@@ -5039,6 +5039,35 @@ abstract class context extends stdClass implements IteratorAggregate {
     protected $_locked;
 
     /**
+     * The ID of the disguise.
+     * Can be accessed publicly through $context->disguiseid
+     * @var int|null
+     */
+    protected $_disguiseid;
+
+    /**
+     * A reference to the disguise object.
+     * Can be accessed publicly through $context->disguiseid
+     * @var \core\disguise\disguise|null
+     */
+    protected $_disguise;
+
+    /**
+     * The ID of the inheritted disguise.
+     * If the context does not have its own disguise, this is the id of the
+     * inheritted disguise.
+     * Can be accessed publicly through $context->inheritteddisguiseid
+     * @var int|null
+     */
+    protected $_inheritteddisguiseid;
+
+    /**
+     * The disguise.
+     * Can be accessed publicly through $context->disguise
+     * @var object|null
+     */
+
+    /**
      * @var array Context caching info
      */
     private static $cache_contextsbyid = array();
@@ -5171,7 +5200,7 @@ abstract class context extends stdClass implements IteratorAggregate {
      *
      * @static
      * @param stdClass $rec
-     * @return void (modifies $rec)
+     * @return context if successful
      */
     protected static function preload_from_record(stdClass $rec) {
         $notenoughdata = false;
@@ -5181,6 +5210,7 @@ abstract class context extends stdClass implements IteratorAggregate {
         $notenoughdata = $notenoughdata || empty($rec->ctxpath);
         $notenoughdata = $notenoughdata || empty($rec->ctxdepth);
         $notenoughdata = $notenoughdata || !isset($rec->ctxlocked);
+        $notenoughdata = $notenoughdata || !isset($rec->ctxdisguiseid);
         if ($notenoughdata) {
             // The record does not have enough data, passed here repeatedly or context does not exist yet.
             if (isset($rec->ctxid) && !isset($rec->ctxlocked)) {
@@ -5196,6 +5226,7 @@ abstract class context extends stdClass implements IteratorAggregate {
             'path'          => $rec->ctxpath,
             'depth'         => $rec->ctxdepth,
             'locked'        => $rec->ctxlocked,
+            'disguiseid'    => $rec->ctxdisguiseid,
         ];
 
         unset($rec->ctxid);
@@ -5204,10 +5235,10 @@ abstract class context extends stdClass implements IteratorAggregate {
         unset($rec->ctxpath);
         unset($rec->ctxdepth);
         unset($rec->ctxlocked);
+        unset($rec->ctxdisguiseid);
 
         return context::create_instance_from_record($record);
     }
-
 
     // ====== magic methods =======
 
@@ -5239,7 +5270,12 @@ abstract class context extends stdClass implements IteratorAggregate {
                 return $this->_depth;
             case 'locked':
                 return $this->is_locked();
-
+            case 'disguiseid':
+                return $this->_disguiseid;
+            case 'inheritteddisguiseid':
+                return $this->get_inheritteddisguiseid();
+            case 'disguise':
+                return $this->get_disguise();
             default:
                 debugging('Invalid context property accessed! '.$name);
                 return null;
@@ -5266,6 +5302,8 @@ abstract class context extends stdClass implements IteratorAggregate {
             case 'locked':
                 // Locked is always set.
                 return true;
+            case 'disguise':
+                return isset($this->_disguiseid);
             default:
                 return false;
         }
@@ -5295,6 +5333,7 @@ abstract class context extends stdClass implements IteratorAggregate {
             'path'         => $this->path,
             'depth'        => $this->depth,
             'locked'       => $this->locked,
+            'disguiseid'   => $this->disguiseid,
         );
         return new ArrayIterator($ret);
     }
@@ -5318,6 +5357,12 @@ abstract class context extends stdClass implements IteratorAggregate {
             $this->_locked = $record->locked;
         } else if (!during_initial_install() && !moodle_needs_upgrading()) {
             debugging('Locked value missing. Code is possibly not usings the getter properly.', DEBUG_DEVELOPER);
+        }
+
+        if (isset($record->disguiseid)) {
+            $this->_disguiseid   = $record->disguiseid;
+        } else if (!during_initial_install() && !moodle_needs_upgrading()) {
+            debugging("Disguiseid missing", DEBUG_DEVELOPER);
         }
     }
 
@@ -5360,14 +5405,15 @@ abstract class context extends stdClass implements IteratorAggregate {
         $dbfamily = $DB->get_dbfamily();
         if ($dbfamily == 'mysql') {
             $updatesql = "UPDATE {context} ct, {context_temp} temp
-                             SET ct.path     = temp.path,
-                                 ct.depth    = temp.depth,
-                                 ct.locked   = temp.locked
+                             SET ct.path        = temp.path,
+                                 ct.depth       = temp.depth,
+                                 ct.locked      = temp.locked
+                                 ct.disguiseid  = temp.disguiseid
                            WHERE ct.id = temp.id";
         } else if ($dbfamily == 'oracle') {
             $updatesql = "UPDATE {context} ct
-                             SET (ct.path, ct.depth, ct.locked) =
-                                 (SELECT temp.path, temp.depth, temp.locked
+                             SET (ct.path, ct.depth, ct.locked, ct.disguiseid) =
+                                 (SELECT temp.path, temp.depth, temp.locked, temp.disguiseid
                                     FROM {context_temp} temp
                                    WHERE temp.id=ct.id)
                            WHERE EXISTS (SELECT 'x'
@@ -5375,17 +5421,19 @@ abstract class context extends stdClass implements IteratorAggregate {
                                            WHERE temp.id = ct.id)";
         } else if ($dbfamily == 'postgres' or $dbfamily == 'mssql') {
             $updatesql = "UPDATE {context}
-                             SET path     = temp.path,
-                                 depth    = temp.depth,
-                                 locked   = temp.locked
+                             SET path       = temp.path,
+                                 depth      = temp.depth,
+                                 locked     = temp.locked,
+                                 disguiseid = temp.disguiseid
                             FROM {context_temp} temp
                            WHERE temp.id={context}.id";
         } else {
             // sqlite and others
             $updatesql = "UPDATE {context}
-                             SET path     = (SELECT path FROM {context_temp} WHERE id = {context}.id),
-                                 depth    = (SELECT depth FROM {context_temp} WHERE id = {context}.id),
-                                 locked   = (SELECT locked FROM {context_temp} WHERE id = {context}.id)
+                             SET path       = (SELECT path FROM {context_temp} WHERE id = {context}.id),
+                                 depth      = (SELECT depth FROM {context_temp} WHERE id = {context}.id),
+                                 locked     = (SELECT locked FROM {context_temp} WHERE id = {context}.id),
+                                 disguiseid = (SELECT disguiseid FROM {context_temp} WHERE id = {context}.id)
                              WHERE id IN (SELECT id FROM {context_temp})";
         }
 
@@ -5499,6 +5547,28 @@ abstract class context extends stdClass implements IteratorAggregate {
         self::reset_caches();
 
         return $this;
+    }
+
+    /**
+     * Set the disguise for the current context.
+     *
+     * @param int $disguiseid
+     * @return disguise ID
+     */
+    public function set_disguise(\core\disguise\disguise $disguise) {
+        global $DB;
+
+        if ($this->_disguiseid === $disguise->get_id()) {
+            return $disguiseid;
+        }
+
+        $this->_disguiseid = $disguise->get_id();
+
+        $DB->set_field('context', 'disguiseid', $disguise->get_id(), array('id' => $this->id));
+        $this->mark_dirty();
+        self::reset_caches();
+
+        return $disguise->get_id();
     }
 
     /**
@@ -5626,6 +5696,7 @@ abstract class context extends stdClass implements IteratorAggregate {
         $record->depth        = 0;
         $record->path         = null; //not known before insert
         $record->locked       = 0;
+        $record->disguiseid   = 0; // Empty by default.
 
         $record->id = $DB->insert_record('context', $record);
 
@@ -5991,6 +6062,69 @@ abstract class context extends stdClass implements IteratorAggregate {
             }
         }
     }
+
+    /**
+     * Fetch the disguise instance for this contet.
+     *
+     * @return \core\disguise\disguise
+     */
+    public function get_disguise() {
+        if (is_a($this->_disguise, '\core\disguise\disguise')) {
+            // The disguise has already been loaded.
+            return $this->_disguise;
+        }
+
+        if ($disguiseid = $this->get_inheritteddisguiseid()) {
+            $this->_disguise = \core\disguise\helper::instance($this);
+        }
+
+        return $this->_disguise;
+    }
+
+    /**
+     * Fetch the ID of any disguise applied to this context, whether local or inheritted.
+     *
+     * @return int
+     */
+    protected function get_inheritteddisguiseid() {
+        if (!empty($this->disguiseid)) {
+            return $this->disguiseid;
+        }
+
+        if (!empty($this->_inheritteddisguiseid)) {
+            return $this->_inheritteddisguiseid;
+        }
+
+        // Attempt to load a disguise for the current context by checking
+        // all parent contexts from this one up to the upper-most parent.
+        foreach ($this->get_parent_contexts() as $parent) {
+            if (!empty($parent->disguiseid)) {
+                return $this->_inheritteddisguiseid = $parent->disguiseid;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Whether a context is applied to this context, or any of its parent
+     * contexts.
+     *
+     * @return bool
+     */
+    public function has_disguise() {
+        $inheritteddisguiseid = $this->inheritteddisguiseid;
+        return !empty($inheritteddisguiseid);
+    }
+
+    /**
+     * Whether a context is applied directly to this context.
+     *
+     * @return bool
+     */
+    public function has_own_disguise() {
+        return !empty($this->disguiseid);
+    }
 }
 
 
@@ -6182,14 +6316,15 @@ class context_helper extends context {
      * @return array (table.column=>alias, ...)
      */
     public static function get_preload_record_columns($tablealias) {
-        return [
-            "$tablealias.id" => "ctxid",
-            "$tablealias.path" => "ctxpath",
-            "$tablealias.depth" => "ctxdepth",
+        return array(
+            "$tablealias.id"           => "ctxid",
+            "$tablealias.path"         => "ctxpath",
+            "$tablealias.depth"        => "ctxdepth",
             "$tablealias.contextlevel" => "ctxlevel",
-            "$tablealias.instanceid" => "ctxinstance",
-            "$tablealias.locked" => "ctxlocked",
-        ];
+            "$tablealias.instanceid"   => "ctxinstance",
+            "$tablealias.locked"       => "ctxlocked",
+            "$tablealias.disguiseid"   => "ctxdisguiseid",
+        );
     }
 
     /**
@@ -6207,7 +6342,8 @@ class context_helper extends context {
                "$tablealias.depth AS ctxdepth, " .
                "$tablealias.contextlevel AS ctxlevel, " .
                "$tablealias.instanceid AS ctxinstance, " .
-               "$tablealias.locked AS ctxlocked";
+               "$tablealias.locked AS ctxlocked, " .
+               "$tablealias.disguiseid AS ctxdisguiseid";
     }
 
     /**
@@ -6433,6 +6569,7 @@ class context_system extends context {
                 $record->path         = '/'.SYSCONTEXTID;
                 $record->depth        = 1;
                 $record->locked       = 0;
+                $record->disguiseid   = 0;
                 context::$systemcontext = new context_system($record);
             }
             return context::$systemcontext;
@@ -6457,6 +6594,7 @@ class context_system extends context {
             $record->depth        = 1;
             $record->path         = null; // Not known before insert.
             $record->locked       = 0;
+            $record->disguiseid   = 0; // Not set by default.
 
             try {
                 if ($DB->count_records('context')) {
@@ -6988,8 +7126,8 @@ class context_coursecat extends context {
             // Deeper categories - one query per depthlevel
             $maxdepth = $DB->get_field_sql("SELECT MAX(depth) FROM {course_categories}");
             for ($n=2; $n<=$maxdepth; $n++) {
-                $sql = "INSERT INTO {context_temp} (id, path, depth, locked)
-                        SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked
+                $sql = "INSERT INTO {context_temp} (id, path, depth, locked, disguiseid)
+                        SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked, pctx.disguiseid
                           FROM {context} ctx
                           JOIN {course_categories} cc ON (cc.id = ctx.instanceid AND ctx.contextlevel = ".CONTEXT_COURSECAT." AND cc.depth = $n)
                           JOIN {context} pctx ON (pctx.instanceid = cc.parent AND pctx.contextlevel = ".CONTEXT_COURSECAT.")
@@ -7220,8 +7358,8 @@ class context_course extends context {
             $DB->execute($sql);
 
             // standard courses
-            $sql = "INSERT INTO {context_temp} (id, path, depth, locked)
-                    SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked
+            $sql = "INSERT INTO {context_temp} (id, path, depth, locked, disguiseid)
+                    SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked, pctx.disguiseid
                       FROM {context} ctx
                       JOIN {course} c ON (c.id = ctx.instanceid AND ctx.contextlevel = ".CONTEXT_COURSE." AND c.category <> 0)
                       JOIN {context} pctx ON (pctx.instanceid = c.category AND pctx.contextlevel = ".CONTEXT_COURSECAT.")
@@ -7501,8 +7639,8 @@ class context_module extends context {
                 $ctxemptyclause = "AND (ctx.path IS NULL OR ctx.depth = 0)";
             }
 
-            $sql = "INSERT INTO {context_temp} (id, path, depth, locked)
-                    SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked
+            $sql = "INSERT INTO {context_temp} (id, path, depth, locked, disguiseid)
+                    SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked, pctx.disguiseid
                       FROM {context} ctx
                       JOIN {course_modules} cm ON (cm.id = ctx.instanceid AND ctx.contextlevel = ".CONTEXT_MODULE.")
                       JOIN {context} pctx ON (pctx.instanceid = cm.course AND pctx.contextlevel = ".CONTEXT_COURSE.")
@@ -7727,8 +7865,8 @@ class context_block extends context {
             }
 
             // pctx.path IS NOT NULL prevents fatal problems with broken block instances that point to invalid context parent
-            $sql = "INSERT INTO {context_temp} (id, path, depth, locked)
-                    SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked
+            $sql = "INSERT INTO {context_temp} (id, path, depth, locked, disguiseid)
+                    SELECT ctx.id, ".$DB->sql_concat('pctx.path', "'/'", 'ctx.id').", pctx.depth+1, ctx.locked, pctx.disguiseid
                       FROM {context} ctx
                       JOIN {block_instances} bi ON (bi.id = ctx.instanceid AND ctx.contextlevel = ".CONTEXT_BLOCK.")
                       JOIN {context} pctx ON (pctx.id = bi.parentcontextid)
