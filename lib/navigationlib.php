@@ -4774,6 +4774,11 @@ class settings_navigation extends navigation_node {
             $coursenode->get('download')->set_force_into_more_menu(true);
         }
 
+        if ($coursecontext->has_own_disguise()) {
+            // Add navigation to configure this disguise.
+            $coursecontext->disguise->add_settings_navigation($this, $coursenode);
+        }
+
         // Return we are done
         return $coursenode;
     }
@@ -4883,6 +4888,11 @@ class settings_navigation extends navigation_node {
         // Remove the module node if there are no children.
         if ($modulenode->children->count() <= 0) {
             $modulenode->remove();
+        }
+
+        if ($this->context->has_own_disguise()) {
+            // Add navigation to configure this disguise.
+            $this->context->disguise->add_settings_navigation($this, $modulenode);
         }
 
         return $modulenode;
@@ -5540,6 +5550,11 @@ class settings_navigation extends navigation_node {
                 'contentbank', new \pix_icon('i/contentbank', ''));
         }
 
+        if ($catcontext->has_own_disguise()) {
+            // Add navigation to configure this disguise.
+            $catcontext->disguise->add_settings_navigation($this, $categorynode);
+        }
+
         return $categorynode;
     }
 
@@ -5676,6 +5691,11 @@ class settings_navigation extends navigation_node {
             foreach ($plugins as $pluginfunction) {
                 $pluginfunction($frontpage, $course, $coursecontext);
             }
+        }
+
+        if ($coursecontext->has_own_disguise()) {
+            // Add navigation to configure this disguise.
+            $coursecontext->disguise->add_settings_navigation($this, $frontpage);
         }
 
         return $frontpage;

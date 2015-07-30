@@ -1218,7 +1218,32 @@ class core_course_renderer extends plugin_renderer_base {
                     html_writer::tag('span', $file->get_filename(), ['class' => 'fp-filename']);
                 $contentfiles .= html_writer::tag('span',
                     html_writer::link($url, $filename),
-                    ['class' => 'coursefile fp-filename-icon']);
+                    ['class' => 'coursefile fp-filename-icon']
+                );
+            }
+        }
+        $content = $contentimages. $contentfiles;
+
+        // Display course contacts. See core_course_list_element::get_course_contacts().
+        if ($course->has_course_contacts()) {
+            $content .= html_writer::start_tag('ul', array('class' => 'teachers'));
+            foreach ($course->get_course_contacts() as $userid => $coursecontact) {
+                $rolenames = array_map(function ($role) {
+                    return $role->displayname;
+                }, $coursecontact['roles']);
+
+                $profileurl = \core_user::profile_url($coursecontact['user'], context_course::instance($course->id), [], SITEID);
+                if ($profileurl) {
+                    $profileurlname = html_writer::link($profileurl, $coursecontact['username']);
+                } else {
+                    $profileurlname = $coursecontact['username'];
+                }
+                $name = sprintf("%s: %s",
+                    implode(', ', $rolenames),
+                    $profileurlname
+                );
+
+                $content .= html_writer::tag('li', $name);
             }
         }
         return $contentimages . $contentfiles;

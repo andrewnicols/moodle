@@ -184,7 +184,9 @@ class core_course_list_element implements IteratorAggregate {
                     $user = username_load_fields_from_object((object)[], $ruser, null, ['id', 'username']);
                     $this->coursecontacts[$ruser->id] = [
                             'user'     => $user,
-                            'username' => fullname($user, $canviewfullnames),
+                            'username' => \core_user::displayname($user, $context, [
+                                'usefullnamedisplay' => $canviewfullnames,
+                            ]),
 
                             // List of all roles.
                             'roles'    => [],

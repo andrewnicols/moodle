@@ -179,6 +179,10 @@ function add_moduleinfo($moduleinfo, $course, $mform = null) {
     // So we have to update one of them twice.
     $sectionid = course_add_cm_to_section($course, $moduleinfo->coursemodule, $moduleinfo->section);
 
+    if (plugin_supports('mod', $moduleinfo->modulename, FEATURE_DISGUISES, false)) {
+        \core\disguise\helper::handle_form_submission($modcontext, $moduleinfo);
+    }
+
     // Trigger event based on the action we did.
     // Api create_from_cm expects modname and id property, and we don't want to modify $moduleinfo since we are returning it.
     $eventdata = clone $moduleinfo;
@@ -691,6 +695,11 @@ function update_moduleinfo($cm, $moduleinfo, $course, $mform = null) {
         core_tag_tag::set_item_tags('core', 'course_modules', $moduleinfo->coursemodule, $modcontext, $moduleinfo->tags);
     }
     $moduleinfo = edit_module_post_actions($moduleinfo, $course);
+
+    if (plugin_supports('mod', $moduleinfo->modulename, FEATURE_DISGUISES, false)) {
+        // This plugin supports disguises - pass to the disguise helper.
+        \core\disguise\helper::handle_form_submission($modcontext, $moduleinfo);
+    }
 
     // Now that module is fully updated, also update completion data if required.
     // (this will wipe all user completion data and recalculate it)

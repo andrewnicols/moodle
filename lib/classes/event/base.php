@@ -207,7 +207,6 @@ abstract class base implements \IteratorAggregate {
         if (isset($data['anonymous'])) {
             $event->data['anonymous'] = $data['anonymous'];
         }
-        $event->data['anonymous'] = (int)(bool)$event->data['anonymous'];
 
         if (isset($event->context)) {
             if (isset($data['context'])) {
@@ -227,6 +226,12 @@ abstract class base implements \IteratorAggregate {
         $event->data['contextid'] = $event->context->id;
         $event->data['contextlevel'] = $event->context->contextlevel;
         $event->data['contextinstanceid'] = $event->context->instanceid;
+
+        if ($event->context->has_disguise() && $event->context->disguise->should_log_anonymously()) {
+            // There is a disguise at this context and it requests log anonymity.
+            $event->data['anonymous'] = true;
+        }
+        $event->data['anonymous'] = (int)(bool)$event->data['anonymous'];
 
         if (!isset($event->data['courseid'])) {
             if ($coursecontext = $event->context->get_course_context(false)) {

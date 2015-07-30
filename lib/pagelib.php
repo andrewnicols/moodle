@@ -428,6 +428,11 @@ class moodle_page {
     protected $_forcelockallblocks = false;
 
     /**
+     * @var bool Whether this is a disguise configuration page.
+     */
+    protected $_disguise_configuration_page = false;
+
+    /**
      * Force the settings menu to be displayed on this page. This will only force the
      * settings menu on an activity / resource page that is being displayed on a theme that
      * uses a settings menu.
@@ -1199,7 +1204,19 @@ class moodle_page {
             }
         }
 
+        if (!$this->_disguise_configuration_page) {
+            \core\disguise\helper::ensure_configured_for_user_in_context($context);
+        }
+
         $this->_context = $context;
+    }
+
+    public function set_disguise_configuration_page($value = true) {
+        $this->_disguise_configuration_page = $value;
+    }
+
+    public function is_disguise_configuration_page() {
+        return !empty($this->_disguise_configuration_page);
     }
 
     /**
