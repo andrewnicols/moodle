@@ -223,6 +223,7 @@ $string['ddlunknownerror'] = 'Unknown DDL library error';
 $string['ddlxmlfileerror'] = 'XML database file errors found';
 $string['destinationcmnotexit'] = 'The destination course module does not exist';
 $string['detectedbrokenplugin'] = 'The plugin {$a} is defective or outdated; sorry you cannot continue.';
+$string['disguisecontextmismatch'] = 'The disguise does not match the context you have specified';
 $string['dmlexceptiononinstall'] = '<p>A database error has occurred [{$a->errorcode}].<br />{$a->debuginfo}</p>';
 $string['dmlparseexception'] = 'Error parsing SQL query';
 $string['dmlreadexception'] = 'Error reading from database';
