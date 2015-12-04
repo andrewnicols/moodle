@@ -114,15 +114,31 @@ class graded_users_iterator {
      * @param string $sortfield2 The second field of the users table by which the array of users will be sorted
      * @param string $sortorder2 The order in which the second sorting field will be sorted (ASC or DESC)
      */
-    public function __construct($course, $grade_items=null, $groupid=0,
-                                          $sortfield1='lastname', $sortorder1='ASC',
-                                          $sortfield2='firstname', $sortorder2='ASC') {
+    public function __construct(
+        $course,
+        $grade_items = null,
+        $groupid = 0,
+        $sortfield1 = '',
+        $sortorder1 = 'ASC',
+        $sortfield2 = '',
+        $sortorder2 = 'ASC',
+    ) {
+        global $CFG;
+
         $this->course      = $course;
         $this->grade_items = $grade_items;
         $this->groupid     = $groupid;
-        $this->sortfield1  = $sortfield1;
+        if (empty($sortfield1)) {
+            $this->sortfield1  = $CFG->defaultpreference_sortuser ? 'firstname' : 'lastname';
+        } else {
+            $this->sortfield1  = $sortfield1;
+        }
         $this->sortorder1  = $sortorder1;
-        $this->sortfield2  = $sortfield2;
+        if (empty($sortfield2)) {
+            $this->sortfield2  = $CFG->defaultpreference_sortuser ? 'lastname' : 'firstname';
+        } else {
+            $this->sortfield2  = $sortfield2;
+        }
         $this->sortorder2  = $sortorder2;
 
         $this->gradestack  = array();

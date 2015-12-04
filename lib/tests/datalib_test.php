@@ -160,6 +160,44 @@ class datalib_test extends \advanced_testcase {
         $this->assertEquals(array(), $params);
     }
 
+    /**
+     * Tests for user_orders_by_sql with a custom sortuser value.
+     *
+     * @dataProvider user_orders_by_sql_sortuser_provider
+     * @covers ::users_order_by_sql
+     * @param mixed $sortuser The sortuser value
+     * @param string $expected The expected SQL
+     */
+    public function test_users_order_by_sql_sortuser_lastname(
+        mixed $sortuser,
+        string $expected,
+    ): void {
+        global $CFG;
+
+        $this->resetAfterTest(true);
+        $CFG->defaultpreference_sortuser = $sortuser;
+
+        [$sort, $params] = users_order_by_sql('u');
+        $this->assert_same_sql($expected, $sort);
+        $this->assertEquals([], $params);
+    }
+
+    /**
+     * Data provider for test_users_order_by_sql_sortuser_lastname tests.
+     *
+     * @return array
+     */
+    public static function user_orders_by_sql_sortuser_provider(): array {
+        return [
+            [0, 'u.lastname, u.firstname, u.id'],
+            [1, 'u.firstname, u.lastname, u.id'],
+            [false, 'u.lastname, u.firstname, u.id'],
+            [true, 'u.firstname, u.lastname, u.id'],
+            ['0', 'u.lastname, u.firstname, u.id'],
+            ['1', 'u.firstname, u.lastname, u.id'],
+        ];
+    }
+
     public function test_users_order_by_sql_search_no_extra_fields() {
         global $CFG, $DB;
         $this->resetAfterTest(true);

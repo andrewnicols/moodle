@@ -338,8 +338,7 @@ class grade_report_grader extends grade_report {
      * @param string $sort sorting direction
      */
     private function setup_sortitemid(string $sort = '') {
-
-        global $SESSION;
+        global $SESSION, $CFG;
 
         if (!isset($SESSION->gradeuserreport)) {
             $SESSION->gradeuserreport = new stdClass();
@@ -370,7 +369,7 @@ class grade_report_grader extends grade_report {
             if (isset($SESSION->gradeuserreport->sortitemid)) {
                 $this->sortitemid = $SESSION->gradeuserreport->sortitemid;
             } else {
-                $this->sortitemid = 'lastname';
+                $this->sortitemid = $CFG->defaultpreference_sortuser ? 'firstname' : 'lastname';
             }
 
             if (isset($SESSION->gradeuserreport->sort)) {

@@ -1577,6 +1577,7 @@ $string['userfiltersdefault_desc'] = 'Select the filters that should be shown on
 $string['usermanagement'] = 'User management';
 $string['userpreference'] = 'User preference';
 $string['userpolicies'] = 'User policies';
+$string['userreportoptions'] = 'Options for reports and menus';
 $string['users'] = 'Users';
 $string['userquota'] = 'Private files space';
 $string['userquota_desc'] = 'The maximum amount of data that each user can store in their private files area.';

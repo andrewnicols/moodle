@@ -345,7 +345,7 @@ function users_search_sql(string $search, string $u = 'u', bool $searchanywhere 
  */
 function users_order_by_sql(string $usertablealias = '', string $search = null, context $context = null,
         array $customfieldmappings = []) {
-    global $DB, $PAGE;
+    global $DB, $PAGE, $CFG;
 
     if ($usertablealias) {
         $tableprefix = $usertablealias . '.';
@@ -353,7 +353,11 @@ function users_order_by_sql(string $usertablealias = '', string $search = null, 
         $tableprefix = '';
     }
 
-    $sort = "{$tableprefix}lastname, {$tableprefix}firstname, {$tableprefix}id";
+    if ($CFG->defaultpreference_sortuser) {
+        $sort = "{$tableprefix}firstname, {$tableprefix}lastname, {$tableprefix}id";
+    } else {
+        $sort = "{$tableprefix}lastname, {$tableprefix}firstname, {$tableprefix}id";
+    }
     $params = array();
 
     if (!$search) {
