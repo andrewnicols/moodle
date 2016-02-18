@@ -124,25 +124,34 @@ class block_online_users extends block_base {
             } else {
                 $canshowicon = false;
             }
+
             foreach ($users as $user) {
                 $this->content->text .= '<li class="listentry">';
-                $timeago = format_time($now - $user->lastaccess); //bruno to calculate correctly on frontpage
+                $timeago = format_time($now - $user->lastaccess);
 
                 if (isguestuser($user)) {
                     $this->content->text .= '<div class="user">'.$OUTPUT->user_picture($user, array('size'=>16, 'alttext'=>false));
                     $this->content->text .= get_string('guestuser').'</div>';
 
                 } else { // Not a guest user.
-                    $this->content->text .= '<div class="user">';
-                    $this->content->text .= '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$this->page->course->id.'" title="'.$timeago.'">';
+                    $this->content->text .= html_writer::start_tag('div', ['class' => 'user']);
                     $avataroptions = [
                         'size' => 30,
                         'class' => 'userpicture align-middle',
                         'visibletoscreenreaders' => false,
                         'link' => false,
                     ];
-                    $this->content->text .= $OUTPUT->user_picture($user, $avataroptions) . $user->fullname . '</a></div>';
-
+                    $this->content->text .= html_writer::link(
+                        \core_user::profile_url($user, $this->page->context),
+                        \core_user::user_picture($user, $this->page->context, $avataroptions) .
+                            \core_user::displayname($user, $this->page->context),
+                        [
+                            'title' => $timeago,
+                        ]
+                    );
+                    $this->content->text .= html_writer::end_tag('div', ['class' => 'user']);
+                }
+                if ($canshowicon and ($USER->id != $user->id) and !isguestuser($user)) {  // Only when logged in and messaging active etc
                     if ($USER->id == $user->id) {
                         if ($CFG->block_online_users_onlinestatushiding) {
                             $action = ($user->uservisibility != null && $user->uservisibility == 0) ? 'show' : 'hide';
@@ -157,9 +166,7 @@ class block_online_users extends block_base {
                     } else {
                         if ($canshowicon) {  // Only when logged in and messaging active etc.
                             $anchortagcontents = $OUTPUT->pix_icon('t/message', get_string('messageselectadd'));
-                            $anchorurl = new moodle_url('/message/index.php', array('id' => $user->id));
-                            $anchortag = html_writer::link($anchorurl, $anchortagcontents,
-                                array('title' => get_string('messageselectadd')));
+                            $anchortag = \core_user::message_link($user, $this->page->context, [], ['title' => get_string('messageselectadd')]);
 
                             $this->content->text .= '<div class="message">'.$anchortag.'</div>';
                         }
@@ -202,5 +209,3 @@ class block_online_users extends block_base {
         ];
     }
 }
-
-

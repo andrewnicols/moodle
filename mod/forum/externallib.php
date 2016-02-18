@@ -372,7 +372,9 @@ class mod_forum_external extends external_api {
         $alldiscussions = forum_get_discussions($cm, $sort, true, -1, -1, true, $page, $perpage, FORUM_POSTS_ALL_USER_GROUPS);
 
         if ($alldiscussions) {
-            $canviewfullname = has_capability('moodle/site:viewfullnames', $modcontext);
+            $coreuserparams = array(
+                    'usefullnamedisplay' => has_capability('moodle/site:viewfullnames', $modcontext),
+                );
 
             // Get the unreads array, this takes a forum id and returns data for all discussions.
             $unreads = array();
@@ -417,6 +419,31 @@ class mod_forum_external extends external_api {
 
                 $discussion->name = external_format_string($discussion->name, $modcontext->id);
                 $discussion->subject = external_format_string($discussion->subject, $modcontext->id);
+                $picturefields = explode(',', user_picture::fields());
+
+                // Load user objects from the results of the query.
+                $user = new stdclass();
+                $user->id = $discussion->userid;
+                $user = username_load_fields_from_object($user, $discussion, null, $picturefields);
+                // Preserve the id, it can be modified by username_load_fields_from_object.
+                $user->id = $discussion->userid;
+                $discussion->userfullname = \core_user::displayname($user, $modcontext, $coreuserparams);
+
+                $userpicture = new user_picture(\core_user::prepare_external_user($user, $modcontext, $coreuserparams));
+                $userpicture->size = 1; // Size f1.
+                $discussion->userpictureurl = $userpicture->get_url($PAGE)->out(false);
+
+                $usermodified = new stdclass();
+                $usermodified->id = $discussion->usermodified;
+                $usermodified = username_load_fields_from_object($usermodified, $discussion, 'um', $picturefields);
+                // Preserve the id (it can be overwritten due to the prefixed $picturefields).
+                $usermodified->id = $discussion->usermodified;
+                $discussion->usermodifiedfullname = \core_user::displayname($usermodified, $modcontext, $coreuserparams);
+
+                $userpicture = new user_picture(\core_user::prepare_external_user($usermodified, $modcontext, $coreuserparams));
+                $userpicture->size = 1; // Size f1.
+                $discussion->usermodifiedpictureurl = $userpicture->get_url($PAGE)->out(false);
+
                 // Rewrite embedded images URLs.
                 $options = array('trusted' => $discussion->messagetrust);
                 list($discussion->message, $discussion->messageformat) =

@@ -960,6 +960,7 @@ class externallib_test extends externallib_advanced_testcase {
         $post1 = $DB->get_record('forum_posts', array('id' => $discussion1->firstpost), '*', MUST_EXIST);
 
         // User pictures are initially empty, we should get the links once the external function is called.
+
         $expecteddiscussions = array(
                 'id' => $discussion1->firstpost,
                 'name' => $discussion1->name,

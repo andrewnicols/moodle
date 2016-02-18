@@ -339,7 +339,7 @@ class send_user_notifications extends \core\task\adhoc_task {
         $eventdata->courseid            = $course->id;
         $eventdata->component           = 'mod_forum';
         $eventdata->name                = 'posts';
-        $eventdata->userfrom            = $author;
+        $eventdata->userfrom            = core_user::get_disguised_user($author, $context);
         $eventdata->userto              = $this->recipient;
         $eventdata->subject             = $postsubject;
         $eventdata->fullmessage         = $this->get_renderer()->render($data);
@@ -360,7 +360,7 @@ class send_user_notifications extends \core\task\adhoc_task {
         }
 
         $eventdata->smallmessage = get_string('smallmessage', 'forum', (object) [
-                'user' => fullname($author),
+                'user' => \core_user::displayname($author, $context),
                 'forumname' => "$shortname: " . format_string($forum->name, true) . ": " . $discussion->name,
                 'message' => $post->message,
             ]);
@@ -506,9 +506,12 @@ class send_user_notifications extends \core\task\adhoc_task {
      */
     protected function get_reply_address($course, $forum, $discussion, $post, $cm, $context) {
         if ($this->can_post($course, $forum, $discussion, $post, $cm, $context)) {
-            // Generate a reply-to address from using the Inbound Message handler.
-            $this->inboundmanager->set_data($post->id);
-            return $this->inboundmanager->generate($this->recipient->id);
+
+            if (!$context->disguise || $context->disguise->is_configured_for_user($this->recipient)) {
+                // Generate a reply-to address from using the Inbound Message handler.
+                $this->inboundmanager->set_data($post->id);
+                return $this->inboundmanager->generate($this->recipient->id);
+            }
         }
 
         // TODO Check if we can return a string.
@@ -546,6 +549,7 @@ class send_user_notifications extends \core\task\adhoc_task {
      * @return  bool
      */
     protected function can_view_fullnames($course, $forum, $discussion, $post, $cm, $context) {
+        // TODO MDL-1071 Work this out.
         if (!isset($this->viewfullnames[$forum->id])) {
             $this->viewfullnames[$forum->id] = has_capability('moodle/site:viewfullnames', $context, $this->recipient->id);
         }

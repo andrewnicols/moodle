@@ -371,6 +371,7 @@ function forum_supports($feature) {
         case FEATURE_PLAGIARISM:              return true;
         case FEATURE_ADVANCED_GRADING:        return true;
         case FEATURE_MOD_PURPOSE:             return MOD_PURPOSE_COLLABORATION;
+        case FEATURE_DISGUISES:               return true;
 
         default: return null;
     }
@@ -1555,6 +1556,21 @@ function forum_count_discussions($forum, $cm, $course) {
     $modinfo = get_fast_modinfo($course);
 
     $mygroups = $modinfo->get_groups($cm->groupingid);
+    /**
+     * TODO WOrk out where this belongs!!
+     * It was present before the Forum rewrite of 2019 - MDL-66770.
+=======
+        $list .= html_writer::start_tag('li');
+        $list .= html_writer::start_div('head');
+        $list .= html_writer::div(userdate_htmltime($post->modified, $strftimerecent), 'date');
+        if (!$authorhidden) {
+            $list .= html_writer::div(core_user::displayname($user, $post->context, [
+                    'usefullnamedisplay' => $viewfullnames,
+                ]), 'name');
+        }
+        $list .= html_writer::end_div(); // Head.
+>>>>>>> 45d5c36ab7 (MDL-1071 forum: Apply disguises to the forum)
+     */
 
     // add all groups posts
     $mygroups[-1] = -1;
@@ -2101,25 +2117,6 @@ function forum_get_course_forum($courseid, $type) {
                 $forum->name  = get_string("sitenews");
                 $forum->forcesubscribe = 0;
             }
-            break;
-        case "social":
-            $forum->name  = get_string("namesocial", "forum");
-            $forum->intro = get_string("introsocial", "forum");
-            $forum->introformat = FORMAT_HTML;
-            $forum->assessed = 0;
-            $forum->forcesubscribe = 0;
-            break;
-        case "blog":
-            $forum->name = get_string('blogforum', 'forum');
-            $forum->intro = get_string('introblog', 'forum');
-            $forum->introformat = FORMAT_HTML;
-            $forum->assessed = 0;
-            $forum->forcesubscribe = 0;
-            break;
-        default:
-            echo $OUTPUT->notification("That forum type doesn't exist!");
-            return false;
-            break;
     }
 
     $forum->timemodified = time();
@@ -4184,6 +4181,10 @@ function forum_print_recent_mod_activity($activity, $courseid, $detail, $modname
     $post = (object) ['parent' => $content->parent];
     $forum = (object) ['type' => $content->forumtype];
     $authorhidden = forum_is_author_hidden($post, $forum);
+    $userparams = array(
+            'usefullnamedisplay' => $viewfullnames,
+        );
+    $modcontext = context_module::instance($activity->cmid);
 
     // Show user picture if author should not be hidden.
     if (!$authorhidden) {
@@ -4192,6 +4193,7 @@ function forum_print_recent_mod_activity($activity, $courseid, $detail, $modname
             'link' => $authorhidden,
             'alttext' => $authorhidden,
         ];
+        echo core_user::user_picture($activity->user, $modcontext, $userparams, $pictureoptions);
         $picture = $OUTPUT->user_picture($activity->user, $pictureoptions);
         $output .= html_writer::tag('td', $picture, ['class' => 'userpicture', 'valign' => 'top']);
     }
@@ -4219,9 +4221,13 @@ function forum_print_recent_mod_activity($activity, $courseid, $detail, $modname
     if ($authorhidden) {
         $authornamedate = $timestamp;
     } else {
-        $fullname = fullname($activity->user, $viewfullnames);
-        $userurl = new moodle_url('/user/view.php');
-        $userurl->params(['id' => $activity->user->id, 'course' => $courseid]);
+        $fullname = core_user::displayname($activity->user, $modcontext, $userparams);
+        if ($userurl = core_user::profile_url($activity->user, $modcontext, $userparams, $courseid)) {
+            echo html_writer::link($userurl, $fullname);
+        } else {
+            echo $fullname;
+        }
+
         $by = new stdClass();
         $by->name = html_writer::link($userurl, $fullname);
         $by->date = $timestamp;
