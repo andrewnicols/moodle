@@ -16,6 +16,9 @@
 
 namespace core;
 
+global $CFG;
+require_once($CFG->libdir . '/tests/fixtures/disguise/helper.php');
+
 /**
  * Test core_user class.
  *
@@ -812,5 +815,280 @@ class user_test extends \advanced_testcase {
         $CFG->sitepolicy = 'https://example.com';
         $this->assertFalse(\core_user::awaiting_action($admin));
         $this->assertTrue(\core_user::awaiting_action($manager));
+    }
+
+    /**
+     * Test displayname without disguise.
+     */
+    public function test_displayname() {
+        global $DB;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $forum = $this->getDataGenerator()->create_module('forum', array('course' => $course->id));
+
+        $coursecontext = \context_course::instance($course->id);
+        $modcontext = context_module::instance($forum->cmid);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        // Creating a new disguise.
+        $disguise = \core\tests\fixtures\disguise\helper::create($modcontext, 'basic');
+
+        // By default the standard displayname will be used.
+        $this->assertEquals(\core_user::real_displayname($user), \core_user::displayname($user));
+        $this->assertNotEquals(get_string('anonymous', 'disguise_basic'), \core_user::displayname($user));
+
+        // Using the applied modcontext will give the disguise.
+        $this->assertEquals(get_string('anonymous', 'disguise_basic'), \core_user::displayname($user, $modcontext));
+
+        // Using a different context will not give the disguise.
+        $this->assertEquals(\core_user::real_displayname($user), \core_user::displayname($user, $coursecontext));
+        $this->assertNotEquals(get_string('anonymous', 'disguise_basic'), \core_user::displayname($user, $coursecontext));
+    }
+
+    /**
+     * Test displayname with disguise.
+     */
+    public function test_displayname_disguised() {
+        global $DB;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $coursecontext = \context_course::instance($course->id);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        $stub = $this->getMockBuilder('\\core\\disguise\\disguise')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub
+            ->expects($this->once())
+            ->method('displayname')
+            ;
+
+        $rc = new \ReflectionClass('\\context_course');
+        $rcp = $rc->getProperty('_disguise');
+        $rcp->setAccessible(true);
+        $rcp->setValue($coursecontext, $stub);
+
+        \core_user::displayname($user, $coursecontext);
+    }
+
+    /**
+     * Test profile_url with disguise with disguise allowing links.
+     */
+    public function test_profile_url_disguised_allow() {
+        global $DB;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $coursecontext = \context_course::instance($course->id);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        $stub = $this->getMockBuilder('\\core\\disguise\\disguise')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub
+            ->expects($this->once())
+            ->method('allow_profile_links')
+            ->willReturn(true)
+            ;
+
+        $rc = new \ReflectionClass('\\context_course');
+        $rcp = $rc->getProperty('_disguise');
+        $rcp->setAccessible(true);
+        $rcp->setValue($coursecontext, $stub);
+
+        $url = \core_user::profile_url($user, $coursecontext);
+        $this->assertInstanceOf('\\moodle_url', $url);
+    }
+
+    /**
+     * Test profile_url with disguise with disguise disallowing links.
+     */
+    public function test_profile_url_disguised_disallow() {
+        global $DB;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $coursecontext = \context_course::instance($course->id);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        $stub = $this->getMockBuilder('\\core\\disguise\\disguise')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub
+            ->expects($this->once())
+            ->method('allow_profile_links')
+            ->willReturn(false)
+            ;
+
+        $rc = new \ReflectionClass('\\context_course');
+        $rcp = $rc->getProperty('_disguise');
+        $rcp->setAccessible(true);
+        $rcp->setValue($coursecontext, $stub);
+
+        $url = \core_user::profile_url($user, $coursecontext);
+        $this->assertEquals('', $url);
+    }
+
+    /**
+     * Test message_url with disguise allowing messaging.
+     */
+    public function test_message_url_disguised_allow() {
+        global $DB;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $coursecontext = \context_course::instance($course->id);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        $stub = $this->getMockBuilder('\\core\\disguise\\disguise')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub
+            ->expects($this->once())
+            ->method('allow_messaging')
+            ->willReturn(true)
+            ;
+
+        $rc = new \ReflectionClass('\\context_course');
+        $rcp = $rc->getProperty('_disguise');
+        $rcp->setAccessible(true);
+        $rcp->setValue($coursecontext, $stub);
+
+        $url = \core_user::message_url($user, $coursecontext);
+        $this->assertInstanceOf('\\moodle_url', $url);
+    }
+
+    /**
+     * Test message_url with disguise not allowing messaging.
+     */
+    public function test_message_url_disguised_disallow() {
+        global $DB;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $coursecontext = \context_course::instance($course->id);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        $stub = $this->getMockBuilder('\\core\\disguise\\disguise')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub
+            ->expects($this->once())
+            ->method('allow_messaging')
+            ->willReturn(false)
+            ;
+
+        $rc = new \ReflectionClass('\\context_course');
+        $rcp = $rc->getProperty('_disguise');
+        $rcp->setAccessible(true);
+        $rcp->setValue($coursecontext, $stub);
+
+        $url = \core_user::message_url($user, $coursecontext);
+        $this->assertEquals('', $url);
+    }
+
+    /**
+     * Test user_picture with disguise.
+     */
+    public function test_user_picture_disguised() {
+        global $DB, $OUTPUT;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $coursecontext = \context_course::instance($course->id);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        $stub = $this->getMockBuilder('\\core\\disguise\\disguise')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $stub
+            ->expects($this->once())
+            ->method('user_picture')
+            ;
+
+        $rc = new \ReflectionClass('\\context_course');
+        $rcp = $rc->getProperty('_disguise');
+        $rcp->setAccessible(true);
+        $rcp->setValue($coursecontext, $stub);
+
+        $outputstub = $this->getMockBuilder('\\core_renderer')
+            ->disableOriginalConstructor()
+            ->setMethods(['user_picture'])
+            ->getMock();
+
+        $outputstub
+            ->expects($this->never())
+            ->method('user_picture')
+            ;
+
+        $OUTPUT = $outputstub;
+
+        \core_user::user_picture($user, $coursecontext);
+    }
+
+    /**
+     * Test user_picture with no disguise.
+     */
+    public function test_user_picture_undisguised() {
+        global $DB, $OUTPUT;
+        $this->resetAfterTest();
+
+        $course = $this->getDataGenerator()->create_course();
+        $coursecontext = \context_course::instance($course->id);
+
+        // Create a user in the course.
+        $user = $this->getDataGenerator()->create_user();
+        $roleid = $DB->get_field('role', 'id', array('shortname' => 'student'), MUST_EXIST);
+        $this->getDataGenerator()->enrol_user($user->id, $course->id, $roleid);
+
+        $stub = $this->getMockBuilder('\\core_renderer')
+            ->disableOriginalConstructor()
+            ->setMethods(['user_picture'])
+            ->getMock();
+
+        $stub
+            ->expects($this->once())
+            ->method('user_picture')
+            ;
+
+        $OUTPUT = $stub;
+
+        \core_user::user_picture($user, $coursecontext);
     }
 }
