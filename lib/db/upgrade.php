@@ -4453,5 +4453,20 @@ privatefiles,moodle|/user/files.php';
         upgrade_main_savepoint(true, 2022032200.02);
     }
 
+    if ($oldversion < 2022040500.00) {
+        // Default value being set is the same value as core_completion\api::STATUS_COMPLETED.
+        // Define field modulestatus to be added to course_completion_criteria.
+        $table = new xmldb_table('course_completion_criteria');
+        $field = new xmldb_field('modulestatus', XMLDB_TYPE_INTEGER, '10', null, null, null, '1', 'moduleinstance');
+
+        // Conditionally launch add field modulestatus.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2022040500.00);
+    }
+
     return true;
 }

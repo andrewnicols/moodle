@@ -35,6 +35,12 @@ defined('MOODLE_INTERNAL') || die();
  */
 class api {
 
+    /** @var int Status requiring any type of completion. */
+    const STATUS_COMPLETED = 1;
+
+    /** @var int Status requiring successful completion. */
+    const STATUS_COMPLETED_PASS = 2;
+
     /**
      * @var string The completion expected on event.
      */
@@ -145,21 +151,36 @@ class api {
             INNER JOIN {course_modules_completion} mc ON mc.coursemoduleid = cr.moduleinstance AND mc.userid = ra.userid
              LEFT JOIN {course_completion_crit_compl} cc ON cc.criteriaid = cr.id AND cc.userid = ra.userid
                  WHERE cr.criteriatype = :criteriatype
-                       AND con.contextlevel = :contextlevel
-                       AND c.enablecompletion = 1
-                       AND cc.id IS NULL
-                       AND (
-                            mc.completionstate = :completionstate
-                            OR mc.completionstate = :completionstatepass
-                            OR mc.completionstate = :completionstatefail
-                            )";
+                   AND con.contextlevel = :contextlevel
+                   AND c.enablecompletion = 1
+                   AND cc.id IS NULL
+                   AND (
+                       (
+                           cr.modulestatus = :modulestatuscompleted AND (
+                                  mc.completionstate = :msccompletionstate
+                               OR mc.completionstate = :msccompletionstatepass
+                               OR mc.completionstate = :msccompletionstatefail
+                           )
+                       ) OR (
+                           cr.modulestatus = :modulestatuscompletedpass AND (
+                                  mc.completionstate = :mscpcompletionstate
+                               OR mc.completionstate = :mscpcompletionstatepass
+                               OR mc.completionstate = :mscpcompletionstatefail
+                           )
+                       )
+                   )";
 
         $params = [
             'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY,
             'contextlevel' => CONTEXT_COURSE,
-            'completionstate' => COMPLETION_COMPLETE,
-            'completionstatepass' => COMPLETION_COMPLETE_PASS,
-            'completionstatefail' => COMPLETION_COMPLETE_FAIL
+            'modulestatuscompleted' => self::STATUS_COMPLETED,
+            'mscpcompletionstate' => COMPLETION_COMPLETE,
+            'mscpcompletionstatepass' => COMPLETION_COMPLETE_PASS,
+            'mscpcompletionstatefail' => COMPLETION_COMPLETE_FAIL,
+            'modulestatuscompletedpass' => self::STATUS_COMPLETED_PASS,
+            'msccompletionstate' => COMPLETION_COMPLETE,
+            'msccompletionstatepass' => COMPLETION_COMPLETE_PASS,
+            'msccompletionstatefail' => COMPLETION_COMPLETE_FAIL,
         ];
 
         if ($userdata) {

@@ -3127,6 +3127,7 @@ class restore_course_completion_structure_step extends restore_structure_step {
             'courseinstance' => $data->courseinstance,
             'module'         => $data->module,
             'moduleinstance' => $data->moduleinstance,
+            'modulestatus'   => $data->modulestatus,
             'timeend'        => $data->timeend,
             'gradepass'      => $data->gradepass,
             'role'           => $data->role

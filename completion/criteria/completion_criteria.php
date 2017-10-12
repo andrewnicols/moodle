@@ -114,7 +114,8 @@ abstract class completion_criteria extends data_object {
      * enrolperiod, timeend, gradepass, role
      * @var array
      */
-    public $required_fields = array('id', 'course', 'criteriatype', 'module', 'moduleinstance', 'courseinstance', 'enrolperiod', 'timeend', 'gradepass', 'role');
+    public $required_fields = array('id', 'course', 'criteriatype', 'module', 'moduleinstance', 'modulestatus',
+        'courseinstance', 'enrolperiod', 'timeend', 'gradepass', 'role');
 
     /* @var int Course id  */
     public $course;
@@ -131,6 +132,9 @@ abstract class completion_criteria extends data_object {
 
     /* @var int Course module instance id this criteria relates to (for activity criteria) */
     public $moduleinstance;
+
+    /* @var int Course module status constant (for activity criteria). */
+    public $modulestatus;
 
     /**
      * Period after enrolment completion will be triggered (for period criteria)
