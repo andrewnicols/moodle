@@ -39,7 +39,7 @@ class course_completion_form extends moodleform {
      * Defines the form fields.
      */
     public function definition() {
-        global $USER, $CFG, $DB;
+        global $USER, $CFG, $DB, $PAGE;
 
         $courseconfig = get_config('moodlecourse');
         $mform = $this->_form;
@@ -87,6 +87,17 @@ class course_completion_form extends moodleform {
 
         $activities = $completion->get_activities();
         if (!empty($activities)) {
+            if (!$completion->is_course_locked()) {
+                $togglerid = html_writer::random_id();
+                $mform->addElement('static', null, null, html_writer::link('#',
+                    get_string('togglebetweenstates', 'core_completion'), ['id' => $togglerid]));
+                $PAGE->requires->js_call_amd('core_completion/value_toggler', 'init', ['#' . $togglerid, 'select[group=1]', [
+                    completion_criteria_activity::STATUS_COMPLETED,
+                    completion_criteria_activity::STATUS_COMPLETED_PASS,
+                    0
+                ]]);
+            }
+
             foreach ($activities as $activity) {
                 $params_a = array('moduleinstance' => $activity->id);
                 $criteria = new completion_criteria_activity(array_merge($params, $params_a));

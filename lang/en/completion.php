@@ -235,6 +235,7 @@ $string['showcompletionconditions'] = 'Show activity completion conditions';
 $string['showcompletionconditions_help'] = 'Activity completion conditions are always shown on the activity page. This setting determines whether activity completion conditions are also shown below each activity on the course page.';
 $string['showinguser'] = 'Showing user';
 $string['todo'] = 'To do';
+$string['togglebetweenstates'] = 'Toggle between states';
 $string['unenrolingfromcourse'] = 'Unenrolling from course';
 $string['unenrolment'] = 'Unenrolment';
 $string['unit'] = 'Unit';
