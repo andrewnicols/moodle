@@ -1320,6 +1320,81 @@ class pgsql_native_moodle_database extends moodle_database {
     }
 
     /**
+     * Import multiple records into database as fast as possible, id field is required.
+     * Safety checks are NOT carried out. Lobs are supported.
+     *
+     * Operation is not atomic, use transactions if necessary.
+     *
+     * @since Moodle 3.6
+     *
+     * @param string $table  The database table to be inserted into
+     * @param array|Traversable $dataobjects list of objects to be inserted, must be compatible with foreach
+     * @return void does not return new record ids
+     *
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function import_records($table, $dataobjects) {
+        // PostgreSQL does not seem to have problems with huge queries.
+        $chunksize = 500;
+        if (!empty($this->dboptions['bulkinsertsize'])) {
+            $chunksize = (int)$this->dboptions['bulkinsertsize'];
+        }
+
+        $columns = $this->get_columns($table, true);
+
+        $count = 0;
+        $chunk = array();
+        foreach ($dataobjects as $dataobject) {
+            $dataobject = (array)$dataobject;
+
+            $count++;
+            $chunk[] = $dataobject;
+
+            if ($count === $chunksize) {
+                $this->import_chunk($table, $chunk, $columns);
+                $chunk = array();
+                $count = 0;
+            }
+        }
+
+        if ($count) {
+            $this->import_chunk($table, $chunk, $columns);
+        }
+    }
+
+    /**
+     * Import records in chunks, no param types...
+     *
+     * Note: can be used only from import_records().
+     *
+     * @param string $table
+     * @param array $chunk
+     * @param database_column_info[] $columns
+     */
+    protected function import_chunk($table, array $chunk, array $columns) {
+        $i = 1;
+        $params = array();
+        $values = array();
+        foreach ($chunk as $dataobject) {
+            $vals = array();
+            foreach ($columns as $field => $column) {
+                $params[] = $dataobject[$field];
+                $vals[] = "\$".$i++;
+            }
+            $values[] = '('.implode(',', $vals).')';
+        }
+
+        $fieldssql = '('.implode(',', array_keys($columns)).')';
+        $valuessql = implode(',', $values);
+
+        $sql = "INSERT INTO {$this->prefix}$table $fieldssql VALUES $valuessql";
+        $this->query_start($sql, $params, SQL_QUERY_INSERT);
+        $result = pg_query_params($this->pgsql, $sql, $params);
+        $this->query_end($result);
+        pg_free_result($result);
+    }
+
+    /**
      * Update record in database, as fast as possible, no safety checks, lobs not supported.
      * @param string $table name
      * @param stdClass|array $params data record as object or array
