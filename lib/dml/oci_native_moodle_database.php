@@ -1325,6 +1325,87 @@ class oci_native_moodle_database extends moodle_database {
     }
 
     /**
+     * Import multiple records into database as fast as possible, id field is required.
+     * Safety checks are NOT carried out. Lobs are supported.
+     *
+     * Operation is not atomic, use transactions if necessary.
+     *
+     * @since Moodle 3.6
+     *
+     * @param string $table  The database table to be inserted into
+     * @param array|Traversable $dataobjects list of objects to be inserted, must be compatible with foreach
+     * @return void does not return new record ids
+     *
+     * @throws dml_exception A DML specific exception is thrown for any errors.
+     */
+    public function import_records($table, $dataobjects) {
+        $columns = $this->get_columns($table, true);
+
+        // Oracle does not seem to have problems with huge queries.
+        $chunksize = (int)(999 / count($columns));
+        if (!empty($this->dboptions['bulkinsertsize'])) {
+            $chunksize = (int)$this->dboptions['bulkinsertsize'];
+        }
+
+        $count = 0;
+        $chunk = array();
+        foreach ($dataobjects as $dataobject) {
+            $dataobject = (array)$dataobject;
+
+            $count++;
+            $chunk[] = $dataobject;
+
+            if ($count === $chunksize) {
+                $this->import_chunk($table, $chunk, $columns);
+                $chunk = array();
+                $count = 0;
+            }
+        }
+
+        if ($count) {
+            $this->import_chunk($table, $chunk, $columns);
+        }
+    }
+
+    /**
+     * Import records in chunks.
+     *
+     * Note: can be used only from import_records().
+     *
+     * @param string $table
+     * @param array $chunk
+     * @param database_column_info[] $columns
+     */
+    protected function import_chunk($table, array $chunk, array $columns) {
+        $fieldssql = '(' . implode(',', array_keys($columns)) . ')';
+
+        $params = array();
+        foreach ($chunk as $index => $dataobject) {
+            $values = array();
+            foreach ($columns as $field => $column) {
+                $pname = $field . '_' . $index;
+                $values[] = ":$pname";
+                $params[$pname] = $this->normalise_value($column, $dataobject[$field]);
+            }
+            $valuessql = 'VALUES (' . implode(',', $values) . ')';
+
+            $rowsql[] = 'INTO {' . $table . '} ' . $fieldssql . $valuessql;
+        }
+
+        $sql = "INSERT ALL " . implode(' ', $rowsql) . " SELECT * FROM dual";
+        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+
+        $this->query_start($sql, $params, SQL_QUERY_INSERT);
+        $stmt = $this->parse_query($sql);
+        $descriptors = array();
+        $this->bind_params($stmt, $params, $table, $descriptors);
+        $result = oci_execute($stmt, $this->commit_status);
+        $this->free_descriptors($descriptors);
+        $this->query_end($result, $stmt);
+        oci_free_statement($stmt);
+    }
+
+    /**
      * Update record in database, as fast as possible, no safety checks, lobs not supported.
      * @param string $table name
      * @param stdClass|array $params data record as object or array
