@@ -223,6 +223,10 @@ abstract class texteditor {
         return $this->text;
     }
 
+    public function get_data_attributes(): array {
+        return [];
+    }
+
     /**
      * Add required JS needed for editor
      *

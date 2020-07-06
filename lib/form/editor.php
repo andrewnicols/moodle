@@ -446,7 +446,13 @@ class MoodleQuickForm_editor extends HTML_QuickForm_element implements templatab
             $context['changelistener'] = true;
         }
 
+        $str .= html_writer::start_div('', array_merge(
+            $editor->get_data_attributes(),
+            [
+            ]
+        ));
         $str .= $OUTPUT->render_from_template('core_form/editor_textarea', $context);
+        $str .= html_writer::end_div();
 
         // during moodle installation, user area doesn't exist
         // so we need to disable filepicker here.
