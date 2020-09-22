@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Unit tests for core\content class.
- *
- * @package     core
- * @category    test
- * @copyright   2020 Michael Hawkins <michaelh@moodle.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace core;
 
 /**
@@ -32,11 +23,15 @@ namespace core;
  * @category    test
  * @copyright   2020 Michael Hawkins <michaelh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @coversDefaultClass \core\content
+ * @covers \core\content
  */
 class content_test extends \advanced_testcase {
 
     /**
      * A test to confirm only valid cases allow exporting of course content.
+     *
+     * @covers ::can_export_context
      */
     public function test_can_export_context_course() {
         global $DB;
@@ -100,12 +95,14 @@ class content_test extends \advanced_testcase {
 
     /**
      * A test to confirm unsupported contexts will return false when checking whether content can be exported.
+     *
+     * @covers ::can_export_context
      */
     public function test_can_export_context_unsupported_context() {
         $this->resetAfterTest();
 
         $course1 = $this->getDataGenerator()->create_course();
-        $systemcontext = \context_system::instance();
+        $systemcontext = \core\context\system::instance();
 
         // Enrol user as student in course1 only.
         $user = $this->getDataGenerator()->create_and_enrol($course1, 'student');
@@ -116,4 +113,68 @@ class content_test extends \advanced_testcase {
         // Confirm system context does not gain permission to export content.
         $this->assertFalse(content::can_export_context($systemcontext, $user));
     }
+
+    /**
+     * @covers ::get_servable_item_from_pluginfile_params
+     */
+    public function test_get_servable_item_from_pluginfile_params_invalid_component(): void {
+        $this->assertNull(\core\content::get_servable_item_from_pluginfile_params(
+            'test_fakecomponent',
+            \core\context\system::instance(),
+            'fakefilearea',
+            [],
+            guest_user(),
+        ));
+    }
+
+    /**
+     * @covers ::can_user_access_stored_file_from_context
+     */
+    public function test_can_user_access_stored_file_from_context_invalid_component(): void {
+        $mock = $this->getMockBuilder(\stored_file::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->assertFalse(\core\content::can_user_access_stored_file_from_context(
+            $mock,
+            guest_user(),
+            \core\context\system::instance(),
+            'test_fakecomponent',
+        ));
+    }
+
+
+    /**
+     * @covers ::get_pluginfile_url_for_stored_file
+     */
+    public function test_get_pluginfile_url_for_stored_file_invalid_component(): void {
+        $storedfile = $this->getMockBuilder(\stored_file::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $this->assertNull(\core\content::get_pluginfile_url_for_stored_file(
+            $storedfile,
+            'test_fakecomponent',
+        ));
+    }
+
+    public function test_serve_servable_item(): void {
+        $content = $this->getMockBuilder(\core\content\servable_item::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $content->expects($this->once())
+            ->method('send_file');
+
+        \core\content::serve_servable_item($content, [], false);
+    }
+
+    public function test_get_all_files_in_context(): void {
+        $files = \core\content::get_all_files_in_context(
+            \core\context\system::instance(),
+            'test_fakecomponent',
+        );
+
+        $this->assertIsArray($files);
+        $this->assertEmpty($files);
+    }
+
 }

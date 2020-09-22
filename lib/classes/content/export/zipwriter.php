@@ -23,7 +23,7 @@
  */
 namespace core\content\export;
 
-use context;
+use core\context;
 use context_system;
 use moodle_url;
 use stdClass;
