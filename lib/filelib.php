@@ -2140,6 +2140,17 @@ function send_file_not_found() {
     throw new \moodle_exception('filenotfound', 'error',
         $CFG->wwwroot.'/course/view.php?id='.$COURSE->id); // This is not displayed on IIS?
 }
+
+/**
+ * The requested file was not accessible to the user.
+ *
+ * Note: This is currently a warpper for send_file_not_found() but should be used where relevant
+ * to allow for future improvements.
+ */
+function send_file_access_denied(): void {
+    send_file_not_found();
+}
+
 /**
  * Helper function to send correct 404 for server.
  */
@@ -4382,6 +4393,23 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
     $contextid = (int)array_shift($args);
     $component = clean_param(array_shift($args), PARAM_COMPONENT);
     $filearea  = clean_param(array_shift($args), PARAM_AREA);
+    $context = context::instance_by_id($contextid);
+
+    $sendfileoptions = [
+        'preview' => $preview,
+        'offline' => $offline,
+        'embed' => $embed,
+    ];
+
+    \core\content::serve_file_from_pluginfile_params(
+        $component,
+        $context,
+        $filearea,
+        $args,
+        $USER,
+        $sendfileoptions,
+        $forcedownload
+    );
 
     list($context, $course, $cm) = get_context_info_array($contextid);
 

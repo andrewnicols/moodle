@@ -315,71 +315,25 @@ function page_get_file_info($browser, $areas, $course, $cm, $context, $filearea,
  * @param bool $forcedownload whether or not force download
  * @param array $options additional options affecting the file serving
  * @return bool false if file not found, does not return if found - just send the file
+ * @deprecated since Moodle 4.3
  */
-function page_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
-    global $CFG, $DB;
-    require_once("$CFG->libdir/resourcelib.php");
+function page_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
+    global $USER;
 
-    if ($context->contextlevel != CONTEXT_MODULE) {
-        return false;
-    }
+    debugging(
+        "The page_pluginfile() function has been deprecated. Please update to use the \core\content API.",
+        DEBUG_DEVELOPER,
+    );
 
-    require_course_login($course, true, $cm);
-    if (!has_capability('mod/page:view', $context)) {
-        return false;
-    }
-
-    if ($filearea !== 'content') {
-        // intro is handled automatically in pluginfile.php
-        return false;
-    }
-
-    // $arg could be revision number or index.html
-    $arg = array_shift($args);
-    if ($arg == 'index.html' || $arg == 'index.htm') {
-        // serve page content
-        $filename = $arg;
-
-        if (!$page = $DB->get_record('page', array('id'=>$cm->instance), '*', MUST_EXIST)) {
-            return false;
-        }
-
-        // We need to rewrite the pluginfile URLs so the media filters can work.
-        $content = file_rewrite_pluginfile_urls($page->content, 'webservice/pluginfile.php', $context->id, 'mod_page', 'content',
-                                                $page->revision);
-        $formatoptions = new stdClass;
-        $formatoptions->noclean = true;
-        $formatoptions->overflowdiv = true;
-        $formatoptions->context = $context;
-        $content = format_text($content, $page->contentformat, $formatoptions);
-
-        // Remove @@PLUGINFILE@@/.
-        $options = array('reverse' => true);
-        $content = file_rewrite_pluginfile_urls($content, 'webservice/pluginfile.php', $context->id, 'mod_page', 'content',
-                                                $page->revision, $options);
-        $content = str_replace('@@PLUGINFILE@@/', '', $content);
-
-        send_file($content, $filename, 0, 0, true, true);
-    } else {
-        $fs = get_file_storage();
-        $relativepath = implode('/', $args);
-        $fullpath = "/$context->id/mod_page/$filearea/0/$relativepath";
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
-            $page = $DB->get_record('page', array('id'=>$cm->instance), 'id, legacyfiles', MUST_EXIST);
-            if ($page->legacyfiles != RESOURCELIB_LEGACYFILES_ACTIVE) {
-                return false;
-            }
-            if (!$file = resourcelib_try_file_migration('/'.$relativepath, $cm->id, $cm->course, 'mod_page', 'content', 0)) {
-                return false;
-            }
-            //file migrate - update flag
-            $page->legacyfileslast = time();
-            $DB->update_record('page', $page);
-        }
-
-        // finally send the file
-        send_stored_file($file, null, 0, $forcedownload, $options);
-    }
+    \core\content::serve_file_from_pluginfile_params(
+        'mod_page',
+        $context,
+        $filearea,
+        $args,
+        $USER,
+        $options,
+        $forcedownload,
+    );
 }
 
 /**
