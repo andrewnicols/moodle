@@ -47,6 +47,8 @@ information provided here is intended especially for developers.
     eventTypes.formSubmittedByJavascript.
 * The block template now includues a block-instanceid data attribute.
 * The core/event::getLegacyEvents() function has been deprecated and should no longer be used.
+* The YUI moodle-core-formchangechecker module has been deprecated and replaced with a new AMD module
+  core_form/changechecker.
 
 === 3.10 ===
 * PHPUnit has been upgraded to 8.5. That comes with a few changes:
