@@ -1,8 +1,11 @@
 This files describes API changes in /mod/* - activity modules,
 information provided here is intended especially for developers.
 
-=== 4.1 ===
+=== 4.2 ===
+* The mod_export_contents callback (for resources only) now should return an additional field 'storedfile' with the stored_file
+  instance when file system files are returned as part of the content structure.
 
+=== 4.1 ===
 * The callback get_shortcuts() is now removed. Please use get_course_content_items and get_all_content_items instead.
 
 === 4.0 ===
