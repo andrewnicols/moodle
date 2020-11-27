@@ -1,6 +1,10 @@
 This files describes API changes in /course/*,
 information provided here is intended especially for developers.
 
+=== 4.2 ===
+* External function core_course_external::get_course_contents now returns a new field 'maxfilesize' that indicates the larger file
+  by size within a course resource.
+
 === 4.1 ===
 * The function course_modchooser() has been finally deprecated and can not be used anymore. Please use
   course_activitychooser() instead.
