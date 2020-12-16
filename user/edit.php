@@ -148,7 +148,20 @@ useredit_load_preferences($user);
 // Load custom profile fields data.
 profile_load_data($user);
 
+$singleimageoptions = [
+    'maxbytes' => 100,
+    'component' => 'core_user',
+    'filearea' => 'icon',
+    'contextid' => $personalcontext->id,
+    'currentimage' => '',
+    'defaultimage' => $OUTPUT->image_url('u/f3')->out()
+];
 
+if ($user->picture > 0) {
+    $userpicture = new user_picture($user);
+    $userpicture->size = 150;
+    $singleimageoptions['currentimage'] = $userpicture->get_url($PAGE, $OUTPUT);
+}
 // Prepare the editor and create form.
 $editoroptions = array(
     'maxfiles'   => EDITOR_UNLIMITED_FILES,
@@ -158,20 +171,12 @@ $editoroptions = array(
     'context'    => $personalcontext
 );
 
-$user = file_prepare_standard_editor($user, 'description', $editoroptions, $personalcontext, 'user', 'profile', 0);
-// Prepare filemanager draft area.
-$draftitemid = 0;
-$filemanagercontext = $editoroptions['context'];
-$filemanageroptions = array('maxbytes'       => $CFG->maxbytes,
-                             'subdirs'        => 0,
-                             'maxfiles'       => 1,
-                             'accepted_types' => 'optimised_image');
-file_prepare_draft_area($draftitemid, $filemanagercontext->id, 'user', 'newicon', 0, $filemanageroptions);
-$user->imagefile = $draftitemid;
+$user->imagefile = file_get_unused_draft_itemid();
+
 // Create form.
 $userform = new user_edit_form(new moodle_url($PAGE->url, array('returnto' => $returnto)), array(
     'editoroptions' => $editoroptions,
-    'filemanageroptions' => $filemanageroptions,
+    'singleimageoptions' => $singleimageoptions,
     'user' => $user));
 
 $emailchanged = false;
@@ -238,8 +243,9 @@ if ($userform->is_cancelled()) {
     }
 
     // Update user picture.
-    if (empty($CFG->disableuserimages)) {
-        core_user::update_picture($usernew, $filemanageroptions);
+    if (empty($CFG->disableuserimages) && isset($usernew->userimage)) {
+        $singleimageoptions['contextid'] = $personalcontext->id;
+        \core_user\imageeditable\handler::process_formdata($usernew->userimage, $singleimageoptions);
     }
 
     // Update mail bounces.

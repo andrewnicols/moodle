@@ -25,6 +25,6 @@ Feature: Award badges based on user profile field
     When I log in as "user1"
     And I follow "Profile" in the user menu
     And I click on "Edit profile" "link" in the "region-main" "region"
-    And I upload "badges/tests/behat/badge.png" file to "New picture" filemanager
+    And I upload "badges/tests/behat/badge.png" file to "Image" singleimage
     And I press "Update profile"
     Then I should see "Site Badge"

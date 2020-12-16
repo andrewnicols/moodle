@@ -1,0 +1,99 @@
+.imagehandler_wrapper {
+    overflow: hidden;
+    .imagehandler {
+        position: relative;
+        min-height: 100%;
+        background-size: cover;
+        background-position: center center;
+
+        .uploadimagecontrols {
+            opacity: 0;
+            transition: all 0.4s ease-in-out;
+            &.js-enabled {
+                opacity: 1;
+                overflow: hidden;
+                position: absolute;
+                top: 0;
+                z-index: 100;
+                width: 100%;
+            }
+        }
+        .alert {
+            position: absolute;
+            width: calc(100% - 1rem);
+            bottom: 0;
+            margin: 0.5rem;
+        }
+    }
+    .deleteimage {
+        opacity: 0;
+        transition: all 0.4s ease-in-out;
+        cursor: default;
+        &.js-enabled {
+            opacity: 1;
+            cursor: pointer;
+        }
+    }
+
+    .croppie-container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+
+        .cr-image {
+            z-index: -1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform-origin: 0 0;
+            max-height: none;
+            max-width: none;
+        }
+
+        .cr-boundary {
+            position: absolute;
+            top: 0;
+            overflow: hidden;
+            margin: 0 auto;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        .cr-viewport,
+        .cr-resizer {
+            position: absolute;
+            border: 2px solid $white;
+            margin: auto;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            left: 0;
+            box-shadow: 0 0 2000px 2000px rgba(0, 0, 0, 0.5);
+            z-index: 0;
+        }
+
+        .cr-overlay {
+            z-index: 1;
+            position: absolute;
+            cursor: move;
+            touch-action: none;
+        }
+
+        .cr-slider-wrap {
+            width: 100%;
+            margin: 0;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            z-index: 2;
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .cr-image,
+        .cr-overlay,
+        .cr-viewport {
+            transform: translateZ(0);
+        }
+    }
+}

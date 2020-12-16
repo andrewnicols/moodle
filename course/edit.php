@@ -115,6 +115,13 @@ if ($id) {
 // Prepare course and the editor.
 $editoroptions = array('maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes'=>$CFG->maxbytes, 'trusttext'=>false, 'noclean'=>true);
 $overviewfilesoptions = course_overviewfiles_options($course);
+$singleimageoptions = [
+    'maxbytes' => 100,
+    'component' => 'core_course',
+    'filearea' => 'overviewfiles',
+    'currentimage' => '',
+    'contextid' => ''
+];
 if (!empty($course)) {
     // Add context for editor.
     $editoroptions['context'] = $coursecontext;
@@ -133,8 +140,13 @@ if (!empty($course)) {
     // Populate course tags.
     $course->tags = core_tag_tag::get_item_tags_array('core', 'course', $course->id);
 
+    $singleimageoptions['currentimage'] = \core_course\external\course_summary_exporter::get_course_image($course);
+    $singleimageoptions['defaultimage'] = $OUTPUT->get_generated_image_for_id($course->id);
+    $singleimageoptions['contextid'] = $coursecontext->id;
+
 } else {
     // Editor should respect category context if course context is not set.
+    $singleimageoptions['defaultimage'] = $OUTPUT->get_generated_image_for_id(0);
     $editoroptions['context'] = $catcontext;
     $editoroptions['subdirs'] = 0;
     $course = file_prepare_standard_editor($course, 'summary', $editoroptions, null, 'course', 'summary', null);
@@ -149,7 +161,8 @@ $args = array(
     'category' => $category,
     'editoroptions' => $editoroptions,
     'returnto' => $returnto,
-    'returnurl' => $returnurl
+    'returnurl' => $returnurl,
+    'singleimageoptions' => $singleimageoptions
 );
 $editform = new course_edit_form(null, $args);
 if ($editform->is_cancelled()) {
@@ -188,12 +201,16 @@ if ($editform->is_cancelled()) {
                 }
             }
         }
+
     } else {
         // Save any changes to the files used in the editor.
         update_course($data, $editoroptions);
         // Set the URL to take them too if they choose save and display.
         $courseurl = new moodle_url('/course/view.php', array('id' => $course->id));
+        $context = context_course::instance($course->id, MUST_EXIST);
     }
+    $singleimageoptions['contextid'] = $context->id;
+    \core_course\imageeditable\handler::process_formdata($data->courseimage, $singleimageoptions);
 
     if (isset($data->saveanddisplay)) {
         // Redirect user to newly created/updated course.

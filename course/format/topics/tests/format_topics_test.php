@@ -223,6 +223,7 @@ class format_topics_testcase extends advanced_testcase {
             ],
             'returnto' => new moodle_url('/'),
             'returnurl' => new moodle_url('/'),
+            'singleimageoptions' => [],
         ];
 
         $courseform = new testable_course_edit_form(null, $args);

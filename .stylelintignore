@@ -71,6 +71,7 @@ lib/plist/
 lib/zipstream/
 lib/php-enum/
 lib/http-message/
+lib/amd/src/croppie.js
 media/player/videojs/amd/src/video-lazy.js
 media/player/videojs/amd/src/Youtube-lazy.js
 media/player/videojs/videojs/

@@ -245,11 +245,10 @@ function useredit_update_interests($user, $interests) {
  *
  * @param moodleform $mform
  * @param array $editoroptions
- * @param array $filemanageroptions
  * @param stdClass $user
  */
-function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions, $user) {
-    global $CFG, $USER, $DB;
+function useredit_shared_definition(&$mform, $editoroptions, $singleimageoptions, $user) {
+    global $CFG, $USER, $DB, $PAGE, $OUTPUT;
 
     if ($user->id > 0) {
         useredit_load_preferences($user, false);
@@ -360,17 +359,10 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
             $mform->addElement('html', html_writer::tag('p', get_string('gravatarenabled')));
         }
 
-        $mform->addElement('static', 'currentpicture', get_string('currentpicture'));
-
-        $mform->addElement('checkbox', 'deletepicture', get_string('deletepicture'));
-        $mform->setDefault('deletepicture', 0);
-
-        $mform->addElement('filemanager', 'imagefile', get_string('newpicture'), '', $filemanageroptions);
-        $mform->addHelpButton('imagefile', 'newpicture');
+        $mform->addElement('singleimage', 'userimage', 'Image', null, $singleimageoptions);
 
         $mform->addElement('text', 'imagealt', get_string('imagealt'), 'maxlength="100" size="30"');
         $mform->setType('imagealt', PARAM_TEXT);
-
     }
 
     // Display user name fields that are not currenlty enabled here if there are any.

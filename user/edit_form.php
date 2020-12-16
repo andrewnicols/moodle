@@ -51,7 +51,7 @@ class user_edit_form extends moodleform {
             throw new coding_exception('invalid custom data for user_edit_form');
         }
         $editoroptions = $this->_customdata['editoroptions'];
-        $filemanageroptions = $this->_customdata['filemanageroptions'];
+        $singleimageoptions = $this->_customdata['singleimageoptions'];
         $user = $this->_customdata['user'];
         $userid = $user->id;
 
@@ -74,12 +74,11 @@ class user_edit_form extends moodleform {
         $mform->addElement('header', 'moodle', $strgeneral);
 
         // Shared fields.
-        useredit_shared_definition($mform, $editoroptions, $filemanageroptions, $user);
+        useredit_shared_definition($mform, $editoroptions, $singleimageoptions, $user);
 
         // Extra settigs.
         if (!empty($CFG->disableuserimages) || $usernotfullysetup) {
-            $mform->removeElement('deletepicture');
-            $mform->removeElement('imagefile');
+            $mform->removeElement('userimage');
             $mform->removeElement('imagealt');
         }
 
@@ -97,7 +96,7 @@ class user_edit_form extends moodleform {
             }
 
             // This is expected to exist when the form is submitted.
-            $imagefile = $mform->createElement('hidden', 'imagefile');
+            $imagefile = $mform->createElement('hidden', 'userimage');
             $mform->insertElementBefore($imagefile, 'userpicturewarning');
         }
 
@@ -128,22 +127,6 @@ class user_edit_form extends moodleform {
             // Remove description.
             if (empty($user->description) && !empty($CFG->profilesforenrolledusersonly) && !$DB->record_exists('role_assignments', array('userid' => $userid))) {
                 $mform->removeElement('description_editor');
-            }
-
-            // Print picture.
-            $context = context_user::instance($user->id, MUST_EXIST);
-            $fs = get_file_storage();
-            $hasuploadedpicture = ($fs->file_exists($context->id, 'user', 'icon', 0, '/', 'f2.png') || $fs->file_exists($context->id, 'user', 'icon', 0, '/', 'f2.jpg'));
-            if (!empty($user->picture) && $hasuploadedpicture) {
-                $imagevalue = $OUTPUT->user_picture($user, array('courseid' => SITEID, 'size' => 64));
-            } else {
-                $imagevalue = get_string('none');
-            }
-            $imageelement = $mform->getElement('currentpicture');
-            $imageelement->setValue($imagevalue);
-
-            if ($mform->elementExists('deletepicture') && !$hasuploadedpicture) {
-                $mform->removeElement('deletepicture');
             }
 
             // Disable fields that are locked by auth plugins.

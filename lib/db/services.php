@@ -2760,6 +2760,15 @@ $functions = array(
         'type'        => 'read',
         'ajax'        => true,
     ],
+    'core_update_image_editable' => array(
+        'classname'     => 'core_external',
+        'methodname'    => 'update_image_editable',
+        'classpath'     => 'lib/external/externallib.php',
+        'description'   => 'Generic service to update images',
+        'type'          => 'write',
+        'loginrequired' => true,
+        'ajax'          => true,
+    ),
 );
 
 $services = array(

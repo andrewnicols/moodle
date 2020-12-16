@@ -2271,6 +2271,7 @@ function course_overviewfiles_options($course) {
     if (empty($CFG->courseoverviewfileslimit)) {
         return null;
     }
+    $onlyimages = false;
     $accepted_types = preg_split('/\s*,\s*/', trim($CFG->courseoverviewfilesext), -1, PREG_SPLIT_NO_EMPTY);
     if (in_array('*', $accepted_types) || empty($accepted_types)) {
         $accepted_types = '*';
@@ -2290,13 +2291,21 @@ function course_overviewfiles_options($course) {
         if (!empty($corrected)) {
             set_config('courseoverviewfilesext', join(',', $accepted_types));
         }
+        $imagetypes = ['jpg', 'png', 'gif', 'svg', 'webp'];
+        $nonimagetypes = array_filter($accepted_types, function($ext) use ($imagetypes) {
+            return !in_array(ltrim($ext, '.'), $imagetypes);
+        });
+        $onlyimages = (count($nonimagetypes) === 0 );
     }
+
     $options = array(
         'maxfiles' => $CFG->courseoverviewfileslimit,
         'maxbytes' => $CFG->maxbytes,
         'subdirs' => 0,
-        'accepted_types' => $accepted_types
+        'accepted_types' => $accepted_types,
+        'onlyimages' => $onlyimages
     );
+
     if (!empty($course->id)) {
         $options['context'] = context_course::instance($course->id);
     } else if (is_int($course) && $course > 0) {

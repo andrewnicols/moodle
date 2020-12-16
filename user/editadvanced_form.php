@@ -45,14 +45,13 @@ class user_editadvanced_form extends moodleform {
 
         $mform = $this->_form;
         $editoroptions = null;
-        $filemanageroptions = null;
 
         if (!is_array($this->_customdata)) {
             throw new coding_exception('invalid custom data for user_edit_form');
         }
         $editoroptions = $this->_customdata['editoroptions'];
-        $filemanageroptions = $this->_customdata['filemanageroptions'];
         $user = $this->_customdata['user'];
+        $singleimageoptions = $this->_customdata['singleimageoptions'];
         $userid = $user->id;
 
         // Accessibility: "Required" is bad legend text.
@@ -147,7 +146,7 @@ class user_editadvanced_form extends moodleform {
         $mform->disabledIf('preference_auth_forcepasswordchange', 'createpassword', 'checked');
 
         // Shared fields.
-        useredit_shared_definition($mform, $editoroptions, $filemanageroptions, $user);
+        useredit_shared_definition($mform, $editoroptions, $singleimageoptions, $user);
 
         // Next the customisable profile fields.
         profile_definition($mform, $userid);
@@ -213,28 +212,6 @@ class user_editadvanced_form extends moodleform {
             // Prevent self and admin mess ups.
             if ($mform->elementExists('suspended')) {
                 $mform->hardFreeze('suspended');
-            }
-        }
-
-        // Print picture.
-        if (empty($USER->newadminuser)) {
-            if ($user) {
-                $context = context_user::instance($user->id, MUST_EXIST);
-                $fs = get_file_storage();
-                $hasuploadedpicture = ($fs->file_exists($context->id, 'user', 'icon', 0, '/', 'f2.png') || $fs->file_exists($context->id, 'user', 'icon', 0, '/', 'f2.jpg'));
-                if (!empty($user->picture) && $hasuploadedpicture) {
-                    $imagevalue = $OUTPUT->user_picture($user, array('courseid' => SITEID, 'size' => 64));
-                } else {
-                    $imagevalue = get_string('none');
-                }
-            } else {
-                $imagevalue = get_string('none');
-            }
-            $imageelement = $mform->getElement('currentpicture');
-            $imageelement->setValue($imagevalue);
-
-            if ($user && $mform->elementExists('deletepicture') && !$hasuploadedpicture) {
-                $mform->removeElement('deletepicture');
             }
         }
 

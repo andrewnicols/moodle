@@ -1,0 +1,15 @@
+{{< core_form/element-template }}
+    {{$label}}
+        {{^element.hiddenlabel}}
+            <p id="{{element.id}}_label" class="mb-0 d-inline" for="singleimage_{{element.id}}" aria-hidden="true">
+                {{{label}}}
+            </p>
+        {{/element.hiddenlabel}}
+    {{/label}}
+    {{$element}}
+        <fieldset class="w-100 m-0 p-0 border-0" id="{{element.id}}_fieldset">
+            <legend class="sr-only">{{label}}</legend>
+            {{{element.html}}}
+        </fieldset>
+    {{/element}}
+{{/ core_form/element-template }}

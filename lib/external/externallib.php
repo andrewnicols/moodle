@@ -558,4 +558,105 @@ class core_external extends external_api {
 
         return \core\notification::fetch_as_array($PAGE->get_renderer('core'));
     }
+
+
+    /**
+     * @return \external_function_parameters
+     */
+    public static function update_image_editable_parameters() {
+        $parameters = [
+            'params' => new \external_single_structure([
+                'imagedata' => new \external_value(PARAM_TEXT, 'Image data', VALUE_REQUIRED),
+                'imagefilename' => new \external_value(PARAM_TEXT, 'Image filename', VALUE_REQUIRED),
+                'cropped' => new \external_value(PARAM_INT, 'Cropped version', VALUE_OPTIONAL),
+                'delete' => new \external_value(PARAM_INT, 'Delete image', VALUE_OPTIONAL),
+                'component' => new \external_value(PARAM_RAW, 'Component', VALUE_REQUIRED),
+                'filearea' => new \external_value(PARAM_RAW, 'File area', VALUE_REQUIRED),
+                'contextid' => new \external_value(PARAM_INT, 'Contextid', VALUE_REQUIRED),
+                'draftitemid' => new \external_value(PARAM_INT, 'Draftitemid', VALUE_OPTIONAL),
+            ], 'Params wrapper - just here to accommodate optional values', VALUE_REQUIRED)
+        ];
+        return new \external_function_parameters($parameters);
+    }
+
+    /**
+     * @param string $params
+     * @return array
+     */
+    public static function update_image_editable($params) {
+        global $CFG, $DB, $PAGE, $USER;
+
+        $params = self::validate_parameters(self::update_image_editable_parameters(), ['params' => $params])['params'];
+
+        $component = $params['component'];
+        $filearea = $params['filearea'];
+        $contextid = $params['contextid'];
+        $delete = isset($params['delete']) ? 1 : 0;
+        $draftitemid = $params['draftitemid'];
+        $filename = $params['imagefilename'];
+
+        $context = \context::instance_by_id($contextid);
+        self::validate_context($context);
+        $params['context'] = $context;
+        $binary = base64_decode($params['imagedata']);
+
+        $success = false;
+        $fileurl = false;
+        $warning = false;
+
+        if ($delete) {
+            $fs = get_file_storage();
+            $personalcontext = \context_user::instance($USER->id);
+            $fs->delete_area_files($personalcontext->id, 'user', 'draft', $draftitemid);
+            $success = true;
+        } else if ($draftitemid > 0) {
+            $fs = get_file_storage();
+            $personalcontext = \context_user::instance($USER->id);
+            $fs->delete_area_files($personalcontext->id, 'user', 'draft', $draftitemid);
+            // Temporarely store the image.
+            $draftfile = array(
+                'contextid' => $personalcontext->id,
+                'component' => 'user',
+                'filearea' => 'draft',
+                'itemid' => $draftitemid,
+                'filepath' => '/',
+                'filename' => $filename,
+            );
+            $tempfile = $fs->create_file_from_string($draftfile, $binary);
+            $url = \moodle_url::make_draftfile_url(
+                $draftitemid,
+                '/',
+                $tempfile->get_filename()
+            );
+            $fileurl = $url->out();
+            $success = true;
+        } else {
+            $classname = "\\$component\\imageeditable\\handler";
+            if (class_exists($classname)) {
+                if ($delete) {
+                    $warning = $classname::delete($contextid, $filearea);
+                } else {
+                    $warning = $classname::store($contextid, $filearea, $filename, $binary);
+                }
+                $success = true;
+            } else {
+                throw new coding_exception("$classname not found");
+            }
+        }
+
+        return ['success' => $success, 'fileurl' => $fileurl, 'warning' => $warning];
+    }
+
+    /**
+     * @return \external_single_structure
+     */
+    public static function update_image_editable_returns() {
+        $keys = [
+            'success' => new \external_value(PARAM_BOOL, 'Was the cover image successfully changed', VALUE_REQUIRED),
+            'warning' => new \external_value(PARAM_TEXT, 'Warning', VALUE_OPTIONAL),
+            'fileurl' => new \external_value(PARAM_TEXT, 'New file url', VALUE_REQUIRED)
+        ];
+
+        return new \external_single_structure($keys, 'coverimage');
+    }
 }

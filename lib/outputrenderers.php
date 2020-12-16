@@ -1579,6 +1579,9 @@ class core_renderer extends renderer_base {
      * @return string hex color code.
      */
     public function get_generated_color_for_id($id) {
+        if (!$id) {
+            return '#FFFFFF'; // White if no id provided or 0.
+        }
         $colornumbers = range(1, 10);
         $basecolors = [];
         foreach ($colornumbers as $number) {

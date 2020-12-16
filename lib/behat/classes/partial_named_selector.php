@@ -114,6 +114,7 @@ class behat_partial_named_selector extends \Behat\Mink\Selector\PartialNamedSele
         'region' => 'region',
         'section' => 'section',
         'select' => 'select',
+        'singleimage' => 'singleimage',
         'table' => 'table',
         'table_row' => 'table_row',
         'text' => 'text',

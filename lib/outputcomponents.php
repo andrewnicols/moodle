@@ -447,6 +447,39 @@ class user_picture implements renderable {
 
         return $defaulturl;
     }
+
+    /**
+     * Gets the user file if uploaded manually.
+     *
+     *
+     * @param moodle_page $page
+     * @param renderer_base $renderer
+     * @return moodle_url
+     */
+    public function get_file() {
+        if ($this->user->picture > 0) {
+            $fs = get_file_storage();
+            $file = false;
+            $context = context_user::instance($this->user->id, IGNORE_MISSING);
+            // usually we have a png
+            $file = $fs->get_file($context->id, 'user', 'icon', 0, '/', 'f3.png');
+            if (!$file) {
+                $file = $fs->get_file($context->id, 'user', 'icon', 0, '/', 'f3.jpg');
+            }
+            return $file;
+        } else {
+            return new stored_file(get_file_storage(), (object)[
+                'component' => 'user',
+                'filearea' => 'icon',
+                'filename' => null,
+                'timemodified' => null,
+                'filepath' => null,
+                'pathnamehash' => null,
+                'contextid' => null,
+                'mimetype' => null
+            ]);
+        }
+    }
 }
 
 /**

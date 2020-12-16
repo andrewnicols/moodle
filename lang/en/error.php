@@ -505,6 +505,7 @@ $string['remotedownloadnotallowed'] = 'Download of components to your server isn
 $string['reportnotavailable'] = 'This type of report is only available for the site course';
 $string['requirecorrectaccess'] = 'Invalid url or port.';
 $string['requireloginerror'] = 'Course or activity not accessible.';
+$string['resolutionlow'] = 'For best quality, we recommend a larger image of at last 512px width.';
 $string['restorechecksumfailed'] = 'Some problem happened with the restore information stored in your session. Please check your PHP memory/DB package size limits. Restore stopped.';
 $string['restore_path_element_missingmethod'] = 'Restore method {$a} is missing. It must be defined by a developer.';
 $string['restore_path_element_noobject'] = 'Restore object {$a} is not an object.';

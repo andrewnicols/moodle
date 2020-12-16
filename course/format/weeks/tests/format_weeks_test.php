@@ -219,6 +219,7 @@ class format_weeks_testcase extends advanced_testcase {
             ],
             'returnto' => new moodle_url('/'),
             'returnurl' => new moodle_url('/'),
+            'singleimageoptions' => [],
         ];
 
         $PAGE->set_course($course);

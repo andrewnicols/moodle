@@ -27,6 +27,7 @@ class course_edit_form extends moodleform {
         $editoroptions = $this->_customdata['editoroptions'];
         $returnto = $this->_customdata['returnto'];
         $returnurl = $this->_customdata['returnurl'];
+        $singleimageoptions = $this->_customdata['singleimageoptions'];
 
         $systemcontext   = context_system::instance();
         $categorycontext = context_coursecat::instance($category->id);
@@ -190,9 +191,14 @@ class course_edit_form extends moodleform {
         $summaryfields = 'summary_editor';
 
         if ($overviewfilesoptions = course_overviewfiles_options($course)) {
-            $mform->addElement('filemanager', 'overviewfiles_filemanager', get_string('courseoverviewfiles'), null, $overviewfilesoptions);
-            $mform->addHelpButton('overviewfiles_filemanager', 'courseoverviewfiles');
-            $summaryfields .= ',overviewfiles_filemanager';
+            if ($overviewfilesoptions['onlyimages']) {
+                $mform->addElement('singleimage', 'courseimage', get_string('courseoverviewfiles'), null, $singleimageoptions);
+            } else {
+                $mform->addElement('filemanager', 'overviewfiles_filemanager',
+                    get_string('courseoverviewfiles'), null, $overviewfilesoptions);
+                $mform->addHelpButton('overviewfiles_filemanager', 'courseoverviewfiles');
+                $summaryfields .= ',overviewfiles_filemanager';
+            }
         }
 
         if (!empty($course->id) and !has_capability('moodle/course:changesummary', $coursecontext)) {

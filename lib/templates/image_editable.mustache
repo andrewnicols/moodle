@@ -1,0 +1,95 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/image_editable
+
+    Simple search input.
+
+    Example context (json):
+    {
+    }
+}}
+<div id="imagehandler-wrapper-{{uniqid}}" class="imagehandler_wrapper"
+    data-currentimage="{{{currentimage}}}"
+    data-defaultimage="{{{defaultimage}}}"
+    data-component="{{component}}"
+    data-filearea="{{filearea}}"
+    data-contextid="{{contextid}}"
+    data-size="{{size}}"
+    data-rounded="{{#rounded}}rounded{{/rounded}}"
+    data-draftitemid="{{draftitemid}}"
+>
+    <div {{#formelements}}id="singleimage_{{ id }}"{{/formelements}} class="imagehandler {{#rounded}}round{{/rounded}} {{classes}}"
+        data-region="imagehandler"
+        {{#currentimage}}
+            style="background-image: url('{{{currentimage}}}'); width: {{size}}px; height: {{size}}px;"
+        {{/currentimage}}
+        {{^currentimage}}
+            style="background-image: url('{{{defaultimage}}}'); width: {{size}}px; height: {{size}}px;"
+        {{/currentimage}}
+        >
+        <div data-region="imagecontrols" class="uploadimagecontrols p-2">
+            <div data-region="editactions" class="w-100">
+                <div class="d-flex">
+                    <label data-region="uploadinputlabel" id="uploadbutton" tabindex="0" class="btn btn-sm btn-secondary icon-no-margin mb-0" for="imagehandler-coverfiles-{{uniqid}}">
+                        <span>
+                            {{#pix}}i/uploadimage, core, {{#str}}uploadimage, repository{{/str}}{{/pix}}
+                        </span>
+                       <input data-action="uploadimage" tabindex="-1" id="imagehandler-coverfiles-{{uniqid}}" name="uploadimage" type="file"  class="sr-only input-coverfiles" accept="image/jpeg,image/gif,image/png"/>
+                    </label>
+
+                    <button data-action="cropimage" class="btn btn-sm btn-secondary ml-auto icon-no-margin">
+                        {{#pix}}i/crop, core, {{#str}}cropimage, repository{{/str}} {{/pix}}
+                    </button>
+                </div>
+            </div>
+
+            <div data-region="confirmactions" class="w-100 saving d-none">
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-sm btn-success mr-1" data-action="confirm">{{#str}}save, admin{{/str}}</button>
+                    <button class="btn btn-sm btn-danger" data-action="cancel">{{#str}}revert, moodle{{/str}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex" style="max-width: {{size}}px;">
+        <a href="#" class="deleteimage" data-action="deleteimage" tabindex="-1">
+            {{#str}}deleteimage, repository{{/str}}
+        </a>
+        <div data-region="ajaxing" class="ml-auto d-none">
+            {{#pix}}i/progressbar, core, {{#str}}saving, repository{{/str}}{{/pix}}
+        </div>
+    </div>
+    {{#formelements}}
+        <input type="hidden" name="{{{ name }}}" id="{{{ id }}}" value="{{{ value }}}" data-region="hiddenformfield">
+    {{/formelements}}
+</div>
+
+{{#js}}
+require(
+[
+    'core/image_editable'
+],
+function(
+    imageEditable
+) {
+    target = document.getElementById("imagehandler-wrapper-{{uniqid}}");
+    if (target) {
+        imageEditable.init(target, {{maxbytes}});
+    }
+});
+{{/js}}
