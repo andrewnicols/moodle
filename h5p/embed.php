@@ -88,6 +88,7 @@ if (empty($messages->error) && empty($messages->exception)) {
     $PAGE->set_pagelayout('embedded');
 
     echo $OUTPUT->header();
+    echo '<script>console.log("HEAD");</script>';
 
     // Print all the errors.
     $messages->h5picon = new \moodle_url('/h5p/pix/icon.svg');
@@ -95,3 +96,6 @@ if (empty($messages->error) && empty($messages->exception)) {
 }
 
 echo $OUTPUT->footer();
+echo '<script>console.log("FOOT");</script>';
+echo '<script>console.log(M.util.pending_js);</script>';
+echo '<script>console.log(window.parent.M.util.pending_js);</script>';
