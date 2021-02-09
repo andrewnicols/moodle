@@ -38,7 +38,13 @@
 {{#js}}
 window.onload=function(){
     setTimeout(() => {
+        const player = document.getElementById('{{uniqid}}-h5player');
+        console.log("Setting minHeight to 230px");
+        console.log(`clientHeight: ${player.clientHeight}`);
+        console.log(player.style);
         document.getElementById('{{uniqid}}-h5player').style.minHeight = '230px';
+        console.log(`clientHeight: ${player.clientHeight}`);
+        console.log(player.style);
     }, 1000);
 };
 {{/js}}
