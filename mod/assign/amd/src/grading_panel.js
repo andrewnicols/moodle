@@ -23,10 +23,33 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      3.1
  */
-define(['jquery', 'core/yui', 'core/notification', 'core/templates', 'core/fragment',
-        'core/ajax', 'core/str', 'mod_assign/grading_form_change_checker',
-        'mod_assign/grading_events', 'core/event', 'core/toast'],
-       function($, Y, notification, templates, fragment, ajax, str, checker, GradingEvents, Event, Toast) {
+define([
+    'jquery',
+    'core/yui',
+    'core/notification',
+    'core/templates',
+    'core/fragment',
+    'core/ajax',
+    'core/str',
+    'mod_assign/grading_form_change_checker',
+    'mod_assign/grading_events',
+    'core/event',
+    'core/toast',
+    'core_form/changechecker',
+], function(
+    $,
+    Y,
+    notification,
+    templates,
+    fragment,
+    ajax,
+    str,
+    checker,
+    GradingEvents,
+    Event,
+    Toast,
+    FormChangeChecker
+) {
 
     /**
      * GradingPanel class.
@@ -119,6 +142,9 @@ define(['jquery', 'core/yui', 'core/notification', 'core/templates', 'core/fragm
 
         $('[data-region="overlay"]').show();
 
+        // Mark the form as submitted in the change checker.
+        FormChangeChecker.markFormSubmitted(form[0]);
+
         // We call this, so other modules can update the form with the latest state.
         form.trigger('save-form-state');
 
@@ -157,14 +183,17 @@ define(['jquery', 'core/yui', 'core/notification', 'core/templates', 'core/fragm
             // validation errors.
             $(document).trigger('reset', [this._lastUserId, formdata]);
         } else {
-            str.get_strings([
-                {key: 'gradechangessaveddetail', component: 'mod_assign'},
-            ]).done(function(strs) {
-                Toast.add(strs[0]);
-            }).fail(notification.exception);
-            Y.use('moodle-core-formchangechecker', function() {
-                M.core_formchangechecker.reset_form_dirty_state();
-            });
+            str.get_string('gradechangessaveddetail', 'mod_assign')
+            .then(function(str) {
+                Toast.add(str);
+                return str;
+            })
+            .catch(notification.exception);
+
+            // Reset the form state.
+            var form = $(this._region.find('form.gradeform'));
+            FormChangeChecker.resetFormDirtyState(form[0]);
+
             if (nextUserId == this._lastUserId) {
                 $(document).trigger('reset', nextUserId);
             } else if (nextUser) {
