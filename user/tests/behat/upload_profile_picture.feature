@@ -12,7 +12,7 @@ Feature: Upload profile picture
     And I log in as "user1"
     And I follow "Profile" in the user menu
     And I click on "Edit profile" "link" in the "region-main" "region"
-    And I upload "lib/tests/fixtures/gd-logo.png" file to "Image" singleimage
+    And I set the field "Image" to "lib/tests/fixtures/gd-logo.png"
     And I press "Update profile"
     Then I should see "Henry Hobel"
     And "//*[contains(@class, 'page-header-image')]//img[contains(@src, 'pluginfile.php') and @alt='Picture of Henry Hobel']" "xpath_element" should exist

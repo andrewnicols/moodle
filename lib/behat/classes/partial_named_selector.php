@@ -272,6 +272,10 @@ XPATH
             'date_time' => <<<XPATH
 .//fieldset[(%idMatch% or ./legend[%exactTagTextMatch%]) and (@data-fieldtype='date' or @data-fieldtype='date_time')]
 XPATH
+        ,
+            'singleimage' => <<<XPATH
+.//fieldset[(%idMatch% or ./legend[%exactTagTextMatch%]) and (@data-fieldtype='singleimage')]
+XPATH
         ],
     ];
 
