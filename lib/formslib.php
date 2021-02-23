@@ -3042,8 +3042,18 @@ class MoodleQuickForm_Renderer extends HTML_QuickForm_Renderer_Tableless{
      *
      * @var string
      */
-    var $_collapseButtonsTemplate =
-        "\n\t<div class=\"collapsible-actions\"><span class=\"collapseexpand\">{strexpandall}</span></div>";
+    var $_collapseButtonsTemplate = <<<EOF
+    <div class="collapsible-actions">
+        <a href='#'
+            class="collapseexpand"
+            role="button"
+            data-action='core_form-shortforms-toggleall'
+            data-expandallstring="{strexpandall}"
+            data-collapseallstring="{strcollapseall}"
+            aria-controls="{ariacontrols}"
+        >{strexpandall}</a>
+    </div>
+EOF;
 
     /**
      * Array whose keys are element names. If the key exists this is a advanced element
@@ -3146,10 +3156,22 @@ class MoodleQuickForm_Renderer extends HTML_QuickForm_Renderer_Tableless{
         }
         if (!empty($this->_collapsibleElements)) {
             if (count($this->_collapsibleElements) > 1) {
-                $this->_collapseButtons = $this->_collapseButtonsTemplate;
-                $this->_collapseButtons = str_replace('{strexpandall}', get_string('expandall'), $this->_collapseButtons);
+                $replacements = [
+                    '{strexpandall}' => get_string('expandall'),
+                    '{strcollapseall}' => get_string('collapseall'),
+                    '{ariacontrols}' => '',
+                ];
+                $replacements['{ariacontrols}'] = implode(' ', array_filter(array_map(function($headername) {
+                    return "{$headername}_toggle";
+                }, array_keys($this->_collapsibleElements))));
+
+                $this->_collapseButtons = str_replace(
+                    array_keys($replacements),
+                    array_values($replacements),
+                    $this->_collapseButtonsTemplate
+                );
             }
-            $PAGE->requires->yui_module('moodle-form-shortforms', 'M.form.shortforms', array(array('formid' => $formid)));
+            $PAGE->requires->js_call_amd('core_form/shortforms', 'init', [$formid]);
         }
         if (!empty($this->_advancedElements)){
             $PAGE->requires->js_call_amd('core_form/showadvanced', 'init', [$formid]);
@@ -3333,39 +3355,83 @@ class MoodleQuickForm_Renderer extends HTML_QuickForm_Renderer_Tableless{
 
         $header->_generateId();
         $name = $header->getName();
-
-        $id = empty($name) ? '' : ' id="' . $header->getAttribute('id') . '"';
-        if (is_null($header->_text)) {
-            $header_html = '';
-        } elseif (!empty($name) && isset($this->_templates[$name])) {
-            $header_html = str_replace('{header}', $header->toHtml(), $this->_templates[$name]);
-        } else {
-            $header_html = str_replace('{header}', $header->toHtml(), $this->_headerTemplate);
+        $id = '';
+        if (!empty($name)) {
+            $id = $header->getAttribute('id');
         }
+
+        if (is_null($header->_text)) {
+            $headertitle = '';
+        } else {
+            $headertitle = $header->toHtml();
+        }
+
+        $fieldsetreplacements = [
+            '{id}' => '',
+        ];
+
+        if ($id) {
+            $fieldsetreplacements['{id}'] = "id='{$id}'";
+        }
+
+        // Define collapsible classes for fieldsets.
+        $fieldsetclasses = ['clearfix'];
+        if (isset($this->_collapsibleElements[$header->getName()])) {
+            $fieldsetclasses[] = 'collapsible';
+            $collapsed = $this->_collapsibleElements[$header->getName()];
+            $ariaexpanded = 'true';
+
+            if ($collapsed) {
+                $fieldsetclasses[] = 'collapsed';
+                $ariaexpanded = 'false';
+            }
+
+            if ($headertitle) {
+                $headertitle = html_writer::link(
+                    '#',
+                    $headertitle,
+                    [
+                        'id' => "{$id}_toggle",
+                        'aria-controls' => $id,
+                        'data-action' => 'core_form-shortforms-toggle-section',
+                        'role' => 'button',
+                        'class' => 'fheader',
+                    ]
+                );
+                $fieldsetreplacements['{id}'] .= " aria-expanded='{$ariaexpanded}'";
+            }
+        }
+
+        if (is_null($header->_text)) {
+            $headerhtml = $headertitle;
+        } elseif (!empty($name) && isset($this->_templates[$name])) {
+            $headertemplate = $this->_templates[$name];
+        } else {
+            $headertemplate = $this->_headerTemplate;
+        }
+
+        $headerreplacements = [
+            '{header}' => $headertitle,
+        ];
+        $headerhtml = str_replace(array_keys($headerreplacements), array_values($headerreplacements), $headertemplate);
 
         if ($this->_fieldsetsOpen > 0) {
             $this->_html .= $this->_closeFieldsetTemplate;
             $this->_fieldsetsOpen--;
         }
 
-        // Define collapsible classes for fieldsets.
-        $arialive = '';
-        $fieldsetclasses = array('clearfix');
-        if (isset($this->_collapsibleElements[$header->getName()])) {
-            $fieldsetclasses[] = 'collapsible';
-            if ($this->_collapsibleElements[$header->getName()]) {
-                $fieldsetclasses[] = 'collapsed';
-            }
-        }
-
         if (isset($this->_advancedElements[$name])){
             $fieldsetclasses[] = 'containsadvancedelements';
         }
 
-        $openFieldsetTemplate = str_replace('{id}', $id, $this->_openFieldsetTemplate);
-        $openFieldsetTemplate = str_replace('{classes}', join(' ', $fieldsetclasses), $openFieldsetTemplate);
+        $fieldsetreplacements['{classes}'] = implode(' ', $fieldsetclasses);
+        $openFieldsetTemplate = str_replace(
+            array_keys($fieldsetreplacements),
+            array_values($fieldsetreplacements),
+            $this->_openFieldsetTemplate
+        );
 
-        $this->_html .= $openFieldsetTemplate . $header_html;
+        $this->_html .= $openFieldsetTemplate . $headerhtml;
         $this->_fieldsetsOpen++;
     }
 
