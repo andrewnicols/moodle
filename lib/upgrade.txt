@@ -34,6 +34,9 @@ information provided here is intended especially for developers.
 * Added new class, AMD modules and WS that allow displaying forms in modal popups or load and submit in AJAX requests.
   See https://docs.moodle.org/dev/Modal_and_AJAX_forms for more details.
 * The core/event events have been renamed and now fire native events, in addition to the legacy YUI and jQuery events.
+  The following events have been renamed:
+  - The FORM_SUBMIT_AJAX event has been replaced with a new native event in the `core_form/events` AMD module
+    eventTypes.formSubmittedByJavascript.
 
 === 3.10 ===
 * PHPUnit has been upgraded to 8.5. That comes with a few changes:
