@@ -1,0 +1,71 @@
+// This file is part of Moodle - http://moodle.org/ //
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Form Events.
+ *
+ * @module     core_filters/events
+ * @package    core_filters
+ * @class      event
+ * @copyright  2021 Andrew Nicols <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      3.11
+ */
+
+import {dispatchEvent} from 'core/local/event/dispatcher';
+import {getList as normalistNodeList} from 'core/normalise';
+import jQuery from 'jquery';
+
+export const eventTypes = {
+    // This event is triggered when a page has added dynamic nodes to a page
+    // that should be processed by the filter system.
+    // An example of this is loading user text that could have equations in it. MathJax can typeset the equations but
+    // only if it is notified that there are new nodes in the page that need processing.
+    filterContentUpdated: 'core_filters/contentUpdated',
+};
+
+/**
+ * Trigger an event to indicate that the specified nodes were updated and should be processed by the filter system.
+ *
+ * @method notifyFilterContentUpdated
+ * @param {jQuery|Array} nodes
+ * @returns {CustomEvent}
+ */
+export const notifyFilterContentUpdated = nodes => {
+    // Historically this could be a jQuery Object.
+    // Normalise the list of nodes to a NodeList.
+    nodes = normalistNodeList(nodes);
+
+    return dispatchEvent(eventTypes.filterContentUpdated, {nodes});
+};
+
+let legacyEventsRegistered = false;
+if (!legacyEventsRegistered) {
+    // The following event triggers are legacy and will be removed in the future.
+    // The following approach provides a backwards-compatability layer for the new events.
+    // Code should be updated to make use of native events.
+
+    Y.use('event', 'moodle-core-event', Y => {
+        // Provide a backwards-compatability layer for YUI Events.
+        document.addEventListener(eventTypes.filterContentUpdated, e => {
+            // Trigger the legacy jQuery event.
+            jQuery(document).trigger(M.core.event.FILTER_CONTENT_UPDATED, [jQuery(e.detail.nodes)]);
+
+            // Trigger the legacy YUI event.
+            Y.fire(M.core.event.FILTER_CONTENT_UPDATED, {nodes: new Y.NodeList(e.detail.nodes)});
+        });
+    });
+
+    legacyEventsRegistered = true;
+}
