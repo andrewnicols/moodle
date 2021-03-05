@@ -35,11 +35,9 @@ Feature: Bulk remove submissions
       | assign                | user      | onlinetext                   |
       | Test assignment name  | student1  | I'm the student1 submission  |
       | Test assignment name  | student2  | I'm the student2 submission  |
-    And I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability                     | permission |
-      | mod/assign:editothersubmission | Allow      |
-    And I log out
+    And the following "permissions" exist:
+      | role    | capability                     | permission |
+      | Teacher | mod/assign:editothersubmission | Allow      |
 
     And I am on the "Test assignment name" Activity page logged in as teacher1
     And I navigate to "View all submissions" in current page administration
@@ -96,12 +94,9 @@ Feature: Bulk remove submissions
       | assign                | user      | onlinetext                   |
       | Test assignment name  | student1  | I'm the student1 submission  |
       | Test assignment name  | student2  | I'm the student2 submission  |
-
-    And I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability                     | permission |
-      | mod/assign:editothersubmission | Allow      |
-    And I log out
+    And the following "permissions" exist:
+      | role    | capability                     | permission |
+      | Teacher | mod/assign:editothersubmission | Allow      |
 
     And I am on the "Test assignment name" Activity page logged in as teacher1
     And I navigate to "View all submissions" in current page administration
@@ -135,11 +130,9 @@ Feature: Bulk remove submissions
       | assign                | user      | onlinetext                   |
       | Test assignment name  | student1  | I'm the student1 submission  |
       | Test assignment name  | student2  | I'm the student2 submission  |
-    And I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability                     | permission |
-      | mod/assign:editothersubmission | Allow      |
-    And I log out
+    And the following "permissions" exist:
+      | role    | capability                     | permission |
+      | Teacher | mod/assign:editothersubmission | Allow      |
 
     And I am on the "Test assignment name" Activity page logged in as teacher1
     And I navigate to "View all submissions" in current page administration

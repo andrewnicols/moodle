@@ -17,11 +17,9 @@ Feature: Users can request and approve courses
       | user2 | Acceptance test site | manager |
     And the following config values are set as admin:
       | lockrequestcategory | 1 |
-    Given I log in as "admin"
-    And I set the following system permissions of "Authenticated user" role:
-      | capability | permission |
-      | moodle/course:request | Allow |
-    And I log out
+    And the following "permissions" exist:
+      | role               | capability            | permission |
+      | Authenticated user | moodle/course:request | Allow      |
     When I log in as "user1"
     And I am on course index
     And I press "Request a course"
@@ -50,7 +48,6 @@ Feature: Users can request and approve courses
     And I follow "My new course"
     And I navigate to course participants
     And I should see "Teacher" in the "User 1" "table_row"
-    And I log out
 
   Scenario: Course request with category selection
     Given the following "categories" exist:
@@ -67,11 +64,9 @@ Feature: Users can request and approve courses
       | user1 | courserequestor | Category     | ENG       |
       | user2 | manager         | Category     | SCI       |
       | user3 | manager         | Category     | ENG       |
-    Given I log in as "admin"
-    And I set the following system permissions of "Course requestor" role:
-      | capability            | permission |
-      | moodle/course:request | Allow      |
-    And I log out
+    And the following "permissions" exist:
+      | role             | capability            | permission |
+      | Course requestor | moodle/course:request | Allow      |
     And I log in as "user1"
     And I am on course index
     And I follow "English category"
@@ -103,4 +98,3 @@ Feature: Users can request and approve courses
     And I am on course index
     And I follow "English category"
     And I should see "My new course"
-    And I log out
