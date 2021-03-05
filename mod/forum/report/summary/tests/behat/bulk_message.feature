@@ -72,10 +72,8 @@ Feature: Message users in the summary report
 
   @javascript
   Scenario: Ensure no message options when messaging is disabled
-    Given I log in as "admin"
-    And I set the following administration settings values:
+    Given the following config values are set as admin:
       | messaging | 0 |
-    And I log out
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I follow "forum1"
