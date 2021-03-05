@@ -83,15 +83,13 @@ Feature: We can change what we are viewing on the grader report
 
   @javascript
   Scenario: View and minimise the grader report containing hidden activities without the 'moodle/grade:viewhidden' capability
-    And I am on "Course 1" course homepage with editing mode on
+    Given I am on "Course 1" course homepage with editing mode on
     And I open "Test assignment name 2" actions menu
     And I click on "Hide" "link" in the "Test assignment name 2" activity
     And I log out
-    And I log in as "admin"
     And I set the following system permissions of "Teacher" role:
-      | capability | permission |
-      | moodle/grade:viewhidden | Prevent |
-    And I log out
+      | capability              | permission |
+      | moodle/grade:viewhidden | Prevent    |
     And the following "course enrolments" exist:
       | user | course | role |
       | student2 | C1 | student |

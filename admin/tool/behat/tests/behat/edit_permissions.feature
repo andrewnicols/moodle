@@ -20,14 +20,14 @@ Feature: Edit capabilities
       | student  | C1     | student        |
 
   Scenario: Default system capabilities modification
-    Given I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability | permission |
-      | block/mnet_hosts:myaddinstance | Allow |
-      | moodle/site:messageanyuser | Inherit |
-      | moodle/grade:managesharedforms | Prevent |
-      | moodle/course:request | Prohibit |
-    When I follow "Edit Teacher role"
+    When I set the following system permissions of "Teacher" role:
+      | capability                     | permission |
+      | block/mnet_hosts:myaddinstance | Allow      |
+      | moodle/site:messageanyuser     | Inherit    |
+      | moodle/grade:managesharedforms | Prevent    |
+      | moodle/course:request          | Prohibit   |
+    And I log in as "admin"
+    And I follow "Edit Teacher role"
     Then "block/mnet_hosts:myaddinstance" capability has "Allow" permission
     And "moodle/site:messageanyuser" capability has "Not set" permission
     And "moodle/grade:managesharedforms" capability has "Prevent" permission

@@ -14,16 +14,14 @@ Feature: Courses can be created in Single Activity mode
     And the following "system role assigns" exist:
       | user   | role    | contextlevel |
       | kevin  | creator | System       |
-    And I log in as "admin"
     And I set the following system permissions of "Creator" role:
-      | capability | permission |
-      | moodle/course:create | Allow |
-      | moodle/course:update | Allow |
-      | moodle/course:manageactivities | Allow |
-      | moodle/course:viewparticipants | Allow |
-      | moodle/role:assign | Allow |
-      | mod/quiz:addinstance | Allow |
-    And I log out
+      | capability                     | permission |
+      | moodle/course:create           | Allow      |
+      | moodle/course:update           | Allow      |
+      | moodle/course:manageactivities | Allow      |
+      | moodle/course:viewparticipants | Allow      |
+      | moodle/role:assign             | Allow      |
+      | mod/quiz:addinstance           | Allow      |
     And I log in as "kevin"
     And I am on site homepage
     When I press "Add a new course"
