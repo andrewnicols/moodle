@@ -37,7 +37,6 @@ Feature: Manage plan workflow
       | Test-Plan1 | Test-Comp2 |
       | Test-Plan2 | Test-Comp1 |
       | Test-Plan2 | Test-Comp2 |
-    And I log in as "admin"
     And I set the following system permissions of "User manage own draft plan role" role:
       | capability | permission |
       | moodle/competency:planmanageowndraft | Allow |
@@ -53,7 +52,6 @@ Feature: Manage plan workflow
       | moodle/competency:planview | Allow |
       | moodle/competency:planreview | Allow |
       | moodle/competency:planrequestreview | Allow |
-    And I log out
 
   Scenario: User can manages his own plan draft
     Given I log in as "user1"
@@ -66,7 +64,6 @@ Feature: Manage plan workflow
     And I should see "Waiting for review"
     And I click on "Cancel review" of edit menu in the "Test-Plan1" row
     And I should see "Draft"
-    And I log out
 
   Scenario: User can manages his own plan
     Given I log in as "user2"
@@ -89,7 +86,6 @@ Feature: Manage plan workflow
     And I click on "Reopen this learning plan" of edit menu in the "Test-Plan2" row
     And I click on "Reopen this learning plan" "button" in the "Confirm" "dialogue"
     And I should see "Active"
-    And I log out
 
   Scenario: Manager can see learning plan with status waiting for review
     Given  the following lp "plans" exist:
@@ -99,7 +95,6 @@ Feature: Manage plan workflow
     When I log in as "manager1"
     Then I should see "Test-Plan3"
     And I should not see "Test-Plan4"
-    And I log out
 
   Scenario: Manager can start review of learning plan with status waiting for review
     Given  the following lp "plans" exist:
@@ -111,7 +106,6 @@ Feature: Manage plan workflow
     And I should see "Test-Plan3"
     When I follow "Start review"
     Then I should see "In review"
-    And I log out
 
   Scenario: Manager can reject a learning plan with status in review
     Given  the following lp "plans" exist:
@@ -124,7 +118,6 @@ Feature: Manage plan workflow
     And I should see "In review"
     When I follow "Finish review"
     Then I should see "Draft"
-    And I log out
 
   Scenario: Manager can accept a learning plan with status in review
     Given  the following lp "plans" exist:
@@ -137,7 +130,6 @@ Feature: Manage plan workflow
     And I should see "In review"
     When I follow "Make active"
     Then I should see "Active"
-    And I log out
 
   Scenario: Manager send back to draft an active learning plan
     Given  the following lp "plans" exist:
@@ -156,7 +148,6 @@ Feature: Manage plan workflow
     And I follow "Learning plans"
     Then I should see "Draft"
     And I should not see "Active"
-    And I log out
 
   Scenario: Manager change an active learning plan to completed
     Given  the following lp "plans" exist:
@@ -178,7 +169,6 @@ Feature: Manage plan workflow
     And I follow "Learning plans"
     Then I should see "Complete"
     And I should not see "Active"
-    And I log out
 
   Scenario: Manager reopen a complete learning plan
     Given  the following lp "plans" exist:
@@ -199,4 +189,3 @@ Feature: Manage plan workflow
     And I follow "Learning plans"
     Then I should see "Active"
     And I should not see "Complete"
-    And I log out

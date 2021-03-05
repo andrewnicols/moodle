@@ -24,19 +24,17 @@ Feature: Bulk remove submissions
 
   @javascript
   Scenario: Bulk remove submissions should remove the data that was submitted
-    Given I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
+    Given I set the following system permissions of "Teacher" role:
       | capability                     | permission |
       | mod/assign:editothersubmission | Allow      |
-    And I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Assignment" to section "1" and I fill the form with:
-      | Assignment name | Test assignment name |
-      | Description | Submit your online text |
-      | assignsubmission_onlinetext_enabled | 1 |
-      | assignsubmission_file_enabled | 0 |
-    And I log out
+    And the following "activity" exists:
+      | course                              | C1                      |
+      | activity                            | assign                  |
+      | idnumber                            | assign1                 |
+      | name                                | Test assignment name    |
+      | intro                               | Submit your online text |
+      | assignsubmission_onlinetext_enabled | 1                       |
+      | assignsubmission_file_enabled       | 0                       |
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And I follow "Test assignment name"
@@ -113,20 +111,18 @@ Feature: Bulk remove submissions
   @javascript
   Scenario: Notification should be displayed when non-group users are selected for submission bulk removal
             in separate group mode
-    Given I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
+    Given I set the following system permissions of "Teacher" role:
       | capability                     | permission |
       | mod/assign:editothersubmission | Allow      |
-    And I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Assignment" to section "1" and I fill the form with:
-      | Assignment name | Test assignment name |
-      | Description | Submit your online text |
-      | assignsubmission_onlinetext_enabled | 1 |
-      | assignsubmission_file_enabled | 0 |
-      | groupmode | 1 |
-    And I log out
+    And the following "activity" exists:
+      | course                              | C1                      |
+      | activity                            | assign                  |
+      | idnumber                            | assign1                 |
+      | name                                | Test assignment name    |
+      | intro                               | Submit your online text |
+      | assignsubmission_onlinetext_enabled | 1                       |
+      | assignsubmission_file_enabled       | 0                       |
+      | groupmode                           | 1                       |
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And I follow "Test assignment name"
@@ -164,20 +160,18 @@ Feature: Bulk remove submissions
       | user     | group   |
       | student1 | G1 |
       | student2 | G1 |
-    And I log in as "admin"
     And I set the following system permissions of "Teacher" role:
       | capability                     | permission |
       | mod/assign:editothersubmission | Allow      |
-    And I log out
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Assignment" to section "1" and I fill the form with:
-      | Assignment name | Test assignment name |
-      | Description | Submit your online text |
-      | assignsubmission_onlinetext_enabled | 1 |
-      | assignsubmission_file_enabled | 0 |
-      | groupmode | 1 |
-    And I log out
+    And the following "activity" exists:
+      | course                              | C1                      |
+      | activity                            | assign                  |
+      | idnumber                            | assign1                 |
+      | name                                | Test assignment name    |
+      | intro                               | Submit your online text |
+      | assignsubmission_onlinetext_enabled | 1                       |
+      | assignsubmission_file_enabled       | 0                       |
+      | groupmode                           | 1                       |
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And I follow "Test assignment name"

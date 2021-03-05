@@ -5,11 +5,9 @@ Feature: Remove a submission
   I need to remove a student submission at any time
 
   Background:
-    Given I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
+    Given I set the following system permissions of "Teacher" role:
       | capability                     | permission |
       | mod/assign:editothersubmission | Allow      |
-    And I log out
     And the following "courses" exist:
       | fullname | shortname | category | groupmode |
       | Course 1 | C1 | 0 | 0 |
@@ -26,7 +24,7 @@ Feature: Remove a submission
     And the following "groups" exist:
       | name    | course | idnumber |
       | Group 1 | C1     | G1       |
-    Given the following "group members" exist:
+    And the following "group members" exist:
       | user     | group   |
       | student1 | G1 |
       | student2 | G1 |

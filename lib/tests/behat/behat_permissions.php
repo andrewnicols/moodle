@@ -47,22 +47,51 @@ class behat_permissions extends behat_base {
      * @param TableNode $table
      */
     public function i_set_the_following_system_permissions_of_role($rolename, $table) {
+        $roles = role_fix_names(get_all_roles(), context_system::instance());
 
-        $parentnodes = get_string('users', 'admin') . ' > ' .
-            get_string('permissions', 'role');
+        $role = array_reduce($roles, function($value, $comparevalue) use ($rolename) {
+            if ($value) {
+                return $value;
+            }
+            if ($comparevalue->localname === $rolename) {
+                return $comparevalue;
+            }
+        });
 
-        // Go to home page.
-        $this->execute("behat_general::i_am_on_homepage");
+        if (empty($role)) {
+            throw new \coding_exception("Unknown role name {$rolename}");
+        }
 
-        // Navigate to course management page via navigation block.
-        $this->execute("behat_navigation::i_navigate_to_in_site_administration",
-            array($parentnodes . ' > ' . get_string('defineroles', 'role'))
-        );
+        $rows = $table->getRowsHash();
 
-        $this->execute("behat_general::click_link", "Edit " . $this->escape($rolename) . " role");
-        $this->execute("behat_permissions::i_fill_the_capabilities_form_with_the_following_permissions", $table);
-
-        $this->execute('behat_forms::press_button', get_string('savechanges'));
+        $context = context_system::instance();
+        foreach ($rows as $capability => $permission) {
+            if ($capability === 'capability') {
+                // Row header.
+                // These were optional in the old format.
+                continue;
+            }
+            switch ($permission) {
+                case 'Not set':
+                    unassign_capability($capability, $role->id, $context->id);
+                    break;
+                case 'Inherit':
+                    assign_capability($capability, CAP_INHERIT, $role->id, $context->id, true);
+                    break;
+                case 'Allow':
+                    assign_capability($capability, CAP_ALLOW, $role->id, $context->id, true);
+                    break;
+                case 'Prevent':
+                    assign_capability($capability, CAP_PREVENT, $role->id, $context->id, true);
+                    break;
+                case 'Prohibit':
+                    assign_capability($capability, CAP_PROHIBIT, $role->id, $context->id, true);
+                    break;
+                default:
+                    throw new \coding_exception("Unknown permission when setting {$capability}: '{$permission}'");
+                    break;
+            }
+        }
     }
 
     /**

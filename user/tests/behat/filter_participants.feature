@@ -732,12 +732,10 @@ Feature: Course participants can be filtered
 
   @javascript
   Scenario: Filter by user identity fields when cannot see the field data
-    Given I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
+    Given I set the following system permissions of "Teacher" role:
       | moodle/site:viewuseridentity | Prevent |
     And the following config values are set as admin:
       | showuseridentity | idnumber,email,city,country |
-    And I log out
 
     And I am on the "C1" "Course" page logged in as "patricia"
     And I navigate to course participants
