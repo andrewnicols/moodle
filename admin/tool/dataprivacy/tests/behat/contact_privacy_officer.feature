@@ -8,10 +8,8 @@ Feature: Contact the privacy officer
     Given the following "users" exist:
       | username | firstname | lastname | email          |
       | student1 | Student   | 1        | s1@example.com |
-    And I log in as "admin"
-    And I set the following administration settings values:
-      | contactdataprotectionofficer | 1 |
-    And I log out
+    And the following config values are set as admin:
+      | contactdataprotectionofficer | 1 | tool_dataprivacy |
 
   @javascript
   Scenario: Contacting the privacy officer

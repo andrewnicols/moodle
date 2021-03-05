@@ -20,11 +20,14 @@ Feature: Use the particiaption report to message groups of students
       | student1 | C1 | student |
       | student2 | C1 | student |
       | student3 | C1 | student |
+    And the following "activity" exists:
+      | activity | book           |
+      | idnumber | book1          |
+      | name     | Test book name |
+      | intro    | Test book      |
+      | course   | C1             |
     And I log in as "teacher1"
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "Book" to section "1" and I fill the form with:
-      | Name | Test book name |
-      | Description | Test book |
+    And I am on "Course 1" course homepage
     And I follow "Test book name"
     And I set the following fields to these values:
       | Chapter title | Test chapter |
@@ -50,10 +53,8 @@ Feature: Use the particiaption report to message groups of students
     Then I should see "Send message to 2 people"
 
   Scenario: Ensure no message options when messaging is disabled
-    Given I log in as "admin"
-    And I set the following administration settings values:
+    Given the following config values are set as admin:
       | messaging | 0 |
-    And I log out
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I navigate to "Reports > Course participation" in current page administration
