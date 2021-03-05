@@ -42,27 +42,12 @@ class behat_permissions extends behat_base {
 
     /**
      * Set system level permissions to the specified role. Expects a table with capability name and permission (Inherit/Allow/Prevent/Prohibit) columns.
-     * @Given /^I set the following system permissions of "(?P<rolefullname_string>(?:[^"]|\\")*)" role:$/
      * @param string $rolename
      * @param TableNode $table
+     * @deprecated since Moodle 4.0
      */
-    public function i_set_the_following_system_permissions_of_role($rolename, $table) {
-
-        $parentnodes = get_string('users', 'admin') . ' > ' .
-            get_string('permissions', 'role');
-
-        // Go to home page.
-        $this->execute("behat_general::i_am_on_homepage");
-
-        // Navigate to course management page via navigation block.
-        $this->execute("behat_navigation::i_navigate_to_in_site_administration",
-            array($parentnodes . ' > ' . get_string('defineroles', 'role'))
-        );
-
-        $this->execute("behat_general::click_link", "Edit " . $this->escape($rolename) . " role");
-        $this->execute("behat_permissions::i_fill_the_capabilities_form_with_the_following_permissions", $table);
-
-        $this->execute('behat_forms::press_button', get_string('savechanges'));
+    public function i_set_the_following_system_permissions_of_role(string $rolename, TableNode $table): void {
+        $this->execute('behat_deprecated::i_set_the_following_system_permissions_of_role', [$rolename, $table]);
     }
 
     /**
@@ -72,21 +57,34 @@ class behat_permissions extends behat_base {
      * @param TableNode $table
      */
     public function i_override_the_system_permissions_of_role_with($rolename, $table) {
+        // Translate the data into the format accepted by the generator.
+        $tabledata = [[
+            'contextlevel',
+            'reference',
+            'capability',
+            'permission',
+            'role',
+        ]];
 
-        // We don't know the number of overrides so we have to get it to match the option contents.
-        $roleoption = $this->find('xpath', '//select[@name="roleid"]/option[contains(.,"' . $this->escape($rolename) . '")]');
-
-        $this->execute('behat_forms::i_set_the_field_to',
-            array(get_string('advancedoverride', 'role'), $this->escape($roleoption->getText()))
-        );
-
-        if (!$this->running_javascript()) {
-            $this->execute("behat_general::i_click_on_in_the", [get_string('go'), 'button', 'region-main', 'region']);
+        foreach ($table->getRowsHash() as $capability => $permission) {
+            if ($capability === 'capability') {
+                // In the old step, the header row was optional.
+                // If specified, remove it.
+                continue;
+            }
+            $tabledata[] = [
+                $contextlevel,
+                $reference,
+                $capability,
+                $permission,
+                $rolename,
+            ];
         }
 
-        $this->execute("behat_permissions::i_fill_the_capabilities_form_with_the_following_permissions", $table);
-
-        $this->execute('behat_forms::press_button', get_string('savechanges'));
+        if (!empty($tabledata)) {
+            $table = new TableNode($tabledata);
+            $this->execute('behat_data_generators::the_following_entities_exist', ['permission overrides', $table]);
+        }
     }
 
     /**

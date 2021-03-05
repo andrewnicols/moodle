@@ -322,14 +322,65 @@ abstract class behat_generator_base {
      * @param string $roleshortname
      * @return int
      */
-    protected function get_role_id($roleshortname) {
+    protected function get_role_id($rolename) {
         global $DB;
 
-        if (!$id = $DB->get_field('role', 'id', array('shortname' => $roleshortname))) {
-            throw new Exception('The specified role with shortname "' . $roleshortname . '" does not exist');
+        $roles = role_fix_names(get_all_roles(), context_system::instance());
+
+        $fields = ['name', 'shortname', 'localname'];
+        $role = array_reduce($roles, function($value, $comparevalue) use ($rolename, $fields) {
+            if ($value) {
+                return $value;
+            }
+            foreach ($fields as $field) {
+                if ($comparevalue->{$field} === $rolename) {
+                    return $comparevalue;
+                }
+            }
+        });
+
+        if (empty($role)) {
+            throw new \coding_exception("Unknown role name {$rolename}");
         }
 
-        return $id;
+        return $role->id;
+    }
+
+    /**
+     * Get the value of a permission from the human-readable string for that permission.
+     *
+     * Typically this will be the keywords:
+     * - Allow
+     * - Inherit
+     * - Prevent
+     * - Prohibit
+     * - Not set
+     *
+     * @param null|string $permission
+     * @return null|int
+     */
+    protected function get_permission_id(?string $permission): ?int {
+        switch (strtolower($permission)) {
+            case strtolower(get_string('inherit', 'role')):
+                return CAP_INHERIT;
+                break;
+            case strtolower(get_string('allow', 'role')):
+                return CAP_ALLOW;
+                break;
+            case strtolower(get_string('prevent', 'role')):
+                return CAP_PREVENT;
+                break;
+            case strtolower(get_string('prohibit', 'role')):
+                return CAP_PROHIBIT;
+                break;
+            case null;
+            case '':
+            case strtolower(get_string('notset', 'role')):
+                return null;
+            default:
+                throw new Exception("The '{$permission}' permission does not exist");
+                break;
+        }
     }
 
     /**

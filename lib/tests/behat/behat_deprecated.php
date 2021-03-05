@@ -101,4 +101,54 @@ class behat_deprecated extends behat_base {
         throw new Exception($message);
     }
 
+    /**
+     * Set system level permissions to the specified role. Expects a table with capability name and permission (Inherit/Allow/Prevent/Prohibit) columns.
+     * @Given /^I set the following system permissions of "(?P<rolefullname_string>(?:[^"]|\\")*)" role:$/
+     * @param string $rolename
+     * @param TableNode $table
+     * @deprecated since Moodle 4.0
+     */
+    public function i_set_the_following_system_permissions_of_role(string $rolename, TableNode $table): void {
+        $this->deprecated("This step has been deprecated. Please use a data generator instead.");
+        $this->set_role_capabilities('System', '', $rolename, $table);
+    }
+
+    /**
+     * Set the capabiltiies in the specified context.
+     *
+     * @param string $contextlevel
+     * @param string $reference
+     * @param string $rolename
+     * @param TableNode $table
+     */
+    protected function set_role_capabilities(string $contextlevel, string $reference, string $rolename, TableNode $table): void {
+        // Translate the data into the format accepted by the generator.
+        $tabledata = [[
+            'contextlevel',
+            'reference',
+            'capability',
+            'permission',
+            'role',
+        ]];
+
+        foreach ($table->getRowsHash() as $capability => $permission) {
+            if ($capability === 'capability') {
+                // In the old step, the header row was optional.
+                // If specified, remove it.
+                continue;
+            }
+            $tabledata[] = [
+                $contextlevel,
+                $reference,
+                $capability,
+                $permission,
+                $rolename,
+            ];
+        }
+
+        if (!empty($tabledata)) {
+            $table = new TableNode($tabledata);
+            $this->execute('behat_data_generators::the_following_entities_exist', ['permissions', $table]);
+        }
+    }
 }
