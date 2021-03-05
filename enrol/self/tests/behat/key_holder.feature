@@ -12,16 +12,13 @@ Feature: Users can be defined as key holders in courses where self enrolment is 
     And the following "courses" exist:
       | fullname | shortname | format |
       | Course 1 | C1 | topics |
+    And the following "role" exists:
+        | shortname | keyholder  |
+        | name      | Key holder |
+    And the following "permissions" exist:
+      | role      | capability         | permission |
+      | Keyholder | enrol/self:holdkey | Allow      |
     And I log in as "admin"
-    And I navigate to "Users > Permissions > Define roles" in site administration
-    And I click on "Add a new role" "button"
-    And I click on "Continue" "button"
-    And I set the following fields to these values:
-      | Short name | keyholder |
-      | Custom full name | Key holder |
-      | contextlevel50 | 1 |
-      | enrol/self:holdkey | 1 |
-    And I click on "Create this role" "button"
     And I navigate to "Appearance > Courses" in site administration
     And I set the following fields to these values:
       | Key holder | 1 |
@@ -29,12 +26,10 @@ Feature: Users can be defined as key holders in courses where self enrolment is 
     And the following "course enrolments" exist:
       | user | course | role |
       | manager1 | C1 | keyholder |
-    And I log out
 
   @javascript
   Scenario: The key holder name is displayed on site home page
-    Given I log in as "admin"
-    And I am on "Course 1" course homepage
+    Given I am on "Course 1" course homepage
     When I add "Self enrolment" enrolment method with:
       | Custom instance name | Test student enrolment |
       | Enrolment key | moodle_rules |

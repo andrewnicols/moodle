@@ -105,6 +105,12 @@ class behat_core_generator extends behat_generator_base {
                 'required' => ['capability', 'permission', 'role', 'contextlevel', 'reference'],
                 'switchids' => ['role' => 'roleid'],
             ],
+            'permissions' => [
+                'singular' => 'permission',
+                'datagenerator' => 'role_capabilities',
+                'required' => ['role', 'capability', 'permission'],
+                'switchids' => ['role' => 'roleid', 'permission' => 'permission'],
+            ],
             'system role assigns' => [
                 'singular' => 'system role assignment',
                 'datagenerator' => 'system_role_assign',
@@ -590,6 +596,38 @@ class behat_core_generator extends behat_generator_base {
         }
 
         role_change_permission($data['roleid'], $context, $data['capability'], $permission);
+    }
+
+    /**
+     * Preprocess role capabilities to fetch the context instance from a contextlevel and reference.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function preprocess_role_capabilities(array $data): array {
+        // Getting the context id.
+        if (empty($data['contextlevel'])) {
+            $data['context'] = \context_system::instance();
+        } else {
+            $data['context'] = $this->get_context($data['contextlevel'], $data['reference']);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Process the management of role capabilities.
+     *
+     * @param array $data
+     */
+    protected function process_role_capabilities(array $data): void {
+        if ($data['permission'] === null) {
+            // If the permission is not set, then unassign the capability.
+            unassign_capability($data['capability'], $data['roleid'], $data['context']->id);
+        } else {
+            // If the permission is set, then assign the capability as per the setting.
+            assign_capability($data['capability'], $data['permission'], $data['roleid'], $data['context']->id, true);
+        }
     }
 
     /**

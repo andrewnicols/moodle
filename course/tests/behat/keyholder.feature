@@ -3,21 +3,16 @@ Feature: Keyholder role is listed as course contact
   As a student I need to know who the keyholder is to enrol in a course
 
   Background:
-    Given I log in as "admin"
-    And I am on site homepage
-    And the following "categories" exist:
+    Given the following "categories" exist:
       | name | category | idnumber |
       | Cat 1 | 0 | CAT1 |
-    And I navigate to "Users > Permissions > Define roles" in site administration
-    And I click on "Add a new role" "button"
-    And I click on "Continue" "button"
-    And I set the following fields to these values:
-    | Short name | keyholder |
-    | Custom full name | Keyholder |
-    | contextlevel40 | 1 |
-    | contextlevel50 | 1 |
-    | enrol/self:holdkey | 1 |
-    And I click on "Create this role" "button"
+    And the following "role" exists:
+        | shortname | keyholder  |
+        | name      | Keyholder |
+    And the following "permissions" exist:
+      | role      | capability         | permission |
+      | Keyholder | enrol/self:holdkey | Allow      |
+    And I log in as "admin"
     And I navigate to "Appearance > Courses" in site administration
     And I click on "Keyholder" "checkbox"
     And I press "Save changes"
@@ -36,27 +31,19 @@ Feature: Keyholder role is listed as course contact
     And I log out
 
   Scenario: Keyholder assigned to a course
-    When I log in as "admin"
-    And the following "course enrolments" exist:
+    Given the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | keyholder1 | C1 | keyholder |
-    And I log out
-    And I log in as "student1"
-    And I am on site homepage
-    And I follow "Course 1"
+    When I am on the "Course 1" course page logged in as student1
     Then I should see "Keyholder 1"
 
   Scenario: Keyholder assigned to a category
-    When I log in as "admin"
-    And the following "role assigns" exist:
+    Given the following "role assigns" exist:
       | user    | role          | contextlevel | reference |
       | keyholder1 | keyholder       | Category     | CAT1      |
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
-    And I log out
-    And I log in as "student1"
-    And I am on site homepage
-    And I follow "Course 1"
+    When I am on the "Course 1" course page logged in as student1
     Then I should see "Keyholder 1"

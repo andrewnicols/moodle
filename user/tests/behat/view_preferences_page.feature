@@ -52,22 +52,19 @@ Feature: Access to preferences page
     Then I should see "Preferences" in the "region-main" "region"
 
   Scenario: A user with the appropriate permissions can view another user's permissions page.
-    Given I log in as "admin"
+    Given the following "roles" exist:
+      | shortname | name   | archetype |
+      | Parent    | Parent |           |
+    And the following "permissions" exist:
+      | role   | capability                           | permission |
+      | Parent | moodle/user:editprofile              | Allow      |
+      | Parent | moodle/user:viewalldetails           | Allow      |
+      | Parent | moodle/user:viewuseractivitiesreport | Allow      |
+      | Parent | moodle/user:viewdetails              | Allow      |
+    And I log in as "admin"
     And I am on site homepage
     And I follow "Turn editing on"
     And I add the "Mentees" block
-    And I navigate to "Users > Permissions > Define roles" in site administration
-    And I click on "Add a new role" "button"
-    And I click on "Continue" "button"
-    And I set the following fields to these values:
-    | Short name | Parent |
-    | Custom full name | Parent |
-    | contextlevel30 | 1 |
-    | moodle/user:editprofile | 1 |
-    | moodle/user:viewalldetails | 1 |
-    | moodle/user:viewuseractivitiesreport | 1 |
-    | moodle/user:viewdetails | 1 |
-    And I click on "Create this role" "button"
     And I navigate to "Users > Accounts > Browse list of users" in site administration
     And I follow "Student 1"
     And I click on "Preferences" "link" in the ".profile_tree" "css_element"
