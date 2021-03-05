@@ -21,12 +21,10 @@ Feature: Viewing the list of cohorts to enrol in a course
       | name        | Test cohort name        |
       | idnumber    | 1337                    |
       | description | Test cohort description |
-    And I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability           | permission |
-      | moodle/cohort:manage | Prohibit |
-      | moodle/cohort:view   | Prohibit |
-    And I log out
+    And the following "permissions" exist:
+      | role    | capability           | permission |
+      | Teacher | moodle/cohort:manage | Prohibit   |
+      | Teacher | moodle/cohort:view   | Prohibit   |
     And I log in as "teacher1"
     And I am on "Course 1" course homepage
     And I navigate to course participants

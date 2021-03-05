@@ -17,12 +17,10 @@ Feature: Users can flag tags and manager can reset flags
     And the following "tags" exist:
       | name         | isstandard |
       | Neverusedtag | 1          |
-    And I log in as "admin"
-    And I set the following system permissions of "Authenticated user" role:
-      | capability                   | permission |
-      | moodle/site:viewparticipants | Allow      |
-      | moodle/user:viewdetails      | Allow      |
-    And I log out
+    And the following "permissions" exist:
+      | role               | capability                   | permission |
+      | Authenticated user | moodle/site:viewparticipants | Allow      |
+      | Authenticated user | moodle/user:viewdetails      | Allow      |
     And I log in as "user2"
     And I press "Customise this page"
     # TODO MDL-57120 site "Tags" link not accessible without navigation block.

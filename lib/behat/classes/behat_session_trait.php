@@ -1094,9 +1094,10 @@ EOF;
         $contextlevels = context_helper::get_all_levels();
         $contextnames = array();
         foreach ($contextlevels as $level => $classname) {
-            $contextnames[context_helper::get_level_name($level)] = $level;
+            $contextnames[strtolower(context_helper::get_level_name($level))] = $level;
         }
 
+        $levelname = strtolower($levelname);
         if (empty($contextnames[$levelname])) {
             throw new Exception('The specified "' . $levelname . '" context level does not exist');
         }

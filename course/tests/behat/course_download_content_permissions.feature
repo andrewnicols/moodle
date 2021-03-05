@@ -73,12 +73,10 @@ Feature: Access to downloading course content can be controlled
     And "Enable download course content" "select" should exist
     And I log out
     # Remove teacher's capabilities for download course content.
-    And I log in as "admin"
-    And I set the following system permissions of "Teacher" role:
-      | capability                             | permission |
-      | moodle/course:downloadcoursecontent    | Prohibit   |
-      | moodle/course:configuredownloadcontent | Prohibit   |
-    And I log out
+    And the following "permissions" exist:
+      | role    | capability                             | permission |
+      | Teacher | moodle/course:downloadcoursecontent    | Prohibit   |
+      | Teacher | moodle/course:configuredownloadcontent | Prohibit   |
     # Check teacher can no longer see download option, and that enable value is visible, but dropdown no longer available.
     When I log in as "teacher1"
     And I am on "Hockey 101" course homepage
@@ -100,12 +98,10 @@ Feature: Access to downloading course content can be controlled
     And I am on "Hockey 101" course homepage
     And "Download course content" "button" should exist
     And I log out
-    And I log in as "admin"
     # Remove student's capability for download course content.
-    When I set the following system permissions of "Student" role:
-      | capability                             | permission |
-      | moodle/course:downloadcoursecontent    | Prohibit   |
-    And I log out
+    And the following "permissions" exist:
+      | role    | capability                             | permission |
+      | Student | moodle/course:downloadcoursecontent    | Prohibit   |
     # Check student can no longer see download button.
     And I log in as "student1"
     And I am on "Hockey 101" course homepage

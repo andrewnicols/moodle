@@ -23,13 +23,11 @@ Feature: Users can edit tags to add description or rename
 
   @javascript
   Scenario: User with tag editing capability can change tag description
-    Given I log in as "admin"
-    And I set the following system permissions of "Tag editor" role:
-      | capability                   | permission |
-      | moodle/tag:edit              | Allow      |
-      | moodle/site:viewparticipants | Allow      |
-      | moodle/user:viewdetails      | Allow      |
-    And I log out
+    Given the following "permissions" exist:
+      | role       | capability                   | permission |
+      | Tag editor | moodle/tag:edit              | Allow      |
+      | Tag editor | moodle/site:viewparticipants | Allow      |
+      | Tag editor | moodle/user:viewdetails      | Allow      |
     When I log in as "editor1"
     And I press "Customise this page"
     # TODO MDL-57120 site "Tags" link not accessible without navigation block.

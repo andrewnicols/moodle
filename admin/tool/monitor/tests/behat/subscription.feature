@@ -19,6 +19,9 @@ Feature: tool_monitor_subscriptions
       | teacher1 | C2 | teacher |
       | teacher2 | C1 | teacher |
       | teacher2 | C2 | editingteacher |
+    And the following "permissions" exist:
+      | role                | capability               | permission |
+      | Non-editing teacher | tool/monitor:managerules | Allow      |
     And I log in as "admin"
     And I navigate to "Reports > Event monitoring rules" in site administration
     And I click on "Enable" "link"
@@ -44,11 +47,6 @@ Feature: tool_monitor_subscriptions
       | frequency            | 1                                                 |
       | minutes              | 1                                                 |
       | Notification message | The course was viewed. {modulelink}               |
-    And I press "Save changes"
-    And I navigate to "Users > Permissions > Define roles" in site administration
-    And I follow "Non-editing teacher"
-    And I press "Edit"
-    And I click on "tool/monitor:managerules" "checkbox"
     And I press "Save changes"
     And I log out
 
@@ -168,10 +166,10 @@ Feature: tool_monitor_subscriptions
     And I should not see "You can manage rules the from the Event monitoring rules page."
 
   Scenario: No manage rules link when user does not have permission
-    Given I log in as "admin"
-    And I set the following system permissions of "Non-editing teacher" role:
-      | tool/monitor:managerules | Prohibit |
-    And I log out
+    Given the following "permission" exists:
+      | role       | Non-editing teacher      |
+      | capability | tool/monitor:managerules |
+      | permission | Prohibit                 |
     And I log in as "teacher1"
     And I follow "Preferences" in the user menu
     And I follow "Event monitoring"
