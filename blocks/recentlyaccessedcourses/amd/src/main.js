@@ -265,12 +265,12 @@ define(
             var resizeTimeout = null;
             var drawerToggling = false;
 
-            PubSub.subscribe(CourseEvents.favourited, function(courseId) {
-                favouriteCourse(root, courseId);
+            document.addEventListener(CourseEvents.eventTypes.courseFavourited, e => {
+                favouriteCourse(root, e.detail.courseId);
             });
 
-            PubSub.subscribe(CourseEvents.unfavorited, function(courseId) {
-                unfavouriteCourse(root, courseId);
+            document.addEventListener(CourseEvents.eventTypes.courseUnfavourited, e => {
+                unfavouriteCourse(root, e.detail.courseId);
             });
 
             PubSub.subscribe('nav-drawer-toggle-start', function() {

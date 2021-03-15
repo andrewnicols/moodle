@@ -238,7 +238,8 @@ function(
 
         setCourseFavouriteState(courseId, true).then(function(success) {
             if (success) {
-                PubSub.publish(CourseEvents.favourited, courseId);
+                CourseEvents.notifyCourseFavourited(courseId);
+                PubSub.publish(CourseEvents.favourited, courseId, CourseEvents.eventTypes.courseFavourited);
                 removeAction.removeClass('hidden');
                 addAction.addClass('hidden');
                 showFavouriteIcon(root, courseId);
@@ -261,7 +262,8 @@ function(
 
         setCourseFavouriteState(courseId, false).then(function(success) {
             if (success) {
-                PubSub.publish(CourseEvents.unfavorited, courseId);
+                CourseEvents.notifyCourseUnfavourited(courseId);
+                PubSub.publish(CourseEvents.unfavorited, courseId, CourseEvents.eventTypes.courseUnfavourited);
                 removeAction.addClass('hidden');
                 addAction.removeClass('hidden');
                 hideFavouriteIcon(root, courseId);

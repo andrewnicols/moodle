@@ -21,60 +21,36 @@
  * @copyright  2018 Ryan Wyllie <ryan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(
-[
-    'core/pubsub',
-    'core_message/message_drawer_events'
-],
-function(
-    PubSub,
-    MessageDrawerEvents
-) {
+import * as PubSub from 'core/pubsub';
+import * as MessageDrawerEvents from 'core_message/message_drawer_events';
+import * as MessageEvents from 'core_message/events';
 
-    /**
-     * Trigger an event to create a new conversation in the message drawer.
-     *
-     * @param {Number} userId The user id to start a conversation.
-     */
-    var createConversationWithUser = function(args) {
-        PubSub.publish(MessageDrawerEvents.CREATE_CONVERSATION_WITH_USER, args);
-    };
+/**
+ * Trigger an event to create a new conversation in the message drawer.
+ *
+ * @param {Number} args The user id to start a conversation.
+ */
+export const createConversationWithUser = args => {
+    MessageEvents.notifyCreateConversationWithUser(args);
+    PubSub.publish(
+        MessageDrawerEvents.CREATE_CONVERSATION_WITH_USER,
+        args,
+        MessageDrawerEvents.eventTypes.createConversationWithUser
+    );
+};
 
-    /**
-     * Trigger an event to hide the message drawer.
-     */
-    var hide = function() {
-        PubSub.publish(MessageDrawerEvents.HIDE);
-    };
+/**
+ * Trigger an event to hide the message drawer.
+ */
+export const hide = () => {
+    MessageEvents.notifyHideMessageDrawer();
+    PubSub.publish(MessageDrawerEvents.HIDE, null, MessageDrawerEvents.eventTypes.hideMessageDrawer);
+};
 
-    /**
-     * Trigger an event to show the message drawer.
-     */
-    var show = function() {
-        PubSub.publish(MessageDrawerEvents.SHOW);
-    };
-
-    /**
-     * Trigger an event to show the given conversation.
-     *
-     * @param {int} conversationId Id for the conversation to show.
-     */
-    var showConversation = function(args) {
-        PubSub.publish(MessageDrawerEvents.SHOW_CONVERSATION, args);
-    };
-
-    /**
-     * Trigger an event to show messaging settings.
-     */
-    var showSettings = function() {
-        PubSub.publish(MessageDrawerEvents.SHOW_SETTINGS);
-    };
-
-    return {
-        createConversationWithUser: createConversationWithUser,
-        hide: hide,
-        show: show,
-        showConversation: showConversation,
-        showSettings: showSettings
-    };
-});
+/**
+ * Trigger an event to show the message drawer.
+ */
+export const show = () => {
+    MessageEvents.notifyHideMessageDrawer();
+    PubSub.publish(MessageDrawerEvents.SHOW, null, MessageDrawerEvents.eventTypes.messageDrawerShown);
+};

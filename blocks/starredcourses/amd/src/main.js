@@ -99,11 +99,10 @@ function(
      * @param {object} root The calendar root element
      */
     var registerEventListeners = function(root) {
-        PubSub.subscribe(CourseEvents.favourited, function() {
+        document.addEventListener(CourseEvents.eventTypes.courseFavourited, () => {
             reloadContent(root);
         });
-
-        PubSub.subscribe(CourseEvents.unfavorited, function() {
+        document.addEventListener(CourseEvents.eventTypes.courseUnfavourited, () => {
             reloadContent(root);
         });
     };

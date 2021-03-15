@@ -37,6 +37,8 @@ define(
     'core_message/message_drawer_events',
     'core/pending',
     'core/drawer',
+    'core_message/events',
+    'core/toast',
 ],
 function(
     $,
@@ -53,7 +55,9 @@ function(
     Routes,
     Events,
     Pending,
-    Drawer
+    Drawer,
+    messageEvents,
+    Toast
 ) {
 
     var SELECTORS = {
@@ -192,6 +196,7 @@ function(
         var paramRegex = /^data-route-param-?(\d*)$/;
 
         root.on(CustomEvents.events.activate, SELECTORS.ROUTES, function(e, data) {
+            Toast.add('foo');
             var element = $(e.target).closest(SELECTORS.ROUTES);
             var route = element.attr('data-route');
             var attributes = [];
@@ -304,7 +309,7 @@ function(
             if (button) {
                 $('#' + button).focus();
             }
-            PubSub.publish(Events.TOGGLE_VISIBILITY);
+            PubSub.publish(Events.TOGGLE_VISIBILITY, null, messageEvents.toggleVisibilty);
         });
 
         PubSub.subscribe(Events.CREATE_CONVERSATION_WITH_USER, function(args) {
