@@ -316,6 +316,13 @@ module.exports = function(grunt) {
                 }]
             }
         },
+        jsdoc: {
+            dist: {
+                options: {
+                    configure: "jsdoc.conf.js",
+                },
+            },
+        },
         sass: {
             dist: {
                 files: {
@@ -798,6 +805,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-eslint');
+    grunt.loadNpmTasks('grunt-jsdoc');
     grunt.loadNpmTasks('grunt-stylelint');
     grunt.loadNpmTasks('grunt-babel');
 
