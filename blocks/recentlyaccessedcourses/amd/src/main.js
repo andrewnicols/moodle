@@ -17,7 +17,6 @@
  * Javascript to initialise the Recently accessed courses block.
  *
  * @module     block_recentlyaccessedcourses/main.js
- * @package    block_recentlyaccessedcourses
  * @copyright  2018 Victor Deniz <victor@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
