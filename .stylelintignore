@@ -2,6 +2,7 @@
 **/yui/build/*
 theme/boost/style/moodle.css
 theme/classic/style/moodle.css
+jsdoc/styles/*.css
 node_modules/
 vendor/
 admin/tool/policy/amd/src/jquery-eu-cookie-law-popup.js

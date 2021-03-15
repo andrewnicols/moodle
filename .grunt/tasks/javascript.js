@@ -43,6 +43,9 @@ module.exports = grunt => {
     // Load ESLint.
     require('./eslint')(grunt);
 
+    // Load JSDoc.
+    require('./jsdoc')(grunt);
+
     const path = require('path');
 
     // Register JS tasks.
