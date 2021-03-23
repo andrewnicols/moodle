@@ -111,6 +111,7 @@ class core_component {
     );
     /** @var array list of all classes that have been renamed to be autoloaded without deprecation */
     protected static $classmapaliases = [
+        'moodle_url' => 'core\url',
     ];
 
     /**
