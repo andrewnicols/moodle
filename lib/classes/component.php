@@ -109,6 +109,9 @@ class core_component {
         'MyCLabs\\Enum' => 'lib/php-enum/src',
         'Psr\\Http\\Message' => 'lib/http-message/src',
     );
+    /** @var array list of all classes that have been renamed to be autoloaded without deprecation */
+    protected static $classmapaliases = [
+    ];
 
     /**
      * Class loader for Frankenstyle named classes in standard locations.
@@ -136,6 +139,18 @@ class core_component {
             include_once(self::$classmap[$classname]);
             return;
         }
+
+        // Check for aliased classes.
+        // Some core legacy classes are permanently aliased rather than deprecated.
+        // No debugging is expected for these. They are too widely used to be deprecated.
+        if (array_key_exists($classname, self::$classmapaliases)) {
+            $renamedclassname = self::$classmapaliases[$classname];
+            if (array_key_exists($renamedclassname, self::$classmap)) {
+                class_alias($renamedclassname, $classname);
+                return;
+            }
+        }
+
         if (isset(self::$classmaprenames[$classname]) && isset(self::$classmap[self::$classmaprenames[$classname]])) {
             $newclassname = self::$classmaprenames[$classname];
             $debugging = "Class '%s' has been renamed for the autoloader and is now deprecated. Please use '%s' instead.";
