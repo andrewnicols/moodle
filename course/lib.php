@@ -3210,6 +3210,11 @@ function course_ajax_enabled($course) {
 function include_course_ajax($course, $usedmodules = array(), $enabledmodules = null, $config = null) {
     global $CFG, $PAGE, $SITE;
 
+    // All the new editor elements will be loaded after the course is presented and
+    // the initial course state will be generated using core_course_get_state webservice.
+    $PAGE->requires->js_call_amd('core_course/courseeditor', 'init', [$course->id]);
+    // TODO: as part of MDL-70907, add a way to indicate the plugin needs the legacy libraries (and get a deprecation message).
+
     // Ensure that ajax should be included
     if (!course_ajax_enabled($course)) {
         return false;
