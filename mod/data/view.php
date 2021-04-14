@@ -271,7 +271,10 @@
     // Render the activity information.
     $completiondetails = \core_completion\cm_completion_details::get_instance($cm, $USER->id);
     $activitydates = \core\activity_dates::get_dates_for_module($cm, $USER->id);
-    echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
+    // Display the activity information output component only when there's completion info or activity dates to display.
+    if ($completiondetails->has_completion() || !empty($activitydates)) {
+        echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
+    }
 
     // Do we need to show a link to the RSS feed for the records?
     //this links has been Settings (database activity administration) block

@@ -81,7 +81,10 @@ echo $OUTPUT->heading(format_string($feedback->name) . $preview);
 // Render the activity information.
 $completiondetails = \core_completion\cm_completion_details::get_instance($cm, $USER->id);
 $activitydates = \core\activity_dates::get_dates_for_module($cm, $USER->id);
-echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
+// Display the activity information output component only when there's completion info or activity dates to display.
+if ($completiondetails->has_completion() || !empty($activitydates)) {
+    echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
+}
 
 // Print the tabs.
 require('tabs.php');

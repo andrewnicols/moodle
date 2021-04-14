@@ -252,7 +252,10 @@ class mod_assign_renderer extends plugin_renderer_base {
         $cm = $modinfo->get_cm($header->coursemoduleid);
         $cmcompletion = \core_completion\cm_completion_details::get_instance($cm, $USER->id);
         $activitydates = \core\activity_dates::get_dates_for_module($cm, $USER->id);
-        $o .= $this->output->activity_information($cm, $cmcompletion, $activitydates);
+        // Display the activity information output component only when there's completion info or activity dates to display.
+        if ($cmcompletion->has_completion() || !empty($activitydates)) {
+            $o .= $this->output->activity_information($cm, $cmcompletion, $activitydates);
+        }
 
         if ($header->preface) {
             $o .= $header->preface;

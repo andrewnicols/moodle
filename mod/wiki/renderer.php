@@ -241,7 +241,11 @@ class mod_wiki_renderer extends plugin_renderer_base {
         $cminfo = cm_info::create($this->page->cm);
         $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
         $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
-        $info = $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+        // Display the activity information output component only when there's completion info or activity dates to display.
+        $info = '';
+        if ($completiondetails->has_completion() || !empty($activitydates)) {
+            $info .= $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+        }
 
         // Add the rest of the wiki info.
         $info .= $this->output->box(format_module_intro('wiki',
