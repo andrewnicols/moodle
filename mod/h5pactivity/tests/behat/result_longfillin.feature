@@ -14,19 +14,17 @@ Feature: View essay attempt report
     And the following "course enrolments" exist:
       | user     | course | role           |
       | student1 | C1     | student        |
-    And I log in as "admin"
-    # No HTML should appear even with formatstringstriptags disabled.
-    And I set the following administration settings values:
+    And the following config values are set as admin:
+      # No HTML should appear even with formatstringstriptags disabled.
       | formatstringstriptags | 0 |
-    And I am on "Course 1" course homepage with editing mode on
-    And I add a "H5P" to section "1"
-    And I set the following fields to these values:
-      | Name           | Awesome H5P package |
-      | Description    | Description         |
-      | Grading method | Average grade       |
-    And I upload "h5p/tests/fixtures/basic_essay.h5p" file to "Package file" filemanager
-    And I click on "Save and display" "button"
-    And I log out
+    And the following "activity" exists:
+      # Note: Grademethod 2 is "Average grade"
+      | course          | C1                                 |
+      | activity        | h5pactivity                        |
+      | idnumber        | h5pactivity                        |
+      | name            | Awesome H5P package                |
+      | grademethod     | 2                                  |
+      | packagefilepath | h5p/tests/fixtures/basic_essay.h5p |
 
   Scenario: View attempt essay content
     # Do an attempt.
