@@ -109,7 +109,10 @@ echo $OUTPUT->heading(format_string($chat->name), 2);
 $cminfo = cm_info::create($cm);
 $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
 $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
-echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
+// Display the activity information output component only when there's completion info or activity dates to display.
+if ($completiondetails->has_completion() || !empty($activitydates)) {
+    echo $OUTPUT->activity_information($cminfo, $completiondetails, $activitydates);
+}
 
 if ($chat->intro) {
     echo $OUTPUT->box(format_module_intro('chat', $chat, $cm->id), 'generalbox', 'intro');

@@ -947,7 +947,10 @@ class mod_quiz_renderer extends plugin_renderer_base {
         $cminfo = cm_info::create($cm);
         $completiondetails = \core_completion\cm_completion_details::get_instance($cminfo, $USER->id);
         $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
-        $output .= $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+        // Display the activity information output component only when there's completion info or activity dates to display.
+        if ($completiondetails->has_completion() || !empty($activitydates)) {
+            $output .= $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+        }
 
         // Print quiz description.
         $output .= $this->quiz_intro($quiz, $cm);

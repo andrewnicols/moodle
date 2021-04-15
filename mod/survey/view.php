@@ -76,7 +76,10 @@ echo $OUTPUT->heading(format_string($survey->name));
 // Render the activity information.
 $completiondetails = \core_completion\cm_completion_details::get_instance($cm, $USER->id);
 $activitydates = \core\activity_dates::get_dates_for_module($cm, $USER->id);
-echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
+// Display the activity information output component only when there's completion info or activity dates to display.
+if ($completiondetails->has_completion() || !empty($activitydates)) {
+    echo $OUTPUT->activity_information($cm, $completiondetails, $activitydates);
+}
 
 // Check to see if groups are being used in this survey.
 if ($groupmode = groups_get_activity_groupmode($cm)) {   // Groups are being used.

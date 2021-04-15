@@ -60,7 +60,10 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $activitydates = \core\activity_dates::get_dates_for_module($cminfo, $USER->id);
         if (has_capability('mod/lesson:manage', $context)) {
             $output .= $this->output->heading_with_help($activityname, 'overview', 'lesson');
-            $output .= $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+            // Display the activity information output component only when there's completion info or activity dates to display.
+            if ($completiondetails->has_completion() || !empty($activitydates)) {
+                $output .= $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+            }
 
             // Info box.
             if ($lesson->intro) {
@@ -74,7 +77,10 @@ class mod_lesson_renderer extends plugin_renderer_base {
             }
         } else {
             $output .= $this->output->heading($activityname);
-            $output .= $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+            // Display the activity information output component only when there's completion info or activity dates to display.
+            if ($completiondetails->has_completion() || !empty($activitydates)) {
+                $output .= $this->output->activity_information($cminfo, $completiondetails, $activitydates);
+            }
 
             // Info box.
             if ($lesson->intro) {
