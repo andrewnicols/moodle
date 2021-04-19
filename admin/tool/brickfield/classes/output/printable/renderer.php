@@ -247,7 +247,6 @@ class renderer extends \tool_brickfield\output\renderer {
         $date = new \DateTime("now", \core_date::get_user_timezone_object());
         $pdf->SetLineWidth(0.0);
 
-        $imagedir = accessibility::get_file_path('/pix/pdf/');
         $html = '
             <h1>' . get_string('accessibilityreport', manager::PLUGINNAME) . '</h1>
             <h2>'. accessibility::get_title($filter, $data->countdata) .'</h2>
@@ -255,15 +254,15 @@ class renderer extends \tool_brickfield\output\renderer {
             <table cellspacing="0" cellpadding="1">
                 <tr>
                     <td>
-                        <img src="' . $imagedir . 'tachometer-alt-solid.svg'.'" width="15" height="15">' .
+                        <img src="' . $this->image_url('pdf/tachometer-alt-solid', 'tool_brickfield') .'" width="15" height="15">' .
                         ' <td style="line-height: 10px;"> '.get_string('totalactivities', manager::PLUGINNAME) . ': ' .
                         $data->combodata['total'] .'</td></td>
                     <td>
-                        <img src="' . $imagedir . 'check-square-regular.svg'.'" width="15" height="15">' .
+                        <img src="' . $this->image_url('pdf/check-square-regular', 'tool_brickfield') .'" width="15" height="15">' .
                         ' <td style="line-height: 10px;"> '.get_string('passed', manager::PLUGINNAME) . ': ' .
                         $data->combodata['passed'] .'</td></td>
                     <td>
-                        <img src="' . $imagedir . 'times-circle-regular.svg'.'" width="15" height="15">' .
+                        <img src="' . $this->image_url('pdf/times-circle-regular', 'tool_brickfield') .'" width="15" height="15">' .
                         ' <td style="line-height: 10px;"> '.get_string('failed', manager::PLUGINNAME) . ': ' .
                         $data->combodata['failed'] .'</td></td>
                 </tr>
@@ -382,15 +381,14 @@ class renderer extends \tool_brickfield\output\renderer {
 
         $tabledata = [];
 
-        $imagedir = accessibility::get_file_path('/pix/pdf/');
         // Numbers are constants from \tool_brickfield\area_base::checkgroup.
         $icons = [
-            area_base::CHECKGROUP_IMAGE => $imagedir . 'image-regular.svg',
-            area_base::CHECKGROUP_LAYOUT => $imagedir . 'th-large-solid.svg',
-            area_base::CHECKGROUP_LINK => $imagedir . 'link.png',
-            area_base::CHECKGROUP_MEDIA => $imagedir . 'play-circle-regular.svg',
-            area_base::CHECKGROUP_TABLE => $imagedir . 'table-solid.svg',
-            area_base::CHECKGROUP_TEXT => $imagedir . 'font-solid.svg'
+            area_base::CHECKGROUP_IMAGE => $this->image_url('pdf/image-regular', 'tool_brickfield'),
+            area_base::CHECKGROUP_LAYOUT => $this->image_url('pdf/th-large-solid', 'tool_brickfield'),
+            area_base::CHECKGROUP_LINK => $this->image_url('pdf/link', 'tool_brickfield'),
+            area_base::CHECKGROUP_MEDIA => $this->image_url('pdf/play-circle-regular', 'tool_brickfield'),
+            area_base::CHECKGROUP_TABLE => $this->image_url('pdf/table-solid', 'tool_brickfield'),
+            area_base::CHECKGROUP_TEXT => $this->image_url('pdf/font-solid', 'tool_brickfield'),
         ];
 
         foreach ($data->groupdata as $key => $group) {
