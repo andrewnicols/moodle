@@ -71,7 +71,7 @@ abstract class base extends area_base {
      * @return mixed
      */
     public function find_system_areas(): ?\moodle_recordset {
-        return [];
+        return null;
     }
 
     /**
