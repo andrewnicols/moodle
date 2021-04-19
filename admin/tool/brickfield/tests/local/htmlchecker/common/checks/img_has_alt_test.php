@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class test_css_text_has_contrast_testcase
- * @group tool_brickfield
  */
-class img_has_alt_testcase extends all_checks {
+class img_has_alt_test extends all_checks {
     public $checktype = 'imgHasAlt';
 
     private $htmlfail1 = <<<EOD

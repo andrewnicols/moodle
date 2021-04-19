@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class table_th_should_have_scope_test
- * @group tool_brickfield
  */
-class table_th_should_have_scope_testcase extends all_checks {
+class table_th_should_have_scope_test extends all_checks {
     public $checktype = 'tableTdShouldHaveScope';
 
     private $htmlfail1 = <<<EOD

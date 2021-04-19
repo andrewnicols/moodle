@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class table_td_should_not_merge_test
- * @group tool_brickfield
  */
-class table_td_should_not_merge_testcase extends all_checks {
+class table_td_should_not_merge_test extends all_checks {
     public $checktype = 'tableTdShouldNotMerge';
 
     private $htmlfail1 = <<<EOD

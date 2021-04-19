@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class img_with_map_has_use_map_test
- * @group tool_brickfield
  */
-class img_with_map_has_use_map_testcase extends all_checks {
+class img_with_map_has_use_map_test extends all_checks {
     public $checktype = 'imgWithMapHasUseMap';
 
     private $htmlfail = <<<EOD

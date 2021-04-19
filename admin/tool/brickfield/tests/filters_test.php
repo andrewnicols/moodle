@@ -24,15 +24,13 @@
  */
 namespace tool_brickfield;
 
-use tool_brickfield\local\tool\filter as filter;
-
-defined('MOODLE_INTERNAL') || die();
+use tool_brickfield\local\tool\filter;
 
 /**
  * Unit tests for {@filter tool_brickfield\local\tool\filter}.
  * @group tool_brickfield
  */
-class tool_brickfield_filter_testcase extends \advanced_testcase {
+class filter_test extends \advanced_testcase {
     public function test_constructor() {
         $this->resetAfterTest();
 

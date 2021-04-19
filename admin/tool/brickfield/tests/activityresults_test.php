@@ -24,13 +24,10 @@
  */
 namespace tool_brickfield\local\tool;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for {@activityresults tool_brickfield\local\tool\activityresults\tool}.
- * @group tool_brickfield
  */
-class tool_brickfield_activityresults_testcase extends \advanced_testcase {
+class activityresults_test extends \advanced_testcase {
 
     public function test_toolname() {
         $this->resetAfterTest();

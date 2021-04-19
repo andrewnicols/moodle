@@ -24,13 +24,11 @@
  */
 namespace tool_brickfield;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for {@scheduler tool_brickfield\scheduler.php}.
  * @group tool_brickfield
  */
-class tool_brickfield_scheduler_testcase extends \advanced_testcase {
+class scheduler_test extends \advanced_testcase {
 
     public function test_request_analysis() {
         $this->resetAfterTest();

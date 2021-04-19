@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class table_summary_does_not_duplicate_caption_test
- * @group tool_brickfield
  */
-class table_summary_does_not_duplicate_caption_testcase extends all_checks {
+class table_summary_does_not_duplicate_caption_test extends all_checks {
     public $checktype = 'tableSummaryDoesNotDuplicateCaption';
 
     private $htmlfail = <<<EOD
