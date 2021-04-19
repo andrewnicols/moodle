@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class legend_text_not_empty_test
- * @group tool_brickfield
  */
-class legend_text_not_empty_testcase extends all_checks {
+class legend_text_not_empty_test extends all_checks {
     public $checktype = 'legendTextNotEmpty';
 
     private $htmlfail1 = <<<EOD

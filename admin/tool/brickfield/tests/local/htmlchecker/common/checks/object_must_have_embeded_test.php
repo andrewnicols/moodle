@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class object_must_have_embeded_test
- * @group tool_brickfield
  */
-class object_must_have_embeded_testcase extends all_checks {
+class object_must_have_embeded_test extends all_checks {
     public $checktype = 'objectMustHaveEmbed';
 
     private $htmlfail = <<<EOD

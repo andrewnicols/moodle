@@ -30,10 +30,9 @@ require_once('all_checks.php');
 
 /**
  * Class test_css_text_has_contrast_testcase
- * @group tool_brickfield
  */
-class css_text_has_contrast_testcase extends all_checks {
-    public $checktype = 'cssTextHasContrast';
+class css_text_has_contrast_test extends all_checks {
+    protected $checktype = 'cssTextHasContrast';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

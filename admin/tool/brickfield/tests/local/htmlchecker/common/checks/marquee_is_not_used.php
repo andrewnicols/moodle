@@ -30,7 +30,6 @@ require_once('all_checks.php');
 
 /**
  * Class marquee_is_not_used_test
- * @group tool_brickfield
  *
  * This check test does not currently exist
  */

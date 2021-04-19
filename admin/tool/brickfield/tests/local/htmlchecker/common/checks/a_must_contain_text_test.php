@@ -30,10 +30,9 @@ require_once('all_checks.php');
 
 /**
  * Class a_must_contain_text_testcase
- * @group tool_brickfield
  */
-class a_must_contain_text_testcase extends all_checks {
-    public $checktype = 'aMustContainText';
+class a_must_contain_text_test extends all_checks {
+    protected $checktype = 'aMustContainText';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

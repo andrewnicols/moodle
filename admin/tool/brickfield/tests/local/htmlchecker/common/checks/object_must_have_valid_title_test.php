@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class object_must_have_valid_title_test
- * @group tool_brickfield
  */
-class object_must_have_valid_title_testcase extends all_checks {
+class object_must_have_valid_title_test extends all_checks {
     public $checktype = 'objectMustHaveValidTitle';
 
     private $htmlfail = <<<EOD

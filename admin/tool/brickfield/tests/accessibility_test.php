@@ -26,13 +26,10 @@ namespace tool_brickfield;
 
 use tool_brickfield\local\tool\filter;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Unit tests for {@accessibility tool_brickfield\accessibility.php}.
- * @group tool_brickfield
  */
-class tool_brickfield_accessibility_testcase extends \advanced_testcase {
+class accessibility_test extends \advanced_testcase {
 
     /**
      * Test get_title().

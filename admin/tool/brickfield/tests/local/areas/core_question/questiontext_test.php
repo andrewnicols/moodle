@@ -24,11 +24,6 @@
 
 namespace tool_brickfield\local\areas\core_question;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-
 /**
  * Class base
  * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
@@ -36,6 +31,11 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @group tool_brickfield
  */
 class questiontext_test extends \advanced_testcase {
+
+    public static function setUpBeforeTest(): void {
+        global $CFG;
+        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+    }
 
     public function test_find_course_areas() {
         $this->resetAfterTest();

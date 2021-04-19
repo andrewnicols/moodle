@@ -30,10 +30,9 @@ require_once('all_checks.php');
 
 /**
  * Class img_alt_not_placeholder_testcase
- * @group tool_brickfield
  */
-class img_alt_not_placeholder_testcase extends all_checks {
-    public $checktype = 'imgAltNotPlaceHolder';
+class img_alt_not_placeholder_test extends all_checks {
+    protected $checktype = 'imgAltNotPlaceHolder';
 
     private $htmlfail1 = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

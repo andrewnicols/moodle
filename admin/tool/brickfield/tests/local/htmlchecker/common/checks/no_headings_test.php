@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class no_headings_test
- * @group tool_brickfield
  */
-class no_headings_testcase extends all_checks {
+class no_headings_test extends all_checks {
     public $checktype = 'noHeadings';
 
     private $htmlfail = <<<EOD

@@ -31,9 +31,9 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Class all_checks
  */
-class all_checks extends \advanced_testcase {
+abstract class all_checks extends \advanced_testcase {
     // Extending class must define this.
-    public $checktype;
+    protected $checktype;
 
     /**
      * Parent function to be called in every check testcase

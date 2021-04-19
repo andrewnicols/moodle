@@ -30,10 +30,9 @@ require_once('all_checks.php');
 
 /**
  * Class bold_is_not_used_testcase
- * @group tool_brickfield
  */
-class bold_is_not_used_testcase extends all_checks {
-    public $checktype = 'boldIsNotUsed';
+class bold_is_not_used_test extends all_checks {
+    protected $checktype = 'boldIsNotUsed';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

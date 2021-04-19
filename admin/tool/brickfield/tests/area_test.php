@@ -23,13 +23,10 @@
  */
 namespace tool_brickfield;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class tool_brickfield_area_testcase
- * @group tool_brickfield
  */
-class tool_brickfield_area_testcase extends \advanced_testcase {
+class area_test extends \advanced_testcase {
 
     /**
      * Test for the area assign intro

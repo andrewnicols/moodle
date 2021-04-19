@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class table_data_should_have_th_test
- * @group tool_brickfield
  */
-class table_data_should_have_th_testcase extends all_checks {
+class table_data_should_have_th_test extends all_checks {
     public $checktype = 'tableDataShouldHaveTh';
 
     private $htmlfail1 = <<<EOD

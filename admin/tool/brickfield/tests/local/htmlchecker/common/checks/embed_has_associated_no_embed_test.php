@@ -30,10 +30,9 @@ require_once('all_checks.php');
 
 /**
  * Class embed_has_associated_no_embed_testcase
- * @group tool_brickfield
  */
-class embed_has_associated_no_embed_testcase extends all_checks {
-    public $checktype = 'embedHasAssociatedNoEmbed';
+class embed_has_associated_no_embed_test extends all_checks {
+    protected $checktype = 'embedHasAssociatedNoEmbed';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

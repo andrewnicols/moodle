@@ -30,10 +30,9 @@ require_once('all_checks.php');
 
 /**
  * Class headers_have_text_testcase
- * @group tool_brickfield
  */
-class headers_have_text_testcase extends all_checks {
-    public $checktype = 'headersHaveText';
+class headers_have_text_test extends all_checks {
+    protected $checktype = 'headersHaveText';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

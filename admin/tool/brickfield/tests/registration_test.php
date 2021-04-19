@@ -24,17 +24,17 @@
  */
 namespace tool_brickfield;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/admin/tool/brickfield/tests/generator/mock_registration.php');
-require_once($CFG->dirroot . '/admin/tool/brickfield/tests/generator/mock_brickfieldconnect.php');
-
 /**
  * Unit tests for {@registration tool_brickfield\registration.php}.
  * @group tool_brickfield
  */
-class tool_brickfield_registration_testcase extends \advanced_testcase {
+class registration_test extends \advanced_testcase {
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        require_once($CFG->dirroot . '/admin/tool/brickfield/tests/generator/mock_registration.php');
+        require_once($CFG->dirroot . '/admin/tool/brickfield/tests/generator/mock_brickfieldconnect.php');
+    }
 
     /**
      * @throws \dml_exception

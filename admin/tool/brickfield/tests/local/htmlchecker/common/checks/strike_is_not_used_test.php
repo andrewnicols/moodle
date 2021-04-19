@@ -30,9 +30,8 @@ require_once('all_checks.php');
 
 /**
  * Class strike_is_not_used_testcase
- * @group tool_brickfield
  */
-class strike_is_not_used_testcase extends all_checks {
+class strike_is_not_used_test extends all_checks {
     public $checktype = 'strikeIsNotUsed';
 
     private $htmlfail = <<<EOD

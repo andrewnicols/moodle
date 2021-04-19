@@ -23,13 +23,11 @@
  */
 namespace tool_brickfield;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
- * Class tool_brickfield_manager_testcase
+ * Class tool_brickfield_manager_test
  * @group tool_brickfield
  */
-class tool_brickfield_manager_testcase extends \advanced_testcase {
+class manager_test extends \advanced_testcase {
 
     /**
      * Tests for the function manager::get_all_areas()
