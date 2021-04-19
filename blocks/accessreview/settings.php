@@ -53,6 +53,11 @@ if ($ADMIN->fulltree) {
     );
 
     // Tool page to display by default.
-    $settings->add(new admin_setting_configtext('block_accessreview/toolpage', get_string('toolpage', 'block_accessreview'), '',
-        'errors', PARAM_ALPHA));
+    $settings->add(new admin_setting_configtext(
+        'block_accessreview/toolpage',
+        get_string('toolpage', 'block_accessreview'),
+        '',
+        'errors',
+        PARAM_ALPHA
+    ));
 }

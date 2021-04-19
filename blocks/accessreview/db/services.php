@@ -25,28 +25,25 @@ defined('MOODLE_INTERNAL') || die();
 
 $functions = [
     'block_accessreview_set_toggle_preference' => [
-        'classname'   => 'block_accessreview_external',
-        'methodname'  => 'set_toggle_preference',
-        'classpath'   => 'block/accessreview/classes/external.php',
+        'classname'   => 'block_accessreview\external\update_toggle_preference',
+        'methodname'  => 'execute',
         'description' => 'Sets the heatmap toggle preference.',
         'type'        => 'read',
-        'ajax'        => true
+        'ajax'        => true,
     ],
     'block_accessreview_get_module_data' => [
-        'classname'   => 'block_accessreview_external',
-        'methodname'  => 'get_module_data',
-        'classpath'   => 'block/accessreview/classes/external.php',
+        'classname'   => 'block_accessreview\external\get_module_data',
+        'methodname'  => 'execute',
         'description' => 'Gets error data for course modules.',
         'type'        => 'read',
-        'ajax'        => true
+        'ajax'        => true,
     ],
     'block_accessreview_get_section_data' => [
-        'classname'   => 'block_accessreview_external',
-        'methodname'  => 'get_section_data',
-        'classpath'   => 'block/accessreview/classes/external.php',
+        'classname'   => 'block_accessreview\external\get_section_data',
+        'methodname'  => 'execute',
         'description' => 'Gets error data for course sections.',
         'type'        => 'read',
-        'ajax'        => true
+        'ajax'        => true,
     ]
 ];
 
@@ -55,7 +52,7 @@ $services = [
         'functions' => [
             'block_accessreview_set_toggle_preference',
             'block_accessreview_get_module_data',
-            'block_accessreview_get_section_data'
+            'block_accessreview_get_section_data',
         ],
         'restrictedusers' => 0,
         'enabled' => 1,

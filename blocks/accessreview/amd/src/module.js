@@ -21,247 +21,283 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define(['jquery', 'core/str', 'core/ajax', 'core/templates'], function ($, str, ajax, templates) {
-    /**
-     * The error data for all sections in the course.
-     * @type {Object[]}
-     */
-    var sections;
-    /**
-     * The error data for all modules in the course.
-     * @type {Object[]}
-     */
-    var modules;
-    /**
-     * The minimum error count for sections/modules.
-     * @type {number}
-     */
-    var mindata;
-    /**
-     * The difference between the minimum and maximum error count for sections/modules.
-     * @type {number}
-     */
-    var diffdata = 0;
-    /**
-     * The number of colours used to represent the heatmap. (Indexed on 0.)
-     * @type {number}
-     */
-    var numColours = 2;
-    /**
-     * The toggle state of the heatmap.
-     * @type {boolean}
-     */
-    var toggleState = true;
-    /**
-     * The display icon for failing modules/sections.
-     * @type {string}
-     */
-    var errorsicon = '';
-    /**
-     * The display icon for passing modules/sections.
-     * @type {string}
-     */
-    var passicon = '';
-    /**
-     * The config information representing the format to display the error data.
-     * @type {string}
-     */
-    let whattoshowdata;
-    /**
-     * The required strings for the module.
-     * @type {string[]}
-     */
-    let strings = {};
+import {get_strings as getStrings} from 'core/str';
+import {call as fetchMany} from 'core/ajax';
+import * as Templates from 'core/templates';
 
-    /**
-     * Gets the required strings for the module.
-     */
-    const getStrings = () => {
-        let requiredStrings = [
-            { key: 'passed', component: 'tool_brickfield' },
-            { key: 'failed', component: 'tool_brickfield' },
-            { key: 'errors', component: 'block_accessreview' },
-            { key: 'percenterrors', component: 'block_accessreview' },
-            { key: 'success' },
-        ];
-        return str.get_strings(requiredStrings).then((values) => {
-            strings.passed = values[0];
-            strings.failed = values[1];
-            strings.errors = values[2];
-            strings.percenterrors = values[3];
-            strings.success = values[4];
-        });
-    };
+/**
+ * The number of colours used to represent the heatmap. (Indexed on 0.)
+ * @type {number}
+ */
+const numColours = 2;
 
-    /**
-     * Renders the HTML template onto a particular HTML element.
-     * @param {HTMLElement} element The element to attach the HTML to.
-     * @param {number} numerrors The number of errors on this module/section.
-     * @param {number} numchecks The number of checks triggered on this module/section.
-     */
-    function renderTemplate(element, numerrors, numchecks) {
-        let weight = parseInt((numerrors - mindata) / diffdata * numColours);
-        let alertstatus = 'block_accessreview_success';
-        if (weight < 1) { alertstatus = 'block_accessreview_warning'; }
-        if (weight >= 1) { alertstatus = 'block_accessreview_danger'; }
-        if (numerrors == 0) { alertstatus = 'block_accessreview_success'; }
-        if (element) {
-            if (whattoshowdata != 'showicons') {
-                if (element.className.search("label") >= 1) {
-                    alertstatus += '_label';
-                }
-                element.className += ' alert ' + alertstatus;
+/**
+ * The toggle state of the heatmap.
+ * @type {boolean}
+ */
+let toggleState = true;
+
+/**
+ * The display icon for failing modules/sections.
+ * @type {string}
+ */
+let errorsicon = '';
+
+/**
+ * The display icon for passing modules/sections.
+ * @type {string}
+ */
+let passicon = '';
+
+/**
+ * The required strings for the module.
+ * @type {string[]}
+ */
+let strings = {};
+
+/**
+ * Gets the required strings for the module.
+ */
+const getModuleStrings = () => {
+    let requiredStrings = [
+        {key: 'passed', component: 'tool_brickfield'},
+        {key: 'failed', component: 'tool_brickfield'},
+        {key: 'errors', component: 'block_accessreview'},
+        {key: 'percenterrors', component: 'block_accessreview'},
+        {key: 'success'},
+    ];
+    getStrings(requiredStrings).then(values => {
+        strings.passed = values[0];
+        strings.failed = values[1];
+        strings.errors = values[2];
+        strings.percenterrors = values[3];
+        strings.success = values[4];
+
+        return values;
+    })
+    .catch();
+};
+
+/**
+ * Renders the HTML template onto a particular HTML element.
+ * @param {HTMLElement} element The element to attach the HTML to.
+ * @param {number} numErrors The number of errors on this module/section.
+ * @param {number} numChecks The number of checks triggered on this module/section.
+ * @param {String} displayFormat
+ * @param {Number} minViews
+ * @param {Number} viewDelta
+ */
+const renderTemplate = (element, numErrors, numChecks, displayFormat, minViews, viewDelta) => {
+    // TODO Convert this to be an actual proper template.
+    let weight = parseInt((numErrors - minViews) / viewDelta * numColours);
+    let alertstatus = 'block_accessreview_success';
+    if (weight < 1) {
+        alertstatus = 'block_accessreview_warning';
+    }
+    if (weight >= 1) {
+        alertstatus = 'block_accessreview_danger';
+    }
+    if (numErrors == 0) {
+        alertstatus = 'block_accessreview_success';
+    }
+    if (element) {
+        if (displayFormat != 'showicons') {
+            if (element.className.search("label") >= 1) {
+                alertstatus += '_label';
             }
-            if (whattoshowdata != 'showbackground') {
-                var divclass = 'block_accessreview_view';
-                if (element.className.search("label") > -1) {
-                    divclass += ' alert ' + alertstatus;
-                }
-                let info = '<div class="' + divclass + '">';
-                if (numerrors == 0) {
-                    info += passicon;
-                    info += strings.passed;
-                } else {
-                    info += errorsicon;
-                    info += strings.failed;
-                    info += '&nbsp;&nbsp;';
-                    info += numerrors;
-                    info += '&nbsp;' + strings.errors;
-                    info += '&nbsp;&nbsp;';
-                    info += Math.round((numerrors / numchecks) * 100);
-                    info += strings.percenterrors;
-                }
-                info += '</div>';
-                element.insertAdjacentHTML('beforeend', info);
+            element.className += ' alert block_accessreview ' + alertstatus;
+        }
+        if (displayFormat != 'showbackground') {
+            let divclass = 'block_accessreview_view';
+            if (element.className.search("label") > -1) {
+                divclass += ' alert ' + alertstatus;
             }
+            let info = '<div class="' + divclass + '">';
+            if (numErrors == 0) {
+                info += passicon;
+                info += strings.passed;
+            } else {
+                info += errorsicon;
+                info += strings.failed;
+                info += '&nbsp;&nbsp;';
+                info += numErrors;
+                info += '&nbsp;' + strings.errors;
+                info += '&nbsp;&nbsp;';
+                info += Math.round((numErrors / numChecks) * 100);
+                info += strings.percenterrors;
+            }
+            info += '</div>';
+            element.insertAdjacentHTML('beforeend', info);
         }
     }
+};
 
-    /**
-     * Applies the template to all sections and modules on the course page.
-     */
-    function showAccessmap() {
-        sections.forEach((section) => {
-            let element = document.getElementById('section-' + section.section).getElementsByClassName("summary")[0];
-            if (element !== null) {
-                renderTemplate(element, section.numerrors, section.numchecks);
-            }
-        });
-        modules.forEach((module) => {
-            let element = document.getElementById('module-' + module.cmid);
-            if (element !== null) {
-                renderTemplate(element, module.numerrors, module.numchecks);
-            }
-        });
-    }
+/**
+ * Applies the template to all sections and modules on the course page.
+ *
+ * @param {Number} courseId
+ * @param {String} displayFormat
+ */
+const showAccessMap = async(courseId, displayFormat) => {
+    // Get error data.
+    const [sectionData, moduleData] = await Promise.all(fetchReviewData(courseId));
 
-    /**
-     * Hides or removes the templates from the HTML of the current page.
-     */
-    function hideAccessmap() {
-        // Removes the added elements.
-        $(".block_accessreview_view").remove();
-        // Removes the added classes.
-        $("*").removeClass ((_, className) => {
-            return (className.match (/(^|\s)alert block_accessreview\S+/g) || []).join(' ');
-        });
-    }
+    // Get total data.
+    const {minViews, viewDelta} = getErrorTotals(sectionData, moduleData);
 
-    /**
-     * Toggles the heatmap on/off.
-     */
-    const toggleAccessmap = async () => {
-        if (toggleState) {
-            hideAccessmap();
-        } else {
-            showAccessmap();
+    sectionData.forEach(section => {
+        const element = document.querySelector(`#section-${section.section} .summary`);
+        if (!element) {
+            return;
         }
 
-        toggleState = !toggleState;
+        renderTemplate(element, section.numerrors, section.numchecks, displayFormat, minViews, viewDelta);
+    });
 
-        await ajax.call([{
-            methodname: 'block_accessreview_set_toggle_preference',
-            args: { toggle: toggleState }
-        }])[0];
-    };
+    moduleData.forEach(module => {
+        const element = document.getElementById(`module-${module.cmid}`);
+        if (!element) {
+            return;
+        }
 
-    /**
-     * Parses information on the errors, generating the min, max and totals.
-     * @param {Object[]} sectiondata The error data for course sections.
-     * @param {Object[]} moduledata The error data for course modules.
-     * @returns {Object} An object representing the extra error information.
-    */
-    function get_error_totals(sectiondata, moduledata) {
-        let totals = {
-            totalerrors: 0,
-            totalusers: 0,
-            minviews: 0,
-            maxviews: 0
-        };
+        renderTemplate(element, module.numerrors, module.numchecks, displayFormat, minViews, viewDelta);
+    });
+};
 
-        let data = [];
 
-        Array.prototype.push.apply(data, sectiondata);
-        Array.prototype.push.apply(data, moduledata);
+/**
+ * Hides or removes the templates from the HTML of the current page.
+ */
+const hideAccessMap = () => {
+    // Removes the added elements.
+    document.querySelectorAll('.block_accessreview_view').forEach(node => node.remove());
 
-        data.forEach((item) => {
-            totals.totalerrors += item.numerrors;
-            if (item.numerrors < totals.minviews) {
-                totals.minviews = item.numerrors;
-            }
-            if (item.numerrors > totals.maxviews) {
-                totals.maxviews = item.numerrors;
-            }
-            totals.totalusers += item.numchecks;
-        });
+    const classList = [
+        'alert',
+        'block_accessreview',
+        'block_accessreview_success',
+        'block_accessreview_warning',
+        'block_accessreview_danger',
+        'block_accessreview_view',
+        'block_accessreview_success_label',
+        'block_accessreview_warning_label',
+        'block_accessreview_danger_label',
+        'block_accessreview_view_label',
+    ];
 
-        return totals;
+    // Removes the added classes.
+    document.querySelectorAll('.block_accessreview.alert').forEach(node => node.classList.remove(...classList));
+};
+
+
+/**
+ * Toggles the heatmap on/off.
+ *
+ * @param {Number} courseId
+ * @param {String} displayFormat
+ */
+const toggleAccessMap = (courseId, displayFormat) => {
+    if (toggleState) {
+        hideAccessMap();
+    } else {
+        showAccessMap(courseId, displayFormat);
     }
 
-    return {
-        /**
-        * Setting up the access review module.
-        * @param {number} toggled A number represnting the state of the review toggle.
-        * @param {string} whattoshow A string representing the display format for icons.
-        * @param {number} courseid The course ID.
-        */
-        init: async function (toggled, whattoshow, courseid) {
-            // Ajax calls.
-            let promises = ajax.call([
-                {
-                    methodname: 'block_accessreview_get_module_data',
-                    args: { courseid: courseid }
-                },
-                {
-                    methodname: 'block_accessreview_get_section_data',
-                    args: { courseid: courseid }
-                }
-            ]);
-            // Core/str calls.
-            let stringpromise = getStrings();
-            // Settings vars.
-            toggleState = toggled == 1;
-            whattoshowdata = whattoshow;
-            // Get error data.
-            modules = await promises[0];
-            sections = await promises[1];
-            // Get total data.
-            let totals = get_error_totals(sections, modules);
-            mindata = totals['minviews'];
-            diffdata = totals['maxviews'] - totals['minviews'] + 1;
-            // Load strings.
-            await stringpromise;
-            // Load icons.
-            passicon = await templates.renderPix('t/check', 'core', strings.success);
-            errorsicon = await templates.renderPix('t/block', 'core', strings.errors);
+    toggleState = !toggleState;
+    fetchMany([{
+        methodname: 'block_accessreview_set_toggle_preference',
+        args: {toggle: toggleState}
+    }]);
+};
 
-            if (toggleState) {
-                showAccessmap();
-            }
-            // Apply the click event.
-            $('#toggle-accessmap').click(() => {
-                toggleAccessmap();
-            });
-        }
+/**
+ * Parses information on the errors, generating the min, max and totals.
+ *
+ * @param {Object[]} sectionData The error data for course sections.
+ * @param {Object[]} moduleData The error data for course modules.
+ * @returns {Object} An object representing the extra error information.
+*/
+const getErrorTotals = (sectionData, moduleData) => {
+    const totals = {
+        totalErrors: 0,
+        totalUsers: 0,
+        minViews: 0,
+        maxViews: 0,
+        viewDelta: 0,
     };
-});
+
+    [].concat(sectionData, moduleData).forEach(item => {
+        totals.totalErrors += item.numerrors;
+        if (item.numerrors < totals.minViews) {
+            totals.minViews = item.numerrors;
+        }
+
+        if (item.numerrors > totals.maxViews) {
+            totals.maxViews = item.numerrors;
+        }
+        totals.totalUsers += item.numchecks;
+    });
+
+    totals.viewDelta = totals.maxViews - totals.minViews + 1;
+
+    return totals;
+};
+
+const registerEventListeners = (courseId, displayFormat) => {
+    document.addEventListener('click', e => {
+        if (e.target.closest('#toggle-accessmap')) {
+            e.preventDefault();
+            toggleAccessMap(courseId, displayFormat);
+        }
+    });
+};
+
+/**
+ * Fetch the review data.
+ *
+ * @param   {Number} courseid
+ * @returns {Promise[]}
+ */
+const fetchReviewData = courseid => fetchMany([
+    {
+        methodname: 'block_accessreview_get_section_data',
+        args: {courseid}
+    },
+    {
+        methodname: 'block_accessreview_get_module_data',
+        args: {courseid}
+    },
+]);
+
+/**
+ * Setting up the access review module.
+ * @param {number} toggled A number represnting the state of the review toggle.
+ * @param {string} displayFormat A string representing the display format for icons.
+ * @param {number} courseId The course ID.
+ */
+export const init = async(toggled, displayFormat, courseId) => {
+    // Settings consts.
+    //
+    toggleState = toggled == 1;
+
+    // TODO: Replace all of this with a template...
+    // __None__ of this should be stored as instance vars.
+    // The over-use of await is a bad thing here because _none_ of these are being checked for errors.
+    // async promise use should usually be in a try/catch, and none of the ones here are necessary.
+
+    // Core/str calls.
+    let stringpromise = getModuleStrings();
+
+    // Load strings.
+    await stringpromise;
+
+    // Load icons.
+    passicon = await Templates.renderPix('t/check', 'core', strings.success);
+    errorsicon = await Templates.renderPix('t/block', 'core', strings.errors);
+
+    if (toggleState) {
+        showAccessMap(courseId, displayFormat);
+    }
+
+    registerEventListeners(courseId, displayFormat);
+};

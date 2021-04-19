@@ -26,13 +26,12 @@ use tool_brickfield\accessibility;
 use tool_brickfield\analysis;
 use tool_brickfield\area_base;
 use tool_brickfield\local\tool\filter;
+use tool_brickfield\manager;
+use tool_brickfield\output\renderer;
 use tool_brickfield\registration;
 use tool_brickfield\scheduler;
 use tool_brickfield\sitedata;
-use tool_brickfield\output\renderer;
-use tool_brickfield\manager;
 
-defined('MOODLE_INTERNAL') || die();
 /**
  * accessreview block class
  *
@@ -187,7 +186,7 @@ class block_accessreview extends block_base {
      * @throws coding_exception
      * @throws moodle_exception
      */
-    protected function get_table_data($courseid) {
+    protected function get_table_data($courseid): array {
         global $OUTPUT;
         $datafilters = new filter($courseid, 0);
         $errordisplay = get_config('block_accessreview', 'errordisplay');
@@ -200,14 +199,21 @@ class block_accessreview extends block_base {
                 $count++;
             }
         }
-        $files = ['form' => '', 'image' => '231/', 'layout' => '234/', 'link' => '237/',
-            'media' => '240/', 'table' => '243/', 'text' => '246/'];
+        $files = [
+            'form' => '',
+            'image' => '231/',
+            'layout' => '234/',
+            'link' => '237/',
+            'media' => '240/',
+            'table' => '243/',
+            'text' => '246/',
+        ];
         // Populating table data.
         $tabledata = [];
         foreach ($data as $key => $total) {
             // If the total is empty it means there is no results yet in the table.
             if ($total === null) {
-                return null;
+                continue;
             }
             $type = area_base::checkgroup_name($key);
             // Error display data.

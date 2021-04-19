@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'block_accessreview';
 $plugin->release = '1.1 (Build - 2021012500)';
-$plugin->version   = 2020101902;
+$plugin->version   = 2020101904;
 $plugin->requires  = 2018051700; // Moodle 3.5 and up.
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->dependencies = array(
