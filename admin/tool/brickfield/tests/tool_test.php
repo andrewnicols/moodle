@@ -33,17 +33,37 @@ use tool_brickfield\local\tool\tool;
  */
 class tool_test extends \advanced_testcase {
 
-    public function test_constructor() {
-        $this->resetAfterTest();
+    protected $base64img = <<<EOF
+<img src="data:image/gif;base64,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
+w==" alt="This is a bus." />';
+EOF;
 
-        $object = new mock_tool_element();
-        $this->assertIsObject($object);
-    }
 
     public function test_build_all_accessibilitytools() {
-        $this->resetAfterTest();
-
         $tools = tool::build_all_accessibilitytools();
+
         $this->assertEquals($tools['errors']::toolshortname(), 'Error list');
         $this->assertEquals($tools['activityresults']::toolshortname(), 'Activity breakdown');
         $this->assertEquals($tools['checktyperesults']::toolshortname(), 'Content types');
@@ -52,9 +72,7 @@ class tool_test extends \advanced_testcase {
     }
 
     public function test_data_is_valid() {
-        $this->resetAfterTest();
-
-        $object = new mock_tool_element();
+        $object = $this->getMockForAbstractClass(tool::class);
         $object->set_filter(new filter());
         $output = $object->data_is_valid();
         $this->assertFalse($output);
@@ -65,26 +83,24 @@ class tool_test extends \advanced_testcase {
         $category = $this->getDataGenerator()->create_category();
         $filter = new filter(1, $category->id, 'tab', 3, 4);
 
-        $tool = new mock_tool_element();
+        $tool = $this->getMockForAbstractClass(tool::class);
+
         $output = $tool->can_access($filter);
         $this->assertFalse($output);
     }
 
     public function test_get_error_message() {
-        $this->resetAfterTest();
+        $tool = $this->getMockForAbstractClass(tool::class);
 
-        $object = new mock_tool_element();
-        $output = $object->get_error_message();
+        $output = $tool->get_error_message();
         $this->assertEquals($output, '');
     }
 
     public function test_get_module_label() {
-        $this->resetAfterTest();
-
-        $object = new mock_tool_element();
-        $output = $object::get_module_label('core_course');
+        $output = tool::get_module_label('core_course');
         $this->assertEquals($output, 'Course');
-        $output = $object::get_module_label('mod_book');
+
+        $output = tool::get_module_label('mod_book');
         $this->assertEquals($output, 'Book');
     }
 
@@ -93,81 +109,58 @@ class tool_test extends \advanced_testcase {
         $category = $this->getDataGenerator()->create_category();
         $filter = new filter(1, $category->id, 'tab', 3, 4);
 
-        $tool = new mock_tool_element();
-        $output = $tool::toplevel_arguments();
+        $output = tool::toplevel_arguments();
         $this->assertEmpty($output);
 
-        $output = $tool::toplevel_arguments($filter);
+        $output = tool::toplevel_arguments($filter);
         $this->assertEquals($output['courseid'], 1);
         $this->assertEquals($output['categoryid'], $category->id);
     }
 
-    /** @var test strings of base64 images. */
-    protected $base64img =
-        '<img src="data:image/gif;base64,R0lGODlhPQBEAPeoAJosM//AwO/AwHVYZ/z595kzAP/s7P+goOXMv8+fhw/v739/f+8PD98fH/' .
-        '8mJl+fn/9ZWb8/PzWlwv///6wWGbImAPgTEMImIN9gUFCEm/gDALULDN8PAD6atYdCTX9gUNKlj8wZAKUsAOzZz+UMAOsJAP/Z2ccMDA8PD/95eX5N' .
-        'WvsJCOVNQPtfX/8zM8+QePLl38MGBr8JCP+zs9myn/8GBqwpAP/GxgwJCPny78lzYLgjAJ8vAP9fX/+MjMUcAN8zM/9wcM8ZGcATEL+QePdZWf/29u' .
-        'c/P9cmJu9MTDImIN+/r7+/vz8/P8VNQGNugV8AAF9fX8swMNgTAFlDOICAgPNSUnNWSMQ5MBAQEJE3QPIGAM9AQMqGcG9vb6MhJsEdGM8vLx8fH98A' .
-        'ANIWAMuQeL8fABkTEPPQ0OM5OSYdGFl5jo+Pj/+pqcsTE78wMFNGQLYmID4dGPvd3UBAQJmTkP+8vH9QUK+vr8ZWSHpzcJMmILdwcLOGcHRQUHxwcK9' .
-        'PT9DQ0O/v70w5MLypoG8wKOuwsP/g4P/Q0IcwKEswKMl8aJ9fX2xjdOtGRs/Pz+Dg4GImIP8gIH0sKEAwKKmTiKZ8aB/f39Wsl+LFt8dgUE9PT5x5aH' .
-        'BwcP+AgP+WltdgYMyZfyywz78AAAAAAAD///8AAP9mZv///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
-        'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
-        'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA' .
-        'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAEAAKgALAAAAAA9AEQAAAj/AFEJHEiwoMGDCBMqXMiwocAbBww4nEhxoYkUpz' .
-        'JGrMixogkfGUNqlNixJEIDB0SqHGmyJSojM1bKZOmyop0gM3Oe2liTISKMOoPy7GnwY9CjIYcSRYm0aVKSLmE6nfq05QycVLPuhDrxBlCtYJUqNAq2b' .
-        'NWEBj6ZXRuyxZyDRtqwnXvkhACDV+euTeJm1Ki7A73qNWtFiF+/gA95Gly2CJLDhwEHMOUAAuOpLYDEgBxZ4GRTlC1fDnpkM+fOqD6DDj1aZpITp0dt' .
-        'GCDhr+fVuCu3zlg49ijaokTZTo27uG7Gjn2P+hI8+PDPERoUB318bWbfAJ5sUNFcuGRTYUqV/3ogfXp1rWlMc6awJjiAAd2fm4ogXjz56aypOoIde4O' .
-        'E5u/F9x199dlXnnGiHZWEYbGpsAEA3QXYnHwEFliKAgswgJ8LPeiUXGwedCAKABACCN+EA1pYIIYaFlcDhytd51sGAJbo3onOpajiihlO92KHGaUXGw' .
-        'WjUBChjSPiWJuOO/LYIm4v1tXfE6J4gCSJEZ7YgRYUNrkji9P55sF/ogxw5ZkSqIDaZBV6aSGYq/lGZplndkckZ98xoICbTcIJGQAZcNmdmUc210hs3' .
-        '5nCyJ58fgmIKX5RQGOZowxaZwYA+JaoKQwswGijBV4C6SiTUmpphMspJx9unX4KaimjDv9aaXOEBteBqmuuxgEHoLX6Kqx+yXqqBANsgCtit4FWQAEk' .
-        'rNbpq7HSOmtwag5w57GrmlJBASEU18ADjUYb3ADTinIttsgSB1oJFfA63bduimuqKB1keqwUhoCSK374wbujvOSu4QG6UvxBRydcpKsav++Ca6G8A6P' .
-        'r1x2kVMyHwsVxUALDq/krnrhPSOzXG1lUTIoffqGR7Goi2MAxbv6O2kEG56I7CSlRsEFKFVyovDJoIRTg7sugNRDGqCJzJgcKE0ywc0ELm6KBCCJo8D' .
-        'IPFeCWNGcyqNFE06ToAfV0HBRgxsvLThHn1oddQMrXj5DyAQgjEHSAJMWZwS3HPxT/QMbabI/iBCliMLEJKX2EEkomBAUCxRi42VDADxyTYDVogV+wS' .
-        'ChqmKxEKCDAYFDFj4OmwbY7bDGdBhtrnTQYOigeChUmc1K3QTnAUfEgGFgAWt88hKA6aCRIXhxnQ1yg3BCayK44EWdkUQcBByEQChFXfCB776aQsG0B' .
-        'IlQgQgE8qO26X1h8cEUep8ngRBnOy74E9QgRgEAC8SvOfQkh7FDBDmS43PmGoIiKUUEGkMEC/PJHgxw0xH74yx/3XnaYRJgMB8obxQW6kL9QYEJ0FIF' .
-        'gByfIL7/IQAlvQwEpnAC7DtLNJCKUoO/w45c44GwCXiAFB/OXAATQryUxdN4LfFiwgjCNYg+kYMIEFkCKDs6PKAIJouyGWMS1FSKJOMRB/BoIxYJIUX' .
-        'FUxNwoIkEKPAgCBZSQHQ1A2EWDfDEUVLyADj5AChSIQW6gu10bE/JG2VnCZGfo4R4d0sdQoBAHhPjhIB94v/wRoRKQWGRHgrhGSQJxCS+0pCZbEhAAO' .
-        'w==" alt="This is a bus." />';
-    protected $img = '<img src="myimage.jpg" />';
+    public function base64_img_provider(): array {
+        $img = '<img src="myimage.jpg" />';
+        return [
+            'Image tag alone (base64)' => [
+                $this->base64img,
+                true,
+            ],
+            'Image tag alone (link)' => [
+                $img,
+                false,
+            ],
+            'Image tag in string (base64)' => [
+                "This is my image {$this->base64img}.",
+                true,
+            ],
+            'Image tag in string (link)' => [
+                "This is my image {$img}.",
+                false,
+            ],
+            'Image tag with string base64 in alt' => [
+                "<img src='myimage.jpg' alt='base64'/>",
+                false,
+            ],
+            'base64 string in text' => [
+                "An example base 64 format string is 'data:image/gif;base64'./>",
+                false,
+            ],
+        ];
+    }
 
-    public function test_base64_img_detected() {
-        $this->resetAfterTest();
-        $tool = new mock_tool_element();
-
-        $this->assertTrue($tool::base64_img_detected($this->base64img));
-        $this->assertFalse($tool::base64_img_detected($this->img));
-        $this->assertTrue($tool::base64_img_detected('This is my image ' . $this->base64img . '.'));
-        $this->assertFalse($tool::base64_img_detected('<img src="myimage.jpg" alt="base64"'));
-        $this->assertFalse($tool::base64_img_detected('<img src="myimage.jpg" alt="base64"'));
-        $this->assertFalse($tool::base64_img_detected('An example base 64 format string is "data:image/gif;base64".'));
+    /**
+     * @dataProvider base64_img_provider
+     * @param string $content
+     * @param bool $expectation
+     */
+    public function test_base64_img_detected(string $content, bool $expectation) {
+        $this->assertEquals(
+            $expectation,
+            tool::base64_img_detected($content)
+        );
     }
 
     public function test_truncate_base64() {
-        $this->resetAfterTest();
-        $tool = new mock_tool_element();
-
-        $truncated = $tool::truncate_base64($this->base64img);
+        $truncated = tool::truncate_base64($this->base64img);
         $this->assertStringContainsString('<img src="data:image/gif;base64..."', $truncated);
-    }
-}
-
-class mock_tool_element extends tool {
-
-    protected function fetch_data(): \stdClass {
-        return (object)[];
-    }
-
-    public function pluginname(): string {
-    }
-
-    public static function toolname(): string {
-        return '';
-    }
-
-    public static function toolshortname(): string {
-        return '';
-    }
-
-    public function get_output() {
     }
 }
