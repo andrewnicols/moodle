@@ -43,6 +43,7 @@ function block_accessreview_get_fontawesome_icon_map() {
         'block_accessreview:f/media' => 'fa-play-circle-o',
         'block_accessreview:f/table' => 'fa-table',
         'block_accessreview:f/text' => 'fa-font',
-
+        'block_accessreview:t/fail' => 'fa-ban',
+        'block_accessreview:t/pass' => 'fa-check',
     ];
 }

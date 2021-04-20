@@ -1,19 +1,19 @@
 .block_accessreview_success,
-.block_accessreview_success_label > div {
+.block_accessreview.block_accessreview_success.hasinfo {
     color: #1e451e;
     background: #d7e6d7;
     border-color: #c8ddc8;
 }
 
 .block_accessreview_danger,
-.block_accessreview_danger_label > div {
+.block_accessreview.block_accessreview_danger.hasinfo {
     color: #6e211e;
     background: #f6d9d8;
     border-color: #f3c9c8;
 }
 
 .block_accessreview_warning,
-.block_accessreview_warning_label > div {
+.block_accessreview.block_accessreview_warning.hasinfo {
     color: #7d5a29;
     background: #fcefdc;
     border-color: #fbe8cd;

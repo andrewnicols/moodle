@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
 /**
  * Simple block language strings
  *
@@ -35,8 +36,6 @@ $string['guides'] = 'Guides';
 $string['link:pdf'] = 'Link to PDF resource on {$a} - opens in new window';
 $string['link:video'] = 'Link to Video resource on {$a} - opens in new window';
 $string['nodata'] = 'No accessibility results data was found.';
-$string['passrate'] = 'Pass rate';
-$string['percenterrors'] = '% of all checks';
 $string['pluginname'] = 'Accessibility Review';
 $string['privacy:metadata'] = 'The Accessibility Review plugin does not store any personal data.';
 $string['showbackground'] = 'Show background colouring only';
@@ -46,6 +45,10 @@ $string['showicons'] = 'Show count icons only';
 $string['showint'] = 'Display amount';
 $string['showpercent'] = 'Display percentage';
 $string['smile'] = '0 errors, congratulations!';
+$string['status:successalt'] = 'Passed';
+$string['status:success'] = 'Passed';
+$string['status:errors'] = 'Failed {$a->errorCount} errors ({$a->failureRate}% of all checks)';
+$string['status:errorsalt'] = 'Errors';
 $string['toggleaccessreview'] = 'Toggle highlighting';
 $string['toolpage'] = 'Report page to show';
 $string['totalerrors'] = '<em>Total errors:</em> {$a} <br>(total excludes course settings)';
