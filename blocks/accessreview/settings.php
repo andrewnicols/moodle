@@ -24,6 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use tool_brickfield\local\tool\tool as base_tool;
+
 if ($ADMIN->fulltree) {
 
     // Control background display and icons.
@@ -53,11 +55,12 @@ if ($ADMIN->fulltree) {
     );
 
     // Tool page to display by default.
-    $settings->add(new admin_setting_configtext(
+    $options = base_tool::get_tool_names();
+    $settings->add(new admin_setting_configselect(
         'block_accessreview/toolpage',
         get_string('toolpage', 'block_accessreview'),
         '',
-        'errors',
-        PARAM_ALPHA
+        key($options),
+        $options
     ));
 }

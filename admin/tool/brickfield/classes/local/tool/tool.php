@@ -51,16 +51,40 @@ abstract class tool {
     private $errormessage = '';
 
     /**
+     * Get a mapping of tool shortname => class name.
+     *
+     * @return  string[]
+     */
+    protected static function get_tool_classnames(): array {
+        $tools = [];
+
+        foreach (self::TOOLNAMES as $toolname) {
+            $tools[$toolname] = "tool_brickfield\\local\\tool\\{$toolname}";
+        }
+
+        return $tools;
+    }
+
+    /**
      * Return an array with one of each tool instance.
-     * @return array
+     *
+     * @return tool[]
      */
     public static function build_all_accessibilitytools(): array {
-        $tools = [];
-        foreach (self::TOOLNAMES as $toolname) {
-            $class = 'tool_brickfield\local\tool\\' . $toolname;
-            $tools[$toolname] = new $class();
-        }
-        return $tools;
+        return array_map(function($classname) {
+            return new $classname();
+        }, self::get_tool_classnames());
+    }
+
+    /**
+     * Get a list of formal tool names for each tool.
+     *
+     * @return  string[]
+     */
+    public static function get_tool_names(): array {
+        return array_map(function($classname) {
+            return $classname::toolname();
+        }, self::get_tool_classnames());
     }
 
     /**
