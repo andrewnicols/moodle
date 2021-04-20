@@ -71,6 +71,8 @@ class get_module_data extends external_api {
         $context = \context_course::instance($courseid);
         self::validate_context($context);
 
+        require_capability('block/accessreview:view', $context);
+
         return array_values(manager::get_cm_summary_for_course($courseid));
     }
 
