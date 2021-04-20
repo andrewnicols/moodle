@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Module Area base class.
- *
- * @package    tool_brickfield
- * @category   module_area_base
- * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
- *
- */
-
 namespace tool_brickfield\local\areas;
 
 use core\event\course_module_created;
@@ -31,6 +22,11 @@ use tool_brickfield\area_base;
 
 /**
  * Base class for all areas that represent a field from the module table (such as 'intro' or 'name')
+ *
+ * @package    tool_brickfield
+ * @category   module_area_base
+ * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
+ *
  */
 abstract class module_area_base extends area_base {
 

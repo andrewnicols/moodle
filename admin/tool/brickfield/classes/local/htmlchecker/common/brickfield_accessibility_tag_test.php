@@ -17,21 +17,13 @@
 namespace tool_brickfield\local\htmlchecker\common;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * A special base class for tests that only file a report whenever it hits the specified tag regardless of anything
+ * about the element (especially for tests like "No Blink Tag" - or ones that fire on objects that require human
+ * attention). To use this class, just override the value of the $tag variable.
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- *    A special base class for tests that only file a report whenever
- *    it hits the specified tag regardless of anything about the element
- *    (especially for tests like "No Blink Tag" - or ones that fire on
- *    objects that require human attention). To use this class, just override
- *    the value of the $tag variable.
- *
  */
 class brickfield_accessibility_tag_test extends brickfield_accessibility_test {
     /**

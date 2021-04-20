@@ -14,19 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Brickfield accessibility HTML checker library.
- *
- * @package    local\htmlchecker
- * @subpackage accessibility
- * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace tool_brickfield\local\htmlchecker\reporters;
 
 use tool_brickfield\local\htmlchecker\brickfield_accessibility;
 
 /**
  * Returns a formatted HTML view of the problems
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class report_codehighlight extends \tool_brickfield\local\htmlchecker\brickfield_accessibility_reporter {
 

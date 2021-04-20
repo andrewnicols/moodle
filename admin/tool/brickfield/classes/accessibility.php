@@ -14,17 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Provides the Brickfield Accessibility toolkit API.
- *
- * @package    tool_brickfield
- * @category   accessibility
- * @copyright  2020 onward Brickfield Education Labs Ltd, https://www.brickfield.ie
- * @author     Mike Churchward (mike@brickfieldlabs.ie)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- */
-
 namespace tool_brickfield;
 
 use context_system;
@@ -35,15 +24,22 @@ use tool_brickfield\event\plugin_installed;
 use tool_brickfield\local\tool\filter;
 
 /**
- * Class accessibilitybasic
- * @package tool_brickfield
+ * Provides the Brickfield Accessibility toolkit API.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward Brickfield Education Labs Ltd, https://www.brickfield.ie
+ * @author     Mike Churchward (mike@brickfieldlabs.ie)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class accessibility {
 
     /** @var string The component sub path */
     private static $pluginpath = 'tool/brickfield';
 
+    /** @var string Supported format of topics */
     const TOOL_BRICKFIELD_FORMAT_TOPIC = 'topics';
+
+    /** @var string Supported format of weeks */
     const TOOL_BRICKFIELD_FORMAT_WEEKLY = 'weeks';
 
     /**
@@ -171,14 +167,8 @@ class accessibility {
     }
 
     /**
-     * @param manager $manager
      * @param int $batch
      * @return bool
-     * @throws \ReflectionException
-     * @throws \coding_exception
-     * @throws \ddl_exception
-     * @throws \ddl_table_missing_exception
-     * @throws \dml_exception
      */
     protected static function bulk_processing(int $batch = 0): bool {
         manager::check_course_updates();

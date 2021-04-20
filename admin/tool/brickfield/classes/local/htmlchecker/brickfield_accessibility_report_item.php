@@ -19,16 +19,11 @@ namespace tool_brickfield\local\htmlchecker;
 use DOMDocument;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * A report item. There is one per issue with the report
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * A report item. There is one per issue with the report
  */
 class brickfield_accessibility_report_item {
 

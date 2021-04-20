@@ -15,22 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace tool_brickfield\local\htmlchecker\reporters;
+
 use tool_brickfield\local\htmlchecker\brickfield_accessibility_reporter;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * A static reporter.
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * Generates a list of errors which do not pass and their severity.
+ *
+ * This is just a demonstration of what you can do with a reporter.
+ *
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-/**
- * A static reporter. Generates a list of errors which do not pass and their severity.
- * This is just a demonstration of what you can do with a reporter.
- */
-
 class report_static extends brickfield_accessibility_reporter {
     /**
      * Generates a static list of errors within a div.

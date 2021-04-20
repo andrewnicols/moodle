@@ -14,22 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Observer class containing methods monitoring various events.
- *
- * @package    tool_brickfield
- * @category   observer
- * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
- * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- */
 namespace tool_brickfield;
 
 use core\event\base;
 use tool_brickfield\event\plugin_installed;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Observer class containing methods monitoring various events.

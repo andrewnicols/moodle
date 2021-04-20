@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Area manager class.
- *
- * @package    tool_brickfield
- * @copyright  2021 Brickfield Education Labs https://www.brickfield.ie
- * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- */
-
 namespace tool_brickfield;
 
 /**
@@ -210,7 +201,7 @@ class manager {
     /**
      * Calculate contenthash of a given content string
      *
-     * @param $content
+     * @param string|null $content
      * @return string
      */
     public static function get_contenthash(?string $content = null): string {

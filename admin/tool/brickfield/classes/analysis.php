@@ -14,21 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Analysis and deployment class.
- *
- * @package    tool_brickfield
- * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
- * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- */
-
 namespace tool_brickfield;
 
 use tool_brickfield\task\process_analysis_requests;
 
 /**
- * Class analysis.
+ * Analysis and deployment class.
+ *
  * @package tool_brickfield
  * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
  * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

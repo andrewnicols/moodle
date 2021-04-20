@@ -17,16 +17,11 @@
 namespace tool_brickfield\local\htmlchecker;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * The base class for a guideline
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * The base class for a guideline
  */
 class brickfield_accessibility_guideline {
     /** @var object The current document's DOMDocument */

@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield;
+
+use tool_brickfield\local\tool\filter;
+use tool_brickfield\local\tool\tool;
+
 /**
  * Provides the Brickfield Accessibility toolkit site data API.
  *
@@ -21,20 +26,6 @@
  * @copyright  2020 onward Brickfield Education Labs Ltd, https://www.brickfield.ie
  * @author     Mike Churchward (mike@brickfieldlabs.ie)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- */
-
-namespace tool_brickfield;
-
-use tool_brickfield\local\tool\filter;
-use tool_brickfield\local\tool\tool;
-
-/**
- * Class sitedata
- * @package tool_brickfield
- * @copyright  2021 Brickfield Education Labs https://www.brickfield.ie
- * @license https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
  */
 class sitedata {
 

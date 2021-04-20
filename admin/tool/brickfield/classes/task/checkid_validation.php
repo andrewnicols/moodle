@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\task;
+
+use tool_brickfield\accessibility;
+use tool_brickfield\manager;
+
 /**
  * Task function to run checkid validation for accessibility checks.
  *
@@ -21,28 +26,19 @@
  * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace tool_brickfield\task;
-use tool_brickfield\accessibility;
-use tool_brickfield\manager;
-
-defined('MOODLE_INTERNAL') || die();
-
 class checkid_validation extends \core\task\scheduled_task {
 
     /**
      * Return the task's name as shown in admin screens.
      *
      * @return string
-     * @throws \coding_exception
      */
     public function get_name(): string {
         return get_string('checkidvalidation', manager::PLUGINNAME);
     }
 
     /**
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * Execute the task
      */
     public function execute() {
         global $DB;

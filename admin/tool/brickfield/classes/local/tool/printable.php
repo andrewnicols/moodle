@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Printable accessibility tool report.
- *
- * @package    tool_brickfield
- * @subpackage printable
- * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_brickfield\local\tool;
 
 use tool_brickfield\manager;
@@ -223,10 +214,7 @@ class printable extends tool {
 
     /**
      * Get the HTML output for display.
-     * @param filter $filter
-     * @return mixed|void
-     * @throws \coding_exception
-     * @throws \dml_exception
+     * @return mixed
      */
     public function get_output() {
         global $PAGE;

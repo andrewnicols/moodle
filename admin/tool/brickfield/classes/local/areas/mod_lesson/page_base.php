@@ -18,8 +18,13 @@ namespace tool_brickfield\local\areas\mod_lesson;
 
 use tool_brickfield\area_base;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Lesson page base.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class page_base extends area_base {
 
     /**

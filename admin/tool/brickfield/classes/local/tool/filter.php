@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Brickfield accessibility tools filter class.
- *
- * @subpackage accessibility
- * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_brickfield\local\tool;
 
 use tool_brickfield\accessibility;

@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Task function to update this site's summary data to the Brickfield database.
- *
- * @package    tool_brickfield
- * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_brickfield\task;
 
 use tool_brickfield\accessibility;
@@ -29,8 +21,13 @@ use tool_brickfield\brickfieldconnect;
 use tool_brickfield\manager;
 use tool_brickfield\registration;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Task function to update this site's summary data to the Brickfield database.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class update_summarydata extends \core\task\scheduled_task {
 
     /**
@@ -43,7 +40,7 @@ class update_summarydata extends \core\task\scheduled_task {
     }
 
     /**
-     * @throws \dml_exception
+     * Execute the task
      */
     public function execute() {
         // If this feature has been disabled, do nothing.

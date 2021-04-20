@@ -14,35 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\task;
+
+use tool_brickfield\accessibility;
+use tool_brickfield\manager;
+
 /**
  * Task function to bulk process caches for accessibility checks.
+ *
  * This is a Brickfield Premium feature only.
  *
  * @package    tool_brickfield
  * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace tool_brickfield\task;
-
-use tool_brickfield\accessibility;
-use tool_brickfield\manager;
-
-defined('MOODLE_INTERNAL') || die();
-
 class bulk_process_caches extends \core\task\scheduled_task {
 
     /**
      * Return the task's name as shown in admin screens.
      *
      * @return string
-     * @throws \coding_exception
      */
     public function get_name(): string {
         return get_string('bulkprocesscaches', manager::PLUGINNAME);
     }
 
-
+    /**
+     * Execute the task
+     */
     public function execute() {
         // If this feature has been disabled do nothing.
         if (accessibility::is_accessibility_enabled()) {

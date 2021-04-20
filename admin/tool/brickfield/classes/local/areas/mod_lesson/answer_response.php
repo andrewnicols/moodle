@@ -16,8 +16,13 @@
 
 namespace tool_brickfield\local\areas\mod_lesson;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Lesson answer response observer.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class answer_response extends answer_base {
 
     /**

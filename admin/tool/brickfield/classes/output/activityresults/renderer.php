@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * tool_brickfield/activityresults renderer
- *
- * @package    accessibilitytool_activityresults
- * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
- * @author:    Mike Churchward
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_brickfield\output\activityresults;
 
 use core\chart_bar as chart_bar;
@@ -31,14 +22,12 @@ use tool_brickfield\accessibility;
 use tool_brickfield\local\tool\filter;
 use tool_brickfield\manager;
 
-defined('MOODLE_INTERNAL') || die;
-
 /**
  * tool_brickfield/activityresults renderer
  *
  * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
- * @author:    Mike Churchward
+ * @author     Mike Churchward
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class renderer extends \tool_brickfield\output\renderer {

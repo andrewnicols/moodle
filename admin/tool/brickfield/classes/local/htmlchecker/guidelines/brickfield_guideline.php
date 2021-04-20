@@ -15,21 +15,17 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace tool_brickfield\local\htmlchecker\guidelines;
+
 use tool_brickfield\local\htmlchecker\brickfield_accessibility_guideline;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * Brickfield Guideline
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-/**
- * Brickfield Guideline
- */
-class brickfield_guideline extends brickfield_accessibility_guideline{
+class brickfield_guideline extends brickfield_accessibility_guideline {
 
     /**
      * @var array An array of test class names which will be called for this guideline

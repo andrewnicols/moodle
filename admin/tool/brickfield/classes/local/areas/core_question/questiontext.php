@@ -14,17 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- *
- * @package    tool_brickfield
- * @copyright  2020 Brickfield Education Labs, https://www.brickfield.ie - Author: Karen Holland
- *
- */
-
 namespace tool_brickfield\local\areas\core_question;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Question text observer.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class questiontext extends base {
 
     /**

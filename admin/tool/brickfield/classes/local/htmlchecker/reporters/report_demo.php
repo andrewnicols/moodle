@@ -14,30 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\local\htmlchecker\reporters;
+
 use tool_brickfield\local\htmlchecker\brickfield_accessibility;
 use tool_brickfield\local\htmlchecker\brickfield_accessibility_reporter;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * Returns the entire document marked-up to highlight problems.
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * Returns the entire document marked-up to highlight problems.
  */
 class report_demo extends brickfield_accessibility_reporter {
 
     /**
      * @var array An array of the classnames to be associated with items
      */
-    public $classnames = [brickfield_accessibility::BA_TEST_SEVERE => 'testlevel_severe',
-                          brickfield_accessibility::BA_TEST_MODERATE => 'testlevel_moderate',
-                          brickfield_accessibility::BA_TEST_SUGGESTION => 'testlevel_suggestion',
-                         ];
+    public $classnames = [
+        brickfield_accessibility::BA_TEST_SEVERE => 'testlevel_severe',
+        brickfield_accessibility::BA_TEST_MODERATE => 'testlevel_moderate',
+        brickfield_accessibility::BA_TEST_SUGGESTION => 'testlevel_suggestion',
+    ];
 
     /**
      * The get_report method - we iterate through every test item and
@@ -74,10 +72,11 @@ class report_demo extends brickfield_accessibility_reporter {
 
 
     /**
-     * Finds the final postion of a needle in the haystack
-     * @param $haystack
-     * @param $needle
-     * @param $occurance
+     * Finds the final postion of a needle in the haystack.
+     *
+     * @param mixed $haystack
+     * @param mixed $needle
+     * @param mixed $occurance
      * @param int $pos
      * @return false|int
      */

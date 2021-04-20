@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield;
+
 /**
  * Scheduler class.
  *
@@ -21,11 +23,7 @@
  * @author     Mike Churchward <mike@brickfieldlabs.ie>
  * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL
- *
  */
-
-namespace tool_brickfield;
-
 class scheduler {
 
     /**

@@ -14,26 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- *
- * @package    tool_brickfield
- * @copyright  2020 Brickfield Education Labs, https://www.brickfield.ie - Author: Karen Holland
- *
- */
-
 namespace tool_brickfield\local\areas\core_question;
 
 use core\event\question_created;
 use core\event\question_updated;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Base class for various question-related areas
  *
  * This is an abstract class so it will be skipped by manager when it finds all areas
  *
- * @package tool_brickfield\local\areas\core_question
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class answerbase extends base {
 

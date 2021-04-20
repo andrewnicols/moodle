@@ -16,20 +16,17 @@
 
 namespace tool_brickfield\local\htmlchecker;
 
-use tool_brickfield\local\htmlchecker\common\brickfield_accessibility_css;
 use DOMDocument;
+use tool_brickfield\local\htmlchecker\common\brickfield_accessibility_css;
 
 /**
  * Brickfield accessibility HTML checker library.
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * The main interface class for brickfield_accessibility.
+ *
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * The main interface class for brickfield_accessibility.
  */
 class brickfield_accessibility {
 

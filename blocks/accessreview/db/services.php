@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * External service definitions for the accessreview block.
+ *
  * @package     block_accessreview
  * @author      Max Larkin <max@brickfieldlabs.ie>
  * @copyright   2020 Brickfield Education Labs <max@brickfieldlabs.ie>

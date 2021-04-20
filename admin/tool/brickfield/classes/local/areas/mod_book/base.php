@@ -18,8 +18,13 @@ namespace tool_brickfield\local\areas\mod_book;
 
 use tool_brickfield\local\areas\module_area_base;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Book base observer.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class base extends module_area_base {
     /**
      * Returns the moodle_url of the page to edit the error.

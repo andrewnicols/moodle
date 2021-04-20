@@ -20,8 +20,13 @@ use core\event\course_module_created;
 use core\event\course_module_updated;
 use tool_brickfield\area_base;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Choice option observer.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class option extends area_base {
 
     /**

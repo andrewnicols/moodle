@@ -17,17 +17,12 @@
 namespace tool_brickfield\local\htmlchecker\common;
 
 /**
- * Brickfield accessibility HTML checker library.
- *
- * @package    local\htmlchecker
- * @subpackage accessibility
- * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
  * Base test class for tests which checks that the given input tag has an associated lable tag.
  * To override, just override the tag and type variables, and use $no_type = true if it is a special form tag like textarea.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class input_has_label extends brickfield_accessibility_test {
     /** @var string The tag name that this test applies to */

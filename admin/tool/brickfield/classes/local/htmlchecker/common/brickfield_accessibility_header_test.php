@@ -17,17 +17,12 @@
 namespace tool_brickfield\local\htmlchecker\common;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * Special base test class that deals with tests concerning the logical heirarchy of headers. To use it, just extend and
+ * change the $tag var.
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- *    Special base test class that deals with tests concerning the logical heirarchy
- *    of headers. To use it, just extend and change the $tag var.
  */
 class brickfield_accessibility_header_test extends brickfield_accessibility_test {
     /** @var string The header tag this test applies to. */

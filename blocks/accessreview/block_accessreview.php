@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * accessreview block definition
- *
- * @package    block_accessreview
- * @copyright  2019 Karen Holland LTS.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 use tool_brickfield\accessibility;
 use tool_brickfield\analysis;
 use tool_brickfield\area_base;
@@ -33,18 +25,17 @@ use tool_brickfield\scheduler;
 use tool_brickfield\sitedata;
 
 /**
- * accessreview block class
+ * Definition of the accessreview block.
  *
+ * @package   block_accessreview
  * @copyright 2019 Karen Holland LTS.ie
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class block_accessreview extends block_base {
     /**
      * Sets the block title.
-     *
-     * @return none
      */
-    public function init() {
+    public function init(): void {
         $this->title = get_string('errorssummary', 'block_accessreview');
     }
 
@@ -53,7 +44,7 @@ class block_accessreview extends block_base {
      *
      * @return array
      */
-    public function applicable_formats() {
+    public function applicable_formats(): array {
         // If Brickfield accessibility toolkit has been disabled, do nothing.
         if (accessibility::is_accessibility_enabled()) {
             return [
@@ -72,7 +63,7 @@ class block_accessreview extends block_base {
      *
      * @return bool
      */
-    public function has_config() {
+    public function has_config(): bool {
         return true;
     }
 
@@ -81,14 +72,14 @@ class block_accessreview extends block_base {
      *
      * @return bool
      */
-    public function instance_allow_multiple() {
+    public function instance_allow_multiple() : bool {
         return false;
     }
 
     /**
      * Creates the block's main content
      *
-     * @return string
+     * @return string|stdClass
      */
     public function get_content() {
         global $COURSE, $OUTPUT;
@@ -234,40 +225,41 @@ class block_accessreview extends block_base {
     }
 
     /**
+     * Get the link to toggle the heatmap.
+     *
      * @return string
-     * @throws coding_exception
      */
-    protected function get_toggle_link() {
+    protected function get_toggle_link(): string {
         global $OUTPUT;
 
-        // Toggle overlay link.
-        return html_writer::link('#',
+        return html_writer::link(
+            '#',
             $OUTPUT->pix_icon('t/hide', get_string('togglealt', 'block_accessreview')),
-            ['title' => get_string('togglealt', 'block_accessreview'),
-             'style' => 'cursor: pointer;',
-             'id' => 'toggle-accessmap',
-             'class' => 'block_accessreview_link']
+            [
+                'title' => get_string('togglealt', 'block_accessreview'),
+                'style' => 'cursor: pointer;',
+                'id' => 'toggle-accessmap',
+                'class' => 'block_accessreview_link',
+            ]
         );
     }
 
     /**
+     * Get the link to download a report for the specified context.
+     *
      * @param context $context
      * @return string
-     * @throws coding_exception
-     * @throws moodle_exception
      */
-    protected function get_download_link(\context $context) {
+    protected function get_download_link(context $context): string {
         global $OUTPUT, $COURSE;
 
         if (has_capability(accessibility::get_capability_name('viewcoursetools'), $context)) {
             return html_writer::link(
-                new moodle_url(accessibility::get_plugin_url(),
-                    [
-                        'courseid' => $COURSE->id,
-                        'tab' => 'printable',
-                        'target' => 'pdf',
-                    ]
-                ),
+                new moodle_url(accessibility::get_plugin_url(), [
+                    'courseid' => $COURSE->id,
+                    'tab' => 'printable',
+                    'target' => 'pdf',
+                ]),
                 $OUTPUT->pix_icon('a/download_all', get_string('downloadreportalt', 'block_accessreview')),
                 [
                     'title' => get_string('downloadreportalt', 'block_accessreview'),
@@ -279,17 +271,21 @@ class block_accessreview extends block_base {
         }
     }
 
-    protected function get_report_link(\context $context) {
+    /**
+     * Get the report link for the specified context
+     *
+     * @param   context $context
+     * @return  string
+     */
+    protected function get_report_link(context $context): string {
         global $OUTPUT, $COURSE;
 
         if (has_capability(accessibility::get_capability_name('viewcoursetools'), $context)) {
             return html_writer::link(
-                new moodle_url(accessibility::get_plugin_url(),
-                    [
-                        'courseid' => $COURSE->id,
-                        'tab' => get_config('block_accessreview', 'toolpage'),
-                    ]
-                ),
+                new moodle_url(accessibility::get_plugin_url(), [
+                    'courseid' => $COURSE->id,
+                    'tab' => get_config('block_accessreview', 'toolpage'),
+                ]),
                 $OUTPUT->pix_icon('f/find', get_string('viewreportalt', 'block_accessreview'), 'block_accessreview'),
                 [
                     'title' => get_string('viewreportalt', 'block_accessreview'),

@@ -14,25 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Course Category Area base class.
- *
- * @package    tool_brickfield
- * @category   base
- * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
- *
- */
-
 namespace tool_brickfield\local\areas\core_course;
 
 use core\event\course_category_created;
 use core\event\course_category_updated;
 use tool_brickfield\area_base;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Base class for all areas that represent a field from the course_categories table (such as 'intro' or 'name')
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class category_base extends area_base {
 

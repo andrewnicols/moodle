@@ -15,30 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace tool_brickfield\local\htmlchecker\common;
+
 /**
- * Brickfield accessibility HTML checker library.
+ * Parse content to check CSS validity.
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * This class first parses all the CSS in the document and prepares an index of CSS styles to be used by accessibility tests
+ * to determine color and positioning.
+ *
+ * First, in loadCSS we get all the inline and linked style sheet information and merge it into a large CSS file string.
+ *
+ * Second, in setStyles we use XPath queries to find all the DOM elements which are effected by CSS styles and then
+ * build up an index in style_index of all the CSS styles keyed by an attriute we attach to all DOM objects to lookup
+ * the style quickly.
+ *
+ * Most of the second step is to get around the problem where XPath DOMNodeList objects are only marginally referential
+ * to the original elements and cannot be altered directly.
+ *
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * @file This class first parses all the CSS in the document and prepares an index of CSS styles to be used by accessibility tests
- * to determine color and positioning.
-
-   First, in loadCSS we get all the inline and linked style sheet information and merge it into a large CSS file string.
-
-   Second, in setStyles we use XPath queries to find all the DOM elements which are effected by CSS styles and then build up an
-   index in style_index of all the CSS styles keyed by an attriute we attach to all DOM objects to lookup the style quickly.
-
-   Most of the second step is to get around the problem where XPath DOMNodeList objects
-   are only marginally referential to the original elements and cannot be altered directly.
- */
-
-/**
- * A helper class to parse the document's CSS so we can run accessibility tests against it.
  */
 class brickfield_accessibility_css {
 

@@ -19,7 +19,7 @@
  *
  * @package    tool_brickfield
  * @copyright  2020 Brickfield Education Labs, https://brickfield.ie
- * @author:    Max Larkin <max@brickfieldlabs.ie>
+ * @author     Max Larkin <max@brickfieldlabs.ie>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -28,9 +28,16 @@ namespace tool_brickfield\local\tool;
 use tool_brickfield\accessibility;
 
 defined('MOODLE_INTERNAL') || die;
-
 require_once($CFG->libdir . '/pdflib.php');
 
+/**
+ * tool_brickfield bfpdf
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 Brickfield Education Labs, https://brickfield.ie
+ * @author     Max Larkin <max@brickfieldlabs.ie>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class bfpdf extends \pdf {
     /**
      * Overriding the footer function in TCPDF.

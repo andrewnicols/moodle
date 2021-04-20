@@ -14,31 +14,43 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Brickfield accessibility tool base class. All common properties and methods for all tool types.
- *
- * @package    local
- * @subpackage accessibility
- * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_brickfield\local\tool;
 
 use tool_brickfield\manager;
 
+/**
+ * Brickfield accessibility tool base class.
+ *
+ * All common properties and methods for all tool types.
+ *
+ * @package     tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 abstract class tool {
 
     /** @var string[] All of the tools provided. */
     const TOOLNAMES = ['errors', 'activityresults', 'checktyperesults', 'printable', 'advanced'];
 
-    /** @var strings of base64 img types. */
+    /** @var string base64 bitmap image type */
     const BASE64_BMP = 'data:image/bmp;base64';
+
+    /** @var string base64 gif image type */
     const BASE64_GIF = 'data:image/gif;base64';
+
+    /** @var string base64 jpg image type */
     const BASE64_JPG = 'data:image/jpeg;base64';
+
+    /** @var string base64 png image type */
     const BASE64_PNG = 'data:image/png;base64';
+
+    /** @var string base64 svg image type */
     const BASE64_SVG = 'data:image/svg+xml;base64';
+
+    /** @var string base64 webp image type */
     const BASE64_WEBP = 'data:image/webp;base64';
+
+    /** @var string base64 ico image type */
     const BASE64_ICO = 'data:image/x-icon;base64';
 
     /** @var null Generic object for data used in tool renderers/templates. */
@@ -186,7 +198,8 @@ abstract class tool {
 
     /**
      * Get the HTML output for display.
-     * @return mixed|void
+     *
+     * @return mixed
      */
     public function get_output() {
         global $PAGE;

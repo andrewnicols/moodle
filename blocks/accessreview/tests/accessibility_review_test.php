@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * PHPUnit block_accessibility_review tests
- *
- * @package   block_accessibility_review
- * @copyright  2020 onward: Learning Technology Services, www.lts.ie
- * @author     Jay Churchward (jay.churchward@poetopensource.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace block_accessreview\tests;
 
 use ReflectionClass;
@@ -31,7 +22,12 @@ use block_accessreview;
 use context_course;
 
 /**
- * Unit tests for {@accessibility_review block_accessibility_review}.
+ * PHPUnit block_accessibility_review tests
+ *
+ * @package   block_accessreview
+ * @copyright  2020 onward: Learning Technology Services, www.lts.ie
+ * @author     Jay Churchward (jay.churchward@poetopensource.org)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class accessibility_review_test extends advanced_testcase {
     public static function setUpBeforeClass(): void {

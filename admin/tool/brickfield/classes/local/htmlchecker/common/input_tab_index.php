@@ -17,16 +17,11 @@
 namespace tool_brickfield\local\htmlchecker\common;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * Helper base class to check that input tags have an appropriate tab order
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- *    Helper base class to check that input tags have an appropriate tab order
  */
 class input_tab_index extends brickfield_accessibility_test {
     /** @var string The tag name that this test applies to */

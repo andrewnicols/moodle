@@ -37,6 +37,13 @@ use tool_brickfield\registration;
 global $CFG;
 require_once($CFG->libdir . '/formslib.php');
 
+/**
+ * Class registration_form
+ *
+ * @package    tool_brickfield
+ * @author  2020 JM Tomas <jmtomas@tresipunt.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
+ */
 class registration_form  extends moodleform {
 
     /**

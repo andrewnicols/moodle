@@ -14,22 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\local\htmlchecker\common\checks;
+
+use tool_brickfield\local\htmlchecker\brickfield_accessibility;
+
 /**
  * tool_brickfield check test.
  *
  * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace tool_brickfield\local\htmlchecker\common\checks;
-
-use tool_brickfield\local\htmlchecker\brickfield_accessibility;
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Class all_checks
  */
 abstract class all_checks extends \advanced_testcase {
     // Extending class must define this.

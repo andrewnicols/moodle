@@ -17,17 +17,13 @@
 namespace tool_brickfield\local\htmlchecker\common;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * Base class for test dealing with WAI ERT color contrast for the document
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * Because a lot of the tests deal with text, vlink, alink, etc.
+ *
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- *    Base class for test dealing with WAI ERT color contrast for the document
- *    Because a lot of the tests deal with text, vlink, alink, etc.
  */
 class body_wai_ert_color_contrast extends brickfield_accessibility_color_test {
     /** @var string The attribute to check for the background color of the <body> tag */

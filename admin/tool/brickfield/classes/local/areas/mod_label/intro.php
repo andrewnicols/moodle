@@ -18,11 +18,16 @@ namespace tool_brickfield\local\areas\mod_label;
 
 use tool_brickfield\local\areas\module_area_base;
 
-defined('MOODLE_INTERNAL') || die();
-
-// Although {label} has two fields, name and intro, name is a duplication of
-// the intro content, therefore it is removed as an area location, to avoid duplicating errors.
-
+/**
+ * Label activity intro observer.
+ *
+ * Although {label} has two fields, name and intro, name is a duplication of
+ * the intro content, therefore it is removed as an area location, to avoid duplicating errors.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class intro extends module_area_base {
 
     /**

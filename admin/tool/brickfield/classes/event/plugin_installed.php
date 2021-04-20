@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\event;
+use coding_exception;
+use core\event\base;
+use tool_brickfield\manager;
+
 /**
  * Class plugin_installed.
  *
@@ -21,18 +26,10 @@
  * @author 2020 JM Tomas <jmtomas@tresipunt.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL
  */
-
-namespace tool_brickfield\event;
-use coding_exception;
-use core\event\base;
-use tool_brickfield\manager;
-
-defined('MOODLE_INTERNAL') || die();
-
 class plugin_installed extends base {
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected function init() {
         $this->data['crud'] = 'u';
@@ -40,16 +37,16 @@ class plugin_installed extends base {
     }
 
     /**
+     * @inheritdoc
      * @return string
-     * @throws coding_exception
      */
     public static function get_name(): string {
         return get_string('installed', manager::PLUGINNAME);
     }
 
     /**
+     * @inheritdoc
      * @return string
-     * @throws coding_exception
      */
     public function get_description(): string {
         return get_string('installeddescription', manager::PLUGINNAME);

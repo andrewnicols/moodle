@@ -17,17 +17,11 @@
 namespace tool_brickfield\local\htmlchecker\common;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * Helper function to support checking the varous color attributes of the <body> tag against WCAG standards
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- * Helper function to support checking the varous color attributes of the <body> tag
- * against WCAG standards
  */
 class body_color_contrast extends brickfield_accessibility_color_test {
     /** @var string The attribute to check for the background color of the <body> tag */

@@ -14,18 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Privacy Subsystem implementation for tool_brickfield
- *
- * @package     tool_brickfield
- * @category    admin
- * @copyright   2020 Brickfield Education Labs https://www.brickfield.ie
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_brickfield\privacy;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Privacy Subsystem for tool_brickfield implementing null_provider.
@@ -33,7 +22,6 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class provider implements \core_privacy\local\metadata\null_provider {
     /**
      * Get the language string identifier with the component's language

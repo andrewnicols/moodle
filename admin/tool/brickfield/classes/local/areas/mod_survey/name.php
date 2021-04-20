@@ -18,8 +18,13 @@ namespace tool_brickfield\local\areas\mod_survey;
 
 use tool_brickfield\local\areas\module_area_base;
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Survey activity name observer.
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class name extends module_area_base {
 
     /**

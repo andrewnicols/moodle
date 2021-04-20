@@ -16,23 +16,16 @@
 
 namespace tool_brickfield\local\htmlchecker\common;
 
-defined('MOODLE_INTERNAL') || die();
-
 use tool_brickfield\local\htmlchecker\brickfield_accessibility_report_item;
 use tool_brickfield\manager;
 
 /**
- * Brickfield accessibility HTML checker library.
+ * The base class for all htmlchecker tests. This handles importing DOM objects, adding items to the report and provides
+ * a few DOM-traversing methods
  *
- * @package    local\htmlchecker
- * @subpackage accessibility
+ * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-/**
- *    The base class for all htmlchecker tests. This handles importing DOM objects, adding items
- *    to the report and provides a few DOM-traversing methods
  */
 class brickfield_accessibility_test {
     /** @var object The DOMDocument object */

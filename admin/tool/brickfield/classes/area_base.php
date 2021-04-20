@@ -14,17 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield;
+
 /**
  * Area base class.
  *
  * @package    tool_brickfield
- * @category   area_base
  * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
- *
  */
-
-namespace tool_brickfield;
-
 abstract class area_base {
 
     // Define constant names for the 'checkgroup' field in the tool_brickfield_checks table.

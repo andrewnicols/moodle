@@ -14,17 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * tool_brickfield renderer
- *
- * @package    tool_brickfield
- * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
- * @author     Bas Brands
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_brickfield\output;
-defined('MOODLE_INTERNAL') || die;
 
 use tool_brickfield\accessibility;
 use plugin_renderer_base;
@@ -141,8 +131,10 @@ class renderer extends plugin_renderer_base {
             $html = \html_writer::div(get_string('schedule:' . $siteorcourse . 'scheduled', manager::PLUGINNAME),
                 '', ['class' => 'alert alert-primary']);
         } else {
-            $html = \html_writer::div(get_string('schedule:' . $siteorcourse . 'notscheduled', manager::PLUGINNAME, manager::get_helpurl()),
-                '', ['class' => 'alert alert-primary']);
+            $html = \html_writer::div(
+                get_string('schedule:' . $siteorcourse . 'notscheduled', manager::PLUGINNAME, manager::get_helpurl()),
+                '', ['class' => 'alert alert-primary']
+            );
             $html .= $this->analysisbutton($courseid);
         }
         return $html;
