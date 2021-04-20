@@ -46,15 +46,3 @@ $functions = [
         'ajax'        => true,
     ]
 ];
-
-$services = [
-    'block_accessreview' => [
-        'functions' => [
-            'block_accessreview_set_toggle_preference',
-            'block_accessreview_get_module_data',
-            'block_accessreview_get_section_data',
-        ],
-        'restrictedusers' => 0,
-        'enabled' => 1,
-    ]
-];
