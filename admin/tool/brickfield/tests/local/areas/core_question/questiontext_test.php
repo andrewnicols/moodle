@@ -32,7 +32,7 @@ namespace tool_brickfield\local\areas\core_question;
  */
 class questiontext_test extends \advanced_testcase {
 
-    public static function setUpBeforeTest(): void {
+    public static function setUpBeforeClass(): void {
         global $CFG;
         require_once($CFG->dirroot . '/mod/quiz/locallib.php');
     }
