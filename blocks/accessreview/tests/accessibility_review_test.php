@@ -23,48 +23,35 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace block_accessreview\tests;
 
-require_once(__DIR__ . '/../../moodleblock.class.php');
-require_once(__DIR__ . '/../block_accessreview.php');
+use ReflectionClass;
+use advanced_testcase;
+use block_accessreview;
+use context_course;
 
 /**
  * Unit tests for {@accessibility_review block_accessibility_review}.
- * @group block_accessibility_review
  */
-class block_accessibility_review_testcase extends advanced_testcase {
-
-    /**
-     * Creates an accessibility review block on a course.
-     *
-     * @param \stdClass $course Course object
-     * @return \block_html Block instance object
-     */
-    protected function create_block($course) {
-        $page = self::construct_page($course);
-        $page->blocks->add_block_at_end_of_default_region('accessreview');
-
-        // Load the block.
-        $page = self::construct_page($course);
-        $page->blocks->load_blocks();
-        $blocks = $page->blocks->get_blocks_for_region($page->blocks->get_default_region());
-        $block = end($blocks);
-        return $block;
+class accessibility_review_test extends advanced_testcase {
+    public static function setUpBeforeClass(): void {
+        require_once(__DIR__ . '/../../moodleblock.class.php');
+        require_once(__DIR__ . '/../block_accessreview.php');
     }
 
     public function test_get_toggle_link() {
-        $this->resetAfterTest();
+        $rc = new ReflectionClass(block_accessreview::class);
+        $rm = $rc->getMethod('get_toggle_link');
+        $rm->setAccessible(true);
 
-        $block = new mock_block_accessreview();
-        $output = $block->get_toggle_link_for_test();
+        $block = new block_accessreview();
+        $output = $rm->invoke($block);
         $this->assertNotEmpty($output);
     }
 
     public function test_get_download_link() {
         $this->resetAfterTest();
 
-        $block = new mock_block_accessreview();
-
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
@@ -74,20 +61,23 @@ class block_accessibility_review_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'teacher');
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'student');
 
+        $rc = new ReflectionClass(block_accessreview::class);
+        $rm = $rc->getMethod('get_download_link');
+        $rm->setAccessible(true);
+        $block = new block_accessreview();
+
         $this->setUser($user1);
-        $result = $block->get_download_link_for_test(context_course::instance($course->id));
+        $result = $rm->invoke($block, context_course::instance($course->id));
         $this->assertNotEmpty($result);
 
         $this->setUser($user2);
-        $result = $block->get_download_link_for_test(context_course::instance($course->id));
+        $result = $rm->invoke($block, context_course::instance($course->id));
         $this->assertEmpty($result);
     }
 
     public function test_get_report_link() {
         $this->resetAfterTest();
 
-        $block = new mock_block_accessreview();
-
         $user1 = $this->getDataGenerator()->create_user();
         $user2 = $this->getDataGenerator()->create_user();
 
@@ -97,26 +87,17 @@ class block_accessibility_review_testcase extends advanced_testcase {
         $this->getDataGenerator()->enrol_user($user1->id, $course->id, 'teacher');
         $this->getDataGenerator()->enrol_user($user2->id, $course->id, 'student');
 
+        $rc = new ReflectionClass(block_accessreview::class);
+        $rm = $rc->getMethod('get_report_link');
+        $rm->setAccessible(true);
+        $block = new block_accessreview();
+
         $this->setUser($user1);
-        $result = $block->get_report_link_for_test(context_course::instance($course->id));
+        $result = $rm->invoke($block, context_course::instance($course->id));
         $this->assertNotEmpty($result);
 
         $this->setUser($user2);
-        $result = $block->get_report_link_for_test(context_course::instance($course->id));
+        $result = $rm->invoke($block, context_course::instance($course->id));
         $this->assertEmpty($result);
-    }
-}
-
-class mock_block_accessreview extends block_accessreview {
-    public function get_toggle_link_for_test() {
-        return $this->get_toggle_link();
-    }
-
-    public function get_download_link_for_test(\context $context) {
-        return $this->get_download_link($context);
-    }
-
-    public function get_report_link_for_test(\context $context) {
-        return $this->get_report_link($context);
     }
 }
