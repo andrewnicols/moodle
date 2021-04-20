@@ -21,9 +21,9 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {get_strings as getStrings} from 'core/str';
 import {call as fetchMany} from 'core/ajax';
 import * as Templates from 'core/templates';
+import {exception as displayError} from 'core/notification';
 
 /**
  * The number of colours used to represent the heatmap. (Indexed on 0.)
@@ -38,98 +38,70 @@ const numColours = 2;
 let toggleState = true;
 
 /**
- * The display icon for failing modules/sections.
- * @type {string}
- */
-let errorsicon = '';
-
-/**
- * The display icon for passing modules/sections.
- * @type {string}
- */
-let passicon = '';
-
-/**
- * The required strings for the module.
- * @type {string[]}
- */
-let strings = {};
-
-/**
- * Gets the required strings for the module.
- */
-const getModuleStrings = () => {
-    let requiredStrings = [
-        {key: 'passed', component: 'tool_brickfield'},
-        {key: 'failed', component: 'tool_brickfield'},
-        {key: 'errors', component: 'block_accessreview'},
-        {key: 'percenterrors', component: 'block_accessreview'},
-        {key: 'success'},
-    ];
-    getStrings(requiredStrings).then(values => {
-        strings.passed = values[0];
-        strings.failed = values[1];
-        strings.errors = values[2];
-        strings.percenterrors = values[3];
-        strings.success = values[4];
-
-        return values;
-    })
-    .catch();
-};
-
-/**
  * Renders the HTML template onto a particular HTML element.
  * @param {HTMLElement} element The element to attach the HTML to.
- * @param {number} numErrors The number of errors on this module/section.
- * @param {number} numChecks The number of checks triggered on this module/section.
+ * @param {number} errorCount The number of errors on this module/section.
+ * @param {number} checkCount The number of checks triggered on this module/section.
  * @param {String} displayFormat
  * @param {Number} minViews
  * @param {Number} viewDelta
+ * @returns {Promise}
  */
-const renderTemplate = (element, numErrors, numChecks, displayFormat, minViews, viewDelta) => {
-    // TODO Convert this to be an actual proper template.
-    let weight = parseInt((numErrors - minViews) / viewDelta * numColours);
-    let alertstatus = 'block_accessreview_success';
-    if (weight < 1) {
-        alertstatus = 'block_accessreview_warning';
+const renderTemplate = (element, errorCount, checkCount, displayFormat, minViews, viewDelta) => {
+    // Calculate a weight?
+    const weight = parseInt((errorCount - minViews) / viewDelta * numColours);
+
+    const context = {
+        resultPassed: !errorCount,
+        classList: '',
+        passRate: {
+            errorCount,
+            checkCount,
+            failureRate: Math.round(errorCount / checkCount * 100),
+        },
+    };
+
+    if (!element) {
+        return Promise.resolve();
     }
-    if (weight >= 1) {
-        alertstatus = 'block_accessreview_danger';
+
+    const elementClassList = ['block_accessreview'];
+    if (context.resultPassed) {
+        elementClassList.push('block_accessreview_success');
+    } else if (weight) {
+        elementClassList.push('block_accessreview_danger');
+    } else {
+        elementClassList.push('block_accessreview_warning');
     }
-    if (numErrors == 0) {
-        alertstatus = 'block_accessreview_success';
+
+    const showIcons = (displayFormat == 'showicons') || (displayFormat == 'showboth');
+    const showBackground = (displayFormat == 'showbackground') || (displayFormat == 'showboth');
+
+    if (showBackground && !showIcons) {
+        // Only the background is displayed.
+        // No need to display the template.
+        // Note: The case where both the background and icons are shown is handled later to avoid jankiness.
+        element.classList.add(...elementClassList, 'alert');
+
+        return Promise.resolve();
     }
-    if (element) {
-        if (displayFormat != 'showicons') {
-            if (element.className.search("label") >= 1) {
-                alertstatus += '_label';
-            }
-            element.className += ' alert block_accessreview ' + alertstatus;
+
+    if (showIcons && !showBackground) {
+        context.classList = elementClassList.join(' ');
+    }
+
+    // The icons are displayed either with, or without, the background.
+    return Templates.renderForPromise('block_accessreview/status', context)
+    .then(({html, js}) => {
+        Templates.appendNodeContents(element, html, js);
+
+        if (showBackground) {
+            element.classList.add(...elementClassList, 'alert');
         }
-        if (displayFormat != 'showbackground') {
-            let divclass = 'block_accessreview_view';
-            if (element.className.search("label") > -1) {
-                divclass += ' alert ' + alertstatus;
-            }
-            let info = '<div class="' + divclass + '">';
-            if (numErrors == 0) {
-                info += passicon;
-                info += strings.passed;
-            } else {
-                info += errorsicon;
-                info += strings.failed;
-                info += '&nbsp;&nbsp;';
-                info += numErrors;
-                info += '&nbsp;' + strings.errors;
-                info += '&nbsp;&nbsp;';
-                info += Math.round((numErrors / numChecks) * 100);
-                info += strings.percenterrors;
-            }
-            info += '</div>';
-            element.insertAdjacentHTML('beforeend', info);
-        }
-    }
+
+        return;
+    })
+    .catch();
 };
 
 /**
@@ -137,31 +109,39 @@ const renderTemplate = (element, numErrors, numChecks, displayFormat, minViews, 
  *
  * @param {Number} courseId
  * @param {String} displayFormat
+ * @returns {Promise}
  */
-const showAccessMap = async(courseId, displayFormat) => {
+const showAccessMap = (courseId, displayFormat) => {
     // Get error data.
-    const [sectionData, moduleData] = await Promise.all(fetchReviewData(courseId));
+    return Promise.all(fetchReviewData(courseId))
+    .then(([sectionData, moduleData]) => {
+        // Get total data.
+        const {minViews, viewDelta} = getErrorTotals(sectionData, moduleData);
 
-    // Get total data.
-    const {minViews, viewDelta} = getErrorTotals(sectionData, moduleData);
+        sectionData.forEach(section => {
+            const element = document.querySelector(`#section-${section.section} .summary`);
+            if (!element) {
+                return;
+            }
 
-    sectionData.forEach(section => {
-        const element = document.querySelector(`#section-${section.section} .summary`);
-        if (!element) {
-            return;
-        }
+            renderTemplate(element, section.numerrors, section.numchecks, displayFormat, minViews, viewDelta);
+        });
 
-        renderTemplate(element, section.numerrors, section.numchecks, displayFormat, minViews, viewDelta);
-    });
+        moduleData.forEach(module => {
+            const element = document.getElementById(`module-${module.cmid}`);
+            if (!element) {
+                return;
+            }
 
-    moduleData.forEach(module => {
-        const element = document.getElementById(`module-${module.cmid}`);
-        if (!element) {
-            return;
-        }
+            renderTemplate(element, module.numerrors, module.numchecks, displayFormat, minViews, viewDelta);
+        });
 
-        renderTemplate(element, module.numerrors, module.numchecks, displayFormat, minViews, viewDelta);
-    });
+        return {
+            sectionData,
+            moduleData,
+        };
+    })
+    .catch(displayError);
 };
 
 
@@ -173,20 +153,15 @@ const hideAccessMap = () => {
     document.querySelectorAll('.block_accessreview_view').forEach(node => node.remove());
 
     const classList = [
-        'alert',
         'block_accessreview',
         'block_accessreview_success',
         'block_accessreview_warning',
         'block_accessreview_danger',
         'block_accessreview_view',
-        'block_accessreview_success_label',
-        'block_accessreview_warning_label',
-        'block_accessreview_danger_label',
-        'block_accessreview_view_label',
     ];
 
     // Removes the added classes.
-    document.querySelectorAll('.block_accessreview.alert').forEach(node => node.classList.remove(...classList));
+    document.querySelectorAll('.block_accessreview').forEach(node => node.classList.remove(...classList));
 };
 
 
@@ -275,25 +250,9 @@ const fetchReviewData = courseid => fetchMany([
  * @param {string} displayFormat A string representing the display format for icons.
  * @param {number} courseId The course ID.
  */
-export const init = async(toggled, displayFormat, courseId) => {
+export const init = (toggled, displayFormat, courseId) => {
     // Settings consts.
-    //
     toggleState = toggled == 1;
-
-    // TODO: Replace all of this with a template...
-    // __None__ of this should be stored as instance vars.
-    // The over-use of await is a bad thing here because _none_ of these are being checked for errors.
-    // async promise use should usually be in a try/catch, and none of the ones here are necessary.
-
-    // Core/str calls.
-    let stringpromise = getModuleStrings();
-
-    // Load strings.
-    await stringpromise;
-
-    // Load icons.
-    passicon = await Templates.renderPix('t/check', 'core', strings.success);
-    errorsicon = await Templates.renderPix('t/block', 'core', strings.errors);
 
     if (toggleState) {
         showAccessMap(courseId, displayFormat);
