@@ -26,14 +26,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 $functions = [
-    'block_accessreview_set_toggle_preference' => [
-        'classname'     => 'block_accessreview\external\update_toggle_preference',
-        'methodname'    => 'execute',
-        'description'   => 'Sets the heatmap toggle preference.',
-        'type'          => 'read',
-        'ajax'          => true,
-        'capabilities'  => 'block/accessreview:view',
-    ],
     'block_accessreview_get_module_data' => [
         'classname'     => 'block_accessreview\external\get_module_data',
         'methodname'    => 'execute',

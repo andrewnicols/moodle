@@ -47,3 +47,19 @@ function block_accessreview_get_fontawesome_icon_map() {
         'block_accessreview:t/pass' => 'fa-check',
     ];
 }
+
+/**
+ * Define preferences which may be set via the core_user_set_user_preferences external function.
+ *
+ * @return  array
+ */
+function block_accessreview_user_preferences(): array {
+    return [
+        'block_accessreviewtogglestate' => [
+            'type' => PARAM_INT,
+            'null' => NULL_NOT_ALLOWED,
+            'default' => 0,
+            'choices' => [0, 1],
+        ],
+    ];
+}
