@@ -792,4 +792,61 @@ class manager {
         $activityresults->close();
         $activityfailedresults->close();
     }
+
+    /**
+     * Get course module summary information for a course.
+     *
+     * @param   int $courseid
+     * @return  stdClass[]
+     */
+    public static function get_cm_summary_for_course(int $courseid): array {
+        global $DB;
+
+        $sql = "
+        SELECT
+            area.cmid,
+            sum(errorcount) as numerrors,
+            count(errorcount) as numchecks
+         FROM {" . self::DB_AREAS . "} area
+         JOIN {" . self::DB_CONTENT . "} ch ON ch.areaid = area.id AND ch.iscurrent = 1
+         JOIN {" . self::DB_RESULTS . "} res ON res.contentid = ch.id
+        WHERE area.courseid = :courseid AND component != :component
+     GROUP BY cmid";
+
+        $params = [
+            'courseid' => $courseid,
+            'component' => 'core_course',
+        ];
+
+        return $DB->get_records_sql($sql, $params);
+    }
+
+    /**
+     * Get section summary information for a course.
+     *
+     * @param   int $courseid
+     * @return  stdClass[]
+     */
+    public static function get_section_summary_for_course(int $courseid): array {
+        global $DB;
+
+        $sql = "
+        SELECT
+            sec.section,
+            sum(errorcount) AS numerrors,
+            count(errorcount) as numchecks
+         FROM {" . self::DB_AREAS . "} area
+         JOIN {" . self::DB_CONTENT . "} ch ON ch.areaid = area.id AND ch.iscurrent = 1
+         JOIN {" . self::DB_RESULTS . "} res ON res.contentid = ch.id
+         JOIN {course_sections} sec ON area.itemid = sec.id
+        WHERE area.tablename = :tablename AND area.courseid = :courseid
+     GROUP BY sec.id";
+
+        $params = [
+            'courseid' => $courseid,
+            'tablename' => 'course_sections'
+        ];
+
+        return $DB->get_records_sql($sql, $params);
+    }
 }

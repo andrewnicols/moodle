@@ -13,13 +13,16 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Web service to fetch module data.
  *
  * @package    block_accessreview
  * @copyright  2020 onward Brickfield Education Labs Ltd, https://www.brickfield.ie
  * @author     2020 Max Larkin <max@brickfieldlabs.ie>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 namespace block_accessreview\external;
 
 use external_api;
@@ -32,6 +35,14 @@ use tool_brickfield\manager;
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
+/**
+ * Web service to fetch module data.
+ *
+ * @package    block_accessreview
+ * @copyright  2020 onward Brickfield Education Labs Ltd, https://www.brickfield.ie
+ * @author     2020 Max Larkin <max@brickfieldlabs.ie>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class get_module_data extends external_api {
     /**
      * Describes the parameters.
@@ -44,31 +55,30 @@ class get_module_data extends external_api {
         ]);
     }
 
-    public static function execute($courseid) {
-        global $DB;
-
+    /**
+     * Execute the service.
+     *
+     * @param int $courseid
+     * @return array
+     */
+    public static function execute(int $courseid) {
         [
             'courseid' => $courseid,
         ] = self::validate_parameters(self::execute_parameters(), [
             'courseid' => $courseid,
         ]);
 
-        $sql = "
-        SELECT area.cmid, sum(errorcount) as numerrors, count(errorcount) as numchecks
-          FROM {" . manager::DB_AREAS . "} area
-          JOIN {" . manager::DB_CONTENT . "} ch ON ch.areaid = area.id AND ch.iscurrent = 1
-          JOIN {" . manager::DB_RESULTS . "} res ON res.contentid = ch.id
-         WHERE area.courseid = :courseid AND component != :component
-      GROUP BY cmid";
+        $context = \context_course::instance($courseid);
+        self::validate_context($context);
 
-        $params = [
-            'courseid' => $courseid,
-            'component' => 'core_course',
-        ];
-        $records = $DB->get_records_sql($sql, $params);
-        return array_values($records);
+        return array_values(manager::get_cm_summary_for_course($courseid));
     }
 
+    /**
+     * Describes the return structure of the service..
+     *
+     * @return external_multiple_structure
+     */
     public static function execute_returns() {
         return new external_multiple_structure(
             new external_single_structure(

@@ -13,7 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
+ * Web service to fetch section data.
  *
  * @package    block_accessreview
  * @copyright  2020 onward Brickfield Education Labs Ltd, https://www.brickfield.ie
@@ -32,9 +34,18 @@ use tool_brickfield\manager;
 defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/externallib.php');
 
+/**
+ * Web service to fetch section data.
+ *
+ * @package    block_accessreview
+ * @copyright  2020 onward Brickfield Education Labs Ltd, https://www.brickfield.ie
+ * @author     2020 Max Larkin <max@brickfieldlabs.ie>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class get_section_data extends external_api {
     /**
      * Describes the parameters.
+     *
      * @return external_function_parameters
      */
     public static function execute_parameters() {
@@ -43,33 +54,30 @@ class get_section_data extends external_api {
         ]);
     }
 
+    /**
+     * Execute the service.
+     *
+     * @param int $courseid
+     * @return array
+     */
     public static function execute($courseid) {
-        global $DB;
-
         [
             'courseid' => $courseid,
         ] = self::validate_parameters(self::execute_parameters(), [
             'courseid' => $courseid,
         ]);
 
-        $sql = "
-        SELECT sec.section, sum(errorcount) AS numerrors, count(errorcount) as numchecks
-         FROM {" . manager::DB_AREAS . "} area
-         JOIN {" . manager::DB_CONTENT . "} ch ON ch.areaid = area.id AND ch.iscurrent = 1
-         JOIN {" . manager::DB_RESULTS . "} res ON res.contentid = ch.id
-         JOIN {course_sections} sec ON area.itemid = sec.id
-        WHERE area.tablename = :tablename AND area.courseid = :courseid
-     GROUP BY sec.id";
+        $context = \context_course::instance($courseid);
+        self::validate_context($context);
 
-        $params = [
-            'courseid' => $courseid,
-            'tablename' => 'course_sections'
-        ];
-        $records = $DB->get_records_sql($sql, $params);
-
-        return array_values($records);
+        return array_values(manager::get_section_summary_for_course($courseid));
     }
 
+    /**
+     * Describes the return structure of the service..
+     *
+     * @return external_multiple_structure
+     */
     public static function execute_returns() {
         return new external_multiple_structure(
             new external_single_structure(
