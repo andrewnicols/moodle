@@ -109,11 +109,12 @@ const renderTemplate = (element, errorCount, checkCount, displayFormat, minViews
  *
  * @param {Number} courseId
  * @param {String} displayFormat
+ * @param {Boolean} updatePreference
  * @returns {Promise}
  */
-const showAccessMap = (courseId, displayFormat) => {
+const showAccessMap = (courseId, displayFormat, updatePreference = false) => {
     // Get error data.
-    return Promise.all(fetchReviewData(courseId))
+    return Promise.all(fetchReviewData(courseId, updatePreference))
     .then(([sectionData, moduleData]) => {
         // Get total data.
         const {minViews, viewDelta} = getErrorTotals(sectionData, moduleData);
@@ -147,8 +148,10 @@ const showAccessMap = (courseId, displayFormat) => {
 
 /**
  * Hides or removes the templates from the HTML of the current page.
+ *
+ * @param {Boolean} updatePreference
  */
-const hideAccessMap = () => {
+const hideAccessMap = (updatePreference = false) => {
     // Removes the added elements.
     document.querySelectorAll('.block_accessreview_view').forEach(node => node.remove());
 
@@ -162,6 +165,10 @@ const hideAccessMap = () => {
 
     // Removes the added classes.
     document.querySelectorAll('.block_accessreview').forEach(node => node.classList.remove(...classList));
+
+    if (updatePreference) {
+        setToggleStatePreference(false);
+    }
 };
 
 
@@ -172,17 +179,12 @@ const hideAccessMap = () => {
  * @param {String} displayFormat
  */
 const toggleAccessMap = (courseId, displayFormat) => {
-    if (toggleState) {
-        hideAccessMap();
-    } else {
-        showAccessMap(courseId, displayFormat);
-    }
-
     toggleState = !toggleState;
-    fetchMany([{
-        methodname: 'block_accessreview_set_toggle_preference',
-        args: {toggle: toggleState}
-    }]);
+    if (!toggleState) {
+        hideAccessMap(true);
+    } else {
+        showAccessMap(courseId, displayFormat, true);
+    }
 };
 
 /**
@@ -228,27 +230,57 @@ const registerEventListeners = (courseId, displayFormat) => {
 };
 
 /**
+ * Set the user preference for the toggle value.
+ *
+ * @param   {Boolean} toggleState
+ * @returns {Promise}
+ */
+const getTogglePreferenceParams = toggleState => {
+    return {
+        methodname: 'core_user_update_user_preferences',
+        args: {
+            preferences: [{
+                type: 'block_accessreviewtogglestate',
+                value: toggleState,
+            }],
+        }
+    };
+};
+
+const setToggleStatePreference = toggleState => fetchMany([getTogglePreferenceParams(toggleState)]);
+
+/**
  * Fetch the review data.
  *
  * @param   {Number} courseid
+ * @param {Boolean} updatePreference
  * @returns {Promise[]}
  */
-const fetchReviewData = courseid => fetchMany([
-    {
-        methodname: 'block_accessreview_get_section_data',
-        args: {courseid}
-    },
-    {
-        methodname: 'block_accessreview_get_module_data',
-        args: {courseid}
-    },
-]);
+const fetchReviewData = (courseid, updatePreference = false) => {
+    const calls = [
+        {
+            methodname: 'block_accessreview_get_section_data',
+            args: {courseid}
+        },
+        {
+            methodname: 'block_accessreview_get_module_data',
+            args: {courseid}
+        },
+    ];
+
+    if (updatePreference) {
+        calls.push(getTogglePreferenceParams(true));
+    }
+
+    return fetchMany(calls);
+};
 
 /**
  * Setting up the access review module.
  * @param {number} toggled A number represnting the state of the review toggle.
  * @param {string} displayFormat A string representing the display format for icons.
  * @param {number} courseId The course ID.
+ * @param {number} userId The id of the currently logged-in user.
  */
 export const init = (toggled, displayFormat, courseId) => {
     // Settings consts.
