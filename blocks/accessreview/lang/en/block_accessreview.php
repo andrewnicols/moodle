@@ -24,11 +24,10 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$string['errors'] = 'Errors';
-$string['errorsfound'] = 'Errors found';
 $string['accessreview:addinstance'] = 'Add an Accessibility Review block to a course';
 $string['accessreview:view'] = 'View the Accessibility Review';
 $string['checktypes'] = 'Types';
+$string['errors'] = 'Errors';
 $string['errordisplay'] = 'Display errors in this format';
 $string['errorssummary'] = 'Accessibility Review';
 $string['frown'] = 'Errors found, sorry!';
@@ -40,9 +39,9 @@ $string['passrate'] = 'Pass rate';
 $string['percenterrors'] = '% of all checks';
 $string['pluginname'] = 'Accessibility Review';
 $string['privacy:metadata'] = 'The Accessibility Review plugin does not store any personal data.';
-$string['showbackground'] = 'Show both background colouring only';
-$string['showboth'] = 'Show both background and count icons';
-$string['showicon'] = 'Display smilie';
+$string['showbackground'] = 'Show background colouring only';
+$string['showboth'] = 'Show both background colour and status icons';
+$string['showicon'] = 'Display smiley';
 $string['showicons'] = 'Show count icons only';
 $string['showint'] = 'Display amount';
 $string['showpercent'] = 'Display percentage';
