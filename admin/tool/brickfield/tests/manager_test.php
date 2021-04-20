@@ -14,18 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * tool_brickfield test
- *
- * @package    tool_brickfield
- * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 namespace tool_brickfield;
 
 /**
  * Class tool_brickfield_manager_test
- * @group tool_brickfield
+ *
+ * @package    tool_brickfield
+ * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class manager_test extends \advanced_testcase {
 

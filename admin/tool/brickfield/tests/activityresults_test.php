@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\local\tool;
+
 /**
- * PHPUnit tool_brickfield tests
+ * Unit tests for {@activityresults tool_brickfield\local\tool\activityresults\tool}.
  *
  * @package   tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @author     Jay Churchward (jay.churchward@poetopensource.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-namespace tool_brickfield\local\tool;
-
-/**
- * Unit tests for {@activityresults tool_brickfield\local\tool\activityresults\tool}.
  */
 class activityresults_test extends \advanced_testcase {
 

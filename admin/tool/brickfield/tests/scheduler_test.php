@@ -14,19 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield;
+
 /**
- * PHPUnit tool_brickfield tests
+ * Unit tests for {@scheduler tool_brickfield\scheduler.php}.
  *
  * @package   tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, www.brickfield.ie
  * @author     Jay Churchward (jay@brickfieldlabs.ie)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-namespace tool_brickfield;
-
-/**
- * Unit tests for {@scheduler tool_brickfield\scheduler.php}.
- * @group tool_brickfield
  */
 class scheduler_test extends \advanced_testcase {
 
