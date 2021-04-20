@@ -28,16 +28,16 @@ class registration {
     /** @var int Registration information has not been entered. */
     const NOT_ENTERED = 0;
 
-    /** @var int Registration information has been entered but not validated. */
-    const NOT_VALIDATED = 1;
+    /** @var int Registration information has been entered but not externally validated. */
+    const PENDING = 1;
 
-    /** @var int Registration information was entered but was not validated within the grace periods. */
+    /** @var int Registration information was entered but was not validated within the defined grace periods. */
     const INVALID = 2;
 
-    /** @var int Registration information is valid. */
+    /** @var int Registration information has been externally validated. */
     const VALIDATED = 3;
 
-    /** @var int Registration information has expired. */
+    /** @var int Registration information has expired and needs to be revalidated. */
     const EXPIRED = 4;
 
     /** @var int Registration validation attempted, but failed. */
@@ -106,16 +106,16 @@ class registration {
      * System can be used when it has been validated, or when its still awaiting validation.
      * @return bool
      */
-    public function is_valid(): bool {
-        return $this->status_is_validated() || $this->not_validated();
+    public function toolkit_is_active(): bool {
+        return $this->status_is_validated() || $this->validation_pending();
     }
 
     /**
-     * The "not validated" status also needs the grace period to still be in effect.
+     * The "not validated" state also needs the grace period to still be in effect.
      * @return bool
      */
-    public function not_validated(): bool {
-        return ($this->status_is_not_validated() || $this->status_is_error()) && $this->grace_period_valid();
+    public function validation_pending(): bool {
+        return ($this->status_is_pending() || $this->status_is_error()) && $this->grace_period_valid();
     }
 
     /**
@@ -182,7 +182,7 @@ class registration {
         }
 
         // If no validation has been confirmed, check the registration site.
-        if ($this->not_validated()) {
+        if ($this->validation_pending()) {
             $brickfieldconnect = $this->get_registration_connection();
             $this->set_check_time();
             if ($brickfieldconnect->is_registered() || $brickfieldconnect->update_registration($this->apikey, $this->secretkey)) {
@@ -247,7 +247,6 @@ class registration {
     /**
      * Get the registration URL.
      * @return string
-     * @throws dml_exception
      */
     public function get_regurl(): string {
         return self::$regurl;
@@ -299,7 +298,7 @@ class registration {
      */
     protected function set_not_validated(): bool {
         $this->set_validation_time();
-        return $this->set_status(self::NOT_VALIDATED);
+        return $this->set_status(self::PENDING);
     }
 
     /**
@@ -376,11 +375,11 @@ class registration {
     }
 
     /**
-     * Not validated includes two possible states.
+     * Return true if the current status is "pending".
      * @return bool
      */
-    protected function status_is_not_validated(): bool {
-        return $this->validation == self::NOT_VALIDATED;
+    protected function status_is_pending(): bool {
+        return $this->validation == self::PENDING;
     }
 
     /**

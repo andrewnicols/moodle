@@ -19,7 +19,6 @@ use tool_brickfield\analysis;
 use tool_brickfield\area_base;
 use tool_brickfield\local\tool\filter;
 use tool_brickfield\manager;
-use tool_brickfield\output\renderer;
 use tool_brickfield\registration;
 use tool_brickfield\scheduler;
 use tool_brickfield\sitedata;
@@ -72,7 +71,7 @@ class block_accessreview extends block_base {
      *
      * @return bool
      */
-    public function instance_allow_multiple() : bool {
+    public function instance_allow_multiple(): bool {
         return false;
     }
 
@@ -103,7 +102,7 @@ class block_accessreview extends block_base {
         }
 
         // Check for valid registration.
-        if (!(new registration())->is_valid()) {
+        if (!(new registration())->toolkit_is_active()) {
             $this->content->text = manager::registration_message();
         } else if (scheduler::is_course_analyzed($COURSE->id)) {
             // Build error data table.
@@ -228,10 +227,12 @@ class block_accessreview extends block_base {
      * Get the link to toggle the heatmap.
      *
      * @return string
+     * @throws coding_exception
      */
     protected function get_toggle_link(): string {
         global $OUTPUT;
 
+        // Toggle overlay link.
         return html_writer::link(
             '#',
             $OUTPUT->pix_icon('t/hide', get_string('togglealt', 'block_accessreview')),
@@ -249,17 +250,21 @@ class block_accessreview extends block_base {
      *
      * @param context $context
      * @return string
+     * @throws coding_exception
+     * @throws moodle_exception
      */
     protected function get_download_link(context $context): string {
         global $OUTPUT, $COURSE;
 
         if (has_capability(accessibility::get_capability_name('viewcoursetools'), $context)) {
             return html_writer::link(
-                new moodle_url(accessibility::get_plugin_url(), [
-                    'courseid' => $COURSE->id,
-                    'tab' => 'printable',
-                    'target' => 'pdf',
-                ]),
+                new moodle_url(accessibility::get_plugin_url(),
+                    [
+                        'courseid' => $COURSE->id,
+                        'tab' => 'printable',
+                        'target' => 'pdf',
+                    ]
+                ),
                 $OUTPUT->pix_icon('a/download_all', get_string('downloadreportalt', 'block_accessreview')),
                 [
                     'title' => get_string('downloadreportalt', 'block_accessreview'),
@@ -272,20 +277,25 @@ class block_accessreview extends block_base {
     }
 
     /**
-     * Get the report link for the specified context
+     * Get the report link for the specified context.
      *
-     * @param   context $context
-     * @return  string
+     * @param context $context
+     * @return string
+     * @throws coding_exception
+     * @throws dml_exception
+     * @throws moodle_exception
      */
     protected function get_report_link(context $context): string {
         global $OUTPUT, $COURSE;
 
         if (has_capability(accessibility::get_capability_name('viewcoursetools'), $context)) {
             return html_writer::link(
-                new moodle_url(accessibility::get_plugin_url(), [
-                    'courseid' => $COURSE->id,
-                    'tab' => get_config('block_accessreview', 'toolpage'),
-                ]),
+                new moodle_url(accessibility::get_plugin_url(),
+                    [
+                        'courseid' => $COURSE->id,
+                        'tab' => get_config('block_accessreview', 'toolpage'),
+                    ]
+                ),
                 $OUTPUT->pix_icon('f/find', get_string('viewreportalt', 'block_accessreview'), 'block_accessreview'),
                 [
                     'title' => get_string('viewreportalt', 'block_accessreview'),

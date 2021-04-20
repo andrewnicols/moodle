@@ -41,7 +41,7 @@ accessibility::require_accessibility_enabled();
 
 // Check for valid registration.
 $registration = new registration();
-if (!$registration->is_valid()) {
+if (!$registration->toolkit_is_active()) {
     $urlregistration = manager::registration_url();
     redirect($urlregistration->out());
 }
@@ -130,7 +130,7 @@ if ($tool->data_is_valid() && ($tool->get_output_target() == 'pdf')) {
         echo $output->tabs($tool->get_filter(), $tools);
         echo $output->cachealert();
 
-        if ($registration->not_validated()) {
+        if ($registration->validation_pending()) {
             echo $output->notvalidatedalert();
         }
 

@@ -37,6 +37,7 @@ class registration_test extends \advanced_testcase {
     }
 
     /**
+     * Tests the state of the registration system when first installed.
      * @throws \dml_exception
      */
     public function test_initial_state() {
@@ -44,14 +45,15 @@ class registration_test extends \advanced_testcase {
         $regobj = new mock_registration();
 
         // Initial state of system.
-        $this->assertFalse($regobj->is_valid());
-        $this->assertFalse($regobj->not_validated());
+        $this->assertFalse($regobj->toolkit_is_active());
+        $this->assertFalse($regobj->validation_pending());
         $this->assertFalse($regobj->validation_error());
         $this->assertEmpty($regobj->get_api_key());
         $this->assertEmpty($regobj->get_secret_key());
     }
 
     /**
+     * Test the various states for setting registration keys.
      * @throws \dml_exception
      */
     public function test_set_keys_for_registration() {
@@ -61,19 +63,20 @@ class registration_test extends \advanced_testcase {
         // State when invalid format keys are sent.
         $this->assertFalse($regobj->set_keys_for_registration('123', 'abc'));
         $this->assertTrue($regobj->is_not_entered());
-        $this->assertFalse($regobj->not_validated());
+        $this->assertFalse($regobj->validation_pending());
         $this->assertEmpty($regobj->get_api_key());
         $this->assertEmpty($regobj->get_secret_key());
 
         // State when valid format keys are sent.
         $this->assertTrue($regobj->set_keys_for_registration(mock_brickfieldconnect::VALIDAPIKEY,
             mock_brickfieldconnect::VALIDSECRETKEY));
-        $this->assertTrue($regobj->not_validated());
+        $this->assertTrue($regobj->validation_pending());
         $this->assertEquals($regobj->get_api_key(), mock_brickfieldconnect::VALIDAPIKEY);
         $this->assertEquals($regobj->get_secret_key(), mock_brickfieldconnect::VALIDSECRETKEY);
     }
 
     /**
+     * Test the validation system through its several states.
      * @throws \dml_exception
      */
     public function test_validation() {
@@ -91,8 +94,8 @@ class registration_test extends \advanced_testcase {
             mock_brickfieldconnect::VALIDSECRETKEY));
         // Run validate function. State should end up as valid, 'VALIDATED'.
         $this->assertTrue($regobj->validate());
-        $this->assertTrue($regobj->is_valid());
-        $this->assertFalse($regobj->not_validated());
+        $this->assertTrue($regobj->toolkit_is_active());
+        $this->assertFalse($regobj->validation_pending());
         $this->assertFalse($regobj->validation_error());
 
         // Set invalid keys and validate the system.
@@ -100,12 +103,13 @@ class registration_test extends \advanced_testcase {
             'cd123456789012345678901234567890'));
         // Run validate function. State should end up as valid, not validated, 'ERROR'.
         $this->assertTrue($regobj->validate());
-        $this->assertTrue($regobj->is_valid());
-        $this->assertTrue($regobj->not_validated());
+        $this->assertTrue($regobj->toolkit_is_active());
+        $this->assertTrue($regobj->validation_pending());
         $this->assertTrue($regobj->validation_error());
     }
 
     /**
+     * Tests the system after validation grace periods expire.
      * @throws \dml_exception
      */
     public function test_validation_time_expiry() {
@@ -117,30 +121,34 @@ class registration_test extends \advanced_testcase {
             mock_brickfieldconnect::VALIDSECRETKEY));
         // Run validate function. State should end up as valid, 'VALIDATED'.
         $this->assertTrue($regobj->validate());
-        $this->assertTrue($regobj->is_valid());
+        $this->assertTrue($regobj->toolkit_is_active());
 
         // Invalidate the validation time.
         $regobj->invalidate_validation_time();
         // Run validate function. State should end up as valid, 'VALIDATED'.
         $this->assertTrue($regobj->validate());
-        $this->assertTrue($regobj->is_valid());
+        $this->assertTrue($regobj->toolkit_is_active());
 
         // Set invalid keys and validate the system.
         $this->assertTrue($regobj->set_keys_for_registration('123456789012345678901234567890cd',
             'cd123456789012345678901234567890'));
         // Run validate function. State should end up as valid, not validated, 'ERROR'.
         $this->assertTrue($regobj->validate());
-        $this->assertTrue($regobj->is_valid());
-        $this->assertTrue($regobj->not_validated());
+        $this->assertTrue($regobj->toolkit_is_active());
+        $this->assertTrue($regobj->validation_pending());
         $this->assertTrue($regobj->validation_error());
 
         // Invalidate the validation time.
         $regobj->invalidate_validation_time();
         // Run validate function. State should end up as  not valid.
         $this->assertFalse($regobj->validate());
-        $this->assertFalse($regobj->is_valid());
+        $this->assertFalse($regobj->toolkit_is_active());
     }
 
+    /**
+     * Tests the system after summary data time periods expire.
+     * @throws \dml_exception
+     */
     public function test_summary_time_expiry() {
         $this->resetAfterTest();
         $regobj = new mock_registration();
@@ -150,20 +158,20 @@ class registration_test extends \advanced_testcase {
             mock_brickfieldconnect::VALIDSECRETKEY));
         // Run validate function. State should end up as valid, 'VALIDATED'.
         $this->assertTrue($regobj->validate());
-        $this->assertTrue($regobj->is_valid());
+        $this->assertTrue($regobj->toolkit_is_active());
 
         // Invalidate the summary time.
         $regobj->invalidate_summary_time();
         // Run validate function. State should end up as not valid.
         $this->assertFalse($regobj->validate());
-        $this->assertFalse($regobj->is_valid());
+        $this->assertFalse($regobj->toolkit_is_active());
 
         // Set invalid keys and validate the system.
         $this->assertTrue($regobj->set_keys_for_registration('123456789012345678901234567890cd',
             'cd123456789012345678901234567890'));
         // Run validate function. State should end up as invalid.
         $this->assertFalse($regobj->validate());
-        $this->assertFalse($regobj->is_valid());
+        $this->assertFalse($regobj->toolkit_is_active());
 
         // Set invalid keys and validate the system.
         $this->assertTrue($regobj->set_keys_for_registration('123456789012345678901234567890cd',
@@ -172,8 +180,8 @@ class registration_test extends \advanced_testcase {
         $regobj->mark_summary_data_sent();
         // Run validate function. State should end up as valid, not validated, 'ERROR'.
         $this->assertTrue($regobj->validate());
-        $this->assertTrue($regobj->is_valid());
-        $this->assertTrue($regobj->not_validated());
+        $this->assertTrue($regobj->toolkit_is_active());
+        $this->assertTrue($regobj->validation_pending());
         $this->assertTrue($regobj->validation_error());
     }
 }

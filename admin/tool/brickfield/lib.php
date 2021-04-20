@@ -25,6 +25,7 @@
 
 use tool_brickfield\accessibility;
 use tool_brickfield\manager;
+use tool_brickfield\output\renderer;
 use tool_brickfield\registration;
 
 /**
@@ -49,7 +50,7 @@ function tool_brickfield_extend_navigation_course(\navigation_node $navigation, 
 
     // Display in the navigation if the user has site:config ability, or if the site is registered.
     $enabled = has_capability('moodle/site:config', \context_system::instance());
-    $enabled = $enabled || (new registration())->is_valid();
+    $enabled = $enabled || (new registration())->toolkit_is_active();
     if (!$enabled) {
         return;
     }

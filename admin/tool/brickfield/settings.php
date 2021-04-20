@@ -119,7 +119,7 @@ if ($hassiteconfig) {
 
 // Add the reports link if the toolkit is enabled, and is either registered, or the user has the ability to register it.
 $showreports = has_capability('moodle/site:config', \context_system::instance());
-$showreports = $showreports || (new registration())->is_valid();
+$showreports = $showreports || (new registration())->toolkit_is_active();
 
 // Create a link to the main page in the reports menu.
 $ADMIN->add(

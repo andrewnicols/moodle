@@ -15,11 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Registration configuration for the Brickfield too.
- *
  * @package    tool_brickfield
- * @author     2020 JM Tomas <jmtomas@tresipunt.com>
- * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
+ * @author  2020 JM Tomas <jmtomas@tresipunt.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  */
 
@@ -76,9 +73,9 @@ if ($fromform = $registrationform->get_data()) {
     }
 }
 
-if (!$registration->is_valid()) {
+if (!$registration->toolkit_is_active()) {
     echo $OUTPUT->notification(get_string('inactive', manager::PLUGINNAME), 'error');
-} else if ($registration->not_validated()) {
+} else if ($registration->validation_pending()) {
     if ($registration->validation_error()) {
         echo $OUTPUT->notification(get_string('validationerror', manager::PLUGINNAME), 'error');
     } else {
