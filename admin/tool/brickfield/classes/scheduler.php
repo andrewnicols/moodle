@@ -112,7 +112,11 @@ class scheduler {
         global $DB;
         if (!$this->is_in_schedule()) {
             $datarecord = $this->get_datarecord();
-            return $DB->insert_record(self::DATA_TABLE, $datarecord, false);
+            $datarecord->id = $DB->insert_record(self::DATA_TABLE, $datarecord);
+
+            $task = new \tool_brickfield\task\process_course();
+            $task->set_custom_data(['id' => $datarecord->id]);
+            \core\task\manager::queue_adhoc_task($task);
         }
         return true;
     }
@@ -255,6 +259,30 @@ class scheduler {
         }
         $requestset->close();
     }
+
+    /**
+     * Process an item which was previously scheduled.
+     *
+     * @param   int $id
+     */
+    public static function process_scheduled_item(int $id): void {
+        global $DB;
+        $request = $DB->get_record(self::DATA_TABLE, ['id' => $id, 'status' => self::STATUS_REQUESTED]);
+        if ($request && $request->contextlevel == CONTEXT_COURSE) {
+            $courseid = $request->instanceid;
+            manager::find_new_or_updated_areas_per_course($courseid);
+            $request->status = 2;
+            $request->timeanalyzed = time();
+            $request->timemodified = time();
+            $DB->update_record(self::DATA_TABLE, $request);
+
+            mtrace("Running rerun caching for Courseid " . $courseid);
+            manager::store_result_summary($courseid);
+            mtrace("rerun cache completed at " . time());
+            $DB->delete_records(manager::DB_PROCESS, ['courseid' => $courseid, 'item' => 'cache']);
+        }
+    }
+
 
     // The following are static versions of the above functions for courses that do not require creating an object first.
 
