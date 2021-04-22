@@ -205,6 +205,16 @@ class renderer extends \tool_brickfield\output\renderer {
     }
 
     /**
+     * Return the path to use for PDF images.
+     *
+     * @return string
+     */
+    private function image_path(): string {
+        global $CFG;
+        return $CFG->wwwroot . '/admin/tool/brickfield/pix/pdf/';
+    }
+
+    /**
      * Renders the accessability report using the pdflib.
      *
      * @param \stdClass $data Report data.
@@ -244,15 +254,15 @@ class renderer extends \tool_brickfield\output\renderer {
             <table cellspacing="0" cellpadding="1">
                 <tr>
                     <td>
-                        <img src="' . $this->image_url('pdf/tachometer-alt-solid', 'tool_brickfield') .'" width="15" height="15">' .
+                        <img src="' . $this->image_path() . 'tachometer-alt-solid.svg" width="15" height="15">' .
                         ' <td style="line-height: 10px;"> '.get_string('totalactivities', manager::PLUGINNAME) . ': ' .
                         $data->combodata['total'] .'</td></td>
                     <td>
-                        <img src="' . $this->image_url('pdf/check-square-regular', 'tool_brickfield') .'" width="15" height="15">' .
+                        <img src="' . $this->image_path() . 'check-square-regular.svg" width="15" height="15">' .
                         ' <td style="line-height: 10px;"> '.get_string('passed', manager::PLUGINNAME) . ': ' .
                         $data->combodata['passed'] .'</td></td>
                     <td>
-                        <img src="' . $this->image_url('pdf/times-circle-regular', 'tool_brickfield') .'" width="15" height="15">' .
+                        <img src="' . $this->image_path() . 'times-circle-regular.svg" width="15" height="15">' .
                         ' <td style="line-height: 10px;"> '.get_string('failed', manager::PLUGINNAME) . ': ' .
                         $data->combodata['failed'] .'</td></td>
                 </tr>
@@ -373,12 +383,12 @@ class renderer extends \tool_brickfield\output\renderer {
 
         // Numbers are constants from \tool_brickfield\area_base::checkgroup.
         $icons = [
-            area_base::CHECKGROUP_IMAGE => $this->image_url('pdf/image-regular', 'tool_brickfield'),
-            area_base::CHECKGROUP_LAYOUT => $this->image_url('pdf/th-large-solid', 'tool_brickfield'),
-            area_base::CHECKGROUP_LINK => $this->image_url('pdf/link', 'tool_brickfield'),
-            area_base::CHECKGROUP_MEDIA => $this->image_url('pdf/play-circle-regular', 'tool_brickfield'),
-            area_base::CHECKGROUP_TABLE => $this->image_url('pdf/table-solid', 'tool_brickfield'),
-            area_base::CHECKGROUP_TEXT => $this->image_url('pdf/font-solid', 'tool_brickfield'),
+            area_base::CHECKGROUP_IMAGE  => $this->image_path() . 'image-regular.svg',
+            area_base::CHECKGROUP_LAYOUT => $this->image_path() . 'th-large-solid.svg',
+            area_base::CHECKGROUP_LINK   => $this->image_path() . 'link.png',
+            area_base::CHECKGROUP_MEDIA  => $this->image_path() . 'play-circle-regular.svg',
+            area_base::CHECKGROUP_TABLE  => $this->image_path() . 'table-solid.svg',
+            area_base::CHECKGROUP_TEXT   => $this->image_path() . 'font-solid.svg',
         ];
 
         foreach ($data->groupdata as $key => $group) {
