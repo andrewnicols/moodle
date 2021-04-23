@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class table_td_should_not_merge_test
  */
 class table_td_should_not_merge_test extends all_checks {
-    public $checktype = 'tableTdShouldNotMerge';
+    public $checktype = 'table_td_should_not_merge';
 
     private $htmlfail1 = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

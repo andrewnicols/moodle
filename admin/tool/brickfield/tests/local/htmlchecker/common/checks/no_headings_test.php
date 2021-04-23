@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class no_headings_test
  */
 class no_headings_test extends all_checks {
-    public $checktype = 'noHeadings';
+    public $checktype = 'no_headings';
 
     private $htmlfail = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

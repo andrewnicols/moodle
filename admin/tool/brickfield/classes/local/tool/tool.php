@@ -344,4 +344,14 @@ abstract class tool {
         }
         return $newhtmlcode;
     }
+
+    /**
+     * Return the correct language string for the provided check.
+     *
+     * @param string $check
+     * @return string
+     */
+    public static function get_check_description(string $check): string {
+        return get_string('checkdesc:' . str_replace('_', '', $check), manager::PLUGINNAME);
+    }
 }

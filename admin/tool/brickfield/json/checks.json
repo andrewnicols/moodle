@@ -1,217 +1,217 @@
 {"checks":[
     {
         "checktype":"full",
-        "shortname":"aLinksDontOpenNewWindow",
+        "shortname":"a_links_dont_open_new_window",
         "checkgroup":"link",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"aMustContainText",
+        "shortname":"a_must_contain_text",
         "checkgroup":"link",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"areaDontOpenNewWindow",
+        "shortname":"area_dont_open_new_window",
         "checkgroup":"link",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"areaHasAltValue",
+        "shortname":"area_has_alt_value",
         "checkgroup":"link",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"aSuspiciousLinkText",
+        "shortname":"a_suspicious_link_text",
         "checkgroup":"link",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"basefontIsNotUsed",
+        "shortname":"basefont_is_not_used",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"blinkIsNotUsed",
+        "shortname":"blink_is_not_used",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"boldIsNotUsed",
+        "shortname":"bold_is_not_used",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"contentTooLong",
+        "shortname":"content_too_long",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"cssTextHasContrast",
+        "shortname":"css_text_has_contrast",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"embedHasAssociatedNoEmbed",
+        "shortname":"embed_has_associated_no_embed",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"headerH3",
+        "shortname":"header_h3",
         "checkgroup":"layout",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"headersHaveText",
+        "shortname":"headers_have_text",
         "checkgroup":"layout",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"iIsNotUsed",
+        "shortname":"i_is_not_used",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"imgAltIsDifferent",
+        "shortname":"img_alt_is_different",
         "checkgroup":"image",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"imgAltIsTooLong",
+        "shortname":"img_alt_is_too_long",
         "checkgroup":"image",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"imgAltNotEmptyInAnchor",
+        "shortname":"img_alt_not_empty_in_anchor",
         "checkgroup":"image",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"imgAltNotPlaceHolder",
+        "shortname":"img_alt_not_place_holder",
         "checkgroup":"image",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"imgHasAlt",
+        "shortname":"img_has_alt",
         "checkgroup":"image",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"imgWithMapHasUseMap",
+        "shortname":"img_with_map_has_use_map",
         "checkgroup":"image",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"legendTextNotEmpty",
+        "shortname":"legend_text_not_empty",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"marqueeIsNotUsed",
+        "shortname":"marquee_is_not_used",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"noHeadings",
+        "shortname":"no_headings",
         "checkgroup":"layout",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"objectMustHaveEmbed",
+        "shortname":"object_must_have_embed",
         "checkgroup":"media",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"objectMustHaveTitle",
+        "shortname":"object_must_have_title",
         "checkgroup":"media",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"objectMustHaveValidTitle",
+        "shortname":"object_must_have_valid_title",
         "checkgroup":"media",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"strikeIsNotUsed",
+        "shortname":"strike_is_not_used",
         "checkgroup":"text",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"tableDataShouldHaveTh",
+        "shortname":"table_data_should_have_th",
         "checkgroup":"table",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"tableSummaryDoesNotDuplicateCaption",
+        "shortname":"table_summary_does_not_duplicate_caption",
         "checkgroup":"table",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"tableTdShouldNotMerge",
+        "shortname":"table_td_should_not_merge",
         "checkgroup":"table",
         "status":"1",
         "severity":"1"
     },
     {
         "checktype":"full",
-        "shortname":"tableThShouldHaveScope",
+        "shortname":"table_th_should_have_scope",
         "checkgroup":"table",
         "status":"1",
         "severity":"1"

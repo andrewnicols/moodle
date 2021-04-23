@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class img_alt_not_empty_in_anchor_testcase
  */
 class img_alt_not_empty_in_anchor_test extends all_checks {
-    protected $checktype = 'imgAltNotEmptyInAnchor';
+    protected $checktype = 'img_alt_not_empty_in_anchor';
 
     private $htmlfail = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

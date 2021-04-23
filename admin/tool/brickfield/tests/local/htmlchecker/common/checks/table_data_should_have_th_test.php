@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class table_data_should_have_th_test
  */
 class table_data_should_have_th_test extends all_checks {
-    public $checktype = 'tableDataShouldHaveTh';
+    public $checktype = 'table_data_should_have_th';
 
     private $htmlfail1 = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

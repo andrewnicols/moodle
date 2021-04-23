@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class area_has_alt_value_testcase
  */
 class area_has_alt_value_test extends all_checks {
-    protected $checktype = 'areaHasAltValue';
+    protected $checktype = 'area_has_alt_value';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

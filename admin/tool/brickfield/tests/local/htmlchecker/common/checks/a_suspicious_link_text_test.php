@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class a_suspicious_link_text
  */
 class a_suspicious_link_text_test extends all_checks {
-    protected $checktype = 'aSuspiciousLinkText';
+    protected $checktype = 'a_suspicious_link_text';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

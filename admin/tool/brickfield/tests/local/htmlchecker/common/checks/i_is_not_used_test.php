@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class i_is_not_used_testcase
  */
 class i_is_not_used_test extends all_checks {
-    protected $checktype = 'iIsNotUsed';
+    protected $checktype = 'i_is_not_used';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

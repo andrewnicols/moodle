@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class img_with_map_has_use_map_test
  */
 class img_with_map_has_use_map_test extends all_checks {
-    public $checktype = 'imgWithMapHasUseMap';
+    public $checktype = 'img_with_map_has_use_map';
 
     private $htmlfail = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

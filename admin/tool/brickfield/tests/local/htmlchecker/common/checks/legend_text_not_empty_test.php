@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class legend_text_not_empty_test
  */
 class legend_text_not_empty_test extends all_checks {
-    public $checktype = 'legendTextNotEmpty';
+    public $checktype = 'legend_text_not_empty';
 
     private $htmlfail1 = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

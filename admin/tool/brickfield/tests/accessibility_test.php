@@ -76,8 +76,8 @@ class accessibility_test extends \advanced_testcase {
         $object = new accessibility();
 
         $output = $object->checkids();
-        $this->assertEquals($output[1], 'aLinksDontOpenNewWindow');
-        $this->assertEquals($output[10], 'cssTextHasContrast');
+        $this->assertEquals($output[1], 'a_links_dont_open_new_window');
+        $this->assertEquals($output[10], 'css_text_has_contrast');
 
         $output = $object->checkids(2);
         $this->assertEmpty($output);
@@ -93,10 +93,10 @@ class accessibility_test extends \advanced_testcase {
         $object = new accessibility();
 
         $output = $object->get_translations();
-        $this->assertEquals($output['aMustContainText']['title'], 'Links should contain text');
+        $this->assertEquals($output['a_must_contain_text']['title'], 'Links should contain text');
         $this->assertStringContainsString('<p>Because many users of screen readers use links to ' .
             'navigate the page, providing links with no text (or with images that have empty \'alt\' attributes and no other ' .
-            'readable text) hinders these users.</p>', $output['aMustContainText']['description']);
+            'readable text) hinders these users.</p>', $output['a_must_contain_text']['description']);
     }
 
     /**

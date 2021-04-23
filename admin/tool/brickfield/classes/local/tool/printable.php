@@ -149,7 +149,7 @@ class printable extends tool {
         $params[] = 1;
         $checkcountdata = $DB->get_records_sql($sql3, $params);
         foreach ($checkcountdata as $key => &$cdata) {
-            $cdata->checkname = get_string('checkdesc:'.$key, manager::PLUGINNAME);
+            $cdata->checkname = self::get_check_description($key);
         }
         $data->checkcountdata = $checkcountdata;
 
@@ -190,7 +190,7 @@ class printable extends tool {
         $errordata = $DB->get_records_sql($errorsql, $params, 0, $perpage);
 
         foreach ($errordata as $err) {
-            $err->shortname = get_string('checkdesc:'.$err->shortname, manager::PLUGINNAME);
+            $err->shortname = self::get_check_description($err->shortname);
             // Truncating HTML with base64 image data, to avoid page overstretching.
             $base64detected = parent::base64_img_detected($err->htmlcode);
             if ($base64detected) {

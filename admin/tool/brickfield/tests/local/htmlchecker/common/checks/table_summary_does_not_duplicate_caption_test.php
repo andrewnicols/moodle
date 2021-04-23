@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class table_summary_does_not_duplicate_caption_test
  */
 class table_summary_does_not_duplicate_caption_test extends all_checks {
-    public $checktype = 'tableSummaryDoesNotDuplicateCaption';
+    public $checktype = 'table_summary_does_not_duplicate_caption';
 
     private $htmlfail = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

@@ -17,6 +17,7 @@
 namespace tool_brickfield\local\htmlchecker\guidelines;
 
 use tool_brickfield\local\htmlchecker\brickfield_accessibility_guideline;
+use tool_brickfield\manager;
 
 /**
  * Brickfield Guideline
@@ -30,36 +31,23 @@ class brickfield_guideline extends brickfield_accessibility_guideline {
     /**
      * @var array An array of test class names which will be called for this guideline
      */
-    public $tests = array(
-        'aLinksDontOpenNewWindow',
-        'aMustContainText',
-        'areaDontOpenNewWindow',
-        'areaHasAltValue',
-        'aSuspiciousLinkText',
-        'basefontIsNotUsed',
-        'blinkIsNotUsed',
-        'boldIsNotUsed',
-        'contentTooLong',
-        'cssTextHasContrast',
-        'embedHasAssociatedNoEmbed',
-        'headerH3',
-        'headersHaveText',
-        'iIsNotUsed',
-        'imgAltIsDifferent',
-        'imgAltIsTooLong',
-        'imgAltNotEmptyInAnchor',
-        'imgAltNotPlaceHolder',
-        'imgHasAlt',
-        'imgWithMapHasUseMap',
-        'legendTextNotEmpty',
-        'marqueeIsNotUsed',
-        'objectMustHaveEmbed',
-        'objectMustHaveTitle',
-        'objectMustHaveValidTitle',
-        'strikeIsNotUsed',
-        'tableDataShouldHaveTh',
-        'tableSummaryDoesNotDuplicateCaption',
-        'tableTdShouldNotMerge',
-        'tableThShouldHaveScope',
-    );
+    public $tests = [];
+
+    /**
+     * brickfield_guideline constructor.
+     * @param $dom
+     * @param $css
+     * @param array $path
+     * @param null $arg
+     * @param string $domain
+     * @param bool $cmsmode
+     * @throws \dml_exception
+     */
+    public function __construct(&$dom, &$css, array &$path, $arg = null, string $domain = 'en', bool $cmsmode = false) {
+        global $DB;
+
+        $this->tests = array_values($DB->get_records_menu(manager::DB_CHECKS, null, '', 'id,shortname'));
+
+        parent::__construct($dom, $css, $path, $arg, $domain, $cmsmode);
+    }
 }

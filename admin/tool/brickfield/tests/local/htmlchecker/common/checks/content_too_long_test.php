@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class content_too_long_testcase
  */
 class content_too_long_test extends all_checks {
-    protected $checktype = 'contentTooLong';
+    protected $checktype = 'content_too_long';
 
     private $htmlfail = <<<EOD
     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">

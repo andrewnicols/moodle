@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class table_th_should_have_scope_test
  */
 class table_th_should_have_scope_test extends all_checks {
-    public $checktype = 'tableTdShouldHaveScope';
+    public $checktype = 'table_th_should_have_scope';
 
     private $htmlfail1 = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
@@ -74,15 +74,16 @@ EOD;
         <table>
             <thead>
                 <tr>
-                    <th></th>
-                    <th scope="row">1</th>
-                    <th></th>
+                    <th scope="col">1</th>
+                    <th scope="col">2</th>
+                    <th scope="col">3</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>2</td>
                     <td>3</td>
+                    <th>4</th>
                 </tr>
                 <tr>
                     <td>4</td>
@@ -104,9 +105,9 @@ EOD;
         <table>
             <thead>
                 <tr>
-                    <th></th>
-                    <th scope="">1</th>
-                    <th></th>
+                    <th scope="col">1</th>
+                    <th scope="col">2</th>
+                    <th scope="col">3</th>
                 </tr>
             </thead>
             <tbody>
@@ -134,15 +135,16 @@ EOD;
         <table>
             <thead>
                 <tr>
-                    <th></th>
-                    <th>1</th>
-                    <th></th>
+                    <th scope="col">1</th>
+                    <th scope="col">2</th>
+                    <th scope="col">3</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>2</td>
                     <td>3</td>
+                    <th scope="row">4</th>
                 </tr>
                 <tr>
                     <td>4</td>
@@ -158,10 +160,13 @@ EOD;
      */
     public function test_check_fail() {
         $results = $this->get_checker_results($this->htmlfail1);
-        $this->assertIsBool($results);
+        $this->assertEquals(2, count($results));
+        $this->assertTrue($results[0]->element->tagName == 'th');
+        $this->assertTrue($results[1]->element->tagName == 'th');
 
         $results = $this->get_checker_results($this->htmlfail2);
-        $this->assertIsBool($results);
+        $this->assertEquals(1, count($results));
+        $this->assertTrue($results[0]->element->tagName == 'th');
     }
 
     /**

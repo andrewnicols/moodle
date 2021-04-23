@@ -34,7 +34,7 @@ require_once('all_checks.php');
  * This check test does not currently exist
  */
 class marquee_is_not_used_test extends all_checks {
-    public $checktype = 'marqueeIsNotUsed';
+    public $checktype = 'marquee_is_not_used';
 
     private $htmlfail = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

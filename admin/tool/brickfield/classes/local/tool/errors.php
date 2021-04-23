@@ -92,7 +92,7 @@ class errors extends tool {
         $checks = $DB->get_records_menu(manager::DB_CHECKS, ['status' => 1], '', 'id, shortname');
         foreach ($errordata as $value) {
             $value->shortname = $checks[$value->checkid];
-            $value->checkdesc = get_string('checkdesc:'.$value->shortname, manager::PLUGINNAME);
+            $value->checkdesc = self::get_check_description($value->shortname);
             // Truncating HTML with base64 image data, to avoid page overstretching.
             $base64detected = parent::base64_img_detected($value->htmlcode);
             if ($base64detected) {

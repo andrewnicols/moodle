@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class test_css_text_has_contrast_testcase
  */
 class img_has_alt_test extends all_checks {
-    public $checktype = 'imgHasAlt';
+    public $checktype = 'img_has_alt';
 
     private $htmlfail1 = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">

@@ -32,7 +32,7 @@ require_once('all_checks.php');
  * Class object_must_have_valid_title_test
  */
 class object_must_have_valid_title_test extends all_checks {
-    public $checktype = 'objectMustHaveValidTitle';
+    public $checktype = 'object_must_have_valid_title';
 
     private $htmlfail = <<<EOD
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
