@@ -139,6 +139,7 @@ $string['remaining'] = ' ({$a} errors remaining)';
 $string['response:0'] = 'This URL doesn\'t point anywhere';
 $string['response:404'] = 'This URL page was not found';
 $string['returntomain'] = 'Return to Overview';
+$string['schedule:blocknotscheduled'] = '<p>This course has not yet been scheduled for analysis, to find common accessibility issues.</p><p>Please view the <a href="{$a}">Accessibility toolkit help page</a> for further details.</p>';
 $string['schedule:notscheduled'] = '<p>This course has not yet been scheduled for analysis, to find common accessibility issues.</p><p>By clicking on the "Submit for analysis" button, you confirm that you want all your relevant course HTML content, such as course section descriptions, activity descriptions, questions, pages, and more, to be scheduled for analysis.</p><p>This analysis will conduct multiple common accessibility checks on your course HTML content, and those results will then display on these Accessibility toolkit report pages.</p><p>Please view the <a href="{$a}">Accessibility toolkit help page</a> for further details.</p><p>This analysis will be processed in the background, by the Moodle scheduled tasks, so its speed of completion will depend on task timings and task run schedules.';
 $string['schedule:requestanalysis'] = 'Submit for analysis';
 $string['schedule:scheduled'] = 'This course has been scheduled for analysis.';

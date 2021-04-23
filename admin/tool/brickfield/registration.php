@@ -15,8 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Registration configuration for the Brickfield too.
+ *
  * @package    tool_brickfield
- * @author  2020 JM Tomas <jmtomas@tresipunt.com>
+ * @author     2020 JM Tomas <jmtomas@tresipunt.com>
+ * @copyright  2020 Brickfield Education Labs https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL
  */
 

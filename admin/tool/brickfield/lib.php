@@ -25,7 +25,6 @@
 
 use tool_brickfield\accessibility;
 use tool_brickfield\manager;
-use tool_brickfield\output\renderer;
 use tool_brickfield\registration;
 
 /**

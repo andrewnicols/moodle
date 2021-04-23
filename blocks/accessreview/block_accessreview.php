@@ -156,7 +156,7 @@ class block_accessreview extends block_base {
             $this->content->text = get_string('analysistypedisabled', manager::PLUGINNAME);
         } else {
             // Display a button to request analysis.
-            $this->content->text = get_string('schedule:notscheduled', manager::PLUGINNAME);
+            $this->content->text = get_string('schedule:blocknotscheduled', manager::PLUGINNAME, manager::get_helpurl());
 
             $button = new single_button(
                 new moodle_url(accessibility::get_plugin_url(), ['action' => 'requestanalysis', 'courseid' => $COURSE->id]),
