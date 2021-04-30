@@ -1159,39 +1159,129 @@ class stored_file {
      * @since Moodle 3.8
      */
     public function rotate_image() {
+        if (!function_exists("exif_read_data")) {
+            return [false, false];
+        }
+
         $content = $this->get_content();
         $mimetype = $this->get_mimetype();
 
-        if ($mimetype === "image/jpeg" && function_exists("exif_read_data")) {
-            $exif = @exif_read_data("data://image/jpeg;base64," . base64_encode($content));
-            if (isset($exif['ExifImageWidth']) && isset($exif['ExifImageLength']) && isset($exif['Orientation'])) {
-                $rotation = [
-                    3 => -180,
-                    6 => -90,
-                    8 => -270,
-                ];
-                $orientation = $exif['Orientation'];
-                if ($orientation !== 1) {
-                    $source = @imagecreatefromstring($content);
-                    $data = @imagerotate($source, $rotation[$orientation], 0);
-                    if (!empty($data)) {
-                        if ($orientation == 1 || $orientation == 3) {
-                            $size = [
-                                'width' => $exif["ExifImageWidth"],
-                                'height' => $exif["ExifImageLength"],
-                            ];
-                        } else {
-                            $size = [
-                                'height' => $exif["ExifImageWidth"],
-                                'width' => $exif["ExifImageLength"],
-                            ];
-                        }
-                        imagedestroy($source);
-                        return [$data, $size];
-                    }
-                }
+        if ($mimetype !== "image/jpeg") {
+            // Not a JPEG.
+            return [false, false];
+        }
+
+        $exif = @exif_read_data("data://image/jpeg;base64," . base64_encode($content));
+        if (!$exif) {
+            // Unable to read exif data.
+            return [false, false];
+        }
+
+        $hasanydimensions = false;
+        $width = null;
+        $height = null;
+
+        if (array_key_exists('ExifImageWidth', $exif) && array_key_exists('ExifImageHeight', $exif)) {
+            $width = $exif['ExifImageWidth'];
+            $height = $exif['ExifImageLength'];
+            $hasanydimensions = true;
+        }
+
+        if (!$hasanydimensions && array_key_exists('COMPUTED', $exif)) {
+            if (array_key_exists('Width', $exif['COMPUTED']) && array_key_exists('Height', $exif['COMPUTED'])) {
+                $width = $exif['COMPUTED']['Width'];
+                $height = $exif['COMPUTED']['Height'];
+                $hasanydimensions = true;
             }
         }
+
+        // Note: Exif orientations are as follows.
+        $angles = [
+            1 => 0,     // 1 => 0 degrees.
+            8 => 90,    // 8 => 90 degrees.
+            3 => 180,   // 3 => 180 degrees.
+            6 => 270,   // 6 => 270 degrees.
+        ];
+
+        $hasorientation = array_key_exists('Orientation', $exif);
+        $hasorientation = $hasorientation && array_key_exists($exif['Orientation'], $angles);
+
+        if ($hasorientation && $hasanydimensions) {
+            $angle = $angles[$exif['Orientation']];
+
+            if ($angle === 0) {
+                return [false, false];
+            }
+
+
+            $result = rotate_image_dimensions(
+                $content,
+                $angle,
+                $width,
+                $height
+            );
+
+            if ($result) {
+                return [
+                    $result['image'],
+                    [
+                        'width' => $result['width'],
+                        'height' => $result['height'],
+                    ],
+                ];
+            }
+
+            return [false, false];
+        }
+
+        if ($hasanydimensions) {
+            // Orientation is not identified, or is not required, but dimensions are known.
+            return [
+                false,
+                [
+                    'width' => $width,
+                    'height' => $height,
+                ],
+            ];
+        }
+
+        // Dimensions not known, or some other error occurred.
         return [false, false];
+    }
+
+    /**
+     * Rotate an image by the specified dimensions
+     *
+     * @param   string $source
+     * @param   int $angle (90, 180, 270)
+     * @param   int $width
+     * @param   int $height
+     * @return  array|null
+     */
+    protected function rotate_image_dimensions(string $source, int $angle, int $width, int $height): ?array {
+        $imagedata = imagecreatefromstring($source);
+
+        if (!$imagedata) {
+            imagedestroy($imagedata);
+            return null;
+        }
+
+        $result = [
+            'image' => $imagedata,
+            'width' => $width,
+            'height' => $height,
+        ];
+
+        if ($angle === 180) {
+            $result['image'] = imagerotate($result['image'], $angle, 0);
+        }
+
+        if ($angle === 90 || $angle === 270) {
+            $result['width'] = $height;
+            $result['height'] = $width;
+            $result['image'] = imagerotate($result['image'], $angle, 0);
+        }
+
+        return $result;
     }
 }
