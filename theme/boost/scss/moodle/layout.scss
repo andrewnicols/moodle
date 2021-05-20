@@ -96,7 +96,6 @@
     display: none;
 }
 
-
 @include media-breakpoint-down(sm) {
     //the scroll to top button
     .drawer-toggles {
@@ -138,6 +137,7 @@
     }
 
     #page.drawers {
+        position: relative;
         overflow-y: auto;
         transition: 0.2s;
         height: calc(100vh - #{$navbar-height});
