@@ -57,9 +57,13 @@ $hasblocks = strpos($blockshtml, 'data-block=') !== false;
 if (!$hasblocks) {
     $blockdraweropen = false;
 }
+
 $courseindex = false;
-if (!$courseindex) {
-    $courseindexopen = false;
+if (!defined('BEHAT_SITE_RUNNING')) {
+    $courseindex = $OUTPUT->courseindex();
+    if (!$courseindex) {
+        $courseindexopen = false;
+    }
 }
 
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);

@@ -1,0 +1,137 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core_course/courseindex
+
+    Course index template.
+
+    Example context (json):
+    {
+        "headingtitle": "Course index",
+        "sections": [
+            {
+                "name": "General",
+                "number": 1,
+                "url": "#",
+                "isactive": 1,
+                "modules": [
+                    {
+                        "name": "Glossary of characters",
+                        "url": "#",
+                        "visibility": 1,
+                        "isactive": 0
+                    },
+                    {
+                        "name": "World Cinema forum",
+                        "url": "#",
+                        "visibility": 1,
+                        "isactive": 0
+                    },
+                    {
+                        "name": "Announcements",
+                        "url": "#",
+                        "visibility": 1,
+                        "isactive": 1
+                    }
+                ]
+            },
+            {
+                "name": "City of God or Cidade de Deus",
+                "number": "2",
+                "url": "#",
+                "isactive": 0,
+                "modules": [
+                    {
+                        "name": "Resources",
+                        "url": "#",
+                        "visibility": 1,
+                        "isactive": 0
+                    },
+                    {
+                        "name": "Studying City of God by Stephen Smith Bergman-Messerschmidt",
+                        "url": "#",
+                        "visibility": 1,
+                        "isactive": 0
+                    },
+                    {
+                        "name": "Film education study guide",
+                        "url": "#",
+                        "visibility": 1,
+                        "isactive": 0
+                    }
+                ]
+            }
+        ]
+    }
+}}
+
+<nav id="courseindex" class="courseindex">
+    <div class="courseindex-heading">
+        <h2 class="h5">{{{headingtitle}}}</h2>
+    </div>
+    <div class="courseindex-sections">
+    {{#sections}}
+        <div class="courseindex-section">
+            <div class="courseindex-item d-flex" id="courseindexsection{{number}}">
+                <a data-toggle="collapse"
+                    href="#courseindexcollapse{{number}}"
+                    aria-expanded="{{#isactive}}true{{/isactive}}{{^isactive}}false{{/isactive}}"
+                    aria-controls="courseindexcollapse{{number}}"
+                    class="courseindex-link icons-collapse-expand {{^isactive}}collapsed{{/isactive}}"
+                >
+                    <span class="collapsed-icon icon-no-margin mr-1"
+                        data-toggle="tooltip" title="{{#str}} expand, core {{/str}}">
+                        {{#pix}} t/collapsed, core {{/pix}}
+                        <span class="sr-only">{{#str}} expand, core {{/str}}</span>
+                    </span>
+                    <span class="expanded-icon icon-no-margin mr-1"
+                        data-toggle="tooltip" title="{{#str}} collapse, core {{/str}}">
+                        {{#pix}} t/expanded, core {{/pix}}
+                        <span class="sr-only">{{#str}} collapse, core {{/str}}</span>
+                    </span>
+                </a>
+                <a href="{{{url}}}"
+                    class="courseindex-link text-truncate flex-fill"
+                    data-action="togglecourseindexsection"
+                >
+                    {{{name}}}
+                </a>
+                <span class="icon-no-margin courseindex-link courseindex-menu" tabindex="0" role="button" aria-haspopup="true" data-drag-type="move" title="{{{name}}}">
+                    {{#pix}}i/menu, core{{/pix}}
+                </span>
+            </div>
+            <div id="courseindexcollapse{{number}}"
+                class="courseindex-item-content collapse {{#isactive}}show{{/isactive}}"
+                aria-labelledby="courseindexsection{{number}}"
+            >
+                <ul class="courseindex-sectioncontent unlist">
+                    {{#modules}}
+                        <li class="courseindex-item d-flex {{#isactive}}active{{/isactive}}">
+                            <a class="courseindex-link text-truncate flex-fill" href="{{{url}}}">
+                                {{{name}}}
+                            </a>
+                            <span class="icon-no-margin courseindex-link courseindex-menu" tabindex="0" role="button" aria-haspopup="true" data-drag-type="move" title="{{{name}}}">
+                                {{#pix}}i/menu, core{{/pix}}
+                            </span>
+                        </li>
+                    {{/modules}}
+                </ul>
+            </div>
+        </div>
+        {{/sections}}
+    </div>
+</nav>

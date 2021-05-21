@@ -20159,6 +20159,37 @@ div.editor_atto_toolbar button .icon {
   .toast .close {
     color: inherit; }
 
+.courseindex .courseindex-heading {
+  padding: 0.5rem 1rem; }
+
+.courseindex .courseindex-item {
+  padding: 0.5rem 0.2rem 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem; }
+  .courseindex .courseindex-item .courseindex-link {
+    color: #495057; }
+    .courseindex .courseindex-item .courseindex-link:hover, .courseindex .courseindex-item .courseindex-link:focus {
+      color: #495057;
+      text-decoration: none; }
+  .courseindex .courseindex-item:hover, .courseindex .courseindex-item:focus {
+    background-color: #e0f0f2;
+    border-color: #b8dce2; }
+  .courseindex .courseindex-item.active {
+    background-color: #f8f9fa;
+    border-color: #dee2e6; }
+    .courseindex .courseindex-item.active:hover, .courseindex .courseindex-item.active:focus {
+      background-color: #e0f0f2;
+      border-color: #b8dce2; }
+
+.courseindex .courseindex-sectioncontent .courseindex-item {
+  padding-left: calc(1rem * 2 + 0.5rem); }
+
+@media (hover: hover) {
+  .courseindex .courseindex-item .courseindex-menu {
+    display: none; }
+  .courseindex .courseindex-item:hover .courseindex-menu {
+    display: block; } }
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
