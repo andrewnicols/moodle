@@ -118,7 +118,7 @@ module.exports = grunt => {
                 files: grunt.moodleEnv.inComponent
                     ? ['amd/src/*.js', 'amd/src/**/*.js']
                     : ['**/amd/src/**/*.js'],
-                tasks: ['amd']
+                tasks: ['amd', 'jsdoc']
             },
         },
     });
