@@ -30,6 +30,20 @@ import Popper from 'core/popper';
  * @class Tour
  */
 export default class Tour {
+    eventTypes = {
+        beforeRender: 'tool_usertours/beforeRender',
+        afterRender: 'tool_usertours/afterRender',
+
+        beforeStart: 'tool_usertours/beforeStart',
+        afterStart: 'tool_usertours/afterStart',
+
+        beforeEnd: 'tool_usertours/beforeEnd',
+        afterEnd: 'tool_usertours/afterEnd',
+
+        beforeHide: 'tool_usertours/beforeHide',
+        afterHide: 'tool_usertours/afterHide',
+    };
+
     /**
      * @param   {object}    config  The configuration object.
      */
@@ -429,9 +443,13 @@ export default class Tour {
 
         this.hide();
 
+        const beforeRenderEvent = this.dispatchEvent(this.eventTypes.beforeRender, {stepConfig}, {cancelable: true});
         this.fireEventHandlers('beforeRender', stepConfig);
-        this.renderStep(stepConfig);
-        this.fireEventHandlers('afterRender', stepConfig);
+        if (!beforeRenderEvent.defaultPrevented) {
+            this.renderStep(stepConfig);
+            this.dispatchEvent(this.eventTypes.afterRender, {stepConfig});
+            this.fireEventHandlers('afterRender', stepConfig);
+        }
 
         return this;
     }
@@ -527,6 +545,42 @@ export default class Tour {
         }, this);
 
         return this;
+    }
+
+    /**
+     * Fire any event handlers for the specified event.
+     *
+     * @param {String} eventName The name of the event
+     * @param {Object} detail Any additional details to pass into the eveent
+     * @param {HTMLElement} container The point at which to dispatch the event
+     * @param {Object} options
+     * @param {Boolean} options.bubbles Whether to bubble up the DOM
+     * @param {Boolean} options.cancelable Whether preventDefault() can be called
+     * @param {Boolean} options.composed Whether the event can bubble across the ShadowDOM bounadry
+     * @returns {CustomEvent}
+     */
+    dispatchEvent(
+        eventName,
+        detail = {},
+        {
+            bubbles = true,
+            cancelable = false,
+            composed = false,
+        } = {}
+    ) {
+        const customEvent = new CustomEvent(
+            eventName,
+            {
+                bubbles,
+                cancelable,
+                composed,
+                detail,
+            }
+        );
+
+        document.dispatchEvent(customEvent);
+
+        return customEvent;
     }
 
     /**
@@ -986,9 +1040,13 @@ export default class Tour {
             startAt = this.getCurrentStepNumber();
         }
 
+        const beforeStartEvent = this.dispatchEvent(this.eventTypes.beforeStart, {startAt}, {cancelable: true});
         this.fireEventHandlers('beforeStart', startAt);
-        this.gotoStep(startAt);
-        this.fireEventHandlers('afterStart', startAt);
+        if (!beforeStartEvent.defaultPrevented) {
+            this.gotoStep(startAt);
+            this.dispatchEvent(this.eventTypes.afterStart, {startAt});
+            this.fireEventHandlers('afterStart', startAt);
+        }
 
         return this;
     }
@@ -1012,7 +1070,11 @@ export default class Tour {
      * @return {Object} this.
      */
     endTour() {
+        const beforeEndEvent = this.dispatchEvent(this.eventTypes.beforeEnd, {}, {cancelable: true});
         this.fireEventHandlers('beforeEnd');
+        if (beforeEndEvent.defaultPrevented) {
+            return this;
+        }
 
         if (this.currentStepConfig) {
             let previousTarget = this.getStepTarget(this.currentStepConfig);
@@ -1026,6 +1088,7 @@ export default class Tour {
 
         this.hide(true);
 
+        this.dispatchEvent(this.eventTypes.afterEnd);
         this.fireEventHandlers('afterEnd');
 
         return this;
@@ -1040,7 +1103,11 @@ export default class Tour {
      * @return {Object} this.
      */
     hide(transition) {
+        const beforeHideEvent = this.dispatchEvent(this.eventTypes.beforeHide, {}, {cancelable: true});
         this.fireEventHandlers('beforeHide');
+        if (beforeHideEvent.defaultPrevented) {
+            return this;
+        }
 
         if (this.currentStepNode && this.currentStepNode.length) {
             this.currentStepNode.hide();
@@ -1097,6 +1164,7 @@ export default class Tour {
 
         this.accessibilityHide();
 
+        this.dispatchEvent(this.eventTypes.afterHide);
         this.fireEventHandlers('afterHide');
 
         this.currentStepNode = null;

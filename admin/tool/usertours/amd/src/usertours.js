@@ -100,7 +100,8 @@ function(ajax, BootstrapTour, $, templates, str, log, notification) {
                     return;
                 }
 
-                return usertours.startBootstrapTour(tourId, template[0], response.tourconfig);
+                usertours.startBootstrapTour(tourId, template[0], response.tourconfig);
+                return;
             })
             .always(function() {
                 M.util.js_complete('admin_usertour_fetchTour' + tourId);
@@ -162,11 +163,8 @@ function(ajax, BootstrapTour, $, templates, str, log, notification) {
                 delete usertours.currentTour;
             }
 
-            // Normalize for the new library.
-            tourConfig.eventHandlers = {
-                afterEnd: [usertours.markTourComplete],
-                afterRender: [usertours.markStepShown],
-            };
+            document.addEventListener(BootstrapTour.eventTypes.afterEnd, usertours.markTourComplete);
+            document.addEventListener(BootstrapTour.eventTypes.afterRender, usertours.markStepShown);
 
             // Sort out the tour name.
             tourConfig.tourName = tourConfig.name;
@@ -228,6 +226,9 @@ function(ajax, BootstrapTour, $, templates, str, log, notification) {
          * @method  markTourComplete
          */
         markTourComplete: function() {
+            document.removeEventListener(BootstrapTour.eventTypes.afterEnd, usertours.markTourComplete);
+            document.removeEventListener(BootstrapTour.eventTypes.afterRender, usertours.markStepShown);
+
             var stepConfig = this.getStepConfig(this.getCurrentStepNumber());
             $.when(
                 ajax.call([
