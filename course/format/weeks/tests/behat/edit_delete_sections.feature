@@ -32,7 +32,7 @@ Feature: Sections can be edited and deleted in weeks format
     When I edit the section "0" and I fill the form with:
       | Custom | 1                      |
       | New value for Section name      | This is the general section |
-    Then I should see "This is the general section" in the "li#section-0" "css_element"
+    Then I should see "This is the general section" in the "0" "core_course > Section"
 
   Scenario: View the default name of the second section in weeks format
     When I edit the section "2"
@@ -42,28 +42,28 @@ Feature: Sections can be edited and deleted in weeks format
   Scenario: Edit section summary in weeks format
     When I edit the section "2" and I fill the form with:
       | Summary | Welcome to section 2 |
-    Then I should see "Welcome to section 2" in the "li#section-2" "css_element"
+    Then I should see "Welcome to section 2" in the "2" "core_course > Section"
 
   Scenario: Edit section default name in weeks format
-    Given I should see "8 May - 14 May" in the "li#section-2" "css_element"
+    Given I should see "8 May - 14 May" in the "2" "core_course > Section"
     When I edit the section "2" and I fill the form with:
       | Custom | 1                  |
       | New value for Section name      | This is the second week |
-    Then I should see "This is the second week" in the "li#section-2" "css_element"
-    And I should not see "8 May - 14 May" in the "li#section-2" "css_element"
+    Then I should see "This is the second week" in the "2" "core_course > Section"
+    And I should not see "8 May - 14 May" in the "2" "core_course > Section"
 
   @javascript
   Scenario: Inline edit section name in weeks format
-    When I set the field "Edit week name" in the "li#section-1" "css_element" to "Midterm evaluation"
+    When I set the field "Edit week name" in the "1" "core_course > Section" to "Midterm evaluation"
     Then I should not see "1 May - 7 May" in the "region-main" "region"
     And "New name for week" "field" should not exist
-    And I should see "Midterm evaluation" in the "li#section-1" "css_element"
+    And I should see "Midterm evaluation" in the "1" "core_course > Section"
     And I am on "Course 1" course homepage
     And I should not see "1 May - 7 May" in the "region-main" "region"
-    And I should see "Midterm evaluation" in the "li#section-1" "css_element"
+    And I should see "Midterm evaluation" in the "1" "core_course > Section"
 
   Scenario: Deleting the last section in weeks format
-    Given I should see "29 May - 4 June" in the "li#section-5" "css_element"
+    Given I should see "29 May - 4 June" in the "5" "core_course > Section"
     When I delete section "5"
     Then I should see "Are you absolutely sure you want to completely delete \"29 May - 4 June\" and all the activities it contains?"
     And I press "Delete"
@@ -71,12 +71,12 @@ Feature: Sections can be edited and deleted in weeks format
     And I should see "22 May - 28 May"
 
   Scenario: Deleting the middle section in weeks format
-    Given I should see "29 May - 4 June" in the "li#section-5" "css_element"
+    Given I should see "29 May - 4 June" in the "5" "core_course > Section"
     When I delete section "4"
     And I press "Delete"
     Then I should not see "29 May - 4 June"
     And I should not see "Test chat name"
-    And I should see "Test choice name" in the "li#section-4" "css_element"
+    And I should see "Test choice name" in the "4" "core_course > Section"
     And I should see "22 May - 28 May"
 
   @javascript
@@ -84,12 +84,12 @@ Feature: Sections can be edited and deleted in weeks format
     When I follow "Add weeks"
     Then the field "Number of sections" matches value "1"
     And I press "Add weeks"
-    And I should see "5 June - 11 June" in the "li#section-6" "css_element"
-    And "li#section-7" "css_element" should not exist
+    And I should see "5 June - 11 June" in the "6" "core_course > Section"
+    And "7" "core_course > Section" should not exist
     And I follow "Add weeks"
     And I set the field "Number of sections" to "3"
     And I press "Add weeks"
-    And I should see "12 June - 18 June" in the "li#section-7" "css_element"
-    And I should see "19 June - 25 June" in the "li#section-8" "css_element"
-    And I should see "26 June - 2 July" in the "li#section-9" "css_element"
-    And "li#section-10" "css_element" should not exist
+    And I should see "12 June - 18 June" in the "7" "core_course > Section"
+    And I should see "19 June - 25 June" in the "8" "core_course > Section"
+    And I should see "26 June - 2 July" in the "9" "core_course > Section"
+    And "10" "core_course > Section" should not exist

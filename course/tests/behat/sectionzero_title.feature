@@ -19,11 +19,10 @@ Feature: Section 0 default/custom title
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
 
-  @javascript
   Scenario: Default section 0 title is General
     Given I log in as "teacher1"
     When I am on "Course 1" course homepage with editing mode on
-    Then I should see "General" in the "li#section-0" "css_element"
+    Then I should see "General" in the "0" "core_course > Section"
 
   @javascript
   Scenario: Editing section 0 title
@@ -32,14 +31,14 @@ Feature: Section 0 default/custom title
     And I edit the section "0" and I fill the form with:
       | Custom                          | 1                |
       | New value for Section name      | Edited section 0 |
-    And I should see "Edited section 0" in the "li#section-0" "css_element"
-    When I set the field "Edit topic name" in the "li#section-0" "css_element" to ""
-    Then I should not see "Edited section 0" in the "li#section-0" "css_element"
-    And I should see "General" in the "li#section-0" "css_element"
+    And I should see "Edited section 0" in the "0" "core_course > Section"
+    When I set the field "Edit topic name" in the "0" "core_course > Section" to ""
+    Then I should not see "Edited section 0" in the "0" "core_course > Section"
+    And I should see "General" in the "0" "core_course > Section"
     And "New name for topic" "field" should not exist
-    And I set the field "Edit topic name" in the "li#section-0" "css_element" to "Edited section 0"
-    And I should see "Edited section 0" in the "li#section-0" "css_element"
+    And I set the field "Edit topic name" in the "0" "core_course > Section" to "Edited section 0"
+    And I should see "Edited section 0" in the "0" "core_course > Section"
     And I edit the section "0" and I fill the form with:
       | Custom | 0                      |
-    And I should not see "Edited section 0" in the "li#section-0" "css_element"
-    And I should see "General" in the "li#section-0" "css_element"
+    And I should not see "Edited section 0" in the "0" "core_course > Section"
+    And I should see "General" in the "0" "core_course > Section"
