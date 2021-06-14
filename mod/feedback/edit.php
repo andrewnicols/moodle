@@ -164,7 +164,7 @@ if ($do_show == 'edit') {
             array('cmid' => $id, 'position' => $lastposition, 'sesskey' => sesskey())),
         'typ', feedback_load_feedback_items_options());
     $select->label = get_string('add_item', 'mod_feedback');
-    echo $OUTPUT->render($select);
+    echo html_writer::div($OUTPUT->render($select), 'ml-5 pl-2 pt-2 mb-3');
 
 
     $form = new mod_feedback_complete_form(mod_feedback_complete_form::MODE_EDIT,

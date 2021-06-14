@@ -70,7 +70,6 @@ class mod_feedback_complete_form extends moodleform {
         $isanonymous = $this->structure->is_anonymous() ? ' ianonymous' : '';
         parent::__construct(null, $customdata, 'POST', '',
                 array('id' => $formid, 'class' => 'feedback_form' . $isanonymous), true);
-        $this->set_display_vertical();
     }
 
     /**
@@ -463,10 +462,10 @@ class mod_feedback_complete_form extends moodleform {
 
         $name = $element->getLabel();
 
-        $name = html_writer::span('', 'itemdd', array('id' => 'feedback_item_box_' . $item->id)) .
-                html_writer::span($name, 'itemname') .
-                html_writer::span($editmenu, 'itemactions');
-        $element->setLabel(html_writer::span($name, 'itemtitle'));
+        $name = html_writer::div('', 'itemdd', array('id' => 'feedback_item_box_' . $item->id)) .
+                html_writer::div($name, 'itemname') .
+                html_writer::div($editmenu, 'itemactions');
+        $element->setLabel(html_writer::div($name, 'itemtitle d-flex'));
     }
 
     /**
