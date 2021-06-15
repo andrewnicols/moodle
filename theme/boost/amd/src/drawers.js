@@ -174,7 +174,7 @@ export const Drawers = class {
     }
 
     openDrawer() {
-        const showEvent = dispatchEvent('drawerShow', true);
+        const showEvent = this.dispatchEvent('drawerShow', true);
         if (showEvent.defaultPrevented) {
             return;
         }
@@ -205,11 +205,11 @@ export const Drawers = class {
             .catch();
         }
 
-        dispatchEvent('drawerShown');
+        this.dispatchEvent('drawerShown');
     }
 
     closeDrawer() {
-        const hideEvent = dispatchEvent('drawerHide', true);
+        const hideEvent = this.dispatchEvent('drawerHide', true);
         if (hideEvent.defaultPrevented) {
             return;
         }
@@ -239,7 +239,7 @@ export const Drawers = class {
         })
         .catch();
 
-        dispatchEvent('drawerHidden');
+        this.dispatchEvent('drawerHidden');
     }
 
     toggleVisibility() {
