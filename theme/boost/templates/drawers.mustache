@@ -60,20 +60,22 @@
     {{> theme_boost/nav-drawer }}
     {{#courseindex}}
         {{< theme_boost/drawer }}
+            {{$id}}theme_boost-drawers-courseindex{{/id}}
             {{$drawerclasses}}drawer drawer-left {{#courseindexopen}}show{{/courseindexopen}}{{/drawerclasses}}
-            {{$drawertrigger}}toggleindex{{/drawertrigger}}
             {{$drawerheading}}
                 {{#str}} courseindex {{/str}}
             {{/drawerheading}}
             {{$drawercontent}}
                 {{{courseindex}}}
             {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-index{{/drawerpreferencename}}
+            {{$drawerstate}}show-drawer-left{{/drawerstate}}
         {{/ theme_boost/drawer}}
     {{/courseindex}}
     {{#hasblocks}}
         {{< theme_boost/drawer }}
+            {{$id}}theme_boost-drawers-blocks{{/id}}
             {{$drawerclasses}}drawer drawer-right {{#blockdraweropen}}show{{/blockdraweropen}}{{/drawerclasses}}
-            {{$drawertrigger}}toggleblocks{{/drawertrigger}}
             {{$drawerheading}}
                 {{#str}} blocks {{/str}}
             {{/drawerheading}}
@@ -82,6 +84,9 @@
                     {{{ sidepreblocks }}}
                 </section>
             {{/drawercontent}}
+            {{$drawerpreferencename}}drawer-open-block{{/drawerpreferencename}}
+            {{$drawerstate}}show-drawer-right{{/drawerstate}}
+            {{$drawercloseonresize}}1{{/drawercloseonresize}}
         {{/ theme_boost/drawer}}
     {{/hasblocks}}
     <div id="page" data-region="mainpage" data-usertour="scroller" class="drawers {{#courseindexopen}}show-drawer-left{{/courseindexopen}} {{#blockdraweropen}}show-drawer-right{{/blockdraweropen}}">
@@ -89,7 +94,7 @@
             <div class="drawer-toggles d-flex">
                 {{#courseindex}}
                     <div class="drawer-left-toggle open-nav">
-                        <button class="btn icon-no-margin" data-state="show-drawer-left" data-preference="drawer-open-index" data-action="toggleindex">
+                        <button class="btn icon-no-margin" data-toggle="drawers" data-action="toggle" data-target="theme_boost-drawers-courseindex">
                             <span class="sr-only">{{#str}}opendrawerindex, core{{/str}}</span>
                             {{#pix}}e/align_left, moodle, {{#str}}opendrawerindex, core{{/str}}{{/pix}}
                         </button>
@@ -97,7 +102,7 @@
                 {{/courseindex}}
                 {{#hasblocks}}
                     <div class="drawer-right-toggle ml-auto">
-                        <button class="btn icon-no-margin" data-state="show-drawer-right" data-preference="drawer-open-block" data-action="toggleblocks" data-closeonresize="1">
+                        <button class="btn icon-no-margin" data-toggle="drawers" data-action="toggle" data-target="theme_boost-drawers-blocks">
                             <span class="sr-only">{{#str}}opendrawerblocks, core{{/str}}</span>
                             {{#pix}}i/categoryevent, moodle, {{#str}}opendrawerblocks, core{{/str}}{{/pix}}
                         </button>

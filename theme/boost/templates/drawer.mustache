@@ -25,10 +25,17 @@
         "drawerconent": "Content for the blocks region"
     }
 }}
-<div class="{{$drawerclasses}}{{/drawerclasses}}" data-region="fixed-drawer" data-trigger="{{$drawertrigger}}{{/drawertrigger}}">
+<div {{!
+    }} class="{{$drawerclasses}}{{/drawerclasses}}"{{!
+    }} data-region="fixed-drawer"{{!
+    }} id="{{$id}}{{/id}}"{{!
+    }} data-preference="{{$drawerpreferencename}}{{/drawerpreferencename}}"{{!
+    }} data-state="{{$drawerstate}}{{/drawerstate}}"{{!
+    }} data-close-on-resize="{{$drawercloseonreize}}0{{/drawercloseonreize}}"{{!
+    }}>
     <div class="drawerheader">
         {{$drawerheading}}{{/drawerheading}}
-        <button class="btn drawertoggle icon-no-margin" data-action="closedrawer">
+        <button class="btn drawertoggle icon-no-margin" data-toggle="drawers" data-action="closedrawer" data-target="{{$id}}{{/id}}">
             {{#pix}}e/cancel, core, {{#str}}closedrawer, core{{/str}}{{/pix}}
         </button>
     </div>

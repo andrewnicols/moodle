@@ -22,172 +22,253 @@
  */
 import ModalBackdrop from 'core/modal_backdrop';
 import Templates from 'core/templates';
-import Notification from 'core/notification';
 import * as Aria from 'core/aria';
+import {dispatchEvent} from 'core/event_dispatcher';
+import {debounce} from 'core/utils';
 
 let backdropPromise = null;
-const pageWrapper = document.getElementById('page-wrapper');
-const page = document.getElementById('page');
+
+const drawerMap = new Map();
+
+export const eventTypes = {
+    /**
+     * An event triggered before a drawer is shown.
+     *
+     * @event theme_boost/drawers:show
+     * @type {CustomEvent}
+     * @property {HTMLElement} target The drawer that will be opened.
+     */
+    drawerShow: 'theme_boost/drawers:show',
+
+    /**
+     * An event triggered after a drawer is shown.
+     *
+     * @event theme_boost/drawers:shown
+     * @type {CustomEvent}
+     * @property {HTMLElement} target The drawer that was be opened.
+     */
+    drawerShown: 'theme_boost/drawers:shown',
+
+    /**
+     * An event triggered before a drawer is hidden.
+     *
+     * @event theme_boost/drawers:hide
+     * @type {CustomEvent}
+     * @property {HTMLElement} target The drawer that will be hidden.
+     */
+    drawerHide: 'theme_boost/drawers:hide',
+
+    /**
+     * An event triggered after a drawer is hidden.
+     *
+     * @event theme_boost/drawers:hidden
+     * @type {CustomEvent}
+     * @property {HTMLElement} target The drawer that was be hidden.
+     */
+    drawerHidden: 'theme_boost/drawers:hidden',
+};
 
 /**
  * Maximum sizes for breakpoints. This needs to correspond with Bootstrap
  * Breakpoints
  */
-const Sizes = {
+const sizes = {
     medium: 991,
     large: 1200
 };
 
+const getCurrentWidth = () => {
+    const DomRect = document.body.getBoundingClientRect();
+    return DomRect.x + DomRect.width;
+};
+const isSmall = () => {
+    const browserWidth = getCurrentWidth();
+    return browserWidth < sizes.medium;
+};
+
+/**
+ * Check if the user uses a medium size browser.
+ * @returns {Bool} true if the body is smaller than sizes.medium max size.
+ * @private
+ */
+const isMedium = () => {
+    const browserWidth = getCurrentWidth();
+    return (browserWidth >= sizes.medium) && (browserWidth < sizes.large);
+};
+
+/**
+ * Check if the user uses a large size browser.
+ * @returns {Bool} true if the body is smaller than sizes.large max size.
+ * @private
+ */
+const isLarge = () => {
+    const browserWidth = getCurrentWidth();
+    return browserWidth >= sizes.large;
+};
+
 /**
  * Add a backdrop to the page.
+ *
  * @return {Promise} rendering of modal backdrop.
  */
 const getBackdrop = () => {
     if (!backdropPromise) {
         backdropPromise = Templates.render('core/modal_backdrop', {})
-            .then(html => {
-                return new ModalBackdrop(html);
-            })
-            .fail(Notification.exception);
+        .then(html => new ModalBackdrop(html))
+        .then(modalBackdrop => {
+            modalBackdrop.getAttachmentPoint().get(0).addEventListener('click', e => {
+                e.preventDefault();
+                Drawers.closeAllDrawers();
+            });
+            return modalBackdrop;
+        })
+        .catch();
     }
     return backdropPromise;
 };
 
-/**
- * Close the drawer
- *
- * @param {DOMElement} pageDrawer The drawer to close.
- * @param {DOMElement} toggleButton The button toggling the drawer.
- * @param {Bool} closeBackdrop Remove the backdrop on closing.
- */
-const closeDrawer = (pageDrawer, toggleButton, closeBackdrop = true) => {
-    const preference = toggleButton.getAttribute('data-preference');
-    const state = toggleButton.getAttribute('data-state');
-    Aria.hide(pageDrawer);
-    pageDrawer.classList.remove('show');
+export const Drawers = class {
+    drawerNode = null;
 
-    if (state) {
-        page.classList.remove(state);
-    }
-    if (!isMedium() && preference) {
-        M.util.set_user_preference(preference, false);
+    /**
+     */
+    get isOpen() {
+        return this.drawerNode.classList.contains('show');
     }
 
-    if (isMedium() && closeBackdrop) {
+    get closeOnResize() {
+        return !!parseInt(this.drawerNode.dataset.closeOnResize);
+    }
+
+    constructor(drawerNode) {
+        this.drawerNode = drawerNode;
+
+        if (this.drawerNode.classList.contains('show')) {
+            this.openDrawer();
+        } else {
+            Aria.hide(this.drawerNode);
+        }
+
+        drawerMap.set(drawerNode, this);
+    }
+
+    static getDrawerInstanceForNode(drawerNode) {
+        if (!drawerMap.has(drawerNode)) {
+            new Drawers(drawerNode);
+        }
+
+        return drawerMap.get(drawerNode);
+    }
+
+    dispatchEvent(name, cancelable) {
+        return dispatchEvent(
+            eventTypes[name],
+            {
+                drawerInstance: this,
+            },
+            this.drawerNode,
+            {
+                cancelable,
+            }
+        );
+    }
+
+    openDrawer() {
+        const showEvent = dispatchEvent('drawerShow', true);
+        if (showEvent.defaultPrevented) {
+            return;
+        }
+
+        Aria.unhide(this.drawerNode);
+        this.drawerNode.classList.add('show');
+
+        const preference = this.drawerNode.dataset.preference;
+        if (!isMedium() && preference) {
+            M.util.set_user_preference(preference, true);
+        }
+
+        const state = this.drawerNode.dataset.state;
+        if (state) {
+            const page = document.getElementById('page');
+            page.classList.add(state);
+        }
+
+        if (isSmall()) {
+            getBackdrop().then(backdrop => {
+                backdrop.show();
+
+                // TODO
+                const pageWrapper = document.getElementById('page-wrapper');
+                pageWrapper.style.overflow = 'hidden';
+                return backdrop;
+            })
+            .catch();
+        }
+
+        dispatchEvent('drawerShown');
+    }
+
+    closeDrawer() {
+        const hideEvent = dispatchEvent('drawerHide', true);
+        if (hideEvent.defaultPrevented) {
+            return;
+        }
+
+        const preference = this.drawerNode.dataset.preference;
+        if (!isMedium() && preference) {
+            M.util.set_user_preference(preference, false);
+        }
+
+        const state = this.drawerNode.dataset.state;
+        if (state) {
+            const page = document.getElementById('page');
+            page.classList.remove(state);
+        }
+
+        Aria.hide(this.drawerNode);
+        this.drawerNode.classList.remove('show');
+
         getBackdrop().then(backdrop => {
             backdrop.hide();
-            pageWrapper.style.overflow = 'auto';
-            return null;
-        }).catch(Notification.exception);
-    }
-};
 
-/**
- * Show the drawer
- *
- * @param {DOMElement} pageDrawer The drawer to open.
- * @param {DOMElement} toggleButton The button toggling the drawer.
- */
-const showDrawer = (pageDrawer, toggleButton) => {
-    const preference = toggleButton.getAttribute('data-preference');
-    const state = toggleButton.getAttribute('data-state');
-
-    Aria.unhide(pageDrawer);
-    pageDrawer.classList.add('show');
-
-    if (!isMedium() && preference) {
-        M.util.set_user_preference(preference, true);
-    }
-
-    if (state) {
-        page.classList.add(state);
-    }
-
-    if (isMedium()) {
-        window.console.log('showbackdrop');
-        getBackdrop().then(backdrop => {
-            backdrop.show();
-            pageWrapper.style.overflow = 'hidden';
-            backdrop.getRoot()[0].addEventListener('click', () => {
-                closeDrawer(pageDrawer);
-            });
-            return null;
-        }).catch(Notification.exception);
-    }
-
-    const trigger = pageDrawer.getAttribute('data-trigger');
-    if (trigger) {
-        pageDrawer.dispatchEvent(new CustomEvent('show-boost-drawer', {bubbles: true, detail: trigger}));
-    }
-};
-
-/**
- * Check if the user uses a medium size browser.
- * @returns {Bool} true if the body is smaller than Sizes.medium max size.
- */
-const isMedium = () => {
-    const DomRect = document.body.getBoundingClientRect();
-    return (DomRect.x + DomRect.width) <= Sizes.medium;
-};
-
-/**
- * Check if the user uses a medium size browser.
- * @returns {Bool} true if the body is smaller than Sizes.large max size.
- */
-const isLarge = () => {
-    const DomRect = document.body.getBoundingClientRect();
-    return (DomRect.x + DomRect.width) <= Sizes.large;
-};
-
-/**
- * Activate the event listeners for this drawer.
- *
- * @param {DOMElement} pageDrawer the drawer
- * @param {DOMElement} toggleButton the button that toggles the drawer
-*/
-const activateDrawer = (pageDrawer, toggleButton) => {
-    const closeButton = pageDrawer.querySelector('[data-action="closedrawer"]');
-
-    if (!pageDrawer.classList.contains('show')) {
-        Aria.hide(pageDrawer);
-    }
-
-    toggleButton.addEventListener('click', () => {
-        if (pageDrawer.classList.contains('show')) {
-            closeDrawer(pageDrawer, toggleButton);
-            toggleButton.focus();
-        } else {
-            showDrawer(pageDrawer, toggleButton);
-            closeButton.focus();
-        }
-    });
-
-    if (closeButton) {
-        closeButton.addEventListener('click', () => {
-            closeDrawer(pageDrawer, toggleButton);
-            toggleButton.focus();
-        });
-    }
-
-    if (toggleButton.getAttribute('data-closeonresize')) {
-        window.addEventListener('resize', () => {
-            if (isLarge() && !isMedium()) {
-                closeDrawer(pageDrawer, toggleButton);
+            if (isMedium()) {
+                const pageWrapper = document.getElementById('page-wrapper');
+                pageWrapper.style.overflow = 'auto';
             }
+            return backdrop;
+        })
+        .catch();
+
+        dispatchEvent('drawerHidden');
+    }
+
+    toggleVisibility() {
+        if (this.drawerNode.classList.contains('show')) {
+            this.closeDrawer();
+        } else {
+            this.openDrawer();
+        }
+    }
+
+    static closeAllDrawers() {
+        drawerMap.forEach(drawerInstance => {
+            drawerInstance.closeDrawer();
         });
     }
 
-    // Close drawer when another drawer opens.
-    document.addEventListener('show-boost-drawer', e => {
-        const trigger = pageDrawer.getAttribute('data-trigger');
-        if (trigger != e.detail && isLarge()) {
-            closeDrawer(pageDrawer, toggleButton, false);
-        }
-    });
-    pageDrawer.setAttribute('initialised', 'true');
+    static closeOtherDrawers(comparisonInstance) {
+        drawerMap.forEach(drawerInstance => {
+            if (drawerInstance === comparisonInstance) {
+                return;
+            }
+
+            drawerInstance.closeDrawer();
+        });
+    }
 };
 
-/** Activate the scroller helper for the drawer layout
+/**
+ * Activate the scroller helper for the drawer layout.
  */
 const scroller = () => {
     const body = document.querySelector('body');
@@ -201,6 +282,69 @@ const scroller = () => {
     });
 };
 
+const registerListeners = () => {
+    // Listen for show/hide events.
+    document.addEventListener('click', e => {
+        const toggleButton = e.target.closest('[data-toggle="drawers"][data-action="toggle"]');
+        if (toggleButton && toggleButton.dataset.target) {
+            e.preventDefault();
+            const targetDrawer = document.getElementById(toggleButton.dataset.target);
+            const drawerInstance = Drawers.getDrawerInstanceForNode(targetDrawer);
+
+            drawerInstance.toggleVisibility();
+        }
+
+        const openDrawerButton = e.target.closest('[data-toggle="drawers"][data-action="opendrawer"]');
+        if (openDrawerButton && openDrawerButton.dataset.target) {
+            e.preventDefault();
+            const targetDrawer = document.getElementById(openDrawerButton.dataset.target);
+            const drawerInstance = Drawers.getDrawerInstanceForNode(targetDrawer);
+
+            drawerInstance.openDrawer();
+        }
+
+        const closeDrawerButton = e.target.closest('[data-toggle="drawers"][data-action="closedrawer"]');
+        if (closeDrawerButton && closeDrawerButton.dataset.target) {
+            e.preventDefault();
+            const targetDrawer = document.getElementById(closeDrawerButton.dataset.target);
+            const drawerInstance = Drawers.getDrawerInstanceForNode(targetDrawer);
+
+            drawerInstance.closeDrawer();
+        }
+    });
+
+    // Close drawer when another drawer opens.
+    document.addEventListener(eventTypes.drawerShow, e => {
+        if (!isLarge()) {
+            return;
+        }
+        Drawers.closeOtherDrawers(e.detail.drawerInstance);
+    });
+
+    const closeOnResizeListener = () => {
+        if (isSmall()) {
+            let anyOpen = false;
+            drawerMap.forEach(drawerInstance => {
+                if (drawerInstance.isOpen) {
+                    if (drawerInstance.closeOnResize) {
+                        drawerInstance.closeDrawer();
+                    } else {
+                        anyOpen = true;
+                    }
+                }
+            });
+
+            if (anyOpen) {
+                getBackdrop().then(backdrop => backdrop.show()).catch();
+            }
+        } else {
+            getBackdrop().then(backdrop => backdrop.hide()).catch();
+        }
+    };
+
+    window.addEventListener('resize', debounce(closeOnResizeListener, 400));
+};
+
 /**
  * Activate all drawers for this page
  *
@@ -208,17 +352,9 @@ const scroller = () => {
  * @param {String} toggle unique identifier for the drawer toggle button
  */
 export const init = () => {
-    scroller();
     const drawers = document.querySelectorAll('[data-region="fixed-drawer"]');
-    drawers.forEach((pageDrawer) => {
-        if (!pageDrawer.hasAttribute('initialised')) {
-            const trigger = pageDrawer.getAttribute('data-trigger');
-            if (trigger) {
-                const toggleButton = document.querySelector(`[data-action="${trigger}"]`);
-                if (toggleButton) {
-                    activateDrawer(pageDrawer, toggleButton);
-                }
-            }
-        }
-    });
+    drawers.forEach(drawerNode => Drawers.getDrawerInstanceForNode(drawerNode));
 };
+
+scroller();
+registerListeners();
