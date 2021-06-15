@@ -45,13 +45,6 @@ function xmldb_tool_usertours_upgrade($oldversion) {
     // Automatically generated Moodle v3.8.0 release upgrade line.
     // Put any upgrade step following this.
 
-    if ($oldversion < 2020061501) {
-        // Updating shipped tours will fix broken sortorder records in existing tours.
-        manager::update_shipped_tours();
-
-        upgrade_plugin_savepoint(true, 2020061501, 'tool', 'usertours');
-    }
-
     // Automatically generated Moodle v3.9.0 release upgrade line.
     // Put any upgrade step following this.
 
@@ -76,11 +69,26 @@ function xmldb_tool_usertours_upgrade($oldversion) {
         upgrade_plugin_savepoint(true, 2021052501, 'tool', 'usertours');
     }
 
-    if ($oldversion < 2021052508) {
-        // Updating shipped tours.
-        manager::update_shipped_tours();
+    if ($oldversion < 2021061500) {
+        // Update existing user tours to update the filename format for shipped tours.
+        $existingtourrecords = $DB->get_recordset('tool_usertours_tours');
+        foreach ($existingtourrecords as $tourrecord) {
+            $tourdata = json_decode($tourrecord->configdata);
+            if (!property_exists($tourdata, \tool_usertours\manager::CONFIG_SHIPPED_TOUR)) {
+                continue;
+            }
 
-        upgrade_plugin_savepoint(true, 2021052508, 'tool', 'usertours');
+            $fileconst = \tool_usertours\manager::CONFIG_SHIPPED_FILENAME;
+            $filename = $tourdata->{$fileconst};
+            print_object($filename);
+            if (strpos($filename, '/') === false) {
+                $tourdata->{$fileconst} = "tool_usertours/{$filename}";
+                $DB->set_field('tool_usertours_tours', 'configdata', json_encode($tourdata), ['id' => $tourrecord->id]);
+            }
+        }
+        $existingtourrecords->close();
+
+        upgrade_plugin_savepoint(true, 2021061500, 'tool', 'usertours');
     }
 
     return true;

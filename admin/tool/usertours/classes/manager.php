@@ -844,65 +844,64 @@ class manager {
     }
 
     /**
-     * Make sure all of the default tours that are shipped with Moodle are created
-     * and up to date with the latest version.
+     * Update shipped and unshipped tours for a Moodle component.
+     *
+     * This function is safe to call during upgrade.
+     *
+     * @param   string $component
      */
-    public static function update_shipped_tours() {
+    public static function update_tours_for_component(string $component): void {
         global $DB, $CFG;
 
-        // A list of tours that are shipped with Moodle. They are in
-        // the format filename => version. The version value needs to
-        // be increased if the tour has been updated.
-        $shippedtours = [
-            '311_activity_information_activity_page_student.json' => 2,
-            '311_activity_information_activity_page_teacher.json' => 2,
-            '311_activity_information_course_page_student.json' => 2,
-            '311_activity_information_course_page_teacher.json' => 2
-        ];
+        $filedir = \core_component::get_component_directory($component);
+        $tourdefinition = "{$filedir}/db/usertours.php";
+        if (!file_exists($tourdefinition)) {
+            return;
+        }
 
-        // These are tours that we used to ship but don't ship any longer.
-        // We do not remove them, but we do disable them.
-        $unshippedtours = [
-            // Formerly included in Moodle 3.2.0.
-            'boost_administrator.json' => 1,
-            'boost_course_view.json' => 1,
+        $tourlist = require($tourdefinition);
 
-            // Formerly included in Moodle 3.6.0.
-            '36_dashboard.json' => 3,
-            '36_messaging.json' => 3,
-        ];
+        $shippedtours = $tourlist->get_shipped_tours();
+        $unshippedtours = $tourlist->get_unshipped_tours();
 
         $existingtourrecords = $DB->get_recordset('tool_usertours_tours');
 
-        // Get all of the existing shipped tours and check if they need to be
-        // updated.
+        // Get all of the existing shipped tours and check if they need to be updated.
         foreach ($existingtourrecords as $tourrecord) {
             $tour = tour::load_from_record($tourrecord);
 
-            if (!empty($tour->get_config(self::CONFIG_SHIPPED_TOUR))) {
-                $filename = $tour->get_config(self::CONFIG_SHIPPED_FILENAME);
-                $version = $tour->get_config(self::CONFIG_SHIPPED_VERSION);
+            if (empty($tour->get_config(self::CONFIG_SHIPPED_TOUR))) {
+                // This is not a shipped tour.
+                continue;
+            }
 
-                // If we know about this tour (otherwise leave it as is).
-                if (isset($shippedtours[$filename])) {
-                    // And the version in the DB is an older version.
-                    if ($version < $shippedtours[$filename]) {
-                        // Remove the old version because it's been updated
-                        // and needs to be recreated.
-                        $tour->remove();
-                    } else {
-                        // The tour has not been updated so we don't need to
-                        // do anything with it.
-                        unset($shippedtours[$filename]);
-                    }
+            $filename = $tour->get_config(self::CONFIG_SHIPPED_FILENAME);
+            $version = $tour->get_config(self::CONFIG_SHIPPED_VERSION);
+            if (strpos($filename, '/') !== false) {
+                $filename = "tool_usertours/{$filename}";
+
+                // Update the filename for future.
+                $tour->set_config(self::CONFIG_SHIPPED_FILENAME, $filename);
+                $tour->persist();
+            }
+
+            // Check whether we know about this tour.
+            if (isset($shippedtours[$filename])) {
+                // And the version in the DB is an older version.
+                if ($version < $shippedtours[$filename]) {
+                    // Remove the old version because it's been updated and needs to be recreated.
+                    $tour->remove();
+                } else {
+                    // The tour has not been updated so we don't need to do anything with it.
+                    unset($shippedtours[$filename]);
                 }
+            }
 
-                if (isset($unshippedtours[$filename])) {
-                    if ($version <= $unshippedtours[$filename]) {
-                        $tour = tour::instance($tour->get_id());
-                        $tour->set_enabled(tour::DISABLED);
-                        $tour->persist();
-                    }
+            if (isset($unshippedtours[$filename])) {
+                if ($version <= $unshippedtours[$filename]) {
+                    $tour = tour::instance($tour->get_id());
+                    $tour->set_enabled(tour::DISABLED);
+                    $tour->persist();
                 }
             }
         }
@@ -912,14 +911,14 @@ class manager {
         helper::reset_tour_sortorder();
 
         foreach (array_reverse($shippedtours) as $filename => $version) {
-            $filepath = $CFG->dirroot . "/{$CFG->admin}/tool/usertours/tours/" . $filename;
+            $filedir = \core_component::get_component_directory($component);
+            $filepath = "{$filedir}/tours/{$filename}";
             $tourjson = file_get_contents($filepath);
             $tour = self::import_tour_from_json($tourjson);
 
-            // Set some additional config data to record that this tour was
-            // added as a shipped tour.
+            // Set some additional config data to record that this tour was added as a shipped tour.
             $tour->set_config(self::CONFIG_SHIPPED_TOUR, true);
-            $tour->set_config(self::CONFIG_SHIPPED_FILENAME, $filename);
+            $tour->set_config(self::CONFIG_SHIPPED_FILENAME, "{$component}/{$filename}");
             $tour->set_config(self::CONFIG_SHIPPED_VERSION, $version);
 
             // Bump new tours to the top of the list.
