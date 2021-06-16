@@ -30,44 +30,6 @@ let backdropPromise = null;
 
 const drawerMap = new Map();
 
-export const eventTypes = {
-    /**
-     * An event triggered before a drawer is shown.
-     *
-     * @event theme_boost/drawers:show
-     * @type {CustomEvent}
-     * @property {HTMLElement} target The drawer that will be opened.
-     */
-    drawerShow: 'theme_boost/drawers:show',
-
-    /**
-     * An event triggered after a drawer is shown.
-     *
-     * @event theme_boost/drawers:shown
-     * @type {CustomEvent}
-     * @property {HTMLElement} target The drawer that was be opened.
-     */
-    drawerShown: 'theme_boost/drawers:shown',
-
-    /**
-     * An event triggered before a drawer is hidden.
-     *
-     * @event theme_boost/drawers:hide
-     * @type {CustomEvent}
-     * @property {HTMLElement} target The drawer that will be hidden.
-     */
-    drawerHide: 'theme_boost/drawers:hide',
-
-    /**
-     * An event triggered after a drawer is hidden.
-     *
-     * @event theme_boost/drawers:hidden
-     * @type {CustomEvent}
-     * @property {HTMLElement} target The drawer that was be hidden.
-     */
-    drawerHidden: 'theme_boost/drawers:hidden',
-};
-
 /**
  * Maximum sizes for breakpoints. This needs to correspond with Bootstrap
  * Breakpoints
@@ -83,6 +45,13 @@ const getCurrentWidth = () => {
     const DomRect = document.body.getBoundingClientRect();
     return DomRect.x + DomRect.width;
 };
+
+/**
+ * Check if the user uses a small size browser.
+ *
+ * @returns {Bool} true if the body is smaller than sizes.medium max size.
+ * @private
+ */
 const isSmall = () => {
     const browserWidth = getCurrentWidth();
     return browserWidth < sizes.medium;
@@ -90,8 +59,8 @@ const isSmall = () => {
 
 /**
  * Check if the user uses a medium size browser.
- * @returns {Bool} true if the body is smaller than sizes.medium max size.
  *
+ * @returns {Bool} true if the body is smaller than sizes.medium max size.
  * @private
  */
 const isMedium = () => {
@@ -101,8 +70,8 @@ const isMedium = () => {
 
 /**
  * Check if the user uses a large size browser.
- * @returns {Bool} true if the body is smaller than sizes.large max size.
  *
+ * @returns {Bool} true if the body is smaller than sizes.large max size.
  * @private
  */
 const isLarge = () => {
@@ -133,14 +102,71 @@ const getBackdrop = () => {
 };
 
 /**
- * The Drawers class.
+ * The Drawers class is used to control on-screen drawer elements.
  *
- * Your description here.
+ * It handles opening, and closing of drawer elements, as well as more detailed behaviours such as closing a drawer when
+ * another drawer is opened, and supports closing a drawer when the screen is resized.
  *
- * @property {NodeElement} drawerNode
+ * Drawers are instantiated on page load, and can also be toggled lazily when toggling any drawer toggle, open button,
+ * or close button.
+ *
+ * A range of show and hide events are also dispatched as detailed in the class
+ * {@link module:theme_boost/drawers#eventTypes eventTypes} object.
+ *
+ * @example <caption>Standard usage</caption>
+ *
+ * // The module just needs to be included to add drawer support.
+ * import 'theme_boost/drawers';
+ *
+ * @example <caption>Manually open or close any drawer</caption>
+ *
+ * import Drawers from 'theme_boost/drawers';
+ *
+ * const myDrawer = Drawers.getDrawerInstanceForNode(document.querySelector('.myDrawerNode');
+ * myDrawer.closeDrawer();
+ *
+ * @example <caption>Listen to the before show event and cancel it</caption>
+ *
+ * import Drawers from 'theme_boost/drawers';
+ *
+ * document.addEventListener(Drawers.eventTypes.drawerShow, e => {
+ *     // The drawer which will be shown.
+ *     window.console.log(e.target);
+ *
+ *     // The instance of the Drawers class for this drawer.
+ *     window.console.log(e.detail.drawerInstance);
+ *
+ *     // Prevent this drawer from being shown.
+ *     e.preventDefault();
+ * });
+ *
+ * @example <caption>Listen to the shown event</caption>
+ *
+ * document.addEventListener(Drawers.eventTypes.drawerShown, e => {
+ *     // The drawer which was shown.
+ *     window.console.log(e.target);
+ *
+ *     // The instance of the Drawers class for this drawer.
+ *     window.console.log(e.detail.drawerInstance);
+ * });
  */
 export default class Drawers {
+    /**
+     * The underlying HTMLElement which is controlled.
+     */
     drawerNode = null;
+
+    constructor(drawerNode) {
+        this.drawerNode = drawerNode;
+
+        if (this.drawerNode.classList.contains('show')) {
+            this.openDrawer();
+        } else {
+            Aria.hide(this.drawerNode);
+        }
+
+        drawerMap.set(drawerNode, this);
+    }
 
     /**
      * Whether the drawer is open.
@@ -160,23 +186,59 @@ export default class Drawers {
         return !!parseInt(this.drawerNode.dataset.closeOnResize);
     }
 
-    constructor(drawerNode) {
-        this.drawerNode = drawerNode;
+    /**
+     * The list of event types.
+     *
+     * @static
+     * @property {String} drawerShow See {@link event:theme_boost/drawers:show}
+     * @property {String} drawerShown See {@link event:theme_boost/drawers:shown}
+     * @property {String} drawerHide See {@link event:theme_boost/drawers:hide}
+     * @property {String} drawerHidden See {@link event:theme_boost/drawers:hidden}
+     */
+    static eventTypes = {
+        /**
+         * An event triggered before a drawer is shown.
+         *
+         * @event theme_boost/drawers:show
+         * @type {CustomEvent}
+         * @property {HTMLElement} target The drawer that will be opened.
+         */
+        drawerShow: 'theme_boost/drawers.show',
 
-        if (this.drawerNode.classList.contains('show')) {
-            this.openDrawer();
-        } else {
-            Aria.hide(this.drawerNode);
-        }
+        /**
+         * An event triggered after a drawer is shown.
+         *
+         * @event theme_boost/drawers:shown
+         * @type {CustomEvent}
+         * @property {HTMLElement} target The drawer that was be opened.
+         */
+        drawerShown: 'theme_boost/drawers:shown',
 
-        drawerMap.set(drawerNode, this);
-    }
+        /**
+         * An event triggered before a drawer is hidden.
+         *
+         * @event theme_boost/drawers:hide
+         * @type {CustomEvent}
+         * @property {HTMLElement} target The drawer that will be hidden.
+         */
+        drawerHide: 'theme_boost/drawers:hide',
+
+        /**
+         * An event triggered after a drawer is hidden.
+         *
+         * @event theme_boost/drawers:hidden
+         * @type {CustomEvent}
+         * @property {HTMLElement} target The drawer that was be hidden.
+         */
+        drawerHidden: 'theme_boost/drawers:hidden',
+    };
+
 
     /**
-     * Get the drawer instance for the specifeid node
+     * Get the drawer instance for the specified node
      *
      * @param {NodeElement} drawerNode
-     * @returns {self}
+     * @returns {module:theme_boost/drawers}
      */
     static getDrawerInstanceForNode(drawerNode) {
         if (!drawerMap.has(drawerNode)) {
@@ -188,7 +250,7 @@ export default class Drawers {
 
     dispatchEvent(name, cancelable = false) {
         return dispatchEvent(
-            eventTypes[name],
+            Drawers.eventTypes[name],
             {
                 drawerInstance: this,
             },
@@ -297,7 +359,7 @@ export default class Drawers {
     /**
      * Close all drawers except for the specified drawer.
      *
-     * @param {self} comparisonInstance
+     * @param {module:theme_boost/drawers} comparisonInstance
      */
     static closeOtherDrawers(comparisonInstance) {
         drawerMap.forEach(drawerInstance => {
@@ -327,6 +389,11 @@ const scroller = () => {
     });
 };
 
+/**
+ * Register the event listeners for the drawer.
+ *
+ * @private
+ */
 const registerListeners = () => {
     // Listen for show/hide events.
     document.addEventListener('click', e => {
@@ -359,7 +426,7 @@ const registerListeners = () => {
     });
 
     // Close drawer when another drawer opens.
-    document.addEventListener(eventTypes.drawerShow, e => {
+    document.addEventListener(Drawers.eventTypes.drawerShow, e => {
         if (!isLarge()) {
             return;
         }
