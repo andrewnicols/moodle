@@ -71,6 +71,8 @@ export const eventTypes = {
 /**
  * Maximum sizes for breakpoints. This needs to correspond with Bootstrap
  * Breakpoints
+ *
+ * @private
  */
 const sizes = {
     medium: 991,
@@ -89,6 +91,7 @@ const isSmall = () => {
 /**
  * Check if the user uses a medium size browser.
  * @returns {Bool} true if the body is smaller than sizes.medium max size.
+ *
  * @private
  */
 const isMedium = () => {
@@ -99,6 +102,7 @@ const isMedium = () => {
 /**
  * Check if the user uses a large size browser.
  * @returns {Bool} true if the body is smaller than sizes.large max size.
+ *
  * @private
  */
 const isLarge = () => {
@@ -109,7 +113,8 @@ const isLarge = () => {
 /**
  * Add a backdrop to the page.
  *
- * @return {Promise} rendering of modal backdrop.
+ * @returns {Promise} rendering of modal backdrop.
+ * @private
  */
 const getBackdrop = () => {
     if (!backdropPromise) {
@@ -132,10 +137,9 @@ const getBackdrop = () => {
  *
  * Your description here.
  *
- * @class   theme_boost/drawsers.Drawers
  * @property {NodeElement} drawerNode
  */
-export const Drawers = class {
+export default class Drawers {
     drawerNode = null;
 
     /**
@@ -182,7 +186,7 @@ export const Drawers = class {
         return drawerMap.get(drawerNode);
     }
 
-    dispatchEvent(name, cancelable) {
+    dispatchEvent(name, cancelable = false) {
         return dispatchEvent(
             eventTypes[name],
             {
@@ -195,6 +199,9 @@ export const Drawers = class {
         );
     }
 
+    /**
+     * Open the drawer.
+     */
     openDrawer() {
         const showEvent = this.dispatchEvent('drawerShow', true);
         if (showEvent.defaultPrevented) {
@@ -230,6 +237,9 @@ export const Drawers = class {
         this.dispatchEvent('drawerShown');
     }
 
+    /**
+     * Close the drawer.
+     */
     closeDrawer() {
         const hideEvent = this.dispatchEvent('drawerHide', true);
         if (hideEvent.defaultPrevented) {
@@ -264,6 +274,9 @@ export const Drawers = class {
         this.dispatchEvent('drawerHidden');
     }
 
+    /**
+     * Toggle visibility of the drawer.
+     */
     toggleVisibility() {
         if (this.drawerNode.classList.contains('show')) {
             this.closeDrawer();
@@ -272,12 +285,20 @@ export const Drawers = class {
         }
     }
 
+    /**
+     * Close all drawers.
+     */
     static closeAllDrawers() {
         drawerMap.forEach(drawerInstance => {
             drawerInstance.closeDrawer();
         });
     }
 
+    /**
+     * Close all drawers except for the specified drawer.
+     *
+     * @param {self} comparisonInstance
+     */
     static closeOtherDrawers(comparisonInstance) {
         drawerMap.forEach(drawerInstance => {
             if (drawerInstance === comparisonInstance) {
@@ -287,10 +308,12 @@ export const Drawers = class {
             drawerInstance.closeDrawer();
         });
     }
-};
+}
 
 /**
  * Activate the scroller helper for the drawer layout.
+ *
+ * @private
  */
 const scroller = () => {
     const body = document.querySelector('body');
@@ -367,16 +390,8 @@ const registerListeners = () => {
     window.addEventListener('resize', debounce(closeOnResizeListener, 400));
 };
 
-/**
- * Activate all drawers for this page
- *
- * @param {String} drawer unique identifier for the drawer to toggle
- * @param {String} toggle unique identifier for the drawer toggle button
- */
-export const init = () => {
-    const drawers = document.querySelectorAll('[data-region="fixed-drawer"]');
-    drawers.forEach(drawerNode => Drawers.getDrawerInstanceForNode(drawerNode));
-};
-
 scroller();
 registerListeners();
+
+const drawers = document.querySelectorAll('[data-region="fixed-drawer"]');
+drawers.forEach(drawerNode => Drawers.getDrawerInstanceForNode(drawerNode));
