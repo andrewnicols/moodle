@@ -16,7 +16,7 @@
 /**
  * Toggling the visibility of the secondary navigation on mobile.
  *
- * @package    theme_boost
+ * @module     theme_boost/drawers
  * @copyright  2021 Bas Brands
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -127,15 +127,31 @@ const getBackdrop = () => {
     return backdropPromise;
 };
 
+/**
+ * The Drawers class.
+ *
+ * Your description here.
+ *
+ * @class   theme_boost/drawsers.Drawers
+ * @property {NodeElement} drawerNode
+ */
 export const Drawers = class {
     drawerNode = null;
 
     /**
+     * Whether the drawer is open.
+     *
+     * @returns {bool}
      */
     get isOpen() {
         return this.drawerNode.classList.contains('show');
     }
 
+    /**
+     * Whether the drawer should close when the window is resized
+     *
+     * @returns {bool}
+     */
     get closeOnResize() {
         return !!parseInt(this.drawerNode.dataset.closeOnResize);
     }
@@ -152,6 +168,12 @@ export const Drawers = class {
         drawerMap.set(drawerNode, this);
     }
 
+    /**
+     * Get the drawer instance for the specifeid node
+     *
+     * @param {NodeElement} drawerNode
+     * @returns {self}
+     */
     static getDrawerInstanceForNode(drawerNode) {
         if (!drawerMap.has(drawerNode)) {
             new Drawers(drawerNode);
