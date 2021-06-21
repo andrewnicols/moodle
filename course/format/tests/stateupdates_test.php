@@ -65,13 +65,13 @@ class stateupdates_test extends \advanced_testcase {
         $currentstate = new $stateclass($format);
         $expected = $currentstate->export_for_template($renderer);
 
-        $updates->add_course_update();
+        $updates->add_course_put();
 
         $updatelist = $updates->jsonSerialize();
         $this->assertCount(1, $updatelist);
 
         $update = array_pop($updatelist);
-        $this->assertEquals('update', $update->action);
+        $this->assertEquals('put', $update->action);
         $this->assertEquals('course', $update->name);
         $this->assertEquals($expected, $update->fields);
     }
@@ -201,7 +201,7 @@ class stateupdates_test extends \advanced_testcase {
      */
     public function add_section_provider(): array {
         return array_merge(
-            $this->add_section_provider_helper('update'),
+            $this->add_section_provider_helper('put'),
             $this->add_section_provider_helper('create'),
             $this->add_section_provider_helper('delete'),
         );
@@ -345,7 +345,7 @@ class stateupdates_test extends \advanced_testcase {
      */
     public function add_cm_provider(): array {
         return array_merge(
-            $this->add_cm_provider_helper('update'),
+            $this->add_cm_provider_helper('put'),
             $this->add_cm_provider_helper('create'),
             $this->add_cm_provider_helper('delete'),
         );

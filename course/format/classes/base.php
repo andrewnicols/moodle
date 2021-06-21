@@ -372,6 +372,18 @@ abstract class base {
     }
 
     /**
+     * Returns true if this course format uses course index
+     *
+     * This function may be called without specifying the course id
+     * i.e. in course_format_uses_sections()
+     *
+     * @return bool
+     */
+    public function uses_course_index() {
+        return false;
+    }
+
+    /**
      * Returns a list of sections used in the course
      *
      * This is a shortcut to get_fast_modinfo()->get_section_info_all()
@@ -480,6 +492,20 @@ abstract class base {
         $ajaxsupport = new stdClass();
         $ajaxsupport->capable = false;
         return $ajaxsupport;
+    }
+
+    /**
+     * Returns true if this course format is compatible with content components.
+     *
+     * Using components means the content elements can watch the frontend course state and
+     * react to the changes. Formats with component compatibility can have more interactions
+     * without refreshing the page, like having drag and drop from the course index to reorder
+     * sections and activities.
+     *
+     * @return bool if the format is compatible with components.
+     */
+    public function supports_components() {
+        return false;
     }
 
     /**
