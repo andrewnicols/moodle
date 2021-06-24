@@ -38,6 +38,9 @@ jobs:
           git reset -- npm-shrinkwrap.json
           git diff --cached --exit-code
 
+      - name: JSDoc Error failures
+        run: npx jsdoc -c .grunt/jsdoc/jsdoc.conf.js --pedantic
+
   PHPUnit:
     runs-on: ${{ matrix.os }}
     services:
