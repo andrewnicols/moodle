@@ -1985,11 +1985,15 @@ class core_renderer extends renderer_base {
         if ($continue instanceof single_button) {
             // ok
             $continue->primary = true;
-        } else if (is_string($continue)) {
-            $continue = new single_button(new moodle_url($continue), get_string('continue'), 'get', true);
-        } else if ($continue instanceof moodle_url) {
-            $continue = new single_button($continue, get_string('continue'), 'get', true);
-        } else {
+        }
+
+        if (is_string($continue) || $continue instanceof moodle_url) {
+            $continuelink = new moodle_url($continue);
+            $continuelink->param('sesskey', sesskey());
+            $continue = new single_button($continuelink, get_string('continue'), 'get', true);
+        }
+
+        if (!$continue instanceof single_button) {
             throw new coding_exception('The continue param to $OUTPUT->confirm() must be either a URL (string/moodle_url) or a single_button instance.');
         }
 
