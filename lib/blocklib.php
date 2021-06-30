@@ -1350,11 +1350,26 @@ class block_manager {
             $str = new lang_string('deleteblock', 'block', $blocktitle);
             $deleteactionurl = new moodle_url($actionurl, ['bui_deleteid' => $block->instance->id]);
             $deleteactionurl->remove_params(['sesskey']);
+
+            $deleteconfirmationurl = new moodle_url($actionurl, [
+                'bui_deleteid' => $block->instance->id,
+                'bui_confirm' => 1,
+                'sesskey' => sesskey(),
+            ]);
+
+            $blocktitle = $block->get_title();
             $controls[] = new action_menu_link_secondary(
                 $deleteactionurl,
                 new pix_icon('t/delete', $str, 'moodle', array('class' => 'iconsmall', 'title' => '')),
                 $str,
-                array('class' => 'editing_delete')
+                [
+                    'class' => 'editing_delete',
+                    'data-confirmation' => 'modal',
+                    'data-confirmation-title' => get_string('deletecheck', 'block', $blocktitle),
+                    'data-confirmation-question' => get_string('deleteblockcheck', 'block', $blocktitle),
+                    'data-confirmation-yes-button' => get_string('yes', 'moodle'),
+                    'data-confirmation-destination' => $deleteconfirmationurl->out(false),
+                ]
             );
         }
 
