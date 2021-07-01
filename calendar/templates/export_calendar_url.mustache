@@ -31,7 +31,14 @@
             <div class="input-group">
                 <input type="text" id="calendarexporturl" class="form-control" value="{{calendarexporturl}}" readonly />
                 <div class="input-group-append">
-                    <button id="copyexporturl" class="btn btn-secondary" aria-label="{{#str}}copycalendarurl, calendar{{/str}}" disabled>
+                    <button{{!
+                        }} data-action="copytoclipboard"{{!
+                        }} data-clipboard-target="#calendarexporturl"{{!
+                        }} data-clipboard-success-message-identifier="calendarurlcopiedtoclipboard"{{!
+                        }} data-clipboard-success-message-component="core_calendar"{{!
+                        }} class="btn btn-secondary"{{!
+                        }} aria-label="{{#str}}copycalendarurl, calendar{{/str}}"{{!
+                    }}>
                         {{#str}}copyurl, calendar{{/str}}
                     </button>
                 </div>
@@ -39,9 +46,3 @@
         </div>
     </div>
 </div>
-
-{{#js}}
-require(['core_calendar/export'], function(calendarExport) {
-    calendarExport.init();
-});
-{{/js}}
