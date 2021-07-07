@@ -52,6 +52,26 @@ class mod_assign_generator extends testing_module_generator {
             'markingallocation'                 => 0,
         );
 
+        // Get assignment subplugins settings for 'enabled'.
+        $assignment = new assign(null, null, null);
+        $plugins = array_merge(
+            $assignment->get_submission_plugins(),
+            $assignment->get_feedback_plugins()
+        );
+
+        foreach ($plugins as $plugin) {
+            $settingname = $plugin->get_subtype() . '_' . $plugin->get_type() . '_enabled';
+            if ($plugin->is_visible() && !$plugin->is_configurable() && $plugin->is_enabled()) {
+                $defaultsettings[$settingname] = 1;
+            } else if ($plugin->is_visible() && $plugin->is_configurable()) {
+                $default = get_config($plugin->get_subtype() . '_' . $plugin->get_type(), 'default');
+                if ($plugin->get_config('enabled') !== false) {
+                    $default = $plugin->is_enabled();
+                }
+                $defaultsettings[$settingname] = $default;
+            }
+        }
+
         foreach ($defaultsettings as $name => $value) {
             if (!isset($record->{$name})) {
                 $record->{$name} = $value;
