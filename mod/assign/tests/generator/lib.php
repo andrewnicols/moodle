@@ -29,9 +29,10 @@ class mod_assign_generator extends testing_module_generator {
     public function create_instance($record = null, array $options = null) {
         $record = (object)(array)$record;
 
+        // These settings should match those created in the UI.
         $defaultsettings = array(
             'alwaysshowdescription'             => 1,
-            'submissiondrafts'                  => 1,
+            'submissiondrafts'                  => 0,
             'requiresubmissionstatement'        => 0,
             'sendnotifications'                 => 0,
             'sendstudentnotifications'          => 1,
