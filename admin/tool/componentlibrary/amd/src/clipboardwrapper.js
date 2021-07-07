@@ -29,51 +29,22 @@
 import 'core/copy_to_clipboard';
 import selectors from 'tool_componentlibrary/selectors';
 import Templates from 'core/templates';
-import {exception as displayException} from 'core/notification';
+
+let idCounter = 0;
 
 /**
  * Initialise the clipboard button on all reusable code.
  */
 export const clipboardWrapper = async() => {
-    // const strings = await getStrings([
-    //     {
-    //         key: 'copied',
-    //         component: 'tool_componentlibrary'
-    //     },
-    //     {
-    //         key: 'copytoclipboard',
-    //         component: 'tool_componentlibrary'
-    //     },
-    // ]);
-
-    document.querySelectorAll(selectors.clipboardcontent)
-        .forEach(element => {
-            const context = {
-                clipboardtarget: "#" + element.id + " code"
-            };
-            Templates.renderForPromise('tool_componentlibrary/clipboardbutton', context).then(({html, js}) => {
-                Templates.prependNodeContents(element, html, js);
-            }).catch(displayException);
-        });
-
-    // const clClipboard = new Clipboard(selectors.clipboardbutton, {
-    //     target: (trigger) => {
-    //         return trigger.parentNode.nextElementSibling;
-    //     }
-    // });
-    //
-    // clClipboard.on('success', e => {
-    //     // Hide the original tooltip
-    //     $(e.trigger).tooltip('dispose');
-    //
-    //     // Show an new tooltip with the Copied string.
-    //     const tooltipBtn = new Tooltip(e.trigger);
-    //     e.trigger.setAttribute('data-original-title', strings[0]);
-    //     tooltipBtn.show();
-    //     setTimeout(() => {
-    //         tooltipBtn.dispose();
-    //     }, 3000);
-    //     e.clearSelection();
-    //     e.trigger.setAttribute('data-original-title', strings[1]);
-    // });
+    document.querySelectorAll(selectors.clipboardcontent).forEach(element => {
+        if (!element.id) {
+            element.id = `tool_componentlibrary_content-${idCounter++}`;
+        }
+        Templates.renderForPromise('tool_componentlibrary/clipboardbutton', {clipboardtarget: `#${element.id} code`})
+        .then(({html, js}) => {
+            Templates.prependNodeContents(element, html, js);
+            return;
+        })
+        .catch();
+    });
 };
