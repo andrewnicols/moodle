@@ -120,7 +120,7 @@ class behat_core_generator extends behat_generator_base {
             'activities' => [
                 'singular' => 'activity',
                 'datagenerator' => 'activity',
-                'required' => ['activity', 'idnumber', 'course'],
+                'required' => ['activity', 'course'],
                 'switchids' => ['course' => 'course', 'gradecategory' => 'gradecat', 'grouping' => 'groupingid'],
             ],
             'blocks' => [
@@ -387,6 +387,10 @@ class behat_core_generator extends behat_generator_base {
             if (!isset($data['gradetype'])) {
                 $data['gradetype'] = GRADE_TYPE_SCALE;
             }
+        }
+
+        if (!array_key_exists('idnumber', $data)) {
+            $data['idnumber'] = $data['name'];
         }
 
         // We split $data in the activity $record and the course module $options.
