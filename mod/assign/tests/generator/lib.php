@@ -26,6 +26,13 @@ defined('MOODLE_INTERNAL') || die();
  */
 class mod_assign_generator extends testing_module_generator {
 
+    /**
+     * Create a new instance of the assignment activity.
+     *
+     * @param array|stdClass|null $record
+     * @param array|null $options
+     * @return stdClass
+     */
     public function create_instance($record = null, array $options = null) {
         $record = (object)(array)$record;
 
@@ -51,6 +58,10 @@ class mod_assign_generator extends testing_module_generator {
             'markingallocation'                 => 0,
         );
 
+        if (property_exists($record, 'teamsubmissiongroupingid')) {
+            $record->teamsubmissiongroupingid = $this->get_grouping_id($record->teamsubmissiongroupingid);
+        }
+
         foreach ($defaultsettings as $name => $value) {
             if (!isset($record->{$name})) {
                 $record->{$name} = $value;
@@ -58,6 +69,39 @@ class mod_assign_generator extends testing_module_generator {
         }
 
         return parent::create_instance($record, (array)$options);
+    }
+
+    /**
+     * Create an assignment submission.
+     *
+     * @param array $data
+     */
+    public function create_submission(array $data): void {
+        global $USER;
+
+        $currentuser = $USER;
+        $user = \core_user::get_user($data['userid']);
+        $this->set_user($user);
+
+        $submission = (object) [
+            'userid' => $user->id,
+        ];
+
+        // TODO Convert this to support subplugins.
+        if (array_key_exists('onlinetext', $data)) {
+            $submission->onlinetext_editor = [
+                'itemid' => file_get_unused_draft_itemid(),
+                'text' => $data['onlinetext'],
+                'format' => FORMAT_HTML,
+            ];
+        }
+
+        [$course, $cm] = get_course_and_cm_from_cmid($data['assignid'], 'assign');
+        $context = context_module::instance($cm->id);
+        $assign = new assign($context, $cm, $course);
+        $assign->save_submission((object) $submission, $notices);
+
+        $this->set_user($currentuser);
     }
 
     /**
@@ -82,5 +126,30 @@ class mod_assign_generator extends testing_module_generator {
         }
 
         $DB->insert_record('assign_overrides', (object) $data);
+    }
+
+    /**
+     * Gets the grouping id from it's idnumber.
+     *
+     * @throws Exception
+     * @param string $idnumber
+     * @return int
+     */
+    protected function get_grouping_id(string $idnumber): int {
+        global $DB;
+
+        // Do not fetch grouping ID for empty grouping idnumber.
+        if (empty($idnumber)) {
+            return null;
+        }
+
+        if (!$id = $DB->get_field('groupings', 'id', ['idnumber' => $idnumber])) {
+            if (is_numeric($idnumber)) {
+                return $idnumber;
+            }
+            throw new Exception('The specified grouping with idnumber "' . $idnumber . '" does not exist');
+        }
+
+        return $id;
     }
 }
