@@ -74,11 +74,21 @@ class behat_auth extends behat_base {
      * @Given /^I log out$/
      */
     public function i_log_out() {
+        $this->getSession()->setCookie('MoodleSession', null);
 
-        // Wait for page to be loaded.
-        $this->wait_for_pending_js();
+        if (empty($this->getSession()->getCookie('MoodleSession'))) {
+            $this->execute('behat_general::i_visit', [new moodle_url('/')]);
+            return;
+        }
 
-        // Click on logout link in footer, as it's much faster.
-        $this->execute('behat_general::i_click_on_in_the', array(get_string('logout'), 'link', '#page-footer', "css_element"));
+        // Goutte has a bug which prevents removal of cookies in a sub-directory.
+        // See https://github.com/minkphp/MinkBrowserKitDriver/pull/157 for information.
+        if ($this->running_javascript()) {
+            $logouturl = new moodle_url('/login/logout.php', ['sesskey' => $this->get_sesskey()]);
+            $this->execute('behat_general::i_visit', [$logouturl]);
+            return;
+        } else {
+            $this->execute('behat_general::i_click_on_in_the', array(get_string('logout'), 'link', '#page-footer', "css_element"));
+        }
     }
 }
