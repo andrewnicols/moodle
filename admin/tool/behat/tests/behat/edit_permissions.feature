@@ -36,39 +36,51 @@ Feature: Edit capabilities
     And "moodle/course:request" capability has "Prohibit" permission
 
   Scenario: Course capabilities overrides
-    Given I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Student" role with:
+    Given the following "permission overrides" exist:
+      | role    | contextlevel | reference | capability              | permission |
+      | Student | Course       | Course 1  | mod/forum:deleteanypost | Prohibit   |
+      | Student | Course       | Course 1  | mod/forum:editanypost   | Prevent    |
+      | Student | Course       | Course 1  | mod/forum:addquestion   | Allow      |
+    And I am on the "Course 1" course page logged in as teacher1
+    When I navigate to "Users > Permissions" in current page administration
+    And I set the field "Advanced role override" to "Student (3)"
+    And I press "Go"
+    Then "mod/forum:deleteanypost" capability has "Prohibit" permission
+    And "mod/forum:editanypost" capability has "Prevent" permission
+    And "mod/forum:addquestion" capability has "Allow" permission
+
+  Scenario: Course capabilities overrides (generator)
+    Given the following permissions are overridden for the Student role in the "Course 1" course:
       | mod/forum:deleteanypost | Prohibit |
       | mod/forum:editanypost | Prevent |
       | mod/forum:addquestion | Allow |
-    When I set the field "Advanced role override" to "Student (3)"
+    When I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "Users > Permissions" in current page administration
+    And I set the field "Advanced role override" to "Student (3)"
     And I press "Go"
     Then "mod/forum:deleteanypost" capability has "Prohibit" permission
     And "mod/forum:editanypost" capability has "Prevent" permission
     And "mod/forum:addquestion" capability has "Allow" permission
 
   Scenario: Module capabilities overrides
-    Given I log in as "teacher1"
-    And the following "activity" exists:
+    Given the following "activity" exists:
       | activity | forum                |
       | course   | C1                   |
       | idnumber | 00001                |
       | name     | I'm the name         |
       | intro    | I'm the introduction |
       | section  | 1                    |
-    And I am on "Course 1" course homepage with editing mode on
-    And I follow "I'm the name"
-    And I navigate to "Permissions" in current page administration
-    And I override the system permissions of "Student" role with:
-      | mod/forum:deleteanypost | Prohibit |
-      | mod/forum:editanypost | Prevent |
-      | mod/forum:addquestion | Allow |
+    And the following "permission overrides" exist:
+      | role    | contextlevel    | reference | capability              | permission |
+      | Student | Activity module | 00001     | mod/forum:deleteanypost | Prohibit   |
+      | Student | Activity module | 00001     | mod/forum:editanypost   | Prevent    |
+      | Student | Activity module | 00001     | mod/forum:addquestion   | Allow      |
+    And I am on the "I'm the name" "forum activity permissions" page logged in as teacher1
     When I set the field "Advanced role override" to "Student (3)"
-    And I click on "Go" "button" in the "region-main" "region"
     Then "mod/forum:deleteanypost" capability has "Prohibit" permission
     And "mod/forum:editanypost" capability has "Prevent" permission
+    And "mod/forum:addquestion" capability has "Allow" permission
     And "mod/forum:addquestion" capability has "Allow" permission
 
   @javascript

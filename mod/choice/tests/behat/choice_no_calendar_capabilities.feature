@@ -14,19 +14,18 @@ Feature: Choice with no calendar capabilites
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability | permission |
-      | moodle/calendar:manageentries | Prohibit |
-    And I log out
+    And the following "permission override" exists:
+      | role         | Teacher                       |
+      | contextlevel | Course                        |
+      | reference    | Course 1                      |
+      | capability   | moodle/calendar:manageentries |
+      | permission   | Prohibit                      |
 
   Scenario: Editing a choice
-    And the following "activities" exist:
+    Given the following "activities" exist:
       | activity | name             | intro                   | course | idnumber | option             | section |
       | choice   | Test choice name | Test choice description | C1     | choice1  | Option 1, Option 2 | 1       |
-    Given I log in as "admin"
+    And I log in as "admin"
     And I am on "Course 1" course homepage
     And I follow "Test choice name"
     And I navigate to "Edit settings" in current page administration

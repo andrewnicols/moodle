@@ -7,21 +7,27 @@ Feature: Completion with no calendar capabilites
   Background:
     Given the following "courses" exist:
       | fullname | shortname | category | groupmode | enablecompletion |
-      | Course 1 | C1 | 0 | 1 | 1 |
+      | Course 1 | Course 1  | 0        | 1         | 1                |
     And the following "users" exist:
-      | username | firstname | lastname | email |
-      | teacher1 | Teacher | 1 | teacher1@example.com |
+      | username | firstname | lastname | email                |
+      | teacher1 | Teacher   | 1        | teacher1@example.com |
     And the following "course enrolments" exist:
-      | user | course | role |
-      | teacher1 | C1 | editingteacher |
+      | user     | course   | role           |
+      | teacher1 | Course 1 | editingteacher |
     And the following "activity" exists:
-      | activity    | forum                       |
-      | course      | C1                          |
-      | idnumber    | 00001                       |
-      | name        | Test forum name             |
-      | intro       | Test forum name description |
-      | section     | 1                           |
-      | completion  | 2                           |
+      | activity   | forum                       |
+      | course     | Course 1                    |
+      | idnumber   | 00001                       |
+      | name       | Test forum name             |
+      | intro      | Test forum name description |
+      | section    | 1                           |
+      | completion | 2                           |
+    And the following "permission override" exists:
+      | role         | Teacher                       |
+      | contextlevel | Course                        |
+      | reference    | Course 1                      |
+      | capability   | moodle/calendar:manageentries |
+      | permission   | Prohibit                      |
     And I log in as "admin"
     And I am on "Course 1" course homepage
     And I follow "Test forum name"
@@ -32,11 +38,6 @@ Feature: Completion with no calendar capabilites
       | id_completionexpected_month   | 1    |
       | id_completionexpected_year    | 2017 |
     And I press "Save and return to course"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability | permission |
-      | moodle/calendar:manageentries | Prohibit |
     And I log out
 
   Scenario: Editing completion date

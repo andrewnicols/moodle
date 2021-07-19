@@ -14,18 +14,18 @@ Feature: Assignment with no calendar capabilites
     And the following "course enrolments" exist:
       | user      | course  | role            |
       | teacher1  | C1      | editingteacher  |
-    And I am on the "C1" Course page logged in as admin
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability                     | permission  |
-      | moodle/calendar:manageentries  | Prohibit    |
+    And the following "permission override" exists:
+      | role         | Teacher                       |
+      | contextlevel | Course                        |
+      | reference    | Course 1                      |
+      | capability   | moodle/calendar:manageentries |
+      | permission   | Prohibit                      |
 
   Scenario: Editing an assignment
     Given the following "activities" exist:
       | activity   | name                   | intro                        | course | section |
       | assign     | Test assignment name   | Test assignment description  | C1     | 1       |
-    And I am on the "Test assignment name" Activity page
-    And I navigate to "Edit settings" in current page administration
+    And I am on the "Test assignment name" "assign activity editing" page logged in as "admin"
     And I set the following fields to these values:
       | Allow submissions from | ##1 January 2017##          |
       | Due date               | ##1 February 2017##         |
@@ -34,8 +34,7 @@ Feature: Assignment with no calendar capabilites
     And I press "Save and return to course"
     And I log out
 
-    When I am on the "Test assignment name" Activity page logged in as teacher1
-    And I navigate to "Edit settings" in current page administration
+    When I am on the "Test assignment name" "assign activity editing" page logged in as "teacher1"
     And I set the following fields to these values:
       | Allow submissions from | ##1 January 2018##  |
       | Due date               | ##1 February 2018## |

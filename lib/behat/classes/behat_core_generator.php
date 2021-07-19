@@ -102,8 +102,8 @@ class behat_core_generator extends behat_generator_base {
             'permission overrides' => [
                 'singular' => 'permission override',
                 'datagenerator' => 'permission_override',
-                'required' => ['capability', 'permission', 'role', 'contextlevel', 'reference'],
-                'switchids' => ['role' => 'roleid'],
+                'required' => ['capability', 'permission', 'role'],
+                'switchids' => ['role' => 'roleid', 'permission' => 'permission'],
             ],
             'permissions' => [
                 'singular' => 'permission',
@@ -565,6 +565,23 @@ class behat_core_generator extends behat_generator_base {
     }
 
     /**
+     * Preprocess the permission override to fetch the context instance from a contextlevel and reference.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function preprocess_permission_override(array $data): array {
+        // Getting the context id.
+        if (empty($data['contextlevel'])) {
+            $data['context'] = \context_system::instance();
+        } else {
+            $data['context'] = $this->get_context($data['contextlevel'], $data['reference']);
+        }
+
+        return $data;
+    }
+
+    /**
      * Allows/denies a capability at the specified context
      *
      * @throws Exception
@@ -572,30 +589,11 @@ class behat_core_generator extends behat_generator_base {
      * @return void
      */
     protected function process_permission_override($data) {
-
-        // Will throw an exception if it does not exist.
-        $context = $this->get_context($data['contextlevel'], $data['reference']);
-
-        switch ($data['permission']) {
-            case get_string('allow', 'role'):
-                $permission = CAP_ALLOW;
-                break;
-            case get_string('prevent', 'role'):
-                $permission = CAP_PREVENT;
-                break;
-            case get_string('prohibit', 'role'):
-                $permission = CAP_PROHIBIT;
-                break;
-            default:
-                throw new Exception('The \'' . $data['permission'] . '\' permission does not exist');
-                break;
-        }
-
         if (is_null(get_capability_info($data['capability']))) {
-            throw new Exception('The \'' . $data['capability'] . '\' capability does not exist');
+            throw new Exception("The '{$data['capability']}' capability does not exist");
         }
 
-        role_change_permission($data['roleid'], $context, $data['capability'], $permission);
+        assign_capability($data['capability'], $data['permission'], $data['roleid'], $data['context']->id, true);
     }
 
     /**
@@ -621,6 +619,10 @@ class behat_core_generator extends behat_generator_base {
      * @param array $data
      */
     protected function process_role_capabilities(array $data): void {
+        if (is_null(get_capability_info($data['capability']))) {
+            throw new Exception("The '{$data['capability']}' capability does not exist");
+        }
+
         if ($data['permission'] === null) {
             // If the permission is not set, then unassign the capability.
             unassign_capability($data['capability'], $data['roleid'], $data['context']->id);

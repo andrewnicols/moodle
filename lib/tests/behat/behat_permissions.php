@@ -52,39 +52,11 @@ class behat_permissions extends behat_base {
 
     /**
      * Overrides system capabilities at category, course and module levels. This step begins after clicking 'Permissions' link. Expects a table with capability name and permission (Inherit/Allow/Prevent/Prohibit) columns.
-     * @Given /^I override the system permissions of "(?P<rolefullname_string>(?:[^"]|\\")*)" role with:$/
      * @param string $rolename
      * @param TableNode $table
      */
     public function i_override_the_system_permissions_of_role_with($rolename, $table) {
-        // Translate the data into the format accepted by the generator.
-        $tabledata = [[
-            'contextlevel',
-            'reference',
-            'capability',
-            'permission',
-            'role',
-        ]];
-
-        foreach ($table->getRowsHash() as $capability => $permission) {
-            if ($capability === 'capability') {
-                // In the old step, the header row was optional.
-                // If specified, remove it.
-                continue;
-            }
-            $tabledata[] = [
-                $contextlevel,
-                $reference,
-                $capability,
-                $permission,
-                $rolename,
-            ];
-        }
-
-        if (!empty($tabledata)) {
-            $table = new TableNode($tabledata);
-            $this->execute('behat_data_generators::the_following_entities_exist', ['permission overrides', $table]);
-        }
+        $this->execute('behat_deprecated::i_override_the_system_permissions_of_role_with', [$rolename, $table]);
     }
 
     /**

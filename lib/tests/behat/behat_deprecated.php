@@ -94,6 +94,31 @@ class behat_deprecated extends behat_base {
     }
 
     /**
+     * Overrides system capabilities at category, course and module levels. This step begins after clicking 'Permissions' link. Expects a table with capability name and permission (Inherit/Allow/Prevent/Prohibit) columns.
+     * @Given /^I override the system permissions of "(?P<rolefullname_string>(?:[^"]|\\")*)" role with:$/
+     * @param string $rolename
+     * @param TableNode $table
+     */
+    public function i_override_the_system_permissions_of_role_with($rolename, $table) {
+        $this->deprecated("This step has been deprecated. Please use a data generator instead.");
+
+        // We don't know the number of overrides so we have to get it to match the option contents.
+        $roleoption = $this->find('xpath', '//select[@name="roleid"]/option[contains(.,"' . $this->escape($rolename) . '")]');
+
+        $this->execute('behat_forms::i_set_the_field_to',
+            array(get_string('advancedoverride', 'role'), $this->escape($roleoption->getText()))
+        );
+
+        if (!$this->running_javascript()) {
+            $this->execute("behat_general::i_click_on_in_the", [get_string('go'), 'button', 'region-main', 'region']);
+        }
+
+        $this->execute("behat_permissions::i_fill_the_capabilities_form_with_the_following_permissions", $table);
+
+        $this->execute('behat_forms::press_button', get_string('savechanges'));
+    }
+
+    /**
      * Set the capabiltiies in the specified context.
      *
      * @param string $contextlevel

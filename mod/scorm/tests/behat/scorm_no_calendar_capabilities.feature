@@ -14,13 +14,12 @@ Feature: Scorm with no calendar capabilites
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability | permission |
-      | moodle/calendar:manageentries | Prohibit |
-    And I log out
+    And the following "permission override" exists:
+      | role         | Teacher                       |
+      | contextlevel | Course                        |
+      | reference    | Course 1                      |
+      | capability   | moodle/calendar:manageentries |
+      | permission   | Prohibit                      |
 
   @javascript @_file_upload @_switch_iframe
   Scenario: Editing a scorm activity without calendar permission
