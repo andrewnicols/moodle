@@ -1443,4 +1443,76 @@ EOF;
         $timeout = self::get_real_timeout(30) * 1000 * $factor;
         $driver->getWebDriver()->getCommandExecutor()->setRequestTimeout($timeout);
     }
+
+    /**
+     * Get the course category id from an identifier.
+     *
+     * The category idnumber, and name are checked.
+     *
+     * @param string $identifier
+     * @return int
+     */
+    protected function get_category_id(string $identifier): int {
+        global $DB;
+
+        $sql = <<<EOF
+    SELECT id
+      FROM {course_categories}
+     WHERE idnumber = :idnumber
+        OR name = :name
+EOF;
+
+        return $DB->get_field_sql($sql, [
+            'idnumber' => $identifier,
+            'name' => $identifier,
+        ], MUST_EXIST);
+    }
+
+    /**
+     * Get the course id from an identifier.
+     *
+     * The course idnumber, shortname, and fullname are checked.
+     *
+     * @param string $identifier
+     * @return int
+     */
+    protected function get_course_id(string $identifier): int {
+        global $DB;
+
+        $sql = <<<EOF
+    SELECT id
+      FROM {course}
+     WHERE idnumber = :idnumber
+        OR shortname = :shortname
+        OR fullname = :fullname
+EOF;
+
+        return $DB->get_field_sql($sql, [
+            'idnumber' => $identifier,
+            'shortname' => $identifier,
+            'fullname' => $identifier,
+        ], MUST_EXIST);
+    }
+
+    /**
+     * Get the activity course module id from its idnumber.
+     *
+     * Note: Only idnumber is supported here, not name at this time.
+     *
+     * @param string $identifier
+     * @return int
+     */
+    protected function get_activity_cmid(string $identifier): int {
+        global $DB;
+
+        $sql = <<<EOF
+    SELECT id
+      FROM {course_modules}
+     WHERE idnumber = :idnumber
+EOF;
+
+        return $DB->get_field_sql($sql, [
+            'idnumber' => $identifier,
+        ], MUST_EXIST);
+    }
 }
