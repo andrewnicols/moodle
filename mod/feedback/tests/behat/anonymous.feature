@@ -26,31 +26,24 @@ Feature: Anonymous feedback
       | activity   | name            | course               | idnumber  | anonymous | publish_stats | section |
       | feedback   | Site feedback   | Acceptance test site | feedback0 | 1         | 1             | 1       |
       | feedback   | Course feedback | C1                   | feedback1 | 1         | 1             | 0       |
-    When I log in as "manager"
-    And I am on site homepage
-    And I follow "Site feedback"
-    And I click on "Edit questions" "link" in the "[role=main]" "css_element"
-    And I add a "Multiple choice" question to the feedback with:
-      | Question                       | Do you like our site?              |
-      | Label                          | multichoice2                       |
-      | Multiple choice type           | Multiple choice - single answer    |
-      | Hide the "Not selected" option | Yes                                |
-      | Multiple choice values         | Yes\nNo\nI don't know              |
-    And I log out
+    And the following "mod_feedback > question" exists:
+      | activity     | feedback0             |
+      | name         | Do you like our site? |
+      | questiontype | multichoice           |
+      | label        | multichoice2          |
+      | subtype      | r                     |
+      | hidenoselect | 1                     |
+      | values       | Yes\nNo\nI don't know |
 
   Scenario: Guests can see anonymous feedback on front page but can not complete
-    When I follow "Site feedback"
+    When I am on the "feedback0" Activity page
     Then I should not see "Answer the questions"
     And I follow "Preview"
     And I should see "Do you like our site?"
-    And I press "Continue"
 
   Scenario: Complete anonymous feedback on the front page as an authenticated user
-    And I log in as "user1"
-    And I am on site homepage
-    When I follow "Site feedback"
-    And I follow "Preview"
-    And I should see "Do you like our site?"
+    When I am on the "Site feedback" "mod_feedback > preview" page logged in as user1
+    Then I should see "Do you like our site?"
     And I press "Continue"
     And I follow "Answer the questions"
     And I should see "Do you like our site?"
@@ -58,63 +51,45 @@ Feature: Anonymous feedback
       | Yes | 1 |
     And I press "Submit your answers"
     And I should not see "Submitted answers"
-    And I press "Continue"
+    And I should see "This is page after submit"
 
   @javascript
-  Scenario: Complete anonymous feedback and view analysis on the front page as an authenticated user
+  Scenario: View analysis of anonymous feedback on the front page as an authenticated user
+    Given the following "mod_feedback > responses" exist:
+      | activity  | user  | Do you like our site? |
+      | feedback0 | user1 | Yes                   |
+      | feedback0 | user2 | No                    |
     And I log in as "admin"
     And I set the following system permissions of "Authenticated user on frontpage" role:
       | capability                   | permission |
       | mod/feedback:viewanalysepage | Allow      |
     And I log out
-    And I log in as "user1"
-    And I am on site homepage
-    When I follow "Site feedback"
-    And I follow "Preview"
-    And I should see "Do you like our site?"
-    And I press "Continue"
-    And I follow "Answer the questions"
-    And I should see "Do you like our site?"
-    And I set the following fields to these values:
-      | Yes | 1 |
-    And I press "Submit your answers"
-    And I log out
-    And I log in as "user2"
-    And I am on site homepage
-    And I follow "Site feedback"
-    And I follow "Preview"
-    And I should see "Do you like our site?"
-    And I press "Continue"
-    And I follow "Answer the questions"
-    And I set the following fields to these values:
-      | No | 1 |
-    And I press "Submit your answers"
-    And I follow "Submitted answers"
-    And I should see "Submitted answers: 2"
+    When I am on the "Site feedback" "mod_feedback > analysis" page logged in as user2
+    Then I should see "Submitted answers: 2"
     And I should see "Questions: 1"
     # And I should not see "multichoice2" # TODO MDL-29303 do not show labels to users who can not edit feedback
     And I show chart data for the "multichoice2" feedback
     And I should see "Do you like our site?"
     And I should see "1 (50.00 %)" in the "Yes" "table_row"
     And I should see "1 (50.00 %)" in the "No" "table_row"
-    And I log out
-    And I log in as "manager"
-    And I am on site homepage
-    And I follow "Site feedback"
-    And I navigate to "Show responses" in current page administration
-    And I should not see "Username"
+
+  Scenario: View analysis of anonymous feedback on the front page as manager
+    Given the following "mod_feedback > responses" exist:
+      | activity  | user  | Do you like our site? |
+      | feedback0 | user1 | Yes                   |
+      | feedback0 | user2 | No                    |
+    When I am on the "Site feedback" "mod_feedback > responses" page logged in as manager
+    Then I should not see "Username"
     And I should see "Anonymous entries (2)"
     And I follow "Response number: 1"
     And I should not see "Username"
     And I should see "Response number: 1 (Anonymous)"
-    And I log out
 
   Scenario: Complete fully anonymous feedback on the front page as a guest
     Given the following config values are set as admin:
       | feedback_allowfullanonymous | 1 |
-    When I follow "Site feedback"
-    And I follow "Preview"
-    And I should see "Do you like our site?"
+    When I am on the "Site feedback" "mod_feedback > preview" page
+    Then I should see "Do you like our site?"
     And I press "Continue"
     And I follow "Answer the questions"
     And I should see "Do you like our site?"
@@ -122,7 +97,7 @@ Feature: Anonymous feedback
       | Yes | 1 |
     And I press "Submit your answers"
     And I should not see "Submitted answers"
-    And I press "Continue"
+    And I should see "This is page after submit"
 
   @javascript
   Scenario: Complete fully anonymous feedback and view analyze on the front page as a guest
@@ -133,8 +108,7 @@ Feature: Anonymous feedback
       | capability                   | permission |
       | mod/feedback:viewanalysepage | Allow      |
     And I log out
-    When I follow "Site feedback"
-    And I follow "Preview"
+    And I am on the "Site feedback" "mod_feedback > preview" page
     And I should see "Do you like our site?"
     And I press "Continue"
     And I follow "Answer the questions"
@@ -144,8 +118,7 @@ Feature: Anonymous feedback
     And I press "Submit your answers"
     And I press "Continue"
     # Starting new feedback
-    When I follow "Site feedback"
-    And I follow "Preview"
+    And I am on the "Site feedback" "mod_feedback > preview" page
     And I should see "Do you like our site?"
     And I press "Continue"
     And I follow "Answer the questions"
@@ -154,7 +127,8 @@ Feature: Anonymous feedback
       | No | 1 |
     And I press "Submit your answers"
     And I follow "Submitted answers"
-    And I should see "Submitted answers: 2"
+    When I am on the "Site feedback" "mod_feedback > analysis" page
+    Then I should see "Submitted answers: 2"
     And I should see "Questions: 1"
     # And I should not see "multichoice2" # TODO MDL-29303
     And I show chart data for the "multichoice2" feedback
@@ -168,7 +142,6 @@ Feature: Anonymous feedback
     And I should see "Anonymous entries (2)"
     And I follow "Response number: 1"
     And I should see "Response number: 1 (Anonymous)"
-    And I log out
 
   @javascript
   Scenario: Anonymous feedback in a course

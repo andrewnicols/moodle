@@ -39,6 +39,47 @@ use Behat\Gherkin\Node\TableNode as TableNode,
 class behat_mod_feedback extends behat_base {
 
     /**
+     * Convert page names to URLs for steps like 'When I am on the "[identifier]" "[page type]" page'.
+     *
+     * Recognised page names are:
+     * | pagetype   | name meaning  | description                                    |
+     * | Submission | Feedback name | The feedback user response page (complete.php) |
+     *
+     * @param string $type identifies which type of page this is, e.g. 'Submission'.
+     * @param string $identifier identifies the particular page, e.g. 'feedback1'.
+     * @return moodle_url the corresponding URL.
+     * @throws Exception with a meaningful error message if the specified page cannot be found.
+     */
+    protected function resolve_page_instance_url(string $type, string $identifier): moodle_url {
+        global $DB;
+
+        switch ($type) {
+            case 'preview':
+            case 'Preview':
+                return new moodle_url('/mod/feedback/print.php', [
+                    'id' => $this->get_cm_by_activity_name('feedback', $identifier)->id
+                ]);
+            case 'submission':
+            case 'Submission':
+                return new moodle_url('/mod/feedback/complete.php', [
+                    'id' => $this->get_cm_by_activity_name('feedback', $identifier)->id
+                ]);
+            case 'analysis':
+            case 'Analysis':
+                return new moodle_url('/mod/feedback/analysis.php', [
+                    'id' => $this->get_cm_by_activity_name('feedback', $identifier)->id
+                ]);
+            case 'responses':
+            case 'Responses':
+                return new moodle_url('/mod/feedback/show_entries.php', [
+                    'id' => $this->get_cm_by_activity_name('feedback', $identifier)->id
+                ]);
+            default:
+                throw new Exception("Unrecognised page type '{$type}'.");
+        }
+    }
+
+    /**
      * Adds a question to the existing feedback with filling the form.
      *
      * The form for creating a question should be on one page.
@@ -99,17 +140,13 @@ class behat_mod_feedback extends behat_base {
      * @param TableNode $questiondata with data for filling the add question form
      */
     public function i_log_in_as_and_complete_feedback_in_course($username, $feedbackname, $coursename, TableNode $answers) {
-        $username = $this->escape($username);
-        $coursename = $this->escape($coursename);
-        $feedbackname = $this->escape($feedbackname);
-        $completeform = $this->escape(get_string('complete_the_form', 'feedback'));
+        global $DB;
 
-        // Log in as user.
-        $this->execute('behat_auth::i_log_in_as', $username);
-
-        // Navigate to feedback complete form.
-        $this->execute('behat_navigation::i_am_on_page_instance', [$feedbackname, 'feedback activity']);
-        $this->execute('behat_general::click_link', $completeform);
+        $this->execute('behat_navigation::i_am_on_page_instance_logged_in_as', [
+            $feedbackname,
+            'mod_feedback > Submission',
+            $username,
+        ]);
 
         // Fill form and submit.
         $this->execute("behat_forms::i_set_the_following_fields_to_these_values", $answers);

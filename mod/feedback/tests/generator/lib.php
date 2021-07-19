@@ -83,6 +83,79 @@ class mod_feedback_generator extends testing_module_generator {
         return parent::create_instance($record, (array)$options);
     }
 
+    public function create_question($data) {
+        global $DB;
+
+        $cm = get_coursemodule_from_id('feedback', $data['cmid']);
+        $feedback = $DB->get_record('feedback', ['id' => $cm->instance]);
+
+        $functionname = "create_item_{$data['questiontype']}";
+
+        $questiondata = (array) (object) $data;
+        unset($questiondata['questiontype']);
+        unset($questiondata['cmid']);
+
+        $result = $this->{$functionname}($feedback, $questiondata);
+    }
+
+    public function create_response(array $data) {
+        global $DB;
+
+        $data = (object) $data;
+        $cm = $this->get_cm_by_activity_name('feedback', $data->activity);
+        $feedback = $DB->get_record('feedback', ['id' => $cm->instance]);
+
+        $feedbackcompletion = new mod_feedback_completion(
+            $feedback,
+            $cm,
+            $cm->course,
+            false,
+            null,
+            null,
+            $data->userid
+        );
+
+        if (!$feedbackcompletion->can_complete()) {
+            throw new \coding_exception("User {$data->userid} cannot complete this feedback activity.");
+        }
+
+        if (!$feedbackcompletion->is_open()) {
+            throw new \coding_exception("This activity is not open.");
+        }
+
+        $feedbackcompletion->set_module_viewed();
+
+        $answers = [];
+        foreach ((array) $data as $field => $response) {
+            if ($field === 'userid' || $field === 'activity') {
+                continue;
+            }
+
+            $name = trim($field);
+            $item = $DB->get_record('feedback_item', ['name' => $name], '*', MUST_EXIST);
+            $itemclass = "feedback_item_{$item->typ}";
+            $instance = new $itemclass();
+
+            $value = 1;
+            do {
+                $printval = $instance->get_printval($item, (object) ['value' => $value]);
+                if ($printval === $response) {
+                    $responsevalue = $value;
+                    break;
+                }
+                if (empty($printval)) {
+                    throw new \coding_exception('Value not found');
+                }
+
+                $value++;
+            } while (true);
+            $answers["{$item->typ}_{$item->id}"] = $responsevalue;
+        }
+
+        $feedbackcompletion->save_response_tmp((object) $answers);
+        $feedbackcompletion->save_response();
+    }
+
     /**
      * Create info question item.
      *
@@ -176,7 +249,7 @@ class mod_feedback_generator extends testing_module_generator {
         $itemobj = feedback_get_item_class('multichoice');
         $position = $DB->count_records('feedback_item', array('feedback' => $feedback->id)) + 1;
 
-        $record = (array)$record + array(
+        $record = array_merge([
             'id' => 0,
             'feedback' => $feedback->id,
             'template' => 0,
@@ -195,8 +268,9 @@ class mod_feedback_generator extends testing_module_generator {
             'hidenoselect' => 1,
             'ignoreempty' => 0,
             'values' => "a\nb\nc\nd\ne"
-        );
+        ], (array) $record);
 
+        $record['values'] = str_replace('\n', "\n", $record['values']);
         $presentation = str_replace("\n", FEEDBACK_MULTICHOICE_LINE_SEP, trim($record['values']));
 
         if ($record['horizontal'] == 1 AND $record['subtype'] != 'd') {
@@ -393,4 +467,3 @@ class mod_feedback_generator extends testing_module_generator {
         return feedback_create_pagebreak($feedback->id);
     }
 }
-
