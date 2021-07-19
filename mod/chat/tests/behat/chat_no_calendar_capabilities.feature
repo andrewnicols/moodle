@@ -21,13 +21,9 @@ Feature: Chat with no calendar capabilites
       | name                          | Test chat name        |
       | intro                         | Test chat description |
       | section                       | 1                     |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability | permission |
+    And the following permissions are overridden for the Teacher role in the "Course 1" course:
       | moodle/calendar:manageentries | Prohibit |
-    And I am on "Course 1" course homepage
+    And I am on the "Course 1" course page logged in as admin
     And I follow "Test chat name"
     And I navigate to "Edit settings" in current page administration
     And I set the following fields to these values:
@@ -39,9 +35,9 @@ Feature: Chat with no calendar capabilites
     And I log out
 
   Scenario: Editing a chat
-    When I log in as "teacher1"
+    Given I am on the "Course 1" course page logged in as teacher1
     And I am on "Course 1" course homepage with editing mode on
-    And I follow "Test chat name"
+    When I follow "Test chat name"
     And I navigate to "Edit settings" in current page administration
     And I set the following fields to these values:
       | id_chattime_year | 2018 |

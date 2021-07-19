@@ -21,6 +21,8 @@ Feature: Quiz with no calendar capabilites
       | name     | Test quiz name        |
       | intro    | Test quiz description |
       | section  | 1                     |
+    And the following permissions are overridden for the Teacher role in the "Course 1" course:
+      | moodle/calendar:manageentries | Prohibit |
     And I log in as "admin"
     And I am on "Course 1" course homepage
     And I follow "Test quiz name"
@@ -35,11 +37,6 @@ Feature: Quiz with no calendar capabilites
       | id_timeclose_month | 2 |
       | id_timeclose_year | 2017 |
     And I press "Save and return to course"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability | permission |
-      | moodle/calendar:manageentries | Prohibit |
     And I log out
 
   Scenario: Editing a quiz

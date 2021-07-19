@@ -6,14 +6,14 @@ Feature: Restrict activities availability
 
   Background:
     Given the following "users" exist:
-      | username | firstname | lastname | email |
-      | teacher1 | Teacher | 1 | teacher1@example.com |
+      | username |
+      | teacher1 |
     And the following "courses" exist:
-      | fullname | shortname | category | format |
-      | Course 1 | C1 | 0 | topics |
+      | fullname | shortname |
+      | Course 1 | C1        |
     And the following "course enrolments" exist:
-      | user | course | role |
-      | teacher1 | C1 | editingteacher |
+      | user     | course | role           |
+      | teacher1 | C1     | editingteacher |
 
   @javascript
   Scenario: Activities can be added with the default permissions
@@ -32,14 +32,11 @@ Feature: Restrict activities availability
   Scenario: Activities can not be added when the admin restricts the permissions
     Given I set the following system permissions of "Teacher" role:
       | mod/chat:addinstance | Prohibit |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
+    And the following permissions are overridden for the Teacher role in the "Course 1" course:
       | mod/glossary:addinstance | Prohibit |
-    And I log out
-    And I log in as "teacher1"
-    When I am on "Course 1" course homepage with editing mode on
+    When I am on the "C1" Course page logged in as teacher1
+    And I am on "Course 1" course homepage with editing mode on
     And I press "Add an activity or resource"
     Then "Add a new Chat" "link" should not exist in the "Add an activity or resource" "dialogue"
-    Then "Add a new Glossary" "link" should not exist in the "Add an activity or resource" "dialogue"
+    And "Add a new Glossary" "link" should not exist in the "Add an activity or resource" "dialogue"
+    And "Add a new Forum" "link" should exist in the "Add an activity or resource" "dialogue"

@@ -14,13 +14,8 @@ Feature: Feedback with no calendar capabilites
     And the following "course enrolments" exist:
       | user | course | role |
       | teacher1 | C1 | editingteacher |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability | permission |
+    And the following permissions are overridden for the Teacher role in the "Course 1" course:
       | moodle/calendar:manageentries | Prohibit |
-    And I log out
 
   Scenario: Editing a feedback
     Given the following "activities" exist:

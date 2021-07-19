@@ -21,13 +21,8 @@ Feature: Lesson with no calendar capabilites
       | name          | Test lesson name        |
       | intro         | Test lesson description |
       | section       | 1                       |
-    And I log in as "admin"
-    And I am on "Course 1" course homepage
-    And I navigate to "Users > Permissions" in current page administration
-    And I override the system permissions of "Teacher" role with:
-      | capability | permission |
+    And the following permissions are overridden for the Teacher role in the "Course 1" course:
       | moodle/calendar:manageentries | Prohibit |
-    And I log out
 
   Scenario: Editing a lesson
     Given I log in as "admin"

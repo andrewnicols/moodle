@@ -83,6 +83,36 @@ class behat_course extends behat_base {
     }
 
     /**
+     * Convert page names to URLs for steps like 'When I am on the "[identifier]" "[page type]" page'.
+     *
+     * Recognised page names are:
+     * | Page type    | Identifier meaning | description                              |
+     * | participants | course shortname   | Participants page for the course         |
+     * | groups       | course shortname   | Groups configuration page for the course |
+     *
+     * @param string $type identifies which type of page this is, e.g. 'Category page'.
+     * @param string $identifier identifies the particular page, e.g. 'test-cat'.
+     * @return moodle_url the corresponding URL.
+     * @throws Exception with a meaningful error message if the specified page cannot be found.
+     */
+    protected function resolve_page_instance_url(string $type, string $identifier): moodle_url {
+        global $DB;
+
+        switch (strtolower($type)) {
+            case 'participants':
+                $courseid = $this->get_course_id($identifier);
+                return new moodle_url('/user/index.php', ['id' => $courseid]);
+
+            case 'groups':
+                $courseid = $this->get_course_id($identifier);
+                return new moodle_url('/group/index.php', ['id' => $courseid]);
+
+            default:
+                throw new Exception("Unrecognised core page type '{$type}'.");
+        }
+    }
+
+    /**
      * Turns editing mode on.
      * @Given /^I turn editing mode on$/
      */
