@@ -52,7 +52,6 @@ Feature: Use core page resolvers for the I am on the page steps
 
     Examples:
       | description | identifier | shouldsee                   |
-      | Admin page  | Admin      | Check for available updates |
       | Home page   | Homepage   | Recently accessed courses   |
 
   @javascript
