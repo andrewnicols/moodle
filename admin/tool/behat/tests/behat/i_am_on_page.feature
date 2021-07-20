@@ -5,7 +5,10 @@ Feature: Use core page resolvers for the I am on the page steps
   I need to have steps which take me straight to a page
 
   Scenario Outline: When I am on an instance
-    Given the following "course" exists:
+    Given the following "categories" exist:
+      | name  | category | idnumber |
+      | Cat 1 | 0        | CAT1     |
+    And the following "course" exists:
       | fullname  | Economics 101 |
       | shortname | ECON101       |
       | idnumber  | 2021-econ101  |
@@ -20,13 +23,18 @@ Feature: Use core page resolvers for the I am on the page steps
 
     Examples:
       | description              | identifier                  | type                     | shouldsee                 |
+      | Course Category idnumber | CAT1                        | category                 | Add a new course          |
+      | Course Category name     | "Cat 1"                     | category                 | Add a new course          |
       | Course Full name         | "Economics 101"             | course                   | Fundamentals of Economics |
       | Course Short name        | ECON101                     | course                   | Fundamentals of Economics |
       | Course idnumber          | "2021-econ101"              | course                   | Fundamentals of Economics |
       | Forum idnumber           | fundamentalsofeconomics     | Activity                 | Add a new discussion      |
 
   Scenario Outline: When I am on an instance logged in as
-    Given the following "course" exists:
+    Given the following "categories" exist:
+      | name  | category | idnumber |
+      | Cat 1 | 0        | CAT1     |
+    And the following "course" exists:
       | fullname  | Economics 101 |
       | shortname | ECON101       |
       | idnumber  | 2021-econ101  |
@@ -40,6 +48,8 @@ Feature: Use core page resolvers for the I am on the page steps
 
     Examples:
       | description              | identifier                  | type                     | shouldsee                 |
+      | Course Category idnumber | CAT1                        | category                 | Add a new course          |
+      | Course Category name     | "Cat 1"                     | category                 | Add a new course          |
       | Course Full name         | "Economics 101"             | course                   | Fundamentals of Economics |
       | Course Short name        | ECON101                     | course                   | Fundamentals of Economics |
       | Course idnumber          | "2021-econ101"              | course                   | Fundamentals of Economics |
@@ -52,13 +62,14 @@ Feature: Use core page resolvers for the I am on the page steps
 
     Examples:
       | description | identifier | shouldsee                   |
+      | Admin page  | "Admin notifications"      | Check for available updates |
       | Home page   | Homepage   | Recently accessed courses   |
 
-  @javascript
   Scenario Outline: When I am on a named page logged in as
     When I am on the <identifier> page logged in as admin
     Then I should see "<shouldsee>"
 
     Examples:
       | description | identifier            | shouldsee                   |
+      | Admin page  | "Admin notifications" | Check for available updates |
       | Home page   | Homepage              | Recently accessed courses   |
