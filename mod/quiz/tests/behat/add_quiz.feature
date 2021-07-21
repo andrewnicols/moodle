@@ -25,6 +25,7 @@ Feature: Add a quiz
       | section  | 1                     |
       | grade    | 10                    |
     When I log in as "teacher1"
+    And I change window size to "large"
     And I am on "Course 1" course homepage with editing mode on
     And I add a "True/False" question to the "Test quiz name" quiz with:
       | Question name                      | First question                          |
@@ -34,9 +35,8 @@ Feature: Add a quiz
       | Feedback for the response 'True'.  | So you think it is true                 |
       | Feedback for the response 'False'. | So you think it is false                |
     And I log out
-    And I log in as "student1"
-    And I am on "Course 1" course homepage
-    And I follow "Test quiz name"
+
+    And I am on the "Test quiz name" "quiz activity" page logged in as student1
     And I press "Attempt quiz now"
     Then I should see "Question 1"
     And I should see "Answer the first question"
@@ -53,7 +53,6 @@ Feature: Add a quiz
     And I should see "The correct answer is 'False'."
     And I follow "Finish review"
     And I should see "Highest grade: 0.00 / 10.00."
-    And I log out
 
   Scenario: Add and configure small quiz and perform an attempt as a student with Javascript disabled
     Then I should see "So you think it is true"
@@ -61,4 +60,3 @@ Feature: Add a quiz
     And I should see "The correct answer is 'False'."
     And I follow "Finish review"
     And I should see "Highest grade: 0.00 / 10.00."
-    And I log out

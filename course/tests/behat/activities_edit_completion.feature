@@ -19,15 +19,15 @@ Feature: Edit completion settings of an activity
     And I should not see "Completion options locked"
 
   Scenario: Completion is locked after the activity has been viewed
-    Given I am on the p1 "Activity" page logged in as admin
-    And I am on the p1 "Activity editing" page
+    Given I am on the TestPage "page activity" page logged in as admin
+    And I am on the TestPage "page activity editing" page
     When I expand all fieldsets
     Then I should see "Completion options locked"
 
   @javascript
   Scenario: Pressing the unlock button allows the user to edit completion settings
-    Given I am on the p1 "Activity" page logged in as admin
-    And I am on the p1 "Activity editing" page
+    Given I am on the TestPage "page activity" page logged in as admin
+    And I am on the TestPage "page activity editing" page
     And I expand all fieldsets
     And I press "Unlock completion options"
     Then I should see "Completion options unlocked"
@@ -39,8 +39,8 @@ Feature: Edit completion settings of an activity
 
   @javascript
   Scenario: Even when completion is locked, the user can still set the date
-    Given I am on the p1 "Activity" page logged in as admin
-    And I am on the p1 "Activity editing" page
+    Given I am on the TestPage "page activity" page logged in as admin
+    And I am on the TestPage "page activity editing" page
     And I expand all fieldsets
     When I click on "id_completionexpected_enabled" "checkbox"
     And I set the field "id_completionexpected_year" to "2013"
