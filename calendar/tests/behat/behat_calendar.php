@@ -124,6 +124,39 @@ class behat_calendar extends behat_base {
     }
 
     /**
+     * Hover over a specific day in the mini-calendar.
+     *
+     * @Given /^I hover over day "(?P<dayofmonth>\d+)" of this month in the mini-calendar$/
+     * @param int $day The day of the current month
+     */
+    public function i_hover_over_day_of_this_month_in_full_calendar(int $day): void {
+        // The current month container.
+        $currentmonth = "div[contains(@class, 'calendarwrapper')]";
+
+        // Strings for the class cell match.
+        $cellclasses = "contains(concat(' ', normalize-space(@class), ' '), ' day ')";
+        $daycontains = "@data-day='{$day}'";
+        $daycell = "td[{$cellclasses}]";
+        $dayofmonth = "a[{$daycontains}]";
+
+        $xpath = '//' . $currentmonth . '/descendant::' . $daycell . '/descendant::' . $dayofmonth;
+        $this->execute("behat_general::wait_until_the_page_is_ready");
+        $this->execute("behat_general::i_hover", [$xpath, "xpath_element"]);
+    }
+
+    /**
+     * Hover over today in the mini-calendar.
+     *
+     * @Given /^I hover over today in the mini-calendar$/
+     */
+    public function i_hover_over_today_in_full_calendar(): void {
+        // For window's compatibility, using %d and not %e.
+        $todaysday = trim(strftime('%d'));
+        $todaysday = ltrim($todaysday, '0');
+        $this->i_hover_over_day_of_this_month_in_full_calendar($todaysday);
+    }
+
+    /**
      * Hover over today in the calendar.
      *
      * @Given /^I hover over today in the calendar$/
