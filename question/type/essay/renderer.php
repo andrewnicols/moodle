@@ -49,8 +49,11 @@ class qtype_essay_renderer extends qtype_renderer {
         }
 
         if (empty($options->readonly)) {
-            $answer = $responseoutput->response_area_input('answer', $qa,
+            $answer = html_writer::start_tag('fieldset');
+            $answer .= html_writer::tag('legend', get_string('answertext', 'qtype_essay'), ['class' => 'sr-only']);
+            $answer .= $responseoutput->response_area_input('answer', $qa,
                     $step, $question->responsefieldlines, $options->context);
+            $answer .= html_writer::end_tag('fieldset');
 
         } else {
             $answer = $responseoutput->response_area_read_only('answer', $qa,
@@ -73,8 +76,10 @@ class qtype_essay_renderer extends qtype_renderer {
         $files = '';
         if ($question->attachments) {
             if (empty($options->readonly)) {
-                $files = $this->files_input($qa, $question->attachments, $options);
-
+                $files .= html_writer::start_tag('fieldset');
+                $files .= html_writer::tag('legend', get_string('answerfiles', 'qtype_essay'), ['class' => 'sr-only']);
+                $files .= $this->files_input($qa, $question->attachments, $options);
+                $files .= html_writer::end_tag('fieldset');
             } else {
                 $files = $this->files_read_only($qa, $options);
             }
