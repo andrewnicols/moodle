@@ -162,7 +162,7 @@ class view {
         $this->cm = $cm;
 
         // Create the url of the new question page to forward to.
-        $this->returnurl = $pageurl->out_as_local_url(false);
+        $this->returnurl = $pageurl->out(false);
         $this->editquestionurl = new \moodle_url('/question/question.php',
                 ['returnurl' => $this->returnurl]);
         if ($this->cm !== null) {
