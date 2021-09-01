@@ -61,7 +61,7 @@ Feature: Test if the login form provides the correct feedback
   Scenario: Set OAuth providers
     Given I log in as "admin"
     And I navigate to "Plugins > Authentication > Manage authentication" in site administration
-    And I click on "//tr[contains(normalize-space(.), 'OAuth 2')]//td[contains(concat(' ', normalize-space(@class), ' '), ' c2 ')]//a" "xpath_element"
+    And I click on "Enable" "link" in the "OAuth 2" "table_row"
     And I navigate to "Server > OAuth 2 services" in site administration
     And I press "Google"
     And I set the field "Client ID" to "1234"
@@ -99,6 +99,5 @@ Feature: Test if the login form provides the correct feedback
     And I set the field "Username" to "admin"
     And I set the field "Password" to "wrongpassword"
     And I press "Log in"
-    And I press the tab key
     And I press the tab key
     Then the focused element is "Username" "field"

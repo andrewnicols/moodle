@@ -120,7 +120,9 @@
         <a href="#" id="loginerrormessage" class="sr-only">{{error}}</a>
         <div class="alert alert-danger" role="alert">{{error}}</div>
     {{/error}}
-    <a href="{{signupurl}}" class="sr-only">{{#str}} tocreatenewaccount {{/str}}</a>
+    {{#cansignup}}
+        <a href="{{signupurl}}" class="sr-only">{{#str}} tocreatenewaccount {{/str}}</a>
+    {{/cansignup}}
     <form class="login-form" action="{{loginurl}}" method="post" id="login">
         <input type="hidden" name="logintoken" value="{{logintoken}}">
         <div class="login-form-username form-group">
