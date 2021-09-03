@@ -1278,7 +1278,7 @@ EOF;
      * @return int Timeout in seconds
      */
     public static function get_timeout() : int {
-        return self::get_real_timeout(6);
+        return self::get_real_timeout(5);
     }
 
     /**
