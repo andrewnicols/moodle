@@ -35,6 +35,7 @@ use mod_forum\local\entities\post_read_receipt_collection as post_read_receipt_c
 use mod_forum\local\entities\sorter as sorter_entity;
 use stdClass;
 use context;
+use context_module;
 use cm_info;
 use user_picture;
 use moodle_url;
@@ -174,7 +175,6 @@ class entity {
             $record->picture,
             $record->firstname,
             $record->lastname,
-            fullname($record),
             $record->email,
             $record->deleted,
             $record->middlename,

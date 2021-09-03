@@ -1562,6 +1562,29 @@ class core_user {
     }
 
     /**
+     * Returns an HTML fragment containing the user's profile picture.
+     *
+     * @param stdClass $user                         A {@link $USER} object to get full name of.
+     * @param context  $context                      The context at which the user is being displayed
+     * @param array    $userpictureoptions           Any additional options to pass to the user_picture renderer.
+     * @return string
+     */
+    public static function profile_image_url(\stdClass $user, \context $context = null, $userpictureoptions = []) {
+        global $PAGE, $OUTPUT;
+
+        if ($context === null) {
+            // No context specified - use page context instead.
+            $context = $PAGE->context;
+        }
+
+        if ($context->disguise) {
+            return $context->disguise->profile_image_url($user, [], $userpictureoptions);
+        }
+
+        return $OUTPUT->user_picture($user, $userpictureoptions)->get_url();
+    }
+
+    /**
      * Prepare a user record for use in web services.
      *
      * @param stdClass $user                         A {@link $USER} object to prepare.

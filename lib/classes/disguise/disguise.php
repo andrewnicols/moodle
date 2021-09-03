@@ -24,7 +24,8 @@
 
 namespace core\disguise;
 
-defined('MOODLE_INTERNAL') || die();
+use moodle_url;
+use user_picture;
 
 /**
  * The disguise base class which all disguise types must extend.
@@ -478,10 +479,42 @@ abstract class disguise {
         global $OUTPUT;
         if ($this->should_use_disguise($options) && !$this->should_show_real_identity()) {
             // The disguise should be active, and the real identity is not being displayed.
-            return $this->disguise_user_picture($user, $options, $userpictureoptions);
+            $picture = $this->disguise_user_picture($user, $options, $userpictureoptions);
+
+            return $OUTPUT->render($picture);
         }
 
         return $OUTPUT->user_picture($user, $userpictureoptions);
+    }
+
+    /**
+     * The user picture for the user, taking into account the disguise configuration, and whether the real identity
+     * should also be displayed. If no picture should be displayed, an empty string value will be returned.
+     *
+     * Generally, this function should not need to be overridden.
+     *
+     * @param \stdClass $user                   The user being displayed.
+     * @param array     $options                The list of options for the user picture.
+     * @param bool      $options.forcedisguise  Force use of the disguise when it is optional.
+     * @param array     $userpictureoptions     Any additional options to pass to the user_picture renderer.
+     * @return string                           The HTML fragment to use
+     */
+    public function profile_image_url(\stdClass $user, $options = array(), $userpictureoptions = array()): ?moodle_url {
+        global $PAGE;
+        if ($this->should_use_disguise($options) && !$this->should_show_real_identity()) {
+            // The disguise should be active, and the real identity is not being displayed.
+            $image = $this->disguise_user_picture($user, $options, $userpictureoptions);
+            return $image->get_url($PAGE);
+        }
+
+        $userpicture = new \user_picture($user);
+        foreach ((array)$options as $key=>$value) {
+            if (property_exists($userpicture, $key)) {
+                $userpicture->$key = $value;
+            }
+        }
+
+        return $userpicture->get_url($PAGE);
     }
 
     /**
@@ -494,13 +527,21 @@ abstract class disguise {
      * @param array     $userpictureoptions     Any additional options to pass to the user_picture renderer.
      * @return string                           The HTML fragment to use
      */
-    protected function disguise_user_picture(\stdClass $user, $options, $userpictureoptions = array()) {
-        global $OUTPUT;
-
+    protected function disguise_user_picture(\stdClass $user, $options, $userpictureoptions = []) {
         $userpictureoptions['link'] = false;
         $userpictureoptions['visibletoscreenreaders'] = false;
         $userpictureoptions['alttext'] = false;
-        return $OUTPUT->user_picture(\core_user::get_disguised_user($user, $this->context, $options), $userpictureoptions);
+
+        $disguiseduser = \core_user::get_disguised_user($user, $this->context, $options);
+
+        $userpicture = new \user_picture($disguiseduser);
+        foreach ((array) $userpictureoptions as $key=>$value) {
+            if (property_exists($userpicture, $key)) {
+                $userpicture->$key = $value;
+            }
+        }
+
+        return $userpicture;
     }
 
     /**

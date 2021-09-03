@@ -24,9 +24,8 @@
 
 namespace mod_forum\local\data_mappers\legacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 use mod_forum\local\entities\author as author_entity;
+use mod_forum\local\entities\forum as forum_entity;
 use stdClass;
 
 /**
@@ -42,14 +41,14 @@ class author {
      * @param author_entity[] $authors The authors to convert.
      * @return stdClass[]
      */
-    public function to_legacy_objects(array $authors) : array {
-        return array_map(function(author_entity $author) {
+    public function to_legacy_objects(array $authors, forum_entity $forum) : array {
+        return array_map(function(author_entity $author) use ($forum) {
             return (object) [
                 'id' => $author->get_id(),
                 'picture' => $author->get_picture_item_id(),
-                'firstname' => $author->get_first_name(),
-                'lastname' => $author->get_last_name(),
-                'fullname' => $author->get_full_name(),
+                'firstname' => $author->get_first_name($forum),
+                'lastname' => $author->get_last_name($forum),
+                'fullname' => $author->get_full_name($forum),
                 'email' => $author->get_email(),
                 'deleted' => $author->is_deleted(),
                 'middlename' => $author->get_middle_name(),
@@ -67,7 +66,7 @@ class author {
      * @param author_entity $author The author to convert.
      * @return stdClass
      */
-    public function to_legacy_object(author_entity $author) : stdClass {
-        return $this->to_legacy_objects([$author])[0];
+    public function to_legacy_object(author_entity $author, forum_entity $forum) : stdClass {
+        return $this->to_legacy_objects([$author], $forum)[0];
     }
 }

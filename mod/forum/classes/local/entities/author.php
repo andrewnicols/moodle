@@ -24,7 +24,7 @@
 
 namespace mod_forum\local\entities;
 
-defined('MOODLE_INTERNAL') || die();
+use stdClass;
 
 /**
  * Author class.
@@ -41,8 +41,6 @@ class author {
     private $firstname;
     /** @var string $lastname Last name */
     private $lastname;
-    /** @var string $fullname Full name */
-    private $fullname;
     /** @var string $email Email */
     private $email;
     /** @var bool $deleted Deleted */
@@ -65,7 +63,6 @@ class author {
      * @param int $pictureitemid Picture item id
      * @param string $firstname First name
      * @param string $lastname Last name
-     * @param string $fullname Full name
      * @param string $email Email
      * @param string|null $middlename Middle name
      * @param string|null $firstnamephonetic Phonetic spelling of first name
@@ -78,7 +75,6 @@ class author {
         int $pictureitemid,
         string $firstname,
         string $lastname,
-        string $fullname,
         string $email,
         bool $deleted,
         string $middlename = null,
@@ -91,7 +87,6 @@ class author {
         $this->pictureitemid = $pictureitemid;
         $this->firstname = $firstname;
         $this->lastname = $lastname;
-        $this->fullname = $fullname;
         $this->email = $email;
         $this->deleted = $deleted;
         $this->middlename = $middlename;
@@ -142,8 +137,8 @@ class author {
      *
      * @return string
      */
-    public function get_full_name() : string {
-        return $this->fullname;
+    public function get_full_name(forum $forum) : string {
+        return \core_user::displayname($this->to_object(), $forum->get_context());
     }
 
     /**
@@ -207,5 +202,19 @@ class author {
      */
     public function get_image_alt() : ?string {
         return $this->imagealt;
+    }
+
+    protected function to_object(): stdClass {
+        return (object) [
+            'id' => $this->get_id(),
+            'firstname' => $this->get_first_name(),
+            'lastname' => $this->get_last_name(),
+            'email' => $this->get_email(),
+            'deleted' => $this->is_deleted(),
+            'middlename' => $this->get_middle_name(),
+            'firstnamephonetic' => $this->get_first_name_phonetic(),
+            'lastnamephonetic' => $this->get_last_name_phonetic(),
+            'alternatename' => $this->get_alternate_name(),
+        ];
     }
 }

@@ -169,6 +169,7 @@ class posts extends exporter {
      */
     protected static function define_related() {
         return [
+            'legacydatamapperfactory' => 'mod_forum\local\factories\legacy_data_mapper',
             'capabilitymanager' => 'mod_forum\local\managers\capability',
             'urlfactory' => 'mod_forum\local\factories\url',
             'forum' => 'mod_forum\local\entities\forum',

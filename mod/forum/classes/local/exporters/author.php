@@ -148,6 +148,8 @@ class author extends exporter {
         $urlfactory = $this->related['urlfactory'];
         $context = $this->related['context'];
         $forum = $this->related['forum'];
+        $legacydatamapperfactory = $this->related['legacydatamapperfactory'];
+        $authormapper = $legacydatamapperfactory->get_author_data_mapper();
 
         if ($this->canview) {
             if ($author->is_deleted()) {
@@ -157,8 +159,8 @@ class author extends exporter {
                     'isdeleted' => true,
                     'groups' => [],
                     'urls' => [
-                        'profile' => ($urlfactory->get_author_profile_url($author, $forum->get_course_id()))->out(false),
-                        'profileimage' => ($urlfactory->get_author_profile_image_url($author, $authorcontextid))->out(false)
+                        'profile' => ($urlfactory->get_author_profile_url($authormapper->to_legacy_object($author), $forum->get_course_id()))->out(false),
+                        'profileimage' => ($urlfactory->get_author_profile_image_url($author, $forum, $authorcontextid))->out(false)
                     ]
                 ];
             } else {
@@ -181,14 +183,17 @@ class author extends exporter {
                     ];
                 }, $this->authorgroups);
 
+                $profileurl = \core_user::profile_url($authormapper->to_legacy_object($author, $forum), $forum->get_context());
+
                 return [
                     'id' => $author->get_id(),
-                    'fullname' => $author->get_full_name(),
+                    'fullname' => $author->get_full_name($forum),
                     'isdeleted' => false,
                     'groups' => $groups,
                     'urls' => [
-                        'profile' => ($urlfactory->get_author_profile_url($author, $forum->get_course_id()))->out(false),
-                        'profileimage' => ($urlfactory->get_author_profile_image_url($author, $authorcontextid))->out(false)
+                        'profile' => $profileurl ?? $profileurl->out(false),
+                        // TODO
+                        'profileimage' => ($urlfactory->get_author_profile_image_url($author, $forum, $authorcontextid))->out(false)
                     ]
                 ];
             }
@@ -214,6 +219,7 @@ class author extends exporter {
      */
     protected static function define_related() {
         return [
+            'legacydatamapperfactory' => 'mod_forum\local\factories\legacy_data_mapper',
             'urlfactory' => 'mod_forum\local\factories\url',
             'context' => 'context',
             'forum' => 'mod_forum\local\entities\forum',

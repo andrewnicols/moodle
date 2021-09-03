@@ -251,6 +251,7 @@ class exporter {
             $tagsbypostid,
             $ratingbypostid,
             [
+                'legacydatamapperfactory' => $this->legacydatamapperfactory,
                 'capabilitymanager' => $this->managerfactory->get_capability_manager($forum),
                 'urlfactory' => $this->urlfactory,
                 'forum' => $forum,

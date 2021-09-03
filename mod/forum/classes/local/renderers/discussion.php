@@ -227,11 +227,11 @@ class discussion {
         }
 
         if (!empty($user->id)) {
-            $loggedinuser = $entityfactory->get_author_from_stdClass($user);
+            $loggedinuser = $entityfactory->get_author_from_stdclass($user);
             $exporteddiscussion['loggedinuser'] = [
                 'firstname' => $loggedinuser->get_first_name(),
-                'fullname' => $loggedinuser->get_full_name(),
-                'profileimageurl' => ($urlfactory->get_author_profile_image_url($loggedinuser, null))->out(false)
+                'fullname' => $loggedinuser->get_full_name($this->forum),
+                'profileimageurl' => ($urlfactory->get_author_profile_image_url($loggedinuser, $this->forum, null))->out(false)
             ];
         }
 

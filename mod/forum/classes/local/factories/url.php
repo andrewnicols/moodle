@@ -415,18 +415,21 @@ class url {
      */
     public function get_author_profile_image_url(
         author_entity $author,
+        forum_entity $forum,
         int $authorcontextid = null,
         int $size = 100
     ) : moodle_url {
-        global $PAGE;
+        $authormapper = $this->legacydatamapperfactory->get_author_data_mapper();
+        $url = \core_user::profile_image_url(
+            $authormapper->to_legacy_object($author, $forum),
+            $forum->get_context(),
+            [
+            ],[
+                'size' => $size,
+            ]
+        );
 
-        $datamapper = $this->legacydatamapperfactory->get_author_data_mapper();
-        $record = $datamapper->to_legacy_object($author);
-        $record->contextid = $authorcontextid;
-        $userpicture = new user_picture($record);
-        $userpicture->size = $size;
-
-        return $userpicture->get_url($PAGE);
+        return $url ?? $url;
     }
 
     /**

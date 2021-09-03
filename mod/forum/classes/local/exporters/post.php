@@ -503,6 +503,7 @@ class post extends exporter {
      */
     protected static function define_related() {
         return [
+            'legacydatamapperfactory' => 'mod_forum\local\factories\legacy_data_mapper',
             'capabilitymanager' => 'mod_forum\local\managers\capability',
             'readreceiptcollection' => 'mod_forum\local\entities\post_read_receipt_collection?',
             'urlfactory' => 'mod_forum\local\factories\url',
