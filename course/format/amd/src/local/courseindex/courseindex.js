@@ -25,6 +25,8 @@
 import {BaseComponent} from 'core/reactive';
 import {getCurrentCourseEditor} from 'core_courseformat/courseeditor';
 import jQuery from 'jquery';
+import TreeNav from 'core_courseformat/local/courseindex/keyboardnav';
+import * as Aria from 'core/aria';
 
 export default class Component extends BaseComponent {
 
@@ -41,6 +43,7 @@ export default class Component extends BaseComponent {
             CM: `[data-for='cm']`,
             TOGGLER: `[data-action="togglecourseindexsection"]`,
             COLLAPSE: `[data-toggle="collapse"]`,
+            DRAWER: `.drawer`,
         };
         // Default classes to toggle on refresh.
         this.classes = {
@@ -48,6 +51,7 @@ export default class Component extends BaseComponent {
             CMHIDDEN: 'dimmed',
             SECTIONCURRENT: 'current',
             COLLAPSED: `collapsed`,
+            SHOW: `show`,
         };
         // Arrays to keep cms and sections elements.
         this.sections = {};
@@ -85,6 +89,18 @@ export default class Component extends BaseComponent {
         cms.forEach((cm) => {
             this.cms[cm.dataset.id] = cm;
         });
+
+        // Configure Aria Tree.
+        this.treeNav = new TreeNav(this);
+
+        // To prevent accessibility issues, tabindex should be only enabled when the drawer is visible.
+        const drawer = this.element.closest(this.selectors.DRAWER);
+        if (drawer && !drawer.classList.contains(this.classes.SHOW)) {
+            // The "core/aria" module uses data-ariaHiddenTabIndex to restore the tabindex
+            // when unhide the element.
+            const activeItem = this.treeNav.getActiveItem();
+            Aria.storeUnhideTabIndex(activeItem, 0);
+        }
     }
 
     getWatchers() {
