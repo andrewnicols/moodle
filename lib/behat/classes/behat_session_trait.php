@@ -1112,7 +1112,16 @@ EOF;
                 break;
 
             case CONTEXT_COURSE:
-                $instanceid = $DB->get_field('course', 'id', array('shortname' => $contextref));
+                $instanceid = $DB->get_field_select(
+                    'course',
+                    'id',
+                    'shortname = :shortname OR fullname = :fullname OR idnumber = :idnumber',
+                    [
+                        'shortname' => $contextref,
+                        'fullname' => $contextref,
+                        'idnumber' => $contextref,
+                    ]
+                );
                 break;
 
             case CONTEXT_MODULE:
