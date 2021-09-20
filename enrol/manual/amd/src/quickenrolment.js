@@ -114,26 +114,27 @@ const showModal = (dynamicTable, contextId) => {
             modal.destroy();
         });
 
-        return modal;
-    })
-    .then(modal => {
         modal.show();
 
         return modal;
     })
     .then(modal => {
-        modal.setSaveButtonText(Str.get_string('enrolusers', 'enrol_manual'));
-
+        const buttonTextPromise = new Pending('enrol_manual/quickenrolment:showModal.postBodyConfiguration');
         modal.getBodyPromise().then(body => {
             if (body.get(0).querySelector(Selectors.cohortSelector)) {
-                modal.setSaveButtonText(Str.get_string('enroluserscohorts', 'enrol_manual'));
+                return 'enroluserscohorts';
             }
 
-            return body;
+            return 'enrolusers';
+        })
+        .then(buttonText => modal.setSaveButtonText(Str.get_string(buttonText, 'enrol_manual')))
+        .then(() => {
+            buttonTextPromise.resolve();
+            pendingPromise.resolve();
+
+            return;
         })
         .catch();
-
-        pendingPromise.resolve();
 
         return modal;
     })
