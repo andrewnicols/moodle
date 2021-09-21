@@ -5,7 +5,8 @@ Feature: Mapping courses in a feedback
   I need to be able to map site feedback to courses
 
   Background:
-    Given the following "users" exist:
+    Given I change window size to "large"
+    And the following "users" exist:
       | username | firstname | lastname |
       | user1    | Username  | 1        |
       | user2    | Username  | 2        |

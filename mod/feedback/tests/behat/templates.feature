@@ -5,7 +5,8 @@ Feature: Saving, using and deleting feedback templates
   I need to be able to create feedback templates
 
   Background:
-    Given the following "users" exist:
+    Given I change window size to "large"
+    And the following "users" exist:
       | username | firstname | lastname |
       | teacher  | Teacher   | 1        |
       | manager  | Manager   | 1        |

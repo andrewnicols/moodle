@@ -5,7 +5,8 @@ Feature: Testing multichoice questions in feedback
   I need to be able to create different types of multichoice questions
 
   Background:
-    Given the following "users" exist:
+    Given I change window size to "large"
+    And the following "users" exist:
       | username | firstname | lastname |
       | teacher1 | Teacher   | 1        |
       | student1 | Student   | 1        |

@@ -5,7 +5,8 @@ Feature: Exporting and importing feedbacks
   I need to be able to export and import feedbacks
 
   Background:
-    Given the following "users" exist:
+    Given I change window size to "large"
+    And the following "users" exist:
       | username | firstname | lastname |
       | teacher | Teacher   | 1        |
     And the following "courses" exist:
