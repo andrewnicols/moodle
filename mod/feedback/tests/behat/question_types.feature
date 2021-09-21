@@ -6,7 +6,8 @@ Feature: Test creating different types of feedback questions for anonymous feedb
 
   @javascript
   Scenario: Create different types of questions in anonymous feedback with javascript enabled
-    Given the following "users" exist:
+    Given I change window size to "large"
+    And the following "users" exist:
       | username | firstname | lastname |
       | teacher1 | Teacher   | 1        |
       | student1 | Student   | 1        |
