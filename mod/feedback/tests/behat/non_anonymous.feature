@@ -5,7 +5,8 @@ Feature: Non anonymous feedback
   I need to be able to create and collect feedbacks
 
   Background:
-    Given the following "users" exist:
+    Given I change window size to "large"
+    And the following "users" exist:
       | username | firstname | lastname |
       | user1    | Username  | 1        |
       | user2    | Username  | 2        |

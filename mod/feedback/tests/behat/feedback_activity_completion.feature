@@ -5,7 +5,8 @@ Feature: View activity completion in the feedback activity
   I need to be able to view my feedback completion progress
 
   Background:
-    Given the following "users" exist:
+    Given I change window size to "large"
+    And the following "users" exist:
       | username | firstname | lastname | email                |
       | student1 | Vinnie    | Student1 | student1@example.com |
       | teacher1 | Darrell   | Teacher1 | teacher1@example.com |

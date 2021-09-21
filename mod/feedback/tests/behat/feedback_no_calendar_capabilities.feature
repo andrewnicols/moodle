@@ -5,7 +5,8 @@ Feature: Feedback with no calendar capabilites
   I need to be able to create feedbacks even when I cannot edit calendar events
 
   Background:
-    Given the following "courses" exist:
+    Given I change window size to "large"
+    And the following "courses" exist:
       | fullname | shortname | category | groupmode |
       | Course 1 | C1 | 0 | 1 |
     And the following "users" exist:
