@@ -208,6 +208,7 @@ class behat_mod_feedback extends behat_base {
                     $feedbackxpath,
                     'xpath_element'
                 ));
+                $this->execute('behat_general::assert_page_contains_text', [get_string('hidechartdata')]);
             }
         }
     }
