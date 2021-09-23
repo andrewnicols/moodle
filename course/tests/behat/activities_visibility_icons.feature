@@ -17,12 +17,13 @@ Feature: Toggle activities visibility from the course page
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
-    And I log in as "teacher1"
+    And the following "activity" exists:
+      | course   | C1                     |
+      | activity | forum                  |
+      | name     | Test forum name        |
+      | intro    | Test forum description |
+    And I am on the "Course 1" course page logged in as teacher1
     And I am on "Course 1" course homepage with editing mode on
-    And I add a "Forum" to section "1" and I fill the form with:
-      | Forum name | Test forum name |
-      | Description | Test forum description |
-      | Availability | Show on course page |
     When I open "Test forum name" actions menu
     Then "Test forum name" actions menu should not have "Show" item
     And "Test forum name" actions menu should not have "Make available" item
@@ -60,7 +61,6 @@ Feature: Toggle activities visibility from the course page
     And I log in as "student1"
     And I am on "Course 1" course homepage
     And I should not see "Test forum name"
-    And I log out
 
   @javascript
   Scenario: Activities can be made available and unavailable inside a hidden section
@@ -75,13 +75,15 @@ Feature: Toggle activities visibility from the course page
       | user | course | role |
       | teacher1 | C1 | editingteacher |
       | student1 | C1 | student |
-    And I log in as "teacher1"
+    And the following "activity" exists:
+      | course   | C1                     |
+      | section  | 2                      |
+      | activity | forum                  |
+      | name     | Test forum name        |
+      | intro    | Test forum description |
+    And I am on the "Course 1" course page logged in as teacher1
     And I am on "Course 1" course homepage with editing mode on
     And I add the "Recent activity" block
-    And I add a "Forum" to section "2" and I fill the form with:
-      | Forum name | Test forum name |
-      | Description | Test forum description |
-      | Availability | Show on course page |
     When I hide section "2"
     Then "Test forum name" activity should be hidden
     And I open "Test forum name" actions menu
@@ -116,7 +118,6 @@ Feature: Toggle activities visibility from the course page
     And I click on "Test forum name" "link" in the "Recent activity" "block"
     And I should see "Test forum name"
     And I should see "(There are no discussion topics yet in this forum)"
-    And I log out
 
   @javascript
   Scenario: Activities can be made available but not visible on a course page
@@ -133,13 +134,14 @@ Feature: Toggle activities visibility from the course page
       | student1 | C1 | student |
     And the following config values are set as admin:
       | allowstealth | 1 |
-    And I log in as "teacher1"
+    And the following "activity" exists:
+      | course   | C1                          |
+      | activity | assign                      |
+      | name     | Test assignment name        |
+      | intro    | Test assignment description |
+    And I am on the "Course 1" course page logged in as teacher1
     And I am on "Course 1" course homepage with editing mode on
     And I add the "Recent activity" block
-    And I add a "Assignment" to section "2" and I fill the form with:
-      | Assignment name | Test assignment name |
-      | Description | Test assignment description |
-      | Availability | Show on course page |
     When I open "Test assignment name" actions menu
     Then "Test assignment name" actions menu should not have "Show" item
     And "Test assignment name" actions menu should have "Hide" item
@@ -172,4 +174,3 @@ Feature: Toggle activities visibility from the course page
     And I click on "Test assignment name" "link" in the "Recent activity" "block"
     And I should see "Test assignment name"
     And I should see "Submission status"
-    And I log out
