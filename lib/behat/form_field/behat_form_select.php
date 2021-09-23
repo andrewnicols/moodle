@@ -37,6 +37,9 @@ require_once(__DIR__  . '/behat_form_field.php');
  */
 class behat_form_select extends behat_form_field {
 
+    protected $node;
+    protected $document;
+
     /**
      * Sets the value(s) of a select element.
      *
@@ -153,6 +156,12 @@ class behat_form_select extends behat_form_field {
      * @return string
      */
     protected function get_selected_options($returntexts = true) {
+        if ($this->node === null) {
+            [
+                'document' => $this->document,
+                'node' => $this->node,
+            ] = $this->get_dom_elements_for_node($this->field);
+        }
 
         $method = 'getHtml';
         if ($returntexts === false) {
@@ -160,7 +169,7 @@ class behat_form_select extends behat_form_field {
         }
 
         // Is the select multiple?
-        $multiple = $this->field->hasAttribute('multiple');
+        $multiple = $this->node->hasAttribute('multiple');
 
         $selectedoptions = array(); // To accumulate found selected options.
 
@@ -172,15 +181,21 @@ class behat_form_select extends behat_form_field {
         }
 
         // Get all the options in the select and extract their value/text pairs.
-        $alloptions = $this->field->findAll('xpath', '//option');
+        $xpath = new \DOMXPath($this->document);
+        $alloptions = $xpath->query('.//option', $this->node);
+
         foreach ($alloptions as $option) {
             // Is it selected?
-            if (in_array($option->getValue(), $values)) {
+            if (in_array($option->getAttribute('value'), $values)) {
                 if ($multiple) {
                     // If the select is multiple, text commas must be encoded.
-                    $selectedoptions[] = trim(str_replace(',', '\,', $option->{$method}()));
+                    if ($returntexts) {
+                        $selectedoptions[] = trim(str_replace(',', '\,', $option->textContent));
+                    } else {
+                        $selectedoptions[] = trim(str_replace(',', '\,', $option->getAttribute('value')));
+                    }
                 } else {
-                    $selectedoptions[] = trim($option->{$method}());
+                    $selectedoptions[] = trim($option->textContent);
                 }
             }
         }

@@ -310,4 +310,31 @@ class behat_form_field implements behat_session_interface {
 
         return $this->fieldlocator;
     }
+
+    /**
+     * Get the DOMDocument and DOMElement for a NodeElement.
+     *
+     * @param NodeElement $fieldnode
+     * @return array
+     */
+    protected function get_dom_elements_for_node(NodeElement $fieldnode): array {
+        $session = $this->getSession();
+
+        $html = $session->getPage()->getContent();
+
+        $document = new \DOMDocument();
+
+        $previousinternalerrors = libxml_use_internal_errors(true);
+        $document->loadHTML($html, LIBXML_HTML_NODEFDTD | LIBXML_BIGLINES);
+        libxml_clear_errors();
+        libxml_use_internal_errors($previousinternalerrors);
+
+        $xpath = new \DOMXPath($document);
+        $node = $xpath->query($fieldnode->getXpath())->item(0);
+
+        return [
+            'document' => $document,
+            'node' => $node,
+        ];
+    }
 }
