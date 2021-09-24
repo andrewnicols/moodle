@@ -167,44 +167,25 @@ class behat_form_select extends behat_form_field {
             ] = $this->get_dom_elements_for_node($this->field);
         }
 
-        print_object("Return text: " . var_export($returntexts, true));
-
-        $method = 'getHtml';
-        if ($returntexts === false) {
-            $method = 'getValue';
-        }
-
         // Is the select multiple?
         $multiple = $this->node->hasAttribute('multiple');
-
-        $selectedoptions = array(); // To accumulate found selected options.
-
-        // Driver returns the values as an array or as a string depending
-        // on whether multiple options are selected or not.
-        $values = $this->field->getValue();
-        if (!is_array($values)) {
-            $values = array($values);
-        }
-        print_object("Values:");
-        print_object($values);
 
         // Get all the options in the select and extract their value/text pairs.
         $xpath = new \DOMXPath($this->document);
         $alloptions = $xpath->query('.//option', $this->node);
 
+        $selectedoptions = [];
         foreach ($alloptions as $option) {
             // Is it selected?
-            print_object("In array: " . var_export(in_array($option->getAttribute('value'), $values)));
-            if (in_array($option->getAttribute('value'), $values)) {
-                if ($multiple) {
-                    // If the select is multiple, text commas must be encoded.
-                    if ($returntexts) {
-                        $selectedoptions[] = trim(str_replace(',', '\,', $option->textContent));
-                    } else {
-                        $selectedoptions[] = trim(str_replace(',', '\,', $option->getAttribute('value')));
-                    }
+            if ($option->hasAttribute('selected')) {
+                if ($returntexts) {
+                    $selectedoptions[] = trim(str_replace(',', '\,', $option->textContent));
                 } else {
-                    $selectedoptions[] = trim($option->textContent);
+                    $selectedoptions[] = trim(str_replace(',', '\,', $option->getAttribute('value')));
+                }
+
+                if (!$multiple) {
+                    break;
                 }
             }
         }
@@ -222,6 +203,7 @@ class behat_form_select extends behat_form_field {
      * @return string
      */
     protected function get_selected_options(bool $returntexts = true) {
+        return $this->get_selected_options_from_dom($returntexts);
         if (get_class($this->getSession()->getDriver()) === 'Behat\Mink\Driver\GoutteDriver') {
             return $this->get_selected_options_from_webdriver($returntexts);
         } else {
