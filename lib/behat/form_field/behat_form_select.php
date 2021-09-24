@@ -97,7 +97,7 @@ class behat_form_select extends behat_form_field {
             // We are dealing with a multi-select.
 
             // Unescape + trim all options and flip it to have the expected values as keys.
-            $expectedvalues = preg_split('/(?<!\\\),/', $value);
+            $expectedvalues = preg_split('/(?<!\\\),/', $expectedvalue);
             $expectedvalues = preg_replace('/\\\,/', ',', $expectedvalues);
 
             // Normalise all values in the same way.
