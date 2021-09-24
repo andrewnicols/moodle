@@ -37,9 +37,6 @@ require_once(__DIR__  . '/behat_form_field.php');
  */
 class behat_form_select extends behat_form_field {
 
-    protected $node;
-    protected $document;
-
     /**
      * Sets the value(s) of a select element.
      *
@@ -51,7 +48,6 @@ class behat_form_select extends behat_form_field {
      * @return void
      */
     public function set_value($value) {
-
         // Is the select multiple?
         $multiple = $this->field->hasAttribute('multiple');
 
@@ -77,71 +73,61 @@ class behat_form_select extends behat_form_field {
      * @return string Comma separated if multiple options are selected. Commas in option texts escaped with backslash.
      */
     public function get_value() {
-        print_object("Getting value");
-        return $this->get_selected_options();
+        return implode(', ', array_values($this->get_selected_options()));
     }
 
     /**
      * Returns whether the provided argument matches the current value.
      *
-     * @param mixed $expectedvalue
+     * @param string $expectedvalue
      * @return bool
      */
-    public function matches($expectedvalue) {
-
+    public function matches($expectedvalue): bool {
         $multiple = $this->field->hasAttribute('multiple');
 
         // Same implementation as the parent if it is a single select.
+        $selectedoptions = $this->get_selected_options();
+
         if (!$multiple) {
-            $cleanexpectedvalue = trim($expectedvalue);
-            $selectedtext = trim($this->get_selected_options());
-            $selectedvalue = trim($this->get_selected_options(false));
-            print_object("Expected: " . var_export($cleanexpectedvalue, true));
-            print_object("Text: " . var_export($selectedtext, true));
-            print_object("Value: " . var_export($selectedvalue, true));
-            if ($cleanexpectedvalue != $selectedvalue && $cleanexpectedvalue != $selectedtext) {
-                return false;
-            }
+            $expectedvalue = trim($expectedvalue);
+
+            $selectedtexts = trim(implode(', ', array_values($selectedoptions)));
+            $selectedvalues = trim(implode(', ', array_keys($selectedoptions)));
+        } else {
+            // We are dealing with a multi-select.
+
+            // Unescape + trim all options and flip it to have the expected values as keys.
+            $expectedvalues = preg_split('/(?<!\\\),/', $value);
+            $expectedvalues = preg_replace('/\\\,/', ',', $expectedvalues);
+
+            // Normalise all values in the same way.
+            $expectedvalue = $this->get_unescaped_options($expectedvalues);
+            $selectedtexts = $this->get_unescaped_options($selectedoptions);
+            $selectedvalues = $this->get_unescaped_options($selectedoptions);
+        }
+
+        if ($expectedvalue === $selectedvalues) {
             return true;
         }
 
-        // We are dealing with a multi-select.
-
-        // Unescape + trim all options and flip it to have the expected values as keys.
-        $expectedoptions = $this->get_unescaped_options($expectedvalue);
-
-        // Get currently selected option's texts.
-        $texts = $this->get_selected_options(true);
-        $selectedoptiontexts = $this->get_unescaped_options($texts);
-
-        // Get currently selected option's values.
-        $values = $this->get_selected_options(false);
-        $selectedoptionvalues = $this->get_unescaped_options($values);
-
-        // We check against string-ordered lists of options.
-        if ($expectedoptions !== $selectedoptiontexts &&
-                $expectedoptions !== $selectedoptionvalues) {
-            return false;
+        if ($expectedvalue === $selectedtexts) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
      * Cleans the list of options and returns it as a string separating options with |||.
      *
-     * @param string $value The string containing the escaped options.
+     * @param array $values
      * @return string The options
      */
-    protected function get_unescaped_options($value) {
+    protected function get_unescaped_options(array $values) {
+        $optionsarray = array_merge([], $values);
 
-        // Can be multiple comma separated, with valuable commas escaped with backslash.
-        $optionsarray = array_map(
-            'trim',
-            preg_replace('/\\\,/', ',',
-                preg_split('/(?<!\\\),/', $value)
-           )
-        );
+        // Trim all values to normalise.
+        $optionsarray = array_map('trim', $values);
 
         // Sort by value (keeping the keys is irrelevant).
         core_collator::asort($optionsarray, SORT_STRING);
@@ -153,79 +139,12 @@ class behat_form_select extends behat_form_field {
     /**
      * Returns the field selected values.
      *
-     * Externalized from the common behat_form_field API method get_value() as
-     * matches() needs to check against both values and texts.
+     * Externalized from the common behat_form_field API method get_value() as matches() needs to check against both
+     * values and texts.
      *
-     * @param bool $returntexts Returns the options texts or the options values.
      * @return string
      */
-    protected function get_selected_options_from_dom($returntexts = true) {
-        if ($this->node === null) {
-            [
-                'document' => $this->document,
-                'node' => $this->node,
-            ] = $this->get_dom_elements_for_node($this->field);
-        }
-
-        // Is the select multiple?
-        $multiple = $this->node->hasAttribute('multiple');
-
-        // Get all the options in the select and extract their value/text pairs.
-        $xpath = new \DOMXPath($this->document);
-        $alloptions = $xpath->query('.//option', $this->node);
-
-        $selectedoptions = [];
-        foreach ($alloptions as $option) {
-            // Is it selected?
-            if ($option->hasAttribute('selected')) {
-                if ($returntexts) {
-                    $selectedoptions[] = trim(str_replace(',', '\,', $option->textContent));
-                } else {
-                    $selectedoptions[] = trim(str_replace(',', '\,', $option->getAttribute('value')));
-                }
-
-                if (!$multiple) {
-                    break;
-                }
-            }
-        }
-
-        return implode(', ', $selectedoptions);
-    }
-
-    /**
-     * Returns the field selected values.
-     *
-     * Externalized from the common behat_form_field API method get_value() as
-     * matches() needs to check against both values and texts.
-     *
-     * @param bool $returntexts Returns the options texts or the options values.
-     * @return string
-     */
-    protected function get_selected_options(bool $returntexts = true) {
-        return $this->get_selected_options_from_dom($returntexts);
-        if (get_class($this->getSession()->getDriver()) === 'Behat\Mink\Driver\GoutteDriver') {
-            return $this->get_selected_options_from_webdriver($returntexts);
-        } else {
-            return $this->get_selected_options_from_dom($returntexts);
-        }
-    }
-
-    /**
-     * Returns the field selected values.
-     *
-     * Externalized from the common behat_form_field API method get_value() as
-     * matches() needs to check against both values and texts.
-     *
-     * @param bool $returntexts Returns the options texts or the options values.
-     * @return string
-     */
-    protected function get_selected_options_from_webdriver(bool $returntexts = true) {
-        $method = 'getHtml';
-        if ($returntexts === false) {
-            $method = 'getValue';
-        }
-
+    protected function get_selected_options() {
         // Is the select multiple?
         $multiple = $this->field->hasAttribute('multiple');
 
@@ -234,25 +153,25 @@ class behat_form_select extends behat_form_field {
         // Driver returns the values as an array or as a string depending
         // on whether multiple options are selected or not.
         $values = $this->field->getValue();
+
         if (!is_array($values)) {
             $values = array($values);
         }
 
-        // Get all the options in the select and extract their value/text pairs.
-        $alloptions = $this->field->findAll('xpath', '//option');
-        foreach ($alloptions as $option) {
-            // Is it selected?
-            if (in_array($option->getValue(), $values)) {
-                if ($multiple) {
-                    // If the select is multiple, text commas must be encoded.
-                    $selectedoptions[] = trim(str_replace(',', '\,', $option->{$method}()));
-                } else {
-                    $selectedoptions[] = trim($option->{$method}());
-                }
+        $selected = [];
+        foreach ($values as $value) {
+            $option = $this->field->find('xpath', "//option[@value='{$value}']", false, $this->field, 0);
+            $textvalue = trim($option->getHtml());
+
+            if ($multiple) {
+                // If the select is multiple, text commas must be encoded.
+                $textvalue = trim(str_replace(',', '\,', $textvalue));
             }
+
+            $selected[$value] = $textvalue;
         }
 
-        return implode(', ', $selectedoptions);
+        return $selected;
     }
 
     /**
