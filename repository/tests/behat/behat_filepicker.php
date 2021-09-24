@@ -51,14 +51,13 @@ class behat_filepicker extends behat_base {
      * @param string $filemanagerelement
      */
     public function i_create_folder_in_filemanager($foldername, $filemanagerelement) {
-
         $fieldnode = $this->get_filepicker_node($filemanagerelement);
 
         // Looking for the create folder button inside the specified filemanager.
         $exception = new ExpectationException('No folders can be created in "'.$filemanagerelement.'" filemanager',
                 $this->getSession());
         $newfolder = $this->find('css', 'div.fp-btn-mkdir a', $exception, $fieldnode);
-        $newfolder->click();
+        $this->execute('behat_general::i_click_on', [$newfolder, 'NodeElement']);
 
         // Setting the folder name in the modal window.
         $exception = new ExpectationException('The dialog to enter the folder name does not appear', $this->getSession());
@@ -68,7 +67,7 @@ class behat_filepicker extends behat_base {
         $exception = new ExpectationException('The button for the create folder dialog can not be located', $this->getSession());
         $dialognode = $this->find('css', '.moodle-dialogue-focused');
         $buttonnode = $this->find('css', '.fp-dlg-butcreate', $exception, $dialognode);
-        $buttonnode->click();
+        $this->execute('behat_general::i_click_on', [$buttonnode, 'NodeElement']);
     }
 
     /**

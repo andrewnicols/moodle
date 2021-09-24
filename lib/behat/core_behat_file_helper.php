@@ -58,23 +58,22 @@ trait core_behat_file_helper {
      */
 
     protected function get_filepicker_node($filepickerelement) {
-
         // More info about the problem (in case there is a problem).
         $exception = new ExpectationException('"' . $filepickerelement . '" filepicker can not be found', $this->getSession());
 
         // If no file picker label is mentioned take the first file picker from the page.
         if (empty($filepickerelement)) {
             $filepickercontainer = $this->find(
-                    'xpath',
-                    "//*[@data-fieldtype=\"filemanager\"]",
-                    $exception
+                'xpath',
+                "//*[@data-fieldtype=\"filemanager\"]",
+                $exception
             );
         } else {
             // Gets the ffilemanager node specified by the locator which contains the filepicker container.
             $filepickerelement = behat_context_helper::escape($filepickerelement);
             $filepickercontainer = $this->find(
-                    'xpath',
-                    "//input[./@id = substring-before(//p[normalize-space(.)=$filepickerelement]/@id, '_label')]" .
+                'xpath',
+                "//input[./@id = substring-before(//p[normalize-space(.)=$filepickerelement]/@id, '_label')]" .
                     "//ancestor::*[@data-fieldtype = 'filemanager' or @data-fieldtype = 'filepicker']",
                     $exception
             );
@@ -95,13 +94,11 @@ trait core_behat_file_helper {
      * @return void
      */
     protected function perform_on_element($action, ExpectationException $exception) {
-
         // Finds the button inside the DOM, is a modal window, so should be unique.
         $classname = 'fp-file-' . $action;
         $button = $this->find('css', '.moodle-dialogue-focused button.' . $classname, $exception);
 
-        $this->ensure_node_is_visible($button);
-        $button->click();
+        $this->execute('behat_general::i_click_on', [$button, 'NodeElement']);
     }
 
     /**
@@ -116,7 +113,6 @@ trait core_behat_file_helper {
      * @return void
      */
     protected function open_element_contextual_menu($name, $filemanagerelement = false) {
-
         // If a filemanager is specified we restrict the search to the descendants of this particular filemanager form element.
         $containernode = false;
         $exceptionmsg = '"'.$name.'" element can not be found';
@@ -146,11 +142,11 @@ trait core_behat_file_helper {
                     "[normalize-space(.)=$name]" .
                     "//descendant::a[contains(concat(' ', normalize-space(@class), ' '), ' fp-contextmenu ')]",
                 $exception,
-                $containernode
+                $containernode,
+                0
             );
 
         } catch (ExpectationException $e) {
-
             // Here the contextual menu is hidden, we click on the thumbnail.
             $node = $this->find(
                 'xpath',
@@ -159,13 +155,13 @@ trait core_behat_file_helper {
                 "[normalize-space(.)=$name]" .
                 "//descendant::div[contains(concat(' ', normalize-space(@class), ' '), ' fp-filename-field ')]",
                 false,
-                $containernode
+                $containernode,
+                0
             );
         }
 
         // Click opens the contextual menu when clicking on files.
-        $this->ensure_node_is_visible($node);
-        $node->click();
+        $this->execute('behat_general::i_click_on', [$node, 'NodeElement']);
     }
 
     /**
@@ -210,7 +206,6 @@ trait core_behat_file_helper {
         );
 
         // Selecting the repo.
-        $this->ensure_node_is_visible($repositorylink);
         if (!$repositorylink->getParent()->getParent()->hasClass('active')) {
             // If the repository link is active, then the repository is already loaded.
             // Clicking it while it's active causes issues, so only click it when it isn't (see MDL-51014).
@@ -228,7 +223,6 @@ trait core_behat_file_helper {
      * @return void
      */
     protected function wait_until_return_to_form() {
-
         $exception = new ExpectationException('The file manager is taking too much time to finish the current action', $this->getSession());
 
          $this->find(
@@ -249,7 +243,6 @@ trait core_behat_file_helper {
      * @return void
      */
     protected function wait_until_contents_are_updated($filepickernode) {
-
         $exception = new ExpectationException(
             'The file manager contents are requiring too much time to be updated',
             $this->getSession()
