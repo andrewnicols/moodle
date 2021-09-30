@@ -655,7 +655,7 @@ class behat_course extends behat_base {
             try {
                 $xpath = "/descendant-or-self::a[contains(concat(' ', normalize-space(@class), ' '), ' dimmed ')] | ".
                          "/descendant-or-self::div[contains(concat(' ', normalize-space(@class), ' '), ' dimmed_text ')]";
-                $this->find('xpath', $xpath, false, $activitynode);
+                $this->find('xpath', $xpath, false, $activitynode, 0);
                 throw new ExpectationException('"' . $activityname . '" is hidden', $this->getSession());
             } catch (ElementNotFoundException $e) {
                 // All ok.
@@ -690,7 +690,7 @@ class behat_course extends behat_base {
             try {
                 $xpath = "/descendant-or-self::a[contains(concat(' ', normalize-space(@class), ' '), ' dimmed ')] | " .
                     "/descendant-or-self::div[contains(concat(' ', normalize-space(@class), ' '), ' dimmed_text ')]";
-                $this->find('xpath', $xpath, false, $activitynode);
+                $this->find('xpath', $xpath, false, $activitynode, 0);
                 throw new ExpectationException('"' . $activityname . '" is hidden', $this->getSession());
             } catch (ElementNotFoundException $e) {
                 // All ok.
@@ -707,7 +707,7 @@ class behat_course extends behat_base {
                 $nohideexception = new ExpectationException('"' . $activityname . '" has neither "' . get_string('hide') .
                     '" nor "' . get_string('makeunavailable') . '" icons', $this->getSession());
                 try {
-                    $this->find('named_partial', array('link', get_string('hide')), false, $activitynode);
+                    $this->find('named_partial', array('link', get_string('hide')), false, $activitynode, 0);
                 } catch (ElementNotFoundException $e) {
                     $this->find('named_partial', array('link', get_string('makeunavailable')), $nohideexception, $activitynode);
                 }
@@ -751,9 +751,9 @@ class behat_course extends behat_base {
                 $noshowexception = new ExpectationException('"' . $activityname . '" has neither "' . get_string('show') .
                     '" nor "' . get_string('makeavailable') . '" icons', $this->getSession());
                 try {
-                    $this->find('named_partial', array('link', get_string('show')), false, $activitynode);
+                    $this->find('named_partial', array('link', get_string('show')), false, $activitynode, 0);
                 } catch (ElementNotFoundException $e) {
-                    $this->find('named_partial', array('link', get_string('makeavailable')), $noshowexception, $activitynode);
+                    $this->find('named_partial', array('link', get_string('makeavailable')), $noshowexception, $activitynode, 0);
                 }
             }
 
@@ -948,7 +948,7 @@ class behat_course extends behat_base {
 
         $notfoundexception = new ExpectationException('"' . $activityname . '" doesn\'t have a "' .
             $menuitem . '" item', $this->getSession());
-        $this->find('named_partial', array('link', $menuitem), $notfoundexception, $activitynode);
+        $this->find('named_partial', array('link', $menuitem), $notfoundexception, $activitynode, 0);
     }
 
     /**
@@ -963,7 +963,7 @@ class behat_course extends behat_base {
         $activitynode = $this->get_activity_node($activityname);
 
         try {
-            $this->find('named_partial', array('link', $menuitem), false, $activitynode);
+            $this->find('named_partial', array('link', $menuitem), false, $activitynode, 0);
             throw new ExpectationException('"' . $activityname . '" has a "' . $menuitem .
                 '" item when it should not', $this->getSession());
         } catch (ElementNotFoundException $e) {
