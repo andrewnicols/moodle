@@ -15,9 +15,7 @@ Feature: Manage external services tokens
 
   @javascript
   Scenario: Add a token to user identified by name and then delete that token
-    Given I log in as "admin"
-    And I am on site homepage
-    And I navigate to "Server > Web services > Manage tokens" in site administration
+    Given I am on the "core_webservice > manage tokens" page logged in as admin
     And I press "Create token"
     And I set the field "User" to "Firstname1 Lastname1"
     And I set the field "Service" to "Moodle mobile web service"
@@ -30,7 +28,7 @@ Feature: Manage external services tokens
     And I press "Delete"
     And "Firstname1 Lastname1" "table_row" should not exist
 
-  @javascript @skip_chrome_zerosize
+  @javascript
   Scenario: Tokens can be filtered by user and by service
     Given the following "core_webservice > Service" exists:
       | name      | Site information              |
@@ -44,8 +42,7 @@ Feature: Manage external services tokens
       | user2     | siteinfo                      |
       | user3     | moodle_mobile_app             |
       | user4     | siteinfo                      |
-    When I log in as "admin"
-    And I navigate to "Server > Web services > Manage tokens" in site administration
+    And I am on the "core_webservice > manage tokens" page logged in as admin
 
     # All created tokens are shown by default.
     And "Firstname1 Lastname1" "table_row" should not exist
