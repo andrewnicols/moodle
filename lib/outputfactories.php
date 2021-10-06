@@ -191,6 +191,7 @@ abstract class renderer_factory_base implements renderer_factory {
             $component = $plugin.'_'.$type;
         }
 
+        $files = [];
         if ($component !== 'core') {
             // Renderers are stored in renderer.php files.
             if (!$compdirectory = core_component::get_component_directory($component)) {
@@ -198,7 +199,7 @@ abstract class renderer_factory_base implements renderer_factory {
             }
             $rendererfile = $compdirectory . '/renderer.php';
             if (file_exists($rendererfile)) {
-                include_once($rendererfile);
+                $files[] = $rendererfile;
             }
 
         } else if (!empty($subtype)) {
@@ -209,7 +210,7 @@ abstract class renderer_factory_base implements renderer_factory {
             if ($coresubsystems[$subtype]) {
                 $rendererfile = $coresubsystems[$subtype] . '/renderer.php';
                 if (file_exists($rendererfile)) {
-                    include_once($rendererfile);
+                    $files[] = $rendererfile;
                 }
             }
         }
@@ -220,7 +221,8 @@ abstract class renderer_factory_base implements renderer_factory {
                 'validwithprefix' => true,
                 'validwithoutprefix' => false,
                 'autoloaded' => true,
-                'classname' => '\\output\\' . $component . '_renderer'
+                'classname' => '\\output\\' . $component . '_renderer',
+                'files' => [],
             );
 
             // Standard autoloaded plugin name (not valid with a prefix).
@@ -228,14 +230,16 @@ abstract class renderer_factory_base implements renderer_factory {
                 'validwithprefix' => false,
                 'validwithoutprefix' => true,
                 'autoloaded' => true,
-                'classname' => '\\' . $component . '\\output\\renderer'
+                'classname' => '\\' . $component . '\\output\\renderer',
+                'files' => [],
             );
             // Legacy class name - (valid with or without a prefix).
             $classnames[] = array(
                 'validwithprefix' => true,
                 'validwithoutprefix' => true,
                 'autoloaded' => false,
-                'classname' => $component . '_renderer'
+                'classname' => $component . '_renderer',
+                'files' => $files,
             );
         } else {
             // Theme specific auto-loaded name (only valid when prefixed with the theme name).
@@ -243,35 +247,40 @@ abstract class renderer_factory_base implements renderer_factory {
                 'validwithprefix' => true,
                 'validwithoutprefix' => false,
                 'autoloaded' => true,
-                'classname' => '\\output\\' . $component . '\\' . $subtype . '_renderer'
+                'classname' => '\\output\\' . $component . '\\' . $subtype . '_renderer',
+                'files' => [],
             );
             // Version of the above with subtype being a namespace level on it's own.
             $classnames[] = array(
                 'validwithprefix' => true,
                 'validwithoutprefix' => false,
                 'autoloaded' => true,
-                'classname' => '\\output\\' . $component . '\\' . $subtype . '\\renderer'
+                'classname' => '\\output\\' . $component . '\\' . $subtype . '\\renderer',
+                'files' => [],
             );
             // Standard autoloaded plugin name (not valid with a prefix).
             $classnames[] = array(
                 'validwithprefix' => false,
                 'validwithoutprefix' => true,
                 'autoloaded' => true,
-                'classname' => '\\' . $component . '\\output\\' . $subtype . '_renderer'
+                'classname' => '\\' . $component . '\\output\\' . $subtype . '_renderer',
+                'files' => [],
             );
             // Version of the above with subtype being a namespace level on it's own.
             $classnames[] = array(
                 'validwithprefix' => false,
                 'validwithoutprefix' => true,
                 'autoloaded' => true,
-                'classname' => '\\' . $component . '\\output\\' . $subtype . '\\renderer'
+                'classname' => '\\' . $component . '\\output\\' . $subtype . '\\renderer',
+                'files' => [],
             );
             // Legacy class name - (valid with or without a prefix).
             $classnames[] = array(
                 'validwithprefix' => true,
                 'validwithoutprefix' => true,
                 'autoloaded' => false,
-                'classname' => $component . '_' . $subtype . '_renderer'
+                'classname' => $component . '_' . $subtype . '_renderer',
+                'files' => $files,
             );
         }
         return $classnames;
@@ -307,29 +316,46 @@ class standard_renderer_factory extends renderer_factory_base {
         list($target, $suffix) = $this->get_target_suffix($target);
         // First look for a version with a suffix.
         foreach ($classnames as $classnamedetails) {
-            if ($classnamedetails['validwithoutprefix']) {
-                $newclassname = $classnamedetails['classname'] . $suffix;
+            if (!$classnamedetails['validwithoutprefix']) {
+                continue;
+            }
+
+            if (!$classnamedetails['autoloaded']) {
+                foreach ($classnamedetails['files'] as $file) {
+                    require_once($file);
+                }
+            }
+
+            $newclassname = $classnamedetails['classname'] . $suffix;
+            if (class_exists($newclassname)) {
+                $classname = $newclassname;
+                break;
+            } else {
+                $newclassname = $classnamedetails['classname'];
                 if (class_exists($newclassname)) {
                     $classname = $newclassname;
                     break;
-                } else {
-                    $newclassname = $classnamedetails['classname'];
-                    if (class_exists($newclassname)) {
-                        $classname = $newclassname;
-                        break;
-                    }
                 }
             }
         }
+
         // Now look for a non-suffixed version.
         if (empty($classname)) {
             foreach ($classnames as $classnamedetails) {
-                if ($classnamedetails['validwithoutprefix']) {
-                    $newclassname = $classnamedetails['classname'];
-                    if (class_exists($newclassname)) {
-                        $classname = $newclassname;
-                        break;
+                if (!$classnamedetails['validwithoutprefix']) {
+                    continue;
+                }
+
+                if (!$classnamedetails['autoloaded']) {
+                    foreach ($classnamedetails['files'] as $file) {
+                        require_once($file);
                     }
+                }
+
+                $newclassname = $classnamedetails['classname'];
+                if (class_exists($newclassname)) {
+                    $classname = $newclassname;
+                    break;
                 }
             }
         }
@@ -396,21 +422,32 @@ class theme_overridden_renderer_factory extends renderer_factory_base {
         // First try the renderers with correct suffix.
         foreach ($this->prefixes as $prefix) {
             foreach ($classnames as $classnamedetails) {
-                if ($classnamedetails['validwithprefix']) {
-                    if ($classnamedetails['autoloaded']) {
-                        $newclassname = $prefix . $classnamedetails['classname'] . $suffix;
-                    } else {
-                        $newclassname = $prefix . '_' . $classnamedetails['classname'] . $suffix;
+                if (!$classnamedetails['validwithprefix']) {
+                    continue;
+                }
+
+                if ($classnamedetails['autoloaded']) {
+                    $newclassname = $prefix . $classnamedetails['classname'] . $suffix;
+                } else {
+                    foreach ($classnamedetails['files'] as $file) {
+                        require_once($file);
                     }
-                    if (class_exists($newclassname)) {
-                        return new $newclassname($page, $target);
-                    }
+                    $newclassname = $prefix . '_' . $classnamedetails['classname'] . $suffix;
+                }
+
+                if (class_exists($newclassname)) {
+                    return new $newclassname($page, $target);
                 }
             }
         }
         foreach ($classnames as $classnamedetails) {
-            if ($classnamedetails['validwithoutprefix']) {
+            if (!$classnamedetails['validwithoutprefix']) {
+                continue;
+            }
+
+            foreach ($classnamedetails['files'] as $file) {
                 $newclassname = $classnamedetails['classname'] . $suffix;
+                require_once($file);
                 if (class_exists($newclassname)) {
                     // Use the specialised renderer for given target, default renderer might also decide
                     // to implement support for more targets.
@@ -422,28 +459,48 @@ class theme_overridden_renderer_factory extends renderer_factory_base {
         // Then try general renderer.
         foreach ($this->prefixes as $prefix) {
             foreach ($classnames as $classnamedetails) {
-                if ($classnamedetails['validwithprefix']) {
-                    if ($classnamedetails['autoloaded']) {
-                        $newclassname = $prefix . $classnamedetails['classname'];
-                    } else {
-                        $newclassname = $prefix . '_' . $classnamedetails['classname'];
+                if (!$classnamedetails['validwithprefix']) {
+                    continue;
+                }
+
+                if ($classnamedetails['autoloaded']) {
+                    $newclassname = $prefix . $classnamedetails['classname'];
+                } else {
+                    $newclassname = $prefix . '_' . $classnamedetails['classname'];
+                    foreach ($classnamedetails['files'] as $file) {
+                        require_once($file);
+                        if (class_exists($newclassname)) {
+                            return new $newclassname($page, $target);
+                        }
                     }
-                    if (class_exists($newclassname)) {
-                        return new $newclassname($page, $target);
-                    }
+                }
+
+                if (class_exists($newclassname)) {
+                    return new $newclassname($page, $target);
                 }
             }
         }
 
         // Final attempt - no prefix or suffix.
         foreach ($classnames as $classnamedetails) {
-            if ($classnamedetails['validwithoutprefix']) {
-                $newclassname = $classnamedetails['classname'];
+            if (!$classnamedetails['validwithoutprefix']) {
+                continue;
+            }
+
+            $newclassname = $classnamedetails['classname'];
+
+            foreach ($classnamedetails['files'] as $file) {
+                require_once($file);
                 if (class_exists($newclassname)) {
                     return new $newclassname($page, $target);
                 }
             }
+
+            if (class_exists($newclassname)) {
+                return new $newclassname($page, $target);
+            }
         }
+
         throw new coding_exception('Request for an unknown renderer ' . $component . ', ' . $subtype . ', ' . $target);
     }
 }
