@@ -39,9 +39,26 @@ class behat_exact_named_selector extends \Behat\Mink\Selector\ExactNamedSelector
      * Creates selector instance.
      */
     public function __construct() {
+        $this->registerOverrides();
+
+        parent::__construct();
+    }
+
+    /**
+     * Register Moodle-specific overrides for replacements, and selectors.
+     */
+    protected function registerOverrides() {
+        // These are the replacements typically found in the \Behat\Mink\Selectors\ExactNamedSelector.
+        $this->registerReplacement('%tagTextMatch%', 'normalize-space(string(.)) = %locator%');
+        $this->registerReplacement('%valueMatch%', './@value = %locator%');
+        $this->registerReplacement('%titleMatch%', './@title = %locator%');
+        $this->registerReplacement('%altMatch%', './@alt = %locator%');
+        $this->registerReplacement('%relMatch%', './@rel = %locator%');
+        $this->registerReplacement('%labelAttributeMatch%', './@label = %locator%');
+
+        // Other undocumented Moodle customisations.
         $this->registerReplacement('%iconMatch%', "(contains(concat(' ', @class, ' '), ' icon ') or name() = 'img')");
         $this->registerReplacement('%imgAltMatch%', './/*[%iconMatch% and (%altMatch% or %titleMatch%)]');
-        parent::__construct();
     }
 
     /**

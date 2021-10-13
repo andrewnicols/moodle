@@ -31,7 +31,7 @@
  * @copyright  2013 David Monllaó
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class behat_partial_named_selector extends \Behat\Mink\Selector\PartialNamedSelector {
+class behat_partial_named_selector extends \Behat\Mink\Selector\NamedSelector {
 
     // Use the named selector trait.
     use behat_named_selector;
@@ -40,6 +40,23 @@ class behat_partial_named_selector extends \Behat\Mink\Selector\PartialNamedSele
      * Creates selector instance.
      */
     public function __construct() {
+        $this->registerOverrides();
+
+        parent::__construct();
+    }
+
+    /**
+     * Register Moodle-specific overrides for replacements, and selectors.
+     */
+    protected function registerOverrides() {
+        // These are the replacements typically found in the \Behat\Mink\Selectors\PartialNamedSelector.
+        $this->registerReplacement('%tagTextMatch%', 'contains(normalize-space(string(.)), %locator%)');
+        $this->registerReplacement('%valueMatch%', 'contains(./@value, %locator%)');
+        $this->registerReplacement('%titleMatch%', 'contains(./@title, %locator%)');
+        $this->registerReplacement('%altMatch%', 'contains(./@alt, %locator%)');
+        $this->registerReplacement('%relMatch%', 'contains(./@rel, %locator%)');
+        $this->registerReplacement('%labelAttributeMatch%', 'contains(./@label, %locator%)');
+
         foreach (self::$customselectors as $alias => $selectors) {
             $this->registerNamedXpath($alias, implode(' | ', $selectors));
         }
@@ -52,9 +69,9 @@ class behat_partial_named_selector extends \Behat\Mink\Selector\PartialNamedSele
             $this->registerReplacement($from, implode(' or ', $tos));
         }
 
+        // Other undocumented Moodle customisations.
         $this->registerReplacement('%iconMatch%', "(contains(concat(' ', @class, ' '), ' icon ') or name() = 'img')");
         $this->registerReplacement('%imgAltMatch%', './/*[%iconMatch% and (%altMatch% or %titleMatch%)]');
-        parent::__construct();
     }
 
     /**
