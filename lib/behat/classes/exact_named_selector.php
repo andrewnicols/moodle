@@ -56,6 +56,10 @@ class behat_exact_named_selector extends \Behat\Mink\Selector\ExactNamedSelector
         $this->registerReplacement('%relMatch%', './@rel = %locator%');
         $this->registerReplacement('%labelAttributeMatch%', './@label = %locator%');
 
+        // The updated tagTextMatch to allow the text to contain &lrm; characters.
+        // Note: The middle argument to translate contains a \u200e character.
+        $this->registerReplacement('%tagTextMatch%', 'contains(translate(normalize-space(string(.)), \'‎\', \'\'), %locator%)');
+
         // Other undocumented Moodle customisations.
         $this->registerReplacement('%iconMatch%', "(contains(concat(' ', @class, ' '), ' icon ') or name() = 'img')");
         $this->registerReplacement('%imgAltMatch%', './/*[%iconMatch% and (%altMatch% or %titleMatch%)]');
