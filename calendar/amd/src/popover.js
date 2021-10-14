@@ -35,34 +35,11 @@ const isPopoverAvailable = (dateContainer) => {
     return window.getComputedStyle(dateContainer.querySelector(CalendarSelectors.elements.dateContent)).display === 'none';
 };
 
-/**
- * Register events for date container.
- */
-const registerEventListeners = () => {
-    document.addEventListener('mouseover', e => {
-        const dateContainer = e.target.closest(CalendarSelectors.elements.dateContainer);
-        if (dateContainer) {
-            e.preventDefault();
-            if (isPopoverAvailable(dateContainer)) {
-                jQuery(dateContainer).popover('show');
-            }
-            dateContainer.addEventListener('mouseleave', e => {
-                e.preventDefault();
-                jQuery(dateContainer).popover('hide');
-            });
-        }
-    });
-};
+const isPopoverConfigured = new Map();
 
-/**
- * Init the popover init for calendar.
- * @param {String} instanceId Block element id.
- */
-const initPopover = (instanceId) => {
-    const blockNode = document.querySelector('[data-instance-id="' + instanceId + '"]');
-    const dates = blockNode.querySelectorAll(CalendarSelectors.elements.dateContainer);
-    dates.forEach((date) => {
-        const dateEle = jQuery(date);
+const showPopover = target => {
+    if (!isPopoverConfigured.has(target)) {
+        const dateEle = jQuery(target);
         dateEle.popover({
             trigger: 'manual',
             placement: 'top',
@@ -77,15 +54,43 @@ const initPopover = (instanceId) => {
                 return content.html();
             }
         });
-    });
+
+        isPopoverConfigured.set(target, true);
+    }
+
+    if (isPopoverAvailable(target)) {
+        jQuery(target).popover('show');
+
+        target.addEventListener('mouseleave', hidePopover);
+    }
+};
+
+const hidePopover = e => {
+    if (isPopoverConfigured.has(e.target)) {
+        jQuery(e.target).popover('hide');
+    }
+
+    e.target.removeEventListener('mouseleave', hidePopover);
 };
 
 /**
- * Initialises popover.
- *
- * @param {String} instanceId Block element id.
+ * Register events for date container.
  */
-export const init = (instanceId) => {
-    initPopover(instanceId);
-    registerEventListeners();
+const registerEventListeners = () => {
+    document.addEventListener('mouseover', e => {
+        const dateContainer = e.target.closest(CalendarSelectors.elements.dateContainer);
+        if (!dateContainer) {
+            return;
+        }
+
+        e.preventDefault();
+        showPopover(dateContainer);
+    });
+
 };
+
+let listenersRegistered = false;
+if (!listenersRegistered) {
+    registerEventListeners();
+    listenersRegistered = true;
+}

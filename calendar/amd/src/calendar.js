@@ -213,7 +213,7 @@ define([
 
         if (contextId) {
             // Bind click events to calendar days.
-            root.on('click', SELECTORS.DAY, function (e) {
+            root.on('click', SELECTORS.DAY, function(e) {
 
                 var target = $(e.target);
                 const displayingSmallBlockCalendar = root.parents('aside').data('blockregion') === 'side-pre';
@@ -226,7 +226,7 @@ define([
                     if (!target.is(SELECTORS.VIEW_DAY_LINK) &&
                         !target.is(SELECTORS.DAY_NUMBER_CIRCLE) && !target.is(SELECTORS.DAY_NUMBER)) {
                         var startTime = $(this).attr('data-new-event-timestamp');
-                        eventFormPromise.then(function (modal) {
+                        eventFormPromise.then(function(modal) {
                             var wrapper = target.closest(CalendarSelectors.wrapper);
                             modal.setCourseId(wrapper.data('courseid'));
 

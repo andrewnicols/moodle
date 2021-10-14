@@ -39,6 +39,18 @@ use Behat\Gherkin\Node\TableNode as TableNode;
 class behat_calendar extends behat_base {
 
     /**
+     * Return the list of partial named selectors.
+     *
+     * @return array
+     */
+    public static function get_partial_named_selectors(): array {
+        return [
+            new behat_component_named_selector('mini calendar', [".//*[@data-block='calendar_month']"]),
+            new behat_component_named_selector('calendar day', [".//*[@data-day=%locator%]"]),
+        ];
+    }
+
+    /**
      * Create event when starting on the front page.
      *
      * @Given /^I create a calendar event with form data:$/
@@ -119,7 +131,6 @@ class behat_calendar extends behat_base {
         $dayofmonth   = "a[{$daycontains}]";
 
         $xpath = '//' . $currentmonth . '/descendant::' . $daycell . '/' . $dayofmonth;
-        $this->execute("behat_general::wait_until_the_page_is_ready");
         $this->execute("behat_general::i_hover", [$xpath, "xpath_element"]);
     }
 
@@ -129,19 +140,8 @@ class behat_calendar extends behat_base {
      * @Given /^I hover over day "(?P<dayofmonth>\d+)" of this month in the mini-calendar$/
      * @param int $day The day of the current month
      */
-    public function i_hover_over_day_of_this_month_in_full_calendar(int $day): void {
-        // The current month container.
-        $currentmonth = "div[contains(@class, 'calendarwrapper')]";
-
-        // Strings for the class cell match.
-        $cellclasses = "contains(concat(' ', normalize-space(@class), ' '), ' day ')";
-        $daycontains = "@data-day='{$day}'";
-        $daycell = "td[{$cellclasses}]";
-        $dayofmonth = "a[{$daycontains}]";
-
-        $xpath = '//' . $currentmonth . '/descendant::' . $daycell . '/descendant::' . $dayofmonth;
-        $this->execute("behat_general::wait_until_the_page_is_ready");
-        $this->execute("behat_general::i_hover", [$xpath, "xpath_element"]);
+    public function i_hover_over_day_of_this_month_in_mini_calendar(int $day): void {
+        $this->execute("behat_general::i_hover_in_the", [$day, 'core_calendar > calendar day', '', 'core_calendar > mini calendar']);
     }
 
     /**
@@ -153,7 +153,7 @@ class behat_calendar extends behat_base {
         // For window's compatibility, using %d and not %e.
         $todaysday = trim(strftime('%d'));
         $todaysday = ltrim($todaysday, '0');
-        $this->i_hover_over_day_of_this_month_in_full_calendar($todaysday);
+        $this->i_hover_over_day_of_this_month_in_mini_calendar($todaysday);
     }
 
     /**
