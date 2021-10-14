@@ -117,7 +117,9 @@ export default class Component extends BaseComponent {
     /**
      * Create a newcm instance.
      *
-     * @param {Object} details the update details.
+     * @param {object} param
+     * @param {Object} param.state
+     * @param {Object} param.element
      */
     async _createCm({state, element}) {
         // Create a fake node while the component is loading.
@@ -144,7 +146,8 @@ export default class Component extends BaseComponent {
     /**
      * Refresh a section cm list.
      *
-     * @param {Object} details the update details.
+     * @param {object} param
+     * @param {Object} param.element
      */
     _refreshSectionCmlist({element}) {
         const cmlist = element.cmlist ?? [];
@@ -155,7 +158,8 @@ export default class Component extends BaseComponent {
     /**
      * Refresh the section list.
      *
-     * @param {Object} details the update details.
+     * @param {object} param
+     * @param {Object} param.element
      */
     _refreshCourseSectionlist({element}) {
         const sectionlist = element.sectionlist ?? [];
@@ -205,7 +209,8 @@ export default class Component extends BaseComponent {
      *
      * The actual DOM element removal is delegated to the cm component.
      *
-     * @param {Object} details the update details.
+     * @param {object} param
+     * @param {Object} param.element
      */
     _deleteCm({element}) {
         delete this.cms[element.id];
