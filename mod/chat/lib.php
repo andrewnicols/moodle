@@ -710,7 +710,7 @@ function chat_update_chat_times($chatid=0) {
             $DB->update_record("chat", $chat);
 
             $cm = get_coursemodule_from_instance('chat', $chat->id, $chat->course);
-            course_purge_module_cache($cm);
+            \course_modinfo::purge_module_cache($cm->course, $cm->id);
         }
 
         $event = new stdClass(); // Update calendar too.

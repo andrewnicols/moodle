@@ -228,8 +228,8 @@ $definitions = array(
     // - get_array_of_activities()
     // Reset/update in functions:
     // - rebuild_course_cache()
-    // - course_purge_module_cache()
-    // - course_purge_section_cache()
+    // - course_modinfo::purge_module_cache()
+    // - course_modinfo::purge_section_cache()
     // - remove_course_contents().
     'coursemodinfo' => array(
         'mode' => cache_store::MODE_APPLICATION,

@@ -615,7 +615,7 @@ class dndupload_ajax_processor {
 
         $DB->set_field('course_modules', 'instance', $instanceid, array('id' => $this->cm->id));
 
-        course_purge_module_cache($this->cm);
+        \course_modinfo::purge_module_cache($this->cm->course, $this->cm->id);
         // Rebuild the course cache after update action
         rebuild_course_cache($this->course->id, true, true);
 

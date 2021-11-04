@@ -2844,7 +2844,7 @@ function lti_update_type($type, $config) {
             $courseids = [];
             foreach ($rs as $record) {
                 $courseids[] = $record->course;
-                course_purge_module_cache($record);
+                \course_modinfo::purge_module_cache($record->course, $record->id);
             }
             $rs->close();
             $courseids = array_unique($courseids);

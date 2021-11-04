@@ -724,6 +724,69 @@ class course_modinfo {
         $cachecoursemodinfo->set($course->id, $coursemodinfo);
         return $coursemodinfo;
     }
+
+    /**
+     * Purge the cache of a course section by its id.
+     *
+     * @param int $courseid The course to purge cache in
+     * @param int $sectionid The section _id_ to purge
+     */
+    public static function purge_section_cache_by_id(int $courseid, int $sectionid): void {
+        $cache = cache::make('core', 'coursemodinfo');
+        $cache->acquire_lock($courseid);
+        $coursemodinfo = $cache->get($courseid);
+        if ($coursemodinfo !== false) {
+            foreach ($coursemodinfo->sectioncache as $sectionno => $sectioncache) {
+                if ($sectioncache->id == $sectionid) {
+                    $coursemodinfo->cacherev = -1;
+                    unset($coursemodinfo->sectioncache[$sectionno]);
+                    $cache->set($courseid, $coursemodinfo);
+                    break;
+                }
+            }
+        }
+        $cache->release_lock($courseid);
+    }
+
+    /**
+     * Purge the cache of a course section by its number.
+     *
+     * @param int $courseid The course to purge cache in
+     * @param int $sectionno The section number to purge
+     */
+    public static function purge_section_cache_by_number(int $courseid, int $sectionno): void {
+        $cache = cache::make('core', 'coursemodinfo');
+        $cache->acquire_lock($courseid);
+        $coursemodinfo = $cache->get($courseid);
+        if ($coursemodinfo !== false && array_key_exists($sectionno, $coursemodinfo->sectioncache)) {
+            $coursemodinfo->cacherev = -1;
+            unset($coursemodinfo->sectioncache[$sectionno]);
+            $cache->set($courseid, $coursemodinfo);
+        }
+        $cache->release_lock($courseid);
+    }
+
+    /**
+     * Purge the cache of a course module.
+     *
+     * $cm must have following attributes:
+     *   - id: cmid
+     *   - course: course id
+     *
+     * @param cm_info|stdClass $cm course module
+     */
+    public static function purge_module_cache(int $courseid, int $cmid): void {
+        $cache = cache::make('core', 'coursemodinfo');
+        $cache->acquire_lock($courseid);
+        $coursemodinfo = $cache->get($courseid);
+        $hascache = ($coursemodinfo !== false) && array_key_exists($cmid, $coursemodinfo->modinfo);
+        if ($hascache) {
+            $coursemodinfo->cacherev = -1;
+            unset($coursemodinfo->modinfo[$cmid]);
+            $cache->set($courseid, $coursemodinfo);
+        }
+        $cache->release_lock($courseid);
+    }
 }
 
 
@@ -2437,10 +2500,10 @@ function get_course_and_cm_from_instance($instanceorid, $modulename, $courseorid
  * @param boolean $clearonly only clear the cache, gets rebuild automatically on the fly.
  *     Recommended to set to true to avoid unnecessary multiple rebuilding.
  * @param boolean $partialrebuild will not delete the whole cache when it's true.
- *     use course_purge_module_cache() or course_purge_section_cache() must be
+ *     use purge_module_cache() or purge_section_cache() must be
  *         called before when partialrebuild is true.
- *     use course_purge_module_cache() to invalidate mod cache.
- *     use course_purge_section_cache() to invalidate section cache.
+ *     use purge_module_cache() to invalidate mod cache.
+ *     use purge_section_cache() to invalidate section cache.
  *
  * @return void
  * @throws coding_exception

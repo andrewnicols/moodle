@@ -858,7 +858,7 @@ function set_coursemodule_groupmode($id, $groupmode) {
     $cm = $DB->get_record('course_modules', array('id' => $id), 'id,course,groupmode', MUST_EXIST);
     if ($cm->groupmode != $groupmode) {
         $DB->set_field('course_modules', 'groupmode', $groupmode, array('id' => $cm->id));
-        course_purge_module_cache($cm);
+        \course_modinfo::purge_module_cache($cm->course, $cm->id);
         rebuild_course_cache($cm->course, false, true);
     }
     return ($cm->groupmode != $groupmode);
@@ -869,7 +869,7 @@ function set_coursemodule_idnumber($id, $idnumber) {
     $cm = $DB->get_record('course_modules', array('id' => $id), 'id,course,idnumber', MUST_EXIST);
     if ($cm->idnumber != $idnumber) {
         $DB->set_field('course_modules', 'idnumber', $idnumber, array('id' => $cm->id));
-        course_purge_module_cache($cm);
+        \course_modinfo::purge_module_cache($cm->course, $cm->id);
         rebuild_course_cache($cm->course, false, true);
     }
     return ($cm->idnumber != $idnumber);
@@ -947,7 +947,7 @@ function set_coursemodule_visible($id, $visible, $visibleoncoursepage = 1) {
         }
     }
 
-    course_purge_module_cache($cm);
+    \course_modinfo::purge_module_cache($cm->course, $cm->id);
     rebuild_course_cache($cm->course, false, true);
     return true;
 }
@@ -985,7 +985,7 @@ function set_coursemodule_name($id, $name) {
     $DB->update_record($cm->modname, $module);
     $cm->name = $module->name;
     \core\event\course_module_updated::create_from_cm($cm)->trigger();
-    course_purge_module_cache($cm);
+    \course_modinfo::purge_module_cache($cm->course, $cm->id);
     rebuild_course_cache($cm->course, false, true);
 
     // Attempt to update the grade item if relevant.
@@ -1144,7 +1144,7 @@ function course_delete_module($cmid, $async = false) {
     ));
     $event->add_record_snapshot('course_modules', $cm);
     $event->trigger();
-    course_purge_module_cache($cm);
+    \course_modinfo::purge_module_cache($cm->course, $cm->id);
     rebuild_course_cache($cm->course, false, true);
 }
 
@@ -1402,23 +1402,19 @@ function move_section_to($course, $section, $destination, $ignorenumsections = f
 
     $movedsections = reorder_sections($sections, $section, $destination);
 
-    $sectioninfo = new stdClass;
-    $sectioninfo->course = $course->id;
     // Update all sections. Do this in 2 steps to avoid breaking database
     // uniqueness constraint
     $transaction = $DB->start_delegated_transaction();
     foreach ($movedsections as $id => $position) {
         if ($sections[$id] !== $position) {
             $DB->set_field('course_sections', 'section', -$position, ['id' => $id]);
-            $sectioninfo->section = $id;
-            course_purge_section_cache($sectioninfo);
+            course_modinfo::purge_section_cache_by_id($course->id, $id);
         }
     }
     foreach ($movedsections as $id => $position) {
         if ($sections[$id] !== $position) {
             $DB->set_field('course_sections', 'section', $position, ['id' => $id]);
-            $sectioninfo->section = $id;
-            course_purge_section_cache($sectioninfo);
+            course_modinfo::purge_section_cache_by_id($course->id, $id);
         }
     }
 
@@ -1608,7 +1604,7 @@ function course_update_section($course, $section, $data) {
     $data['id'] = $section->id;
     $data['timemodified'] = time();
     $DB->update_record('course_sections', $data);
-    course_purge_section_cache($section);
+    course_modinfo::purge_section_cache_by_id($course->id, $section->id);
     rebuild_course_cache($courseid, false, true);
     course_get_format($courseid)->update_section_format_options($data);
 
@@ -1642,7 +1638,7 @@ function course_update_section($course, $section, $data) {
                     // We hide the section, so we hide the module but we store the original state in visibleold.
                     set_coursemodule_visible($moduleid, 0, $cm->visibleoncoursepage);
                     $DB->set_field('course_modules', 'visibleold', $cm->visible, ['id' => $moduleid]);
-                    course_purge_module_cache($cm);
+                    \course_modinfo::purge_module_cache($cm->course, $cm->id);
                 }
                 \core\event\course_module_updated::create_from_cm($cm)->trigger();
             }
@@ -5164,58 +5160,4 @@ function course_output_fragment_new_base_form($args) {
     ob_end_clean();
 
     return $o;
-}
-
-/**
- * Purge the cache of a course section.
- *
- * $sectioninfo must have following attributes:
- *   - course: course id
- *   - section: section number
- *
- * @param object $sectioninfo section info
- * @return void
- */
-function course_purge_section_cache(object $sectioninfo): void {
-    $sectionid = $sectioninfo->section;
-    $courseid = $sectioninfo->course;
-    $cache = cache::make('core', 'coursemodinfo');
-    $cache->acquire_lock($courseid);
-    $coursemodinfo = $cache->get($courseid);
-    if ($coursemodinfo !== false) {
-        foreach ($coursemodinfo->sectioncache as $sectionno => $sectioncache) {
-            if ($sectioncache->id == $sectionid) {
-                $coursemodinfo->cacherev = -1;
-                unset($coursemodinfo->sectioncache[$sectionno]);
-                $cache->set($courseid, $coursemodinfo);
-                break;
-            }
-        }
-    }
-    $cache->release_lock($courseid);
-}
-
-/**
- * Purge the cache of a course module.
- *
- * $cm must have following attributes:
- *   - id: cmid
- *   - course: course id
- *
- * @param cm_info|stdClass $cm course module
- * @return void
- */
-function course_purge_module_cache($cm): void {
-    $cmid = $cm->id;
-    $courseid = $cm->course;
-    $cache = cache::make('core', 'coursemodinfo');
-    $cache->acquire_lock($courseid);
-    $coursemodinfo = $cache->get($courseid);
-    $hascache = ($coursemodinfo !== false) && array_key_exists($cmid, $coursemodinfo->modinfo);
-    if ($hascache) {
-        $coursemodinfo->cacherev = -1;
-        unset($coursemodinfo->modinfo[$cmid]);
-        $cache->set($courseid, $coursemodinfo);
-    }
-    $cache->release_lock($courseid);
 }
