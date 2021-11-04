@@ -481,117 +481,153 @@ abstract class testing_util {
             self::$sequencenextstartingid = 100000;
         }
 
-        $dbfamily = $DB->get_dbfamily();
-        if ($dbfamily === 'postgres') {
-            $queries = array();
-            $prefix = $DB->get_prefix();
-            foreach ($data as $table => $records) {
-                // If table is not modified then no need to do anything.
-                if (!isset($updatedtables[$table])) {
-                    continue;
-                }
-                if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
+        if (!defined('TESTING_USE_DB_SEQUENCES') || TESTING_USE_DB_SEQUENCES) {
+            $dbfamily = $DB->get_dbfamily();
+            if ($dbfamily === 'postgres') {
+                self::reset_database_sequences_for_postgres($data);
+                return;
+            } else if ($dbfamily === 'mysql') {
+                self::reset_database_sequences_for_mysql($data);
+                return;
+            } else if ($dbfamily === 'oracle') {
+                self::reset_database_sequences_for_oracle($data);
+                return;
+            }
+        }
+
+        // Note: does mssql support any kind of faster reset?
+        // This also implies mssql will not use unique sequence values.
+        if (is_null($empties) and (empty($updatedtables))) {
+            $empties = self::guess_unmodified_empty_tables();
+        }
+        foreach ($data as $table => $records) {
+            // If table is not modified then no need to do anything.
+            if (isset($empties[$table]) or (!isset($updatedtables[$table]))) {
+                continue;
+            }
+            if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
+                $DB->get_manager()->reset_sequence($table);
+            }
+        }
+    }
+
+    /**
+     * Reset all database sequences to initial values for postgres.
+     *
+     * @param array $empties tables that are known to be unmodified and empty
+     */
+    protected static function reset_database_sequences_for_postgres(array $data): void {
+        global $DB;
+
+        $queries = [];
+        $prefix = $DB->get_prefix();
+        foreach ($data as $table => $records) {
+            // If table is not modified then no need to do anything.
+            if (!isset($updatedtables[$table])) {
+                continue;
+            }
+            if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
+                $nextid = self::get_next_sequence_starting_value($records, $table);
+                $queries[] = "ALTER SEQUENCE {$prefix}{$table}_id_seq RESTART WITH $nextid";
+            }
+        }
+        if ($queries) {
+            $DB->change_database_structure(implode(';', $queries));
+        }
+    }
+
+    /**
+     * Reset all database sequences to initial values for mysql.
+     *
+     * @param array $empties tables that are known to be unmodified and empty
+     */
+    protected static function reset_database_sequences_for_mysql(array $data): void {
+        global $DB;
+
+        $queries = [];
+        $sequences = [];
+        $prefix = $DB->get_prefix();
+        $rs = $DB->get_recordset_sql("SHOW TABLE STATUS LIKE ?", ["{$prefix}%"]);
+        foreach ($rs as $info) {
+            $table = strtolower($info->name);
+            if (strpos($table, $prefix) !== 0) {
+                // Incorrect table match caused by _.
+                continue;
+            }
+
+            if (!is_null($info->auto_increment)) {
+                $table = preg_replace('/^'.preg_quote($prefix, '/').'/', '', $table);
+                $sequences[$table] = $info->auto_increment;
+            }
+        }
+        $rs->close();
+
+        $prefix = $DB->get_prefix();
+        foreach ($data as $table => $records) {
+            // If table is not modified then no need to do anything.
+            if (!isset($updatedtables[$table])) {
+                continue;
+            }
+            if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
+                if (isset($sequences[$table])) {
                     $nextid = self::get_next_sequence_starting_value($records, $table);
-                    $queries[] = "ALTER SEQUENCE {$prefix}{$table}_id_seq RESTART WITH $nextid";
-                }
-            }
-            if ($queries) {
-                $DB->change_database_structure(implode(';', $queries));
-            }
-
-        } else if ($dbfamily === 'mysql') {
-            $queries = array();
-            $sequences = array();
-            $prefix = $DB->get_prefix();
-            $rs = $DB->get_recordset_sql("SHOW TABLE STATUS LIKE ?", array($prefix.'%'));
-            foreach ($rs as $info) {
-                $table = strtolower($info->name);
-                if (strpos($table, $prefix) !== 0) {
-                    // incorrect table match caused by _
-                    continue;
-                }
-                if (!is_null($info->auto_increment)) {
-                    $table = preg_replace('/^'.preg_quote($prefix, '/').'/', '', $table);
-                    $sequences[$table] = $info->auto_increment;
-                }
-            }
-            $rs->close();
-            $prefix = $DB->get_prefix();
-            foreach ($data as $table => $records) {
-                // If table is not modified then no need to do anything.
-                if (!isset($updatedtables[$table])) {
-                    continue;
-                }
-                if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
-                    if (isset($sequences[$table])) {
-                        $nextid = self::get_next_sequence_starting_value($records, $table);
-                        if ($sequences[$table] != $nextid) {
-                            $queries[] = "ALTER TABLE {$prefix}{$table} AUTO_INCREMENT = $nextid";
-                        }
-                    } else {
-                        // some problem exists, fallback to standard code
-                        $DB->get_manager()->reset_sequence($table);
+                    if ($sequences[$table] != $nextid) {
+                        $queries[] = "ALTER TABLE {$prefix}{$table} AUTO_INCREMENT = $nextid";
                     }
-                }
-            }
-            if ($queries) {
-                $DB->change_database_structure(implode(';', $queries));
-            }
-
-        } else if ($dbfamily === 'oracle') {
-            $sequences = self::get_sequencenames();
-            $sequences = array_map('strtoupper', $sequences);
-            $lookup = array_flip($sequences);
-
-            $current = array();
-            list($seqs, $params) = $DB->get_in_or_equal($sequences);
-            $sql = "SELECT sequence_name, last_number FROM user_sequences WHERE sequence_name $seqs";
-            $rs = $DB->get_recordset_sql($sql, $params);
-            foreach ($rs as $seq) {
-                $table = $lookup[$seq->sequence_name];
-                $current[$table] = $seq->last_number;
-            }
-            $rs->close();
-
-            foreach ($data as $table => $records) {
-                // If table is not modified then no need to do anything.
-                if (!isset($updatedtables[$table])) {
-                    continue;
-                }
-                if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
-                    $lastrecord = end($records);
-                    if ($lastrecord) {
-                        $nextid = $lastrecord->id + 1;
-                    } else {
-                        $nextid = 1;
-                    }
-                    if (!isset($current[$table])) {
-                        $DB->get_manager()->reset_sequence($table);
-                    } else if ($nextid == $current[$table]) {
-                        continue;
-                    }
-                    // reset as fast as possible - alternatively we could use http://stackoverflow.com/questions/51470/how-do-i-reset-a-sequence-in-oracle
-                    $seqname = $sequences[$table];
-                    $cachesize = $DB->get_manager()->generator->sequence_cache_size;
-                    $DB->change_database_structure("DROP SEQUENCE $seqname");
-                    $DB->change_database_structure("CREATE SEQUENCE $seqname START WITH $nextid INCREMENT BY 1 NOMAXVALUE CACHE $cachesize");
-                }
-            }
-
-        } else {
-            // note: does mssql support any kind of faster reset?
-            // This also implies mssql will not use unique sequence values.
-            if (is_null($empties) and (empty($updatedtables))) {
-                $empties = self::guess_unmodified_empty_tables();
-            }
-            foreach ($data as $table => $records) {
-                // If table is not modified then no need to do anything.
-                if (isset($empties[$table]) or (!isset($updatedtables[$table]))) {
-                    continue;
-                }
-                if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
+                } else {
+                    // some problem exists, fallback to standard code
                     $DB->get_manager()->reset_sequence($table);
                 }
+            }
+        }
+        if ($queries) {
+            $DB->change_database_structure(implode(';', $queries));
+        }
+    }
+
+    /**
+     * Reset all database sequences to initial values for oracle.
+     *
+     * @param array $empties tables that are known to be unmodified and empty
+     */
+    protected static function reset_database_sequences_for_oracle(array $data): void {
+        $sequences = self::get_sequencenames();
+        $sequences = array_map('strtoupper', $sequences);
+        $lookup = array_flip($sequences);
+
+        $current = [];
+        [$seqs, $params] = $DB->get_in_or_equal($sequences);
+        $sql = "SELECT sequence_name, last_number FROM user_sequences WHERE sequence_name $seqs";
+        $rs = $DB->get_recordset_sql($sql, $params);
+        foreach ($rs as $seq) {
+            $table = $lookup[$seq->sequence_name];
+            $current[$table] = $seq->last_number;
+        }
+        $rs->close();
+
+        foreach ($data as $table => $records) {
+            // If table is not modified then no need to do anything.
+            if (!isset($updatedtables[$table])) {
+                continue;
+            }
+
+            if (isset($structure[$table]['id']) and $structure[$table]['id']->auto_increment) {
+                $lastrecord = end($records);
+                if ($lastrecord) {
+                    $nextid = $lastrecord->id + 1;
+                } else {
+                    $nextid = 1;
+                }
+                if (!isset($current[$table])) {
+                    $DB->get_manager()->reset_sequence($table);
+                } else if ($nextid == $current[$table]) {
+                    continue;
+                }
+                // reset as fast as possible - alternatively we could use http://stackoverflow.com/questions/51470/how-do-i-reset-a-sequence-in-oracle
+                $seqname = $sequences[$table];
+                $cachesize = $DB->get_manager()->generator->sequence_cache_size;
+                $DB->change_database_structure("DROP SEQUENCE $seqname");
+                $DB->change_database_structure("CREATE SEQUENCE $seqname START WITH $nextid INCREMENT BY 1 NOMAXVALUE CACHE $cachesize");
             }
         }
     }
