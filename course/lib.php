@@ -5177,14 +5177,19 @@ function course_output_fragment_new_base_form($args) {
  * @return void
  */
 function course_purge_section_cache(object $sectioninfo): void {
-    $section = $sectioninfo->section;
+    $sectionid = $sectioninfo->section;
     $courseid = $sectioninfo->course;
     $cache = cache::make('core', 'coursemodinfo');
     $cache->acquire_lock($courseid);
     $coursemodinfo = $cache->get($courseid);
-    if (($coursemodinfo !== false) && array_key_exists($section, $coursemodinfo->sectioncache)) {
-        unset($coursemodinfo->sectioncache[$section]);
-        $cache->set($courseid, $coursemodinfo);
+    if ($coursemodinfo !== false) {
+        foreach ($coursemodinfo->sectioncache as $sectionno => $sectioncache) {
+            if ($sectioncache->id == $sectionid) {
+                unset($coursemodinfo->sectioncache[$sectionno]);
+                $cache->set($courseid, $coursemodinfo);
+                break;
+            }
+        }
     }
     $cache->release_lock($courseid);
 }
