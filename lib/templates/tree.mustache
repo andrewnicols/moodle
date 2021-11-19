@@ -1,0 +1,27 @@
+<div {{!
+    Set the identifier from the Tree.
+    }} id="{{identifier}}"{{!
+
+    Class list.
+    }} class="{{!
+        Always add the collapse class.
+        }} collapse{{!
+
+        This Tree is not initially collapsed so add the `show` class.
+        }}{{^is_initially_collapsed}} show{{/is_initially_collapsed}}{{!
+    }}" {{!
+
+    If the Tree is initially collapsed, set the initial state of the ariaHidden to true.
+    }}{{#is_initially_collapsed}} aria-hidden="true"{{/is_initially_collapsed}}{{!
+}}>
+    {{#nodes}}
+        {{> core/tree_node }}
+    {{/nodes}}
+</div>
+
+{{^hasparent}}
+{{! Only apply the Tree to the top-most element }}
+{{#js}}
+require(['core/collapsible_tree'], Tree => new Tree("#{{identifier}}"));
+{{/js}}
+{{/hasparent}}

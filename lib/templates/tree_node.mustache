@@ -1,0 +1,75 @@
+<div {{!
+    Set the nodeidentifier from the TreeNode.
+    }} id="{{nodeidentifier}}"{{!
+
+    Apply the `treeitem` role.
+    }} role="treeitem"{{!
+
+    If the Node contains a child Tree then link the two
+    }}{{#tree}}{{!
+        Set the aria-owns identifier to indiciate hierarchy.
+        }} aria-owns="{{identifier}}"{{!
+        Setup the Bootstrap collapse using the data-toggle attribute, and the data-target to indicate what will be toggled.
+        }} data-toggle="collapse"{{!
+        }} data-target="#{{identifier}}"{{!
+
+        Set the aria-expanded attribute according to current state.
+        }}{{#is_initially_collapsed}} aria-expanded="false"{{/is_initially_collapsed}}{{!
+        }}{{^is_initially_collapsed}} aria-expanded="true"{{/is_initially_collapsed}}{{!
+    }}{{/tree}}{{!
+}}>
+{{!
+  TODO Include any additional icons.
+}}
+    <div {{!
+        Apply classes
+        }} class="{{!
+            // This uses flex layouts.
+            }}d-flex{{!
+        }}"{{!
+    }}>
+
+        {{#tree}}{{!
+        }}<a href=""{{!
+            Set the aria-owns identifier to indiciate hierarchy.
+            }} aria-owns="{{identifier}}"{{!
+            Setup the Bootstrap collapse using the data-toggle attribute, and the data-target to indicate what will be toggled.
+            }} data-toggle="collapse"{{!
+            }} data-target="#{{identifier}}"{{!
+            }} tabindex="-1"{{!
+
+            Set the aria-expanded attribute according to current state.
+            }}{{#is_initially_collapsed}} aria-expanded="false"{{/is_initially_collapsed}}{{!
+            }}{{^is_initially_collapsed}} aria-expanded="true"{{/is_initially_collapsed}}{{!
+        }}>
+            <span class="icon-container collapsed-icon icon-no-margin mr-1"
+              data-toggle="tooltip" title="{{#str}} expand, core {{/str}}">
+              {{#pix}} t/collapsedchevron, core {{/pix}}
+              <span class="sr-only">{{#str}} expand, core {{/str}}</span>
+            </span>
+            <span class="icon-container expanded-icon icon-no-margin mr-1"
+              data-toggle="tooltip" title="{{#str}} collapse, core {{/str}}">
+              {{#pix}} t/expandedchevron, core {{/pix}}
+              <span class="sr-only">{{#str}} collapse, core {{/str}}</span>
+            </span>
+        </a>
+        {{/tree}}
+        {{#link}}<a href="{{link}}">{{value}}</a>{{/link}}
+        {{^link}}{{value}}{{/link}}
+
+    </div>
+        {{! Check whether this Node contains any sub-tree }}
+        {{#tree}}
+    <div {{!
+        Apply the `treeitem` role.
+        }} role="group"{{!
+
+        And set the aria-labelledby to the TreeNode identifier.
+        }} aria-labelledby="{{nodeidentifier}}"{{!
+
+        Include the Tree.
+    }}>
+        {{> core/tree }}
+    </div>
+    {{/tree}}
+</div>

@@ -1,0 +1,22 @@
+<?php
+
+define('CLI_SCRIPT', true);
+require(__DIR__.'/config.php');
+
+use core\tree;
+use core\tree_node;
+
+require_once("{$CFG->libdir}/outputlib.php");
+
+$tree = new tree();
+
+$n1 = new tree_node('apple', 'Apple');
+$n2 = new tree_node('banana', 'Banana');
+
+$tree->add_node($n1);
+$tree->add_node($n2);
+
+
+$output = $PAGE->get_renderer('core');
+
+print_object($tree->export_for_template($output));

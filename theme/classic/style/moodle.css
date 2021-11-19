@@ -12218,6 +12218,13 @@ body.dragging .dragging {
 .page-mycourses .block_myoverview {
   border: 0; }
 
+[data-toggle="collapse"] .icon-container {
+  display: none; }
+
+[data-toggle="collapse"][aria-expanded="true"] > .expanded-icon,
+[data-toggle="collapse"][aria-expanded="false"] > .collapsed-icon {
+  display: flex; }
+
 .icon {
   font-size: 16px;
   width: 16px;

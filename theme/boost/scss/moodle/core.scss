@@ -2885,3 +2885,15 @@ body.dragging {
         border: 0;
     }
 }
+
+
+[data-toggle="collapse"] {
+    .icon-container {
+        display: none;
+    }
+
+    &[aria-expanded="true"] > .expanded-icon,
+    &[aria-expanded="false"] > .collapsed-icon {
+        display: flex;
+    }
+}
