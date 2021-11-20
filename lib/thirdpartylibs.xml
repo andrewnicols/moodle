@@ -349,4 +349,11 @@
     <license>MIT</license>
     <version>1.0.1</version>
   </library>
+  <library>
+    <location>../.grunt/babel-plugin-transform-es2015-modules-amd-lazy/index.js</location>
+    <name>babel-plugin-transform-es2015-modules-amd-lazy</name>
+    <license>Apache</license>
+    <licenseversion>2.0</licenseversion>
+    <version>2.0.1</version>
+  </library>
 </libraries>
