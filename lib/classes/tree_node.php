@@ -80,6 +80,7 @@ class tree_node implements
             'attributes' => $this->get_attributes(),
             'link' => $this->has_link() ? $this->get_link()->out() : '',
             'icon' => $this->get_icon(),
+            'has_tree' => !empty($this->childtree),
             'tree' => $this->childtree ? $this->childtree->export_for_template($output) : false,
         ];
     }

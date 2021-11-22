@@ -28,6 +28,8 @@ use templatable;
 /**
  * A generic tree structure supporting collapsing, lazy loading, and more.
  *
+ * TODO: Support lazy loading.
+ *
  * @package   core
  * @copyright 2021 Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

@@ -12225,6 +12225,9 @@ body.dragging .dragging {
 [data-toggle="collapse"][aria-expanded="false"] > .collapsed-icon {
   display: flex; }
 
+[role="treeitem"] {
+  padding-left: 1rem; }
+
 .icon {
   font-size: 16px;
   width: 16px;

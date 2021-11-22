@@ -6,21 +6,23 @@
     }} role="treeitem"{{!
 
     If the Node contains a child Tree then link the two
-    }}{{#tree}}{{!
+    }}{{#has_tree}}{{!
+
         Set the aria-owns identifier to indiciate hierarchy.
         }} aria-owns="{{identifier}}"{{!
-        Setup the Bootstrap collapse using the data-toggle attribute, and the data-target to indicate what will be toggled.
-        }} data-toggle="collapse"{{!
-        }} data-target="#{{identifier}}"{{!
 
-        Set the aria-expanded attribute according to current state.
-        }}{{#is_initially_collapsed}} aria-expanded="false"{{/is_initially_collapsed}}{{!
-        }}{{^is_initially_collapsed}} aria-expanded="true"{{/is_initially_collapsed}}{{!
-    }}{{/tree}}{{!
+        }}{{#is_collapsible}}{{!
+            Note: Do not use the data-toggle attribute here as it will cause issue with nested tree structures.
+            The data-target is used to identify the Tree that will be collapsed.
+            }} data-target="#{{tree.identifier}}"{{!
+
+            Set the aria-expanded attribute according to current state.
+            }}{{#is_initially_collapsed}} aria-expanded="false"{{/is_initially_collapsed}}{{!
+            }}{{^is_initially_collapsed}} aria-expanded="true"{{/is_initially_collapsed}}{{!
+        }}{{/is_collapsible}}{{!
+
+    }}{{/has_tree}}{{!
 }}>
-{{!
-  TODO Include any additional icons.
-}}
     <div {{!
         Apply classes
         }} class="{{!
@@ -28,8 +30,7 @@
             }}d-flex{{!
         }}"{{!
     }}>
-
-        {{#tree}}{{!
+{{#tree}}{{!
         }}<a href=""{{!
             Set the aria-owns identifier to indiciate hierarchy.
             }} aria-owns="{{identifier}}"{{!
@@ -53,16 +54,16 @@
               <span class="sr-only">{{#str}} collapse, core {{/str}}</span>
             </span>
         </a>
-        {{/tree}}
-        {{#icon}}
+{{/tree}}
+{{#icon}}
             {{#pix}} {{identifier}}, {{component}}, {{{label}}} {{/pix}}
-        {{/icon}}
+{{/icon}}
         {{#link}}<a href="{{link}}">{{value}}</a>{{/link}}
         {{^link}}{{value}}{{/link}}
 
     </div>
         {{! Check whether this Node contains any sub-tree }}
-        {{#tree}}
+{{#tree}}
     <div {{!
         Apply the `treeitem` role.
         }} role="group"{{!
@@ -74,5 +75,5 @@
     }}>
         {{> core/tree }}
     </div>
-    {{/tree}}
+{{/tree}}
 </div>
