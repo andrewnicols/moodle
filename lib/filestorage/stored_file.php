@@ -715,6 +715,13 @@ class stored_file {
         return $this->file_record->filename;
     }
 
+    public function get_directory_name(): string {
+        $filepath = $this->file_record->filepath;
+        $filepath = trim($filepath, '/');
+        $dirs = explode('/', $filepath);
+        return array_pop($dirs);
+    }
+
     /**
      * Returns id of user who created the file.
      *

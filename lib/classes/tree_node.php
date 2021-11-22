@@ -78,7 +78,7 @@ class tree_node implements
             'nodeidentifier' => $this->get_identifier(),
             'value' => $this->get_value(),
             'attributes' => $this->get_attributes(),
-            'link' => $this->has_link() ?? $this->get_link()->out(),
+            'link' => $this->has_link() ? $this->get_link()->out() : '',
             'icon' => $this->get_icon(),
             'tree' => $this->childtree ? $this->childtree->export_for_template($output) : false,
         ];

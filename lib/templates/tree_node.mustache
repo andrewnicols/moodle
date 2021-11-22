@@ -54,6 +54,9 @@
             </span>
         </a>
         {{/tree}}
+        {{#icon}}
+            {{#pix}} {{identifier}}, {{component}}, {{{label}}} {{/pix}}
+        {{/icon}}
         {{#link}}<a href="{{link}}">{{value}}</a>{{/link}}
         {{^link}}{{value}}{{/link}}
 
