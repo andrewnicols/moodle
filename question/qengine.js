@@ -19,6 +19,7 @@
  * @package    moodlecore
  * @subpackage questionengine
  * @copyright  2008 The Open University
+ * @deprecated since Moodle 4.0
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -46,10 +47,15 @@ M.core_scroll_manager = M.core_scroll_manager || {};
  * In the form that contains the element, set the value of the form field with
  * name scrollpos to the current scroll position. If there is no element with
  * that name, it creates a hidden form field wiht that name within the form.
+ * @deprecated since Moodle 4.0
+ * @see core/scroll_manager
  * @param element the element in the form. Should be something that can be
  *      passed to Y.one.
  */
 M.core_scroll_manager.save_scroll_pos = function(Y, element) {
+    Y.log("The save_scroll_pos function has been deprecated. " +
+        "Please use saveScrollPos in core/scroll_manager instead.", 'moodle-core-notification', 'warn');
+
     if (typeof(element) == 'string') {
         // Have to use getElementById here because element id can contain :.
         element = Y.one(document.getElementById(element));
@@ -68,8 +74,13 @@ M.core_scroll_manager.save_scroll_pos = function(Y, element) {
 /**
  * Event handler that can be used on a link. Assumes that the link already
  * contains at least one URL parameter.
+ * @deprecated since Moodle 4.0
+ * @see core/scroll_manager
  */
 M.core_scroll_manager.save_scroll_action = function(e) {
+    Y.log("The scroll_to_saved_pos function has been deprecated. " +
+        "Please use initLinksScrollPos in core/scroll_manager instead.", 'moodle-core-notification', 'warn');
+
     var link = e.target.ancestor('a[href]');
     if (!link) {
         M.core_scroll_manager.save_scroll_pos({}, e.target);
@@ -81,12 +92,12 @@ M.core_scroll_manager.save_scroll_action = function(e) {
 /**
  * If there is a parameter like scrollpos=123 in the URL, scroll to that saved position.
  * @deprecated since Moodle 4.0
- * @see question\bank\qbank_previewquestion\amd\src
+ * @see core/scroll_manager
  * @todo Final deprecation on Moodle 4.4 MDL-72438
  */
 M.core_scroll_manager.scroll_to_saved_pos = function(Y) {
     Y.log("The scroll_to_saved_pos function has been deprecated. " +
-        "Please use scrollToSavedPos() in qbank_preview/preview.js instead.", 'moodle-core-notification', 'warn');
+        "Please use scrollToSavedPos in core/scroll_manager instead.", 'moodle-core-notification', 'warn');
 
     var matches = window.location.href.match(/^.*[?&]scrollpos=(\d*)(?:&|$|#).*$/, '$1');
     if (matches) {
@@ -105,9 +116,14 @@ M.core_scroll_manager.scroll_to_saved_pos = function(Y) {
 
 /**
  * Beat IE into submission.
+ * @deprecated since Moodle 4.0
+ * We will not support IE from Moodle 3.10.
  * @param targetpos the target scroll position.
  */
 M.core_scroll_manager.force_ie_to_scroll = function(Y, targetpos) {
+    Y.log("The core_question_engine.init_submit_button function has been deprecated. " +
+        "We do not support IE from Moodle 3.10", 'warn');
+
     var hackcount = 25;
     function do_scroll() {
         window.scrollTo(0, targetpos);
@@ -129,9 +145,14 @@ M.core_question_engine.questionformalreadysubmitted = false;
 /**
  * Initialise a question submit button. This saves the scroll position and
  * sets the fragment on the form submit URL so the page reloads in the right place.
+ * @deprecated since Moodle 4.0
+ * @see core_question/question_engine
  * @param button the id of the button in the HTML.
  */
 M.core_question_engine.init_submit_button = function(Y, button) {
+    Y.log("The core_question_engine.init_submit_button function has been deprecated. " +
+        "Please use initSubmitButton in core_question/question_engine instead.", 'moodle-core-notification', 'warn');
+
     require(['core_form/submit'], function(submit) {
         submit.init(button);
     });
@@ -160,12 +181,12 @@ M.core_question_engine.init_submit_button = function(Y, button) {
  * @param Y the Yahoo object. Needs to have the DOM and Event modules loaded.
  * @param form something that can be passed to Y.one, to find the form element.
  * @deprecated since Moodle 4.0
- * @see question\bank\qbank_previewquestion\amd\src
+ * @see core_question/question_engine
  * @todo Final deprecation on Moodle 4.4 MDL-72438
  */
 M.core_question_engine.init_form = function(Y, form) {
     Y.log("The core_question_engine.init_form function has been deprecated. " +
-        "Please use setupQuestionForm() in qbank_preview/preview.js instead.", 'moodle-core-notification', 'warn');
+        "Please use init_form in core_question/question_engine instead.", 'moodle-core-notification', 'warn');
 
     Y.one(form).setAttribute('autocomplete', 'off');
 
@@ -188,12 +209,12 @@ M.core_question_engine.init_form = function(Y, form) {
  * @param e the form submit event.
  * @param form the form element.
  * @deprecated since Moodle 4.0
- * @see question\bank\qbank_previewquestion\amd\src
+ * @see core_question/question_engine
  * @todo Final deprecation on Moodle 4.4 MDL-72438
  */
 M.core_question_engine.prevent_repeat_submission = function(e, Y) {
     Y.log("The prevent_repeat_submission function has been deprecated. " +
-        "Please use preventRepeatSubmission in qbank_preview/preview.js instead.", 'moodle-core-notification', 'warn');
+        "Please use preventRepeatSubmission in core_question/question_engine instead.", 'moodle-core-notification', 'warn');
 
     if (M.core_question_engine.questionformalreadysubmitted) {
         e.halt();

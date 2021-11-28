@@ -190,10 +190,6 @@ if (data_submitted() && confirm_sesskey()) {
             question_engine::save_questions_usage_by_activity($quba);
             $transaction->allow_commit();
 
-            $scrollpos = optional_param('scrollpos', '', PARAM_RAW);
-            if ($scrollpos !== '') {
-                $actionurl->param('scrollpos', (int) $scrollpos);
-            }
             redirect($actionurl);
         }
 

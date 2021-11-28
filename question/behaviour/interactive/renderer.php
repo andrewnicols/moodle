@@ -65,8 +65,7 @@ class qbehaviour_interactive_renderer extends qbehaviour_renderer {
         }
         $output = html_writer::empty_tag('input', $attributes);
         if (empty($attributes['disabled'])) {
-            $this->page->requires->js_init_call('M.core_question_engine.init_submit_button',
-                    array($attributes['id']));
+            $this->page->requires->js_call_amd('core_question/question_engine', 'initSubmitButton', [$attributes['id']]);
         }
         return $output;
     }

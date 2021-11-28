@@ -2871,6 +2871,17 @@ function redirect($url, $message='', $delay=null, $messagetype = \core\output\no
         $url = $url->out(false);
     }
 
+    // If the current url contains mdlscrollto, we foward it to the redirect url.
+    $mdlscrollto = optional_param('mdlscrollto', '', PARAM_INT);
+    if ($mdlscrollto) {
+        $query = parse_url($url, PHP_URL_QUERY);
+        if ($query) {
+            $url .= '&mdlscrollto=' . $mdlscrollto;
+        } else {
+            $url .= '?mdlscrollto=' . $mdlscrollto;
+        }
+    }
+
     $debugdisableredirect = false;
     do {
         if (defined('DEBUGGING_PRINTED')) {

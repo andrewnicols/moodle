@@ -138,8 +138,10 @@ Moodle 4.0 included the results of a major project to re-work the question bank.
     referring to the behat_question class name (nothing in the standard Moodle code was)
     then you will have to update your reference.
 
+8) The question/qengine.js has been deprecated. We create core_question/question_engine
+   and core/scroll_manager to replace it.
 
-=== 3.9 ===
+=== 3.9 ==
 
 1) For years, the ..._questions_in_use callback has been the right way for plugins to
    tell the core question system if questions are required. Previously this callback
