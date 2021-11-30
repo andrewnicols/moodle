@@ -61,6 +61,18 @@ class core_componentlib_testcase extends advanced_testcase {
         $this->assertSame('47250a973d1b88d9445f94db4ef2c97a', md5_file($destpath.'/'.'test.html'));
     }
 
+    public function test_failure(): void {
+        $this->assertTrue(false);
+    }
+
+    public function test_pass(): void {
+        $this->assertTrue(true);
+    }
+
+    public function test_another_failure(): void {
+        $this->assertNull(0);
+    }
+
     /**
      * Test the public API of the {@link lang_installer} class.
      */
