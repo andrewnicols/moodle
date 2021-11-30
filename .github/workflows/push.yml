@@ -107,7 +107,9 @@ jobs:
           sudo locale-gen en_AU.UTF-8
           php admin/tool/phpunit/cli/init.php --no-composer-self-update
 
+      - name: Configure matchers
+        uses: mheap/phpunit-matcher-action@v1
       - name: Running PHPUnit tests
         env:
           dbtype: ${{ matrix.db }}
-        run: vendor/bin/phpunit -v
+        run: vendor/bin/phpunit -v --teamcity
