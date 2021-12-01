@@ -42,7 +42,7 @@ Feature: Automatic completion in the choice activity
     Then "What to drink?" should have the "View" completion condition
     And "What to drink?" should have the "Make a choice" completion condition
 
-  @javascript
+  @javascript @skip_interim
   Scenario: Overriding automatic choice completion for a user
     Given I am on the "Course 1" course page logged in as teacher1
     And I navigate to "Reports > Activity completion" in current page administration

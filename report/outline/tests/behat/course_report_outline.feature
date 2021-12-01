@@ -1,4 +1,4 @@
-@report @report_outline
+@report @report_outline @skip_interim
 Feature: In a course administration page, navigate through report page, test for activity report page
   In order to navigate through report page
   As an admin

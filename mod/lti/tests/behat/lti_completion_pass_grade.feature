@@ -1,4 +1,4 @@
-@mod @mod_lti @core_completion @javascript
+@mod @mod_lti @core_completion @javascript @skip_interim
 Feature: Pass grade activity completion information in the LTI activity
 
   Background:

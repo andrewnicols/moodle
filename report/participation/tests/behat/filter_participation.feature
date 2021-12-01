@@ -1,4 +1,4 @@
-@report @report_participation
+@report @report_participation @skip_interim
 Feature: In a participation report, admin can filter student actions
   In order to filter participation data
   As a student

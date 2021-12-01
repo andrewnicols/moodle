@@ -1,4 +1,4 @@
-@mod @mod_h5pactivity @core_h5p @_file_upload @_switch_iframe @javascript @core_completion
+@mod @mod_h5pactivity @core_h5p @_file_upload @_switch_iframe @javascript @core_completion @skip_interim
 Feature: Pass grade activity completion information in the h5p activity
 
   Background:

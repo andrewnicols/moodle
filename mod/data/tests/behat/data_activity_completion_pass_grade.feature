@@ -1,4 +1,4 @@
-@mod @mod_data @core_completion
+@mod @mod_data @core_completion @skip_interim
 Feature: Completion pass grade
   View activity completion in the database activity
   In order to have visibility of database completion requirements

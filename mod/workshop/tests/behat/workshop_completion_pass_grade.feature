@@ -1,4 +1,4 @@
-@mod @mod_workshop @core_completion @javascript
+@mod @mod_workshop @core_completion @javascript @skip_interim
 Feature: Workshop submission and assessment with pass grade activity completion
 
   Background:

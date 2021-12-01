@@ -1,4 +1,4 @@
-@mod @mod_choice @core_completion
+@mod @mod_choice @core_completion @skip_interim
 Feature: Manual completion in the choice activity
   To avoid navigating from the choice activity to the course homepage to mark the choice activity as complete
   As a student

@@ -17,7 +17,7 @@ Feature: Scorm multi-sco completion
       | teacher1 | C1     | editingteacher |
       | student1 | C1     | student        |
 
-  @javascript
+  @javascript @skip_interim
   Scenario: Test completion with a single sco completion.
     Given the following "activity" exists:
       | activity                 | scorm                                                    |
@@ -42,7 +42,7 @@ Feature: Scorm multi-sco completion
     And I am on the "Course 1" course page logged in as teacher1
     Then "Student 1" user has completed "Basic Multi-sco SCORM package" activity
 
-  @javascript
+  @javascript @skip_interim
   Scenario: Test completion with all scos and correct sco load on re-entry.
     Given the following "activity" exists:
       | activity                | scorm                                                    |

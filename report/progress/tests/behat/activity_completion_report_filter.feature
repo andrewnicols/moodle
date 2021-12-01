@@ -1,4 +1,4 @@
-@report @report_progress
+@report @report_progress @skip_interim
 Feature: Teacher can view and filter activity completion data by group and activity type.
 
   Background:
