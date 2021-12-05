@@ -3729,6 +3729,11 @@
           <ON_CHECK message="iscustomadminwarnings" />
         </FEEDBACK>
       </CUSTOM_CHECK>
+      <CUSTOM_CHECK file="lib/upgradelib.php" function="check_xmlrpc_webservice_usage" level="optional">
+        <FEEDBACK>
+          <ON_CHECK message="xmlrpcwebserviceenabled" />
+        </FEEDBACK>
+      </CUSTOM_CHECK>
     </CUSTOM_CHECKS>
   </MOODLE>
 </COMPATIBILITY_MATRIX>

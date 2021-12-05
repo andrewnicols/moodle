@@ -2732,3 +2732,33 @@ function check_admin_dir_usage(environment_results $result): ?environment_result
 
     return $result;
 }
+
+/**
+ * Check whether the XMLRPC Web Service protocol is enabled and warn if so.
+ *
+ * The xmlrpc protocol will be removed in a future version (4.1) as it is no longer supportable by PHP.
+ *
+ * See MDL-70889 for further information.
+ *
+ * @param environment_results $result
+ * @return null|environment_results
+ */
+function check_xmlrpc_webservice_usage(environment_results $result): ?environment_results {
+    global $CFG;
+
+    if (empty($CFG->webserviceprotocols)) {
+        return null;
+    }
+
+    $plugins = array_flip(explode(',', $CFG->webserviceprotocols));
+
+    if (!array_key_exists('xmlrpc', $plugins)) {
+        return null;
+    }
+
+    $result->setInfo('xmlrpc_webservice_usage');
+    $result->setStatus(false);
+
+    return $result;
+
+}
