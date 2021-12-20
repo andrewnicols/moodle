@@ -287,6 +287,19 @@ class behat_core_generator extends behat_generator_base {
                 'required' => ['user', 'course', 'lastaccess'],
                 'switchids' => ['user' => 'userid', 'course' => 'courseid'],
             ],
+            'files' => [
+                'singular' => 'file',
+                'datagenerator' => 'stored_file',
+                'required' => [
+                    'user',
+                    'contextlevel',
+                    'reference',
+                    'component',
+                    'filearea',
+                    'path',
+                ],
+                'switchids' => ['user' => 'userid'],
+            ],
         ];
 
         return $entities;
@@ -1118,5 +1131,30 @@ class behat_core_generator extends behat_generator_base {
             $updatedata = (object) $updatedata;
             $DB->update_record('user', $updatedata);
         }
+    }
+
+    /**
+     * Create a stored_file record.
+     *
+     * @param array $data
+     */
+    protected function process_stored_file(array $data): void {
+        global $CFG;
+
+        $context = $this->get_context($data['contextlevel'], $data['reference']);
+        unset($data['contextlevel']);
+        unset($data['reference']);
+
+        $fs = get_file_storage();
+
+        $pathondisk = $data['path'];
+        unset($data['path']);
+
+        $fs->create_file_from_pathname(array_merge([
+            'contextid' => $context->id,
+            'itemid' => 0,
+            'filepath' => $data['filepath'] ?? dirname($pathondisk),
+            'filename' => $data['filename'] ?? basename($pathondisk),
+        ], $data), $CFG->dirroot . DIRECTORY_SEPARATOR . $pathondisk);
     }
 }
