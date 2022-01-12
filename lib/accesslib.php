@@ -5008,6 +5008,39 @@ abstract class context extends stdClass implements IteratorAggregate {
     }
 
     /**
+     * Get the maximum size of the context cache.
+     *
+     * This considers both the CONTEXT_CACHE_MAX_SIZE constant, and any max cache size already set for a bulk operation.
+     *
+     * @return int
+     */
+    protected static function get_max_cache_size(): int {
+        global $CFG;
+
+        return max(CONTEXT_CACHE_MAX_SIZE, $CFG->context_cache_max_size ?? 0);
+    }
+
+    /**
+     * Set a new max cache size for the context cache.
+     *
+     * @param int $newcachesize
+     */
+    protected static function set_max_cache_size(int $newcachesize): void {
+        global $CFG;
+
+        if ($newcachesize > 2 * CONTEXT_CACHE_MAX_SIZE) {
+            debugging('Attempting to set new cache size to an extremely high value.');
+        }
+
+        $newcachesize = min(
+            max($CFG->context_cache_max_size ?? 0, $newcachesize),
+            2 * CONTEXT_CACHE_MAX_SIZE
+        );
+
+        $CFG->context_cache_max_size = $newcachesize;
+    }
+
+    /**
      * Adds a context to the cache. If the cache is full, discards a batch of
      * older entries.
      *
@@ -5021,7 +5054,9 @@ abstract class context extends stdClass implements IteratorAggregate {
             return;
         }
 
-        if (self::$cache_count >= CONTEXT_CACHE_MAX_SIZE) {
+        $maxcachesize = self::get_max_cache_size();
+
+        if (self::$cache_count >= $maxcachesize) {
             $i = 0;
             foreach (self::$cache_contextsbyid as $ctx) {
                 $i++;
@@ -5029,7 +5064,7 @@ abstract class context extends stdClass implements IteratorAggregate {
                     // we want to keep the first contexts to be loaded on this page, hopefully they will be needed again later
                     continue;
                 }
-                if ($i > (CONTEXT_CACHE_MAX_SIZE / 3)) {
+                if ($i > ($maxcachesize / 3)) {
                     // we remove oldest third of the contexts to make room for more contexts
                     break;
                 }
@@ -6433,6 +6468,8 @@ class context_system extends context {
                   FROM {context} c
                  WHERE contextlevel > ".CONTEXT_SYSTEM;
         $records = $DB->get_records_sql($sql);
+
+        selfl::set_max_cache_size(count($records) * 1.1);
 
         $result = array();
         foreach ($records as $record) {
