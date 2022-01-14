@@ -43,6 +43,22 @@ const RESOURCE = 1;
 export default class extends ItemChooser {
 
     /**
+     * @property {string} The name of the itemchooser type.
+     */
+    static name = 'coursechooser';
+
+    /**
+     * Constructor to configure the chooser.
+     *
+     * @param {Number} courseId
+     */
+    constructor(courseId) {
+        super();
+
+        this.courseId = courseId;
+    }
+
+    /**
      * Set the tab mode.
      *
      * @param {number} tabMode
@@ -58,17 +74,6 @@ export default class extends ItemChooser {
      */
     get tabMode() {
         return this._tabMode;
-    }
-
-    /**
-     * Constructor to configure the chooser.
-     *
-     * @param {Number} courseId
-     */
-    constructor(courseId) {
-        super();
-
-        this.courseId = courseId;
     }
 
     /**
@@ -151,7 +156,6 @@ export default class extends ItemChooser {
         return {
             name: 'activities',
             filterFunction: item => item.archetype === ACTIVITY,
-            visibleFunction: ({items}) => !!items.length,
             titleIdentifier: 'activities',
             titleComponent: 'core',
         };
@@ -166,7 +170,6 @@ export default class extends ItemChooser {
         return {
             name: 'resources',
             filterFunction: item => item.archetype === RESOURCE,
-            visibleFunction: ({items}) => !!items.length,
             titleIdentifier: 'resources',
             titleComponent: 'core',
         };
@@ -222,5 +225,21 @@ export default class extends ItemChooser {
             return fetchFooterData(this.courseId, this.sectionId);
         }
         return Promise.resolve('');
+    }
+
+    /**
+     * Get the tab visibility controller function for the named tab.
+     *
+     * @param {string} tabName
+     * @return {function|null}
+     */
+    getTabVisibilityFunction(tabName) {
+        switch (tabName) {
+            case 'activities':
+            case 'resources':
+                return ({items}) => !!items.length;
+            default:
+                return super.getTabVisibilityFunction(tabName);
+        }
     }
 }

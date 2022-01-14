@@ -22,7 +22,7 @@
  */
 
 import selectors from 'core_course/local/activitychooser/selectors';
-import ModChooser from './local/modchooser/itemchooser';
+import ItemChooser from './local/modchooser/itemchooser';
 
 const getCaller = target => {
     // We need to know who called this.
@@ -47,7 +47,7 @@ export const init = (courseId, chooserConfig) => {
     let chooserInstance;
     const getChooser = () => {
         if (!chooserInstance) {
-            chooserInstance = new ModChooser(courseId);
+            chooserInstance = new ItemChooser(courseId);
             chooserInstance.tabMode = chooserConfig.tabmode;
         }
 
