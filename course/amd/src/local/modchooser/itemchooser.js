@@ -155,7 +155,6 @@ export default class extends ItemChooser {
     get activitiesTab() {
         return {
             name: 'activities',
-            filterFunction: item => item.archetype === ACTIVITY,
             titleIdentifier: 'activities',
             titleComponent: 'core',
         };
@@ -169,7 +168,6 @@ export default class extends ItemChooser {
     get resourcesTab() {
         return {
             name: 'resources',
-            filterFunction: item => item.archetype === RESOURCE,
             titleIdentifier: 'resources',
             titleComponent: 'core',
         };
@@ -241,5 +239,32 @@ export default class extends ItemChooser {
             default:
                 return super.getTabVisibilityFunction(tabName);
         }
+    }
+
+    /**
+     * Get the tab visibility controller function for the named tab.
+     *
+     * @param {string} tabName
+     * @return {function|null}
+     */
+    getTabFilterFunction(tabName) {
+        switch (tabName) {
+            case 'activities':
+                return item => item.archetype === ACTIVITY;
+            case 'resources':
+                return item => item.archetype === RESOURCE;
+            default:
+                return super.getTabFilterFunction(tabName);
+        }
+    }
+
+    /**
+     * Handle selection of the item.
+     *
+     * @param {string} itemName
+     */
+    handleItemSelection(itemName) {
+        const item = this.state.items.get(itemName);
+        window.location.href = `${item.link}&section=${this.sectionId}`;
     }
 }
