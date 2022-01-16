@@ -35,7 +35,7 @@
 
 <div data-region="carousel" class="carousel slide d-flex flex-fill">
     <div class="carousel-inner d-flex flex-fill" aria-live="polite">
-        <div class="carousel-item p-3 active" data-region="modules">
+        <div class="carousel-item p-3 active" data-id="items" data-region="modules">
             <div class="modchoosercontainer d-flex flex-column flex-fill" aria-label="{{#str}} activitymodules, core {{/str}}">
                 <div class="searchcontainer mb-3">
                     {{>core/local/itemchooser/search}}
@@ -71,8 +71,8 @@
                 </div>
             </div>
         </div>
-        <div class="carousel-item" data-region="help"></div>
+        <div class="carousel-item" data-id="help" data-region="help"></div>
         <!--The following div is used as a place for additional plugins to have widgets in the chooser.-->
-        <div class="carousel-item" data-region="pluginCarousel"></div>
+        <div class="carousel-item" data-id="pluginCarousel" data-region="pluginCarousel"></div>
     </div>
 </div>

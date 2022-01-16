@@ -179,9 +179,7 @@ export default class extends ItemChooser {
      * @returns {object}
      */
     get chooserTemplateContext() {
-        return {
-            classes: 'modchooser',
-        };
+        return super.chooserTemplateContext;
     }
 
     /**
