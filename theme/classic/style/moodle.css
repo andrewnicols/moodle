@@ -11636,6 +11636,13 @@ h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
   .chart-area .chart-table.accesshide .chart-table-data {
     display: block; }
 
+.chart-area .chart-image {
+  /** Class to adjust chart size inside chart-area. */
+  position: relative;
+  margin: auto;
+  height: 70vh;
+  width: 40vw; }
+
 ul {
   padding-left: 1rem;
   -webkit-margin-start: 0.2rem;

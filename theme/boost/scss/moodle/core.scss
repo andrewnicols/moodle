@@ -2193,6 +2193,14 @@ h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
             }
         }
     }
+
+    .chart-image {
+        /** Class to adjust chart size inside chart-area. */
+        position: relative;
+        margin: auto;
+        height: 70vh;
+        width: 40vw;
+    }
 }
 
 // Reset for ul.
