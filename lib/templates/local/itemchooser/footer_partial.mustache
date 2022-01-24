@@ -15,22 +15,19 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template core_course/chooser_favourites
+    @template core/local/itemchooser/footer_partial
 
     Chooser favourite template partial.
 
     Example context (json):
     {
-        "favourites": {
-            "label": "Option name",
-            "description": "Option description",
-            "urls": {
-                "addoption": "http://addoptionurl.com"
-            },
-            "icon": "<img class='icon' src='http://urltooptionicon'>"
-        }
     }
 }}
-{{#favourites}}
-    {{>core_course/local/activitychooser/item}}
-{{/favourites}}
+<div class="w-100 d-flex justify-content-between" data-region="chooser-option-summary-actions-container">
+    <button data-action="close-chooser-option-summary" class="closeoptionsummary btn btn-secondary" tabindex="0" data-modname="{{componentname}}_{{link}}">
+        {{#str}} back {{/str}}
+    </button>
+    <a href="{{link}}" title="{{#str}} addnew, moodle, {{title}} {{/str}}" data-action="add-chooser-option" class="addoption btn btn-primary" tabindex="0">
+        {{#str}} add {{/str}}
+    </a>
+</div>

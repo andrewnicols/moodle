@@ -131,7 +131,7 @@ class core_course_renderer extends plugin_renderer_base {
      * @return string
      */
     public function render_modchooser(renderable $modchooser) {
-        return $this->render_from_template('core_course/modchooser', $modchooser->export_for_template($this));
+        return $this->render_from_template('core_course/activitychooser', $modchooser->export_for_template($this));
     }
 
     /**
@@ -164,7 +164,7 @@ class core_course_renderer extends plugin_renderer_base {
         $chooserconfig = (object) [
             'tabmode' => get_config('core', 'activitychoosertabmode'),
         ];
-        $this->page->requires->js_call_amd('core_course/modchooser', 'init', [$courseid, $chooserconfig]);
+        $this->page->requires->js_call_amd('core_course/activitychooser', 'init', [$courseid, $chooserconfig]);
 
         return '';
     }
