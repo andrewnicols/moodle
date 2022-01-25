@@ -159,6 +159,8 @@ $string['userentriestorevive'] = "User entries to be revived: {\$a}\n";
 $string['userentriestoupdate'] = "User entries to be updated: {\$a}\n";
 $string['usernotfound'] = 'User not found in LDAP';
 $string['useracctctrlerror'] = 'Error getting userAccountControl for {$a}';
+$string['sync_updateuserchunk'] = 'Sync update users will update users in chunks; this is the chunk size, number of users to update in one transaction';
+$string['sync_updateuserchunk_key'] = 'Sync update users chunk size';
 
 $string['diag_genericerror'] = 'LDAP error {$a->code} reading {$a->subject}: {$a->message}.';
 $string['diag_toooldversion'] = 'It is very unlikely a modern LDAP server uses LDAPv2 protocol. Wrong settings can corrupt values in user fields. Check with your LDAP administrator.';
