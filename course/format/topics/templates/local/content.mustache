@@ -1,0 +1,18 @@
+{{< core_courseformat/local/content }}
+
+
+{{! Override the content/section/header by wrapping the standard header in an extra <div> }}
+{{$ core_courseformat/local/content/section/header }}
+    <div class="mynewdiv">
+        {{> core_courseformat/local/content/section/header }}
+    </div>
+{{/ core_courseformat/local/content/section/header }}
+
+
+{{! Override the section/summary with something for format_topics in particular }}
+{{$ core_courseformat/local/content/section/summary }}
+    {{> format_topics/local/content/section/summary }}
+{{/ core_courseformat/local/content/section/summary }}
+
+
+{{/ core_courseformat/local/content }}
