@@ -1,0 +1,27 @@
+{{!
+
+This is an example template to override individual child templates in the content of a course.
+
+All overridable templates are listed in this file.
+
+If you are overriding this template, or any of the children listed here, then you must also create and configure the
+format_[yourplugin]\output\local\content\cm\title class.
+
+}}
+
+{{!
+    Note: This template does not include any blocks as standard.
+    You should not use the block inclusion tags.
+}}
+{{!> core_courseformat/local/content/cm/title }}
+
+
+{{!
+
+EXAMPLE: Wrapping the entire content in a new div and adding additional siblings.
+
+}}
+<div class="my_first_example">
+    {{> core_courseformat/local/content/cm/title }}
+    <div class="d-flex flex-column my_second_example">Example sibling</div>
+</div>

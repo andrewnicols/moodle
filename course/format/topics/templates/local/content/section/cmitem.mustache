@@ -1,0 +1,84 @@
+{{!
+
+This is an example template to override individual child templates in a course module (activity).
+
+All overridable templates are listed in this file.
+
+If you are overriding this template, or any of the children listed here, then you must also:
+* create and configure the format_[yourplugin]\output\local\content\section\cmitem class;
+* override the content/section template; and
+* create and configure the format_[yourplugin]\output\local\content\section class;
+* override the content template; and
+* create and configure the format_[yourplugin]\output\local\content class.
+
+}}
+
+{{!
+  Include the core content/section/cmitem template.
+  This is the template used to render a single activity.
+}}
+{{< core_courseformat/local/content/section/cmitem }}
+
+
+    {{!
+        The representation of the course module.
+        Source: core_courseformat/local/content/cm/badges
+
+        Note: This template has lots of children.
+        If you wish to override this template, or any of it's children, then they must be specified in this file.
+    }}
+    {{!$ core_courseformat/local/content/cm}}
+        {{!> core_courseformat/local/content/cm }}
+    {{!/ core_courseformat/local/content/cm}}
+
+    {{!
+        The representation of the course module 'badges'.
+        Source: core_courseformat/local/content/cm/badges
+    }}
+    {{!$ core_courseformat/local/content/cm/badges }}
+        {{!> core_courseformat/local/content/cm/badges }}
+    {{!/ core_courseformat/local/content/cm/badges }}
+
+
+    {{!
+        The representation of the course module information.
+        Source: core_courseformat/local/content/cm/activity_info
+    }}
+    {{!$ core_courseformat/local/content/cm/activity_info }}
+        {{!> core_courseformat/local/content/cm/activity_info }}
+    {{!/ core_courseformat/local/content/cm/activity_info }}
+
+
+    {{!
+        The representation of the course module control menu.
+        Source: core_courseformat/local/content/cm/controlmenu
+    }}
+    {{!$ core_courseformat/local/content/cm/controlmenu }}
+        {{!> core_courseformat/local/content/cm/controlmenu }}
+    {{!/ core_courseformat/local/content/cm/controlmenu }}
+
+
+    {{!
+        The representation of the course module availability information.
+        Source: core_courseformat/local/content/cm/availability
+    }}
+    {{!$ core_courseformat/local/content/cm/availability }}
+        {{!> core_courseformat/local/content/cm/availability }}
+    {{!/ core_courseformat/local/content/cm/availability }}
+
+{{!
+
+EXAMPLE: The following is an example of wrapping one of the standard templates in a new div.
+
+We also override the format_topics\output\local\content\section\cmitem class to specify the template name of this
+template.
+
+}}
+
+    {{$ core_courseformat/local/content/cm}}
+        <div class="text-monospace">
+            {{> core_courseformat/local/content/cm }}
+        </div>
+    {{/ core_courseformat/local/content/cm}}
+
+{{/ core_courseformat/local/content/section/cmitem }}

@@ -1,0 +1,26 @@
+{{!
+
+EXAMPLE
+
+This is an example of how the standard section summary template can be overridden.
+
+Care should be taken when overriding entire templates in this manner and it is recommended that you carefully check git
+logs for any template that is overridden between versions.
+
+Note: there is no need to override the \core_courseformat\output\local\content\section\summary class for this change as
+the section summary is only ever rendered as part of the whole section.
+
+}}
+{{#summarytext}}
+    {{!
+        This example adds some extra classes to the standard summary div.
+    }}
+    <div class="course-description-item summarytext mycustomtemplate example">
+        {{!
+            And also to the inner description.
+        }}
+        <div class="description-inner text-monospace">
+            {{{summarytext}}}
+        </div>
+    </div>
+{{/summarytext}}

@@ -1,0 +1,95 @@
+{{!
+
+This is an example template to override individual child templates in the content of a course.
+
+All overridable templates are listed in this file.
+
+If you are overriding this template, or any of the children listed here, then you must also create and configure the
+format_[yourplugin]\output\local\content class.
+
+To override the formatting of a section, you will need to:
+* override the section template, following the documentation in local/content/section.mustache;
+* provide a format_[yourplugin]\output\local\content\section class with detail of the overridden section template;
+* override this template to include the section; and
+* provide a format_[yourplugin]\output\local\content class with detail of the overridden content template.
+
+To override the formatting of a course module (activity), you will need to:
+* override the cmitem template, following the documentation in local/content/section/cmitem.mustache;
+* provide a format_[yourplugin]\output\local\content\section\cmitem class with detail of the overridden cmitem template;
+* override the section template, following the documentation in local/content/section.mustache;
+* provide a format_[yourplugin]\output\local\content\section class with detail of the overridden section template;
+* override this template to include the section; and
+* provide a format_[yourplugin]\output\local\content class with detail of the overridden content template.
+
+}}
+
+{{!
+  Include the core content template.
+  This is the top template for a course.
+}}
+{{< core_courseformat/local/content }}
+
+    {{!
+        The representation of a single section.
+        Source: core_courseformat/local/content/section
+
+        Note: To override the section template you must also override the section class.
+        See notes in the content/section example.
+    }}
+    {{!$ core_courseformat/local/content/section }}
+        {{! In this example, we override it with a template in the format_topics component }}
+        {{!> format_topics/local/content/section }}
+    {{!/ core_courseformat/local/content/section }}
+
+
+    {{!
+        The representation of the section navigation.
+        Source: core_courseformat/local/content/sectionnavigation
+    }}
+    {{!$ core_courseformat/local/content/sectionnavigation }}
+        {{!> core_courseformat/local/content/sectionnavigation }}
+    {{!/ core_courseformat/local/content/sectionnavigation }}
+
+
+    {{!
+        The representation of the section selector.
+        Source: core_courseformat/local/content/sectionselector
+    }}
+    {{!$ core_courseformat/local/content/sectionselector }}
+        {{!> core_courseformat/local/content/sectionselector }}
+    {{!/ core_courseformat/local/content/sectionselector }}
+
+
+    {{!
+        The representation of the "Add section" button.
+        Source: core_courseformat/local/content/addsection
+
+        Note: This template is also used in the content/section template and must be specified there too.
+    }}
+    {{!$ core_courseformat/local/content/addsection }}
+        {{!> core_courseformat/local/content/addsection }}
+    {{!/ core_courseformat/local/content/addsection }}
+
+{{!
+
+EXAMPLE: The following is an example of overriding part of a cmitem.
+
+Because the cmitem may be rendered individually, as part of a single section, or a part of an entire course, the
+following three templates _must_ be overridden:
+* core_courseformat\local\content
+* core_courseformat\local\content\section
+* core_courseformat\local\content\section\cmitem
+
+
+The following classes must also be provided and specify the respective template names:
+* format_topics\output\local\content
+* format_topics\output\local\content\section
+* format_topics\output\local\content\section\cmitem
+
+}}
+
+    {{$ core_courseformat/local/content/section }}
+        {{> format_topics/local/content/section }}
+    {{/ core_courseformat/local/content/section }}
+
+{{/ core_courseformat/local/content }}

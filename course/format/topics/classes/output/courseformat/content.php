@@ -42,4 +42,7 @@ class content extends content_base {
      */
     protected $hasaddsection = false;
 
+    public function get_template_name(\renderer_base $renderer): string {
+        return 'format_topics/local/content';
+    }
 }
