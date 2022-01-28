@@ -1,0 +1,17 @@
+{{< core_courseformat/local/content/section/cmitem }}
+
+
+{{! Override the content/section/header by wrapping the standard header in an extra <div> }}
+{{$ core_courseformat/local/content/cm}}
+    {{! An example of wrapping the standard template in a div: !}}
+    <div class="text-monospace">
+        {{> core_courseformat/local/content/cm }}
+    </div>
+
+
+    {{! Or you can create your own version of the cm template and use that instead: }}
+    {{! format_topics/local/content/cm }}
+{{/ core_courseformat/local/content/cm}}
+
+
+{{/ core_courseformat/local/content/section/cmitem }}
