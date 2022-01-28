@@ -96,19 +96,45 @@ class mustache_template_finder {
     /**
      * Helper function for getting a filename for a template from the template name.
      *
-     * @param string $name - This is the componentname/templatename combined.
-     * @param string $themename - This is the current theme name.
+     * @param string $name The template name
+     * @param string $themename The current theme name
      * @return string
+     * @throws coding_exception If the template was not found
      */
     public static function get_template_filepath($name, $themename = '') {
-        global $CFG, $PAGE;
+        $candidate = self::get_template_path($name, $themename);
+        if ($candidate) {
+            return $candidate;
+        }
 
+        throw new moodle_exception('filenotfound', 'error', '', null, $name);
+    }
+
+    /**
+     * Helper function to determine if the specified template exists in any way.
+     *
+     * @param string $name - This is the componentname/templatename combined.
+     * @return bool
+     */
+    public static function template_exists(string $name): bool {
+        return self::get_template_path($name) ? true : false;
+    }
+
+    /**
+     * Helper to determine the best matching template path for the specified template name, given the current theme.
+     *
+     * @param string $name The template name
+     * @param string $themename The current theme name
+     * @return string|null
+     * @throws coding_exception If the template name is invalid
+     */
+    protected static function get_template_path(string $name, string $themename = ''): ?string {
         if (strpos($name, '/') === false) {
             throw new coding_exception('Templates names must be specified as "componentname/templatename"' .
                                        ' (' . s($name) . ' requested) ');
         }
 
-        list($component, $templatename) = explode('/', $name, 2);
+        [$component, $templatename] = explode('/', $name, 2);
         $component = clean_param($component, PARAM_COMPONENT);
 
         $dirs = self::get_template_directories_for_component($component, $themename);
@@ -120,6 +146,6 @@ class mustache_template_finder {
             }
         }
 
-        throw new moodle_exception('filenotfound', 'error', '', null, $name);
+        return null;
     }
 }

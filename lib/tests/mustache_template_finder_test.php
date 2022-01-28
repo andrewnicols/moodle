@@ -23,15 +23,19 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace core\output;
 
-use core\output\mustache_template_finder;
+use advanced_testcase;
+use coding_exception;
+use moodle_exception;
 
 /**
  * Unit tests for the Mustache template finder class (contains logic about
  * resolving mustache template locations.
+ *
+ * @coversDefaultClass \core\output\mustache_template_finder
  */
-class core_output_mustache_template_finder_testcase extends advanced_testcase {
+class mustache_template_finder_test extends advanced_testcase {
 
     /**
      * Data provider which reutrns a set of valid template directories to be used when testing
@@ -86,6 +90,7 @@ class core_output_mustache_template_finder_testcase extends advanced_testcase {
      * @param   string $component
      * @param   string $theme
      * @param   array $paths
+     * @covers ::get_template_directories_for_component
      */
     public function test_get_template_directories_for_component(string $component, string $theme, array $paths): void {
         global $CFG;
@@ -102,6 +107,7 @@ class core_output_mustache_template_finder_testcase extends advanced_testcase {
 
     /**
      * Tests for get_template_directories_for_component when dealing with an invalid component.
+     * @covers ::get_template_directories_for_component
      */
     public function test_invalid_component_get_template_directories_for_component() {
         // Test something invalid.
@@ -174,8 +180,42 @@ class core_output_mustache_template_finder_testcase extends advanced_testcase {
     }
 
     /**
+     * Data provider which returns deta for invalid template paths.
+     */
+    public function invalid_template_filepath_provider(): array {
+        $base = [
+            'Invalid templatename' => [
+                'flurge',
+                '',
+                coding_exception::class,
+            ],
+            'Invalid component' => [
+                'flurgle/some_template/name',
+                '',
+                coding_exception::class,
+            ],
+            'Valid component format, but component does not exist' => [
+                'flurgle_blurgle/some_template/name',
+                '',
+                coding_exception::class,
+            ],
+        ];
+
+        $tests = [];
+        foreach ($base as $testcase => $data) {
+            $tests[$testcase] = $data;
+            $tests[$testcase . " (classic)"] = $data;
+            $tests[$testcase . " (classic)"][1] = 'classic';
+        }
+
+        return $tests;
+    }
+
+    /**
      * Tests for get_template_filepath.
      *
+     * @covers  ::get_template_filepath
+     * @covers  ::get_template_path
      * @dataProvider valid_template_filepath_provider
      * @param   string $template
      * @param   string $theme
@@ -190,9 +230,90 @@ class core_output_mustache_template_finder_testcase extends advanced_testcase {
 
     /**
      * Tests for get_template_filepath when dealing with an invalid component.
+     *
+     * @covers ::get_template_filepath
+     * @covers ::get_template_path
+     * @dataProvider invalid_template_filepath_provider
+     * @param string $template
+     * @param string $theme
+     * @param string $exceptiontype
      */
-    public function test_invalid_component_get_template_filepath() {
+    public function test_invalid_component_get_template_filepath(string $template, string $theme, string $exceptiontype) {
+        $this->expectException($exceptiontype);
+        mustache_template_finder::get_template_filepath($template, $theme);
+    }
+
+    /**
+     * Tests for get_template_filepath when dealing with an invalid component.
+     *
+     * @covers ::get_template_filepath
+     * @covers ::get_template_path
+     * @dataProvider invalid_template_filepath_provider
+     * @param string $template
+     * @param string $theme
+     * @param string $exceptiontype
+     */
+    public function test_invalid_template_exists(string $template, string $theme, string $exceptiontype) {
+        $this->expectException($exceptiontype);
+        mustache_template_finder::template_exists($template, $theme);
+    }
+
+    /**
+     * Tests for template_exists.
+     *
+     * @dataProvider valid_template_filepath_provider
+     * @covers  ::template_exists
+     * @covers  ::get_template_path
+     * @param   string $template
+     * @param   string $theme
+     */
+    public function test_template_exists(string $template, string $theme) {
+        $this->assertTrue(mustache_template_finder::template_exists($template, $theme));
+    }
+
+    /**
+     * Data provider for the template_exists with falsey data.
+     *
+     * @return array
+     */
+    public function template_exists_false_provider(): array {
+        return [
+            'Default theme' => [
+                'core/eno_template',
+                '',
+            ],
+            'Classic theme' => [
+                'core/eno_template',
+                'classic',
+            ],
+        ];
+    }
+
+    /**
+     * Tests for get_template_filepath when dealing with an invalid component.
+     *
+     * @covers ::template_exists
+     * @covers ::get_template_path
+     * @dataProvider template_exists_false_provider
+     * @param string $template
+     * @param string $theme
+     */
+    public function test_template_exists_not_exists(string $template, string $theme) {
+        $this->assertFalse(mustache_template_finder::template_exists($template, $theme));
+    }
+
+    /**
+     * Tests for get_template_filepath when dealing with an invalid component.
+     *
+     * @covers ::get_template_filepath
+     * @covers ::get_template_path
+     * @dataProvider template_exists_false_provider
+     * @param string $template
+     * @param string $theme
+     * @param string $exceptiontype
+     */
+    public function test_get_template_filepath_not_exists(string $template, string $theme) {
         $this->expectException(moodle_exception::class);
-        mustache_template_finder::get_template_filepath('core/octopus', 'classic');
+        mustache_template_finder::get_template_filepath($template, $theme);
     }
 }
