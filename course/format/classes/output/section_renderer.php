@@ -107,13 +107,16 @@ abstract class section_renderer extends core_course_renderer {
         if ($widget instanceof templatable) {
             // Templatables from both core_courseformat\output\xxx_format\* and format_xxx\output\xxx_format\*
             // use core_crouseformat/local/xxx_format templates by default.
-            $corepath = 'core_courseformat\/output\/local';
-            $pluginpath = 'format_.+\/output\/courseformat';
-            $specialrenderers = '/^(?<componentpath>' . $corepath . '|' . $pluginpath . ')\/(?<template>.+)$/';
+            $specialrenderers = '@^(?<component>[^/]*)/output/(local|courseformat)/(?<template>.+)$@';
             $matches = null;
 
             if (preg_match($specialrenderers, $fullpath, $matches)) {
                 $data = $widget->export_for_template($this);
+
+                $templatepath = "{$matches['component']}/local/{$matches['template']}";
+                if (\core\output\mustache_template_finder::template_exists($templatepath)) {
+                    return $this->render_from_template($templatepath, $data);
+                }
                 return $this->render_from_template('core_courseformat/local/' . $matches['template'], $data);
             }
         }
