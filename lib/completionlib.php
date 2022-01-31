@@ -230,6 +230,8 @@ function completion_can_view_data($userid, $course = null) {
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class completion_info {
+    /** @var stdClass Static cache storing data for whole course, to reduce get_record calls */
+    protected static $wholecourse;
 
     /* @var stdClass Course object passed during construction */
     private $course;
@@ -1060,60 +1062,45 @@ class completion_info {
             'timemodified' => 0,
         ];
 
-        // If cached completion data is not found, fetch via SQL.
-        // Fetch completion data for all of the activities in the course ONLY if we're caching the fetched completion data.
-        // If we're not caching the completion data, then just fetch the completion data for the user in this course module.
-        if ($usecache && $wholecourse) {
-            // Get whole course data for cache.
-            $alldatabycmc = $DB->get_records_sql("SELECT cm.id AS cmid, cmc.*
-                                                    FROM {course_modules} cm
-                                               LEFT JOIN {course_modules_completion} cmc ON cmc.coursemoduleid = cm.id
-                                                         AND cmc.userid = ?
-                                              INNER JOIN {modules} m ON m.id = cm.module
-                                                   WHERE m.visible = 1 AND cm.course = ?", [$userid, $this->course->id]);
-
-            $cminfos = get_fast_modinfo($cm->course, $userid)->get_cms();
-
-            // Reindex by course module id.
-            foreach ($alldatabycmc as $data) {
-
-                // Filter acitivites with no cm_info (missing plugins or other causes).
-                if (!isset($cminfos[$data->cmid])) {
-                    continue;
-                }
-
-                if (empty($data->coursemoduleid)) {
-                    $cacheddata[$data->cmid] = $defaultdata;
-                    $cacheddata[$data->cmid]['coursemoduleid'] = $data->cmid;
-                } else {
-                    $cacheddata[$data->cmid] = (array) $data;
-                }
-
-                // Add the other completion data for this user in this module instance.
-                $othercminfo = $cminfos[$data->cmid];
-                $cacheddata[$othercminfo->id] += $this->get_other_cm_completion_data($othercminfo, $userid);
+        // If cached completion data is not found, fetch via SQL. When we are likely to fetch the
+        // data for the whole course at once, do it with a single SQL query and use static cache
+        // so it isn't re-queried when there are multiple repeated requests.
+        if ($wholecourse) {
+            if (self::$wholecourse === null ||
+                    self::$wholecourse->courseid !== $this->course->id ||
+                    self::$wholecourse->userid !== $userid) {
+                self::$wholecourse = (object) [
+                        'courseid' => $this->course->id,
+                        'userid' => $userid
+                ];
+                self::$wholecourse->data = $DB->get_records_sql("
+                        SELECT cm.id AS cmid, cmc.*
+                          FROM {course_modules} cm
+                     LEFT JOIN {course_modules_completion} cmc ON cmc.coursemoduleid = cm.id
+                               AND cmc.userid = ?
+                          JOIN {modules} m ON m.id = cm.module
+                         WHERE m.visible = 1 AND cm.course = ?", [$userid, $this->course->id]);
             }
-
-            if (!isset($cacheddata[$cminfo->id])) {
+            if (!isset(self::$wholecourse->data[$cminfo->id])) {
                 $errormessage = "Unexpected error: course-module {$cminfo->id} could not be found on course {$this->course->id}";
                 $this->internal_systemerror($errormessage);
             }
-
+            $data = self::$wholecourse->data[$cminfo->id];
         } else {
-            // Get single record
             $data = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cminfo->id, 'userid' => $userid));
-            if ($data) {
-                $data = (array)$data;
-            } else {
-                // Row not present counts as 'not complete'.
-                $data = $defaultdata;
-            }
-            // Fill the other completion data for this user in this module instance.
-            $data += $this->get_other_cm_completion_data($cminfo, $userid);
-
-            // Put in cache
-            $cacheddata[$cminfo->id] = $data;
         }
+
+        if ($data) {
+            $data = (array)$data;
+        } else {
+            // Row not present counts as 'not complete'.
+            $data = $defaultdata;
+        }
+        // Fill the other completion data for this user in this module instance.
+        $data += $this->get_other_cm_completion_data($cminfo, $userid);
+
+        // Put in cache
+        $cacheddata[$cminfo->id] = $data;
 
         if ($usecache) {
             $cacheddata['cacherev'] = $this->course->cacherev;
