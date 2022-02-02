@@ -1039,7 +1039,18 @@ class completion_info {
                     // Course structure has been changed since the last caching, forget the cache.
                     $cacheddata = array();
                 } else if (isset($cacheddata[$cm->id])) {
-                    return (object)$cacheddata[$cm->id];
+                    $data = $cacheddata[$cm->id];
+                    if (!$data['fetched']) {
+                        $data += $this->get_other_cm_completion_data($cminfo, $userid);
+                        $data[$cm->id]['fetched'] = true;
+
+                        // Put in cache
+                        $cacheddata[$cminfo->id] = $data;
+
+                        $completioncache->set($key, $cacheddata);
+                    }
+
+                    return (object) $cacheddata[$cm->id];
                 }
             }
         }
@@ -1101,6 +1112,7 @@ class completion_info {
 
         // Fill the other completion data for this user in this module instance.
         $data += $this->get_other_cm_completion_data($cminfo, $userid);
+        $data['fetched'] = true;
 
         // Put in cache
         $cacheddata[$cminfo->id] = $data;
