@@ -230,8 +230,6 @@ function completion_can_view_data($userid, $course = null) {
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class completion_info {
-    /** @var stdClass Static cache storing data for whole course, to reduce get_record calls */
-    protected static $wholecourse;
 
     /* @var stdClass Course object passed during construction */
     private $course;
@@ -1019,7 +1017,9 @@ class completion_info {
      */
     public function get_data($cm, $wholecourse = false, $userid = 0, $modinfo = null) {
         global $USER, $DB;
+
         $completioncache = cache::make('core', 'completion');
+        $wholecoursecache = cache::make('core', 'course_completion_info');
 
         // Get user ID
         if (!$userid) {
@@ -1066,26 +1066,28 @@ class completion_info {
         // data for the whole course at once, do it with a single SQL query and use static cache
         // so it isn't re-queried when there are multiple repeated requests.
         if ($wholecourse) {
-            if (self::$wholecourse === null ||
-                    self::$wholecourse->courseid !== $this->course->id ||
-                    self::$wholecourse->userid !== $userid) {
-                self::$wholecourse = (object) [
-                        'courseid' => $this->course->id,
-                        'userid' => $userid
-                ];
-                self::$wholecourse->data = $DB->get_records_sql("
+            $changecourse = $wholecoursecache->get('courseid') !== $this->course->id;
+            $changecourse = $changecourse || ($wholecoursecache->get('userid') !== $userid);
+            if ($changecourse) {
+                $wholecoursedata = $DB->get_records_sql("
                         SELECT cm.id AS cmid, cmc.*
                           FROM {course_modules} cm
                      LEFT JOIN {course_modules_completion} cmc ON cmc.coursemoduleid = cm.id
                                AND cmc.userid = ?
                           JOIN {modules} m ON m.id = cm.module
                          WHERE m.visible = 1 AND cm.course = ?", [$userid, $this->course->id]);
+
+                $wholecoursecache->set_many([
+                    'courseid' => $this->course->id,
+                    'userid' => $userid,
+                ] + $wholecoursedata);
             }
-            if (!isset(self::$wholecourse->data[$cminfo->id])) {
+
+            if (!$wholecoursecache->has($cminfo->id)) {
                 $errormessage = "Unexpected error: course-module {$cminfo->id} could not be found on course {$this->course->id}";
                 $this->internal_systemerror($errormessage);
             }
-            $data = self::$wholecourse->data[$cminfo->id];
+            $data = $wholecoursecache->get($cminfo->id);
         } else {
             $data = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cminfo->id, 'userid' => $userid));
         }
@@ -1096,6 +1098,7 @@ class completion_info {
             // Row not present counts as 'not complete'.
             $data = $defaultdata;
         }
+
         // Fill the other completion data for this user in this module instance.
         $data += $this->get_other_cm_completion_data($cminfo, $userid);
 
@@ -1106,7 +1109,8 @@ class completion_info {
             $cacheddata['cacherev'] = $this->course->cacherev;
             $completioncache->set($key, $cacheddata);
         }
-        return (object)$cacheddata[$cminfo->id];
+
+        return (object) $cacheddata[$cminfo->id];
     }
 
     /**

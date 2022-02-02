@@ -248,6 +248,13 @@ $definitions = array(
         'staticaccelerationsize' => 2, // Should be current course and site course.
     ),
 
+    // Used to cache course completion_info data during a request.
+    'course_completion_info' => array(
+        'mode' => cache_store::MODE_REQUEST,
+        'simplekeys' => true,
+        'staticacceleration' => true,
+    ),
+
     // Used to cache course completion status.
     'coursecompletion' => array(
         'mode' => cache_store::MODE_APPLICATION,
