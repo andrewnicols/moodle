@@ -613,6 +613,7 @@ class completion_info {
 
         // Delete the cm's cached completion data for this user if automatic completion is enabled.
         // This ensures any changes to the status of individual completion conditions in the activity will be fetched.
+        cache_helper::purge_by_event('completionupdated');
         if ($cm->completion == COMPLETION_TRACKING_AUTOMATIC) {
             $completioncache = cache::make('core', 'completion');
             $completionkey = $userid . '_' . $this->course->id;
@@ -900,6 +901,7 @@ class completion_info {
         // Difficult to find affected users, just purge all completion cache.
         cache::make('core', 'completion')->purge();
         cache::make('core', 'coursecompletion')->purge();
+        cache::make('core', 'course_completion_info')->purge();
     }
 
     /**
@@ -952,6 +954,7 @@ class completion_info {
         // Difficult to find affected users, just purge all completion cache.
         cache::make('core', 'completion')->purge();
         cache::make('core', 'coursecompletion')->purge();
+        cache::make('core', 'course_completion_info')->purge();
     }
 
     /**
@@ -1039,7 +1042,7 @@ class completion_info {
                     // Course structure has been changed since the last caching, forget the cache.
                     $cacheddata = array();
                 } else if (isset($cacheddata[$cm->id])) {
-                    $data = $cacheddata[$cm->id];
+                    $data = (array) $cacheddata[$cm->id];
                     if (!$data['fetched']) {
                         $data += $this->get_other_cm_completion_data($cminfo, $userid);
                         $data[$cm->id]['fetched'] = true;
@@ -1087,6 +1090,14 @@ class completion_info {
                                AND cmc.userid = ?
                           JOIN {modules} m ON m.id = cm.module
                          WHERE m.visible = 1 AND cm.course = ?", [$userid, $this->course->id]);
+
+                foreach ($wholecoursedata as $cmid => $cmdata) {
+                    if (empty($cmdata->coursemoduleid)) {
+                        $cmdata = $defaultdata;
+                        $cmdata['coursemoduleid'] = $cmid;
+                        $wholecoursedata[$cmid] = $cmdata;
+                    }
+                }
 
                 $wholecoursecache->set_many([
                     'courseid' => $this->course->id,
@@ -1243,6 +1254,7 @@ class completion_info {
         $cmcontext = context_module::instance($data->coursemoduleid);
 
         $completioncache = cache::make('core', 'completion');
+        cache_helper::purge_by_event('completionupdated');
         if ($data->userid == $USER->id) {
             // Fetch other completion data to cache (e.g. require grade completion status, custom completion rule statues).
             $cminfo = cm_info::create($cm, $data->userid); // Make sure we're working on a cm_info object.

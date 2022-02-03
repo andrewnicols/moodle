@@ -253,6 +253,9 @@ $definitions = array(
         'mode' => cache_store::MODE_REQUEST,
         'simplekeys' => true,
         'staticacceleration' => true,
+        'invalidationevents' => array(
+            'completionupdated',
+        )
     ),
 
     // Used to cache course completion status.
