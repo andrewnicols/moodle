@@ -1,7 +1,7 @@
 ---
 layout: docs
-title: "Confirm"
-description: "A reusable confirmation modal component"
+title: "Modals"
+description: "A reusable modal component"
 date: 2021-12-09T14:48:00+08:00
 draft: false
 tags:
@@ -11,8 +11,9 @@ tags:
 
 ## How it works
 
-The confirm module is automatically invoked on page load, you just need to add some specific data attributes
-to the element that will trigger the confirmation modal.
+The core/confirm module allows different modals to be displayed automatically when interacting with the page.
+
+Modals are configured using a set of specific data-attributes.
 
 ## Source files
 
@@ -21,19 +22,27 @@ to the element that will trigger the confirmation modal.
 
 ## Usage
 The confirmation AMD module is loaded automatically, so the only thing you need to do is to add some specific data attributes
-to the target element:
+to the target element.
+
+To display a confirmation modal.
 {{< highlight html >}}
-<button type="button" class="btn btn-primary" data-confirmation="modal" data-confirmation-title-str='["delete", "core"]'
-data-confirmation-question-str='["areyousure"]' data-confirmation-yes-button-str='["delete", "core"]'>Show confirmation modal</button>
+<button type="button" class="btn btn-primary" data-modal="confirmation" data-modal-title-str='["delete", "core"]'
+data-modal-content-str='["areyousure"]' data-modal-yes-button-str='["delete", "core"]'>Show confirmation modal</button>
+{{< /highlight >}}
+
+To display an alert modal.
+{{< highlight html >}}
+<button type="button" class="btn btn-primary" data-modal="alert" data-modal-title-str='["cookiesenabled", "core"]'
+data-modal-content-str='["cookiesenabled_help_html", "core"]'>Show alert modal</button>
 {{< /highlight >}}
 
 You can also use it on PHP, you just need to set the attributes parameter to any moodle output component that takes attributes:
 {{< php >}}
 echo $OUTPUT->single_button('#', get_string('delete'), 'get', [
-    'data-confirmation' => 'modal',
-    'data-confirmation-title-str' => json_encode(['delete', 'core']),
-    'data-confirmation-question-str' => json_encode(['areyousure']),
-    'data-confirmation-yes-button-str' => json_encode(['delete', 'core'])
+    'data-modal' => 'modal',
+    'data-modal-title-str' => json_encode(['delete', 'core']),
+    'data-modal-content-str' => json_encode(['areyousure']),
+    'data-modal-yes-button-str' => json_encode(['delete', 'core'])
 ]);
 {{< / php >}}
 
@@ -48,57 +57,76 @@ echo $OUTPUT->single_button('#', get_string('delete'), 'get', [
   </thead>
   <tbody>
     <tr>
-      <td>data-confirmation</td>
-      <td>The identifier value must be "modal" so the module can find and register an event listener for that element.</td>
+      <td>data-modal</td>
+      <td>One of either "confirmation", or "alert".</td>
     </tr>
     <tr>
-      <td>data-confirmation-title-str</td>
+      <td>data-modal-title-str</td>
       <td>The modal title language string identifier, must be provided in JSON encoded format.</td>
     </tr>
     <tr>
-      <td>data-confirmation-question-str</td>
-      <td>The confirmation question language string identifier, must be provided in JSON encoded format.</td>
+      <td>data-modal-content-str</td>
+      <td>The modal content or content language string identifier, must be provided in JSON encoded format.</td>
     </tr>
     <tr>
-      <td>data-confirmation-yes-button-str</td>
-      <td>The language string identifier for the "Yes" button, must be provided in JSON encoded format.</td>
+      <td>data-modal-yes-button-str</td>
+      <td>
+        The language string identifier for the "Yes" button, must be provided in JSON encoded format.
+        Confirmation modals only.
+      </td>
     </tr>
     <tr>
-      <td>data-confirmation-toast</td>
-      <td>If set to "true" it will display a confirmation toast in the end.</td>
+      <td>data-modal-toast</td>
+      <td>
+        If set to "true" it will display a modal toast in the end.
+        Confirmation modals only.
+      </td>
     </tr>
     <tr>
-      <td>data-confirmation-toast-confirmation-str</td>
-      <td>The confirmation toast language string identifier, must be provided in JSON encoded format.</td>
+      <td>data-modal-toast-confirmation-str</td>
+      <td>
+        The confirmation toast language string identifier, must be provided in JSON encoded format.
+        Confirmation modals only.
+      </td>
     </tr>
     <tr>
-      <td>data-confirmation-destination</td>
-      <td>An url to redirect the user to.</td>
+      <td>data-modal-destination</td>
+      <td>
+        An url to redirect the user to.
+        Confirmation modals only.
+      </td>
     </tr>
   </tbody>
 </table>
 
 ## Examples
 
+### Basic Alert modal
+
+{{< example >}}
+<button type="button" class="btn btn-primary" data-modal="alert" data-modal-title-str='["cookiesenabled", "core"]'
+data-modal-content-str='["cookiesenabled_help_html", "core"]'>Show alert modal</button>
+{{< /example >}}
+
 ### Basic confirmation modal
 
 {{< example >}}
-<button type="button" class="btn btn-primary" data-confirmation="modal" data-confirmation-title-str='["delete", "core"]'
-data-confirmation-question-str='["areyousure"]' data-confirmation-yes-button-str='["delete", "core"]'>Show confirmation modal</button>
+<button type="button" class="btn btn-primary" data-modal="confirmation" data-modal-title-str='["delete", "core"]'
+data-modal-content-str='["areyousure"]' data-modal-yes-button-str='["delete", "core"]'>Show confirmation modal</button>
 {{< /example >}}
 
 ### Confirmation modal with a toast
 
 {{< example >}}
-<button type="button" class="btn btn-primary" data-confirmation="modal" data-confirmation-title-str='["delete", "core"]'
-data-confirmation-question-str='["areyousure"]' data-confirmation-yes-button-str='["delete", "core"]' data-confirmation-toast="true"
-data-confirmation-toast-confirmation-str='["deleteblockinprogress", "block", "Online users"]'>Show confirmation modal</button>
+<button type="button" class="btn btn-primary" data-modal="confirmation" data-modal-title-str='["delete", "core"]'
+data-modal-content-str='["areyousure"]' data-modal-yes-button-str='["delete", "core"]' data-modal-toast="true"
+data-modal-toast-confirmation-str='["deleteblockinprogress", "block", "Online users"]'>Show confirmation modal</button>
 {{< /example >}}
 
 ### Confirmation modal with redirect
 
 {{< example >}}
-<button type="button" class="btn btn-primary" data-confirmation="modal" data-confirmation-title-str='["delete", "core"]'
-data-confirmation-question-str='["areyousure"]' data-confirmation-yes-button-str='["delete", "core"]'
-data-confirmation-destination="http://moodle.com">Show confirmation modal</button>
+<button type="button" class="btn btn-primary" data-modal="confirmation" data-modal-title-str='["delete", "core"]'
+data-modal-content-str='["areyousure"]' data-modal-yes-button-str='["delete", "core"]'
+data-modal-destination="http://moodle.com">Show confirmation modal</button>
 {{< /example >}}

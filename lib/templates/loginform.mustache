@@ -203,14 +203,15 @@
             </div>
             <div class="divider border-left align-self-center mx-3"></div>
         {{/languagemenu}}
-        <button type="button" class="btn btn-secondary" data-toggle="cookie-modal">{{#str}}cookiesnotice{{/str}}</button>
+        <button type="button" class="btn btn-secondary" {{!
+        }} data-modal="alert"{{!
+        }} data-modal-title-str='["cookiesenabled", "core"]' {{!
+        }} data-modal-content-str='["cookiesenabled_help_html", "core"]'{{!
+        }}>{{#str}}cookiesnotice{{/str}}</button>
     </div>
 </div>
 
 {{#js}}
-    require(['theme_boost/login'], function(login) {
-        login.init();
-    });
     {{^error}}
         {{#autofocusform}}
             var userNameField = document.getElementById('username');
