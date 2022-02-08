@@ -210,7 +210,9 @@ class section implements renderable, templatable {
             }
 
             // Add activities summary if necessary.
-            if (!$format->show_editor() && $course->coursedisplay == COURSE_DISPLAY_MULTIPAGE) {
+            $options = $format->get_format_options();
+            $multipage = array_key_exists('coursedisplay', $options) && $options['coursedisplay'] == COURSE_DISPLAY_MULTIPAGE;
+            if (!$format->show_editor() && $multipage) {
                 $cmsummary = new $this->cmsummaryclass($format, $thissection);
                 $data->cmsummary = $cmsummary->export_for_template($output);
 
