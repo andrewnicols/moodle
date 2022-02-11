@@ -1295,8 +1295,8 @@ function upgrade_calendar_override_events_fix(stdClass $info, bool $output = tru
 function upgrade_migrate_question_table(): void {
     global $DB;
 
-    // Maximum size of array.
-    $maxlength = 30000;
+    // Maximum size of question chunks.
+    $maxlength = 1000;
 
     // Array of question_versions objects.
     $questionversions = [];
@@ -1311,85 +1311,102 @@ function upgrade_migrate_question_table(): void {
     $total = $DB->count_records('question');
     $pbar = new progress_bar('migratequestions', 1000, true);
     $i = 0;
-    // Get all records in question table, we dont need the subquestions, just regular questions and random questions.
-    $questions = $DB->get_recordset('question');
-    foreach ($questions as $question) {
-        upgrade_set_timeout(60);
-        // Populate table question_bank_entries.
-        $questionbankentry = new \stdClass();
-        $questionbankentry->questioncategoryid = $question->category;
-        $questionbankentry->idnumber = $question->idnumber;
-        $questionbankentry->ownerid = $question->createdby;
-        // Insert a question_bank_entries record here as the id is required to populate other tables.
-        $questionbankentry->id = $DB->insert_record('question_bank_entries', $questionbankentry);
-
-        // Create question_versions records to be added.
-        $questionversion = new \stdClass();
-        $questionversion->questionbankentryid = $questionbankentry->id;
-        $questionversion->questionid = $question->id;
-        $questionstatus = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
-        if ((int)$question->hidden === 1) {
-            $questionstatus = \core_question\local\bank\question_version_status::QUESTION_STATUS_HIDDEN;
+    // Split the records.
+    $questionlimit = [];
+    $chunks = $total / $maxlength;
+    if ($chunks <= 1) {
+        $limitobject = new stdClass();
+        $limitobject->limitfrom = 0;
+        $limitobject->limitto = $total;
+        $questionlimit[] = $limitobject;
+    } else {
+        // Take the chunk of questions.
+        $limitfrom = 0;
+        $chunks = (string) $chunks;
+        $chunkslimit = explode('.', $chunks);
+        $chunksround = (int) $chunkslimit[0];
+        for ($l = 1; $l <= $chunksround; $l++) {
+            $limitobject = new stdClass();
+            $limitobject->limitfrom = $limitfrom;
+            $limitobject->limitto = $maxlength;
+            $questionlimit[] = $limitobject;
+            $limitfrom = $limitfrom + $maxlength;
         }
-        $questionversion->status = $questionstatus;
-        $questionversions[] = $questionversion;
-
-        // Insert the records if the array limit is reached.
-        if (count($questionversions) >= $maxlength) {
-            $DB->insert_records('question_versions', $questionversions);
-            $questionversions = [];
+        // Take the rest after the chunks.
+        $addedrecoreds = ($chunksround * $maxlength);
+        if ($total > $addedrecoreds) {
+            $restoftherecods = $total - $addedrecoreds;
+            $limitobject = new stdClass();
+            $limitobject->limitfrom = $limitfrom;
+            $limitobject->limitto = $restoftherecods;
+            $questionlimit[] = $limitobject;
         }
+    }
+    foreach ($questionlimit as $limit) {
+        // Get the questions.
+        $questions = $DB->get_recordset('question', null, '', '*', $limit->limitfrom, $limit->limitto);
+        foreach ($questions as $question) {
+            upgrade_set_timeout();
+            // Populate table question_bank_entries.
+            $questionbankentry = new \stdClass();
+            $questionbankentry->questioncategoryid = $question->category;
+            $questionbankentry->idnumber = $question->idnumber;
+            $questionbankentry->ownerid = $question->createdby;
+            // Insert a question_bank_entries record here as the id is required to populate other tables.
+            $questionbankentry->id = $DB->insert_record('question_bank_entries', $questionbankentry);
 
-        // Create question_set_references records to be added.
-        // Only if the question type is random and the question is used in a quiz.
-        if ($question->qtype === 'random') {
-            $quizslots = $DB->get_records('quiz_slots', ['questionid' => $question->id]);
-            foreach ($quizslots as $quizslot) {
-                $questionsetreference = new \stdClass();
-                $cm = get_coursemodule_from_instance('quiz', $quizslot->quizid);
-                $questionsetreference->usingcontextid = context_module::instance($cm->id)->id;
-                $questionsetreference->component = 'mod_quiz';
-                $questionsetreference->questionarea = 'slot';
-                $questionsetreference->itemid = $quizslot->id;
-                $catcontext = $DB->get_field('question_categories', 'contextid', ['id' => $question->category]);
-                $questionsetreference->questionscontextid = $catcontext;
-                // Migration of the slot tags and filter identifiers from slot table to filtercondition.
-                $filtercondition = new stdClass();
-                $filtercondition->questioncategoryid = $question->category;
-                $filtercondition->includingsubcategories = $quizslot->includingsubcategories;
-                $tags = $DB->get_records('quiz_slot_tags', ['slotid' => $quizslot->id]);
-                $tagstrings = [];
-                foreach ($tags as $tag) {
-                    $tagstrings [] = "{$tag->id},{$tag->name}";
-                }
-                if (!empty($tagstrings)) {
-                    $filtercondition->tags = $tagstrings;
-                }
-                $questionsetreference->filtercondition = json_encode($filtercondition);
-
-                $questionsetreferences[] = $questionsetreference;
-
-                // Insert the records if the array limit is reached.
-                if (count($questionsetreferences) >= $maxlength) {
-                    $DB->insert_records('question_set_references', $questionsetreferences);
-                    $questionsetreferences = [];
-                }
+            // Create question_versions records to be added.
+            $questionversion = new \stdClass();
+            $questionversion->questionbankentryid = $questionbankentry->id;
+            $questionversion->questionid = $question->id;
+            $questionstatus = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
+            if ((int)$question->hidden === 1) {
+                $questionstatus = \core_question\local\bank\question_version_status::QUESTION_STATUS_HIDDEN;
             }
+            $questionversion->status = $questionstatus;
+            $questionversions[] = $questionversion;
+            // Insert the records if the limit is reached.
+            if (count($questionversions) >= $limit->limitto) {
+                $DB->insert_records('question_versions', $questionversions);
+                $questionversions = [];
+            }
+
+            // Create question_set_references records to be added.
+            // Only if the question type is random and the question is used in a quiz.
+            if ($question->qtype === 'random') {
+                $quizslots = $DB->get_records('quiz_slots', ['questionid' => $question->id]);
+                foreach ($quizslots as $quizslot) {
+                    $questionsetreference = new \stdClass();
+                    $cm = get_coursemodule_from_instance('quiz', $quizslot->quizid);
+                    $questionsetreference->usingcontextid = context_module::instance($cm->id)->id;
+                    $questionsetreference->component = 'mod_quiz';
+                    $questionsetreference->questionarea = 'slot';
+                    $questionsetreference->itemid = $quizslot->id;
+                    $catcontext = $DB->get_field('question_categories', 'contextid', ['id' => $question->category]);
+                    $questionsetreference->questionscontextid = $catcontext;
+                    // Migration of the slot tags and filter identifiers from slot table to filtercondition.
+                    $filtercondition = new stdClass();
+                    $filtercondition->questioncategoryid = $question->category;
+                    $filtercondition->includingsubcategories = $quizslot->includingsubcategories;
+                    $tags = $DB->get_records('quiz_slot_tags', ['slotid' => $quizslot->id]);
+                    $tagstrings = [];
+                    foreach ($tags as $tag) {
+                        $tagstrings[] = "{$tag->id},{$tag->name}";
+                    }
+                    if (!empty($tagstrings)) {
+                        $filtercondition->tags = $tagstrings;
+                    }
+                    $questionsetreference->filtercondition = json_encode($filtercondition);
+                    $questionsetreferences[] = $questionsetreference;
+                }
+                $DB->insert_records('question_set_references', $questionsetreferences);
+                $questionsetreferences = [];
+            }
+            // Update progress.
+            $i++;
+            $pbar->update($i, $total, "Migrating questions - $i/$total.");
         }
-        // Update progress.
-        $i++;
-        $pbar->update($i, $total, "Migrating questions - $i/$total.");
-    }
-    $questions->close();
-
-    // Insert the remaining question_versions records.
-    if ($questionversions) {
-        $DB->insert_records('question_versions', $questionversions);
-    }
-
-    // Insert the remaining question_set_references records.
-    if ($questionsetreferences) {
-        $DB->insert_records('question_set_references', $questionsetreferences);
+        $questions->close();
     }
 
     // Create question_references record for each question.
