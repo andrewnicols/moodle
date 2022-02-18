@@ -87,7 +87,8 @@ module.exports = grunt => {
                         // This minification plugin needs to be disabled because it breaks the
                         // source map generation and causes invalid source maps to be output.
                         simplify: false,
-                        builtIns: false
+                        builtIns: false,
+                        mangle: false,
                     }],
                     ['@babel/preset-env', {
                         targets: {
