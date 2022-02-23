@@ -1294,120 +1294,117 @@ function upgrade_calendar_override_events_fix(stdClass $info, bool $output = tru
  */
 function upgrade_migrate_question_table(): void {
     global $DB;
-
-    // Maximum size of question chunks.
-    $maxlength = 1000;
-
-    // Array of question_versions objects.
-    $questionversions = [];
-
-    // Array of question_set_references objects.
-    $questionsetreferences = [];
+    $dbman = $DB->get_manager();
 
     // The actual update/insert done with multiple DB access, so we do it in a transaction.
     $transaction = $DB->start_delegated_transaction();
 
-    // Count all questions to be migrated (for progress bar).
-    $total = $DB->count_records('question');
-    $pbar = new progress_bar('migratequestions', 1000, true);
-    $i = 0;
-    // Split the records.
-    $questionlimit = [];
-    $chunks = $total / $maxlength;
-    if ($chunks <= 1) {
-        $limitobject = new stdClass();
-        $limitobject->limitfrom = 0;
-        $limitobject->limitto = $total;
-        $questionlimit[] = $limitobject;
-    } else {
-        // Take the chunk of questions.
-        $limitfrom = 0;
-        $chunks = (string) $chunks;
-        $chunkslimit = explode('.', $chunks);
-        $chunksround = (int) $chunkslimit[0];
-        for ($l = 1; $l <= $chunksround; $l++) {
-            $limitobject = new stdClass();
-            $limitobject->limitfrom = $limitfrom;
-            $limitobject->limitto = $maxlength;
-            $questionlimit[] = $limitobject;
-            $limitfrom = $limitfrom + $maxlength;
-        }
-        // Take the rest after the chunks.
-        $addedrecoreds = ($chunksround * $maxlength);
-        if ($total > $addedrecoreds) {
-            $restoftherecods = $total - $addedrecoreds;
-            $limitobject = new stdClass();
-            $limitobject->limitfrom = $limitfrom;
-            $limitobject->limitto = $restoftherecods;
-            $questionlimit[] = $limitobject;
-        }
+    // Define a new temporary field in the question_bank_entries tables.
+    echo("Creating temporary field... ");
+    $table = new xmldb_table('question_bank_entries');
+    $field = new xmldb_field('questionid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_TYPE_INTEGER);
+    if (!$dbman->field_exists($table, $field)) {
+        $dbman->add_field($table, $field);
     }
-    foreach ($questionlimit as $limit) {
-        // Get the questions.
-        $questions = $DB->get_recordset('question', null, '', '*', $limit->limitfrom, $limit->limitto);
-        foreach ($questions as $question) {
-            upgrade_set_timeout();
-            // Populate table question_bank_entries.
-            $questionbankentry = new \stdClass();
-            $questionbankentry->questioncategoryid = $question->category;
-            $questionbankentry->idnumber = $question->idnumber;
-            $questionbankentry->ownerid = $question->createdby;
-            // Insert a question_bank_entries record here as the id is required to populate other tables.
-            $questionbankentry->id = $DB->insert_record('question_bank_entries', $questionbankentry);
+    echo(" done.\n");
 
-            // Create question_versions records to be added.
-            $questionversion = new \stdClass();
-            $questionversion->questionbankentryid = $questionbankentry->id;
-            $questionversion->questionid = $question->id;
-            $questionstatus = \core_question\local\bank\question_version_status::QUESTION_STATUS_READY;
-            if ((int)$question->hidden === 1) {
-                $questionstatus = \core_question\local\bank\question_version_status::QUESTION_STATUS_HIDDEN;
-            }
-            $questionversion->status = $questionstatus;
-            $questionversions[] = $questionversion;
-            // Insert the records if the limit is reached.
-            if (count($questionversions) >= $limit->limitto) {
-                $DB->insert_records('question_versions', $questionversions);
-                $questionversions = [];
+
+    // Create the data for the question_bank_entries table with, including the new temporary field.
+    $sql = <<<EOF
+INSERT INTO {question_bank_entries}
+    (questionid, questioncategoryid, idnumber, ownerid)
+SELECT id, category, idnumber, createdby
+FROM {question} q
+EOF;
+
+    echo("Inserting question_bank_entries data...");
+    $DB->execute($sql);
+    echo(" done.\n");
+
+    // Create the question_versions using that temporary field.
+    $sql = <<<EOF
+INSERT INTO {question_versions}
+    (questionbankentryid, questionid, status)
+SELECT
+    qbe.id,
+    q.id,
+    CASE
+        WHEN q.hidden > 0 THEN 'hidden'
+        ELSE 'ready'
+    END
+FROM {question_bank_entries} qbe
+INNER JOIN {question} q ON qbe.questionid = q.id
+EOF;
+
+    echo("Inserting question_versions data...");
+    $DB->execute($sql);
+    echo(" done.\n");
+
+    // Drop the temporary field.
+    echo("Dropping temporary field. ");
+    $dbman->drop_field($table, $field);
+    echo(" done.\n");
+
+    // Create the base data for the random questions in the set_references table.
+    // This covers most of the hard work in one go.
+    $sql = <<<EOF
+INSERT INTO {question_set_references}
+(usingcontextid, component, questionarea, itemid, questionscontextid, filtercondition)
+SELECT
+    c.id,
+    'mod_quiz',
+    'slot',
+    qs.id,
+    qc.contextid,
+    concat('{"questioncategoryid":', q.category, ',"includingsubcategories":', qs.includingsubcategories, '}')
+FROM {question} q
+INNER JOIN {quiz_slots} qs on q.id = qs.questionid
+INNER JOIN {course_modules} cm ON cm.instance = qs.quizid AND cm.module = :quizmoduleid
+INNER JOIN {context} c ON cm.id = c.instanceid AND c.contextlevel = :contextmodule
+INNER JOIN {question_categories} qc ON qc.id = q.category
+WHERE q.qtype = :random
+EOF;
+
+    echo("Inserting question_set_references data...");
+    $DB->execute($sql, [
+        'quizmoduleid' => $DB->get_field('modules', 'id', ['name' => 'quiz']),
+        'contextmodule' => CONTEXT_MODULE,
+        'random' => 'random',
+    ]);
+    echo(" done.\n");
+
+    echo("Updating slot_tags for random question tags...");
+    // Now fetch any quiz slot tags and update those slot details into the question_set_references.
+    $slottags = $DB->get_recordset('quiz_slot_tags', [], 'slotid ASC');
+
+    $tagstrings = [];
+    $lastslot = null;
+    $runinsert = function (int $lastslot, array $tagstrings) use ($DB) {
+        $conditiondata = $DB->get_field('question_set_references', 'filtercondition', ['itemid' => $lastslot]);
+        $condition = json_decode($conditiondata);
+        $condition->tags = $tagstrings;
+        $DB->set_field('question_set_references', 'filtercondition', json_encode($condition), ['itemid' => $lastslot]);
+    };
+
+    foreach ($slottags as $tag) {
+        if ($lastslot && $tag->slotid != $lastslot) {
+            if (!empty($tagstrings)) {
+                // Insert the data.
+                $runinsert($lastslot, $tagstrings);
             }
 
-            // Create question_set_references records to be added.
-            // Only if the question type is random and the question is used in a quiz.
-            if ($question->qtype === 'random') {
-                $quizslots = $DB->get_records('quiz_slots', ['questionid' => $question->id]);
-                foreach ($quizslots as $quizslot) {
-                    $questionsetreference = new \stdClass();
-                    $cm = get_coursemodule_from_instance('quiz', $quizslot->quizid);
-                    $questionsetreference->usingcontextid = context_module::instance($cm->id)->id;
-                    $questionsetreference->component = 'mod_quiz';
-                    $questionsetreference->questionarea = 'slot';
-                    $questionsetreference->itemid = $quizslot->id;
-                    $catcontext = $DB->get_field('question_categories', 'contextid', ['id' => $question->category]);
-                    $questionsetreference->questionscontextid = $catcontext;
-                    // Migration of the slot tags and filter identifiers from slot table to filtercondition.
-                    $filtercondition = new stdClass();
-                    $filtercondition->questioncategoryid = $question->category;
-                    $filtercondition->includingsubcategories = $quizslot->includingsubcategories;
-                    $tags = $DB->get_records('quiz_slot_tags', ['slotid' => $quizslot->id]);
-                    $tagstrings = [];
-                    foreach ($tags as $tag) {
-                        $tagstrings[] = "{$tag->id},{$tag->name}";
-                    }
-                    if (!empty($tagstrings)) {
-                        $filtercondition->tags = $tagstrings;
-                    }
-                    $questionsetreference->filtercondition = json_encode($filtercondition);
-                    $questionsetreferences[] = $questionsetreference;
-                }
-                $DB->insert_records('question_set_references', $questionsetreferences);
-                $questionsetreferences = [];
-            }
-            // Update progress.
-            $i++;
-            $pbar->update($i, $total, "Migrating questions - $i/$total.");
+            // Prepare for the next slot id.
+            $tagstrings = [];
         }
-        $questions->close();
+
+        $lastslot = $tag->slotid;
+        $tagstrings[] = "{$tag->id},{$tag->tagname}";
     }
+    if ($tagstrings) {
+        $runinsert($lastslot, $tagstrings);
+    }
+    $slottags->close();
+    echo(" done.\n");
 
     // Create question_references record for each question.
     // Except if qtype is random. That case is handled by question_set_reference.
@@ -1421,7 +1418,9 @@ function upgrade_migrate_question_table(): void {
                    JOIN {course_modules} cm ON cm.module = m.id AND cm.instance = qs.quizid
                    JOIN {context} c ON c.instanceid = cm.id AND c.contextlevel = " . CONTEXT_MODULE . "
                   WHERE q.qtype <> 'random'";
+    echo("Inserting question_references data...");
     $DB->execute($sql);
+    echo(" done.\n");
 
     $transaction->allow_commit();
 }
