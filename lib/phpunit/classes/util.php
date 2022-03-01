@@ -586,14 +586,14 @@ class phpunit_util extends testing_util {
         $template = '
     <testsuites>
         <testsuite name="@component@_testsuite">
-            <directory suffix="_test.php">.</directory>
+            <directory suffix="_test.php">tests</directory>
         </testsuite>
     </testsuites>';
         $filterdefault = '
             <whitelist processUncoveredFilesFromWhitelist="false">
                 <directory suffix=".php">.</directory>
                 <exclude>
-                    <directory suffix="_test.php">.</directory>
+                    <directory suffix="_test.php">tests</directory>
                 </exclude>
             </whitelist>';
 
