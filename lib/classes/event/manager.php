@@ -120,6 +120,9 @@ class manager {
                 return;
             }
 
+            // Log the event to be sent.
+            mray()->showEvent($event);
+
             $observingclasses = self::get_observing_classes($event);
             foreach ($observingclasses as $observingclass) {
                 if (!isset(self::$allobservers[$observingclass])) {

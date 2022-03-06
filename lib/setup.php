@@ -419,6 +419,42 @@ if (!defined('MOODLE_INTERNAL')) { // Necessary because cli installer has to def
 // core_component can be used in any scripts, it does not need anything else.
 require_once($CFG->libdir .'/classes/component.php');
 
+// If composer dependencies have been installed, attempt to load the Composer autoload.
+$rootcomposerdir = "{$CFG->dirroot}/vendor";
+if (file_exists("{$rootcomposerdir}/autoload.php")) {
+    require_once("{$rootcomposerdir}/autoload.php");
+}
+
+if (!function_exists('mray')) {
+    if (file_exists("{$rootcomposerdir}/andrewnicols/moodle-ray")) {
+        // Note: the standard ray() function cannot be called because the helper does not provide a way to add our own
+        // features.
+        // This is the way that other official Ray libraries do it - for example WordpressRay.
+        // Because of this our version of Ray() must be loaded before the vendor autolaod.
+        // Create a MoodleRay instance.
+        function mray(...$args) {
+            $settings = \Spatie\Ray\Settings\SettingsFactory::createFromConfigFile();
+            $settings->setDefaultSettings([
+                'enable' => false,
+            ]);
+
+            return (new \AndrewNicols\MoodleRay\Ray($settings))->send(...$args);
+        }
+        \AndrewNicols\MoodleRay\Ray::bootForMoodle();
+    } else {
+        // Provide an alternative to the MoodleRay class.
+        // We provide this for cases where errant mray() calls have been left in the code.
+        function mray() {
+            return new class {
+                // Typically calls to ray() and it's child function return $this.
+                public function __call($name, $args): self {
+                    return $this;
+                }
+            };
+        }
+    }
+}
+
 // special support for highly optimised scripts that do not need libraries and DB connection
 if (defined('ABORT_AFTER_CONFIG')) {
     if (!defined('ABORT_AFTER_CONFIG_CANCEL')) {

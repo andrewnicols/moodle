@@ -341,6 +341,13 @@ class core_string_manager_standard implements core_string_manager {
             // Do not rebuild caches here!
             // Devs need to learn to purge all caches after any change or disable $CFG->langstringcache.
             if (!isset($string[$identifier])) {
+                mray([
+                    'identifer' => $identifier,
+                    'component' => $component,
+                    'a' => $a,
+                    'lang' => $lang,
+                ])->label('Invalid get_string() call');
+
                 // The string is still missing - should be fixed by developer.
                 if ($CFG->debugdeveloper) {
                     list($plugintype, $pluginname) = core_component::normalize_component($component);

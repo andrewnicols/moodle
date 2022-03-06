@@ -460,9 +460,17 @@ abstract class moodle_database {
      * @return void
      */
     protected function query_end($result) {
+        // Always log to mray() as sending is configured outside of DML.
+        mray()->sendQueryToRay(
+            $this->last_sql,
+            $this->last_params,
+            $this->query_time()
+        );
+
         if ($this->loggingquery) {
             return;
         }
+
         if ($result !== false) {
             $this->query_log();
             // free memory
