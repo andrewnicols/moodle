@@ -352,6 +352,10 @@ class file_serving_exception extends moodle_exception {
 function default_exception_handler($ex) {
     global $CFG, $DB, $OUTPUT, $USER, $FULLME, $SESSION, $PAGE;
 
+    if (defined('SENTRY') && is_callable('\Sentry\captureException')) {
+        \Sentry\captureException($ex);
+    }
+
     // detect active db transactions, rollback and log as error
     abort_all_db_transactions();
 

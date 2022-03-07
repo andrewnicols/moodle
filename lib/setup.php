@@ -483,6 +483,11 @@ if (!function_exists('dd')) {
     }
 }
 
+if (defined('SENTRY') && is_callable('\Sentry\init')) {
+    // Allow for integrations with \Sentry for capture of Exceptions.
+    \Sentry\init(SENTRY);
+}
+
 // special support for highly optimised scripts that do not need libraries and DB connection
 if (defined('ABORT_AFTER_CONFIG')) {
     if (!defined('ABORT_AFTER_CONFIG_CANCEL')) {
