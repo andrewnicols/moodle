@@ -455,6 +455,34 @@ if (!function_exists('mray')) {
     }
 }
 
+// The `dump` function is provided by Symfony's VarDumper and is far superior to print_object and friends.
+// Since the fallback for `dump`, and `dd` is to call `print_object()` or `print_r()`, we define a constant that is used
+// in `print_object()` to prevent recursion.
+if (!defined('SYMFONY_VARDUMPER')) {
+    define('SYMFONY_VARDUMPER', function_exists('dump'));
+}
+
+if (!SYMFONY_VARDUMPER) {
+    // Provide an alternative to the dump() function from Symfony's VarDumper.
+    function dump(...$args) {
+        foreach ($args as $arg) {
+            if (function_exists('print_object')) {
+                print_object($arg); // phpcs:ignore moodle.PHP.ForbiddenFunctions.Found
+            } else {
+                print_r($arg); // phpcs:ignore moodle.PHP.ForbiddenFunctions.Found
+            }
+        }
+    }
+}
+
+if (!function_exists('dd')) {
+    // Provide an alternative to the dd() function from Symfony's VarDumper.
+    function dd(...$args) {
+        dump(...$args);
+        exit(1);
+    }
+}
+
 // special support for highly optimised scripts that do not need libraries and DB connection
 if (defined('ABORT_AFTER_CONFIG')) {
     if (!defined('ABORT_AFTER_CONFIG_CANCEL')) {

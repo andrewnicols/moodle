@@ -1664,8 +1664,35 @@ function user_accesstime_log($courseid=0) {
  * @return void output is echo'd
  */
 function print_object($object) {
+    if (SYMFONY_VARDUMPER) {
+        // If the Symfony VarDumper is available, use that instead.
+        if (AJAX_SCRIPT) {
+            // We want to send AJAX_SCRIPT output to stderr so that it does not mess with output.
+            // Ideally we would use MonoLog for this, but we currently do not support Monolog.
+            // Use the Symfony VarCloner to clone the object, which removes recursive references, etc.
+            $cloner = new \Symfony\Component\VarDumper\Cloner\VarCloner();
+            $cloner->addCasters(
+                \Symfony\Component\VarDumper\Caster\ReflectionCaster::UNSET_CLOSURE_FILE_INFO
+            );
 
-    // we may need a lot of memory here
+            // Create a new CliDumper and send the output to stderr (error_log).
+            $dumper = new \Symfony\Component\VarDumper\Dumper\CliDumper();
+            $dumper->setOutput('php://stderr');
+
+            // Wrap the Dumper in a ContextualizedDumper to provide context to sources.
+            // This include class name, file name, line no, code excerpts, and more.
+            $dumper = new \Symfony\Component\VarDumper\Dumper\ContextualizedDumper($dumper, [
+                new \Symfony\Component\VarDumper\Dumper\ContextProvider\SourceContextProvider(),
+            ]);
+            $dumper->dump($cloner->cloneVar($object));
+        } else {
+            dump($object);
+        }
+
+        return;
+    }
+
+    // We may need a lot of memory here.
     raise_memory_limit(MEMORY_EXTRA);
 
     if (CLI_SCRIPT) {
