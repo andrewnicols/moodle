@@ -14846,6 +14846,9 @@ span.editinstructions {
   .automatic-completion-conditions .badge:first-child {
     margin-top: 0; }
 
+.jsenabled #fitem_id_updatecourseformat {
+  display: none; }
+
 /* Anchor link offset fix. This makes hash links scroll 60px down to account for the fixed header. */
 :target {
   scroll-margin-top: 60px; }

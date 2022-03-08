@@ -1530,3 +1530,7 @@ $activity-add-hover: theme-color-level('primary', -10) !default;
         margin-top: 0;
     }
 }
+
+.jsenabled #fitem_id_updatecourseformat {
+    display: none;
+}
