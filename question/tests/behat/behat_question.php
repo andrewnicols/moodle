@@ -16,6 +16,7 @@
 
 // NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 
+require_once(__DIR__ . '/../../../lib/behat/behat_deprecated_base.php');
 require_once(__DIR__ . '/behat_question_base.php');
 
 /**
@@ -29,7 +30,6 @@ require_once(__DIR__ . '/behat_question_base.php');
  *      (if you need to refer to this class at all, which you probably don't).
  */
 class behat_question extends behat_deprecated_base {
-
     public function __call($name, $arguments) {
         if (method_exists(behat_core_question::class, $name)) {
             $this->deprecated_message('The behat_question class has been moved to behat_core_question.');
