@@ -24,7 +24,7 @@ namespace editor_tiny;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class editor extends \texteditor {
+class editor extends \texteditor implements plugin_with_buttons, plugin_with_menuitems {
 
     /**
      * Is the current browser supported by this editor?
