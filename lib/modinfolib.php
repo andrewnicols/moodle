@@ -1809,7 +1809,10 @@ class cm_info implements IteratorAggregate {
                 }
             }
         } else {
-            $icon = $output->image_url('icon', $this->modname);
+            $icon = $output->image_url_candidates($this->modname, [
+                'dynamicicon',
+                'icon',
+            ]);
         }
         return $icon;
     }

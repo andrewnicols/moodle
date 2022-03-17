@@ -347,6 +347,29 @@ class renderer_base {
     }
 
     /**
+     * Return the moodle_url for an image given a selection of candidate image names.
+     *
+     * The first matching candidate for the current theme where an image candidate exists for that image will be
+     * returned.
+     *
+     * If no matching values are found, a null value will be returned.
+     *
+     * @param string $component The component to search for the image in
+     * @param string[] $imagenames The list of possible image names
+     * @return \moodle_url
+     */
+    public function image_url_candidates(string $component, array $imagenames): ?moodle_url {
+        foreach ($imagenames as $imagename) {
+            $location = $this->page->theme->resolve_image_location($imagename, $component, true);
+            if ($location !== null) {
+                return $this->image_url($imagename, $component);
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Return the site's logo URL, if any.
      *
      * @param int $maxwidth The maximum width, or null when the maximum width does not matter.
