@@ -44,13 +44,13 @@ class renderer_base_test extends \advanced_testcase {
     public function image_url_candidates_provider(): array {
         return [
             'One value only' => [
-                'mod_forum', ['icon'], 'icon',
+                'mod_forum', ['dynamicicon'], 'dynamicicon',
             ],
             'Two values with first selected' => [
-                'mod_forum', ['icon', 'foo'], 'icon',
+                'mod_forum', ['dynamicicon', 'foo'], 'dynamicicon',
             ],
             'Two values with second selected' => [
-                'mod_forum', ['foo', 'icon'], 'icon',
+                'mod_forum', ['foo', 'dynamicicon'], 'dynamicicon',
             ],
             'One values with no valid match' => [
                 'mod_forum', ['foo'], null,
@@ -59,7 +59,7 @@ class renderer_base_test extends \advanced_testcase {
                 'mod_forum', ['foo', 'bar'], null,
             ],
             'One value with invalid component' => [
-                'mod_nonexistent_plugin', ['icon'], null,
+                'mod_nonexistent_plugin', ['dynamicicon'], null,
             ],
         ];
     }
