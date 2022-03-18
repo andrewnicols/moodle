@@ -1086,12 +1086,21 @@ class core_admin_renderer extends plugin_renderer_base {
             $plugintyperows = array();
 
             foreach ($plugins as $name => $plugin) {
+                $component = "{$plugin->type}_{$plugin->name}";
+
                 $sumtotal++;
                 $row = new html_table_row();
-                $row->attributes['class'] = 'type-' . $plugin->type . ' name-' . $plugin->type . '_' . $plugin->name;
+                $row->attributes['class'] = "type-{$plugin->type} name-{$component}";
 
-                if ($this->page->theme->resolve_image_location('icon', $plugin->type . '_' . $plugin->name, null)) {
-                    $icon = $this->output->pix_icon('icon', '', $plugin->type . '_' . $plugin->name, array('class' => 'smallicon pluginicon'));
+                $iconidentifier = 'icon';
+                if ($plugin->type === 'mod') {
+                    $iconidentifier = 'monologo';
+                }
+
+                if ($this->page->theme->resolve_image_location($iconidentifier, $component, null)) {
+                    $icon = $this->output->pix_icon($iconidentifier, '', $component, [
+                        'class' => 'smallicon pluginicon',
+                    ]);
                 } else {
                     $icon = '';
                 }
@@ -1804,11 +1813,20 @@ class core_admin_renderer extends plugin_renderer_base {
             }
 
             foreach ($plugins as $name => $plugin) {
-                $row = new html_table_row();
-                $row->attributes['class'] = 'type-' . $plugin->type . ' name-' . $plugin->type . '_' . $plugin->name;
+                $component = "{$plugin->type}_{$plugin->name}";
 
-                if ($this->page->theme->resolve_image_location('icon', $plugin->type . '_' . $plugin->name, null)) {
-                    $icon = $this->output->pix_icon('icon', '', $plugin->type . '_' . $plugin->name, array('class' => 'icon pluginicon'));
+                $row = new html_table_row();
+                $row->attributes['class'] = "type-{$plugin->type} name-{$component}";
+
+                $iconidentifier = 'icon';
+                if ($plugin->type === 'mod') {
+                    $iconidentifier = 'monologo';
+                }
+
+                if ($this->page->theme->resolve_image_location($iconidentifier, $component, null)) {
+                    $icon = $this->output->pix_icon($iconidentifier, '', $component, [
+                        'class' => 'icon pluginicon',
+                    ]);
                 } else {
                     $icon = $this->output->spacer();
                 }

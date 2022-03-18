@@ -359,6 +359,7 @@ class renderer_base {
      * @return \moodle_url
      */
     public function image_url_candidates(string $component, array $imagenames): ?moodle_url {
+        return $this->image_url(implode('.', $imagenames), $component);
         foreach ($imagenames as $imagename) {
             $location = $this->page->theme->resolve_image_location($imagename, $component, true);
             if ($location !== null) {
