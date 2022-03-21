@@ -454,7 +454,7 @@ class cachestore_redis extends cache_store implements cache_is_key_aware, cache_
      * @return bool
      */
     public function purge() {
-        if ($this->definition->get_ttl()) {
+        if ($this->definition && $this->definition->get_ttl()) {
             // Purge the TTL list as well.
             $this->redis->del($this->hash . self::TTL_SUFFIX);
             // According to documentation, there is no error return for the 'del' command (it
