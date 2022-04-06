@@ -39,7 +39,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libroot . '/db/upgradelib.php');
+require_once("{$CFG->libdir}/db/upgradelib.php");
 
 /**
  * Upgrade the calendar_month block
