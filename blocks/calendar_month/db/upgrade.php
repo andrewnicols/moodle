@@ -61,10 +61,10 @@ function xmldb_block_calendar_month_upgrade($oldversion, $block) {
     // Automatically generated Moodle v3.9.0 release upgrade line.
     // Put any upgrade step following this.
 
-    if ($oldversion < 2022040500) {
+    if ($oldversion < 2022030200) {
         // Update all calendar_month blocks in the my-index to be in the main content region.
         upgrade_block_set_defaultregion('calendar_month', '__default', 'my-index', 'content');
-        upgrade_block_savepoint(true, 2022040500, 'calendar_month', false);
+        upgrade_block_savepoint(true, 2022030200, 'calendar_month', false);
     }
 
     return true;

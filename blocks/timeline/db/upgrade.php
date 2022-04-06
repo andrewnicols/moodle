@@ -60,10 +60,10 @@ function xmldb_block_timeline_upgrade($oldversion, $block) {
     // Automatically generated Moodle v3.9.0 release upgrade line.
     // Put any upgrade step following this.
 
-    if ($oldversion < 2022040500) {
+    if ($oldversion < 2022030200) {
         // Update all timeline blocks in the my-index to be in the main content region.
         upgrade_block_set_defaultregion('timeline', '__default', 'my-index', 'content');
-        upgrade_block_savepoint(true, 2022040500, 'timeline', false);
+        upgrade_block_savepoint(true, 2022030200, 'timeline', false);
     }
 
     return true;
