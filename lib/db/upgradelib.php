@@ -1320,7 +1320,7 @@ function upgrade_block_set_defaultregion(
     // community block to do something different.
     // This function is not suited to those cases.
     $subpagepattern = $DB->sql_cast_char2int('bi.subpagepattern');
-    $subpageempty = $DB->sql_isnotempty('block_instances', 'subpagepattern', true, false);
+    $subpageempty = $DB->sql_isnotempty('block_instances', 'bi.subpagepattern', true, false);
 
     // If a subquery returns any NULL then the NOT IN returns no results at all.
     // By adding a join in the inner select on my_pages we remove any possible nulls and prevent any need for
@@ -1351,7 +1351,7 @@ function upgrade_block_set_defaultregion(
             SELECT mpi.id FROM {my_pages} mpi
               JOIN {block_instances} bi
                     ON bi.blockname = :blockname
-                   AND bi.subpagepattern IS NOT NULL AND bi.subpagepattern <> :subpageempty
+                   AND bi.subpagepattern IS NOT NULL AND {$subpageempty}
                    AND bi.pagetypepattern = :pagetypepattern
                    AND {$subpagepattern} = mpi.id
          )
@@ -1367,7 +1367,6 @@ function upgrade_block_set_defaultregion(
         'selectdefaultregion' => $newdefaultregion,
         'selecttimecreated' => time(),
         'selecttimemodified' => time(),
-        'subpageempty' => $subpageempty,
         'pagetypepattern' => $pagetypepattern,
         'blockname' => $blockname,
         'pagename' => $pagename,
@@ -1383,7 +1382,7 @@ function upgrade_block_set_defaultregion(
                   FROM {my_pages} mp
                   JOIN {block_instances} bi
                         ON bi.blockname = :blockname
-                       AND bi.subpagepattern IS NOT NULL AND bi.subpagepattern <> :subpageempty
+                       AND bi.subpagepattern IS NOT NULL AND {$subpageempty}
                        AND bi.pagetypepattern = :pagetypepattern
                        AND {$subpagepattern} = mp.id
                  WHERE mp.private = 1
@@ -1395,7 +1394,6 @@ function upgrade_block_set_defaultregion(
 
     $DB->execute($sql, [
         'newdefaultregion' => $newdefaultregion,
-        'subpageempty' => $subpageempty,
         'pagetypepattern' => $pagetypepattern,
         'blockname' => $blockname,
         'existingnewdefaultregion' => $newdefaultregion,
@@ -1487,6 +1485,7 @@ function upgrade_block_delete_instances(
     $subpagepattern = $DB->sql_cast_char2int('bi.subpagepattern');
 
     // Look for any and all instances of the block in customised /my pages.
+    $subpageempty = $DB->sql_isnotempty('block_instances', 'bi.subpagepattern', true, false);
     $instanceselect = <<<EOF
          bi.id IN (
             SELECT * FROM (
@@ -1494,7 +1493,7 @@ function upgrade_block_delete_instances(
                   FROM {my_pages} mp
                   JOIN {block_instances} bi
                         ON bi.blockname = :blockname
-                       AND bi.subpagepattern IS NOT NULL AND bi.subpagepattern <> :subpageempty
+                       AND bi.subpagepattern IS NOT NULL AND {$subpageempty}
                        AND bi.pagetypepattern = :pagetypepattern
                        AND {$subpagepattern} = mp.id
                  WHERE mp.private = :private
@@ -1505,7 +1504,6 @@ function upgrade_block_delete_instances(
 
     $params = [
         'blockname' => $blockname,
-        'subpageempty' => $subpageempty,
         'pagetypepattern' => $pagetypepattern,
         'pagename' => $pagename,
         'private' => MY_PAGE_PRIVATE,
