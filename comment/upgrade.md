@@ -1,0 +1,8 @@
+# API Changes for the `core_comment` subsystem
+
+## 3.8
+
+- External function get_comments now returns the total count of comments and the number of comments per page.
+  It also has a new parameter to indicate the sorting direction (defaulted to DESC).
+  - The external function core_comment_get_comments now indicates if the current user can post comments in the requested
+    area.

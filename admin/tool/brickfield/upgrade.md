@@ -1,0 +1,6 @@
+# API Changes for the `tool_brickfield` plugin
+
+## 4.0
+
+- classes/local/htmlchecker/common/brickfield_accessibility_color_test::get_rgb() has been modified to return either an
+  array or null. Previously it returned either an array or false.

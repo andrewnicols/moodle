@@ -1,0 +1,12 @@
+# API Changes for the `tool_generator` plugin
+
+## 4.0
+
+- Function tool_generator_testplan_backend::create_users_file() now supports to pass the size of the testing plan,
+  that needs to be equal or smaller than the size of the generated site. That's used to effectively restrict the
+  exported number of users to the number of threads the jmeter plan will have (previously all the enrolled users
+  were being exported, with that leading to "false" loops (users not really looping X times).
+
+## 3.7
+
+- Function tool_generator_testplan_backend::get_course_options() is removed, the 'course' form element is used instead.

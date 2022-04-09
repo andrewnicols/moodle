@@ -1,0 +1,7 @@
+# API Changes for the `core_my` subsystem
+
+This files describes changes in the my system.
+## 4.0
+
+- Introduce a new /courses page
+- Tighten up the typing within the lib file
