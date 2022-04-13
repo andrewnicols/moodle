@@ -34,7 +34,8 @@ module.exports = grunt => {
                                 // These rules have to be disabled in .stylelintrc for scss compat.
                                 "at-rule-no-unknown": true,
                             }
-                        }
+                        },
+                        fix: grunt.option('fix'),
                     }
                 },
             },
@@ -45,7 +46,10 @@ module.exports = grunt => {
         return {
             stylelint: {
                 scss: {
-                    options: {syntax: 'scss'},
+                    options: {
+                        syntax: 'scss',
+                        fix: grunt.option('fix'),
+                    },
                     src: files,
                 },
             },

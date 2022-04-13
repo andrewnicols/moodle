@@ -1,4 +1,4 @@
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,8 +12,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/* jshint node: true, browser: false */
-/* eslint-env node */
 
 /**
  * @copyright  2021 Andrew Nicols
@@ -33,7 +31,8 @@ module.exports = grunt => {
             // Also --max-lint-warnings=-1 can be used to display warnings but not fail.
             options: {
                 quiet: (!grunt.option('show-lint-warnings')) && (typeof grunt.option('max-lint-warnings') === 'undefined'),
-                maxWarnings: ((typeof grunt.option('max-lint-warnings') !== 'undefined') ? grunt.option('max-lint-warnings') : -1)
+                maxWarnings: ((typeof grunt.option('max-lint-warnings') !== 'undefined') ? grunt.option('max-lint-warnings') : -1),
+                fix: grunt.option('fix'),
             },
 
             // Check AMD src files.
