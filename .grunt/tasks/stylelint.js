@@ -1,4 +1,4 @@
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,6 +12,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /* jshint node: true, browser: false */
 /* eslint-env node */
 
@@ -58,10 +59,6 @@ module.exports = grunt => {
 
     /**
      * Register any stylelint tasks.
-     *
-     * @param {Object} grunt
-     * @param {Array} files
-     * @param {String} fullRunDir
      */
     const registerStyleLintTasks = () => {
         const glob = require('glob');

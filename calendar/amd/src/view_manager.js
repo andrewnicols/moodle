@@ -1,4 +1,4 @@
-// This file is part of Moodle - http://moodle.org/
+// This file is part of Moodle - https://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -345,7 +345,7 @@ export const reloadCurrentMonth = (root, courseId = 0, categoryId = 0) => {
 export const refreshDayContent = (root, year, month, day, courseId, categoryId, target = null, template = '') => {
     startLoading(root);
 
-    if (!target || target.length == 0){
+    if (!target || target.length == 0) {
         target = root.find(CalendarSelectors.wrapper);
     }
     template = template || root.attr('data-template');
