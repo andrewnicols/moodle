@@ -238,7 +238,6 @@ class upgradelib_test extends \advanced_testcase {
         ], 'id')->id;
 
         $dashboards = [];
-        $mycourses = [];
         $unchanged = [];
         $unchangedcontexts = [];
         $unchangedpreferences = [];
@@ -309,7 +308,6 @@ class upgradelib_test extends \advanced_testcase {
                 'name' => '__courses',
                 'private' => MY_PAGE_PRIVATE,
             ]);
-            $mycourses[] = $usermycoursesid;
 
             // These are on the my-index above, but are not the block being updated.
             $userunchangedblocks[] = $this->getDataGenerator()->create_block('online_users', [
@@ -460,7 +458,6 @@ class upgradelib_test extends \advanced_testcase {
         $systemcontext = \context_system::instance();
 
         $dashboards = [];
-        $mycourses = [];
         $otherblocknames = [
             'online_users',
             'myoverview',
@@ -483,7 +480,6 @@ class upgradelib_test extends \advanced_testcase {
                 'name' => '__courses',
                 'private' => MY_PAGE_PRIVATE,
             ]);
-            $mycourses[] = $mycourse;
 
             // These are on the my-index above, but are not the block being updated.
             foreach ($otherblocknames as $blockname) {

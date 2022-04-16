@@ -1360,8 +1360,7 @@ function upgrade_block_set_defaultregion(
          AND mp.name = :pagename
     EOF;
 
-    $context = context_system::instance();
-    $result = $DB->execute($sql, [
+    $DB->execute($sql, [
         'selectblockname' => $blockname,
         'contextuser' => CONTEXT_USER,
         'selectpagetypepattern' => $pagetypepattern,
@@ -1564,7 +1563,7 @@ function upgrade_block_set_my_user_parent_context(
     ]);
 
     $dbfamily = $DB->get_dbfamily();
-    if ($dbfamily == 'mysql') {
+    if ($dbfamily === 'mysql') {
         // MariaDB and MySQL.
         $sql = <<<EOF
             UPDATE {block_instances} bi, {block_instance_context} bic
