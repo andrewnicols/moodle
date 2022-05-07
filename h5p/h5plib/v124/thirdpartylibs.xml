@@ -3,13 +3,23 @@
   <library>
     <location>joubel/core</location>
     <name>h5p-php-library</name>
+    <description>The general H5P library</description>
     <license>GPL-3.0</license>
     <version>1.24.3</version>
+    <repository>https://github.com/h5p/h5p-php-library/</repository>
+    <copyrights>
+      <copyright>Joubel</copyright>
+    </copyrights>
   </library>
   <library>
     <location>joubel/editor</location>
     <name>h5p-editor-php-library</name>
+    <description>A general library that is supposed to be used in most PHP implementations of H5P.</description>
     <license>GPL-3.0</license>
     <version>moodle-1.20.2</version>
+    <repository>https://github.com/h5p/h5p-editor-php-library/</repository>
+    <copyrights>
+      <copyright>Joubel</copyright>
+    </copyrights>
   </library>
 </libraries>

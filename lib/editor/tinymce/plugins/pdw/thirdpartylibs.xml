@@ -6,5 +6,8 @@
     <license>MIT</license>
     <version>1.2</version>
     <licenseversion></licenseversion>
+    <copyrights>
+      <copyright>Guido Neele (www.neele.name)</copyright>
+    </copyrights>
   </library>
 </libraries>

@@ -3,8 +3,12 @@
   <library>
     <location>MongoDB</location>
     <name>MongoDB PHP Library</name>
-    <license>Apache</license>
+    <description>MongoDB PHP library</description>
     <version>1.8.0</version>
+    <license>Apache</license>
     <licenseversion>2.0</licenseversion>
+    <repository>https://github.com/mongodb/mongo-php-driver</repository>
+    <copyrights>
+    </copyrights>
   </library>
 </libraries>

@@ -3,8 +3,12 @@
     <library>
         <location>ims-blti</location>
         <name>IMS-BLTI</name>
+        <description>Set of IMS-LTI tools</description>
         <license>MIT</license>
         <version></version>
         <licenseversion></licenseversion>
+        <repository>https://github.com/jfederico/ims-dev</repository>
+        <copyrights>
+        <copyrights>
     </library>
 </libraries>

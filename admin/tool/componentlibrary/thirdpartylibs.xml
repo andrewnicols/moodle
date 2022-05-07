@@ -3,8 +3,12 @@
   <library>
     <location>amd/src/lunr.js</location>
     <name>lunr - http://lunrjs.com</name>
-    <license>MIT</license>
+    <description>Search made simple</description>
     <version>2.3.8</version>
+    <license>MIT</license>
     <licenseversion></licenseversion>
+    <repository>https://github.com/olivernn/lunr.js</repository>
+    <copyrights>
+    </copyrights>
   </library>
 </libraries>
