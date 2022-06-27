@@ -24,7 +24,14 @@ namespace editor_tiny;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class editor extends \texteditor implements plugin_with_buttons, plugin_with_menuitems {
+class editor extends \texteditor {
+
+    /** @var manager The Tiny Manager instace */
+    protected $manager;
+
+    public function __construct() {
+        $this->manager = new manager();
+    }
 
     /**
      * Is the current browser supported by this editor?
@@ -80,8 +87,10 @@ class editor extends \texteditor implements plugin_with_buttons, plugin_with_men
     }
 
     public function get_data_attributes(): array {
+        // TODO Make this work properly.
         return [
             'data-region' => 'editor_tiny',
+            'data-pluginlist' => json_encode($this->manager->get_available_plugins()),
         ];
     }
 }

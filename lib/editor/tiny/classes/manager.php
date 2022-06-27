@@ -124,7 +124,7 @@ class manager {
      */
     public function get_available_plugins(): array {
         $plugins = $this->get_core_plugins();
-        if ($this->enable_premium_plugins()) {
+        if ($this->premium_plugins_enabled()) {
             $plugins += $this->get_premium_plugins();
         }
 
@@ -490,6 +490,14 @@ class manager {
      */
     protected function get_moodle_plugins(): array {
         return [
+            'tiny_media/insertmedia' => [
+                'buttons' => [
+                    'tiny_media/insertmedia',
+                ],
+                'menuitems' => [
+                    'tiny_media/insertmedia',
+                ],
+            ],
             'editor_tiny/testplugin' => [
                 'buttons' => [
                     'editor_tiny/testplugin',
