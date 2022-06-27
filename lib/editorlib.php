@@ -242,4 +242,29 @@ abstract class texteditor {
      */
     public function head_setup() {
     }
+
+    /**
+     * Fetch a list of data attributes to insert into the text area used for this plugin.
+     *
+     * @return array
+     */
+    public function get_data_attributes(): array {
+        return [];
+    }
+
+    /**
+     * Fetch a list of the data attributes suitable for a template.
+     *
+     * @return array
+     */
+    public function get_template_data_attributes(): array {
+        $attributes = $this->get_data_attributes();
+
+        return array_values(array_map(function(string $key, string $value): array {
+            return [
+                'key' => $key,
+                'value' => $value,
+            ];
+        }, array_keys($attributes), array_values($attributes)));
+    }
 }

@@ -1737,13 +1737,15 @@ class core_renderer extends renderer_base {
         $editor = editors_get_preferred_editor(FORMAT_HTML);
         $editor->set_text($value);
         $editor->use_editor($id, []);
+        $attributes = $editor->get_data_attributes();
 
         $context = [
             'id' => $id,
             'name' => $name,
             'value' => $value,
             'rows' => $rows,
-            'cols' => $cols
+            'cols' => $cols,
+            'data-attributes' => $editor->get_template_data_attributes(),
         ];
 
         return $this->render_from_template('core_form/editor_textarea', $context);

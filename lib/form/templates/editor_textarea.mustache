@@ -29,9 +29,14 @@
         "format": 3
     }
 }}
+
 <div>
-<textarea id="{{id}}" name="{{name}}[text]" class="form-control" rows="{{rows}}" cols="{{cols}}" spellcheck="true" {{#changelistener}} onblur="{{onblur}}"
-    onchange="{{onchange}}" {{/changelistener}}>{{value}}</textarea>
+<textarea id="{{id}}" name="{{name}}[text]" class="form-control" rows="{{rows}}" cols="{{cols}}" spellcheck="true" {{!
+    }}{{# data-attributes }}
+    {{{key}}}={{#quote}}{{value}}{{/quote}}
+    {{/ data-attributes }}{{!
+    }}{{#changelistener}} onblur="{{onblur}}" onchange="{{onchange}}" {{/changelistener}}{{!
+}}>{{value}}</textarea>
 </div>
 <div>
     {{#hasformats}}

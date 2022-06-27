@@ -441,6 +441,7 @@ class MoodleQuickForm_editor extends HTML_QuickForm_element implements templatab
         $context['id'] = $id;
         $context['value'] = $text;
         $context['format'] = $format;
+        $context['data-attributes'] = $editor->get_template_data_attributes();
 
         if (!is_null($this->getAttribute('onblur')) && !is_null($this->getAttribute('onchange'))) {
             $context['changelistener'] = true;
