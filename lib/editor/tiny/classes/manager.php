@@ -254,30 +254,12 @@ class manager {
                     'help' => 'help',
                 ],
             ],
-            'hr' => [
-                'buttons' => [
-                    'hr',
-                ],
-                'menuitems' => [
-                    'hr' => 'insert',
-                ],
-            ],
             'image' => [
                 'buttons' => [
                     'image',
                 ],
                 'menuitems' => [
                     'image' => 'insert',
-                ],
-            ],
-            'imagetools' => [
-                'buttons' => [
-                    'editimage',
-                    'fliph',
-                    'flipv',
-                    'imageoptions',
-                    'rotateleft',
-                    'rotateright',
                 ],
             ],
             'insertdatetime' => [
@@ -328,28 +310,12 @@ class manager {
                     'pagebreak' => 'insert',
                 ],
             ],
-            'paste' => [
-                'buttons' => [
-                    'pastetext',
-                ],
-                'menuitems' => [
-                    'pastetext' => 'edit',
-                ],
-            ],
             'preview' => [
                 'buttons' => [
                     'preview',
                 ],
                 'menuitems' => [
                     'preview' => 'file',
-                ],
-            ],
-            'print' => [
-                'buttons' => [
-                    'print',
-                ],
-                'menuitems' => [
-                    'print' => 'file',
                 ],
             ],
             'quickbars' => [
@@ -371,14 +337,6 @@ class manager {
                 ],
                 'menuitems' => [
                     'searchreplace' => 'edit',
-                ],
-            ],
-            'spellchecker' => [
-                'buttons' => [
-                    'spellchecker',
-                ],
-                'menuitems' => [
-                    'spellchecker' => 'tools',
                 ],
             ],
             'table' => [
@@ -447,15 +405,6 @@ class manager {
                     'template' => 'insert',
                 ],
             ],
-            'toc' => [
-                'buttons' => [
-                    'toc',
-                    'tocupdate',
-                ],
-                'menuitems' => [
-                    'toc' => 'insert',
-                ],
-            ],
             'visualblocks' => [
                 'buttons' => [
                     'visualblocks',
@@ -496,14 +445,6 @@ class manager {
                 ],
                 'menuitems' => [
                     'tiny_media/insertmedia',
-                ],
-            ],
-            'editor_tiny/testplugin' => [
-                'buttons' => [
-                    'editor_tiny/testplugin',
-                ],
-                'menuitems' => [
-                    'editor_tiny/testplugin',
                 ],
             ],
         ];
