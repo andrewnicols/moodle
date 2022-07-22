@@ -15,31 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Atto upgrade script.
+ * Tiny upgrade script.
  *
- * @package    editor_atto
- * @copyright  2014 Damyon Wiese
+ * @package    editor_tiny
+ * @copyright  2022 Simey Lameze
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Make the Atto the default editor for upgrades from 26.
+ * Make the Tiny the default editor.
  *
  * @return bool
  */
-function xmldb_editor_atto_install() {
+function xmldb_editor_tiny_install() {
     global $CFG;
 
-    // Make Atto the default.
+    // Make Tiny the default editor.
     $currenteditors = $CFG->texteditors;
-    $neweditors = array();
+    $neweditors = [];
 
     $list = explode(',', $currenteditors);
-    array_push($neweditors, 'atto');
+    array_push($neweditors, 'tiny');
     foreach ($list as $editor) {
-        if ($editor != 'atto') {
+        if ($editor != 'tiny') {
             array_push($neweditors, $editor);
         }
     }
