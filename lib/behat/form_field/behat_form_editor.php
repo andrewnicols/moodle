@@ -64,6 +64,13 @@ class behat_form_editor extends behat_form_textarea {
 })();
 ';
             behat_base::execute_script_in_session($this->session, $js);
+
+            behat_base::execute_in_namespace('editor', 'set_editor_value', [
+                $this,
+                $editorid,
+                $value,
+            ]);
+
         } else {
             parent::set_value($value);
         }
