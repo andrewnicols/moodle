@@ -116,6 +116,18 @@ class behat_context_helper {
     }
 
     /**
+     * Get the contexts by a given prefix.
+     *
+     * @param string $prefix The prefix.
+     * @return array
+     */
+    public static function get_prefixed_contexts(string $prefix): array {
+        return array_filter(self::$environment->getContexts(), function($context) use ($prefix): bool {
+            return (strpos(get_class($context), $prefix) === 0);
+        });
+    }
+
+    /**
      * Check for any theme override of the specified class name.
      *
      * @param string $classname

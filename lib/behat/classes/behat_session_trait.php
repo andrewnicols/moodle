@@ -1046,6 +1046,23 @@ EOF;
     }
 
     /**
+     * Execute in namespace.
+     *
+     * @param string $prefix
+     * @param string $method
+     * @param array $params
+     * @return void
+     */
+    public static function execute_in_namespace(string $prefix, string $method, array $params): void {
+        $contexts = behat_context_helper::get_prefixed_contexts("behat_{$prefix}_");
+        foreach ($contexts as $context) {
+            if (method_exists($context, $method) && is_callable([$context, $method])) {
+                call_user_func_array([$context, $method], $params);
+            }
+        }
+    }
+
+    /**
      * Get the actual user in the behat session (note $USER does not correspond to the behat session's user).
      * @return mixed
      * @throws coding_exception
