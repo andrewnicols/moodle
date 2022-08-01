@@ -28,7 +28,26 @@ use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 // NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 require_once(__DIR__ . '/../../../../behat/behat_base.php');
 
-class behat_editor_tiny extends behat_base {
+class behat_editor_tiny extends behat_base implements \core_behat\settable_editor {
+
+    /**
+     * Set the value for the editor.
+     *
+     * @param string $editorid
+     * @param string $value
+     */
+    public function set_editor_value(string $editorid, string $value): void {
+        $js = <<<EOF
+        require(['editor_tiny/editor'], (editor) => {
+            const instance = editor.getInstanceForElementId('${editorid}');
+            instance.setContent('${value}');
+            instance.undoManager.add();
+        });
+        EOF;
+
+        $this->execute_script($js);
+    }
+
 
     /**
      * Set Tiny as default editor before executing Tiny tests.
