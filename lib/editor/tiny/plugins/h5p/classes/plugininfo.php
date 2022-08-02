@@ -35,6 +35,17 @@ class plugininfo extends plugin implements
     plugin_with_menuitems,
     plugin_with_configuration
 {
+
+    public static function is_enabled(
+        context $context,
+        array $options,
+        array $fpoptions,
+        ?\editor_tiny\editor $editor = null
+    ): bool {
+        // Users must have permission to embed content.
+        return has_capability('atto/h5p:addembed', $context);
+    }
+
     public static function get_available_buttons(): array {
         return [
             'tiny_h5p/h5p',
