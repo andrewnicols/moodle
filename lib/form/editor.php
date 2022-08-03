@@ -496,4 +496,14 @@ class MoodleQuickForm_editor extends HTML_QuickForm_element implements templatab
 
         return '';
     }
+
+    /**
+     * Sets label to be hidden.
+     *
+     * @param $hiddenLabel
+     * @return void
+     */
+    function setHiddenLabel($hiddenLabel){
+        $this->_hiddenLabel = $hiddenLabel;
+    }
 }
