@@ -2689,7 +2689,8 @@ function require_logout() {
             'other' => array('sessionid' => $sid),
         )
     );
-    if ($session = $DB->get_record('sessions', array('sid'=>$sid))) {
+    $session = \core\session\manager::get_session_by_sid($sid);
+    if (isset($session->id)) {
         $event->add_record_snapshot('sessions', $session);
     }
 
