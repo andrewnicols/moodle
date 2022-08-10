@@ -513,6 +513,9 @@ class manager {
             // These are not generally compatible with Moodle.
             'image',
             'media',
+
+            // Use the Moodle autosave plugin instead.
+            'autosave',
         ];
     }
 
