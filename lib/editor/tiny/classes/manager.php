@@ -30,7 +30,8 @@ class manager {
     public function get_plugin_configuration(
         context $context,
         array $options = [],
-        array $fpoptions = []
+        array $fpoptions = [],
+        ?editor $editor = null
     ): array {
         $disabledplugins = $this->get_disabled_plugins();
 
@@ -50,10 +51,11 @@ class manager {
 
             $plugininfo = $classname::get_plugin_info();
 
-            $config = $classname::get_plugin_configuration_for_context(
+            $config = $classname::get_plugin_configuration(
                 $context,
                 $options,
-                $fpoptions
+                $fpoptions,
+                $editor
             );
 
             if (!empty($config)) {
