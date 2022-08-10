@@ -15,17 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Privacy Subsystem implementation for the TinyMCE Editor.
+ * Tiny text editor H5P Plugin version file.
  *
- * @package    editor_tiny
+ * @package    tiny_h5p
  * @copyright  2022 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace editor_tiny\privacy;
+defined('MOODLE_INTERNAL') || die();
 
-class provider implements \core_privacy\local\metadata\null_provider {
-    public static function get_reason(): string {
-        return 'privacy:reason';
-    }
-}
+$plugin->version   = 2022080900;
+$plugin->requires  = 2021051700;
+$plugin->component = 'tiny_autosave';
