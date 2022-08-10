@@ -33,13 +33,14 @@ abstract class plugin {
         return $plugindata;
     }
 
-    public static function get_plugin_configuration_for_context(
+    public static function get_plugin_configuration(
         context $context,
         array $options,
-        array $fpoptions
+        array $fpoptions,
+        ?editor $editor = null
     ): array {
         if (is_a(static::class, plugin_with_configuration::class, true)) {
-            return static::get_plugin_configuration_for_context($context, $options, $fpoptions);
+            return static::get_plugin_configuration_for_context($context, $options, $fpoptions, $editor);
         }
 
         return [];
