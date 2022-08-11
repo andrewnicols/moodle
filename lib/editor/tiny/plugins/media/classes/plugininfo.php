@@ -14,34 +14,52 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tiny_media;
-
-use editor_tiny\plugin;
-use editor_tiny\plugin_with_buttons;
-use editor_tiny\plugin_with_menuitems;
-
 /**
- * Tiny Editor.
+ * Tiny media plugin.
  *
- * @package    editor_tiny
- * @copyright  2021 Andrew Lyons <andrew@nicols.co.uk>
+ * @package    tiny_media
+ * @copyright  2022 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-class plugininfo extends plugin implements plugin_with_buttons, plugin_with_menuitems {
+namespace tiny_media;
+
+use context;
+use editor_tiny\editor;
+use editor_tiny\plugin;
+use editor_tiny\plugin_with_buttons;
+use editor_tiny\plugin_with_configuration;
+use editor_tiny\plugin_with_menuitems;
+
+/**
+ * Tiny media plugin.
+ *
+ * @package    tiny_media
+ * @copyright  2022 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class plugininfo extends plugin implements plugin_with_buttons, plugin_with_menuitems, plugin_with_configuration {
+
     public static function get_available_buttons(): array {
         return [
-            'tiny_media/image',
-            'tiny_media/video',
-            'tiny_media/manage',
+            'tiny_media/tiny_media_image',
         ];
     }
 
     public static function get_available_menuitems(): array {
         return [
-            'tiny_media/image',
-            'tiny_media/video',
-            'tiny_media/manage',
+            'tiny_media/tiny_media_image',
+        ];
+    }
+
+    public static function get_plugin_configuration_for_context(context $context, array $options, array $fpoptions,
+        ?editor $editor = null): array {
+        $permissions = [
+            'upload' => true,
+        ];
+        return [
+            'permissions' => $permissions,
+            'storeinrepo' => true,
         ];
     }
 }
