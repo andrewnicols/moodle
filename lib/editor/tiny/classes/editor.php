@@ -169,6 +169,13 @@ class editor extends \texteditor {
             // File picker options.
             'filepicker' => $fpoptions,
 
+            // Language options.
+            'moodlelang' => [
+                'currentlang' => current_language(),
+                'installed' => get_string_manager()->get_list_of_translations(true),
+                'available' => get_string_manager()->get_list_of_languages()
+            ],
+
             // Plugin configuration.
             'plugins' => $this->manager->get_plugin_configuration($context, $options, $fpoptions, $this),
         ];

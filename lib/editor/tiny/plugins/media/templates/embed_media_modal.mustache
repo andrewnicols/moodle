@@ -1,0 +1,60 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template tiny_media/embed_media_modal
+
+    Embed media modal template.
+
+    Example context (json):
+    {
+
+    }
+}}
+<form class="tiny_media_form" id="{{elementid}}_tiny_media_form">
+    <ul class="root nav nav-tabs mb-1" role="tablist">
+        <li data-medium-type="{{CSS.LINK}}" class="nav-item">
+            <a class="nav-link active" href="#{{elementid}}_{{CSS.LINK}}" role="tab" data-toggle="tab">
+                {{#str}} link, tiny_media {{/str}}
+            </a>
+        </li>
+        <li data-medium-type="{{CSS.VIDEO}}" class="nav-item">
+            <a class="nav-link" href="#{{elementid}}_{{CSS.VIDEO}}" role="tab" data-toggle="tab">
+                {{#str}} video, tiny_media {{/str}}
+            </a>
+        </li>
+        <li data-medium-type="{{CSS.AUDIO}}" class="nav-item">
+            <a class="nav-link" href="#{{elementid}}_{{CSS.AUDIO}}" role="tab" data-toggle="tab">
+                {{#str}} audio, tiny_media {{/str}}
+            </a>
+        </li>
+    </ul>
+    <div class="root tab-content">
+        <div data-medium-type="{{CSS.LINK}}" class="tab-pane active" id="{{elementid}}_{{CSS.LINK}}">
+            {{> tiny_media/embed_media_modal_link }}
+        </div>
+        <div data-medium-type="{{CSS.VIDEO}}" class="tab-pane" id="{{elementid}}_{{CSS.VIDEO}}">
+            {{> tiny_media/embed_media_modal_video}}
+        </div>
+        <div data-medium-type="{{CSS.AUDIO}}" class="tab-pane" id="{{elementid}}_{{CSS.AUDIO}}">
+            {{> tiny_media/embed_media_modal_audio}}
+        </div>
+    </div>
+    <div class="mdl-align">
+        <br/>
+        <button class="btn btn-secondary tiny_media_submit" type="submit">{{#str}} createmedia, tiny_media {{/str}}</button>
+    </div>
+</form>
