@@ -55,18 +55,8 @@ list($unused, $component, $module) = explode('/', $file, 3);
 // Use the caching only for meaningful revision numbers which prevents future cache poisoning.
 if ($rev > 0 and $rev < (time() + 60 * 60)) {
     // This is "production mode".
-    // Some (huge) modules are better loaded lazily (when they are used). If we are requesting
-    // one of these modules, only return the one module, not the combo.
-    $lazysuffix = "-lazy.js";
-    $lazyload = (strpos($module, $lazysuffix) !== false);
-
-    if ($lazyload) {
-        // We are lazy loading a single file - so include the component/filename pair in the etag.
-        $etag = sha1($rev . '/' . $component . '/' . $module);
-    } else {
-        // We loading all (non-lazy) files - so only the rev makes this request unique.
-        $etag = sha1($rev);
-    }
+    // We are loading a single file - so include the component/filename pair in the etag.
+    $etag = sha1($rev . '/' . $component . '/' . $module);
 
     $candidate = $CFG->localcachedir . '/requirejs/' . $etag;
 
@@ -80,16 +70,7 @@ if ($rev > 0 and $rev < (time() + 60 * 60)) {
         exit(0);
 
     } else {
-        $jsfiles = array();
-        if ($lazyload) {
-            $jsfiles = core_requirejs::find_one_amd_module($component, $module);
-        } else {
-            // Here we respond to the request by returning ALL amd modules. This saves
-            // round trips in production.
-
-            $jsfiles = core_requirejs::find_all_amd_modules();
-        }
-
+        $jsfiles = core_requirejs::find_one_amd_module($component, $module);
         $content = '';
         foreach ($jsfiles as $modulename => $jsfile) {
             $js = file_get_contents($jsfile);
@@ -126,8 +107,7 @@ if ($rev > 0 and $rev < (time() + 60 * 60)) {
     }
 }
 
-// If we've made it here then we're in "dev mode" where everything is lazy loaded.
-// So all files will be served one at a time.
+// If we've made it here then we're in "dev mode".
 $jsfiles = core_requirejs::find_one_amd_module($component, $module);
 
 if (!empty($jsfiles)) {
