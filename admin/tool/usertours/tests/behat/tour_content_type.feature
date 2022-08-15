@@ -66,7 +66,7 @@ Feature: Apply content type to a tour
     And I should see "Editing \"New: Activity information\""
     And I should not see "Language string ID" in the "#fitem_id_contentlangstring" "css_element"
     And the field "Title" matches value "tour_activityinfo_course_teacher_title,tool_usertours"
-    And the field "id_content" matches value "<b>Test content</b>"
+    And the field "id_content" matches value "<p><strong>Test content</strong></p>"
 
   @javascript
   Scenario: Tour name and description can be translatable
