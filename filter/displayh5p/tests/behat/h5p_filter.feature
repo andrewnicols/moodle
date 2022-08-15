@@ -62,13 +62,13 @@ Feature: Render H5P content using filters
     And I upload "h5p/tests/fixtures/ipsums.h5p" file to "Select files" filemanager
     And I press "Save and return to course"
     And I am on the PageName1 "page activity editing" page
-    And I click on "Insert H5P" "button" in the "#fitem_id_page" "css_element"
-    And I click on "Browse repositories..." "button" in the "Insert H5P" "dialogue"
+    And I click on "Configure H5P content" "button" in the "#fitem_id_page" "css_element"
+    And I click on "Browse repositories..." "button" in the "Insert H5P content" "dialogue"
     And I click on "Server files" "link" in the ".fp-repo-area" "css_element"
     And I click on "ipsumFile (File)" "link"
     And I click on "ipsums.h5p" "link"
     And I click on "Select this file" "button"
-    And I click on "Insert H5P" "button" in the "Insert H5P" "dialogue"
+    And I click on "Insert H5P" "button" in the "Insert H5P content" "dialogue"
     And I wait until the page is ready
     When I click on "Save and display" "button"
 #   Switch to iframe created by filter
@@ -96,13 +96,13 @@ Feature: Render H5P content using filters
     And I upload "h5p/tests/fixtures/ipsums.h5p" file to "Select files" filemanager
     And I press "Save and return to course"
     And I am on the PageName1 "page activity editing" page
-    And I click on "Insert H5P" "button" in the "#fitem_id_page" "css_element"
-    And I click on "Browse repositories..." "button" in the "Insert H5P" "dialogue"
+    And I click on "Configure H5P content" "button" in the "#fitem_id_page" "css_element"
+    And I click on "Browse repositories..." "button" in the "Insert H5P content" "dialogue"
     And I click on "Server files" "link" in the ".fp-repo-area" "css_element"
     And I click on "ipsumFile (File)" "link"
     And I click on "ipsums.h5p" "link"
     And I click on "Select this file" "button"
-    And I click on "Insert H5P" "button" in the "Insert H5P" "dialogue"
+    And I click on "Insert H5P content" "button" in the "Insert H5P content" "dialogue"
     And I wait until the page is ready
     When I click on "Save and display" "button"
 #   Switch to iframe created by filter
@@ -120,13 +120,13 @@ Feature: Render H5P content using filters
     And I upload "h5p/tests/fixtures/ipsums.h5p" file to "Select files" filemanager
     And I press "Save and return to course"
     And I am on the PageName1 "page activity editing" page
-    And I click on "Insert H5P" "button" in the "#fitem_id_page" "css_element"
-    And I click on "Browse repositories..." "button" in the "Insert H5P" "dialogue"
+    And I click on "Configure H5P content" "button" in the "#fitem_id_page" "css_element"
+    And I click on "Browse repositories..." "button" in the "Insert H5P content" "dialogue"
     And I click on "Server files" "link" in the ".fp-repo-area" "css_element"
     And I click on "ipsumFileTeacher (File)" "link"
     And I click on "ipsums.h5p" "link"
     And I click on "Select this file" "button"
-    And I click on "Insert H5P" "button" in the "Insert H5P" "dialogue"
+    And I click on "Insert H5P" "button" in the "Insert H5P content" "dialogue"
     And I wait until the page is ready
     And I click on "Save and display" "button"
 #   Switch to iframe created by filter
@@ -143,13 +143,13 @@ Feature: Render H5P content using filters
     And I upload "h5p/tests/fixtures/ipsums.h5p" file to "Select files" filemanager
     And I press "Save and return to course"
     And I am on the PageName2 "page activity editing" page
-    And I click on "Insert H5P" "button" in the "#fitem_id_page" "css_element"
-    And I click on "Browse repositories..." "button" in the "Insert H5P" "dialogue"
+    And I click on "Configure H5P content" "button" in the "#fitem_id_page" "css_element"
+    And I click on "Browse repositories..." "button" in the "Insert H5P content" "dialogue"
     And I click on "Server files" "link" in the ".fp-repo-area" "css_element"
     And I click on "ipsumFile (File)" "link"
     And I click on "ipsums.h5p" "link"
     And I click on "Select this file" "button"
-    And I click on "Insert H5P" "button" in the "Insert H5P" "dialogue"
+    And I click on "Insert H5P" "button" in the "Insert H5P content" "dialogue"
     And I wait until the page is ready
     And I click on "Save and display" "button"
 #   Switch to iframe created by filter
@@ -183,12 +183,12 @@ Feature: Render H5P content using filters
 # Add H5P content to the page.
     And I am on "Course 1" course homepage
     And I am on the PageName1 "page activity editing" page
-    When I click on "Insert H5P" "button" in the "#fitem_id_page" "css_element"
-    And I click on "Browse repositories..." "button" in the "Insert H5P" "dialogue"
+    When I click on "Configure H5P content" "button" in the "#fitem_id_page" "css_element"
+    And I click on "Browse repositories..." "button" in the "Insert H5P content" "dialogue"
     And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
     And I click on "ipsums.h5p" "link"
     And I click on "Select this file" "button"
-    And I click on "Insert H5P" "button" in the "Insert H5P" "dialogue"
+    And I click on "Insert H5P" "button" in the "Insert H5P content" "dialogue"
     And I click on "Save and display" "button"
     And I switch to "h5p-iframe" class iframe
 #   Library is disabled, so an error should be displayed.
