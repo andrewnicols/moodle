@@ -152,7 +152,7 @@ class editor extends \texteditor {
 
         $context = $PAGE->context;
 
-        if ($options['context'] && ($options['context'] instanceof \context)) {
+        if (isset($options['context']) && ($options['context'] instanceof \context)) {
             // A different context was provided.
             // Use that instead.
             $context = $options['context'];
