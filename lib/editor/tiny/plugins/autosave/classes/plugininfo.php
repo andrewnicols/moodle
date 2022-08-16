@@ -34,7 +34,7 @@ class plugininfo extends plugin implements plugin_with_configuration {
         context $context,
         array $options,
         array $fpoptions,
-        ?\editor_tiny\editor $editor = null,
+        ?\editor_tiny\editor $editor = null
     ): array {
         global $PAGE;
 
