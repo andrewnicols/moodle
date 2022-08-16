@@ -15,8 +15,8 @@ class behat_editor_tiny extends behat_base {
 $js = "
 require(['editor_tiny/editor'], (editor) => {
     const instance = editor.getInstanceForElementId('${editorid}');
-    instance.load();
     instance.setContent('${value}');
+    instance.undoManager.add();
 });
 ";
         behat_base::execute_script_in_session($params->getSession(), $js);
