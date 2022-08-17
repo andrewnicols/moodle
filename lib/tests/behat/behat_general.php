@@ -2198,7 +2198,7 @@ EOF;
      * @param string $editor
      * @return void
      */
-    public function the_default_editor_is_set_to(string $editor): void {
+    public static function the_default_editor_is_set_to(string $editor): void {
         global $CFG;
 
         $available = editors_get_available();
@@ -2206,9 +2206,13 @@ EOF;
             throw new \Moodle\BehatExtension\Exception\SkippedException();
         }
 
+        // Make the editor the default.
         $list = explode(',', $CFG->texteditors);
-        $list[0] = $editor;
+        array_unshift($list, $editor);
+        $list = array_unique($list);
 
         set_config('texteditors', implode(',', $list));
+        print_object($CFG->texteditors); //gives atto,tiny,tinymce,textarea.
+        //core_plugin_manager::reset_caches(); tried purging caches, no luck.
     }
 }
