@@ -334,6 +334,34 @@ class behat_config_util {
     }
 
     /**
+     * Sort the list of components contexts.
+     *
+     * This ensures that contexts are sorted consistently.
+     * Core hooks defined in the behat_hooks class _must_ be defined first.
+     *
+     * @param array $contexts
+     * @return array The sorted context list
+     */
+    protected function sort_component_contexts(array $contexts): array {
+        // Ensure that the lib_tests are first as they include the root of all tests, hooks, and more.
+        usort($contexts, function($a, $b): int {
+            if ($a === 'behat_hooks') {
+                return -1;
+            }
+            if ($b === 'behat_hooks') {
+                return 1;
+            }
+
+            if ($a == $b) {
+                return 0;
+            }
+            return ($a < $b) ? -1 : 1;
+        });
+
+        return $contexts;
+    }
+
+    /**
      * Behat config file specifing the main context class,
      * the required Behat extensions and Moodle test wwwroot.
      *
@@ -506,8 +534,10 @@ class behat_config_util {
             // Get a list of all step definition paths.
             $allpaths = array_merge($allpaths, $suites[$theme]['contexts']);
 
-            // Convert the contexts array to a list of names only.
-            $suites[$theme]['contexts'] = array_keys($suites[$theme]['contexts']);
+            // Convert the contexts array to a list of sorted names only.
+            $suites[$theme]['contexts'] = $this->sort_component_contexts(
+                array_keys($suites[$theme]['contexts'])
+            );
         }
 
         // Comments use black color, so failure path is not visible. Using color other then black/white is safer.
