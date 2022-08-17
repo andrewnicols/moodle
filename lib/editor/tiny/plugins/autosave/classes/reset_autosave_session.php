@@ -64,7 +64,7 @@ class reset_autosave_session extends external_api {
         int $contextid,
         string $pagehash,
         string $pageinstance,
-        string $elementid,
+        string $elementid
     ): array {
         global $DB, $USER;
 

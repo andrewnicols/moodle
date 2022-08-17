@@ -73,7 +73,7 @@ class resume_autosave_session extends external_api {
         string $pagehash,
         string $pageinstance,
         string $elementid,
-        ?int $draftid,
+        ?int $draftid
     ): array {
         global $DB, $USER;
 
