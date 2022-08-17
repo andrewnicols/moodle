@@ -3,7 +3,8 @@ Feature: Add media to Atto
   To write rich text - I need to add media.
 
   Background:
-    Given the following "blocks" exist:
+    Given the default editor is set to "atto"
+    And the following "blocks" exist:
       | blockname     | contextlevel | reference | pagetypepattern | defaultregion |
       | private_files | System       | 1         | my-index        | side-post     |
     And I log in as "admin"

@@ -2190,4 +2190,25 @@ EOF;
         $class = core_plugin_manager::resolve_plugininfo_class($plugintype);
         $class::enable_plugin($plugin, true);
     }
+
+    /**
+     * Check if a specific editor is default.
+     *
+     * @Given the default editor is set to :editor
+     * @param string $editor
+     * @return void
+     */
+    public function the_default_editor_is_set_to(string $editor): void {
+        global $CFG;
+
+        $available = editors_get_available();
+        if (!array_key_exists($editor, $available)) {
+            throw new \Moodle\BehatExtension\Exception\SkippedException();
+        }
+
+        $list = explode(',', $CFG->texteditors);
+        $list[0] = $editor;
+
+        set_config('texteditors', implode(',', $list));
+    }
 }
