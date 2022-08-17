@@ -67,7 +67,7 @@ class update_autosave_session_content extends external_api {
         string $pagehash,
         string $pageinstance,
         string $elementid,
-        string $drafttext,
+        string $drafttext
     ): array {
         global $DB, $USER;
 
