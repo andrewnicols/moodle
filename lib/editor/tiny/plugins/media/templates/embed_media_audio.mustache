@@ -24,17 +24,18 @@
 
     }
 }}
-&nbsp;<audio
-{{#showControls}}controls="true" {{/showControls}}
-{{#loop}}loop="true" {{/loop}}
-{{#muted}}muted="true" {{/muted}}
-{{#autoplay}}autoplay="true" {{/autoplay}}
-{{#title}}title="{{.}}" {{/title}}
->
-{{#sources}}<source src="{{source}}">{{/sources}}
-{{#tracks}}
-<track src="{{track}}" kind="{{kind}}" srclang="{{srclang}}" label="{{label}}"
- {{#defaultTrack}}default="true"{{/defaultTrack}}>
-{{/tracks}}
-{{#description}}{{.}}{{/description}}
-</audio>&nbsp
+&nbsp;<audio{{!
+    }}{{#showControls}} controls="true" {{/showControls}}{{!
+    }}{{#loop}} loop="true"{{/loop}}{{!
+    }}{{#muted}} muted="true"{{/muted}}{{!
+    }}{{#autoplay}} autoplay="true"{{/autoplay}}{{!
+    }}{{#title}} title="{{.}}"{{/title}}{{!
+}}>
+    {{#sources}}<source src="{{source}}"/>{{/sources}}
+    {{#tracks}}
+    <track src="{{track}}" kind="{{kind}}" srclang="{{srclang}}" label="{{label}}"{{!
+        }}{{#defaultTrack}} default="true"{{/defaultTrack}}{{!
+    }}>
+    {{/tracks}}
+    {{#description}}{{.}}{{/description}}
+</audio>&nbsp;

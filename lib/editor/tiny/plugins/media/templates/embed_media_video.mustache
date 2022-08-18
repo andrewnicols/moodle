@@ -24,22 +24,27 @@
 
     }
 }}
-&nbsp<video
-    {{#width}}width="{{.}}" {{/width}}
-    {{#height}}height="{{.}}" {{/height}}
-    {{#poster}}poster="{{.}}" {{/poster}}
-    {{#showControls}}controls="true" {{/showControls}}
-    {{#loop}}loop="true" {{/loop}}
-    {{#muted}}muted="true" {{/muted}}
-    {{#autoplay}}autoplay="true" {{/autoplay}}
-    {{#title}}title="{{.}}" {{/title}}
->
+&nbsp;<video{{!
+    }}{{#width}} width="{{.}}"{{/width}}{{!
+    }}{{#height}} height="{{.}}"{{/height}}{{!
+    }}{{#poster}} poster="{{.}}"{{/poster}}{{!
+    }}{{#showControls}} controls="true"{{/showControls}}{{!
+    }}{{#loop}} loop="true"{{/loop}}{{!
+    }}{{#muted}} muted="true"{{/muted}}{{!
+    }}{{#autoplay}} autoplay="true"{{/autoplay}}{{!
+    }}{{#title}} title="{{.}}"{{/title}}{{!
+}}>
     {{#sources}}
         <source src="{{.}}">
     {{/sources}}
     {{#tracks}}
-        <track src="{{track}}" kind="{{kind}}" srclang="{{srclang}}" label="{{label}}"
-               {{#defaultTrack}}default="true"{{/defaultTrack}}>
+        <track{{!
+            }} src="{{track}}"{{!
+            }} kind="{{kind}}"{{!
+            }} srclang="{{srclang}}"{{!
+            }} label="{{label}}"{{!
+            }}{{#defaultTrack}} default="true"{{/defaultTrack}}{{!
+        }}>
     {{/tracks}}
     {{#description}}{{.}}{{/description}}
-</video>&nbsp
+</video>&nbsp;

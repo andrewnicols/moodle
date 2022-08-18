@@ -24,9 +24,10 @@
 
     }
 }}
-<a href="{{url}}"
-    {{#width}}data-width="{{.}}" {{/width}}
-    {{#height}}data-height="{{.}}" {{/height}}
->
-    {{#name}}{{.}}{{/name}}{{^name}}{{url}}{{/name}}
-</a>
+<a href="{{url}}"{{!
+    }}{{#width}} data-width="{{.}}"{{/width}}{{!
+    }}{{#height}} data-height="{{.}}"{{/height}}{{!
+}}>{{!
+    }}{{#name}}{{.}}{{/name}}{{!
+    }}{{^name}}{{url}}{{/name}}{{!
+}}</a>
