@@ -44,7 +44,7 @@ class update_autosave_session_content extends external_api {
             'contextid' => new external_value(PARAM_INT, 'The context id that owns the editor', VALUE_REQUIRED),
             'pagehash' => new external_value(PARAM_ALPHANUMEXT, 'The page hash', VALUE_REQUIRED),
             'pageinstance' => new external_value(PARAM_ALPHANUMEXT, 'The page instance', VALUE_REQUIRED),
-            'elementid' => new external_value(PARAM_ALPHANUMEXT, 'The ID of the element', VALUE_REQUIRED),
+            'elementid' => new external_value(PARAM_RAW, 'The ID of the element', VALUE_REQUIRED),
             'drafttext' => new external_value(PARAM_RAW, 'The draft text', VALUE_REQUIRED),
         ]);
     }
