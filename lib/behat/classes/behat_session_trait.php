@@ -30,6 +30,7 @@ use Behat\Mink\Exception\ExpectationException;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\NoSuchWindowException;
 use Behat\Mink\Session;
+use Behat\Testwork\Hook\Scope\HookScope;
 use Facebook\WebDriver\Exception\ScriptTimeoutException;
 use Facebook\WebDriver\WebDriverBy;
 use Facebook\WebDriver\WebDriverElement;
@@ -1613,5 +1614,39 @@ EOF;
         $instancedata = $acttable->extract_from_result($result);
 
         return get_fast_modinfo($course)->get_cm($result->cmid);
+    }
+
+    /**
+     * Check whether any of the scope tags match using the given callable.
+     *
+     * @param HookScope $scope The scope to check
+     * @param callable $callback The callable to use to check the scope
+     * @return bool Whether any of the scope tags match
+     */
+    public static function scope_tags_match(HookScope $scope, callable $callback): bool {
+        $tags = [];
+
+        if (is_subclass_of($scope, \Behat\Behat\Hook\Scope\FeatureScope::class)) {
+            $tags = $scope->getFeature()->getTags();
+        }
+
+        if (is_subclass_of($scope, \Behat\Behat\Hook\Scope\ScenarioScope::class)) {
+            $tags = array_merge(
+                $scope->getFeature()->getTags(),
+                $scope->getScenario()->getTags()
+            );
+        }
+
+        if (is_subclass_of($scope, \Behat\Behat\Hook\Scope\StepScope::class)) {
+            $tags = array_merge(
+                $scope->getFeature()->getTags(),
+                $scope->getScenario()->getTags(),
+                $scope->getStep()->getTags()
+            );
+        }
+
+        $matches = array_filter($tags, $callback);
+
+        return !empty($matches);
     }
 }

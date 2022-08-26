@@ -27,7 +27,6 @@
 
 require_once(__DIR__ . '/../../../../behat/behat_base.php');
 
-
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 
 /**
@@ -83,10 +82,18 @@ class behat_editor_atto extends behat_base {
     /**
      * Set atto as default editor before executing atto tests.
      *
-     * @BeforeScenario @editor_atto
+     * @BeforeScenario
      */
-    public function set_default_editor_flag(): void {
+    public function set_default_editor_flag(BeforeScenarioScope $scope): void {
+        // This only applies to a scenario which matches the editor_atto, or an atto subplugin.
+        $callback = function (string $tag): bool {
+            return $tag === 'editor_atto' || substr($tag, 0, 5) === 'atto_';
+        };
+
+        if (!self::scope_tags_match($scope, $callback)) {
+            return;
+        }
+
         $this->execute('behat_general::the_default_editor_is_set_to', ['atto']);
     }
 }
-
