@@ -1602,10 +1602,37 @@ EOF;
             $output .= html_writer::script($js);
         }
 
+        // Add OpenGraph tags.
+        foreach ($this->get_opengraph_tags($page) as $params) {
+            $output .= html_writer::empty_tag('meta', $params);
+        }
+
         // Mark head sending done, it is not possible to anything there.
         $this->headdone = true;
 
         return $output;
+    }
+
+    protected function get_opengraph_tags(moodle_page $page): array {
+        $tags = [];
+
+        $imageurl = new moodle_url('/opengraph/index.php');
+
+        // TODO Determine revision.
+        $imageurl->add_slashargument('revision', -1);
+        $imageurl->add_slashargument('contextid', $page->context->id);
+        $imageurl->add_slashargument('language', current_language());
+        $tags[] = [
+            'property' => 'og:image',
+            'content' => $imageurl->out(false),
+        ];
+
+        $tags[] = [
+            'property' => 'og:title',
+            'content' => $page->title,
+        ];
+
+        return $tags;
     }
 
     /**

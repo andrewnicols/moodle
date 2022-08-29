@@ -5656,6 +5656,15 @@ abstract class context extends stdClass implements IteratorAggregate {
     }
 
     /**
+     * Get the component name for this context.
+     * 
+     * @return string
+     */
+    public function get_component_name(): string {
+        throw new coding_exception('can not get name of abstract context');
+    }
+
+    /**
      * Whether the current context is locked.
      *
      * @return  bool
@@ -6378,6 +6387,15 @@ class context_system extends context {
     }
 
     /**
+     * Get the component name for this context.
+     * 
+     * @return string
+     */
+    public function get_component_name(): string {
+        return 'core';
+    }
+
+    /**
      * Returns the most relevant URL for this context.
      *
      * @return moodle_url
@@ -6642,6 +6660,16 @@ class context_user extends context {
         return $name;
     }
 
+
+    /**
+     * Get the component name for this context.
+     * 
+     * @return string
+     */
+    public function get_component_name(): string {
+        return 'core_user';
+    }
+
     /**
      * Returns the most relevant URL for this context.
      *
@@ -6828,6 +6856,16 @@ class context_coursecat extends context {
             }
         }
         return $name;
+    }
+
+
+    /**
+     * Get the component name for this context.
+     * 
+     * @return string
+     */
+    public function get_component_name(): string {
+        return 'core_course';
     }
 
     /**
@@ -7080,6 +7118,15 @@ class context_course extends context {
     }
 
     /**
+     * Get the component name for this context.
+     * 
+     * @return string
+     */
+    public function get_component_name(): string {
+        return 'core_course';
+    }
+
+    /**
      * Returns the most relevant URL for this context.
      *
      * @return moodle_url
@@ -7300,6 +7347,25 @@ class context_module extends context {
                 }
             }
         return $name;
+    }
+
+    /**
+     * Get the component name for this context.
+     * 
+     * @return string
+     */
+    public function get_component_name(): string {
+        global $DB;
+
+        $sql = "SELECT md.name AS modname
+                  FROM {course_modules} cm
+                  JOIN {modules} md ON md.id = cm.module
+                 WHERE cm.id = :cmid";
+        $modname = $DB->get_field_sql($sql, [
+            'cmid' => $this->_instanceid,
+        ]);
+
+        return "mod_{$modname}";
     }
 
     /**
@@ -7578,6 +7644,22 @@ class context_block extends context {
         }
 
         return $name;
+    }
+
+
+    /**
+     * Get the component name for this context.
+     * 
+     * @return string
+     */
+    public function get_component_name(): string {
+        global $DB;
+
+        $blockname = $DB->get_field('block_instances', 'blockname', [
+            'id' => $this->_instanceid,
+        ]);
+
+        return "block_{$blockname}";
     }
 
     /**

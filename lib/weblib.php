@@ -740,6 +740,20 @@ class moodle_url {
         }
     }
 
+    public function add_slashargument(string $parameter, string $value, ?bool $supported = null) {
+        global $CFG;
+
+        if (is_null($supported)) {
+            $supported = !empty($CFG->slasharguments);
+        }
+        if ($supported) {
+            $this->slashargument .= '/' . rawurlencode($value);
+            unset($this->params[$parameter]);
+        } else {
+            $this->params[$parameter] = $value;
+        }
+    }
+
     // Static factory methods.
 
     /**
