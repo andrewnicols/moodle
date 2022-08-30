@@ -94,10 +94,11 @@ echo $OUTPUT->header();
 $pluginname = get_string('pluginname', 'report_outline');
 report_helper::print_report_selector($pluginname);
 
-list($uselegacyreader, $useinternalreader, $minloginternalreader, $logtable) = report_outline_get_common_log_variables();
+list($uselegacyreader, $useinternalreader, $minloginternalreader, $logtable, $usedatabasereader)
+        = report_outline_get_common_log_variables();
 
 // If no legacy and no internal log then don't proceed.
-if (!$uselegacyreader && !$useinternalreader) {
+if (!$uselegacyreader && !$usedatabasereader && !$useinternalreader) {
     echo $OUTPUT->box_start('generalbox', 'notice');
     echo $OUTPUT->notification(get_string('nologreaderenabled', 'report_outline'));
     echo $OUTPUT->box_end();
@@ -112,7 +113,7 @@ if ($uselegacyreader) {
 }
 
 // If we are using the internal reader check the minimum time in that table.
-if ($useinternalreader) {
+if ($useinternalreader || $usedatabasereader) {
     // If new log table has older data then don't use the minimum time obtained from the legacy table.
     if (empty($minlog) || ($minloginternalreader <= $minlog)) {
         $minlog = $minloginternalreader;
@@ -177,7 +178,7 @@ if ($uselegacyreader) {
 }
 
 // Get record from sql_internal_table_reader and merge with records obtained from legacy log (if needed).
-if ($useinternalreader) {
+if ($useinternalreader || $usedatabasereader) {
     // Check if we need to show the last access.
     $sqllasttime = '';
     if ($showlastaccess) {
@@ -201,7 +202,15 @@ if ($useinternalreader) {
                AND contextlevel = :contextmodule
                $limittime
           GROUP BY contextinstanceid";
-    $v = $DB->get_records_sql($sql, $params);
+    if ($usedatabasereader) {
+        $sql = str_replace(array('{', '}'), '', $sql);
+        $logmanager = get_log_manager();
+        $store = new \logstore_database\log\store($logmanager);
+        $dbext = $store->get_extdb();
+        $v = $dbext->get_records_sql($sql, $params);
+    } else {
+        $v = $DB->get_records_sql($sql, $params);
+    }
 
     if (empty($views)) {
         $views = $v;
@@ -303,6 +312,3 @@ foreach ($modinfo->sections as $sectionnum=>$section) {
 echo html_writer::table($outlinetable);
 
 echo $OUTPUT->footer();
-
-
-
