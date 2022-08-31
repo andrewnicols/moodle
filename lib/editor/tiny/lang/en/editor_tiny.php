@@ -23,6 +23,7 @@
  */
 
 $string['pluginname'] = 'TinyMCE editor';
+$string['settings'] = 'General settings';
 $string['privacy:reason'] = 'The TinyMCE Editor does not store any preferences or user data.';
 $string['tiny:hash'] = '#';
 $string['tiny:accessibility'] = 'Accessibility';
