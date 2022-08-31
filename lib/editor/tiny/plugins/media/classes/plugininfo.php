@@ -30,6 +30,7 @@ use editor_tiny\plugin;
 use editor_tiny\plugin_with_buttons;
 use editor_tiny\plugin_with_configuration;
 use editor_tiny\plugin_with_menuitems;
+use GuzzleHttp\Promise\Is;
 
 /**
  * Tiny media plugin.
@@ -67,8 +68,64 @@ class plugininfo extends plugin implements plugin_with_buttons, plugin_with_menu
             ]
         ];
 
-        return [
+        return array_merge([
             'permissions' => $permissions,
+        ], self::get_file_manager_configuration($context, $options, $fpoptions));
+    }
+
+    protected static function get_file_manager_configuration(
+        context $context,
+        array $options,
+        array $fpoptions
+    ): array {
+        global $USER;
+
+        // Disabled if:
+        // - Not logged in or guest.
+        // - Files are not allowed.
+        // - Only URL are supported.
+        $canhavefiles = !empty($options['maxfiles']);
+        $canhaveexternalfiles = !empty($options['return_types']) && ($options['return_types'] & FILE_EXTERNAL);
+        $enabled = isloggedin() && !isguestuser() && $canhavefiles && $canhaveexternalfiles;
+
+        $params = [
+            'disabled' => !$enabled,
+            'area' => [],
+            'usercontext' => null,
+        ];
+
+        if ($enabled) {
+            $params['usercontext'] = \context_user::instance($USER->id)->id;
+            $keys = [
+                'itemid',
+                'areamaxbytes',
+                'maxbytes',
+                'subdirs',
+                'return_types',
+                'removeorphaneddrafts',
+            ];
+            if (isset($options['context'])) {
+                if (is_object($options['context'])) {
+                    $params['area']['context'] = $options['context']->id;
+                } else {
+                    $params['area']['context'] = $options['context'];
+                }
+            }
+            foreach ($keys as $key) {
+                if (isset($options[$key])) {
+                    $params['area'][$key] = $options[$key];
+                }
+            }
+        }
+
+        $data = [
+            'params' => $params,
+            'fpoptions' => $fpoptions
+        ];
+
+        return [
+            'storeinrepo' => true,
+            'data' => $data
         ];
     }
 }
