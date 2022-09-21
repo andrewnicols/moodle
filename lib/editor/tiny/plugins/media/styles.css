@@ -1,20 +1,20 @@
-#tiny_mediamanager_form {
+#tiny_media_form {
     padding: 1rem;
 }
 
-#tiny_mediamanager_form #id_deletefileshdr {
+#tiny_media_form #id_deletefileshdr {
     display: none;
 }
 
-#tiny_mediamanager_form.has-unused-files #id_deletefileshdr {
+#tiny_media_form.has-unused-files #id_deletefileshdr {
     display: block;
 }
 
-#tiny_mediamanager_form #id_missingfileshdr {
+#tiny_media_form #id_missingfileshdr {
     display: none;
 }
 
-#tiny_mediamanager_form.has-missing-files #id_missingfileshdr {
+#tiny_media_form.has-missing-files #id_missingfileshdr {
     display: block;
 }
 

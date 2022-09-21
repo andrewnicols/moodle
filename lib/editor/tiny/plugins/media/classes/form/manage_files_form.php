@@ -22,18 +22,24 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace tiny_media\form;
+
+use html_writer;
+
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir."/formslib.php");
+require_once("{$CFG->libdir}/formslib.php");
 
 /**
  * Form allowing to edit files in one draft area.
  *
- * No buttons are necessary since the draft area files are saved immediately using AJAX.
+ * @package tiny_media
+ * @copyright 2022, Stevani Andolo <stevani@hotmail.com.au>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tiny_mediamanager_manage_form extends moodleform {
+class manage_files_form extends \moodleform {
 
-    function definition() {
+    public function definition() {
         global $PAGE, $USER;
         $mform = $this->_form;
 
@@ -43,24 +49,32 @@ class tiny_mediamanager_manage_form extends moodleform {
         $elementid = $this->_customdata['elementid'];
         $options = $this->_customdata['options'];
         $files = $this->_customdata['files'];
+        $usercontext = $this->_customdata['context'];
         $removeorphaneddrafts = $this->_customdata['removeorphaneddrafts'] ?? false;
 
         $mform->addElement('header', 'filemanagerhdr', get_string('filemanager', 'tiny_media'));
 
         $mform->addElement('hidden', 'itemid');
         $mform->setType('itemid', PARAM_INT);
+
         $mform->addElement('hidden', 'maxbytes');
         $mform->setType('maxbytes', PARAM_INT);
+
         $mform->addElement('hidden', 'subdirs');
         $mform->setType('subdirs', PARAM_INT);
+
         $mform->addElement('hidden', 'accepted_types');
         $mform->setType('accepted_types', PARAM_RAW);
+
         $mform->addElement('hidden', 'return_types');
         $mform->setType('return_types', PARAM_INT);
+
         $mform->addElement('hidden', 'context');
         $mform->setType('context', PARAM_INT);
+
         $mform->addElement('hidden', 'areamaxbytes');
         $mform->setType('areamaxbytes', PARAM_INT);
+
         $mform->addElement('hidden', 'elementid');
         $mform->setType('elementid', PARAM_TEXT);
 
@@ -68,13 +82,16 @@ class tiny_mediamanager_manage_form extends moodleform {
 
         // Let the user know that any drafts not referenced in the text will be removed automatically.
         if ($removeorphaneddrafts) {
-            $mform->addElement('static', '', '',
-                html_writer::tag('div', get_string('unusedfilesremovalnotice', 'tiny_media')));
+            $mform->addElement('static', '', '', html_writer::tag(
+                'div',
+                get_string('unusedfilesremovalnotice', 'tiny_media')
+            ));
         }
 
         $mform->addElement('header', 'missingfileshdr', get_string('missingfiles', 'tiny_media'));
         $mform->addElement('static', '', '',
-            html_writer::tag('div',
+            html_writer::tag(
+                'div',
                 html_writer::tag('div', get_string('hasmissingfiles', 'tiny_media')) .
                 html_writer::tag('div', '', ['class' => 'missing-files']
             ),
@@ -82,33 +99,20 @@ class tiny_mediamanager_manage_form extends moodleform {
         );
 
         $mform->addElement('header', 'deletefileshdr', get_string('unusedfilesheader', 'tiny_media'));
-        $mform->addElement('static', '', '',
-            html_writer::tag('div', get_string('unusedfilesdesc', 'tiny_media')));
+        $mform->addElement('static', '', '', html_writer::tag('div', get_string('unusedfilesdesc', 'tiny_media')));
 
         foreach ($files as $hash => $file) {
-            $mform->addElement('checkbox', 'deletefile[' . $hash . ']', '', $file, ['data-filename' => $file]);
-            $mform->setType('deletefile[' . $hash . ']', PARAM_INT);
+            $mform->addElement('checkbox', "deletefile[{$hash}]", '', $file, ['data-filename' => $file]);
+            $mform->setType("deletefile[{$hash}]", PARAM_INT);
         }
 
         $mform->addElement('submit', 'delete', get_string('deleteselected', 'tiny_media'));
 
         $PAGE->requires->js_call_amd('tiny_media/usedfiles', 'init', [
             'files' => array_flip($files),
-            'usercontext' => context_user::instance($USER->id)->id,
+            'usercontext' => $usercontext->id,
             'itemid' => $itemid,
             'elementid' => $elementid,
-        ]);
-
-        $this->set_data([
-            'files_filemanager' => $itemid,
-            'itemid' => $itemid,
-            'elementid' => $elementid,
-            'subdirs' => $options['subdirs'],
-            'maxbytes' => $options['maxbytes'],
-            'areamaxbytes' => $options['areamaxbytes'],
-            'accepted_types' => $options['accepted_types'],
-            'return_types' => $options['return_types'],
-            'context' => $options['context']->id,
         ]);
     }
 }
