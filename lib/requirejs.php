@@ -43,32 +43,24 @@ if (substr_count($slashargument, '/') < 1) {
     header('HTTP/1.0 404 not found');
     die('Slash argument must contain both a revision and a file path');
 }
+
 // Split into revision and module name.
-list($rev, $file) = explode('/', $slashargument, 2);
-$rev  = min_clean_param($rev, 'INT');
+[$rev, $file] = explode('/', $slashargument, 2);
+$rev = min_clean_param($rev, 'INT');
 $file = '/' . min_clean_param($file, 'SAFEPATH');
 
 // Only load js files from the js modules folder from the components.
-$jsfiles = array();
-list($unused, $component, $module) = explode('/', $file, 3);
+$jsfiles = [];
+[$unused, $component, $module] = explode('/', $file, 3);
+
+$candidate = null;
+$etag = null;
 
 // Use the caching only for meaningful revision numbers which prevents future cache poisoning.
-if ($rev > 0 and $rev < (time() + 60 * 60)) {
-    // This is "production mode".
-    // Some (huge) modules are better loaded lazily (when they are used). If we are requesting
-    // one of these modules, only return the one module, not the combo.
-    $lazysuffix = "-lazy.js";
-    $lazyload = (strpos($module, $lazysuffix) !== false);
-
-    if ($lazyload) {
-        // We are lazy loading a single file - so include the component/filename pair in the etag.
-        $etag = sha1($rev . '/' . $component . '/' . $module);
-    } else {
-        // We loading all (non-lazy) files - so only the rev makes this request unique.
-        $etag = sha1($rev);
-    }
-
-    $candidate = $CFG->localcachedir . '/requirejs/' . $etag;
+if ($rev > 0 && $rev < (time() + 60 * 60)) {
+    // We are loading a single file - so include the component/filename pair in the etag.
+    $etag = sha1("{$rev}/{$component}/{$module}");
+    $candidate = "{$CFG->localcachedir}/requirejs/{$etag}";
 
     if (file_exists($candidate)) {
         if (!empty($_SERVER['HTTP_IF_NONE_MATCH']) || !empty($_SERVER['HTTP_IF_MODIFIED_SINCE'])) {
@@ -78,99 +70,55 @@ if ($rev > 0 and $rev < (time() + 60 * 60)) {
         }
         js_send_cached($candidate, $etag, 'requirejs.php');
         exit(0);
-
-    } else {
-        $jsfiles = array();
-        if ($lazyload) {
-            $jsfiles = core_requirejs::find_one_amd_module($component, $module);
-        } else {
-            // Here we respond to the request by returning ALL amd modules. This saves
-            // round trips in production.
-
-            $jsfiles = core_requirejs::find_all_amd_modules();
-        }
-
-        $content = '';
-        foreach ($jsfiles as $modulename => $jsfile) {
-            $js = file_get_contents($jsfile);
-            if ($js === false) {
-                error_log('Failed to load JavaScript file ' . $jsfile);
-                $js = "/* Failed to load JavaScript file {$jsfile}. */\n";
-                $content = $js . $content;
-                continue;
-            }
-            // Remove source map link.
-            $js = preg_replace('~//# sourceMappingURL.*$~s', '', $js);
-            $js = rtrim($js);
-            $js .= "\n";
-
-            if (preg_match('/define\(\s*(\[|function)/', $js)) {
-                // If the JavaScript module has been defined without specifying a name then we'll
-                // add the Moodle module name now.
-                $replace = 'define(\'' . $modulename . '\', ';
-                $search = 'define(';
-                // Replace only the first occurrence.
-                $js = implode($replace, explode($search, $js, 2));
-            }
-
-            $content .= $js;
-        }
-
-        js_write_cache_file_content($candidate, $content);
-        // Verify nothing failed in cache file creation.
-        clearstatcache();
-        if (file_exists($candidate)) {
-            js_send_cached($candidate, $etag, 'requirejs.php');
-            exit(0);
-        }
     }
 }
 
-// If we've made it here then we're in "dev mode" where everything is lazy loaded.
-// So all files will be served one at a time.
 $jsfiles = core_requirejs::find_one_amd_module($component, $module);
-
-if (!empty($jsfiles)) {
-    $modulename = array_keys($jsfiles)[0];
-    $jsfile = $jsfiles[$modulename];
-    $shortfilename = str_replace($CFG->dirroot, '', $jsfile);
-    $mapfile = $jsfile . '.map';
-
-    if (file_exists($mapfile)) {
-        // We've got a a source map file so we can return the minified file here and
-        // the source map will be used by the browser to debug.
-        $js = file_get_contents($jsfile);
-        // Fix the source map link for the file.
-        $js = preg_replace(
-            '~//# sourceMappingURL.*$~s',
-            "//# sourceMappingURL={$CFG->wwwroot}/lib/jssourcemap.php{$file}",
-            $js
-        );
-        $js = rtrim($js);
-    } else {
-        // This file doesn't have a map file. We might be dealing with an older source file from
-        // a plugin or previous version of Moodle so we should just return the full original source
-        // like we used to.
-        $originalsource = str_replace('/amd/build/', '/amd/src/', $jsfile);
-        $originalsource = str_replace('.min.js', '.js', $originalsource);
-        $js = file_get_contents($originalsource);
-        $js = rtrim($js);
-    }
-
-    if (preg_match('/define\(\s*(\[|function)/', $js)) {
-        // If the JavaScript module has been defined without specifying a name then we'll
-        // add the Moodle module name now.
-        $replace = 'define(\'' . $modulename . '\', ';
-
-        // Replace only the first occurrence.
-        $js = implode($replace, explode('define(', $js, 2));
-    } else if (!preg_match('/define\s*\(/', $js)) {
-        debugging('JS file: ' . $shortfilename . ' cannot be loaded, or does not contain a javascript' .
-                  ' module in AMD format. "define()" not found.', DEBUG_DEVELOPER);
-    }
-
-    js_send_uncached($js, 'requirejs.php');
-} else {
+if (empty($jsfiles)) {
     // We can't find the requested file.
     header('HTTP/1.0 404 not found');
+    die("JS file not found");
+    exit(1);
+}
+
+$modulename = array_keys($jsfiles)[0];
+$jsfile = $jsfiles[$modulename];
+$shortfilename = str_replace($CFG->dirroot, '', $jsfile);
+
+// Fetch the source content of the JS.
+$js = file_get_contents($jsfile);
+
+$mapfile = "{$jsfile}.map";
+if (!file_exists($mapfile)) {
+    // This file doesn't have a map file. We might be dealing with an older source file from
+    // a plugin or previous version of Moodle which we no longer support.
+    // For now just remove the sourceMapURL entirely.
+    $js = preg_replace('~//# sourceMappingURL.*$~s', "", $js);
+} else {
+    // Replace the sourcemap path with a fully-qualified URL.
+    $js = preg_replace(
+        '~//# sourceMappingURL.*$~s',
+        "//# sourceMappingURL={$CFG->wwwroot}/lib/jssourcemap.php{$file}",
+        $js
+    );
+}
+$js = rtrim($js);
+
+if (!preg_match('/define\s*\(/', $js)) {
+    debugging(
+        "JS file {$shortfilename} cannot be loaded, or does not contain a JavaScript module in AMD format. define() not found",
+        DEBUG_DEVELOPER
+    );
+}
+
+if ($candidate) {
+    js_write_cache_file_content($candidate, $js);
+    // Verify nothing failed in cache file creation.
+    clearstatcache();
+    if (file_exists($candidate)) {
+        js_send_cached($candidate, $etag, 'requirejs.php');
+        exit(0);
+    }
+} else {
+    js_send_uncached($js, 'requirejs.php');
 }

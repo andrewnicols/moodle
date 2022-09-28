@@ -44,12 +44,10 @@ $file = '/' . min_clean_param($file, 'SAFEPATH');
 // Only load js files from the js modules folder from the components.
 [$unused, $component, $module] = explode('/', $file, 3);
 
-// When running a lazy load, we only deal with one file so we can just return the working sourcemap.
 $jsfiles = core_requirejs::find_one_amd_module($component, $module);
 $jsfile = reset($jsfiles);
 
-$mapfile = $jsfile . '.map';
-
+$mapfile = "{$jsfile}.map";
 if (file_exists($mapfile)) {
     $mapdata = file_get_contents($mapfile);
     $mapdata = json_decode($mapdata, true);
@@ -59,9 +57,11 @@ if (file_exists($mapfile)) {
     $srcfilename = str_replace('.min.js', '.js', $srcfilename);
     $fullsrcfilename = $CFG->wwwroot . $srcfilename;
     $mapdata['sources'][0] = $fullsrcfilename;
+    unset($mapdata['sourcesContent']);
 
     echo json_encode($mapdata);
 } else {
     // If there is no source map file, then we will not generate one for you, sorry.
     header('HTTP/1.0 404 not found');
+    die("Map file not found");
 }
