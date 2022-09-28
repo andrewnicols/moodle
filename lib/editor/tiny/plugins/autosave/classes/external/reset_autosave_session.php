@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tiny_autosave;
+namespace tiny_autosave\external;
 
 use external_api;
 use external_function_parameters;
@@ -81,7 +81,7 @@ class reset_autosave_session extends external_api {
 
         ]);
 
-        $manager = new autosave_manager($contextid, $pagehash, $pageinstance, $elementid);
+        $manager = new \tiny_autosave\autosave_manager($contextid, $pagehash, $pageinstance, $elementid);
         $manager->remove_autosave_record();
 
         return [];

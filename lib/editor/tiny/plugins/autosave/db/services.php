@@ -26,21 +26,21 @@ defined('MOODLE_INTERNAL') || die;
 
 $functions = [
     'tiny_autosave_resume_session' => array(
-        'classname' => 'tiny_autosave\resume_autosave_session',
+        'classname' => 'tiny_autosave\external\resume_autosave_session',
         'methodname' => 'execute',
         'description' => 'Resume an autosave session',
         'type' => 'write',
         'ajax' => true,
     ),
     'tiny_autosave_reset_session' => array(
-        'classname' => 'tiny_autosave\reset_autosave_session',
+        'classname' => 'tiny_autosave\external\reset_autosave_session',
         'methodname' => 'execute',
         'description' => 'Reset an autosave session',
         'type' => 'write',
         'ajax' => true,
     ),
     'tiny_autosave_update_session' => array(
-        'classname' => 'tiny_autosave\update_autosave_session_content',
+        'classname' => 'tiny_autosave\external\update_autosave_session_content',
         'methodname' => 'execute',
         'description' => 'Update an autosave session',
         'type' => 'write',
