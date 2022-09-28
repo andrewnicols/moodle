@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tiny_autosave;
+namespace tiny_autosave\external;
 
 use external_api;
 use external_function_parameters;
@@ -26,14 +26,14 @@ defined('MOODLE_INTERNAL') || die();
 require_once("{$CFG->libdir}/externallib.php");
 
 /**
- * Web Service to update an autosave session's content.
+ * Web Service to reset the autosave session.
  *
  * @package   tiny_autosave
  * @category  external
  * @copyright 2022 Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class update_autosave_session_content extends external_api {
+class reset_autosave_session extends external_api {
     /**
      * Returns description of method parameters
      *
@@ -45,7 +45,6 @@ class update_autosave_session_content extends external_api {
             'pagehash' => new external_value(PARAM_ALPHANUMEXT, 'The page hash', VALUE_REQUIRED),
             'pageinstance' => new external_value(PARAM_ALPHANUMEXT, 'The page instance', VALUE_REQUIRED),
             'elementid' => new external_value(PARAM_RAW, 'The ID of the element', VALUE_REQUIRED),
-            'drafttext' => new external_value(PARAM_RAW, 'The draft text', VALUE_REQUIRED),
         ]);
     }
 
@@ -59,34 +58,31 @@ class update_autosave_session_content extends external_api {
      * @param string $pagehash The hash of the page
      * @param string $pageinstance The instance id of the page
      * @param string $elementid The id of the element
-     * @param string $drafttext The text to store
      * @return null
      */
     public static function execute(
         int $contextid,
         string $pagehash,
         string $pageinstance,
-        string $elementid,
-        string $drafttext
+        string $elementid
     ): array {
         global $DB, $USER;
 
         [
             'contextid' => $contextid,
             'pagehash' => $pagehash,
-            'pageinstance' => $pageinstance,
             'elementid' => $elementid,
-            'drafttext' => $drafttext,
+            'pageinstance' => $pageinstance,
         ] = self::validate_parameters(self::execute_parameters(), [
             'contextid' => $contextid,
             'pagehash' => $pagehash,
-            'pageinstance' => $pageinstance,
             'elementid' => $elementid,
-            'drafttext' => $drafttext,
+            'pageinstance' => $pageinstance,
+
         ]);
 
-        $manager = new autosave_manager($contextid, $pagehash, $pageinstance, $elementid);
-        $manager->update_autosave_record($drafttext);
+        $manager = new \tiny_autosave\autosave_manager($contextid, $pagehash, $pageinstance, $elementid);
+        $manager->remove_autosave_record();
 
         return [];
     }
