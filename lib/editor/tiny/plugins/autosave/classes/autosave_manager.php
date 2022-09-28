@@ -212,7 +212,9 @@ class autosave_manager {
      * @return stdClass The updated autosave record
      */
     protected function update_draftid_for_record(stdClass $record, int $newdraftid): stdClass {
-        global $DB;
+        global $CFG, $DB;
+
+        require_once("{$CFG->libdir}/filelib.php");
 
         // Copy all draft files from the old draft area.
         $usercontext = \context_user::instance($this->user->id);

@@ -48,7 +48,7 @@ class resume_autosave_session extends external_api {
             'draftid' => new external_value(
                 PARAM_INT,
                 'The new draft item id to resume files to',
-                VALUE_OPTIONAL,
+                VALUE_REQUIRED,
                 null,
                 NULL_ALLOWED
             ),
