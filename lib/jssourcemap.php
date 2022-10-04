@@ -64,4 +64,5 @@ if (file_exists($mapfile)) {
 } else {
     // If there is no source map file, then we will not generate one for you, sorry.
     header('HTTP/1.0 404 not found');
+    die("Map file not found for {$jsfile}");
 }
