@@ -25,11 +25,25 @@
 $ADMIN->add('editorsettings', new admin_category('editortiny', $editor->displayname, $editor->is_enabled() === false));
 
 $settings = new admin_settingpage('editorsettingstiny', new lang_string('settings', 'editor_tiny'));
+if ($ADMIN->fulltree) {
+    $setting = new admin_setting_configcheckbox(
+        'editor_tiny/branding',
+        new lang_string('branding', 'editor_tiny'),
+        new lang_string('branding_desc', 'editor_tiny'),
+        1
+    );
+
+    $settings->add($setting);
+}
 
 foreach (core_plugin_manager::instance()->get_plugins_of_type('tiny') as $plugin) {
     /** @var \editor_tiny\plugininfo\tiny $plugin */
     $plugin->load_settings($ADMIN, 'editortiny', $hassiteconfig);
 }
+
+// Note: We add editortiny to the settings page here manually rather than deferring to the plugininfo class.
+// This ensures that it shows in the category list too.
+$ADMIN->add('editortiny', $settings);
 
 // Required or the editor plugininfo will add this section twice.
 unset($settings);
