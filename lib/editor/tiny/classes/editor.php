@@ -159,6 +159,7 @@ class editor extends \texteditor {
         }
 
         // Generate the configuration for this editor.
+        $siteconfig = get_config('editor_tiny');
         $config = (object) [
             // The URL to the CSS file for the editor.
             'css' => $PAGE->theme->editor_css_url()->out(false),
@@ -170,6 +171,8 @@ class editor extends \texteditor {
             'filepicker' => $fpoptions,
 
             'currentLanguage' => current_language(),
+
+            'branding' => property_exists($siteconfig, 'branding') ? !empty($siteconfig->branding) : true,
 
             // Language options.
             'language' => [
