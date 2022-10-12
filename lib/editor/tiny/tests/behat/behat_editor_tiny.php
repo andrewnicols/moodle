@@ -23,7 +23,13 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use Behat\Behat\Context\Exception\ContextNotFoundException;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Gherkin\Node\PyStringNode;
+use Behat\Mink\Element\NodeElement;
+use Behat\Mink\Exception\DriverException;
+use Behat\Mink\Exception\ExpectationException;
+use Behat\Mink\Exception\UnsupportedDriverActionException;
 
 // NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 require_once(__DIR__ . '/../../../../behat/behat_base.php');
@@ -65,6 +71,22 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
     }
 
     /**
+     * Store the current value of the editor, if it is a Tiny editor, to the textarea.
+     *
+     * @param string $editorid The ID of the editor.
+     */
+    public function store_current_value(string $editorid): void {
+        $js = <<<EOF
+        require(['editor_tiny/editor'], (editor) => {
+            const instance = editor.getInstanceForElementId('${editorid}');
+            instance?.save();
+        });
+        EOF;
+
+        $this->execute_script($js);
+    }
+
+    /**
      * Set Tiny as default editor before executing Tiny tests.
      *
      * This step is required to ensure that TinyMCE is set as the current default editor as it may
@@ -91,5 +113,234 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
         $this->require_javascript();
 
         $this->execute('behat_general::the_default_editor_is_set_to', ['tiny']);
+    }
+
+    /**
+     * Ensure that the editor_tiny tag is in use.
+     *
+     * This function should be used for any step defined in this file.
+     *
+     * @throws DriverException Thrown if the editor_tiny tag is not specified for this file
+     */
+    protected function require_tiny_tags(): void {
+        // Ensure that this step only runs in TinyMCE tags.
+        if (!$this->has_tag('editor_tiny')) {
+            throw new DriverException(
+                'TinyMCE tests using this step must have the @editor_tiny tag on either the scenario or feature.'
+            );
+        }
+    }
+
+    /**
+     * Get the Mink NodeElement of the <textarea> for the specified locator.
+     *
+     * Moodle mostly referes to the textarea, rather than the editor itself and interactions are translated to the Editor using the TinyMCE API.
+     *
+     * @param string $locator A Moodle field locator
+     * @return NodeElement The element found by the find_field function
+     */
+    protected function get_textarea_for_locator(string $locator): NodeElement {
+        return $this->find_field($locator);
+    }
+
+    /**
+     * Get the Mink NodeElement of the container for the specified locator.
+     *
+     * This is the top-most HTML element for the editor found by TinyMCE.getContainer().
+     *
+     * @param string $locator A Moodle field locator
+     * @return NodeElement The Mink NodeElement representing the container.
+     */
+    protected function get_editor_container_for_locator(string $locator): NodeElement {
+        $textarea = $this->get_textarea_for_locator($locator);
+        $editorid = $textarea->getAttribute('id');
+
+        $targetid = uniqid();
+        $js = <<<EOF
+        return new Promise((resolve, reject) => {
+            require(['editor_tiny/editor'], (editor) => {
+                const instance = editor.getInstanceForElementId('${editorid}');
+                if (!instance) {
+                    reject("Instance '${editorid}' not found");
+                }
+
+                const container = instance.getContainer();
+                if (!container.id) {
+                    container.id = '${targetid}';
+                }
+                resolve(container.id);
+            });
+        });
+        EOF;
+
+        $containerid = $this->evaluate_script($js);
+
+        return $this->find('css', "#{$containerid}");
+    }
+
+    /**
+     * Get the name of the iframe relating to the editor.
+     *
+     * If no name is found, then add one.
+     *
+     * If the editor it not found, then throw an exception.
+     *
+     * @param string $locator The name of the editor
+     * @return string The name of the iframe
+     */
+    protected function get_editor_iframe_name(string $locator): string {
+        return $this->get_editor_iframe_name_for_element($this->get_textarea_for_locator($locator));
+    }
+
+    /**
+     * Get the name of the iframe relating to the editor.
+     *
+     * If no name is found, then add one.
+     *
+     * If the editor it not found, then throw an exception.
+
+     * @param NodeElement $editor The editor element
+     * @return string The name of the iframe
+     */
+    protected function get_editor_iframe_name_for_element(NodeElement $editor): string {
+        $editorid = $editor->getAttribute('id');
+
+        // Ensure that a name is set on the iframe relating to the editorid.
+        // phpcs:disable
+        $js = <<<EOF
+            return new Promise((resolve, reject) => {
+                require(['editor_tiny/editor'], (editor) => {
+                    const instance = editor.getInstanceForElementId('${editorid}');
+                    if (!instance) {
+                        reject("Instance '${editorid}' not found");
+                    }
+
+                    if (!instance.iframeElement.name) {
+                        instance.iframeElement.name = '${editorid}';
+                    }
+                    resolve(instance.iframeElement.name);
+                });
+            });
+        EOF;
+        // phpcs:enable
+
+        return $this->evaluate_script($js);
+    }
+
+    /**
+     * @Given /^I type the following text in the "(?P<locator_string>(?:[^"]|\\")*)" TinyMCE editor:$/
+     *
+     * @param string $locator
+     * @param PyStringNode $text
+     */
+    public function type_into_editor(string $locator, PyStringNode $text): void {
+        $this->require_tiny_tags();
+
+        // Get the iframe name for this editor.
+        $iframename = $this->get_editor_iframe_name($locator);
+
+        // Switch to it.
+        $this->execute('behat_general::switch_to_iframe', [$iframename]);
+
+        // Type the text.
+        $this->execute('behat_general::i_type', [$text]);
+
+        // Switch back to the main window.
+        $this->execute('behat_general::switch_to_the_main_frame', []);
+    }
+
+    /**
+     * @When /^I click on the "(?P<button_string>(?:[^"]|\\")*)" button for the "(?P<locator_string>(?:[^"]|\\")*)" TinyMCE editor$/
+     *
+     * @param string $button The label of the button
+     * @param string $locator The locator for the editor
+     */
+    public function i_click_on_button(string $button, string $locator): void {
+        $this->require_tiny_tags();
+        $container = $this->get_editor_container_for_locator($locator);
+
+        $this->execute('behat_general::i_click_on_in_the', [$button, 'button', $container, 'NodeElement']);
+    }
+
+    /**
+     * @Then /^the "(?P<button_string>(?:[^"]|\\")*)" button of the "(?P<locator_string>(?:[^"]|\\")*)" TinyMCE editor has state "(?P<state_string>(?:[^"]|\\")*)"$/
+     *
+     * @param string $button The text name of the button
+     * @param string $locator The locator string for the editor
+     * @param string $state The state of the button
+     * @throws ExpectationException Thrown if the button state is not correct
+     */
+    public function button_state_is(string $button, string $locator, string $state): void {
+        $this->require_tiny_tags();
+        $container = $this->get_editor_container_for_locator($locator);
+
+        $button = $this->find_button($button, false, $container);
+        $buttonstate = $button->getAttribute('aria-pressed');
+
+        if ($buttonstate !== $state) {
+            throw new ExpectationException("Button '{$button}' is in state '{$buttonstate}' not '{$state}'", $this->getSession());
+        }
+    }
+
+    /**
+     * @When /^I click on the "(?P<menuitem_string>(?:[^"]|\\")*)" menu item for the "(?P<locator_string>(?:[^"]|\\")*)" TinyMCE editor$/
+     *
+     * @param string $menuitem The label of the menu item
+     * @param string $menu The label of the menu that the menu item is in
+     * @param string $locator The locator for the editor
+     */
+    public function i_click_on_menuitem_in_menu(string $menuitem, string $locator): void {
+        $this->require_tiny_tags();
+        $container = $this->get_editor_container_for_locator($locator);
+
+        $menubar = $container->find('css', '[role="menubar"]');
+
+        $menus = array_map(function(string $value): string {
+            return trim($value);
+        }, explode('>', $menuitem));
+
+        // Open the menu bar.
+        $mainmenu = array_shift($menus);
+        $this->execute('behat_general::i_click_on_in_the', [$mainmenu, 'button', $menubar, 'NodeElement']);
+
+        foreach ($menus as $menuitem) {
+            $openmenu = $this->find('css', '.tox-selected-menu');
+            // Match any menuitem, or menuitemcheckbox, or menuitem*.
+            $link = $openmenu->find('css', "[title='{$menuitem}'][role^='menuitem']");
+            $this->execute('behat_general::i_click_on', [$link, 'NodeElement']);
+            sleep(1);
+        }
+    }
+
+    /**
+     * @When /^I select the "(?P<textlocator_string>(?:[^"]|\\")*)" element in position "(?P<position_int>(?:[^"]|\\")*)" of the "(?P<locator_string>(?:[^"]|\\")*)" TinyMCE editor$/
+     * @param string $textlocator The type of element to select (for example `p` or `span`)
+     * @param int $position The zero-indexed position
+     * @param string $locator The editor to select within
+     */
+    public function select_text(string $textlocator, int $position, string $locator): void {
+        $this->require_tiny_tags();
+
+        $editor = $this->get_textarea_for_locator($locator);
+        $editorid = $editor->getAttribute('id');
+
+        // Ensure that a name is set on the iframe relating to the editorid.
+        // phpcs:disable
+        $js = <<<EOF
+            return new Promise((resolve, reject) => {
+                require(['editor_tiny/editor'], (editor) => {
+                    const instance = editor.getInstanceForElementId('${editorid}');
+                    if (!instance) {
+                        reject("Instance '${editorid}' not found");
+                    }
+                    const element = instance.dom.select("${textlocator}")[${position}];
+                    instance.selection.select(element);
+                    resolve(element);
+                });
+            });
+        EOF;
+        // phpcs:enable
+
+        $this->evaluate_script($js);
     }
 }
