@@ -527,6 +527,9 @@ class manager {
             // These are not generally compatible with Moodle.
             'image',
             'media',
+
+            // Disable the Template plugin for now.
+            'template',
         ];
     }
 
