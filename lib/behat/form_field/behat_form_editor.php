@@ -138,6 +138,7 @@ class behat_form_editor extends behat_form_textarea {
         // Note: We must remove newlines too because DOMDocument does not do so, despite preserveWhiteSpace being false.
         // Unfortunately this is slightly limited in that it will also remove newlines from <pre> content and similar.
         $document->loadHTML(str_replace("\n", "", "<div>{$html}</div>"), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+        $document->normalizeDocument();
         libxml_clear_errors();
         libxml_use_internal_errors($errorstate);
 
