@@ -39,10 +39,10 @@ require_once(__DIR__ . '/classes/behat_session_trait.php');
  * It can not contain steps definitions to avoid duplicates, only utility
  * methods shared between steps.
  *
- * @method NodeElement find_field(string $locator) Finds a form element
- * @method NodeElement find_button(string $locator) Finds a form input submit element or a button
- * @method NodeElement find_link(string $locator) Finds a link on a page
- * @method NodeElement find_file(string $locator) Finds a forum input file element
+ * @method \Behat\Mink\Element\NodeElement find_field(string $locator) Finds a form element
+ * @method \Behat\Mink\Element\NodeElement find_button(string $locator) Finds a form input submit element or a button
+ * @method \Behat\Mink\Element\NodeElement find_link(string $locator) Finds a link on a page
+ * @method \Behat\Mink\Element\NodeElement find_file(string $locator) Finds a forum input file element
  *
  * @package   core
  * @category  test
