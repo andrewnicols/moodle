@@ -27,6 +27,7 @@
 
 require_once(__DIR__ . '/../../../../lib/behat/core_behat_file_helper.php');
 
+use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\DriverException as DriverException,
     Behat\Mink\Exception\ExpectationException as ExpectationException,
     Behat\Gherkin\Node\TableNode as TableNode;
@@ -44,7 +45,8 @@ class behat_repository_upload extends behat_base {
     use core_behat_file_helper;
 
     /**
-     * Uploads a file to the specified filemanager leaving other fields in upload form default. The paths should be relative to moodle codebase.
+     * Upload a file to the specified filemanager leaving other fields in upload form default.
+     * The paths should be relative to moodle codebase.
      *
      * @When /^I upload "(?P<filepath_string>(?:[^"]|\\")*)" file to "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager$/
      * @throws DriverException
@@ -52,12 +54,13 @@ class behat_repository_upload extends behat_base {
      * @param string $filepath
      * @param string $filemanagerelement
      */
-    public function i_upload_file_to_filemanager($filepath, $filemanagerelement) {
+    public function i_upload_file_to_filemanager($filepath, $filemanagerelement): void {
         $this->upload_file_to_filemanager($filepath, $filemanagerelement, new TableNode(array()), false);
     }
 
     /**
-     * Uploads a file to the specified filemanager leaving other fields in upload form default and confirms to overwrite an existing file. The paths should be relative to moodle codebase.
+     * Upload a file to the specified filemanager leaving other fields in upload form default and confirms to overwrite an existing file.
+     * The paths should be relative to moodle codebase.
      *
      * @When /^I upload and overwrite "(?P<filepath_string>(?:[^"]|\\")*)" file to "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager$/
      * @throws DriverException
@@ -65,13 +68,14 @@ class behat_repository_upload extends behat_base {
      * @param string $filepath
      * @param string $filemanagerelement
      */
-    public function i_upload_and_overwrite_file_to_filemanager($filepath, $filemanagerelement) {
+    public function i_upload_and_overwrite_file_to_filemanager($filepath, $filemanagerelement): void {
         $this->upload_file_to_filemanager($filepath, $filemanagerelement, new TableNode(array()),
                 get_string('overwrite', 'repository'));
     }
 
     /**
-     * Uploads a file to the specified filemanager and confirms to overwrite an existing file. The paths should be relative to moodle codebase.
+     * Upload a file to the specified filemanager and confirms to overwrite an existing file.
+     * The paths should be relative to moodle codebase.
      *
      * @When /^I upload "(?P<filepath_string>(?:[^"]|\\")*)" file to "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager as:$/
      * @throws DriverException
@@ -80,12 +84,12 @@ class behat_repository_upload extends behat_base {
      * @param string $filemanagerelement
      * @param TableNode $data Data to fill in upload form
      */
-    public function i_upload_file_to_filemanager_as($filepath, $filemanagerelement, TableNode $data) {
+    public function i_upload_file_to_filemanager_as($filepath, $filemanagerelement, TableNode $data): void {
         $this->upload_file_to_filemanager($filepath, $filemanagerelement, $data, false);
     }
 
     /**
-     * Uploads a file to the specified filemanager. The paths should be relative to moodle codebase.
+     * Upload a file to the specified filemanager. The paths should be relative to moodle codebase.
      *
      * @When /^I upload and overwrite "(?P<filepath_string>(?:[^"]|\\")*)" file to "(?P<filemanager_field_string>(?:[^"]|\\")*)" filemanager as:$/
      * @throws DriverException
@@ -94,9 +98,13 @@ class behat_repository_upload extends behat_base {
      * @param string $filemanagerelement
      * @param TableNode $data Data to fill in upload form
      */
-    public function i_upload_and_overwrite_file_to_filemanager_as($filepath, $filemanagerelement, TableNode $data) {
-        $this->upload_file_to_filemanager($filepath, $filemanagerelement, $data,
-                get_string('overwrite', 'repository'));
+    public function i_upload_and_overwrite_file_to_filemanager_as($filepath, $filemanagerelement, TableNode $data): void {
+        $this->upload_file_to_filemanager(
+            $filepath,
+            $filemanagerelement,
+            $data,
+            get_string('overwrite', 'repository')
+        );
     }
 
     /**
@@ -110,77 +118,48 @@ class behat_repository_upload extends behat_base {
      * @param false|string $overwriteaction false if we don't expect that file with the same name already exists,
      *     or button text in overwrite dialogue ("Overwrite", "Rename to ...", "Cancel")
      */
-    protected function upload_file_to_filemanager($filepath, $filemanagerelement, TableNode $data, $overwriteaction = false) {
-        global $CFG;
-
+    protected function upload_file_to_filemanager($filepath, $filemanagerelement, TableNode $data, $overwriteaction = false): void {
         if (!$this->has_tag('_file_upload')) {
             throw new DriverException('File upload tests must have the @_file_upload tag on either the scenario or feature.');
         }
 
-        $filemanagernode = $this->get_filepicker_node($filemanagerelement);
-
         // Opening the select repository window and selecting the upload repository.
+        $filemanagernode = $this->get_filepicker_node($filemanagerelement);
         $this->open_add_file_window($filemanagernode, get_string('pluginname', 'repository_upload'));
 
-        // Ensure all the form is ready.
-        $noformexception = new ExpectationException('The upload file form is not ready', $this->getSession());
-        $this->find(
-                'xpath',
-                "//div[contains(concat(' ', normalize-space(@class), ' '), ' container ')]" .
-                "[contains(concat(' ', normalize-space(@class), ' '), ' repository_upload ')]" .
-                "/descendant::div[contains(concat(' ', normalize-space(@class), ' '), ' file-picker ')]" .
-                "/descendant::div[contains(concat(' ', normalize-space(@class), ' '), ' fp-content ')]" .
-                "/descendant::div[contains(concat(' ', normalize-space(@class), ' '), ' fp-upload-form ')]" .
-                "/descendant::form",
-                $noformexception
-        );
-        // After this we have the elements we want to interact with.
+        // Grab the repository region of the file picker.
+        $filepicker = $this->find('dialogue', get_string('filepicker', 'core_repository'));
+        $reporegion = $filepicker->find('css', '.fp-repo-items');
 
-        // Form elements to interact with.
-        $file = $this->find_file('repo_upload_file');
-
-        $filepath = $this->normalise_fixture_filepath($filepath);
-        $file->attachFile($filepath);
+        // Upload the file.
+        $this->upload_the_file($reporegion, $filepath);
 
         // Fill the form in Upload window.
-        $datahash = $data->getRowsHash();
+        $this->execute('behat_forms::i_set_the_following_fields_in_container_to_these_values', [
+            $reporegion, 'NodeElement',
+            $data,
+        ]);
 
-        // The action depends on the field type.
-        foreach ($datahash as $locator => $value) {
-
-            $field = behat_field_manager::get_form_field_from_label($locator, $this);
-
-            // Delegates to the field class.
-            $field->set_value($value);
-        }
-
-        // Submit the file.
-        $submit = $this->find_button(get_string('upload', 'repository'));
-        $submit->press();
-
-        // We wait for all the JS to finish as it is performing an action.
-        $this->getSession()->wait(self::get_timeout(), self::PAGE_READY_JS);
+        // Submit the form.
+        $this->execute('behat_general::i_click_on_in_the', [
+            get_string('upload', 'repository'), 'button',
+            $reporegion, 'NodeElement',
+        ]);
 
         if ($overwriteaction !== false) {
             $overwritebutton = $this->find_button($overwriteaction);
-            $this->ensure_node_is_visible($overwritebutton);
-            $overwritebutton->click();
-
-            // We wait for all the JS to finish.
-            $this->getSession()->wait(self::get_timeout(), self::PAGE_READY_JS);
+            $this->execute('behat_general::i_click_on', [$overwritebutton, 'NodeElement']);
         }
-
     }
 
     /**
      * Try to get the filemanager node specified by the element
      *
      * @param string $filepickerelement
-     * @return \Behat\Mink\Element\NodeElement
+     * @return NodeElement
      * @throws ExpectationException
      */
     protected function get_filepicker_node($filepickerelement) {
-
         // More info about the problem (in case there is a problem).
         $exception = new ExpectationException('"' . $filepickerelement . '" filepicker can not be found', $this->getSession());
 
@@ -214,6 +193,28 @@ class behat_repository_upload extends behat_base {
      * @Given /^I upload "(?P<filepath_string>(?:[^"]|\\")*)" to the file picker$/
      */
     public function i_upload_a_file_in_the_filepicker(string $filepath): void {
+        // Ensure that we are on the "Upload a file" repository plugin.
+        $filepicker = $this->select_upload_repository();
+
+        // Grab the repository region of the file picker.
+        $reporegion = $filepicker->find('css', '.fp-repo-items');
+
+        // Upload the file.
+        $this->upload_the_file($reporegion, $filepath);
+
+        // Attach it.
+        $this->execute('behat_general::i_click_on_in_the', [
+            get_string('upload', 'repository'), 'button',
+            $reporegion, 'NodeElement',
+        ]);
+    }
+
+    /**
+     * Select the "Upload a file" repository plugin from the filepicker.
+     *
+     * @return NodeElement The filepicker region.
+     */
+    protected function select_upload_repository(): NodeElement {
         if (!$this->has_tag('javascript')) {
             throw new DriverException('The file picker is only available with javascript enabled');
         }
@@ -229,16 +230,21 @@ class behat_repository_upload extends behat_base {
             $filepicker, 'NodeElement',
         ]);
 
-        $reporegion = $filepicker->find('css', '.fp-repo-items');
+        return $filepicker;
+    }
+
+    /**
+     * Upload the specified file into the repository_upload repository.
+     *
+     * Note: This action is synchronous and WebDriver will wait for it to return before proceeding.
+     *
+     * @param NodeElement $reporegion The region that the file input is contained in
+     * @param string $filepath The filepath within the Moodle repository
+     */
+    protected function upload_the_file(NodeElement $reporegion, string $filepath): void {
         $fileinput = $this->find('field', get_string('attachment', 'core_repository'), false, $reporegion);
-
         $filepath = $this->normalise_fixture_filepath($filepath);
-
         $fileinput->attachFile($filepath);
-        $this->execute('behat_general::i_click_on_in_the', [
-            get_string('upload', 'repository'), 'button',
-            $reporegion, 'NodeElement',
-        ]);
     }
 
     /**
