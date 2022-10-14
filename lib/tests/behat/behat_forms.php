@@ -104,16 +104,21 @@ class behat_forms extends behat_base {
      * @param TableNode $data
      */
     public function i_set_the_following_fields_in_container_to_these_values(
-            $containerelement, $containerselectortype, TableNode $data) {
+        $containerelement,
+        $containerselectortype,
+        TableNode $data
+    ) {
 
-        // Expand all fields in case we have.
-        $this->expand_all_fields();
+        // Find the container to avoid fetching it multiple times.
+        $container = $this->find($containerselectortype,  $containerelement);
 
-        $datahash = $data->getRowsHash();
+        // Expand all fields in the container, in case we have any collapsed.
+        $this->expand_all_fields($container);
 
         // The action depends on the field type.
+        $datahash = $data->getRowsHash();
         foreach ($datahash as $locator => $value) {
-            $this->set_field_value_in_container($locator, $value, $containerselectortype, $containerelement);
+            $this->set_field_value_in_container($locator, $value, 'NodeElement', $container);
         }
     }
 
@@ -127,14 +132,16 @@ class behat_forms extends behat_base {
 
     /**
      * Expands all moodle form fieldsets if they exists.
+     * If a container is specified, only the fields in the specified element are expanded.
      *
      * Externalized from i_expand_all_fields to call it from
      * other form-related steps without having to use steps-group calls.
      *
+     * @param NodeElement|null $container The container where we look for fieldsets. If not specified, look on the whole page.
      * @throws ElementNotFoundException Thrown by behat_base::find_all
      * @return void
      */
-    protected function expand_all_fields() {
+    protected function expand_all_fields(?NodeElement $container = null) {
         // Expand only if JS mode, else not needed.
         if (!$this->running_javascript()) {
             return;
@@ -156,7 +163,7 @@ class behat_forms extends behat_base {
                     "//a[contains(concat(' ', @class, ' '), ' icons-collapse-expand ') and @aria-expanded = 'false']";
 
             $collapseexpandlink = $this->find('xpath', $expandallxpath . '|' . $expandsectionold . '|' . $expandsectioncurrent,
-                    false, false, behat_base::get_reduced_timeout());
+                    false, $container, behat_base::get_reduced_timeout());
             $collapseexpandlink->click();
             $this->wait_for_pending_js();
 
@@ -507,16 +514,20 @@ class behat_forms extends behat_base {
      * @param TableNode $data Pairs of | field | value |
      */
     public function the_following_fields_in_container_match_these_values(
-            $containerelement, $containerselectortype, TableNode $data) {
+        $containerelement,
+        $containerselectortype,
+        TableNode $data
+    ) {
+        // Find the container to avoid fetching it multiple times.
+        $container = $this->find($containerselectortype,  $containerelement);
 
-        // Expand all fields in case we have.
-        $this->expand_all_fields();
-
-        $datahash = $data->getRowsHash();
+        // Expand all fields in the container, in case we have any collapsed.
+        $this->expand_all_fields($container);
 
         // The action depends on the field type.
+        $datahash = $data->getRowsHash();
         foreach ($datahash as $locator => $value) {
-            $this->the_field_in_container_matches_value($locator, $containerelement, $containerselectortype, $value);
+            $this->the_field_in_container_matches_value($locator, $container, 'NodeElement', $value);
         }
     }
 
@@ -530,16 +541,20 @@ class behat_forms extends behat_base {
      * @param TableNode $data Pairs of | field | value |
      */
     public function the_following_fields_in_container_do_not_match_these_values(
-            $containerelement, $containerselectortype, TableNode $data) {
+        $containerelement,
+        $containerselectortype,
+        TableNode $data
+    ) {
+        // Find the container to avoid fetching it multiple times.
+        $container = $this->find($containerselectortype,  $containerelement);
 
-        // Expand all fields in case we have.
-        $this->expand_all_fields();
-
-        $datahash = $data->getRowsHash();
+        // Expand all fields in the container, in case we have any collapsed.
+        $this->expand_all_fields($container);
 
         // The action depends on the field type.
+        $datahash = $data->getRowsHash();
         foreach ($datahash as $locator => $value) {
-            $this->the_field_in_container_does_not_match_value($locator, $containerelement, $containerselectortype, $value);
+            $this->the_field_in_container_does_not_match_value($locator, $container, 'NodeElement', $value);
         }
     }
 
@@ -554,7 +569,6 @@ class behat_forms extends behat_base {
      *                       values if multiple. Commas in multiple values escaped with backslash.
      */
     public function the_select_box_should_contain($select, $option) {
-
         $selectnode = $this->find_field($select);
         $multiple = $selectnode->hasAttribute('multiple');
         $optionsarr = array(); // Array of passed value/text options to test.
@@ -598,7 +612,6 @@ class behat_forms extends behat_base {
      *                       values if multiple. Commas in multiple values escaped with backslash.
      */
     public function the_select_box_should_not_contain($select, $option) {
-
         $selectnode = $this->find_field($select);
         $multiple = $selectnode->hasAttribute('multiple');
         $optionsarr = array(); // Array of passed value/text options to test.
@@ -681,7 +694,6 @@ class behat_forms extends behat_base {
      * @Given /^I select "(?P<singleselect_option_string>(?:[^"]|\\")*)" from the "(?P<singleselect_name_string>(?:[^"]|\\")*)" singleselect$/
      */
     public function i_select_from_the_singleselect($option, $singleselect) {
-
         $this->execute('behat_forms::i_set_the_field_to', array($this->escape($singleselect), $this->escape($option)));
 
         if (!$this->running_javascript()) {
@@ -774,7 +786,6 @@ class behat_forms extends behat_base {
      *                         should be present.
      */
     public function the_select_menu_should_contain(string $label, string $option, ?string $not = null) {
-
         $field = behat_field_manager::get_form_field_from_label($label, $this);
 
         if (!method_exists($field, 'has_option')) {
