@@ -23,13 +23,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use Behat\Behat\Context\Exception\ContextNotFoundException;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Gherkin\Node\PyStringNode;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\DriverException;
 use Behat\Mink\Exception\ExpectationException;
-use Behat\Mink\Exception\UnsupportedDriverActionException;
 
 // NOTE: no MOODLE_INTERNAL test here, this file may be required by behat before including /config.php.
 require_once(__DIR__ . '/../../../../behat/behat_base.php');
@@ -134,7 +132,8 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
     /**
      * Get the Mink NodeElement of the <textarea> for the specified locator.
      *
-     * Moodle mostly referes to the textarea, rather than the editor itself and interactions are translated to the Editor using the TinyMCE API.
+     * Moodle mostly referes to the textarea, rather than the editor itself and interactions are translated to the
+     * Editor using the TinyMCE API.
      *
      * @param string $locator A Moodle field locator
      * @return NodeElement The element found by the find_field function
@@ -304,11 +303,18 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
         $this->execute('behat_general::i_click_on_in_the', [$mainmenu, 'button', $menubar, 'NodeElement']);
 
         foreach ($menus as $menuitem) {
+            // Find the menu that was opened.
             $openmenu = $this->find('css', '.tox-selected-menu');
-            // Match any menuitem, or menuitemcheckbox, or menuitem*.
+
+            // Move the mouse to the first item in the list.
+            // This is required because WebDriver takes the shortest path to the next click location,
+            // which will mean crossing across other menu items.
+            $firstlink = $openmenu->find('css', "[role^='menuitem']");
+            $firstlink->mouseover();
+
+            // Now match by title where the role matches any menuitem, or menuitemcheckbox, or menuitem*.
             $link = $openmenu->find('css', "[title='{$menuitem}'][role^='menuitem']");
             $this->execute('behat_general::i_click_on', [$link, 'NodeElement']);
-            sleep(1);
         }
     }
 
@@ -342,5 +348,60 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
         // phpcs:enable
 
         $this->evaluate_script($js);
+    }
+
+    /**
+     * Upload a file in the file picker using the repository_upload plugin.
+     *
+     * Note: This step assumes we are already in the file picker.
+     * Note: This step is for use by TinyMCE and will be removed once an appropriate step is added to core.
+     * See MDL-76001 for details.
+     *
+     * @Given /^I upload "(?P<filepath_string>(?:[^"]|\\")*)" to the file picker for TinyMCE$/
+     */
+    public function i_upload_a_file_in_the_filepicker(string $filepath): void {
+        if (!$this->has_tag('javascript')) {
+            throw new DriverException('The file picker is only available with javascript enabled');
+        }
+
+        if (!$this->has_tag('_file_upload')) {
+            throw new DriverException('File upload tests must have the @_file_upload tag on either the scenario or feature.');
+        }
+
+        if (!$this->has_tag('editor_tiny')) {
+            throw new DriverException('This step is intended for use in TinyMCE. Please vote for MDL-76001');
+        }
+
+        $filepicker = $this->find('dialogue', get_string('filepicker', 'core_repository'));
+
+        $this->execute('behat_general::i_click_on_in_the', [
+            get_string('pluginname', 'repository_upload'), 'link',
+            $filepicker, 'NodeElement',
+        ]);
+
+        $reporegion = $filepicker->find('css', '.fp-repo-items');
+        $fileinput = $this->find('field', get_string('attachment', 'core_repository'), false, $reporegion);
+
+        $filepath = $this->normalise_fixture_filepath($filepath);
+
+        $fileinput->attachFile($filepath);
+        $this->execute('behat_general::i_click_on_in_the', [
+            get_string('upload', 'repository'), 'button',
+            $reporegion, 'NodeElement',
+        ]);
+    }
+
+    protected function normalise_fixture_filepath(string $filepath): string {
+        global $CFG;
+
+        $filepath = str_replace('/', DIRECTORY_SEPARATOR, $filepath);
+        if (!is_readable($filepath)) {
+            $filepath = $CFG->dirroot . DIRECTORY_SEPARATOR . $filepath;
+            if (!is_readable($filepath)) {
+                throw new ExpectationException('The file to be uploaded does not exist.', $this->getSession());
+            }
+        }
+
+        return $filepath;
     }
 }
