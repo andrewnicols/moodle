@@ -139,19 +139,7 @@ class behat_repository_upload extends behat_base {
         // Form elements to interact with.
         $file = $this->find_file('repo_upload_file');
 
-        // Attaching specified file to the node.
-        // Replace 'admin/' if it is in start of path with $CFG->admin .
-        if (substr($filepath, 0, 6) === 'admin/') {
-            $filepath = $CFG->dirroot . DIRECTORY_SEPARATOR . $CFG->admin .
-                    DIRECTORY_SEPARATOR . substr($filepath, 6);
-        }
-        $filepath = str_replace('/', DIRECTORY_SEPARATOR, $filepath);
-        if (!is_readable($filepath)) {
-            $filepath = $CFG->dirroot . DIRECTORY_SEPARATOR . $filepath;
-            if (!is_readable($filepath)) {
-                throw new ExpectationException('The file to be uploaded does not exist.', $this->getSession());
-            }
-        }
+        $filepath = $this->normalise_fixture_filepath($filepath);
         $file->attachFile($filepath);
 
         // Fill the form in Upload window.
@@ -218,4 +206,59 @@ class behat_repository_upload extends behat_base {
         return $filepickercontainer;
     }
 
+    /**
+     * Upload a file in the file picker using the repository_upload plugin.
+     *
+     * Note: This step assumes we are already in the file picker.
+     *
+     * @Given /^I upload "(?P<filepath_string>(?:[^"]|\\")*)" to the file picker$/
+     */
+    public function i_upload_a_file_in_the_filepicker(string $filepath): void {
+        if (!$this->has_tag('javascript')) {
+            throw new DriverException('The file picker is only available with javascript enabled');
+        }
+
+        if (!$this->has_tag('_file_upload')) {
+            throw new DriverException('File upload tests must have the @_file_upload tag on either the scenario or feature.');
+        }
+
+        $filepicker = $this->find('dialogue', get_string('filepicker', 'core_repository'));
+
+        $this->execute('behat_general::i_click_on_in_the', [
+            get_string('pluginname', 'repository_upload'), 'link',
+            $filepicker, 'NodeElement',
+        ]);
+
+        $reporegion = $filepicker->find('css', '.fp-repo-items');
+        $fileinput = $this->find('field', get_string('attachment', 'core_repository'), false, $reporegion);
+
+        $filepath = $this->normalise_fixture_filepath($filepath);
+
+        $fileinput->attachFile($filepath);
+        $this->execute('behat_general::i_click_on_in_the', [
+            get_string('upload', 'repository'), 'button',
+            $reporegion, 'NodeElement',
+        ]);
+    }
+
+    /**
+     * Normalise the path to a fixture file.
+     *
+     * @param string $filepath The path relative to the CFG->dirroot.
+     * @return string A fully-qualified and normalised filepath
+     * @throws ExpectationException If the file is not found
+     */
+    protected function normalise_fixture_filepath(string $filepath): string {
+        global $CFG;
+
+        $filepath = str_replace('/', DIRECTORY_SEPARATOR, $filepath);
+        if (!is_readable($filepath)) {
+            $filepath = $CFG->dirroot . DIRECTORY_SEPARATOR . $filepath;
+            if (!is_readable($filepath)) {
+                throw new ExpectationException('The file to be uploaded does not exist.', $this->getSession());
+            }
+        }
+
+        return $filepath;
+    }
 }
