@@ -55,9 +55,9 @@ class primary implements renderable, templatable {
             $output = $this->page->get_renderer('core');
         }
 
-        $menudata = (object) array_merge($this->get_primary_nav(), $this->get_custom_menu($output));
+        $menudata = (object) $this->merge_primary_and_custom($this->get_primary_nav(), $this->get_custom_menu($output));
         $moremenu = new \core\navigation\output\more_menu($menudata, 'navbar-nav', false);
-        $mobileprimarynav = array_merge($this->get_primary_nav(), $this->get_custom_menu($output));
+        $mobileprimarynav = $this->merge_primary_and_custom($this->get_primary_nav(), $this->get_custom_menu($output), true);
 
         $languagemenu = new \core\output\language_menu($this->page);
 
@@ -114,6 +114,82 @@ class primary implements renderable, templatable {
         }
 
         return $nodes;
+    }
+
+    /**
+     * When defining custom menu items, the active flag is not obvserved correctly. Therefore, the merge of the primary
+     * and custom navigation must be handled a bit smarter. Change the "isactive" flag of the nodes (this may set by
+     * default in the primary nav nodes but is entirely missing in the custom nav nodes).
+     * Set the $ismobile when the menu for the mobile template is build.
+     *
+     * @param array $primary
+     * @param array $custom
+     * @param bool $ismobile
+     * @return array
+     */
+    protected function merge_primary_and_custom(array $primary, array $custom, bool $ismobile = false): array {
+        if (empty($custom)) {
+            return $primary; // No custom nav, nothing to merge.
+        }
+        // Remember the amount of primary nodes and whether we changed the active flag in the custom menu nodes.
+        $primarylen = count($primary);
+        $changed = false;
+        foreach (array_keys($custom) as $i) {
+            if (!$changed) {
+                if ($this->eval_is_active($custom[$i], $ismobile)) {
+                    $changed = true;
+                }
+            }
+            $primary[] = $custom[$i];
+        }
+        // In case some custom node is active, mark all primary nav elements as inactive.
+        if ($changed) {
+            for ($i = 0; $i < $primarylen; $i++) {
+                $primary[$i]['isactive'] = false;
+            }
+        }
+        return $primary;
+    }
+
+    /**
+     * Recursive checks if any of the children is active. If that's the case this node (the parent) is active as
+     * well. If the node has no children, check if the node itself is active. Use pass by reference for the node
+     * object because we actively change/set the "isactive" flag inside the method and this needs to be kept at the
+     * callers side.
+     * Set the $ismobile to true, if the mobile menu is done, in this case the active flag gets the node that is
+     * actually active, while the parent hierarchy of the active node gets the flag isopen.
+     *
+     * @param object $node
+     * @param bool $ismobile
+     * @return bool
+     */
+    protected function eval_is_active(object $node, bool $ismobile = false): bool {
+        global $PAGE;
+        $active = false;
+        foreach (array_keys($node->children ?? []) as $c) {
+            if ($this->eval_is_active($node->children[$c], $ismobile)) {
+                $active = true;
+            }
+        }
+        // One of the children is active, so this node (the parent) is active as well.
+        if ($active) {
+            if ($ismobile) {
+                $node->isopen = true;
+            } else {
+                $node->isactive = true;
+            }
+            return true;
+        }
+        // Check if the node url matches the called url. The node url may omit the trailing index.php, therefore check
+        // this as well.
+        $nodeurl = parse_url($node->url ?? '');
+        $currentpath = $PAGE->url->get_path();
+        $currentquery = $_SERVER['QUERY_STRING'] ?? ''; // Use $_SERVER because $PAGE omits the query string.
+        $node->isactive = (
+            ($nodeurl['path'] === $currentpath || $nodeurl['path'] . 'index.php' === $currentpath) &&
+            (empty($nodeurl['query']) || $nodeurl['query'] === $currentquery)
+        );
+        return $node->isactive;
     }
 
     /**
