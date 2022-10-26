@@ -467,10 +467,12 @@ class course_modinfo {
             $course = get_course($course->id, false);
         }
 
-        $cachecoursemodinfo = cache::make('core', 'coursemodinfo');
+        // Retrieve modinfo from cache. If not present or cacherev mismatches, call rebuild and retrieve again.
+        $cachecoursemodinfo = self::get_coursemodinfo_cache();
 
         // Retrieve modinfo from cache. If not present or cacherev mismatches, call rebuild and retrieve again.
         $coursemodinfo = $cachecoursemodinfo->get_versioned($course->id, $course->cacherev);
+
         // Note the version comparison using the data in the cache should not be necessary, but the
         // partial rebuild logic sometimes sets the $coursemodinfo->cacherev to -1 which is an
         // indicator that it needs rebuilding.
@@ -560,6 +562,42 @@ class course_modinfo {
     }
 
     /**
+     * Helper to fetch the correct coursemodinfo cache.
+     *
+     * @param bool $forcereal Force use of the real cache instead of the loggedinas cache
+     * @return cache_loader A cache instance
+     */
+    protected static function get_coursemodinfo_cache(bool $forcereal = false): cache_loader {
+        // Note: If any other situations lead to the forceclean option being programatically set, we should add them here.
+        $usesessioncache = \core\session\manager::is_loggedinas();
+
+        if ($usesessioncache && !$forcereal) {
+            return cache::make('core', 'coursemodinfo_session');
+        } else {
+            return cache::make('core', 'coursemodinfo');
+        }
+    }
+
+    /**
+     * Helper to fetch the course cache for purge operations.
+     *
+     * In this instance the real cache is returned, but the loggedinas cache is also purged.
+     *
+     * @param int $courseid The course to purge for
+     * @return cache_application A cache instance
+     */
+    protected static function get_coursemodinfo_cache_for_purge(int $courseid): cache_application {
+        $cache = self::get_coursemodinfo_cache();
+        $realcache = self::get_coursemodinfo_cache(true);
+
+        if ($cache !== $realcache) {
+            $cache->delete($courseid);
+        }
+
+        return $realcache;
+    }
+
+    /**
      * This method can not be used anymore.
      *
      * @see course_modinfo::build_course_cache()
@@ -589,7 +627,7 @@ class course_modinfo {
         $courseformat = course_get_format($course);
 
         if ($usecache) {
-            $cachecoursemodinfo = \cache::make('core', 'coursemodinfo');
+            $cachecoursemodinfo = self::get_coursemodinfo_cache();
             $coursemodinfo = $cachecoursemodinfo->get_versioned($course->id, $course->cacherev);
             if ($coursemodinfo !== false) {
                 $compressedsections = $coursemodinfo->sectioncache;
@@ -638,9 +676,11 @@ class course_modinfo {
             throw new coding_exception('Object $course is missing required property \id\'');
         }
 
-        $cachecoursemodinfo = cache::make('core', 'coursemodinfo');
+        $cachecoursemodinfo = self::get_coursemodinfo_cache();
         $cachekey = $course->id;
-        $cachecoursemodinfo->acquire_lock($cachekey);
+        if (is_a($cachecoursemodinfo, cache_loader_with_locking::class)) {
+            $cachecoursemodinfo->acquire_lock($cachekey);
+        }
         try {
             // Only actually do the build if it's still needed after getting the lock (not if
             // somebody else, who might have been holding the lock, built it already).
@@ -649,7 +689,9 @@ class course_modinfo {
                 $coursemodinfo = self::inner_build_course_cache($course);
             }
         } finally {
-            $cachecoursemodinfo->release_lock($cachekey);
+            if (is_a($cachecoursemodinfo, cache_loader_with_locking::class)) {
+                $cachecoursemodinfo->release_lock($cachekey);
+            }
         }
         return $coursemodinfo;
     }
@@ -666,8 +708,8 @@ class course_modinfo {
         require_once("{$CFG->dirroot}/course/lib.php");
 
         $cachekey = $course->id;
-        $cachecoursemodinfo = cache::make('core', 'coursemodinfo');
-        if (!$cachecoursemodinfo->check_lock_state($cachekey)) {
+        $cachecoursemodinfo = self::get_coursemodinfo_cache();
+        if (is_a($cachecoursemodinfo, cache_loader_with_locking::class) && !$cachecoursemodinfo->check_lock_state($cachekey)) {
             throw new coding_exception('You must acquire a lock on the course ID before calling inner_build_course_cache');
         }
 
@@ -695,8 +737,9 @@ class course_modinfo {
      */
     public static function purge_course_section_cache_by_id(int $courseid, int $sectionid): void {
         $course = get_course($courseid);
-        $cache = cache::make('core', 'coursemodinfo');
         $cachekey = $course->id;
+        $cache = self::get_coursemodinfo_cache_for_purge($cachekey);
+
         $cache->acquire_lock($cachekey);
         $coursemodinfo = $cache->get_versioned($cachekey, $course->cacherev);
         if ($coursemodinfo !== false) {
@@ -720,8 +763,10 @@ class course_modinfo {
      */
     public static function purge_course_section_cache_by_number(int $courseid, int $sectionno): void {
         $course = get_course($courseid);
-        $cache = cache::make('core', 'coursemodinfo');
+
         $cachekey = $course->id;
+        $cache = self::get_coursemodinfo_cache_for_purge($cachekey);
+
         $cache->acquire_lock($cachekey);
         $coursemodinfo = $cache->get_versioned($cachekey, $course->cacherev);
         if ($coursemodinfo !== false && array_key_exists($sectionno, $coursemodinfo->sectioncache)) {
@@ -740,8 +785,10 @@ class course_modinfo {
      */
     public static function purge_course_module_cache(int $courseid, int $cmid): void {
         $course = get_course($courseid);
-        $cache = cache::make('core', 'coursemodinfo');
+
         $cachekey = $course->id;
+        $cache = self::get_coursemodinfo_cache_for_purge($cachekey);
+
         $cache->acquire_lock($cachekey);
         $coursemodinfo = $cache->get_versioned($cachekey, $course->cacherev);
         $hascache = ($coursemodinfo !== false) && array_key_exists($cmid, $coursemodinfo->modinfo);
@@ -776,7 +823,7 @@ class course_modinfo {
         $mods = [];
         if ($usecache) {
             // Get existing cache.
-            $cachecoursemodinfo = cache::make('core', 'coursemodinfo');
+            $cachecoursemodinfo = self::get_coursemodinfo_cache();
             $coursemodinfo = $cachecoursemodinfo->get_versioned($course->id, $course->cacherev);
             if ($coursemodinfo !== false) {
                 $mods = $coursemodinfo->modinfo;
@@ -946,8 +993,8 @@ class course_modinfo {
      */
     public static function purge_course_cache(int $courseid): void {
         increment_revision_number('course', 'cacherev', 'id = :id', array('id' => $courseid));
-        $cachemodinfo = cache::make('core', 'coursemodinfo');
-        $cachemodinfo->delete($courseid);
+        self::get_coursemodinfo_cache()->delete($courseid);
+        self::get_coursemodinfo_cache(true)->delete($courseid);
     }
 }
 
@@ -2736,11 +2783,13 @@ function rebuild_course_cache(int $courseid = 0, bool $clearonly = false, bool $
     core_courseformat\base::reset_course_cache($courseid);
 
     $cachecoursemodinfo = cache::make('core', 'coursemodinfo');
+    $cachecoursemodinfosession = cache::make('core', 'coursemodinfo_session');
     if (empty($courseid)) {
         // Clearing caches for all courses.
         increment_revision_number('course', 'cacherev', '');
         if (!$partialrebuild) {
             $cachecoursemodinfo->purge();
+            $cachecoursemodinfosession->purge();
         }
         // Clear memory static cache.
         course_modinfo::clear_instance_cache();
@@ -2758,6 +2807,7 @@ function rebuild_course_cache(int $courseid = 0, bool $clearonly = false, bool $
         if (!$partialrebuild) {
             // Purge all course modinfo.
             $cachecoursemodinfo->delete($courseid);
+            $cachecoursemodinfosession->delete($courseid);
         }
         // Clear memory static cache.
         course_modinfo::clear_instance_cache($courseid);

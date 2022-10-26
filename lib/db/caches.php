@@ -253,6 +253,14 @@ $definitions = array(
         'canuselocalstore' => true,
         'requirelockingbeforewrite' => true
     ),
+    // An alternate version of the coursemodinfo cache used within the current session only.
+    // This cache is used primarily for the logged-in-as feature.
+    'coursemodinfo_session' => array(
+        'mode' => cache_store::MODE_SESSION,
+        'simplekeys' => true,
+        'canuselocalstore' => true,
+        'requirelockingbeforewrite' => true
+    ),
     // This is the session user selections cache.
     // It's a special cache that is used to record user selections that should persist for the lifetime of the session.
     // Things such as which categories the user has expanded can be stored here.
