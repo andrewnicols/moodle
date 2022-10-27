@@ -36,8 +36,7 @@ use core\event\user_login_failed;
 use core\output\notification;
 
 require_once(__DIR__ . '/../../config.php');
-
-global $OUTPUT, $PAGE, $SESSION;
+require_once("{$CFG->libdir}/authlib.php");
 
 // Form fields dealing with the user's choice about account types (new, existing).
 $newaccount = optional_param('new_account', false, PARAM_BOOL);
