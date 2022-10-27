@@ -67,26 +67,24 @@ if ($newaccount) {
         $event->trigger();
 
         // Site settings prevent creating new accounts.
-        $errormsg = get_string('cannotcreateaccounts', 'auth_lti');
-        $SESSION->loginerrormsg = $errormsg;
-        redirect(new moodle_url('/login/index.php'));
+        redirect(
+            new moodle_url('/login/index.php')),
+            get_string('cannotcreateaccounts', 'auth_lti'),
+            null,
+            notification::NOTIFY_ERROR
+        );
     } else {
         // Create a new account and link it, logging the user in.
         $auth = get_auth_plugin('lti');
         $newuser = $auth->find_or_create_user_from_launch($launchdata, true);
         complete_user_login($newuser);
 
-        $PAGE->set_context(context_system::instance());
-        $PAGE->set_url(new moodle_url('/auth/lti/login.php'));
-        $PAGE->set_pagelayout('popup');
-        $renderer = $PAGE->get_renderer('auth_lti');
-        echo $OUTPUT->header();
-        echo $renderer->render_account_binding_complete(
-            new notification(get_string('accountcreatedsuccess', 'auth_lti'), notification::NOTIFY_SUCCESS, false),
-            $returnurl
+        redirect(
+            $returnurl,
+            get_string('accountcreatedsuccess', 'auth_lti'),
+            null,
+            notification::NOTIFY_SUCCESS
         );
-        echo $OUTPUT->footer();
-        exit();
     }
 } else if ($existingaccount) {
     // Only when authenticated can an account be bound, allowing the user to continue to the original launch action.
@@ -100,17 +98,12 @@ if ($newaccount) {
     $auth = get_auth_plugin('lti');
     $auth->create_user_binding($launchdata['iss'], $launchdata['sub'], $USER->id);
 
-    $PAGE->set_context(context_system::instance());
-    $PAGE->set_url(new moodle_url('/auth/lti/login.php'));
-    $PAGE->set_pagelayout('popup');
-    $renderer = $PAGE->get_renderer('auth_lti');
-    echo $OUTPUT->header();
-    echo $renderer->render_account_binding_complete(
-        new notification(get_string('accountlinkedsuccess', 'auth_lti'), notification::NOTIFY_SUCCESS, false),
-        $returnurl
+    redirect(
+        $returnurl,
+        get_string('accountlinkedsuccess', 'auth_lti'),
+        null,
+        notification::NOTIFY_SUCCESS
     );
-    echo $OUTPUT->footer();
-    exit();
 }
 
 // Render the relevant account provisioning page, based on the provisioningmode set in the calling code.

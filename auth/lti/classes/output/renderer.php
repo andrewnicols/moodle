@@ -63,25 +63,4 @@ class renderer extends \plugin_renderer_base {
         ];
         return parent::render_from_template('auth_lti/local/ltiadvantage/login', $context);
     }
-
-    /**
-     * Render the page displayed when the account binding is complete, letting the user continue to the launch.
-     *
-     * Callers can provide different messages depending on which type of binding took place. For example, a newly
-     * provisioned account may require a slightly different message to an existing account being linked.
-     *
-     * The return URL is the page the user will be taken back to when they click 'Continue'. This is likely the launch
-     * or deeplink launch endpoint but could be any calling code in LTI which wants to use the account binding workflow.
-     *
-     * @param notification $notification the notification containing the message describing the binding success.
-     * @param \moodle_url $returnurl the URL to return to when the user clicks continue on the rendered page.
-     * @return string the rendered HTML
-     */
-    public function render_account_binding_complete(notification $notification, \moodle_url $returnurl): string {
-        $context = (object) [
-            'notification' => $notification->export_for_template($this),
-            'returnurl' => $returnurl->out()
-        ];
-        return parent::render_from_template('auth_lti/local/ltiadvantage/account_binding_complete', $context);
-    }
 }
