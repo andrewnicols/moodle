@@ -60,8 +60,10 @@ if ($newaccount) {
         // This just ensures no action is taken were the 'newaccount' value to be present in the submitted data.
 
         // Trigger login failed event.
-        $failurereason = AUTH_LOGIN_UNAUTHORISED;
-        $event = user_login_failed::create(['other' => ['reason' => $failurereason]]);
+        $event = user_login_failed::create(['other' => [
+            'reason' => AUTH_LOGIN_UNAUTHORISED;
+            'username' => 'unknown',
+        ]]);
         $event->trigger();
 
         // Site settings prevent creating new accounts.
