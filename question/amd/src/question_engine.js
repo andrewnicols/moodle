@@ -25,11 +25,6 @@ import * as scrollManager from 'core/scroll_manager';
 import * as formSubmit from 'core_form/submit';
 
 /**
- * Is question form already submitted?
- */
-let questionFormAlreadySubmitted = false;
-
-/**
  * Initialise a question submit button. This saves the scroll position and
  * sets the fragment on the form submit URL so the page reloads in the right place.
  *
@@ -56,28 +51,41 @@ export const initSubmitButton = button => {
  *
  * @param {string} formSelector Selector to identify the form.
  */
-export const initForm = formSelector => {
+export const initForm = (formSelector) => {
     const form = document.querySelector(formSelector);
     form.setAttribute('autocomplete', 'off');
 
     form.addEventListener('submit', preventRepeatSubmission);
 
-    form.addEventListener('key', event => {
-        if (event.keyCode == 13 && !event.target.matches('a') && !event.target.matches('input[type=submit]') &&
-            !event.target.matches('input[type=img]') && !event.target.matches('textarea') &&
-            !event.target.matches('[contenteditable=true]')) {
-            event.preventDefault();
+    form.addEventListener('key', (event) => {
+        if (event.keyCode !== 13) {
+            return;
         }
+
+        if (event.target.matches('a')) {
+            return;
+        }
+
+        if (event.target.matches('input[type="submit"]')) {
+            return;
+        }
+
+        if (event.target.matches('input[type=img]')) {
+            return;
+        }
+
+        if (event.target.matches('textarea') || event.target.matches('[contenteditable=true]')) {
+            return;
+        }
+
+        event.preventDefault();
     });
 
     const questionFlagSaveButtons = form.querySelectorAll('.questionflagsavebutton');
-    Array.prototype.forEach.call(questionFlagSaveButtons, function(node) {
-        node.parentNode.removeChild(node);
-    });
+    [...questionFlagSaveButtons].forEach((node) => node.remove());
 
-    window.onload = () => {
-        scrollManager.scrollToSavedPos();
-    };
+    // Note: The scrollToSavedPosition function tries to wait until the content has loaded before firing.
+    scrollManager.scrollToSavedPos();
 };
 
 /**
@@ -86,14 +94,14 @@ export const initForm = formSelector => {
  * @param {object} event the form submit event.
  */
 export const preventRepeatSubmission = (event) => {
-    if (questionFormAlreadySubmitted) {
+    const form = event.target.closest('form');
+    if (form.dataset.formSubmitted === '1') {
         event.preventDefault();
         return;
     }
 
-    const form = event.target;
     setTimeout(() => {
-        form.querySelector('input[type=submit]').setAttribute('disabled', true);
-    }, 0);
-    questionFormAlreadySubmitted = true;
+        [...form.querySelectorAll('input[type=submit]')].forEach((input) => input.setAttribute('disabled', true));
+    });
+    form.dataset.formSubmitted = '1';
 };

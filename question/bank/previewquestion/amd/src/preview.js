@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import * as QuestionEngine from 'core_question/question_engine';
+import {initForm as initQuestionEngineForm} from 'core_question/question_engine';
 
 /**
  * Set up the actions.
@@ -33,15 +33,16 @@ import * as QuestionEngine from 'core_question/question_engine';
  */
 export const init = (redirect, url) => {
     if (!redirect) {
-        let closeButton = document.getElementById('close-previewquestion-page');
-        closeButton.onclick = () => {
+        const closeButton = document.getElementById('close-previewquestion-page');
+        closeButton.addEventListener('click', (e) => {
+            e.preventDefault();
             if (window.opener === null) {
                 location.href = url;
             } else {
                 window.close();
             }
-        };
+        });
     }
     // Set up the form to be displayed.
-    QuestionEngine.initForm('#responseform');
+    initQuestionEngineForm('#responseform');
 };

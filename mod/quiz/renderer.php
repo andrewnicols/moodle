@@ -600,7 +600,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
         if ($disabled) {
             $attributes['disabled'] = 'disabled';
         } else {
-            $this->page->requires->js_call_amd('core_question/question_engine', 'initSubmitButton', [$attributes['id']]);
+            $this->page->requires->js_call_amd('core_question/question_engine', 'watchSubmitButtons');
         }
         return html_writer::div(html_writer::empty_tag('input', $attributes));
     }
