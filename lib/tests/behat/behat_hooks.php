@@ -29,19 +29,20 @@
 
 require_once(__DIR__ . '/../../behat/behat_base.php');
 
-use Behat\Testwork\Hook\Scope\BeforeSuiteScope,
-    Behat\Testwork\Hook\Scope\AfterSuiteScope,
-    Behat\Behat\Hook\Scope\BeforeFeatureScope,
-    Behat\Behat\Hook\Scope\AfterFeatureScope,
-    Behat\Behat\Hook\Scope\BeforeScenarioScope,
-    Behat\Behat\Hook\Scope\AfterScenarioScope,
-    Behat\Behat\Hook\Scope\BeforeStepScope,
-    Behat\Behat\Hook\Scope\AfterStepScope,
-    Behat\Mink\Exception\ExpectationException,
-    Behat\Mink\Exception\DriverException,
-    Facebook\WebDriver\Exception\UnexpectedAlertOpenException,
-    Facebook\WebDriver\Exception\WebDriverCurlException,
-    Facebook\WebDriver\Exception\UnknownErrorException;
+use Behat\Testwork\Hook\Scope\BeforeSuiteScope;
+use Behat\Testwork\Hook\Scope\AfterSuiteScope;
+use Behat\Behat\Hook\Scope\BeforeFeatureScope;
+use Behat\Behat\Hook\Scope\AfterFeatureScope;
+use Behat\Behat\Hook\Scope\BeforeScenarioScope;
+use Behat\Behat\Hook\Scope\AfterScenarioScope;
+use Behat\Behat\Hook\Scope\BeforeStepScope;
+use Behat\Behat\Hook\Scope\AfterStepScope;
+use Behat\Mink\Exception\ExpectationException;
+use Behat\Mink\Exception\DriverException;
+use Facebook\WebDriver\Exception\UnexpectedAlertOpenException;
+use Facebook\WebDriver\Exception\WebDriverCurlException;
+use Facebook\WebDriver\Exception\UnknownErrorException;
+use Facebook\WebDriver\Exception\WebDriverException;
 
 /**
  * Hooks to the behat process.
@@ -624,6 +625,7 @@ EOF;
                 // Save a screenshot.
                 $this->take_screenshot($scope);
             }
+            $this->get_browser_logs($scope);
         }
 
         if ($isfailed && !empty($CFG->behat_pause_on_fail)) {
@@ -720,6 +722,44 @@ EOF;
             $message = "Could not save screenshot due to an error\n" . $e->getMessage();
             file_put_contents($dir . DIRECTORY_SEPARATOR . $filename, $message);
         }
+    }
+
+    /**
+     * Fetch browser logs when a step fails.
+     *
+     * @param AfterStepScope $scope
+     */
+    protected function get_browser_logs(AfterStepScope $scope): void {
+        $driver = $this->getSession()->getDriver();
+        if (!method_exists($driver, 'getWebDriver')) {
+            // WebDriver is required.
+            return;
+        }
+        $webdriver = $driver->getWebDriver();
+
+        if (!method_exists($webdriver, 'manage')) {
+            return;
+        }
+
+        $logtypes = ['driver', 'browser'];
+        foreach ($logtypes as $logtype) {
+            [$dir, $filename] = $this->get_faildump_filename($scope, "${logtype}.log");
+            try {
+                $logs = $webdriver->manage()->getLog($logtype);
+            } catch (WebDriverException $e) {
+                // Not all drivers support logging.
+                return;
+            }
+            if (empty($logs)) {
+                continue;
+            }
+
+            file_put_contents($dir . DIRECTORY_SEPARATOR . $filename, json_encode(
+                $logs,
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            ));
+        }
+
     }
 
     /**
