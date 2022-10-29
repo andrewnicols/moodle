@@ -624,6 +624,7 @@ EOF;
                 // Save a screenshot.
                 $this->take_screenshot($scope);
             }
+            $this->get_browser_logs($scope);
         }
 
         if ($isfailed && !empty($CFG->behat_pause_on_fail)) {
@@ -720,6 +721,39 @@ EOF;
             $message = "Could not save screenshot due to an error\n" . $e->getMessage();
             file_put_contents($dir . DIRECTORY_SEPARATOR . $filename, $message);
         }
+    }
+
+    /**
+     * Fetch browser logs when a step fails.
+     *
+     * @param AfterStepScope $scope
+     */
+    protected function get_browser_logs(AfterStepScope $scope): void {
+        $driver = $this->getSession()->getDriver();
+        if (!method_exists($driver, 'getWebDriver')) {
+            // WebDriver is required.
+            return;
+        }
+        $webdriver = $driver->getWebDriver();
+
+        if (!method_exists($webdriver, 'manage')) {
+            return;
+        }
+
+        $logtypes = ['driver', 'browser'];
+        foreach ($logtypes as $logtype) {
+            [$dir, $filename] = $this->get_faildump_filename($scope, "${logtype}.log");
+            $logs = $webdriver->manage()->getLog($logtype);
+            if (empty($logs)) {
+                continue;
+            }
+
+            file_put_contents($dir . DIRECTORY_SEPARATOR . $filename, json_encode(
+                $logs,
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+            ));
+        }
+
     }
 
     /**
