@@ -28,21 +28,34 @@ use core\local\guzzle\check_request;
 use core\local\guzzle\redirect_middleware;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\RequestOptions;
 
-class http_client {
-    public static function get_client(array $settings = []): Client {
-        return new Client(self::get_options($settings));
+// General TODO:
+// - Update moodle_url to implement the Psr7\UriInterface
+// - Testing
+// - Caching
+// - Cookies
+// - See if it's possible to have the existing curl class just call these functions.
+
+class http_client extends Client {
+    public function __construct(array $config = []) {
+        $config = $this->get_options($config);
+
+        parent::__construct($config);
     }
 
-    protected static function get_options(array $settings): array {
-        $options = [];
+    protected function get_options(array $settings): array {
+        if (empty($settings['handler'])) {
+            // Configure the default handlers.
+            $settings['handler'] = $this->get_handlers($settings);
+        }
 
-        $options['handler'] = self::get_handlers($settings);
-
-        // Debugging.
-        if (!empty($settings['debug'])) {
-            // Request debugging @see {https://docs.guzzlephp.org/en/stable/request-options.html#debug}.
-            $options['debug'] = true;
+        // Request debugging @see {https://docs.guzzlephp.org/en/stable/request-options.html#debug}.
+        if (!empty($settings[RequestOptions::DEBUG])) {
+            // Accepts either a bool, or an fopen resource.
+            if (!is_resource($settings[RequestOptions::DEBUG])) {
+                $settings[RequestOptions::DEBUG] = !empty($settings['debug']);
+            }
         }
 
         // Cookies.
@@ -50,38 +63,45 @@ class http_client {
         // Need to see if this is still relevant.
 
         // Proxy.
-        $proxy = self::setup_proxy($settings);
+        $proxy = $this->setup_proxy($settings);
         if (!empty($proxy)) {
-            $options['proxy'] = $proxy;
+            $settings[RequestOptions::PROXY] = $proxy;
         }
 
         // Cache.
         // TODO Look at whether to implement our own cache, or something like this:
-        // https://github.com/Kevinrob/guzzle-cache-middleware
+        // @see {https://github.com/Kevinrob/guzzle-cache-middleware}.
 
-
-        return $options;
+        return $settings;
     }
 
-    protected static function get_handlers(array $settings): HandlerStack
-    {
+    protected function get_handlers(array $settings): HandlerStack {
         $stack = HandlerStack::create();
+
+            // Ensure that the first piece of middleware checks the block list.
+            $stack->unshift(check_request::setup($settings), 'moodle_check_initial_request');
 
         // Replace the standard redirect handler with our custom Moodle one.
         // This handler checks the block list.
+        // It extends the standard 'allow_redirects' handler so supports the same options.
         $stack->after('allow_redirects', redirect_middleware::setup($settings), 'moodle_allow_redirect');
         $stack->remove('allow_redirects');
-
-        // Ensure that the first piece of middleware also checks the block list.
-        $stack->unshift(check_request::setup($settings), 'moodle_checkinitialrequest');
 
         return $stack;
     }
 
-    protected static function setup_proxy(array $settings): array {
+    /**
+     * Get the proxy configuration.
+     *
+     * @see {https://docs.guzzlephp.org/en/stable/request-options.html#proxy}
+     * @param array $settings The incoming settings
+     * @return array The proxy settings
+     */
+    protected function setup_proxy(array $settings): ?array {
         global $CFG;
+
         if (empty($CFG->proxyhost)) {
-            return [];
+            return null;
         }
 
         $proxy = $this->get_proxy($settings);
@@ -100,7 +120,13 @@ class http_client {
         ];
     }
 
-    protected static function get_proxy(array $settings): string {
+    /**
+     * Get the proxy server identified.
+     *
+     * @param array $settings The incoming settings
+     * @return string The URI for the Proxy Server
+     */
+    protected function get_proxy(array $settings): string {
         global $CFG;
         $proxyhost = $CFG->proxyhost;
         if (!empty($CFG->proxyport)) {
@@ -108,7 +134,7 @@ class http_client {
         }
 
         $proxyauth = "";
-        if (!empty($CFG->proxyuser) and !empty($CFG->proxypassword)) {
+        if (!empty($CFG->proxyuser) && !empty($CFG->proxypassword)) {
             $proxyauth = "{$CFG->proxyuser}{$CFG->proxypassword}";
         }
 
