@@ -4,7 +4,7 @@
  * @module     tool_usertours/managesteps
  * @copyright  2016 Andrew Nicols <andrew@nicols.co.uk>
  */
-import {call as fetchMany} from 'core/ajax';
+import {fetchOne} from 'core/fetch';
 import moodleConfig from 'core/config';
 
 /**
@@ -13,14 +13,11 @@ import moodleConfig from 'core/config';
  * @param {number} tourid
  * @return {Promise}
  */
-export const resetTourState = tourid => fetchMany([{
-    methodname: 'tool_usertours_reset_tour',
-    args: {
-        tourid,
-        context: moodleConfig.contextid,
-        pageurl: window.location.href,
-    }
-}])[0];
+export const resetTourState = (tourid) => fetchOne('tool_usertours_reset_tour', {
+    tourid,
+    context: moodleConfig.contextid,
+    pageurl: window.location.href,
+});
 
 /**
  * Mark the specified tour as complete.
@@ -30,16 +27,13 @@ export const resetTourState = tourid => fetchMany([{
  * @param {number} stepindex
  * @return {Promise}
  */
-export const markTourComplete = (stepid, tourid, stepindex) => fetchMany([{
-    methodname: 'tool_usertours_complete_tour',
-    args: {
-        stepid,
-        stepindex: stepindex,
-        tourid,
-        context: moodleConfig.contextid,
-        pageurl: window.location.href,
-    }
-}])[0];
+export const markTourComplete = (stepid, tourid, stepindex) => fetchOne('tool_usertours_complete_tour', {
+    stepid,
+    stepindex: stepindex,
+    tourid,
+    context: moodleConfig.contextid,
+    pageurl: window.location.href,
+});
 
 /**
  * Fetch the specified tour.
@@ -47,14 +41,11 @@ export const markTourComplete = (stepid, tourid, stepindex) => fetchMany([{
  * @param {number} tourid
  * @return {Promise}
  */
-export const fetchTour = tourid => fetchMany([{
-    methodname: 'tool_usertours_fetch_and_start_tour',
-    args: {
-        tourid,
-        context: moodleConfig.contextid,
-        pageurl: window.location.href,
-    }
-}])[0];
+export const fetchTour = tourid => fetchOne('tool_usertours_fetch_and_start_tour', {
+    tourid,
+    context: moodleConfig.contextid,
+    pageurl: window.location.href,
+});
 
 /**
  * Mark the specified step as having been shown.
@@ -64,13 +55,10 @@ export const fetchTour = tourid => fetchMany([{
  * @param {number} stepindex
  * @return {Promise}
  */
-export const markStepShown = (stepid, tourid, stepindex) => fetchMany([{
-    methodname: 'tool_usertours_step_shown',
-    args: {
-        tourid,
-        stepid,
-        stepindex,
-        context: moodleConfig.contextid,
-        pageurl: window.location.href,
-    }
-}])[0];
+export const markStepShown = (stepid, tourid, stepindex) => fetchOne('tool_usertours_step_shown', {
+    tourid,
+    stepid,
+    stepindex,
+    context: moodleConfig.contextid,
+    pageurl: window.location.href,
+});

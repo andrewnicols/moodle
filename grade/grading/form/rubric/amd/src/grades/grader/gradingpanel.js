@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {call as fetchMany} from 'core/ajax';
+import {fetchOne} from 'core/fetch';
 import {normaliseResult} from 'core_grades/grades/grader/gradingpanel/normalise';
 import {compareData} from 'core_grades/grades/grader/gradingpanel/comparison';
 
@@ -38,17 +38,15 @@ import jQuery from 'jquery';
  *
  * @returns {Promise}
  */
-export const fetchCurrentGrade = (component, contextid, itemname, gradeduserid) => {
-    return fetchMany([{
-        methodname: `gradingform_rubric_grader_gradingpanel_fetch`,
-        args: {
-            component,
-            contextid,
-            itemname,
-            gradeduserid,
-        },
-    }])[0];
-};
+export const fetchCurrentGrade = (component, contextid, itemname, gradeduserid) => fetchOne(
+    `gradingform_rubric_grader_gradingpanel_fetch`,
+    {
+        component,
+        contextid,
+        itemname,
+        gradeduserid,
+    }
+);
 
 /**
  * For a given component, contextid, itemname & gradeduserid we can store the currently assigned grade in a given form.
@@ -66,17 +64,14 @@ export const storeCurrentGrade = async(component, contextid, itemname, gradeduse
     const form = rootNode.querySelector('form');
 
     if (compareData(form) === true) {
-        return normaliseResult(await fetchMany([{
-            methodname: `gradingform_rubric_grader_gradingpanel_store`,
-            args: {
-                component,
-                contextid,
-                itemname,
-                gradeduserid,
-                notifyuser: notifyUser,
-                formdata: jQuery(form).serialize(),
-            },
-        }])[0]);
+        return normaliseResult(await fetchOne(`gradingform_rubric_grader_gradingpanel_store`, {
+            component,
+            contextid,
+            itemname,
+            gradeduserid,
+            notifyuser: notifyUser,
+            formdata: jQuery(form).serialize(),
+        }));
     } else {
         return '';
     }

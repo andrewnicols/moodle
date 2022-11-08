@@ -21,7 +21,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {call as fetchMany} from 'core/ajax';
+import {fetchOne} from 'core/fetch';
 
 /**
  * Fetch the list of recordings from the server.
@@ -41,7 +41,7 @@ export const fetchRecordings = (bigbluebuttonbnid, tools, groupid) => {
         args.groupid = groupid;
     }
 
-    return fetchMany([{methodname: 'mod_bigbluebuttonbn_get_recordings', args}])[0];
+    return fetchOne('mod_bigbluebuttonbn_get_recordings', args);
 };
 
 /**
@@ -72,7 +72,7 @@ export const fetchRecordingsToImport = (
         args.groupid = groupid;
     }
 
-    return fetchMany([{methodname: 'mod_bigbluebuttonbn_get_recordings_to_import', args}])[0];
+    return fetchOne('mod_bigbluebuttonbn_get_recordings_to_import', args);
 };
 
 /**
@@ -81,12 +81,7 @@ export const fetchRecordingsToImport = (
  * @param   {object} args The instance ID
  * @returns {Promise}
  */
-export const updateRecording = args => fetchMany([
-    {
-        methodname: 'mod_bigbluebuttonbn_update_recording',
-        args,
-    }
-])[0];
+export const updateRecording = (args) => fetchOne('mod_bigbluebuttonbn_update_recording', args);
 
 /**
  * End the Meeting
@@ -95,15 +90,10 @@ export const updateRecording = args => fetchMany([
  * @param {number} groupid
  * @returns {Promise}
  */
-export const endMeeting = (bigbluebuttonbnid, groupid) => fetchMany([
-    {
-        methodname: 'mod_bigbluebuttonbn_end_meeting',
-        args: {
-            bigbluebuttonbnid,
-            groupid
-        },
-    }
-])[0];
+export const endMeeting = (bigbluebuttonbnid, groupid) => fetchOne('mod_bigbluebuttonbn_end_meeting', {
+    bigbluebuttonbnid,
+    groupid
+});
 
 /**
  * Validate completion.
@@ -111,13 +101,7 @@ export const endMeeting = (bigbluebuttonbnid, groupid) => fetchMany([
  * @param {object} args
  * @returns {Promise}
  */
-export const completionValidate = args => fetchMany([
-    {
-        methodname: 'mod_bigbluebuttonbn_completion_validate',
-        args,
-    }
-])[0];
-
+export const completionValidate = (args) => fetchOne('mod_bigbluebuttonbn_completion_validate', args);
 
 /**
  * Fetch meeting info for the specified meeting.
@@ -127,13 +111,8 @@ export const completionValidate = args => fetchMany([
  * @param {boolean} [updatecache=false]
  * @returns {Promise}
  */
-export const getMeetingInfo = (bigbluebuttonbnid, groupid, updatecache = false) => fetchMany([
-    {
-        methodname: 'mod_bigbluebuttonbn_meeting_info',
-        args: {
-            bigbluebuttonbnid,
-            groupid,
-            updatecache,
-        },
-    }
-])[0];
+export const getMeetingInfo = (bigbluebuttonbnid, groupid, updatecache = false) => fetchOne('mod_bigbluebuttonbn_meeting_info', {
+    bigbluebuttonbnid,
+    groupid,
+    updatecache,
+});

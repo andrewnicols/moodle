@@ -20,22 +20,15 @@
  * @copyright  2020 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-import {call as fetchMany} from 'core/ajax';
+import {fetchOne} from 'core/fetch';
 
 /**
  * Unenrol the user with the specified user enrolmentid ID.
  *
- * @param {Number} userEnrolmentId
+ * @param {Number} ueid The user enrolment ID
  * @return {Promise}
  */
-export const unenrolUser = userEnrolmentId => {
-    return fetchMany([{
-        methodname: 'core_enrol_unenrol_user_enrolment',
-        args: {
-            ueid: userEnrolmentId,
-        },
-    }])[0];
-};
+export const unenrolUser = (ueid) => fetchOne('core_enrol_unenrol_user_enrolment', {ueid});
 
 /**
  * Submit the user enrolment form with the specified form data.
@@ -43,27 +36,8 @@ export const unenrolUser = userEnrolmentId => {
  * @param {String} formdata
  * @return {Promise}
  */
-export const submitUserEnrolmentForm = formdata => {
-    return fetchMany([{
-        methodname: 'core_enrol_submit_user_enrolment_form',
-        args: {
-            formdata,
-        },
-    }])[0];
-};
+export const submitUserEnrolmentForm = (formdata) => fetchOne('core_enrol_submit_user_enrolment_form', {formdata});
 
-export const createNotesForUsers = notes => {
-    return fetchMany([{
-        methodname: 'core_notes_create_notes',
-        args: {
-            notes
-        }
-    }])[0];
-};
+export const createNotesForUsers = (notes) => fetchOne('core_notes_create_notes', {notes});
 
-export const sendMessagesToUsers = messages => {
-    return fetchMany([{
-        methodname: 'core_message_send_instant_messages',
-        args: {messages}
-    }])[0];
-};
+export const sendMessagesToUsers = (messages) => fetchOne('core_message_send_instant_messages', {messages});

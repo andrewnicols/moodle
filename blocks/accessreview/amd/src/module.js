@@ -22,7 +22,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {call as fetchMany} from 'core/ajax';
+import {fetchMany} from 'core/fetch';
 import * as Templates from 'core/templates';
 import {exception as displayError} from 'core/notification';
 
@@ -242,22 +242,22 @@ const registerEventListeners = (courseId, displayFormat) => {
 /**
  * Set the user preference for the toggle value.
  *
- * @param   {Boolean} toggleState
+ * @param   {Boolean} value
  * @returns {Promise}
  */
-const getTogglePreferenceParams = toggleState => {
+const getTogglePreferenceParams = (value) => {
     return {
         methodname: 'core_user_update_user_preferences',
         args: {
             preferences: [{
                 type: 'block_accessreviewtogglestate',
-                value: toggleState,
+                value,
             }],
         }
     };
 };
 
-const setToggleStatePreference = toggleState => fetchMany([getTogglePreferenceParams(toggleState)]);
+const setToggleStatePreference = (toggleState) => fetchMany([getTogglePreferenceParams(toggleState)]);
 
 /**
  * Fetch the review data.

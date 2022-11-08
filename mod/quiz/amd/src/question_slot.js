@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {call as fetchMany} from 'core/ajax';
+import {fetchOne} from 'core/fetch';
 import Notification from 'core/notification';
 
 /**
@@ -30,15 +30,12 @@ import Notification from 'core/notification';
  *
  * @param {Number} slotId
  * @param {Number} newVersion
- * @return {Array} The modified question version
+ * @return {Promise<Array>} The modified question version
  */
-const setQuestionVersion = (slotId, newVersion) => fetchMany([{
-    methodname: 'mod_quiz_set_question_version',
-    args: {
-        slotid: slotId,
-        newversion: newVersion,
-    }
-}])[0];
+const setQuestionVersion = (slotId, newVersion) => fetchOne('mod_quiz_set_question_version', {
+    slotid: slotId,
+    newversion: newVersion,
+});
 
 /**
  * Replace the container with a new version.

@@ -21,7 +21,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {call as fetchMany} from 'core/ajax';
+import {fetchOne} from 'core/fetch';
 import {exception as displayException} from 'core/notification';
 import SortableList from 'core/sortable_list';
 import jQuery from 'jquery';
@@ -52,10 +52,7 @@ const setupSortableLists = (listRoot) => {
  * @param {String} columns String that contains column order.
  * @returns {Promise}
  */
-const setOrder = columns => fetchMany([{
-    methodname: 'qbank_columnsortorder_set_columnbank_order',
-    args: {columns},
-}])[0];
+const setOrder = (columns) => fetchOne('qbank_columnsortorder_set_columnbank_order', {columns});
 
 /**
  * Gets the newly reordered columns to display in the question bank view.

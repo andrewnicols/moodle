@@ -22,7 +22,7 @@
  */
 
 import 'core/inplace_editable';
-import {call as fetchMany} from 'core/ajax';
+import {fetchMany, fetchOne} from 'core/fetch';
 import {
     get_string as getString,
     get_strings as getStrings,
@@ -62,8 +62,10 @@ const confirmDelete = (id, type, component, area, itemid) => {
                 },
                 {methodname: 'core_customfield_reload_template', args: {component, area, itemid}}
             ])[1]
-            .then(response => Templates.render('core_customfield/list', response))
-            .then((html, js) => Templates.replaceNode(jQuery('[data-region="list-page"]'), html, js))
+            .then((response) => Templates.renderForPromise('core_customfield/list', response))
+            .then(({html, js}) => {
+                return Templates.replaceNode(jQuery('[data-region="list-page"]'), html, js);
+            })
             .then(pendingDeletePromise.resolve)
             .catch(Notification.exception);
         });
@@ -84,11 +86,13 @@ const createNewCategory = (component, area, itemid) => {
     const pendingPromise = new Pending('core_customfield/form:createNewCategory');
     const promises = fetchMany([
         {methodname: 'core_customfield_create_category', args: {component, area, itemid}},
-        {methodname: 'core_customfield_reload_template', args: {component, area, itemid}}
+        {methodname: 'core_customfield_reload_template', args: {component, area, itemid}},
     ]);
 
-    promises[1].then(response => Templates.render('core_customfield/list', response))
-    .then((html, js) => Templates.replaceNode(jQuery('[data-region="list-page"]'), html, js))
+    promises[1].then((response) => Templates.renderForPromise('core_customfield/list', response))
+    .then(({html, js}) => {
+        return Templates.replaceNode(jQuery('[data-region="list-page"]'), html, js);
+    })
     .then(() => pendingPromise.resolve())
     .catch(Notification.exception);
 };
@@ -119,11 +123,12 @@ const createNewField = (element, component, area, itemid) => {
 
     form.addEventListener(form.events.FORM_SUBMITTED, () => {
         const pendingCreatedPromise = new Pending('core_customfield/form:createdNewField');
-        const promises = fetchMany([
-            {methodname: 'core_customfield_reload_template', args: {component: component, area: area, itemid: itemid}}
-        ]);
-
-        promises[0].then(response => Templates.render('core_customfield/list', response))
+        fetchOne('core_customfield_reload_template', {
+            component,
+            area,
+            itemid,
+        })
+        .then(response => Templates.render('core_customfield/list', response))
         .then((html, js) => Templates.replaceNode(jQuery('[data-region="list-page"]'), html, js))
         .then(() => pendingCreatedPromise.resolve())
         .catch(() => window.location.reload());
@@ -158,11 +163,12 @@ const editField = (element, component, area, itemid) => {
 
     form.addEventListener(form.events.FORM_SUBMITTED, () => {
         const pendingCreatedPromise = new Pending('core_customfield/form:createdNewField');
-        const promises = fetchMany([
-            {methodname: 'core_customfield_reload_template', args: {component: component, area: area, itemid: itemid}}
-        ]);
-
-        promises[0].then(response => Templates.render('core_customfield/list', response))
+        fetchOne('core_customfield_reload_template', {
+            component,
+            area,
+            itemid,
+        })
+        .then((response) => Templates.render('core_customfield/list', response))
         .then((html, js) => Templates.replaceNode(jQuery('[data-region="list-page"]'), html, js))
         .then(() => pendingCreatedPromise.resolve())
         .catch(() => window.location.reload());
@@ -198,14 +204,10 @@ const setupSortableLists = rootNode => {
     jQuery('[data-category-id]').on(SortableList.EVENTS.DROP, (evt, info) => {
         if (info.positionChanged) {
             const pendingPromise = new Pending('core_customfield/form:categoryid:on:sortablelist-drop');
-            fetchMany([{
-                methodname: 'core_customfield_move_category',
-                args: {
-                    id: info.element.data('category-id'),
-                    beforeid: info.targetNextElement.data('category-id')
-                }
-
-            }])[0]
+            fetchOne('core_customfield_move_category', {
+                id: info.element.data('category-id'),
+                beforeid: info.targetNextElement.data('category-id')
+            })
             .then(pendingPromise.resolve)
             .catch(Notification.exception);
         }
@@ -233,14 +235,11 @@ const setupSortableLists = rootNode => {
     jQuery('[data-field-name]').on(SortableList.EVENTS.DROP, (evt, info) => {
         if (info.positionChanged) {
             const pendingPromise = new Pending('core_customfield/form:fieldname:on:sortablelist-drop');
-            fetchMany([{
-                methodname: 'core_customfield_move_field',
-                args: {
-                    id: info.element.data('field-id'),
-                    beforeid: info.targetNextElement.data('field-id'),
-                    categoryid: Number(info.targetList.closest('[data-category-id]').attr('data-category-id'))
-                },
-            }])[0]
+            fetchOne('core_customfield_move_field', {
+                id: info.element.data('field-id'),
+                beforeid: info.targetNextElement.data('field-id'),
+                categoryid: Number(info.targetList.closest('[data-category-id]').attr('data-category-id'))
+            })
             .then(pendingPromise.resolve)
             .catch(Notification.exception);
         }
