@@ -90,7 +90,6 @@ class core_component {
     );
     /** @var array associative array of PRS-4 namespaces and corresponding paths. */
     protected static $psr4namespaces = array(
-        'MaxMind' => 'lib/maxmind/MaxMind',
         'GeoIp2' => 'lib/maxmind/GeoIp2',
         'Sabberworm\\CSS' => 'lib/php-css-parser',
         'MoodleHQ\\RTLCSS' => 'lib/rtlcss',
@@ -108,7 +107,6 @@ class core_component {
         'ZipStream' => 'lib/zipstream/src/',
         'MyCLabs\\Enum' => 'lib/php-enum/src',
         'Psr\\Http\\Message' => 'lib/http-message/src',
-        'PhpXmlRpc' => 'lib/phpxmlrpc',
     );
 
     /**
@@ -235,6 +233,8 @@ class core_component {
             self::fill_all_caches();
             return;
         }
+
+        require_once("{$CFG->systemroot}/vendor/autoload.php");
 
         if (!empty($CFG->alternative_component_cache)) {
             // Hack for heavily clustered sites that want to manage component cache invalidation manually.

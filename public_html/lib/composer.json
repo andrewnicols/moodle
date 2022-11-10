@@ -1,0 +1,7 @@
+{
+    "require": {
+        "maxmind-db/reader": "~1.0",
+        "michelf/php-markdown": "*",
+        "phpxmlrpc/phpxmlrpc": "*"
+    }
+}

@@ -40,7 +40,8 @@
         "ext-intl": "*",
         "ext-json": "*",
         "ext-hash": "*",
-        "ext-fileinfo": "*"
+        "ext-fileinfo": "*",
+        "wikimedia/composer-merge-plugin": "dev-master"
     },
     "suggest": {
         "ext-mysqli": "Needed when Moodle uses MySQL or MariaDB database.",
@@ -51,5 +52,59 @@
         "ext-soap": "Enabling SOAP PHP extension is useful for web services and some plugins.",
         "ext-sodium": "Enabling Sodium PHP extension is recommended, it is used by Moodle encryption API.",
         "ext-exif": "Enabling Exif PHP extension is recommended, it is used by Moodle to parse image meta data."
+    },
+    "config": {
+        "allow-plugins": {
+            "wikimedia/composer-merge-plugin": true
+        }
+    },
+    "extra": {
+        "merge-plugin": {
+            "include": [
+                "public_html/lib/composer.json",
+                "public_html/lib/antivirus/*/composer.json",
+                "public_html/availability/condition/*/composer.json",
+                "public_html/question/type/*/composer.json",
+                "public_html/mod/*/composer.json",
+                "public_html/auth/*/composer.json",
+                "public_html/calendar/type/*/composer.json",
+                "public_html/customfield/field/*/composer.json",
+                "public_html/enrol/*/composer.json",
+                "public_html/message/output/*/composer.json",
+                "public_html/blocks/*/composer.json",
+                "public_html/media/player/*/composer.json",
+                "public_html/filter/*/composer.json",
+                "public_html/lib/editor/*/composer.json",
+                "public_html/course/format/*/composer.json",
+                "public_html/dataformat/*/composer.json",
+                "public_html/user/profile/field/*/composer.json",
+                "public_html/report/*/composer.json",
+                "public_html/course/report/*/composer.json",
+                "public_html/grade/export/*/composer.json",
+                "public_html/grade/import/*/composer.json",
+                "public_html/grade/report/*/composer.json",
+                "public_html/grade/grading/form/*/composer.json",
+                "public_html/lib/mlbackend/*/composer.json",
+                "public_html/mnet/service/*/composer.json",
+                "public_html/webservice/*/composer.json",
+                "public_html/repository/*/composer.json",
+                "public_html/portfolio/*/composer.json",
+                "public_html/search/engine/*/composer.json",
+                "public_html/question/bank/*/composer.json",
+                "public_html/question/behaviour/*/composer.json",
+                "public_html/question/format/*/composer.json",
+                "public_html/plagiarism/*/composer.json",
+                "public_html/admin/tool/*/composer.json",
+                "public_html/cache/stores/*/composer.json",
+                "public_html/cache/locks/*/composer.json",
+                "public_html/files/converter/*/composer.json",
+                "public_html/contentbank/contenttype/*/composer.json",
+                "public_html/theme/*/composer.json",
+                "public_html/local/*/composer.json",
+                "public_html/h5p/h5plib/*/composer.json",
+                "public_html/payment/gateway/*/composer.json"
+
+            ]
+        }
     }
 }
