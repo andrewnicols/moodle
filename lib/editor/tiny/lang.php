@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace editor_tiny;
+
 // Disable moodle specific debug messages and any errors in output,
 // comment out when debugging or better look into error log!
 define('NO_DEBUG_DISPLAY', true);
@@ -32,7 +34,13 @@ define('ABORT_AFTER_CONFIG', true);
 // This stops immediately at the beginning of lib/setup.php.
 require('../../../config.php');
 
-$loader = new class() {
+/**
+ * An anonymous class to handle loading and serving lang files for TinyMCE.
+ *
+ * @copyright  2021 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class lang {
     /** @var string The language code to load */
     protected $lang;
 
@@ -42,6 +50,9 @@ $loader = new class() {
     /** @var bool Whether Moodle is fully loaded or not */
     protected $fullyloaded = false;
 
+    /**
+     * Constructor to load and serve the langfile.
+     */
     public function __construct() {
         $this->parse_file_information_from_url();
         $this->serve_file();
@@ -332,3 +343,5 @@ $loader = new class() {
         }
     }
 };
+
+$loader = new lang();
