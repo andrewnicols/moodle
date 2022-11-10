@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tiny_accessibilitychecker\privacy;
+
 /**
  * Privacy Subsystem implementation for the accessibilitychecker plugin for TinyMCE.
  *
@@ -21,10 +23,12 @@
  * @copyright 2022 Andrew Lyons <andrew@nicols.co.uk>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace tiny_accessibilitychecker\privacy;
-
 class provider implements \core_privacy\local\metadata\null_provider {
+    /**
+     * Return the langstring identifier for the reason that no privacy provider needs to be implemented for this plugin.
+     *
+     * @return string
+     */
     public static function get_reason(): string {
         return 'privacy:metadata';
     }

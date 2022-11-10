@@ -15,13 +15,23 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template tiny_media/insert_image_modal
+    @template tiny_accessibilitychecker/warning_contenet
 
-    Insert image template.
+    Display a content warning message
 
     Example context (json):
     {
-
+        "warnings": [
+            {
+                "description": "This is a warning message",
+                "nodeData": [{
+                    "text": "Text of content",
+                    "src": "https://example.com/image.png",
+                    "nodeName": "IMG",
+                    "nodeIndex": 0
+                }]
+            }
+        ]
     }
 }}
 <div class="warning-desc">
@@ -35,7 +45,7 @@
                             {{text}}
                         {{/text}}
                         {{#src}}
-                            <img src="{{src}}" width="100"/>
+                            <img alt="" src="{{src}}" width="100"/>
                         {{/src}}
                         - <a href="#" data-action="highlightfault" data-node-name="{{nodeName}}" data-node-index="{{nodeIndex}}">{{#str}} viewissue, tiny_accessibilitychecker {{/str}}</a>
                     </li>
