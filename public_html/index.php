@@ -61,6 +61,7 @@ if (!empty($CFG->maintenance_enabled) and !$hasmaintenanceaccess) {
 
 $hassiteconfig = has_capability('moodle/site:config', context_system::instance());
 
+xdebug_break();
 if ($hassiteconfig && moodle_needs_upgrading()) {
     redirect($CFG->wwwroot .'/'. $CFG->admin .'/index.php');
 }

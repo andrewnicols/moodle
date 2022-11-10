@@ -62,6 +62,7 @@ class filter_mediaplugin extends moodle_text_filter {
     }
 
     public function filter($text, array $options = array()) {
+        xdebug_break();
         global $CFG, $PAGE;
 
         if (!is_string($text) or empty($text)) {

@@ -2856,6 +2856,7 @@ function notice ($message, $link='', $course=null) {
  * @throws moodle_exception
  */
 function redirect($url, $message='', $delay=null, $messagetype = \core\output\notification::NOTIFY_INFO) {
+    xdebug_break();
     global $OUTPUT, $PAGE, $CFG;
 
     if (CLI_SCRIPT or AJAX_SCRIPT) {

@@ -122,6 +122,7 @@ class filter_manager {
         $filters = filter_get_active_in_context($context);
         $this->textfilters[$context->id] = array();
         $this->stringfilters[$context->id] = array();
+        xdebug_break();
         foreach ($filters as $filtername => $localconfig) {
             $filter = $this->make_filter_object($filtername, $context, $localconfig);
             if (is_null($filter)) {
@@ -145,7 +146,7 @@ class filter_manager {
      */
     protected function make_filter_object($filtername, $context, $localconfig) {
         global $CFG;
-        $path = $CFG->dirroot .'/filter/'. $filtername .'/filter.php';
+        $path = \core_component::get_plugin_directory('filter', $filtername) . '/filter.php';
         if (!is_readable($path)) {
             return null;
         }
@@ -169,6 +170,7 @@ class filter_manager {
      */
     protected function apply_filter_chain($text, $filterchain, array $options = array(),
             array $skipfilters = null) {
+                xdebug_break();
         foreach ($filterchain as $filtername => $filter) {
             if ($skipfilters !== null && in_array($filtername, $skipfilters)) {
                 continue;

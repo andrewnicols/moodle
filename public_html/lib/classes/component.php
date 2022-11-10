@@ -397,6 +397,7 @@ $cache = '.var_export($cache, true).';
      * Fill all caches.
      */
     protected static function fill_all_caches() {
+        global $CFG;
         self::$subsystems = self::fetch_subsystems();
 
         list(self::$plugintypes, self::$parents, self::$subplugins) = self::fetch_plugintypes();
@@ -404,6 +405,24 @@ $cache = '.var_export($cache, true).';
         self::$plugins = array();
         foreach (self::$plugintypes as $type => $fulldir) {
             self::$plugins[$type] = self::fetch_plugins($type, $fulldir);
+        }
+
+        // Check each possible directory type.
+        $addondirs = [
+            "{$CFG->systemroot}/plugins",
+        ];
+
+        foreach ($addondirs as $addondir) {
+            $items = new \DirectoryIterator($addondir);
+            foreach ($items as $item) {
+                if ($item->isDot() or !$item->isDir()) {
+                    continue;
+                }
+
+                [$plugintype, $pluginname] = explode('_', $item->getFilename(), 2);
+
+                self::$plugins[$plugintype][$pluginname] = $item->getPathname();
+            }
         }
 
         self::fill_classmap_cache();
@@ -1129,6 +1148,8 @@ $cache = '.var_export($cache, true).';
             $usecache = true;
         }
 
+        $plugins = [];
+
         // Now all plugins.
         $plugintypes = core_component::get_plugin_types();
         foreach ($plugintypes as $type => $typedir) {
@@ -1137,14 +1158,39 @@ $cache = '.var_export($cache, true).';
             } else {
                 $plugs = self::fetch_plugins($type, $typedir);
             }
-            foreach ($plugs as $plug => $fullplug) {
-                $plugin = new stdClass();
-                $plugin->version = null;
-                $module = $plugin;
-                include($fullplug.'/version.php');
-                $versions[$type.'_'.$plug] = $plugin->version;
+
+            foreach ($plugs as $pluginname => $path) {
+                $plugins["{$type}_{$pluginname}"] = $path;
             }
         }
+
+        // Check each possible directory type.
+        $addondirs = [
+            "{$CFG->systemroot}/plugins",
+        ];
+
+        foreach ($addondirs as $addondir) {
+            $items = new \DirectoryIterator($addondir);
+            foreach ($items as $item) {
+                if ($item->isDot() or !$item->isDir()) {
+                    continue;
+                }
+
+                $pluginss[$item->getFilename()] = $item->getPathname();
+            }
+        }
+
+        foreach ($pluginss as $pluginname => $path) {
+            $plugin = (object) [
+                'version' => null,
+            ];
+
+            if (file_exists($path . '/version.php')) {
+                include($path . '/version.php');
+                $versions[$pluginname] = $plugin->version;
+            }
+        }
+
 
         return $versions;
     }
