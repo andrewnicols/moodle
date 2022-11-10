@@ -77,17 +77,18 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
      * @param BeforeScenarioScope $scope The Behat Scope
      */
     public function set_default_editor_flag(BeforeScenarioScope $scope): void {
-        // TinyMCE is a JavaScript editor so require JS here.
-        $this->require_javascript();
-
         // This only applies to a scenario which matches the editor_tiny, or an tiny subplugin.
         $callback = function (string $tag): bool {
             return $tag === 'editor_tiny' || substr($tag, 0, 5) === 'tiny_';
         };
 
         if (!self::scope_tags_match($scope, $callback)) {
+            // This scope does not require TinyMCE. Exit now.
             return;
         }
+
+        // TinyMCE is a JavaScript editor so require JS here.
+        $this->require_javascript();
 
         $this->execute('behat_general::the_default_editor_is_set_to', ['tiny']);
     }
