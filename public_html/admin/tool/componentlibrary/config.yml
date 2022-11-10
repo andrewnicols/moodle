@@ -51,13 +51,13 @@ blackfriday:
 
 relativeURLs:           true
 
-publishDir:             "./admin/tool/componentlibrary/docs"
-archetypeDir:           "./admin/tool/componentlibrary/hugo/archetypes"
-assetDir:               "./admin/tool/componentlibrary/hugo/assets"
-contentDir:             "./admin/tool/componentlibrary/content"
-dataDir:                "./admin/tool/componentlibrary/hugo/site/data"
-layoutDir:              "./admin/tool/componentlibrary/hugo/site/layouts"
-staticDir:              "./admin/tool/componentlibrary/content/static"
+publishDir:             "./public_html/admin/tool/componentlibrary/docs"
+archetypeDir:           "./public_html/admin/tool/componentlibrary/hugo/archetypes"
+assetDir:               "./public_html/admin/tool/componentlibrary/hugo/assets"
+contentDir:             "./public_html/admin/tool/componentlibrary/content"
+dataDir:                "./public_html/admin/tool/componentlibrary/hugo/site/data"
+layoutDir:              "./public_html/admin/tool/componentlibrary/hugo/site/layouts"
+staticDir:              "./public_html/admin/tool/componentlibrary/content/static"
 
 params:
   moodleroot:           "MOODLEROOT"
