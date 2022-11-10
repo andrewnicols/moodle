@@ -419,7 +419,12 @@ $cache = '.var_export($cache, true).';
                     continue;
                 }
 
-                [$plugintype, $pluginname] = explode('_', $item->getFilename(), 2);
+                $filename = $item->getFilename();
+                if (strpos($filename, '_') === -1) {
+                    continue;
+                }
+
+                [$plugintype, $pluginname] = explode('_', $filename, 2);
 
                 self::$plugins[$plugintype][$pluginname] = $item->getPathname();
             }

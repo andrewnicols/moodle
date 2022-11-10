@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
 
-    require_once($CFG->dirroot.'/filter/tex/lib.php');
+    require_once($CFG->systemroot.'/plugins/filter_tex/lib.php');
 
     $items = array();
     $items[] = new admin_setting_heading('filter_tex/latexheading', get_string('latexsettings', 'filter_tex'), '');
