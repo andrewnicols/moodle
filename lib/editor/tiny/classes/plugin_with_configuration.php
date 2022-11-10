@@ -25,7 +25,6 @@ use context;
  * @copyright  2021 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 interface plugin_with_configuration {
     /**
      * Get a list of the menu items provided by this plugin.

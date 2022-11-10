@@ -29,8 +29,9 @@ use context;
  * - plugin_with_configuration: to add configuration to the TinyMCE editor
  *
  * @package editor_tiny
+ * @copyright  2021 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 abstract class plugin {
     /**
      * Whether the plugin is enabled

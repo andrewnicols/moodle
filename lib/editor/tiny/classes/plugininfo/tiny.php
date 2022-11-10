@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace editor_tiny\plugininfo;
+
+use moodle_url;
+
 /**
  * Subplugin info class.
  *
@@ -21,11 +25,6 @@
  * @copyright   2022 Andrew Lyons <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace editor_tiny\plugininfo;
-
-use moodle_url;
-
 class tiny extends \core\plugininfo\base {
 
     /**
@@ -52,6 +51,10 @@ class tiny extends \core\plugininfo\base {
      * Include the settings.php file from subplugins if provided.
      *
      * This is a copy of very similar implementations from various other subplugin areas.
+     *
+     * @param \part_of_admin_tree $adminroot
+     * @param string $parentnodename
+     * @param bool $hassiteconfig whether the current user has moodle/site:config capability
      */
     public function load_settings(\part_of_admin_tree $adminroot, $parentnodename, $hassiteconfig): void {
         // In case settings.php wants to refer to them.

@@ -23,7 +23,6 @@ namespace editor_tiny;
  * @copyright  2021 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class editor extends \texteditor {
 
     /** @var manager The Tiny Manager instace */
@@ -63,7 +62,7 @@ class editor extends \texteditor {
         $inlinejs = <<<EOF
             M.util.js_pending('editor_tiny/editor:defaultConfiguration');
             require(['editor_tiny/editor'], (Tiny) => {
-                Tiny.configureDefaultEditor(${config});
+                Tiny.configureDefaultEditor({$config});
                 M.util.js_complete('editor_tiny/editor:defaultConfiguration');
             });
         EOF;
