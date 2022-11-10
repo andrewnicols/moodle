@@ -67,9 +67,11 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
     /**
      * Set Tiny as default editor before executing Tiny tests.
      *
-     * This step is required to ensure that TinyMCE is set as the current default editor as it may not always be the default editor.
+     * This step is required to ensure that TinyMCE is set as the current default editor as it may
+     * not always be the default editor.
      *
-     * Any Scenario, or Feature, which has the `editor_tiny` tag, or any `tiny_*` tag will have this step executed before the Scenario.
+     * Any Scenario, or Feature, which has the `editor_tiny` tag, or any `tiny_*` tag will have
+     * this step executed before the Scenario.
      *
      * @BeforeScenario
      * @param BeforeScenarioScope $scope The Behat Scope
