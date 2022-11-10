@@ -16,7 +16,7 @@
     },
     "autoload-dev": {
         "psr-0": {
-            "Moodle\\BehatExtension": "lib/behat/extension/"
+            "Moodle\\BehatExtension": "public_html/lib/behat/extension/"
         }
     },
     "minimum-stability": "dev",
