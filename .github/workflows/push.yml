@@ -104,9 +104,9 @@ jobs:
         run: |
           echo "pathtophp=$(which php)" >> $GITHUB_ENV # Inject installed pathtophp to env. The template config needs it.
           cp .github/workflows/config-template.php config.php
-          mkdir ../moodledata
+          mkdir moodledata
           sudo locale-gen en_AU.UTF-8
-          php admin/tool/phpunit/cli/init.php --no-composer-self-update
+          php public_html/admin/tool/phpunit/cli/init.php --no-composer-self-update
 
       - name: Running PHPUnit tests
         env:

@@ -40,7 +40,7 @@ $CFG->dboptions = ['dbcollation' => 'utf8mb4_bin'];
 
 $host = 'localhost';
 $CFG->wwwroot   = "http://{$host}";
-$CFG->dataroot  = realpath(dirname(__DIR__)) . '/moodledata';
+$CFG->dataroot  = realpath(__DIR__) . '/moodledata';
 $CFG->admin     = 'admin';
 $CFG->directorypermissions = 0777;
 
@@ -67,5 +67,3 @@ define('TEST_CACHESTORE_REDIS_TESTSERVERS', 'localhost');
 // TODO: add others (solr, mongodb, memcached, ldap...).
 
 // Too much for now: define('PHPUNIT_LONGTEST', true); // Only leaves a few tests out and they are run later by CI.
-
-require_once(__DIR__ . '/lib/setup.php');
