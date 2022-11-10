@@ -71,7 +71,7 @@ class course_delete_modules_test extends \advanced_testcase {
      * Test to have a message in the exception.
      */
     public function test_delete_module_exception() {
-        global $DB;
+        global $CFG, $DB;
         $this->resetAfterTest();
 
         // Generate test data.
@@ -104,7 +104,7 @@ class course_delete_modules_test extends \advanced_testcase {
             $this->assertStringContainsString('course/lib.php', $errormsg);
             $this->assertStringContainsString('mod/TestModuleToDelete/lib.php is missing', $errormsg);
             // Get line numbers array which contains the exception name.
-            $lines = array_keys(preg_grep("/cannotdeletemodulemissinglib/", file('course/lib.php')));
+            $lines = array_keys(preg_grep("/cannotdeletemodulemissinglib/", file("{$CFG->dirroot}/course/lib.php")));
             // Increase 1 to keys to convert to actual line number.
             $lines = array_map(function($key) {
                 return ++$key;
