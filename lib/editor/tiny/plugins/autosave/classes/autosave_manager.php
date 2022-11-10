@@ -49,7 +49,7 @@ class autosave_manager {
      * @param string $pagehash The page hash
      * @param string $pageinstance The page instance
      * @param string $elementid The element id
-     * @param null|stdClass The user object for the owner of the autosave
+     * @param null|stdClass $user The user object for the owner of the autosave
      */
     public function __construct(
         int $contextid,

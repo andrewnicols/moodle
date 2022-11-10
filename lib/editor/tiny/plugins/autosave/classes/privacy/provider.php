@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Privacy Subsystem implementation for tiny_autosave.
- *
- * @package    tiny_autosave
- * @copyright  2022 Andrew Nicols <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tiny_autosave\privacy;
 
 use core_privacy\local\request\approved_contextlist;
@@ -31,13 +23,23 @@ use core_privacy\local\request\userlist;
 use core_privacy\local\request\approved_userlist;
 use stdClass;
 
+/**
+ * Privacy Subsystem implementation for tiny_autosave.
+ *
+ * @package    tiny_autosave
+ * @copyright  2022 Andrew Nicols <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class provider implements
     // The tiny editor stores user provided data.
     \core_privacy\local\metadata\provider,
+
     // The tiny editor provides data directly to core.
     \core_privacy\local\request\plugin\provider,
+
     // The tiny editor is capable of determining which users have data within it.
     \core_privacy\local\request\core_userlist_provider {
+
     /**
      * Returns information about how tiny_autosave stores its data.
      *

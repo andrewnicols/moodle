@@ -27,7 +27,6 @@ use editor_tiny\plugin_with_configuration;
  * @copyright  2021 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class plugininfo extends plugin implements plugin_with_configuration {
 
     public static function get_plugin_configuration_for_context(
