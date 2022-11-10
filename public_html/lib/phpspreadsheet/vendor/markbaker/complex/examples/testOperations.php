@@ -3,7 +3,7 @@
 use Complex\Complex as Complex;
 use Complex\Operations;
 
-include(__DIR__ . '/../vendor/autoload.php');
+include(__DIR__ . '/../../vendor/autoload.php');
 
 $values = [
     new Complex(123),

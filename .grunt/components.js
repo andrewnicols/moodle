@@ -42,11 +42,12 @@ const fetchComponentData = () => {
         componentData.pathList = [];
 
         // Fetch the component definiitions from the distributed JSON file.
-        const components = JSON.parse(fs.readFileSync(`${gruntFilePath}/lib/components.json`));
+        const components = JSON.parse(fs.readFileSync(`${gruntFilePath}/public_html/lib/components.json`));
+        const publicRoot = path.join(process.cwd(), 'public_html');
 
         // Build the list of moodle subsystems.
         componentData.subsystems.lib = 'core';
-        componentData.pathList.push(process.cwd() + path.sep + 'lib');
+        componentData.pathList.push(path.join(publicRoot, 'lib'));
         for (const [component, thisPath] of Object.entries(components.subsystems)) {
             if (thisPath) {
                 // Prefix "core_" to the front of the subsystems.

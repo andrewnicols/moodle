@@ -34,6 +34,7 @@
  * Some typical settings in the $CFG global:
  *  - $CFG->wwwroot  - Path to moodle index directory in url format.
  *  - $CFG->dataroot - Path to moodle data files directory on server's filesystem.
+ *  - $CFG->systemroot - Path to moodle's root folder on server's filesystem.
  *  - $CFG->dirroot  - Path to moodle's library folder on server's filesystem.
  *  - $CFG->libdir   - Path to moodle's library folder on server's filesystem.
  *  - $CFG->backuptempdir  - Path to moodle's backup temp file directory on server's filesystem.
@@ -60,6 +61,7 @@ if (!isset($CFG)) {
 // We can detect real dirroot path reliably since PHP 4.0.2,
 // it can not be anything else, there is no point in having this in config.php
 $CFG->dirroot = dirname(__DIR__);
+$CFG->systemroot = dirname($CFG->dirroot);
 
 // File permissions on created directories in the $CFG->dataroot
 if (!isset($CFG->directorypermissions)) {

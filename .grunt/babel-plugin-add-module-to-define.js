@@ -53,7 +53,7 @@ module.exports = ({template, types}) => {
      */
     function getModuleNameFromFileName(searchFileName) {
         searchFileName = fs.realpathSync(searchFileName);
-        const relativeFileName = searchFileName.replace(`${cwd}${path.sep}`, '').replace(/\\/g, '/');
+        const relativeFileName = searchFileName.replace(`${cwd}${path.sep}public_html${path.sep}`, '').replace(/\\/g, '/');
         const [componentPath, file] = relativeFileName.split('/amd/src/');
         const fileName = file.replace('.js', '');
 
