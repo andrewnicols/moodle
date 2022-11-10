@@ -22,6 +22,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace editor_tiny;
+
 // Disable moodle specific debug messages and any errors in output.
 define('NO_DEBUG_DISPLAY', true);
 
@@ -31,7 +33,13 @@ define('ABORT_AFTER_CONFIG', true);
 // This stops immediately at the beginning of lib/setup.php.
 require('../../../config.php');
 
-$loader = new class() {
+/**
+ * An anonymous class to handle loading and serving TinyMCE JavaScript.
+ *
+ * @copyright  2021 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class loader {
     /** @var string The filepath requested */
     protected $filepath;
 
@@ -318,4 +326,6 @@ $loader = new class() {
         header('HTTP/1.0 404 not found');
         die('TinyMCE file was not found, sorry.');
     }
-};
+}
+
+new loader();
