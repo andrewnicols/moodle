@@ -48,22 +48,13 @@ define(['jquery', 'tool_lp/competencypicker', 'core/ajax', 'core/notification', 
             }
         }
 
-        $.when.apply($, Ajax.call(requests, false)).then(function() {
-            var i = 0,
-                competencies = [];
-
-            for (i = 0; i < arguments.length; i++) {
-                competencies[i] = arguments[i];
-            }
-            var context = {
-                competencies: competencies
-            };
-
-            return Templates.render('tool_lp/form_competency_list', context);
-        }).then(function(html, js) {
-            Templates.replaceNode($('[data-region="competencies"]'), html, js);
-            return true;
-        }).fail(Notification.exception);
+        $.when.apply($, Ajax.call(requests))
+        .then((...competencies) => ({
+            competencies,
+        }))
+        .then((context) => Templates.render('tool_lp/form_competency_list', context))
+        .then((html, js) => Templates.replaceNode($('[data-region="competencies"]'), html, js))
+        .catch(Notification.exception);
 
         return true;
     };
