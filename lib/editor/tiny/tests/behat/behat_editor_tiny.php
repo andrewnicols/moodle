@@ -319,7 +319,7 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
     }
 
     /**
-     * @When /^I select the "(?P<textlocator_string>(?:[^"]|\\")*)" element in position "(?P<position_int>(?:[^"]|\\")*)" of the "(?P<locator_string>(?:[^"]|\\")*)" TinyMCE editor$/
+     * @When /^I select the "(?P<textlocator_string>(?:[^"]|\\")*)" element in position "(?P<position_int>(?:[^"]|\\")*)" of the "(?P<locator_string>(?:[^"]|\\")*)" TinyMCE editor $/
      * @param string $textlocator The type of element to select (for example `p` or `span`)
      * @param int $position The zero-indexed position
      * @param string $locator The editor to select within
@@ -403,5 +403,56 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
         }
 
         return $filepath;
+    }
+
+    /**
+     * @Given /^I select the "(?P<locator_string>(?:[^"]|\\")*)" "(?P<type_string>(?:[^"]|\\")*)" in the "(?P<editorlocator_string>(?:[^"]|\\")*)" TinyMCE editor$/
+     */
+    public function select_in_editor(string $locator, string $type, string $editorlocator): void {
+        $this->require_tiny_tags();
+
+        $editor = $this->get_textarea_for_locator($editorlocator);
+        $editorid = $editor->getAttribute('id');
+
+        // Get the iframe name for this editor.
+        $iframename = $this->get_editor_iframe_name($editorlocator);
+
+        // Switch to it.
+        $this->execute('behat_general::switch_to_iframe', [$iframename]);
+
+        // Find the element.
+        $element = $this->find($type, $locator);
+        $xpath = $element->getXpath();
+
+        // Switch back to the main window.
+        $this->execute('behat_general::switch_to_the_main_frame', []);
+
+        // Select the Node using the xpath.
+        // phpcs:disable
+        $js = <<<EOF
+        return new Promise((resolve, reject) => {
+            require(['editor_tiny/editor'], (editor) => {
+                const instance = editor.getInstanceForElementId('${editorid}');
+                if (!instance) {
+                    reject("Instance '${editorid}' not found");
+                }
+
+                const editorDocument = instance.getDoc();
+                const element = editorDocument.evaluate(
+                    "${xpath}",
+                    editorDocument,
+                    null,
+                    XPathResult.FIRST_ORDERED_NODE_TYPE,
+                    null
+                ).singleNodeValue;
+
+                instance.selection.select(element);
+                resolve(element);
+            });
+        });
+    EOF;
+        // phpcs:enable
+
+        $this->evaluate_script($js);
     }
 }
