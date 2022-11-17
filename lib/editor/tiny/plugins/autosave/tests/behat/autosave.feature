@@ -1,11 +1,11 @@
 @editor @editor_tiny @_file_upload
-Feature: Atto Autosave
-  To reduce frustration, atto should save drafts of my work.
+Feature: Tiny editor autosave
+  To reduce frustration, Tiny editor should save drafts of my work.
 
   Background:
     Given the following "courses" exist:
-      | fullname | shortname | category | groupmode |
-      | Course 1 | C1        | 0        | 1         |
+      | fullname | shortname | category | groupmode | description |
+      | Course 1 | C1        | 0        | 1         |             |
     And the following "users" exist:
       | username | firstname | lastname | email |
       | teacher1 | Teacher | 1 | teacher1@example.com |
@@ -17,22 +17,26 @@ Feature: Atto Autosave
     And the following "blocks" exist:
       | blockname     | contextlevel | reference | pagetypepattern | defaultregion |
       | private_files | System       | 1         | my-index        | side-post     |
+    And I log in as "admin"
+    And I am on "Course 1" course homepage
+    And I navigate to "Settings" in current page administration
+    And I set the field with xpath "//select[@name='summary_editor[format]']" to "1"
+    And I click on "Save and display" "button"
+    And I log out
 
   @javascript
   Scenario: Restore a draft
     Given I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I navigate to "Settings" in current page administration
-    And I set the field "Course summary" to "This is my draft"
+    And I open my profile in edit mode
+    And I set the field "Description" to "This is my draft"
     # Wait for the autosave
     And I wait "5" seconds
     And I log out
     When I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I navigate to "Settings" in current page administration
+    And I open my profile in edit mode
     # Wait for the autorestore
     And I wait "2" seconds
-    Then I should see "This is my draft"
+    Then the field "Description" matches value "This is my draft"
 
   @javascript
   Scenario: Do not restore a draft if files have been modified
