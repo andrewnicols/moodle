@@ -7,11 +7,9 @@ Feature: Atto accessibility checker
     Given I log in as "admin"
     And I open my profile in edit mode
     And I set the field "Description" to "<p>Some plain text</p><img src='/broken-image' width='1' height='1'/><p>Some more text</p>"
-    #And I pause
-    # Accessibility checker is under Tools.
-    #When I click on "Show more buttons" "button"
-    #And I click on "Accessibility checker" "button"
+    And I pause
     And I click on the "Tools > Accessibility checker" menu item for the "Description" TinyMCE editor
+    And I pause
     Then I should see "Images require alternative text."
     And I follow "/broken-image"
     And I wait "2" seconds
