@@ -27,9 +27,12 @@ define(
         'core/ajax',
         'core/templates',
         'core/notification',
+        'core/copy_to_clipboard',
         'core/str',
         'core/url',
         'core/yui',
+        'core/modal',
+        'core/modal_registry',
         'core/modal_factory',
         'core/modal_events',
         'core/key_codes',
@@ -43,9 +46,12 @@ define(
         ajax,
         templates,
         notification,
+        copyToCliboard,
         str,
         url,
         Y,
+        Modal,
+        ModalRegistry,
         ModalFactory,
         ModalEvents,
         KeyCodes,
@@ -963,6 +969,32 @@ define(
                     var actionItem = $(this),
                         sectionElement = actionItem.closest(SELECTOR.SECTIONLI),
                         sectionId = actionItem.closest(SELECTOR.SECTIONACTIONMENU).attr('data-sectionid');
+
+                    if (actionItem.attr('data-action') === 'permalink') {
+                        e.preventDefault();
+                        const CopyModal = class extends Modal {
+                            static TYPE = 'core/permalink';
+                            static TEMPLATE = 'core/permalink_modal';
+                        };
+
+                        if (!ModalRegistry.get(CopyModal.TYPE)) {
+                            ModalRegistry.register(CopyModal.TYPE, CopyModal, CopyModal.TEMPLATE);
+                        }
+                        let permalinkModal = null;
+                        ModalFactory.create({
+                            type: CopyModal.TYPE,
+                            templateContext: {
+                                link: actionItem.attr('data-link'),
+                            },
+                        }).then(modal => {
+                            permalinkModal = modal;
+                            modal.show();
+
+                        }).catch(() => {
+                            permalinkModal.destroy();
+                        });
+                        return;
+                    }
 
                     let isExecuted = true;
                     if (actionItem.attr('data-confirm')) {
