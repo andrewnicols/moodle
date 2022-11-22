@@ -1,0 +1,12 @@
+parameters:
+  # These are all of the file paths in the docroot
+  paths:
+    - .
+  excludePaths:
+    - */tests/*
+    - vendor
+    - node_modules
+    - config.php
+    - coverage
+    - jsdoc
+    - phpdoc

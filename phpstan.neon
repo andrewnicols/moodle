@@ -1,0 +1,22 @@
+includes:
+  - .phpstan.thirdparty.neon
+  - .phpstan.include.neon
+
+parameters:
+  level: 0
+
+  # Dynamic properties emits warnings from PHP 8.2 onwards.
+  checkDynamicProperties: true
+
+  ignoreErrors:
+    - '#Variable \$CFG might not be defined\.#'
+    - '#Variable \$COURSE might not be defined\.#'
+    - '#Variable \$DB might not be defined\.#'
+    - '#Variable \$OUTPUT might not be defined\.#'
+    - '#Variable \$PAGE might not be defined\.#'
+    - '#Variable \$SESSION might not be defined\.#'
+    - '#Variable \$SITE might not be defined\.#'
+    - '#Variable \$USER might not be defined\.#'
+    - '#Method .*\(\) has no return type specified\.#'
+    - message: '#Variable \$plugin might not be defined\.#'
+      path: '*/version.php'

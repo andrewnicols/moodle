@@ -63,6 +63,8 @@ module.exports = grunt => {
      */
     const handler = function() {
         const path = require('path');
+        const yaml = require('js-yaml');
+
         const ComponentList = require(path.join(process.cwd(), '.grunt', 'components.js'));
 
         // An array of paths to third party directories.
@@ -90,6 +92,15 @@ module.exports = grunt => {
             'admin/tool/componentlibrary/hugo/dist/css/docs.css',
         ].concat(thirdPartyPaths);
         grunt.file.write('.stylelintignore', stylelintIgnores.join('\n') + '\n');
+
+        const phpstanIgnores = {
+            parameters: {
+                analyse: {
+                    excludePaths: thirdPartyPaths,
+                },
+            },
+        };
+        grunt.file.write('.phpstan.thirdparty.neon', yaml.safeDump(phpstanIgnores));
 
         phpcsIgnore(thirdPartyPaths);
     };
