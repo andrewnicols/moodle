@@ -176,6 +176,8 @@ class editor extends \texteditor {
 
             'branding' => property_exists($siteconfig, 'branding') ? !empty($siteconfig->branding) : true,
 
+            'directionality' => property_exists($siteconfig, 'directionality') ? !empty($siteconfig->directionality) : true,
+
             // Language options.
             'language' => [
                 'currentlang' => current_language(),

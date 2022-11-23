@@ -36,6 +36,14 @@ if ($ADMIN->fulltree) {
     );
 
     $settings->add($setting);
+
+    $setting = new admin_setting_configcheckbox(
+        'editor_tiny/directionality',
+        new lang_string('directionality_enabled', 'editor_tiny'),
+        new lang_string('directionality_enabled_desc', 'editor_tiny'),
+        1
+    );
+    $settings->add($setting);
 }
 
 foreach (core_plugin_manager::instance()->get_plugins_of_type('tiny') as $plugin) {
