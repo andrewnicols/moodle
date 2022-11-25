@@ -55,5 +55,6 @@ class mustache_javascript_helper {
      */
     public function help($text, \Mustache_LambdaHelper $helper) {
         $this->page->requires->js_amd_inline($helper->render($text));
+        return '';
     }
 }
