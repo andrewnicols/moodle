@@ -945,14 +945,14 @@ function initialise_fullme_cli() {
     $topfile = realpath($topfile['file']);
     $dirroot = realpath($CFG->dirroot);
 
+    $FULLME = $FULLSCRIPT = $CFG->wwwroot;
     if (strpos($topfile, $dirroot) !== 0) {
         // Probably some weird external script
-        $SCRIPT = $FULLSCRIPT = $FULLME = $ME = null;
+        $SCRIPT = $ME = null;
     } else {
         $relativefile = substr($topfile, strlen($dirroot));
         $relativefile = str_replace('\\', '/', $relativefile); // Win fix
-        $SCRIPT = $FULLSCRIPT = $relativefile;
-        $FULLME = $ME = null;
+        $SCRIPT = $relativefile;
     }
 }
 

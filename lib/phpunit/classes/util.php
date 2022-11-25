@@ -199,7 +199,7 @@ class phpunit_util extends testing_util {
         // reinitialise following globals
         $OUTPUT = new bootstrap_renderer();
         $PAGE = new moodle_page();
-        $FULLME = null;
+        $FULLME = $CFG->wwwroot;
         $ME = null;
         $SCRIPT = null;
         $FILTERLIB_PRIVATE = null;
@@ -335,7 +335,7 @@ class phpunit_util extends testing_util {
         self::$globals['CFG'] = clone($CFG);
         self::$globals['SITE'] = clone($SITE);
         self::$globals['DB'] = $DB;
-        self::$globals['FULLME'] = $FULLME;
+        self::$globals['FULLME'] = $CFG->wwwroot;
 
         // refresh data in all tables, clear caches, etc.
         self::reset_all_data();
