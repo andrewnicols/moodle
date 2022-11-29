@@ -31,9 +31,6 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Automatic media embedding filter class.
  *
- * It is highly recommended to configure servers to be compatible with our slasharguments,
- * otherwise the "?d=600x400" may not work.
- *
  * @package    filter
  * @subpackage mediaplugin
  * @copyright  2004 onwards Martin Dougiamas  {@link http://moodle.com}

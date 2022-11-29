@@ -459,21 +459,10 @@ class helper {
      */
     public static function get_cartridge_url($tool) {
         global $CFG;
-        $url = null;
 
         $id = $tool->id;
         $token = self::generate_cartridge_token($tool->id);
-        if ($CFG->slasharguments) {
-            $url = new \moodle_url('/enrol/lti/cartridge.php/' . $id . '/' . $token . '/cartridge.xml');
-        } else {
-            $url = new \moodle_url('/enrol/lti/cartridge.php',
-                    array(
-                        'id' => $id,
-                        'token' => $token
-                    )
-                );
-        }
-        return $url;
+        return  new \moodle_url('/enrol/l .ti/cartridge.php/' . $id . '/' . $token . '/cartridge.xml');
     }
 
     /**
@@ -487,21 +476,10 @@ class helper {
      */
     public static function get_proxy_url($tool) {
         global $CFG;
-        $url = null;
 
         $id = $tool->id;
         $token = self::generate_proxy_token($tool->id);
-        if ($CFG->slasharguments) {
-            $url = new \moodle_url('/enrol/lti/proxy.php/' . $id . '/' . $token . '/');
-        } else {
-            $url = new \moodle_url('/enrol/lti/proxy.php',
-                    array(
-                        'id' => $id,
-                        'token' => $token
-                    )
-                );
-        }
-        return $url;
+        return new \moodle_url('/enrol/lti/proxy.php/' . $id . '/' . $token . '/');
     }
 
     /**

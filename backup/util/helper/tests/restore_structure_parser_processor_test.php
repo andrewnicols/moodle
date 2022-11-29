@@ -55,62 +55,52 @@ class restore_structure_parser_processor_test extends advanced_testcase {
      */
     public function process_cdata_data_provider() {
         return array(
-            array(null, null, true),
-            array("$@NULL@$", null, true),
-            array("$@NULL@$ ", "$@NULL@$ ", true),
-            array(1, 1, true),
-            array(" ", " ", true),
-            array("1", "1", true),
-            array("$@FILEPHP@$1.jpg", "$@FILEPHP@$1.jpg", true),
+            array(null, null),
+            array("$@NULL@$", null),
+            array("$@NULL@$ ", "$@NULL@$ "),
+            array(1, 1),
+            array(" ", " "),
+            array("1", "1"),
+            array("$@FILEPHP@$1.jpg", "$@FILEPHP@$1.jpg"),
             array(
                 "http://test.test/$@SLASH@$",
                 "http://test.test/$@SLASH@$",
-                true
             ),
             array(
                 "<a href='$@FILEPHP@$1.jpg'>Image</a>",
                 "<a href='http://test.test/file.php/11.jpg'>Image</a>",
-                true
             ),
             array(
                 "<a href='$@FILEPHP@$$@SLASH@$1.jpg'>Image</a>",
                 "<a href='http://test.test/file.php/1/1.jpg'>Image</a>",
-                true
             ),
             array(
                 "<a href='$@FILEPHP@$$@SLASH@$$@SLASH@$1.jpg'>Image</a>",
                 "<a href='http://test.test/file.php/1//1.jpg'>Image</a>",
-                true
             ),
             array(
                 "<a href='$@FILEPHP@$1.jpg'>Image</a>",
                 "<a href='http://test.test/file.php?file=%2F11.jpg'>Image</a>",
-                false
             ),
             array(
                 "<a href='$@FILEPHP@$$@SLASH@$1.jpg'>Image</a>",
                 "<a href='http://test.test/file.php?file=%2F1%2F1.jpg'>Image</a>",
-                false
             ),
             array(
                 "<a href='$@FILEPHP@$$@SLASH@$$@SLASH@$1.jpg'>Image</a>",
                 "<a href='http://test.test/file.php?file=%2F1%2F%2F1.jpg'>Image</a>",
-                false
             ),
             array(
                 "<a href='$@FILEPHP@$$@SLASH@$1.jpg$@FORCEDOWNLOAD@$'>Image</a>",
                 "<a href='http://test.test/file.php/1/1.jpg?forcedownload=1'>Image</a>",
-                true
             ),
             array(
                 "<a href='$@FILEPHP@$$@SLASH@$1.jpg$@FORCEDOWNLOAD@$'>Image</a>",
                 "<a href='http://test.test/file.php?file=%2F1%2F1.jpg&amp;forcedownload=1'>Image</a>",
-                false
             ),
             array(
                 "<iframe src='$@H5PEMBED@$?url=testurl'></iframe>",
                 "<iframe src='http://test.test/h5p/embed.php?url=testurl'></iframe>",
-                true
             ),
         );
     }
@@ -121,12 +111,11 @@ class restore_structure_parser_processor_test extends advanced_testcase {
      * @dataProvider process_cdata_data_provider
      * @param string $content Testing content.
      * @param string $expected Expected result.
-     * @param bool $slasharguments A value for $CFG->slasharguments setting.
+     * @covers \restore_structure_parser_processor::process_cdata
      */
-    public function test_process_cdata($content, $expected, $slasharguments) {
+    public function test_process_cdata($content, $expected) {
         global $CFG;
 
-        $CFG->slasharguments = $slasharguments;
         $CFG->wwwroot = 'http://test.test';
 
         $processor = new restore_structure_parser_processor(1, 1);

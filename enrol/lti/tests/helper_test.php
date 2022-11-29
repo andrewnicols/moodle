@@ -257,44 +257,28 @@ class helper_test extends \advanced_testcase {
 
     /**
      * Test getting the cartridge url of a tool.
+     * @covers \enrol_lti\helper::get_cartridge_url
      */
-    public function test_get_cartridge_url() {
-        global $CFG;
-
-        $slasharguments = $CFG->slasharguments;
-
-        $CFG->slasharguments = false;
-
+    public function test_get_cartridge_url(): void {
         $course1 = $this->getDataGenerator()->create_course();
-        $data = new \stdClass();
-        $data->courseid = $course1->id;
+        $data = (object) ['courseid' => $course1->id];
         $tool1 = $this->getDataGenerator()->create_lti_tool($data);
 
         $id = $tool1->id;
         $token = \enrol_lti\helper::generate_cartridge_token($id);
-        $launchurl = \enrol_lti\helper::get_cartridge_url($tool1);
-        $this->assertEquals('https://www.example.com/moodle/enrol/lti/cartridge.php?id=' . $id . '&amp;token=' . $token,
-                            $launchurl->out());
-
-        $CFG->slasharguments = true;
 
         $launchurl = \enrol_lti\helper::get_cartridge_url($tool1);
-        $this->assertEquals('https://www.example.com/moodle/enrol/lti/cartridge.php/' . $id . '/' . $token . '/cartridge.xml',
-                            $launchurl->out());
-
-        $CFG->slasharguments = $slasharguments;
+        $this->assertEquals(
+            "https://www.example.com/moodle/enrol/lti/cartridge.php/${id}/${token}/cartridge.xml",
+            $launchurl->out()
+        );
     }
 
     /**
      * Test getting the cartridge url of a tool.
+     * @covers \enrol_lti\helper::get_proxy_url
      */
     public function test_get_proxy_url() {
-        global $CFG;
-
-        $slasharguments = $CFG->slasharguments;
-
-        $CFG->slasharguments = false;
-
         $course1 = $this->getDataGenerator()->create_course();
         $data = new \stdClass();
         $data->courseid = $course1->id;
@@ -302,17 +286,12 @@ class helper_test extends \advanced_testcase {
 
         $id = $tool1->id;
         $token = \enrol_lti\helper::generate_proxy_token($id);
-        $launchurl = \enrol_lti\helper::get_proxy_url($tool1);
-        $this->assertEquals('https://www.example.com/moodle/enrol/lti/proxy.php?id=' . $id . '&amp;token=' . $token,
-                            $launchurl->out());
-
-        $CFG->slasharguments = true;
 
         $launchurl = \enrol_lti\helper::get_proxy_url($tool1);
-        $this->assertEquals('https://www.example.com/moodle/enrol/lti/proxy.php/' . $id . '/' . $token . '/',
-                            $launchurl->out());
-
-        $CFG->slasharguments = $slasharguments;
+        $this->assertEquals(
+            "https://www.example.com/moodle/enrol/lti/proxy.php/${id}/${token}/",
+            $launchurl->out()
+        );
     }
 
     /**

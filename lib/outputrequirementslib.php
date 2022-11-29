@@ -175,7 +175,7 @@ class page_requirements_manager {
         global $CFG;
 
         // You may need to set up URL rewrite rule because oversized URLs might not be allowed by web server.
-        $sep = empty($CFG->yuislasharguments) ? '?' : '/';
+        $sep = '/';
 
         $this->yui3loader = new stdClass();
         $this->YUI_config = new YUI_config();
@@ -329,7 +329,7 @@ class page_requirements_manager {
                 'sessiontimeout'        => $CFG->sessiontimeout,
                 'sessiontimeoutwarning' => $CFG->sessiontimeoutwarning,
                 'themerev'              => theme_get_revision(),
-                'slasharguments'        => (int)(!empty($CFG->slasharguments)),
+                'slasharguments'        => 1,
                 'theme'                 => $page->theme->name,
                 'iconsystemmodule'      => $iconsystem->get_amd_name(),
                 'jsrev'                 => $this->get_jsrev(),
@@ -581,24 +581,10 @@ class page_requirements_manager {
                 debugging("Invalid file '$file' specified in jQuery plugin '$plugin' in component '$component'");
                 continue;
             }
-            if (!empty($CFG->slasharguments)) {
-                $url = new moodle_url("/theme/jquery.php");
-                $url->set_slashargument("/$component/$file");
 
-            } else {
-                // This is not really good, we need slasharguments for relative links, this means no caching...
-                $path = realpath("$componentdir/jquery/$file");
-                if (strpos($path, $CFG->dirroot) === 0) {
-                    $url = $CFG->wwwroot.preg_replace('/^'.preg_quote($CFG->dirroot, '/').'/', '', $path);
-                    // Replace all occurences of backslashes characters in url to forward slashes.
-                    $url = str_replace('\\', '/', $url);
-                    $url = new moodle_url($url);
-                } else {
-                    // Bad luck, fix your server!
-                    debugging("Moodle jQuery integration requires 'slasharguments' setting to be enabled.");
-                    continue;
-                }
-            }
+            $url = new moodle_url("/theme/jquery.php");
+            $url->set_slashargument("/$component/$file");
+
             $this->jqueryplugins[$plugin]->urls[] = $url;
         }
 
@@ -735,13 +721,9 @@ class page_requirements_manager {
             }
             if (substr($url, -3) === '.js') {
                 $jsrev = $this->get_jsrev();
-                if (empty($CFG->slasharguments)) {
-                    return new moodle_url('/lib/javascript.php', array('rev'=>$jsrev, 'jsfile'=>$url));
-                } else {
-                    $returnurl = new moodle_url('/lib/javascript.php');
-                    $returnurl->set_slashargument('/'.$jsrev.$url);
-                    return $returnurl;
-                }
+                $returnurl = new moodle_url('/lib/javascript.php');
+                $returnurl->set_slashargument("/${jsrev}${url}");
+                return $returnurl;
             } else {
                 return new moodle_url($url);
             }
@@ -1372,12 +1354,6 @@ class page_requirements_manager {
 
         $requirejsconfig = file_get_contents($CFG->dirroot . '/lib/requirejs/moodle-config.js');
 
-        // No extension required unless slash args is disabled.
-        $jsextension = '.js';
-        if (!empty($CFG->slasharguments)) {
-            $jsextension = '';
-        }
-
         $minextension = '.min';
         if (!$cachejs) {
             $minextension = '';
@@ -1386,7 +1362,7 @@ class page_requirements_manager {
         $requirejsconfig = str_replace('[BASEURL]', $requirejsloader, $requirejsconfig);
         $requirejsconfig = str_replace('[JSURL]', $jsloader, $requirejsconfig);
         $requirejsconfig = str_replace('[JSMIN]', $minextension, $requirejsconfig);
-        $requirejsconfig = str_replace('[JSEXT]', $jsextension, $requirejsconfig);
+        $requirejsconfig = str_replace('[JSEXT]', '', $requirejsconfig);
 
         $output .= html_writer::script($requirejsconfig);
         if ($cachejs) {

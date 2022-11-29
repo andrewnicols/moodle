@@ -89,12 +89,6 @@
         tex2image($texexp);
     }
 
-    // Action: Check Slasharguments
-    if ($action=='SlashArguments') {
-        slasharguments($texexp);
-        exit;
-    }
-
     // Action: Show Tex command line output
     if ($action=='ShowImageTex') {
         TexOutput($texexp, true);
@@ -291,23 +285,6 @@
         $output .= "OUTPUT: $lines\n";
         $output .= "RETURN CODE: $code\n</pre>\n";
         return $output;
-    }
-
-    function slasharguments($texexp) {
-        global $CFG;
-        $admin = $CFG->wwwroot.'/'.$CFG->admin.'/settings.php?section=http';
-        $image = tex2image($texexp,true);
-        echo "<p>If the following image displays correctly, set your ";
-        echo "<a href=\"$admin\" target=\"_blank\">Administration->Server->HTTP</a> ";
-        echo "setting for slasharguments to file.php/1/pic.jpg: ";
-        echo "<img src=\"$CFG->wwwroot/filter/tex/pix.php/$image\" align=\"absmiddle\"></p>\n";
-        echo "<p>Otherwise set it to file.php?file=/1/pic.jpg ";
-        echo "It should display correctly as ";
-        echo "<img src=\"$CFG->wwwroot/filter/tex/pix.php?file=$image\" align=\"absmiddle\"></p>\n";
-        echo "<p>If neither equation image displays correctly, please seek ";
-        echo "further help at moodle.org at the ";
-        echo "<a href=\"http://moodle.org/mod/forum/view.php?id=752&loginguest=true\" target=\"_blank\">";
-        echo "Mathematics Tools Forum</a></p>";
     }
 
 ?>

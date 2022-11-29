@@ -87,11 +87,7 @@ function filter_text_image($imagefile, $tex, $height, $width, $align, $alt) {
 
     // Build the output.
     $anchorcontents = "<img class=\"texrender\" $title alt=\"$alt\" src=\"";
-    if ($CFG->slasharguments) {        // Use this method if possible for better caching
-        $anchorcontents .= "$CFG->wwwroot/filter/tex/pix.php/$imagefile";
-    } else {
-        $anchorcontents .= "$CFG->wwwroot/filter/tex/pix.php?file=$imagefile";
-    }
+    $anchorcontents .= "$CFG->wwwroot/filter/tex/pix.php/$imagefile";
     $anchorcontents .= "\" $style/>";
 
     if (!file_exists("$CFG->dataroot/filter/tex/$imagefile") && has_capability('moodle/site:config', context_system::instance())) {
@@ -212,5 +208,3 @@ class filter_tex extends moodle_text_filter {
         return $text;
     }
 }
-
-

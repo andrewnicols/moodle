@@ -66,11 +66,7 @@ function filter_algebra_image($imagefile, $tex= "", $height="", $width="", $alig
   $anchorcontents = '';
   if ($imagefile) {
     $anchorcontents .= "<img $title alt=\"".s($tex)."\" src=\"";
-    if ($CFG->slasharguments) {        // Use this method if possible for better caching
-      $anchorcontents .= "$CFG->wwwroot/filter/algebra/pix.php/$imagefile";
-    } else {
-      $anchorcontents .= "$CFG->wwwroot/filter/algebra/pix.php?file=$imagefile";
-    }
+    $anchorcontents .= "$CFG->wwwroot/filter/algebra/pix.php/$imagefile";
     $anchorcontents .= "\" $style />";
 
     if (!file_exists("$CFG->dataroot/filter/algebra/$imagefile") && has_capability('moodle/site:config', context_system::instance())) {
@@ -247,5 +243,3 @@ class filter_algebra extends moodle_text_filter {
         return $text;
     }
 }
-
-

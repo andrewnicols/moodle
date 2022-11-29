@@ -290,8 +290,6 @@ $CFG->admin = 'admin';
 //         '/filedir'   => '/var/www/moodle/filedir',  // for custom $CFG->filedir locations
 //     );
 //
-// YUI caching may be sometimes improved by slasharguments:
-//     $CFG->yuislasharguments = 1;
 // Some servers may need a special rewrite rule to work around internal path length limitations:
 // RewriteRule (^.*/theme/yui_combo\.php)(/.*) $1?file=$2
 //
