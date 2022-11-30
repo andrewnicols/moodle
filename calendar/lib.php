@@ -4025,4 +4025,6 @@ function calendar_inplace_editable(string $itemtype, int $itemid, int $newvalue)
     }
 
     \external_api::validate_context(context_system::instance());
+
+    throw new \coding_exception('Invalid inplace editable item type');
 }

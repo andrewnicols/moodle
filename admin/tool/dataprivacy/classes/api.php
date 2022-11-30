@@ -372,7 +372,7 @@ class api {
                 $alloweduserids = array_merge($alloweduserids, array_keys($children));
             }
             list($insql, $inparams) = $DB->get_in_or_equal($alloweduserids, SQL_PARAMS_NAMED);
-            $sqlconditions[] .= "userid $insql";
+            $sqlconditions[] = "userid $insql";
             $select = implode(' AND ', $sqlconditions);
             $params = array_merge($params, $inparams, $sqlparams);
 
@@ -451,7 +451,7 @@ class api {
                 $alloweduserids = array_merge($alloweduserids, array_keys($children));
             }
             list($insql, $inparams) = $DB->get_in_or_equal($alloweduserids, SQL_PARAMS_NAMED);
-            $sqlconditions[] .= "userid $insql";
+            $sqlconditions[] = "userid $insql";
             $select = implode(' AND ', $sqlconditions);
             $params = array_merge($params, $inparams, $sqlparams);
 

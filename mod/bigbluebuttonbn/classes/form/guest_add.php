@@ -89,7 +89,7 @@ class guest_add extends dynamic_form {
             foreach ($emails as $email) {
                 $email = trim($email);
                 if (!validate_email($email)) {
-                    $emailserrors[] .= get_string('guestaccess_emails_invalidemail', 'mod_bigbluebuttonbn', $email);
+                    $emailserrors[] = get_string('guestaccess_emails_invalidemail', 'mod_bigbluebuttonbn', $email);
                 }
             }
         }

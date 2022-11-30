@@ -77,6 +77,10 @@ class sqlite_sql_generator extends sql_generator {
         parent::__construct($mdb);
     }
 
+    public function getCreateTempTableSQL($xmldb_table) {
+        throw new \coding_exception('getCreateTempTableSQL() is not supported on SQLite.');
+    }
+
     /**
      * Reset a sequence to the id field of a table.
      *
