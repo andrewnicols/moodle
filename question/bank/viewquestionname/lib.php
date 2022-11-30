@@ -57,4 +57,5 @@ function qbank_viewquestionname_inplace_editable ($itemtype, $itemid, $newvalue)
         // Prepare the element for the output.
         return new \qbank_viewquestionname\output\questionname($record);
     }
+    throw new \coding_exception('Invalid inplace editable item type');
 }
