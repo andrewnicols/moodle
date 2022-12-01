@@ -55,6 +55,11 @@ class manager {
     const ACTION_ENABLE = 'enable';
 
     /**
+     * Action for upgrading license versions.
+     */
+    const ACTION_UPGRADE = 'upgrade';
+
+    /**
      * Action for displaying the license list view.
      */
     const ACTION_VIEW_LICENSE_MANAGER = 'viewlicensemanager';
@@ -121,6 +126,11 @@ class manager {
                 require_sesskey();
                 $this->change_license_order($action, $license);
                 redirect($redirect);
+                break;
+
+            case self::ACTION_UPGRADE:
+                license_manager::install_licenses();
+                license_manager::reset_license_cache();
                 break;
 
             case self::ACTION_VIEW_LICENSE_MANAGER:

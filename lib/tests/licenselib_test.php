@@ -125,7 +125,7 @@ class licenselib_test extends advanced_testcase {
         $license = license_manager::get_license_by_shortname('cc-nc');
         $actual = $license->fullname;
 
-        $this->assertEquals('Creative Commons - No Commercial', $actual);
+        $this->assertEquals('Creative Commons - NonCommercial 4.0 International', $actual);
         $this->assertNull(license_manager::get_license_by_shortname('somefakelicense'));
     }
 

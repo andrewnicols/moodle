@@ -10,12 +10,12 @@ Feature: Licence manager
     Then I should see "Licence not specified" in the "unknown" "table_row"
     And I should see "All rights reserved" in the "allrightsreserved" "table_row"
     And I should see "Public domain" in the "public" "table_row"
-    And I should see "Creative Commons" in the "cc" "table_row"
-    And I should see "Creative Commons - NoDerivs" in the "cc-nd" "table_row"
-    And I should see "Creative Commons - No Commercial NoDerivs" in the "cc-nc-nd" "table_row"
-    And I should see "Creative Commons - No Commercial" in the "cc-nc" "table_row"
-    And I should see "Creative Commons - No Commercial ShareAlike" in the "cc-nc-sa" "table_row"
-    And I should see "Creative Commons - ShareAlike" in the "cc-sa" "table_row"
+    And I should see "Creative Commons - 4.0 International" in the "cc" "table_row"
+    And I should see "Creative Commons - NoDerivatives 4.0 International" in the "cc-nd" "table_row"
+    And I should see "Creative Commons - NonCommercial-NoDerivatives 4.0 International" in the "cc-nc-nd" "table_row"
+    And I should see "Creative Commons - NonCommercial-ShareAlike 4.0 International" in the "cc-nc-sa" "table_row"
+    And I should see "Creative Commons - ShareAlike 4.0 International" in the "cc-sa" "table_row"
+    And I should see "Creative Commons - NonCommercial 4.0 International" in the "cc-nc" "table_row"
 
   Scenario: I should be able to enable and disable licences
     Given I log in as "admin"
@@ -43,7 +43,7 @@ Feature: Licence manager
     And I follow "Private files" in the user menu
     And I follow "Add..."
     And I follow "Upload a file"
-    And the field with xpath "//select[@name='license']" matches value "Creative Commons"
+    And the field with xpath "//select[@name='license']" matches value "Creative Commons - 4.0 International"
     And I click on "Close" "button" in the "File picker" "dialogue"
     When I upload "lib/tests/fixtures/empty.txt" file to "Files" filemanager as:
       | Save as | empty_copy.txt |
@@ -53,6 +53,6 @@ Feature: Licence manager
     Then the field with xpath "//select[@name='license']" matches value "<expectedlicence>"
 
     Examples:
-      | rememberuserlicensepref | expectedlicence  |
-      | 0                       | Creative Commons |
-      | 1                       | Public domain    |
+      | rememberuserlicensepref | expectedlicence                      |
+      | 0                       | Creative Commons - 4.0 International |
+      | 1                       | Public domain                        |
