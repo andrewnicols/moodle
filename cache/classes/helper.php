@@ -633,6 +633,12 @@ class cache_helper {
      * @return string
      */
     public static function hash_key($key, cache_definition $definition) {
+        if ($key === '' || $key === null || $key === false) {
+            throw new coding_exception(
+                "Invalid cache key. The key must be a non-empty string or integer.",
+                $key
+            );
+        }
         if ($definition->uses_simple_keys()) {
             if (debugging() && preg_match('#[^a-zA-Z0-9_]#', $key)) {
                 throw new coding_exception('Cache definition '.$definition->get_id().' requires simple keys. Invalid key provided.', $key);
