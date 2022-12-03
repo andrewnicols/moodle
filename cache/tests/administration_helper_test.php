@@ -235,6 +235,42 @@ class administration_helper_test extends \advanced_testcase {
     }
 
     /**
+     * Key provide for hash_key with an empty key.
+     *
+     * @return array
+     */
+    public function empty_hash_key_provider(): array {
+        return [
+            'null' => [null],
+            'false' => [false],
+            'empty string' => [''],
+        ];
+    }
+
+    /**
+     * Test the behaviour of hash_key when the key is invalid.
+     * @dataProvider empty_hash_key_provider
+     * @param mixed $key
+     * @covers cache_helper::hash_key
+     */
+    public function test_empty_hash_key($key): void {
+        $this->resetAfterTest();
+
+        $instance = cache_config_testing::instance(true);
+        $instance->phpunit_add_definition('phpunit/hashtest', array(
+            'mode' => cache_store::MODE_APPLICATION,
+            'component' => 'phpunit',
+            'area' => 'hashtest',
+            'simplekeys' => true
+        ));
+
+        $factory = cache_factory::instance();
+        $definition = $factory->create_definition('phpunit', 'hashtest');
+        $this->expectException(\coding_exception::class);
+        cache_helper::hash_key($key, $definition);
+    }
+
+    /**
      * Tests the get_usage function.
      */
     public function test_get_usage(): void {
