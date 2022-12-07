@@ -27,7 +27,6 @@ use invalid_response_exception;
 use moodle_exception;
 use restricted_context_exception;
 use external_function_parameters;
-use external_multiple_structure;
 use stdClass;
 
 /**
