@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+// TODO Add debugging notice to these functions, and to this file from Moodle 4.6 onwards.
 
 class_alias(\core_external\restricted_context_exception::class, 'restricted_context_exception');
 class_alias(\core_external\api::class, 'external_api');
