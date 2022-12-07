@@ -26,7 +26,6 @@ use invalid_parameter_exception;
 use invalid_response_exception;
 use moodle_exception;
 use restricted_context_exception;
-use external_description;
 use external_function_parameters;
 use external_value;
 use external_multiple_structure;
