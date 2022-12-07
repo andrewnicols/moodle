@@ -55,7 +55,7 @@ jobs:
       matrix:
         include:
           - os: ubuntu-22.04
-            php: 7.4
+            php: 8.0
             extensions:
             db: mysqli
           - os: ubuntu-22.04
