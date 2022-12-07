@@ -25,7 +25,6 @@ use context_helper;
 use invalid_parameter_exception;
 use invalid_response_exception;
 use moodle_exception;
-use restricted_context_exception;
 use stdClass;
 
 /**
