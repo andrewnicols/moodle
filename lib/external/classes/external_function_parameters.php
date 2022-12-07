@@ -19,7 +19,7 @@ namespace core_external;
 /**
  * Description of top level - PHP function parameters.
  *
- * @package    core_webservice
+ * @package    core_external
  * @copyright  2009 Petr Skodak
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

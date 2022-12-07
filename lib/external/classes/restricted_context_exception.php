@@ -19,15 +19,13 @@ namespace core_external;
 /**
  * Exception indicating user is not allowed to use external function in the current context.
  *
- * @package    core_webservice
+ * @package    core_external
  * @copyright  2009 Petr Skodak
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restricted_context_exception extends \moodle_exception {
     /**
      * Constructor
-     *
-     * @since Moodle 2.0
      */
     public function __construct() {
         parent::__construct('restrictedcontextexception', 'error');
