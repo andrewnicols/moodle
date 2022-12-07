@@ -28,7 +28,7 @@ abstract class external_description {
      * Contructor.
      *
      * @param string $desc Description of element
-     * @param bool $required Whethe the element value is required
+     * @param int $required Whethe the element value is required
      * @param mixed $default The default value
      */
     public function __construct(

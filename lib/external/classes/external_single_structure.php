@@ -22,25 +22,23 @@ namespace core_external;
  * @package    core_webservice
  * @copyright  2009 Petr Skodak
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since Moodle 2.0
  */
 class external_single_structure extends external_description {
-
-     /** @var array Description of array keys key=>external_description */
-    public $keys;
-
     /**
      * Constructor
      *
      * @param array $keys
      * @param string $desc
-     * @param bool $required
+     * @param int $required
      * @param array $default
-     * @since Moodle 2.0
      */
-    public function __construct(array $keys, $desc='',
-            $required=VALUE_REQUIRED, $default=null) {
+    public function __construct(
+        /** @var array Description of array keys key => external_description */
+        public array $keys,
+        $desc = '',
+        $required = VALUE_REQUIRED,
+        $default=null
+    ) {
         parent::__construct($desc, $required, $default);
-        $this->keys = $keys;
     }
 }

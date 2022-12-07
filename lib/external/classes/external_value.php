@@ -24,13 +24,12 @@ namespace core_external;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class external_value extends external_description {
-
     /**
      * Constructor for the external_value class.
      *
      * @param mixed $type
      * @param string $desc
-     * @param bool $required
+     * @param int $required
      * @param mixed $default
      * @param bool $allownull
      */
