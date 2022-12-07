@@ -17,7 +17,7 @@
 namespace core_external;
 
 /**
- * Unit tests for core_external\api.
+ * Unit tests for core_external\settings.
  *
  * @package     core_external
  * @category    test
@@ -27,17 +27,33 @@ namespace core_external;
  */
 class settings_test extends \advanced_testcase {
     /**
-     * Tests for external_settings class.
+     * Reset the singleton between tests.
      */
-    public function test_external_settings() {
+    public function tearDown(): void {
+        settings::reset();
+    }
 
+    /**
+     * Tests for external_settings class.
+     *
+     * @covers \core_external\settings::get_instance
+     */
+    public function test_external_settings(): void {
+        $settings = settings::get_instance();
+        $this->assertInstanceOf(settings::class, $settings);
+    }
+
+    /**
+     * Check external_settings defaults.
+     *
+     * @covers \core_external\settings::get_instance
+     */
+    public function test_external_settings_defaults(): void {
         $settings = settings::get_instance();
         $currentraw = $settings->get_raw();
         $currentfilter = $settings->get_filter();
         $currentfile = $settings->get_file();
         $currentfileurl = $settings->get_fileurl();
-
-        $this->assertInstanceOf(settings::class, $settings);
 
         // Check apis.
         $settings->set_file('plugin.php');
@@ -56,4 +72,54 @@ class settings_test extends \advanced_testcase {
         $settings->set_raw($currentraw);
     }
 
+    /**
+     * Check external_settings file API calls.
+     *
+     * @covers \core_external\settings::set_file
+     * @covers \core_external\settings::get_file
+     */
+    public function test_external_settings_set_file(): void {
+        $settings = settings::get_instance();
+
+        $settings->set_file('plugin.php');
+        $this->assertEquals('plugin.php', $settings->get_file());
+    }
+
+    /**
+     * Check external_settings filter API calls.
+     *
+     * @covers \core_external\settings::set_filter
+     * @covers \core_external\settings::get_filter
+     */
+    public function test_external_settings_set_filter(): void {
+        $settings = settings::get_instance();
+
+        $settings->set_filter(false);
+        $this->assertFalse($settings->get_filter());
+    }
+
+    /**
+     * Check external_settings file API calls.
+     *
+     * @covers \core_external\settings::set_fileurl
+     * @covers \core_external\settings::get_fileurl
+     */
+    public function test_external_settings_set_fileurl(): void {
+        $settings = settings::get_instance();
+
+        $settings->set_fileurl(false);
+        $this->assertFalse($settings->get_fileurl());
+    }
+
+    /**
+     * Check external_settings raw API calls.
+     *
+     * @covers \core_external\settings::set_raw
+     * @covers \core_external\settings::get_raw
+     */
+    public function test_external_settings_set_raw(): void {
+        $settings = settings::get_instance();
+        $settings->set_raw(true);
+        $this->assertTrue($settings->get_raw());
+    }
 }
