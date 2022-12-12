@@ -56,9 +56,22 @@ class behat_assignfeedback_editpdf extends behat_base {
      * @When /^I draw on the pdf$/
      */
     public function i_draw_on_the_pdf() {
+        // There appears to be a bug with detecting changes to
+        // annotations. If a PDF is annotated, then the student
+        // updates the submission, if the teacher then draws the
+        // exact same annotations on the new PDF, the readonly
+        // pages are not updated and the student's view of the
+        // annotated PDF still shows the old PDF. So we add some
+        // randomness in this step to ensure the annotations are
+        // different every time.
+        //
+        // This was added to test MDL-75898. See MDL-76659 for
+        // more details about the bug.
+        $x = 100 + rand(0, 50);
+        $y = 250 + rand(0, 50);
         $js = ' (function() {
     var instance = M.assignfeedback_editpdf.instance;
-    var event = { clientX: 100, clientY: 250, preventDefault: function() {} };
+    var event = { clientX: ' . $x . ', clientY: ' . $y . ', preventDefault: function() {} };
     instance.edit_start(event);
 }()); ';
         $this->execute_script($js);
