@@ -4910,6 +4910,46 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
             \core\session\manager::write_close(); // Unlock session during file serving.
             send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
+        } else if (strpos($filearea, 'offline') === 0) {
+            // Stream a zipfile containing files available for offline usage.
+            $helper = new \core_course\external\file_helper($course);
+
+            // The argument order is:
+            // /contextid/component/filearea/filters[/sectionfilters[/cmid]].
+
+            // The filters are a bitwise addition.
+            // 1: Include modules.
+            // 2: Include module contents (files).
+            // 3: Include stealth modules.
+            $filters = (int) array_shift($args);
+            $helper->set_include_modules(($filters & 1) !== 0);
+            $helper->set_include_contents(($filters & 2) !== 0);
+            $helper->set_include_stealth_modules(($filters & 4) !== 0);
+
+            // Add the sectionfilters if relevant.
+            if ($filearea === 'offlinesectionidfiles') {
+                $sectionid = (int) array_shift($args);
+                if (!empty($args)) {
+                    $cmid = (int) array_shift($args);
+                    $helper->set_cmid_filter($cmid);
+                }
+                $stream = $helper->get_streamable_zip_for_section_id($sectionid);
+            } else if ($filearea === 'offlinesectionnumberfiles') {
+                $sectionnumber = (int) array_shift($args);
+                if (!empty($args)) {
+                    $cmid = (int) array_shift($args);
+                    $helper->set_cmid_filter($cmid);
+                }
+                $stream = $helper->get_streamable_zip_for_section_number($sectionnumber);
+            } else {
+                if (!empty($args)) {
+                    $cmid = (int) array_shift($args);
+                    $helper->set_cmid_filter($cmid);
+                }
+                $stream = $helper->get_streamable_zip_for_course();
+            }
+            $stream->finish();
+            exit();
         } else {
             send_file_not_found();
         }
@@ -5193,6 +5233,48 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
 
             // finally send the file
             send_stored_file($file, null, 0, false, $sendfileoptions);
+        } else if (strpos($filearea, 'offline') === 0) {
+            // Stream a zipfile containing files available for offline usage.
+            $helper = new \core_course\external\file_helper($course);
+            $helper->set_activity_name_filter($modname);
+
+            // The argument order is:
+            // /contextid/mod_[name]/offlinefiles/filters[/sectionfilters[/instanceid]].
+
+            // The filters are a bitwise addition.
+            // 1: Include modules.
+            // 2: Include module contents (files).
+            // 3: Include stealth modules.
+            $filters = (int) array_shift($args);
+            $helper->set_include_modules(($filters & 1) !== 0);
+            $helper->set_include_contents(($filters & 2) !== 0);
+            $helper->set_include_stealth_modules(($filters & 4) !== 0);
+
+            // Add the sectionfilters if relevant.
+            if ($filearea === 'offlinesectionidfiles') {
+                $sectionid = (int) array_shift($args);
+                if (!empty($args)) {
+                    $instanceid = (int) array_shift($args);
+                    $helper->set_modid_filter($instanceid);
+                }
+                $stream = $helper->get_streamable_zip_for_section_id($sectionid);
+            } else if ($filearea === 'offlinesectionnumberfiles') {
+                $sectionnumber = (int) array_shift($args);
+                if (!empty($args)) {
+                    $instanceid = (int) array_shift($args);
+                    $helper->set_modid_filter($instanceid);
+                }
+                $stream = $helper->get_streamable_zip_for_section_number($sectionnumber);
+            } else {
+                if (!empty($args)) {
+                    $instanceid = (int) array_shift($args);
+                    $helper->set_modid_filter($instanceid);
+                }
+                $stream = $helper->get_streamable_zip_for_course();
+            }
+            var_dump($helper);die;
+            $stream->finish();
+            exit();
         }
 
         $filefunction = $component.'_pluginfile';
