@@ -108,6 +108,15 @@ class file_helper {
     }
 
     /**
+     * Get the course context for the relevant course.
+     *
+     * @return context_course
+     */
+    public function get_course_context(): context_course {
+        return $this->context;
+    }
+
+    /**
      * Set whether to include module information.
      *
      * @param bool $include Whether to include module information
@@ -177,7 +186,7 @@ class file_helper {
     /**
      * Get the activity name to filter on.
      *
-     * @return null|string 
+     * @return null|string
      */
     public function get_activity_name_filter(): ?string {
         return $this->activitynamefilter;
@@ -400,7 +409,7 @@ class file_helper {
      *
      * @return array
      */
-    public function fetch_course_file_info(): array {
+    public function get_fileinfo_for_all_sections(): array {
         if (!$this->can_fetch_any()) {
             // The user cannot fetch course content for this course.
             // Return an empty array instead.
@@ -428,18 +437,15 @@ class file_helper {
      * @return archive_writer
      */
     public function get_streamable_zip_for_course(): archive_writer {
-        $fileinfo = $this->fetch_course_file_info();
+        $fileinfo = $this->get_fileinfo_for_all_sections();
         return $this->get_streamable_zip_for_fileinfo($fileinfo);
     }
 
     /**
      * Fetch the course section information.
      *
-     * @param section_info $section 
-     * @return array 
-     * @throws coding_exception 
-     * @throws dml_exception 
-     * @throws moodle_exception 
+     * @param section_info $section
+     * @return array
      */
     protected function fetch_course_section_file_info(section_info $section): array {
         global $USER;
@@ -479,7 +485,7 @@ class file_helper {
                 if ($cm->modname != $activityname) {
                     continue;
                 } else if ($modidfilter = $this->get_modid_filter()) {
-                    if ($cm->instance != $modifilter) {
+                    if ($cm->instance != $modidfilter) {
                         // The filter does not match.
                         continue;
                     } else {
