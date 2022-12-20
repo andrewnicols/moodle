@@ -1,5 +1,5 @@
 # This feature has Atto-specific steps. See MDL-75913 for further details.
-@customfield @customfield_textarea @javascript @_file_upload @editor_atto
+@customfield @customfield_textarea @javascript @_file_upload
 Feature: Default value for the textarea custom field can contain images
   In order to see images on custom fields
   As a manager
@@ -36,9 +36,9 @@ Feature: Default value for the textarea custom field can contain images
     And I set the following fields to these values:
       | Name       | Test field |
       | Short name | testfield  |
-      | Default value | v       |
-    # Embed the image into Default value.
-    And I select the text in the "Default value" Atto editor
+
+  @editor_atto
+  Scenario: For the courses that existed before the custom field was created the default value is displayed (Atto version).
     And I click on "Insert or edit image" "button" in the "Default value" "form_row"
     And I click on "Browse repositories..." "button"
     And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
@@ -48,12 +48,34 @@ Feature: Default value for the textarea custom field can contain images
     And I click on "Save image" "button"
     And I click on "Save changes" "button" in the "Adding a new Text area" "dialogue"
     And I log out
-
-  Scenario: For the courses that existed before the custom field was created the default value is displayed
     When I am on site homepage
     Then the image at "//*[contains(@class, 'frontpage-course-list-all')]//*[contains(@class, 'customfield_textarea')]//img[contains(@src, 'pluginfile.php') and contains(@src, '/customfield_textarea/defaultvalue/') and @alt='Example']" "xpath_element" should be identical to "lib/tests/fixtures/gd-logo.png"
 
-  Scenario: Teacher will see textarea default value when editing a course created before custom field was created
+  @editor_tiny
+  Scenario: For the courses that existed before the custom field was created the default value is displayed (Tiny version).
+    And I click on "Image" "button" in the "Default value" "form_row"
+    And I click on "Browse repositories..." "button"
+    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
+    And I click on "gd-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "Describe this image for someone who cannot see it" to "Example"
+    And I click on "Save image" "button"
+    And I click on "Save changes" "button" in the "Adding a new Text area" "dialogue"
+    And I log out
+    When I am on site homepage
+    #BUG. Fails at this step. Tiny is ignores image on save.
+    Then the image at "//*[contains(@class, 'frontpage-course-list-all')]//*[contains(@class, 'customfield_textarea')]//img[contains(@src, 'pluginfile.php') and contains(@src, '/customfield_textarea/defaultvalue/') and @alt='Example']" "xpath_element" should be identical to "lib/tests/fixtures/gd-logo.png"
+
+  @editor_atto
+  Scenario: Teacher will see textarea default value when editing a course created before custom field was created (Atto version).
+    And I click on "Insert or edit image" "button" in the "Default value" "form_row"
+    And I click on "Browse repositories..." "button"
+    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
+    And I click on "gd-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "Describe this image for someone who cannot see it" to "Example"
+    And I click on "Save image" "button"
+    And I click on "Save changes" "button" in the "Adding a new Text area" "dialogue"
      # Teacher will see the image when editing existing course.
     And I log in as "teacher"
     And I am on "Course 1" course homepage
@@ -68,7 +90,42 @@ Feature: Default value for the textarea custom field can contain images
     And "//img[contains(@src, '/customfield_textarea/defaultvalue/')]" "xpath_element" should not exist
     And the image at "//*[contains(@class, 'frontpage-course-list-all')]//*[contains(@class, 'customfield_textarea')]//img[contains(@src, 'pluginfile.php') and contains(@src, '/customfield_textarea/value/') and @alt='Example']" "xpath_element" should be identical to "lib/tests/fixtures/gd-logo.png"
 
-  Scenario: Manager can create a course and the default value for textarea custom field will apply.
+  @editor_tiny
+  Scenario: Teacher will see textarea default value when editing a course created before custom field was created (Tiny version).
+    And I click on "Image" "button" in the "Default value" "form_row"
+    And I click on "Browse repositories..." "button"
+    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
+    And I click on "gd-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "Describe this image for someone who cannot see it" to "Example"
+    And I click on "Save image" "button"
+    And I click on "Save changes" "button" in the "Adding a new Text area" "dialogue"
+     # Teacher will see the image when editing existing course.
+    And I log in as "teacher"
+    And I am on "Course 1" course homepage
+    And I navigate to "Settings" in current page administration
+    And I expand all fieldsets
+    #BUG. Fails at this step. Tiny is ignores image on save.
+    Then "//img[contains(@src, 'draftfile.php') and contains(@src, '/gd-logo.png') and @alt='Example']" "xpath_element" should exist in the "Test field" "form_row"
+    # Save the course without changing the default value.
+    And I press "Save and display"
+    And I log out
+    # Now the same image is displayed as "value" and not as "defaultvalue".
+    And I am on site homepage
+    And "//img[contains(@src, '/customfield_textarea/defaultvalue/')]" "xpath_element" should not exist
+    And the image at "//*[contains(@class, 'frontpage-course-list-all')]//*[contains(@class, 'customfield_textarea')]//img[contains(@src, 'pluginfile.php') and contains(@src, '/customfield_textarea/value/') and @alt='Example']" "xpath_element" should be identical to "lib/tests/fixtures/gd-logo.png"
+
+  @editor_atto
+  Scenario: Manager can create a course and the default value for textarea custom field will apply (Atto version).
+    And I click on "Insert or edit image" "button" in the "Default value" "form_row"
+    And I click on "Browse repositories..." "button"
+    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
+    And I click on "gd-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "Describe this image for someone who cannot see it" to "Example"
+    And I click on "Save image" "button"
+    And I click on "Save changes" "button" in the "Adding a new Text area" "dialogue"
+    # Log in as manager.
     When I log in as "manager"
     And I go to the courses management page
     And I click on "Create new course" "link" in the "#course-listing" "css_element"
@@ -76,6 +133,32 @@ Feature: Default value for the textarea custom field can contain images
       | Course full name      | Course 2     |
       | Course short name     | C2           |
     And I expand all fieldsets
+    Then "//img[contains(@src, 'draftfile.php') and contains(@src, '/gd-logo.png') and @alt='Example']" "xpath_element" should exist in the "Test field" "form_row"
+    And I press "Save and display"
+    And I log out
+    # Now the same image is displayed as "value" and not as "defaultvalue".
+    And I am on site homepage
+    And the image at "//*[contains(@class, 'frontpage-course-list-all')]//*[contains(@class, 'customfield_textarea')]//img[contains(@src, 'pluginfile.php') and contains(@src, '/customfield_textarea/value/') and @alt='Example']" "xpath_element" should be identical to "lib/tests/fixtures/gd-logo.png"
+
+  @editor_tiny
+  Scenario: Manager can create a course and the default value for textarea custom field will apply (Tiny version).
+    And I click on "Image" "button" in the "Default value" "form_row"
+    And I click on "Browse repositories..." "button"
+    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
+    And I click on "gd-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "Describe this image for someone who cannot see it" to "Example"
+    And I click on "Save image" "button"
+    And I click on "Save changes" "button" in the "Adding a new Text area" "dialogue"
+    # Log in as manager.
+    When I log in as "manager"
+    And I go to the courses management page
+    And I click on "Create new course" "link" in the "#course-listing" "css_element"
+    And I set the following fields to these values:
+      | Course full name      | Course 2     |
+      | Course short name     | C2           |
+    And I expand all fieldsets
+    #BUG. Fails at this step. Tiny is ignores image on save.
     Then "//img[contains(@src, 'draftfile.php') and contains(@src, '/gd-logo.png') and @alt='Example']" "xpath_element" should exist in the "Test field" "form_row"
     And I press "Save and display"
     And I log out

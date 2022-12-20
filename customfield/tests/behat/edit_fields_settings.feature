@@ -1,5 +1,5 @@
 # This feature has Atto-specific steps. See MDL-75913 for further details.
-@core @core_course @core_customfield @javascript @editor_atto
+@core @core_course @core_customfield @javascript
 Feature: Teachers can edit course custom fields
   In order to have additional data on the course
   As a teacher
@@ -19,6 +19,9 @@ Feature: Teachers can edit course custom fields
     And the following "users" exist:
       | username | firstname | lastname | email                |
       | teacher1 | Teacher   | 1        | teacher1@example.com |
+    And the following "user private files" exist:
+      | user     | filepath                      | filename |
+      | teacher1 | h5p/tests/fixtures/ipsums.h5p | ipsums.h5p |
     And the following "courses" exist:
       | fullname | shortname | format |
       | Course 1 | C1        | topics |
@@ -29,6 +32,7 @@ Feature: Teachers can edit course custom fields
       | blockname     | contextlevel | reference | pagetypepattern | defaultregion |
       | private_files | System       | 1         | my-index        | side-post     |
 
+@dave_test
   Scenario: Display custom fields on course edit form
     When I log in as "teacher1"
     And I am on "Course 1" course homepage
@@ -74,8 +78,8 @@ Feature: Teachers can edit course custom fields
       | Field 5               | b            |
     And I log out
 
-  @javascript @_file_upload
-  Scenario: Use images in the custom field description
+  @javascript @_file_upload @editor_atto
+  Scenario: Use images in the custom field description (Atto version).
     When I log in as "admin"
     And I follow "Manage private files"
     And I upload "lib/tests/fixtures/gd-logo.png" file to "Files" filemanager
@@ -96,6 +100,31 @@ Feature: Teachers can edit course custom fields
     And I am on "Course 1" course homepage
     And I navigate to "Settings" in current page administration
     And I expand all fieldsets
+    Then the image at "//div[contains(@class, 'fitem')][contains(., 'Field 1')]/following-sibling::div[1]//img[contains(@src, 'pluginfile.php') and contains(@src, '/core_customfield/description/') and @alt='Example']" "xpath_element" should be identical to "lib/tests/fixtures/gd-logo.png"
+    And I log out
+
+  @javascript @_file_upload @editor_tiny
+  Scenario: Use images in the custom field description (Tiny version).
+    When I log in as "admin"
+    And I follow "Manage private files"
+    And I upload "lib/tests/fixtures/gd-logo.png" file to "Files" filemanager
+    And I click on "Save changes" "button"
+    And I navigate to "Courses > Course custom fields" in site administration
+    And I click on "Edit" "link" in the "Field 1" "table_row"
+    And I click on "Image" "button" in the "Description" "form_row"
+    And I click on "Browse repositories..." "button"
+    And I click on "Private files" "link" in the ".fp-repo-area" "css_element"
+    And I click on "gd-logo.png" "link"
+    And I click on "Select this file" "button"
+    And I set the field "Describe this image for someone who cannot see it" to "Example"
+    And I click on "Save image" "button"
+    And I click on "Save changes" "button" in the "Updating Field 1" "dialogue"
+    And I log out
+    And I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I navigate to "Settings" in current page administration
+    And I expand all fieldsets
+    #BUG. Fails at this step. Tiny is ignores image on save.
     Then the image at "//div[contains(@class, 'fitem')][contains(., 'Field 1')]/following-sibling::div[1]//img[contains(@src, 'pluginfile.php') and contains(@src, '/core_customfield/description/') and @alt='Example']" "xpath_element" should be identical to "lib/tests/fixtures/gd-logo.png"
     And I log out
 

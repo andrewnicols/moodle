@@ -276,6 +276,11 @@ class behat_core_generator extends behat_generator_base {
                 'required' => array('contextlevel', 'reference', 'contenttype', 'user', 'contentname'),
                 'switchids' => array('user' => 'userid')
             ],
+            'user private files' => [
+                'singular' => 'user private file',
+                'datagenerator' => 'user_private_files',
+                'required' => ['user', 'filepath', 'filename'],
+            ],
             'badge external backpacks' => [
                 'singular' => 'badge external backpack',
                 'datagenerator' => 'badge_external_backpack',
@@ -1014,6 +1019,55 @@ class behat_core_generator extends behat_generator_base {
         } else {
             throw new Exception('The specified "' . $data['contenttype'] . '" contenttype does not exist');
         }
+    }
+
+    /**
+     * Create content in the given user's private area.
+     *
+     * @param array $data
+     * @return void
+     */
+    protected function process_user_private_file(array $data) {
+        global $CFG, $USER;
+        $user = $USER;
+
+        //
+        $fs = get_file_storage();
+            ////
+            $filepath = "{$CFG->dirroot}/{$data['filepath']}";
+            if (!file_exists($filepath)) {
+                throw new coding_exception("File '{$filepath}' does not exist");
+            }
+            $filerecord = [
+                'userid' => $user->id,
+                'contextid' => context_user::instance($user->id)->id,
+                'component' => 'user',
+                'filearea' => 'privatefiles',
+                'itemid' => 0,
+                'filepath'  => '/',
+                'filename'  => basename($filepath),
+            ];
+            $fs->create_file_from_pathname($filerecord, $filepath);
+
+            //////
+            //if (!empty($data['filepath'])) {
+
+                // $filename = basename($data['filepath']);
+                // $fs = get_file_storage();
+                // $filerecord = array(
+                //     'component' => 'contentbank',
+                //     'filearea' => 'public',
+                //     'contextid' => $context->id,
+                //     'userid' => $data['userid'],
+                //     'itemid' => $content->get_id(),
+                //     'filename' => $filename,
+                //     'filepath' => '/'
+                // );
+                // $fs->create_file_from_pathname($filerecord, $CFG->dirroot . $data['filepath']);
+
+        //} else {
+            //throw new Exception('The specified "' . $data['contenttype'] . '" contenttype does not exist');
+      // }
     }
 
     /**
