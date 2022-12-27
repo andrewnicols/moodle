@@ -32,7 +32,7 @@ class with_maxlength extends configtext {
     protected $maxlength;
 
     /**
-     * Config text constructor
+     * Constructor.
      *
      * @param string $name unique ascii name, either 'mysetting' for settings that in config,
      *                     or 'myplugin/mysetting' for ones in config_plugins.
@@ -43,14 +43,21 @@ class with_maxlength extends configtext {
      * @param int $size default field size
      * @param mixed $maxlength int maxlength allowed, 0 for infinite.
      */
-    public function __construct($name, $visiblename, $description, $defaultsetting, $paramtype=PARAM_RAW,
-                                $size=null, $maxlength = 0) {
+    public function __construct(
+        $name,
+        $visiblename,
+        $description,
+        $defaultsetting,
+        $paramtype = PARAM_RAW,
+        $size = null,
+        $maxlength = 0
+    ) {
         $this->maxlength = $maxlength;
         parent::__construct($name, $visiblename, $description, $defaultsetting, $paramtype, $size);
     }
 
     /**
-     * Validate data before storage
+     * Validate data before storage.
      *
      * @param string $data data
      * @return mixed true if ok string if error found
@@ -62,14 +69,14 @@ class with_maxlength extends configtext {
                 // Max length check.
                 $length = core_text::strlen($data);
                 if ($length > $this->maxlength) {
-                    return get_string('maximumchars', 'moodle',  $this->maxlength);
+                    return get_string('maximumchars', 'moodle', $this->maxlength);
                 }
                 return true;
-            } else {
-                return true; // No max length check needed.
             }
-        } else {
-            return $parentvalidation;
+
+            // No max length check needed.
+            return true;
         }
+        return $parentvalidation;
     }
 }
