@@ -16,8 +16,6 @@
 
 namespace core_admin;
 
-use stdClass;
-
 /**
  * An additional option that can be applied to an admin setting.
  * The currently supported options are 'ADVANCED', 'LOCKED' and 'REQUIRED'.
@@ -118,11 +116,10 @@ class setting_flag {
             } else {
                 $value = !empty($data[$setting->get_full_name() . '_' . $this->get_shortname()]);
             }
-            $result = $setting->config_write($setting->name . '_' . $this->get_shortname(), $value);
+            $result = $setting->config_write("{$setting->name}_" . $this->get_shortname(), $value);
         }
 
         return $result;
-
     }
 
     /**
@@ -136,12 +133,13 @@ class setting_flag {
 
         $value = $setting->get_setting_flag_value($this);
 
-        $context = new stdClass();
-        $context->id = $setting->get_id() . '_' . $this->get_shortname();
-        $context->name = $setting->get_full_name() .  '_' . $this->get_shortname();
-        $context->value = 1;
-        $context->checked = $value ? true : false;
-        $context->label = $this->get_displayname();
+        $context = (object) [
+            'id' => $setting->get_id() . '_' . $this->get_shortname(),
+            'name' => $setting->get_full_name() . '_' . $this->get_shortname(),
+            'value' => 1,
+            'checked' => $value ? true : false,
+            'label' => $this->get_displayname(),
+        ];
 
         return $OUTPUT->render_from_template('core_admin/setting_flag', $context);
     }
