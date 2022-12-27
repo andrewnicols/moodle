@@ -17,7 +17,6 @@
 namespace core_admin\adminsetting;
 
 use core_admin\setting;
-use stdClass;
 
 /**
  * No setting - just name and description in same row.
@@ -76,12 +75,13 @@ class description extends setting {
      * @param string $query
      * @return string Returns an HTML string
      */
-    public function output_html($data, $query='') {
+    public function output_html($data, $query = '') {
         global $OUTPUT;
 
-        $context = new stdClass();
-        $context->title = $this->visiblename;
-        $context->description = $this->description;
+        $context = (object) [
+            'title' => $this->visiblename,
+            'description' => $this->description,
+        ];
 
         return $OUTPUT->render_from_template('core_admin/setting_description', $context);
     }
