@@ -16,11 +16,11 @@
 
 namespace core_admin\local\tree;
 
+use context;
 use context_system;
 use core_admin\local\settings\linkable_settings_page;
 use core_text;
 use moodle_url;
-use stdClass;
 
 /**
  * Links external PHP pages into the admin tree.
@@ -63,19 +63,27 @@ class externalpage implements part_of_admin_tree, linkable_settings_page {
      * @param string $name The internal name for this external page. Must be unique amongst ALL part_of_admin_tree objects.
      * @param string $visiblename The displayed name for this external page. Usually obtained through get_string().
      * @param string $url The external URL that we should link to when someone requests this external page.
-     * @param mixed $req_capability The role capability/permission a user must have to access this external page. Defaults to 'moodle/site:config'.
+     * @param mixed $reqcapability The role capability/permission a user must have to access this external page.
+     *                              Defaults to 'moodle/site:config'.
      * @param boolean $hidden Is this external page hidden in admin tree block? Default false.
-     * @param stdClass $context The context the page relates to. Not sure what happens
+     * @param context $context The context the page relates to. Not sure what happens
      *      if you specify something other than system or front page. Defaults to system.
      */
-    public function __construct($name, $visiblename, $url, $req_capability='moodle/site:config', $hidden=false, $context=NULL) {
+    public function __construct(
+        $name,
+        $visiblename,
+        $url,
+        $reqcapability = 'moodle/site:config',
+        $hidden = false,
+        context $context = null
+    ) {
         $this->name        = $name;
         $this->visiblename = $visiblename;
         $this->url         = $url;
-        if (is_array($req_capability)) {
-            $this->req_capability = $req_capability;
+        if (is_array($reqcapability)) {
+            $this->req_capability = $reqcapability;
         } else {
-            $this->req_capability = array($req_capability);
+            $this->req_capability = [$reqcapability];
         }
         $this->hidden = $hidden;
         $this->context = $context;
@@ -97,15 +105,15 @@ class externalpage implements part_of_admin_tree, linkable_settings_page {
      * @param bool $findpath defaults to false
      * @return mixed A reference to the object with internal name $name if found, otherwise a reference to NULL.
      */
-    public function locate($name, $findpath=false) {
+    public function locate($name, $findpath = false) {
         if ($this->name == $name) {
             if ($findpath) {
-                $this->visiblepath = array($this->visiblename);
-                $this->path        = array($this->name);
+                $this->visiblepath = [$this->visiblename];
+                $this->path        = [$this->name];
             }
             return $this;
         } else {
-            $return = NULL;
+            $return = null;
             return $return;
         }
     }
@@ -132,14 +140,16 @@ class externalpage implements part_of_admin_tree, linkable_settings_page {
             $found = true;
         } else if (strpos(core_text::strtolower($this->visiblename), $query) !== false) {
                 $found = true;
-            }
+        }
         if ($found) {
-            $result = new stdClass();
-            $result->page     = $this;
-            $result->settings = array();
-            return array($this->name => $result);
+            return [
+                $this->name => (object) [
+                    'page' => $this,
+                    'settings' => [],
+                ],
+            ];
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -149,9 +159,8 @@ class externalpage implements part_of_admin_tree, linkable_settings_page {
      * @return bool True if user has access, false otherwise.
      */
     public function check_access() {
-        global $CFG;
         $context = empty($this->context) ? context_system::instance() : $this->context;
-        foreach($this->req_capability as $cap) {
+        foreach ($this->req_capability as $cap) {
             if (has_capability($cap, $context)) {
                 return true;
             }

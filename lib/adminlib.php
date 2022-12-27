@@ -664,10 +664,10 @@ function enable_cli_maintenance_mode() {
 /// CLASS DEFINITIONS /////////////////////////////////////////////////////////
 
 class_alias(\core_admin\local\tree\category::class, 'admin_category');
+class_alias(\core_admin\local\tree\externalpage::class, 'admin_externalpage');
 class_alias(\core_admin\local\tree\part_of_admin_tree::class, 'part_of_admin_tree');
 class_alias(\core_admin\local\tree\parentable_part_of_admin_tree::class, 'parentable_part_of_admin_tree');
 class_alias(\core_admin\local\tree\root::class, 'admin_root');
-class_alias(\core_admin\local\tree\externalpage::class, 'admin_externalpage');
 
 /**
  * Used to store details of the dependency between two settings elements.
