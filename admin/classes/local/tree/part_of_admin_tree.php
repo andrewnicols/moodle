@@ -29,21 +29,21 @@ namespace core_admin\local\tree;
  */
 interface part_of_admin_tree {
 
-/**
- * Finds a named part_of_admin_tree.
- *
- * Used to find a part_of_admin_tree. If a class only inherits part_of_admin_tree
- * and not parentable_part_of_admin_tree, then this function should only check if
- * $this->name matches $name. If it does, it should return a reference to $this,
- * otherwise, it should return a reference to NULL.
- *
- * If a class inherits parentable_part_of_admin_tree, this method should be called
- * recursively on all child objects (assuming, of course, the parent object's name
- * doesn't match the search criterion).
- *
- * @param string $name The internal name of the part_of_admin_tree we're searching for.
- * @return mixed An object reference or a NULL reference.
- */
+    /**
+     * Finds a named part_of_admin_tree.
+     *
+     * Used to find a part_of_admin_tree. If a class only inherits part_of_admin_tree
+     * and not parentable_part_of_admin_tree, then this function should only check if
+     * $this->name matches $name. If it does, it should return a reference to $this,
+     * otherwise, it should return a reference to NULL.
+     *
+     * If a class inherits parentable_part_of_admin_tree, this method should be called
+     * recursively on all child objects (assuming, of course, the parent object's name
+     * doesn't match the search criterion).
+     *
+     * @param string $name The internal name of the part_of_admin_tree we're searching for.
+     * @return mixed An object reference or a NULL reference.
+     */
     public function locate($name);
 
     /**
