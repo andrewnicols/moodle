@@ -72,7 +72,7 @@ class setting_dependency {
                 $plugin = '';
             }
         }
-        return 's_'.$plugin.'_'.$name;
+        return "s_{$plugin}_{$name}";
     }
 
     /**
