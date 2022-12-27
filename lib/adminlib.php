@@ -663,6 +663,7 @@ function enable_cli_maintenance_mode() {
 
 /// CLASS DEFINITIONS /////////////////////////////////////////////////////////
 
+class_alias(\core_admin\adminsetting\heading::class, 'admin_setting_heading');
 class_alias(\core_admin\local\tree\category::class, 'admin_category');
 class_alias(\core_admin\local\tree\externalpage::class, 'admin_externalpage');
 class_alias(\core_admin\local\tree\part_of_admin_tree::class, 'part_of_admin_tree');
@@ -672,63 +673,6 @@ class_alias(\core_admin\local\tree\settingpage::class, 'admin_settingpage');
 class_alias(\core_admin\setting::class, 'admin_setting');
 class_alias(\core_admin\setting_dependency::class, 'admin_settingdependency');
 class_alias(\core_admin\setting_flag::class, 'admin_setting_flag');
-
-/**
- * No setting - just heading and text.
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_setting_heading extends admin_setting {
-
-    /**
-     * not a setting, just text
-     * @param string $name unique ascii name, either 'mysetting' for settings that in config, or 'myplugin/mysetting' for ones in config_plugins.
-     * @param string $heading heading
-     * @param string $information text in box
-     */
-    public function __construct($name, $heading, $information) {
-        $this->nosave = true;
-        parent::__construct($name, $heading, $information, '');
-    }
-
-    /**
-     * Always returns true
-     * @return bool Always returns true
-     */
-    public function get_setting() {
-        return true;
-    }
-
-    /**
-     * Always returns true
-     * @return bool Always returns true
-     */
-    public function get_defaultsetting() {
-        return true;
-    }
-
-    /**
-     * Never write settings
-     * @return string Always returns an empty string
-     */
-    public function write_setting($data) {
-    // do not write any setting
-        return '';
-    }
-
-    /**
-     * Returns an HTML string
-     * @return string Returns an HTML string
-     */
-    public function output_html($data, $query='') {
-        global $OUTPUT;
-        $context = new stdClass();
-        $context->title = $this->visiblename;
-        $context->description = $this->description;
-        $context->descriptionformatted = highlight($query, markdown_to_html($this->description));
-        return $OUTPUT->render_from_template('core_admin/setting_heading', $context);
-    }
-}
 
 /**
  * No setting - just name and description in same row.
