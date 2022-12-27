@@ -16,7 +16,6 @@
 
 namespace core_admin;
 
-use admin_setting_flag;
 use core_text;
 use html_writer;
 use lang_string;
@@ -47,7 +46,7 @@ abstract class setting {
     public $nosave = false;
     /** @var bool if set, indicates that a change to this setting requires rebuild course cache */
     public $affectsmodinfo = false;
-    /** @var array of admin_setting_flag - These are extra checkboxes attached to a setting. */
+    /** @var array of setting_flag - These are extra checkboxes attached to a setting. */
     private $flags = [];
     /** @var bool Whether this field must be forced LTR. */
     private $forceltr = null;
@@ -81,7 +80,7 @@ abstract class setting {
      */
     protected function set_flag_options($enabled, $default, $shortname, $displayname) {
         if (empty($this->flags[$shortname])) {
-            $this->flags[$shortname] = new admin_setting_flag($enabled, $default, $shortname, $displayname);
+            $this->flags[$shortname] = new setting_flag($enabled, $default, $shortname, $displayname);
         } else {
             $this->flags[$shortname]->set_options($enabled, $default);
         }
@@ -154,10 +153,10 @@ abstract class setting {
     /**
      * Get the currently saved value for a setting flag
      *
-     * @param admin_setting_flag $flag - One of the admin_setting_flag for this admin_setting.
+     * @param setting_flag $flag - One of the setting_flag for this admin_setting.
      * @return bool
      */
-    public function get_setting_flag_value(admin_setting_flag $flag) {
+    public function get_setting_flag_value(setting_flag $flag) {
         $value = $this->config_read($this->name . '_' . $flag->get_shortname());
         if (!isset($value)) {
             $value = $flag->get_default();
