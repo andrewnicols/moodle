@@ -663,6 +663,7 @@ function enable_cli_maintenance_mode() {
 
 /// CLASS DEFINITIONS /////////////////////////////////////////////////////////
 
+class_alias(\core_admin\adminsetting\description::class, 'admin_setting_description');
 class_alias(\core_admin\adminsetting\heading::class, 'admin_setting_heading');
 class_alias(\core_admin\local\tree\category::class, 'admin_category');
 class_alias(\core_admin\local\tree\externalpage::class, 'admin_externalpage');
@@ -673,75 +674,6 @@ class_alias(\core_admin\local\tree\settingpage::class, 'admin_settingpage');
 class_alias(\core_admin\setting::class, 'admin_setting');
 class_alias(\core_admin\setting_dependency::class, 'admin_settingdependency');
 class_alias(\core_admin\setting_flag::class, 'admin_setting_flag');
-
-/**
- * No setting - just name and description in same row.
- *
- * @copyright 2018 onwards Amaia Anabitarte
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_setting_description extends admin_setting {
-
-    /**
-     * Not a setting, just text
-     *
-     * @param string $name
-     * @param string $visiblename
-     * @param string $description
-     */
-    public function __construct($name, $visiblename, $description) {
-        $this->nosave = true;
-        parent::__construct($name, $visiblename, $description, '');
-    }
-
-    /**
-     * Always returns true
-     *
-     * @return bool Always returns true
-     */
-    public function get_setting() {
-        return true;
-    }
-
-    /**
-     * Always returns true
-     *
-     * @return bool Always returns true
-     */
-    public function get_defaultsetting() {
-        return true;
-    }
-
-    /**
-     * Never write settings
-     *
-     * @param mixed $data Gets converted to str for comparison against yes value
-     * @return string Always returns an empty string
-     */
-    public function write_setting($data) {
-        // Do not write any setting.
-        return '';
-    }
-
-    /**
-     * Returns an HTML string
-     *
-     * @param string $data
-     * @param string $query
-     * @return string Returns an HTML string
-     */
-    public function output_html($data, $query='') {
-        global $OUTPUT;
-
-        $context = new stdClass();
-        $context->title = $this->visiblename;
-        $context->description = $this->description;
-
-        return $OUTPUT->render_from_template('core_admin/setting_description', $context);
-    }
-}
-
-
 
 /**
  * The most flexible setting, the user enters text.
