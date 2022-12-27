@@ -65,19 +65,20 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
      *
      * @param string $name The internal name for this external page. Must be unique amongst ALL part_of_admin_tree objects.
      * @param string $visiblename The displayed name for this external page. Usually obtained through get_string().
-     * @param mixed $req_capability The role capability/permission a user must have to access this external page. Defaults to 'moodle/site:config'.
+     * @param mixed $req_capability The role capability/permission a user must have to access this external page.
+     *                              Defaults to 'moodle/site:config'.
      * @param boolean $hidden Is this external page hidden in admin tree block? Default false.
      * @param stdClass $context The context the page relates to. Not sure what happens
      *      if you specify something other than system or front page. Defaults to system.
      */
-    public function __construct($name, $visiblename, $req_capability='moodle/site:config', $hidden=false, $context=NULL) {
+    public function __construct($name, $visiblename, $reqcapability = 'moodle/site:config', $hidden = false, $context = null) {
         $this->settings    = new stdClass();
         $this->name        = $name;
         $this->visiblename = $visiblename;
-        if (is_array($req_capability)) {
-            $this->req_capability = $req_capability;
+        if (is_array($reqcapability)) {
+            $this->req_capability = $reqcapability;
         } else {
-            $this->req_capability = array($req_capability);
+            $this->req_capability = [$reqcapability];
         }
         $this->hidden      = $hidden;
         $this->context     = $context;
@@ -104,15 +105,15 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
      * @param bool $findpath
      * @return mixed Object (this) if name ==  this->name, else returns null
      */
-    public function locate($name, $findpath=false) {
+    public function locate($name, $findpath = false) {
         if ($this->name == $name) {
             if ($findpath) {
-                $this->visiblepath = array($this->visiblename);
-                $this->path        = array($this->name);
+                $this->visiblepath = [$this->visiblename];
+                $this->path        = [$this->name];
             }
             return $this;
         } else {
-            $return = NULL;
+            $return = null;
             return $return;
         }
     }
@@ -124,7 +125,7 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
      * @return array
      */
     public function search($query) {
-        $found = array();
+        $found = [];
 
         foreach ($this->settings as $setting) {
             if ($setting->is_related($query)) {
@@ -136,7 +137,7 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
             $result = new stdClass();
             $result->page     = $this;
             $result->settings = $found;
-            return array($this->name => $result);
+            return [$this->name => $result];
         }
 
         $found = false;
@@ -144,14 +145,14 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
             $found = true;
         } else if (strpos(core_text::strtolower($this->visiblename), $query) !== false) {
                 $found = true;
-            }
+        }
         if ($found) {
             $result = new stdClass();
             $result->page     = $this;
-            $result->settings = array();
-            return array($this->name => $result);
+            $result->settings = [];
+            return [$this->name => $result];
         } else {
-            return array();
+            return [];
         }
     }
 
@@ -166,10 +167,12 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
     }
 
     /**
-     * adds an admin_setting to this settingpage
+     * Adds an admin_setting to this settingpage.
      *
-     * not the same as add for category. adds an admin_setting to this settingpage. settings appear (on the settingpage) in the order in which they're added
-     * n.b. each admin_setting in an settingpage must have a unique internal name
+     * Not the same as add for admin_category.
+     * Adds an admin_setting to this settingpage.
+     * Settings appear (on the settingpage) in the order in which they're added.
+     * Note: each admin_setting in an admin_settingpage must have a unique internal name.
      *
      * @param object $setting is the admin_setting object you want to add
      * @return bool true if successful, false if not
@@ -217,9 +220,8 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
      * @return bool Returns true for yes false for no
      */
     public function check_access() {
-        global $CFG;
         $context = empty($this->context) ? context_system::instance() : $this->context;
-        foreach($this->req_capability as $cap) {
+        foreach ($this->req_capability as $cap) {
             if (has_capability($cap, $context)) {
                 return true;
             }
@@ -233,14 +235,14 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
      */
     public function output_html() {
         $adminroot = admin_get_root();
-        $return = '<fieldset>'."\n".'<div class="clearer"><!-- --></div>'."\n";
-        foreach($this->settings as $setting) {
+        $return = '<fieldset>' . "\n" . '<div class="clearer"><!-- --></div>' . "\n";
+        foreach ($this->settings as $setting) {
             $fullname = $setting->get_full_name();
             if (array_key_exists($fullname, $adminroot->errors)) {
                 $data = $adminroot->errors[$fullname]->data;
             } else {
                 $data = $setting->get_setting();
-                // do not use defaults if settings not available - upgrade settings handles the defaults!
+                // Do not use defaults if settings not available - upgrade settings handles the defaults!
             }
             $return .= $setting->output_html($data);
         }
@@ -262,7 +264,7 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
      * @return bool
      */
     public function show_save() {
-        foreach($this->settings as $setting) {
+        foreach ($this->settings as $setting) {
             if (empty($setting->nosave)) {
                 return true;
             }
@@ -275,7 +277,7 @@ class settingpage implements part_of_admin_tree, linkable_settings_page {
      * @return bool
      */
     public function has_dependencies() {
-        return (bool)$this->dependencies;
+        return (bool) $this->dependencies;
     }
 
     /**
