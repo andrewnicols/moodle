@@ -42,13 +42,13 @@ abstract class setting {
     /** @var string */
     public $updatedcallback;
     /** @var mixed can be String or Null.  Null means main config table */
-    public $plugin; // null means main config table
+    public $plugin; // Null means main config table.
     /** @var bool true indicates this setting does not actually save anything, just information */
     public $nosave = false;
     /** @var bool if set, indicates that a change to this setting requires rebuild course cache */
     public $affectsmodinfo = false;
     /** @var array of admin_setting_flag - These are extra checkboxes attached to a setting. */
-    private $flags = array();
+    private $flags = [];
     /** @var bool Whether this field must be forced LTR. */
     private $forceltr = null;
     /** @var array list of other settings that may cause this setting to be hidden */
@@ -141,8 +141,10 @@ abstract class setting {
                 return true;
             }
         } else {
-            if (array_key_exists($this->plugin, $CFG->forced_plugin_settings)
-                and array_key_exists($this->name, $CFG->forced_plugin_settings[$this->plugin])) {
+            if (
+                array_key_exists($this->plugin, $CFG->forced_plugin_settings)
+                && array_key_exists($this->name, $CFG->forced_plugin_settings[$this->plugin])
+            ) {
                 return true;
             }
         }
@@ -169,7 +171,7 @@ abstract class setting {
      *
      * @param array of strings describing the defaults for this setting. This is appended to by this function.
      */
-    public function get_setting_flag_defaults(& $defaults) {
+    public function get_setting_flag_defaults(&$defaults) {
         foreach ($this->flags as $flag) {
             if ($flag->is_enabled() && $flag->get_default()) {
                 $defaults[] = $flag->get_displayname();
@@ -194,7 +196,7 @@ abstract class setting {
         }
 
         if (!empty($output)) {
-            return html_writer::tag('span', $output, array('class' => 'adminsettingsflags'));
+            return html_writer::tag('span', $output, ['class' => 'adminsettingsflags']);
         }
         return $output;
     }
@@ -238,7 +240,7 @@ abstract class setting {
                 $this->plugin = null;
             } else if (!preg_match('/^[a-zA-Z0-9_]+$/', $this->plugin)) {
                     throw new moodle_exception('invalidadminsettingname', '', '', $name);
-                }
+            }
         }
     }
 
@@ -247,7 +249,7 @@ abstract class setting {
      * @return string
      */
     public function get_full_name() {
-        return 's_'.$this->plugin.'_'.$this->name;
+        return 's_' . $this->plugin . '_' . $this->name;
     }
 
     /**
@@ -255,7 +257,7 @@ abstract class setting {
      * @return string
      */
     public function get_id() {
-        return 'id_s_'.$this->plugin.'_'.$this->name;
+        return 'id_s_' . $this->plugin . '_' . $this->name;
     }
 
     /**
@@ -275,13 +277,12 @@ abstract class setting {
         global $CFG;
         if (!empty($this->plugin)) {
             $value = get_config($this->plugin, $name);
-            return $value === false ? NULL : $value;
-
+            return $value === false ? null : $value;
         } else {
             if (isset($CFG->$name)) {
                 return $CFG->$name;
             } else {
-                return NULL;
+                return null;
             }
         }
     }
@@ -294,33 +295,33 @@ abstract class setting {
      * @return bool Write setting to config table
      */
     public function config_write($name, $value) {
-        global $DB, $USER, $CFG;
-
         if ($this->nosave) {
             return true;
         }
 
-        // make sure it is a real change
+        // Make sure it is a real change.
         $oldvalue = get_config($this->plugin, $name);
-        $oldvalue = ($oldvalue === false) ? null : $oldvalue; // normalise
-        $value = is_null($value) ? null : (string)$value;
+        // Normalise.
+        $oldvalue = ($oldvalue === false) ? null : $oldvalue;
+        $value = is_null($value) ? null : (string) $value;
 
         if ($oldvalue === $value) {
             return true;
         }
 
-        // store change
+        // Store change.
         set_config($name, $value, $this->plugin);
 
-        // Some admin settings affect course modinfo
+        // Some admin settings affect course modinfo.
         if ($this->affectsmodinfo) {
-            // Clear course cache for all courses
+            // Clear course cache for all courses.
             rebuild_course_cache(0, true);
         }
 
         $this->add_to_config_log($name, $oldvalue, $value);
 
-        return true; // BC only
+        // BC only.
+        return true;
     }
 
     /**
@@ -337,18 +338,19 @@ abstract class setting {
      * Returns current value of this setting
      * @return mixed array or string depending on instance, NULL means not set yet
      */
-    public abstract function get_setting();
+    abstract public function get_setting();
 
     /**
      * Returns default setting if exists
      * @return mixed array or string depending on instance; NULL means no default, user must supply
      */
     public function get_defaultsetting() {
-        $adminroot =  admin_get_root(false, false);
+        $adminroot = admin_get_root(false, false);
         if (!empty($adminroot->custom_defaults)) {
             $plugin = is_null($this->plugin) ? 'moodle' : $this->plugin;
             if (isset($adminroot->custom_defaults[$plugin])) {
-                if (array_key_exists($this->name, $adminroot->custom_defaults[$plugin])) { // null is valid value here ;-)
+                if (array_key_exists($this->name, $adminroot->custom_defaults[$plugin])) {
+                    // Note: null is a valid value here.
                     return $adminroot->custom_defaults[$plugin][$this->name];
                 }
             }
@@ -362,18 +364,18 @@ abstract class setting {
      * @param mixed $data string or array, must not be NULL
      * @return string empty string if ok, string error message otherwise
      */
-    public abstract function write_setting($data);
+    abstract public function write_setting($data);
 
     /**
      * Return part of form with setting
-     * This function should always be overwritten
+     * This function should always be overwridden
      *
      * @param mixed $data array or string depending on setting
      * @param string $query
      * @return string
      */
-    public function output_html($data, $query='') {
-    // should be overridden
+    public function output_html($data, $query = '') {
+        // Should be overridden.
         return;
     }
 
@@ -398,7 +400,7 @@ abstract class setting {
         }
 
         $callbackfunction = $this->updatedcallback;
-        if (!empty($callbackfunction) and is_callable($callbackfunction)) {
+        if (!empty($callbackfunction) && is_callable($callbackfunction)) {
             $callbackfunction($this->get_full_name());
         }
         return true;
