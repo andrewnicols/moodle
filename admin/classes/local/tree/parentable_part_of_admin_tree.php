@@ -30,23 +30,22 @@ namespace core_admin\local\tree;
  */
 interface parentable_part_of_admin_tree extends part_of_admin_tree {
 
-/**
- * Adds a part_of_admin_tree object to the admin tree.
- *
- * Used to add a part_of_admin_tree object to this object or a child of this
- * object. $something should only be added if $destinationname matches
- * $this->name. If it doesn't, add should be called on child objects that are
- * also parentable_part_of_admin_tree's.
- *
- * $something should be appended as the last child in the $destinationname. If the
- * $beforesibling is specified, $something should be prepended to it. If the given
- * sibling is not found, $something should be appended to the end of $destinationname
- * and a developer debugging message should be displayed.
- *
- * @param string $destinationname The internal name of the new parent for $something.
- * @param part_of_admin_tree $something The object to be added.
- * @return bool True on success, false on failure.
- */
+    /**
+     * Adds a part_of_admin_tree object to the admin tree.
+     *
+     * Used to add a part_of_admin_tree object to this object or a child of this
+     * object. $something should only be added if $destinationname matches
+     * $this->name. If it doesn't, add should be called on child objects that are
+     * also parentable_part_of_admin_tree's.
+     *
+     * $something should be appended as the last child in the $destinationname. If the
+     * $beforesibling is specified, $something should be prepended to it. If the given
+     * sibling is not found, $something should be appended to the end of $destinationname
+     * and a developer debugging message should be displayed.
+     *
+     * @param string $destinationname The internal name of the new parent for $something.
+     * @param part_of_admin_tree $something The object to be added.
+     * @return bool True on success, false on failure.
+     */
     public function add($destinationname, $something, $beforesibling = null);
-
 }
