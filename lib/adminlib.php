@@ -664,40 +664,7 @@ function enable_cli_maintenance_mode() {
 /// CLASS DEFINITIONS /////////////////////////////////////////////////////////
 
 class_alias(\core_admin\local\tree\part_of_admin_tree::class, 'part_of_admin_tree');
-
-/**
- * Interface implemented by any part_of_admin_tree that has children.
- *
- * The interface implemented by any part_of_admin_tree that can be a parent
- * to other part_of_admin_tree's. (For now, this only includes admin_category.) Apart
- * from ensuring part_of_admin_tree compliancy, it also ensures inheriting methods
- * include an add method for adding other part_of_admin_tree objects as children.
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-interface parentable_part_of_admin_tree extends part_of_admin_tree {
-
-/**
- * Adds a part_of_admin_tree object to the admin tree.
- *
- * Used to add a part_of_admin_tree object to this object or a child of this
- * object. $something should only be added if $destinationname matches
- * $this->name. If it doesn't, add should be called on child objects that are
- * also parentable_part_of_admin_tree's.
- *
- * $something should be appended as the last child in the $destinationname. If the
- * $beforesibling is specified, $something should be prepended to it. If the given
- * sibling is not found, $something should be appended to the end of $destinationname
- * and a developer debugging message should be displayed.
- *
- * @param string $destinationname The internal name of the new parent for $something.
- * @param part_of_admin_tree $something The object to be added.
- * @return bool True on success, false on failure.
- */
-    public function add($destinationname, $something, $beforesibling = null);
-
-}
-
+class_alias(\core_admin\local\tree\parentable_part_of_admin_tree::class, 'parentable_part_of_admin_tree');
 
 /**
  * The object used to represent folders (a.k.a. categories) in the admin tree block.
