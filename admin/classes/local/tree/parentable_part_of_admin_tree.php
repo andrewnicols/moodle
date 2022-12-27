@@ -20,7 +20,7 @@ namespace core_admin\local\tree;
  * Interface implemented by any part_of_admin_tree that has children.
  *
  * The interface implemented by any part_of_admin_tree that can be a parent
- * to other part_of_admin_tree's. (For now, this only includes admin_category.) Apart
+ * to other part_of_admin_tree's. (For now, this only includes category.) Apart
  * from ensuring part_of_admin_tree compliancy, it also ensures inheriting methods
  * include an add method for adding other part_of_admin_tree objects as children.
  *
