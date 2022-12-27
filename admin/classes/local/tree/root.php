@@ -24,7 +24,7 @@ namespace core_admin\local\tree;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class root extends category {
-/** @var array List of errors */
+    /** @var array List of errors */
     public $errors;
     /** @var string search query */
     public $search;
@@ -39,24 +39,24 @@ class root extends category {
      * @param bool $fulltree true means all settings required,
      *                            false only pages required
      */
-    public function __construct($fulltree) {
+    public function __construct(bool $fulltree) {
         global $CFG;
 
         parent::__construct('root', get_string('administration'), false);
-        $this->errors   = array();
+        $this->errors   = [];
         $this->search   = '';
         $this->fulltree = $fulltree;
         $this->loaded   = false;
 
-        $this->category_cache = array();
+        $this->category_cache = [];
 
-        // load custom defaults if found
+        // Load custom defaults if found.
         $this->custom_defaults = null;
-        $defaultsfile = "$CFG->dirroot/local/defaults.php";
+        $defaultsfile = "{$CFG->dirroot}/local/defaults.php";
         if (is_readable($defaultsfile)) {
-            $defaults = array();
+            $defaults = [];
             include($defaultsfile);
-            if (is_array($defaults) and count($defaults)) {
+            if (is_array($defaults) && count($defaults)) {
                 $this->custom_defaults = $defaults;
             }
         }
@@ -68,13 +68,13 @@ class root extends category {
      * @param bool $requirefulltree
      */
     public function purge_children($requirefulltree) {
-        $this->children = array();
+        $this->children = [];
         $this->fulltree = ($requirefulltree || $this->fulltree);
         $this->loaded   = false;
-        //break circular dependencies - this helps PHP 5.2
-        while($this->category_cache) {
+        // Break circular dependencies - this helps PHP 5.2.
+        while ($this->category_cache) {
             array_pop($this->category_cache);
         }
-        $this->category_cache = array();
+        $this->category_cache = [];
     }
 }
