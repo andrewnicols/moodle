@@ -17,7 +17,6 @@
 namespace core_admin\adminsetting;
 
 use core_admin\setting;
-use stdClass;
 
 /**
  * No setting - just heading and text.
@@ -30,7 +29,8 @@ class heading extends setting {
 
     /**
      * not a setting, just text
-     * @param string $name unique ascii name, either 'mysetting' for settings that in config, or 'myplugin/mysetting' for ones in config_plugins.
+     * @param string $name unique ascii name, either 'mysetting' for settings that in config,
+     *                                        or 'myplugin/mysetting' for ones in config_plugins.
      * @param string $heading heading
      * @param string $information text in box
      */
@@ -60,7 +60,7 @@ class heading extends setting {
      * @return string Always returns an empty string
      */
     public function write_setting($data) {
-    // do not write any setting
+        // Do not write any setting.
         return '';
     }
 
@@ -68,12 +68,14 @@ class heading extends setting {
      * Returns an HTML string
      * @return string Returns an HTML string
      */
-    public function output_html($data, $query='') {
+    public function output_html($data, $query = '') {
         global $OUTPUT;
-        $context = new stdClass();
-        $context->title = $this->visiblename;
-        $context->description = $this->description;
-        $context->descriptionformatted = highlight($query, markdown_to_html($this->description));
+
+        $context = (object) [
+            'title' => $this->visiblename,
+            'description' => $this->description,
+            'descriptionformatted' => highlight($query, markdown_to_html($this->description)),
+        ];
         return $OUTPUT->render_from_template('core_admin/setting_heading', $context);
     }
 }
