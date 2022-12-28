@@ -40,7 +40,8 @@ class configselect extends setting {
      * If you want to lazy-load the choices, pass a callback function that returns a choice
      * array for the $choices parameter.
      *
-     * @param string $name unique ascii name, either 'mysetting' for settings that in config, or 'myplugin/mysetting' for ones in config_plugins.
+     * @param string $name unique ascii name, either 'mysetting' for settings that in config,
+     *                     or 'myplugin/mysetting' for ones in config_plugins.
      * @param string $visiblename localised
      * @param string $description long localised info
      * @param string|int $defaultsetting
@@ -137,11 +138,12 @@ class configselect extends setting {
      * @return string empty of error string
      */
     public function write_setting($data) {
-        if (!$this->load_choices() or empty($this->choices)) {
+        if (!$this->load_choices() || empty($this->choices)) {
             return '';
         }
         if (!array_key_exists($data, $this->choices)) {
-            return ''; // ignore it
+            // Ignore it.
+            return '';
         }
 
         // Validate the new setting.
@@ -184,7 +186,10 @@ class configselect extends setting {
      * @deprecated since Moodle 3.2
      */
     public function output_select_html($data, $current, $default, $extraname = '') {
-        debugging('The method admin_setting_configselect::output_select_html is depreacted, do not use any more.', DEBUG_DEVELOPER);
+        debugging(
+            'The method admin_setting_configselect::output_select_html is deprecated, do not use any more.',
+            DEBUG_DEVELOPER
+        );
     }
 
     /**
@@ -214,7 +219,7 @@ class configselect extends setting {
         if (!is_null($default) && array_key_exists($default, $this->choices)) {
             $defaultinfo = $this->choices[$default];
         } else {
-            $defaultinfo = NULL;
+            $defaultinfo = null;
         }
 
         // Warnings.
@@ -236,12 +241,12 @@ class configselect extends setting {
         if (!empty($this->optgroups)) {
             $optgroups = [];
             foreach ($this->optgroups as $label => $choices) {
-                $optgroup = array('label' => $label, 'options' => []);
+                $optgroup = ['label' => $label, 'options' => []];
                 foreach ($choices as $value => $name) {
                     $optgroup['options'][] = [
                         'value' => $value,
                         'name' => $name,
-                        'selected' => (string) $value == $data
+                        'selected' => (string) $value == $data,
                     ];
                     unset($this->choices[$value]);
                 }
@@ -256,7 +261,7 @@ class configselect extends setting {
             $options[] = [
                 'value' => $value,
                 'name' => $name,
-                'selected' => (string) $value == $data
+                'selected' => (string) $value == $data,
             ];
         }
         $context->options = $options;
