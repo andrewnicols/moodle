@@ -666,7 +666,7 @@ function enable_cli_maintenance_mode() {
 class_alias(\core_admin\adminsetting\configselect::class, 'admin_setting_configselect');
 class_alias(\core_admin\adminsetting\configselect\autocomplete::class, 'admin_setting_configselect_autocomplete');
 class_alias(\core_admin\adminsetting\configtext::class, 'admin_setting_configtext');
-class_alias(\core_admin\adminsetting\configtext_with_maxlength::class, 'admin_setting_configtext_with_maxlength');
+class_alias(\core_admin\adminsetting\configtext\with_maxlength::class, 'admin_setting_configtext_with_maxlength');
 class_alias(\core_admin\adminsetting\description::class, 'admin_setting_description');
 class_alias(\core_admin\adminsetting\heading::class, 'admin_setting_heading');
 class_alias(\core_admin\local\tree\category::class, 'admin_category');
