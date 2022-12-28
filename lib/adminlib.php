@@ -666,6 +666,7 @@ function enable_cli_maintenance_mode() {
 class_alias(\core_admin\adminsetting\configselect::class, 'admin_setting_configselect');
 class_alias(\core_admin\adminsetting\configselect\autocomplete::class, 'admin_setting_configselect_autocomplete');
 class_alias(\core_admin\adminsetting\configtext::class, 'admin_setting_configtext');
+class_alias(\core_admin\adminsetting\configtext\textarea::class, 'admin_setting_configtextarea');
 class_alias(\core_admin\adminsetting\configtext\with_maxlength::class, 'admin_setting_configtext_with_maxlength');
 class_alias(\core_admin\adminsetting\description::class, 'admin_setting_description');
 class_alias(\core_admin\adminsetting\heading::class, 'admin_setting_heading');
@@ -678,61 +679,6 @@ class_alias(\core_admin\local\tree\settingpage::class, 'admin_settingpage');
 class_alias(\core_admin\setting::class, 'admin_setting');
 class_alias(\core_admin\setting_dependency::class, 'admin_settingdependency');
 class_alias(\core_admin\setting_flag::class, 'admin_setting_flag');
-
-/**
- * General text area without html editor.
- *
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class admin_setting_configtextarea extends admin_setting_configtext {
-    private $rows;
-    private $cols;
-
-    /**
-     * @param string $name
-     * @param string $visiblename
-     * @param string $description
-     * @param mixed $defaultsetting string or array
-     * @param mixed $paramtype
-     * @param string $cols The number of columns to make the editor
-     * @param string $rows The number of rows to make the editor
-     */
-    public function __construct($name, $visiblename, $description, $defaultsetting, $paramtype=PARAM_RAW, $cols='60', $rows='8') {
-        $this->rows = $rows;
-        $this->cols = $cols;
-        parent::__construct($name, $visiblename, $description, $defaultsetting, $paramtype);
-    }
-
-    /**
-     * Returns an XHTML string for the editor
-     *
-     * @param string $data
-     * @param string $query
-     * @return string XHTML string for the editor
-     */
-    public function output_html($data, $query='') {
-        global $OUTPUT;
-
-        $default = $this->get_defaultsetting();
-        $defaultinfo = $default;
-        if (!is_null($default) and $default !== '') {
-            $defaultinfo = "\n".$default;
-        }
-
-        $context = (object) [
-            'cols' => $this->cols,
-            'rows' => $this->rows,
-            'id' => $this->get_id(),
-            'name' => $this->get_full_name(),
-            'value' => $data,
-            'forceltr' => $this->get_force_ltr(),
-            'readonly' => $this->is_readonly(),
-        ];
-        $element = $OUTPUT->render_from_template('core_admin/setting_configtextarea', $context);
-
-        return format_admin_setting($this, $this->visiblename, $element, $this->description, true, '', $defaultinfo, $query);
-    }
-}
 
 /**
  * General text area with html editor.
