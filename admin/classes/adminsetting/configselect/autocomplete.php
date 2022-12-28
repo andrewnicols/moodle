@@ -46,7 +46,7 @@ class autocomplete extends configselect {
      * @param string $query
      * @return string XHTML field and wrapping div
      */
-    public function output_html($data, $query='') {
+    public function output_html($data, $query = '') {
         global $PAGE;
 
         $html = parent::output_html($data, $query);
@@ -57,8 +57,15 @@ class autocomplete extends configselect {
 
         $this->placeholder = get_string('search');
 
-        $params = array('#' . $this->get_id(), $this->tags, $this->ajax,
-            $this->placeholder, $this->casesensitive, $this->showsuggestions, $this->noselectionstring);
+        $params = [
+            '#' . $this->get_id(),
+            $this->tags,
+            $this->ajax,
+            $this->placeholder,
+            $this->casesensitive,
+            $this->showsuggestions,
+            $this->noselectionstring,
+        ];
 
         // Load autocomplete wrapper for select2 library.
         $PAGE->requires->js_call_amd('core/form-autocomplete', 'enhance', $params);
