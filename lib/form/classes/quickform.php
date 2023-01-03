@@ -1466,10 +1466,12 @@ require([
      * @throws    HTML_QuickForm_Error
      */
     public function &_loadElement($event, $type, $args) {
-        if (!class_exists($type)) {
+        $namespacedelement = self::get_classname_for_element_type($type);
+        if (!class_exists($namespacedelement)) {
             return parent::_loadElement($event, $type, $args);
         }
-        $instance = new $type();
+
+        $instance = new $namespacedelement();
         for ($i = 0; $i < 5; $i++) {
             if (!isset($args[$i])) {
                 $args[$i] = null;
@@ -1482,12 +1484,30 @@ require([
         return $instance;
     }
 
-    public function isTypeRegistered($type) {
+    protected static $namespacedelements = [];
+
+    public static function register_classname_mapping(string $type, string $classname): void {
+        self::$namespacedelements[$type] = $classname;
+    }
+
+    protected static function get_classname_for_element_type(string $type): ?string {
         if (class_exists($type)) {
+            return $type;
+        }
+        return self::$namespacedelements[$type] ?? null;
+    }
+
+    public function isTypeRegistered($type) {
+        $namespacedelement = self::get_classname_for_element_type($type);
+        if (class_exists($namespacedelement)) {
             return true;
         }
 
-        return parent::isTypeRegistered(($type);
+        if ($namespacedelement = self::get_classname_for_element_type($type)) {
+            return class_exists($namespacedelement);
+        }
+
+        return parent::isTypeRegistered($type);
     }
 
     public function getRegisteredTypes() {
@@ -1498,8 +1518,9 @@ require([
         global $CFG;
 
         // Please keep this list in alphabetical order.
+        self::register_classname_mapping('autocomplete', \core_form\form\autocomplete::class);
+        self::register_classname_mapping('select', \core_form\form\select::class);
         self::registerElementType('advcheckbox', "$CFG->libdir/form/advcheckbox.php", 'MoodleQuickForm_advcheckbox');
-        self::registerElementType('autocomplete', "$CFG->libdir/form/autocomplete.php", 'MoodleQuickForm_autocomplete');
         self::registerElementType('button', "$CFG->libdir/form/button.php", 'MoodleQuickForm_button');
         self::registerElementType('cancel', "$CFG->libdir/form/cancel.php", 'MoodleQuickForm_cancel');
         self::registerElementType('course', "$CFG->libdir/form/course.php", 'MoodleQuickForm_course');
@@ -1527,7 +1548,6 @@ require([
         self::registerElementType('questioncategory', "$CFG->libdir/form/questioncategory.php", 'MoodleQuickForm_questioncategory');
         self::registerElementType('radio', "$CFG->libdir/form/radio.php", 'MoodleQuickForm_radio');
         self::registerElementType('recaptcha', "$CFG->libdir/form/recaptcha.php", 'MoodleQuickForm_recaptcha');
-        self::registerElementType('select', "$CFG->libdir/form/select.php", 'MoodleQuickForm_select');
         self::registerElementType('selectgroups', "$CFG->libdir/form/selectgroups.php", 'MoodleQuickForm_selectgroups');
         self::registerElementType('selectwithlink', "$CFG->libdir/form/selectwithlink.php", 'MoodleQuickForm_selectwithlink');
         self::registerElementType('selectyesno', "$CFG->libdir/form/selectyesno.php", 'MoodleQuickForm_selectyesno');

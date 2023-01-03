@@ -118,6 +118,10 @@ class_alias(\core_form\quickform::class, 'MoodleQuickForm');
 class_alias(\core_form\quickform_renderer::class, 'MoodleQuickForm_Renderer');
 class_alias(\core_form\required_rule::class, 'MoodleQuickForm_Rule_Required');
 
+// And now alias the migrated classes.
+class_alias(\core_form\form\autocomplete::class, 'MoodleQuickForm_autocomplete');
+class_alias(\core_form\form\select::class, 'MoodleQuickForm_select');
+
 /**
  * @global object $GLOBALS['_HTML_QuickForm_default_renderer']
  * @name $_HTML_QuickForm_default_renderer
