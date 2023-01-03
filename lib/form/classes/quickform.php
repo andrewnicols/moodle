@@ -1453,4 +1453,92 @@ require([
     public function is_new_repeat($name) {
         return in_array($name, $this->_newrepeats);
     }
+
+    /**
+     * Returns a form element of the given type
+     *
+     * @param     string   $event   event to send to newly created element ('createElement' or 'addElement')
+     * @param     string   $type    element type
+     * @param     array    $args    arguments for event
+     * @since     2.0
+     * @access    private
+     * @return    object    a new element
+     * @throws    HTML_QuickForm_Error
+     */
+    public function &_loadElement($event, $type, $args) {
+        if (!class_exists($type)) {
+            return parent::_loadElement($event, $type, $args);
+        }
+        $instance = new $type();
+        for ($i = 0; $i < 5; $i++) {
+            if (!isset($args[$i])) {
+                $args[$i] = null;
+            }
+        }
+        $err = $instance->onQuickFormEvent($event, $args, $this);
+        if ($err !== true) {
+            return $err;
+        }
+        return $instance;
+    }
+
+    public function isTypeRegistered($type) {
+        if (class_exists($type)) {
+            return true;
+        }
+
+        return parent::isTypeRegistered(($type);
+    }
+
+    public function getRegisteredTypes() {
+        throw new \coding_exception('Do not call this');
+    }
+
+    public static function registerStandardElements(): void {
+        global $CFG;
+
+        // Please keep this list in alphabetical order.
+        self::registerElementType('advcheckbox', "$CFG->libdir/form/advcheckbox.php", 'MoodleQuickForm_advcheckbox');
+        self::registerElementType('autocomplete', "$CFG->libdir/form/autocomplete.php", 'MoodleQuickForm_autocomplete');
+        self::registerElementType('button', "$CFG->libdir/form/button.php", 'MoodleQuickForm_button');
+        self::registerElementType('cancel', "$CFG->libdir/form/cancel.php", 'MoodleQuickForm_cancel');
+        self::registerElementType('course', "$CFG->libdir/form/course.php", 'MoodleQuickForm_course');
+        self::registerElementType('cohort', "$CFG->libdir/form/cohort.php", 'MoodleQuickForm_cohort');
+        self::registerElementType('searchableselector', "$CFG->libdir/form/searchableselector.php", 'MoodleQuickForm_searchableselector');
+        self::registerElementType('checkbox', "$CFG->libdir/form/checkbox.php", 'MoodleQuickForm_checkbox');
+        self::registerElementType('date_selector', "$CFG->libdir/form/dateselector.php", 'MoodleQuickForm_date_selector');
+        self::registerElementType('date_time_selector', "$CFG->libdir/form/datetimeselector.php", 'MoodleQuickForm_date_time_selector');
+        self::registerElementType('duration', "$CFG->libdir/form/duration.php", 'MoodleQuickForm_duration');
+        self::registerElementType('editor', "$CFG->libdir/form/editor.php", 'MoodleQuickForm_editor');
+        self::registerElementType('filemanager', "$CFG->libdir/form/filemanager.php", 'MoodleQuickForm_filemanager');
+        self::registerElementType('filepicker', "$CFG->libdir/form/filepicker.php", 'MoodleQuickForm_filepicker');
+        self::registerElementType('filetypes', "$CFG->libdir/form/filetypes.php", 'MoodleQuickForm_filetypes');
+        self::registerElementType('float', "$CFG->libdir/form/float.php", 'MoodleQuickForm_float');
+        self::registerElementType('grading', "$CFG->libdir/form/grading.php", 'MoodleQuickForm_grading');
+        self::registerElementType('group', "$CFG->libdir/form/group.php", 'MoodleQuickForm_group');
+        self::registerElementType('header', "$CFG->libdir/form/header.php", 'MoodleQuickForm_header');
+        self::registerElementType('hidden', "$CFG->libdir/form/hidden.php", 'MoodleQuickForm_hidden');
+        self::registerElementType('listing', "$CFG->libdir/form/listing.php", 'MoodleQuickForm_listing');
+        self::registerElementType('defaultcustom', "$CFG->libdir/form/defaultcustom.php", 'MoodleQuickForm_defaultcustom');
+        self::registerElementType('modgrade', "$CFG->libdir/form/modgrade.php", 'MoodleQuickForm_modgrade');
+        self::registerElementType('modvisible', "$CFG->libdir/form/modvisible.php", 'MoodleQuickForm_modvisible');
+        self::registerElementType('password', "$CFG->libdir/form/password.php", 'MoodleQuickForm_password');
+        self::registerElementType('passwordunmask', "$CFG->libdir/form/passwordunmask.php", 'MoodleQuickForm_passwordunmask');
+        self::registerElementType('questioncategory', "$CFG->libdir/form/questioncategory.php", 'MoodleQuickForm_questioncategory');
+        self::registerElementType('radio', "$CFG->libdir/form/radio.php", 'MoodleQuickForm_radio');
+        self::registerElementType('recaptcha', "$CFG->libdir/form/recaptcha.php", 'MoodleQuickForm_recaptcha');
+        self::registerElementType('select', "$CFG->libdir/form/select.php", 'MoodleQuickForm_select');
+        self::registerElementType('selectgroups', "$CFG->libdir/form/selectgroups.php", 'MoodleQuickForm_selectgroups');
+        self::registerElementType('selectwithlink', "$CFG->libdir/form/selectwithlink.php", 'MoodleQuickForm_selectwithlink');
+        self::registerElementType('selectyesno', "$CFG->libdir/form/selectyesno.php", 'MoodleQuickForm_selectyesno');
+        self::registerElementType('static', "$CFG->libdir/form/static.php", 'MoodleQuickForm_static');
+        self::registerElementType('submit', "$CFG->libdir/form/submit.php", 'MoodleQuickForm_submit');
+        self::registerElementType('tags', "$CFG->libdir/form/tags.php", 'MoodleQuickForm_tags');
+        self::registerElementType('text', "$CFG->libdir/form/text.php", 'MoodleQuickForm_text');
+        self::registerElementType('textarea', "$CFG->libdir/form/textarea.php", 'MoodleQuickForm_textarea');
+        self::registerElementType('url', "$CFG->libdir/form/url.php", 'MoodleQuickForm_url');
+        self::registerElementType('warning', "$CFG->libdir/form/warning.php", 'MoodleQuickForm_warning');
+
+        self::registerRule('required', null, 'MoodleQuickForm_Rule_Required', "$CFG->libdir/formslib.php");
+    }
 }
