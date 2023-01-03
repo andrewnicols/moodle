@@ -138,6 +138,8 @@ class quickform extends \HTML_QuickForm_DHTMLRulesTableless {
     public function __construct($formName, $method, $action, $target = '', $attributes = null, $ajaxformdata = null) {
         global $CFG, $OUTPUT;
 
+        self::register_moodle_elements();
+
         static $formcounter = 1;
 
         // TODO MDL-52313 Replace with the call to parent::__construct().
@@ -1460,7 +1462,6 @@ require([
      * @param     string   $event   event to send to newly created element ('createElement' or 'addElement')
      * @param     string   $type    element type
      * @param     array    $args    arguments for event
-     * @since     2.0
      * @access    private
      * @return    object    a new element
      * @throws    HTML_QuickForm_Error
@@ -1486,10 +1487,29 @@ require([
 
     protected static $namespacedelements = [];
 
-    public static function register_classname_mapping(string $type, string $classname): void {
+    /**
+     * Register a legacy classname mapping.
+     *
+     * @param string $type
+     * @param string $classname 
+     */
+    public static function register_classname_mapping(
+        string $type,
+        string $classname,
+        ?string $legacyclassname = null
+    ): void {
         self::$namespacedelements[$type] = $classname;
+        if ($legacyclassname) {
+            class_alias($classname, $legacyclassname);
+        }
     }
 
+    /**
+     * Get the namespaced class name for the type, or the map for legacy form fields.
+     *
+     * @param string $type 
+     * @return null|string 
+     */
     protected static function get_classname_for_element_type(string $type): ?string {
         if (class_exists($type)) {
             return $type;
@@ -1497,12 +1517,13 @@ require([
         return self::$namespacedelements[$type] ?? null;
     }
 
-    public function isTypeRegistered($type) {
-        $namespacedelement = self::get_classname_for_element_type($type);
-        if (class_exists($namespacedelement)) {
-            return true;
-        }
-
+    /**
+     * Override the upstream function to support namespaced elements.
+     *
+     * @param string $type 
+     * @return bool 
+     */
+    public function isTypeRegistered($type): bool {
         if ($namespacedelement = self::get_classname_for_element_type($type)) {
             return class_exists($namespacedelement);
         }
@@ -1510,16 +1531,30 @@ require([
         return parent::isTypeRegistered($type);
     }
 
+    /**
+     * Now that we support autoloading of classes, this is no longer possible.
+     *
+     * @deprecated since 4.2
+     * @throws coding_exception
+     */
     public function getRegisteredTypes() {
         throw new \coding_exception('Do not call this');
     }
 
-    public static function registerStandardElements(): void {
+    protected static $registered = false;
+
+    public static function register_moodle_elements(): void {
         global $CFG;
 
+        if (self::$registered) {
+            return;
+        }
+
         // Please keep this list in alphabetical order.
-        self::register_classname_mapping('autocomplete', \core_form\form\autocomplete::class);
-        self::register_classname_mapping('select', \core_form\form\select::class);
+        self::register_classname_mapping('autocomplete', \core_form\form\autocomplete::class, 'MoodleQuickForm_autocomplete');
+        self::register_classname_mapping('header', \core_form\form\header::class, 'MoodleQuickForm_header');
+        self::register_classname_mapping('select', \core_form\form\select::class, 'MoodleQuickForm_select');
+        self::register_classname_mapping('selectyesno', \core_form\form\selectyesno::class, 'MoodleQuickForm_selectyesno');
         self::registerElementType('advcheckbox', "$CFG->libdir/form/advcheckbox.php", 'MoodleQuickForm_advcheckbox');
         self::registerElementType('button', "$CFG->libdir/form/button.php", 'MoodleQuickForm_button');
         self::registerElementType('cancel', "$CFG->libdir/form/cancel.php", 'MoodleQuickForm_cancel');
@@ -1537,7 +1572,6 @@ require([
         self::registerElementType('float', "$CFG->libdir/form/float.php", 'MoodleQuickForm_float');
         self::registerElementType('grading', "$CFG->libdir/form/grading.php", 'MoodleQuickForm_grading');
         self::registerElementType('group', "$CFG->libdir/form/group.php", 'MoodleQuickForm_group');
-        self::registerElementType('header', "$CFG->libdir/form/header.php", 'MoodleQuickForm_header');
         self::registerElementType('hidden', "$CFG->libdir/form/hidden.php", 'MoodleQuickForm_hidden');
         self::registerElementType('listing', "$CFG->libdir/form/listing.php", 'MoodleQuickForm_listing');
         self::registerElementType('defaultcustom', "$CFG->libdir/form/defaultcustom.php", 'MoodleQuickForm_defaultcustom');
@@ -1550,7 +1584,6 @@ require([
         self::registerElementType('recaptcha', "$CFG->libdir/form/recaptcha.php", 'MoodleQuickForm_recaptcha');
         self::registerElementType('selectgroups', "$CFG->libdir/form/selectgroups.php", 'MoodleQuickForm_selectgroups');
         self::registerElementType('selectwithlink', "$CFG->libdir/form/selectwithlink.php", 'MoodleQuickForm_selectwithlink');
-        self::registerElementType('selectyesno', "$CFG->libdir/form/selectyesno.php", 'MoodleQuickForm_selectyesno');
         self::registerElementType('static', "$CFG->libdir/form/static.php", 'MoodleQuickForm_static');
         self::registerElementType('submit', "$CFG->libdir/form/submit.php", 'MoodleQuickForm_submit');
         self::registerElementType('tags', "$CFG->libdir/form/tags.php", 'MoodleQuickForm_tags');
@@ -1560,5 +1593,7 @@ require([
         self::registerElementType('warning', "$CFG->libdir/form/warning.php", 'MoodleQuickForm_warning');
 
         self::registerRule('required', null, 'MoodleQuickForm_Rule_Required', "$CFG->libdir/formslib.php");
+
+        self::$registered = true;
     }
 }

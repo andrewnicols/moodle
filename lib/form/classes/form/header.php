@@ -14,18 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_form\form;
 
-/**
- * Header form element
- *
- * Contains a pseudo-element used for adding headers to form
- *
- * @package   core_form
- * @copyright 2007 Jamie Pratt <me@jamiep.org>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-require_once 'HTML/QuickForm/header.php';
+use HTML_QuickForm_header;
 
 /**
  * Header form element
@@ -37,7 +28,7 @@ require_once 'HTML/QuickForm/header.php';
  * @copyright 2007 Jamie Pratt <me@jamiep.org>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class MoodleQuickForm_header extends HTML_QuickForm_header
+class header extends HTML_QuickForm_header
 {
     /** @var string html for help button, if empty then no help */
     var $_helpbutton='';

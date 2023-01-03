@@ -44,7 +44,7 @@ class course_edit_form extends moodleform {
         $this->context = $context;
 
         // Form definition with new course defaults.
-        $mform->addElement('header','general', get_string('general', 'form'));
+        $mform->addElement(\core_form\form\header::class, 'general', get_string('general', 'form'));
 
         $mform->addElement('hidden', 'returnto', null);
         $mform->setType('returnto', PARAM_ALPHANUM);
@@ -76,7 +76,7 @@ class course_edit_form extends moodleform {
         if (empty($course->id)) {
             if (has_capability('moodle/course:create', $categorycontext)) {
                 $displaylist = core_course_category::make_categories_list('moodle/course:create');
-                $mform->addElement('autocomplete', 'category', get_string('coursecategory'), $displaylist);
+                $mform->addElement(\core_form\form\autocomplete::class, 'category', get_string('coursecategory'), $displaylist);
                 $mform->addRule('category', null, 'required', null, 'client');
                 $mform->addHelpButton('category', 'coursecategory');
                 $mform->setDefault('category', $category->id);
