@@ -71,6 +71,12 @@ class api_test extends \externallib_advanced_testcase {
         $expectedissues = array('adodbdebugwarning', 'displayerrorswarning');
 
         $issues = api::get_potential_config_issues();
+        foreach ($issues as $issue) {
+            $this->assertContains($issue[0], $expectedissues);
+        }
+        if (count($expectedissues) !== count($issues)) {
+            print_r($issues);
+        }
         $this->assertCount(count($expectedissues), $issues);
         foreach ($issues as $issue) {
             $this->assertTrue(in_array($issue[0], $expectedissues));

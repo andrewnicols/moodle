@@ -12,33 +12,6 @@ env:
   php: 8.0
 
 jobs:
-  Grunt:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checking out code
-        uses: actions/checkout@v3
-
-      - name: Configuring node & npm
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-
-      - name: Installing node stuff
-        run: npm install
-
-      - name: Running grunt
-        run: npx grunt
-
-      - name: Looking for uncommitted changes
-        # Add all files to the git index and then run diff --cached to see all changes.
-        # This ensures that we get the status of all files, including new files.
-        # We ignore npm-shrinkwrap.json to make the tasks immune to npm changes.
-        run: |
-          git add .
-          git reset -- npm-shrinkwrap.json
-          git diff --cached --exit-code
-
   PHPUnit:
     runs-on: ${{ matrix.os }}
     services:
@@ -112,4 +85,4 @@ jobs:
         env:
           dbtype: ${{ matrix.db }}
           phpunit_options: ${{ secrets.phpunit_options }}
-        run: vendor/bin/phpunit $phpunit_options
+        run: vendor/bin/phpunit $phpunit_options admin/tool/mobile/tests/api_test.php --filter issues --repeat 1000
