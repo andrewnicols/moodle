@@ -9,6 +9,11 @@ This files describes API changes for code that uses the user API.
 
 === 4.2 ===
 
+* The `core_user/repository` Javascript module now exports new methods for manipulating user preferences:
+  - `[get|set]UserPreference`
+  - `[get|set]UserPreferences`
+* The external `core_user_set_user_preferences` method will now default the `userid` property of each preference to
+  that of the current user, if omitted
 * Added get_internalfield_list() and get_internalfields() in the user_field_mapping class.
   The get_internalfield_list() returns data in an array by grouping profile fields based on field categories,
   used for internal field name dropdown in the user field mapping of Oauth2 services
