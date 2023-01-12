@@ -3015,6 +3015,14 @@ privatefiles,moodle|/user/files.php';
         unset_config('grade_report_showlocks');
         unset_config('grade_report_showanalysisicon');
 
+        // Add public key field to user_devices table.
+        $table = new xmldb_table('user_devices');
+        $field = new xmldb_field('publickey', XMLDB_TYPE_TEXT, null, null, null, null, null, 'enable');
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2023022000.00);
     }
