@@ -886,10 +886,23 @@ class moodle_xhprofrun implements iXHProfRuns {
 
         // Handle historical runs that aren't compressed.
         if (@gzuncompress(base64_decode($rec->data)) === false) {
-            return unserialize(base64_decode($rec->data));
+            $rawdata = unserialize(base64_decode($rec->data));
         } else {
-            return unserialize(gzuncompress(base64_decode($rec->data)));
+            $rawdata = unserialize(gzuncompress(base64_decode($rec->data)));
         }
+
+        foreach ($rawdata as $parentchild => $datum) {
+            [$parent, $child] = xhprof_parse_parent_child($parentchild);
+            $parentismustache = strpos($parent, '__Mustache_') === 0;
+            $childismustache = strpos($child, '__Mustache_') === 0;
+            if (($parentismustache && $childismustache) || $childismustache) {
+                // This keeps all calls _to_ Mustache from outside, but not internal Mustache calls.
+                // It also removes all calls _from_ Mustache to other functions as these would be orphaned anyway.
+                unset($rawdata[$parentchild]);
+            }
+        }
+
+        return $rawdata;
     }
 
     /**
