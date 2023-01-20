@@ -55,7 +55,7 @@ module.exports = ({template, types}) => {
         searchFileName = fs.realpathSync(searchFileName);
         const relativeFileName = searchFileName.replace(`${cwd}${path.sep}`, '').replace(/\\/g, '/');
         const [componentPath, file] = relativeFileName.split('/amd/src/');
-        const fileName = file.replace('.js', '');
+        const fileName = file.replace(/\.m?js/, '');
 
         // Check subsystems first which require an exact match.
         const componentName = ComponentList.getComponentFromPath(componentPath);

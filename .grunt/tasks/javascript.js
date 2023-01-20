@@ -34,6 +34,7 @@
 const babelRename = function(destPath, srcPath) {
     destPath = srcPath.replace('src', 'build');
     destPath = destPath.replace('.js', '.min.js');
+    destPath = destPath.replace('.mjs', '.min.js');
     return destPath;
 };
 
@@ -197,8 +198,8 @@ module.exports = grunt => {
         watch: {
             amd: {
                 files: grunt.moodleEnv.inComponent
-                    ? ['amd/src/*.js', 'amd/src/**/*.js']
-                    : ['**/amd/src/**/*.js'],
+                    ? ['amd/src/*.m?js', 'amd/src/**/*.m?js']
+                    : ['**/amd/src/**/*.js', '**/amd/src/**/*.mjs'],
                 tasks: ['amd']
             },
         },
