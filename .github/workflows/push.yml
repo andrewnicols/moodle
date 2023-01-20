@@ -30,14 +30,23 @@ jobs:
       - name: Running grunt
         run: npx grunt
 
-      - name: Looking for uncommitted changes
-        # Add all files to the git index and then run diff --cached to see all changes.
-        # This ensures that we get the status of all files, including new files.
-        # We ignore npm-shrinkwrap.json to make the tasks immune to npm changes.
-        run: |
-          git add .
-          git reset -- npm-shrinkwrap.json
-          git diff --cached --exit-code
+  Jest:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v3
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running Jest
+        run: npm run test
 
   PHPUnit:
     runs-on: ${{ matrix.os }}
