@@ -35,6 +35,7 @@ const babelRename = function(destPath, srcPath) {
     destPath = srcPath.replace('src', 'build');
     destPath = destPath.replace('.js', '.min.js');
     destPath = destPath.replace('.mjs', '.min.js');
+    destPath = destPath.replace('.ts', '.min.js');
     return destPath;
 };
 
@@ -173,8 +174,22 @@ module.exports = grunt => {
                                 },
                                 modules: false,
                                 useBuiltIns: false
+                            }],
+                            ['@babel/preset-typescript', {
+                                targets: {
+                                    browsers: [
+                                        ">0.3%",
+                                        "last 2 versions",
+                                        "not ie >= 0",
+                                        "not op_mini all",
+                                        "not Opera > 0",
+                                        "not dead"
+                                    ]
+                                },
+                                modules: false,
+                                useBuiltIns: false
                             }]
-                        ]
+                        ],
                     }),
 
                     terser({
@@ -190,9 +205,30 @@ module.exports = grunt => {
                     src: grunt.moodleEnv.files ? grunt.moodleEnv.files : grunt.moodleEnv.amdSrc,
                     rename: babelRename,
                     filter: (src) => {
+                        if (src.match(/\.ts$/)) {
+                            // Prefer Typescript above all others.
+                            return grunt.file.isFile(src);;
+                        }
+
+                        if (src.match(/\.mjs$/)) {
+                            // Prefer ES6 modules above AMD.
+                            // Check that there is no Typescript variant.
+                            if (grunt.file.isFile(src.replace(/\.mjs$/, '.ts'))) {
+                                // A TypeScript equivalent exists. Do not build.
+                                grunt.log.warn(`Skipping build of ${src} because a TypeScript equivalent exists`);
+                                return false;
+                            };
+                        }
+
                         if (src.match(/\.js$/)) {
                             // AMD is the bottom of the barrel.
                             // Only build it if there is no better alternative.
+                            if (grunt.file.isFile(src.replace(/\.js$/, '.ts'))) {
+                                // A TypeScript equivalent exists. Do not build.
+                                grunt.log.warn(`Skipping build of ${src} because a TypeScript equivalent exists`);
+                                return false;
+                            }
+
                             if (grunt.file.isFile(src.replace(/\.js$/, '.mjs'))) {
                                 // An ESM equivalent exists. Do not build.
                                 grunt.log.warn(`Skipping build of ${src} because an ESM equivalent exists`);
@@ -211,8 +247,16 @@ module.exports = grunt => {
         watch: {
             amd: {
                 files: grunt.moodleEnv.inComponent
-                    ? ['amd/src/*.m?js', 'amd/src/**/*.m?js']
-                    : ['**/amd/src/**/*.js', '**/amd/src/**/*.mjs'],
+                    ? [
+                        'amd/src/*.js',
+                        'amd/src/**/*.mjs',
+                        'amd/src/**/*.ts',
+                    ]
+                    : [
+                        '**/amd/src/**/*.js',
+                        '**/amd/src/**/*.mjs',
+                        '**/amd/src/**/*.ts',
+                    ],
                 tasks: ['amd']
             },
         },
