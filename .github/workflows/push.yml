@@ -39,6 +39,25 @@ jobs:
           git reset -- npm-shrinkwrap.json
           git diff --cached --exit-code
 
+  Mocha:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v3
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running Mocha
+        run: npx nyc --all --reporter text mocha
+
+
   PHPUnit:
     runs-on: ${{ matrix.os }}
     services:
