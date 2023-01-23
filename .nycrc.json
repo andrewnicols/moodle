@@ -1,0 +1,12 @@
+{
+    "include": [
+        "lib/javascript-static.js",
+        "**/module.js",
+        "**/amd/src/**"
+    ],
+    "reporter": [
+        "html",
+        "text-summary"
+    ],
+    "report-dir": "coverage/js"
+}

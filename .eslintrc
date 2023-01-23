@@ -173,7 +173,9 @@
     'semi-spacing': ['warn', {'before': false, 'after': true}],
     'sort-vars': 'off',
     'space-before-blocks': 'warn',
-    'space-before-function-paren': ['warn', 'never'],
+    'space-before-function-paren': ['warn', {
+      asyncArrow: "always",
+    }],
     'space-in-parens': 'warn',
     'space-infix-ops': 'warn',
     'space-unary-ops': 'warn',
@@ -232,6 +234,31 @@
       files: ["*.mjs"],
       parserOptions: {
         sourceType: "module",
+      },
+    },
+    {
+      files: [
+        "**/tests/mocha/**/*.js",
+        ".grunt/mocha/*.js",
+        ".grunt/mocha/*.mjs",
+      ],
+      parserOptions: {
+        sourceType: "module",
+      },
+      env: {
+        mocha: true,
+        node: true,
+      },
+      globals: {
+        expect: true,
+        should: true,
+        sinon: true,
+        td: true,
+        global: true,
+        getModulePath: true,
+      },
+      rules: {
+        "no-unused-expressions": "off",
       },
     },
     {
