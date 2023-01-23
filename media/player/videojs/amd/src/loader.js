@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Ajax from 'core/ajax';
+import {fetchOne} from 'core/fetch';
 import Config from 'core/config';
 import {eventTypes} from 'core_filters/events';
 import LocalStorage from 'core/localstorage';
@@ -132,21 +132,14 @@ const getLanguageJson = () => {
         return Promise.resolve(langStringCache);
     }
 
-    const request = {
-        methodname: 'media_videojs_get_language',
-        args: {
-            lang: language,
-        },
-    };
-
-    return Ajax.call([request])[0]
-        .then(langStringData => {
+    return fetchOne('media_videojs_get_language', {lang: language})
+        .then((langStringData) => {
             LocalStorage.set(cacheKey, langStringData);
 
             return langStringData;
         })
-        .then(result => JSON.parse(result))
-        .then(langStrings => {
+        .then((result) => JSON.parse(result))
+        .then((langStrings) => {
             langStringCache = langStrings;
 
             return langStrings;
