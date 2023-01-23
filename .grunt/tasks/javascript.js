@@ -34,6 +34,7 @@
 const babelRename = function(destPath, srcPath) {
     destPath = srcPath.replace('src', 'build');
     destPath = destPath.replace('.js', '.min.js');
+    destPath = destPath.replace('.mjs', '.min.js');
     return destPath;
 };
 
@@ -187,7 +188,20 @@ module.exports = grunt => {
                 files: [{
                     expand: true,
                     src: grunt.moodleEnv.files ? grunt.moodleEnv.files : grunt.moodleEnv.amdSrc,
-                    rename: babelRename
+                    rename: babelRename,
+                    filter: (src) => {
+                        if (src.match(/\.js$/)) {
+                            // AMD is the bottom of the barrel.
+                            // Only build it if there is no better alternative.
+                            if (grunt.file.isFile(src.replace(/\.js$/, '.mjs'))) {
+                                // An ESM equivalent exists. Do not build.
+                                grunt.log.warn(`Skipping build of ${src} because an ESM equivalent exists`);
+                                return false;
+                            }
+                        }
+
+                        return grunt.file.isFile(src);
+                    },
                 }],
             },
         },
@@ -197,8 +211,8 @@ module.exports = grunt => {
         watch: {
             amd: {
                 files: grunt.moodleEnv.inComponent
-                    ? ['amd/src/*.js', 'amd/src/**/*.js']
-                    : ['**/amd/src/**/*.js'],
+                    ? ['amd/src/*.js', 'amd/src/**/*.mjs']
+                    : ['**/amd/src/**/*.js', '**/amd/src/**/*.mjs'],
                 tasks: ['amd']
             },
         },

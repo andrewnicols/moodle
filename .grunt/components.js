@@ -210,6 +210,33 @@ const getComponentFromPath = path => {
 };
 
 /**
+ * Get the Moodle component for a JS Module name.
+ * @param {String} moduleName The name of the module to find a component for
+ * @returns {String} component
+ */
+const getComponentNameFromAMDModuleName = (moduleName) => {
+    return moduleName.split('/')[0];
+};
+
+/**
+ * Get the relative path to an AMD module from its module name
+ * @param {String} moduleName
+ * @returns {String}
+ */
+const getPathFromAMDModuleName = (moduleName) => {
+    const [component, modulePath] = moduleName.split('/', 2);
+    const componentList = fetchComponentData().components;
+
+    for (const [path, name] of Object.entries(componentList)) {
+        if (name === component) {
+            return `${path}/amd/src/${modulePath}`;
+        }
+    }
+
+    return null;
+};
+
+/**
  * Check whether the supplied path, relative to the Gruntfile.js, is in a known component.
  *
  * @param {String} checkPath The path to check. This can be with either Windows, or Linux directory separators.
@@ -237,7 +264,9 @@ module.exports = {
     getAmdSrcGlobList,
     getComponentFromPath,
     getComponentPaths,
+    getComponentNameFromAMDModuleName,
     getOwningComponentDirectory,
+    getPathFromAMDModuleName,
     getYuiSrcGlobList,
     getThirdPartyLibsList,
     getThirdPartyPaths,

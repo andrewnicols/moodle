@@ -54,11 +54,26 @@ if (file_exists($mapfile)) {
     $mapdata = file_get_contents($mapfile);
     $mapdata = json_decode($mapdata, true);
 
+    // We need to replace the source file with the full path to the source file.
+
     $shortfilename = str_replace($CFG->dirroot, '', $jsfile);
     $srcfilename = str_replace('/amd/build/', '/amd/src/', $shortfilename);
-    $srcfilename = str_replace('.min.js', '.js', $srcfilename);
-    $fullsrcfilename = $CFG->wwwroot . $srcfilename;
+
+    if ($mapdata['sources'][0]) {
+        // The source file has been defined.
+        // Use the calculated path, and the filename of the mapped sourcefile provided.
+        // We do not trust the source file provided in the map file because it is typically a relative path.
+        $fullsrcfiledir = dirname($CFG->wwwroot . $srcfilename);
+        $fullsrcfilename = $fullsrcfiledir . '/' . basename($mapdata['sources'][0]);
+    } else {
+        // The original file could not be found.
+        // Fall back to the old behaviour of assuming the filename.
+        $srcfilename = str_replace('.min.js', '.js', $srcfilename);
+        $fullsrcfilename = $CFG->wwwroot . $srcfilename;
+    }
+
     $mapdata['sources'][0] = $fullsrcfilename;
+    unset($mapdata['sourcesContent']);
 
     echo json_encode($mapdata);
 } else {
