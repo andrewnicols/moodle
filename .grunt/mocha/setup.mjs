@@ -32,8 +32,10 @@ import * as td from 'testdouble';
 import chai from 'chai';
 import tdChai from 'testdouble-chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
 
 chai.use(tdChai(td));
+chai.use(sinonChai);
 
 /**
  * A helper to mock modules.
