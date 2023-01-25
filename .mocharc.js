@@ -16,6 +16,21 @@ const spec = Object.keys(fetchComponentData().components)
         return glob.sync(path.join(process.cwd(), globPath)).length > 0;
     });
 
+const sourceFiles = Object.keys(fetchComponentData().components)
+    .map((componentPath) => {
+        return [
+            `${componentPath}/amd/src/**/*.js`,
+        ];
+    })
+    .flat()
+    .filter((globPath) => {
+        return glob.sync(path.join(process.cwd(), globPath)).length > 0;
+    });
+
+const watchFiles = [].concat(spec, sourceFiles, [
+    '.grunt/mocha',
+]);
+
 module.exports = {
     spec,
     require: [
@@ -28,5 +43,8 @@ module.exports = {
         // Add our own setup too.
         ".grunt/mocha/setup.mjs",
     ],
+
     color: true,
+
+    'watch-files': watchFiles,
 };
