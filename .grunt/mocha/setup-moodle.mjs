@@ -25,14 +25,7 @@
  */
 
 import * as td from 'testdouble';
-import chai from 'chai';
-import tdChai from 'testdouble-chai';
 import sinon from 'sinon';
-import sinonChai from 'sinon-chai';
-
-chai.use(tdChai(td));
-chai.use(sinonChai);
-
 
 /**
  * The root hooks to apply before and after each test.
@@ -51,11 +44,6 @@ export const mochaHooks = {
      * cache issue mentioned above.
      */
     async beforeEach () {
-        // Add Chai's expect and should to the global scope.
-        global.expect = chai.expect;
-        global.should = chai.should;
-        global.td = td;
-
         // Reset the initial M.cfg values.
         global.M.cfg = {
             wwwroot: 'https://test.example.com/',
@@ -64,8 +52,6 @@ export const mochaHooks = {
         };
         global.M.str = {};
         global.M.yui = {};
-
-        global.sinon = sinon;
     },
 
     /**
@@ -83,19 +69,9 @@ export const mochaHooks = {
             util: {},
             yui: {},
         };
+
         global.YUI = td.constructor(['use', 'add']);
-        global.YUI.add = td.func();
+        global.YUI.add = sinon.fake();
         await import('../../lib/javascript-static.js');
-    },
-
-
-    /**
-     * This hook is called after each individual test.
-     *
-     * We use it to reset spies and mocks.
-     */
-    afterEach () {
-        sinon.restore();
-        td.reset();
     },
 };

@@ -40,6 +40,9 @@ module.exports = {
         // Require jsdom for our tests.
         ".grunt/mocha/setup-jsdom.mjs",
 
+        // Setup Chai.
+        ".grunt/mocha/setup-chai.mjs",
+
         // Add our own setup too.
         ".grunt/mocha/setup-moodle.mjs",
 
