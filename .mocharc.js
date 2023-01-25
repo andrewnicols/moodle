@@ -38,10 +38,13 @@ module.exports = {
         ".grunt/mocha/setup-babel.mjs",
 
         // Require jsdom for our tests.
-        "jsdom-global/register",
+        ".grunt/mocha/setup-jsdom.mjs",
 
         // Add our own setup too.
-        ".grunt/mocha/setup.mjs",
+        ".grunt/mocha/setup-moodle.mjs",
+
+        // Finally, add our own global helpers.
+        ".grunt/mocha/setup-moodle-helpers.mjs",
     ],
 
     color: true,

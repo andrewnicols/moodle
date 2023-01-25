@@ -24,10 +24,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import path from 'path';
-import {
-    getPathFromAMDModuleName,
-} from '../components.js';
 import * as td from 'testdouble';
 import chai from 'chai';
 import tdChai from 'testdouble-chai';
@@ -37,29 +33,11 @@ import sinonChai from 'sinon-chai';
 chai.use(tdChai(td));
 chai.use(sinonChai);
 
-/**
- * A helper to mock modules.
- *
- * The library we use to mock modules (testdouble) uses absolute paths.
- *
- * @param {String} moduleName
- * @returns {testdouble.TestDouble}
- */
-global.getModulePath = (moduleName) => {
-    const modulePath = getPathFromAMDModuleName(moduleName);
-    return path.join(process.cwd(), modulePath);
-};
-
-// Add Chai's expect and should to the global scope.
-global.expect = chai.expect;
-global.should = chai.should;
-global.td = td;
-global.sinon = sinon;
 
 /**
  * The root hooks to apply before and after each test.
  *
- * https://mochajs.org/#defining-a-root-hook-plugin
+ * https://mocha.org/#defining-a-root-hook-plugin
  */
 export const mochaHooks = {
     // Note: The ESM cache currently cannot be reset between tests.
@@ -73,12 +51,21 @@ export const mochaHooks = {
      * cache issue mentioned above.
      */
     async beforeEach () {
+        // Add Chai's expect and should to the global scope.
+        global.expect = chai.expect;
+        global.should = chai.should;
+        global.td = td;
+
+        // Reset the initial M.cfg values.
         global.M.cfg = {
+            wwwroot: 'https://test.example.com/',
             langrev: -1,
             themerev: -1,
         };
         global.M.str = {};
         global.M.yui = {};
+
+        global.sinon = sinon;
     },
 
     /**

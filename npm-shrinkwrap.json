@@ -21,6 +21,7 @@
         "babel-eslint": "10.1.0",
         "babel-plugin-module-resolver": "^5.0.0",
         "babel-plugin-system-import-transformer": "^4.0.0",
+        "babel-plugin-transform-amd-to-es6": "^0.6.2",
         "babel-plugin-transform-es2015-modules-amd-lazy": "2.0.1",
         "babel-preset-minify": "0.5.1",
         "chai": "^4.3.7",
@@ -3014,6 +3015,19 @@
         "@babel/core": "^7.0.0",
         "@babel/helper-plugin-utils": "^7.0.0",
         "@babel/plugin-syntax-dynamic-import": "^7.0.0"
+      }
+    },
+    "node_modules/babel-plugin-transform-amd-to-es6": {
+      "version": "0.6.2",
+      "resolved": "https://registry.npmjs.org/babel-plugin-transform-amd-to-es6/-/babel-plugin-transform-amd-to-es6-0.6.2.tgz",
+      "integrity": "sha512-WOSRwdKyyGDKYKyB2BGXJnO1SXlQMKmVPInNHRPprAq9EZVWGR6tY8MrARuNfEyIUiRHtdH+JGewZiDHm9hz5g==",
+      "dev": true,
+      "dependencies": {
+        "@babel/helper-plugin-utils": "^7.10.4",
+        "minimatch": "^3.0.4"
+      },
+      "peerDependencies": {
+        "@babel/core": "^7.0.0-0"
       }
     },
     "node_modules/babel-plugin-transform-es2015-modules-amd-lazy": {
@@ -18843,6 +18857,16 @@
         "@babel/core": "^7.0.0",
         "@babel/helper-plugin-utils": "^7.0.0",
         "@babel/plugin-syntax-dynamic-import": "^7.0.0"
+      }
+    },
+    "babel-plugin-transform-amd-to-es6": {
+      "version": "0.6.2",
+      "resolved": "https://registry.npmjs.org/babel-plugin-transform-amd-to-es6/-/babel-plugin-transform-amd-to-es6-0.6.2.tgz",
+      "integrity": "sha512-WOSRwdKyyGDKYKyB2BGXJnO1SXlQMKmVPInNHRPprAq9EZVWGR6tY8MrARuNfEyIUiRHtdH+JGewZiDHm9hz5g==",
+      "dev": true,
+      "requires": {
+        "@babel/helper-plugin-utils": "^7.10.4",
+        "minimatch": "^3.0.4"
       }
     },
     "babel-plugin-transform-es2015-modules-amd-lazy": {

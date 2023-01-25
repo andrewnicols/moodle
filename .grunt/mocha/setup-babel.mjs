@@ -55,6 +55,15 @@ registerBabel({
         }]
     ],
     plugins: [
+
+        ['transform-amd-to-es6', {
+            amdToES6Modules: true, // true by default
+            excludes: [
+                '**/lib/requirejs/require.js',
+                '**/lib/jquery/jquery*.js',
+                '**/lib/amd/src/loglevel.js',
+            ]
+        }],
         ["@babel/plugin-proposal-class-properties"],
         getModuleResolver(),
     ],

@@ -256,6 +256,7 @@
         td: true,
         global: true,
         getModulePath: true,
+        helper: true,
       },
       rules: {
         "no-unused-expressions": "off",
