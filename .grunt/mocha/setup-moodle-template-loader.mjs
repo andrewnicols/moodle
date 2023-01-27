@@ -24,26 +24,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Loader from 'core/local/templates/loader';
-import Renderer from 'core/local/templates/renderer';
-import { getNormalisedComponent } from 'core/utils';
-import Templates from 'core/templates';
+export const mochaHooks = {
+    async beforeEach () {
 
-class TestLoader extends Loader {
-    static processLoadTemplateBuffer() {
-        if (!this.loadTemplateBuffer.length) {
-            return;
-        }
-
-        if (this.isLoadingTemplates) {
-            return;
-        }
-
-        this.isLoadingTemplates = true;
-        templatesToLoad.map(function (templateData) {
-            var component = getNormalisedComponent(templateData.component);
-        });
-    }
-}
-
-Renderer.setLoader(TestLoader);
+    },
+};
