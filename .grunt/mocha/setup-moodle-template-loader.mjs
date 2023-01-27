@@ -1,0 +1,49 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * This file is responsible for the setup and configuration of the following for use in our Mocha tests:
+ *
+ * - The global M object.
+ * - Including lib/javascript-static.js
+ * - Mocking a global YUI instance.
+ *
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+import Loader from 'core/local/templates/loader';
+import Renderer from 'core/local/templates/renderer';
+import { getNormalisedComponent } from 'core/utils';
+import Templates from 'core/templates';
+
+class TestLoader extends Loader {
+    static processLoadTemplateBuffer() {
+        if (!this.loadTemplateBuffer.length) {
+            return;
+        }
+
+        if (this.isLoadingTemplates) {
+            return;
+        }
+
+        this.isLoadingTemplates = true;
+        templatesToLoad.map(function (templateData) {
+            var component = getNormalisedComponent(templateData.component);
+        });
+    }
+}
+
+Renderer.setLoader(TestLoader);

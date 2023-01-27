@@ -45,10 +45,12 @@ export const mochaHooks = {
      */
     async beforeEach () {
         // Reset the initial M.cfg values.
+        global.M.cfg.iconsystemmodule = 'core/icon_system_fontawesome';
         global.M.cfg = {
             wwwroot: 'https://test.example.com/',
             langrev: -1,
             themerev: -1,
+            iconsystemmodule: 'core/icon_system_fontawesome',
         };
         global.M.str = {};
         global.M.yui = {};
@@ -64,14 +66,17 @@ export const mochaHooks = {
             cfg: {
                 langrev: -1,
                 themerev: -1,
+                iconsystemmodule: 'core/icon_system_fontawesome',
             },
             str: {},
             util: {},
             yui: {},
         };
 
-        global.YUI = td.constructor(['use', 'add']);
+        global.YUI = sinon.stub();
         global.YUI.add = sinon.fake();
+        global.YUI.use = sinon.fake();
+        global.Y = YUI;
         await import('../../lib/javascript-static.js');
     },
 };
