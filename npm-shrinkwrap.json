@@ -55,6 +55,7 @@
         "npm-run-all": "^4.1.5",
         "ny": "^1.7.0",
         "nyc": "^15.1.0",
+        "override-require": "^1.1.1",
         "resnap": "^1.0.1",
         "rollup-plugin-terser": "^7.0.2",
         "semver": "7.3.5",
@@ -12285,6 +12286,12 @@
         "os-homedir": "^1.0.0",
         "os-tmpdir": "^1.0.0"
       }
+    },
+    "node_modules/override-require": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/override-require/-/override-require-1.1.1.tgz",
+      "integrity": "sha512-eoJ9YWxFcXbrn2U8FKT6RV+/Kj7fiGAB1VvHzbYKt8xM5ZuKZgCGvnHzDxmreEjcBH28ejg5MiOH4iyY1mQnkg==",
+      "dev": true
     },
     "node_modules/p-cancelable": {
       "version": "0.4.1",
@@ -26001,6 +26008,12 @@
         "os-homedir": "^1.0.0",
         "os-tmpdir": "^1.0.0"
       }
+    },
+    "override-require": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/override-require/-/override-require-1.1.1.tgz",
+      "integrity": "sha512-eoJ9YWxFcXbrn2U8FKT6RV+/Kj7fiGAB1VvHzbYKt8xM5ZuKZgCGvnHzDxmreEjcBH28ejg5MiOH4iyY1mQnkg==",
+      "dev": true
     },
     "p-cancelable": {
       "version": "0.4.1",

@@ -23,7 +23,37 @@
 import registerBabel from '@babel/register';
 import {
     fetchComponentData,
+    getPathFromAMDModuleName,
 } from '../components.js';
+
+import overrideRequire from 'override-require';
+
+const isOverride = (request) => {
+    if (request.startsWith('.')) {
+        return false;
+    }
+    if (request.split('/').length === 1) {
+        return false;
+    }
+    if (request.startsWith('/')) {
+        return false;
+    }
+    const path = getPathFromAMDModuleName(request);
+    if (path) {
+        console.log(path);
+        return true;
+    }
+    return false;
+};
+
+const resolveRequest = (request) => {
+    const path = getPathFromAMDModuleName(request);
+    console.log(`Fetching ${request}`);
+    console.log(path);
+    return `../../${path}`;
+};
+overrideRequire(isOverride, resolveRequest);
+
 
 // Register Babel first.
 // We want to do this here, with our own configuration which is separate to the grunt amd configuration.
