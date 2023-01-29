@@ -224,12 +224,15 @@ const getComponentNameFromAMDModuleName = (moduleName) => {
  * @returns {String}
  */
 const getPathFromAMDModuleName = (moduleName) => {
-    const [component, modulePath] = moduleName.split('/', 2);
+    const path = require('path');
+
+    const [component, ...modulePath] = moduleName.split('/');
     const componentList = fetchComponentData().components;
 
-    for (const [path, name] of Object.entries(componentList)) {
+    for (const [componentPath, name] of Object.entries(componentList)) {
         if (name === component) {
-            return `${path}/amd/src/${modulePath}`;
+            const finalPath = path.join(componentPath, 'amd', 'src', ...modulePath);
+            return finalPath;
         }
     }
 

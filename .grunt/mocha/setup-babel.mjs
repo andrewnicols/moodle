@@ -41,7 +41,6 @@ const isOverride = (request) => {
     }
     const path = getPathFromAMDModuleName(request);
     if (path) {
-        console.log(path);
         return true;
     }
     return false;
@@ -76,6 +75,30 @@ const getModuleResolver = () => {
     ];
 };
 
+const getEsmModuleResolver = () => {
+    const componentData = fetchComponentData().components;
+    const aliases = {
+        jquery: './lib/jquery/jquery-3.6.1.js',
+        requirejs: './lib/requirejs/require.js',
+    };
+    for (const [thisPath, component] of Object.entries(componentData)) {
+        aliases[component] = `./${thisPath}/amd/src`;
+    }
+
+    return [
+        path.join(process.cwd(), '.grunt', 'mocha', 'esm-resolver.js'),
+        {
+            extensions: [".ts", ".mjs", ".js"],
+            root: ["./"],
+            // "alias",
+            source: {
+                alias: aliases,
+                ignoreUnresolved: true,
+            },
+        },
+    ];
+};
+
 registerBabel({
     presets: [
         ['@babel/preset-env', {
@@ -83,6 +106,7 @@ registerBabel({
         }]
     ],
     plugins: [
+        getEsmModuleResolver(),
 
         ['transform-amd-to-es6', {
             amdToES6Modules: true, // true by default

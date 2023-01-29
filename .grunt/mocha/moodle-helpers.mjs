@@ -13,6 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+import path from 'path';
+import {
+    getPathFromAMDModuleName,
+} from '../components.js';
+import mockTemplateLoader from './setup-moodle-template-loader.mjs';
+
 /**
  * This file contains Moodle-specific helpers for use in our tests.
  *
@@ -25,11 +31,6 @@
  * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-import path from 'path';
-import {
-    getPathFromAMDModuleName,
-} from '../components.js';
 
 /**
  * Mock the data response from a standard Moodle web service.
@@ -79,7 +80,7 @@ export const respondWith = (
  */
 export const getModulePath = (moduleName) => {
     const modulePath = getPathFromAMDModuleName(moduleName);
-    return path.join(process.cwd(), modulePath);
+    return path.join(process.cwd(), `${modulePath}.js`);
 };
 
 /**
@@ -103,13 +104,7 @@ const helpers = {
     respondWith,
     getModulePath,
     setupFakeServer,
+    mockTemplateLoader: mockTemplateLoader.mockTemplateLoader,
 };
-
-export const mochaHooks = {
-    beforeEach() {
-        // Add the helpers.
-        global.helper = helpers;
-    }
-}
 
 export default helpers;

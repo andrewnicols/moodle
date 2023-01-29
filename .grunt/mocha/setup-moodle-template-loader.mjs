@@ -24,8 +24,79 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-export const mochaHooks = {
-    async beforeEach () {
+import path from 'path';
+import fs from 'fs/promises';
+import {
+    fetchComponentData,
+} from '../components.js';
+import {
+    getModulePath,
+} from './moodle-helpers.mjs';
 
-    },
+/**
+ * Get the relative path to an AMD module from its module name
+ * @param {String} component
+ * @param {String} templateName
+ * @returns {String}
+ */
+const getPathFromTemplatesName = (component, templateName) => {
+    const componentList = fetchComponentData().components;
+
+    for (const [componentPath, name] of Object.entries(componentList)) {
+        if (name === component) {
+            return path.join(
+                process.cwd(),
+                componentPath,
+                'templates',
+                `${templateName}.mustache`,
+            );
+        }
+    }
+
+    return null;
+};
+
+/**
+ * Mock the template loader.
+ */
+export const mockTemplateLoader = async () => {
+    const Loader = (await import(getModulePath('core/local/templates/loader'))).default.default;
+    const Renderer = (await import(getModulePath('core/local/templates/renderer'))).default.default;
+    const getNormalisedComponent = (await import(getModulePath('core/utils'))).default.getNormalisedComponent;
+
+    class TestLoader extends Loader {
+        static processLoadTemplateBuffer() {
+            if (!this.loadTemplateBuffer.length) {
+                return;
+            }
+
+            if (this.isLoadingTemplates) {
+                return;
+            }
+
+            this.isLoadingTemplates = true;
+
+            var templatesToLoad = this.loadTemplateBuffer.slice();
+            templatesToLoad.map(function (templateData) {
+                const path = getPathFromTemplatesName(
+                    getNormalisedComponent(templateData.component),
+                    templateData.name
+                );
+                const templateSource = fs.readFile(path, { encoding: 'utf8' });
+
+                return templateSource.then((templateSource) => {
+                    templateData.deferred.resolve(templateSource);
+                    return templateSource;
+                });
+            });
+
+            this.isLoadingTemplates = false;
+        }
+    }
+
+    Renderer.setLoader(TestLoader);
+};
+
+export default {
+    mockTemplateLoader,
 };
