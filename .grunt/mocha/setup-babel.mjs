@@ -106,7 +106,7 @@ registerBabel({
         }]
     ],
     plugins: [
-        getEsmModuleResolver(),
+        // getEsmModuleResolver(),
 
         ['transform-amd-to-es6', {
             amdToES6Modules: true, // true by default

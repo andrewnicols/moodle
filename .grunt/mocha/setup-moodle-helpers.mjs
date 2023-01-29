@@ -17,7 +17,6 @@ import path from 'path';
 import {
     getPathFromAMDModuleName,
 } from '../components.js';
-import mockTemplateLoader from './setup-moodle-template-loader.mjs';
 
 /**
  * This file contains Moodle-specific helpers for use in our tests.
@@ -104,7 +103,22 @@ const helpers = {
     respondWith,
     getModulePath,
     setupFakeServer,
-    mockTemplateLoader: mockTemplateLoader.mockTemplateLoader,
 };
 
 export default helpers;
+
+export const mochaHooks = {
+    // Note: The ESM cache currently cannot be reset between tests.
+    // This is a known issue with Mocha with ESM because NodeJS does not support clearing the cache.
+    // This is noted in https://github.com/mochajs/mocha/issues/4374#issuecomment-658060627.
+
+    /**
+     * This hook is called before each individual test.
+     *
+     * Ideally we should re-include javascript-static.js here but this is currently not possible due to the
+     * cache issue mentioned above.
+     */
+    async beforeEach() {
+        global.helper = helpers;
+    },
+};

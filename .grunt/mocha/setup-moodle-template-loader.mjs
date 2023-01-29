@@ -13,8 +13,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+import {mockTemplateLoader} from './moodle-template-loader.mjs';
+
 /**
- * This file is responsible for the setup and configuration of the following for use in our Mocha tests:
+ * This file contains Moodle-specific helpers for use in our tests.
+ *
+ * Note: This helper is not included via mocha.
  *
  * - The global M object.
  * - Including lib/javascript-static.js
@@ -24,79 +28,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import path from 'path';
-import fs from 'fs/promises';
-import {
-    fetchComponentData,
-} from '../components.js';
-import {
-    getModulePath,
-} from './moodle-helpers.mjs';
+export const mochaHooks = {
+    // Note: The ESM cache currently cannot be reset between tests.
+    // This is a known issue with Mocha with ESM because NodeJS does not support clearing the cache.
+    // This is noted in https://github.com/mochajs/mocha/issues/4374#issuecomment-658060627.
 
-/**
- * Get the relative path to an AMD module from its module name
- * @param {String} component
- * @param {String} templateName
- * @returns {String}
- */
-const getPathFromTemplatesName = (component, templateName) => {
-    const componentList = fetchComponentData().components;
+    /**
+     * This hook is called before each individual test.
+     *
+     * Ideally we should re-include javascript-static.js here but this is currently not possible due to the
+     * cache issue mentioned above.
+     */
+    async beforeEach () {
+        global.restoreDefaultTemplateLoader = await mockTemplateLoader();
+    },
 
-    for (const [componentPath, name] of Object.entries(componentList)) {
-        if (name === component) {
-            return path.join(
-                process.cwd(),
-                componentPath,
-                'templates',
-                `${templateName}.mustache`,
-            );
-        }
+    afterEach () {
+        global.restoreDefaultTemplateLoader();
     }
-
-    return null;
-};
-
-/**
- * Mock the template loader.
- */
-export const mockTemplateLoader = async () => {
-    const Loader = (await import(getModulePath('core/local/templates/loader'))).default.default;
-    const Renderer = (await import(getModulePath('core/local/templates/renderer'))).default.default;
-    const getNormalisedComponent = (await import(getModulePath('core/utils'))).default.getNormalisedComponent;
-
-    class TestLoader extends Loader {
-        static processLoadTemplateBuffer() {
-            if (!this.loadTemplateBuffer.length) {
-                return;
-            }
-
-            if (this.isLoadingTemplates) {
-                return;
-            }
-
-            this.isLoadingTemplates = true;
-
-            var templatesToLoad = this.loadTemplateBuffer.slice();
-            templatesToLoad.map(function (templateData) {
-                const path = getPathFromTemplatesName(
-                    getNormalisedComponent(templateData.component),
-                    templateData.name
-                );
-                const templateSource = fs.readFile(path, { encoding: 'utf8' });
-
-                return templateSource.then((templateSource) => {
-                    templateData.deferred.resolve(templateSource);
-                    return templateSource;
-                });
-            });
-
-            this.isLoadingTemplates = false;
-        }
-    }
-
-    Renderer.setLoader(TestLoader);
-};
-
-export default {
-    mockTemplateLoader,
 };

@@ -45,7 +45,8 @@ module.exports = {
 
         // Add our own setup too.
         ".grunt/mocha/setup-moodle.mjs",
-    
+        ".grunt/mocha/setup-moodle-helpers.mjs",
+        ".grunt/mocha/setup-moodle-template-loader.mjs",
     ],
 
     color: true,

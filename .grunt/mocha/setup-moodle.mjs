@@ -25,7 +25,6 @@
  */
 
 import sinon from 'sinon';
-import MoodleHelpers from './moodle-helpers.mjs';
 
 /**
  * The root hooks to apply before and after each test.
@@ -44,7 +43,6 @@ export const mochaHooks = {
      * cache issue mentioned above.
      */
     async beforeEach () {
-        global.helper = MoodleHelpers;
         // Reset the initial M.cfg values.
         global.M.cfg.iconsystemmodule = 'core/icon_system_fontawesome';
         global.M.cfg = {
@@ -57,10 +55,6 @@ export const mochaHooks = {
         global.M.yui = {};
         global.M.util.pending_js = [];
         global.M.util.complete_js = [];
-
-        const TemplateLoader = await import('./setup-moodle-template-loader.mjs');
-
-        // await TemplateLoader.mockTemplateLoader();
     },
 
     /**
