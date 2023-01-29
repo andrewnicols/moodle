@@ -15,8 +15,11 @@
 
 import path from 'path';
 import {
+    fetchComponentData,
     getPathFromAMDModuleName,
 } from '../components.js';
+import fs from 'fs/promises';
+import * as td from 'testdouble';
 
 /**
  * This file contains Moodle-specific helpers for use in our tests.
@@ -98,11 +101,91 @@ export const setupFakeServer = () => {
     return server;
 };
 
+const getComponentDirectory = (component) => {
+    const componentList = fetchComponentData().components;
+    for (const [componentPath, name] of Object.entries(componentList)) {
+        if (name === component) {
+            return componentPath;
+        }
+    }
+
+    return null;
+};
+
+export const fetchComponentStrings = async (component) => {
+    const componentDirectory = getComponentDirectory(component);
+    if (!componentDirectory) {
+        throw new Error(`Invalid component '${component}'`);
+    }
+
+    const getLangStringFileName = (component) => {
+        if (component.startsWith('core_')) {
+            return component.replace('core_', '');
+        }
+
+        if (component.startsWith('mod_')) {
+            return component.replace('mod_', '');
+        }
+
+        return component;
+    };
+
+    const langStringPath = path.join(
+        componentDirectory,
+        'lang',
+        'en',
+        `${getLangStringFileName(component)}.php`,
+    );
+
+    if (!await fs.stat(langStringPath)) {
+        throw new Error(`No strings found for component '${component}'`);
+    }
+
+    const langStrings = await (await fs.readFile(langStringPath, 'utf8'))
+        .split("\n")
+        .slice(1)
+        .join("\n");
+
+    const $string = {};
+    eval(langStrings);
+
+    return $string;
+};
+
+export const mockedGetString = (strings) => {
+    return strings.map(({
+        key,
+        component = 'core',
+        param,
+        lang = 'en',
+    }) => {
+        const componentStrings = fetchComponentStrings(component);
+        const string = componentStrings[key];
+
+        if (!string) {
+            return `[[${key}},${component}]]`;
+        }
+
+        global.M.str[component] = {
+            ...M.str[component],
+            [key]: str,
+        };
+
+        return M.util.get_string(key, component, param);
+    });
+};
+
+export const mockStringFetcher = () => {
+    console.log("MOCK");
+    td.replace(getModulePath('core/str'), 'get_strings', mockedGetString);
+};
+
 const helpers = {
     getMockResponse,
     respondWith,
     getModulePath,
     setupFakeServer,
+    mockStringFetcher,
 };
 
 export default helpers;
