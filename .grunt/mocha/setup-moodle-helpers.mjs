@@ -175,17 +175,11 @@ export const mockedGetString = (strings) => {
     });
 };
 
-export const mockStringFetcher = () => {
-    console.log("MOCK");
-    td.replace(getModulePath('core/str'), 'get_strings', mockedGetString);
-};
-
 const helpers = {
     getMockResponse,
     respondWith,
     getModulePath,
     setupFakeServer,
-    mockStringFetcher,
 };
 
 export default helpers;

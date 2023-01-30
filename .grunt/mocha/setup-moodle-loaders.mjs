@@ -14,6 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 import {mockTemplateLoader} from './moodle-template-loader.mjs';
+import {mockStringLoader} from './moodle-string-loader.mjs';
 
 /**
  * This file contains Moodle-specific helpers for use in our tests.
@@ -41,9 +42,10 @@ export const mochaHooks = {
      */
     async beforeEach () {
         global.restoreDefaultTemplateLoader = await mockTemplateLoader();
+        global.restoreDefaultStringLoader = await mockStringLoader();
     },
 
     afterEach () {
-        global.restoreDefaultTemplateLoader();
+        global.restoreDefaultStringLoader();
     }
 };
