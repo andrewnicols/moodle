@@ -77,8 +77,8 @@ export const mockTemplateLoader = async () => {
 
             this.isLoadingTemplates = true;
 
-            var templatesToLoad = this.loadTemplateBuffer.slice();
-            templatesToLoad.map(function (templateData) {
+            const templatesToLoad = this.loadTemplateBuffer.slice();
+            const templatePromises = templatesToLoad.map(function (templateData) {
                 const path = getPathFromTemplatesName(
                     getNormalisedComponent(templateData.component),
                     templateData.name
@@ -91,7 +91,18 @@ export const mockTemplateLoader = async () => {
                 });
             });
 
-            this.isLoadingTemplates = false;
+            Promise.all(templatePromises).then(() => {
+                Loader.loadTemplateBuffer.splice(0, templatesToLoad.length);
+                this.isLoadingTemplates = false;
+                this.processLoadTemplateBuffer();
+
+                return;
+            })
+            .catch(() => {
+                Loader.loadTemplateBuffer.splice(0, templatesToLoad.length);
+                this.isLoadingTemplates = false;
+                this.processLoadTemplateBuffer();
+            });
         }
     }
 
