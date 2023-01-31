@@ -32,8 +32,9 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @author     Safat Shahin <safatshahin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \mod_quiz\question\bank\qbank_helper
- * @coversDefaultClass \backup_quiz_activity_structure_step
- * @coversDefaultClass \restore_quiz_activity_structure_step
+ * @covers \mod_quiz\question\bank\qbank_helper
+ * @covers \backup_quiz_activity_structure_step
+ * @covers \restore_quiz_activity_structure_step
  */
 class quiz_question_restore_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
@@ -153,7 +154,7 @@ class quiz_question_restore_test extends \advanced_testcase {
     /**
      * Test if a duplicate does not duplicate questions in course question bank.
      *
-     * @covers ::duplicate_module
+     * @covers \quiz_question_helper_test_trait::duplicate_quiz
      */
     public function test_quiz_duplicate_does_not_duplicate_course_question_bank_questions() {
         $this->resetAfterTest();
@@ -175,7 +176,7 @@ class quiz_question_restore_test extends \advanced_testcase {
     /**
      * Test quiz duplicate for quiz question bank.
      *
-     * @covers ::duplicate_module
+     * @covers \quiz_question_helper_test_trait::duplicate_quiz
      */
     public function test_quiz_duplicate_for_quiz_question_bank_questions() {
         $this->resetAfterTest();
@@ -236,7 +237,7 @@ class quiz_question_restore_test extends \advanced_testcase {
     /**
      * Test pre 4.0 quiz restore for regular questions.
      *
-     * @covers ::process_quiz_question_legacy_instance
+     * @covers \restore_quiz_activity_structure_step::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_regular_questions() {
         global $USER, $DB;
@@ -278,7 +279,7 @@ class quiz_question_restore_test extends \advanced_testcase {
     /**
      * Test pre 4.0 quiz restore for random questions.
      *
-     * @covers ::process_quiz_question_legacy_instance
+     * @covers \restore_quiz_activity_structure_step::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_random_questions() {
         global $USER, $DB;
@@ -326,7 +327,7 @@ class quiz_question_restore_test extends \advanced_testcase {
     /**
      * Test pre 4.0 quiz restore for random question tags.
      *
-     * @covers ::process_quiz_question_legacy_instance
+     * @covers \restore_quiz_activity_structure_step::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_random_question_tags() {
         global $USER, $DB;
