@@ -26,7 +26,7 @@ use question_bank;
  * @copyright  2021 Catalyst IT Australia Pty Ltd
  * @author     Guillermo Gomez Arias <guillermogomez@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \question_bank
+ * @covers \question_bank
  */
 class version_test extends \advanced_testcase {
 
@@ -67,8 +67,6 @@ class version_test extends \advanced_testcase {
 
     /**
      * Test if creating a question a new version and bank entry records are created.
-     *
-     * @covers ::load_question
      */
     public function test_make_question_create_version_and_bank_entry() {
         global $DB;
@@ -102,8 +100,7 @@ class version_test extends \advanced_testcase {
     /**
      * Test if deleting a question the related version and bank entry records are deleted.
      *
-     * @covers ::load_question
-     * @covers ::question_delete_question
+     * @covers \question_delete_question
      */
     public function test_delete_question_delete_versions() {
         global $DB;
@@ -154,9 +151,8 @@ class version_test extends \advanced_testcase {
     /**
      * Test if deleting a question will not break a quiz.
      *
-     * @covers ::load_question
-     * @covers ::quiz_add_quiz_question
-     * @covers ::question_delete_question
+     * @covers \quiz_add_quiz_question
+     * @covers \question_delete_question
      */
     public function test_delete_question_in_use() {
         global $DB;
@@ -188,8 +184,7 @@ class version_test extends \advanced_testcase {
     /**
      * Test if moving a category will not break a quiz.
      *
-     * @covers ::load_question
-     * @covers ::quiz_add_quiz_question
+     * @covers \quiz_add_quiz_question
      */
     public function test_move_category_with_questions() {
         global $DB;
@@ -223,8 +218,6 @@ class version_test extends \advanced_testcase {
 
     /**
      * Test that all versions will have the same bank entry idnumber value.
-     *
-     * @covers ::load_question
      */
     public function test_id_number_in_bank_entry() {
         global $DB;
@@ -262,8 +255,6 @@ class version_test extends \advanced_testcase {
 
     /**
      * Test that all the versions are available from the method.
-     *
-     * @covers ::get_all_versions_of_question
      */
     public function test_get_all_versions_of_question() {
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
@@ -291,8 +282,6 @@ class version_test extends \advanced_testcase {
 
     /**
      * Test that all the versions of questions are available from the method.
-     *
-     * @covers ::get_all_versions_of_questions
      */
     public function test_get_all_versions_of_questions() {
         global $DB;
