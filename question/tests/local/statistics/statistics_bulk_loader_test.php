@@ -53,8 +53,6 @@ class statistics_bulk_loader_test extends advanced_testcase {
 
     /**
      * Test quizzes that contain a specified question.
-     *
-     * @covers ::get_all_places_where_questions_were_attempted
      */
     public function test_get_all_places_where_questions_were_attempted(): void {
         global $DB;
