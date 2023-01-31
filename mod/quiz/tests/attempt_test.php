@@ -32,6 +32,7 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @category  test
  * @copyright 2014 Tim Hunt
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \mod_quiz\quiz_attempt
  */
 class attempt_test extends \advanced_testcase {
 
@@ -380,7 +381,6 @@ class attempt_test extends \advanced_testcase {
 
     /**
      * Test check_page_access function
-     * @covers \quiz_attempt::check_page_access
      */
     public function test_check_page_access() {
         $timenow = time();
@@ -467,9 +467,6 @@ class attempt_test extends \advanced_testcase {
 
     /**
      * Starting a new attempt built on last with a question in draft status should throw an exception.
-     *
-     * @covers ::quiz_start_attempt_built_on_last()
-     * @return void
      */
     public function test_quiz_start_attempt_built_on_last_with_draft(): void {
         global $DB;
@@ -510,8 +507,6 @@ class attempt_test extends \advanced_testcase {
 
     /**
      * Starting a new attempt and check the summary previous attempts table.
-     *
-     * @covers ::view_table()
      */
     public function test_view_table(): void {
         global $PAGE;
