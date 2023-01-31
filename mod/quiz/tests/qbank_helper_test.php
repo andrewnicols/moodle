@@ -32,7 +32,7 @@ require_once(__DIR__ . '/quiz_question_helper_test_trait.php');
  * @copyright  2021 Catalyst IT Australia Pty Ltd
  * @author     Safat Shahin <safatshahin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \mod_quiz\question\bank\qbank_helper
+ * @covers \mod_quiz\question\bank\qbank_helper
  */
 class qbank_helper_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
@@ -56,8 +56,6 @@ class qbank_helper_test extends \advanced_testcase {
 
     /**
      * Test reference records.
-     *
-     * @covers ::get_version_options
      */
     public function test_reference_records() {
         $this->resetAfterTest();
@@ -106,9 +104,6 @@ class qbank_helper_test extends \advanced_testcase {
 
     /**
      * Test question structure data.
-     *
-     * @covers ::get_question_structure
-     * @covers ::get_always_latest_version_question_ids
      */
     public function test_get_question_structure() {
         $this->resetAfterTest();
@@ -147,9 +142,6 @@ class qbank_helper_test extends \advanced_testcase {
 
     /**
      * When a question only has draft versions, we should get those and not a dummy question.
-     *
-     * @return void
-     * @covers ::get_question_structure
      */
     public function test_get_question_structure_with_drafts(): void {
         $this->resetAfterTest();

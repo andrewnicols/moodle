@@ -31,6 +31,7 @@ require_once($CFG->dirroot . '/mod/quiz/attemptlib.php');
  * @category  test
  * @copyright 2013 Adrian Greeve
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \mod_quiz\structure
  */
 class structure_test extends \advanced_testcase {
 
@@ -928,8 +929,6 @@ class structure_test extends \advanced_testcase {
 
     /**
      * Test to get the version information for a question to show in the version selection dropdown.
-     *
-     * @covers ::get_question_version_info
      */
     public function test_get_version_choices_for_slot() {
         $this->resetAfterTest();
@@ -961,8 +960,6 @@ class structure_test extends \advanced_testcase {
 
     /**
      * Test the current user have '...use' capability over the question(s) in a given slot.
-     *
-     * @covers ::has_use_capability
      */
     public function test_has_use_capability() {
         $this->resetAfterTest();

@@ -31,9 +31,10 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @copyright  2021 Catalyst IT Australia Pty Ltd
  * @author     Safat Shahin <safatshahin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \mod_quiz\question\bank\qbank_helper
- * @coversDefaultClass \backup_quiz_activity_structure_step
- * @coversDefaultClass \restore_quiz_activity_structure_step
+ * @covers \mod_quiz\question\bank\qbank_helper
+ * @covers \backup_quiz_activity_structure_step
+ * @covers \restore_quiz_activity_structure_step
+ * @covers \quiz_question_helper_test_trait
  */
 class quiz_question_restore_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
@@ -57,8 +58,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test a quiz backup and restore in a different course without attempts for course question bank.
-     *
-     * @covers ::get_question_structure
      */
     public function test_quiz_restore_in_a_different_course_using_course_question_bank() {
         $this->resetAfterTest();
@@ -96,8 +95,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test a quiz backup and restore in a different course without attempts for quiz question bank.
-     *
-     * @covers ::get_question_structure
      */
     public function test_quiz_restore_in_a_different_course_using_quiz_question_bank() {
         $this->resetAfterTest();
@@ -152,8 +149,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test if a duplicate does not duplicate questions in course question bank.
-     *
-     * @covers ::duplicate_module
      */
     public function test_quiz_duplicate_does_not_duplicate_course_question_bank_questions() {
         $this->resetAfterTest();
@@ -174,8 +169,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test quiz duplicate for quiz question bank.
-     *
-     * @covers ::duplicate_module
      */
     public function test_quiz_duplicate_for_quiz_question_bank_questions() {
         $this->resetAfterTest();
@@ -196,8 +189,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test quiz restore with attempts.
-     *
-     * @covers ::get_question_structure
      */
     public function test_quiz_restore_with_attempts() {
         $this->resetAfterTest();
@@ -235,8 +226,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.0 quiz restore for regular questions.
-     *
-     * @covers ::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_regular_questions() {
         global $USER, $DB;
@@ -277,8 +266,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.0 quiz restore for random questions.
-     *
-     * @covers ::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_random_questions() {
         global $USER, $DB;
@@ -325,8 +312,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.0 quiz restore for random question tags.
-     *
-     * @covers ::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_random_question_tags() {
         global $USER, $DB;
@@ -382,8 +367,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.0 quiz restore for random question used on multiple quizzes.
-     *
-     * @covers ::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_shared_random_question() {
         global $USER, $DB;
@@ -435,9 +418,6 @@ class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Ensure that question slots are correctly backed up and restored with all properties.
-     *
-     * @covers \backup_quiz_activity_structure_step::define_structure()
-     * @return void
      */
     public function test_backup_restore_question_slots(): void {
         $this->resetAfterTest(true);

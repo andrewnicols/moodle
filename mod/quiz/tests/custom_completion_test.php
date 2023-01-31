@@ -38,7 +38,7 @@ require_once($CFG->libdir . '/completionlib.php');
  * @package   mod_quiz
  * @copyright 2021 Shamim Rezaie <shamim@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \mod_quiz\completion\custom_completion
+ * @covers \mod_quiz\completion\custom_completion
  */
 class custom_completion_test extends advanced_testcase {
 
@@ -190,9 +190,6 @@ class custom_completion_test extends advanced_testcase {
     /**
      * Test checking the completion state of a quiz.
      * To be completed, this quiz requires either a passing grade or for all attempts to be used up.
-     *
-     * @covers ::get_state
-     * @covers ::get_custom_rule_descriptions
      */
     public function test_completionexhausted() {
         list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
@@ -268,9 +265,6 @@ class custom_completion_test extends advanced_testcase {
     /**
      * Test checking the completion state of a quiz.
      * To be completed, this quiz requires a minimum number of attempts.
-     *
-     * @covers ::get_state
-     * @covers ::get_custom_rule_descriptions
      */
     public function test_completionminattempts() {
         list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
@@ -321,8 +315,6 @@ class custom_completion_test extends advanced_testcase {
 
     /**
      * Test for get_defined_custom_rules().
-     *
-     * @covers ::get_defined_custom_rules
      */
     public function test_get_defined_custom_rules() {
         $rules = custom_completion::get_defined_custom_rules();
@@ -335,8 +327,6 @@ class custom_completion_test extends advanced_testcase {
 
     /**
      * Test update moduleinfo.
-     *
-     * @covers \update_moduleinfo
      */
     public function test_update_moduleinfo() {
         $this->setAdminUser();

@@ -80,6 +80,7 @@ class testable_mod_quiz_external extends mod_quiz_external {
  * @copyright  2016 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.1
+ * @covers \mod_quiz_external
  */
 class external_test extends externallib_advanced_testcase {
 

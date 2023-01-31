@@ -31,7 +31,7 @@ require_once(__DIR__ . '/quiz_question_helper_test_trait.php');
  * @copyright  2021 Catalyst IT Australia Pty Ltd
  * @author     Safat Shahin <safatshahin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \mod_quiz\question\bank\qbank_helper
+ * @covers \mod_quiz\question\bank\qbank_helper
  */
 class quiz_question_version_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
@@ -50,8 +50,6 @@ class quiz_question_version_test extends \advanced_testcase {
 
     /**
      * Test the quiz question data for changed version in the slots.
-     *
-     * @covers ::get_version_options
      */
     public function test_quiz_questions_for_changed_versions() {
         $this->resetAfterTest();
@@ -131,8 +129,6 @@ class quiz_question_version_test extends \advanced_testcase {
 
     /**
      * Test if changing the version of the slot changes the attempts.
-     *
-     * @covers ::get_version_options
      */
     public function test_quiz_question_attempts_with_changed_version() {
         $this->resetAfterTest();
