@@ -86,14 +86,15 @@ class mod_wiki_generator extends testing_module_generator {
      * @return int
      */
     public function get_subwiki($wiki, $subwikiid = null, $group = null, $userid = null) {
-        global $USER, $DB;
+        global $CFG, $USER, $DB;
+        require_once($CFG->dirroot . '/mod/wiki/locallib.php');
 
         if ($subwikiid) {
             $params = ['id' => $subwikiid, 'wikiid' => $wiki->id];
             if ($group !== null) {
                 $params['group'] = $group;
             }
-            if ($userid !== null) {
+            if ($wiki->wikimode == 'individual' && $userid !== null) {
                 $params['userid'] = $userid;
             }
             return $DB->get_field('wiki_subwikis', 'id', $params, MUST_EXIST);
@@ -102,6 +103,8 @@ class mod_wiki_generator extends testing_module_generator {
         if ($userid === null) {
             $userid = ($wiki->wikimode == 'individual') ? $USER->id : 0;
         }
+        $userid = ($wiki->wikimode !== 'individual') ? 0 : $userid;
+
         if ($group === null) {
             $group = 0;
         }
@@ -110,6 +113,17 @@ class mod_wiki_generator extends testing_module_generator {
         } else {
             return wiki_add_subwiki($wiki->id, $group, $userid);
         }
+    }
+
+    public function create_page_for_behat(array $record): void {
+        global $DB;
+
+        $wiki = $DB->get_record('wiki', ['id' => $record['wikiid']]);
+        if (!$DB->record_exists('wiki_subwikis', ['wikiid' => $wiki->id])) {
+            $record['subwikiid'] = $this->get_subwiki($wiki);
+        }
+
+        $this->create_page($wiki, $record);
     }
 
     /**
@@ -138,12 +152,14 @@ class mod_wiki_generator extends testing_module_generator {
         }
         $record['subwikiid'] = $this->get_subwiki($wiki, $record['subwikiid'], $record['group'], $record['userid']);
 
+        $userid = empty($record['userid']) ? $USER->id : $record['userid'];
+
         $wikipage = wiki_get_page_by_title($record['subwikiid'], $record['title']);
         if (!$wikipage) {
-            $pageid = wiki_create_page($record['subwikiid'], $record['title'], $record['format'], $USER->id);
+            $pageid = wiki_create_page($record['subwikiid'], $record['title'], $record['format'], $userid);
             $wikipage = wiki_get_page($pageid);
         }
-        $rv = wiki_save_page($wikipage, $record['content'], $USER->id);
+        $rv = wiki_save_page($wikipage, $record['content'], $userid);
 
         if (array_key_exists('tags', $record)) {
             $tags = is_array($record['tags']) ? $record['tags'] : preg_split('/,/', $record['tags']);
