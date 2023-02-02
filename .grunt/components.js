@@ -257,34 +257,37 @@ const getLatestTag = async(url) => {
  * @returns {Array}
  */
 const getThirdPartyLibsUpgradable = async() => {
-    const libraries = getThirdPartyLibsData();
-    let upgradableLibraries = [];
+    const libraries = getThirdPartyLibsData().filter((library) => !!library.repository);
+    const upgradableLibraries = [];
     for (let library of libraries) {
-        if (library.repository) {
-            const latestTag = await getLatestTag(library.repository);
-            if (latestTag.length !== 0) {
-                let newVersion = latestTag.shift();
-                const currentVersion = library.version;
-                if (newVersion !== undefined && newVersion.startsWith('v') && !currentVersion.startsWith('v')) {
-                    // If the version doesn't start with v (vX.Y), remove it from the new, unless the current also starts with 'v'.
-                    newVersion = newVersion.substring(1);
-                }
-                if (newVersion != currentVersion) {
-                    // Initially this was using the semver.gt method, but in some cases it won't work so finally I realised it was
-                    // easier to compare versions and done.
+        upgradableLibraries.push(
+            getLatestTag(library.repository).then((latestTag) => {
+                if (latestTag.length !== 0) {
+                    let newVersion = latestTag.shift();
+                    const currentVersion = library.version;
+                    if (newVersion !== undefined && newVersion.startsWith('v') && !currentVersion.startsWith('v')) {
+                        // If the version doesn't start with v (vX.Y), remove it from the new,
+                        // unless the current also starts with 'v'.
+                        newVersion = newVersion.substring(1);
+                    }
+                    if (newVersion != currentVersion) {
+                        // Initially this was using the semver.gt method,//
+                        // but in some cases it won't work so finally I realised it was easier to compare versions and done.
 
-                    // Delete version and add it again at the end of the array. That way, current and new will stay closer.
-                    delete library.version;
-                    library.version = currentVersion;
-                    // If the versions are different, include the newVersion to the library data and return it.
-                    library.newVersion = newVersion;
-                    upgradableLibraries.push(library);
+                        // Delete version and add it again at the end of the array. That way, current and new will stay closer.
+                        delete library.version;
+                        library.version = currentVersion;
+                        // If the versions are different, include the newVersion to the library data and return it.
+                        library.newVersion = newVersion;
+                        return library;
+                    }
                 }
-            }
-        }
+                return null;
+            })
+        );
     }
 
-    return upgradableLibraries;
+    return await Promise.all(upgradableLibraries);
 };
 
 /**
@@ -296,6 +299,7 @@ const getThirdPartyLibsData = () => {
     const DOMParser = require('xmldom').DOMParser;
     const fs = require('fs');
     const xpath = require('xpath');
+    const path = require('path');
 
     const libraryList = [];
     const libraryFields = [
@@ -311,10 +315,11 @@ const getThirdPartyLibsData = () => {
         const doc = new DOMParser().parseFromString(xmlContent);
         const libraries = xpath.select("/libraries/library", doc);
         for (const library of libraries) {
-            let libraryData = [];
+            const libraryData = [];
             for (const field of libraryFields) {
-              libraryData[field] = xpath.select(`${field}/text()`, library)?.toString();
+                libraryData[field] = xpath.select(`${field}/text()`, library)?.toString();
             }
+            libraryData.location = path.join(path.dirname(libraryPath), libraryData.location);
             libraryList.push(libraryData);
         }
     });
