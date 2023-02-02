@@ -21,23 +21,22 @@
  */
 
 module.exports = grunt => {
-
     /**
      * Generate upgradable third-party libraries (utilising thirdpartylibs.xml data)
      */
     grunt.registerTask('upgradablelibs', 'Generate upgradable third-party libraries', async function() {
-      const done = this.async();
+        const done = this.async();
 
-      const path = require('path');
-      const ComponentList = require(path.join(process.cwd(), '.grunt', 'components.js'));
+        const path = require('path');
+        const ComponentList = require(path.join(process.cwd(), '.grunt', 'components.js'));
 
-      // An array of third party libraries that have a newer version in their repositories.
-      const thirdPartyLibs = await ComponentList.getThirdPartyLibsUpgradable();
-      for (let library of thirdPartyLibs) {
-        grunt.log.ok(JSON.stringify(Object.assign({}, library), null, 4));
-      }
+        // An array of third party libraries that have a newer version in their repositories.
+        const thirdPartyLibs = await ComponentList.getThirdPartyLibsUpgradable({progress: true});
+        for (let library of thirdPartyLibs) {
+            grunt.log.ok(JSON.stringify(Object.assign({}, library), null, 4));
+        }
 
-      done();
+        done();
     });
 
 };
