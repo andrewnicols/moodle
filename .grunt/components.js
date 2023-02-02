@@ -303,7 +303,8 @@ const getThirdPartyLibsUpgradable = async() => {
                     .map((tag) => tag.replace(/^v/, ''))
                     .sort((a, b) => versionCompare(b, a));
                 if (!tags.length) {
-                    return null;
+                    library.warning = "Unable to find any comparable tags.";
+                    return library;
                 }
 
                 library.latestVersion = tags[0];
@@ -323,9 +324,9 @@ const getThirdPartyLibsUpgradable = async() => {
 
 
                 if (versionCompare(currentVersion, library.latestVersion) > 0) {
-                    console.log(`Newer version found: ${currentVersion} > ${library.latestVersion} for ${library.name}`);
                     // Moodle somehow has a newer version than the latest version.
-                    return false;
+                    library.warning = `Newer version found: ${currentVersion} > ${library.latestVersion} for ${library.name}`;
+                    return library;
                 }
 
 
