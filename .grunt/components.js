@@ -238,26 +238,7 @@ const getOwningComponentDirectory = checkPath => {
  * @param {string} url The remote repository.
  * @returns {Array}
  */
-const getLatestTag = async(url) => {
-    const gtr = require('git-tags-remote');
-    try {
-        const tag = await gtr.latest(url);
-        if (tag !== undefined) {
-            return tag;
-        }
-    } catch {
-        return [];
-    }
-    return [];
-};
-
-/**
- * Get the latest tag in a remote GitHub repository.
- *
- * @param {string} url The remote repository.
- * @returns {Array}
- */
-const getLatestTags = async(url) => {
+const getRepositoryTags = async(url) => {
     const gtr = require('git-tags-remote');
     try {
         const tags = await gtr.get(url);
@@ -278,20 +259,54 @@ const getLatestTags = async(url) => {
 const getThirdPartyLibsUpgradable = async() => {
     const libraries = getThirdPartyLibsData().filter((library) => !!library.repository);
     const upgradableLibraries = [];
+    const versionCompare = (a, b) => {
+        if (a === b) {
+            return 0;
+        }
+
+        const aParts = a.split('.');
+        const bParts = b.split('.');
+
+        for (let i = 0; i < Math.min(aParts.length, bParts.length); i++) {
+            const aPart = parseInt(aParts[i], 10);
+            const bPart = parseInt(bParts[i], 10);
+            if (aPart > bPart) {
+                // 1.1.0 > 1.0.9
+                return 1;
+            } else if (aPart < bPart) {
+                // 1.0.9 < 1.1.0
+                return -1;
+            } else {
+                // Same version.
+                continue;
+            }
+        }
+
+        if (aParts.length > bParts.length) {
+            // 1.0.1 > 1.0
+            return 1;
+        }
+
+        // 1.0 < 1.0.1
+        return -1;
+    };
+
     for (let library of libraries) {
         upgradableLibraries.push(
-            getLatestTags(library.repository).then((tagMap) => {
-                const currentVersion = library.version;
+            getRepositoryTags(library.repository).then((tagMap) => {
+                library.version = library.version.replace(/^v/, '');
+                const currentVersion = library.version.replace(/moodle-/, '');
                 const currentMajorVersion = library.version.split('.')[0];
                 const tags = [...tagMap]
                     .map((tagData) => tagData[0])
-                    .filter((tag) => !tag.match(/(alpha|beta)/))
+                    .filter((tag) => !tag.match(/(alpha|beta|rc)/))
                     .map((tag) => tag.replace(/^v/, ''))
-                    .sort((a, b) => b[0].localeCompare(a[0]));
-
-                if (tags.length) {
-                    library.latestVersion = tags[0];
+                    .sort((a, b) => versionCompare(b, a));
+                if (!tags.length) {
+                    return null;
                 }
+
+                library.latestVersion = tags[0];
                 tags.some((tag) => {
                     if (!tag) {
                         return false;
@@ -305,6 +320,14 @@ const getThirdPartyLibsUpgradable = async() => {
                     }
                     return false;
                 });
+
+
+                if (versionCompare(currentVersion, library.latestVersion) > 0) {
+                    console.log(`Newer version found: ${currentVersion} > ${library.latestVersion} for ${library.name}`);
+                    // Moodle somehow has a newer version than the latest version.
+                    return false;
+                }
+
 
                 if (library.version !== library.latestVersion) {
                     // Delete version and add it again at the end of the array. That way, current and new will stay closer.
