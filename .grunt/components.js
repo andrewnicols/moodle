@@ -252,6 +252,25 @@ const getLatestTag = async(url) => {
 };
 
 /**
+ * Get the latest tag in a remote GitHub repository.
+ *
+ * @param {string} url The remote repository.
+ * @returns {Array}
+ */
+const getLatestTags = async(url) => {
+    const gtr = require('git-tags-remote');
+    try {
+        const tags = await gtr.get(url);
+        if (tags !== undefined) {
+            return tags;
+        }
+    } catch (error) {
+        return [];
+    }
+    return [];
+};
+
+/**
  * Get the list of thirdparty libraries that could be upgraded.
  *
  * @returns {Array}
@@ -261,33 +280,44 @@ const getThirdPartyLibsUpgradable = async() => {
     const upgradableLibraries = [];
     for (let library of libraries) {
         upgradableLibraries.push(
-            getLatestTag(library.repository).then((latestTag) => {
-                if (latestTag.length !== 0) {
-                    let newVersion = latestTag.shift();
-                    const currentVersion = library.version;
-                    if (newVersion !== undefined && newVersion.startsWith('v') && !currentVersion.startsWith('v')) {
-                        // If the version doesn't start with v (vX.Y), remove it from the new,
-                        // unless the current also starts with 'v'.
-                        newVersion = newVersion.substring(1);
-                    }
-                    if (newVersion != currentVersion) {
-                        // Initially this was using the semver.gt method,//
-                        // but in some cases it won't work so finally I realised it was easier to compare versions and done.
+            getLatestTags(library.repository).then((tagMap) => {
+                const currentVersion = library.version;
+                const currentMajorVersion = library.version.split('.')[0];
+                const tags = [...tagMap]
+                    .map((tagData) => tagData[0])
+                    .filter((tag) => !tag.match(/(alpha|beta)/))
+                    .map((tag) => tag.replace(/^v/, ''))
+                    .sort((a, b) => b[0].localeCompare(a[0]));
 
-                        // Delete version and add it again at the end of the array. That way, current and new will stay closer.
-                        delete library.version;
-                        library.version = currentVersion;
-                        // If the versions are different, include the newVersion to the library data and return it.
-                        library.newVersion = newVersion;
-                        return library;
+                if (tags.length) {
+                    library.latestVersion = tags[0];
+                }
+                tags.some((tag) => {
+                    if (!tag) {
+                        return false;
                     }
+
+                    // See if the version part matches.
+                    const majorVersion = tag.split('.')[0];
+                    if (majorVersion === currentMajorVersion) {
+                        library.latestSameMajorVersion = tag;
+                        return true;
+                    }
+                    return false;
+                });
+
+                if (library.version !== library.latestVersion) {
+                    // Delete version and add it again at the end of the array. That way, current and new will stay closer.
+                    delete library.version;
+                    library.version = currentVersion;
+                    return library;
                 }
                 return null;
             })
         );
     }
 
-    return await Promise.all(upgradableLibraries);
+    return (await Promise.all(upgradableLibraries)).filter((library) => !!library);
 };
 
 /**
