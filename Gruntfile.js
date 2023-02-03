@@ -350,7 +350,7 @@ module.exports = function(grunt) {
         };
     };
 
-    const terser = require('rollup-plugin-terser').terser;
+    const terser = require('@rollup/plugin-terser');
 
     // Project configuration.
     grunt.initConfig({
