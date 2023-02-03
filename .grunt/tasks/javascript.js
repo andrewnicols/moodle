@@ -127,7 +127,7 @@ module.exports = grunt => {
         };
     };
 
-    const terser = require('rollup-plugin-terser').terser;
+    const terser = require('@rollup/plugin-terser');
     grunt.config.merge({
         rollup: {
             options: {
