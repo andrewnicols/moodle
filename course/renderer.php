@@ -1531,6 +1531,7 @@ class core_course_renderer extends plugin_renderer_base {
      * @return string
      */
     protected function coursecat_category(coursecat_helper $chelper, $coursecat, $depth) {
+        // throw new \coding_exception("ARGH");
         // open category tag
         $classes = array('category');
         if (empty($coursecat->visible)) {
