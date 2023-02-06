@@ -40,7 +40,9 @@ class renderer extends \plugin_renderer_base {
             $html = $this->output->box(get_string('nofilesavailable', 'repository'));
         } else {
             $htmlid = 'private_files_tree_' . uniqid();
-            $this->page->requires->js_call_amd('block_private_files/files_tree', 'init', [$htmlid]);
+            $this->page->requires->js_call_amd('core/tree', 'initialiseForSelector', [
+                "#{$htmlid} [role='tree']",
+            ]);
             $html = html_writer::div(
                 $this->htmllize_tree($tree, $tree->dir, true),
                 '',
