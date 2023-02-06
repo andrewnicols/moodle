@@ -24,53 +24,55 @@
  */
 
 class block_private_files extends block_base {
-
-    function init() {
+    public function init() {
         $this->title = get_string('pluginname', 'block_private_files');
     }
 
-    function specialization() {
+    public function specialization() {
     }
 
-    function applicable_formats() {
-        return array('all' => true);
+    public function applicable_formats() {
+        return ['all' => true];
     }
 
-    function instance_allow_multiple() {
+    public function instance_allow_multiple() {
         return false;
     }
 
-    function get_content() {
-
-        if ($this->content !== NULL) {
+    public function get_content() {
+        if ($this->content !== null) {
             return $this->content;
         }
         if (empty($this->instance)) {
             return null;
         }
 
-        $this->content = new stdClass();
-        $this->content->text = '';
-        $this->content->footer = '';
-        if (isloggedin() && !isguestuser()) {   // Show the block
-            $this->content = new stdClass();
+        $this->content = (object) [
+            'text' => '',
+            'footer' => '',
+        ];
 
-            //TODO: add capability check here!
+        if (!isloggedin() || isguestuser()) {
+            // Do not show the block to guests or anonymous users.
+            return $this->content;
+        }
 
-            $renderer = $this->page->get_renderer('block_private_files');
-            $this->content->text = $renderer->private_files_tree();
-            if (has_capability('moodle/user:manageownfiles', $this->context)) {
-                $this->content->footer = html_writer::link(
-                    new moodle_url('/user/files.php'),
-                    get_string('privatefilesmanage') . '...',
-                    ['data-action' => 'manageprivatefiles']);
-                $this->page->requires->js_call_amd(
-                    'core_user/private_files',
-                    'initModal',
-                    ['[data-action=manageprivatefiles]', \core_user\form\private_files::class]
-                );
-            }
+        // TODO: add capability check here!
 
+        $renderer = $this->page->get_renderer('block_private_files');
+        $this->content->text = $renderer->private_files_tree();
+
+        if (has_capability('moodle/user:manageownfiles', $this->context)) {
+            $this->content->footer = html_writer::link(
+                new moodle_url('/user/files.php'),
+                get_string('privatefilesmanage') . '...',
+                ['data-action' => 'manageprivatefiles']
+            );
+            $this->page->requires->js_call_amd(
+                'core_user/private_files',
+                'initModal',
+                ['[data-action=manageprivatefiles]', \core_user\form\private_files::class]
+            );
         }
         return $this->content;
     }

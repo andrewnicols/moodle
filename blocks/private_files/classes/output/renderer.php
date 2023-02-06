@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace block_private_files\output;
+
+use html_writer;
+
 /**
  * Print private files tree
  *
@@ -21,28 +25,29 @@
  * @copyright  2010 Dongsheng Cai <dongsheng@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-class block_private_files_renderer extends plugin_renderer_base {
+class renderer extends \plugin_renderer_base {
 
     /**
      * Prints private files tree view
      * @return string
      */
     public function private_files_tree() {
-        return $this->render(new private_files_tree);
+        return $this->render(new private_files_tree());
     }
 
     public function render_private_files_tree(private_files_tree $tree) {
         if (empty($tree->dir['subdirs']) && empty($tree->dir['files'])) {
             $html = $this->output->box(get_string('nofilesavailable', 'repository'));
         } else {
-            $htmlid = 'private_files_tree_'.uniqid();
+            $htmlid = 'private_files_tree_' . uniqid();
             $this->page->requires->js_call_amd('block_private_files/files_tree', 'init', [$htmlid]);
-            $html = '<div id="'.$htmlid.'">';
-            $html .= $this->htmllize_tree($tree, $tree->dir, true);
-            $html .= '</div>';
+            $html = html_writer::div(
+                $this->htmllize_tree($tree, $tree->dir, true),
+                '',
+                [
+                    'id' => $htmlid,
+                ]
+            );
         }
 
         return $html;
@@ -59,7 +64,7 @@ class block_private_files_renderer extends plugin_renderer_base {
     protected function htmllize_tree($tree, $dir, $isroot) {
         global $CFG;
 
-        if (empty($dir['subdirs']) and empty($dir['files'])) {
+        if (empty($dir['subdirs']) && empty($dir['files'])) {
             return '';
         }
         if ($isroot) {
@@ -78,24 +83,21 @@ class block_private_files_renderer extends plugin_renderer_base {
             }
         }
         foreach ($dir['files'] as $file) {
-            $url = file_encode_url("$CFG->wwwroot/pluginfile.php", '/'.$tree->context->id.'/user/private'.$file->get_filepath().$file->get_filename(), true);
+            $url = \moodle_url::make_pluginfile_url(
+                $tree->context->id,
+                'user',
+                'private',
+                $file->get_itemid(),
+                $file->get_filepath(),
+                $file->get_filename(),
+                true
+            );
             $filename = $file->get_filename();
             $image = $this->output->pix_icon(file_file_icon($file), '');
-            $result .= '<li role="treeitem">'.html_writer::link($url, $image.$filename, ['tabindex' => -1]).'</li>';
+            $result .= '<li role="treeitem">' . html_writer::link($url, $image . $filename, ['tabindex' => -1]) . '</li>';
         }
         $result .= '</ul>';
 
         return $result;
-    }
-}
-
-class private_files_tree implements renderable {
-    public $context;
-    public $dir;
-    public function __construct() {
-        global $USER;
-        $this->context = context_user::instance($USER->id);
-        $fs = get_file_storage();
-        $this->dir = $fs->get_area_tree($this->context->id, 'user', 'private', 0);
     }
 }
