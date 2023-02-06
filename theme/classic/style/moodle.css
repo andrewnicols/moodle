@@ -12338,6 +12338,53 @@ blockquote {
   overflow-wrap: anywhere;
   white-space: normal; }
 
+.treeviewul[role="tree"] {
+  margin: 0;
+  padding: 0; }
+
+.treeview ul,
+.treeview li {
+  list-style: none; }
+
+.treeview li[role="treeitem"] {
+  padding-left: 22px;
+  cursor: pointer; }
+  .treeview li[role="treeitem"] p {
+    margin-bottom: 0; }
+  .treeview li[role="treeitem"][aria-expanded] {
+    padding-left: 0; }
+    .treeview li[role="treeitem"][aria-expanded] > p::before {
+      content: url("[[pix:t/expanded]]");
+      vertical-align: sub;
+      margin-right: 5px; }
+  .treeview li[role="treeitem"]:not([aria-expanded]) {
+    background-image: repeating-linear-gradient(to right, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.5) 1px, rgba(255, 255, 255, 0) 1px, rgba(255, 255, 255, 0) 2px), repeating-linear-gradient(to top, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.5) 1px, rgba(255, 255, 255, 0) 1px, rgba(255, 255, 255, 0) 2px);
+    background-repeat: no-repeat, no-repeat;
+    /*rtl:remove*/
+    background-position: left 10px top 50%, left 8px top 0;
+    /*rtl:raw:
+                background-position: right 10px top 50%, right 8px top 0;
+            */
+    background-size: 11px 1px, 1px 100%; }
+    .treeview li[role="treeitem"]:not([aria-expanded]):last-child {
+      background-size: 11px 1px, 1px 50%; }
+    .treeview li[role="treeitem"]:not([aria-expanded]) > p::before {
+      /*rtl:remove*/
+      content: url("[[pix:t/collapsed]]");
+      /*rtl:raw:
+                    content: url('[[pix:t/collapsed_rtl]]');
+                */
+      vertical-align: sub;
+      margin-right: 5px; }
+  .treeview li[role="treeitem"] ul[role="group"] {
+    background-image: repeating-linear-gradient(to top, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.5) 1px, rgba(255, 255, 255, 0) 1px, rgba(255, 255, 255, 0) 2px);
+    background-repeat: no-repeat;
+    background-position: left 8px top 100%;
+    background-size: 1px 100%;
+    margin-left: 0; }
+  .treeview li[role="treeitem"] [aria-hidden="true"]:not(.icon) {
+    display: none; }
+
 .icon {
   font-size: 16px;
   width: 16px;
