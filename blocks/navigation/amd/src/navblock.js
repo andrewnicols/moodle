@@ -23,6 +23,25 @@
 import {notifyBlockContentUpdated} from 'core_block/events';
 import Tree from 'core/tree';
 
+class NavigationTree extends Tree {
+
+    setBlockNode(blockNode) {
+        this.blockNode = blockNode;
+    }
+
+    finishExpandingGroup(item) {
+        super.finishExpandingGroup(item);
+
+        notifyBlockContentUpdated(this.blockNode);
+    }
+
+    collapseGroup(item) {
+        super.collapseGroup(item);
+
+        notifyBlockContentUpdated(this.blockNode);
+    }
+}
+
 /**
  * Initialise the navblock javascript for the specified block instance.
  *
@@ -30,30 +49,6 @@ import Tree from 'core/tree';
  * @param {Number} instanceId
  */
 export const init = instanceId => {
-    const navTree = new Tree(".block_navigation .block_tree");
-    const blockNode = document.querySelector(`[data-instance-id="${instanceId}"]`);
-
-    /**
-     * The method to call when then the navtree finishes expanding a group.
-     *
-     * @method finishExpandingGroup
-     * @param {Object} item
-     * @fires event:blockContentUpdated
-     */
-    navTree.finishExpandingGroup = item => {
-        Tree.prototype.finishExpandingGroup.call(navTree, item);
-        notifyBlockContentUpdated(blockNode);
-    };
-
-    /**
-     * The method to call whe then the navtree collapses a group
-     *
-     * @method collapseGroup
-     * @param {Object} item
-     * @fires event:blockContentUpdated
-     */
-    navTree.collapseGroup = item => {
-        Tree.prototype.collapseGroup.call(navTree, item);
-        notifyBlockContentUpdated(blockNode);
-    };
+    const navTree = new NavigationTree(".block_navigation .block_tree");
+    navTree.setBlockNode(document.querySelector(`[data-instance-id="${instanceId}"]`));
 };
