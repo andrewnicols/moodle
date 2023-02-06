@@ -12357,7 +12357,7 @@ blockquote {
       content: url("[[pix:t/expanded]]");
       vertical-align: sub;
       margin-right: 5px; }
-  .treeview li[role="treeitem"]:not([aria-expanded]) {
+  .treeview li[role="treeitem"][aria-expanded="false"] {
     background-image: repeating-linear-gradient(to right, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.5) 1px, rgba(255, 255, 255, 0) 1px, rgba(255, 255, 255, 0) 2px), repeating-linear-gradient(to top, rgba(0, 0, 0, 0.5) 0, rgba(0, 0, 0, 0.5) 1px, rgba(255, 255, 255, 0) 1px, rgba(255, 255, 255, 0) 2px);
     background-repeat: no-repeat, no-repeat;
     /*rtl:remove*/
@@ -12366,9 +12366,9 @@ blockquote {
                 background-position: right 10px top 50%, right 8px top 0;
             */
     background-size: 11px 1px, 1px 100%; }
-    .treeview li[role="treeitem"]:not([aria-expanded]):last-child {
+    .treeview li[role="treeitem"][aria-expanded="false"] > :last-child {
       background-size: 11px 1px, 1px 50%; }
-    .treeview li[role="treeitem"]:not([aria-expanded]) > p::before {
+    .treeview li[role="treeitem"][aria-expanded="false"] > p::before {
       /*rtl:remove*/
       content: url("[[pix:t/collapsed]]");
       /*rtl:raw:

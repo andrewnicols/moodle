@@ -1409,6 +1409,9 @@ class core_course_renderer extends plugin_renderer_base {
             return '';
         }
 
+        // TODO Put the paging bar into a new template to replace core/tree (which is a thin wrapper around core/subtree).
+        // TODO Ditto the 'View more' link.
+
         // prepare content of paging bar or more link if it is needed
         $paginationurl = $chelper->get_categories_display_option('paginationurl');
         $paginationallowall = $chelper->get_categories_display_option('paginationallowall');
@@ -1445,9 +1448,24 @@ class core_course_renderer extends plugin_renderer_base {
             $content .= $pagingbar;
         }
 
+        $templatecontext = [
+            'children' => [],
+            'haschildren' => false,
+        ];
         foreach ($subcategories as $subcategory) {
+            $subcategory->set_chelper($chelper);
+            $templatecontext['children'][] = $subcategory->export_for_template($this);
+
+            // TODO Remove next line.
             $content .= $this->coursecat_category($chelper, $subcategory, $depth + 1);
         }
+        $templatecontext['haschildren'] = !empty($templatecontext['children']);
+
+        $foo = $this->render_from_template(
+            'core/tree',
+            $templatecontext
+        );
+        print_object($templatecontext);
 
         if (!empty($pagingbar)) {
             $content .= $pagingbar;
@@ -1531,7 +1549,6 @@ class core_course_renderer extends plugin_renderer_base {
      * @return string
      */
     protected function coursecat_category(coursecat_helper $chelper, $coursecat, $depth) {
-        // throw new \coding_exception("ARGH");
         // open category tag
         $classes = array('category');
         if (empty($coursecat->visible)) {
@@ -1602,6 +1619,7 @@ class core_course_renderer extends plugin_renderer_base {
     protected function coursecat_tree(coursecat_helper $chelper, $coursecat) {
         // Reset the category expanded flag for this course category tree first.
         $this->categoryexpandedonload = false;
+        xdebug_break();
         $categorycontent = $this->coursecat_category_content($chelper, $coursecat, 0);
         if (empty($categorycontent)) {
             return '';
@@ -1648,6 +1666,7 @@ class core_course_renderer extends plugin_renderer_base {
      */
     public function course_category($category) {
         global $CFG;
+        xdebug_break();
         $usertop = core_course_category::user_top();
         if (empty($category)) {
             $coursecat = $usertop;

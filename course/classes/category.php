@@ -48,7 +48,12 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2013 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_course_category implements renderable, cacheable_object, IteratorAggregate {
+class core_course_category implements
+    renderable,
+    cacheable_object,
+    IteratorAggregate,
+    templatable
+{
     /** @var core_course_category stores pseudo category with id=0. Use core_course_category::get(0) to retrieve */
     protected static $coursecat0;
 
@@ -3204,5 +3209,40 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
         }
 
         return null;
+    }
+
+    public function get_url(): moodle_url {
+        return new moodle_url('/course/index.php', [
+            'categoryid' => $this->id,
+        ]);
+    }
+    public function set_chelper($chelper): void {
+        $this->chelper = $chelper;
+    }
+
+    public function export_for_template(renderer_base $output): array {
+        $templatecontext = [
+            'name' => $this->get_formatted_name(),
+            'url' => $this->get_url()->out(false),
+            'children' => [],
+            'haschildren' => false,
+            'expanded' => false,
+        ];
+
+        $children = $this->get_children();
+        if (count($children) > 0) {
+            $templatecontext['haschildren'] = true;
+            foreach ($children as $child) {
+                $templatecontext['children'][] = $child->export_for_template($output);
+            }
+        }
+
+        if ($this->chelper->get_show_courses() > core_course_renderer::COURSECAT_SHOW_COURSES_COUNT) {
+            // TODO Add course support.
+            // This needs to be refactored or sorted.
+            // This is currently handled in the core_course_renderer::coursecat_courses() method.
+        }
+
+        return $templatecontext;
     }
 }
