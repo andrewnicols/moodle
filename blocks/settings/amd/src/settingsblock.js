@@ -23,39 +23,34 @@
 import {notifyBlockContentUpdated} from 'core_block/events';
 import Tree from 'core/tree';
 
-export const init = (instanceId, siteAdminNodeId) => {
-    const adminTree = new Tree(".block_settings .block_tree");
-    const blockNode = document.querySelector(`[data-instance-id="${instanceId}"]`);
+class AdminTree extends Tree {
 
+    setBlockNode(blockNode) {
+        this.blockNode = blockNode;
+    }
+
+    finishExpandingGroup(item) {
+        super.finishExpandingGroup(item);
+
+        notifyBlockContentUpdated(this.blockNode);
+    }
+
+    collapseGroup(item) {
+        super.collapseGroup(item);
+
+        notifyBlockContentUpdated(this.blockNode);
+    }
+}
+
+export const init = (instanceId, siteAdminNodeId) => {
     if (siteAdminNodeId) {
-        const siteAdminLink = adminTree.treeRoot.get(0).querySelector(`#${siteAdminNodeId} a`);
+        const siteAdminLink = document.querySelector(`#${siteAdminNodeId} a`);
         const newContainer = document.createElement('span');
-        newContainer.setAttribute('tabindex', '0');
-        siteAdminLink.childNodes.forEach(node => newContainer.appendChild(node));
+        newContainer.tabIndex = 0;
+        siteAdminLink.childNodes.forEach((node) => newContainer.appendChild(node));
         siteAdminLink.replaceWith(newContainer);
     }
 
-    /**
-     * The method to call when then the navtree finishes expanding a group.
-     *
-     * @method finishExpandingGroup
-     * @param {Object} item
-     * @fires event:blockContentUpdated
-     */
-    adminTree.finishExpandingGroup = function(item) {
-        Tree.prototype.finishExpandingGroup.call(adminTree, item);
-        notifyBlockContentUpdated(blockNode);
-    };
-
-    /**
-     * The method to call whe then the navtree collapses a group
-     *
-     * @method collapseGroup
-     * @param {Object} item
-     * @fires event:blockContentUpdated
-     */
-    adminTree.collapseGroup = function(item) {
-        Tree.prototype.collapseGroup.call(adminTree, item);
-        notifyBlockContentUpdated(blockNode);
-    };
+    const adminTree = new AdminTree(".block_settings .block_tree");
+    adminTree.setBlockNode(document.querySelector(`[data-instance-id="${instanceId}"]`));
 };
