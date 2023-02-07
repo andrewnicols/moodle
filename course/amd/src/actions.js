@@ -27,38 +27,34 @@ define(
         'core/ajax',
         'core/templates',
         'core/notification',
-        'core/copy_to_clipboard',
         'core/str',
         'core/url',
         'core/yui',
-        'core/modal',
-        'core/modal_registry',
         'core/modal_factory',
         'core/modal_events',
         'core/key_codes',
         'core/log',
         'core_courseformat/courseeditor',
         'core/event_dispatcher',
-        'core_course/events'
+        'core_course/events',
+        'core/modal_permalink',
     ],
     function(
         $,
         ajax,
         templates,
         notification,
-        copyToCliboard,
         str,
         url,
         Y,
-        Modal,
-        ModalRegistry,
         ModalFactory,
         ModalEvents,
         KeyCodes,
         log,
         editor,
         EventDispatcher,
-        CourseEvents
+        CourseEvents,
+        ModalPermalink
     ) {
 
         // Eventually, core_courseformat/local/content/actions will handle all actions for
@@ -972,27 +968,10 @@ define(
 
                     if (actionItem.attr('data-action') === 'permalink') {
                         e.preventDefault();
-                        const CopyModal = class extends Modal {
-                            static TYPE = 'core/permalink';
-                            static TEMPLATE = 'core/permalink_modal';
-                        };
+                        ModalPermalink.create({
+                            link: actionItem.attr('data-link'),
+                        }, str.get_string('sectionlink', 'core'));
 
-                        if (!ModalRegistry.get(CopyModal.TYPE)) {
-                            ModalRegistry.register(CopyModal.TYPE, CopyModal, CopyModal.TEMPLATE);
-                        }
-                        let permalinkModal = null;
-                        ModalFactory.create({
-                            type: CopyModal.TYPE,
-                            templateContext: {
-                                link: actionItem.attr('data-link'),
-                            },
-                        }).then(modal => {
-                            permalinkModal = modal;
-                            modal.show();
-
-                        }).catch(() => {
-                            permalinkModal.destroy();
-                        });
                         return;
                     }
 
