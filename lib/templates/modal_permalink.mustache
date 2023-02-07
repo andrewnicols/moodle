@@ -29,9 +29,7 @@
     }
 }}
 {{< core/modal }}
-    {{$title}}{{#str}} sectionlink, core {{/str}}{{/title}}
     {{$body}}
-        {{> core/local/toast/wrapper }}
         <input type="text" id="directionlink-modal-{{uniqid}}" class="form-control bg-white" readonly {{!
             }} value="{{{link}}}"{{!
         }}/>
