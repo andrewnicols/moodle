@@ -89,6 +89,7 @@ information provided here is intended especially for developers.
 * The core/modal module and all their versions (SAVE_CANCEL, DELETE_CANCEL...) now has a setButtonDisable to disable or enable
   specific modal action buttons. This function allows developers to have modals that could only be submited if the user do some
   action in the modal body like ticking a checkbox or selecting an element.
+<<<<<<< HEAD
 * Course module indentation has been recovered for course format using components via Move right/left feature.
   Course formats using components will be allowed to use one level indentation only.
 * The method `flexible_table::set_columnsattributes` now can be used with 'class' key to add custom classes to the DOM.
@@ -149,6 +150,13 @@ information provided here is intended especially for developers.
   Can be mixed, apart from 'id' of course.
 * The file_system class now declares a new, optional, `get_psr_stream` function which allows a Stream implementing `\Psr\Http\Message\StreamInterface` to be returned.
   A default implementation which uses the existing file handle resource is used by default, but this should be extended by file_system implementations where relevant.
+=======
+* The M.util.show_confirm_dialog function has been rewritten as an ESM to use the core/notification module instead.
+  See MDL-77174 for further information.
+* The moodle-core-notification-confirm module, found under the M.core.confirm namespace, has been deprecated.
+  Any code using it should be rewritten as an ESM and use the core/notification module instead.
+  See MDL-77174 for further information.
+>>>>>>> 86f29882c1 (MDL-77174 core: Deprecate moodle-core-notification-confirm)
 
 === 4.1 ===
 
