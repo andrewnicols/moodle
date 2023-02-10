@@ -10,6 +10,8 @@ information provided here is intended especially for developers.
 * The `component_action` class has been modified to support AMD JS modules. To use an JS module you may specify either:
   - `$this->no_module()` to indicate that it uses JS content already on the page; or
   - `$this->module('core/modulename', 'optional_function_name');`
+* The `component_action` class no longer supports arbitrary inline JavaScript.
+  All components must be updated to use an ESM with relevant data-attributes specified.
 
 === 4.2 ===
 

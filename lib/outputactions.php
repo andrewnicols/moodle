@@ -79,6 +79,13 @@ class component_action implements templatable {
      */
     public function __construct($event, $jsfunction, $jsfunctionargs = []) {
         if (empty($this->module) && empty($this->nomodule)) {
+            // Provide backwards compatability for existing content until 4.6.
+            // TODO: Remove this in 4.6.
+            debugging(
+                'The use of inline action JS is deprecated. Please use an AMD module instead.',
+                DEBUG_DEVELOPER
+            );
+
             $this->event = $event;
 
             $this->jsfunction = $jsfunction;
@@ -144,6 +151,8 @@ class component_action implements templatable {
      */
     public function export_for_template(renderer_base $output) {
         if (empty($this->nomodule) && empty($this->module)) {
+            // Provide backwards compatability for existing content until 4.6.
+            // TODO: Remove this in 4.6.
             $args = !empty($this->jsfunctionargs) ? json_encode($this->jsfunctionargs) : false;
             return (object) [
                 'event' => $this->event,
@@ -218,29 +227,18 @@ class confirm_action extends component_action {
  * @category output
  */
 class popup_action extends component_action {
-
     /**
-     * @var string The JS function to call for the popup
+     * @var array An array of parameters that will be passed to the window.open JS function.
      */
-    public $jsfunction = 'openpopup';
-
-    /**
-     * @var array An array of parameters that will be passed to the openpopup JS function
-     */
-    public $params = array(
-            'height' =>  400,
-            'width' => 500,
-            'top' => 0,
-            'left' => 0,
-            'menubar' => false,
-            'location' => false,
-            'scrollbars' => true,
-            'resizable' => true,
-            'toolbar' => true,
-            'status' => true,
-            'directories' => false,
-            'fullscreen' => false,
-            'dependent' => true);
+    public $params = [
+        'height' =>  600,
+        'width' => 800,
+        'top' => 0,
+        'left' => 0,
+        'fullscreen' => false,
+        'noreferrer' => false,
+        'noopener' => false,
+    ];
 
     /**
      * Constructor
@@ -248,23 +246,24 @@ class popup_action extends component_action {
      * @param string $event DOM event
      * @param moodle_url|string $url A moodle_url object, required if no jsfunction is given
      * @param string $name The JS function to call for the popup (default 'popup')
-     * @param array  $params An array of popup parameters
+     * @param array $params An array of popup parameters supported by window.open
+     * @see {https://developer.mozilla.org/en-US/docs/Web/API/Window/open#windowfeatures}
      */
-    public function __construct($event, $url, $name='popup', $params=array()) {
-        global $CFG;
-        $this->name = $name;
-
-        $url = new moodle_url($url);
-
-        if ($this->name) {
-            $_name = $this->name;
-            if (($_name = preg_replace("/\s/", '_', $_name)) != $this->name) {
-                throw new coding_exception('The $name of a popup window shouldn\'t contain spaces - string modified. '. $this->name .' changed to '. $_name);
-                $this->name = $_name;
+    public function __construct($event, $url, $name = 'popup', $params = []) {
+        if ($name) {
+            if (preg_match("/\s/", $name)) {
+                throw new coding_exception(
+                    'The $name of a popup window shouldn\'t contain spaces - string modified.'
+                );
             }
-        } else {
-            $this->name = 'popup';
         }
+
+        $this->set_module('core/utility');
+        $this->set_action_attribute('popup-name', json_encode($name));
+        $this->set_action_attribute('popup-url', json_encode(
+            (new moodle_url($url))->out(false),
+            JSON_UNESCAPED_SLASHES
+        ));
 
         foreach ($this->params as $var => $val) {
             if (array_key_exists($var, $params)) {
@@ -272,11 +271,22 @@ class popup_action extends component_action {
             }
         }
 
-        $attributes = array('url' => $url->out(false), 'name' => $name, 'options' => $this->get_js_options($params));
-        if (!empty($params['fullscreen'])) {
-            $attributes['fullscreen'] = 1;
-        }
-        parent::__construct($event, $this->jsfunction, $attributes);
+        parent::__construct('', '');
+    }
+
+    /**
+     * Export for template.
+     *
+     * @param renderer_base $output The renderer.
+     * @return stdClass
+     */
+    public function export_for_template(renderer_base $output) {
+        $this->set_action_attribute('popup', 'popup');
+        $this->set_action_attribute('popup-fullscreen', json_encode(!empty($this->params['fullscreen'])));
+        unset($this->params['fullscreen']);
+
+        $this->set_action_attribute('popup-options', json_encode($this->params));
+        return parent::export_for_template($output);
     }
 
     /**
