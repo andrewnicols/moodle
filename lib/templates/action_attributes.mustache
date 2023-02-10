@@ -24,21 +24,8 @@
         "actions": [{"event": "event", "jsfunction": "Y.log", "id": "id"}]
     }
 }}
-{{#js}}
-    {{#actions}}
-        {{^nomodule}}
-            {{#module}}
-                require(['{{module}}'], function(Mod) {
-                    {{#function}}
-                        Mod.{{function}}('{{id}}');
-                    {{/function}}
-                })
-            {{/module}}
-            {{^module}}
-                require(['core/yui'], function(Y) {
-                    Y.on('{{event}}', {{{jsfunction}}}, '#{{id}}', null{{#jsfunctionargs}}, {{{jsfunctionargs}}}{{/jsfunctionargs}});
-                });
-            {{/module}}
-        {{/nomodule}}
-    {{/actions}}
-{{/js}}
+{{#actions}}
+    {{#actiondata}}
+        {{#actiondata}} data-{{key}}={{#quote}}{{value}}{{/quote}}{{/actiondata}}
+    {{/actiondata}}
+{{/actions}}

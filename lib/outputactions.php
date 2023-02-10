@@ -38,6 +38,20 @@ defined('MOODLE_INTERNAL') || die();
  * @category output
  */
 class component_action implements templatable {
+    /**
+     * @var string $module The name of the AMD module to load
+     */
+    protected ?array $module = null;
+
+    /**
+     * @var bool $nomodule Whether a module is required at all.
+     */
+    protected bool $nomodule = false;
+
+    /**
+     * @var array The action data attributes to add.
+     */
+    protected array $actionattributes = [];
 
     /**
      * @var string $event The DOM event that will trigger this action when caught
@@ -55,7 +69,7 @@ class component_action implements templatable {
     /**
      * @var array An array of arguments to pass to the JS function
      */
-    public $jsfunctionargs = array();
+    public $jsfunctionargs = [];
 
     /**
      * Constructor
@@ -63,17 +77,63 @@ class component_action implements templatable {
      * @param string $jsfunction An optional JS function. Required if jsfunctionargs is given
      * @param array $jsfunctionargs An array of arguments to pass to the jsfunction
      */
-    public function __construct($event, $jsfunction, $jsfunctionargs=array()) {
-        $this->event = $event;
+    public function __construct($event, $jsfunction, $jsfunctionargs = []) {
+        if (empty($this->module) && empty($this->nomodule)) {
+            $this->event = $event;
 
-        $this->jsfunction = $jsfunction;
-        $this->jsfunctionargs = $jsfunctionargs;
+            $this->jsfunction = $jsfunction;
+            $this->jsfunctionargs = $jsfunctionargs;
 
-        if (!empty($this->jsfunctionargs)) {
-            if (empty($this->jsfunction)) {
-                throw new coding_exception('The component_action object needs a jsfunction value to pass the jsfunctionargs to.');
+            if (!empty($this->jsfunctionargs)) {
+                if (empty($this->jsfunction)) {
+                    throw new coding_exception('The component_action object needs a jsfunction value to pass the jsfunctionargs to.');
+                }
             }
         }
+    }
+
+    /**
+     * Mark this action as not requiring the addition of any other javascript
+     */
+    protected function set_nomodule(): void {
+        $this->nomodule = true;
+    }
+
+    /**
+     * Set the module required to use this action, with an optional function name.
+     *
+     * @param string $module The AMD module name
+     * @param string|null $function An optional function to call on the module
+     */
+    protected function set_module(string $module, ?string $function = null): void {
+        $this->module = [
+            'module' => $module,
+            'function' => $function,
+        ];
+    }
+
+    /**
+     * Fetch the action attributes.
+     *
+     * @return array
+     */
+    protected function get_action_attributes() {
+        return array_map(function($key, $value): array {
+            return [
+                'key' => $key,
+                'value' => $value,
+            ];
+        }, array_keys($this->actionattributes), $this->actionattributes);
+    }
+
+    /**
+     * Set an action attribute.
+     *
+     * @param string $key
+     * @param mixed $value
+     */
+    protected function set_action_attribute(string $key, $value): void {
+        $this->actionattributes[$key] = $value;
     }
 
     /**
@@ -83,11 +143,19 @@ class component_action implements templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        $args = !empty($this->jsfunctionargs) ? json_encode($this->jsfunctionargs) : false;
+        if (empty($this->nomodule) && empty($this->module)) {
+            $args = !empty($this->jsfunctionargs) ? json_encode($this->jsfunctionargs) : false;
+            return (object) [
+                'event' => $this->event,
+                'jsfunction' => $this->jsfunction,
+                'jsfunctionargs' => $args,
+            ];
+        }
+
         return (object) [
-            'event' => $this->event,
-            'jsfunction' => $this->jsfunction,
-            'jsfunctionargs' => $args,
+            'nomodule' => $this->nomodule,
+            'module' => $this->module,
+            'actiondata' => $this->get_action_attributes(),
         ];
     }
 }
@@ -103,25 +171,39 @@ class component_action implements templatable {
  * @category output
  */
 class confirm_action extends component_action {
+
     /**
      * Constructs the confirm action object
      *
-     * @param string $message The message to display to the user when they are shown
-     *    the confirm dialogue.
+     * @param string $message The message to display to the user when they are shown the confirm dialogue
      * @param string $callback Deprecated since 2.7
      * @param string $continuelabel The string to use for he continue button
-     * @param string $cancellabel The string to use for the cancel button
+     * @param string $cancellabel Deprecated since 4.2
      */
     public function __construct($message, $callback = null, $continuelabel = null, $cancellabel = null) {
-        if ($callback !== null) {
-            debugging('The callback argument to new confirm_action() has been deprecated.' .
-                    ' If you need to use a callback, please write Javascript to use moodle-core-notification-confirmation ' .
-                    'and attach to the provided events.',
-                    DEBUG_DEVELOPER);
+        $this->set_action_attribute('modal', 'confirmation');
+        $this->set_action_attribute('modal-content', $message);
+        if ($continuelabel) {
+            $this->set_action_attribute('modal-yes-button', $continuelabel);
         }
-        parent::__construct('click', 'M.util.show_confirm_dialog', array(
-                'message' => $message,
-                'continuelabel' => $continuelabel, 'cancellabel' => $cancellabel));
+
+        $this->set_module('core/utility');
+
+        if ($callback !== null) {
+            debugging(
+                'The callback argument to new confirm_action() has been deprecated.',
+                DEBUG_DEVELOPER
+            );
+        }
+
+        if ($cancellabel !== null) {
+            debugging(
+                'The cancellabel argument to new confirm_action() has been deprecated.' .
+                DEBUG_DEVELOPER
+            );
+        }
+
+        parent::__construct('', '');
     }
 }
 

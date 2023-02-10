@@ -45,6 +45,7 @@
                     {{#is_action_link}}
                         <a class="dropdown-item" role="menuitem" {{#actionattributes}}{{name}}="{{value}}"{{/actionattributes}} href="{{{url}}}{{{action}}}"
                             data-disableactive="true" tabindex="-1"
+                            {{#action_link_actions}}{{> core/action_attributes }}{{/action_link_actions}}
                         >
                             {{{text}}}
                         </a>
@@ -67,9 +68,16 @@
     <li data-key="{{key}}" class="nav-item" role="none" data-forceintomoremenu="{{#forceintomoremenu}}true{{/forceintomoremenu}}{{^forceintomoremenu}}false{{/forceintomoremenu}}">
         {{#istablist}}
             {{#is_action_link}}
-                <a role="tab" class="nav-link {{#classes}}{{.}} {{/classes}}" href="{{tab}}" data-toggle="tab" data-text="{{{text}}}" data-disableactive="true" tabindex="-1">
-                    {{{text}}}
-                </a>
+                <a
+                    role="tab"
+                    class="nav-link {{#classes}}{{.}} {{/classes}}"
+                    href="{{tab}}"
+                    data-toggle="tab"
+                    data-text="{{{text}}}"
+                    data-disableactive="true"
+                    tabindex="-1"
+                    {{#action_link_actions}}{{> core/action_attributes }}{{/action_link_actions}}
+                >{{{text}}}</a>
                 {{#action_link_actions}}
                     {{> core/actions }}
                 {{/action_link_actions}}
@@ -86,9 +94,15 @@
         {{/istablist}}
         {{^istablist}}
             {{#is_action_link}}
-                <a role="menuitem" class="nav-link {{#classes}}{{.}} {{/classes}}" {{#actionattributes}}{{name}}="{{value}}"{{/actionattributes}} href="{{{url}}}{{{action}}}" data-disableactive="true" tabindex="-1">
-                    {{{text}}}
-                </a>
+                <a
+                    role="menuitem"
+                    class="nav-link {{#classes}}{{.}} {{/classes}}"
+                    {{#actionattributes}}{{name}}="{{value}}"{{/actionattributes}}
+                    href="{{{url}}}{{{action}}}"
+                    data-disableactive="true"
+                    tabindex="-1"
+                    {{#action_link_actions}}{{> core/action_attributes }}{{/action_link_actions}}
+                >{{{text}}}</a>
                 {{#action_link_actions}}
                     {{> core/actions }}
                 {{/action_link_actions}}

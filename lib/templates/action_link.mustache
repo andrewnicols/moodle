@@ -52,7 +52,15 @@
     }
 }}
 {{^disabled}}
-    <a href="{{{url}}}" id="{{id}}" class="{{classes}}" {{#attributes}} {{name}}="{{value}}" {{/attributes}}>{{#icon}}{{#pix}}{{key}}, {{component}}, {{title}}{{/pix}}{{/icon}}{{{text}}}</a>
+    <a {{!
+        }} href="{{{url}}}" {{!
+        }} id="{{id}}" {{!
+        }} class="{{classes}}" {{!
+        }} {{#attributes}} {{name}}="{{value}}" {{/attributes}} {{!
+        }} {{> core/action_attributes }}{{!
+    }}>{{!
+        }}{{#icon}}{{#pix}}{{key}}, {{component}}, {{title}}{{/pix}}{{/icon}}{{{text}}}{{!
+    }}</a>
     {{#hasactions}}
         {{> core/actions }}
     {{/hasactions}}

@@ -1138,7 +1138,7 @@ class single_select implements renderable, templatable {
      * @param string $confirmmessage The yes/no confirmation question. If "Yes" is clicked, the original action will occur.
      */
     public function add_confirm_action($confirmmessage) {
-        $this->add_action(new component_action('submit', 'M.util.show_confirm_dialog', array('message' => $confirmmessage)));
+        $this->add_action(new confirm_action($confirmmessage));
     }
 
     /**
