@@ -1,0 +1,8 @@
+Update $cminfo to support an action of some kind, some how?
+Allow for actions to be declared without YUI - not ideal :/
+Completely deprecate the actions
+
+
+Behat:
+https://ci.moodle.org/view/Testing/job/DEV.01%20-%20Developer-requested%20Behat/32219/
+https://ci.moodle.org/view/Testing/job/DEV.01%20-%20Developer-requested%20Behat/32220/
