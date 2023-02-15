@@ -169,6 +169,7 @@ class notification implements \renderable, \templatable {
             'isinfo'            => $this->messagetype === 'info',
             'iswarning'         => $this->messagetype === 'warning',
             'iserror'           => $this->messagetype === 'error',
+            'level' => $this->messagetype,
         );
     }
 

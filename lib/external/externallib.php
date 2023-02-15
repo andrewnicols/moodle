@@ -527,6 +527,7 @@ class core_external extends external_api {
                 array(
                     'template'      => new external_value(PARAM_RAW, 'Name of the template'),
                     'variables'     => new external_single_structure(array(
+                        'level'          => new external_value(PARAM_ALPHA, 'The notification evel'),
                         'message'       => new external_value(PARAM_RAW, 'HTML content of the Notification'),
                         'extraclasses'  => new external_value(PARAM_RAW, 'Extra classes to provide to the tmeplate'),
                         'announce'      => new external_value(PARAM_RAW, 'Whether to announce'),
