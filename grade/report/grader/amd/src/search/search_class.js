@@ -18,6 +18,7 @@ import CustomEvents from "core/custom_interaction_events";
 import * as Templates from 'core/templates';
 import {debounce} from 'core/utils';
 import Url from 'core/url';
+import Pending from 'core/pending';
 
 /**
  * The class that manages the state of the user search.
@@ -246,7 +247,8 @@ export default class GradebookSearchClass {
      */
     registerInputHandlers() {
         // Register & handle the text input.
-        searchInput.addEventListener('input', debounce(async() => {
+        let pendingPromise = null;
+        const debouncedHandler = debounce(async() => {
             this.searchTerm = searchInput.value;
             // We can also require a set amount of input before search.
             if (this.searchTerm === '') {
@@ -258,7 +260,16 @@ export default class GradebookSearchClass {
                 clearSearchButton.classList.remove('d-none');
                 this.renderAndShow();
             }
-        }, 300));
+            pendingPromise.resolve();
+            pendingPromise = null;
+        }, 300);
+
+        searchInput.addEventListener('input', () => {
+            if (!pendingPromise) {
+                pendingPromise = new Pending('gradebook/search:inputHandler');
+            }
+            debouncedHandler();
+        });
     }
 
     /**
@@ -366,6 +377,7 @@ export default class GradebookSearchClass {
      * @param {Event} e The triggering event that we are working with.
      */
     clickHandler(e) {
+        const pendingPromise = new Pending('gradereport_grader/search:clickHandler');
         this.updateNodes();
 
         // Prevent normal key presses activating this.
@@ -385,6 +397,7 @@ export default class GradebookSearchClass {
         if (e.target.closest(selectors.input) && this.searchTerm !== '' && e.button === 0) {
             this.renderAndShow();
         }
+        pendingPromise.resolve();
     }
 
     /**
