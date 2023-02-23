@@ -21,7 +21,7 @@
  */
 
 /**
- * Function to generate the destination for the uglify task
+ * Function to generate the destination for the minification task
  * (e.g. build/file.min.js). This function will be passed to
  * the rename property of files array when building dynamically:
  * http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically
@@ -61,7 +61,6 @@ module.exports = grunt => {
     grunt.registerTask('js', ['amd', 'yui']);
 
     // Register NPM tasks.
-    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-rollup');
 
@@ -128,7 +127,7 @@ module.exports = grunt => {
         };
     };
 
-    const terser = require('rollup-plugin-terser').terser;
+    const terser = require('@rollup/plugin-terser');
     grunt.config.merge({
         rollup: {
             options: {
@@ -160,16 +159,6 @@ module.exports = grunt => {
                         ],
                         presets: [
                             ['@babel/preset-env', {
-                                targets: {
-                                    browsers: [
-                                        ">0.3%",
-                                        "last 2 versions",
-                                        "not ie >= 0",
-                                        "not op_mini all",
-                                        "not Opera > 0",
-                                        "not dead"
-                                    ]
-                                },
                                 modules: false,
                                 useBuiltIns: false
                             }]
