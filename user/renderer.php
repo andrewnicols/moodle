@@ -85,7 +85,7 @@ class core_user_renderer extends plugin_renderer_base {
      * @return string html output
      * @throws coding_exception
      */
-    public function partial_user_search(String $url, String $firstinitial, String $lastinitial, Bool $minirender = false): String {
+    public function partial_user_search(String $url, String $firstinitial, String $lastinitial, Bool $minirender = false): string {
 
         $content = '';
 

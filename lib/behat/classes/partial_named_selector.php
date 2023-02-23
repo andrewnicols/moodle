@@ -218,6 +218,9 @@ XPATH
         , 'menuitem' => <<<XPATH
 .//*[@role='menuitem'][%titleMatch% or %ariaLabelMatch% or text()[contains(., %locator%)]]
 XPATH
+    , 'option' => <<<XPATH
+.//*[@role='option'][%titleMatch% or %ariaLabelMatch% or text()[contains(., %locator%)]]
+XPATH
         , 'question' => <<<XPATH
 .//div[contains(concat(' ', normalize-space(@class), ' '), ' que ')]
     [contains(div[@class='content']/div[contains(concat(' ', normalize-space(@class), ' '), ' formulation ')], %locator%)]
