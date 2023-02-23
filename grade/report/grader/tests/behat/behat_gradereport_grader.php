@@ -172,6 +172,22 @@ class behat_gradereport_grader extends behat_base {
     }
 
     /**
+     * Return a list of the partial named selectors for the component.
+     *
+     * @return behat_component_named_selector[]
+     */
+    public static function get_partial_named_selectors(): array {
+        return [
+            new behat_component_named_selector(
+                'User search result',
+                [
+                    ".//*[@role='option'][%titleMatch% or %ariaLabelMatch% or text()[contains(., %locator%)]]",
+                ],
+            ),
+        ];
+    }
+
+    /**
      * Gets the user id from its name.
      *
      * @throws Exception

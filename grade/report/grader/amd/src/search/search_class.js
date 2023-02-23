@@ -18,6 +18,7 @@ import CustomEvents from "core/custom_interaction_events";
 import * as Templates from 'core/templates';
 import {debounce} from 'core/utils';
 import Url from 'core/url';
+import Pending from 'core/pending';
 
 /**
  * The class that manages the state of the user search.
@@ -267,6 +268,8 @@ export default class GradebookSearchClass {
      * @returns {Promise<void>}
      */
     async renderAndShow() {
+        const pendingPromise = new Pending('gradebook/search:renderAndShow');
+
         // User has given something for us to filter against.
         this.matchedResults = this.filterDataset();
         // Replace the dropdown node contents and show the results.
@@ -279,6 +282,8 @@ export default class GradebookSearchClass {
         );
         // Set the dropdown to open.
         this.toggleDropdown(true);
+
+        pendingPromise.resolve();
     }
 
     /**
@@ -366,6 +371,7 @@ export default class GradebookSearchClass {
      * @param {Event} e The triggering event that we are working with.
      */
     clickHandler(e) {
+        const pendingPromise = new Pending('gradereport_grader/search:clickHandler');
         this.updateNodes();
 
         // Prevent normal key presses activating this.
@@ -385,6 +391,7 @@ export default class GradebookSearchClass {
         if (e.target.closest(selectors.input) && this.searchTerm !== '' && e.button === 0) {
             this.renderAndShow();
         }
+        pendingPromise.resolve();
     }
 
     /**
