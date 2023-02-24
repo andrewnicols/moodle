@@ -21,7 +21,6 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Pending from 'core/pending';
 import {debounce} from 'core/utils';
 
 const SELECTORS = {
@@ -40,8 +39,6 @@ export const init = form => {
     const availableLangsElement = form.querySelector(SELECTORS.AVAILABLE_LANG_SELECT);
 
     const availableLangsFilter = (event) => {
-        const pendingPromise = new Pending('tool_langimport/search:filter');
-
         // Remove existing options.
         availableLangsElement.querySelectorAll('option').forEach((option) => {
             option.remove();
@@ -64,8 +61,6 @@ export const init = form => {
             option.innerText = langname;
             availableLangsElement.append(option);
         });
-
-        pendingPromise.resolve();
     };
 
     // Cache initial available language options.
@@ -85,12 +80,5 @@ export const init = form => {
 
     // Debounce the event listener to allow the user to finish typing.
     const availableLangsSearchDebounce = debounce(availableLangsFilter, DEBOUNCE_TIMER);
-    availableLangsSearch.addEventListener('keyup', (event) => {
-        const pendingPromise = new Pending('tool_langimport/search:keyup');
-
-        availableLangsSearchDebounce(event);
-        setTimeout(() => {
-            pendingPromise.resolve();
-        }, DEBOUNCE_TIMER);
-    });
+    availableLangsSearch.addEventListener('keyup', (event) => availableLangsSearchDebounce(event));
 };
