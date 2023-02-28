@@ -690,4 +690,12 @@ All rights reserved.</copyright>
     <license>MIT</license>
     <repository>https://github.com/Kevinrob/guzzle-cache-middleware</repository>
   </library>
+  <library>
+    <location>phpseclib</location>
+    <name>phpseclib</name>
+    <description>A php library for secure communications</description>
+    <version>3.0</version>
+    <license>MIT</license>
+    <repository>https://github.com/phpseclib/phpseclib</repository>
+  </library>
 </libraries>
