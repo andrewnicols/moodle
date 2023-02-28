@@ -1708,4 +1708,44 @@ class externallib_test extends externallib_advanced_testcase {
         $this->assertEquals(null, $DB->get_field('user_preferences', 'value',
             ['userid' => $adminuser->id, 'name' => 'user_home_page_preference']));
     }
+
+    /**
+     * Test update_user_device_public_key.
+     */
+    public function test_update_user_device_public_key() {
+        global $USER, $DB;
+
+        $this->resetAfterTest();
+        $this->setAdminUser();
+
+        // Create user device to add the key against.
+        $device = array(
+            'appid' => 'com.moodle.moodlemobile',
+            'name' => 'occam',
+            'model' => 'Nexus 4',
+            'platform' => 'Android',
+            'version' => '4.2.2',
+            'pushid' => 'apushdkasdfj4835',
+            'uuid' => 'ABCDE3723ksdfhasfaasef859',
+            'userid' => $USER->id,
+            'timecreated' => time(),
+            'timemodified' => time(),
+        );
+        $DB->insert_record('user_devices', $device);
+
+        $private = \phpseclib3\Crypt\RSA::createKey();
+        $public = $private->getPublicKey()->toString('PKCS8');
+
+        // Test sending a key to a valid device.
+        $result = core_user_external::update_user_device_public_key($device['uuid'], $device['appid'], $public);
+        $result = external_api::clean_returnvalue(core_user_external::update_user_device_public_key_returns(), $result);
+        $this->assertTrue($result['status']);
+        $this->assertEmpty($result['warnings']);
+
+        // Test sending a key to an invalid device.
+        $result = core_user_external::update_user_device_public_key($device['uuid'], 'moodlemobile', $public);
+        $result = external_api::clean_returnvalue(core_user_external::update_user_device_public_key_returns(), $result);
+        $this->assertFalse($result['status']);
+        $this->assertNotEmpty($result['warnings']);
+    }
 }
