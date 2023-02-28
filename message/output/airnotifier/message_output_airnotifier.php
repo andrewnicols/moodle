@@ -85,6 +85,7 @@ class message_output_airnotifier extends message_output {
         $extra->site            = $siteid;
         $extra->date            = (!empty($eventdata->timecreated)) ? $eventdata->timecreated : time();
         $extra->notification    = (!empty($eventdata->notification)) ? 1 : 0;
+        $extra->encrypted = get_config('message_airnotifier', 'encryptnotifications') == 1;
 
         // Site name.
         $site = get_site();
@@ -110,6 +111,7 @@ class message_output_airnotifier extends message_output {
         $devicetokens = $airnotifiermanager->get_user_devices($CFG->airnotifiermobileappname, $eventdata->userto->id);
 
         foreach ($devicetokens as $devicetoken) {
+            $deviceextra = clone $extra;
 
             if (!$devicetoken->enable) {
                 continue;
@@ -124,11 +126,58 @@ class message_output_airnotifier extends message_output {
             $curl->setopt(array('CURLOPT_TIMEOUT' => 2, 'CURLOPT_CONNECTTIMEOUT' => 2));
             $curl->setHeader($header);
 
+            if ($deviceextra->encrypted && $devicetoken->publickey != null) {
+                $publickey = \phpseclib3\Crypt\RSA::loadPublicKey($devicetoken->publickey);
+                $fields = ['userfromfullname', 'userfromid', 'sitefullname', 'smallmessage', 'fullmessage', 'fullmessagehtml',
+                    'subject', 'contexturl'];
+                foreach ($fields as $field) {
+                    if (!isset($deviceextra->$field)) {
+                        continue;
+                    }
+                    // Use SHA1 for Android and SHA256 for iOS as an old Android bug prevents use of SHA256 for MGF with RSA OAEP.
+                    // We have to truncate the message to 190 characters because of encryption size limit (based on our key size),
+                    // For fields that are displayed to user this doesn't matter as phones cut off the message earlier than this,
+                    // when displaying the notification.
+                    $ciphertext = $publickey->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)->withHash('sha256')
+                        ->withMGFHash($devicetoken->platform == 'Android-fcm' ? 'sha1' : 'sha256')
+                        ->encrypt(substr($deviceextra->$field, 0, 190));
+                    $deviceextra->$field = base64_encode($ciphertext);
+                }
+                // Remove extra fields which may contain personal data.
+                // They cannot be encrypted otherwise we would go over the 4KB payload size limit.
+                unset($deviceextra->usertoid);
+                unset($deviceextra->replyto);
+                unset($deviceextra->replytoname);
+                unset($deviceextra->name);
+                unset($deviceextra->siteshortname);
+                unset($deviceextra->customdata);
+                unset($deviceextra->contexturlname);
+                unset($deviceextra->replytoname);
+                unset($deviceextra->attachment);
+                unset($deviceextra->attachname);
+                unset($deviceextra->fullmessageformat);
+                unset($deviceextra->fullmessagetrust);
+            }
+
+            // Firebase has a 4KB payload limit.
+            // If the message is over that limit we remove unneeded fields and replace the title with a simple message.
+            if (mb_strlen(json_encode($deviceextra), '8bit') > 4000) {
+                unset($deviceextra->fullmessage);
+                unset($deviceextra->fullmessagehtml);
+                $deviceextra->smallmessage = get_string('view_notification', 'message_airnotifier');
+            }
+
             $params = array(
-                'device'    => $devicetoken->platform,
-                'token'     => $devicetoken->pushid,
-                'extra'     => $extra
+                'device' => $devicetoken->platform,
+                'token' => $devicetoken->pushid,
+                'extra' => $deviceextra
             );
+            if ($deviceextra->encrypted) {
+                // Setting alert to null makes air notifier send the notification as a data payload,
+                // this forces Android phones to call the app onMessageReceived function to decrypt the notification.
+                // Otherwise notifications are created by the Android system and will not be decrypted.
+                $params['alert'] = null;
+            }
 
             // JSON POST raw body request.
             $resp = $curl->post($serverurl, json_encode($params));

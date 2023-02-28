@@ -1711,6 +1711,8 @@ class externallib_test extends externallib_advanced_testcase {
 
     /**
      * Test update_user_device_public_key.
+     *
+     * @covers \core_user_external::update_user_device_public_key
      */
     public function test_update_user_device_public_key() {
         global $USER, $DB;
