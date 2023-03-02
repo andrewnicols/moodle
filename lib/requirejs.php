@@ -105,6 +105,7 @@ if ($rev > 0 and $rev < (time() + 60 * 60)) {
             $js .= "\n";
 
             if (!preg_match('/define\(\s*["\']/', $js)) {
+                $shortfilename = str_replace($CFG->dirroot, '', $jsfile);
                 error_log(
                     "JS file: '{$shortfilename}' cannot be loaded, or does not contain a javascript" .
                         ' module in AMD format. "define()" not found.',
