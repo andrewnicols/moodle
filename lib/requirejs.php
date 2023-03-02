@@ -108,8 +108,7 @@ if ($rev > 0 and $rev < (time() + 60 * 60)) {
                 $shortfilename = str_replace($CFG->dirroot, '', $jsfile);
                 error_log(
                     "JS file: '{$shortfilename}' cannot be loaded, or does not contain a javascript" .
-                        ' module in AMD format. "define()" not found.',
-                    DEBUG_DEVELOPER
+                        ' module in AMD format. "define()" not found.'
                 );
             }
 
@@ -160,8 +159,7 @@ if (!empty($jsfiles)) {
     if (!preg_match('/define\(\s*["\']/', $js)) {
         error_log(
             "JS file: '{$shortfilename}' cannot be loaded, or does not contain a javascript" .
-            ' module in AMD format. "define()" not found.',
-            DEBUG_DEVELOPER
+            ' module in AMD format. "define()" not found.'
         );
     }
 
