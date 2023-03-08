@@ -44,7 +44,7 @@
         "postcss-scss": "^4.0.6",
         "rollup": "^3.18.0",
         "semver": "^7.3.8",
-        "shifter": "https://github.com/andrewnicols/shifter/releases/download/v1.2.0_moodle-slim-0/shifter-1.2.0_moodle-slim-0.tar.gz",
+        "shifter": "https://github.com/andrewnicols/shifter/releases/download/v1.2.0_moodle-slim-1/shifter-1.2.0_moodle-slim-1.tar.gz",
         "stylelint": "^14.16.1",
         "stylelint-csstree-validator": "^2.1.0",
         "xmldom": "^0.6.0",
@@ -10157,8 +10157,8 @@
     },
     "node_modules/shifter": {
       "version": "1.2.0",
-      "resolved": "https://github.com/andrewnicols/shifter/releases/download/v1.2.0_moodle-slim-0/shifter-1.2.0_moodle-slim-0.tar.gz",
-      "integrity": "sha512-qy0Q1YsTLWa+oDPfUaBrEFThjOWuLhYbkXS+FKwxDJrPFQvdko5Ubv75W6kPl6qdl3URiQAUD3muhx7m9dAcTw==",
+      "resolved": "https://github.com/andrewnicols/shifter/releases/download/v1.2.0_moodle-slim-1/shifter-1.2.0_moodle-slim-1.tar.gz",
+      "integrity": "sha512-6IBChnPxxl05VNN6cnjRCkeROjnZGerIT1FRYjADXcW5bwba5iRNqNNM9sp7ze00WlOB4783U6blt5m3MvasaQ==",
       "dev": true,
       "dependencies": {
         "ansi-color": "*",
@@ -19325,8 +19325,8 @@
       "dev": true
     },
     "shifter": {
-      "version": "https://github.com/andrewnicols/shifter/releases/download/v1.2.0_moodle-slim-0/shifter-1.2.0_moodle-slim-0.tar.gz",
-      "integrity": "sha512-qy0Q1YsTLWa+oDPfUaBrEFThjOWuLhYbkXS+FKwxDJrPFQvdko5Ubv75W6kPl6qdl3URiQAUD3muhx7m9dAcTw==",
+      "version": "https://github.com/andrewnicols/shifter/releases/download/v1.2.0_moodle-slim-1/shifter-1.2.0_moodle-slim-1.tar.gz",
+      "integrity": "sha512-6IBChnPxxl05VNN6cnjRCkeROjnZGerIT1FRYjADXcW5bwba5iRNqNNM9sp7ze00WlOB4783U6blt5m3MvasaQ==",
       "dev": true,
       "requires": {
         "ansi-color": "*",
