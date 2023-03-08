@@ -1,0 +1,11 @@
+{
+    "name": "moodle/phpunit",
+    "description": "Moodle PHPUnit Configuration",
+    "type": "project",
+    "require-dev": {
+        "phpunit/phpunit": "9.5.*",
+        "mikey179/vfsstream": "2.0.x-dev"
+    },
+    "minimum-stability": "dev",
+    "require": {}
+}

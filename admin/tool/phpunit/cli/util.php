@@ -50,9 +50,9 @@ list($options, $unrecognized) = cli_get_params(
     )
 );
 
-if (file_exists(__DIR__.'/../../../../vendor/phpunit/phpunit/composer.json')) {
+if (file_exists(dirname(__DIR__) . '/vendor/phpunit/phpunit/composer.json')) {
     // Composer packages present.
-    require_once(__DIR__.'/../../../../vendor/autoload.php');
+    require_once(dirname(__DIR__) . '/vendor/autoload.php');
 
 } else {
     // Note: installation via PEAR is not supported any more.

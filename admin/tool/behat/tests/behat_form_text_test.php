@@ -28,13 +28,6 @@ use Behat\Mink\Session;
 use Behat\Mink\Element\NodeElement;
 use core_string_manager_standard;
 
-defined('MOODLE_INTERNAL') || die;
-
-global $CFG;
-require_once($CFG->libdir . '/behat/classes/behat_session_interface.php');
-require_once($CFG->libdir . '/behat/classes/behat_session_trait.php');
-require_once($CFG->libdir . '/behat/form_field/behat_form_text.php');
-
 /**
  * Tests for the behat_form_text class
  *
@@ -45,8 +38,29 @@ require_once($CFG->libdir . '/behat/form_field/behat_form_text.php');
  *
  * @covers \behat_form_text
  * @covers \behat_form_field
+ * @runTestsInSeparateProcesses
  */
 class behat_form_text_test extends \basic_testcase {
+    /** @var bool $isready true if behat is installed, false otherwise */
+    protected static $isready = false;
+
+    public static function setUpBeforeClass(): void {
+        if (!file_exists(dirname(__DIR__) . '/behat/vendor/autoload.php')) {
+            return;
+        }
+        self::$isready = true;
+
+        global $CFG;
+        require_once($CFG->libdir . '/behat/classes/behat_session_interface.php');
+        require_once($CFG->libdir . '/behat/classes/behat_session_trait.php');
+        require_once($CFG->libdir . '/behat/form_field/behat_form_text.php');
+    }
+
+    public function setUp(): void {
+        if (!self::$isready) {
+            $this->markTestSkipped('Behat not installed');
+        }
+    }
 
     /**
      * Data provider for the test_set_get_value() method.

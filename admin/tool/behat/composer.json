@@ -1,0 +1,21 @@
+{
+    "name": "moodle/behat",
+    "description": "Moodle Behat Runner",
+    "type": "project",
+    "require-dev": {
+        "behat/mink": "^1.10.0",
+        "friends-of-behat/mink-extension": "^2.7.2",
+        "behat/mink-goutte-driver": "^2.0",
+        "symfony/process": "^4.4 || ^5.0",
+        "behat/behat": "3.12.*",
+        "oleg-andreyev/mink-phpwebdriver": "^1.2.1"
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "Moodle\\BehatExtension": "../../../lib/behat/extension/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {}
+}

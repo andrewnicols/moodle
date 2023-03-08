@@ -88,7 +88,11 @@ if ($options['disable-composer']) {
 }
 
 // Install and update composer and dependencies as required.
-testing_update_composer_dependencies($options['composer-self-update'], $options['composer-upgrade']);
+testing_update_composer_dependencies(
+    'phpunit',
+    $options['composer-self-update'],
+    $options['composer-upgrade']
+);
 
 $output = null;
 exec('php --version', $output, $code);

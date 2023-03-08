@@ -183,12 +183,18 @@ function testing_error($errorcode, $text = '') {
  * @param   bool $selfupdate Perform a composer self-update to update the composer.phar utility
  * @param   bool $updatedependencies Upgrade dependencies
  */
-function testing_update_composer_dependencies(bool $selfupdate = true, bool $updatedependencies = true): void {
+function testing_update_composer_dependencies(
+    string $tool,
+    bool $selfupdate = true,
+    bool $updatedependencies = true
+): void {
     // To restore the value after finishing.
     $cwd = getcwd();
 
     // Set some paths.
     $dirroot = dirname(dirname(__DIR__));
+    $pathtocomposer = $dirroot . '/composer.phar';
+    $tooldir = "{$dirroot}/admin/tool/{$tool}";
 
     // Switch to Moodle's dirroot for easier path handling.
     chdir($dirroot);
@@ -244,14 +250,15 @@ function testing_update_composer_dependencies(bool $selfupdate = true, bool $upd
     }
 
     // If the vendor directory does not exist, force the installation of dependencies.
-    $vendorpath = $dirroot . DIRECTORY_SEPARATOR . 'vendor';
+    $vendorpath = $tooldir . DIRECTORY_SEPARATOR . 'vendor';
     if (!file_exists($vendorpath)) {
         $updatedependencies = true;
     }
 
     if ($updatedependencies) {
         // Update composer dependencies.
-        passthru("php composer.phar install", $code);
+        chdir($tooldir);
+        passthru("php {$pathtocomposer} install", $code);
         if ($code != 0) {
             exit($code);
         }

@@ -148,7 +148,11 @@ if ($options['disable-composer']) {
 }
 
 // Install and update composer and dependencies as required.
-testing_update_composer_dependencies($options['composer-self-update'], $options['composer-upgrade']);
+testing_update_composer_dependencies(
+    'behat',
+    $options['composer-self-update'],
+    $options['composer-upgrade']
+);
 
 // Check whether the behat test environment needs to be updated.
 chdir(__DIR__);
