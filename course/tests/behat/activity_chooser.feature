@@ -133,7 +133,7 @@ Feature: Display and choose from the available activities in course
   Scenario: Teacher can see a "clear" button after entering a search query in the activity chooser search bar
     Given I click on "Add an activity or resource" "button" in the "Topic 1" "section"
     When I set the field "search" to "Search query"
-    Then "Clear search input" "button" should not be visible
+    Then "Clear search input" "button" should be visible
 
   Scenario: Teacher can not see a "clear" button if the search query is removed in the activity chooser search bar
     Given I click on "Add an activity or resource" "button" in the "Topic 1" "section"
