@@ -72,26 +72,31 @@ H5PEmbedCommunicator = (function() {
             window.parent.postMessage(data, '*');
         };
 
+        /* eslint-disable promise/avoid-new */
+        const repositoryPromise = new Promise((resolve) => {
+            require(['core_h5p/repository'], (Repository) => {
+
+                // Replace the default versions.
+                self.post = Repository.postStatement;
+                self.postState = Repository.postState;
+                self.deleteState = Repository.deleteState;
+
+                // Resolve the Promise with Repository to allow any queued calls to be executed.
+                resolve(Repository);
+            });
+        });
+
         /**
          * Send a xAPI statement to LMS.
          *
          * @param {string} component
          * @param {Object} statements
+         * @returns {Promise}
          */
-        self.post = function(component, statements) {
-            require(['core/ajax'], function(ajax) {
-                var data = {
-                    component: component,
-                    requestjson: JSON.stringify(statements)
-                };
-                ajax.call([
-                   {
-                       methodname: 'core_xapi_statement_post',
-                       args: data
-                   }
-                ]);
-            });
-        };
+        self.post = (component, statements) => repositoryPromise.then((Repository) => Repository.postStatement(
+            component,
+            statements,
+        ));
 
         /**
          * Send a xAPI state to LMS.
@@ -101,24 +106,21 @@ H5PEmbedCommunicator = (function() {
          * @param {Object} agent
          * @param {string} stateId
          * @param {string} stateData
+         * @returns {void}
          */
-        self.postState = function(component, activityId, agent, stateId, stateData) {
-            require(['core/ajax'], function(ajax) {
-                var data = {
-                    component: component,
-                    activityId: activityId,
-                    agent: JSON.stringify(agent),
-                    stateId: stateId,
-                    stateData: stateData
-                };
-                ajax.call([
-                    {
-                        methodname: 'core_xapi_post_state',
-                        args: data
-                    }
-                ]);
-            });
-        };
+        self.postState = (
+            component,
+            activityId,
+            agent,
+            stateId,
+            stateData,
+        ) => repositoryPromise.then((Repository) => Repository.postState(
+            component,
+            activityId,
+            agent,
+            stateId,
+            stateData,
+        ));
 
         /**
          * Delete a xAPI state from LMS.
@@ -127,23 +129,14 @@ H5PEmbedCommunicator = (function() {
          * @param {string} activityId
          * @param {Object} agent
          * @param {string} stateId
+         * @returns {Promise}
          */
-        self.deleteState = function(component, activityId, agent, stateId) {
-          require(['core/ajax'], function(ajax) {
-              var data = {
-                  component: component,
-                  activityId: activityId,
-                  agent: JSON.stringify(agent),
-                  stateId: stateId
-              };
-              ajax.call([
-                  {
-                      methodname: 'core_xapi_delete_state',
-                      args: data
-                  }
-              ]);
-          });
-      };
+        self.deleteState = (component, activityId, agent, stateId) => repositoryPromise.then((Repository) => Repository.deleteState(
+            component,
+            activityId,
+            agent,
+            stateId,
+        ));
     }
 
     return (window.postMessage && window.addEventListener ? new Communicator() : undefined);
