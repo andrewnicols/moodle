@@ -92,6 +92,58 @@ H5PEmbedCommunicator = (function() {
                 ]);
             });
         };
+
+        /**
+         * Send a xAPI state to LMS.
+         *
+         * @param {string} component
+         * @param {string} activityId
+         * @param {Object} agent
+         * @param {string} stateId
+         * @param {string} stateData
+         */
+        self.postState = function(component, activityId, agent, stateId, stateData) {
+            require(['core/ajax'], function(ajax) {
+                var data = {
+                    component: component,
+                    activityId: activityId,
+                    agent: JSON.stringify(agent),
+                    stateId: stateId,
+                    stateData: stateData
+                };
+                ajax.call([
+                    {
+                        methodname: 'core_xapi_post_state',
+                        args: data
+                    }
+                ]);
+            });
+        };
+
+        /**
+         * Delete a xAPI state from LMS.
+         *
+         * @param {string} component
+         * @param {string} activityId
+         * @param {Object} agent
+         * @param {string} stateId
+         */
+        self.deleteState = function(component, activityId, agent, stateId) {
+          require(['core/ajax'], function(ajax) {
+              var data = {
+                  component: component,
+                  activityId: activityId,
+                  agent: JSON.stringify(agent),
+                  stateId: stateId
+              };
+              ajax.call([
+                  {
+                      methodname: 'core_xapi_delete_state',
+                      args: data
+                  }
+              ]);
+          });
+      };
     }
 
     return (window.postMessage && window.addEventListener ? new Communicator() : undefined);
@@ -119,6 +171,9 @@ document.onreadystatechange = async() => {
     if (document.readyState !== 'complete') {
         return;
     }
+
+    /** @var {boolean} statementPosted Whether the statement has been sent or not, to avoid sending xAPI State after it. */
+    var statementPosted = false;
 
     // Check for H5P iFrame.
     var iFrame = document.querySelector('.h5p-iframe');
@@ -188,6 +243,7 @@ document.onreadystatechange = async() => {
 
     // Get emitted xAPI data.
     H5P.externalDispatcher.on('xAPI', function(event) {
+        statementPosted = false;
         var moodlecomponent = H5P.getMoodleComponent();
         if (moodlecomponent == undefined) {
             return;
@@ -215,6 +271,33 @@ document.onreadystatechange = async() => {
         if (isCompleted && !isChild) {
             var statements = H5P.getXAPIStatements(this.contentId, statement);
             H5PEmbedCommunicator.post(moodlecomponent, statements);
+            // Mark the statement has been sent, to avoid sending xAPI State after it.
+            statementPosted = true;
+        }
+    });
+
+    H5P.externalDispatcher.on('xAPIState', function(event) {
+        var moodlecomponent = H5P.getMoodleComponent();
+        var contentId = event.data.activityId;
+        var stateId = event.data.stateId;
+        var state = event.data.state;
+        if (state === undefined) {
+            // When state is undefined, a call to the WS for getting the state could be done. However, for now, this is not
+            // required because the content state is initialised with PHP.
+            return;
+        }
+
+        if (state === null) {
+            // When this method is called from the H5P API with null state, the state must be deleted using the rest of attributes.
+            H5PEmbedCommunicator.deleteState(moodlecomponent, contentId, H5P.getxAPIActor(), stateId);
+        } else if (!statementPosted) {
+            // Only update the state if a statement hasn't been posted recently.
+            // When state is defined, it needs to be updated. As not all the H5P content types are returning a JSON, we need
+            // to simulate it because xAPI State defines statedata as a JSON.
+            var statedata = {
+                h5p: state
+            };
+            H5PEmbedCommunicator.postState(moodlecomponent, contentId, H5P.getxAPIActor(), stateId, JSON.stringify(statedata));
         }
     });
 
