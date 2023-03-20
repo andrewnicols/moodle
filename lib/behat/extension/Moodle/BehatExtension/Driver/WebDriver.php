@@ -50,6 +50,9 @@ class WebDriver extends UpstreamDriver {
         $wdhost = 'http://localhost:4444/wd/hub',
         $moodleparameters = []
     ) {
+        // Accept insecure certifiates - this is required for situations where we test things like oauth.
+        $desiredcapabilities['acceptInsecureCerts'] = true;
+
         parent::__construct($browsername, $desiredcapabilities, $wdhost);
 
         // This class is instantiated by the dependencies injection system so prior to all of beforeSuite subscribers
