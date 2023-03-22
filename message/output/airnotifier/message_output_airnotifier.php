@@ -127,21 +127,17 @@ class message_output_airnotifier extends message_output {
             $curl->setHeader($header);
 
             if ($deviceextra->encrypted && $devicetoken->publickey != null) {
-                $publickey = \phpseclib3\Crypt\RSA::loadPublicKey($devicetoken->publickey);
+                $publickey = sodium_base642bin($devicetoken->publickey, SODIUM_BASE64_VARIANT_ORIGINAL);
                 $fields = ['userfromfullname', 'userfromid', 'sitefullname', 'smallmessage', 'fullmessage', 'fullmessagehtml',
                     'subject', 'contexturl'];
                 foreach ($fields as $field) {
                     if (!isset($deviceextra->$field)) {
                         continue;
                     }
-                    // Use SHA1 for Android and SHA256 for iOS as an old Android bug prevents use of SHA256 for MGF with RSA OAEP.
-                    // We have to truncate the message to 190 characters because of encryption size limit (based on our key size),
-                    // For fields that are displayed to user this doesn't matter as phones cut off the message earlier than this,
-                    // when displaying the notification.
-                    $ciphertext = $publickey->withPadding(\phpseclib3\Crypt\RSA::ENCRYPTION_OAEP)->withHash('sha256')
-                        ->withMGFHash($devicetoken->platform == 'Android-fcm' ? 'sha1' : 'sha256')
-                        ->encrypt(substr($deviceextra->$field, 0, 190));
-                    $deviceextra->$field = base64_encode($ciphertext);
+                    $deviceextra->$field = sodium_bin2base64(sodium_crypto_box_seal(
+                        $deviceextra->$field,
+                        $publickey
+                    ), SODIUM_BASE64_VARIANT_ORIGINAL);
                 }
                 // Remove extra fields which may contain personal data.
                 // They cannot be encrypted otherwise we would go over the 4KB payload size limit.
@@ -270,4 +266,3 @@ class message_output_airnotifier extends message_output {
         return $airnotifiermanager->is_system_configured();
     }
 }
-
