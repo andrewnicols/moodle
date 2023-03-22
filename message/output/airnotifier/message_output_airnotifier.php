@@ -127,15 +127,21 @@ class message_output_airnotifier extends message_output {
             $curl->setHeader($header);
 
             if ($deviceextra->encrypted && $devicetoken->publickey != null) {
-                $publickey = sodium_base642bin($devicetoken->publickey, SODIUM_BASE64_VARIANT_ORIGINAL);
+                $publickey = \core_user\devicekey::get_signed_encryption_key($devicetoken->publickey);
+
                 $fields = ['userfromfullname', 'userfromid', 'sitefullname', 'smallmessage', 'fullmessage', 'fullmessagehtml',
                     'subject', 'contexturl'];
                 foreach ($fields as $field) {
                     if (!isset($deviceextra->$field)) {
                         continue;
                     }
-                    $deviceextra->$field = sodium_bin2base64(sodium_crypto_box_seal(
+
+                    $nonce = random_bytes(SODIUM_CRYPTO_BOX_NONCEBYTES);
+                    // Base64 encode the nonce and the encrypted message.
+                    // To extract the nonce, we need to decode the base64 string and extract the first 24 bytes.
+                    $deviceextra->$field = sodium_bin2base64($nonce . sodium_crypto_box(
                         $deviceextra->$field,
+                        $nonce,
                         $publickey
                     ), SODIUM_BASE64_VARIANT_ORIGINAL);
                 }

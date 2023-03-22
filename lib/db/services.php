@@ -1721,9 +1721,7 @@ $functions = array(
         'ajax' => true,
     ),
     'core_user_add_user_device' => array(
-        'classname' => 'core_user_external',
-        'methodname' => 'add_user_device',
-        'classpath' => 'user/externallib.php',
+        'classname' => 'core_user\external\update_user_device_key',
         'description' => 'Store mobile user devices information for PUSH Notifications.',
         'type' => 'write',
         'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
