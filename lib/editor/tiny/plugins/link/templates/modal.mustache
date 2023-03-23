@@ -47,7 +47,12 @@
         <form class="mform" id="{{uniqid}}">
             <div class="mb-1">
                 <label for="{{elementid}}_tiny_link_urltext">{{#str}} texttodisplay, tiny_link {{/str}}</label>
-                <input class="form-control fullwidth text-ltr w-100 tiny_link_urltext" id="{{elementid}}_tiny_link_urltext" type="text" {{#setLinkOnElement}}data-link-on-element="1"{{/setLinkOnElement}} value="{{urltext}}"/>
+                <input
+                class="form-control fullwidth text-ltr w-100 tiny_link_urltext"
+                id="{{elementid}}_tiny_link_urltext" type="text"
+                data-use-link-as-text="{{#urltext}}false{{/urltext}}{{^urltext}}true{{/urltext}}"
+                {{#setLinkOnElement}}data-link-on-element="1"{{/setLinkOnElement}}
+                value="{{urltext}}"/>
             </div>
             <div class="mb-1">
                 <label for="{{elementid}}_tiny_link_urlentry">{{#str}} enterurl, tiny_link {{/str}}</label>
