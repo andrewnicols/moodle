@@ -2145,6 +2145,12 @@ abstract class enrol_plugin {
             grade_recover_history_grades($userid, $courseid);
         }
 
+        // Add users to a communication room.
+        if (!empty($CFG->enablecommunicationsubsystem)) {
+            $communication = new \core_communication\communication_handler($courseid);
+            $communication->update_room_membership('add', [$userid]);
+        }
+
         // reset current user enrolment caching
         if ($userid == $USER->id) {
             if (isset($USER->enrol['enrolled'][$courseid])) {
@@ -2182,9 +2188,12 @@ abstract class enrol_plugin {
         }
 
         $modified = false;
+        $statusmodified = false;
+        $timeendmodified = false;
         if (isset($status) and $ue->status != $status) {
             $ue->status = $status;
             $modified = true;
+            $statusmodified = true;
         }
         if (isset($timestart) and $ue->timestart != $timestart) {
             $ue->timestart = $timestart;
@@ -2193,11 +2202,25 @@ abstract class enrol_plugin {
         if (isset($timeend) and $ue->timeend != $timeend) {
             $ue->timeend = $timeend;
             $modified = true;
+            $timeendmodified = true;
         }
 
         if (!$modified) {
             // no change
             return;
+        }
+
+        // Add/remove users to/from communication room.
+        if (!empty($CFG->enablecommunicationsubsystem)) {
+            if (($statusmodified && ((int) $ue->status === 1)) ||
+                    ($timeendmodified && $ue->timeend !== 0 && (time() > $ue->timeend))) {
+                $action = 'remove';
+            } else {
+                $action = 'add';
+            }
+            $course = enrol_get_course_by_user_enrolment_id($ue->id);
+            $communication = new \core_communication\communication_handler($course->id);
+            $communication->update_room_membership($action, [$userid]);
         }
 
         $ue->modifierid = $USER->id;
@@ -2302,6 +2325,12 @@ abstract class enrol_plugin {
                     )
                 );
         $event->trigger();
+
+        // Remove users from a communication room.
+        if (!empty($CFG->enablecommunicationsubsystem)) {
+            $communication = new \core_communication\communication_handler($courseid);
+            $communication->update_room_membership('remove', [$userid]);
+        }
 
         // User enrolments have changed, so mark user as dirty.
         mark_user_dirty($userid);
@@ -2639,6 +2668,30 @@ abstract class enrol_plugin {
 
         // Invalidate all enrol caches.
         $context->mark_dirty();
+    }
+
+    /**
+     * Update instance status
+     *
+     * Update communication room membership for an instance action being performed.
+     *
+     * @param int $instanceid ID of the enrolment instance
+     * @param string $action The update action being performed
+     * @param int $courseid The id of the coruse
+     * @return void
+     */
+    public function update_communication(int $instanceid, string $action, int $courseid): void {
+        global $DB;
+        // Get enrolled instance users.
+        $instanceusers = $DB->get_records('user_enrolments', ['enrolid' => $instanceid, 'status' => 0]);
+        $enrolledusers = [];
+
+        foreach ($instanceusers as $user) {
+            $enrolledusers[] = $user->userid;
+        }
+
+        $communication = new \core_communication\communication_handler($courseid);
+        $communication->update_room_membership($action, $enrolledusers);
     }
 
     /**
