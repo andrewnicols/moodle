@@ -23,54 +23,18 @@ namespace core_communication;
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class communication_user_base {
-
-    /**
-     * @var communication $communication The communicaiton object.
-     */
-    protected communication $communication;
-
+interface user_provider {
     /**
      * Communication room constructor to get the communication object.
      *
      * @param communication $communication The communication object
      */
-    public function __construct(communication $communication) {
-        $this->communication = $communication;
-        $this->init();
-    }
-
-    /**
-     * Function to allow child classes load objects etc.
-     *
-     * @return void
-     */
-    protected function init(): void {
-    }
+    public function __construct(communication $communication);
 
     /**
      * Create members.
      *
      * @param array $userid The users ids to be created
-     * @return void
      */
-    public function create_members(array $userid): void {
-    }
-
-    /**
-     * Add members to communication room.
-     *
-     * @param array $userids The user ids to be added
-     * @return void
-     */
-    abstract public function add_members_to_room(array $userids): void;
-
-    /**
-     * Remove members from room.
-     *
-     * @param array $userids The user ids to be removed
-     * @return void
-     */
-    abstract public function remove_members_from_room(array $userids): void;
-
+    public function create_members(array $userid): void;
 }

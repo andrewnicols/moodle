@@ -23,7 +23,7 @@ namespace core_communication;
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class communication_settings_data {
+class settings_data {
 
     /**
      * @var string $provider The communication provider

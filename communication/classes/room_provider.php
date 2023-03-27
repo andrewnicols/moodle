@@ -25,57 +25,28 @@ namespace core_communication;
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class communication_room_base {
-
-    /**
-     * @var communication $communication The communicaiton object.
-     */
-    protected communication $communication;
-
+interface room_provider {
     /**
      * Communication room constructor to get the communication object.
      *
      * @param communication $communication The communication object
      */
-    public function __construct(communication $communication) {
-        $this->communication = $communication;
-        $this->init();
-    }
-
-    /**
-     * Function to allow child classes load objects etc.
-     *
-     * @return void
-     */
-    protected function init(): void {
-    }
-
-    /**
-     * Create a provider room when a new instance is created.
-     *
-     * @return void
-     */
-    abstract public function create(): void;
-
-    /**
-     * Delete a provider room when a instance is deleted.
-     *
-     * @return void
-     */
-    abstract public function delete(): void;
+    public function __construct(communication $communication);
 
     /**
      * Update a provider room when a instance is updated.
-     *
-     * @return void
      */
-    abstract public function update(): void;
+    public function create_or_update_room(): void;
+
+    /**
+     * Delete a provider room when a instance is deleted.
+     */
+    public function delete_room(): void;
 
     /**
      * Generate a room url if there is a room.
      *
      * @return string|null
      */
-    abstract public function generate_room_url(): ?string;
-
+    public function get_room_url(): ?string;
 }

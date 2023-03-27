@@ -31,9 +31,9 @@ class communication_feature_base {
      * Get the provider room object.
      *
      * @param communication $communication The communication object
-     * @return communication_room_base|null
+     * @return room_provider|null
      */
-    public function get_provider_room(communication $communication): ?communication_room_base {
+    public function get_provider_room(communication $communication): ?room_provider {
         return null;
     }
 
@@ -41,9 +41,9 @@ class communication_feature_base {
      * Get the provider user object.
      *
      * @param communication $communication The communication object
-     * @return communication_user_base|null
+     * @return user_provider|null
      */
-    public function get_provider_user(communication $communication): ?communication_user_base {
+    public function get_provider_user(communication $communication): ?user_provider {
         return null;
     }
 

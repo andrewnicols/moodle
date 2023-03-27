@@ -68,7 +68,7 @@ class matrix_user_manager_test extends \advanced_testcase {
         $matrixuser = new matrix_user($communication);
         $matrixuser->create_members([$userid]);
 
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -92,7 +92,7 @@ class matrix_user_manager_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_room_operations');
 
         $communication = new communication($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
         $elementserver = matrix_user_manager::set_matrix_home_server($matrixhomeserverurl);
@@ -133,7 +133,7 @@ class matrix_user_manager_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_room_operations');
 
         $communication = new communication($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
 
         // Sets qualified matrix id.
@@ -167,7 +167,7 @@ class matrix_user_manager_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_room_operations');
 
         $communication = new communication($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
 
         // Will generate matrix home server.

@@ -18,8 +18,8 @@ namespace communication_matrix;
 
 use core_communication\communication;
 use core_communication\communication_test_helper_trait;
-use core_communication\communication_room_base;
-use core_communication\communication_settings_data;
+use core_communication\room_provider;
+use core_communication\settings_data;
 use communication_matrix\matrix_test_helper_trait;
 use communication_matrix\matrix_user_manager;
 
@@ -44,9 +44,9 @@ class matrix_user_test extends \advanced_testcase {
     use communication_test_helper_trait;
 
     /**
-     * @var communication_room_base|matrix_room_manager $matrixroommanager Matrix room manager object
+     * @var room_provider|matrix_room_manager $matrixroommanager Matrix room manager object
      */
-    protected communication_room_base|matrix_room_manager $matrixroommanager;
+    protected room_provider|matrix_room_manager $matrixroommanager;
 
     /**
      * @var communication $communication The communication object
@@ -54,9 +54,9 @@ class matrix_user_test extends \advanced_testcase {
     protected communication $communication;
 
     /**
-     * @var communication_settings_data $communicationdata The communication settings data object
+     * @var settings_data $communicationdata The communication settings data object
      */
-    protected communication_settings_data $communicationdata;
+    protected settings_data $communicationdata;
 
     public function setUp(): void {
         parent::setUp();
@@ -86,7 +86,7 @@ class matrix_user_test extends \advanced_testcase {
         $matrixuser = new matrix_user($communication);
         $matrixuser->create_members([$userid]);
 
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
 
         // Get created matrixuserid from moodle.
@@ -125,7 +125,7 @@ class matrix_user_test extends \advanced_testcase {
         $matrixuser = new matrix_user($communication);
         $matrixuser->add_members_to_room([$userid]);
         // Get matrix room.
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         // Get created matrixuserid from moodle.
         $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($userid, $eventmanager->matrixhomeserverurl);
@@ -158,7 +158,7 @@ class matrix_user_test extends \advanced_testcase {
         $matrixuser = new matrix_user($communication);
         $matrixuser->add_members_to_room([$userid]);
         // Get matrix room.
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         // Get created matrixuserid from moodle.
         $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($userid, $eventmanager->matrixhomeserverurl);
@@ -192,7 +192,7 @@ class matrix_user_test extends \advanced_testcase {
         $matrixuser = new matrix_user($communication);
         $matrixuser->add_members_to_room([$userid]);
         // Get matrix room.
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         // Get created matrixuserid from moodle.
         $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($userid, $eventmanager->matrixhomeserverurl);
@@ -222,7 +222,7 @@ class matrix_user_test extends \advanced_testcase {
         $matrixuser = new matrix_user($communication);
         $matrixuser->add_members_to_room([$userid]);
         // Get matrix room.
-        $matrixrooms = new matrix_rooms($communication->communicationsettings->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communication->settingsdata->get_communication_instance_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         // Get created matrixuserid from moodle.
         $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($userid, $eventmanager->matrixhomeserverurl);

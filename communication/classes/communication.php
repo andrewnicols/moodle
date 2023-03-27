@@ -26,29 +26,22 @@ namespace core_communication;
 class communication {
 
     /**
-     * @var string|null The url of the instance avatar
+     * @var null|string The url of the instance avatar
      */
-    public string|null $instanceavatarurl = null;
+    private null|string $instanceavatarurl = null;
 
     /**
-     * @var communication_room_base $communicationroom The communication room object
+     * @var settings_data $settingsdata The communication settings object
      */
-    private communication_room_base $communicationroom;
-
-    /**
-     * @var communication_settings_data $communicationsettings The communication settings object
-     */
-    public communication_settings_data $communicationsettings;
-
-    /**
-     * @var communication_user_base $communicationuser The communication user object
-     */
-    public communication_user_base $communicationuser;
+    private settings_data $settingsdata;
 
     /**
      * @var array $userids The id of the users
      */
-    protected array $userids;
+    private array $userids;
+
+    /** @var user_provider|room_provider|room_user_provider The provider class */
+    private user_provider|room_provider|room_user_provider $provider;
 
     /**
      * Communication room constructor to get the communication features.
@@ -60,132 +53,147 @@ class communication {
      * @param string|null $disableprovider The provider to use for associated tasks after disabled
      * @param array $userids The user ids
      */
-    public function __construct(int $instanceid, string $component, string $instancetype, string $instanceavatarurl = null,
-        string $disableprovider = null, array $userids = []) {
+    public function __construct(
+        int $instanceid,
+        string $component,
+        string $instancetype,
+        string $instanceavatarurl = null,
+        string $disableprovider = null,
+        array $userids = [],
+    ) {
         $this->instanceavatarurl = $instanceavatarurl;
         $this->userids = $userids;
-        $this->communicationsettings = new communication_settings_data($instanceid, $component, $instancetype);
+        $this->settingsdata = new settings_data($instanceid, $component, $instancetype);
         if ($disableprovider !== null) {
-            $this->communicationsettings->provider = $disableprovider;
-            $this->communicationsettings->disableprovider = $disableprovider;
+            $this->settingsdata->provider = $disableprovider;
+            $this->settingsdata->disableprovider = $disableprovider;
         }
-        $this->init_provider();
+
+        $provider = $this->settingsdata->get_provider();
+        if (!\core\plugininfo\communication::is_plugin_enabled($provider)) {
+            throw new \moodle_exception('communicationproviderdisabled', 'core_communication', '', $provider);
+        }
+        $providerclass = $this->get_classname_for_provider($provider);
+        if (!class_exists($providerclass)) {
+            throw new \moodle_exception('communicationproviderclassnotfound', 'core_communication', '', $providerclass);
+        }
+
+        $this->provider = new $providerclass($this);
     }
 
-    /**
-     * Initialize provider room operations.
-     *
-     * @return void
-     */
-    protected function init_provider(): void {
-        $plugins = \core_component::get_plugin_list_with_class('communication', 'communication_feature',
-            'communication_feature.php');
+    private function get_classname_for_provider(string $component): string {
+        return "{$component}\\communication_feature";
+    }
 
-        // Unset the inactive plugins.
-        foreach ($plugins as $componentname => $plugin) {
-            if (!\core\plugininfo\communication::is_plugin_enabled($componentname)) {
-                unset($plugins[$componentname]);
-            }
+    public function get_settings_data(): settings_data {
+        return $this->settingsdata;
+    }
+
+    public function get_avatar_url(): ?string {
+        return $this->instanceavatarurl;
+    }
+
+    public function get_room_provider(): room_provider {
+        $this->require_room_features();
+        return $this->provider;
+    }
+
+    public function get_user_provider(): user_provider {
+        $this->require_user_features();
+        return $this->provider;
+    }
+
+    public function get_room_user_provider(): room_user_provider {
+        $this->require_room_features();
+        $this->require_user_features();
+        $this->require_room_user_features();
+        return $this->provider;
+    }
+
+    public function supports_user_features(): bool {
+        return ($this->provider instanceof user_provider);
+    }
+
+    public function supports_room_user_features(): bool {
+        if (!$this->supports_user_features()) {
+            return false;
         }
 
-        $pluginnames = array_keys($plugins);
-        if (in_array($this->communicationsettings->get_provider(), $pluginnames, true)) {
-            $pluginentrypoint = new $plugins[$this->communicationsettings->get_provider()] ();
-            $communicationroom = $pluginentrypoint->get_provider_room($this);
-            if (!empty($communicationroom)) {
-                $this->communicationroom = $communicationroom;
-            }
-            if (!empty($this->userids)) {
-                $communicationuser = $pluginentrypoint->get_provider_user($this);
-                if (!empty($communicationuser)) {
-                    $this->communicationuser = $communicationuser;
-                }
-            }
+        if (!$this->supports_room_features()) {
+            return false;
+        }
+
+        return ($this->provider instanceof room_user_provider);
+    }
+
+    public function require_user_features(): void {
+        if (!$this->supports_user_features()) {
+            throw new \coding_exception('User features are not supported by the provider');
         }
     }
 
-    /**
-     * Check if the object and method exists and safe to call.
-     * This method will ensure that any call to the plugin is safe and available to call.
-     *
-     * @param string $objectname
-     * @param string $method
-     * @return bool
-     */
-    private function check_object_and_method_exist(string $objectname, string $method): bool {
-        return !empty($this->$objectname) && method_exists($this->$objectname, $method);
+    public function supports_room_features(): bool {
+        return ($this->provider instanceof room_provider);
+    }
+
+    public function require_room_features(): void {
+        if (!$this->supports_room_features()) {
+            throw new \coding_exception('room features are not supported by the provider');
+        }
+    }
+
+    public function require_room_user_features(): void {
+        if (!$this->supports_room_user_features()) {
+            throw new \coding_exception('room features are not supported by the provider');
+        }
     }
 
     /**
      * Create operation for the communication api.
-     *
-     * @return void
      */
     public function create_room(): void {
-        if ($this->check_object_and_method_exist('communicationroom', 'create') &&
-                $this->communicationsettings->disableprovider === null) {
-            $this->communicationroom->create();
-        }
+        $this->get_room_provider()->create_or_update_room();
     }
 
     /**
      * Update operation for the communication api.
-     *
-     * @return void
      */
     public function update_room(): void {
-        if ($this->check_object_and_method_exist('communicationroom', 'update') &&
-                $this->communicationsettings->disableprovider === null) {
-            $this->communicationroom->update();
-        }
+        $this->get_room_provider()->create_or_update_room();
     }
 
     /**
      * Delete operation for the communication api.
-     *
-     * @return void
      */
     public function delete_room(): void {
-        if ($this->communicationsettings->disableprovider === null) {
-            if ($this->check_object_and_method_exist('communicationroom', 'delete')) {
-                $this->communicationroom->delete();
-            }
+        if ($this->settingsdata->disableprovider === null) {
+            $this->get_room_provider()->delete_room();
+
             // Now delete the local communication record after the deletion if done from the plugin.
-            $this->communicationsettings->delete();
+            $this->settingsdata->delete();
         }
     }
 
     /**
      * Get a room url.
      *
-     * @return string|null
+     * @return string
      */
-    public function get_room_url(): ?string {
-        if ($this->check_object_and_method_exist('communicationroom', 'generate_room_url')) {
-            return $this->communicationroom->generate_room_url();
-        }
-        return null;
+    public function get_room_url(): string {
+        return $this->get_room_provider()->get_room_url();
     }
 
     /**
      * Add members to the room.
-     *
-     * @return void
      */
     public function add_members(): void {
-        if ($this->check_object_and_method_exist('communicationuser', 'add_members_to_room')) {
-            $this->communicationuser->add_members_to_room($this->userids);
-        }
+        $this->get_room_user_provider()->add_members_to_room($this->userids);
     }
 
     /**
      * Remove members from room.
-     *
-     * @return void
      */
     public function remove_members(): void {
-        if ($this->check_object_and_method_exist('communicationuser', 'remove_members_from_room')) {
-            $this->communicationuser->remove_members_from_room($this->userids);
-        }
+        $this->get_room_user_provider()->remove_members_from_room($this->userids);
     }
 }

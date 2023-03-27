@@ -14,24 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace communication_matrix;
-
-use core_communication\communication;
-use core_communication\communication_feature_base;
+namespace core_communication;
 
 /**
- * Class communication_feature to manage matrix communication provider features from the plugin.
+ * Class communication_user_base to manage communication provider users.
  *
- * @package    communication_matrix
+ * @package    core_communication
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class communication_feature extends communication_feature_base {
-    public function get_provider_room(communication $communication): matrix_room_manager {
-        return new matrix_room_manager($communication);
-    }
+interface room_user_provider {
+    /**
+     * Add members to communication room.
+     *
+     * @param array $userids The user ids to be added
+     */
+    public function add_members_to_room(array $userids): void;
 
-    public function get_provider_user(communication $communication): matrix_user {
-        return new matrix_user($communication);
-    }
+    /**
+     * Remove members from room.
+     *
+     * @param array $userids The user ids to be removed
+     */
+    public function remove_members_from_room(array $userids): void;
 }

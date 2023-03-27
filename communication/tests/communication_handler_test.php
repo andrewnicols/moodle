@@ -93,7 +93,7 @@ class communication_handler_test extends \advanced_testcase {
         $communication->create_and_configure_room_and_add_members($selectedcommunication, $communicationroomname);
 
         // Test the set data.
-        $communicationsettingsdata = new communication_settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
         $this->assertEquals($communicationroomname, $communicationsettingsdata->get_room_name());
         $this->assertEquals($selectedcommunication, $communicationsettingsdata->get_provider());
     }
@@ -147,7 +147,7 @@ class communication_handler_test extends \advanced_testcase {
         $this->assertInstanceOf('\\core_communication\\task\\communication_room_operations', $adhoctask);
 
         // Test the communication record added.
-        $communicationsettingsdata = new communication_settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
         $this->assertTrue($communicationsettingsdata->record_exist());
     }
 
@@ -168,7 +168,7 @@ class communication_handler_test extends \advanced_testcase {
         $this->assertCount(0, $adhoctask);
 
         // Test the communication record added.
-        $communicationsettingsdata = new communication_settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
         $this->assertFalse($communicationsettingsdata->record_exist());
     }
 
@@ -201,7 +201,7 @@ class communication_handler_test extends \advanced_testcase {
         $this->assertInstanceOf('\\core_communication\\task\\communication_room_operations', $adhoctask);
 
         // Test the communication record added.
-        $communicationsettingsdata = new communication_settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
         $this->assertTrue($communicationsettingsdata->record_exist());
     }
 
@@ -217,7 +217,7 @@ class communication_handler_test extends \advanced_testcase {
         $course = $this->get_course();
 
         // Test the communication record added.
-        $communicationsettingsdata = new communication_settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
         $this->assertTrue($communicationsettingsdata->record_exist());
 
         // Handler object to delete communication data.
@@ -225,7 +225,7 @@ class communication_handler_test extends \advanced_testcase {
         $communication->delete_room_and_remove_members();
 
         // Test the communication record added.
-        $communicationsettingsdata = new communication_settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
         // Expect it to be true as the local record should only be deleted after the room operation actioned.
         $this->assertTrue($communicationsettingsdata->record_exist());
     }

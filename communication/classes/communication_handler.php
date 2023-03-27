@@ -30,9 +30,9 @@ use core_communication\task\communication_user_operations;
 class communication_handler {
 
     /**
-     * @var communication_settings_data $communicationsettings The communication settings object
+     * @var settings_data $communicationsettings The communication settings object
      */
-    private communication_settings_data $communicationsettings;
+    private settings_data $communicationsettings;
 
     /**
      * @var string|null $avatarurl The url of the avatar for the instance
@@ -52,7 +52,7 @@ class communication_handler {
      */
     public function __construct(int $instanceid, string $avatarurl = null, string $instancetype = 'coursecommunication',
             string $component = 'core_course') {
-        $this->communicationsettings = new communication_settings_data($instanceid, $component, $instancetype);
+        $this->communicationsettings = new settings_data($instanceid, $component, $instancetype);
         $this->avatarurl = $avatarurl;
     }
 
