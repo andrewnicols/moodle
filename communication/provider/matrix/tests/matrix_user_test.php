@@ -19,7 +19,7 @@ namespace communication_matrix;
 use core_communication\communication;
 use core_communication\communication_test_helper_trait;
 use core_communication\room_provider;
-use core_communication\settings_data;
+use core_communication\instance_data;
 use communication_matrix\matrix_test_helper_trait;
 use communication_matrix\matrix_user_manager;
 
@@ -54,9 +54,9 @@ class matrix_user_test extends \advanced_testcase {
     protected communication $communication;
 
     /**
-     * @var settings_data $communicationdata The communication settings data object
+     * @var instance_data $communicationdata The communication settings data object
      */
-    protected settings_data $communicationdata;
+    protected instance_data $communicationdata;
 
     public function setUp(): void {
         parent::setUp();

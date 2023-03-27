@@ -18,7 +18,7 @@ namespace communication_matrix;
 
 use core_communication\communication;
 use core_communication\room_provider;
-use core_communication\settings_data;
+use core_communication\instance_data;
 use core_communication\communication_test_helper_trait;
 
 defined('MOODLE_INTERNAL') || die();
@@ -51,9 +51,9 @@ class matrix_room_manager_test extends \advanced_testcase {
     protected communication $communication;
 
     /**
-     * @var settings_data $communicationdata The communication settings data object
+     * @var instance_data $communicationdata The communication settings data object
      */
-    protected settings_data $communicationdata;
+    protected instance_data $communicationdata;
 
     public function setUp(): void {
         parent::setUp();
@@ -73,7 +73,7 @@ class matrix_room_manager_test extends \advanced_testcase {
         $course = $this->get_course();
         $avatarurl = $CFG->dirroot . '/communication/provider/matrix/tests/fixtures/moodle_logo.jpg';
 
-        $communicationdata = new settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationdata = new instance_data($course->id, 'core_course', 'coursecommunication');
         $communication = new communication($course->id, 'core_course', 'coursecommunication', $avatarurl);
         $matrixroommanager = new matrix_room_manager($communication);
         $matrixroommanager->create();
@@ -105,7 +105,7 @@ class matrix_room_manager_test extends \advanced_testcase {
         $course = $this->get_course();
         $avatarurl = $CFG->dirroot . '/communication/provider/matrix/tests/fixtures/moodle_logo.jpg';
 
-        $communicationdata = new settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationdata = new instance_data($course->id, 'core_course', 'coursecommunication');
         $communication = new communication($course->id, 'core_course', 'coursecommunication', $avatarurl);
         $matrixroommanager = new matrix_room_manager($communication);
 
@@ -145,7 +145,7 @@ class matrix_room_manager_test extends \advanced_testcase {
     public function test_update_room_name(): void {
         $course = $this->get_course();
 
-        $communicationdata = new settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationdata = new instance_data($course->id, 'core_course', 'coursecommunication');
         $communication = new communication($course->id, 'core_course', 'coursecommunication');
         $matrixroommanager = new matrix_room_manager($communication);
 

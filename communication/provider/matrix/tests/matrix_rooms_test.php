@@ -17,7 +17,7 @@
 namespace communication_matrix;
 
 use core_communication\communication_handler;
-use core_communication\settings_data;
+use core_communication\instance_data;
 use core_communication\communication_test_helper_trait;
 
 defined('MOODLE_INTERNAL') || die();
@@ -54,7 +54,7 @@ class matrix_rooms_test extends \advanced_testcase {
         $sampleroomalias = 'samplematrixalias#roomalias';
 
         // Communication api call.
-        $communicationdata = new settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationdata = new instance_data($course->id, 'core_course', 'coursecommunication');
 
         // Call matrix room object to create the matrix data.
         $matrixroom = new \communication_matrix\matrix_rooms(
@@ -93,7 +93,7 @@ class matrix_rooms_test extends \advanced_testcase {
         $sampleroomalias = 'samplematrixalias#roomalias';
 
         // Communication api call.
-        $communicationdata = new settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationdata = new instance_data($course->id, 'core_course', 'coursecommunication');
 
         // Call matrix room object to create the matrix data.
         $matrixroom = new \communication_matrix\matrix_rooms(
@@ -146,7 +146,7 @@ class matrix_rooms_test extends \advanced_testcase {
         $sampleroomalias = 'samplematrixalias#roomalias';
 
         // Communication api call.
-        $communicationdata = new settings_data($course->id, 'core_course', 'coursecommunication');
+        $communicationdata = new instance_data($course->id, 'core_course', 'coursecommunication');
 
         // Call matrix room object to create the matrix data.
         $matrixroom = new \communication_matrix\matrix_rooms(

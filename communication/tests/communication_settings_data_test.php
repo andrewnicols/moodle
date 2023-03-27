@@ -46,7 +46,7 @@ class communication_settings_data_test extends \advanced_testcase {
         $communicationroomname = 'communicationroom';
 
         // Communication settings data object.
-        $communicationsettingsdata = new settings_data($instanceid, $component, $instancetype);
+        $communicationsettingsdata = new instance_data($instanceid, $component, $instancetype);
         $communicationsettingsdata->provider = $selectedcommunication;
         $communicationsettingsdata->roomname = $communicationroomname;
         $communicationsettingsdata->save();
@@ -95,7 +95,7 @@ class communication_settings_data_test extends \advanced_testcase {
         $communicationroomname = 'communicationroom';
 
         // Communication settings data object.
-        $communicationsettingsdata = new settings_data($instanceid, $component, $instancetype);
+        $communicationsettingsdata = new instance_data($instanceid, $component, $instancetype);
         $communicationsettingsdata->provider = $selectedcommunication;
         $communicationsettingsdata->roomname = $communicationroomname;
         $communicationsettingsdata->save();
@@ -142,7 +142,7 @@ class communication_settings_data_test extends \advanced_testcase {
         $communicationroomname = 'communicationroom';
 
         // Communication settings data object.
-        $communicationsettingsdata = new settings_data($instanceid, $component, $instancetype);
+        $communicationsettingsdata = new instance_data($instanceid, $component, $instancetype);
         $communicationsettingsdata->provider = $selectedcommunication;
         $communicationsettingsdata->roomname = $communicationroomname;
         $communicationsettingsdata->save();
@@ -194,7 +194,7 @@ class communication_settings_data_test extends \advanced_testcase {
         $communicationroomname = 'communicationroom';
 
         // Communication settings data object.
-        $communicationsettingsdata = new settings_data($instanceid, $component, $instancetype);
+        $communicationsettingsdata = new instance_data($instanceid, $component, $instancetype);
         $communicationsettingsdata->provider = $selectedcommunication;
         $communicationsettingsdata->roomname = $communicationroomname;
         $communicationsettingsdata->save();

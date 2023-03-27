@@ -29,9 +29,9 @@ use core_communication\task\user_operation_processor;
 class communication_handler {
 
     /**
-     * @var settings_data $instancedata The communication settings object
+     * @var instance_data $instancedata The communication settings object
      */
-    private settings_data $instancedata;
+    private instance_data $instancedata;
 
     /**
      * @var string|null $avatarurl The url of the avatar for the instance
@@ -55,7 +55,7 @@ class communication_handler {
         string $instancetype = 'coursecommunication',
         string $component = 'core_course',
     ) {
-        $this->instancedata = new settings_data($instanceid, $component, $instancetype);
+        $this->instancedata = new instance_data($instanceid, $component, $instancetype);
         $this->avatarurl = $avatarurl;
     }
 

@@ -31,9 +31,9 @@ class communication {
     private null|string $instanceavatarurl = null;
 
     /**
-     * @var settings_data $settingsdata The communication settings object
+     * @var instance_data $settingsdata The communication settings object
      */
-    private settings_data $settingsdata;
+    private instance_data $settingsdata;
 
     /**
      * @var array $userids The id of the users
@@ -64,7 +64,7 @@ class communication {
     ) {
         $this->instanceavatarurl = $instanceavatarurl;
         $this->userids = $userids;
-        $this->settingsdata = new settings_data($instanceid, $component, $instancetype);
+        $this->settingsdata = new instance_data($instanceid, $component, $instancetype);
         if ($disableprovider !== null) {
             // WTF is the disableprovider!?
             // What is going on here?
@@ -88,7 +88,7 @@ class communication {
         return "{$component}\\communication_feature";
     }
 
-    public function get_settings_data(): settings_data {
+    public function get_settings_data(): instance_data {
         return $this->settingsdata;
     }
 

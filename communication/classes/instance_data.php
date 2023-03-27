@@ -23,7 +23,7 @@ namespace core_communication;
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class settings_data {
+class instance_data {
 
     /**
      * @var string $provider The communication provider
@@ -72,11 +72,11 @@ class settings_data {
         $this->load_record();
     }
 
-    public static function load_by_id(int $id): ?settings_data {
+    public static function load_by_id(int $id): ?instance_data {
         global $DB;
         $record = $DB->get_record('communication', ['id' => $id]);
         if ($record) {
-            return new settings_data($record->instanceid, $record->component, $record->instancetype);
+            return new instance_data($record->instanceid, $record->component, $record->instancetype);
         }
         return null;
     }

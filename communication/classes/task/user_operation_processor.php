@@ -18,7 +18,7 @@ namespace core_communication\task;
 
 use core\task\adhoc_task;
 use core_communication\communication;
-use core_communication\settings_data;
+use core_communication\instance_data;
 
 /**
  * Class communication_room_operations to manage communication provider room operations from provider plugins.
@@ -33,7 +33,7 @@ class user_operation_processor extends adhoc_task {
 
     public function execute() {
         $data = $this->get_custom_data();
-        $settings = settings_data::load_by_id($data->id);
+        $settings = instance_data::load_by_id($data->id);
         // Initialize the custom data operation to be used for the action.
         $operation = $this->get_custom_data()->operation;
 
@@ -50,7 +50,7 @@ class user_operation_processor extends adhoc_task {
     }
 
     public static function queue(
-        settings_data $instancedata,
+        instance_data $instancedata,
         string $disableprovider,
         array $userids,
         string $action,
