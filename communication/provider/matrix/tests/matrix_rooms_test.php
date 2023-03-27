@@ -58,7 +58,7 @@ class matrix_rooms_test extends \advanced_testcase {
 
         // Call matrix room object to create the matrix data.
         $matrixroom = new \communication_matrix\matrix_rooms(
-            $communicationdata->get_communication_instance_id());
+            $communicationdata->get_id());
         $matrixroom->roomid = $sampleroomid;
         $matrixroom->roomalias = $sampleroomalias;
         $matrixroom->create();
@@ -69,13 +69,13 @@ class matrix_rooms_test extends \advanced_testcase {
 
         // Get the record from db.
         $matrixrecord = $DB->get_record('matrix_rooms',
-            ['commid' => $communicationdata->get_communication_instance_id()]);
+            ['commid' => $communicationdata->get_id()]);
 
         // Check the record against sample data.
         $this->assertNotEmpty($matrixrecord);
         $this->assertEquals($sampleroomid, $matrixrecord->roomid);
         $this->assertEquals($sampleroomalias, $matrixrecord->alias);
-        $this->assertEquals($communicationdata->get_communication_instance_id(), $matrixrecord->commid);
+        $this->assertEquals($communicationdata->get_id(), $matrixrecord->commid);
     }
 
     /**
@@ -97,14 +97,14 @@ class matrix_rooms_test extends \advanced_testcase {
 
         // Call matrix room object to create the matrix data.
         $matrixroom = new \communication_matrix\matrix_rooms(
-            $communicationdata->get_communication_instance_id());
+            $communicationdata->get_id());
         $matrixroom->roomid = $sampleroomid;
         $matrixroom->roomalias = $sampleroomalias;
         $matrixroom->create();
 
         // Get the record from db.
         $matrixrecord = $DB->get_record('matrix_rooms',
-            ['commid' => $communicationdata->get_communication_instance_id()]);
+            ['commid' => $communicationdata->get_id()]);
 
         // Check the record against sample data.
         $this->assertNotEmpty($matrixrecord);
@@ -122,13 +122,13 @@ class matrix_rooms_test extends \advanced_testcase {
 
         // Get the record from db.
         $matrixrecord = $DB->get_record('matrix_rooms',
-            ['commid' => $communicationdata->get_communication_instance_id()]);
+            ['commid' => $communicationdata->get_id()]);
 
         // Check the record against sample data.
         $this->assertNotEmpty($matrixrecord);
         $this->assertEquals($sampleroomidupdated, $matrixrecord->roomid);
         $this->assertEquals($sampleroomaliasupdated, $matrixrecord->alias);
-        $this->assertEquals($communicationdata->get_communication_instance_id(), $matrixrecord->commid);
+        $this->assertEquals($communicationdata->get_id(), $matrixrecord->commid);
     }
 
     /**
@@ -150,14 +150,14 @@ class matrix_rooms_test extends \advanced_testcase {
 
         // Call matrix room object to create the matrix data.
         $matrixroom = new \communication_matrix\matrix_rooms(
-            $communicationdata->get_communication_instance_id());
+            $communicationdata->get_id());
         $matrixroom->roomid = $sampleroomid;
         $matrixroom->roomalias = $sampleroomalias;
         $matrixroom->create();
 
         // Get the record from db.
         $matrixrecord = $DB->get_record('matrix_rooms',
-            ['commid' => $communicationdata->get_communication_instance_id()]);
+            ['commid' => $communicationdata->get_id()]);
 
         // Check the record against sample data.
         $this->assertNotEmpty($matrixrecord);
@@ -167,7 +167,7 @@ class matrix_rooms_test extends \advanced_testcase {
 
         // Get the record from db.
         $matrixrecord = $DB->get_record('matrix_rooms',
-            ['commid' => $communicationdata->get_communication_instance_id()]);
+            ['commid' => $communicationdata->get_id()]);
 
         // Check the record against sample data.
         $this->assertEmpty($matrixrecord);

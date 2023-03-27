@@ -71,7 +71,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->assertTrue($communicationsettingsdata->record_exist());
 
         // Initialize the matrix room object.
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
 
         // Test against the data.
         $matrixroomdata = $this->get_matrix_room_data($matrixrooms->roomid);
@@ -108,7 +108,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->assertTrue($communicationsettingsdata->record_exist());
 
         // Initialize the matrix room object.
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
 
         // Test against the data.
         $matrixroomdata = $this->get_matrix_room_data($matrixrooms->roomid);
@@ -139,10 +139,10 @@ class matrix_communication_test extends \advanced_testcase {
         // Get the communication id.
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
         $this->assertTrue($communicationsettingsdata->record_exist());
-        $communicationid = $communicationsettingsdata->get_communication_instance_id();
+        $communicationid = $communicationsettingsdata->get_id();
 
         // Initialize the matrix room object.
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
 
         // Test against the data.
         $matrixroomdata = $this->get_matrix_room_data($matrixrooms->roomid);
@@ -189,7 +189,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
 
         // Get matrix user id from moodle.
@@ -236,7 +236,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -282,7 +282,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -334,7 +334,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -386,7 +386,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -438,7 +438,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -490,7 +490,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -549,7 +549,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -602,7 +602,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
@@ -655,7 +655,7 @@ class matrix_communication_test extends \advanced_testcase {
         $this->runAdhocTasks('\core_communication\task\communication_user_operations');
 
         $communicationsettingsdata = new settings_data($course->id, 'core_course', 'coursecommunication');
-        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_communication_instance_id());
+        $matrixrooms = new matrix_rooms($communicationsettingsdata->get_id());
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 

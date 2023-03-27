@@ -36,16 +36,6 @@ class settings_data {
     public string $roomname = '';
 
     /**
-     * @var bool $recordexist The record available or not
-     */
-    public bool $recordexist = false;
-
-    /**
-     * @var int $id The id of the communication instance
-     */
-    public int $id;
-
-    /**
      * @var int $instanceid The instance id of the associated element
      */
     public int $instanceid;
@@ -65,6 +55,9 @@ class settings_data {
      */
     public ?string $disableprovider = null;
 
+    /** @var \stdClass|null $record */
+    private ?\stdClass $record = null;
+
     /**
      * Communication data constructor to load the communication information from communication table.
      *
@@ -76,45 +69,53 @@ class settings_data {
         $this->instanceid = $instanceid;
         $this->component = $component;
         $this->instancetype = $instancetype;
-
-        if (!empty($this->instanceid) && !empty($this->component) && !empty($this->instancetype) &&
-                $commrecord = $this->get_communication_data_from_instance($this->instanceid, $this->component,
-                        $this->instancetype)) {
-
-            $this->set_communication_data($commrecord);
-        }
+        $this->load_record();
     }
 
-    /**
-     * Set the data to the object.
-     *
-     * @param \stdClass $commrecord The communication record from db
-     */
-    public function set_communication_data(\stdClass $commrecord): void {
-        $this->id = $commrecord->id;
-        $this->instanceid = $commrecord->instanceid;
-        $this->component = $commrecord->component;
-        $this->instancetype = $commrecord->instancetype;
-        $this->provider = $commrecord->provider;
-        $this->roomname = $commrecord->roomname;
+    public static function load_by_id(int $id): ?settings_data {
+        global $DB;
+        $record = $DB->get_record('communication', ['id' => $id]);
+        if ($record) {
+            return new settings_data($record->instanceid, $record->component, $record->instancetype);
+        }
+        return null;
     }
 
     /**
      * Get the communication data from database. Either get the data object or return false if no data found.
      *
-     * @param int $instanceid The id of the instance
-     * @param string $component The component of the instance
-     * @param string $instancetype The id of the communication record
-     * @return \stdClass|bool
+     * @return void
      */
-    public function get_communication_data_from_instance(int $instanceid, string $component, string $instancetype): bool|\stdClass {
+    private function load_record(): void {
         global $DB;
-        $record = $DB->get_record('communication',
-                ['instanceid' => $instanceid, 'component' => $component, 'instancetype' => $instancetype]);
+        $record = $DB->get_record('communication', [
+            'instanceid' => $this->instanceid,
+            'component' => $this->component,
+            'instancetype' => $this->instancetype,
+        ]);
+
         if ($record) {
-            $this->recordexist = true;
+            $this->record = $record;
         }
-        return $record;
+    }
+
+    public function update(string $provider, string $roomname): void {
+        global $DB;
+
+        if (empty($this->record)) {
+            $this->record = (object) [
+                'instanceid' => $this->instanceid,
+                'component' => $this->component,
+                'instancetype' => $this->instancetype,
+                'provider' => $provider,
+                'roomname' => $roomname,
+            ];
+            $this->record->id = $DB->insert_record('communication', $this->record);
+        } else {
+            $this->record->provider = $provider;
+            $this->record->roomname = $roomname;
+            $DB->update_record('communication', $this->record);
+        }
     }
 
     /**
@@ -122,8 +123,20 @@ class settings_data {
      *
      * @return int
      */
-    public function get_communication_instance_id(): int {
-        return $this->id;
+    public function get_id(): int {
+        return $this->record->id;
+    }
+
+    public function get_component(): string {
+        return $this->record->component;
+    }
+
+    public function get_instanceid(): int {
+        return $this->record->instanceid;
+    }
+
+    public function get_instancetype(): string {
+        return $this->record->instancetype;
     }
 
     /**
@@ -132,7 +145,7 @@ class settings_data {
      * @return string|null
      */
     public function get_provider(): ?string {
-        return $this->provider;
+        return $this->record->provider;
     }
 
     /**
@@ -141,7 +154,7 @@ class settings_data {
      * @return string|null
      */
     public function get_room_name(): ?string {
-        return $this->roomname;
+        return $this->record->roomname;
     }
 
     /**
@@ -151,18 +164,18 @@ class settings_data {
      */
     public function save(): void {
         global $DB;
-        if ($this->recordexist) {
-            $DB->update_record('communication', $this);
-        } else {
-            $commrecord = new \stdClass();
-            $commrecord->instanceid = $this->instanceid;
-            $commrecord->component = $this->component;
-            $commrecord->instancetype = $this->instancetype;
-            $commrecord->provider = $this->provider;
-            $commrecord->roomname = $this->roomname;
-            $this->id = $DB->insert_record('communication', $commrecord);
-            $this->recordexist = true;
+
+        if (empty($this->record)) {
+            $this->record = (object) [
+                'instanceid' => $this->instanceid,
+                'component' => $this->component,
+                'instancetype' => $this->instancetype,
+                'provider' => $this->provider,
+                'roomname' => $this->roomname,
+            ];
+            $this->record->id = $DB->insert_record('communication', $this->record);
         }
+        $DB->update_record('communication', $this->record);
     }
 
     /**
@@ -172,8 +185,7 @@ class settings_data {
      */
     public function delete(): void {
         global $DB;
-        $DB->delete_records('communication', ['id' => $this->id]);
-        $this->recordexist = false;
+        $DB->delete_records('communication', ['id' => $this->record->id]);
     }
 
     /**
@@ -182,7 +194,6 @@ class settings_data {
      * @return bool
      */
     public function record_exist(): bool {
-        return $this->recordexist;
+        return !empty($this->record);
     }
-
 }

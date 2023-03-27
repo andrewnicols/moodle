@@ -39,8 +39,7 @@ class communication_provider implements
     public function __construct(
         private \core_communication\communication $communication,
     ) {
-        $this->matrixrooms = new matrix_rooms($communication->get_settings_data()->get_communication_instance_id());
-        // TODO: Stop accessing public properites. Use gettters.
+        $this->matrixrooms = new matrix_rooms($communication->get_settings_data()->get_id());
         $this->eventmanager = new matrix_events_manager($this->matrixrooms->roomid);
     }
 
@@ -198,7 +197,7 @@ class communication_provider implements
         $response = json_decode($response->getBody());
 
         if (!empty($roomid = $response->room_id)) {
-            $this->matrixrooms->commid = $this->communication->get_settings_data()->get_communication_instance_id();
+            $this->matrixrooms->commid = $this->communication->get_settings_data()->get_id();
             $this->matrixrooms->roomid = $roomid;
             $this->matrixrooms->roomalias = '#' . $alias . ':' .
                 matrix_user_manager::set_matrix_home_server($this->eventmanager->matrixhomeserverurl);

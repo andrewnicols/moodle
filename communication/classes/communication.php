@@ -43,6 +43,7 @@ class communication {
     /** @var user_provider|room_provider|room_user_provider The provider class */
     private user_provider|room_provider|room_user_provider $provider;
 
+    // TODO: Why is the avatarurl a runtime option instead of a setting stored in the DB??
     /**
      * Communication room constructor to get the communication features.
      *
@@ -65,6 +66,8 @@ class communication {
         $this->userids = $userids;
         $this->settingsdata = new settings_data($instanceid, $component, $instancetype);
         if ($disableprovider !== null) {
+            // WTF is the disableprovider!?
+            // What is going on here?
             $this->settingsdata->provider = $disableprovider;
             $this->settingsdata->disableprovider = $disableprovider;
         }

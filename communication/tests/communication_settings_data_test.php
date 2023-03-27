@@ -114,7 +114,7 @@ class communication_settings_data_test extends \advanced_testcase {
 
         // Test against the object.
         $this->assertTrue($communicationsettingsdata->record_exist());
-        $this->assertEquals($communicationsettingsdata->get_communication_instance_id(), $settingsdatarecord->id);
+        $this->assertEquals($communicationsettingsdata->get_id(), $settingsdatarecord->id);
         $this->assertEquals($communicationsettingsdata->get_provider(), $settingsdatarecord->provider);
         $this->assertEquals($communicationsettingsdata->get_room_name(), $settingsdatarecord->roomname);
     }
@@ -168,7 +168,7 @@ class communication_settings_data_test extends \advanced_testcase {
 
         // Test against the object.
         $this->assertTrue($communicationsettingsdata->record_exist());
-        $this->assertEquals($communicationsettingsdata->get_communication_instance_id(), $settingsdatarecord->id);
+        $this->assertEquals($communicationsettingsdata->get_id(), $settingsdatarecord->id);
         $this->assertEquals($communicationsettingsdata->get_provider(), $settingsdatarecord->provider);
         $this->assertEquals($communicationsettingsdata->get_room_name(), $settingsdatarecord->roomname);
     }

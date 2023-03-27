@@ -16,7 +16,6 @@
 
 namespace core_communication;
 
-use core\task\adhoc_task;
 use core_communication\task\communication_room_operations;
 use core_communication\task\communication_user_operations;
 
@@ -30,9 +29,9 @@ use core_communication\task\communication_user_operations;
 class communication_handler {
 
     /**
-     * @var settings_data $communicationsettings The communication settings object
+     * @var settings_data $instancedata The communication settings object
      */
-    private settings_data $communicationsettings;
+    private settings_data $instancedata;
 
     /**
      * @var string|null $avatarurl The url of the avatar for the instance
@@ -50,9 +49,13 @@ class communication_handler {
      * @param string $component The component of the item for the instance
      *
      */
-    public function __construct(int $instanceid, string $avatarurl = null, string $instancetype = 'coursecommunication',
-            string $component = 'core_course') {
-        $this->communicationsettings = new settings_data($instanceid, $component, $instancetype);
+    public function __construct(
+        int $instanceid,
+        string $avatarurl = null,
+        string $instancetype = 'coursecommunication',
+        string $component = 'core_course',
+    ) {
+        $this->instancedata = new settings_data($instanceid, $component, $instancetype);
         $this->avatarurl = $avatarurl;
     }
 
@@ -102,9 +105,9 @@ class communication_handler {
      * @return void
      */
     public function set_data(\stdClass $instance): void {
-        if (!empty($instance->id) && !empty($this->communicationsettings)) {
-            $instance->selectedcommunication = $this->communicationsettings->get_provider();
-            $instance->communicationroomname = $this->communicationsettings->get_room_name();
+        if (!empty($instance->id) && $this->instancedata->record_exist()) {
+            $instance->selectedcommunication = $this->instancedata->get_provider();
+            $instance->communicationroomname = $this->instancedata->get_room_name();
         }
     }
 
@@ -117,10 +120,10 @@ class communication_handler {
      */
     public function save_form_data(string $selectedcommunication, string $communicationroomname): void {
         if ($selectedcommunication === 'none') {
-            $this->communicationsettings->disableprovider = $this->communicationsettings->provider;
+            $this->instancedata->disableprovider = $this->instancedata->get_provider();
         }
-        $this->communicationsettings->provider = $selectedcommunication;
-        $this->communicationsettings->roomname = $communicationroomname;
+
+        $this->instancedata->update($selectedcommunication, $communicationroomname);
     }
 
     /**
@@ -131,17 +134,7 @@ class communication_handler {
      * @return bool
      */
     public function is_update_required(): bool {
-        return $this->communicationsettings->provider !== 'none';
-    }
-
-    /**
-     * Add the task to ad-hoc queue.
-     *
-     * @param adhoc_task $task The task to be added to the queue
-     * @return void
-     */
-    public function add_to_task_queue(adhoc_task $task): void {
-        \core\task\manager::queue_adhoc_task($task);
+        return $this->instancedata->get_provider() !== 'none';
     }
 
     /**
@@ -155,21 +148,13 @@ class communication_handler {
         if ($selectedcommunication !== 'none' && $selectedcommunication !== '') {
             // Update communication record.
             $this->save_form_data($selectedcommunication, $communicationroomname);
-            $this->communicationsettings->save();
 
             // Add ad-hoc task to create the provider room.
-            $createroom = new communication_room_operations();
-            $createroom->set_custom_data(
-                [
-                    'instanceid' => $this->communicationsettings->instanceid,
-                    'component' => $this->communicationsettings->component,
-                    'instancetype' => $this->communicationsettings->instancetype,
-                    'avatarurl' => $this->avatarurl,
-                    'operation' => 'create_room',
-                ]
+            communication_room_operations::queue(
+                $this->instancedata,
+                $this->avatarurl,
+                'create_room',
             );
-            // Queue the task for the next run.
-            $this->add_to_task_queue($createroom);
         }
     }
 
@@ -181,25 +166,16 @@ class communication_handler {
      * @return void
      */
     public function update_room_and_membership(string $selectedcommunication, string $communicationroomname): void {
-        if ($this->communicationsettings->record_exist()) {
+        if ($this->instancedata->record_exist()) {
             // Update communication record.
             $this->save_form_data($selectedcommunication, $communicationroomname);
-            $this->communicationsettings->save();
 
             if ($this->is_update_required()) {
-                // Add ad-hoc task to update the provider room.
-                $updateroom = new communication_room_operations();
-                $updateroom->set_custom_data(
-                    [
-                        'instanceid' => $this->communicationsettings->instanceid,
-                        'component' => $this->communicationsettings->component,
-                        'instancetype' => $this->communicationsettings->instancetype,
-                        'avatarurl' => $this->avatarurl,
-                        'operation' => 'update_room',
-                    ]
+                communication_room_operations::queue(
+                    $this->instancedata,
+                    $this->avatarurl,
+                    'update_room'
                 );
-                // Queue the task for the next run.
-                $this->add_to_task_queue($updateroom);
             }
         } else {
             $this->create_and_configure_room_and_add_members($selectedcommunication, $communicationroomname);
@@ -213,21 +189,11 @@ class communication_handler {
      */
     public function delete_room_and_remove_members(): void {
         // Remove the room data from the communication table.
-        if ($this->communicationsettings->record_exist()) {
-            // Add ad-hoc task to delete the provider room.
-            $deleteroom = new communication_room_operations();
-            $deleteroom->set_custom_data(
-                [
-                    'instanceid' => $this->communicationsettings->instanceid,
-                    'component' => $this->communicationsettings->component,
-                    'instancetype' => $this->communicationsettings->instancetype,
-                    'avatarurl' => $this->avatarurl,
-                    'operation' => 'delete_room',
-                ]
-            );
-            // Queue the task for the next run.
-            $this->add_to_task_queue($deleteroom);
-        }
+        communication_room_operations::queue(
+            $this->instancedata,
+            $this->avatarurl,
+            'delete_room',
+        );
     }
 
     /**
@@ -239,37 +205,44 @@ class communication_handler {
      * @return void
      */
     public function update_room_membership(string $action, array $userids, $async = true): void {
+        if (!$this->instancedata->record_exist()) {
+            return;
+        }
 
-        if ($this->communicationsettings->record_exist() && !empty($userids)) {
+        if (empty($userids)) {
+            return;
+        }
 
-            $data = [
-                'instanceid' => $this->communicationsettings->instanceid,
-                'component' => $this->communicationsettings->component,
-                'instancetype' => $this->communicationsettings->instancetype,
-                'disableprovider' => $this->communicationsettings->disableprovider,
-                'userids' => $userids,
-            ];
+        switch ($action) {
+            case 'add':
+                $operation = 'add_members';
+                break;
 
-            switch ($action) {
-                case 'add':
-                    $data['operation'] = 'add_members';
-                    break;
+            case 'remove':
+                $operation = 'remove_members';
+                break;
+            // TODO
+            // What is the fallback action?
+            // Throw an exception?
+        }
 
-                case 'remove':
-                    $data['operation'] = 'remove_members';
-                    break;
-            }
-            // Add ad-hoc task to update room membership.
-            $updatemembership = new communication_user_operations();
-            $updatemembership->set_custom_data($data);
-
-            if ($async) {
-                // Queue the task for the next run.
-                $this->add_to_task_queue($updatemembership);
-            } else {
-                // Run immidiately.
-                $updatemembership->execute($data);
-            }
+        if ($async) {
+            communication_user_operations::queue(
+                $this->instancedata,
+                $this->instancedata->disableprovider,
+                $userids,
+                $operation,
+            );
+        } else {
+            $communication = new communication(
+                $this->instancedata->get_instanceid(),
+                $this->instancedata->get_component(),
+                $this->instancedata->get_instancetype(),
+                null,
+                $this->instancedata->disableprovider,
+                $userids,
+            );
+            $communication->{$operation}();
         }
     }
 
