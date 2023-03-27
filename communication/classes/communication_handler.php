@@ -16,8 +16,8 @@
 
 namespace core_communication;
 
-use core_communication\task\communication_room_operations;
-use core_communication\task\communication_user_operations;
+use core_communication\task\room_operation_processor;
+use core_communication\task\user_operation_processor;
 
 /**
  * Class communication_handler to manage the provider communication objects and actions for apis using core_communication.
@@ -150,7 +150,7 @@ class communication_handler {
             $this->save_form_data($selectedcommunication, $communicationroomname);
 
             // Add ad-hoc task to create the provider room.
-            communication_room_operations::queue(
+            room_operation_processor::queue(
                 $this->instancedata,
                 $this->avatarurl,
                 'create_room',
@@ -171,7 +171,7 @@ class communication_handler {
             $this->save_form_data($selectedcommunication, $communicationroomname);
 
             if ($this->is_update_required()) {
-                communication_room_operations::queue(
+                room_operation_processor::queue(
                     $this->instancedata,
                     $this->avatarurl,
                     'update_room'
@@ -189,7 +189,7 @@ class communication_handler {
      */
     public function delete_room_and_remove_members(): void {
         // Remove the room data from the communication table.
-        communication_room_operations::queue(
+        room_operation_processor::queue(
             $this->instancedata,
             $this->avatarurl,
             'delete_room',
@@ -227,7 +227,7 @@ class communication_handler {
         }
 
         if ($async) {
-            communication_user_operations::queue(
+            user_operation_processor::queue(
                 $this->instancedata,
                 $this->instancedata->disableprovider,
                 $userids,

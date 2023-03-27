@@ -30,7 +30,7 @@ use core_communication\settings_data;
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class communication_room_operations extends adhoc_task {
+class room_operation_processor extends adhoc_task {
 
     public function execute() {
         $data = $this->get_custom_data();
