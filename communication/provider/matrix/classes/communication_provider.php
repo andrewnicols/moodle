@@ -39,7 +39,7 @@ class communication_provider implements
     public function __construct(
         private \core_communication\communication $communication,
     ) {
-        $this->matrixrooms = new matrix_rooms($communication->get_settings_data()->get_id());
+        $this->matrixrooms = new matrix_rooms($communication->get_id());
         $this->eventmanager = new matrix_events_manager($this->matrixrooms->roomid);
     }
 
@@ -184,9 +184,9 @@ class communication_provider implements
     }
 
     public function create_or_update_room(): void {
-        $alias = str_replace(' ', '', $this->communication->get_settings_data()->get_room_name());
+        $alias = str_replace(' ', '', $this->communication->get_room_name());
         $json = [
-            'name' => $this->communication->get_settings_data()->get_room_name(),
+            'name' => $this->communication->get_room_name(),
             'visibility' => 'private',
             'preset' => 'private_chat',
             'room_alias_name' => $alias,
@@ -197,7 +197,7 @@ class communication_provider implements
         $response = json_decode($response->getBody());
 
         if (!empty($roomid = $response->room_id)) {
-            $this->matrixrooms->commid = $this->communication->get_settings_data()->get_id();
+            $this->matrixrooms->commid = $this->communication->get_id();
             $this->matrixrooms->roomid = $roomid;
             $this->matrixrooms->roomalias = '#' . $alias . ':' .
                 matrix_user_manager::set_matrix_home_server($this->eventmanager->matrixhomeserverurl);
@@ -212,6 +212,7 @@ class communication_provider implements
 
     public function delete_room(): void {
         $this->matrixrooms->delete();
+        $this->communication->delete_instance();
     }
 
     public function update_room(): void {
@@ -219,7 +220,7 @@ class communication_provider implements
         $matrixroomdata = json_decode($matrixroomdata->getBody(), false, 512, JSON_THROW_ON_ERROR);
 
         // Update the room name when its updated from the form.
-        if ($matrixroomdata->name !== $this->communication->get_settings_data()->get_room_name()) {
+        if ($matrixroomdata->name !== $this->communication->get_room_name()) {
             $this->update_room_name();
         }
 
@@ -233,7 +234,7 @@ class communication_provider implements
      * @return void
      */
     public function update_room_name(): void {
-        $json = ['name' => $this->communication->get_settings_data()->get_room_name()];
+        $json = ['name' => $this->communication->get_room_name()];
         $this->eventmanager->request($json)->put($this->eventmanager->get_update_room_name_endpoint());
     }
 

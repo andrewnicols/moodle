@@ -29,9 +29,9 @@ use core_communication\task\user_operation_processor;
 class communication_handler {
 
     /**
-     * @var instance_data $instancedata The communication settings object
+     * @var null|communication $communication The communication settings object
      */
-    private instance_data $instancedata;
+    private ?communication $communication;
 
     /**
      * @var string|null $avatarurl The url of the avatar for the instance
@@ -43,19 +43,23 @@ class communication_handler {
      *
      * This class is the entrypoint for all kinda usages.
      *
+     * @param string $component The component of the item for the instance
+     * @param string $instancetype The type of the item for the instance
      * @param int $instanceid The id of the instance
      * @param string|null $avatarurl The url of the avatar of the instance
-     * @param string $instancetype The type of the item for the instance
-     * @param string $component The component of the item for the instance
      *
      */
     public function __construct(
-        int $instanceid,
+        private string $component,
+        private string $instancetype,
+        private int $instanceid,
         string $avatarurl = null,
-        string $instancetype = 'coursecommunication',
-        string $component = 'core_course',
     ) {
-        $this->instancedata = new instance_data($instanceid, $component, $instancetype);
+        $this->communication = communication::load_by_instance(
+            $this->instanceid,
+            $this->component,
+            $this->instancetype,
+        );
         $this->avatarurl = $avatarurl;
     }
 
@@ -105,9 +109,9 @@ class communication_handler {
      * @return void
      */
     public function set_data(\stdClass $instance): void {
-        if (!empty($instance->id) && $this->instancedata->record_exist()) {
-            $instance->selectedcommunication = $this->instancedata->get_provider();
-            $instance->communicationroomname = $this->instancedata->get_room_name();
+        if ($this->communication) {
+            $instance->selectedcommunication = $this->communication->get_provider();
+            $instance->communicationroomname = $this->communication->get_room_name();
         }
     }
 
@@ -120,10 +124,25 @@ class communication_handler {
      */
     public function save_form_data(string $selectedcommunication, string $communicationroomname): void {
         if ($selectedcommunication === 'none') {
-            $this->instancedata->disableprovider = $this->instancedata->get_provider();
+            if ($this->communication) {
+                $this->communication->delete_room();
+                return;
+            }
+            return;
         }
 
-        $this->instancedata->update($selectedcommunication, $communicationroomname);
+        if ($this->communication) {
+            $this->communication->update_instance($selectedcommunication, $communicationroomname);
+        } else {
+            $this->communication = communication::create_instance(
+                $selectedcommunication,
+                $this->component,
+                $this->instancetype,
+                $this->instanceid,
+                $communicationroomname,
+                $this->avatarurl,
+            );
+        }
     }
 
     /**
@@ -134,7 +153,7 @@ class communication_handler {
      * @return bool
      */
     public function is_update_required(): bool {
-        return $this->instancedata->get_provider() !== 'none';
+        return $this->communication->get_provider() !== 'none';
     }
 
     /**
@@ -151,8 +170,7 @@ class communication_handler {
 
             // Add ad-hoc task to create the provider room.
             room_operation_processor::queue(
-                $this->instancedata,
-                $this->avatarurl,
+                $this->communication->get_id(),
                 'create_room',
             );
         }
@@ -166,14 +184,13 @@ class communication_handler {
      * @return void
      */
     public function update_room_and_membership(string $selectedcommunication, string $communicationroomname): void {
-        if ($this->instancedata->record_exist()) {
+        if ($this->communication) {
             // Update communication record.
             $this->save_form_data($selectedcommunication, $communicationroomname);
 
             if ($this->is_update_required()) {
                 room_operation_processor::queue(
-                    $this->instancedata,
-                    $this->avatarurl,
+                    $this->communication->get_id(),
                     'update_room'
                 );
             }
@@ -190,8 +207,7 @@ class communication_handler {
     public function delete_room_and_remove_members(): void {
         // Remove the room data from the communication table.
         room_operation_processor::queue(
-            $this->instancedata,
-            $this->avatarurl,
+            $this->communication->get_id(),
             'delete_room',
         );
     }
@@ -205,7 +221,7 @@ class communication_handler {
      * @return void
      */
     public function update_room_membership(string $action, array $userids, $async = true): void {
-        if (!$this->instancedata->record_exist()) {
+        if (!$this->communication) {
             return;
         }
 
@@ -221,28 +237,18 @@ class communication_handler {
             case 'remove':
                 $operation = 'remove_members';
                 break;
-            // TODO
-            // What is the fallback action?
-            // Throw an exception?
+            default:
+                throw new \coding_exception('Invalid action');
         }
 
         if ($async) {
             user_operation_processor::queue(
-                $this->instancedata,
-                $this->instancedata->disableprovider,
-                $userids,
+                $this->communication->get_id(),
                 $operation,
+                $userids,
             );
         } else {
-            $communication = new communication(
-                $this->instancedata->get_instanceid(),
-                $this->instancedata->get_component(),
-                $this->instancedata->get_instancetype(),
-                null,
-                $this->instancedata->disableprovider,
-                $userids,
-            );
-            $communication->{$operation}();
+            $this->communication->{$operation}($userids);
         }
     }
 

@@ -4330,7 +4330,7 @@ EOD;
         if ($COURSE->id != SITEID) {
             $component = 'core_course'; // TODO: get dynamically.
             $instancetype = 'coursecommunication'; // TODO: get dynamically.
-            $comm = new \core_communication\communication($COURSE->id, $component, $instancetype);
+            $comm = \core_communication\communication::load_by_instance($component, $instancetype, $COURSE->id);
             $url = $comm->get_room_url() ?? '';
         }
 

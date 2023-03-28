@@ -16,6 +16,8 @@
 
 namespace core_communication;
 
+use stdClass;
+
 /**
  * Class communication to manage the base operations of the providers.
  *
@@ -25,58 +27,17 @@ namespace core_communication;
  */
 class communication {
 
-    /**
-     * @var null|string The url of the instance avatar
-     */
-    private null|string $instanceavatarurl = null;
-
-    /**
-     * @var instance_data $settingsdata The communication settings object
-     */
-    private instance_data $settingsdata;
-
-    /**
-     * @var array $userids The id of the users
-     */
-    private array $userids;
-
     /** @var user_provider|room_provider|room_user_provider The provider class */
     private user_provider|room_provider|room_user_provider $provider;
 
-    // TODO: Why is the avatarurl a runtime option instead of a setting stored in the DB??
-    /**
-     * Communication room constructor to get the communication features.
-     *
-     * @param int $instanceid The id of the instance
-     * @param string $component The component of the instance
-     * @param string $instancetype The type of instance for the component
-     * @param string|null $instanceavatarurl The url of the avatar for the instance
-     * @param string|null $disableprovider The provider to use for associated tasks after disabled
-     * @param array $userids The user ids
-     */
-    public function __construct(
-        int $instanceid,
-        string $component,
-        string $instancetype,
-        string $instanceavatarurl = null,
-        string $disableprovider = null,
-        array $userids = [],
+    protected function __construct(
+        private stdClass $instancedata,
     ) {
-        $this->instanceavatarurl = $instanceavatarurl;
-        $this->userids = $userids;
-        $this->settingsdata = new instance_data($instanceid, $component, $instancetype);
-        if ($disableprovider !== null) {
-            // WTF is the disableprovider!?
-            // What is going on here?
-            $this->settingsdata->provider = $disableprovider;
-            $this->settingsdata->disableprovider = $disableprovider;
+        $providercomponent = $this->instancedata->provider;
+        if (!\core\plugininfo\communication::is_plugin_enabled($providercomponent)) {
+            throw new \moodle_exception('communicationproviderdisabled', 'core_communication', '', $providercomponent);
         }
-
-        $provider = $this->settingsdata->get_provider();
-        if (!\core\plugininfo\communication::is_plugin_enabled($provider)) {
-            throw new \moodle_exception('communicationproviderdisabled', 'core_communication', '', $provider);
-        }
-        $providerclass = $this->get_classname_for_provider($provider);
+        $providerclass = $this->get_classname_for_provider($providercomponent);
         if (!class_exists($providerclass)) {
             throw new \moodle_exception('communicationproviderclassnotfound', 'core_communication', '', $providerclass);
         }
@@ -84,16 +45,120 @@ class communication {
         $this->provider = new $providerclass($this);
     }
 
+    public static function create_instance(
+        string $provider,
+        int $instanceid,
+        string $component,
+        string $instancetype,
+        string $roomname,
+        string $avatarurl,
+    ): self {
+        global $DB;
+
+        $record = (object) [
+            'provider' => $provider,
+            'instanceid' => $instanceid,
+            'component' => $component,
+            'instancetype' => $instancetype,
+            'roomname' => $roomname,
+            'avatarurl' => $avatarurl,
+        ];
+        $record->id = $DB->insert_record('communication', $record);
+
+        return new self($record);
+    }
+
+    public function update_instance(
+        string $provider,
+        string $roomname,
+    ): void {
+        global $DB;
+        $this->instancedata->provider = $provider;
+        $this->instancedata->roomname = $roomname;
+        $DB->update_record('communication', $this->instancedata);
+    }
+
+    /**
+     * Delete communication data.
+     *
+     * @return void
+     */
+    public function delete_instance(): void {
+        global $DB;
+        $DB->delete_records('communication', ['id' => $this->instancedata->id]);
+    }
+
+    public static function load_by_id(int $id): ?self {
+        global $DB;
+
+        if ($record = $DB->get_record('communication', ['id' => $id])) {
+            return new self($record);
+        }
+
+        return null;
+    }
+
+    public static function load_by_instance(int $instanceid, string $component, string $instancetype): ?self {
+        global $DB;
+
+        $record = $DB->get_record('communication', [
+            'instanceid' => $instanceid,
+            'component' => $component,
+            'instancetype' => $instancetype,
+        ]);
+
+        if ($record) {
+            return new self($record);
+        }
+
+        return null;
+    }
+
     private function get_classname_for_provider(string $component): string {
         return "{$component}\\communication_feature";
     }
 
-    public function get_settings_data(): instance_data {
-        return $this->settingsdata;
+    /**
+     * Get communication instance id after creating the instance in communication table.
+     *
+     * @return int
+     */
+    public function get_id(): int {
+        return $this->instancedata->id;
+    }
+
+    public function get_component(): string {
+        return $this->instancedata->component;
+    }
+
+    public function get_instanceid(): int {
+        return $this->instancedata->instanceid;
+    }
+
+    public function get_instancetype(): string {
+        return $this->instancedata->instancetype;
+    }
+
+    /**
+     * Get communication provider.
+     *
+     * @return string|null
+     */
+    public function get_provider(): ?string {
+        return $this->instancedata->provider;
+    }
+
+    /**
+     * Get room name.
+     *
+     * @return string|null
+     */
+    public function get_room_name(): ?string {
+        return $this->instancedata->roomname;
     }
 
     public function get_avatar_url(): ?string {
-        return $this->instanceavatarurl;
+        return $this->instancedata->avatarurl;
     }
 
     public function get_room_provider(): room_provider {
@@ -169,12 +234,7 @@ class communication {
      * Delete operation for the communication api.
      */
     public function delete_room(): void {
-        if ($this->settingsdata->disableprovider === null) {
-            $this->get_room_provider()->delete_room();
-
-            // Now delete the local communication record after the deletion if done from the plugin.
-            $this->settingsdata->delete();
-        }
+        $this->get_room_provider()->delete_room();
     }
 
     /**
@@ -189,14 +249,14 @@ class communication {
     /**
      * Add members to the room.
      */
-    public function add_members(): void {
-        $this->get_room_user_provider()->add_members_to_room($this->userids);
+    public function add_members(array $userids): void {
+        $this->get_room_user_provider()->add_members_to_room($userids);
     }
 
     /**
      * Remove members from room.
      */
-    public function remove_members(): void {
-        $this->get_room_user_provider()->remove_members_from_room($this->userids);
+    public function remove_members(array $userids): void {
+        $this->get_room_user_provider()->remove_members_from_room($userids);
     }
 }

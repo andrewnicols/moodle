@@ -240,8 +240,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->roomid);
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $communication = new \core_communication\communication($course->id, 'core_course', 'coursecommunication',
-                null, false, [$user->id]);
+        $communication = \core_communication\communication::load_by_instance('core_course', 'coursecommunication', $course->id);
         $matrixuser = new matrix_user($communication);
         $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
         // Check our Matrix user id has room membership.

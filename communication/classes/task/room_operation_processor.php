@@ -34,35 +34,23 @@ class room_operation_processor extends adhoc_task {
 
     public function execute() {
         $data = $this->get_custom_data();
-        $settings = instance_data::load_by_id($data->id);
 
         // Initialize the custom data operation to be used for the action.
-        $operation = $this->get_custom_data()->operation;
+        $operation = $data->operation;
 
         // Call the communication api to action the passed operation.
-        $communication = new communication(
-            $settings->get_instanceid(),
-            $settings->get_component(),
-            $settings->get_instancetype(),
-            $this->get_custom_data()->avatarurl
-        );
+        $communication = communication::load_by_id($data->id);
         $communication->$operation();
     }
 
     public static function queue(
-        instance_data $instancedata,
-        string $avatarurl,
+        int $communicationid,
         string $action,
     ): void {
-        if (!$instancedata->record_exist()) {
-            return;
-        }
-
         // Add ad-hoc task to update the provider room.
         $task = new self();
         $task->set_custom_data([
-            'id' => $instancedata->get_id(),
-            'avatarurl' => $avatarurl,
+            'id' => $communicationid,
             'operation' => $action,
         ]);
 
