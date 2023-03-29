@@ -4148,8 +4148,12 @@ function delete_user(stdClass $user) {
     // Remove user from communication rooms immediately.
     if (!empty($CFG->enablecommunicationsubsystem)) {
         foreach (enrol_get_users_courses($user->id) as $course) {
-            $communication = new \core_communication\communication_handler($course->id);
-            $communication->update_room_membership('remove', [$user->id], false);
+            $communication = \core_communication\communication::load_by_instance(
+                'core_course',
+                'coursecommunication',
+                $course->id,
+            );
+            $communication->remove_members([$user->id]);
         }
     }
 
@@ -5080,8 +5084,13 @@ function delete_course($courseorid, $showfeedback = true) {
     context_helper::delete_instance(CONTEXT_COURSE, $courseid);
 
     // Communication provider delete associated information.
-    $communication = new \core_communication\communication_handler($course->id);
-    $communication->delete_room_and_remove_members();
+    $communication = \core_communication\communication::load_by_instance(
+        'core_course',
+        'coursecommunication',
+        $course->id,
+    );
+    $communication->delete_room();
+    $communication->disable_instance();
 
     $DB->delete_records("course", array("id" => $courseid));
     $DB->delete_records("course_format_options", array("courseid" => $courseid));

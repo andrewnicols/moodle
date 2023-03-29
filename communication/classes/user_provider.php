@@ -17,20 +17,19 @@
 namespace core_communication;
 
 /**
- * Class communication_user_base to manage communication provider users.
+ * A communication provider for plugins which support user management.
+ *
+ * Any communication provider that supports management of users must implement this interface.
+ * You will also likely want to implement the following related interfaces:
+ * - room_provider
+ * - room_user_provider
+
  *
  * @package    core_communication
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 interface user_provider {
-    /**
-     * Communication room constructor to get the communication object.
-     *
-     * @param communication $communication The communication object
-     */
-    public function __construct(communication $communication);
-
     /**
      * Create members.
      *

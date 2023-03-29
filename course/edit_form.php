@@ -405,9 +405,14 @@ class course_edit_form extends moodleform {
 
         // Add communication plugins to the form.
         if (!empty($CFG->enablecommunicationsubsystem)) {
-            $communication = new \core_communication\communication_handler(empty($course->id) ? 0 : $course->id);
-            $communication->form_definition($mform);
-            $communication->set_data($course);
+            $communication = \core_communication\communication::load_by_instance(
+                'core_course',
+                'coursecommunication',
+                $course->id,
+            );
+            $helper = $communication->get_handler();
+            $helper->form_definition($mform);
+            $helper->set_data($course);
         }
 
         // When two elements we need a group.

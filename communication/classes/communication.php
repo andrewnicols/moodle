@@ -16,7 +16,13 @@
 
 namespace core_communication;
 
+use core_communication\task\add_members_to_room_task;
+use core_communication\task\remove_members_from_room_task;
+use core_communication\task\create_room_task;
+use core_communication\task\delete_room_task;
+use core_communication\task\update_room_task;
 use stdClass;
+use stored_file;
 
 /**
  * Class communication to manage the base operations of the providers.
@@ -27,8 +33,11 @@ use stdClass;
  */
 class communication {
 
-    /** @var user_provider|room_provider|room_user_provider The provider class */
-    private user_provider|room_provider|room_user_provider $provider;
+    /** @var string The magic 'none' provider */
+    public const PROVIDER_NONE = 'none';
+
+    /** @var communication_provider|user_provider|room_provider|room_user_provider The provider class */
+    private communication_provider|user_provider|room_provider|room_user_provider $provider;
 
     protected function __construct(
         private stdClass $instancedata,
@@ -42,16 +51,21 @@ class communication {
             throw new \moodle_exception('communicationproviderclassnotfound', 'core_communication', '', $providerclass);
         }
 
-        $this->provider = new $providerclass($this);
+        if (!is_a($providerclass, communication_provider::class, true)) {
+            // A the moment we only have one communication provider interface.
+            // In future we may have others, at which point we will support the newest first and emit a debugging notice for older ones.
+            throw new \moodle_exception('communicationproviderclassinvalid', 'core_communication', '', $providerclass);
+        }
+
+        $this->provider = $providerclass::load_for_instance($this);
     }
 
     public static function create_instance(
         string $provider,
-        int $instanceid,
         string $component,
         string $instancetype,
+        int $instanceid,
         string $roomname,
-        string $avatarurl,
     ): self {
         global $DB;
 
@@ -61,21 +75,26 @@ class communication {
             'component' => $component,
             'instancetype' => $instancetype,
             'roomname' => $roomname,
-            'avatarurl' => $avatarurl,
         ];
         $record->id = $DB->insert_record('communication', $record);
 
         return new self($record);
     }
 
+    public function disable_instance(): void {
+        global $DB;
+
+        $DB->set_field('communication', 'provider', self::PROVIDER_NONE, ['id' => $this->instancedata->id]);
+    }
+
     public function update_instance(
-        string $provider,
         string $roomname,
     ): void {
         global $DB;
-        $this->instancedata->provider = $provider;
+
         $this->instancedata->roomname = $roomname;
         $DB->update_record('communication', $this->instancedata);
+        // TODO - Queue the update room task or not?
     }
 
     /**
@@ -88,17 +107,46 @@ class communication {
         $DB->delete_records('communication', ['id' => $this->instancedata->id]);
     }
 
-    public static function load_by_id(int $id): ?self {
+    /**
+     * Load the communication instance by its id.
+     *
+     * @param int $id
+     * @param null|string $provider An optional provider name to use to override the configured provider
+     * This parameter is required for adhoc tasks as the provider configuration may have change between the task being queued,
+     * and the task executing
+     * @return null|communication
+     */
+    public static function load_by_id(int $id, ?string $provider = null): ?self {
         global $DB;
 
         if ($record = $DB->get_record('communication', ['id' => $id])) {
+            if ($provider) {
+                // Override the standard provider.
+                $record->provider = $provider;
+            }
             return new self($record);
         }
 
         return null;
     }
 
-    public static function load_by_instance(int $instanceid, string $component, string $instancetype): ?self {
+    /**
+     * Load communication instance by instance configuration.
+     *
+     * @param string $component
+     * @param string $instancetype
+     * @param int $instanceid
+     * @param null|string $provider An optional provider name to use to override the configured provider
+     * This parameter is required for adhoc tasks as the provider configuration may have change between the task being queued,
+     * and the task executing
+     * @return null|communication
+     */
+    public static function load_by_instance(
+        string $component,
+        string $instancetype,
+        int $instanceid,
+        ?string $provider = null,
+    ): ?self {
         global $DB;
 
         $record = $DB->get_record('communication', [
@@ -108,10 +156,18 @@ class communication {
         ]);
 
         if ($record) {
+            if ($provider) {
+                // Override the standard provider.
+                $record->provider = $provider;
+            }
             return new self($record);
         }
 
         return null;
+    }
+
+    public function get_handler(): communication_handler {
+        return new communication_handler($this);
     }
 
     private function get_classname_for_provider(string $component): string {
@@ -157,8 +213,68 @@ class communication {
         return $this->instancedata->roomname;
     }
 
-    public function get_avatar_url(): ?string {
-        return $this->instancedata->avatarurl;
+    public function get_avatar(): ?stored_file {
+        $fs = get_file_storage();
+        $file = $fs->get_file(
+            (\context_system::instance())->id,
+            'core_communication',
+            'avatar',
+            $this->instancedata->id,
+            '/',
+            $this->instancedata->avatarfilename,
+        );
+
+        return $file ? $file : null;
+    }
+
+    protected function get_avatar_filerecord(string $filename): stdClass {
+        $context = \context_system::instance();
+        return (object) [
+            'contextid' => $context->id,
+            'component' => 'core_communication',
+            'filearea' => 'avatar',
+            'itemid' => $this->instancedata->id,
+            'filepath' => '/',
+            'filename' => $filename,
+        ];
+    }
+
+    public function set_avatar_from_datauri(string $datauri): void {
+        global $DB;
+
+        $context = \context_system::instance();
+        $filename = "avatar.svg";
+
+        $fs = get_file_storage();
+        $fs->delete_area_files(
+            $context->id,
+            'core_communication',
+            'avatar',
+            $this->instancedata->id
+        );
+
+        $imagedata = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $datauri));
+        $fs->create_file_from_string($this->get_avatar_filerecord($filename), $imagedata);
+        $DB->set_field('communication', 'avatarfilename', $filename, ['id' => $this->instancedata->id]);
+    }
+
+    public function set_avatar_from_filepath(string $filepath): void {
+        global $DB;
+
+        $context = \context_system::instance();
+        $extension = pathinfo($filepath, PATHINFO_EXTENSION);
+        $filename = "avatar.{$extension}";
+
+        $fs = get_file_storage();
+        $fs->delete_area_files(
+            $context->id,
+            'core_communication',
+            'avatar',
+            $this->instancedata->id
+        );
+
+        $fs->create_file_from_pathname($this->get_avatar_filerecord($extension), $filepath);
+        $DB->set_field('communication', 'avatarfilename', $filename, ['id' => $this->instancedata->id]);
     }
 
     public function get_room_provider(): room_provider {
@@ -172,8 +288,6 @@ class communication {
     }
 
     public function get_room_user_provider(): room_user_provider {
-        $this->require_room_features();
-        $this->require_user_features();
         $this->require_room_user_features();
         return $this->provider;
     }
@@ -217,24 +331,28 @@ class communication {
     }
 
     /**
-     * Create operation for the communication api.
+     * Queue a task to create the room from the current instance data.
      */
     public function create_room(): void {
-        $this->get_room_provider()->create_or_update_room();
+        $this->require_room_features();
+        create_room_task::queue($this);
     }
 
     /**
-     * Update operation for the communication api.
+     * Queue a task to update the room from the current instance data.
+     * TODO: Should we rename this to something like update_room_from_instance?
      */
     public function update_room(): void {
-        $this->get_room_provider()->create_or_update_room();
+        $this->require_room_features();
+        update_room_task::queue($this);
     }
 
     /**
-     * Delete operation for the communication api.
+     * Queue a task to delete the room.
      */
     public function delete_room(): void {
-        $this->get_room_provider()->delete_room();
+        $this->require_room_features();
+        delete_room_task::queue($this);
     }
 
     /**
@@ -247,16 +365,22 @@ class communication {
     }
 
     /**
-     * Add members to the room.
+     * Queue a task to add the specified users to the room.
+     *
+     * @param array $userids
      */
     public function add_members(array $userids): void {
-        $this->get_room_user_provider()->add_members_to_room($userids);
+        $this->require_room_user_features();
+        add_members_to_room_task::queue($this, $userids)''
     }
 
     /**
-     * Remove members from room.
+     * Queue a task to remove the specified users to the room.
+     *
+     * @param array $userids
      */
     public function remove_members(array $userids): void {
-        $this->get_room_user_provider()->remove_members_from_room($userids);
+        $this->require_room_user_features();
+        remove_members_from_room_task::queue($this, $userids);
     }
 }

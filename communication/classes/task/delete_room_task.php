@@ -18,40 +18,40 @@ namespace core_communication\task;
 
 use core\task\adhoc_task;
 use core_communication\communication;
-use core_communication\instance_data;
 
 /**
- * TODO - very poorly named
- * Class communication_room_operations to manage communication provider room operations from provider plugins.
- *
- * This task will handle create, update, delete for the provider room.
+ * Handle the task of removing a room.
  *
  * @package    core_communication
- * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
+ * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class room_operation_processor extends adhoc_task {
+class delete_room_task extends adhoc_task {
 
     public function execute() {
+        // Initialize the custom data operation to be used for the action.
         $data = $this->get_custom_data();
 
-        // Initialize the custom data operation to be used for the action.
-        $operation = $data->operation;
-
         // Call the communication api to action the passed operation.
-        $communication = communication::load_by_id($data->id);
-        $communication->$operation();
+        // We must override the provider with the one stored in the data in case the provider has changed.
+        $communication = communication::load_by_id($data->id, $data->provider);
+        $communication->get_room_provider()->delete_room();
     }
 
+    /**
+     * Queue the task to add members to the room.
+     *
+     * @param communication $communication
+     * @param array $userids
+     */
     public static function queue(
-        int $communicationid,
-        string $action,
+        communication $communication,
     ): void {
         // Add ad-hoc task to update the provider room.
         $task = new self();
         $task->set_custom_data([
-            'id' => $communicationid,
-            'operation' => $action,
+            'id' => $communication->get_id(),
+            'provider' => $communication->get_provider(),
         ]);
 
         // Queue the task for the next run.

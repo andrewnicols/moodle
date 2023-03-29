@@ -18,40 +18,44 @@ namespace core_communication\task;
 
 use core\task\adhoc_task;
 use core_communication\communication;
-use core_communication\instance_data;
 
 /**
- * Class communication_room_operations to manage communication provider room operations from provider plugins.
- *
- * This task will handle create, update, delete for the provider room.
+ * Handle the task of updating a room.
  *
  * @package    core_communication
- * @copyright  2023 David Woloszyn <david.woloszyn@moodle.com>
+ * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class user_operation_processor extends adhoc_task {
+class update_room_task extends adhoc_task {
 
     public function execute() {
         // Initialize the custom data operation to be used for the action.
         $data = $this->get_custom_data();
-        $operation = $data->operation;
 
         // Call the communication api to action the passed operation.
+        // We must override the provider with the one stored in the data in case the provider has changed.
         $communication = communication::load_by_id($data->id);
-        $communication->$operation($data->userids);
+        if ($communication->get_provider() !== $data->provider) {
+            mtrace("Skipping room update because the provider no longer matches the requested provider");
+            return;
+        }
+        $communication->get_room_provider()->update_room();
     }
 
+    /**
+     * Queue the task to update a room to match the communication API record.
+     *
+     * @param communication $communication
+     * @param array $userids
+     */
     public static function queue(
-        int $communicationid,
-        string $action,
-        array $userids,
+        communication $communication,
     ): void {
         // Add ad-hoc task to update the provider room.
         $task = new self();
         $task->set_custom_data([
-            'id' => $communicationid,
-            'operation' => $action,
-            'userids' => $userids,
+            'id' => $communication->get_id(),
+            'provider' => $communication->get_provider(),
         ]);
 
         // Queue the task for the next run.

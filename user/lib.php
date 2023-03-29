@@ -164,13 +164,12 @@ function user_update_user($user, $updatepassword = true, $triggerevent = true) {
         if (!empty($currentrecord) && isset($user->suspended) && $currentrecord->suspended !== $user->suspended) {
             foreach ($usercourses as $usercourse) {
                 // If the record updated the suspended for a user.
+                $communication = new \core_communication\communication::load_by_instance('core_course', 'course', $usercourse->id);
                 if ($user->suspended === 0) {
-                    $action = 'add';
+                    $communication->add_members([$user->id])
                 } else if ($user->suspended === 1) {
-                    $action = 'remove';
+                    $communication->remove_members([$user->id])
                 }
-                $communication = new \core_communication\communication_handler($usercourse->id);
-                $communication->update_room_membership($action, [$user->id]);
             }
         }
     }

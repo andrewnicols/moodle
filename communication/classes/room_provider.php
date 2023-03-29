@@ -17,9 +17,12 @@
 namespace core_communication;
 
 /**
- * Class communication_room_base to manage the room operations of communication providers.
+ * A communication provider for plugins which support room management.
  *
- * Every plugin that supports room operation must implement/extend this class in the plugin.
+ * Any communication provider that supports management of room must implement this interface.
+ * You will also likely want to implement the following related interfaces:
+ * - user_provider
+ * - room_user_provider
  *
  * @package    core_communication
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
@@ -27,16 +30,14 @@ namespace core_communication;
  */
 interface room_provider {
     /**
-     * Communication room constructor to get the communication object.
-     *
-     * @param communication $communication The communication object
+     * Create a room.
      */
-    public function __construct(communication $communication);
+    public function create_room(): void;
 
     /**
-     * Update a provider room when a instance is updated.
+     * Update a room within the provider.
      */
-    public function create_or_update_room(): void;
+    public function update_room(): void;
 
     /**
      * Delete a provider room when a instance is deleted.

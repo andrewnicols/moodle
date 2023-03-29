@@ -226,6 +226,7 @@
         <FIELD NAME="instancetype" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="The type of the instance for the given component."/>
         <FIELD NAME="provider" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" COMMENT="Name of the selected communication provider"/>
         <FIELD NAME="roomname" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="Name of the communication room"/>
+        <FIELD NAME="avatarfilename" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" COMMENT="The file name in the files API for the avatar"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

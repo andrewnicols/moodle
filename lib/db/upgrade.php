@@ -3205,13 +3205,14 @@ privatefiles,moodle|/user/files.php';
         // Define course communication table.
         $table = new xmldb_table('communication');
 
-        // Adding fields to table course_communication.
+        // Adding fields to table ccourse_communication.
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->add_field('instanceid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null, 'id');
         $table->add_field('component', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'instanceid');
         $table->add_field('instancetype', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'component');
-        $table->add_field('provider', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'instancerype');
+        $table->add_field('provider', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, null, 'instancetype');
         $table->add_field('roomname', XMLDB_TYPE_CHAR, '255', null, null, null, null, 'provider');
+        $table->add_field('avatarfilename', XMLDB_TYPE_CHAR, '100', null, null, null, null, 'roomname');
 
         // Add key.
         $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);

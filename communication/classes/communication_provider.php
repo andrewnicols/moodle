@@ -17,29 +17,21 @@
 namespace core_communication;
 
 /**
- * A communication provider for plugins which support room membership.
+ * A base communication provider.
  *
- * Any communication provider that supports users and rooms must implement this interface.
- * You will also likely want to implement the following related interfaces:
- * - user_provider
- * - room_provider
+ * This interface should be used to declare support for the instantiation method for communication providers.
+ *
+ * Every communication provider must, as a minimum, implement this provider.
  *
  * @package    core_communication
  * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface room_user_provider {
+interface communication_provider {
     /**
-     * Add members to communication room.
+     * A base communication provider.
      *
-     * @param array $userids The user ids to be added
+     * @param communication $communication The communication object
      */
-    public function add_members_to_room(array $userids): void;
-
-    /**
-     * Remove members from room.
-     *
-     * @param array $userids The user ids to be removed
-     */
-    public function remove_members_from_room(array $userids): void;
+    public static function load_for_instance(communication $communication);
 }

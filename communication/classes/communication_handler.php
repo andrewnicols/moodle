@@ -28,15 +28,7 @@ use core_communication\task\user_operation_processor;
  */
 class communication_handler {
 
-    /**
-     * @var null|communication $communication The communication settings object
-     */
-    private ?communication $communication;
-
-    /**
-     * @var string|null $avatarurl The url of the avatar for the instance
-     */
-    private ?string $avatarurl;
+    /** @var communication $communication The communication settings object */
 
     /**
      * Communication handler constructor to manage and handle all communication related actions.
@@ -46,21 +38,11 @@ class communication_handler {
      * @param string $component The component of the item for the instance
      * @param string $instancetype The type of the item for the instance
      * @param int $instanceid The id of the instance
-     * @param string|null $avatarurl The url of the avatar of the instance
      *
      */
     public function __construct(
-        private string $component,
-        private string $instancetype,
-        private int $instanceid,
-        string $avatarurl = null,
+        private communication $communication,
     ) {
-        $this->communication = communication::load_by_instance(
-            $this->instanceid,
-            $this->component,
-            $this->instancetype,
-        );
-        $this->avatarurl = $avatarurl;
     }
 
     /**
@@ -68,12 +50,12 @@ class communication_handler {
      *
      * @return array
      */
-    public function get_communication_plugin_list_for_form(): array {
+    public static function get_communication_plugin_list_for_form(): array {
         // Add the option to have communication disabled.
-        $selection['none'] = get_string('nocommunicationselected', 'communication');
+        $selection[communication::PROVIDER_NONE] = get_string('nocommunicationselected', 'communication');
         $communicationplugins = \core\plugininfo\communication::get_enabled_plugins();
         foreach ($communicationplugins as $pluginname => $notusing) {
-            $selection['communication_' . $pluginname] = get_string('pluginname', 'communication_'. $pluginname);
+            $selection["communication_{$pluginname}"] = get_string('pluginname', 'communication_'. $pluginname);
         }
         return $selection;
     }
@@ -88,18 +70,26 @@ class communication_handler {
         $mform->addElement('header', 'communication', get_string('communication', 'communication'));
 
         // List the communication providers.
-        $communicationproviders = $this->get_communication_plugin_list_for_form();
-        $mform->addElement('select', 'selectedcommunication',
-            get_string('seleccommunicationprovider', 'communication'), $communicationproviders);
+        $communicationproviders = self::get_communication_plugin_list_for_form();
+        $mform->addElement(
+            'select',
+            'selectedcommunication',
+            get_string('seleccommunicationprovider', 'communication'),
+            $communicationproviders,
+        );
         $mform->addHelpButton('selectedcommunication', 'seleccommunicationprovider', 'communication');
-        $mform->setDefault('selectedcommunication', 'none');
+        $mform->setDefault('selectedcommunication', communication::PROVIDER_NONE);
 
         // Room name for the communication provider.
-        $mform->addElement('text', 'communicationroomname',
-            get_string('communicationroomname', 'communication'), 'maxlength="100" size="20"');
+        $mform->addElement(
+            'text',
+            'communicationroomname',
+            get_string('communicationroomname', 'communication'),
+            'maxlength="100" size="20"',
+        );
         $mform->addHelpButton('communicationroomname', 'communicationroomname', 'communication');
         $mform->setType('communicationroomname', PARAM_TEXT);
-        $mform->hideIf('communicationroomname', 'selectedcommunication', 'eq', 'none');
+        $mform->hideIf('communicationroomname', 'selectedcommunication', 'eq', communication::PROVIDER_NONE);
     }
 
     /**
@@ -114,142 +104,4 @@ class communication_handler {
             $instance->communicationroomname = $this->communication->get_room_name();
         }
     }
-
-    /**
-     * Save the data from the form or set data.
-     *
-     * @param string $selectedcommunication The selected communication provider
-     * @param string $communicationroomname The communication room name
-     * @return void
-     */
-    public function save_form_data(string $selectedcommunication, string $communicationroomname): void {
-        if ($selectedcommunication === 'none') {
-            if ($this->communication) {
-                $this->communication->delete_room();
-                return;
-            }
-            return;
-        }
-
-        if ($this->communication) {
-            $this->communication->update_instance($selectedcommunication, $communicationroomname);
-        } else {
-            $this->communication = communication::create_instance(
-                $selectedcommunication,
-                $this->component,
-                $this->instancetype,
-                $this->instanceid,
-                $communicationroomname,
-                $this->avatarurl,
-            );
-        }
-    }
-
-    /**
-     * Check if update required according to the updated data.
-     * This method will add efficiency while adding task to send requests etc.
-     * Without this method, everytime and instance is saved, it will add a new task.
-     *
-     * @return bool
-     */
-    public function is_update_required(): bool {
-        return $this->communication->get_provider() !== 'none';
-    }
-
-    /**
-     * Create a communication ad-hoc task for create operation.
-     *
-     * @param string $selectedcommunication The selected communication provider
-     * @param string $communicationroomname The communication room name
-     * @return void
-     */
-    public function create_and_configure_room_and_add_members(string $selectedcommunication, string $communicationroomname): void {
-        if ($selectedcommunication !== 'none' && $selectedcommunication !== '') {
-            // Update communication record.
-            $this->save_form_data($selectedcommunication, $communicationroomname);
-
-            // Add ad-hoc task to create the provider room.
-            room_operation_processor::queue(
-                $this->communication->get_id(),
-                'create_room',
-            );
-        }
-    }
-
-    /**
-     * Create a communication ad-hoc task for update operation.
-     *
-     * @param string $selectedcommunication The selected communication provider
-     * @param string $communicationroomname The communication room name
-     * @return void
-     */
-    public function update_room_and_membership(string $selectedcommunication, string $communicationroomname): void {
-        if ($this->communication) {
-            // Update communication record.
-            $this->save_form_data($selectedcommunication, $communicationroomname);
-
-            if ($this->is_update_required()) {
-                room_operation_processor::queue(
-                    $this->communication->get_id(),
-                    'update_room'
-                );
-            }
-        } else {
-            $this->create_and_configure_room_and_add_members($selectedcommunication, $communicationroomname);
-        }
-    }
-
-    /**
-     * Create a communication ad-hoc task for delete operation.
-     *
-     * @return void
-     */
-    public function delete_room_and_remove_members(): void {
-        // Remove the room data from the communication table.
-        room_operation_processor::queue(
-            $this->communication->get_id(),
-            'delete_room',
-        );
-    }
-
-    /**
-     * Update room membership for a user.
-     *
-     * @param string $action The action to perform
-     * @param array $userids The user ids to update
-     * @param bool $async Run task asyncronously, or not
-     * @return void
-     */
-    public function update_room_membership(string $action, array $userids, $async = true): void {
-        if (!$this->communication) {
-            return;
-        }
-
-        if (empty($userids)) {
-            return;
-        }
-
-        switch ($action) {
-            case 'add':
-                $operation = 'add_members';
-                break;
-
-            case 'remove':
-                $operation = 'remove_members';
-                break;
-            default:
-                throw new \coding_exception('Invalid action');
-        }
-
-        if ($async) {
-            user_operation_processor::queue(
-                $this->communication->get_id(),
-                $operation,
-                $userids,
-            );
-        } else {
-            $this->communication->{$operation}($userids);
-        }
-    }
-
 }

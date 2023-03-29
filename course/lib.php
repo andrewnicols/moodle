@@ -24,6 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use core_communication\communication;
 use core_course\external\course_summary_exporter;
 use core_courseformat\base as course_format;
 
@@ -2315,15 +2316,29 @@ function create_course($data, $editoroptions = NULL) {
     }
 
     // Communication api implementation in course.
-    if (isset($data->selectedcommunication) && !empty($CFG->enablecommunicationsubsystem)) {
+    $setcommunication = !empty($CFG->enablecommunication);
+    $setcommunication = $setcommunication && isset($data->selectedcommunication);
+    $setcommunication = $setcommunication && $data->selectedcommunication !== communication::PROVIDER_NONE;
+    if ($setcommunication) {
         // Prepare the communication api date.
         $courseimage = course_summary_exporter::get_course_image($course);
         $communicationroomname = !empty($data->communicationroomname) ? $data->communicationroomname : $data->fullname;
         $selectedcommunication = $data->selectedcommunication;
 
         // Communication api call.
-        $communication = new \core_communication\communication_handler($course->id, empty($courseimage) ? null : $courseimage);
-        $communication->create_and_configure_room_and_add_members($selectedcommunication, $communicationroomname);
+        $communication = communication::create_instance(
+            $selectedcommunication,
+            'core_course',
+            'coursecommunication',
+            $course->id,
+            $communicationroomname,
+        );
+
+        if ($courseimage) {
+            $communication->set_avatar_from_datauri($courseimage);
+        }
+
+        $communication->create_room();
     }
 
     // Save custom fields if there are any of them in the form.
@@ -2450,12 +2465,19 @@ function update_course($data, $editoroptions = NULL) {
     if (isset($data->selectedcommunication) && !empty($CFG->enablecommunicationsubsystem)) {
         // Prepare the communication api data.
         $courseimage = course_summary_exporter::get_course_image($data);
+        // TODO Move the course image into the relevant location to use as a room avatar.
         $communicationroomname = !empty($data->communicationroomname) ? $data->communicationroomname : $data->fullname;
         $selectedcommunication = $data->selectedcommunication;
 
         // Communication api call.
-        $communication = new \core_communication\communication_handler($data->id, empty($courseimage) ? null : $courseimage);
+        $communication = \core_communication\communication::load_by_instance(
+            'core_course',
+            'coursecommunication',
+            $data->id,
+        );
         if (empty($data->visibleold)) {
+            // TODO
+            // Create a new API function to do both
             $communication->update_room_and_membership($selectedcommunication, $communicationroomname);
         }
 
@@ -2470,9 +2492,9 @@ function update_course($data, $editoroptions = NULL) {
 
         if (count($enrolledusers) > 0) {
             if ($data->selectedcommunication !== 'none') {
-                $communication->update_room_membership('add', $enrolledusers);
+                $communication->add_members($enrolledusers);
             } else {
-                $communication->update_room_membership('remove', $enrolledusers);
+                $communication->remove_members($enrolledusers);
             }
         }
     }

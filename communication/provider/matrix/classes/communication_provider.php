@@ -16,6 +16,8 @@
 
 namespace communication_matrix;
 
+use \core_communication\communication;
+
 /**
  * class matrix_user_manager to handle specific actions.
  *
@@ -24,6 +26,7 @@ namespace communication_matrix;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class communication_provider implements
+    \core_communication\communication_provider,
     \core_communication\user_provider,
     \core_communication\room_provider,
     \core_communication\room_user_provider {
@@ -35,9 +38,14 @@ class communication_provider implements
     /** @var matrix_rooms $matrixrooms The matrix room object to update room information */
     private matrix_rooms $matrixrooms;
 
+    public static function load_for_instance(communication $communication,
+    ) {
+        return new self($communication);
+    }
 
-    public function __construct(
-        private \core_communication\communication $communication,
+
+    private function __construct(
+        private communication $communication,
     ) {
         $this->matrixrooms = new matrix_rooms($communication->get_id());
         $this->eventmanager = new matrix_events_manager($this->matrixrooms->roomid);
@@ -183,7 +191,7 @@ class communication_provider implements
         return false;
     }
 
-    public function create_or_update_room(): void {
+    public function create_room(): void {
         $alias = str_replace(' ', '', $this->communication->get_room_name());
         $json = [
             'name' => $this->communication->get_room_name(),
@@ -244,13 +252,12 @@ class communication_provider implements
      * @return void
      */
     public function update_room_avatar(): void {
-        $instanceimage = $this->communication->get_avatar_url();
+        $instanceimage = $this->communication->get_avatar();
         $contenturi = null;
         // If avatar is set for the instance, update in matrix.
-        if (!empty($instanceimage)) {
-            $instanceimage = file_get_contents($instanceimage);
+        if ($instanceimage) {
             // First upload the content.
-            $contenturi = $this->eventmanager->upload_matrix_content($instanceimage);
+            $contenturi = $this->eventmanager->upload_matrix_content($instanceimage->get_content());
         }
         // Now update the room avatar.
         $json = [
