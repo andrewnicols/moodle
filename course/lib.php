@@ -24,6 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+use core_course\external\course_summary_exporter;
 use core_courseformat\base as course_format;
 
 require_once($CFG->libdir.'/completionlib.php');
@@ -2313,6 +2314,18 @@ function create_course($data, $editoroptions = NULL) {
         core_tag_tag::set_item_tags('core', 'course', $course->id, context_course::instance($course->id), $data->tags);
     }
 
+    // Communication api implementation in course.
+    if (isset($data->selectedcommunication) && !empty($CFG->enablecommunicationsubsystem)) {
+        // Prepare the communication api date.
+        $courseimage = course_summary_exporter::get_course_image($course);
+        $communicationroomname = !empty($data->communicationroomname) ? $data->communicationroomname : $data->fullname;
+        $selectedcommunication = $data->selectedcommunication;
+
+        // Communication api call.
+        $communication = \core_communication\api::load_by_instance('core_course', 'coursecommunication', $course->id);
+        $communication->create_and_configure_room($selectedcommunication, $communicationroomname, $courseimage);
+    }
+
     // Save custom fields if there are any of them in the form.
     $handler = core_course\customfield\course_handler::create();
     // Make sure to set the handler's parent context first.
@@ -2432,6 +2445,47 @@ function update_course($data, $editoroptions = NULL) {
     // Set showcompletionconditions to null when completion tracking has been disabled for the course.
     if (isset($data->enablecompletion) && $data->enablecompletion == COMPLETION_DISABLED) {
         $data->showcompletionconditions = null;
+    }
+
+    if (isset($data->selectedcommunication) && !empty($CFG->enablecommunicationsubsystem)) {
+        // Prepare the communication api data.
+        $courseimage = course_summary_exporter::get_course_image($data);
+        $communicationroomname = !empty($data->communicationroomname) ? $data->communicationroomname : $data->fullname;
+        $selectedcommunication = $data->selectedcommunication;
+
+        // Communication api call.
+        $communication = \core_communication\api::load_by_instance('core_course', 'coursecommunication', $data->id);
+
+        // Update communication room membership of enrolled users.
+        require_once($CFG->libdir . '/enrollib.php');
+        $courseusers = enrol_get_course_users($data->id);
+        $enrolledusers = [];
+
+        foreach ($courseusers as $user) {
+            $enrolledusers[] = $user->id;
+        }
+
+        $addafterupdate = false;
+        if (count($enrolledusers) > 0 && $data->selectedcommunication !== $communication->get_current_communication_provider()) {
+            if ($data->selectedcommunication === 'none') {
+                $communication->update_room_membership('remove', $enrolledusers);
+            } else {
+                if ($communication->get_current_communication_provider() !== 'none' &&
+                        $data->selectedcommunication !== $communication->get_current_communication_provider()) {
+                    $communication->update_room_membership('remove', $enrolledusers);
+                    $addafterupdate = true;
+                } else {
+                    $communication->update_room_membership('add', $enrolledusers);
+                }
+            }
+        }
+
+        if (empty($data->visibleold)) {
+            $communication->update_room($selectedcommunication, $communicationroomname, $courseimage);
+            if ($addafterupdate) {
+                $communication->update_room_membership('add', $enrolledusers);
+            }
+        }
     }
 
     // Update custom fields if there are any of them in the form.
