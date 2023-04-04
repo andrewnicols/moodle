@@ -29,15 +29,24 @@ use core_communication\communication_processor;
 class add_members_to_room_task extends adhoc_task {
 
     public function execute() {
+        global $DB;
+
         // Initialize the custom data operation to be used for the action.
         $data = $this->get_custom_data();
+
+        // Get the list of userids in the room.
+        $userids = $DB->get_records('communication_user', [
+            'commid' => $data->id,
+            'synced' => 0,
+        ], '', 'userid');
+        $userids = array_keys($userids);
 
         // Call the communication api to action the operation.
         $communication = communication_processor::load_by_id($data->id);
 
-        $communication->get_room_user_provider()->add_members_to_room($data->userids);
+        $communication->get_room_user_provider()->add_members_to_room($userids);
         // Update the sync to 1 for the users.
-        $communication->update_instance_user_mapping($data->userids);
+        $communication->update_instance_user_mapping($userids);
     }
 
     /**
@@ -48,14 +57,12 @@ class add_members_to_room_task extends adhoc_task {
      */
     public static function queue(
         communication_processor $communication,
-        array $userids,
     ): void {
 
         // Add ad-hoc task to update the provider room.
         $task = new self();
         $task->set_custom_data([
             'id' => $communication->get_id(),
-            'userids' => $userids,
             'provider' => $communication->get_provider(),
         ]);
 

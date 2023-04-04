@@ -364,10 +364,9 @@ class api {
         if ($async) {
             $task::queue(
                 $this->communication,
-                $userids,
             );
         } else {
-            $this->communication->get_room_user_provider()->{$operation}($userids);
+            $this->communication->get_room_user_provider()->{$operation}();
         }
     }
 
