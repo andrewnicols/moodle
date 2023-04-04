@@ -223,6 +223,18 @@ class api {
         return $this->communication->get_provider();
     }
 
+    public function has_provider(): bool {
+        return $this->communication && !empty($this->communication->get_provider());
+    }
+
+    public function provider_matches(string $provider): bool {
+        if ($this->has_provider()) {
+            return $this->communication->get_provider() === $provider;
+        }
+
+        return false;
+    }
+
     /**
      * Create a communication ad-hoc task for create operation.
      * This method will add a task to the queue to create the room.

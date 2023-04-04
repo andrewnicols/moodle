@@ -44,7 +44,11 @@ class remove_members_from_room extends adhoc_task {
         // We must override the provider with the one stored in the data in case the provider has changed.
         $communication = communication_processor::load_by_id($data->id, $data->provider);
         $communication->get_room_user_provider()->remove_members_from_room($userids);
-        $communication->delete_instance_user_mapping($userids);
+
+        $record = communication_processor::load_by_id($data->id);
+        if ($communication->provider_matches($record->get_provider()) {
+            $communication->delete_instance_user_mapping($userids);
+        }
     }
 
     /**
