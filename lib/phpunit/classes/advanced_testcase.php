@@ -23,6 +23,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\task\adhoc_task;
+use core\task\scheduled_task;
+use core\task\task_base;
 
 /**
  * Advanced PHPUnit test case customised for Moodle.
@@ -704,5 +707,62 @@ abstract class advanced_testcase extends base_testcase {
             unset($task);
         }
         $tasks->close();
+    }
+
+    /**
+     * Run a task.
+     *
+     * @param task_base $task
+     * @throws coding_exception
+     */
+    protected function run_task(task_base $task): void {
+        if ($task instanceof adhoc_task) {
+            $this->run_adhoc_task($task);
+            return;
+        }
+
+        if ($task instanceof scheduled_task) {
+            $this->run_scheduled_task($task);
+            return;
+        }
+
+        throw new \coding_exception('Unknown class type');
+    }
+
+    /**
+     * Run an adhoc task.
+     *
+     * @param adhoc_task $task
+     */
+    protected function run_adhoc_task(adhoc_task $task): void {
+        global $DB;
+
+        if ($userid = $task->get_userid()) {
+            // This task has a userid specified.
+            $user = \core_user::get_user($userid);
+
+            // User found. Check that they are suitable.
+            \core_user::require_active_user($user, true, true);
+            \core\cron::setup_user($user);
+        } else {
+            \core\cron::setup_user();
+        }
+
+        \core\cron::run_inner_adhoc_task($task);
+
+        if ($id = $task->get_id()) {
+            // This task was queued, so delete its entry.
+            $DB->delete_records('task_adhoc', ['id' => $id]);
+        }
+    }
+
+    /**
+     * Run a scheduled task
+     *
+     * @param scheduled_task $task
+     */
+    protected function run_scheduled_task(scheduled_task $task): void {
+        \core\cron::setup_user();
+        \core\cron::run_inner_scheduled_task($task);
     }
 }
