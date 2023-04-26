@@ -16,11 +16,11 @@
 
 namespace core\oauth2\discovery;
 
-use curl;
-use stdClass;
-use moodle_exception;
 use core\oauth2\issuer;
 use core\oauth2\endpoint;
+use curl;
+use moodle_exception;
+use stdClass;
 
 /**
  * Class for provider discovery definition, to allow services easily discover and process information.
@@ -36,10 +36,40 @@ abstract class base_definition {
     /**
      * Get the URL for the discovery manifest.
      *
+     * Typically this will make use of a well-known URL, but can be overridden if needed.
+     * Well-known URLs are described by RFC-8615.
+     *
+     * While the RFC does not define a specific protocol, format, or standard for well-known URLs,
+     * those used for oauth2 purposes are almost certain to be hosted under a TLS-protected domain.
+     *
+     * The `.well-known` folder prefix must always be at the web root.
+     *
+     * If a service does not use a well-known URL, then this method can be overridden by the service type.
+     *
+     * If it does, then the `get_discovery_endpoint_path` method should be overridden instead.
+     *
      * @param issuer $issuer The OAuth issuer the endpoints should be discovered for.
-     * @return string The URL of the discovery file, containing the endpoints.
+     * @return null|string The URL of the discovery file, containing the endpoints.
      */
-    public abstract static function get_discovery_endpoint_url(issuer $issuer): string;
+    public static function get_discovery_endpoint_url(issuer $issuer): ?string {
+        $url = $issuer->get('baseurl');
+        $wellknownsuffix = static::get_discovery_endpoint_path($url);
+        if ($wellknownsuffix && !empty($url)) {
+            $hostname = parse_url($url, PHP_URL_HOST);
+            return "https://{$hostname}/.well-known/{$wellknownsuffix}";
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the path for the discovery manifest.
+     *
+     * @return null|string
+     */
+    protected static function get_discovery_endpoint_path(string $url): ?string {
+        return null;
+    }
 
     /**
      * Process the discovery information and create endpoints defined with the expected format.

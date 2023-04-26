@@ -30,23 +30,8 @@ use core\oauth2\user_field_mapping;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class openidconnect extends base_definition {
-
-    /**
-     * Get the URL for the discovery manifest.
-     *
-     * @param issuer $issuer The OAuth issuer the endpoints should be discovered for.
-     * @return string The URL of the discovery file, containing the endpoints.
-     */
-    public static function get_discovery_endpoint_url(issuer $issuer): string {
-        $url = $issuer->get('baseurl');
-        if (!empty($url)) {
-            // Add slash at the end of the base url.
-            $url .= (substr($url, -1) == '/' ? '' : '/');
-            // Append the well-known file for OIDC.
-            $url .= '.well-known/openid-configuration';
-        }
-
-        return $url;
+    protected static function get_discovery_endpoint_path(string $url): ?string {
+        return 'openid-configuration';
     }
 
     /**

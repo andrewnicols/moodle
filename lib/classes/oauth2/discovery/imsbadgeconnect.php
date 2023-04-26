@@ -32,22 +32,8 @@ use core\oauth2\endpoint;
  */
 class imsbadgeconnect extends base_definition {
 
-    /**
-     * Get the URL for the discovery manifest.
-     *
-     * @param issuer $issuer The OAuth issuer the endpoints should be discovered for.
-     * @return string The URL of the discovery file, containing the endpoints.
-     */
-    public static function get_discovery_endpoint_url(issuer $issuer): string {
-        $url = $issuer->get('baseurl');
-        if (!empty($url)) {
-            // Add slash at the end of the base url.
-            $url .= (substr($url, -1) == '/' ? '' : '/');
-            // Append the well-known file for IMS OBv2.1.
-            $url .= '.well-known/badgeconnect.json';
-        }
-
-        return $url;
+    protected static function get_discovery_endpoint_path(string $url): ?string {
+        return 'badgeconnect.json';
     }
 
     /**
