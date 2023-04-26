@@ -86,6 +86,9 @@ class external_backpack extends \moodleform {
         $issuercontact = $CFG->badges_defaultissuercontact;
         $this->add_auth_fields($issuercontact);
 
+        // TODO: We really don't actually need to show this, ever.
+        // TODO: Drop creation of the badge oauth2 issuer in the oauth2 page entirely.
+        // It should only be created from here.
         $oauth2options = badges_get_oauth2_service_options();
         $mform->addElement('select', 'oauth2_issuerid', get_string('oauth2issuer', 'core_badges'), $oauth2options);
         $mform->setType('oauth2_issuerid', PARAM_INT);

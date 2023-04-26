@@ -798,6 +798,25 @@ function badges_delete_site_backpack($id) {
  */
 function badges_save_external_backpack(stdClass $data) {
     global $DB;
+    if ($data->apiversion == OPEN_BADGES_V2P1) {
+        // TODO: Refactor this out so that the creation is in the versioned backpack_api class.
+        // IMHO The backpack_api2p1 class should extend backpackapi_2 which should extend a base class.
+        if (!empty($data->oauth2_issuerid)) {
+            $issuer = \core\oauth2\api::get_issuer($data->oauth2_issuerid);
+        }
+        if (empty($issuer)) {
+            $issuer = new \core\oauth2\issuer(0, (object) [
+                'name' => $data->backpackapiurl,
+                'baseurl' => $data->backpackapiurl,
+                // Note: This is required becasue the DB schema is broken and does not accept a null value when it should.
+                'image' => '',
+            ]);
+            $issuer->save();
+        }
+
+        \core\oauth2\discovery\imsbadgeconnect::create_endpoints($issuer);
+        $data->oauth2_issuerid = $issuer->get('id');
+    }
     $backpack = new stdClass();
 
     $backpack->apiversion = $data->apiversion;
