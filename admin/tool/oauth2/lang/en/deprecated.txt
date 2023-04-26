@@ -3,3 +3,4 @@ createnewgoogleissuer,tool_oauth2
 createnewissuer,tool_oauth2
 createnewmicrosoftissuer,tool_oauth2
 createnewnextcloudissuer,tool_oauth2
+imsobv2p1_service,tool_oauth2
