@@ -60,7 +60,13 @@ class imsbadgeconnect extends base_definition {
     protected static function process_configuration_json(issuer $issuer, stdClass $info): void {
         $info = array_pop($info->badgeConnectAPI);
         foreach ($info as $key => $value) {
-            if (substr_compare($key, 'Url', - strlen('Url')) === 0 && !empty($value)) {
+            if ($key === 'apiBase') {
+                (new endpoint(0, (object) [
+                    'issuerid' => $issuer->get('id'),
+                    'name' => $key,
+                    'url' => $value,
+                ]))->create();
+            } else if (substr_compare($key, 'Url', - strlen('Url')) === 0 && !empty($value)) {
                 $record = new stdClass();
                 $record->issuerid = $issuer->get('id');
                 // Convert key names from xxxxUrl to xxxx_endpoint, in order to make it compliant with the Moodle oAuth API.
@@ -82,6 +88,10 @@ class imsbadgeconnect extends base_definition {
                     $issuer->set('image', $url);
                     $issuer->update();
                 }
+            } else if ($key == 'name') {
+                // Get and update issuer name.
+                $issuer->set('name', $value);
+                $issuer->update();
             }
         }
     }
