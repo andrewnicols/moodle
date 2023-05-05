@@ -19,7 +19,8 @@ namespace core\content\servable_items;
 use core\context;
 use core\content\filearea;
 use core\content\servable_item;
-use stdClass;
+use core\content\xsendfile_response;
+use Psr\Http\Message\StreamInterface;
 use stored_file;
 
 /**
@@ -29,7 +30,9 @@ use stored_file;
  * @copyright   2020 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class servable_stored_file extends servable_item {
+class servable_stored_file extends servable_item implements
+    xsendfile_response
+{
 
     /** @var stored_file $file The file to be proxied */
 
@@ -59,6 +62,7 @@ class servable_stored_file extends servable_item {
      * @param   bool $forcedownload Whether the user-requested the file be downloaded.
      *          Note: The component may override this value as required.
      * @codeCoverageIgnore This method calls send_file which will die.
+     * TODO Remove
      */
     public function send_file(array $sendfileoptions, bool $forcedownload): void {
         $this->send_headers();
@@ -72,12 +76,25 @@ class servable_stored_file extends servable_item {
         );
     }
 
-    /**
-     * Get the stored file behind this proxy.
-     *
-     * @return  stored_file
-     */
-    public function get_stored_file(): stored_file {
-        return $this->file;
+    public function get_response_stream(): StreamInterface {
+        return $this->file->get_psr_stream();
+    }
+
+    public function get_xsendfile_path(): string {
+        $filesystem = get_file_storage()->get_file_system();
+        return $filesystem->get_local_path_from_storedfile($this->file);
+    }
+
+    public function can_accelerate(): bool {
+        $fs = get_file_storage();
+        return $fs->supports_xsendfile();
+    }
+
+    public function get_filename(): ?string {
+        return $this->file->get_filename();
+    }
+
+    public function get_mimetype(): ?string {
+        return $this->file->get_mimetype();
     }
 }

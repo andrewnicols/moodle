@@ -14,29 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * X-Sendfile support
- *
- * @package   core_files
- * @copyright 2012 Petr Skoda {@link http://skodak.org}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core\content;
+
+use Psr\Http\Message\MessageInterface;
 
 /**
- * Serve file using X-Sendfile header, this needs special server module
- * or configuration. Please make sure that all headers are already sent
- * and the all access control checks passed.
+ * A servable item which is capable of sending an xsendfile response.
  *
- * @param string $filepath
- * @return bool success
+ * @package core\content
  */
-function xsendfile($filepath) {
-    if ($headers = \core\response_handler::get_xsendfile_headers($filepath)) {
-        foreach ($headers as $name => $value) {
-            header(sprintf('%s: %s', $name, $value));
-        }
-        return true;
-    }
+interface xsendfile_response {
+    /**
+     * Get the path to the file on disk for the file
+     *
+     * @return string
+     */
+    public function get_xsendfile_path(): string;
 
-    return false;
+    /**
+     * Whether this servable item can be sent using xsendfile.
+     *
+     * Note: This boils down to various settings and configuration, not code.
+     *
+     * @return bool
+     */
+    public function can_accelerate(): bool;
 }

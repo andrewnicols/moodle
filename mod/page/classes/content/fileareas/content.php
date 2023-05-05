@@ -143,6 +143,7 @@ class content extends filearea {
         array $args,
         stdClass $user,
     ): ?servable_stored_file {
+        xdebug_break();
         global $DB;
 
         [

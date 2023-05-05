@@ -24,7 +24,9 @@ use core\content\export\exporters\component_exporter;
 use core\content\export\exporters\course_exporter;
 use core\content\export\zipwriter;
 use core\content\servable_item;
+use core\content\xsendfile_response;
 use moodle_url;
+use Psr\Http\Message\ResponseInterface;
 use stdClass;
 use stored_file;
 
@@ -191,17 +193,8 @@ class content {
         array $args,
         stdClass $user,
     ): ?servable_item {
-        if ($componentclass = self::get_contentarea_classname($component)) {
-            return $componentclass::get_servable_item_from_pluginfile_params(
-                component: $component,
-                context: $context,
-                filearea: $filearea,
-                args: $args,
-                user: $user,
-            );
-        }
-
-        return null;
+        $handler = content\file_handler::instance();
+        return $handler->get_servable_item_from_pluginfile_params(...func_get_args());
     }
 
     /**
@@ -219,17 +212,8 @@ class content {
         context $context,
         ?string $component = null,
     ): bool {
-        $component = $component ?? $file->get_component();
-        if ($componentclass = self::get_contentarea_classname($component)) {
-            return $componentclass::can_user_access_stored_file_from_context(
-                file: $file,
-                component: $component,
-                user: $user,
-                context: $context,
-            ) ?? false;
-        }
-
-        return false;
+        $handler = content\file_handler::instance();
+        return $handler->can_user_access_stored_file_from_context(...func_get_args());
     }
 
     /**
@@ -240,18 +224,8 @@ class content {
      * @param   bool $forcedownload
      */
     public static function serve_servable_item(?servable_item $content, array $sendfileoptions, bool $forcedownload): void {
-        // This method cannot be covered because send_file dies.
-        // @codeCoverageIgnoreStart
-        if (!$content) {
-            send_file_not_found();
-        }
-        // @codeCoverageIgnoreEnd
-
-        // Close the session to prevent it blocking during large file transmission.
-        \core\session\manager::write_close();
-
-        // Serve the file.
-        $content->send_file($sendfileoptions, $forcedownload);
+        $handler = content\file_handler::instance();
+        $handler->serve_servable_item(...func_get_args());
     }
 
     /**
@@ -275,22 +249,8 @@ class content {
         array $sendfileoptions,
         bool $forcedownload,
     ): void {
-        // Fetch the servable file.
-        $servable = self::get_servable_item_from_pluginfile_params($component, $context, $filearea, $args, $user);
-        if ($servable) {
-            $servable->call_require_login_if_needed();
-
-            if ($servable->can_access_content($user, $context)) {
-                self::serve_servable_item($servable, $sendfileoptions, $forcedownload);
-            } else {
-                // The servable was found, but permission denied.
-                send_file_access_denied();
-            }
-        }
-
-        // The supplied component did not return a file.
-        // In the future this will return a file not found, but for now it will return void to allow the legacy
-        // `file_pluginfile` system to serve legacy content.
+        $handler = content\file_handler::instance();
+        $handler->serve_file_from_pluginfile_params(...func_get_args());
     }
 
     /**
@@ -315,27 +275,8 @@ class content {
         bool $tokenurl = false,
         ?context $viewcontext = null,
     ): ?moodle_url {
-        $component = $component ?? $file->get_component();
-        if ($componentclass = self::get_contentarea_classname($component)) {
-            return $componentclass::get_pluginfile_url_for_stored_file(
-                file: $file,
-                forcedownload: $forcedownload,
-                tokenurl: $tokenurl,
-                viewcontext: $viewcontext,
-            );
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the contentarea classname for a component.
-     *
-     * @param   string $component The component name
-     * @return  null|string The classname or null if not found
-     */
-    protected static function get_contentarea_classname(string $component): ?string {
-        return component_file_controller::get_contentarea_classname_for_component($component);
+        $handler = content\file_handler::instance();
+        return $handler->get_pluginfile_url_for_stored_file(...func_get_args());
     }
 
     /**
@@ -349,15 +290,7 @@ class content {
         context $context,
         string $component,
     ): array {
-        $classname = self::get_contentarea_classname($component);
-
-        if (!$classname) {
-            return [];
-        }
-
-        return $classname::get_all_files_in_context(
-            context: $context,
-            component: $component,
-        );
+        $handler = content\file_handler::instance();
+        return $handler->get_all_files_in_context(...func_get_args());
     }
 }

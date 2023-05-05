@@ -16,10 +16,16 @@
 
 namespace core\content\servable_items;
 
+use Closure;
 use core\content\filearea;
+use core\content\redirect_response;
 use core\content\servable_item;
 use core\context;
+use GuzzleHttp\Psr7\Response;
 use moodle_url;
+use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * A servable item representing a URL to be redirected to.
@@ -31,6 +37,9 @@ use moodle_url;
 class servable_redirect extends servable_item {
 
     /** @var moodle_url $url The URL to redirect to */
+    /** @var null|string $message The message to show when redirecting */
+    /** @var null|string $messagetype The message type for the redirect message */
+    /** @var int $delay The delay before redirecting */
 
     /**
      * Constructor for the stored_file proxy.
@@ -46,20 +55,41 @@ class servable_redirect extends servable_item {
         context $context,
         filearea $filearea,
         protected moodle_url $url,
+        protected int $delay = 0,
+        protected ?string $message = null,
+        protected ?string $messagetype = null,
     ) {
         parent::__construct($component, $context, $filearea);
+
+        $this->add_header('Location', $this->url->out(false)
     }
 
-    /**
-     * Handle the redirection.
-     *
-     * @param   array $sendfileoptions he user-requested send_file options.
-     *          Note: These may be overridden by the component as required.
-     * @param   bool $forcedownload Whether the user-requested the file be downloaded.
-     *          Note: The component may override this value as required.
-     * @codeCoverageIgnore This method calls redirect which will die.
-     */
-    public function send_file(array $sendfileoptions, bool $forcedownload): void {
-        redirect($this->url);
+    protected function get_callable_stream(callable $callable): StreamInterface {
+        return Utils::streamFor(function ($size) use ($callable) {
+            static $complete = false;
+
+            if ($complete) {
+                return false;
+            }
+            $complete = true;
+            return call_user_func($callable);
+        });
+    }
+
+    public function get_response(): ResponseInterface {
+        return new redirect_response(
+            url: $this->url,
+            delay: $this->delay,
+            message: $this->message,
+            messagetype: $this->messagetype,
+        );
+    }
+
+    public function get_filename(): ?string {
+        return null;
+    }
+
+    public function get_mimetype(): ?string {
+        return null;
     }
 }

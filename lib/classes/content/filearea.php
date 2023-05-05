@@ -113,10 +113,6 @@ abstract class filearea {
         stdClass $user,
         context $viewcontext,
     ): bool {
-        if ($servable instanceof servable_stored_file) {
-            return static::can_user_access_stored_file_from_context($servable->get_stored_file(), $user, $viewcontext);
-        }
-
         return static::can_user_access_content_from_context(
             $servable->get_component(),
             $servable->get_context(),

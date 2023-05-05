@@ -19,6 +19,8 @@ namespace core\content\servable_items;
 use core\content\filearea;
 use core\content\servable_item;
 use core\context;
+use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * A servable item representing a file stored on the local disk.
@@ -47,25 +49,15 @@ class servable_local_file extends servable_item {
         $this->filepath = $filepath;
     }
 
-    /**
-     * Send the file proxy.
-     *
-     * @param   array $sendfileoptions he user-requested send_file options.
-     *          Note: These may be overridden by the component as required.
-     * @param   bool $forcedownload Whether the user-requested the file be downloaded.
-     *          Note: The component may override this value as required.
-     * @codeCoverageIgnore This method calls send_file which will die.
-     */
-    public function send_file(array $sendfileoptions, bool $forcedownload): void {
-        $this->send_headers();
+    public function get_response_stream(): StreamInterface {
+        return Utils::streamFor(fopen($this->filepath, 'rb'));
+    }
 
-        send_file(
-            $this->filepath,
-            basename($this->filepath),
-            lifetime: $this->get_cache_time(),
-            filter: $this->get_filter_value(),
-            forcedownload: $this->get_force_download_value($forcedownload),
-            options: $this->get_sendfile_options($sendfileoptions),
-        );
+    public function get_filename(): ?string {
+        return basename($this->filepath);
+    }
+
+    public function get_mimetype(): ?string {
+        return null;
     }
 }

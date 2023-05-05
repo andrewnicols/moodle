@@ -20,7 +20,8 @@ use Closure;
 use core\content\filearea;
 use core\content\servable_item;
 use core\context;
-use stdClass;
+use GuzzleHttp\Psr7\Utils;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * Servable content item where content is returned from a callback.
@@ -57,35 +58,23 @@ class servable_callback extends servable_item {
         $this->filename = $filename;
     }
 
-    /**
-     * Send the file proxy.
-     *
-     * @param   array $sendfileoptions he user-requested send_file options.
-     *          Note: These may be overridden by the component as required.
-     * @param   bool $forcedownload Whether the user-requested the file be downloaded.
-     *          Note: The component may override this value as required.
-     * @codeCoverageIgnore This method calls send_file which will die.
-     */
-    public function send_file(array $sendfileoptions, bool $forcedownload): void {
-        $this->send_headers();
+    public function get_response_stream(): StreamInterface {
+        return Utils::streamFor(function ($size) {
+            static $complete = false;
 
-        send_file(
-            $this->get_content(),
-            $this->filename,
-            lifetime: $this->get_cache_time(),
-            filter: $this->get_filter_value(),
-            forcedownload: $this->get_force_download_value($forcedownload),
-            options: $this->get_sendfile_options($sendfileoptions),
-        );
-        $this->send_headers();
+            if ($complete) {
+                return false;
+            }
+            $complete = true;
+            return call_user_func($this->callback);
+        });
     }
 
-    /**
-     * Get the content.
-     *
-     * @return string
-     */
-    public function get_content(): string {
-        return $this->callback->call($this);
+    public function get_filename(): ?string {
+        return $this->filename;
+    }
+
+    public function get_mimetype(): ?string {
+        return null;
     }
 }
