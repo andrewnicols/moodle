@@ -755,11 +755,6 @@ class assign_files implements renderable {
             $this->preprocess($subdir, $filearea, $component);
         }
         foreach ($dir['files'] as $file) {
-            $file->timemodified = userdate(
-                $file->get_timemodified(),
-                get_string('strftimedatetime', 'langconfig')
-            );
-
             $path = '/' .
                     $this->context->id .
                     '/' .
@@ -776,5 +771,49 @@ class assign_files implements renderable {
                     'target' => '_blank',
                 ]);
         }
+    }
+
+    /**
+     * Get the portfolio button content for the specified file.
+     *
+     * @param stored_file $file
+     * @return string
+     */
+    public function get_portfolio_button(stored_file $file): string {
+        global $CFG;
+        if (empty($CFG->enableportfolios)) {
+            return '';
+        }
+
+        if (!has_capability('mod/assign:exportownsubmission', $this->context)) {
+            return '';
+        }
+
+        require_once($CFG->libdir . '/portfoliolib.php');
+
+        if (!array_key_exists($file->get_id(), $this->portfoliobuttons)) {
+            $button = new portfolio_add_button();
+            $portfolioparams = [
+                'cmid' => $this->cm->id,
+                'fileid' => $file->get_id(),
+            ];
+            $button->set_callback_options('assign_portfolio_caller', $portfolioparams, 'mod_assign');
+            $button->set_format_by_file($file);
+            $this->portfoliobuttons[$file->get_id()] = $button->to_html(PORTFOLIO_ADD_ICON_LINK);
+        }
+
+        return $this->portfoliobuttons[$file->get_id()];
+    }
+
+    /**
+     * Get the modified time of the specified file.
+     * @param stored_file $file
+     * @return string
+     */
+    public function get_modified_time(stored_file $file): string {
+        return userdate(
+            $file->get_timemodified(),
+            get_string('strftimedatetime', 'langconfig'),
+        );
     }
 }
