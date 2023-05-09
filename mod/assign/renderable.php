@@ -746,49 +746,70 @@ class assign_files implements renderable {
      * @param array $dir
      * @param string $filearea
      * @param string $component
-     * @return void
      */
     public function preprocess($dir, $filearea, $component) {
+        // Nothing to do here any more.
+    }
+
+    /**
+     * Get the portfolio button content for the specified file.
+     *
+     * @param stored_file $file
+     * @return string
+     */
+    public function get_portfolio_button(stored_file $file): string {
         global $CFG;
-
-        foreach ($dir['subdirs'] as $subdir) {
-            $this->preprocess($subdir, $filearea, $component);
+        if (empty($CFG->enableportfolios)) {
+            return '';
         }
-        foreach ($dir['files'] as $file) {
-            $file->portfoliobutton = '';
 
-            $file->timemodified = userdate(
-                $file->get_timemodified(),
-                get_string('strftimedatetime', 'langconfig')
-            );
-
-            if (!empty($CFG->enableportfolios)) {
-                require_once($CFG->libdir . '/portfoliolib.php');
-                $button = new portfolio_add_button();
-                if (has_capability('mod/assign:exportownsubmission', $this->context)) {
-                    $portfolioparams = array('cmid' => $this->cm->id, 'fileid' => $file->get_id());
-                    $button->set_callback_options('assign_portfolio_caller',
-                                                  $portfolioparams,
-                                                  'mod_assign');
-                    $button->set_format_by_file($file);
-                    $file->portfoliobutton = $button->to_html(PORTFOLIO_ADD_ICON_LINK);
-                }
-            }
-            $path = '/' .
-                    $this->context->id .
-                    '/' .
-                    $component .
-                    '/' .
-                    $filearea .
-                    '/' .
-                    $file->get_itemid() .
-                    $file->get_filepath() .
-                    $file->get_filename();
-            $url = file_encode_url("$CFG->wwwroot/pluginfile.php", $path, true);
-            $filename = $file->get_filename();
-            $file->fileurl = html_writer::link($url, $filename, [
-                    'target' => '_blank',
-                ]);
+        if (!has_capability('mod/assign:exportownsubmission', $this->context)) {
+            return '';
         }
+
+        require_once($CFG->libdir . '/portfoliolib.php');
+
+        if (!array_key_exists($file->get_id(), $this->portfoliobuttons)) {
+            $button = new portfolio_add_button();
+            $portfolioparams = [
+                'cmid' => $this->cm->id,
+                'fileid' => $file->get_id(),
+            ];
+            $button->set_callback_options('assign_portfolio_caller', $portfolioparams, 'mod_assign');
+            $button->set_format_by_file($file);
+            $this->portfoliobuttons[$file->get_id()] = $button->to_html(PORTFOLIO_ADD_ICON_LINK);
+        }
+
+        return $this->portfoliobuttons[$file->get_id()];
+    }
+
+    /**
+     * Get the modified time of the specified file.
+     * @param stored_file $file
+     * @return string
+     */
+    public function get_modified_time(stored_file $file): string {
+        return userdate(
+            $file->get_timemodified(),
+            get_string('strftimedatetime', 'langconfig'),
+        );
+    }
+
+    /**
+     * Get the URL used to view the file.
+     *
+     * @param stored_file
+     * @return moodle_url
+     */
+    public function get_file_url(stored_file $file): moodle_url {
+        return \moodle_url::make_pluginfile_url(
+            $this->context->id,
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename(),
+            true,
+        );
     }
 }
