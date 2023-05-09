@@ -1397,11 +1397,13 @@ class renderer extends \plugin_renderer_base {
             $result .= '<li yuiConfig=\'' . json_encode($yuiconfig) . '\'>' .
                 '<div>' .
                     '<div class="fileuploadsubmission">' . $image . ' ' .
-                    $file->fileurl . ' ' .
+                    html_writer::link($tree->get_file_url($file), $file->get_filename(), [
+                        'target' => '_blank',
+                    ]) . ' ' .
                     $plagiarismlinks . ' ' .
                     $this->get_portfolio_button($tree, $file) . ' ' .
                     '</div>' .
-                    '<div class="fileuploadsubmissiontime">' . $file->timemodified . '</div>' .
+                    '<div class="fileuploadsubmissiontime">' . $tree->get_modified_time($file) . '</div>' .
                 '</div>' .
             '</li>';
         }

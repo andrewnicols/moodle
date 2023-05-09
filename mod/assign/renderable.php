@@ -746,31 +746,9 @@ class assign_files implements renderable {
      * @param array $dir
      * @param string $filearea
      * @param string $component
-     * @return void
      */
     public function preprocess($dir, $filearea, $component) {
-        global $CFG;
-
-        foreach ($dir['subdirs'] as $subdir) {
-            $this->preprocess($subdir, $filearea, $component);
-        }
-        foreach ($dir['files'] as $file) {
-            $path = '/' .
-                    $this->context->id .
-                    '/' .
-                    $component .
-                    '/' .
-                    $filearea .
-                    '/' .
-                    $file->get_itemid() .
-                    $file->get_filepath() .
-                    $file->get_filename();
-            $url = file_encode_url("$CFG->wwwroot/pluginfile.php", $path, true);
-            $filename = $file->get_filename();
-            $file->fileurl = html_writer::link($url, $filename, [
-                    'target' => '_blank',
-                ]);
-        }
+        // Nothing to do here any more.
     }
 
     /**
@@ -814,6 +792,24 @@ class assign_files implements renderable {
         return userdate(
             $file->get_timemodified(),
             get_string('strftimedatetime', 'langconfig'),
+        );
+    }
+
+    /**
+     * Get the URL used to view the file.
+     *
+     * @param stored_file
+     * @return moodle_url
+     */
+    public function get_file_url(stored_file $file): moodle_url {
+        return \moodle_url::make_pluginfile_url(
+            $this->context->id,
+            $file->get_component(),
+            $file->get_filearea(),
+            $file->get_itemid(),
+            $file->get_filepath(),
+            $file->get_filename(),
+            true,
         );
     }
 }
