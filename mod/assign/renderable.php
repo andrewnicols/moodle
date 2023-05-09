@@ -755,25 +755,11 @@ class assign_files implements renderable {
             $this->preprocess($subdir, $filearea, $component);
         }
         foreach ($dir['files'] as $file) {
-            $file->portfoliobutton = '';
-
             $file->timemodified = userdate(
                 $file->get_timemodified(),
                 get_string('strftimedatetime', 'langconfig')
             );
 
-            if (!empty($CFG->enableportfolios)) {
-                require_once($CFG->libdir . '/portfoliolib.php');
-                $button = new portfolio_add_button();
-                if (has_capability('mod/assign:exportownsubmission', $this->context)) {
-                    $portfolioparams = array('cmid' => $this->cm->id, 'fileid' => $file->get_id());
-                    $button->set_callback_options('assign_portfolio_caller',
-                                                  $portfolioparams,
-                                                  'mod_assign');
-                    $button->set_format_by_file($file);
-                    $file->portfoliobutton = $button->to_html(PORTFOLIO_ADD_ICON_LINK);
-                }
-            }
             $path = '/' .
                     $this->context->id .
                     '/' .
