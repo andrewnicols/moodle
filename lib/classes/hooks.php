@@ -26,9 +26,15 @@ namespace core;
 class hooks implements \core\hook\discovery_agent {
     public static function discover_hooks(): array {
         // Describe any hard-coded hooks which can't be easily discovered by namespace.
-        $hooks = [];
+        $hooks = [
+            \core\some_random_class::class => [
+                'class' => \core\some_random_class::class,
+                'description' => 'An example of a random class',
+            ],
+        ];
 
         $hooks = array_merge($hooks, self::discover_hooks_in_namespace('core', 'hook'));
+        $hooks = array_merge($hooks, self::discover_hooks_in_namespace('core', 'event'));
 
         return $hooks;
     }
@@ -54,6 +60,13 @@ class hooks implements \core\hook\discovery_agent {
                 'description' => '',
                 'tags' => [],
             ];
+
+            if (is_subclass_of($classname, \core\event\base::class, true)) {
+                $hooks[$classname]['description'] = $classname::get_name();
+                $hooks[$classname]['tags'][] = ['Event', null, 'Some popover'];
+                $hooks[$classname]['tags'][] = ['AWOOOGA', 'danger'];
+                $hooks[$classname]['tags'][] = 'Hello :)';
+            }
 
             if ($rc->implementsInterface(\core\hook\described_hook::class)) {
                 $hooks[$classname]['description'] = $classname::get_hook_description();
