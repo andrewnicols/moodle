@@ -25,11 +25,6 @@
 
 namespace core\event;
 
-defined('MOODLE_INTERNAL') || die();
-
-debugging('core\\event\\role_capabilities_updated has been deprecated. Please use
-        core\\event\\capability_assigned instead', DEBUG_DEVELOPER);
-
 /**
  * Role updated event class.
  *
