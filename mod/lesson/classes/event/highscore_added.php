@@ -25,10 +25,6 @@
 
 namespace mod_lesson\event;
 
-defined('MOODLE_INTERNAL') || die();
-
-debugging('mod_lesson\event\highscore_added has been deprecated. Since the functionality no longer resides in the lesson module.',
-        DEBUG_DEVELOPER);
 /**
  * The mod_lesson highscore added event class.
  *
@@ -46,6 +42,15 @@ debugging('mod_lesson\event\highscore_added has been deprecated. Since the funct
  */
 
 class highscore_added extends \core\event\base {
+
+    /**
+     * This event has been deprected.
+     *
+     * @return boolean
+     */
+    public static function is_deprecated() {
+        return true;
+    }
 
     /**
      * Set basic properties for the event.

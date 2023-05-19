@@ -25,10 +25,6 @@
 
 namespace mod_lesson\event;
 
-defined('MOODLE_INTERNAL') || die();
-
-debugging('mod_lesson\event\highscores_viewed has been deprecated. Since the functionality no longer resides in the lesson module.',
-        DEBUG_DEVELOPER);
 /**
  * The mod_lesson highscores viewed class.
  *
@@ -38,6 +34,15 @@ debugging('mod_lesson\event\highscores_viewed has been deprecated. Since the fun
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
  */
 class highscores_viewed extends \core\event\base {
+
+    /**
+     * This event has been deprected.
+     *
+     * @return boolean
+     */
+    public static function is_deprecated() {
+        return true;
+    }
 
     /**
      * Set basic properties for the event.
