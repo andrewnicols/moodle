@@ -175,6 +175,7 @@ class editor extends \texteditor {
             'currentLanguage' => current_language(),
 
             'branding' => property_exists($siteconfig, 'branding') ? !empty($siteconfig->branding) : true,
+            'apikey' => $siteconfig->apikey ?? null,
 
             // Language options.
             'language' => [

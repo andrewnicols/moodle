@@ -43,6 +43,14 @@ if ($ADMIN->fulltree) {
     );
 
     $settings->add($setting);
+
+    $setting = new admin_setting_configpasswordunmask(
+        'editor_tiny/apikey',
+        get_string('apikey', 'editor_tiny'),
+        get_string('apikey_desc', 'editor_tiny'),
+        '',
+    );
+    $settings->add($setting);
 }
 
 // Note: We add editortiny to the settings page here manually rather than deferring to the plugininfo class.

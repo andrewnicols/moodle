@@ -434,3 +434,5 @@ $string['tiny:yuan_character'] = 'yuan character';
 $string['tiny:yuan_character_in_hong_kong_and_taiwan'] = 'yuan character, in hong kong and taiwan';
 $string['tiny:0_characters'] = '{0} characters';
 $string['tiny:0_words'] = '{0} words';
+$string['apikey'] = 'API Key';
+$string['apikey_desc'] = 'API Key Description to go here.';
