@@ -23,7 +23,7 @@
  */
 
 import Fragment from 'core/fragment';
-import ModalFactory from 'core/modal_factory';
+import CancelModal from 'core/modal_cancel';
 import Notification from 'core/notification';
 import * as Str from 'core/str';
 
@@ -31,35 +31,36 @@ import * as Str from 'core/str';
  * Event listeners for the module.
  *
  * @method clickEvent
- * @param {int} questionId
- * @param {int} contextId
+ * @param {Number} questionId
+ * @param {Number} contextId
  */
 const usageEvent = (questionId, contextId) => {
-    let args = {
-        questionid: questionId
+    const args = {
+        questionid: questionId,
     };
-    ModalFactory.create({
-        type: ModalFactory.types.CANCEL,
+
+    CancelModal.create({
         title: Str.get_string('usageheader', 'qbank_usage'),
         body: Fragment.loadFragment('qbank_usage', 'question_usage', contextId, args),
         large: true,
+        show: true,
     }).then((modal) => {
-        modal.show();
+        const refreshModal = () => modal.setBody(Fragment.loadFragment('qbank_usage', 'question_usage', contextId, args));
         modal.getRoot().on('click', 'a[href].page-link', function(e) {
             e.preventDefault();
             let attr = e.target.getAttribute("href");
             if (attr !== '#') {
                 args.querystring = attr;
-                modal.setBody(Fragment.loadFragment('qbank_usage', 'question_usage', contextId, args));
+                refreshModal();
             }
         });
         // Version selection event.
         modal.getRoot().on('change', '#question_usage_version_dropdown', function(e) {
             args.questionid = e.target.value;
-            modal.setBody(Fragment.loadFragment('qbank_usage', 'question_usage', contextId, args));
+            refreshModal();
         });
         return modal;
-    }).fail(Notification.exception);
+    }).catch(Notification.exception);
 };
 
 /**
@@ -67,11 +68,11 @@ const usageEvent = (questionId, contextId) => {
  *
  * @method init
  * @param {string} questionSelector the question usage identifier.
- * @param {int} contextId the question context id.
+ * @param {Number} contextId the question context id.
  */
 export const init = (questionSelector, contextId) => {
-    let target = document.querySelector(questionSelector);
-    let questionId = target.getAttribute('data-questionid');
+    const target = document.querySelector(questionSelector);
+    const questionId = target.getAttribute('data-questionid');
     target.addEventListener('click', () => {
         // Call for the event listener to listed for clicks in any usage count row.
         usageEvent(questionId, contextId);
