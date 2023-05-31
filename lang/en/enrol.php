@@ -26,10 +26,7 @@
 $string['actenrolshhdr'] = 'Available course enrolment plugins';
 $string['addinstance'] = 'Add method';
 $string['addinstanceanother'] = 'Add method and create another';
-$string['ajaxoneuserfound'] = '1 user found';
-$string['ajaxxusersfound'] = '{$a} users found';
-$string['ajaxxmoreusersfound'] = 'More than {$a} users found';
-$string['ajaxnext25'] = 'Next 25...';
+
 $string['assignnotpermitted'] = 'You do not have permission or can not assign roles in this course.';
 $string['bulkuseroperation'] = 'Bulk user operation';
 $string['configenrolplugins'] = 'Please select all required plugins and arrange then in appropriate order.';
@@ -42,7 +39,6 @@ Are you sure you want to continue?';
 $string['deleteinstanceconfirmself'] = 'Are you really sure you want to delete instance "{$a->name}" that gives you access to this course? It is possible that you will not be able to access this course if you continue.';
 $string['deleteinstancenousersconfirm'] = 'You are about to delete the enrolment method "{$a->name}". Are you sure you want to continue?';
 $string['disableinstanceconfirmself'] = 'Are you really sure you want to disable instance "{$a->name}" that gives you access to this course? It is possible that you will not be able to access this course if you continue.';
-$string['durationdays'] = '{$a} days';
 $string['editenrolment'] = 'Edit enrolment';
 $string['edituserenrolment'] = 'Edit {$a}\'s enrolment';
 $string['enrol'] = 'Enrol';
@@ -70,13 +66,10 @@ $string['enrolnotpermitted'] = 'You do not have permission or are not allowed to
 $string['enrolperiod'] = 'Enrolment duration';
 $string['enrolusage'] = 'Instances / enrolments';
 $string['enrolusers'] = 'Enrol users';
-$string['enrolxusers'] = 'Enrol {$a} users';
 $string['enroltimecreated'] = 'Enrolment created';
 $string['enroltimeend'] = 'Enrolment ends';
 $string['enroltimeendinvalid'] = 'Enrolment end date must be after the enrolment start date';
 $string['enroltimestart'] = 'Enrolment starts';
-$string['errajaxfailedenrol'] = 'Failed to enrol user';
-$string['errajaxsearch'] = 'Error when searching users';
 $string['erroreditenrolment'] = 'An error occurred while trying to edit a users enrolment';
 $string['errorenrolcohort'] = 'Error creating cohort sync enrolment instance in this course.';
 $string['errorenrolcohortusers'] = 'Error enrolling cohort members in this course.';
@@ -93,7 +86,6 @@ $string['expirynotifyhour'] = 'Hour to send enrolment expiry notifications';
 $string['expirythreshold'] = 'Notification threshold';
 $string['expirythreshold_help'] = 'How long before enrolment expiry should users be notified?';
 $string['finishenrollingusers'] = 'Finish enrolling users';
-$string['foundxcohorts'] = 'Found {$a} cohorts';
 $string['instanceadded'] = 'Method added';
 $string['instanceeditselfwarning'] = 'Warning:';
 $string['instanceeditselfwarningtext'] = 'You are enrolled into this course through this enrolment method, changes may affect your access to this course.';
@@ -129,7 +121,6 @@ $string['rolefromsystem'] = '{$a->role} (Assigned at site level)';
 $string['sendfromcoursecontact'] = 'From the course contact';
 $string['sendfromkeyholder'] = 'From the key holder';
 $string['sendfromnoreply'] = 'From the no-reply address';
-$string['startdatetoday'] = 'Today';
 $string['synced'] = 'Synced';
 $string['testsettings'] = 'Test settings';
 $string['testsettingsheading'] = 'Test enrol settings - {$a}';
@@ -149,9 +140,7 @@ $string['unenrolnotpermitted'] = 'You do not have permission to unenrol this use
 $string['unenrolroleusers'] = 'Unenrol users';
 $string['uninstallmigrating'] = 'Migrating "{$a}" enrolments';
 $string['unknowajaxaction'] = 'Unknown action requested';
-$string['unlimitedduration'] = 'Unlimited';
 $string['userremovedfromselectiona'] = 'User "{$a}" was removed from the selection.';
-$string['usersearch'] = 'Search ';
 $string['withselectedusers'] = 'With selected users';
 $string['extremovedaction'] = 'External unenrol action';
 $string['extremovedaction_help'] = 'Select action to carry out when user enrolment disappears from external enrolment source. Please note that some user data and settings are purged from course during course unenrolment.';
@@ -174,3 +163,17 @@ $string['youunenrolledfromcourse'] = 'You are unenrolled from the course "{$a}".
 
 // Deprecated since Moodle 4.0.
 $string['proceedtocourse'] = 'Proceed to course content';
+
+// Deprecated since Moodle 4.3.
+$string['ajaxoneuserfound'] = '1 user found';
+$string['ajaxxusersfound'] = '{$a} users found';
+$string['ajaxxmoreusersfound'] = 'More than {$a} users found';
+$string['ajaxnext25'] = 'Next 25...';
+$string['enrolxusers'] = 'Enrol {$a} users';
+$string['errajaxfailedenrol'] = 'Failed to enrol user';
+$string['errajaxsearch'] = 'Error when searching users';
+$string['foundxcohorts'] = 'Found {$a} cohorts';
+$string['usersearch'] = 'Search ';
+$string['unlimitedduration'] = 'Unlimited';
+$string['startdatetoday'] = 'Today';
+$string['durationdays'] = '{$a} days';

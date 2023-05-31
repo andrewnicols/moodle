@@ -75,3 +75,15 @@ type_contentbank,core_plugin
 type_contentbank_plural,core_plugin
 missingversionfile,core_webservice
 cannotgetcoursecontents,core_webservice
+ajaxoneuserfound,core_enrol
+ajaxxusersfound,core_enrol
+ajaxxmoreusersfound,core_enrol
+ajaxnext25,core_enrol
+enrolxusers,core_enrol
+errajaxfailedenrol,core_enrol
+errajaxsearch,core_enrol
+foundxcohorts,core_enrol
+usersearch,core_enrol
+unlimitedduration,core_enrol
+startdatetoday,core_enrol
+durationdays,core_enrol

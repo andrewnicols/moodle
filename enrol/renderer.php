@@ -654,7 +654,9 @@ class course_enrolment_other_users_table extends course_enrolment_table {
      */
     public function __construct(course_enrolment_manager $manager) {
         parent::__construct($manager);
-        $this->attributes = array('class'=>'userenrolment otheruserenrolment');
+        $this->attributes = [
+            'class' => 'userenrolment otheruserenrolment',
+        ];
     }
 
     /**
@@ -665,43 +667,14 @@ class course_enrolment_other_users_table extends course_enrolment_table {
      * @return single_button
      */
     public function get_user_search_button() {
-        static $count = 0;
-        if (!has_capability('moodle/role:assign', $this->manager->get_context())) {
+        $context = $this->manager->get_context();
+        if (!has_capability('moodle/role:assign', $context)) {
             return false;
         }
-        $count++;
-        $url = new moodle_url('/admin/roles/assign.php', array('contextid'=>$this->manager->get_context()->id, 'sesskey'=>sesskey()));
+        $url = new moodle_url('/admin/roles/assign.php', [
+            'contextid' => $context->id,
+        ]);
         $control = new single_button($url, get_string('assignroles', 'role'), 'get');
-        $control->class = 'singlebutton assignuserrole instance'.$count;
-        if ($count == 1) {
-            $this->manager->get_moodlepage()->requires->strings_for_js(array(
-                    'ajaxoneuserfound',
-                    'ajaxxusersfound',
-                    'ajaxxmoreusersfound',
-                    'ajaxnext25',
-                    'enrol',
-                    'enrolmentoptions',
-                    'enrolusers',
-                    'enrolxusers',
-                    'errajaxfailedenrol',
-                    'errajaxsearch',
-                    'foundxcohorts',
-                    'none',
-                    'usersearch',
-                    'unlimitedduration',
-                    'startdatetoday',
-                    'durationdays',
-                    'enrolperiod'), 'enrol');
-            $this->manager->get_moodlepage()->requires->string_for_js('assignrole', 'role');
-
-            $modules = array('moodle-enrol-otherusersmanager', 'moodle-enrol-otherusersmanager-skin');
-            $function = 'M.enrol.otherusersmanager.init';
-            $arguments = array(
-                'courseId'=> $this->manager->get_course()->id,
-                'ajaxUrl' => '/enrol/ajax.php',
-                'url' => $this->manager->get_moodlepage()->url->out(false));
-            $this->manager->get_moodlepage()->requires->yui_module($modules, $function, array($arguments));
-        }
         return $control;
     }
 }
