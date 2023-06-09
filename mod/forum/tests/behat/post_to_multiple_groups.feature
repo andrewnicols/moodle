@@ -98,3 +98,36 @@ Feature: A user with access to multiple groups should be able to post a copy of 
     Then I should see "Discussion 1"
     And I am on the "Groupings forum" "forum activity" page logged in as student2
     And I should not see "Discussion 1"
+
+  Scenario: The 'Post a copy to all groups' option can be available in the quick discussion creation form
+    Given the following config values are set as admin:
+      | forum_showgroupoptionsinquickdiscussion | 1 |
+    And I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I follow "Separate group forum"
+    When I click on "Add discussion topic" "link"
+    Then "input[name=posttomygroups]" "css_element" should exist
+
+  Scenario: The default value of the 'Post a copy to all groups' option in discussion creation forms can be configured as 'Yes'
+    Given the following config values are set as admin:
+      | forum_showgroupoptionsinquickdiscussion | 1 |
+      | forum_posttomygroupsdefault | 1 |
+    And I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I follow "Separate group forum"
+    When I click on "Add discussion topic" "link"
+    Then "input[name=posttomygroups][checked=checked]" "css_element" should exist
+    And I click on "Advanced" "button"
+    And "input[name=posttomygroups][checked=checked]" "css_element" should exist
+
+  Scenario: The default value of the 'Post a copy to all groups' option in discussion creation forms can be configured as 'No'
+    Given the following config values are set as admin:
+      | forum_showgroupoptionsinquickdiscussion | 1 |
+      | forum_posttomygroupsdefault | 0 |
+    And I log in as "teacher1"
+    And I am on "Course 1" course homepage
+    And I follow "Separate group forum"
+    When I click on "Add discussion topic" "link"
+    Then "input[name=posttomygroups]:not([checked=checked])" "css_element" should exist
+    And I click on "Advanced" "button"
+    And "input[name=posttomygroups]:not([checked=checked])" "css_element" should exist
