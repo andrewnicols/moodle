@@ -82,10 +82,6 @@ class behat_qbank_comment extends behat_question_base {
             $commentstextarea = $this->find('css',
                                         '.modal-dialog .question-comment-view .comment-area textarea', $exception);
             $commentstextarea->setValue($comment);
-
-            // We delay 1 second which is all we need.
-            $this->getSession()->wait(1000);
-
         } else {
             throw new ExpectationException('JavaScript not running', $this->getSession());
         }
@@ -106,10 +102,6 @@ class behat_qbank_comment extends behat_question_base {
             $commentstextarea = $this->find('css',
                     '.comment-area textarea', $exception);
             $commentstextarea->setValue($comment);
-
-            // We delay 1 second which is all we need.
-            $this->getSession()->wait(1000);
-
         } else {
             throw new ExpectationException('JavaScript not running', $this->getSession());
         }
@@ -135,9 +127,6 @@ class behat_qbank_comment extends behat_question_base {
         $this->execute('behat_general::i_click_on_in_the',
             ["Delete comment posted by", "icon", $this->escape($commentxpath), "xpath_element"]
         );
-
-        // Wait for the animation to finish, in theory is just 1 sec, adding 4 just in case.
-        $this->getSession()->wait(4 * 1000);
     }
 
     /**
@@ -160,9 +149,6 @@ class behat_qbank_comment extends behat_question_base {
         $this->execute('behat_general::i_click_on_in_the',
                 ["Delete comment posted by", "icon", $this->escape($commentxpath), "xpath_element"]
         );
-
-        // Wait for the animation to finish, in theory is just 1 sec, adding 4 just in case.
-        $this->getSession()->wait(4 * 1000);
     }
 
 }
