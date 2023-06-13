@@ -94,29 +94,15 @@ M.core_comment = {
                             var result = scope.render([obj], true);
                             var newcomment = Y.Node.create(result.html);
                             container.appendChild(newcomment);
-                            var ids = result.ids;
                             var linkText = Y.one('#comment-link-text-' + cid);
                             if (linkText) {
                                 linkText.set('innerHTML', M.util.get_string('commentscount', 'moodle', obj.count));
                             }
-                            for(var i in ids) {
-                                var attributes = {
-                                    color: { to: '#06e' },
-                                    backgroundColor: { to: '#FFE390' }
-                                };
-                                var anim = new Y.YUI2.util.ColorAnim(ids[i], attributes);
-                                anim.animate();
-                            }
+
                             scope.register_pagination();
                             scope.register_delete_buttons();
                         }
                     }, true);
-                } else {
-                    var attributes = {
-                        backgroundColor: { from: '#FFE390', to:'#FFFFFF' }
-                    };
-                    var anim = new Y.YUI2.util.ColorAnim('dlg-content-'+cid, attributes);
-                    anim.animate();
                 }
             },
             request: function(args, noloading) {
