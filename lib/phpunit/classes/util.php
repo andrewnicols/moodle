@@ -23,6 +23,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use \org\bovigo\vfs\vfsStream;
+
 require_once(__DIR__.'/../../testing/classes/util.php');
 require_once(__DIR__ . "/coverage_info.php");
 
@@ -322,6 +324,38 @@ class phpunit_util extends testing_util {
         self::$lastdbwrites = $DB->perf_get_writes();
 
         return true;
+    }
+
+    /**
+     * Purge dataroot directory
+     * @static
+     * @return void
+     */
+    public static function reset_dataroot() {
+        global $CFG;
+
+        // Do not delete automatically installed files.
+        self::skip_original_data_files(self::class);
+
+        // Clear file status cache, before checking file_exists.
+        clearstatcache();
+
+        // Clean up the dataroot folder.
+        vfsStream::setup('dataroot');
+        vfsStream::copyFromFileSystem(self::get_dataroot());
+        $CFG->dataroot = vfsStream::url('dataroot');
+
+        make_temp_directory('');
+        make_backup_temp_directory('');
+        make_cache_directory('');
+        make_localcache_directory('');
+        // Purge all data from the caches. This is required for consistency between tests.
+        // Any file caches that happened to be within the data root will have already been clearer (because we just deleted cache)
+        // and now we will purge any other caches as well.  This must be done before the cache_factory::reset() as that
+        // removes all definitions of caches and purge does not have valid caches to operate on.
+        cache_helper::purge_all();
+        // Reset the cache API so that it recreates it's required directories as well.
+        cache_factory::reset();
     }
 
     /**
