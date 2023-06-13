@@ -2332,7 +2332,12 @@ function create_course($data, $editoroptions = NULL) {
 
         // Communication api call.
         $communication = \core_communication\api::load_by_instance('core_course', 'coursecommunication', $course->id);
-        $communication->create_and_configure_room($selectedcommunication, $communicationroomname, $courseimage, $data);
+        $communication->create_and_configure_room(
+            $selectedcommunication,
+            $communicationroomname,
+            $courseimage ?: null,
+            $data,
+        );
     }
 
     // Save custom fields if there are any of them in the form.

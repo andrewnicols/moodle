@@ -96,26 +96,6 @@ class api_test extends \advanced_testcase {
     }
 
     /**
-     * Test get_avatar_filerecord method.
-     *
-     * @covers ::get_avatar_filerecord
-     */
-    public function test_get_avatar_filerecord(): void {
-        $course = $this->get_course();
-
-        $communication = \core_communication\api::load_by_instance(
-            'core_course',
-            'coursecommunication',
-            $course->id
-        );
-        $filerecord = $communication->get_avatar_filerecord('avatar.svg');
-
-        $this->assertEquals('avatar.svg', $filerecord->filename);
-        $this->assertEquals('core_communication', $filerecord->component);
-        $this->assertEquals('avatar', $filerecord->filearea);
-    }
-
-    /**
      * Test set_avatar method.
      *
      * @covers ::set_avatar
@@ -135,20 +115,26 @@ class api_test extends \advanced_testcase {
             'moodle_logo.jpg',
         );
 
+        // Create the room, settingthe avatar.
         $communication = \core_communication\api::load_by_instance(
             'core_course',
             'coursecommunication',
-            $course->id
+            $course->id,
         );
         $communication->create_and_configure_room($selectedcommunication, $communicationroomname, $avatar);
 
+        // Reload the communication processor.
         $communicationprocessor = processor::load_by_instance(
             'core_course',
             'coursecommunication',
-            $course->id
+            $course->id,
         );
 
-        $this->assertNotNull($communicationprocessor->get_avatar());
+        // Compare result.
+        $this->assertEquals(
+            $avatar->get_contenthash(),
+            $communicationprocessor->get_avatar()->get_contenthash(),
+        );
     }
 
     /**
@@ -230,14 +216,6 @@ class api_test extends \advanced_testcase {
             $course->id
         );
         $communication->update_room($selectedcommunication, $communicationroomname);
-
-        // Test the tasks added.
-        $adhoctask = \core\task\manager::get_adhoc_tasks('\\core_communication\\task\\update_room_task');
-        // Should be 2 as one for create, another for update.
-        $this->assertCount(1, $adhoctask);
-
-        $adhoctask = reset($adhoctask);
-        $this->assertInstanceOf('\\core_communication\\task\\update_room_task', $adhoctask);
 
         // Test the communication record exists.
         $communicationprocessor = processor::load_by_instance(
