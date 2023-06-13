@@ -258,7 +258,7 @@ M.core_comment = {
                 var scope = this,
                     cid = scope.client_id,
                     params = {'commentid': id};
-                function remove_dom(type, anim, cmt) {
+                function remove_dom(cmt) {
                     cmt.remove();
                     var linkText = Y.one('#comment-link-text-' + cid),
                         comments = Y.all('#comment-list-' + cid + ' li');
@@ -272,15 +272,9 @@ M.core_comment = {
                     params: params,
                     callback: function(id, resp, args) {
                         var htmlid= 'comment-'+resp.commentid+'-'+resp.client_id;
-                        var attributes = {
-                            width:{to:0},
-                            height:{to:0}
-                        };
                         var cmt = Y.one('#'+htmlid);
                         cmt.setStyle('overflow', 'hidden');
-                        var anim = new Y.YUI2.util.Anim(htmlid, attributes, 1, Y.YUI2.util.Easing.easeOut);
-                        anim.onComplete.subscribe(remove_dom, cmt, this);
-                        anim.animate();
+                        remove_dom(cmt);
                     }
                 }, true);
             },
