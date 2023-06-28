@@ -566,94 +566,186 @@ function upgrade_core_licenses() {
     $license->custom = 0;
     $corelicenses[] = $license;
 
-    $license = new stdClass();
-    $license->shortname = 'cc';
-    $license->fullname = 'Creative Commons - 4.0 International';
-    $license->source = 'https://creativecommons.org/licenses/by/4.0/';
-    $license->enabled = 1;
-    $license->version = '2022120100';
-    $license->custom = 0;
-    $corelicenses[] = $license;
+    // Creative Commons 3.0 licenses.
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-3.0',
+        'fullname' => 'Creative Commons - 3.0 International',
+        'source' => 'https://creativecommons.org/licenses/by/3.0/',
+        'enabled' => 0,
+        'version' => '2010033100',
+        'custom' => 0,
+        'replaces' => 'cc',
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nc-3.0',
+        'fullname' => 'Creative Commons - NonCommercial 3.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nc/3.0/',
+        'enabled' => 0,
+        'version' => '2010033100',
+        'custom' => 0,
+        'replaces' => 'cc-nc',
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nd-3.0',
+        'fullname' => 'Creative Commons - NoDerivatives 3.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nd/3.0/',
+        'enabled' => 0,
+        'version' => '2010033100',
+        'custom' => 0,
+        'replaces' => 'cc-nd',
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nc-nd-3.0',
+        'fullname' => 'Creative Commons - NonCommercial-NoDerivatives 3.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nc-nd/3.0/',
+        'enabled' => 0,
+        'version' => '2022120100',
+        'custom' => 0,
+        'replaces' => 'cc-nc-nd',
+    ];
 
-    $license = new stdClass();
-    $license->shortname = 'cc-nc';
-    $license->fullname = 'Creative Commons - NonCommercial 4.0 International';
-    $license->source = 'https://creativecommons.org/licenses/by-nc/4.0/';
-    $license->enabled = 1;
-    $license->version = '2022120100';
-    $license->custom = 0;
-    $corelicenses[] = $license;
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nc-sa-3.0',
+        'fullname' => 'Creative Commons - NonCommercial-ShareAlike 3.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nc-sa/3.0/',
+        'enabled' => 0,
+        'version' => '2022120100',
+        'custom' => 0,
+        'replaces' => 'cc-nc-sa',
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-sa-3.0',
+        'fullname' => 'Creative Commons - ShareAlike 3.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-sa/3.0/',
+        'enabled' => 0,
+        'version' => '2010033100',
+        'custom' => 0,
+        'replaces' => 'cc-sa',
+    ];
 
-    $license = new stdClass();
-    $license->shortname = 'cc-nd';
-    $license->fullname = 'Creative Commons - NoDerivatives 4.0 International';
-    $license->source = 'https://creativecommons.org/licenses/by-nd/4.0/';
-    $license->enabled = 1;
-    $license->version = '2022120100';
-    $license->custom = 0;
-    $corelicenses[] = $license;
+    // Creative Commons 4.0 licenses.
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-4.0',
+        'fullname' => 'Creative Commons - 4.0 International',
+        'source' => 'https://creativecommons.org/licenses/by/4.0/',
+        'enabled' => 1,
+        'version' => '2022120100',
+        'custom' => 0,
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nc-4.0',
+        'fullname' => 'Creative Commons - NonCommercial 4.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nc/4.0/',
+        'enabled' => 1,
+        'version' => '2022120100',
+        'custom' => 0,
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nd-4.0',
+        'fullname' => 'Creative Commons - NoDerivatives 4.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nd/4.0/',
+        'enabled' => 1,
+        'version' => '2022120100',
+        'custom' => 0,
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nc-nd-4.0',
+        'fullname' => 'Creative Commons - NonCommercial-NoDerivatives 4.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
+        'enabled' => 1,
+        'version' => '2022120100',
+        'custom' => 0,
+    ];
 
-    $license = new stdClass();
-    $license->shortname = 'cc-nc-nd';
-    $license->fullname = 'Creative Commons - NonCommercial-NoDerivatives 4.0 International';
-    $license->source = 'https://creativecommons.org/licenses/by-nc-nd/4.0/';
-    $license->enabled = 1;
-    $license->version = '2022120100';
-    $license->custom = 0;
-    $corelicenses[] = $license;
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-nc-sa-4.0',
+        'fullname' => 'Creative Commons - NonCommercial-ShareAlike 4.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+        'enabled' => 1,
+        'version' => '2022120100',
+        'custom' => 0,
+    ];
+    $corelicenses[] = (object) [
+        'shortname' => 'cc-sa-4.0',
+        'fullname' => 'Creative Commons - ShareAlike 4.0 International',
+        'source' => 'https://creativecommons.org/licenses/by-sa/4.0/',
+        'enabled' => 1,
+        'version' => '2022120100',
+        'custom' => 0,
+    ];
 
-    $license = new stdClass();
-    $license->shortname = 'cc-nc-sa';
-    $license->fullname = 'Creative Commons - NonCommercial-ShareAlike 4.0 International';
-    $license->source = 'https://creativecommons.org/licenses/by-nc-sa/4.0/';
-    $license->enabled = 1;
-    $license->version = '2022120100';
-    $license->custom = 0;
-    $corelicenses[] = $license;
-
-    $license = new stdClass();
-    $license->shortname = 'cc-sa';
-    $license->fullname = 'Creative Commons - ShareAlike 4.0 International';
-    $license->source = 'https://creativecommons.org/licenses/by-sa/4.0/';
-    $license->enabled = 1;
-    $license->version = '2022120100';
-    $license->custom = 0;
-    $corelicenses[] = $license;
-
-    $filelicenseupdate = 'UPDATE {files} set license = :bk WHERE license = :new';
-
+    // Ensure that all new licenses are added first.
+    // This must be done first to allow old license versions to be replaced.
     foreach ($corelicenses as $corelicense) {
-        // Check for current license to maintain idempotence.
-        // Need to fetch all versions of the same licence.
-        $currentlicenses = $DB->get_records('license', ['shortname' => $corelicense->shortname], 'version');
-        if (!empty($currentlicenses)) {
-            foreach ($currentlicenses as $currentlicense) {
-                if ($currentlicense->version < $corelicense->version) {
-                    // Remember if the license was enabled before upgrade.
-                    $corelicense->enabled = $currentlicense->enabled;
-                    // And disable the old version in case it was enabled before.
-                    if ($currentlicense->enabled == 1) {
-                        $currentlicense->enabled = 0;
-                    }
-                    $currentlicense->shortname .= '-3.0';
-                    $tranaction = $DB->start_delegated_transaction();
-                    $DB->update_record('license', $currentlicense);
-                    $DB->execute($filelicenseupdate, ['bk' => $currentlicense->shortname, 'new' => $corelicense->shortname]);
-                    $DB->commit_delegated_transaction($tranaction);
-                } else {
-                    // License found, we don't have to do anything except remember the id of the existing record.
-                    $corelicense->id = $currentlicense->id;
+        if (!$DB->record_exists('license', ['shortname' => $corelicense->shortname])) {
+            $insert = true;
+            if (property_exists($corelicense, 'replaces')) {
+                $replaces = $DB->get_record('license', ['shortname' => $corelicense->replaces]);
+                if ($replaces) {
+                    // An old license exists that should be replaced.
+                    $insert = false;
+                    $corelicense->id = $replaces->id;
+                    $DB->update_record('license', $corelicense);
+                    $DB->set_field('files', 'license', $corelicense->shortname, ['license' => $replaces->shortname]);
                 }
             }
-            if (!isset($corelicense->id) && !isset($CFG->upgraderunning)) {
-                // Install new version of license when it was missing (if not in upgrade run).
+
+            if ($insert) {
                 $DB->insert_record('license', $corelicense);
             }
-        } else if (!isset($CFG->upgraderunning) || during_initial_install()) {
-            // Only install missing core licenses if not upgrading or during initial install.
-            $DB->insert_record('license', $corelicense);
         }
     }
+
+    // Now update all existing core licenses.
+    foreach ($corelicenses as $corelicense) {
+        // Check for current license to maintain idempotence.
+        $currentlicense = $DB->get_record('license', ['shortname' => $corelicense->shortname]);
+        if (empty($currentlicense)) {
+            // This should not happen as we just inserted missing licenses.
+            continue;
+        }
+        if ($corelicense->version > $currentlicense->version) {
+            // This license is being updated.
+            $corelicense->id = $currentlicense->id;
+
+            // Remember if the license was enabled before upgrade.
+            $corelicense->enabled = $currentlicense->enabled;
+            $DB->update_record('license', $corelicense);
+        }
+    }
+
+    // foreach ($corelicenses as $corelicense) {
+    //     // Check for current license to maintain idempotence.
+    //     // Need to fetch all versions of the same licence.
+    //     $currentlicenses = $DB->get_records('license', ['shortname' => $corelicense->shortname], 'version');
+    //     if (!empty($currentlicenses)) {
+    //         foreach ($currentlicenses as $currentlicense) {
+    //             if ($currentlicense->version < $corelicense->version) {
+    //                 // Remember if the license was enabled before upgrade.
+    //                 $corelicense->enabled = $currentlicense->enabled;
+    //                 // And disable the old version in case it was enabled before.
+    //                 if ($currentlicense->enabled == 1) {
+    //                     $currentlicense->enabled = 0;
+    //                 }
+    //                 $currentlicense->shortname .= '-3.0';
+    //                 $tranaction = $DB->start_delegated_transaction();
+    //                 $DB->update_record('license', $currentlicense);
+    //                 $DB->execute($filelicenseupdate, ['bk' => $currentlicense->shortname, 'new' => $corelicense->shortname]);
+    //                 $DB->commit_delegated_transaction($tranaction);
+    //             } else {
+    //                 // License found, we don't have to do anything except remember the id of the existing record.
+    //                 $corelicense->id = $currentlicense->id;
+    //             }
+    //         }
+    //         if (!isset($corelicense->id) && !isset($CFG->upgraderunning)) {
+    //             // Install new version of license when it was missing (if not in upgrade run).
+    //             $DB->insert_record('license', $corelicense);
+    //         }
+    //     } else if (!isset($CFG->upgraderunning) || during_initial_install()) {
+    //         // Only install missing core licenses if not upgrading or during initial install.
+    //         $DB->insert_record('license', $corelicense);
+    //     }
+    // }
 
     // Add sortorder to all licenses.
     $licenses = $DB->get_records('license');
