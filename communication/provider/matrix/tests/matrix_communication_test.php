@@ -210,7 +210,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
 
         // Get matrix user id from moodle.
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $eventmanager->matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         $this->assertNotNull($matrixuserid);
 
         // Get matrix user id from matrix.
@@ -258,7 +258,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
     }
@@ -302,7 +302,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Unenrol the user from the course.
@@ -351,7 +351,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Suspend user enrolment.
@@ -400,7 +400,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Delete instance.
@@ -449,7 +449,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Update enrolment communication.
@@ -501,7 +501,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Update enrolment communication when updating instance to disabled.
@@ -557,7 +557,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Disable communication provider.
@@ -607,7 +607,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Suspend user.
@@ -657,7 +657,7 @@ class matrix_communication_test extends \advanced_testcase {
         $eventmanager = new matrix_events_manager($matrixrooms->get_matrix_room_id());
         $matrixhomeserverurl = $eventmanager->matrixhomeserverurl;
 
-        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id, $matrixhomeserverurl);
+        $matrixuserid = matrix_user_manager::get_matrixid_from_moodle($user->id);
         // Check our Matrix user id has room membership.
         $this->assertTrue($communicationprocessor->get_room_provider()->check_room_membership($matrixuserid));
         // Delete user.
@@ -894,7 +894,7 @@ class matrix_communication_test extends \advanced_testcase {
     /**
      * Test status notifications of a communication room are generated correctly.
      *
-     * @covers ::show_communication_room_status_notification
+     * @covers \core_communication\api::show_communication_room_status_notification
      */
     public function test_show_communication_room_status_notification(): void {
         $course = $this->get_course();
@@ -930,7 +930,8 @@ class matrix_communication_test extends \advanced_testcase {
     /**
      * Test set provider data from handler.
      *
-     * @covers ::set_data
+     * @covers \core_communication\api::set_data
+     * @covers \communication_matrix\communication_feature::set_form_data
      */
     public function test_set_provider_data(): void {
         $this->resetAfterTest();
