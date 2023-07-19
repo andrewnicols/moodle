@@ -38,7 +38,7 @@ if ($hassiteconfig) {
     // Refresh token.
     $name = new lang_string('matrixrefreshtoken', 'communication_matrix');
     $desc = new lang_string('matrixrefreshtoken_desc', 'communication_matrix');
-    $settings->add(new admin_setting_requiredpasswordunmask('communication_matrix/matrixrefreshtoken', $name, $desc, ''));
+    $settings->add(new admin_setting_configpasswordunmask('communication_matrix/matrixrefreshtoken', $name, $desc, ''));
 
     // Element web URL.
     $name = new lang_string('matrixelementurl', 'communication_matrix');
