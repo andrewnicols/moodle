@@ -3325,9 +3325,9 @@ privatefiles,moodle|/user/files.php';
         // Update the old external tokens.
         $sql = 'UPDATE {external_tokens}
                    SET name = ' . $DB->sql_concat(
-            // We only need the prefix, so leave the third param with an empty string.
-                "'" . get_string('tokennameprefix', 'webservice', '') . "'",
-                "id");
+                       // We only need the prefix, so leave the third param with an empty string.
+                           "'" . get_string('tokennameprefix', 'webservice', '') . "'",
+                           "id");
         $DB->execute($sql);
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2023062700.01);
