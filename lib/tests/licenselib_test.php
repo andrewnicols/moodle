@@ -337,7 +337,6 @@ class licenselib_test extends advanced_testcase {
 
         $expectedshortnames = [
             'allrightsreserved', 'public', 'unknown',
-            'cc-3.0', 'cc-nc-3.0', 'cc-nc-nd-3.0', 'cc-nc-sa-3.0', 'cc-nd-3.0', 'cc-sa-3.0',
             'cc-4.0', 'cc-nc-4.0', 'cc-nc-nd-4.0', 'cc-nc-sa-4.0', 'cc-nd-4.0', 'cc-sa-4.0',
         ];
         $actualshortnames = $DB->get_records_menu('license', null, '', 'id, shortname');

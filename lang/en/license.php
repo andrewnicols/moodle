@@ -23,22 +23,16 @@
  */
 // Core licenses.
 $string['allrightsreserved'] = 'All rights reserved';
-$string['cc'] = 'Creative Commons';
-$string['cc-nc'] = 'Creative Commons - No Commercial';
-$string['cc-nc-nd'] = 'Creative Commons - No Commercial NoDerivs';
-$string['cc-nc-sa'] = 'Creative Commons - No Commercial ShareAlike';
-$string['cc-nd'] = 'Creative Commons - NoDerivs';
-$string['cc-sa'] = 'Creative Commons - ShareAlike';
 $string['public'] = 'Public domain';
 $string['unknown'] = 'Licence not specified';
 
 // Old cc-* 3.0 licenses that should be disabled and replaces by the 4.0 licenses from above.
-$string['cc-3.0'] = 'Creative Commons - 3.0 International';
-$string['cc-nc-3.0'] = 'Creative Commons - NonCommercial 3.0 International';
-$string['cc-nc-nd-3.0'] = 'Creative Commons - NonCommercial-NoDerivatives 3.0 International';
-$string['cc-nc-sa-3.0'] = 'Creative Commons - NonCommercial-ShareAlike 3.0 International';
-$string['cc-nd-3.0'] = 'Creative Commons - NoDerivatives 3.0 International';
-$string['cc-sa-3.0'] = 'Creative Commons - ShareAlike 3.0 International';
+$string['cc'] = 'Creative Commons - 3.0 International';
+$string['cc-nc'] = 'Creative Commons - NonCommercial 3.0 International';
+$string['cc-nc-nd'] = 'Creative Commons - NonCommercial-NoDerivatives 3.0 International';
+$string['cc-nc-sa'] = 'Creative Commons - NonCommercial-ShareAlike 3.0 International';
+$string['cc-nd'] = 'Creative Commons - NoDerivatives 3.0 International';
+$string['cc-sa'] = 'Creative Commons - ShareAlike 3.0 International';
 
 // The new 4.0 licenses.
 $string['cc-4.0'] = 'Creative Commons - 4.0 International';
