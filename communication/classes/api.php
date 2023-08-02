@@ -260,15 +260,13 @@ class api {
      * @return null|\stored_file
      */
     public function get_avatar(): ?\stored_file {
+        $filename = $this->communication->get_avatar_filename();
+        if ($filename === null) {
+            return null;
+        }
         $fs = get_file_storage();
-        return $fs->get_file(
-            contextid: \context_system::instance()->id,
-            component: 'core_communication',
-            filearea: 'avatar',
-            itemid: $this->communication->get_id(),
-            filepath: '/',
-            filename: $this->communication->get_avatar_filename(),
-        ) ?: null;
+        $args = (array) $this->get_avatar_filerecord($filename);
+        return $fs->get_file(...$args) ?: null;
     }
 
     /**
@@ -279,12 +277,12 @@ class api {
      */
     protected function get_avatar_filerecord(string $filename): stdClass {
         return (object) [
-            'contextid' => \context_system::instance()->id,
+            'contextid' => \core\context\system::instance()->id,
             'component' => 'core_communication',
             'filearea' => 'avatar',
-            'filename' => $filename,
-            'filepath' => '/',
             'itemid' => $this->communication->get_id(),
+            'filepath' => '/',
+            'filename' => $filename,
         ];
     }
 
@@ -314,7 +312,7 @@ class api {
             }
         }
 
-        $context = \context_system::instance();
+        $context = \core\context\system::instance();
 
         $fs = get_file_storage();
         $fs->delete_area_files(

@@ -31,8 +31,6 @@ use GuzzleHttp\Psr7\Response;
  * This code does not warrant being tested. Testing offers no discernible benefit given its usage is tested.
  */
 trait create_room_v3 {
-    // TODO: Some of these options should really be optional.
-    // In particular preset or visibility, and initial_state.
 
     /**
      * Create a new room.
