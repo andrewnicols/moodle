@@ -429,7 +429,7 @@ function get_guest_role() {
  * @param boolean $doanything If false, ignores effect of admin role assignment
  * @return boolean true if the user has this capability. Otherwise false.
  */
-function has_capability($capability, context $context, $user = null, $doanything = true) {
+function has_capability($capability, context|\core\context $context, $user = null, $doanything = true) {
     global $USER, $CFG, $SCRIPT, $ACCESSLIB_PRIVATE;
 
     if (during_initial_install()) {

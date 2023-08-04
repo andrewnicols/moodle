@@ -116,11 +116,23 @@ class core_component {
             'lib/psr/http-message/src',
             'lib/psr/http-factory/src',
         ],
+        'Psr\\Http\\Server' => [
+            "lib/psr/http-server-handler/src",
+            "lib/psr/http-server-middleware/src",
+        ],
         'Psr\\EventDispatcher' => 'lib/psr/event-dispatcher/src',
+        'Psr\\Container' => 'lib/psr/container/src',
+        'Psr\\Log' => "lib/psr/log/src",
         'GuzzleHttp\\Psr7' => 'lib/guzzlehttp/psr7/src',
         'GuzzleHttp\\Promise' => 'lib/guzzlehttp/promises/src',
         'GuzzleHttp' => 'lib/guzzlehttp/guzzle/src',
         'Kevinrob\\GuzzleCache' => 'lib/guzzlehttp/kevinrob/guzzlecache/src',
+        'Laravel\\SerializableClosure\\' => 'lib/laravel/serializable-closure/src',
+        'FastRoute' => 'lib/nikic/fast-route/src',
+        'Invoker' => 'lib/php-di/invoker/src',
+        'DI' => 'lib/php-di/php-di/src',
+        'DI\\Bridge\\Slim' => "lib/php-di/slim-bridge/src",
+        'Slim' => 'lib/slim/slim/Slim',
     ];
 
     /**
@@ -179,6 +191,8 @@ class core_component {
      * @return string|bool The full path to the file defining the class. Or false if it could not be resolved or does not exist.
      */
     protected static function psr_classloader($class) {
+        global $CFG;
+
         // Iterate through each PSR-4 namespace prefix.
         foreach (self::$psr4namespaces as $prefix => $paths) {
             if (!is_array($paths)) {
