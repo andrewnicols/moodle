@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 // Constants used in version.php files, these must exist when core_component executes.
 
 /** Software maturity level - internals can be tested using white box techniques. */
@@ -110,13 +108,27 @@ class core_component {
         'MyCLabs\\Enum' => 'lib/php-enum/src',
         'PhpXmlRpc' => 'lib/phpxmlrpc',
         'Psr\\Http\\Client' => 'lib/psr/http-client/src',
-        'Psr\\Http\\Factory' => 'lib/psr/http-factory/src',
-        'Psr\\Http\\Message' => 'lib/psr/http-message/src',
+        'Psr\\Http\\Message' => [
+            'lib/psr/http-message/src',
+            'lib/psr/http-factory/src',
+        ],
+        'Psr\\Http\\Server' => [
+            "lib/psr/http-server-handler/src",
+            "lib/psr/http-server-middleware/src",
+        ],
         'Psr\\EventDispatcher' => 'lib/psr/event-dispatcher/src',
+        'Psr\\Container' => 'lib/psr/container/src',
+        'Psr\\Log' => "lib/psr/log/src",
         'GuzzleHttp\\Psr7' => 'lib/guzzlehttp/psr7/src',
         'GuzzleHttp\\Promise' => 'lib/guzzlehttp/promises/src',
         'GuzzleHttp' => 'lib/guzzlehttp/guzzle/src',
         'Kevinrob\\GuzzleCache' => 'lib/guzzlehttp/kevinrob/guzzlecache/src',
+        'Laravel\\SerializableClosure\\' => 'lib/laravel/serializable-closure/src',
+        'FastRoute' => 'lib/nikic/fast-route/src',
+        'Invoker' => 'lib/php-di/invoker/src',
+        'DI' => 'lib/php-di/php-di/src',
+        'DI\\Bridge\\Slim' => "lib/php-di/slim-bridge/src",
+        'Slim' => 'lib/slim/slim/Slim',
     );
 
     /**
@@ -175,17 +187,31 @@ class core_component {
      * @return string|bool The full path to the file defining the class. Or false if it could not be resolved or does not exist.
      */
     protected static function psr_classloader($class) {
+        global $CFG;
+
         // Iterate through each PSR-4 namespace prefix.
-        foreach (self::$psr4namespaces as $prefix => $path) {
-            $file = self::get_class_file($class, $prefix, $path, array('\\'));
-            if (!empty($file) && file_exists($file)) {
-                return $file;
+        foreach (self::$psr4namespaces as $prefix => $paths) {
+            if (!is_array($paths)) {
+                $paths = [$paths];
+            }
+            foreach ($paths as $path) {
+                if ($class === $prefix) {
+                    $file = "{$CFG->dirroot}/{$paths}";
+                    if (!empty($file) && file_exists($file)) {
+                        return $file;
+                    }
+                }
+
+                $file = self::get_class_file($class, $prefix, $path, array('\\'));
+                if (!empty($file) && file_exists($file)) {
+                    return $file;
+                }
             }
         }
 
         // Iterate through each PSR-0 namespace prefix.
-        foreach (self::$psr0namespaces as $prefix => $path) {
-            $file = self::get_class_file($class, $prefix, $path, array('\\', '_'));
+        foreach (self::$psr0namespaces as $prefix => $paths) {
+            $file = self::get_class_file($class, $prefix, $paths, array('\\', '_'));
             if (!empty($file) && file_exists($file)) {
                 return $file;
             }

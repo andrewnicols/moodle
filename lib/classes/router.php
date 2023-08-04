@@ -1,0 +1,239 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+namespace core;
+
+use core\openapi\specification;
+use core\router\route;
+use Psr\Http\Message\RequestInterface;
+use Slim\Routing\RouteCollectorProxy;
+use Psr\Container\ContainerInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use ReflectionClass;
+use Slim\App;
+
+/**
+ * Moodle Router.
+ *
+ * @package    core
+ * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class router {
+    protected ContainerInterface $container;
+
+    public function __construct() {
+        $this->container = container::get_container();
+    }
+
+    public function get_app(): App {
+        global $CFG;
+
+        // Create an App using the DI Bridge.
+        $app = \DI\Bridge\Slim\Bridge::create(
+            container: $this->container,
+        );
+
+        // $app = \DI\Bridge\Slim\Bridge::create();
+        $app->addBodyParsingMiddleware();
+
+        // TODO: Configure caching properly.
+        if (!$CFG->debugdeveloper) {
+            $app->getRouteCollector()->setCacheFile(
+                $CFG->cachedir . '/routes.cache',
+            );
+        }
+
+        // Handle the REST API.
+        $app->group('/api/rest/v2', function (
+            RouteCollectorProxy $group,
+        ): void {
+            // Add all standard routes.
+            $this->add_all_api_routes($group);
+
+            $this->get_api_docs($group);
+
+            // Add the OpenAPI generator route.
+            // $this->container->get(openapi::class)->add_openapi_generator_routes($group);
+        })->add(function (RequestInterface $request, $handler) {
+            // $This->callableResolver->resolveRoute($)
+            // Add a Middleware to set the CORS headers for all REST Responses.
+            $response = $handler->handle($request);
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withHeader('Content-Disposition', 'inline')
+                ->withHeader('Access-Control-Allow-Origin', '*')
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS')
+                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
+        });
+
+        return $app;
+    }
+
+    /**
+     * Fetch all paths to API components.
+     *
+     * @return array
+     */
+    public function get_all_paths(
+        string $subpath = 'api',
+    ): array {
+        global $CFG;
+
+        $componentlist = \core_component::get_component_list();
+        $componentpaths = [];
+        $componentlist['core']['core'] = $CFG->libdir;
+        foreach ($componentlist as $componenttype) {
+            $componentsintype = array_filter($componenttype, fn($path) => $path !== null);
+            $componentpaths = array_merge(
+                $componentpaths,
+                array_map(fn($path) => "{$path}/classes/{$subpath}", $componentsintype),
+            );
+        }
+
+        return $componentpaths;
+    }
+
+    public function add_all_api_routes(RouteCollectorProxy $group): void {
+        $classes = \core_component::get_component_classes_in_namespace(namespace: 'api');
+        foreach (array_keys($classes) as $classname) {
+            $classinfo = new \ReflectionClass($classname);
+            [$component] = explode('\\', $classinfo->getNamespaceName());
+
+            $classroutes = $classinfo->getAttributes(\core\router\route::class);
+            if ($classroutes) {
+                foreach ($classroutes as $classroute) {
+                    $parentroute = $classroute->newInstance();
+                    $this->add_api_routes_for_methods(
+                        $group,
+                        $component,
+                        $classinfo,
+                        $parentroute,
+                    );
+                }
+            } else {
+                $this->add_api_routes_for_methods(
+                    $group,
+                    $component,
+                    $classinfo,
+                );
+            }
+        }
+    }
+
+    protected function add_api_routes_for_methods(
+        RouteCollectorProxy $group,
+        string $component,
+        ReflectionClass $classinfo,
+        ?route $parentroute = null,
+    ): void {
+        $methods = $classinfo->getMethods();
+        foreach ($methods as $method) {
+            foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
+                $routeattribute = $methodroute->newInstance();
+                $path = $routeattribute->get_path([$parentroute]);
+                $methods = $routeattribute->get_methods($parentroute);
+                $group->map(
+                    $methods,
+                    "/{$component}{$path}",
+                    [$classinfo->getName(), $method->getName()],
+                )
+                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
+                    // Add a Route middleware to validate the path, and parameters.
+                    $routeattribute->validate_request($request);
+
+                    // Pass to the next Middleware.
+                    return $handler->handle($request);
+                })
+                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
+                    // Add a Route middleware to response.
+                    // This happens after the request has been handled.
+                    $response = $handler->handle($request);
+                    $routeattribute->validate_response($response);
+
+                    return $response;
+                });
+            }
+        }
+    }
+
+    public function get_api_docs(RouteCollectorProxy $group): void {
+        $group->get('/openapi.json', function(
+            ServerRequestInterface $request,
+            ResponseInterface $response,
+        ): ResponseInterface {
+            $api = new specification();
+
+            $classes = \core_component::get_component_classes_in_namespace(namespace: 'api');
+            foreach (array_keys($classes) as $classname) {
+                $classinfo = new \ReflectionClass($classname);
+                [$component] = explode('\\', $classinfo->getNamespaceName());
+
+                $classroutes = $classinfo->getAttributes(\core\router\route::class);
+                if ($classroutes) {
+                    foreach ($classroutes as $classroute) {
+                        $parentroute = $classroute->newInstance();
+                        $this->get_api_docs_for_route(
+                            component: $component,
+                            classinfo: $classinfo,
+                            api: $api,
+                            parentcontexts: [$parentroute],
+                        );
+                    }
+                } else {
+                    $this->get_api_docs_for_route(
+                        component: $component,
+                        classinfo: $classinfo,
+                        api: $api,
+                    );
+                }
+            }
+
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
+                    json_encode(
+                        $api,
+                        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
+                    ),
+                ));
+        });
+    }
+
+    protected function get_api_docs_for_route(
+        string $component,
+        ReflectionClass $classinfo,
+        specification $api,
+        array $parentcontexts = [],
+    ): \stdClass {
+        $methods = $classinfo->getMethods();
+
+        foreach ($methods as $method) {
+            foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
+                $routeattribute = $methodroute->newInstance();
+
+                $api->add_path(
+                    component: $component,
+                    parentcontexts: $parentcontexts,
+                    route: $routeattribute,
+                );
+            }
+        }
+
+        return new \stdClass();
+    }
+}
