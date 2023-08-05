@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -15,25 +16,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * setup.php - Sets up sessions, connects to databases and so on
+ * Moodle Bootstrap.
  *
- * Normally this is only called by the main config.php file
- * Normally this file does not need to be edited.
+ * This is Moodle's answer to vendor/autoload.php (for now).
  *
  * @package    core
- * @subpackage lib
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once(__DIR__ . '/classes/bootstrap.php');
-
-if (defined('MOODLE_BOOTSTRAPPED') && MOODLE_BOOTSTRAPPED) {
-    return;
-} else {
-    if (defined('ABORT_AFTER_CONFIG') && !defined('ABORT_AFTER_CONFIG_CANCEL')) {
-        \core\bootstrap::early_setup();
-    } else {
-        \core\bootstrap::full_setup();
-    }
-}
+// Note: This file does not support autoloading.
+require(__DIR__ . '/lib/classes/bootstrap.php');
+define('MOODLE_BOOTSTRAPPED', true);
+require(__DIR__ . '/config.php');

@@ -345,7 +345,7 @@ if ($candownloadcourse) {
 // Load the view JS module if completion tracking is enabled for this course.
 $completion = new completion_info($course);
 if ($completion->is_enabled()) {
-    $PAGE->requires->js_call_amd('core_course/view', 'init');
+    $PAGE->requiresv->js_call_amd('core_course/view', 'init');
 }
 
 echo $OUTPUT->footer();

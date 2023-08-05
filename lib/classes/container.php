@@ -67,6 +67,11 @@ class container {
 
         $builder->addDefinitions([
             \core\hook\manager::class => $hookmanager,
+            \moodle_database::class => function() {
+                global $DB;
+
+                return $DB;
+            },
             \moodle_page::class => function() {
                 global $CFG, $PAGE;
 
@@ -85,6 +90,10 @@ class container {
                 return $PAGE;
             },
 
+            \core_renderer::class => function() {
+                global $OUTPUT;
+                return $OUTPUT;
+            },
 
             \core_string_manager::class => function() {
                 return get_string_manager();

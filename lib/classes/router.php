@@ -18,6 +18,7 @@ namespace core;
 
 use core\openapi\specification;
 use core\router\route;
+use FastRoute\RouteCollector;
 use Psr\Http\Message\RequestInterface;
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Container\ContainerInterface;
@@ -25,6 +26,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use Slim\App;
+use Slim\Routing\RouteContext;
 
 /**
  * Moodle Router.
@@ -42,6 +44,9 @@ class router {
 
     public function get_app(): App {
         global $CFG;
+
+        // PHP Does not support autoloading functions.
+        require_once("{$CFG->libdir}/nikic/fast-route/src/functions.php");
 
         // Create an App using the DI Bridge.
         $app = \DI\Bridge\Slim\Bridge::create(
@@ -70,7 +75,12 @@ class router {
             // Add the OpenAPI generator route.
             // $this->container->get(openapi::class)->add_openapi_generator_routes($group);
         })->add(function (RequestInterface $request, $handler) {
-            // $This->callableResolver->resolveRoute($)
+            define('AJAX_SCRIPT', true);
+
+            \core\bootstrap::full_setup();
+
+            $this->get(\moodle_page::class)->set_context(\core\context\system::instance());
+
             // Add a Middleware to set the CORS headers for all REST Responses.
             $response = $handler->handle($request);
             return $response
@@ -80,6 +90,30 @@ class router {
                 ->withHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS')
                 ->withHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
         });
+
+        $app->add(function(RequestInterface $request, $handler) {
+            \core\bootstrap::full_setup();
+            $page = $this->get(\moodle_page::class);
+
+            // TODO - Do this from the Route somehow?
+            $response = $handler->handle($request);
+
+            $page->set_url($request->getUri());
+
+            if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
+                $renderer = $this->get(\core_renderer::class);
+                $existingcontent = (string) $response->getBody();
+                $response->getBody()->write(
+                    $renderer->header() .
+                    $existingcontent .
+                    $renderer->footer(),
+                );
+            }
+
+            return $response;
+        });
+
+        $this->add_all_user_routes($app);
 
         return $app;
     }
@@ -135,6 +169,34 @@ class router {
         }
     }
 
+    public function add_all_user_routes(RouteCollectorProxy $group): void {
+        $classes = \core_component::get_component_classes_in_namespace(namespace: 'route');
+        foreach (array_keys($classes) as $classname) {
+            $classinfo = new \ReflectionClass($classname);
+
+            [$component] = explode('\\', $classinfo->getNamespaceName());
+
+            $classroutes = $classinfo->getAttributes(\core\router\route::class);
+            if ($classroutes) {
+                foreach ($classroutes as $classroute) {
+                    $parentroute = $classroute->newInstance();
+                    $this->add_routes_for_methods(
+                        $group,
+                        $component,
+                        $classinfo,
+                        $parentroute,
+                    );
+                }
+            } else {
+                $this->add_routes_for_methods(
+                    $group,
+                    $component,
+                    $classinfo,
+                );
+            }
+        }
+    }
+
     protected function add_api_routes_for_methods(
         RouteCollectorProxy $group,
         string $component,
@@ -147,6 +209,55 @@ class router {
                 $routeattribute = $methodroute->newInstance();
                 $path = $routeattribute->get_path([$parentroute]);
                 $methods = $routeattribute->get_methods($parentroute);
+                $group->map(
+                    $methods,
+                    "/{$component}{$path}",
+                    [$classinfo->getName(), $method->getName()],
+                )
+                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
+                    // Add a Route middleware to validate the path, and parameters.
+                    $routeattribute->validate_request($request);
+
+                    // Pass to the next Middleware.
+                    return $handler->handle($request);
+                })
+                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
+                    // Add a Route middleware to response.
+                    // This happens after the request has been handled.
+                    $response = $handler->handle($request);
+                    $routeattribute->validate_response($response);
+
+                    return $response;
+                });
+            }
+        }
+    }
+
+    protected function add_routes_for_methods(
+        RouteCollectorProxy $group,
+        string $component,
+        ReflectionClass $classinfo,
+        ?route $parentroute = null,
+    ): void {
+        $methods = $classinfo->getMethods();
+        foreach ($methods as $method) {
+            foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
+                $routeattribute = $methodroute->newInstance();
+                if ($parentroute) {
+                    $path = $routeattribute->get_path([$parentroute]);
+                } else {
+                    $path = $routeattribute->get_path();
+                }
+                $methods = $routeattribute->get_methods($parentroute);
+                if (empty($methods)) {
+                    $methods = ['GET'];
+                }
+
+                [$type, $subsystem] = \core_component::normalize_component($component);
+                if ($type === 'core') {
+                    $component = $subsystem;
+                }
+
                 $group->map(
                     $methods,
                     "/{$component}{$path}",

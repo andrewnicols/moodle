@@ -71,4 +71,20 @@ trait route_controller {
                 json_encode($data)
             ));
     }
+
+    protected function page_response(
+        ResponseInterface $reponse,
+        \core_renderer $renderer,
+    ): ResponseInterface {
+        return $response;
+    }
+
+    protected function redirect(
+        ResponseInterface $redirect,
+        string|moodle_url $url,
+    ): ResponseInterface {
+        return $response
+            ->withStatus(302)
+            ->withHeader('Location', (string) $url);
+    }
 }

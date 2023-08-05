@@ -256,7 +256,11 @@ final class manager implements
 
         $cache = null;
         // @codeCoverageIgnoreStart
-        if (!PHPUNIT_TEST && !CACHE_DISABLE_ALL) {
+        $usecache = !defined('PHPUNIT_TEST');
+        $usecache = $usecache || !PHPUNIT_TEST;
+        $usecache = $usecache && !CACHE_DISABLE_ALL;
+
+        if ($usecache) {
             $cache = \cache::make('core', 'hookcallbacks');
             $callbacks = $cache->get('callbacks');
             $deprecations = $cache->get('deprecations');

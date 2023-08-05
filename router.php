@@ -22,13 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-define('AJAX_SCRIPT', true);
-
-require_once('config.php');
-require_once("{$CFG->libdir}/nikic/fast-route/src/functions.php");
+require_once('bootstrap.php');
+\core\bootstrap::early_setup();
 
 // TODO: Work out the best way to configure some of these globals.
-$PAGE->set_context(\core\context\system::instance());
+// $PAGE->set_context(\core\context\system::instance());
 
 $openapi = new \core\router();
 $app = $openapi->get_app();
