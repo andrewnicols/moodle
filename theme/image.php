@@ -28,6 +28,7 @@ define('NO_DEBUG_DISPLAY', true);
 
 // we need just the values from config.php and minlib.php
 define('ABORT_AFTER_CONFIG', true);
+
 require('../config.php'); // this stops immediately at the beginning of lib/setup.php
 
 if ($slashargument = min_get_slash_argument()) {

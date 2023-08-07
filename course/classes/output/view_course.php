@@ -14,194 +14,56 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core_course\route;
+namespace core_course\output;
 
-use core\router\path_parameter;
-use core\router\query_parameter;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use core\router\route;
-use html_writer;
-use moodle_database;
+use stdClass;
 
-class view_controller {
+class view_course {
     use \core\router\route_controller;
 
-    #[route(
-        path: '/view/byidnumber/{idnumber:[0-9]+}',
-        pathtypes: [
-            new path_parameter(
-                name: 'idnumber',
-                type: PARAM_RAW,
-            ),
-        ],
-    )]
-    public function view_by_idnumber(
-        ServerRequestInterface $request,
+    public function show_course(
         ResponseInterface $response,
-        string $idnumber,
-        moodle_database $db,
-    ): response {
-        $id = $db->get_field('course', 'id', ['idnumber' => $idnumber], MUST_EXIST);
-        \core\router::redirect_with_params(
-            "/course/view/{$id}",
-            ['idnumber'],
-        );
-    }
-
-    #[route(
-        path: '/view/byshortname/{shortname}',
-        pathtypes: [
-            new path_parameter(
-                name: 'shortname',
-                type: PARAM_TEXT,
-            ),
-        ],
-    )]
-    public function view_by_shortname(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        string $shortname,
-        moodle_database $db,
-    ): response {
-        $id = $db->get_field('course', 'id', ['shortname' => $shortname], MUST_EXIST);
-        \core\router::redirect_with_params(
-            "/course/view/{$id}",
-            ['idnumber'],
-        );
-    }
-
-    #[route(
-        path: '/view/{id:[0-9]+}',
-        pathtypes: [
-            new \core\router\path_parameter(
-                name: 'id',
-                type: PARAM_INT,
-            ),
-        ],
-        queryparams: [
-            new query_parameter(
-                name: 'sectionid',
-                type: PARAM_INT,
-                description: 'The database ID of the section to highlight',
-            ),
-            new query_parameter(
-                name: 'section',
-                type: PARAM_INT,
-                description: 'The zero-indexed section number of the section to highlight',
-            ),
-            new query_parameter(
-                name: 'expandsection',
-                type: PARAM_INT,
-            ),
-            new query_parameter(
-                name: 'edit',
-                type: PARAM_INT,
-                default: -1,
-            ),
-            new query_parameter(
-                name: 'hide',
-                type: PARAM_INT,
-                default: null,
-            ),
-            new query_parameter(
-                name: 'show',
-                type: PARAM_INT,
-                default: null,
-            ),
-            new query_parameter(
-                name: 'switchrole',
-                type: PARAM_INT,
-            ),
-            new query_parameter(
-                name: 'duplicatesection',
-                type: PARAM_INT,
-            ),
-            new query_parameter(
-                name: 'return',
-                type: PARAM_LOCALURL,
-            ),
-            new query_parameter(
-                name: 'move',
-                type: PARAM_INT,
-            ),
-            new query_parameter(
-                name: 'marker',
-                type: PARAM_INT,
-                default: -1,
-            ),
-        ]
-
-    )]
-    public function view_course(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        int $id,
-        \moodle_page $PAGE,
-        \moodle_database $db,
-        \core\config $CFG,
+        stdClass $course,
+        ?int $sectionid = null,
+        int $expandsection = -1,
+        \moodle_page $page,
+        ?int $switchrole = null,
     ): ResponseInterface {
-        global $USER, $OUTPUT, $SESSION;
-
-        $edit = $this->get_param($request, 'edit');
-        $hide = $this->get_param($request, 'hide');
-        $show = $this->get_param($request, 'show');
-        $duplicatesection = $this->get_param($request, 'duplicatesection');
-        $sectionid = $this->get_param($request, 'sectionid');
-        $section = $this->get_param($request, 'section');
-        $expandsection = $this->get_param($request, 'expandsection');
-        $move = $this->get_param($request, 'move');
-        // Note: This is required by the course format.
-        // This is _nasty_. We should not be using globals.
-        $marker = $this->get_param($request, 'marker');
-        $switchrole = $this->get_param($request, 'switchrole');
-        $return = $this->get_param($request, 'return');
-
-
-        $course = $db->get_record('course', ['id' => $id]);
-
-        // Preload the course context, and all child contexts.
-        \core\context_helper::preload_course($course->id);
-        $context = \core\context\course::instance($course->id, MUST_EXIST);
+        global $CFG, $USER, $DB;
 
         $urlparams = ['id' => $course->id];
 
         // Sectionid should get priority over section number.
-        $section = null;
         if ($sectionid) {
-            $section = $db->get_field('course_sections', 'section', ['id' => $sectionid, 'course' => $course->id], MUST_EXIST);
+            $section = $DB->get_field('course_sections', 'section', ['id' => $sectionid, 'course' => $course->id], MUST_EXIST);
         }
         if ($section) {
             $urlparams['section'] = $section;
         }
-
-        if ($expandsection = $this->get_param($request, 'expandsection', null)) {
+        if ($expandsection !== -1) {
             $urlparams['expandsection'] = $expandsection;
         }
 
-        $PAGE->set_url("/course/view/{$id}", $urlparams); // Defined here to avoid notices on errors etc.
+        $page->set_url('/course/view.php', $urlparams); // Defined here to avoid notices on errors etc.
 
         // Prevent caching of this page to stop confusion when changing page after making AJAX changes.
-        $PAGE->set_cacheable(false);
+        $page->set_cacheable(false);
 
         \core\context_helper::preload_course($course->id);
         $context = \core\context\course::instance($course->id, MUST_EXIST);
 
         // Remove any switched roles before checking login.
-        if ($switchrole = $this->get_param($request, 'switchrole', null)) {
-            if ($switchrole == 0 && confirm_sesskey()) {
-                role_switch($switchrole, $context);
-            }
+        if ($switchrole == 0 && confirm_sesskey()) {
+            role_switch($switchrole, $context);
         }
 
         require_login($course);
 
         // Switchrole - sanity check in cost-order...
         $resetuserallowedediting = false;
-        if (
-            $switchrole > 0 && confirm_sesskey() &&
-            has_capability('moodle/role:switchroles', $context)
-        ) {
+        if ($switchrole > 0 && confirm_sesskey() &&
+            has_capability('moodle/role:switchroles', $context)) {
             // Is this role assignable in this context?
             // Inquiring minds want to know.
             $aroles = get_switchable_roles($context);
@@ -230,11 +92,11 @@ class view_controller {
             }
         }
 
-        require_once($CFG->dirroot . '/calendar/lib.php'); // This is after login because it needs $USER.
+        require_once($CFG->dirroot.'/calendar/lib.php'); // This is after login because it needs $USER.
 
         // Must set layout before gettting section info. See MDL-47555.
-        $PAGE->set_pagelayout('course');
-        $PAGE->add_body_class('limitedwidth');
+        $page->set_pagelayout('course');
+        $page->add_body_class('limitedwidth');
 
         if ($section && $section > 0) {
 
@@ -263,39 +125,38 @@ class view_controller {
         $format = course_get_format($course);
         $course->format = $format->get_format();
 
-        $PAGE->set_pagetype('course-view-' . $course->format);
-        $PAGE->set_other_editing_capability('moodle/course:update');
-        $PAGE->set_other_editing_capability('moodle/course:manageactivities');
-        $PAGE->set_other_editing_capability('moodle/course:activityvisibility');
+        $page->set_pagetype('course-view-' . $course->format);
+        $page->set_other_editing_capability('moodle/course:update');
+        $page->set_other_editing_capability('moodle/course:manageactivities');
+        $page->set_other_editing_capability('moodle/course:activityvisibility');
         if (course_format_uses_sections($course->format)) {
-            $PAGE->set_other_editing_capability('moodle/course:sectionvisibility');
-            $PAGE->set_other_editing_capability('moodle/course:movesections');
+            $page->set_other_editing_capability('moodle/course:sectionvisibility');
+            $page->set_other_editing_capability('moodle/course:movesections');
         }
 
         // Preload course format renderer before output starts.
         // This is a little hacky but necessary since
         // format.php is not included until after output starts.
-        $renderer = $format->get_renderer($PAGE);
+        $renderer = $format->get_renderer($page);
 
         if ($resetuserallowedediting) {
             // Ugly hack.
-            unset($PAGE->_user_allowed_editing);
+            unset($page->_user_allowed_editing);
         }
 
         if (!isset($USER->editing)) {
             $USER->editing = 0;
         }
-        $edit = $this->get_param($request, 'edit', -1);
-        if ($PAGE->user_allowed_editing()) {
+        if ($page->user_allowed_editing()) {
             if (($edit == 1) && confirm_sesskey()) {
                 $USER->editing = 1;
                 // Redirect to site root if Editing is toggled on frontpage.
                 if ($course->id == SITEID) {
-                    redirect($CFG->wwwroot . '/?redirect=0');
+                    redirect($CFG->wwwroot .'/?redirect=0');
                 } else if (!empty($return)) {
                     redirect($CFG->wwwroot . $return);
                 } else {
-                    $url = new moodle_url($PAGE->url, ['notifyeditingon' => 1]);
+                    $url = new moodle_url($page->url, ['notifyeditingon' => 1]);
                     redirect($url);
                 }
             } else if (($edit == 0) && confirm_sesskey()) {
@@ -306,25 +167,23 @@ class view_controller {
                 }
                 // Redirect to site root if Editing is toggled on frontpage.
                 if ($course->id == SITEID) {
-                    redirect($CFG->wwwroot . '/?redirect=0');
+                    redirect($CFG->wwwroot .'/?redirect=0');
                 } else if (!empty($return)) {
                     redirect($CFG->wwwroot . $return);
                 } else {
-                    redirect($PAGE->url);
+                    redirect($page->url);
                 }
             }
 
             if (has_capability('moodle/course:sectionvisibility', $context)) {
-                $hide = $this->get_param($request, 'hide');
-                $show = $this->get_param($request, 'show');
                 if ($hide && confirm_sesskey()) {
                     set_section_visible($course->id, $hide, '0');
-                    redirect($PAGE->url);
+                    redirect($page->url);
                 }
 
                 if ($show && confirm_sesskey()) {
                     set_section_visible($course->id, $show, '1');
-                    redirect($PAGE->url);
+                    redirect($page->url);
                 }
             }
 
@@ -336,10 +195,8 @@ class view_controller {
                 redirect(course_get_url($course, $newsection->section));
             }
 
-            if (
-                !empty($section) && !empty($move) &&
-                has_capability('moodle/course:movesections', $context) && confirm_sesskey()
-            ) {
+            if (!empty($section) && !empty($move) &&
+                    has_capability('moodle/course:movesections', $context) && confirm_sesskey()) {
                 $destsection = $section + $move;
                 if (move_section_to($course, $section, $destsection)) {
                     if ($course->id == SITEID) {
@@ -361,12 +218,12 @@ class view_controller {
             $USER->editing = 0;
         }
 
-        $SESSION->fromdiscussion = $PAGE->url->out(false);
+        $SESSION->fromdiscussion = $page->url->out(false);
 
 
         if ($course->id == SITEID) {
             // This course is not a real course.
-            redirect($CFG->wwwroot . '/?redirect=0');
+            redirect($CFG->wwwroot .'/?redirect=0');
         }
 
         // Determine whether the user has permission to download course content.
@@ -375,16 +232,16 @@ class view_controller {
         // We are currently keeping the button here from 1.x to help new teachers figure out
         // what to do, even though the link also appears in the course admin block.  It also
         // means you can back out of a situation where you removed the admin block.
-        if ($PAGE->user_allowed_editing()) {
-            $buttons = $OUTPUT->edit_button($PAGE->url);
-            $PAGE->set_button($buttons);
+        if ($page->user_allowed_editing()) {
+            $buttons = $OUTPUT->edit_button($page->url);
+            $page->set_button($buttons);
         }
 
         // If viewing a section, make the title more specific.
         if ($section && $section > 0 && course_format_uses_sections($course->format)) {
             $sectionname = get_string('sectionname', "format_$course->format");
             $sectiontitle = get_section_name($course, $section);
-            $PAGE->set_title(
+            $page->set_title(
                 get_string(
                     'coursesectiontitle',
                     'moodle',
@@ -392,19 +249,19 @@ class view_controller {
                 )
             );
         } else {
-            $PAGE->set_title(get_string('coursetitle', 'moodle', ['course' => $course->fullname]));
+            $page->set_title(get_string('coursetitle', 'moodle', ['course' => $course->fullname]));
         }
 
         // Add bulk editing control.
         $bulkbutton = $renderer->bulk_editing_button($format);
         if (!empty($bulkbutton)) {
-            $PAGE->add_header_action($bulkbutton);
+            $page->add_header_action($bulkbutton);
         }
 
-        $PAGE->set_heading($course->fullname);
+        $page->set_heading($course->fullname);
 
         // Show communication room status notification.
-        if (\core_communication\api::is_available() && has_capability('moodle/course:update', $context)) {
+        if (core_communication\api::is_available() && has_capability('moodle/course:update', $context)) {
             $communication = \core_communication\api::load_by_instance(
                 'core_course',
                 'coursecommunication',
@@ -414,10 +271,11 @@ class view_controller {
         }
 
         if ($USER->editing == 1) {
+
             // MDL-65321 The backup libraries are quite heavy, only require the bare minimum.
             require_once($CFG->dirroot . '/backup/util/helper/async_helper.class.php');
 
-            if (\async_helper::is_async_pending($id, 'course', 'backup')) {
+            if (async_helper::is_async_pending($id, 'course', 'backup')) {
                 $response->getBody()->write(
                     $OUTPUT->notification(get_string('pendingasyncedit', 'backup'), 'warning'),
                 );
@@ -450,9 +308,7 @@ class view_controller {
         include_course_ajax($course, $modnamesused);
 
         // Include the actual course format.
-        ob_start();
-        require($CFG->dirroot . '/course/format/' . $course->format . '/format.php');
-        $response->getBody()->write(ob_get_clean());
+        require($CFG->dirroot .'/course/format/'. $course->format .'/format.php');
         // Content wrapper end.
 
         $response->getBody()->write(html_writer::end_tag('div'));
@@ -460,34 +316,19 @@ class view_controller {
         // Trigger course viewed event.
         // We don't trust $context here. Course format inclusion above executes in the global space. We can't assume
         // anything after that point.
-        course_view(\core\context\course::instance($course->id), $section);
+        course_view(context_course::instance($course->id), $section);
 
         // If available, include the JS to prepare the download course content modal.
         if ($candownloadcourse) {
-            $PAGE->requires->js_call_amd('core_course/downloadcontent', 'init');
+            $page->requires->js_call_amd('core_course/downloadcontent', 'init');
         }
 
         // Load the view JS module if completion tracking is enabled for this course.
-        $completion = new \completion_info($course);
+        $completion = new completion_info($course);
         if ($completion->is_enabled()) {
-            $PAGE->requiresv->js_call_amd('core_course/view', 'init');
+            $page->requiresv->js_call_amd('core_course/view', 'init');
         }
 
         return $response;
-    }
-
-    protected function get_param(
-        ServerRequestInterface $request,
-        string $key,
-        mixed $default = null,
-    ): mixed {
-        $params = $request->getQueryParams();
-        if (array_key_exists($key, $params)) {
-            return $params[$key];
-        } else {
-            debugging("Missing parameter: $key");
-        }
-
-        return $default;
     }
 }

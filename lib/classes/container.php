@@ -95,8 +95,19 @@ class container {
                 return $OUTPUT;
             },
 
-            \core_string_manager::class => function() {
-                return get_string_manager();
+            \core_string_manager::class => fn() => get_string_manager(),
+
+            \core\config::class => function() {
+                global $CFG;
+
+                return $CFG;
+            },
+
+            ServerRequestInterface::class => function() {
+                // TODO: Can we get this?
+                // Probably not, because the request is immutable and we may replace it during the course of processing.
+                // See query parameter validation for an example.
+                return \Slim\Psr7\Factory\ServerRequestFactory::createFromGlobals();
             },
         ]);
 

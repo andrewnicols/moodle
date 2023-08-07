@@ -19,6 +19,9 @@ namespace core;
 use core\openapi\specification;
 use core\router\route;
 use FastRoute\RouteCollector;
+use GuzzleHttp\Psr7\Uri;
+use Invoker\Reflection\CallableReflection;
+use moodle_url;
 use Psr\Http\Message\RequestInterface;
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Container\ContainerInterface;
@@ -40,6 +43,21 @@ class router {
 
     public function __construct() {
         $this->container = container::get_container();
+    }
+
+    public static function redirect_with_params(
+        string|moodle_url $path,
+        array $excludeparams = [],
+    ): never {
+        $params = $_GET;
+        $url = new \moodle_url(
+            $path,
+            $params,
+            // TODO Anchor.
+        );
+        $url->remove_params($excludeparams);
+
+        redirect($url);
     }
 
     public function get_app(): App {
@@ -103,17 +121,19 @@ class router {
             if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
                 $renderer = $this->get(\core_renderer::class);
                 $existingcontent = (string) $response->getBody();
-                $response->getBody()->write(
+                $response = $response->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
                     $renderer->header() .
                     $existingcontent .
                     $renderer->footer(),
-                );
+                ));
             }
 
             return $response;
         });
 
         $this->add_all_user_routes($app);
+
+        $parser = $app->getRouteCollector()->getRouteParser();
 
         return $app;
     }
@@ -263,9 +283,10 @@ class router {
                     "/{$component}{$path}",
                     [$classinfo->getName(), $method->getName()],
                 )
+                ->setName($classinfo->getName() . '::' . $method->getName())
                 ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
                     // Add a Route middleware to validate the path, and parameters.
-                    $routeattribute->validate_request($request);
+                    $request = $routeattribute->validate_request($request);
 
                     // Pass to the next Middleware.
                     return $handler->handle($request);
@@ -346,5 +367,52 @@ class router {
         }
 
         return new \stdClass();
+    }
+
+    public static function redirect_to_callable(
+        $callable,
+        array $params = [],
+    ): never {
+        $params = array_merge(
+            $_GET,
+            $params,
+        );
+
+        $url = self::get_path_for_callable($callable, $params, $params);
+
+        redirect($url);
+    }
+
+    public static function get_route_name_for_callable($callable): string {
+        $container = \core\container::get_container();
+
+        $resolver = $container->get(\Invoker\CallableResolver::class);
+        [
+            $classinstance,
+            $methodname,
+        ] = $resolver->resolve($callable);
+
+        return get_class($classinstance) . '::' . $methodname;
+    }
+
+    public static function get_path_for_callable(
+        $callable,
+        array $params,
+        array $queryparams,
+    ): moodle_url {
+        $container = \core\container::get_container();
+        $router = $container->get(self::class);
+        $app = $router->get_app();
+        $parser = $app->getRouteCollector()->getRouteParser();
+
+        $routename = self::get_route_name_for_callable($callable);
+
+        return new moodle_url(
+            url: $parser->urlFor(
+                $routename,
+                $params,
+                $queryparams,
+            ),
+        );
     }
 }

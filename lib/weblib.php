@@ -30,6 +30,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use Psr\Http\Message\UriInterface;
+
 defined('MOODLE_INTERNAL') || die();
 
 // Constants.
@@ -770,6 +772,20 @@ class moodle_url {
     }
 
     // Static factory methods.
+
+    public static function from_uri(UriInterface $uri): self {
+        $url = new self(
+            url: $uri->getScheme() . '://' . $uri->getAuthority() . $uri->getPath(),
+            anchor: $uri->getFragment(),
+        );
+
+        $params = $uri->getQuery();
+        foreach (explode('&', $params) as $param) {
+            $url->param(...explode('=', $param, 2));
+        }
+
+        return $url;
+    }
 
     /**
      * General moodle file url.

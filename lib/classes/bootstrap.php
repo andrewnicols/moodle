@@ -126,6 +126,11 @@ class bootstrap {
             // This should never happen, maybe somebody is accessing this file directly.
             exit(1);
         }
+
+        require_once(__DIR__ . '/config.php');
+        if (!is_a($CFG, \core\config::class)) {
+            $CFG = new \core\config($CFG);
+        }
     }
 
     protected static function setup_autoloader(): void {

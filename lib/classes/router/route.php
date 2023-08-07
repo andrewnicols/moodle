@@ -19,6 +19,7 @@ namespace core\router;
 use Attribute;
 use coding_exception;
 use core\openapi\specification;
+use GuzzleHttp\Psr7\ServerRequest;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -69,7 +70,7 @@ class route {
         /** @var param[] A list of param types for path arguments */
         protected array $pathtypes = [],
 
-        /** @var param[] A list of query parameters with matching types */
+        /** @var \core\router\query_parameter[] A list of query parameters with matching types */
         protected array $queryparams = [],
 
         /** @var response[] A list of possible response types */
@@ -123,13 +124,13 @@ class route {
         );
     }
 
-    public function validate_request(ServerRequestInterface $request): void {
+    public function validate_request(ServerRequestInterface $request): ServerRequestInterface {
         // Add a Route middleware to validate the path, and parameters.
         $routecontext = RouteContext::fromRequest($request);
         $route = $routecontext->getRoute();
 
         $this->validate_path($route);
-        $this->validate_query($request, $route);
+        return $this->validate_query($request, $route);
     }
 
     /**
@@ -155,12 +156,14 @@ class route {
     }
 
     public function validate_query(
-        RequestInterface $request,
+        ServerRequestInterface $request,
         RoutingRoute $route,
-    ): void {
+    ): ServerRequestInterface {
         foreach ($this->queryparams as $queryparam) {
-            $queryparam->validate($request, $route);
+            $request = $queryparam->validate($request, $route);
         }
+
+        return $request;
     }
 
     public function validate_response(ResponseInterface $response): void {

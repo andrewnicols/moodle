@@ -37,12 +37,11 @@ class query_parameter extends parameter {
     public function validate(
         ServerRequestInterface $request,
         Route $route,
-    ): void {
+    ): ServerRequestInterface {
         $params = $request->getQueryParams();
 
         if (array_key_exists($this->name, $params)) {
             // This parameter was specified.
-
             if ($this->get_type() === PARAM_BOOL) {
                 switch ($params[$this->name]) {
                     case 'true':
@@ -59,7 +58,27 @@ class query_parameter extends parameter {
                 param: $params[$this->name],
                 type: $this->type,
             );
+        } else if ($this->required) {
+            throw new \coding_exception(
+                "A required parameter {$this->name} was not provided and must be specified",
+            );
+        } else if ($this->default) {
+            $request = $request->withQueryParams(
+                array_merge(
+                    $params,
+                    [$this->name => $this->default],
+                ),
+            );
+        } else {
+            $request = $request->withQueryParams(
+                array_merge(
+                    $params,
+                    [$this->name => null],
+                ),
+            );
         }
+
+        return $request;
     }
 
     public function get_schema_from_type(): \stdClass {

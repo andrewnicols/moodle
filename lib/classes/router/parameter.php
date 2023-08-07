@@ -60,6 +60,7 @@ class parameter extends openapi_base {
         protected ?schema $schema = null,
         protected ?string $description = null,
         protected ?bool $required = null,
+        protected mixed $default = null,
         protected ?bool $deprecated = false,
         protected ?bool $allowemptyvalue = false,
 
@@ -74,6 +75,13 @@ class parameter extends openapi_base {
         assert(
             $example === null || count($examples) === 0,
             'Only one of example or examples can be specified.',
+        );
+
+        assert(
+            ($required === true && $default === null)
+                ||
+            ($required == null || $required == false),
+            'A parameter cannot be required and have a default value.',
         );
     }
 
