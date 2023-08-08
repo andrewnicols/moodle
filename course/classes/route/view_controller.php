@@ -28,6 +28,8 @@ class view_controller {
     use \core\router\route_controller;
 
     #[route(
+        deprecated: true,
+        deprecateMessage: 'see ...',
         path: '/view/byidnumber/{idnumber:[0-9]+}',
         pathtypes: [
             new path_parameter(
@@ -477,20 +479,5 @@ class view_controller {
 
         $response->getBody()->write($renderer->footer());
         return $response;
-    }
-
-    protected function get_param(
-        ServerRequestInterface $request,
-        string $key,
-        mixed $default = null,
-    ): mixed {
-        $params = $request->getQueryParams();
-        if (array_key_exists($key, $params)) {
-            return $params[$key];
-        } else {
-            debugging("Missing parameter: $key");
-        }
-
-        return $default;
     }
 }

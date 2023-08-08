@@ -111,7 +111,7 @@ class router {
                 ->withHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
         });
 
-        // xdebug_break();
+        // Middleware to set flags and define setup.
         $app->add(function(RequestInterface $request, $handler) {
             global $CFG;
             if (str_contains($request->getUri(), '/api/rest/v2')) {
@@ -119,36 +119,18 @@ class router {
             }
             \core\bootstrap::full_setup();
             $page = $this->get(\moodle_page::class);
-
-            // TODO - Do this from the Route somehow?
-            // $fiber = new \Fiber(function() use ($handler, $request) {
-                $response = $handler->handle($request);
-            // });
-
-            // $response = $fiber->start();
-
             $page->set_url($request->getUri());
 
-            // $fiber->resume($response);
-
-            // if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
-            //     // TODO... Stop doing this.
-            //     // We need to be able to make use of streams. By casting the body to a string, we immediately invoke the stream and wait for it to complete.
-            //     $renderer = $this->get(\core_renderer::class);
-            //     $existingcontent = (string) $response->getBody();
-            //     $response = $response->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
-            //         $renderer->header() .
-            //         $existingcontent .
-            //         $renderer->footer(),
-            //     ));
-            // }
+            $response = $handler->handle($request);
 
             return $response;
         });
 
+        // Add all standard routes.
         $this->add_all_user_routes($app);
 
-        $parser = $app->getRouteCollector()->getRouteParser();
+        // Add all shimmed routes for things which have been replaced.
+        $this->add_all_shimmed_routes($app);
 
         return $app;
     }
@@ -182,6 +164,7 @@ class router {
         foreach (array_keys($classes) as $classname) {
             $classinfo = new \ReflectionClass($classname);
             [$component] = explode('\\', $classinfo->getNamespaceName());
+            $componentpath = $this->normalise_component_to_path($component);
 
             $classroutes = $classinfo->getAttributes(\core\router\route::class);
             if ($classroutes) {
@@ -189,7 +172,7 @@ class router {
                     $parentroute = $classroute->newInstance();
                     $this->add_api_routes_for_methods(
                         $group,
-                        $component,
+                        $componentpath,
                         $classinfo,
                         $parentroute,
                     );
@@ -197,7 +180,7 @@ class router {
             } else {
                 $this->add_api_routes_for_methods(
                     $group,
-                    $component,
+                    $componentpath,
                     $classinfo,
                 );
             }
@@ -206,10 +189,15 @@ class router {
 
     public function add_all_user_routes(RouteCollectorProxy $group): void {
         $classes = \core_component::get_component_classes_in_namespace(namespace: 'route');
+
         foreach (array_keys($classes) as $classname) {
+            if (str_contains($classname, '\\shim\\')) {
+                continue;
+            }
             $classinfo = new \ReflectionClass($classname);
 
             [$component] = explode('\\', $classinfo->getNamespaceName());
+            $componentpath = $this->normalise_component_to_path($component);
 
             $classroutes = $classinfo->getAttributes(\core\router\route::class);
             if ($classroutes) {
@@ -217,7 +205,7 @@ class router {
                     $parentroute = $classroute->newInstance();
                     $this->add_routes_for_methods(
                         $group,
-                        $component,
+                        $componentpath,
                         $classinfo,
                         $parentroute,
                     );
@@ -225,8 +213,53 @@ class router {
             } else {
                 $this->add_routes_for_methods(
                     $group,
-                    $component,
+                    $componentpath,
                     $classinfo,
+                );
+            }
+        }
+    }
+
+    public function add_all_shimmed_routes(RouteCollectorProxy $group): void {
+        global $CFG;
+
+        $classes = \core_component::get_component_classes_in_namespace(namespace: 'route\shim');
+
+        $middleware = function(ServerRequestInterface $request, $handler) {
+            \core\notification::add(
+                'This page has been replaced by a newer version. Please update your code.',
+                \core\notification::WARNING,
+            );
+
+            return $handler->handle($request);
+        };
+        foreach (array_keys($classes) as $classname) {
+            $classinfo = new \ReflectionClass($classname);
+
+            [$component] = explode('\\', $classinfo->getNamespaceName());
+            $componentpath = substr(
+                \core_component::get_component_directory($component),
+                strlen($CFG->dirroot) + 1,
+            );
+
+            $classroutes = $classinfo->getAttributes(\core\router\route::class);
+            if ($classroutes) {
+                foreach ($classroutes as $classroute) {
+                    $parentroute = $classroute->newInstance();
+                    $this->add_routes_for_methods(
+                        $group,
+                        $componentpath,
+                        $classinfo,
+                        parentroute: $parentroute,
+                        middleware: $middleware,
+                    );
+                }
+            } else {
+                $this->add_routes_for_methods(
+                    $group,
+                    $componentpath,
+                    $classinfo,
+                    middleware: $middleware,
                 );
             }
         }
@@ -268,11 +301,25 @@ class router {
         }
     }
 
+    protected function normalise_component_to_path(string $component): string {
+        [$type, $subsystem] = \core_component::normalize_component($component);
+        if ($type === 'core') {
+            $component = $subsystem;
+        }
+
+        if ($component === null) {
+            $component = '';
+        }
+
+        return $component;
+    }
+
     protected function add_routes_for_methods(
         RouteCollectorProxy $group,
-        string $component,
+        string $componentpath,
         ReflectionClass $classinfo,
         ?route $parentroute = null,
+        ?callable $middleware = null
     ): void {
         $methods = $classinfo->getMethods();
         foreach ($methods as $method) {
@@ -288,14 +335,9 @@ class router {
                     $methods = ['GET'];
                 }
 
-                [$type, $subsystem] = \core_component::normalize_component($component);
-                if ($type === 'core') {
-                    $component = $subsystem;
-                }
-
-                $group->map(
+                $route = $group->map(
                     $methods,
-                    "/{$component}{$path}",
+                    "/{$componentpath}{$path}",
                     [$classinfo->getName(), $method->getName()],
                 )
                 ->setName($classinfo->getName() . '::' . $method->getName())
@@ -305,15 +347,11 @@ class router {
 
                     // Pass to the next Middleware.
                     return $handler->handle($request);
-                })
-                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
-                    // Add a Route middleware to response.
-                    // This happens after the request has been handled.
-                    $response = $handler->handle($request);
-                    $routeattribute->validate_response($response);
-
-                    return $response;
                 });
+
+                if ($middleware) {
+                    $route->add($middleware);
+                }
             }
         }
     }
