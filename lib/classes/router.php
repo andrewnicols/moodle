@@ -60,6 +60,10 @@ class router {
         redirect($url);
     }
 
+    protected function get_muc_dispatcher() {
+
+    }
+
     public function get_app(): App {
         global $CFG;
 
@@ -74,7 +78,7 @@ class router {
         // $app = \DI\Bridge\Slim\Bridge::create();
         $app->addBodyParsingMiddleware();
 
-        // TODO: Configure caching properly.
+        // TODO: Look into MUC caching.
         if (!$CFG->debugdeveloper) {
             $app->getRouteCollector()->setCacheFile(
                 $CFG->cachedir . '/routes.cache',
@@ -93,8 +97,6 @@ class router {
             // Add the OpenAPI generator route.
             // $this->container->get(openapi::class)->add_openapi_generator_routes($group);
         })->add(function (RequestInterface $request, $handler) {
-            define('AJAX_SCRIPT', true);
-
             \core\bootstrap::full_setup();
 
             $this->get(\moodle_page::class)->set_context(\core\context\system::instance());
@@ -109,24 +111,37 @@ class router {
                 ->withHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
         });
 
+        // xdebug_break();
         $app->add(function(RequestInterface $request, $handler) {
+            global $CFG;
+            if (str_contains($request->getUri(), '/api/rest/v2')) {
+                define('AJAX_SCRIPT', true);
+            }
             \core\bootstrap::full_setup();
             $page = $this->get(\moodle_page::class);
 
             // TODO - Do this from the Route somehow?
-            $response = $handler->handle($request);
+            // $fiber = new \Fiber(function() use ($handler, $request) {
+                $response = $handler->handle($request);
+            // });
+
+            // $response = $fiber->start();
 
             $page->set_url($request->getUri());
 
-            if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
-                $renderer = $this->get(\core_renderer::class);
-                $existingcontent = (string) $response->getBody();
-                $response = $response->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
-                    $renderer->header() .
-                    $existingcontent .
-                    $renderer->footer(),
-                ));
-            }
+            // $fiber->resume($response);
+
+            // if (!defined('AJAX_SCRIPT') || !AJAX_SCRIPT) {
+            //     // TODO... Stop doing this.
+            //     // We need to be able to make use of streams. By casting the body to a string, we immediately invoke the stream and wait for it to complete.
+            //     $renderer = $this->get(\core_renderer::class);
+            //     $existingcontent = (string) $response->getBody();
+            //     $response = $response->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
+            //         $renderer->header() .
+            //         $existingcontent .
+            //         $renderer->footer(),
+            //     ));
+            // }
 
             return $response;
         });

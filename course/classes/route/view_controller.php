@@ -140,6 +140,7 @@ class view_controller {
         \moodle_page $PAGE,
         \moodle_database $db,
         \core\config $CFG,
+        \core\container $container,
     ): ResponseInterface {
         global $USER, $OUTPUT, $SESSION;
 
@@ -156,7 +157,6 @@ class view_controller {
         $marker = $this->get_param($request, 'marker');
         $switchrole = $this->get_param($request, 'switchrole');
         $return = $this->get_param($request, 'return');
-
 
         $course = $db->get_record('course', ['id' => $id]);
 
@@ -277,6 +277,8 @@ class view_controller {
         // format.php is not included until after output starts.
         $renderer = $format->get_renderer($PAGE);
 
+        $response->getBody()->write($renderer->header());
+
         if ($resetuserallowedediting) {
             // Ugly hack.
             unset($PAGE->_user_allowed_editing);
@@ -362,7 +364,7 @@ class view_controller {
         }
 
         $SESSION->fromdiscussion = $PAGE->url->out(false);
-
+        // \Fiber::suspend($response);
 
         if ($course->id == SITEID) {
             // This course is not a real course.
@@ -473,6 +475,7 @@ class view_controller {
             $PAGE->requiresv->js_call_amd('core_course/view', 'init');
         }
 
+        $response->getBody()->write($renderer->footer());
         return $response;
     }
 

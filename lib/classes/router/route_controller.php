@@ -16,6 +16,7 @@
 
 namespace core\router;
 
+use moodle_url;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -73,14 +74,14 @@ trait route_controller {
     }
 
     protected function page_response(
-        ResponseInterface $reponse,
+        ResponseInterface $response,
         \core_renderer $renderer,
     ): ResponseInterface {
         return $response;
     }
 
     protected function redirect(
-        ResponseInterface $redirect,
+        ResponseInterface $response,
         string|moodle_url $url,
     ): ResponseInterface {
         return $response

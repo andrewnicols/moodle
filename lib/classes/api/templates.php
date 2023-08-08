@@ -74,15 +74,15 @@ class templates {
                 content: [
                     new \core\router\response\content\json_response(
                         schema: new \core\router\schema\array_of_strings(),
-                        // examples: [
-                        //     new \core\router\response\example(
-                        //         name: 'Single template value',
-                        //         summary: 'A json response containing the template for a single template',
-                        //         value: [
-                        //             "mod_example/template_identifier" => "<div class=\"example\">Hello World</div>",
-                        //         ],
-                        //     ),
-                        // ]
+                        examples: [
+                            new \core\router\response\example(
+                                name: 'Single template value',
+                                summary: 'A json response containing the template for a single template',
+                                value: [
+                                    "mod_example/template_identifier" => "<div class=\"example\">Hello World</div>",
+                                ],
+                            ),
+                        ]
                     ),
                 ],
             ),
@@ -95,7 +95,7 @@ class templates {
         string $themename,
         string $component,
         string $identifier,
-    ): Response {
+    ): ResponseInterface {
         $params = $request->getQueryParams();
         if (array_key_exists('includecomments', $params)) {
             $comments = $params['includecomments'];
