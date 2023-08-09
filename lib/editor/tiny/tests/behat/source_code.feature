@@ -2,10 +2,15 @@
 Feature: A user can insert script tag in TinyMCE
 
   Scenario: Allow script elements in the editor
-    Given I log in as "admin"
-    And I open my profile in edit mode
+    Given I am on the "Profile advanced editing" page logged in as "admin"
+    And I set the field "Description" to "<p><script>alert('script in tiny');</script></p>"
     When I click on the "Tools > Source code" menu item for the "Description" TinyMCE editor
-    Then I set the field with xpath "//textarea[@class='tox-textarea']" to "<p><script>alert('script in tiny');</script></p>"
     And I click on "Save" "button"
-    When I click on the "Tools > Source code" menu item for the "Description" TinyMCE editor
-    Then the field with xpath "//textarea[@class='tox-textarea']" matches value "<p><script>alert('script in tiny');</script></p>"
+    Then the field "Description" matches multiline:
+    """
+  <p>
+    <script>
+        alert('script in tiny');
+      </script>
+    </p>
+    """
