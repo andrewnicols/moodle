@@ -61,6 +61,6 @@ class course_routes {
             return $this->redirect_to_callable($request, $response, \core_course\route\view_controller::class . '::view_course_by_shortname');
         }
 
-        return $this->not_found($request, $response);
+        return $this->page_not_found($request, $response);
     }
 }

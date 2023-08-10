@@ -18,9 +18,6 @@ namespace core;
 
 use core\openapi\specification;
 use core\router\route;
-use FastRoute\RouteCollector;
-use GuzzleHttp\Psr7\Uri;
-use Invoker\Reflection\CallableReflection;
 use moodle_url;
 use Psr\Http\Message\RequestInterface;
 use Slim\Routing\RouteCollectorProxy;
@@ -29,7 +26,6 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use ReflectionClass;
 use Slim\App;
-use Slim\Routing\RouteContext;
 
 /**
  * Moodle Router.
@@ -60,10 +56,6 @@ class router {
         redirect($url);
     }
 
-    protected function get_muc_dispatcher() {
-
-    }
-
     public function get_app(): App {
         global $CFG;
 
@@ -75,10 +67,9 @@ class router {
             container: $this->container,
         );
 
-        // $app = \DI\Bridge\Slim\Bridge::create();
         $app->addBodyParsingMiddleware();
 
-        // TODO: Look into MUC caching.
+        // TODO: Look into MUC caching instead of a file-based cache.
         if (!$CFG->debugdeveloper) {
             $app->getRouteCollector()->setCacheFile(
                 $CFG->cachedir . '/routes.cache',
@@ -136,178 +127,195 @@ class router {
     }
 
     /**
-     * Fetch all paths to API components.
+     * Add all routes relating to the REST API.
      *
-     * @return array
+     * @param RouteCollectorProxy $group
      */
-    public function get_all_paths(
-        string $subpath = 'api',
-    ): array {
-        global $CFG;
-
-        $componentlist = \core_component::get_component_list();
-        $componentpaths = [];
-        $componentlist['core']['core'] = $CFG->libdir;
-        foreach ($componentlist as $componenttype) {
-            $componentsintype = array_filter($componenttype, fn($path) => $path !== null);
-            $componentpaths = array_merge(
-                $componentpaths,
-                array_map(fn($path) => "{$path}/classes/{$subpath}", $componentsintype),
-            );
-        }
-
-        return $componentpaths;
-    }
-
-    public function add_all_api_routes(RouteCollectorProxy $group): void {
-        $classes = \core_component::get_component_classes_in_namespace(namespace: 'api');
-        foreach (array_keys($classes) as $classname) {
-            $classinfo = new \ReflectionClass($classname);
-            [$component] = explode('\\', $classinfo->getNamespaceName());
-            $componentpath = $this->normalise_component_to_path($component);
-
-            $classroutes = $classinfo->getAttributes(\core\router\route::class);
-            if ($classroutes) {
-                foreach ($classroutes as $classroute) {
-                    $parentroute = $classroute->newInstance();
-                    $this->add_api_routes_for_methods(
-                        $group,
-                        $componentpath,
-                        $classinfo,
-                        $parentroute,
-                    );
-                }
-            } else {
-                $this->add_api_routes_for_methods(
-                    $group,
-                    $componentpath,
-                    $classinfo,
-                );
-            }
+    protected function add_all_api_routes(RouteCollectorProxy $group): void {
+        $routedata = $this->get_all_api_routes();
+        foreach ($routedata as $route) {
+            $group->map(...$route);
         }
     }
 
-    public function add_all_user_routes(RouteCollectorProxy $group): void {
-        $classes = \core_component::get_component_classes_in_namespace(namespace: 'route');
-
-        foreach (array_keys($classes) as $classname) {
-            if (str_contains($classname, '\\shim\\')) {
-                continue;
-            }
-            $classinfo = new \ReflectionClass($classname);
-
-            [$component] = explode('\\', $classinfo->getNamespaceName());
-            $componentpath = $this->normalise_component_to_path($component);
-
-            $classroutes = $classinfo->getAttributes(\core\router\route::class);
-            if ($classroutes) {
-                foreach ($classroutes as $classroute) {
-                    $parentroute = $classroute->newInstance();
-                    $this->add_routes_for_methods(
-                        $group,
-                        $componentpath,
-                        $classinfo,
-                        $parentroute,
-                    );
-                }
-            } else {
-                $this->add_routes_for_methods(
-                    $group,
-                    $componentpath,
-                    $classinfo,
-                );
-            }
-        }
-    }
-
-    public function add_all_shimmed_routes(RouteCollectorProxy $group): void {
-        global $CFG;
-
-        $classes = \core_component::get_component_classes_in_namespace(namespace: 'route\shim');
-
-        $middleware = function(ServerRequestInterface $request, $handler) {
-            \core\notification::add(
-                'This page has been replaced by a newer version. Please update your code.',
-                \core\notification::WARNING,
-            );
-
-            return $handler->handle($request);
-        };
-        foreach (array_keys($classes) as $classname) {
-            $classinfo = new \ReflectionClass($classname);
-
-            [$component] = explode('\\', $classinfo->getNamespaceName());
-            $componentpath = substr(
-                \core_component::get_component_directory($component),
-                strlen($CFG->dirroot) + 1,
-            );
-
-            $classroutes = $classinfo->getAttributes(\core\router\route::class);
-            if ($classroutes) {
-                foreach ($classroutes as $classroute) {
-                    $parentroute = $classroute->newInstance();
-                    $this->add_routes_for_methods(
-                        $group,
-                        $componentpath,
-                        $classinfo,
-                        parentroute: $parentroute,
-                        middleware: $middleware,
-                    );
-                }
-            } else {
-                $this->add_routes_for_methods(
-                    $group,
-                    $componentpath,
-                    $classinfo,
-                    middleware: $middleware,
-                );
-            }
-        }
-    }
-
-    protected function add_api_routes_for_methods(
-        RouteCollectorProxy $group,
-        string $component,
-        ReflectionClass $classinfo,
+    protected function get_flat_route_data(
+        string $componentpath,
+        \ReflectionClass $classinfo,
         ?route $parentroute = null,
-    ): void {
-        if ($component === "") {
-            $component = "core";
-        }
+    ): array {
+        $cachedata = [];
+        $parentroutedata = $parentroute ? [$parentroute] : [];
         $methods = $classinfo->getMethods();
         foreach ($methods as $method) {
             foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
                 $routeattribute = $methodroute->newInstance();
-                $path = $routeattribute->get_path([$parentroute]);
+                $path = $routeattribute->get_path($parentroutedata);
                 $methods = $routeattribute->get_methods($parentroute);
-                $group->map(
-                    $methods,
-                    "/{$component}{$path}",
-                    [$classinfo->getName(), $method->getName()],
+                if (empty($methods)) {
+                    $methods = ['GET'];
+                }
+                $cachedata[] = [
+                    'methods' => $methods,
+                    'pattern' => "/{$componentpath}{$path}",
+                    'callable' => [$classinfo->getName(), $method->getName()],
+                ];
+            }
+        }
+
+        return $cachedata;
+    }
+
+    protected function get_route_data_for_namespace(
+        string $namespace,
+        callable $componentpathcallback,
+        callable $filtercallback = null,
+    ): array {
+        $cachedata = [];
+
+        $classes = \core_component::get_component_classes_in_namespace(namespace: $namespace);
+        foreach (array_keys($classes) as $classname) {
+            $classinfo = new \ReflectionClass($classname);
+            if ($filtercallback && !$filtercallback($classname)) {
+                continue;
+            }
+            [$component] = explode('\\', $classinfo->getNamespaceName());
+            $componentpath = $componentpathcallback($component);
+
+            $classroutes = $classinfo->getAttributes(\core\router\route::class);
+            if ($classroutes) {
+                foreach ($classroutes as $classroute) {
+                    $parentroute = $classroute->newInstance();
+                    $cachedata += $this->get_flat_route_data(
+                        $componentpath,
+                        $classinfo,
+                        $parentroute,
+                    );
+                }
+            } else {
+                $cachedata += $this->get_flat_route_data(
+                    $componentpath,
+                    $classinfo,
+                );
+            }
+        }
+        return $cachedata;
+    }
+
+    protected function get_all_api_routes(): array {
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('api_routes'))) {
+            $cachedata = $this->get_route_data_for_namespace(
+                namespace: 'api',
+                componentpathcallback: fn($component) => $this->normalise_component_to_path($component, true),
+            );
+
+            $cache->set('api_routes', $cachedata);
+        }
+
+        return $cachedata;
+    }
+
+    protected function get_all_shimmed_routes(): array {
+        global $CFG;
+
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('shimmed_routes'))) {
+            $cachedata = $this->get_route_data_for_namespace(
+                namespace: 'route\shim',
+                componentpathcallback: fn($component) => substr(
+                    \core_component::get_component_directory($component),
+                    strlen($CFG->dirroot) + 1,
+                ),
+            );
+
+            $cache->set('shimmed_routes', $cachedata);
+        }
+
+        return $cachedata;
+    }
+
+    protected function get_all_standard_routes(): array {
+        global $CFG;
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('standard_routes'))) {
+            $cachedata = $this->get_route_data_for_namespace(
+                namespace: 'route',
+                componentpathcallback: fn($component) => substr(
+                    \core_component::get_component_directory($component),
+                    strlen($CFG->dirroot) + 1,
+                ),
+                filtercallback: fn(string $classname) => !str_contains($classname, '\\shim\\'),
+            );
+
+            $cache->set('standard_routes', $cachedata);
+        }
+
+        return $cachedata;
+    }
+
+    public function add_all_user_routes(RouteCollectorProxy $group): void {
+        $routedata = $this->get_all_standard_routes();
+        foreach ($routedata as $data) {
+            $group
+                ->map(
+                    methods: $data['methods'],
+                    pattern: $data['pattern'],
+                    callable: $data['callable'],
                 )
-                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
+                ->setName(implode('::', $data['callable']))
+                ->add(function (ServerRequestInterface $request, $handler) use ($data) {
+                    $classinfo = new \ReflectionClass($data['callable'][0]);
+                    $routeattribute = $classinfo->getMethod($data['callable'][1])
+                        ->getAttributes(\core\router\route::class)[0]
+                        ->newInstance();
                     // Add a Route middleware to validate the path, and parameters.
-                    $routeattribute->validate_request($request);
+                    $request = $routeattribute->validate_request($request);
+
+                    // Pass to the next Middleware.
+                    return $handler->handle($request);
+                });
+        }
+    }
+
+    public function add_all_shimmed_routes(RouteCollectorProxy $group): void {
+        $routedata = $this->get_all_shimmed_routes();
+        foreach ($routedata as $data) {
+            $group
+                ->map(...$data)
+                ->add(function (ServerRequestInterface $request, $handler) use ($data) {
+                    $classinfo = new \ReflectionClass($data['callable'][0]);
+                    $routeattribute = $classinfo->getMethod($data['callable'][1])
+                    ->getAttributes(\core\router\route::class)[0]
+                        ->newInstance();
+                    // Add a Route middleware to validate the path, and parameters.
+                    $request = $routeattribute->validate_request($request);
 
                     // Pass to the next Middleware.
                     return $handler->handle($request);
                 })
-                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
-                    // Add a Route middleware to response.
-                    // This happens after the request has been handled.
-                    $response = $handler->handle($request);
-                    $routeattribute->validate_response($response);
+                ->add(function(ServerRequestInterface $request, $handler) {
+                    \core\notification::add(
+                        'This page has been replaced by a newer version. Please update your code.',
+                        \core\notification::WARNING,
+                    );
 
-                    return $response;
+                    return $handler->handle($request);
                 });
-            }
         }
     }
 
-    protected function normalise_component_to_path(string $component): string {
+    protected function normalise_component_to_path(
+        string $component,
+        bool $includecore = true,
+    ): string {
         [$type, $subsystem] = \core_component::normalize_component($component);
         if ($type === 'core') {
-            $component = $subsystem;
+            if (!$includecore) {
+                $component = $subsystem;
+            }
         }
 
         if ($component === null) {
@@ -315,48 +323,6 @@ class router {
         }
 
         return $component;
-    }
-
-    protected function add_routes_for_methods(
-        RouteCollectorProxy $group,
-        string $componentpath,
-        ReflectionClass $classinfo,
-        ?route $parentroute = null,
-        ?callable $middleware = null
-    ): void {
-        $methods = $classinfo->getMethods();
-        foreach ($methods as $method) {
-            foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
-                $routeattribute = $methodroute->newInstance();
-                if ($parentroute) {
-                    $path = $routeattribute->get_path([$parentroute]);
-                } else {
-                    $path = $routeattribute->get_path();
-                }
-                $methods = $routeattribute->get_methods($parentroute);
-                if (empty($methods)) {
-                    $methods = ['GET'];
-                }
-
-                $route = $group->map(
-                    $methods,
-                    "/{$componentpath}{$path}",
-                    [$classinfo->getName(), $method->getName()],
-                )
-                ->setName($classinfo->getName() . '::' . $method->getName())
-                ->add(function(ServerRequestInterface $request, $handler) use ($routeattribute) {
-                    // Add a Route middleware to validate the path, and parameters.
-                    $request = $routeattribute->validate_request($request);
-
-                    // Pass to the next Middleware.
-                    return $handler->handle($request);
-                });
-
-                if ($middleware) {
-                    $route->add($middleware);
-                }
-            }
-        }
     }
 
     public function get_api_docs(RouteCollectorProxy $group): void {
@@ -440,15 +406,24 @@ class router {
     }
 
     public static function get_route_name_for_callable($callable): string {
+        [
+            'classinstance' => $instance,
+            'methodname' => $methodname,
+        ] = self::parse_callable($callable);
+
+        return get_class($instance) . '::' . $methodname;
+    }
+
+    protected static function parse_callable($callable): array {
         $container = \core\container::get_container();
 
         $resolver = $container->get(\Invoker\CallableResolver::class);
-        [
-            $classinstance,
-            $methodname,
-        ] = $resolver->resolve($callable);
+        $callable = $resolver->resolve($callable);
 
-        return get_class($classinstance) . '::' . $methodname;
+        return [
+            'classinstance' => $callable[0],
+            'methodname' => $callable[1],
+        ];
     }
 
     public static function get_path_for_callable(
