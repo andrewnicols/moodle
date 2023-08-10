@@ -25,11 +25,8 @@
 require_once('bootstrap.php');
 \core\bootstrap::early_setup();
 
-// TODO: Work out the best way to configure some of these globals.
-// $PAGE->set_context(\core\context\system::instance());
-
-$openapi = new \core\router();
-$app = $openapi->get_app();
+$router = new \core\router();
+$app = $router->get_app();
 
 // Moodle is not guaranteed to exist at the domain root.
 // Strip out the current script.

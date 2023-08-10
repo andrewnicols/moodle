@@ -271,6 +271,9 @@ class router {
         ReflectionClass $classinfo,
         ?route $parentroute = null,
     ): void {
+        if ($component === "") {
+            $component = "core";
+        }
         $methods = $classinfo->getMethods();
         foreach ($methods as $method) {
             foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
