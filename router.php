@@ -25,12 +25,12 @@
 require_once('bootstrap.php');
 \core\bootstrap::early_setup();
 
-$router = new \core\router();
-$app = $router->get_app();
-
 // Moodle is not guaranteed to exist at the domain root.
 // Strip out the current script.
 $scriptroot = parse_url($CFG->wwwroot, PHP_URL_PATH);
-$app->setBasePath($scriptroot);
 
-$app->run();
+$router = new \core\router(
+    basepath: $scriptroot,
+);
+
+$router->serve();
