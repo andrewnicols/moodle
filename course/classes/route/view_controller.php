@@ -28,8 +28,6 @@ class view_controller {
     use \core\router\route_controller;
 
     #[route(
-        deprecated: true,
-        deprecateMessage: 'see ...',
         path: '/view/byidnumber/{idnumber:[0-9]+}',
         pathtypes: [
             new path_parameter(
@@ -43,7 +41,7 @@ class view_controller {
         ResponseInterface $response,
         string $idnumber,
         moodle_database $db,
-    ): response {
+    ): ResponseInterface {
         $id = $db->get_field('course', 'id', ['idnumber' => $idnumber], MUST_EXIST);
         \core\router::redirect_with_params(
             "/course/view/{$id}",
@@ -65,7 +63,7 @@ class view_controller {
         ResponseInterface $response,
         string $shortname,
         moodle_database $db,
-    ): response {
+    ): ResponseInterface {
         $id = $db->get_field('course', 'id', ['shortname' => $shortname], MUST_EXIST);
         \core\router::redirect_with_params(
             "/course/view/{$id}",

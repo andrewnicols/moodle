@@ -422,6 +422,7 @@ class bootstrap {
         } else {
             $CFG->debug = 0;
         }
+
         $CFG->debugdeveloper = (($CFG->debug & (E_ALL | E_STRICT)) === (E_ALL | E_STRICT)); // DEBUG_DEVELOPER is not available yet.
 
         if (!defined('MOODLE_INTERNAL')) {

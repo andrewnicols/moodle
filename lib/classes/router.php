@@ -16,16 +16,18 @@
 
 namespace core;
 
-use core\openapi\specification;
+use coding_exception;
 use core\router\route;
+use moodle_exception;
+use HTMLPurifier_Exception;
 use moodle_url;
 use Psr\Http\Message\RequestInterface;
-use Slim\Routing\RouteCollectorProxy;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use ReflectionClass;
+use Psr\Http\Server\RequestHandlerInterface;
 use Slim\App;
+use Slim\Routing\RouteCollectorProxy;
 
 /**
  * Moodle Router.
@@ -35,12 +37,25 @@ use Slim\App;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class router {
+    /** @var ContainerInterface The DI Container */
     protected ContainerInterface $container;
 
-    public function __construct() {
+    /** @var App The SlimPHP App */
+    protected App $app;
+
+    public function __construct(
+        protected string $basepath,
+    ) {
         $this->container = container::get_container();
     }
 
+    /**
+     * Redirect to the specified URL, carrying all parameters across too.
+     *
+     * @param string|moodle_url $path
+     * @param array $excludeparams Any parameters to exlude from the query params
+     * @return never
+     */
     public static function redirect_with_params(
         string|moodle_url $path,
         array $excludeparams = [],
@@ -56,7 +71,22 @@ class router {
         redirect($url);
     }
 
+    /**
+     * Get the configured SlimPHP Application.
+     *
+     * @return App
+     */
     public function get_app(): App {
+        if (!isset($this->app )) {
+            $this->app = $this->create_app($this->basepath);
+        }
+
+        return $this->app;
+    }
+
+    protected function create_app(
+        string $basepath = '',
+    ): App {
         global $CFG;
 
         // PHP Does not support autoloading functions.
@@ -66,8 +96,10 @@ class router {
         $app = \DI\Bridge\Slim\Bridge::create(
             container: $this->container,
         );
+        $this->configure_error_handling($app);
 
         $app->addBodyParsingMiddleware();
+
 
         // TODO: Look into MUC caching instead of a file-based cache.
         if (!$CFG->debugdeveloper) {
@@ -76,35 +108,54 @@ class router {
             );
         }
 
-        // Handle the REST API.
-        $app->group('/api/rest/v2', function (
-            RouteCollectorProxy $group,
-        ): void {
-            // Add all standard routes.
-            $this->add_all_api_routes($group);
+        $this->configure_routes($app);
 
-            $this->get_api_docs($group);
+        $app->setBasePath($basepath);
 
-            // Add the OpenAPI generator route.
-            // $this->container->get(openapi::class)->add_openapi_generator_routes($group);
-        })->add(function (RequestInterface $request, $handler) {
-            \core\bootstrap::full_setup();
+        return $app;
+    }
 
-            $this->get(\moodle_page::class)->set_context(\core\context\system::instance());
+    public function handle_request(
+        ServerRequestInterface $request,
+    ): ResponseInterface {
+        return $this->get_app()->handle($request);
+    }
 
-            // Add a Middleware to set the CORS headers for all REST Responses.
-            $response = $handler->handle($request);
-            return $response
-                ->withHeader('Content-Type', 'application/json')
-                ->withHeader('Content-Disposition', 'inline')
-                ->withHeader('Access-Control-Allow-Origin', '*')
-                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS')
-                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
+    public function serve(): void {
+        $this->get_app()->run();
+    }
+
+    /**
+     * Configure error handling features of Slim.
+     *
+     * @param App $app
+     */
+    protected function configure_error_handling(App $app): void {
+        $app->add(function(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+            global $CFG;
+
+            $developerautoloadpath = $CFG->dirroot . '/vendor/autoload.php';
+            if ($CFG->debugdeveloper && file_exists($developerautoloadpath)) {
+                require_once($developerautoloadpath);
+                $whoopsGuard = new \Zeuxisoo\Whoops\Slim\WhoopsGuard([
+                    'enable' => true,
+                    'editor' => $CFG->debug_developer_editor ?: null,
+                ]);
+                $whoopsGuard->setRequest($request);
+                $whoopsGuard->install();
+            } else {
+                // Some other standard error handling.
+            }
+            return $handler->handle($request);
         });
+    }
+
+    protected function configure_routes(App $app): void {
+        // Handle the REST API.
+        $this->configure_api_routes($app);
 
         // Middleware to set flags and define setup.
-        $app->add(function(RequestInterface $request, $handler) {
-            global $CFG;
+        $app->add(function (RequestInterface $request, $handler) {
             if (str_contains($request->getUri(), '/api/rest/v2')) {
                 define('AJAX_SCRIPT', true);
             }
@@ -122,8 +173,30 @@ class router {
 
         // Add all shimmed routes for things which have been replaced.
         $this->add_all_shimmed_routes($app);
+    }
 
-        return $app;
+    protected function configure_api_routes(App $app): void {
+        $app->group('/api/rest/v2', function (
+            RouteCollectorProxy $group,
+        ): void {
+            // Add all standard routes.
+            $this->add_all_api_routes($group);
+
+            $group->get('/openapi.json', [\core\router\apidocs::class, 'openapi_docs']);
+        })->add(function (RequestInterface $request, $handler) {
+            \core\bootstrap::full_setup();
+
+            $this->get(\moodle_page::class)->set_context(\core\context\system::instance());
+
+            // Add a Middleware to set the CORS headers for all REST Responses.
+            $response = $handler->handle($request);
+            return $response
+                ->withHeader('Content-Type', 'application/json')
+                ->withHeader('Content-Disposition', 'inline')
+                ->withHeader('Access-Control-Allow-Origin', '*')
+                ->withHeader('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT, PATCH, OPTIONS')
+                ->withHeader('Access-Control-Allow-Headers', 'Content-Type, api_key, Authorization');
+        });
     }
 
     /**
@@ -133,8 +206,30 @@ class router {
      */
     protected function add_all_api_routes(RouteCollectorProxy $group): void {
         $routedata = $this->get_all_api_routes();
-        foreach ($routedata as $route) {
-            $group->map(...$route);
+        foreach ($routedata as $data) {
+            $group
+                ->map(...$data)
+                ->setName(implode('::', $data['callable']))
+                ->add(function (ServerRequestInterface $request, $handler) use ($data) {
+                    // Fetch route information.
+                    $classinfo = new \ReflectionClass($data['callable'][0]);
+                    $routeattribute = $classinfo->getMethod($data['callable'][1])
+                        ->getAttributes(\core\router\route::class)[0]
+                        ->newInstance();
+
+                    // Validate the request.
+                    $request = $routeattribute->validate_request($request);
+
+                    // Process the remaining middleware to fetch the final repsonse.
+                    $response = $handler->handle($request);
+
+                    // Validate the response.
+                    $routeattribute->validate_response($response);
+
+                    return $response;
+                });
+
+                ;
         }
     }
 
@@ -256,7 +351,7 @@ class router {
         return $cachedata;
     }
 
-    public function add_all_user_routes(RouteCollectorProxy $group): void {
+    protected function add_all_user_routes(RouteCollectorProxy $group): void {
         $routedata = $this->get_all_standard_routes();
         foreach ($routedata as $data) {
             $group
@@ -267,11 +362,11 @@ class router {
                 )
                 ->setName(implode('::', $data['callable']))
                 ->add(function (ServerRequestInterface $request, $handler) use ($data) {
+                    // Add a Route middleware to validate the path, and parameters.
                     $classinfo = new \ReflectionClass($data['callable'][0]);
                     $routeattribute = $classinfo->getMethod($data['callable'][1])
                         ->getAttributes(\core\router\route::class)[0]
                         ->newInstance();
-                    // Add a Route middleware to validate the path, and parameters.
                     $request = $routeattribute->validate_request($request);
 
                     // Pass to the next Middleware.
@@ -280,7 +375,7 @@ class router {
         }
     }
 
-    public function add_all_shimmed_routes(RouteCollectorProxy $group): void {
+    protected function add_all_shimmed_routes(RouteCollectorProxy $group): void {
         $routedata = $this->get_all_shimmed_routes();
         foreach ($routedata as $data) {
             $group
@@ -323,72 +418,6 @@ class router {
         }
 
         return $component;
-    }
-
-    public function get_api_docs(RouteCollectorProxy $group): void {
-        $group->get('/openapi.json', function(
-            ServerRequestInterface $request,
-            ResponseInterface $response,
-        ): ResponseInterface {
-            $api = new specification();
-
-            $classes = \core_component::get_component_classes_in_namespace(namespace: 'api');
-            foreach (array_keys($classes) as $classname) {
-                $classinfo = new \ReflectionClass($classname);
-                [$component] = explode('\\', $classinfo->getNamespaceName());
-
-                $classroutes = $classinfo->getAttributes(\core\router\route::class);
-                if ($classroutes) {
-                    foreach ($classroutes as $classroute) {
-                        $parentroute = $classroute->newInstance();
-                        $this->get_api_docs_for_route(
-                            component: $component,
-                            classinfo: $classinfo,
-                            api: $api,
-                            parentcontexts: [$parentroute],
-                        );
-                    }
-                } else {
-                    $this->get_api_docs_for_route(
-                        component: $component,
-                        classinfo: $classinfo,
-                        api: $api,
-                    );
-                }
-            }
-
-            return $response
-                ->withHeader('Content-Type', 'application/json')
-                ->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
-                    json_encode(
-                        $api,
-                        JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES,
-                    ),
-                ));
-        });
-    }
-
-    protected function get_api_docs_for_route(
-        string $component,
-        ReflectionClass $classinfo,
-        specification $api,
-        array $parentcontexts = [],
-    ): \stdClass {
-        $methods = $classinfo->getMethods();
-
-        foreach ($methods as $method) {
-            foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
-                $routeattribute = $methodroute->newInstance();
-
-                $api->add_path(
-                    component: $component,
-                    parentcontexts: $parentcontexts,
-                    route: $routeattribute,
-                );
-            }
-        }
-
-        return new \stdClass();
     }
 
     public static function redirect_to_callable(
