@@ -51,22 +51,27 @@ class path_parameter extends parameter {
     public function get_openapi_description(
         specification $api,
         string $component,
+        string $path,
         array $parentcontexts = [],
-    ): stdClass {
+    ): ?stdClass {
+        if (!str_contains($path, "{{$this->name}}")) {
+            // In OpenAPI, Path parameters can never be optional.
+            return null;
+        }
         $data = parent::get_openapi_description(
             api: $api,
             component: $component,
+            path: $path,
             parentcontexts: $parentcontexts,
         );
-
-        // Fetch the route, and determine if this is an optional parameter.
-        // We can determine if this is optional if there is any `[` character before it in the path.
-        // There can be no required parameter after any optional parameter.
-        $routes = array_filter($parentcontexts, fn($context) => $context instanceof route);
-        $path = $routes[0]->get_path(array_slice($routes, 1));
-        $paramposition = strpos($path, '{' . $this->name . '}');
-        $data->required = !str_contains(substr($path, 0, $paramposition), '[');
+        $data->required = true;
 
         return $data;
+    }
+
+    public function is_required(route $route): bool {
+        $path = $route->get_path();
+        $paramposition = strpos($path, '{' . $this->name . '}');
+        return !str_contains(substr($path, 0, $paramposition), '[');
     }
 }

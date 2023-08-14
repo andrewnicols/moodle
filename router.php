@@ -29,7 +29,7 @@ require_once('bootstrap.php');
 // Strip out the current script.
 $scriptroot = parse_url($CFG->wwwroot, PHP_URL_PATH);
 
-$router = new \core\router(
+    $router = new \core\router(
     basepath: $scriptroot,
 );
 

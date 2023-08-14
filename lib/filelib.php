@@ -107,7 +107,7 @@ function file_encode_url($urlbase, $path, $forcedownload=false, $https=false) {
  * @param string $itemid
  * @return bool
  */
-function file_area_contains_subdirs(context $context, $component, $filearea, $itemid) {
+function file_area_contains_subdirs(\core\context|\context $context, $component, $filearea, $itemid) {
     global $DB;
 
     if (!isset($itemid)) {
