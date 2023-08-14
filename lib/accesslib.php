@@ -869,7 +869,7 @@ function has_capability_in_accessdata($capability, context $context, array &$acc
  * @param string $stringfile The language file to load the error string from. Defaults to 'error'.
  * @return void terminates with an error if the user does not have the given capability.
  */
-function require_capability($capability, context $context, $userid = null, $doanything = true,
+function require_capability($capability, \context|\core\context $context, $userid = null, $doanything = true,
                             $errormessage = 'nopermissions', $stringfile = '') {
     if (!has_capability($capability, $context, $userid, $doanything)) {
         throw new required_capability_exception($context, $capability, $errormessage, $stringfile);

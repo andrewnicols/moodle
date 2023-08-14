@@ -64,7 +64,6 @@ class Invoker implements InvokerInterface
         $diff = array_diff_key($callableReflection->getParameters(), $args);
         $parameter = reset($diff);
         if ($parameter && \assert($parameter instanceof ReflectionParameter) && ! $parameter->isVariadic()) {
-            xdebug_break();
             throw new NotEnoughParametersException(sprintf(
                 'Unable to invoke the callable because no value was given for parameter %d ($%s)',
                 $parameter->getPosition() + 1,

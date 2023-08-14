@@ -109,6 +109,15 @@ class container {
                 // See query parameter validation for an example.
                 return \Slim\Psr7\Factory\ServerRequestFactory::createFromGlobals();
             },
+
+            \core\router::class => function() {
+                global $CFG;
+                $scriptroot = parse_url($CFG->wwwroot, PHP_URL_PATH);
+
+                return new \core\router(
+                    basepath: $scriptroot,
+                );
+            }
         ]);
 
         // Add any additional definitions using hooks.

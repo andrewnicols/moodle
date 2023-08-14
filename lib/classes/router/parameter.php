@@ -44,13 +44,13 @@ class parameter extends openapi_base {
      * @param string $in The location of the parameter. Possible values are "query", "header", "path" or "cookie".
      * @param null|string $type A Moodle PARAM_ type, which can be used instead of a schema.
      * @param null|schema $schema
-     * @param null|string $description 
-     * @param null|bool $required 
+     * @param null|string $description
+     * @param null|bool $required
      * @param null|bool $deprecated Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
      * @param null|bool $allowemptyvalue Sets the ability to pass empty-valued parameters. This is valid only for query parameters and allows sending a parameter with an empty value.
-     * @param null|string $example 
-     * @param array $examples 
-     * @param mixed $extra 
+     * @param null|string $example
+     * @param array $examples
+     * @param mixed $extra
      */
     public function __construct(
         // Fixed fields.
@@ -88,8 +88,9 @@ class parameter extends openapi_base {
     public function get_openapi_description(
         specification $api,
         string $component,
+        string $path,
         array $parentcontexts = [],
-    ): \stdClass {
+    ): ?\stdClass {
         if (is_a($this, referenced_parameter::class)) {
             $this->ensure_parameter_exists($api);
             return (object) [
@@ -221,5 +222,13 @@ class parameter extends openapi_base {
             $api->add_parameter($this->get_reference(qualify: false), $this);
         }
         return $this;
+    }
+
+    public function is_required(route $route): bool {
+        return $this->required;
+    }
+
+    public function get_name(): string {
+        return $this->name;
     }
 }

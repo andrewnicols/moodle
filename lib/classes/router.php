@@ -16,10 +16,8 @@
 
 namespace core;
 
-use coding_exception;
 use core\router\route;
-use moodle_exception;
-use HTMLPurifier_Exception;
+use GuzzleHttp\Psr7\Uri;
 use moodle_url;
 use Psr\Http\Message\RequestInterface;
 use Psr\Container\ContainerInterface;
@@ -97,9 +95,30 @@ class router {
             container: $this->container,
         );
         $this->configure_error_handling($app);
-
         $app->addBodyParsingMiddleware();
 
+        $app->add(function(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+            $uri = $request->getUri();
+            $path = $uri->getPath();
+
+            if ($path === '') {
+                // Ensure that there is always a path.
+                $path = '/';
+            }
+
+            // Remove duplicate slashes.
+            $path = preg_replace('@/+@', '/', $path);
+
+            // Remove trailing slashes
+            $path = rtrim($path, '/');
+
+            if ($uri->getPath() !== $path) {
+                // Path has changed. Update it.
+                $request = $request->withUri($uri->withPath($path));
+            }
+
+            return $handler->handle($request);
+        });
 
         // TODO: Look into MUC caching instead of a file-based cache.
         if (!$CFG->debugdeveloper) {
@@ -137,12 +156,12 @@ class router {
             $developerautoloadpath = $CFG->dirroot . '/vendor/autoload.php';
             if ($CFG->debugdeveloper && file_exists($developerautoloadpath)) {
                 require_once($developerautoloadpath);
-                $whoopsGuard = new \Zeuxisoo\Whoops\Slim\WhoopsGuard([
+                $guard = new \Zeuxisoo\Whoops\Slim\WhoopsGuard([
                     'enable' => true,
                     'editor' => $CFG->debug_developer_editor ?: null,
                 ]);
-                $whoopsGuard->setRequest($request);
-                $whoopsGuard->install();
+                $guard->setRequest($request);
+                $guard->install();
             } else {
                 // Some other standard error handling.
             }
@@ -211,11 +230,7 @@ class router {
                 ->map(...$data)
                 ->setName(implode('::', $data['callable']))
                 ->add(function (ServerRequestInterface $request, $handler) use ($data) {
-                    // Fetch route information.
-                    $classinfo = new \ReflectionClass($data['callable'][0]);
-                    $routeattribute = $classinfo->getMethod($data['callable'][1])
-                        ->getAttributes(\core\router\route::class)[0]
-                        ->newInstance();
+                    $routeattribute = self::get_route_instance_for_method($data['callable']);
 
                     // Validate the request.
                     $request = $routeattribute->validate_request($request);
@@ -236,25 +251,31 @@ class router {
     protected function get_flat_route_data(
         string $componentpath,
         \ReflectionClass $classinfo,
-        ?route $parentroute = null,
     ): array {
         $cachedata = [];
-        $parentroutedata = $parentroute ? [$parentroute] : [];
         $methods = $classinfo->getMethods();
         foreach ($methods as $method) {
-            foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
-                $routeattribute = $methodroute->newInstance();
-                $path = $routeattribute->get_path($parentroutedata);
-                $methods = $routeattribute->get_methods($parentroute);
-                if (empty($methods)) {
-                    $methods = ['GET'];
-                }
-                $cachedata[] = [
-                    'methods' => $methods,
-                    'pattern' => "/{$componentpath}{$path}",
-                    'callable' => [$classinfo->getName(), $method->getName()],
-                ];
+            if (!$method->isPublic()) {
+                continue;
             }
+            $routeattribute = self::get_route_instance_for_method(
+                [$classinfo->getName(), $method->getName()],
+            );
+
+            if ($routeattribute === null) {
+                continue;
+            }
+
+            $path = $routeattribute->get_path();
+            $httpmethods = $routeattribute->get_methods();
+            if (empty($httpmethods)) {
+                $httpmethods = ['GET'];
+            }
+            $cachedata[] = [
+                'methods' => $httpmethods,
+                'pattern' => "/{$componentpath}{$path}",
+                'callable' => [$classinfo->getName(), $method->getName()],
+            ];
         }
 
         return $cachedata;
@@ -276,22 +297,10 @@ class router {
             [$component] = explode('\\', $classinfo->getNamespaceName());
             $componentpath = $componentpathcallback($component);
 
-            $classroutes = $classinfo->getAttributes(\core\router\route::class);
-            if ($classroutes) {
-                foreach ($classroutes as $classroute) {
-                    $parentroute = $classroute->newInstance();
-                    $cachedata += $this->get_flat_route_data(
-                        $componentpath,
-                        $classinfo,
-                        $parentroute,
-                    );
-                }
-            } else {
-                $cachedata += $this->get_flat_route_data(
-                    $componentpath,
-                    $classinfo,
-                );
-            }
+            array_push($cachedata, ...$this->get_flat_route_data(
+                $componentpath,
+                $classinfo,
+            ));
         }
         return $cachedata;
     }
@@ -363,10 +372,7 @@ class router {
                 ->setName(implode('::', $data['callable']))
                 ->add(function (ServerRequestInterface $request, $handler) use ($data) {
                     // Add a Route middleware to validate the path, and parameters.
-                    $classinfo = new \ReflectionClass($data['callable'][0]);
-                    $routeattribute = $classinfo->getMethod($data['callable'][1])
-                        ->getAttributes(\core\router\route::class)[0]
-                        ->newInstance();
+                    $routeattribute = router::get_route_instance_for_method($data['callable']);
                     $request = $routeattribute->validate_request($request);
 
                     // Pass to the next Middleware.
@@ -381,10 +387,8 @@ class router {
             $group
                 ->map(...$data)
                 ->add(function (ServerRequestInterface $request, $handler) use ($data) {
-                    $classinfo = new \ReflectionClass($data['callable'][0]);
-                    $routeattribute = $classinfo->getMethod($data['callable'][1])
-                    ->getAttributes(\core\router\route::class)[0]
-                        ->newInstance();
+                    $routeattribute = router::get_route_instance_for_method($data['callable']);
+
                     // Add a Route middleware to validate the path, and parameters.
                     $request = $routeattribute->validate_request($request);
 
@@ -392,10 +396,10 @@ class router {
                     return $handler->handle($request);
                 })
                 ->add(function(ServerRequestInterface $request, $handler) {
-                    \core\notification::add(
-                        'This page has been replaced by a newer version. Please update your code.',
-                        \core\notification::WARNING,
-                    );
+                    // \core\notification::add(
+                    //     'This page has been replaced by a newer version. Please update your code.',
+                    //     \core\notification::WARNING,
+                    // );
 
                     return $handler->handle($request);
                 });
@@ -460,6 +464,8 @@ class router {
         array $params,
         array $queryparams,
     ): moodle_url {
+        global $CFG;
+
         $container = \core\container::get_container();
         $router = $container->get(self::class);
         $app = $router->get_app();
@@ -468,11 +474,42 @@ class router {
         $routename = self::get_route_name_for_callable($callable);
 
         return new moodle_url(
-            url: $parser->urlFor(
+            url: $parser->fullUrlFor(
+                new Uri($CFG->wwwroot),
                 $routename,
                 $params,
                 $queryparams,
             ),
         );
+    }
+
+    public static function get_route_instance_for_method($callable): ?route {
+        $container = \core\container::get_container();
+
+        $resolver = $container->get(\Invoker\CallableResolver::class);
+        $callable = $resolver->resolve($callable);
+
+        $classinfo = new \ReflectionClass($callable[0]);
+        $classattributes = $classinfo->getAttributes(\core\router\route::class);
+        $classroute = null;
+        if ($classattributes) {
+            $classroute = $classattributes[0]->newInstance();
+        }
+
+        $methodattributes = $classinfo->getMethod($callable[1])->getAttributes(\core\router\route::class);
+        $methodroute = null;
+        if ($methodattributes) {
+            $methodroute = $methodattributes[0]->newInstance();
+        }
+
+        if ($classroute && $methodroute) {
+            $methodroute->set_parent($classroute);
+        }
+
+        if ($methodroute) {
+            return $methodroute;
+        }
+
+        return null;
     }
 }

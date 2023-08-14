@@ -107,14 +107,43 @@ class specification implements
         array $parentcontexts,
         route $route,
     ): self {
-        $path = $route->get_path($parentcontexts);
+        $path = $route->get_path();
         $path = "/{$component}{$path}";
 
-        $this->data->paths->{$path} = $route->get_openapi_description(
-            api: $this,
-            component: $component,
-            parentcontexts: $parentcontexts,
+        // Check for any optional parameters.
+        // OpenAPI does not support optional parameters so we have to duplicate routes instead.
+        // We can determine if this is optional if there is any `[` character before it in the path.
+        // There can be no required parameter after any optional parameter.
+        $optionalparameters = array_filter(
+            $route->get_path_parameters(),
+            fn($parameter) => !$parameter->is_required($route),
         );
+
+        $addpath = function(string $path) use ($route, $component, $parentcontexts) {
+            $path = str_replace(
+                ['[', ']'],
+                '',
+                $path,
+            );
+
+            $pathdocs = $route->get_openapi_description(
+                api: $this,
+                component: $component,
+                path: $path,
+                parentcontexts: $parentcontexts,
+            );
+
+            $this->data->paths->{$path} = $pathdocs;
+        };
+
+        $addpath($path);
+
+        if (!empty($optionalparameters)) {
+            while (strrpos($path, '[') !== false) {
+                $path = substr($path, 0, strrpos($path, '['));
+                $addpath($path);
+            }
+        }
 
         return $this;
     }
@@ -132,7 +161,9 @@ class specification implements
         string $name,
         parameter $parameter,
     ): self {
-        $this->data->components->parameters->$name = $parameter->get_schema();
+        if ($schema = $parameter->get_schema()) {
+            $this->data->components->parameters->$name = $schema;
+        }
 
         return $this;
     }

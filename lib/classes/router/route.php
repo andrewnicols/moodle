@@ -19,8 +19,6 @@ namespace core\router;
 use Attribute;
 use coding_exception;
 use core\openapi\specification;
-use GuzzleHttp\Psr7\ServerRequest;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\Route as RoutingRoute;
@@ -39,6 +37,9 @@ use Slim\Routing\RouteContext;
 class route {
     /** @var string[] The list of HTTP Methods */
     protected array $method = [];
+
+    /** @var route|null The parent route */
+    protected ?route $parentroute = null;
 
     /**
      * Constructor for a new Moodle route.
@@ -103,23 +104,22 @@ class route {
         ));
     }
 
-    public function get_path(
-        array $parents = [],
-    ): string {
+    public function set_parent(route $parent) {
+        $this->parentroute = $parent;
+    }
+
+    public function get_path(): string {
         $path = $this->path ?? '';
 
-        if (count($parents)) {
-            $parent = array_shift($parents);
-            $path = $parent->get_path($parents) . $path;
+        if ($this->parentroute) {
+            $path = $this->parentroute->get_path() . $path;
         }
         return $path;
     }
 
-    public function get_methods(
-        ?route $parent = null,
-    ): array {
+    public function get_methods(): array {
         return array_merge(
-            $parent ? $parent->get_methods() : [],
+            $this->parentroute ? $this->parentroute->get_methods() : [],
             $this->method,
         );
     }
@@ -140,7 +140,11 @@ class route {
      * @throws coding_exception 
      */
     public function validate_path(RoutingRoute $route): void {
-        if (count($this->pathtypes) !== count($route->getArguments())) {
+        $requiredparams = count(array_filter(
+            $this->pathtypes,
+            fn($pathtype) => $pathtype->is_required($this),
+        ));
+        if ($requiredparams > count($route->getArguments())) {
             throw new \coding_exception(sprintf(
                 "Route %s has %d arguments, but %d pathtypes were specified.",
                 $route->getPattern(),
@@ -177,12 +181,10 @@ class route {
         $this->responses[$response->getStatusCode()]->validate($response);
     }
 
-    public function get_operationid(
-        ?route $parentroute = null,
-    ): string {
+    public function get_operationid(): string {
         $operationid = $this->title;
-        if ($parentroute) {
-            $operationid = $parentroute->get_operationid() . $operationid;
+        if ($this->parentroute) {
+            $operationid = $this->parentroute->get_operationid() . $operationid;
         }
         return $operationid;
     }
@@ -190,16 +192,25 @@ class route {
     public function get_openapi_description(
         specification $api,
         string $component,
+        string $path,
         array $parentcontexts = [],
     ): \stdClass {
-        $searchcontexts = [$this, ...$parentcontexts];
+        $searchcontexts = [$this];
+        if ($this->parentroute) {
+            $searchcontexts[] = $this->parentroute;
+        }
 
         $data = (object) [
             'description' => $this->description,
             'summary' => $this->title,
             'tags' => [$component, ...$this->tags],
             'parameters' => array_map(
-                fn($param) => $param->get_openapi_description($api, $component, $searchcontexts),
+                fn($param) => $param->get_openapi_description(
+                    api: $api,
+                    component: $component,
+                    path: $path,
+                    parentcontexts: $searchcontexts,
+                ),
                 array_merge(
                     $this->queryparams,
                 ),
@@ -225,20 +236,34 @@ class route {
 
         $methoddata = [];
         foreach ($this->method as $method) {
-            $data->operationId = sha1(sprintf(
-                "%s/%s/%s",
-                $method,
-                $component,
-                $this->get_path($parentcontexts),
-            ));
             $methoddata[strtolower($method)] = $data;
         }
 
-        $methoddata['parameters'] = array_map(
-            fn ($param) => $param->get_openapi_description($api, $component, $searchcontexts),
-            $this->pathtypes,
+        $methoddata['parameters'] = array_filter(
+            array_map(
+                fn($param) => $param->get_openapi_description(
+                    api: $api,
+                    component: $component,
+                    path: $path,
+                    parentcontexts: $searchcontexts,
+                ),
+                $this->pathtypes,
+            ),
+            fn($param) => $param !== null,
         );
 
         return (object) $methoddata;
+    }
+
+    public function get_path_parameters(): array {
+        $parameters = [];
+        if ($this->parentroute) {
+            $parameters = $this->parentroute->get_path_parameters();
+        }
+        foreach ($this->pathtypes as $parameter) {
+            $parameters[$parameter->get_name()] = $parameter;
+        }
+
+        return $parameters;
     }
 }

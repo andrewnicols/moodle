@@ -39,6 +39,7 @@ class apidocs {
             [$component] = explode('\\', $classinfo->getNamespaceName());
 
             $classroutes = $classinfo->getAttributes(\core\router\route::class);
+
             if ($classroutes) {
                 foreach ($classroutes as $classroute) {
                     $parentroute = $classroute->newInstance();
@@ -78,15 +79,23 @@ class apidocs {
         $methods = $classinfo->getMethods();
 
         foreach ($methods as $method) {
-            foreach ($method->getAttributes(\core\router\route::class) as $methodroute) {
-                $routeattribute = $methodroute->newInstance();
-
-                $api->add_path(
-                    component: $component,
-                    parentcontexts: $parentcontexts,
-                    route: $routeattribute,
-                );
+            if (!$method->isPublic()) {
+                continue;
             }
+
+            $routeattribute = \core\router::get_route_instance_for_method(
+                [$classinfo->getName(), $method->getName()],
+            );
+
+            if ($routeattribute === null) {
+                continue;
+            }
+
+            $api->add_path(
+                component: $component,
+                parentcontexts: $parentcontexts,
+                route: $routeattribute,
+            );
         }
 
         return new \stdClass();
