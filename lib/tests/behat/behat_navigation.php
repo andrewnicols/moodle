@@ -489,9 +489,9 @@ class behat_navigation extends behat_base {
      * @param string $nodetext navigation node to click, may contain path, for example "Reports > Overview"
      * @return void
      */
-    public function i_navigate_to_in_site_administration($nodetext) {
+    public function i_navigate_to_in_site_administration($nodetext)        {
+        $this->i_am_on_page('Site administration');
         $nodelist = array_map('trim', explode('>', $nodetext));
-        $this->i_select_from_primary_navigation(get_string('administrationsite'));
         $this->select_on_administration_page($nodelist);
     }
 
@@ -724,6 +724,9 @@ class behat_navigation extends behat_base {
 
             case 'Admin notifications':
                 return new moodle_url('/admin/');
+
+            case 'Site administration':
+                return new moodle_url('/admin/search.php');
 
             case 'My private files':
                 return new moodle_url('/user/files.php');
@@ -1097,69 +1100,51 @@ class behat_navigation extends behat_base {
      * @param array $nodelist
      */
     protected function select_on_administration_page($nodelist) {
-        $parentnodes = $nodelist;
-        $lastnode = array_pop($parentnodes);
-        $xpath = '//section[@id=\'region-main\']';
+        // Try to find the leaf node first.
+        $reversednodelist = array_reverse($nodelist);
+        $pagelinktext = array_shift($reversednodelist);
+        $xpath = '//a[contains(normalize-space(.), ' . behat_context_helper::escape($pagelinktext) . ')]';
 
-        // Check if there is a separate tab for this submenu of the page. If found go to it.
-        if ($parentnodes) {
-            $tabname = behat_context_helper::escape($parentnodes[0]);
-            $tabxpath = '//ul[@role=\'tablist\']/li/a[contains(normalize-space(.), ' . $tabname . ')]';
-            $menubarxpath = '//ul[@role=\'menubar\']/li/a[contains(normalize-space(.), ' . $tabname . ')]';
-            $linkname = behat_context_helper::escape(get_string('moremenu'));
-            $menubarmorexpath = '//ul[contains(@class,\'more-nav\')]/li/a[contains(normalize-space(.), ' . $linkname . ')]';
-            $tabnode = $this->getSession()->getPage()->find('xpath', $tabxpath);
-            $menunode = $this->getSession()->getPage()->find('xpath', $menubarxpath);
-            $menubuttons = $this->getSession()->getPage()->findAll('xpath', $menubarmorexpath);
-            if ($tabnode || $menunode) {
-                $node = is_object($tabnode) ? $tabnode : $menunode;
-                if ($this->running_javascript()) {
-                    $this->execute('behat_general::i_click_on', [$node, 'NodeElement']);
-                    // Click on the tab and add 'active' tab to the xpath.
-                    $xpath .= '//div[contains(@class,\'active\')]';
-                } else {
-                    // Add the tab content selector to the xpath.
-                    $tabid = behat_context_helper::escape(ltrim($node->getAttribute('href'), '#'));
-                    $xpath .= '//div[@id = ' . $tabid . ']';
-                }
-                array_shift($parentnodes);
-            } else if (count($menubuttons) > 0) {
-                try {
-                    $menubuttons[0]->isVisible();
-                    try {
-                        $this->execute('behat_general::i_click_on', [$menubuttons[1], 'NodeElement']);
-                    } catch (Exception $e) {
-                        $this->execute('behat_general::i_click_on', [$menubuttons[0], 'NodeElement']);
-                    }
-                    $moreitemxpath = '//ul[@data-region=\'moredropdown\']/li/a[contains(normalize-space(.), ' . $tabname . ')]';
-                    if ($morenode = $this->getSession()->getPage()->find('xpath', $moreitemxpath)) {
-                        $this->execute('behat_general::i_click_on', [$morenode, 'NodeElement']);
-                        $xpath .= '//div[contains(@class,\'active\')]';
-                        array_shift($parentnodes);
-                    }
-                } catch (Exception $e) {
-                }
+        if (count($reversednodelist) > 0) {
+            $sectiontext = array_shift($reversednodelist);
+            $xpath = "//*[@data-settingcategory='{$sectiontext}']{$xpath}";
+        }
+
+        $link = $this->find('xpath', $xpath);
+
+        if (!$this->running_javascript()) {
+            $this->execute('behat_general::i_click_on', [$link, 'NodeElement']);
+            return;
+        }
+        $tabpane = $link->find('xpath', "/ancestor::*[contains(concat(' ', @class, ' '), 'tab-pane')]");
+
+        if (!$tabpane->hasClass('active')) {
+            $tabpaneid = $tabpane->getAttribute('id');
+            $tabpanelink = $this->find('xpath', "//a[@href='#{$tabpaneid}']");
+            if ($tabpanelink->isVisible()) {
+                $this->execute('behat_general::i_click_on', [$tabpanelink, 'NodeElement']);
+            } else {
+                $linkname = behat_context_helper::escape(get_string('moremenu'));
+                $menubarmorexpath = "//*[contains(concat(' ', @class, ' '), 'secondary-navigation')]//ul[contains(@class,'more-nav')]/li/a[contains(normalize-space(.), {$linkname})]";
+                $moremenu = $this->find('xpath', $menubarmorexpath);
+
+                $this->execute('behat_general::i_click_on',[
+                    $moremenu,
+                    'NodeElement',
+                ]);
+
+                $this->execute('behat_general::i_click_on', [
+                    $tabpanelink,
+                    'NodeElement',
+                ]);
             }
         }
 
-        // Find a section with the parent name in it.
-        if ($parentnodes) {
-            // Find the section on the page (links may be repeating in different sections).
-            $section = behat_context_helper::escape($parentnodes[0]);
-            $xpath .= '//div[@class=\'row\' and contains(.,'.$section.')]';
-        }
-
-        // Find a link and click on it.
-        $linkname = behat_context_helper::escape($lastnode);
-        $xpathlink = $xpathbutton = $xpath;
-        $xpathlink .= '//a[contains(normalize-space(.), ' . $linkname . ')]';
-        $xpathbutton .= '//button[contains(normalize-space(.), ' . $linkname . ')]';
-        if ($node = $this->getSession()->getPage()->find('xpath', $xpathbutton)) {
-            $this->execute('behat_general::i_click_on', [$node, 'NodeElement']);
-        } else if (!$node = $this->getSession()->getPage()->find('xpath', $xpathlink)) {
-             throw new ElementNotFoundException($this->getSession(), 'Link "' . join(' > ', $nodelist) . '"');
+        if ($tabpane->hasClass('active')) {
+            // If it's visible, just click it.
+            $this->execute('behat_general::i_click_on', [$link, 'NodeElement']);
         } else {
-            $this->execute('behat_general::i_click_on', [$node, 'NodeElement']);
+            throw new \Exception('Could not find the link to click on the administration page.');
         }
     }
 

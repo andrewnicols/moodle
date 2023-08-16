@@ -59,7 +59,7 @@
 <div class="tab-content mt-3">
     <div class="tab-pane active" id="link{{node.key}}" {{^secondarynavigation}}role="tabpanel"{{/secondarynavigation}}>
         <div class="container-fluid">
-            <div class="row">
+            <div class="row" data-settingcategory="{{text}}">
                 <div class="col-sm-3">
                 </div>
                 <div class="col">
@@ -80,7 +80,7 @@
                     {{#children.count}}
                         {{#is_short_branch}}
                             <hr>
-                            <div class="row">
+                            <div class="row" data-settingcategory="{{text}}">
                                 <div class="col-sm-3">
                                     {{#action}}<h4><a href="{{action}}">{{text}}</a></h4>{{/action}}
                                     {{^action}}<h4>{{text}}</h4>{{/action}}
@@ -103,7 +103,7 @@
         {{#children.count}}
             <div class="tab-pane" id="link{{key}}" {{^secondarynavigation}}role="tabpanel"{{/secondarynavigation}}>
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="row" data-settingcategory="{{text}}">
                         <div class="col-sm-3">
                             {{#action}}<h4><a href="{{action}}">{{text}}</a></h4>{{/action}}
                             {{^action}}<h4>{{text}}</h4>{{/action}}
@@ -124,7 +124,7 @@
                         {{#display}}
                             {{#children.count}}
                                 <hr>
-                                <div class="row">
+                                <div class="row" data-settingcategory="{{text}}">
                                     <div class="col-sm-3">
                                         {{#action}}<h4><a href="{{action}}">{{text}}</a></h4>{{/action}}
                                         {{^action}}<h4>{{text}}</h4>{{/action}}
