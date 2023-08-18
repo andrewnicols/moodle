@@ -140,6 +140,8 @@ being forced open in all behat tests.
 * A new parameter $compactmode has been added to the recaptcha_get_challenge_html() to define whether the reCaptcha element should be displayed in the compact mode or not.
   Default value is false.
 * A new native event in the `core_filters/events` AMD module eventTypes.filterContentRenderingComplete has been created to determine when the filter is complete the rendering.
+* The core/modal_factory has been deprecated. From Moodle 4.3 onwards please instantiate new modals using the ModalType.create method instead.
+  Please note that this method does not support the `trigger` option.
 
 === 4.2 ===
 
