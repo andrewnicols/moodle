@@ -158,6 +158,8 @@ being forced open in all behat tests.
   but a subset can be specified instead.
 * core/form-autocomplete now supports disabled options in the source select list. These will be displayed in the autocomplete
   options with the aria-disabled attribute, and will not be selectable.
+* The core/modal_factory has been deprecated. From Moodle 4.3 onwards please instantiate new modals using the ModalType.create method instead.
+  Please note that this method does not support the `trigger` option.
 
 === 4.2 ===
 
