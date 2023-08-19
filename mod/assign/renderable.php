@@ -712,12 +712,14 @@ class assign_files implements renderable, templatable {
         $fs = get_file_storage();
         $this->dir = $fs->get_area_tree($this->context->id, $component, $filearea, $sid);
 
-        $files = $fs->get_area_files($this->context->id,
-                                     $component,
-                                     $filearea,
-                                     $sid,
-                                     'timemodified',
-                                     false);
+        $files = $fs->get_area_files(
+            $this->context->id,
+            $component,
+            $filearea,
+            $sid,
+            'timemodified',
+            false,
+        );
 
         if (!empty($CFG->enableportfolios)) {
             require_once($CFG->libdir . '/portfoliolib.php');
@@ -787,6 +789,7 @@ class assign_files implements renderable, templatable {
      * @return array data required by template
      */
     public function export_for_template(renderer_base $output) {
+        xdebug_break();
         return [
             'foldersexpanded' => true,
             'files' => $this->prepare_dir_for_template($this->dir, $output)
@@ -816,20 +819,71 @@ class assign_files implements renderable, templatable {
     /**
      * Generates the structure required by core/filetree template for a file
      *
-     * @param array $file
+     * @param stored_file $file
      * @param renderer_base $output
      * @return array
      */
     protected function prepare_file_for_template($file, renderer_base $output) {
-        global $CFG;
+        global $OUTPUT;
 
-        $data = [];
-        $data['title'] = $file->get_filename();
-        $data['url'] = $file->fileurl;
-        $data['icon'] = $output->pix_icon(file_file_icon($file), $file->get_filename(), 'moodle', array('class' => 'icon'));
-        $data['extrahtml'] = $file->plagiarismlinks . $file->portfoliobutton;
-        $data['isdir'] = false;
+        $extrahtml = '';
+        if ($plagiarismlinks = $this->get_plagiarism_links($file)) {
+            $extrahtml .= $plagiarismlinks;
+        }
+        if ($portfoliobutton = $this->get_portfolio_button($file)) {
+            $extrahtml .= $portfoliobutton;
+        }
 
-        return $data;
+        return [
+            'title' => $file->get_filename(),
+            'url' => $this->get_file_url($file),
+            'icon' => $OUTPUT->pix_icon(file_file_icon($file), $file->get_filename(), 'moodle', array('class' => 'icon')),
+            'extrahtml' => $extrahtml,
+            'isdir' => false,
+        ];
     }
+
+    /**
+     * Get the portfolio button content for the specified file.
+     *
+     * @param stored_file $file
+     * @return string
+     */
+    protected function get_portfolio_button(stored_file $file): string {
+        global $CFG;
+        if (empty($CFG->enableportfolios)) {
+            return '';
+        }
+
+        if (!has_capability('mod/assign:exportownsubmission', $this->context)) {
+            return '';
+        }
+
+        require_once($CFG->libdir . '/portfoliolib.php');
+
+        $button = new portfolio_add_button();
+        $portfolioparams = [
+            'cmid' => $this->cm->id,
+            'fileid' => $file->get_id(),
+        ];
+        $button->set_callback_options('assign_portfolio_caller', $portfolioparams, 'mod_assign');
+        $button->set_format_by_file($file);
+
+        return (string) $button->to_html(PORTFOLIO_ADD_ICON_LINK);
+    }
+
+    protected function get_plagiarism_links($file): ?string {
+        global $CFG;
+        if (!$CFG->enableplagiarism) {
+            return null;
+        }
+        require_once($CFG->libdir . '/plagiarismlib.php');
+        return plagiarism_get_links([
+            'userid' => $file->get_userid(),
+            'file' => $file,
+            'cmid' => $this->cm->id,
+            'course' => $this->course
+        ]);
+    }
+
 }

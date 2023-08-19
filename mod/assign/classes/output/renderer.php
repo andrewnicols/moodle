@@ -68,16 +68,10 @@ class renderer extends \plugin_renderer_base {
      * @return string
      */
     public function render_assign_files(\assign_files $tree) {
-        $this->htmlid = \html_writer::random_id('assign_files_tree');
-        $this->page->requires->js_init_call('M.mod_assign.init_tree', array(true, $this->htmlid));
-        $html = '<div id="'.$this->htmlid.'">';
-        $html .= $this->htmllize_tree($tree, $tree->dir);
-        $html .= '</div>';
-
-        if ($tree->portfolioform) {
-            $html .= $tree->portfolioform;
-        }
-        return $html;
+        return $this->render_from_template(
+            'core/filetree',
+            $tree->export_for_template($this),
+        );
     }
 
     /**
@@ -1356,98 +1350,6 @@ class renderer extends \plugin_renderer_base {
 
         // Assignment is not overdue, and no submission has been made. Just display the due date.
         return [get_string('paramtimeremaining', 'assign', format_time($duedate - $time)), 'timeremaining'];
-    }
-
-    /**
-     * Internal function - creates htmls structure suitable for YUI tree.
-     *
-     * @param \assign_files $tree
-     * @param array $dir
-     * @return string
-     */
-    protected function htmllize_tree(\assign_files $tree, $dir) {
-        global $CFG;
-        $yuiconfig = array();
-        $yuiconfig['type'] = 'html';
-
-        if (empty($dir['subdirs']) and empty($dir['files'])) {
-            return '';
-        }
-
-        $result = '<ul>';
-        foreach ($dir['subdirs'] as $subdir) {
-            $image = $this->output->pix_icon(file_folder_icon(),
-                                             $subdir['dirname'],
-                                             'moodle',
-                                             array('class'=>'icon'));
-            $result .= '<li yuiConfig=\'' . json_encode($yuiconfig) . '\'>' .
-                       '<div>' . $image . ' ' . s($subdir['dirname']) . '</div> ' .
-                       $this->htmllize_tree($tree, $subdir) .
-                       '</li>';
-        }
-
-        foreach ($dir['files'] as $file) {
-            $filename = $file->get_filename();
-            if ($CFG->enableplagiarism) {
-                require_once($CFG->libdir.'/plagiarismlib.php');
-                $plagiarismlinks = plagiarism_get_links(array('userid'=>$file->get_userid(),
-                                                             'file'=>$file,
-                                                             'cmid'=>$tree->cm->id,
-                                                             'course'=>$tree->course));
-            } else {
-                $plagiarismlinks = '';
-            }
-            $image = $this->output->pix_icon(file_file_icon($file),
-                                             $filename,
-                                             'moodle',
-                                             array('class'=>'icon'));
-            $result .= '<li yuiConfig=\'' . json_encode($yuiconfig) . '\'>' .
-                '<div>' .
-                    '<div class="fileuploadsubmission">' . $image . ' ' .
-                    html_writer::link($tree->get_file_url($file), $file->get_filename(), [
-                        'target' => '_blank',
-                    ]) . ' ' .
-                    $plagiarismlinks . ' ' .
-                    $this->get_portfolio_button($tree, $file) . ' ' .
-                    '</div>' .
-                    '<div class="fileuploadsubmissiontime">' . $tree->get_modified_time($file) . '</div>' .
-                '</div>' .
-            '</li>';
-        }
-
-        $result .= '</ul>';
-
-        return $result;
-    }
-
-    /**
-     * Get the portfolio button content for the specified file.
-     *
-     * @param assign_files $tree
-     * @param stored_file $file
-     * @return string
-     */
-    protected function get_portfolio_button(assign_files $tree, stored_file $file): string {
-        global $CFG;
-        if (empty($CFG->enableportfolios)) {
-            return '';
-        }
-
-        if (!has_capability('mod/assign:exportownsubmission', $tree->context)) {
-            return '';
-        }
-
-        require_once($CFG->libdir . '/portfoliolib.php');
-
-        $button = new portfolio_add_button();
-        $portfolioparams = [
-            'cmid' => $tree->cm->id,
-            'fileid' => $file->get_id(),
-        ];
-        $button->set_callback_options('assign_portfolio_caller', $portfolioparams, 'mod_assign');
-        $button->set_format_by_file($file);
-
-        return (string) $button->to_html(PORTFOLIO_ADD_ICON_LINK);
     }
 
     /**
