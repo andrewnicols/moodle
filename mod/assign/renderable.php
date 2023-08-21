@@ -789,7 +789,6 @@ class assign_files implements renderable, templatable {
      * @return array data required by template
      */
     public function export_for_template(renderer_base $output) {
-        xdebug_break();
         return [
             'foldersexpanded' => true,
             'files' => $this->prepare_dir_for_template($this->dir, $output)
