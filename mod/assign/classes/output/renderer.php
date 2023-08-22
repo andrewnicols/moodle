@@ -69,7 +69,7 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_assign_files(\assign_files $tree) {
         return $this->render_from_template(
-            'core/filetree',
+            'core/filetreegrid',
             $tree->export_for_template($this),
         );
     }

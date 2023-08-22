@@ -789,9 +789,36 @@ class assign_files implements renderable, templatable {
      * @return array data required by template
      */
     public function export_for_template(renderer_base $output) {
+        $filestructure = $this->prepare_dir_for_template($this->dir, $output, 1);
+
+        $hasplagiarism = false;
+        $hasportfolio = false;
+
+        foreach ($filestructure as $fileordir) {
+            if (!empty($fileordir['plagiarismlinks'])) {
+                $hasplagiarism = true;
+            }
+            if (!empty($fileordir['portfoliobutton'])) {
+                $hasportfolio = true;
+            }
+
+            if ($hasplagiarism && $hasportfolio) {
+                break;
+            }
+        }
+
+        foreach ($filestructure as &$fileordir) {
+            if ($hasplagiarism && !array_key_exists('plagiarismlinks', $fileordir)) {
+                $fileordir['plagiarismlinks'] = '&nbsp;';
+            }
+            if ($hasportfolio && !array_key_exists('portfoliobutton', $fileordir)) {
+                $fileordir['portfoliobutton'] = '&nbsp;';
+            }
+        }
+
         return [
             'foldersexpanded' => true,
-            'files' => $this->prepare_dir_for_template($this->dir, $output)
+            'files' => $filestructure,
         ];
     }
 
@@ -802,15 +829,29 @@ class assign_files implements renderable, templatable {
      * @param renderer_base $output
      * @return array tree structure required by core/filetree template.
      */
-    protected function prepare_dir_for_template($dir, renderer_base $output) {
+    protected function prepare_dir_for_template(
+        array $dir,
+        renderer_base $output,
+        int $depth,
+    ) {
         $files = [];
         foreach ($dir['subdirs'] as $subdir) {
-            $dirfiles = $this->prepare_dir_for_template($subdir, $output);
-            $files[] = ['title' => $subdir['dirname'], 'isdir' => true, 'files' => $dirfiles];
+            $files[] = [
+                'title' => $subdir['dirname'],
+                'isdir' => true,
+                'depth' => $depth,
+            ];
+            $files = array_merge(
+                $files,
+                $this->prepare_dir_for_template($subdir, $output, $depth + 1),
+            );
         }
 
         foreach ($dir['files'] as $file) {
-            $files[] = $this->prepare_file_for_template($file, $output);
+            $files = array_merge(
+                $files,
+                [$this->prepare_file_for_template($file, $output, $depth)],
+            );
         }
         return $files;
     }
@@ -822,7 +863,11 @@ class assign_files implements renderable, templatable {
      * @param renderer_base $output
      * @return array
      */
-    protected function prepare_file_for_template($file, renderer_base $output) {
+    protected function prepare_file_for_template(
+        stored_file $file,
+        renderer_base $output,
+        int $depth,
+    ) {
         global $OUTPUT;
 
         $extrahtml = '';
@@ -837,8 +882,11 @@ class assign_files implements renderable, templatable {
             'title' => $file->get_filename(),
             'url' => $this->get_file_url($file),
             'icon' => $OUTPUT->pix_icon(file_file_icon($file), $file->get_filename(), 'moodle', array('class' => 'icon')),
+            'plagiarismlinks' => $plagiarismlinks . $plagiarismlinks . $plagiarismlinks,
+            'portfoliobutton' => $portfoliobutton . $portfoliobutton . $portfoliobutton,
             'extrahtml' => $extrahtml,
             'isdir' => false,
+            'depth' => $depth,
         ];
     }
 

@@ -15,15 +15,13 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template core/filetree
+    @template core/filetree_grid
 
-    File tree.
+    TODO describe template filetree_grid
 
     Example context (json):
     {
-       "files": [
-            {
-                "level": "1",
+            "level": "1",
                 "title": "Directory",
                 "isdir": true,
                 "files": [
@@ -68,12 +66,10 @@
     }
 }}
 
-<div class="filetree" id="file-tree-{{uniqid}}" role="tree">
-    {{> core/filetree_dir }}
-</div>
+<table role="treegrid" id="file-treegrid-{{uniqid}}">
+    {{> core/filetreegrid_dir }}
+</table>
 
 {{#js}}
-require(['core/tree'], function(Tree) {
-    new Tree("#file-tree-{{uniqid}}");
-});
+require(['core/treegrid'], (TreeGrid) => TreeGrid.createTreeGrid(document.getElementById("file-treegrid-{{uniqid}}")));
 {{/js}}

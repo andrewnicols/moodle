@@ -38295,6 +38295,10 @@ div.editor_atto_toolbar button .icon {
   margin-right: auto;
 }
 
+table[role=treegrid] tr[aria-hidden=true] {
+  display: none;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
