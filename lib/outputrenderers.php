@@ -213,9 +213,14 @@ class renderer_base {
             $mustache->addHelper('uniqid', $uniqidhelper);
         }
 
+        if (str_contains($renderedtemplate, '</html>')) {
+            \core_shutdown_manager::set_end_tag("</html>");
+
+            return substr($renderedtemplate, 0, -strlen('</html>'));
+        }
+
         return $renderedtemplate;
     }
-
 
     /**
      * Returns rendered widget.
@@ -5093,7 +5098,9 @@ EOD;
      * @return string ascii fragment
      */
     public function render_progress_bar_update(string $id, float $percent, string $msg, string $estimate) : string {
-        return html_writer::script(js_writer::function_call('updateProgressBar', [$id, $percent, $msg, $estimate]));
+        $output = html_writer::script(js_writer::function_call('updateProgressBar', [$id, $percent, $msg, $estimate]));
+        $output .= $this->select_element_for_append(forceflush: true);
+        return $output;
     }
 
     /**
@@ -5197,19 +5204,29 @@ EOD;
      * @param string $selector where new content should be appended
      * @param string $element which contains the streamed content
      */
-    public function select_element_for_append(string $selector = '#region-main [role=main]', string $element = 'div') {
-
+    public function select_element_for_append(
+        string $selector = '#region-main [role=main]',
+        string $element = 'div',
+        bool $forceflush = false,
+    ) {
+        $this->defer_html_end_output();
         static $currentselector = '';
         static $currentelement = '';
+        static $uniqid = '';
 
         if (!CLI_SCRIPT && !NO_OUTPUT_BUFFERING) {
             throw new coding_exception('select_element_for_append used in a non-CLI script without setting NO_OUTPUT_BUFFERING.',
                 DEBUG_DEVELOPER);
         }
 
-        // We are already streaming into this element so don't change anything.
-        if ($currentselector === $selector && $currentelement === $element) {
-            return;
+        if ($forceflush) {
+            $selector = $currentselector;
+            $element = $currentelement;
+        } else {
+            // We are already streaming into this element so don't change anything.
+            if ($currentselector === $selector && $currentelement === $element) {
+                return;
+            }
         }
 
         $html = '';
@@ -5217,15 +5234,35 @@ EOD;
         // We have a streaming element so close it before starting a new one.
         if ($currentselector !== '') {
             $html .= html_writer::end_tag($currentelement);
+            $html .= html_writer::end_tag('div');
+            $html .= html_writer::script(<<<EOF
+                const nodeList = document.getElementById('{$uniqid}')?.children;
+                if (nodeList) {
+                    document.querySelector('$currentselector').append(...nodeList);
+                }
+            EOF);
         }
 
         $currentselector = $selector;
         $currentelement = $element;
+        $uniqid = 'append-' . uniqid();
 
-        // Create an unclosed element for the streamed content to append into.
-        $id = uniqid();
-        $html .= html_writer::start_tag($element, ['id' => $id]);
-        $html .= html_writer::tag('script', "document.querySelector('$selector').append(document.getElementById('$id'))");
+        core_shutdown_manager::register_function(function() {
+            echo $this->select_element_for_append('', '');
+        });
+
+        $html .= html_writer::start_tag(
+            tagname: 'div',
+            attributes: [
+                'id' => $uniqid,
+                'style' => 'display: none;',
+            ],
+        );
+
+        $html .= html_writer::start_tag(
+            tagname: $element,
+        );
+
         return $html;
     }
 
@@ -5244,16 +5281,27 @@ EOD;
      * @param bool $outer Wether it replaces the innerHTML or the outerHTML
      */
     public function select_element_for_replace(string $selector, string $html, bool $outer = false) {
-
+        $this->defer_html_end_output();
         if (!CLI_SCRIPT && !NO_OUTPUT_BUFFERING) {
             throw new coding_exception('select_element_for_replace used in a non-CLI script without setting NO_OUTPUT_BUFFERING.',
                 DEBUG_DEVELOPER);
         }
 
-        // Escape html for use inside a javascript string.
-        $html = addslashes_js($html);
-        $property = $outer ? 'outerHTML' : 'innerHTML';
-        $output = html_writer::tag('script', "document.querySelector('$selector').$property = '$html';");
+        $uniqid = 'replace-' . uniqid();
+        $output = html_writer::div(
+            content: $html,
+            attributes: [
+                'id' => $uniqid,
+                'style' => 'display: none;',
+            ],
+        );
+
+        $output .= html_writer::script(
+            "document.querySelector('$selector').replaceChildren(
+                ...document.getElementById('{$uniqid}').children
+            )",
+        );
+
         return $output;
     }
 }

@@ -188,7 +188,18 @@ class core_shutdown_manager {
             }
         }
 
+        echo self::get_end_tag();
+
         // NOTE: do not dispose $DB and MUC here, they might be used from legacy shutdown functions.
+    }
+
+    protected static string $endtag = '';
+    public static function set_end_tag(string $tag = ''): void {
+        self::$endtag = $tag;
+    }
+
+    protected static function get_end_tag(): string {
+        return self::$endtag;
     }
 
     /**
