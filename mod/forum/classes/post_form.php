@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -118,11 +117,9 @@ class mod_forum_post_form extends moodleform {
         $mform->setType('message', PARAM_RAW);
         $mform->addRule('message', get_string('required'), 'required', null, 'client');
 
-        if ($inpagereply && $CFG->forum_showgroupoptionsinquickdiscussion) {
+        if ($inpagereply) {
             $this->add_group_elements_if_applicable($mform);
-        }
-
-        if (!$inpagereply) {
+        } else {
             $manageactivities = has_capability('moodle/course:manageactivities', $coursecontext);
 
             if (\mod_forum\subscriptions::is_forcesubscribed($forum)) {
@@ -321,7 +318,6 @@ class mod_forum_post_form extends moodleform {
             // Note: This is not the same as accessallgroups. This option will copy a post to all groups that a
             // user is a member of.
             $mform->addElement('checkbox', 'posttomygroups', get_string('posttomygroups', 'forum'));
-            $mform->setDefault('posttomygroups', $CFG->forum_posttomygroupsdefault);
             $mform->addHelpButton('posttomygroups', 'posttomygroups', 'forum');
             $mform->disabledIf('groupinfo', 'posttomygroups', 'checked');
         }

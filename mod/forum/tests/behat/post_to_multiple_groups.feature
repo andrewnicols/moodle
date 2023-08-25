@@ -1,66 +1,66 @@
 @mod @mod_forum
 Feature: A user with access to multiple groups should be able to post a copy of a message to all the groups they have access to
-  In order to post to all groups a user has access to
-  As a user
-  I need to have the option to post a copy of a message to all groups
+    In order to post to all groups a user has access to
+    As a user
+    I need to have the option to post a copy of a message to all groups
 
   Background:
     Given the following "users" exist:
-      | username | firstname | lastname | email |
-      | teacher1 | Teacher | 1 | teacher1@example.com |
-      | student1 | Student | 1 | student1@example.com |
-      | student2 | Student | 2 | student2@example.com |
-      | student3 | Student | 3 | student3@example.com |
+      | username | firstname | lastname | email                |
+      | teacher1 | Teacher   | 1        | teacher1@example.com |
+      | student1 | Student   | 1        | student1@example.com |
+      | student2 | Student   | 2        | student2@example.com |
+      | student3 | Student   | 3        | student3@example.com |
     And the following "courses" exist:
       | fullname | shortname | category |
-      | Course 1 | C1 | 0 |
-      | Course 2 | C2 | 0 |
+      | Course 1 | C1        | 0        |
+      | Course 2 | C2        | 0        |
     And the following "course enrolments" exist:
-      | user | course | role |
-      | teacher1 | C1 | editingteacher |
-      | teacher1 | C2 | editingteacher |
-      | student1 | C1 | student |
-      | student1 | C2 | student |
-      | student2 | C1 | student |
-      | student2 | C2 | student |
-      | student3 | C1 | student |
-      | student3 | C2 | student |
+      | user     | course | role           |
+      | teacher1 | C1     | editingteacher |
+      | teacher1 | C2     | editingteacher |
+      | student1 | C1     | student        |
+      | student1 | C2     | student        |
+      | student2 | C1     | student        |
+      | student2 | C2     | student        |
+      | student3 | C1     | student        |
+      | student3 | C2     | student        |
     And the following "groups" exist:
-      | name | course | idnumber |
-      | Group A | C1 | C1G1 |
-      | Group B | C1 | C1G2 |
-      | Group C | C1 | C1G3 |
-      | Group A | C2 | C2G1 |
-      | Group B | C2 | C2G2 |
-      | Group C | C2 | C2G3 |
+      | name    | course | idnumber |
+      | Group A | C1     | C1G1     |
+      | Group B | C1     | C1G2     |
+      | Group C | C1     | C1G3     |
+      | Group A | C2     | C2G1     |
+      | Group B | C2     | C2G2     |
+      | Group C | C2     | C2G3     |
     And the following "groupings" exist:
       | name | course | idnumber |
-      | G1 | C2 | G1 |
+      | G1   | C2     | G1       |
     And the following "group members" exist:
-      | user | group |
-      | teacher1 | C1G1 |
-      | teacher1 | C1G2 |
-      | teacher1 | C1G3 |
-      | teacher1 | C2G1 |
-      | teacher1 | C2G1 |
-      | student1 | C1G1 |
-      | student1 | C2G1 |
-      | student1 | C2G2 |
-      | student2 | C1G1 |
-      | student2 | C1G2 |
-      | student3 | C1G1 |
-      | student3 | C1G2 |
-      | student3 | C1G3 |
+      | user     | group |
+      | teacher1 | C1G1  |
+      | teacher1 | C1G2  |
+      | teacher1 | C1G3  |
+      | teacher1 | C2G1  |
+      | teacher1 | C2G1  |
+      | student1 | C1G1  |
+      | student1 | C2G1  |
+      | student1 | C2G2  |
+      | student2 | C1G1  |
+      | student2 | C1G2  |
+      | student3 | C1G1  |
+      | student3 | C1G2  |
+      | student3 | C1G3  |
     And the following "grouping groups" exist:
       | grouping | group |
-      | G1       | C2G1 |
-      | G1       | C2G2 |
+      | G1       | C2G1  |
+      | G1       | C2G2  |
     And the following "activities" exist:
-      | activity   | name                   | course | idnumber     | groupmode | grouping |
-      | forum      | No group forum         | C1     | forum        | 0         |          |
-      | forum      | Separate group forum   | C1     | forum        | 1         |          |
-      | forum      | Visible group forum    | C1     | forum        | 2         |          |
-      | forum      | Groupings forum        | C2     | forum        | 1         | G1       |
+      | activity | name                 | course | idnumber | groupmode | grouping |
+      | forum    | No group forum       | C1     | forum    | 0         |          |
+      | forum    | Separate group forum | C1     | forum    | 1         |          |
+      | forum    | Visible group forum  | C1     | forum    | 2         |          |
+      | forum    | Groupings forum      | C2     | forum    | 1         | G1       |
     And the following forum discussions exist in course "Course 1":
       | user     | forum                | name         | message | posttomygroups |
       | teacher1 | Separate group forum | Discussion 1 | test    | 1              |
@@ -91,43 +91,18 @@ Feature: A user with access to multiple groups should be able to post a copy of 
     Given I log in as "teacher1"
     And I am on "Course 2" course homepage
     And I add a new discussion to "Groupings forum" forum with:
-      | Subject | Discussion 1 |
-      | Message | test |
-      | Post a copy to all groups | 1 |
+      | Subject                   | Discussion 1 |
+      | Message                   | test         |
+      | Post a copy to all groups | 1            |
     When I am on the "Groupings forum" "forum activity" page logged in as student1
     Then I should see "Discussion 1"
     And I am on the "Groupings forum" "forum activity" page logged in as student2
     And I should not see "Discussion 1"
 
-  Scenario: The 'Post a copy to all groups' option can be available in the quick discussion creation form
-    Given the following config values are set as admin:
-      | forum_showgroupoptionsinquickdiscussion | 1 |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Separate group forum"
-    When I click on "Add discussion topic" "link"
-    Then "input[name=posttomygroups]" "css_element" should exist
-
+  @javascript
   Scenario: The default value of the 'Post a copy to all groups' option in discussion creation forms can be configured as 'Yes'
-    Given the following config values are set as admin:
-      | forum_showgroupoptionsinquickdiscussion | 1 |
-      | forum_posttomygroupsdefault | 1 |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Separate group forum"
+    Given I am on the "Separate group forum" "forum activity" page logged in as teacher1
     When I click on "Add discussion topic" "link"
-    Then "input[name=posttomygroups][checked=checked]" "css_element" should exist
+    Then "Post a copy to all groups" "field" should exist
     And I click on "Advanced" "button"
-    And "input[name=posttomygroups][checked=checked]" "css_element" should exist
-
-  Scenario: The default value of the 'Post a copy to all groups' option in discussion creation forms can be configured as 'No'
-    Given the following config values are set as admin:
-      | forum_showgroupoptionsinquickdiscussion | 1 |
-      | forum_posttomygroupsdefault | 0 |
-    And I log in as "teacher1"
-    And I am on "Course 1" course homepage
-    And I follow "Separate group forum"
-    When I click on "Add discussion topic" "link"
-    Then "input[name=posttomygroups]:not([checked=checked])" "css_element" should exist
-    And I click on "Advanced" "button"
-    And "input[name=posttomygroups]:not([checked=checked])" "css_element" should exist
+    Then "Post a copy to all groups" "field" should exist

@@ -138,12 +138,5 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configcheckbox('forum_enabletimedposts', get_string('timedposts', 'forum'),
                        get_string('configenabletimedposts', 'forum'), 1));
-
-    $settings->add(new admin_setting_configcheckbox('forum_showgroupoptionsinquickdiscussion',
-        get_string('showgroupoptionsinquickdiscussion', 'forum'),
-        get_string('showgroupoptionsinquickdiscussion_desc', 'forum'), 0));
-
-    $settings->add(new admin_setting_configselect('forum_posttomygroupsdefault', get_string('posttomygroupsdefault', 'forum'),
-        get_string('posttomygroupsdefault_desc', 'forum'), 0,
-        [0 => get_string('no'), 1 => get_string('yes')]));
 }
+
