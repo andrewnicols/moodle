@@ -1325,15 +1325,13 @@ class pgsql_native_moodle_database extends moodle_database {
      *
      * Operation is not atomic, use transactions if necessary.
      *
-     * @since Moodle 3.6
+     * @since Moodle 4.3
      *
      * @param string $table  The database table to be inserted into
-     * @param array|Traversable $dataobjects list of objects to be inserted, must be compatible with foreach
-     * @return void does not return new record ids
-     *
+     * @param iterable $dataobjects list of objects to be inserted, must be compatible with foreach
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function import_records($table, $dataobjects) {
+    public function import_records(string $table, iterable $dataobjects): void {
         // PostgreSQL does not seem to have problems with huge queries.
         $chunksize = 500;
         if (!empty($this->dboptions['bulkinsertsize'])) {
@@ -1371,20 +1369,28 @@ class pgsql_native_moodle_database extends moodle_database {
      * @param array $chunk
      * @param database_column_info[] $columns
      */
-    protected function import_chunk($table, array $chunk, array $columns) {
+    protected function import_chunk(string $table, array $chunk, array $columns): void {
         $i = 1;
-        $params = array();
-        $values = array();
+        $params = [];
+        $values = [];
+
         foreach ($chunk as $dataobject) {
-            $vals = array();
+            $vals = [];
             foreach ($columns as $field => $column) {
-                $params[] = $dataobject[$field];
-                $vals[] = "\$".$i++;
+                if (array_key_exists($field, $dataobject)) {
+                    $params[] = $this->normalise_value($column, $dataobject[$field]);
+                } else if ($column->has_default) {
+                    $params[] = $column->default_value;
+                } else {
+                    $params[] = null;
+                }
+                $vals[] = "\$" . $i;
+                $i++;
             }
-            $values[] = '('.implode(',', $vals).')';
+            $values[] = '(' . implode(',', $vals) . ')';
         }
 
-        $fieldssql = '('.implode(',', array_keys($columns)).')';
+        $fieldssql = '(' . implode(',', array_keys($columns)) . ')';
         $valuessql = implode(',', $values);
 
         $sql = "INSERT INTO {$this->prefix}$table $fieldssql VALUES $valuessql";

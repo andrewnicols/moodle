@@ -1686,41 +1686,34 @@ class mysqli_native_moodle_database extends moodle_database {
      *
      * Operation is not atomic, use transactions if necessary.
      *
-     * @since Moodle 3.6
+     * @since Moodle 4.3
      *
      * @param string $table  The database table to be inserted into
-     * @param array|Traversable $dataobjects list of objects to be inserted, must be compatible with foreach
-     * @return void does not return new record ids
-     *
+     * @param iterable $dataobjects list of objects to be inserted, must be compatible with foreach
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function import_records($table, $dataobjects) {
+    public function import_records(string $table, iterable $dataobjects): void {
         // MySQL has a relatively small query length limit by default,
         // make sure 'max_allowed_packet' in my.cnf is high enough
-        // if you change the following default...
+        // if you change the following default.
         static $chunksize = null;
         if ($chunksize === null) {
             if (!empty($this->dboptions['bulkinsertsize'])) {
                 $chunksize = (int)$this->dboptions['bulkinsertsize'];
             } else {
-                if (PHP_INT_SIZE === 4) {
-                    // Bad luck for Windows, we cannot do any maths with large numbers.
-                    $chunksize = 5;
-                } else {
-                    $sql = "SHOW VARIABLES LIKE 'max_allowed_packet'";
-                    $this->query_start($sql, null, SQL_QUERY_AUX);
-                    $result = $this->mysqli->query($sql);
-                    $this->query_end($result);
-                    $size = 0;
-                    if ($rec = $result->fetch_assoc()) {
-                        $size = $rec['Value'];
-                    }
-                    $result->close();
-                    // Hopefully 200kb per object are enough.
-                    $chunksize = (int)($size / 200000);
-                    if ($chunksize > 50) {
-                        $chunksize = 50;
-                    }
+                $sql = "SHOW VARIABLES LIKE 'max_allowed_packet'";
+                $this->query_start($sql, null, SQL_QUERY_AUX);
+                $result = $this->mysqli->query($sql);
+                $this->query_end($result);
+                $size = 0;
+                if ($rec = $result->fetch_assoc()) {
+                    $size = $rec['Value'];
+                }
+                $result->close();
+                // Hopefully 200kb per object are enough.
+                $chunksize = (int)($size / 200000);
+                if ($chunksize > 50) {
+                    $chunksize = 50;
                 }
             }
         }
@@ -1755,7 +1748,7 @@ class mysqli_native_moodle_database extends moodle_database {
      * @param array $chunk
      * @param database_column_info[] $columns
      */
-    protected function import_chunk($table, array $chunk, array $columns) {
+    protected function import_chunk(string $table, array $chunk, array $columns): void {
         $fieldssql = '(' . implode(',', array_keys($columns)) . ')';
 
         $valuessql = '(?' . str_repeat(',?', count($columns) - 1) . ')';
@@ -1764,7 +1757,13 @@ class mysqli_native_moodle_database extends moodle_database {
         $params = array();
         foreach ($chunk as $dataobject) {
             foreach ($columns as $field => $column) {
-                $params[] = $dataobject[$field];
+                if (array_key_exists($field, $dataobject)) {
+                    $params[] = $this->normalise_value($column, $dataobject[$field]);
+                } else if ($column->has_default) {
+                    $params[] = $column->default_value;
+                } else {
+                    $params[] = null;
+                }
             }
         }
 

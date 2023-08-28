@@ -1867,15 +1867,12 @@ abstract class moodle_database {
      *
      * Operation is not atomic, use transactions if necessary.
      *
-     * @since Moodle 3.6
-     *
+     * @since Moodle 4.3
      * @param string $table  The database table to be inserted into
-     * @param array|Traversable $dataobjects list of objects to be inserted, must be compatible with foreach
-     * @return void does not return new record ids
-     *
+     * @param iterable $dataobjects list of objects to be inserted, must be compatible with foreach
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function import_records($table, $dataobjects) {
+    public function import_records(string $table, iterable $dataobjects): void {
         // Note: override in driver if there is a faster way.
         foreach ($dataobjects as $dataobject) {
             $this->import_record($table, $dataobject);

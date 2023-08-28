@@ -1330,19 +1330,17 @@ class oci_native_moodle_database extends moodle_database {
      *
      * Operation is not atomic, use transactions if necessary.
      *
-     * @since Moodle 3.6
+     * @since Moodle 4.3
      *
      * @param string $table  The database table to be inserted into
-     * @param array|Traversable $dataobjects list of objects to be inserted, must be compatible with foreach
-     * @return void does not return new record ids
-     *
+     * @param iterable $dataobjects list of objects to be inserted, must be compatible with foreach
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function import_records($table, $dataobjects) {
+    public function import_records(string $table, iterable $dataobjects): void {
         $columns = $this->get_columns($table, true);
 
         // Oracle does not seem to have problems with huge queries.
-        $chunksize = (int)(999 / count($columns));
+        $chunksize = (int) (999 / count($columns));
         if (!empty($this->dboptions['bulkinsertsize'])) {
             $chunksize = (int)$this->dboptions['bulkinsertsize'];
         }
@@ -1379,13 +1377,20 @@ class oci_native_moodle_database extends moodle_database {
     protected function import_chunk($table, array $chunk, array $columns) {
         $fieldssql = '(' . implode(',', array_keys($columns)) . ')';
 
-        $params = array();
+        $params = [];
         foreach ($chunk as $index => $dataobject) {
             $values = array();
             foreach ($columns as $field => $column) {
-                $pname = $field . '_' . $index;
+                $pname = "{$field}_{$index}";
                 $values[] = ":$pname";
-                $params[$pname] = $this->normalise_value($column, $dataobject[$field]);
+                if (array_key_exists($field, $dataobject)) {
+                    $param = $this->normalise_value($column, $dataobject[$field]);
+                } else if ($column->has_default) {
+                    $param = $column->default_value;
+                } else {
+                    $param = null;
+                }
+                $params[$pname] = $param;
             }
             $valuessql = 'VALUES (' . implode(',', $values) . ')';
 
