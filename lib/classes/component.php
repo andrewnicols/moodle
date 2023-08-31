@@ -119,6 +119,7 @@ class core_component {
         'Psr\\EventDispatcher' => 'lib/psr/event-dispatcher/src',
         'Psr\\Container' => 'lib/psr/container/src',
         'Psr\\Log' => "lib/psr/log/src",
+        'Psr\SimpleCache' => 'lib/psr/simplecache/src',
         'GuzzleHttp\\Psr7' => 'lib/guzzlehttp/psr7/src',
         'GuzzleHttp\\Promise' => 'lib/guzzlehttp/promises/src',
         'GuzzleHttp' => 'lib/guzzlehttp/guzzle/src',
@@ -129,6 +130,8 @@ class core_component {
         'DI' => 'lib/php-di/php-di/src',
         'DI\\Bridge\\Slim' => "lib/php-di/slim-bridge/src",
         'Slim' => 'lib/slim/slim/Slim',
+        'Jgut\\Mapping' => 'lib/juliangut/mapping/src',
+        'Jgut\\Slim\\Routing' => 'lib/juliangut/slim-routing/src',
     );
 
     /**

@@ -19,6 +19,8 @@ namespace core_user\api;
 use core\router\route;
 use core\output\mustache_template_source_loader;
 use GuzzleHttp\Psr7\Response;
+use Jgut\Slim\Routing\Response\PayloadResponse;
+use Jgut\Slim\Routing\Response\ResponseType;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -78,8 +80,9 @@ class preference {
     )]
     public function get_preferences(
         ResponseInterface $response,
+        ServerRequestInterface $request,
         ?string $preference,
-    ): ResponseInterface {
+    ): ResponseType {
         // TODO User validation.
 
         $result = get_user_preferences(
@@ -91,6 +94,6 @@ class preference {
             $result = [$preference => $result];
         }
 
-        return $this->json_response($response, $result);
+        return new PayloadResponse($result, $request, $response);
     }
 }

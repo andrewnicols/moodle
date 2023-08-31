@@ -16,8 +16,16 @@
 
 namespace core;
 
+use core\router\controller_invoker;
 use core\router\route;
 use GuzzleHttp\Psr7\Uri;
+use Invoker\Invoker;
+use Invoker\ParameterResolver\AssociativeArrayResolver;
+use Invoker\ParameterResolver\Container\TypeHintContainerResolver;
+use Invoker\ParameterResolver\DefaultValueResolver;
+use Invoker\ParameterResolver\ResolverChain;
+use Jgut\Slim\Routing\AppFactory;
+use Jgut\Slim\Routing\Configuration;
 use moodle_url;
 use Psr\Http\Message\RequestInterface;
 use Psr\Container\ContainerInterface;
@@ -91,9 +99,10 @@ class router {
         require_once("{$CFG->libdir}/nikic/fast-route/src/functions.php");
 
         // Create an App using the DI Bridge.
-        $app = \DI\Bridge\Slim\Bridge::create(
+        $app = router\bridge::create(
             container: $this->container,
         );
+
         $this->configure_error_handling($app);
         $app->addBodyParsingMiddleware();
 
@@ -121,11 +130,13 @@ class router {
         });
 
         // TODO: Look into MUC caching instead of a file-based cache.
-        if (!$CFG->debugdeveloper) {
-            $app->getRouteCollector()->setCacheFile(
-                $CFG->cachedir . '/routes.cache',
-            );
-        }
+        $app->getRouteCollector()->setCacheFile(
+            sprintf(
+                "%s/routes.%.cache",
+                $CFG->cachedir,
+                sha1($this->basepath),
+            ),
+        );
 
         $this->configure_routes($app);
 

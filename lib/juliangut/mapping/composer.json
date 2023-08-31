@@ -1,0 +1,79 @@
+{
+  "name": "juliangut/mapping",
+  "description": "Base for mapping support",
+  "keywords": [
+    "doctrine",
+    "annotations",
+    "attributes",
+    "mapping",
+    "php",
+    "json",
+    "yaml",
+    "xml"
+  ],
+  "homepage": "https://github.com/juliangut/mapping",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Julián Gutiérrez",
+      "email": "juliangut@gmail.com",
+      "homepage": "http://juliangut.com",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "source": "https://github.com/juliangut/mapping",
+    "issues": "https://github.com/juliangut/mapping/issues"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": "^7.4|^8.0",
+    "psr/simple-cache": "^1.0"
+  },
+  "require-dev": {
+    "ext-json": "*",
+    "ext-libxml": "*",
+    "ext-simplexml": "*",
+    "doctrine/annotations": "^1.13.3",
+    "grifart/phpstan-oneline": "~0.4",
+    "infection/infection": "~0.24",
+    "juliangut/easy-coding-standard-config": "^1.0",
+    "overtrue/phplint": "^3.0|^4.0|^5.0|^6.0",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "phpmd/phpmd": "^2.10",
+    "phpstan/extension-installer": "^1.1",
+    "phpstan/phpstan": "^1.10",
+    "phpstan/phpstan-deprecation-rules": "^1.0",
+    "phpstan/phpstan-strict-rules": "^1.0",
+    "phpunit/phpunit": "^9.5",
+    "povils/phpmnd": "^2.5",
+    "roave/security-advisories": "dev-master",
+    "sebastian/phpcpd": "^6.0",
+    "symfony/yaml": "^5.0.10",
+    "thecodingmachine/phpstan-strict-rules": "^1.0"
+  },
+  "suggest": {
+    "doctrine/annotations": "(^1.4) In order to load mappings from class annotations",
+    "symfony/yaml": "(^3.1) In order to load mappings from YAML files"
+  },
+  "autoload": {
+    "psr-4": {
+      "Jgut\\Mapping\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Jgut\\Mapping\\Tests\\": "tests/Mapping/"
+    }
+  },
+  "config": {
+    "preferred-install": "dist",
+    "sort-packages": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "infection/extension-installer": true,
+      "phpstan/extension-installer": true
+    }
+  }
+}
