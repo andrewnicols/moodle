@@ -1,0 +1,17 @@
+includes:
+  - vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+  level: max
+  checkMissingCallableSignature: true
+  tipsOfTheDay: false
+  errorFormat: compact
+  parallel:
+    maximumNumberOfProcesses: 7
+  paths:
+    - src
+  ignoreErrors:
+    - message: '/^Parameter #1 \$callback of function array_map expects \(callable\(.+\): mixed\)\|null, Closure\(.+\): .+ given\.$/'
+      path: src/Metadata/MetadataResolver.php
+    - message: '/^Instanceof between SimpleXMLElement and SimpleXMLElement will always evaluate to true\.$/'
+      path: src/Driver/Traits/XmlMappingTrait.php

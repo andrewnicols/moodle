@@ -29,16 +29,16 @@ class RequestHandler implements RequestHandlerInvocationStrategyInterface
     /**
      * Invoke a route callable that implements RequestHandlerInterface
      *
-     * @param array<string, string>  $routeArguments
+     * @param array<string, string>  $routeargs
      */
     public function __invoke(
         callable $callable,
         ServerRequestInterface $request,
         ResponseInterface $response,
-        array $routeArguments
+        array $routeargs
     ): ResponseInterface {
         if ($this->appendRouteArgumentsToRequestAttributes) {
-            foreach ($routeArguments as $k => $v) {
+            foreach ($routeargs as $k => $v) {
                 $request = $request->withAttribute($k, $v);
             }
         }

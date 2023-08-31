@@ -31,14 +31,14 @@ class RequestResponseNamedArgs implements InvocationStrategyInterface
      * Invoke a route callable with request, response and all route parameters
      * as individual arguments.
      *
-     * @param array<string, string>  $routeArguments
+     * @param array<string, string>  $routeargs
      */
     public function __invoke(
         callable $callable,
         ServerRequestInterface $request,
         ResponseInterface $response,
-        array $routeArguments
+        array $routeargs
     ): ResponseInterface {
-        return $callable($request, $response, ...$routeArguments);
+        return $callable($request, $response, ...$routeargs);
     }
 }

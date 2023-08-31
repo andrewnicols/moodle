@@ -24,7 +24,7 @@ class ControllerInvoker implements InvocationStrategyInterface
      * @param callable               $callable       The callable to invoke using the strategy.
      * @param ServerRequestInterface $request        The request object.
      * @param ResponseInterface      $response       The response object.
-     * @param array                  $routeArguments The route's placeholder arguments
+     * @param array                  $routeargs The route's placeholder arguments
      *
      * @return ResponseInterface|string The response from the callable.
      */
@@ -32,15 +32,15 @@ class ControllerInvoker implements InvocationStrategyInterface
         callable $callable,
         ServerRequestInterface $request,
         ResponseInterface $response,
-        array $routeArguments
+        array $routeargs
     ): ResponseInterface {
         // Inject the request and response by parameter name
         $parameters = [
-            'request'  => self::injectRouteArguments($request, $routeArguments),
+            'request'  => self::injectRouteArguments($request, $routeargs),
             'response' => $response,
         ];
         // Inject the route arguments by name
-        $parameters += $routeArguments;
+        $parameters += $routeargs;
         // Inject the attributes defined on the request
         $parameters += $request->getAttributes();
 
