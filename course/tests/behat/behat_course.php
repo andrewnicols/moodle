@@ -1177,8 +1177,13 @@ class behat_course extends behat_base {
      * @param string $activityname
      */
     public function i_click_on_in_the_activity($element, $selectortype, $activityname) {
-        $element = $this->get_activity_element($element, $selectortype, $activityname);
-        $element->click();
+        $this->execute(
+            'behat_general::i_click_on',
+            [
+                $this->get_activity_element($element, $selectortype, $activityname),
+                'NodeElement',
+            ],
+        );
     }
 
     /**
