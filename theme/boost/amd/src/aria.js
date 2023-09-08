@@ -39,12 +39,18 @@ const dropdownFix = () => {
     };
 
     // Special handling for navigation keys when menu is open.
-    const shiftFocus = element => {
-        const delayedFocus = pendingPromise => {
-            element.focus();
+    const shiftFocus = (element) => {
+        // Store the active element at the time we were called.
+        // If focus is changed after we were called, then abort.
+        const activeElement = document.activeElement;
+        const pendingPromise = new Pending('core/aria:delayed-focus');
+        setTimeout(() => {
+            if (activeElement === document.activeElement) {
+                element.focus();
+            }
+
             pendingPromise.resolve();
-        };
-        setTimeout(delayedFocus, 50, new Pending('core/aria:delayed-focus'));
+        });
     };
 
     // Event handling for the dropdown menu button.
