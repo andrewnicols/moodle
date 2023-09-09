@@ -1519,6 +1519,7 @@ class behat_navigation extends behat_base {
                     selector: 'named_partial',
                     locator: ['dropdown_item', $item],
                     node: $dropdownnode,
+                    timeout: 0,
                 );
 
                 throw new ExpectationException(

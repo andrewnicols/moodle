@@ -176,7 +176,11 @@ class behat_completion extends behat_base {
 
         try {
             // If there is a dropdown, open it.
-            $dropdownnode = $this->find('css', $selector . ' .dropdown-menu');
+            $dropdownnode = $this->find(
+                selector: 'css',
+                locator: "{$selector} .dropdown-menu",
+                timeout: 0,
+            );
             if (!$dropdownnode->hasClass('show')) {
                 $params = ["button.dropdown-toggle", "css_element", $selector, "css_element"];
                 $this->execute("behat_general::i_click_on_in_the", $params);
@@ -283,7 +287,11 @@ class behat_completion extends behat_base {
     public function there_should_be_no_completion_for_activity(string $activityname): void {
         $containerselector = "div[data-region=activity-information][data-activityname='$activityname']";
         try {
-            $this->find('css_element', $containerselector);
+            $this->find(
+                selector: 'css_element',
+                locator: $containerselector,
+                timeout: 0,
+            );
         } catch (ElementNotFoundException $e) {
             // If activity information container does not exist (activity dates not shown, completion info not shown), all good.
             return;
@@ -346,7 +354,11 @@ class behat_completion extends behat_base {
 
         try {
             // If there is a dropdown, open it.
-            $dropdownnode = $this->find('css', $containerselector . ' .dropdown-menu');
+            $dropdownnode = $this->find(
+                selector: 'css',
+                locator: "{$containerselector} .dropdown-menu",
+                timeout: 0,
+            );
             if (!$dropdownnode->hasClass('show')) {
                 $params = ["button.dropdown-toggle", "css_element", $containerselector, "css_element"];
                 $this->execute("behat_general::i_click_on_in_the", $params);

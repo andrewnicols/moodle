@@ -681,8 +681,7 @@ class behat_general extends behat_base {
         // should also ensure that the element is visible. Using microsleep as this
         // is a repeated step and global performance is important.
         $this->spin(
-            function($context, $args) {
-
+            lambda: function($context, $args) {
                 foreach ($args['nodes'] as $node) {
                     if ($node->isVisible()) {
                         return true;
@@ -692,10 +691,11 @@ class behat_general extends behat_base {
                 // If non of the nodes is visible we loop again.
                 throw new ExpectationException('"' . $args['text'] . '" text was found but was not visible', $context->getSession());
             },
-            array('nodes' => $nodes, 'text' => $text),
-            false,
-            false,
-            true
+            args: [
+                'nodes' => $nodes,
+                'text' => $text,
+            ],
+            microsleep: true
         );
 
     }
