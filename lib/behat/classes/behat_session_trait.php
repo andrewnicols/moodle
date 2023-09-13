@@ -881,10 +881,15 @@ EOF;
         // It is unlikely that Javascript code of a page or an AJAX request needs more than get_extended_timeout() seconds
         // to be loaded, although when pages contains Javascript errors M.util.js_complete() can not be executed, so the
         // number of JS pending code and JS completed code will not match and we will reach this point.
-        throw new \Exception('Javascript code and/or AJAX requests are not ready after ' .
-                self::get_extended_timeout() .
-                ' seconds. There is a Javascript error or the code is extremely slow (' . $pending .
-                '). If you are using a slow machine, consider setting $CFG->behat_increasetimeout.');
+        throw new \Exception(sprintf(
+            'Javascript code and/or AJAX requests are not ready after %d seconds. ' .
+                'There is a Javascript error or the code is extremely slow (%s). ' .
+                'If you are using a slow machine, consider setting $CFG->behat_increasetimeout. ' .
+                "Backtrace follows: \n\n%s",
+            self::get_extended_timeout(),
+            $pending,
+            format_backtrace(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS), true)
+        ));
     }
 
     /**
