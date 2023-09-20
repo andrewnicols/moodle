@@ -153,6 +153,9 @@ class column_manager extends column_manager_base {
      * @param bool $global save this as a global default, rather than a user preference?
      */
     private static function save_preference(string $name, string $value, bool $global = false): void {
+        if ($value === "") {
+            $value = null;
+        }
         if ($global) {
             require_capability('moodle/site:config', context_system::instance());
             set_config($name, $value, 'qbank_columnsortorder');
