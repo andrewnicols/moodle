@@ -29,10 +29,7 @@ Feature: Outgoing mail configuration
     And I should see "Testing service" in the "OAuth 2 service" "select"
 
   Scenario: Test outgoing mail configuration page
-    Given a email catcher server is configured
-    And the following config values are set as admin:
-      | smtphosts | 0.0.0.0:1025 |
-    And I navigate to "Server > Email > Outgoing mail configuration" in site administration
+    Given I navigate to "Server > Email > Outgoing mail configuration" in site administration
     And I follow "Test outgoing mail configuration"
     And I set the following fields to these values:
       | To email address               | student1@example.com  |

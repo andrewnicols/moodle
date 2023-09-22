@@ -222,12 +222,6 @@ function behat_clean_init_config() {
         'altcacheconfigpath', 'pathtounoconv', 'alternative_file_system_class', 'pathtopython'
     ));
 
-    // Allow email catcher settings.
-    if (defined('TEST_EMAILCATCHER_SERVER')) {
-        $CFG->noemailerver = false;
-        $CFG->smtphosts = TEST_EMAILCATCHER_SERVER;
-    }
-
     // Add extra allowed settings.
     if (!empty($CFG->behat_extraallowedsettings)) {
         $allowed = array_merge($allowed, array_flip($CFG->behat_extraallowedsettings));
@@ -238,6 +232,12 @@ function behat_clean_init_config() {
         if (!isset($allowed[$key]) && strpos($key, 'behat_') !== 0) {
             unset($CFG->{$key});
         }
+    }
+
+    // Allow email catcher settings.
+    if (defined('TEST_EMAILCATCHER_SERVER') && defined('TEST_EMAILCATCHER_API_SERVER')) {
+        $CFG->noemailerver = false;
+        $CFG->smtphosts = TEST_EMAILCATCHER_SERVER;
     }
 }
 

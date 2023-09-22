@@ -6,9 +6,8 @@ Feature: User must accept policy when logging in and signing up
 
   Scenario: Accept policy on sign up, no site policy
     Given the following config values are set as admin:
-      | smtphosts       | 0.0.0.0:1025 |
-      | registerauth    | email        |
-      | passwordpolicy  | 0            |
+      | registerauth    | email |
+      | passwordpolicy  | 0     |
     And I am on site homepage
     And I follow "Log in"
     When I click on "Create new account" "link"
@@ -39,7 +38,6 @@ Feature: User must accept policy when logging in and signing up
       | registerauth    | email              |
       | passwordpolicy  | 0                  |
       | sitepolicy      | https://moodle.org |
-      | smtphosts       | 0.0.0.0:1025       |
     And I am on site homepage
     And I follow "Log in"
     When I click on "Create new account" "link"
@@ -69,9 +67,8 @@ Feature: User must accept policy when logging in and signing up
   Scenario Outline: Email validation during email registration
     Given the following config values are set as admin:
       | allowaccountssameemail | <allowsameemail> |
-      | registerauth           | email              |
-      | passwordpolicy         | 0                  |
-      | smtphosts              | 0.0.0.0:1025       |
+      | registerauth           | email            |
+      | passwordpolicy         | 0                |
     And the following "users" exist:
       | username | firstname | lastname | email          |
       | s1       | John      | Doe      | s1@example.com |

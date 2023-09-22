@@ -17,23 +17,25 @@
 namespace core\test;
 
 /**
- * Generic email catcher interface.
+ * Generic message user interface.
  *
  * @package    core
  * @category   test
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @copyright Simey Lameze <simey@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  */
-interface email_catcher {
+interface message_user {
     /**
-     * Get a list of messages from the mailpit server.
+     * Get the display name of the user.
      *
-     * @return iterable<message>
+     * @return string
      */
-    public function get_messages(): iterable;
+    public function get_name(): string;
 
     /**
-     * Delete all messages from the mailpit server.
+     * Get the email address of the user.
+     *
+     * @return string
      */
-    public function delete_all();
+    public function get_address(): string;
 }

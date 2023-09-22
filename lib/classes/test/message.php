@@ -25,13 +25,69 @@ namespace core\test;
  * @copyright Simey Lameze <simey@moodle.com>
  */
 interface message {
-
     /**
-     * Get the message body.
+     * Get the message subject.
      *
      * @return string
      */
-    public function get_body(): string;
+    public function get_subject(): string;
+
+    /**
+     * Get the text representation of the body, if one was provided.
+     *
+     * @return null|string
+     */
+    public function get_body_text(): ?string;
+
+    /**
+     * Get the HTML representation of the body, if one was provided.
+     *
+     * @return null|string
+     */
+    public function get_body_html(): ?string;
+
+    /**
+     * Get the message sender.
+     *
+     * @return message_user
+     */
+    public function get_sender(): message_user;
+
+    /**
+     * Get the message recipients.
+     *
+     * @return iterable<message_user>
+     */
+    public function get_recipients(): iterable;
+
+    /**
+     * Whether the message has the specified recipient.
+     *
+     * @param string $email The email address.
+     * @return bool
+     */
+    public function has_recipient(string $email): bool;
+
+    /**
+     * Get the message cc recipients.
+     *
+     * @return iterable<message_user>
+     */
+    public function get_cc(): iterable;
+
+    /**
+     * Get the message cc recipients.
+     *
+     * @return iterable<message_user>
+     */
+    public function get_bcc(): iterable;
+
+    /**
+     * Get the number of attachments.
+     *
+     * @return int
+     */
+    public function get_attachment_count(): int;
 
     /**
      * Get the message attachments.
@@ -39,32 +95,4 @@ interface message {
      * @return array
      */
     public function get_attachments(): array;
-
-    /**
-     * Get the message recipients.
-     *
-     * @return array
-     */
-    public function get_recipients(): array;
-
-    /**
-     * Get the message cc recipients.
-     *
-     * @return array
-     */
-    public function get_cc_recipients(): array;
-
-    /**
-     * Get the message title.
-     *
-     * @return array
-     */
-    public function get_title(): string;
-
-    /**
-     * Get the message sender.
-     *
-     * @return array
-     */
-    public function get_sender(): string;
 }

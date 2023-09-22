@@ -25,6 +25,7 @@
 namespace core\test;
 
 use core\http_client;
+use stdClass;
 
 /**
  * Mailpit email handling class.
@@ -34,7 +35,6 @@ use core\http_client;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mailpit_email_catcher implements email_catcher {
-
     /** @var http_client The http client object */
     protected $httpclient;
 
@@ -56,26 +56,12 @@ class mailpit_email_catcher implements email_catcher {
     }
 
     /**
-     * Delete a message from the mailpit server.
-     *
-     * @param array|null $ids The message ids.
-     * @return void
-     */
-    public function delete(?array $ids = null): bool {
-        $response = $this->httpclient->delete('api/v1/messages', [
-            'json' => ['ids' => $ids]
-        ]);
-
-        return json_decode($response->getBody());
-    }
-
-    /**
      * Delete all messages from the mailpit server.
      *
      * @return void
      */
     public function delete_all() {
-        $this->httpclient->delete( 'api/v1/messages');
+        $this->httpclient->delete('api/v1/messages');
     }
 
     /**
@@ -84,7 +70,7 @@ class mailpit_email_catcher implements email_catcher {
      * @param string $id The message id.
      * @return mixed
      */
-    public function get_message_summary(string $id): stdClass {
+    public function get_message_data(string $id): stdClass {
         $response = $this->httpclient->get("api/v1/message/{$id}");
 
         return json_decode($response->getBody());
@@ -93,54 +79,29 @@ class mailpit_email_catcher implements email_catcher {
     /**
      * Get a list of messages from the mailpit server.
      *
-     * @return mixed
+     * @return iterable<message>
      */
-    public function list(): \Generator {
+    public function get_messages(): iterable {
         $uri = 'api/v1/messages';
-
-        while ($uri !== null) {
-            $response = $this->httpclient->get($uri);
-
-            $data = json_decode($response->getBody());
-
-            yield mailpit_message::create_from_api_response($data);
-            $uri = $data->next_page ?: null;
-
-        }
-    }
-
-    /**
-     * Search for a message in the mailpit server.
-     *
-     * @param string $query The search query.
-     * @return mixed
-     */
-    public function search(string $query): \Iterator {
-        $uri = "api/v1/search?query={$query}";
-
-        while ($uri !== null) {
-            $response = $this->httpclient->get($uri);
-
-            $data = json_decode($response->getBody());
-
-            yield mailpit_message::create_from_api_response($data);
-            $uri = $data->next_page ?: null;
-
-        }
-    }
-
-    /**
-     * Set the read status of a message (read, unread).
-     *
-     * @param array $ids The message ids.
-     * @param bool $status The status to set.
-     */
-    public function set_read_status(array $ids, bool $status): void {
-        $params = [
-            'ids' => $ids,
-            'read' => $status
+        $options = [
+            'query' => [
+                'start' => 0,
+                'limit' => 1,
+            ],
         ];
 
-        $this->httpclient->put('api/v1/messages', ['json' => $params]);
+        do {
+            $response = $this->httpclient->get(
+                uri: $uri,
+                options: $options,
+            );
+            $data = json_decode($response->getBody());
+
+            foreach ($data->messages as $messagedata) {
+                yield mailpit_message::create_from_api_response($this, $messagedata);
+            }
+
+            $options['query']['start'] = $data->start + $data->count;
+        } while ($data->total > ($options['query']['start']));
     }
 }
