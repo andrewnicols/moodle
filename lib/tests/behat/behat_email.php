@@ -40,24 +40,22 @@ require_once(__DIR__ . '/../../behat/behat_base.php');
  */
 class behat_email extends behat_base {
     /**
-     * Get the email catcher object or thrown a SkippedException if TEST_EMAILCATCHER_SERVER is not defined.
+     * Get the email catcher object or thrown a SkippedException if TEST_MAILPIT_SERVER is not defined.
      *
      * @return \core\test\email_catcher
      * @throws SkippedException
      */
     private function get_catcher(): \core\test\email_catcher {
-        if (!defined('TEST_EMAILCATCHER_SERVER')) {
+        if (!defined('TEST_MAILPIT_SERVER')) {
             throw new SkippedException(
-                'The TEST_EMAILCATCHER_SERVER constant must be defined in config.php to use the mailcatcher steps.',
-            );
-        }
-        if (!defined('TEST_EMAILCATCHER_API_SERVER')) {
-            throw new SkippedException(
-                'The TEST_EMAILCATCHER_SERVER constant must be defined in config.php to use the mailcatcher steps.',
+                'The TEST_MAILPIT_SERVER constant must be defined in config.php to use the mailcatcher steps.',
             );
         }
 
-        return new \core\test\mailpit_email_catcher(TEST_EMAILCATCHER_API_SERVER);
+        [$hostname, , $apiport] = explode(':', TEST_MAILPIT_SERVER);
+        $apiserver = "http://{$hostname}:{$apiport}";
+
+        return new \core\test\mailpit_email_catcher($apiserver);
     }
 
     /**
