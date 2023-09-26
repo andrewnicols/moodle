@@ -86,7 +86,6 @@ class mailpit_email_catcher implements email_catcher {
         $options = [
             'query' => [
                 'start' => 0,
-                'limit' => 1,
             ],
         ];
 
