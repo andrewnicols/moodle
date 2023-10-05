@@ -3601,7 +3601,7 @@ privatefiles,moodle|/user/files.php';
         upgrade_main_savepoint(true, 2023091300.03);
     }
 
-    if ($oldversion < 2023100400.01) {
+    if ($oldversion < 2023100400.02) {
         // Define field id to be added to communication.
         $table = new xmldb_table('communication');
 
@@ -3622,17 +3622,30 @@ privatefiles,moodle|/user/files.php';
 
         // Fill the existing data.
         $sql = <<<EOF
-            UPDATE {communication}
-               SET contextid = c.id
-              FROM {communication} comm
-        INNER JOIN {context} c ON c.instanceid = comm.instanceid AND c.contextlevel = :contextcourse
-             WHERE comm.contextid IS NULL
-               AND comm.instancetype = :instancetype
+                    SELECT comm.id, c.id AS contextid
+                      FROM {communication} comm
+                INNER JOIN {context} c ON c.instanceid = comm.instanceid AND c.contextlevel = :contextcourse
+                     WHERE comm.contextid IS NULL
+                       AND comm.instancetype = :instancetype
         EOF;
-        $DB->execute($sql, [
-            'contextcourse' => CONTEXT_COURSE,
-            'instancetype' => 'coursecommunication',
-        ]);
+        $rs = $DB->get_recordset_sql(
+            sql: $sql,
+            params: [
+                'contextcourse' => CONTEXT_COURSE,
+                'instancetype' => 'coursecommunication',
+            ],
+        );
+        foreach ($rs as $comm) {
+            $DB->set_field(
+                table: 'communication',
+                newfield: 'contextid',
+                newvalue: $comm->contextid,
+                conditions: [
+                    'id' => $comm->id,
+                ],
+            );
+        }
+        $rs->close();
 
         $systemcontext = \core\context\system::instance();
         $DB->set_field_select(
@@ -3656,7 +3669,7 @@ privatefiles,moodle|/user/files.php';
         $dbman->add_key($table, $key);
 
         // Main savepoint reached.
-        upgrade_main_savepoint(true, 2023100400.01);
+        upgrade_main_savepoint(true, 2023100400.02);
     }
 
     return true;
