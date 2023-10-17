@@ -269,7 +269,7 @@ abstract class grade_export {
         $column = new stdClass();
 
         if ($grade_item->itemtype == 'mod') {
-            $column->name = get_string('modulename', $grade_item->itemmodule).get_string('labelsep', 'langconfig').$grade_item->get_name();
+            $column->name = get_string('modulename', $grade_item->itemmodule).get_string('labelsep', 'core_langconfig').$grade_item->get_name();
         } else {
             $column->name = $grade_item->get_name(true);
         }

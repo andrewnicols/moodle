@@ -2459,7 +2459,7 @@ class html_writer {
         // TODO MDL-12192 $colonize disabled for now yet
         // if (!empty($text) and $colonize) {
         //     // the $text may end with the colon already, though it is bad string definition style
-        //     $colon = get_string('labelsep', 'langconfig');
+        //     $colon = get_string('labelsep', 'core_langconfig');
         //     if (!empty($colon)) {
         //         $trimmed = trim($colon);
         //         if ((substr($text, -strlen($trimmed)) == $trimmed) or (substr($text, -1) == ':')) {
@@ -3322,7 +3322,7 @@ class initials_bar implements renderable, templatable {
         $data = new stdClass();
 
         if ($this->alpha == null) {
-            $this->alpha = explode(',', get_string('alphabet', 'langconfig'));
+            $this->alpha = explode(',', get_string('alphabet', 'core_langconfig'));
         }
 
         if ($this->current == 'all') {

@@ -595,11 +595,11 @@ class core_text {
     public static function get_encodings() {
         $encodings = array();
         $encodings['UTF-8'] = 'UTF-8';
-        $winenc = strtoupper(get_string('localewincharset', 'langconfig'));
+        $winenc = strtoupper(get_string('localewincharset', 'core_langconfig'));
         if ($winenc != '') {
             $encodings[$winenc] = $winenc;
         }
-        $nixenc = strtoupper(get_string('oldcharset', 'langconfig'));
+        $nixenc = strtoupper(get_string('oldcharset', 'core_langconfig'));
         $encodings[$nixenc] = $nixenc;
 
         $listedencodings = mb_list_encodings();

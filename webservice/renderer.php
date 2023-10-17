@@ -335,12 +335,12 @@ class core_webservice_renderer extends plugin_renderer_base {
 
                 $validuntil = '';
                 if (!empty($token->validuntil)) {
-                    $validuntil = userdate($token->validuntil, get_string('strftimedatetime', 'langconfig'));
+                    $validuntil = userdate($token->validuntil, get_string('strftimedatetime', 'core_langconfig'));
                 }
 
                 $lastaccess = '';
                 if (!empty($token->lastaccess)) {
-                    $lastaccess = userdate($token->lastaccess, get_string('strftimedatetime', 'langconfig'));
+                    $lastaccess = userdate($token->lastaccess, get_string('strftimedatetime', 'core_langconfig'));
                 }
 
                 $servicename = $token->servicename;

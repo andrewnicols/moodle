@@ -121,7 +121,7 @@ reports,core_reportbuilder|/reportbuilder/index.php',
                                                     '%I:%M %p' => new lang_string('timeformat_12', 'calendar'),
                                                     '%H:%M'    => new lang_string('timeformat_24', 'calendar'))));
     $temp->add(new admin_setting_configselect('calendar_startwday', new lang_string('configstartwday', 'admin'),
-        new lang_string('helpstartofweek', 'admin'), get_string('firstdayofweek', 'langconfig'),
+        new lang_string('helpstartofweek', 'admin'), get_string('firstdayofweek', 'core_langconfig'),
     array(
             0 => new lang_string('sunday', 'calendar'),
             1 => new lang_string('monday', 'calendar'),

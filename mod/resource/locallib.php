@@ -140,7 +140,7 @@ function resource_display_frame($resource, $cm, $course, $file) {
         $framesize = $config->framesize;
         $contentframetitle = s(format_string($resource->name));
         $modulename = s(get_string('modulename','resource'));
-        $dir = get_string('thisdirection', 'langconfig');
+        $dir = get_string('thisdirection', 'core_langconfig');
 
         $file = <<<EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
@@ -366,10 +366,10 @@ function resource_get_optional_details($resource, $cm, bool $showtype = true) {
         if (!empty($options['showdate']) && (!empty($filedetails['modifieddate']) || !empty($filedetails['uploadeddate']))) {
             if (!empty($filedetails['modifieddate'])) {
                 $date = get_string('modifieddate', 'mod_resource', userdate($filedetails['modifieddate'],
-                    get_string('strftimedatetimeshort', 'langconfig')));
+                    get_string('strftimedatetimeshort', 'core_langconfig')));
             } else if (!empty($filedetails['uploadeddate'])) {
                 $date = get_string('uploadeddate', 'mod_resource', userdate($filedetails['uploadeddate'],
-                    get_string('strftimedatetimeshort', 'langconfig')));
+                    get_string('strftimedatetimeshort', 'core_langconfig')));
             }
             $langstring .= 'date';
             $infodisplayed += 1;

@@ -715,7 +715,7 @@ class core_date {
         // from the string 'locale' even for Windows, so we can neither use moodle_getlocale().
         // nor rely on the setlocale() use below. We also ignore $CFG->locale because it can use
         // Windows format.
-        $locale = $locale ?: get_string('locale', 'langconfig');
+        $locale = $locale ?: get_string('locale', 'core_langconfig');
 
         // The following code is taken from https://github.com/alphp/strftime without modifications.
         // phpcs:disable

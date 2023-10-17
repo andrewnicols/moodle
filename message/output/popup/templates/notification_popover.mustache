@@ -43,11 +43,11 @@
     {{$attributes}}id="nav-notification-popover-container" data-userid="{{userid}}"{{/attributes}}
 
     {{$togglelabel}}{{!
-        }}{{^unreadcount}} {{#str}} shownotificationwindownonew, message {{/str}} {{/unreadcount}} {{!
-        }}{{#unreadcount}} {{#str}} shownotificationwindowwithcount, message, {{.}} {{/str}} {{/unreadcount}} {{!
+        }}{{^unreadcount}} {{#str}} shownotificationwindownonew, core_message {{/str}} {{/unreadcount}} {{!
+        }}{{#unreadcount}} {{#str}} shownotificationwindowwithcount, core_message, {{.}} {{/str}} {{/unreadcount}} {{!
     }}{{/togglelabel}}
     {{$togglecontent}}
-        {{#pix}} i/notifications, core, {{#str}} togglenotificationmenu, message {{/str}} {{/pix}}
+        {{#pix}} i/notifications, core, {{#str}} togglenotificationmenu, core_message {{/str}} {{/pix}}
         <div
             class="count-container {{^unreadcount}}hidden{{/unreadcount}}"
             data-region="count-container"
@@ -57,9 +57,9 @@
         </div>
     {{/togglecontent}}
 
-    {{$containerlabel}}{{#str}} notificationwindow, message {{/str}}{{/containerlabel}}
+    {{$containerlabel}}{{#str}} notificationwindow, core_message {{/str}}{{/containerlabel}}
 
-    {{$headertext}}{{#str}} notifications, message {{/str}}{{/headertext}}
+    {{$headertext}}{{#str}} notifications, core_message {{/str}}{{/headertext}}
     {{$headeractions}}
         <a class="mark-all-read-button"
            href="#"
@@ -72,8 +72,8 @@
         </a>
         {{# urls.preferences }}
             <a href="{{{ . }}}"
-               title="{{#str}} notificationpreferences, message {{/str}}"
-               aria-label="{{#str}} notificationpreferences, message {{/str}}">
+               title="{{#str}} notificationpreferences, core_message {{/str}}"
+               aria-label="{{#str}} notificationpreferences, core_message {{/str}}">
                 {{#pix}} i/settings, core {{/pix}}</a>
         {{/ urls.preferences }}
     {{/headeractions}}
@@ -85,7 +85,7 @@
             aria-busy="false"
             aria-atomic="false"
             aria-relevant="additions"></div>
-        <div class="empty-message" tabindex="0" data-region="empty-message">{{#str}} nonotifications, message {{/str}}</div>
+        <div class="empty-message" tabindex="0" data-region="empty-message">{{#str}} nonotifications, core_message {{/str}}</div>
     {{/content}}
 {{/ core/popover_region }}
 {{#js}}

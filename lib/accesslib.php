@@ -4566,14 +4566,14 @@ function role_get_name(stdClass $role, $context = null, $rolenamedisplay = ROLEN
         // Empty role->name means we want to see localised role name based on shortname,
         // only default roles are supposed to be localised.
         switch ($role->shortname) {
-            case 'manager':         $original = get_string('manager', 'role'); break;
+            case 'manager':         $original = get_string('manager', 'core_role'); break;
             case 'coursecreator':   $original = get_string('coursecreators'); break;
             case 'editingteacher':  $original = get_string('defaultcourseteacher'); break;
             case 'teacher':         $original = get_string('noneditingteacher'); break;
             case 'student':         $original = get_string('defaultcoursestudent'); break;
             case 'guest':           $original = get_string('guest'); break;
             case 'user':            $original = get_string('authenticateduser'); break;
-            case 'frontpage':       $original = get_string('frontpageuser', 'role'); break;
+            case 'frontpage':       $original = get_string('frontpageuser', 'core_role'); break;
             // We should not get here, the role UI should require the name for custom roles!
             default:                $original = $role->shortname; break;
         }

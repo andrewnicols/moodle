@@ -192,9 +192,7 @@ function get_plugin_directory($plugintype, $name) {
  * @return array two-items list of [(string)type, (string|null)name]
  */
 function normalize_component($component) {
-
     // NOTE: do not add any other debugging here, keep forever.
-
     return core_component::normalize_component($component);
 }
 

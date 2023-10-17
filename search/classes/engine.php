@@ -308,7 +308,7 @@ abstract class engine {
                     $lastprogress = $now;
                     // The first date format is the same used in \core\cron::trace_time_and_memory().
                     $options['progress']->output(date('H:i:s', (int)$now) . ': Done to ' . userdate(
-                            $lastindexeddoc, get_string('strftimedatetimeshort', 'langconfig')), 1);
+                            $lastindexeddoc, get_string('strftimedatetimeshort', 'core_langconfig')), 1);
                 }
             }
         }

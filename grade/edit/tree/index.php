@@ -50,7 +50,7 @@ require_capability('moodle/grade:manage', $context);
 $PAGE->requires->js_call_amd('core_grades/edittree_index', 'init', [$courseid, $USER->id]);
 $PAGE->requires->js_call_amd('core_grades/gradebooksetup_forms', 'init');
 
-$decsep = get_string('decsep', 'langconfig');
+$decsep = get_string('decsep', 'core_langconfig');
 // This setting indicates if we should use algorithm prior to MDL-49257 fix for calculating extra credit weights.
 $gradebookcalculationfreeze = (int) get_config('core', 'gradebook_calculations_freeze_' . $courseid);
 $oldextracreditcalculation = $gradebookcalculationfreeze && ($gradebookcalculationfreeze <= 20150619);

@@ -499,7 +499,7 @@ function lesson_clock_block_contents($cmid, $lesson, $timer, $page) {
 
     $clocksettings = array('starttime' => $timer->starttime, 'servertime' => time(), 'testlength' => $lesson->timelimit);
     $page->requires->data_for_js('clocksettings', $clocksettings, true);
-    $page->requires->strings_for_js(array('timeisup'), 'lesson');
+    $page->requires->strings_for_js(array('timeisup'), 'mod_lesson');
     $page->requires->js('/mod/lesson/timer.js');
     $page->requires->js_init_call('show_clock');
 

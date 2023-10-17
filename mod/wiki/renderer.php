@@ -80,7 +80,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
         }
         $diff1 = format_text($old->diff, FORMAT_HTML, array('overflowdiv'=>true));
         $diff2 = format_text($new->diff, FORMAT_HTML, array('overflowdiv'=>true));
-        $strdatetime = get_string('strftimedatetime', 'langconfig');
+        $strdatetime = get_string('strftimedatetime', 'core_langconfig');
 
         $olduser = $old->user;
         $versionlink = new moodle_url('/mod/wiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $old->id));

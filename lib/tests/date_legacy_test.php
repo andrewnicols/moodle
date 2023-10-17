@@ -262,7 +262,7 @@ class date_legacy_test extends \advanced_testcase {
         $users[] = $this->getDataGenerator()->create_user(array('timezone' => 'Australia/Perth'));
         $users[] = $this->getDataGenerator()->create_user(array('timezone' => 'America/New_York'));
 
-        $format = get_string('strftimedaydatetime', 'langconfig');
+        $format = get_string('strftimedaydatetime', 'core_langconfig');
 
         $this->setTimezone('Pacific/Auckland', 'Pacific/Auckland');
         foreach ($years as $year) {

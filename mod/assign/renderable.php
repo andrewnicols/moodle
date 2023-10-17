@@ -758,7 +758,7 @@ class assign_files implements renderable {
     public function get_modified_time(stored_file $file): string {
         return userdate(
             $file->get_timemodified(),
-            get_string('strftimedatetime', 'langconfig'),
+            get_string('strftimedatetime', 'core_langconfig'),
         );
     }
 

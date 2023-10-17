@@ -137,9 +137,9 @@ class data_controller extends \core_customfield\data_controller {
 
         // Check if time needs to be included.
         if ($this->get_field()->get_configdata_property('includetime')) {
-            $format = get_string('strftimedaydatetime', 'langconfig');
+            $format = get_string('strftimedaydatetime', 'core_langconfig');
         } else {
-            $format = get_string('strftimedate', 'langconfig');
+            $format = get_string('strftimedate', 'core_langconfig');
         }
 
         return userdate($value, $format);

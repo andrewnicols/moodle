@@ -810,7 +810,7 @@ class core_renderer extends renderer_base {
         // must always return a string containing valid html.
         foreach (\core_component::get_core_subsystems() as $name => $path) {
             if ($path) {
-                $output .= component_callback($name, 'before_standard_top_of_body_html', [], '');
+                $output .= component_callback("core_{$name}", 'before_standard_top_of_body_html', [], '');
             }
         }
 
@@ -943,7 +943,7 @@ class core_renderer extends renderer_base {
             $purgeurl = new moodle_url('/admin/purgecaches.php', array('confirm' => 1,
                 'sesskey' => sesskey(), 'returnurl' => $this->page->url->out_as_local_url(false)));
             $output .= '<div class="purgecaches">' .
-                    html_writer::link($purgeurl, get_string('purgecaches', 'admin')) . '</div>';
+                    html_writer::link($purgeurl, get_string('purgecaches', 'core_admin')) . '</div>';
 
             // Reactive module debug panel.
             $output .= $this->render_from_template('core/local/reactive/debugpanel', []);
@@ -1125,7 +1125,7 @@ class core_renderer extends renderer_base {
         // must always return a string containing valid html.
         foreach (\core_component::get_core_subsystems() as $name => $path) {
             if ($path) {
-                $output .= component_callback($name, 'standard_after_main_region_html', [], '');
+                $output .= component_callback("core_{$name}", 'standard_after_main_region_html', [], '');
             }
         }
 
@@ -3032,7 +3032,7 @@ EOD;
         $output .= $this->box($message, 'errorbox alert alert-danger', null, array('data-rel' => 'fatalerror'));
 
         if ($CFG->debugdeveloper) {
-            $labelsep = get_string('labelsep', 'langconfig');
+            $labelsep = get_string('labelsep', 'core_langconfig');
             if (!empty($debuginfo)) {
                 $debuginfo = s($debuginfo); // removes all nasty JS
                 $debuginfo = str_replace("\n", '<br />', $debuginfo); // keep newlines
@@ -3470,7 +3470,7 @@ EOD;
         // must always return a string containing valid html.
         foreach (\core_component::get_core_subsystems() as $name => $path) {
             if ($path) {
-                $output .= component_callback($name, 'render_navbar_output', [$this], '');
+                $output .= component_callback("core_{$name}", 'render_navbar_output', [$this], '');
             }
         }
 
@@ -4294,7 +4294,7 @@ EOD;
             return '';
         }
 
-        $label = get_string('contactsitesupport', 'admin');
+        $label = get_string('contactsitesupport', 'core_admin');
         $icon = $this->pix_icon('t/email', '');
 
         if (!$embed) {
@@ -4369,7 +4369,7 @@ EOD;
         $link = $this->communication_url() ?? '';
         $commicon = $this->pix_icon('t/messages-o', '', 'moodle', ['class' => 'fa fa-comments']);
         $newwindowicon = $this->pix_icon('i/externallink', get_string('opensinnewwindow'), 'moodle', ['class' => 'ml-1']);
-        $content = $commicon . get_string('communicationroomlink', 'course') . $newwindowicon;
+        $content = $commicon . get_string('communicationroomlink', 'core_course') . $newwindowicon;
         $html = html_writer::tag('a', $content, ['target' => '_blank', 'href' => $link]);
 
         return !empty($link) ? $html : '';

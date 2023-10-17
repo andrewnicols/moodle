@@ -59,7 +59,7 @@ class core_user_renderer extends plugin_renderer_base {
         $content .= html_writer::start_tag('div');
 
         // Search utility heading.
-        $content .= $this->output->heading($heading.get_string('labelsep', 'langconfig').$usercount.'/'.$totalcount, 3);
+        $content .= $this->output->heading($heading.get_string('labelsep', 'core_langconfig').$usercount.'/'.$totalcount, 3);
 
         // Initials bar.
         $prefixfirst = 'sifirst';

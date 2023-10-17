@@ -242,7 +242,7 @@ abstract class filterset implements JsonSerializable {
                 'missingrequiredfields',
                 'core_table',
                 '',
-                implode(get_string('listsep', 'langconfig') . ' ', $missing)
+                implode(get_string('listsep', 'core_langconfig') . ' ', $missing)
             );
         }
     }

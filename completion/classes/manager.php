@@ -338,17 +338,17 @@ class manager {
 
         if (has_capability('moodle/course:update', $coursecontext)) {
             $completionlink = new moodle_url('/course/completion.php', ['id' => $courseid]);
-            $options[$completionlink->out(false)] = get_string('coursecompletionsettings', 'completion');
+            $options[$completionlink->out(false)] = get_string('coursecompletionsettings', 'core_completion');
         }
 
         if (has_capability('moodle/course:manageactivities', $coursecontext)) {
             $defaultcompletionlink = new moodle_url('/course/defaultcompletion.php', ['id' => $courseid]);
-            $options[$defaultcompletionlink->out(false)] = get_string('defaultcompletion', 'completion');
+            $options[$defaultcompletionlink->out(false)] = get_string('defaultcompletion', 'core_completion');
         }
 
         if (self::can_edit_bulk_completion($courseid)) {
             $bulkcompletionlink = new moodle_url('/course/bulkcompletion.php', ['id' => $courseid]);
-            $options[$bulkcompletionlink->out(false)] = get_string('bulkactivitycompletion', 'completion');
+            $options[$bulkcompletionlink->out(false)] = get_string('bulkactivitycompletion', 'core_completion');
         }
 
         return $options;

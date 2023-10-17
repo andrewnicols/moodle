@@ -47,20 +47,20 @@ define('CHOICE_EVENT_TYPE_CLOSE', 'close');
 
 /** @global array $CHOICE_PUBLISH */
 global $CHOICE_PUBLISH;
-$CHOICE_PUBLISH = array (CHOICE_PUBLISH_ANONYMOUS  => get_string('publishanonymous', 'choice'),
-                         CHOICE_PUBLISH_NAMES      => get_string('publishnames', 'choice'));
+$CHOICE_PUBLISH = array (CHOICE_PUBLISH_ANONYMOUS  => get_string('publishanonymous', 'mod_choice'),
+                         CHOICE_PUBLISH_NAMES      => get_string('publishnames', 'mod_choice'));
 
 /** @global array $CHOICE_SHOWRESULTS */
 global $CHOICE_SHOWRESULTS;
-$CHOICE_SHOWRESULTS = array (CHOICE_SHOWRESULTS_NOT          => get_string('publishnot', 'choice'),
-                         CHOICE_SHOWRESULTS_AFTER_ANSWER => get_string('publishafteranswer', 'choice'),
-                         CHOICE_SHOWRESULTS_AFTER_CLOSE  => get_string('publishafterclose', 'choice'),
-                         CHOICE_SHOWRESULTS_ALWAYS       => get_string('publishalways', 'choice'));
+$CHOICE_SHOWRESULTS = array (CHOICE_SHOWRESULTS_NOT          => get_string('publishnot', 'mod_choice'),
+                         CHOICE_SHOWRESULTS_AFTER_ANSWER => get_string('publishafteranswer', 'mod_choice'),
+                         CHOICE_SHOWRESULTS_AFTER_CLOSE  => get_string('publishafterclose', 'mod_choice'),
+                         CHOICE_SHOWRESULTS_ALWAYS       => get_string('publishalways', 'mod_choice'));
 
 /** @global array $CHOICE_DISPLAY */
 global $CHOICE_DISPLAY;
-$CHOICE_DISPLAY = array (CHOICE_DISPLAY_HORIZONTAL   => get_string('displayhorizontal', 'choice'),
-                         CHOICE_DISPLAY_VERTICAL     => get_string('displayvertical','choice'));
+$CHOICE_DISPLAY = array (CHOICE_DISPLAY_HORIZONTAL   => get_string('displayhorizontal', 'mod_choice'),
+                         CHOICE_DISPLAY_VERTICAL     => get_string('displayvertical','mod_choice'));
 
 require_once(__DIR__ . '/deprecatedlib.php');
 
@@ -143,7 +143,7 @@ function choice_add_instance($choice) {
     // Add calendar events if necessary.
     choice_set_events($choice);
     if (!empty($choice->completionexpected)) {
-        \core_completion\api::update_completion_date_event($choice->coursemodule, 'choice', $choice->id,
+        \core_completion\api::update_completion_date_event($choice->coursemodule, 'mod_choice', $choice->id,
                 $choice->completionexpected);
     }
 
@@ -196,7 +196,7 @@ function choice_update_instance($choice) {
     // Add calendar events if necessary.
     choice_set_events($choice);
     $completionexpected = (!empty($choice->completionexpected)) ? $choice->completionexpected : null;
-    \core_completion\api::update_completion_date_event($choice->coursemodule, 'choice', $choice->id, $completionexpected);
+    \core_completion\api::update_completion_date_event($choice->coursemodule, 'mod_choice', $choice->id, $completionexpected);
 
     return $DB->update_record('choice', $choice);
 
@@ -330,12 +330,12 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
     $continueurl = new moodle_url('/mod/choice/view.php', array('id' => $cm->id));
 
     if (empty($formanswer)) {
-        throw new \moodle_exception('atleastoneoption', 'choice', $continueurl);
+        throw new \moodle_exception('atleastoneoption', 'mod_choice', $continueurl);
     }
 
     if (is_array($formanswer)) {
         if (!$choice->allowmultiple) {
-            throw new \moodle_exception('multiplenotallowederror', 'choice', $continueurl);
+            throw new \moodle_exception('multiplenotallowederror', 'mod_choice', $continueurl);
         }
         $formanswers = $formanswer;
     } else {
@@ -345,7 +345,7 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
     $options = $DB->get_records('choice_options', array('choiceid' => $choice->id), '', 'id');
     foreach ($formanswers as $key => $val) {
         if (!isset($options[$val])) {
-            throw new \moodle_exception('cannotsubmit', 'choice', $continueurl);
+            throw new \moodle_exception('cannotsubmit', 'mod_choice', $continueurl);
         }
     }
     // Start lock to prevent synchronous access to the same data
@@ -360,7 +360,7 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
         // Opening the lock.
         $choicelock = $lockfactory->get_lock($resouce, $timeout, MINSECS);
         if (!$choicelock) {
-            throw new \moodle_exception('cannotsubmit', 'choice', $continueurl);
+            throw new \moodle_exception('cannotsubmit', 'mod_choice', $continueurl);
         }
     }
 
@@ -476,7 +476,7 @@ function choice_user_submit_response($formanswer, $choice, $userid, $course, $cm
     } else {
         // This is a choice with limited options, and one of the options selected has just run over its limit.
         $choicelock->release();
-        throw new \moodle_exception('choicefull', 'choice', $continueurl);
+        throw new \moodle_exception('choicefull', 'mod_choice', $continueurl);
     }
 
     // Release lock.
@@ -530,7 +530,7 @@ function prepare_choice_show_results($choice, $course, $cm, $allresponses) {
     $display->courseid = $course->id;
 
     if (!empty($choice->showunanswered)) {
-        $choice->option[0] = get_string('notanswered', 'choice');
+        $choice->option[0] = get_string('notanswered', 'mod_choice');
         $choice->maxanswers[0] = 0;
     }
 
@@ -724,8 +724,8 @@ function choice_get_post_actions() {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function choice_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'choiceheader', get_string('modulenameplural', 'choice'));
-    $mform->addElement('advcheckbox', 'reset_choice', get_string('removeresponses','choice'));
+    $mform->addElement('header', 'choiceheader', get_string('modulenameplural', 'mod_choice'));
+    $mform->addElement('advcheckbox', 'reset_choice', get_string('removeresponses','mod_choice'));
 }
 
 /**
@@ -749,7 +749,7 @@ function choice_reset_course_form_defaults($course) {
 function choice_reset_userdata($data) {
     global $CFG, $DB;
 
-    $componentstr = get_string('modulenameplural', 'choice');
+    $componentstr = get_string('modulenameplural', 'mod_choice');
     $status = array();
 
     if (!empty($data->reset_choice)) {
@@ -758,7 +758,7 @@ function choice_reset_userdata($data) {
                        WHERE ch.course=?";
 
         $DB->delete_records_select('choice_answers', "choiceid IN ($choicessql)", array($data->courseid));
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('removeresponses', 'choice'), 'error'=>false);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('removeresponses', 'mod_choice'), 'error'=>false);
     }
 
     /// updating dates - shift may be negative too
@@ -863,7 +863,7 @@ function choice_supports($feature) {
  */
 function choice_extend_settings_navigation(settings_navigation $settings, navigation_node $choicenode) {
     if (has_capability('mod/choice:readresponses', $settings->get_page()->cm->context)) {
-        $choicenode->add(get_string('responses', 'choice'),
+        $choicenode->add(get_string('responses', 'mod_choice'),
             new moodle_url('/mod/choice/report.php', array('id' => $settings->get_page()->cm->id)));
     }
 }
@@ -875,7 +875,7 @@ function choice_extend_settings_navigation(settings_navigation $settings, naviga
  * @param stdClass $currentcontext Current context of block
  */
 function choice_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-choice-*'=>get_string('page-mod-choice-x', 'choice'));
+    $module_pagetype = array('mod-choice-*'=>get_string('page-mod-choice-x', 'mod_choice'));
     return $module_pagetype;
 }
 
@@ -1149,7 +1149,7 @@ function mod_choice_core_calendar_provide_event_action(calendar_event $event,
     }
 
     return $factory->create_instance(
-        get_string('viewchoices', 'choice'),
+        get_string('viewchoices', 'mod_choice'),
         new \moodle_url('/mod/choice/view.php', array('id' => $cm->id)),
         1,
         $actionable
@@ -1184,14 +1184,14 @@ function mod_choice_core_calendar_get_valid_event_timestart_range(\calendar_even
         if (!empty($choice->timeclose)) {
             $maxdate = [
                 $choice->timeclose,
-                get_string('openafterclose', 'choice')
+                get_string('openafterclose', 'mod_choice')
             ];
         }
     } else if ($event->eventtype == CHOICE_EVENT_TYPE_CLOSE) {
         if (!empty($choice->timeopen)) {
             $mindate = [
                 $choice->timeopen,
-                get_string('closebeforeopen', 'choice')
+                get_string('closebeforeopen', 'mod_choice')
             ];
         }
     }
@@ -1338,7 +1338,7 @@ function mod_choice_get_completion_active_rule_descriptions($cm) {
         switch ($key) {
             case 'completionsubmit':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionsubmit', 'choice');
+                    $descriptions[] = get_string('completionsubmit', 'mod_choice');
                 }
                 break;
             default:
@@ -1355,7 +1355,7 @@ function mod_choice_get_completion_active_rule_descriptions($cm) {
  * @return lang_string The event type lang string.
  */
 function mod_choice_core_calendar_get_event_action_string(string $eventtype): string {
-    $modulename = get_string('modulename', 'choice');
+    $modulename = get_string('modulename', 'mod_choice');
 
     switch ($eventtype) {
         case CHOICE_EVENT_TYPE_OPEN:
@@ -1368,5 +1368,5 @@ function mod_choice_core_calendar_get_event_action_string(string $eventtype): st
             return get_string('requiresaction', 'calendar', $modulename);
     }
 
-    return get_string($identifier, 'choice', $modulename);
+    return get_string($identifier, 'mod_choice', $modulename);
 }

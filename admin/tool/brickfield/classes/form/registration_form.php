@@ -97,7 +97,7 @@ class registration_form  extends moodleform {
         $data = new stdClass();
         $data->name = $site->fullname;
         $data->url = $CFG->wwwroot;
-        $data->language = get_string('thislanguage', 'langconfig');
+        $data->language = get_string('thislanguage', 'core_langconfig');
         $data->languagecode = $admin->lang ?: $CFG->lang;
         $data->country = $admin->country ?: $CFG->country;
         $data->email = $admin->email;

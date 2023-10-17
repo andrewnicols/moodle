@@ -529,12 +529,12 @@ class qtype_numerical_answer_processor {
     public function __construct($units, $unitsbefore = false, $decsep = null,
             $thousandssep = null) {
         if (is_null($decsep)) {
-            $decsep = get_string('decsep', 'langconfig');
+            $decsep = get_string('decsep', 'core_langconfig');
         }
         $this->decsep = $decsep;
 
         if (is_null($thousandssep)) {
-            $thousandssep = get_string('thousandssep', 'langconfig');
+            $thousandssep = get_string('thousandssep', 'core_langconfig');
         }
         $this->thousandssep = $thousandssep;
 

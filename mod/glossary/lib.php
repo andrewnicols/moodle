@@ -2029,7 +2029,7 @@ global $CFG;
 function glossary_print_alphabet_links($cm, $glossary, $mode, $hook, $sortkey, $sortorder) {
 global $CFG;
      if ( $glossary->showalphabet) {
-          $alphabet = explode(",", get_string('alphabet', 'langconfig'));
+          $alphabet = explode(",", get_string('alphabet', 'core_langconfig'));
           for ($i = 0; $i < count($alphabet); $i++) {
               if ( $hook == $alphabet[$i] and $hook) {
                    echo "<b>$alphabet[$i]</b>";

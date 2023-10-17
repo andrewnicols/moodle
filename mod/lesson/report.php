@@ -141,7 +141,7 @@ if ($action === 'delete') {
     $course_context = context_course::instance($course->id);
     if (has_capability('gradereport/grader:view', $course_context) && has_capability('moodle/grade:viewall', $course_context)) {
         $seeallgradeslink = new moodle_url('/grade/report/grader/index.php', array('id'=>$course->id));
-        $seeallgradeslink = html_writer::link($seeallgradeslink, get_string('seeallcoursegrades', 'grades'));
+        $seeallgradeslink = html_writer::link($seeallgradeslink, get_string('seeallcoursegrades', 'core_grades'));
         echo $OUTPUT->box($seeallgradeslink, 'allcoursegrades');
     }
 
@@ -270,7 +270,7 @@ if ($action === 'delete') {
     $course_context = context_course::instance($course->id);
     if (has_capability('gradereport/grader:view', $course_context) && has_capability('moodle/grade:viewall', $course_context)) {
         $seeallgradeslink = new moodle_url('/grade/report/grader/index.php', array('id'=>$course->id));
-        $seeallgradeslink = html_writer::link($seeallgradeslink, get_string('seeallcoursegrades', 'grades'));
+        $seeallgradeslink = html_writer::link($seeallgradeslink, get_string('seeallcoursegrades', 'core_grades'));
         echo $OUTPUT->box($seeallgradeslink, 'allcoursegrades');
     }
 

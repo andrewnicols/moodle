@@ -700,10 +700,10 @@ class structure {
         // Brief summary on the page.
         if ($timenow < $quiz->timeopen) {
             $currentstatus = get_string('quizisclosedwillopen', 'quiz',
-                    userdate($quiz->timeopen, get_string('strftimedatetimeshort', 'langconfig')));
+                    userdate($quiz->timeopen, get_string('strftimedatetimeshort', 'core_langconfig')));
         } else if ($quiz->timeclose && $timenow <= $quiz->timeclose) {
             $currentstatus = get_string('quizisopenwillclose', 'quiz',
-                    userdate($quiz->timeclose, get_string('strftimedatetimeshort', 'langconfig')));
+                    userdate($quiz->timeclose, get_string('strftimedatetimeshort', 'core_langconfig')));
         } else if ($quiz->timeclose && $timenow > $quiz->timeclose) {
             $currentstatus = get_string('quizisclosed', 'quiz');
         } else {

@@ -312,6 +312,6 @@ class structure extends type_base {
      * @return string locale
      */
     public function locale_win_charset() {
-        return get_string('localewincharset', 'langconfig');
+        return get_string('localewincharset', 'core_langconfig');
     }
 }

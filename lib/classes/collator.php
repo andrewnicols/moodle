@@ -67,7 +67,7 @@ class core_collator {
      * @return bool Returns true if collation is available and ready
      */
     protected static function ensure_collator_available() {
-        $locale = get_string('locale', 'langconfig');
+        $locale = get_string('locale', 'core_langconfig');
         if (is_null(self::$collator) || $locale != self::$locale) {
             self::$collator = false;
             self::$locale = $locale;

@@ -210,7 +210,7 @@ class condition extends \core_availability\condition {
             $time = strtotime('-1 day', $time);
         }
         return userdate($time,
-                get_string($dateonly ? 'strftimedate' : 'strftimedatetime', 'langconfig'));
+                get_string($dateonly ? 'strftimedate' : 'strftimedatetime', 'core_langconfig'));
     }
 
     /**

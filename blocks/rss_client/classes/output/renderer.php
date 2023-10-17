@@ -95,7 +95,7 @@ class renderer extends \plugin_renderer_base {
         if (empty($timestamp)) {
             return '';
         } else {
-            return \core_date::strftime(get_string('strftimerecentfull', 'langconfig'), $timestamp);
+            return \core_date::strftime(get_string('strftimerecentfull', 'core_langconfig'), $timestamp);
         }
     }
 

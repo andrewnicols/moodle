@@ -746,6 +746,8 @@ function user_convert_text_to_menu_items($text, $page) {
         // Name processing.
         $namebits = explode(',', $bits[0], 2);
         if (count($namebits) == 2) {
+            if ($namebits[1] && !str_contains($namebits[1], '_')) {
+            }
             // Check the validity of the identifier part of the string.
             if (clean_param($namebits[0], PARAM_STRINGID) !== '') {
                 // Treat this as a language string.

@@ -59,7 +59,7 @@ class cohort_upload_form extends moodleform {
         $mform->addElement('select', 'delimiter', get_string('csvdelimiter', 'tool_uploadcourse'), $choices);
         if (array_key_exists('cfg', $choices)) {
             $mform->setDefault('delimiter', 'cfg');
-        } else if (get_string('listsep', 'langconfig') == ';') {
+        } else if (get_string('listsep', 'core_langconfig') == ';') {
             $mform->setDefault('delimiter', 'semicolon');
         } else {
             $mform->setDefault('delimiter', 'comma');

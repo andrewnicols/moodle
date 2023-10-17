@@ -64,7 +64,7 @@ class core_files_renderer extends plugin_renderer_base {
         foreach ($tree->tree as $file) {
             $filedate = $filesize = $filetype = '';
             if ($file['filedate']) {
-                $filedate = userdate($file['filedate'], get_string('strftimedatetimeshort', 'langconfig'));
+                $filedate = userdate($file['filedate'], get_string('strftimedatetimeshort', 'core_langconfig'));
             }
             if (empty($file['isdir'])) {
                 if ($file['filesize']) {

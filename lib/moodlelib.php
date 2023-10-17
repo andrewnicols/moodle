@@ -2317,7 +2317,7 @@ function format_time($totalsecs, $str = null) {
  * @category time
  * @param int $date the timestamp in UTC, as obtained from the database.
  * @param string $format strftime format. You should probably get this using
- *        get_string('strftime...', 'langconfig');
+ *        get_string('strftime...', 'core_langconfig');
  * @param int|float|string $timezone by default, uses the user's time zone. if numeric and
  *        not 99 then daylight saving will not be added.
  *        {@link https://moodledev.io/docs/apis/subsystems/time#timezone}
@@ -2339,7 +2339,7 @@ function userdate($date, $format = '', $timezone = 99, $fixday = true, $fixhour 
  * @category time
  * @param int $date the timestamp in UTC, as obtained from the database.
  * @param string $format strftime format. You should probably get this using
- *        get_string('strftime...', 'langconfig');
+ *        get_string('strftime...', 'core_langconfig');
  * @param int|float|string $timezone by default, uses the user's time zone. if numeric and
  *        not 99 then daylight saving will not be added.
  *        {@link https://moodledev.io/docs/apis/subsystems/time#timezone}
@@ -2382,8 +2382,8 @@ function date_format_string($date, $format, $tz = 99) {
             '%P',
             '%p',
         ], [
-            $datearray['hours'] < 12 ? get_string('am', 'langconfig') : get_string('pm', 'langconfig'),
-            $datearray['hours'] < 12 ? get_string('amcaps', 'langconfig') : get_string('pmcaps', 'langconfig'),
+            $datearray['hours'] < 12 ? get_string('am', 'core_langconfig') : get_string('pm', 'core_langconfig'),
+            $datearray['hours'] < 12 ? get_string('amcaps', 'core_langconfig') : get_string('pmcaps', 'core_langconfig'),
         ], $format);
     }
 
@@ -2493,7 +2493,7 @@ function get_time_interval_string(int $time1, int $time2, string $format = '',
         if ($fullformat) {
             $formatkey .= 'full';
         }
-        $format = get_string($formatkey, 'langconfig');
+        $format = get_string($formatkey, 'core_langconfig');
     }
     return $interval->format($format);
 }
@@ -7297,7 +7297,7 @@ function fix_current_language(string $lang): void {
  */
 function get_parent_language($lang=null) {
 
-    $parentlang = get_string_manager()->get_string('parentlanguage', 'langconfig', null, $lang);
+    $parentlang = get_string_manager()->get_string('parentlanguage', 'core_langconfig', null, $lang);
 
     if ($parentlang === 'en') {
         $parentlang = '';
@@ -8256,9 +8256,7 @@ function component_callback_exists($component, $function) {
     }
 
     if (!function_exists($function) and function_exists($oldfunction)) {
-        if ($type !== 'mod' and $type !== 'core') {
-            debugging("Please use new function name $function instead of legacy $oldfunction", DEBUG_DEVELOPER);
-        }
+        debugging("Please use new function name $function instead of legacy $oldfunction", DEBUG_DEVELOPER);
         $function = $oldfunction;
     }
 
@@ -8472,7 +8470,7 @@ function moodle_getlocale() {
         return $CFG->locale;
     }
 
-    return get_string($stringtofetch, 'langconfig');
+    return get_string($stringtofetch, 'core_langconfig');
 }
 
 /**
@@ -8958,7 +8956,7 @@ function format_float($float, $decimalpoints=1, $localized=true, $stripzeros=fal
         return '';
     }
     if ($localized) {
-        $separator = get_string('decsep', 'langconfig');
+        $separator = get_string('decsep', 'core_langconfig');
     } else {
         $separator = '.';
     }
@@ -8994,7 +8992,7 @@ function unformat_float($localefloat, $strict = false) {
     }
 
     $localefloat = str_replace(' ', '', $localefloat); // No spaces - those might be used as thousand separators.
-    $localefloat = str_replace(get_string('decsep', 'langconfig'), '.', $localefloat);
+    $localefloat = str_replace(get_string('decsep', 'core_langconfig'), '.', $localefloat);
 
     if ($strict && !is_numeric($localefloat)) {
         return false;
@@ -9835,7 +9833,7 @@ function get_performance_info() {
 
         $table = new html_table();
         $table->attributes['class'] = 'cachesused table table-dark table-sm w-auto table-bordered';
-        $table->head = ['Mode', 'Cache item', 'Static', 'H', 'M', get_string('mappingprimary', 'cache'), 'H', 'M', 'S', 'I/O'];
+        $table->head = ['Mode', 'Cache item', 'Static', 'H', 'M', get_string('mappingprimary', 'core_cache'), 'H', 'M', 'S', 'I/O'];
         $table->data = [];
         $table->align = ['left', 'left', 'left', 'right', 'right', 'left', 'right', 'right', 'right', 'right'];
 
@@ -9989,7 +9987,7 @@ function get_performance_info() {
 
         $table = new html_table();
         $table->attributes['class'] = 'cachesused table table-dark table-sm w-auto table-bordered';
-        $table->head = [get_string('storename', 'cache'), get_string('type_cachestore', 'plugin'), 'H', 'M', 'S', 'I/O'];
+        $table->head = [get_string('storename', 'core_cache'), get_string('type_cachestore', 'core_plugin'), 'H', 'M', 'S', 'I/O'];
         $table->data = [];
         $table->align = ['left', 'left', 'right', 'right', 'right', 'right'];
 

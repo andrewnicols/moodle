@@ -366,7 +366,7 @@ class enrol_paypal_plugin extends enrol_plugin {
             $errors['enrolenddate'] = get_string('enrolenddaterror', 'enrol_paypal');
         }
 
-        $cost = str_replace(get_string('decsep', 'langconfig'), '.', $data['cost']);
+        $cost = str_replace(get_string('decsep', 'core_langconfig'), '.', $data['cost']);
         if (!is_numeric($cost)) {
             $errors['cost'] = get_string('costerror', 'enrol_paypal');
         }

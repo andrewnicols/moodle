@@ -3394,7 +3394,7 @@ function print_location_comment($file, $line, $return = false) {
  * @return boolean true if the current language is right-to-left (Hebrew, Arabic etc)
  */
 function right_to_left() {
-    return (get_string('thisdirection', 'langconfig') === 'rtl');
+    return (get_string('thisdirection', 'core_langconfig') === 'rtl');
 }
 
 

@@ -59,7 +59,7 @@ class locale {
         // Store current locale.
         $currentlocale = $this->set_locale(LC_ALL, 0);
 
-        $locale = get_string_manager()->get_string($stringtofetch, 'langconfig', $a = null, $langpackcode);
+        $locale = get_string_manager()->get_string($stringtofetch, 'core_langconfig', $a = null, $langpackcode);
 
         // Try to set new locale.
         $return = $this->set_locale(LC_ALL, $locale);

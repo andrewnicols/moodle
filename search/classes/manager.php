@@ -1299,7 +1299,7 @@ class manager {
                 $partialtext = '';
                 if ($partial) {
                     $partialtext = ' (not complete; done to ' . userdate($lastindexeddoc,
-                            get_string('strftimedatetimeshort', 'langconfig')) . ')';
+                            get_string('strftimedatetimeshort', 'core_langconfig')) . ')';
                 }
 
                 $progress->output('Processed ' . $numrecords . ' records containing ' . $numdocs .

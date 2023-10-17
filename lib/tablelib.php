@@ -1443,11 +1443,11 @@ class flexible_table {
             $ilast = optional_param($this->request[TABLE_VAR_ILAST], null, PARAM_RAW);
         }
 
-        if (!is_null($ifirst) && ($ifirst === '' || strpos(get_string('alphabet', 'langconfig'), $ifirst) !== false)) {
+        if (!is_null($ifirst) && ($ifirst === '' || strpos(get_string('alphabet', 'core_langconfig'), $ifirst) !== false)) {
             $this->prefs['i_first'] = $ifirst;
         }
 
-        if (!is_null($ilast) && ($ilast === '' || strpos(get_string('alphabet', 'langconfig'), $ilast) !== false)) {
+        if (!is_null($ilast) && ($ilast === '' || strpos(get_string('alphabet', 'core_langconfig'), $ilast) !== false)) {
             $this->prefs['i_last'] = $ilast;
         }
 

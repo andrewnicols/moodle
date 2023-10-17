@@ -2892,7 +2892,7 @@ class mod_assign_external extends \mod_assign\external\external_api {
             'allowsubmissionsfromdate' => $assign->get_instance($userid)->allowsubmissionsfromdate,
             'duedate' => $assign->get_instance($userid)->duedate,
             'cutoffdate' => $assign->get_instance($userid)->cutoffdate,
-            'duedatestr' => userdate($assign->get_instance($userid)->duedate, get_string('strftimedatetime', 'langconfig')),
+            'duedatestr' => userdate($assign->get_instance($userid)->duedate, get_string('strftimedatetime', 'core_langconfig')),
         );
 
         if (!empty($participant->groupid)) {

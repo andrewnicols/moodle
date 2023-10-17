@@ -419,7 +419,7 @@ abstract class base_moodleform extends moodleform {
         $PAGE->requires->yui_module('moodle-backup-backupselectall', 'M.core_backup.backupselectall',
                 array($modnames));
         $PAGE->requires->strings_for_js(array('select', 'all', 'none'), 'moodle');
-        $PAGE->requires->strings_for_js(array('showtypes', 'hidetypes'), 'backup');
+        $PAGE->requires->strings_for_js(array('showtypes', 'hidetypes'), 'core_backup');
 
         parent::display();
     }

@@ -36,7 +36,7 @@ namespace qbank_importquestions;
 class navigation extends \core_question\local\bank\navigation_node_base {
 
     public function get_navigation_title(): string {
-        return get_string('import', 'question');
+        return get_string('import', 'core_question');
     }
 
     public function get_navigation_key(): string {

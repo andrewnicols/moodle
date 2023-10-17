@@ -2268,8 +2268,8 @@ abstract class repository implements cacheable_object {
                     if (!$file[$key]) {
                         unset($file[$key]);
                     } else {
-                        $file[$key.'_f'] = userdate($file[$key], get_string('strftimedatetime', 'langconfig'));
-                        $file[$key.'_f_s'] = userdate($file[$key], get_string('strftimedatetimeshort', 'langconfig'));
+                        $file[$key.'_f'] = userdate($file[$key], get_string('strftimedatetime', 'core_langconfig'));
+                        $file[$key.'_f_s'] = userdate($file[$key], get_string('strftimedatetimeshort', 'core_langconfig'));
                     }
                 }
             }

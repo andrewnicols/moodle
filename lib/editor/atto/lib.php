@@ -170,7 +170,7 @@ class atto_texteditor extends texteditor {
     protected function get_init_params($elementid, array $options = null, array $fpoptions = null, $plugins = null) {
         global $PAGE;
 
-        $directionality = get_string('thisdirection', 'langconfig');
+        $directionality = get_string('thisdirection', 'core_langconfig');
         $strtime        = get_string('strftimetime');
         $strdate        = get_string('strftimedaydate');
         $lang           = current_language();

@@ -148,7 +148,7 @@ abstract class qtype_calculated_question_helper {
 
         $question->vs = new qtype_calculated_variable_substituter(
                 $question->datasetloader->get_values($variant),
-                get_string('decsep', 'langconfig'));
+                get_string('decsep', 'core_langconfig'));
         $question->calculate_all_expressions();
 
         foreach ($question->vs->get_values() as $name => $value) {
@@ -166,7 +166,7 @@ abstract class qtype_calculated_question_helper {
         }
 
         $question->vs = new qtype_calculated_variable_substituter(
-                $values, get_string('decsep', 'langconfig'));
+                $values, get_string('decsep', 'core_langconfig'));
         $question->calculate_all_expressions();
     }
 }

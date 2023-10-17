@@ -508,7 +508,7 @@ class icon_system_fontawesome extends icon_system_font {
 
         // Flip question mark icon orientation when the `questioniconfollowlangdirection` lang config string is set to `yes`.
         $isquestionicon = strpos($data['key'], 'fa-question') !== false;
-        if ($isquestionicon && right_to_left() && get_string('questioniconfollowlangdirection', 'langconfig') === 'yes') {
+        if ($isquestionicon && right_to_left() && get_string('questioniconfollowlangdirection', 'core_langconfig') === 'yes') {
             $data['extraclasses'] = "fa-flip-horizontal";
         }
 

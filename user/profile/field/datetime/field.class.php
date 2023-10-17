@@ -102,9 +102,9 @@ class profile_field_datetime extends profile_field_base {
     public function display_data() {
         // Check if time was specified.
         if (!empty($this->field->param3)) {
-            $format = get_string('strftimedaydatetime', 'langconfig');
+            $format = get_string('strftimedaydatetime', 'core_langconfig');
         } else {
-            $format = get_string('strftimedate', 'langconfig');
+            $format = get_string('strftimedate', 'core_langconfig');
         }
 
         // Check if a date has been specified.

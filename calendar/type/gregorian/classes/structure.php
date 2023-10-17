@@ -204,7 +204,7 @@ class structure extends type_base {
         if (isset($CFG->calendar_startwday)) {
             $firstday = $CFG->calendar_startwday;
         } else {
-            $firstday = get_string('firstdayofweek', 'langconfig');
+            $firstday = get_string('firstdayofweek', 'core_langconfig');
         }
 
         if (!is_numeric($firstday)) {
@@ -300,7 +300,7 @@ class structure extends type_base {
         global $CFG;
 
         if (empty($format)) {
-            $format = get_string('strftimedaydatetime', 'langconfig');
+            $format = get_string('strftimedaydatetime', 'core_langconfig');
         }
 
         if (!empty($CFG->nofixday)) { // Config.php can force %d not to be fixed.
@@ -411,6 +411,6 @@ class structure extends type_base {
      * @return string locale
      */
     public function locale_win_charset() {
-        return get_string('localewincharset', 'langconfig');
+        return get_string('localewincharset', 'core_langconfig');
     }
 }

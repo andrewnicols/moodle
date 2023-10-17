@@ -43,7 +43,7 @@ class creator_name_column extends column_base {
         if (!empty($question->creatorfirstname) && !empty($question->creatorlastname)) {
             $u = new \stdClass();
             $u = username_load_fields_from_object($u, $question, 'creator');
-            $displaydata['date'] = userdate($question->timecreated, get_string('strftimedatetime', 'langconfig'));
+            $displaydata['date'] = userdate($question->timecreated, get_string('strftimedatetime', 'core_langconfig'));
             $displaydata['creator'] = fullname($u);
             echo $PAGE->get_renderer('qbank_viewcreator')->render_creator_name($displaydata);
         }

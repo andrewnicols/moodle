@@ -100,7 +100,7 @@ class field_controller extends \core_customfield\field_controller {
      * @return array
      */
     public function course_grouping_format_values($values): array {
-        $format = get_string('strftimedate', 'langconfig');
+        $format = get_string('strftimedate', 'core_langconfig');
         $ret = [];
         foreach ($values as $value) {
             if ($value) {

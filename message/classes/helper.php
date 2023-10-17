@@ -563,17 +563,17 @@ class helper {
         $choices = [];
         $choices[] = [
             'value' => \core_message\api::MESSAGE_PRIVACY_ONLYCONTACTS,
-            'text' => get_string('contactableprivacy_onlycontacts', 'message')
+            'text' => get_string('contactableprivacy_onlycontacts', 'core_message')
         ];
         $choices[] = [
             'value' => \core_message\api::MESSAGE_PRIVACY_COURSEMEMBER,
-            'text' => get_string('contactableprivacy_coursemember', 'message')
+            'text' => get_string('contactableprivacy_coursemember', 'core_message')
         ];
         if (!empty($CFG->messagingallusers)) {
             // Add the MESSAGE_PRIVACY_SITE option when site-wide messaging between users is enabled.
             $choices[] = [
                 'value' => \core_message\api::MESSAGE_PRIVACY_SITE,
-                'text' => get_string('contactableprivacy_site', 'message')
+                'text' => get_string('contactableprivacy_site', 'core_message')
             ];
         }
 
@@ -582,7 +582,7 @@ class helper {
 
         $notification = '';
         if (!get_user_preferences('core_message_migrate_data', false)) {
-            $notification = get_string('messagingdatahasnotbeenmigrated', 'message');
+            $notification = get_string('messagingdatahasnotbeenmigrated', 'core_message');
         }
 
         if ($isdrawer) {

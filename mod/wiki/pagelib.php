@@ -1318,7 +1318,7 @@ class page_wiki_history extends page_wiki {
         $version0page = wiki_get_wiki_page_version($this->page->id, 0);
         $creator = wiki_get_user_info($version0page->userid);
         $a = new StdClass;
-        $a->date = userdate($this->page->timecreated, get_string('strftimedaydatetime', 'langconfig'));
+        $a->date = userdate($this->page->timecreated, get_string('strftimedaydatetime', 'core_langconfig'));
         $a->username = fullname($creator);
         echo html_writer::tag ('div', get_string('createddate', 'wiki', $a), array('class' => 'wiki_headingtime'));
         if ($vcount > 0) {
@@ -1330,8 +1330,8 @@ class page_wiki_history extends page_wiki {
 
                 $username = wiki_get_user_info($row->userid);
                 $picture = $OUTPUT->user_picture($username);
-                $date = userdate($row->timecreated, get_string('strftimedate', 'langconfig'));
-                $time = userdate($row->timecreated, get_string('strftimetime', 'langconfig'));
+                $date = userdate($row->timecreated, get_string('strftimedate', 'core_langconfig'));
+                $time = userdate($row->timecreated, get_string('strftimetime', 'core_langconfig'));
                 $versionid = wiki_get_version($row->id);
                 $versionlink = new moodle_url('/mod/wiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $versionid->id));
                 $userlink = new moodle_url('/user/view.php', array('id' => $username->id, 'course' => $this->cm->course));
@@ -1353,7 +1353,7 @@ class page_wiki_history extends page_wiki {
                     $picture = $OUTPUT->user_picture($user, array('popup' => true));
                     $date = userdate($version->timecreated, get_string('strftimedate'));
                     $rowclass[] = 'wiki_histnewdate';
-                    $time = userdate($version->timecreated, get_string('strftimetime', 'langconfig'));
+                    $time = userdate($version->timecreated, get_string('strftimetime', 'core_langconfig'));
                     $versionid = wiki_get_version($version->id);
                     if ($versionid) {
                         $url = new moodle_url('/mod/wiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $versionid->id));
@@ -2207,7 +2207,7 @@ class page_wiki_viewversion extends page_wiki {
                 html_writer::link($restorelink->out(false), '(' . get_string('restorethis', 'wiki') .
                 ')', array('class' => 'wiki_restore')) . '&nbsp;', array('class' => 'wiki_headingtitle'));
             $userinfo = wiki_get_user_info($pageversion->userid);
-            $heading = '<p><strong>' . get_string('modified', 'wiki') . ':</strong>&nbsp;' . userdate($pageversion->timecreated, get_string('strftimedatetime', 'langconfig'));
+            $heading = '<p><strong>' . get_string('modified', 'wiki') . ':</strong>&nbsp;' . userdate($pageversion->timecreated, get_string('strftimedatetime', 'core_langconfig'));
             $viewlink = new moodle_url('/user/view.php', array('id' => $userinfo->id));
             $heading .= '&nbsp;&nbsp;&nbsp;<strong>' . get_string('user') . ':</strong>&nbsp;' . html_writer::link($viewlink->out(false), fullname($userinfo));
             $heading .= '&nbsp;&nbsp;&rarr;&nbsp;' . $OUTPUT->user_picture(wiki_get_user_info($pageversion->userid), array('popup' => true)) . '</p>';
@@ -2683,7 +2683,7 @@ class page_wiki_admin extends page_wiki {
         $version0page = wiki_get_wiki_page_version($this->page->id, 0);
         $creator = wiki_get_user_info($version0page->userid);
         $a = new stdClass();
-        $a->date = userdate($this->page->timecreated, get_string('strftimedaydatetime', 'langconfig'));
+        $a->date = userdate($this->page->timecreated, get_string('strftimedaydatetime', 'core_langconfig'));
         $a->username = fullname($creator);
         echo $OUTPUT->heading(get_string('createddate', 'wiki', $a), 4);
         if ($versioncount > 0) {
@@ -2692,8 +2692,8 @@ class page_wiki_admin extends page_wiki {
                 $row = array_shift($versions);
                 $username = wiki_get_user_info($row->userid);
                 $picture = $OUTPUT->user_picture($username);
-                $date = userdate($row->timecreated, get_string('strftimedate', 'langconfig'));
-                $time = userdate($row->timecreated, get_string('strftimetime', 'langconfig'));
+                $date = userdate($row->timecreated, get_string('strftimedate', 'core_langconfig'));
+                $time = userdate($row->timecreated, get_string('strftimetime', 'core_langconfig'));
                 $versionid = wiki_get_version($row->id);
                 $versionlink = new moodle_url('/mod/wiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $versionid->id));
                 $userlink = new moodle_url('/user/view.php', array('id' => $username->id, 'course' => $this->cm->course));
@@ -2723,7 +2723,7 @@ class page_wiki_admin extends page_wiki {
                         $rowclass[] = 'wiki_histnewdate';
                     }
 
-                    $time = userdate($version->timecreated, get_string('strftimetime', 'langconfig'));
+                    $time = userdate($version->timecreated, get_string('strftimetime', 'core_langconfig'));
                     $versionid = wiki_get_version($version->id);
                     if ($versionid) {
                         $url = new moodle_url('/mod/wiki/viewversion.php', array('pageid' => $pageid, 'versionid' => $versionid->id));

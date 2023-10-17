@@ -74,9 +74,9 @@ class core_calendar_export_form extends moodleform {
             $a = new stdClass();
             $now = time();
             $time = $now - $CFG->calendar_exportlookback * DAYSECS;
-            $a->timestart = userdate($time, get_string('strftimedatefullshort', 'langconfig'));
+            $a->timestart = userdate($time, get_string('strftimedatefullshort', 'core_langconfig'));
             $time = $now + $CFG->calendar_exportlookahead * DAYSECS;
-            $a->timeend = userdate($time, get_string('strftimedatefullshort', 'langconfig'));
+            $a->timeend = userdate($time, get_string('strftimedatefullshort', 'core_langconfig'));
 
             $range[] = $mform->createElement('radio', 'timeperiod', '', get_string('customexport', 'calendar', $a), 'custom');
         }

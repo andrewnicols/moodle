@@ -124,8 +124,8 @@ class calc_formula {
      */
     public static function localize($formula) {
         $formula = str_replace('.', '$', $formula ?? ''); // Temp placeholder.
-        $formula = str_replace(',', get_string('listsep', 'langconfig'), $formula);
-        $formula = str_replace('$', get_string('decsep', 'langconfig'), $formula);
+        $formula = str_replace(',', get_string('listsep', 'core_langconfig'), $formula);
+        $formula = str_replace('$', get_string('decsep', 'core_langconfig'), $formula);
         return $formula;
     }
 
@@ -135,8 +135,8 @@ class calc_formula {
      * @return string
      */
     public static function unlocalize($formula) {
-        $formula = str_replace(get_string('decsep', 'langconfig'), '$', $formula);
-        $formula = str_replace(get_string('listsep', 'langconfig'), ',', $formula);
+        $formula = str_replace(get_string('decsep', 'core_langconfig'), '$', $formula);
+        $formula = str_replace(get_string('listsep', 'core_langconfig'), ',', $formula);
         $formula = str_replace('$', '.', $formula); // temp placeholder
         return $formula;
     }

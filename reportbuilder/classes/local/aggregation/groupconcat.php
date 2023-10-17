@@ -133,7 +133,7 @@ class groupconcat extends base {
             $formattedvalues[] = parent::format_value($originalvalue, $originalvalues, $callbacks, $columntype);
         }
 
-        $listseparator = get_string('listsep', 'langconfig') . ' ';
+        $listseparator = get_string('listsep', 'core_langconfig') . ' ';
         return implode($listseparator, $formattedvalues);
     }
 }

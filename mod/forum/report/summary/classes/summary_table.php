@@ -927,7 +927,7 @@ class summary_table extends table_sql {
      * @param string $format The format to download the report.
      */
     public function download($format) {
-        $filename = 'summary_report_' . userdate(time(), get_string('backupnameformat', 'langconfig'),
+        $filename = 'summary_report_' . userdate(time(), get_string('backupnameformat', 'core_langconfig'),
                 99, false);
 
         $this->is_downloading($format, $filename);

@@ -174,7 +174,7 @@ function question_context_has_any_questions($context): bool {
     } else if (is_numeric($context)) {
         $contextid = $context;
     } else {
-        throw new moodle_exception('invalidcontextinhasanyquestions', 'question');
+        throw new moodle_exception('invalidcontextinhasanyquestions', 'core_question');
     }
     $sql = 'SELECT qbe.*
               FROM {question_bank_entries} qbe
@@ -267,7 +267,7 @@ function question_category_delete_safe($category): void {
         }
         if (!empty($questionids)) {
             $parentcontextid = SYSCONTEXTID;
-            $name = get_string('unknown', 'question');
+            $name = get_string('unknown', 'core_question');
             if ($context !== false) {
                 $name = $context->get_context_name();
                 $parentcontext = $context->get_parent_context();
@@ -510,8 +510,8 @@ function question_save_from_deletion($questionids, $newcontextid, $oldplace, $ne
         $newcategory->parent = question_get_top_category($newcontextid, true)->id;
         $newcategory->contextid = $newcontextid;
         // Max length of column name in question_categories is 255.
-        $newcategory->name = shorten_text(get_string('questionsrescuedfrom', 'question', $oldplace), 255);
-        $newcategory->info = get_string('questionsrescuedfrominfo', 'question', $oldplace);
+        $newcategory->name = shorten_text(get_string('questionsrescuedfrom', 'core_question', $oldplace), 255);
+        $newcategory->info = get_string('questionsrescuedfrominfo', 'core_question', $oldplace);
         $newcategory->sortorder = 999;
         $newcategory->stamp = make_unique_id_code();
         $newcategory->id = $DB->insert_record('question_categories', $newcategory);
@@ -925,7 +925,7 @@ function question_load_questions($questionids, $extrafields = '', $join = '') {
 
     // Load the question type specific information.
     if (!get_question_options($questions)) {
-        return get_string('questionloaderror', 'question');
+        return get_string('questionloaderror', 'core_question');
     }
 
     return $questions;
@@ -1131,7 +1131,7 @@ function print_question_icon($question): string {
         $qtype = $question->qtype;
     }
 
-    return $PAGE->get_renderer('question', 'bank')->qtype_icon($qtype);
+    return $PAGE->get_renderer('core_question', 'bank')->qtype_icon($qtype);
 }
 
 // CATEGORY FUNCTIONS.
@@ -1269,8 +1269,8 @@ function question_make_default_categories($contexts): object {
             $category = new stdClass();
             $contextname = $context->get_context_name(false, true);
             // Max length of name field is 255.
-            $category->name = shorten_text(get_string('defaultfor', 'question', $contextname), 255);
-            $category->info = get_string('defaultinfofor', 'question', $contextname);
+            $category->name = shorten_text(get_string('defaultfor', 'core_question', $contextname), 255);
+            $category->info = get_string('defaultinfofor', 'core_question', $contextname);
             $category->contextid = $context->id;
             $category->parent = $topcategory->id;
             // By default, all categories get this number, and are sorted alphabetically.
@@ -1398,9 +1398,9 @@ function question_default_export_filename($course, $category): string {
     // We build a string that is an appropriate name (questions) from the lang pack,
     // then the corse shortname, then the question category name, then a timestamp.
 
-    $base = clean_filename(get_string('exportfilename', 'question'));
+    $base = clean_filename(get_string('exportfilename', 'core_question'));
 
-    $dateformat = str_replace(' ', '_', get_string('exportnameformat', 'question'));
+    $dateformat = str_replace(' ', '_', get_string('exportnameformat', 'core_question'));
     $timestamp = clean_filename(userdate(time(), $dateformat, 99, false));
 
     $shortname = clean_filename($course->shortname);
@@ -1555,12 +1555,12 @@ function question_extend_settings_navigation(navigation_node $navigationnode, $c
         $params['cat'] = $cat;
     }
 
-    $questionnode = $navigationnode->add(get_string('questionbank', 'question'),
+    $questionnode = $navigationnode->add(get_string('questionbank', 'core_question'),
             new moodle_url($baseurl, $params), navigation_node::TYPE_CONTAINER, null, 'questionbank');
 
     $corenavigations = [
             'questions' => [
-                    'title' => get_string('questions', 'question'),
+                    'title' => get_string('questions', 'core_question'),
                     'url' => new moodle_url($baseurl)
             ],
             'categories' => [],
@@ -1730,7 +1730,7 @@ function question_rewrite_question_preview_urls($text, $questionid, $filecontext
 }
 
 /**
- * Called by pluginfile.php to serve files related to the 'question' core
+ * Called by pluginfile.php to serve files related to the 'core_question' core
  * component and for files belonging to qtypes.
  *
  * For files that relate to questions in a question_attempt, then we delegate to
@@ -1804,7 +1804,7 @@ function question_pluginfile($course, $context, $component, $filearea, $args, $f
 
         if (!$qformat->exportpreprocess()) {
             send_file_not_found();
-            throw new moodle_exception('exporterror', 'question', $thispageurl->out());
+            throw new moodle_exception('exporterror', 'core_question', $thispageurl->out());
         }
 
         // Export data to moodle file pool.
@@ -1935,11 +1935,11 @@ function core_question_question_preview_pluginfile($previewcontext, $questionid,
 function question_page_type_list($pagetype, $parentcontext, $currentcontext): array {
     global $CFG;
     $types = [
-        'question-*' => get_string('page-question-x', 'question'),
-        'question-edit' => get_string('page-question-edit', 'question'),
-        'question-category' => get_string('page-question-category', 'question'),
-        'question-export' => get_string('page-question-export', 'question'),
-        'question-import' => get_string('page-question-import', 'question')
+        'question-*' => get_string('page-question-x', 'core_question'),
+        'question-edit' => get_string('page-question-edit', 'core_question'),
+        'question-category' => get_string('page-question-category', 'core_question'),
+        'question-export' => get_string('page-question-export', 'core_question'),
+        'question-import' => get_string('page-question-import', 'core_question')
     ];
     if ($currentcontext->contextlevel == CONTEXT_COURSE) {
         require_once($CFG->dirroot . '/course/lib.php');

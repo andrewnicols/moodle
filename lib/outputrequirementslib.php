@@ -355,10 +355,10 @@ class page_requirements_manager {
         $this->get_config_for_javascript($page, $renderer);
 
         // Accessibility stuff.
-        $this->skip_link_to('maincontent', get_string('tocontent', 'access'));
+        $this->skip_link_to('maincontent', get_string('tocontent', 'core_access'));
 
         // Add strings used on many pages.
-        $this->string_for_js('confirmation', 'admin');
+        $this->string_for_js('confirmation', 'core_admin');
         $this->string_for_js('cancel', 'moodle');
         $this->string_for_js('yes', 'moodle');
 
@@ -775,20 +775,20 @@ class page_requirements_manager {
                                         'yui2-treeview', 'panel', 'cookie', 'datatable', 'datatable-sort', 'resize-plugin', 'dd-plugin',
                                         'escape', 'moodle-core_filepicker', 'moodle-core-notification-dialogue'
                                     ),
-                                    'strings'  => array(array('lastmodified', 'moodle'), array('name', 'moodle'), array('type', 'repository'), array('size', 'repository'),
-                                                        array('invalidjson', 'repository'), array('error', 'moodle'), array('info', 'moodle'),
-                                                        array('nofilesattached', 'repository'), array('filepicker', 'repository'), array('logout', 'repository'),
-                                                        array('nofilesavailable', 'repository'), array('norepositoriesavailable', 'repository'),
-                                                        array('fileexistsdialogheader', 'repository'), array('fileexistsdialog_editor', 'repository'),
-                                                        array('fileexistsdialog_filemanager', 'repository'), array('renameto', 'repository'),
-                                                        array('referencesexist', 'repository'), array('select', 'repository')
+                                    'strings'  => array(array('lastmodified', 'moodle'), array('name', 'moodle'), array('type', 'core_repository'), array('size', 'core_repository'),
+                                                        array('invalidjson', 'core_repository'), array('error', 'moodle'), array('info', 'moodle'),
+                                                        array('nofilesattached', 'core_repository'), array('filepicker', 'core_repository'), array('logout', 'core_repository'),
+                                                        array('nofilesavailable', 'core_repository'), array('norepositoriesavailable', 'core_repository'),
+                                                        array('fileexistsdialogheader', 'core_repository'), array('fileexistsdialog_editor', 'core_repository'),
+                                                        array('fileexistsdialog_filemanager', 'core_repository'), array('renameto', 'core_repository'),
+                                                        array('referencesexist', 'core_repository'), array('select', 'core_repository')
                                                     ));
                     break;
                 case 'core_comment':
                     $module = array('name'     => 'core_comment',
                                     'fullpath' => '/comment/comment.js',
                                     'requires' => array('base', 'io-base', 'node', 'json', 'yui2-animation', 'overlay', 'escape'),
-                                    'strings' => array(array('confirmdeletecomments', 'admin'), array('yes', 'moodle'), array('no', 'moodle'))
+                                    'strings' => array(array('confirmdeletecomments', 'core_admin'), array('yes', 'moodle'), array('no', 'moodle'))
                                 );
                     break;
                 case 'core_role':
@@ -823,9 +823,9 @@ class page_requirements_manager {
                                     'fullpath' => '/lib/form/dndupload.js',
                                     'requires' => array('node', 'event', 'json', 'core_filepicker'),
                                     'strings'  => array(array('uploadformlimit', 'moodle'), array('droptoupload', 'moodle'), array('maxfilesreached', 'moodle'),
-                                                        array('dndenabled_inbox', 'moodle'), array('fileexists', 'moodle'), array('maxbytesfile', 'error'),
+                                                        array('dndenabled_inbox', 'moodle'), array('fileexists', 'moodle'), array('maxbytesfile', 'core_error'),
                                                         array('sizegb', 'moodle'), array('sizemb', 'moodle'), array('sizekb', 'moodle'), array('sizeb', 'moodle'),
-                                                        array('maxareabytesreached', 'moodle'), array('serverconnection', 'error'),
+                                                        array('maxareabytesreached', 'moodle'), array('serverconnection', 'core_error'),
                                                         array('changesmadereallygoaway', 'moodle'), array('complete', 'moodle')
                                                     ));
                     break;
@@ -1707,8 +1707,8 @@ EOF;
             'debuginfo',
             'line',
             'stacktrace',
-        ), 'debug');
-        $this->string_for_js('labelsep', 'langconfig');
+        ), 'core_debug');
+        $this->string_for_js('labelsep', 'core_langconfig');
         if (!empty($this->stringsforjs)) {
             $strings = array();
             foreach ($this->stringsforjs as $component=>$v) {

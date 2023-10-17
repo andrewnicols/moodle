@@ -393,7 +393,7 @@ class core_calendar_renderer extends plugin_renderer_base {
             if (empty($sub->lastupdated)) {
                 $lastupdated = $strnever->out();
             } else {
-                $lastupdated = userdate($sub->lastupdated, get_string('strftimedatetimeshort', 'langconfig'));
+                $lastupdated = userdate($sub->lastupdated, get_string('strftimedatetimeshort', 'core_langconfig'));
             }
 
             $type = $sub->eventtype . 'events';

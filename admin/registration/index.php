@@ -93,7 +93,7 @@ if (\core\hub\registration::is_registered()) {
     } else if (\core\hub\registration::get_new_registration_fields()) {
         $registrationmessage = get_string('pleaserefreshregistrationnewdata', 'admin');
     } else {
-        $lastupdated = userdate($lastupdated, get_string('strftimedate', 'langconfig'));
+        $lastupdated = userdate($lastupdated, get_string('strftimedate', 'core_langconfig'));
         $registrationmessage = get_string('pleaserefreshregistration', 'admin', $lastupdated);
         $notificationtype = \core\output\notification::NOTIFY_INFO;
     }

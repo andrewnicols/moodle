@@ -568,7 +568,7 @@ class core_string_manager_standard implements core_string_manager {
                 // Invalid lang pack name!
                 continue;
             }
-            $string = $this->load_component_strings('langconfig', $lang);
+            $string = $this->load_component_strings('core_langconfig', $lang);
             if (!empty($string['thislanguage'])) {
                 $languages[$lang] = $string['thislanguage'].' '.$lrm.'('. $lang .')'.$lrm;
             }

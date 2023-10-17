@@ -419,7 +419,7 @@ class report extends \mod_scorm\report {
                             $row[] = userdate($timetracks->start);
                         }
                         if ($download == 'ODS' || $download == 'Excel' ) {
-                            $row[] = userdate($timetracks->finish, get_string('strftimedatetime', 'langconfig'));
+                            $row[] = userdate($timetracks->finish, get_string('strftimedatetime', 'core_langconfig'));
                         } else {
                             $row[] = userdate($timetracks->finish);
                         }

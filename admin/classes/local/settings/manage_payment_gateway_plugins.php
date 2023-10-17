@@ -69,6 +69,6 @@ class manage_payment_gateway_plugins extends \admin_setting_manage_plugins {
             $currencies[$c] = new \lang_string($c, 'core_currencies');
         }
 
-        return implode(get_string('listsep', 'langconfig') . ' ', $currencies);
+        return implode(get_string('listsep', 'core_langconfig') . ' ', $currencies);
     }
 }

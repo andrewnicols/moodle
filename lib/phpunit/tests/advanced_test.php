@@ -572,8 +572,8 @@ class advanced_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         // If this fails self::resetAllData(); must be updated.
-        $this->assertSame('en_AU.UTF-8', get_string('locale', 'langconfig'));
-        $this->assertSame('English_Australia.1252', get_string('localewin', 'langconfig'));
+        $this->assertSame('en_AU.UTF-8', get_string('locale', 'core_langconfig'));
+        $this->assertSame('English_Australia.1252', get_string('localewin', 'core_langconfig'));
 
         if ($CFG->ostype === 'WINDOWS') {
             $this->assertSame('English_Australia.1252', setlocale(LC_TIME, 0));

@@ -240,7 +240,7 @@ abstract class backup_plan_dbops extends backup_dbops {
         }
 
         // Calculate date
-        $backupdateformat = str_replace(' ', '_', get_string('backupnameformat', 'langconfig'));
+        $backupdateformat = str_replace(' ', '_', get_string('backupnameformat', 'core_langconfig'));
         $date = userdate(time(), $backupdateformat, 99, false);
         $date = core_text::strtolower(trim(clean_filename($date), '_'));
 

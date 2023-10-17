@@ -81,16 +81,16 @@ define(['jquery', 'core/ajax', 'core/templates', 'core/str', 'core/url',
      */
     NotificationPopoverController.prototype.updateButtonAriaLabel = function() {
         if (this.isMenuOpen()) {
-            Str.get_string('hidenotificationwindow', 'message').done(function(string) {
+            Str.get_string('hidenotificationwindow', 'core_message').done(function(string) {
                 this.menuToggle.attr('aria-label', string);
             }.bind(this));
         } else {
             if (this.unreadCount) {
-                Str.get_string('shownotificationwindowwithcount', 'message', this.unreadCount).done(function(string) {
+                Str.get_string('shownotificationwindowwithcount', 'core_message', this.unreadCount).done(function(string) {
                     this.menuToggle.attr('aria-label', string);
                 }.bind(this));
             } else {
-                Str.get_string('shownotificationwindownonew', 'message').done(function(string) {
+                Str.get_string('shownotificationwindownonew', 'core_message').done(function(string) {
                     this.menuToggle.attr('aria-label', string);
                 }.bind(this));
             }

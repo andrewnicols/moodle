@@ -666,7 +666,7 @@ class zip_archive extends file_archive {
                         $name = $newname;
                     }
                 }
-                if (!$found and $encoding = get_string('oldcharset', 'langconfig')) {
+                if (!$found and $encoding = get_string('oldcharset', 'core_langconfig')) {
                     // Last attempt - try the dos/unix encoding from current language.
                     $windows = true;
                     foreach($file['extra'] as $extra) {
@@ -690,7 +690,7 @@ class zip_archive extends file_archive {
                             case 'WINDOWS-1251': $encoding = 'CP866'; break;
                             case 'EUC-JP':
                             case 'UTF-8':
-                                if ($winchar = get_string('localewincharset', 'langconfig')) {
+                                if ($winchar = get_string('localewincharset', 'core_langconfig')) {
                                     // Most probably works only for zh_cn,
                                     // if there are more problems we could add zipcharset to langconfig files.
                                     $encoding = $winchar;

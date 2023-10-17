@@ -505,7 +505,7 @@ class renderer extends \plugin_renderer_base {
                 $proflink,
                 $creatediplink,
                 $lastiplink,
-                userdate($record->timemodified, get_string('strftimedatetime', 'langconfig')),
+                userdate($record->timemodified, get_string('strftimedatetime', 'core_langconfig')),
                 $actions,
             ];
         }

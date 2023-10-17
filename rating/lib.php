@@ -1060,7 +1060,7 @@ class rating_manager {
                 $aggregatelabel .= get_string("aggregatesum", "rating");
                 break;
         }
-        $aggregatelabel .= get_string('labelsep', 'langconfig');
+        $aggregatelabel .= get_string('labelsep', 'core_langconfig');
         return $aggregatelabel;
     }
 

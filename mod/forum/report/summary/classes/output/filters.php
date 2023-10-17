@@ -267,7 +267,7 @@ class filters implements renderable, templatable {
         ];
 
         // Prepare button string data.
-        $displayformat = get_string('strftimedatemonthabbr', 'langconfig');
+        $displayformat = get_string('strftimedatemonthabbr', 'core_langconfig');
         $fromdatestring = $calendartype->timestamp_to_date_string($fromtimestamp, $displayformat, $timezone, true, true);
         $todatestring = $calendartype->timestamp_to_date_string($totimestamp, $displayformat, $timezone, true, true);
 

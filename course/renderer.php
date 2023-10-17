@@ -2019,7 +2019,7 @@ class core_course_renderer extends plugin_renderer_base {
             return '';
         }
         $output = html_writer::link('#' . $skipdivid,
-            get_string('skipa', 'access', core_text::strtolower(strip_tags($header))),
+            get_string('skipa', 'core_access', core_text::strtolower(strip_tags($header))),
             array('class' => 'skip-block skip aabtn'));
 
         // Wrap frontpage part in div container.

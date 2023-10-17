@@ -152,7 +152,7 @@ abstract class frontend {
                 'condition_group', 'condition_group_info', 'and', 'or',
                 'label_multi', 'label_sign', 'setheading', 'itemheading',
                 'missingplugin', 'disabled_verb'),
-                'availability');
+                'core_availability');
     }
 
     /**

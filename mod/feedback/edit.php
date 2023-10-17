@@ -97,7 +97,7 @@ if (count($feedbackitems) > 1) {
            'pluginname',
            'move_item',
            'position',
-        ), 'feedback');
+        ), 'mod_feedback');
     $PAGE->requires->yui_module('moodle-mod_feedback-dragdrop', 'M.mod_feedback.init_dragdrop',
             array(array('cmid' => $cm->id)));
 }

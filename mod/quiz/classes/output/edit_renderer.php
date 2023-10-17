@@ -1198,7 +1198,7 @@ class edit_renderer extends \plugin_renderer_base {
         unset($config->pagehtml);
         unset($config->addpageiconhtml);
 
-        $this->page->requires->strings_for_js(['areyousureremoveselected'], 'quiz');
+        $this->page->requires->strings_for_js(['areyousureremoveselected'], 'mod_xquiz');
         $this->page->requires->yui_module('moodle-mod_quiz-toolboxes',
                 'M.mod_quiz.init_section_toolbox',
                 [[
@@ -1264,7 +1264,7 @@ class edit_renderer extends \plugin_renderer_base {
                 'questiondependencyfree',
                 'questiondependencyremove',
                 'questiondependsonprevious',
-        ], 'quiz');
+        ], 'mod_quiz');
 
         foreach (\question_bank::get_all_qtypes() as $qtype => $notused) {
             $this->page->requires->string_for_js('pluginname', 'qtype_' . $qtype);

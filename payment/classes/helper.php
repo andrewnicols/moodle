@@ -103,7 +103,7 @@ class helper {
     public static function get_rounded_cost(float $amount, string $currency, float $surcharge = 0): float {
         $amount = $amount * (100 + $surcharge) / 100;
 
-        $locale = get_string('localecldr', 'langconfig');
+        $locale = get_string('localecldr', 'core_langconfig');
         $fmt = \NumberFormatter::create($locale, \NumberFormatter::CURRENCY);
         $localisedcost = numfmt_format_currency($fmt, $amount, $currency);
 
@@ -121,7 +121,7 @@ class helper {
     public static function get_cost_as_string(float $amount, string $currency, float $surcharge = 0): string {
         $amount = $amount * (100 + $surcharge) / 100;
 
-        $locale = get_string('localecldr', 'langconfig');
+        $locale = get_string('localecldr', 'core_langconfig');
         $fmt = \NumberFormatter::create($locale, \NumberFormatter::CURRENCY);
         $localisedcost = numfmt_format_currency($fmt, $amount, $currency);
 

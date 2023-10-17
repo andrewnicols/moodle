@@ -115,7 +115,7 @@ foreach($feeds as $feed) {
         '<div class="url">' . html_writer::link($feed->url, $feed->url) .'</div>' .
         '<div class="description">' . $feed->description . '</div>';
     if ($feed->skipuntil) {
-        $skipuntil = userdate($feed->skipuntil, get_string('strftimedatetime', 'langconfig'));
+        $skipuntil = userdate($feed->skipuntil, get_string('strftimedatetime', 'core_langconfig'));
         $skipmsg = get_string('failedfeed', 'block_rss_client', $skipuntil);
         $notification = new \core\output\notification($skipmsg, 'error');
         $notification->set_show_closebutton(false);

@@ -372,7 +372,7 @@ function forum_rss_feed_contents($forum, $sql, $params, $context) {
                     $item->title = format_string($rec->postsubject);
                 } else {
                     //we should have an item title by now but if we dont somehow then substitute something somewhat meaningful
-                    $item->title = format_string($forum->name.' '.userdate($rec->postcreated,get_string('strftimedatetimeshort', 'langconfig')));
+                    $item->title = format_string($forum->name.' '.userdate($rec->postcreated,get_string('strftimedatetimeshort', 'core_langconfig')));
                 }
                 $item->author = fullname($rec);
                 $message = file_rewrite_pluginfile_urls($rec->postmessage, 'pluginfile.php', $context->id,

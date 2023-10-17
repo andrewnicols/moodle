@@ -72,7 +72,7 @@ $interactive = empty($options['non-interactive']);
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 if ($options['help']) {
@@ -138,7 +138,7 @@ $newversion = "$release ($version)";
 if ($options['unset-ui-upgrade-lock']) {
     // Unconditionally unset this config if requested.
     set_config('outagelessupgrade', false);
-    cli_writeln(get_string('cliupgradeunsetlock', 'admin'));
+    cli_writeln(get_string('cliupgradeunsetlock', 'core_admin'));
 }
 
 $allhash = core_component::get_all_component_hash();
@@ -181,7 +181,7 @@ if ($options['is-pending'] || $options['is-maintenance-required']) {
     // If requested, we should always set the upgrade lock here, so this cannot be run from frontend.
     if ($options['set-ui-upgrade-lock']) {
         set_config('outagelessupgrade', true);
-        cli_writeln(get_string('cliupgradesetlock', 'admin'));
+        cli_writeln(get_string('cliupgradesetlock', 'core_admin'));
     }
 
     // We can do an upgrade without maintenance!
@@ -193,7 +193,7 @@ if ($options['is-pending'] || $options['is-maintenance-required']) {
 list($envstatus, $environment_results) = check_moodle_environment(normalize_version($release), ENV_SELECT_RELEASE);
 if (!$envstatus) {
     $errors = environment_get_errors($environment_results);
-    cli_heading(get_string('environment', 'admin'));
+    cli_heading(get_string('environment', 'core_admin'));
     foreach ($errors as $error) {
         list($info, $report) = $error;
         echo "!! $info !!\n$report\n\n";
@@ -203,18 +203,18 @@ if (!$envstatus) {
 
 // Make sure there are no files left over from previous versions.
 if (upgrade_stale_php_files_present()) {
-    cli_problem(get_string('upgradestalefiles', 'admin'));
+    cli_problem(get_string('upgradestalefiles', 'core_admin'));
 
     // Stale file info contains HTML elements which aren't suitable for CLI.
-    $upgradestalefilesinfo = get_string('upgradestalefilesinfo', 'admin', get_docs_url('Upgrading'));
+    $upgradestalefilesinfo = get_string('upgradestalefilesinfo', 'core_admin', get_docs_url('Upgrading'));
     cli_error(strip_tags($upgradestalefilesinfo));
 }
 
 // Test plugin dependencies.
 $failed = array();
 if (!core_plugin_manager::instance()->all_plugins_ok($version, $failed, $CFG->branch)) {
-    cli_problem(get_string('pluginscheckfailed', 'admin', array('pluginslist' => implode(', ', array_unique($failed)))));
-    cli_error(get_string('pluginschecktodo', 'admin'));
+    cli_problem(get_string('pluginscheckfailed', 'core_admin', array('pluginslist' => implode(', ', array_unique($failed)))));
+    cli_error(get_string('pluginschecktodo', 'core_admin'));
 }
 
 $a = new stdClass();
@@ -228,26 +228,26 @@ if ($interactive) {
 // make sure we are upgrading to a stable release or display a warning
 if (isset($maturity)) {
     if (($maturity < MATURITY_STABLE) and !$options['allow-unstable']) {
-        $maturitylevel = get_string('maturity'.$maturity, 'admin');
+        $maturitylevel = get_string('maturity'.$maturity, 'core_admin');
 
         if ($interactive) {
             cli_separator();
             cli_heading(get_string('notice'));
-            echo get_string('maturitycorewarning', 'admin', $maturitylevel) . PHP_EOL;
+            echo get_string('maturitycorewarning', 'core_admin', $maturitylevel) . PHP_EOL;
             echo get_string('morehelp') . ': ' . get_docs_url('admin/versions') . PHP_EOL;
             cli_separator();
         } else {
-            cli_problem(get_string('maturitycorewarning', 'admin', $maturitylevel));
-            cli_error(get_string('maturityallowunstable', 'admin'));
+            cli_problem(get_string('maturitycorewarning', 'core_admin', $maturitylevel));
+            cli_error(get_string('maturityallowunstable', 'core_admin'));
         }
     }
 }
 
 if ($interactive) {
-    echo html_to_text(get_string('upgradesure', 'admin', $newversion))."\n";
-    $prompt = get_string('cliyesnoprompt', 'admin');
-    $input = cli_input($prompt, '', array(get_string('clianswerno', 'admin'), get_string('cliansweryes', 'admin')));
-    if ($input == get_string('clianswerno', 'admin')) {
+    echo html_to_text(get_string('upgradesure', 'core_admin', $newversion))."\n";
+    $prompt = get_string('cliyesnoprompt', 'core_admin');
+    $input = cli_input($prompt, '', array(get_string('clianswerno', 'core_admin'), get_string('cliansweryes', 'core_admin')));
+    if ($input == get_string('clianswerno', 'core_admin')) {
         exit(1);
     }
 }
@@ -277,7 +277,7 @@ upgrade_noncore(true);
 \core\session\manager::set_user(get_admin());
 
 // Apply default settings and output those that have changed.
-cli_heading(get_string('cliupgradedefaultheading', 'admin'));
+cli_heading(get_string('cliupgradedefaultheading', 'core_admin'));
 $settingsoutput = admin_apply_default_settings(null, false);
 
 foreach ($settingsoutput as $setting => $value) {
@@ -287,10 +287,10 @@ foreach ($settingsoutput as $setting => $value) {
                 'name' => $setting,
                 'defaultsetting' => var_export($value, true) // Expand objects.
         );
-        echo get_string('cliupgradedefaultverbose', 'admin', $stringvlaues) . PHP_EOL;
+        echo get_string('cliupgradedefaultverbose', 'core_admin', $stringvlaues) . PHP_EOL;
 
     } else {
-        echo get_string('cliupgradedefault', 'admin', $setting) . PHP_EOL;
+        echo get_string('cliupgradedefault', 'core_admin', $setting) . PHP_EOL;
 
     }
 }
@@ -301,10 +301,10 @@ foreach ($settingsoutput as $setting => $value) {
 // to immediately start browsing the site.
 upgrade_themes();
 
-echo get_string('cliupgradefinished', 'admin', $a)."\n";
+echo get_string('cliupgradefinished', 'core_admin', $a)."\n";
 
 if (!$options['maintenance']) {
-    cli_writeln(get_string('cliupgradecompletenomaintenanceupgrade', 'admin'));
+    cli_writeln(get_string('cliupgradecompletenomaintenanceupgrade', 'core_admin'));
 
     // Here we check if upgrade lock has not been specifically set during this upgrade run.
     // This supports wider server orchestration actions happening, which should call with no-maintenance AND set-ui-upgrade-lock,

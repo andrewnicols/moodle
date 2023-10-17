@@ -42,7 +42,7 @@ class modifier_name_column extends column_base {
         if (!empty($question->modifierfirstname) && !empty($question->modifierlastname)) {
             $u = new \stdClass();
             $u = username_load_fields_from_object($u, $question, 'modifier');
-            $displaydata['date'] = userdate($question->timemodified, get_string('strftimedatetime', 'langconfig'));
+            $displaydata['date'] = userdate($question->timemodified, get_string('strftimedatetime', 'core_langconfig'));
             $displaydata['creator'] = fullname($u);
             echo $PAGE->get_renderer('qbank_viewcreator')->render_creator_name($displaydata);
         }

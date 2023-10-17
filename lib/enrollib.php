@@ -452,7 +452,7 @@ function enrol_add_course_navigation(navigation_node $coursenode, $course) {
     // Have this available even in the site context as the page is still accessible from the frontpage.
     if (has_capability('moodle/course:enrolreview', $coursecontext)) {
         $url = new moodle_url('/user/index.php', array('id' => $course->id));
-        $usersnode->add(get_string('enrolledusers', 'enrol'), $url, navigation_node::TYPE_SETTING,
+        $usersnode->add(get_string('enrolledusers', 'core_enrol'), $url, navigation_node::TYPE_SETTING,
             null, 'review', new pix_icon('i/enrolusers', ''));
     }
 
@@ -463,7 +463,7 @@ function enrol_add_course_navigation(navigation_node $coursenode, $course) {
         } else {
             $url = NULL;
         }
-        $instancesnode = $usersnode->add(get_string('enrolmentinstances', 'enrol'), $url, navigation_node::TYPE_SETTING, null, 'manageinstances');
+        $instancesnode = $usersnode->add(get_string('enrolmentinstances', 'core_enrol'), $url, navigation_node::TYPE_SETTING, null, 'manageinstances');
 
         // each instance decides how to configure itself or how many other nav items are exposed
         foreach ($instances as $instance) {
@@ -505,19 +505,19 @@ function enrol_add_course_navigation(navigation_node $coursenode, $course) {
         } else {
             $url = NULL;
         }
-        $permissionsnode = $usersnode->add(get_string('permissions', 'role'), $url, navigation_node::TYPE_SETTING, null, 'override');
+        $permissionsnode = $usersnode->add(get_string('permissions', 'core_role'), $url, navigation_node::TYPE_SETTING, null, 'override');
 
         // Add assign or override roles if allowed
         if ($course->id == SITEID or (!empty($CFG->adminsassignrolesincourse) and is_siteadmin())) {
             if (has_capability('moodle/role:assign', $coursecontext)) {
                 $url = new moodle_url('/admin/roles/assign.php', array('contextid'=>$coursecontext->id));
-                $permissionsnode->add(get_string('assignedroles', 'role'), $url, navigation_node::TYPE_SETTING, null, 'roles', new pix_icon('i/assignroles', ''));
+                $permissionsnode->add(get_string('assignedroles', 'core_role'), $url, navigation_node::TYPE_SETTING, null, 'roles', new pix_icon('i/assignroles', ''));
             }
         }
         // Check role permissions
         if (has_any_capability(array('moodle/role:assign', 'moodle/role:safeoverride', 'moodle/role:override'), $coursecontext)) {
             $url = new moodle_url('/admin/roles/check.php', array('contextid'=>$coursecontext->id));
-            $permissionsnode->add(get_string('checkpermissions', 'role'), $url, navigation_node::TYPE_SETTING, null, 'permissions', new pix_icon('i/checkpermissions', ''));
+            $permissionsnode->add(get_string('checkpermissions', 'core_role'), $url, navigation_node::TYPE_SETTING, null, 'permissions', new pix_icon('i/checkpermissions', ''));
         }
     }
 
@@ -526,7 +526,7 @@ function enrol_add_course_navigation(navigation_node $coursenode, $course) {
         //TODO, create some new UI for role assignments at course level
         if (has_capability('moodle/course:reviewotherusers', $coursecontext)) {
             $url = new moodle_url('/enrol/otherusers.php', array('id'=>$course->id));
-            $usersnode->add(get_string('notenrolledusers', 'enrol'), $url, navigation_node::TYPE_SETTING, null, 'otherusers', new pix_icon('i/assignroles', ''));
+            $usersnode->add(get_string('notenrolledusers', 'core_enrol'), $url, navigation_node::TYPE_SETTING, null, 'otherusers', new pix_icon('i/assignroles', ''));
         }
     }
 

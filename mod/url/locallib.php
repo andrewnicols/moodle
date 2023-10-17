@@ -223,7 +223,7 @@ function url_display_frame($url, $cm, $course) {
         $framesize = $config->framesize;
         $modulename = s(get_string('modulename','url'));
         $contentframetitle = s(format_string($url->name));
-        $dir = get_string('thisdirection', 'langconfig');
+        $dir = get_string('thisdirection', 'core_langconfig');
 
         $extframe = <<<EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">

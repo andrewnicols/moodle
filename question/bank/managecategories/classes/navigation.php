@@ -29,7 +29,7 @@ namespace qbank_managecategories;
 class navigation extends \core_question\local\bank\navigation_node_base {
 
     public function get_navigation_title(): string {
-        return get_string('categories', 'question');
+        return get_string('categories', 'core_question');
     }
 
     public function get_navigation_key(): string {

@@ -229,7 +229,7 @@ class get extends external_api {
         self::validate_context($instance->get_context());
 
         $instance->set_sortdata($sortdata);
-        $alphabet = get_string('alphabet', 'langconfig');
+        $alphabet = get_string('alphabet', 'core_langconfig');
 
         if ($firstinitial !== null && ($firstinitial === '' || strpos($alphabet, $firstinitial) !== false)) {
             $instance->set_first_initial($firstinitial);

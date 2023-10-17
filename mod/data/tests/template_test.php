@@ -148,8 +148,8 @@ class template_test extends \advanced_testcase {
         // Some cooked variables for the regular expression.
         $replace = [
             '{authorfullname}' => fullname($author),
-            '{timeadded}' => userdate($entry->timecreated, get_string('strftimedatemonthabbr', 'langconfig')),
-            '{timemodified}' => userdate($entry->timemodified, get_string('strftimedatemonthabbr', 'langconfig')),
+            '{timeadded}' => userdate($entry->timecreated, get_string('strftimedatemonthabbr', 'core_langconfig')),
+            '{timemodified}' => userdate($entry->timemodified, get_string('strftimedatemonthabbr', 'core_langconfig')),
             '{fieldid}' => $field->field->id,
             '{fieldname}' => $field->field->name,
             '{fielddescription}' => $field->field->description,

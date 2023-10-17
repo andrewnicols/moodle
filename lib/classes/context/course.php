@@ -79,7 +79,7 @@ class course extends context {
 
         $name = '';
         if ($this->_instanceid == SITEID) {
-            $name = get_string('frontpage', 'admin');
+            $name = get_string('frontpage', 'core_admin');
         } else {
             if ($course = $DB->get_record('course', array('id' => $this->_instanceid))) {
                 if ($withprefix) {

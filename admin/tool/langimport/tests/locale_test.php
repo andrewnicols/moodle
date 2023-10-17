@@ -117,9 +117,9 @@ class locale_test extends \advanced_testcase {
         ];
 
         // The base locale name is also OS dependent.
-        $baselocale = get_string('locale', 'langconfig');
+        $baselocale = get_string('locale', 'core_langconfig');
         if (PHP_OS_FAMILY === 'Windows') {
-            $baselocale = get_string('localewin', 'langconfig');
+            $baselocale = get_string('localewin', 'core_langconfig');
         }
 
         // Here we'll go accumulating cases to be provided.

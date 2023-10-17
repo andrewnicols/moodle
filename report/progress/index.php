@@ -317,7 +317,7 @@ foreach($activities as $activity) {
         if ($csv) {
             $datetext = userdate($activity->completionexpected, "%F %T");
         } else {
-            $datetext = userdate($activity->completionexpected, get_string('strftimedate', 'langconfig'));
+            $datetext = userdate($activity->completionexpected, get_string('strftimedate', 'core_langconfig'));
         }
     } else {
         $datetext='';

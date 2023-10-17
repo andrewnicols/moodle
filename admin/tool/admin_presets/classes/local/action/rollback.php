@@ -44,7 +44,7 @@ class rollback extends base {
         $context->noapplications = !empty($applications);
         $context->applications = [];
         foreach ($applications as $application) {
-            $format = get_string('strftimedatetime', 'langconfig');
+            $format = get_string('strftimedatetime', 'core_langconfig');
             $user = $DB->get_record('user', ['id' => $application->userid]);
             $rollbacklink = new \moodle_url(
                 '/admin/tool/admin_presets/index.php',

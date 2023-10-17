@@ -59,7 +59,7 @@ $csv = ($format == 'csv' || $excel);
 if ($csv) {
     $dateformat = "%F %T";
 } else {
-    $dateformat = get_string('strftimedatetimeshort', 'langconfig');
+    $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
 }
 
 // Load CSV library

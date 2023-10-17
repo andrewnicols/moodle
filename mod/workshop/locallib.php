@@ -411,7 +411,7 @@ class workshop {
                 'monthyear', 'recent', 'recentfull', 'time');
         $a = new stdclass();
         foreach ($formats as $format) {
-            $a->{$format} = userdate($timestamp, get_string('strftime'.$format, 'langconfig'));
+            $a->{$format} = userdate($timestamp, get_string('strftime'.$format, 'core_langconfig'));
         }
         $day = userdate($timestamp, '%Y%m%d', 99, false);
         $today = userdate(time(), '%Y%m%d', 99, false);

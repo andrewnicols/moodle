@@ -186,7 +186,7 @@ class mod_glossary_entry_query_builder {
     protected function filter_by_non_letter($finalfield) {
         global $DB;
 
-        $alphabet = explode(',', get_string('alphabet', 'langconfig'));
+        $alphabet = explode(',', get_string('alphabet', 'core_langconfig'));
         list($nia, $aparams) = $DB->get_in_or_equal($alphabet, SQL_PARAMS_NAMED, 'nonletter', false);
 
         $sql = $DB->sql_substr(sprintf('upper(%s)', $finalfield), 1, 1);
