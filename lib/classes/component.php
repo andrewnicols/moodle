@@ -1054,6 +1054,10 @@ $cache = '.var_export($cache, true).';
         }
 
         if (strpos($component, '_') === false) {
+            debugging(
+                message: "Components must be written in frankenstyle format: {$component}.",
+                level: DEBUG_DEVELOPER,
+            );
             self::init();
             if (array_key_exists($component, self::$subsystems)) {
                 $type   = 'core';
