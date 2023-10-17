@@ -101,7 +101,7 @@ class moodle_exception extends Exception {
         global $CFG;
 
         if (empty($module) || $module == 'moodle' || $module == 'core') {
-            $module = 'error';
+            $module = 'core_error';
         }
 
         $this->errorcode = $errorcode;
