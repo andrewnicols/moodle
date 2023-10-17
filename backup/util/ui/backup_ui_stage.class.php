@@ -188,9 +188,9 @@ class backup_ui_stage_initial extends backup_ui_stage {
                 // For the initial stage we are only interested in the root settings.
                 if ($task instanceof backup_root_task) {
                     if ($this->ui instanceof import_ui) {
-                        $form->add_heading('rootsettings', get_string('importrootsettings', 'backup'));
+                        $form->add_heading('rootsettings', get_string('importrootsettings', 'core_backup'));
                     } else {
-                        $form->add_heading('rootsettings', get_string('rootsettings', 'backup'));
+                        $form->add_heading('rootsettings', get_string('rootsettings', 'core_backup'));
                     }
                     $settings = $task->get_settings();
                     // First add all settings except the filename setting.
@@ -320,7 +320,7 @@ class backup_ui_stage_schema extends backup_ui_stage {
                 if (!($task instanceof backup_root_task)) {
                     if (!$courseheading) {
                         // If we haven't already display a course heading to group nicely.
-                        $form->add_heading('coursesettings', get_string('includeactivities', 'backup'));
+                        $form->add_heading('coursesettings', get_string('includeactivities', 'core_backup'));
                         $courseheading = true;
                     }
                     // First add each setting.
@@ -334,7 +334,7 @@ class backup_ui_stage_schema extends backup_ui_stage {
                 } else if ($this->ui->enforce_changed_dependencies()) {
                     // Only show these settings if dependencies changed them.
                     // Add a root settings heading to group nicely.
-                    $form->add_heading('rootsettings', get_string('rootsettings', 'backup'));
+                    $form->add_heading('rootsettings', get_string('rootsettings', 'core_backup'));
                     // Iterate all settings and add them to the form as a fixed
                     // setting. We only want schema settings to be editable.
                     foreach ($task->get_settings() as $setting) {
@@ -454,7 +454,7 @@ class backup_ui_stage_confirmation extends backup_ui_stage {
 
             foreach ($this->ui->get_tasks() as $task) {
                 if ($setting = $task->get_setting('filename')) {
-                    $form->add_heading('filenamesetting', get_string('filename', 'backup'));
+                    $form->add_heading('filenamesetting', get_string('filename', 'core_backup'));
                     if ($setting->get_value() == 'backup.mbz') {
                         $format = $this->ui->get_format();
                         $type = $this->ui->get_type();
@@ -487,13 +487,13 @@ class backup_ui_stage_confirmation extends backup_ui_stage {
                 if ($task instanceof backup_root_task) {
                     // If its a backup root add a root settings heading to group nicely.
                     if ($this->ui instanceof import_ui) {
-                        $form->add_heading('rootsettings', get_string('importrootsettings', 'backup'));
+                        $form->add_heading('rootsettings', get_string('importrootsettings', 'core_backup'));
                     } else {
-                        $form->add_heading('rootsettings', get_string('rootsettings', 'backup'));
+                        $form->add_heading('rootsettings', get_string('rootsettings', 'core_backup'));
                     }
                 } else if (!$courseheading) {
                     // We haven't already add a course heading.
-                    $form->add_heading('coursesettings', get_string('includeditems', 'backup'));
+                    $form->add_heading('coursesettings', get_string('includeditems', 'core_backup'));
                     $courseheading = true;
                 }
                 // Iterate all settings, doesnt need to happen by reference.
@@ -636,13 +636,13 @@ class backup_ui_stage_complete extends backup_ui_stage_final {
         $output = '';
         $output .= $renderer->box_start();
         if (!empty($this->results['include_file_references_to_external_content'])) {
-            $output .= $renderer->notification(get_string('filereferencesincluded', 'backup'), 'notifyproblem');
+            $output .= $renderer->notification(get_string('filereferencesincluded', 'core_backup'), 'notifyproblem');
         }
         if (!empty($this->results['missing_files_in_pool'])) {
-            $output .= $renderer->notification(get_string('missingfilesinpool', 'backup'), 'notifyproblem');
+            $output .= $renderer->notification(get_string('missingfilesinpool', 'core_backup'), 'notifyproblem');
         }
         $output .= $renderer->get_samesite_notification();
-        $output .= $renderer->notification(get_string('executionsuccess', 'backup'), 'notifysuccess');
+        $output .= $renderer->notification(get_string('executionsuccess', 'core_backup'), 'notifysuccess');
         $output .= $renderer->continue_button($restorerul, 'get');
         $output .= $renderer->box_end();
 

@@ -479,13 +479,13 @@ class assign_attempt_history_chooser implements renderable, templatable {
             if ($submission->timemodified) {
                 $submissionsummary = userdate($submission->timemodified);
             } else {
-                $submissionsummary = get_string('nosubmission', 'assign');
+                $submissionsummary = get_string('nosubmission', 'mod_assign');
             }
 
             $attemptsummaryparams = array('attemptnumber' => $submission->attemptnumber + 1,
                                           'submissionsummary' => $submissionsummary);
-            $submission->attemptsummary = get_string('attemptheading', 'assign', $attemptsummaryparams);
-            $submission->statussummary = get_string('submissionstatus_' . $submission->status, 'assign');
+            $submission->attemptsummary = get_string('attemptheading', 'mod_assign', $attemptsummaryparams);
+            $submission->statussummary = get_string('submissionstatus_' . $submission->status, 'mod_assign');
 
         }
 

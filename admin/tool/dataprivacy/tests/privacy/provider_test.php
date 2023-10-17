@@ -121,7 +121,7 @@ class provider_test extends provider_testcase {
 
         /** @var stdClass[] $data */
         $data = (array) $writer->get_data([
-            get_string('privacyandpolicies', 'admin'),
+            get_string('privacyandpolicies', 'core_admin'),
             get_string('datarequests', 'tool_dataprivacy'),
         ]);
 

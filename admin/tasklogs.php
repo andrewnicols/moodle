@@ -31,7 +31,7 @@ use core_reportbuilder\system_report_factory;
 $PAGE->set_url(new \moodle_url('/admin/tasklogs.php'));
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
-$strheading = get_string('tasklogs', 'admin');
+$strheading = get_string('tasklogs', 'core_admin');
 $PAGE->set_title($strheading);
 $PAGE->set_heading($strheading);
 

@@ -85,7 +85,7 @@ if ($sco->scormtype == 'asset') {
     header('Location: ' . $scolaunchurl);
     // Provide a short feedback in case of slow network connection.
     echo html_writer::start_tag('html');
-    echo html_writer::tag('body', html_writer::tag('p', get_string('activitypleasewait', 'scorm')));
+    echo html_writer::tag('body', html_writer::tag('p', get_string('activitypleasewait', 'mod_scorm')));
     echo html_writer::end_tag('html');
     exit;
 }
@@ -139,7 +139,7 @@ echo html_writer::tag('title', 'LoadSCO');
             location = "<?php echo $scolaunchurl ?>";
         }
         else {
-            document.body.innerHTML = "<p><?php echo get_string('activityloading', 'scorm');?>" +
+            document.body.innerHTML = "<p><?php echo get_string('activityloading', 'mod_scorm');?>" +
                                         "<span id='countdown'><?php echo $delayseconds ?></span> " +
                                         "<?php echo get_string('numseconds', 'moodle', '');?>. &nbsp; " +
                                         "<?php echo addslashes($OUTPUT->pix_icon('wait', '', 'scorm')); ?></p>";
@@ -150,7 +150,7 @@ echo html_writer::tag('title', 'LoadSCO');
                                                 e.innerHTML = --cSeconds;
                                             } else {
                                                 clearInterval(timer);
-                                                document.body.innerHTML = "<p><?php echo get_string('activitypleasewait', 'scorm');?></p>";
+                                                document.body.innerHTML = "<p><?php echo get_string('activitypleasewait', 'mod_scorm');?></p>";
                                                 location = "<?php echo $scolaunchurl ?>";
                                             }
                                         }, 1000);
@@ -163,5 +163,5 @@ echo html_writer::tag('title', 'LoadSCO');
     </noscript>
 <?php
 echo html_writer::end_tag('head');
-echo html_writer::tag('body', html_writer::tag('p', get_string('activitypleasewait', 'scorm')), array('onload' => "doredirect();"));
+echo html_writer::tag('body', html_writer::tag('p', get_string('activitypleasewait', 'mod_scorm')), array('onload' => "doredirect();"));
 echo html_writer::end_tag('html');

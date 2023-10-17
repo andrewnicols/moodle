@@ -39,8 +39,8 @@ $event = \mod_resource\event\course_module_instance_list_viewed::create($params)
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strresource     = get_string('modulename', 'resource');
-$strresources    = get_string('modulenameplural', 'resource');
+$strresource     = get_string('modulename', 'mod_resource');
+$strresources    = get_string('modulenameplural', 'mod_resource');
 $strsectionname  = get_string('sectionname', 'format_'.$course->format);
 $strname         = get_string('name');
 $strintro        = get_string('moduleintro');

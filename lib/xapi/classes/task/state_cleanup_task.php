@@ -32,7 +32,7 @@ class state_cleanup_task extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('xapicleanup', 'xapi');
+        return get_string('xapicleanup', 'core_xapi');
     }
 
     /**

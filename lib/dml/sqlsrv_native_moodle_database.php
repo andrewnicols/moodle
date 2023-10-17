@@ -94,7 +94,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
         // the name used by 'extension_loaded()' is case specific! The extension
         // therefore *could be* mixed case and hence not found.
         if (!function_exists('sqlsrv_num_rows')) {
-            return get_string('nativesqlsrvnodriver', 'install');
+            return get_string('nativesqlsrvnodriver', 'mod_install');
         }
         return true;
     }
@@ -132,7 +132,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_name() {
-        return get_string('nativesqlsrv', 'install');
+        return get_string('nativesqlsrv', 'mod_install');
     }
 
     /**
@@ -141,7 +141,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_configuration_help() {
-        return get_string('nativesqlsrvhelp', 'install');
+        return get_string('nativesqlsrvhelp', 'mod_install');
     }
 
     /**
@@ -168,7 +168,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
         $this->free_result($result);
 
         if (!$correctrcsmode) {
-            return get_string('mssqlrcsmodemissing', 'error');
+            return get_string('mssqlrcsmodemissing', 'mod_error');
         }
 
         // Arrived here, all right.

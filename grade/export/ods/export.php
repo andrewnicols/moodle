@@ -39,13 +39,13 @@ $key = optional_param('key', '', PARAM_RAW);
 if (!empty($CFG->gradepublishing) && !empty($key)) {
     $actionbar = new \core_grades\output\export_publish_action_bar($context, 'ods');
     print_grade_page_head($COURSE->id, 'export', 'ods',
-        get_string('exportto', 'grades') . ' ' . get_string('pluginname', 'gradeexport_ods'),
+        get_string('exportto', 'core_grades') . ' ' . get_string('pluginname', 'gradeexport_ods'),
         false, false, true, null, null, null, $actionbar);
 }
 
 if (groups_get_course_groupmode($COURSE) == SEPARATEGROUPS and !has_capability('moodle/site:accessallgroups', $context)) {
     if (!groups_is_member($groupid, $USER->id)) {
-        throw new \moodle_exception('cannotaccessgroup', 'grades');
+        throw new \moodle_exception('cannotaccessgroup', 'core_grades');
     }
 }
 $mform = new grade_export_form(null, array('publishing' => true, 'simpleui' => true, 'multipledisplaytypes' => true));

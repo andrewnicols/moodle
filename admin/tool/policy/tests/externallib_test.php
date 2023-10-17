@@ -188,7 +188,7 @@ class externallib_test extends externallib_advanced_testcase {
         // Make sure user can not login.
         $toolconsentpage = $sitepolicymanager->get_redirect_url();
         $this->expectException(\moodle_exception::class);
-        $this->expectExceptionMessage(get_string('sitepolicynotagreed', 'error', $toolconsentpage->out()));
+        $this->expectExceptionMessage(get_string('sitepolicynotagreed', 'mod_error', $toolconsentpage->out()));
         \core_user_external::validate_context(\context_system::instance());
 
         // Call WS to agree to the site policy. It will call tool_policy handler.

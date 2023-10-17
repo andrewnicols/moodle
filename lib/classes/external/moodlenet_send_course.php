@@ -97,7 +97,7 @@ class moodlenet_send_course extends external_api {
             return self::return_errors(
                 $courseid,
                 'errorpermission',
-                get_string('nopermissions', 'error', get_string('moodlenet:sharetomoodlenet', 'moodle'))
+                get_string('nopermissions', 'mod_error', get_string('moodlenet:sharetomoodlenet', 'moodle'))
             );
         }
 
@@ -106,7 +106,7 @@ class moodlenet_send_course extends external_api {
             return self::return_errors(
                 $shareformat,
                 'errorinvalidformat',
-                get_string('invalidparameter', 'debug')
+                get_string('invalidparameter', 'mod_debug')
             );
         }
 
@@ -119,7 +119,7 @@ class moodlenet_send_course extends external_api {
                     return self::return_errors(
                         $cmid,
                         'errorinvalidcmids',
-                        get_string('invalidparameter', 'debug')
+                        get_string('invalidparameter', 'mod_debug')
                     );
                 }
             }
@@ -132,7 +132,7 @@ class moodlenet_send_course extends external_api {
             return self::return_errors(
                 $issuerid,
                 'errorissuernotenabled',
-                get_string('invalidparameter', 'debug')
+                get_string('invalidparameter', 'mod_debug')
             );
         }
 
@@ -145,7 +145,7 @@ class moodlenet_send_course extends external_api {
             return self::return_errors(
                 $issuerid,
                 'erroroauthclient',
-                get_string('invalidparameter', 'debug')
+                get_string('invalidparameter', 'mod_debug')
             );
         }
 

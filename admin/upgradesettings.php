@@ -56,7 +56,7 @@ if (!empty($adminroot->errors)) {
 echo $OUTPUT->header($focus);
 
 if (!empty($SITE->fullname) and !empty($SITE->shortname)) {
-    echo $OUTPUT->box(get_string('upgradesettingsintro','admin'), 'generalbox');
+    echo $OUTPUT->box(get_string('upgradesettingsintro','core_admin'), 'generalbox');
 }
 
 echo '<form action="upgradesettings.php" method="post" id="adminsettings">';
@@ -67,7 +67,7 @@ echo '<fieldset>';
 echo '<div class="clearer"><!-- --></div>';
 echo $newsettingshtml;
 echo '</fieldset>';
-echo '<div class="form-buttons"><input class="form-submit btn btn-primary" type="submit" value="'.get_string('savechanges','admin').'" /></div>';
+echo '<div class="form-buttons"><input class="form-submit btn btn-primary" type="submit" value="'.get_string('savechanges','core_admin').'" /></div>';
 echo '</div>';
 echo '</form>';
 

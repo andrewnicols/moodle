@@ -33,7 +33,7 @@ list($options, $unrecognized) = cli_get_params(array('help' => false, 'force' =>
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 if ($options['help']) {
@@ -64,7 +64,7 @@ if (!\core_search\manager::is_global_search_enabled() && empty($options['force']
 }
 
 if (!$searchengine = \core_search\manager::search_engine_instance()) {
-    cli_error(get_string('engineserverstatus', 'search'));
+    cli_error(get_string('engineserverstatus', 'core_search'));
 }
 if (!$searchengine->is_installed()) {
     cli_error('enginenotinstalled', 'search', $CFG->searchengine);

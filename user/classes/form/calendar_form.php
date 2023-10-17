@@ -60,7 +60,7 @@ class calendar_form extends \moodleform {
         // We do not want to show this option unless there is more than one calendar type to display.
         if (count(\core_calendar\type_factory::get_list_of_calendar_types()) > 1) {
             $calendartypes = \core_calendar\type_factory::get_list_of_calendar_types();
-            $mform->addElement('select', 'calendartype', get_string('preferredcalendar', 'calendar'), $calendartypes);
+            $mform->addElement('select', 'calendartype', get_string('preferredcalendar', 'core_calendar'), $calendartypes);
             $mform->setType('calendartype', PARAM_ALPHANUM);
             $mform->setDefault('calendartype', $CFG->calendartype);
         } else {
@@ -71,24 +71,24 @@ class calendar_form extends \moodleform {
 
         // Date / Time settings.
         $options = array(
-            '0'  => get_string('default', 'calendar'),
-            CALENDAR_TF_12 => get_string('timeformat_12', 'calendar'),
-            CALENDAR_TF_24 => get_string('timeformat_24', 'calendar')
+            '0'  => get_string('default', 'core_calendar'),
+            CALENDAR_TF_12 => get_string('timeformat_12', 'core_calendar'),
+            CALENDAR_TF_24 => get_string('timeformat_24', 'core_calendar')
         );
-        $mform->addElement('select', 'timeformat', get_string('pref_timeformat', 'calendar'), $options);
+        $mform->addElement('select', 'timeformat', get_string('pref_timeformat', 'core_calendar'), $options);
         $mform->addHelpButton('timeformat', 'pref_timeformat', 'calendar');
 
         // First day of week.
         $options = array(
-            0 => get_string('sunday', 'calendar'),
-            1 => get_string('monday', 'calendar'),
-            2 => get_string('tuesday', 'calendar'),
-            3 => get_string('wednesday', 'calendar'),
-            4 => get_string('thursday', 'calendar'),
-            5 => get_string('friday', 'calendar'),
-            6 => get_string('saturday', 'calendar')
+            0 => get_string('sunday', 'core_calendar'),
+            1 => get_string('monday', 'core_calendar'),
+            2 => get_string('tuesday', 'core_calendar'),
+            3 => get_string('wednesday', 'core_calendar'),
+            4 => get_string('thursday', 'core_calendar'),
+            5 => get_string('friday', 'core_calendar'),
+            6 => get_string('saturday', 'core_calendar')
         );
-        $mform->addElement('select', 'startwday', get_string('pref_startwday', 'calendar'), $options);
+        $mform->addElement('select', 'startwday', get_string('pref_startwday', 'core_calendar'), $options);
         $mform->addHelpButton('startwday', 'pref_startwday', 'calendar');
 
         // Maximum events to display.
@@ -96,7 +96,7 @@ class calendar_form extends \moodleform {
         for ($i = 1; $i <= 20; $i++) {
             $options[$i] = $i;
         }
-        $mform->addElement('select', 'maxevents', get_string('pref_maxevents', 'calendar'), $options);
+        $mform->addElement('select', 'maxevents', get_string('pref_maxevents', 'core_calendar'), $options);
         $mform->addHelpButton('maxevents', 'pref_maxevents', 'calendar');
 
         // Calendar lookahead.
@@ -117,7 +117,7 @@ class calendar_form extends \moodleform {
                 3  => get_string('numdays', '', 3),
                 2  => get_string('numdays', '', 2),
                 1  => get_string('numday', '', 1));
-        $mform->addElement('select', 'lookahead', get_string('pref_lookahead', 'calendar'), $options);
+        $mform->addElement('select', 'lookahead', get_string('pref_lookahead', 'core_calendar'), $options);
         $mform->addHelpButton('lookahead', 'pref_lookahead', 'calendar');
 
         // Remember event filtering.
@@ -125,7 +125,7 @@ class calendar_form extends \moodleform {
             0 => get_string('no'),
             1 => get_string('yes')
         );
-        $mform->addElement('select', 'persistflt', get_string('pref_persistflt', 'calendar'), $options);
+        $mform->addElement('select', 'persistflt', get_string('pref_persistflt', 'core_calendar'), $options);
         $mform->addHelpButton('persistflt', 'pref_persistflt', 'calendar');
         $this->add_action_buttons(true, get_string('savechanges'));
     }

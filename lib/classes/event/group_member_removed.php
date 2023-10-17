@@ -51,7 +51,7 @@ class group_member_removed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventgroupmemberremoved', 'group');
+        return get_string('eventgroupmemberremoved', 'core_group');
     }
 
     /**

@@ -51,7 +51,7 @@ if (!empty($name)) {
 } else if (!empty($id)) {
     $params = ['id' => $id];
 } else {
-    throw new \moodle_exception('unspecifycourseid', 'error');
+    throw new \moodle_exception('unspecifycourseid', 'mod_error');
 }
 
 $course = $DB->get_record('course', $params, '*', MUST_EXIST);
@@ -306,7 +306,7 @@ if ($USER->editing == 1) {
     require_once($CFG->dirroot . '/backup/util/helper/async_helper.class.php');
 
     if (async_helper::is_async_pending($id, 'course', 'backup')) {
-        echo $OUTPUT->notification(get_string('pendingasyncedit', 'backup'), 'warning');
+        echo $OUTPUT->notification(get_string('pendingasyncedit', 'core_backup'), 'warning');
     }
 }
 

@@ -10,7 +10,7 @@ class user_message_form extends moodleform {
 
     function definition() {
         $mform =& $this->_form;
-        $mform->addElement('header', 'general', get_string('message', 'message'));
+        $mform->addElement('header', 'general', get_string('message', 'core_message'));
 
 
         $mform->addElement('editor', 'messagebody', get_string('messagebody'), null, null);

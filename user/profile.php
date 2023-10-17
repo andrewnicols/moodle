@@ -51,7 +51,7 @@ if (!empty($CFG->forceloginforprofiles)) {
     if (isguestuser()) {
         $PAGE->set_context(context_system::instance());
         echo $OUTPUT->header();
-        echo $OUTPUT->confirm(get_string('guestcantaccessprofiles', 'error'),
+        echo $OUTPUT->confirm(get_string('guestcantaccessprofiles', 'mod_error'),
                               get_login_url(),
                               $CFG->wwwroot);
         echo $OUTPUT->footer();
@@ -65,7 +65,7 @@ if ((!$user = $DB->get_record('user', array('id' => $userid))) || ($user->delete
     $PAGE->set_context(context_system::instance());
     echo $OUTPUT->header();
     if (!$user) {
-        echo $OUTPUT->notification(get_string('invaliduser', 'error'));
+        echo $OUTPUT->notification(get_string('invaliduser', 'mod_error'));
     } else {
         echo $OUTPUT->notification(get_string('userdeleted'));
     }
@@ -88,7 +88,7 @@ if (!user_can_view_profile($user, null, $context)) {
     $PAGE->set_url('/user/profile.php', array('id' => $userid));
     $PAGE->navbar->add($struser);
     echo $OUTPUT->header();
-    echo $OUTPUT->notification(get_string('usernotavailable', 'error'));
+    echo $OUTPUT->notification(get_string('usernotavailable', 'mod_error'));
     echo $OUTPUT->footer();
     exit;
 }
@@ -141,7 +141,7 @@ if ($PAGE->user_allowed_editing()) {
     if ($reset !== null) {
         if (!is_null($userid)) {
             if (!$currentpage = my_reset_page($userid, MY_PAGE_PUBLIC, 'user-profile')) {
-                throw new \moodle_exception('reseterror', 'my');
+                throw new \moodle_exception('reseterror', 'core_my');
             }
             redirect(new moodle_url('/user/profile.php', array('id' => $userid)));
         }
@@ -171,7 +171,7 @@ if ($PAGE->user_allowed_editing()) {
     $params = array('edit' => !$edit, 'id' => $userid);
 
     $resetbutton = '';
-    $resetstring = get_string('resetpage', 'my');
+    $resetstring = get_string('resetpage', 'core_my');
     $reseturl = new moodle_url("$CFG->wwwroot/user/profile.php", array('edit' => 1, 'reset' => 1, 'id' => $userid));
 
     if (!$currentpage->userid) {

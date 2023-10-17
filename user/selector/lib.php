@@ -812,7 +812,7 @@ abstract class groups_user_selector_base extends user_selector_base {
                 unset($user->roles);
                 $user->fullname = fullname($user);
                 if (!empty($user->component)) {
-                    $user->infobelow = get_string('addedby', 'group',
+                    $user->infobelow = get_string('addedby', 'core_group',
                         get_string('pluginname', $user->component));
                 }
             }

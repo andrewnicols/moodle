@@ -126,7 +126,7 @@ class copy {
             if (isset($formdata->{$field})) {
                 $copydata->{$field} = $formdata->{$field};
             } else {
-                throw new \moodle_exception('copyfieldnotfound', 'backup', '', null, $field);
+                throw new \moodle_exception('copyfieldnotfound', 'core_backup', '', null, $field);
             }
         }
 

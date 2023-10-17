@@ -41,7 +41,7 @@ require_capability('tool/uploaduser:uploaduserpictures', context_system::instanc
 $site = get_site();
 
 if (!$adminuser = get_admin()) {
-    throw new \moodle_exception('noadmins', 'error');
+    throw new \moodle_exception('noadmins', 'mod_error');
 }
 
 $strfile = get_string('file');

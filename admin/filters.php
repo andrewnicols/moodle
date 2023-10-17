@@ -112,14 +112,14 @@ if ($action) {
 
 // Print the page heading.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('filtersettings', 'admin'));
+echo $OUTPUT->heading(get_string('filtersettings', 'core_admin'));
 
 $states = filter_get_global_states();
 $stringfilters = filter_get_string_filters();
 
 $table = new html_table();
-$table->head  = [get_string('filter'), get_string('isactive', 'filters'),
-        get_string('order'), get_string('applyto', 'filters'), get_string('settings'), get_string('uninstallplugin', 'core_admin')];
+$table->head  = [get_string('filter'), get_string('isactive', 'core_filters'),
+        get_string('order'), get_string('applyto', 'core_filters'), get_string('settings'), get_string('uninstallplugin', 'core_admin')];
 $table->colclasses = array ('leftalign', 'leftalign', 'centeralign', 'leftalign', 'leftalign', 'leftalign');
 $table->attributes['class'] = 'admintable generaltable';
 $table->id = 'filterssetting';
@@ -152,7 +152,7 @@ foreach ($states as $state) {
 }
 
 echo html_writer::table($table);
-echo '<p class="filtersettingnote">' . get_string('filterallwarning', 'filters') . '</p>';
+echo '<p class="filtersettingnote">' . get_string('filterallwarning', 'core_filters') . '</p>';
 echo $OUTPUT->footer();
 die;
 
@@ -214,7 +214,7 @@ function get_table_row(\core\plugininfo\filter $plugininfo, stdClass $state,
 
     // Disable/off/on.
     $select = new single_select(filters_action_url($filter, 'setstate'), 'newstate', $activechoices, $state->active, null, 'active' . $filter);
-    $select->set_label(get_string('isactive', 'filters'), ['class' => 'accesshide']);
+    $select->set_label(get_string('isactive', 'core_filters'), ['class' => 'accesshide']);
     $row[] = $OUTPUT->render($select);
 
     // Re-order.
@@ -239,7 +239,7 @@ function get_table_row(\core\plugininfo\filter $plugininfo, stdClass $state,
     // Apply to strings.
     $select = new single_select(filters_action_url($filter, 'setapplyto'),
             'stringstoo', $applytochoices, $applytostrings, null, 'applyto' . $filter);
-    $select->set_label(get_string('applyto', 'filters'), ['class' => 'accesshide']);
+    $select->set_label(get_string('applyto', 'core_filters'), ['class' => 'accesshide']);
     $select->disabled = ($state->active == TEXTFILTER_DISABLED);
     $row[] = $OUTPUT->render($select);
 

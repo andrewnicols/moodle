@@ -141,8 +141,8 @@ function report_log_extend_navigation_module($navigation, $cm) {
  */
 function report_log_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $array = array(
-        '*'                => get_string('page-x', 'pagetype'),
-        'report-*'         => get_string('page-report-x', 'pagetype'),
+        '*'                => get_string('page-x', 'mod_pagetype'),
+        'report-*'         => get_string('page-report-x', 'mod_pagetype'),
         'report-log-*'     => get_string('page-report-log-x',  'report_log'),
         'report-log-index' => get_string('page-report-log-index',  'report_log'),
         'report-log-user'  => get_string('page-report-log-user',  'report_log')

@@ -45,7 +45,7 @@ class draft_file_added extends base {
     }
 
     public static function get_name() {
-        return get_string('eventfileaddedtodraftarea', 'files');
+        return get_string('eventfileaddedtodraftarea', 'core_files');
     }
 
     public function get_description() {

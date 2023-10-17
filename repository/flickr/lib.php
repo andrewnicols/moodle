@@ -183,7 +183,7 @@ class repository_flickr extends repository {
             ];
 
         } else {
-            echo '<a target="_blank" href="'.$authurl->out().'">'.get_string('login', 'repository').'</a>';
+            echo '<a target="_blank" href="'.$authurl->out().'">'.get_string('login', 'core_repository').'</a>';
         }
     }
 

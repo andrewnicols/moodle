@@ -34,7 +34,7 @@ if ($id = optional_param('id', 0, PARAM_INT)) {
     redirect($CFG->wwwroot . '/mod/quiz/startattempt.php?cmid=' . $id . '&sesskey=' . sesskey());
 } else if ($qid = optional_param('q', 0, PARAM_INT)) {
     if (!$cm = get_coursemodule_from_instance('quiz', $qid)) {
-        throw new \moodle_exception('invalidquizid', 'quiz');
+        throw new \moodle_exception('invalidquizid', 'mod_quiz');
     }
     redirect(new moodle_url('/mod/quiz/startattempt.php',
             ['cmid' => $cm->id, 'sesskey' => sesskey()]));
@@ -61,7 +61,7 @@ if ($attemptobj->get_userid() != $USER->id) {
     if ($attemptobj->has_capability('mod/quiz:viewreports')) {
         redirect($attemptobj->review_url(null, $page));
     } else {
-        throw new moodle_exception('notyourattempt', 'quiz', $attemptobj->view_url());
+        throw new moodle_exception('notyourattempt', 'mod_quiz', $attemptobj->view_url());
     }
 }
 
@@ -90,7 +90,7 @@ $accessmanager->setup_attempt_page($PAGE);
 $output = $PAGE->get_renderer('mod_quiz');
 $messages = $accessmanager->prevent_access();
 if (!$attemptobj->is_preview_user() && $messages) {
-    throw new \moodle_exception('attempterror', 'quiz', $attemptobj->view_url(),
+    throw new \moodle_exception('attempterror', 'mod_quiz', $attemptobj->view_url(),
             $output->access_messages($messages));
 }
 if ($accessmanager->is_preflight_check_required($attemptobj->get_attemptid())) {
@@ -112,7 +112,7 @@ $slots = $attemptobj->get_slots($page);
 
 // Check.
 if (empty($slots)) {
-    throw new moodle_exception('noquestionsfound', 'quiz', $attemptobj->view_url());
+    throw new moodle_exception('noquestionsfound', 'mod_quiz', $attemptobj->view_url());
 }
 
 // Update attempt page, redirecting the user if $page is not valid.

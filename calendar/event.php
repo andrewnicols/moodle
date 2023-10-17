@@ -112,7 +112,7 @@ $calendar->set_sources($course, $courses);
 
 $formoptions = new stdClass;
 if ($eventid !== 0) {
-    $title = get_string('editevent', 'calendar');
+    $title = get_string('editevent', 'core_calendar');
     $event = calendar_event::load($eventid);
     if (!calendar_edit_event_allowed($event, true)) {
         throw new \moodle_exception('nopermissions');
@@ -129,11 +129,11 @@ if ($eventid !== 0) {
     // Check to see if this event is part of a subscription or import.
     // If so display a warning on edit.
     if (isset($event->subscriptionid) && ($event->subscriptionid != null)) {
-        \core\notification::add(get_string('eventsubscriptioneditwarning', 'calendar'), \core\output\notification::NOTIFY_INFO);
+        \core\notification::add(get_string('eventsubscriptioneditwarning', 'core_calendar'), \core\output\notification::NOTIFY_INFO);
     }
 
 } else {
-    $title = get_string('newevent', 'calendar');
+    $title = get_string('newevent', 'core_calendar');
     calendar_get_allowed_types($formoptions->eventtypes, $course);
     $event = new stdClass();
     $event->action = $action;
@@ -187,7 +187,7 @@ if ($data) {
 $viewcalendarurl = new moodle_url(CALENDAR_URL.'view.php', $PAGE->url->params());
 $viewcalendarurl->remove_params(array('id', 'action'));
 $viewcalendarurl->param('view', 'upcoming');
-$strcalendar = get_string('calendar', 'calendar');
+$strcalendar = get_string('calendar', 'core_calendar');
 
 $PAGE->navbar->add($strcalendar, $viewcalendarurl);
 $PAGE->navbar->add($title);

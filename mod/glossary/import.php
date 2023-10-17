@@ -29,7 +29,7 @@ if (! $course = $DB->get_record("course", array("id"=>$cm->course))) {
 }
 
 if (! $glossary = $DB->get_record("glossary", array("id"=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    throw new \moodle_exception('invalidid', 'mod_glossary');
 }
 
 require_login($course, false, $cm);
@@ -37,14 +37,14 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/glossary:import', $context);
 
-$strglossaries = get_string("modulenameplural", "glossary");
-$strglossary = get_string("modulename", "glossary");
-$strallcategories = get_string("allcategories", "glossary");
-$straddentry = get_string("addentry", "glossary");
-$strnoentries = get_string("noentries", "glossary");
-$strsearchindefinition = get_string("searchindefinition", "glossary");
+$strglossaries = get_string("modulenameplural", 'mod_glossary');
+$strglossary = get_string("modulename", 'mod_glossary');
+$strallcategories = get_string("allcategories", 'mod_glossary');
+$straddentry = get_string("addentry", 'mod_glossary');
+$strnoentries = get_string("noentries", 'mod_glossary');
+$strsearchindefinition = get_string("searchindefinition", 'mod_glossary');
 $strsearch = get_string("search");
-$strimportentries = get_string('importentriesfromxml', 'glossary');
+$strimportentries = get_string('importentriesfromxml', 'mod_glossary');
 
 $PAGE->navbar->add($strimportentries);
 $PAGE->set_title($glossary->name);
@@ -167,7 +167,7 @@ if ($xml = glossary_read_imported_file($result)) {
             } else {
                 $glossarycontext = context_module::instance($glossary->coursemodule);
                 glossary_xml_import_files($xmlglossary, 'INTROFILES', $glossarycontext->id, 'intro', 0);
-                echo $OUTPUT->box(get_string("newglossarycreated","glossary"),'generalbox boxaligncenter boxwidthnormal');
+                echo $OUTPUT->box(get_string("newglossarycreated",'mod_glossary'),'generalbox boxaligncenter boxwidthnormal');
             }
         } else {
             echo $OUTPUT->notification("Error while trying to create the new glossary.");
@@ -185,7 +185,7 @@ if ($xml = glossary_read_imported_file($result)) {
         $newentry->concept = trim($xmlentry['#']['CONCEPT'][0]['#']);
         $definition = $xmlentry['#']['DEFINITION'][0]['#'];
         if (!is_string($definition)) {
-            throw new \moodle_exception('errorparsingxml', 'glossary');
+            throw new \moodle_exception('errorparsingxml', 'mod_glossary');
         }
         $newentry->definition = trusttext_strip($definition);
         if ( isset($xmlentry['#']['CASESENSITIVE'][0]['#']) ) {
@@ -310,11 +310,11 @@ if ($xml = glossary_read_imported_file($result)) {
             if ( $newentry->concept and $newentry->definition ) {
                 // add to exception report (duplicated entry))
                 $rejections .= "<tr><td>$newentry->concept</td>" .
-                               "<td>" . get_string("duplicateentry","glossary"). "</td></tr>";
+                               "<td>" . get_string("duplicateentry",'mod_glossary'). "</td></tr>";
             } else {
                 // add to exception report (no concept or definition found))
                 $rejections .= "<tr><td>---</td>" .
-                               "<td>" . get_string("noconceptfound","glossary"). "</td></tr>";
+                               "<td>" . get_string("noconceptfound",'mod_glossary'). "</td></tr>";
             }
         }
     }
@@ -327,7 +327,7 @@ if ($xml = glossary_read_imported_file($result)) {
     echo '<table class="glossaryimportexport">';
     echo '<tr>';
     echo '<td width="50%" align="right">';
-    echo get_string("totalentries","glossary");
+    echo get_string("totalentries",'mod_glossary');
     echo ':</td>';
     echo '<td width="50%" align="left">';
     echo $importedentries + $entriesrejected;
@@ -335,19 +335,19 @@ if ($xml = glossary_read_imported_file($result)) {
     echo '</tr>';
     echo '<tr>';
     echo '<td width="50%" align="right">';
-    echo get_string("importedentries","glossary");
+    echo get_string("importedentries",'mod_glossary');
     echo ':</td>';
     echo '<td width="50%" align="left">';
     echo $importedentries;
     if ( $entriesrejected ) {
-        echo ' <small>(' . get_string("rejectedentries","glossary") . ": $entriesrejected)</small>";
+        echo ' <small>(' . get_string("rejectedentries",'mod_glossary') . ": $entriesrejected)</small>";
     }
     echo '</td>';
     echo '</tr>';
     if (!empty($data->catsincl)) {
         echo '<tr>';
         echo '<td width="50%" align="right">';
-        echo get_string("importedcategories","glossary");
+        echo get_string("importedcategories",'mod_glossary');
         echo ':</td>';
         echo '<td width="50%">';
         echo $importedcats;
@@ -358,7 +358,7 @@ if ($xml = glossary_read_imported_file($result)) {
 
     // rejected entries
     if ($rejections) {
-        echo $OUTPUT->heading(get_string("rejectionrpt","glossary"), 4);
+        echo $OUTPUT->heading(get_string("rejectionrpt",'mod_glossary'), 4);
         echo '<table class="glossaryimportexport">';
         echo $rejections;
         echo '</table><hr />';
@@ -372,7 +372,7 @@ if ($xml = glossary_read_imported_file($result)) {
     echo $OUTPUT->box_end();
 } else {
     echo $OUTPUT->box_start('glossarydisplay generalbox');
-    echo get_string('errorparsingxml', 'glossary');
+    echo get_string('errorparsingxml', 'mod_glossary');
     echo $OUTPUT->continue_button('import.php?id='.$id);
     echo $OUTPUT->box_end();
 }

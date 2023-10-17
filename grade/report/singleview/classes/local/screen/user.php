@@ -69,7 +69,7 @@ class user extends tablelike implements selectable_items {
      * @return string
      */
     public function description(): string {
-        return get_string('gradeitems', 'grades');
+        return get_string('gradeitems', 'core_grades');
     }
 
     /**
@@ -150,10 +150,10 @@ class user extends tablelike implements selectable_items {
         return [
             get_string('assessmentname', 'gradereport_singleview'),
             '', // For filter icon.
-            get_string('gradecategory', 'grades'),
-            get_string('grade', 'grades'),
-            get_string('range', 'grades'),
-            get_string('feedback', 'grades'),
+            get_string('gradecategory', 'core_grades'),
+            get_string('grade', 'core_grades'),
+            get_string('range', 'core_grades'),
+            get_string('feedback', 'core_grades'),
             get_string('override', 'gradereport_singleview'),
             get_string('exclude', 'gradereport_singleview'),
         ];

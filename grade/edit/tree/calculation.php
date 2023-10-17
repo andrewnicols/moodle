@@ -60,7 +60,7 @@ if (!$grade_item = grade_item::fetch(array('id'=>$id, 'courseid'=>$course->id)))
 
 // activity items and items without grade can not have calculation
 if ($grade_item->is_external_item() or ($grade_item->gradetype != GRADE_TYPE_VALUE and $grade_item->gradetype != GRADE_TYPE_SCALE)) {
-    redirect($returnurl, get_string('errornocalculationallowed', 'grades'));
+    redirect($returnurl, get_string('errornocalculationallowed', 'core_grades'));
 }
 
 $mform = new edit_calculation_form(null, array('gpr'=>$gpr, 'itemid' => $grade_item->id));
@@ -110,8 +110,8 @@ if ($data = $mform->get_data()) {
 $gtree = new grade_tree($course->id, false, false);
 
 $strgrades          = get_string('grades');
-$strgraderreport    = get_string('graderreport', 'grades');
-$strcalculationedit = get_string('editcalculation', 'grades');
+$strgraderreport    = get_string('graderreport', 'core_grades');
+$strcalculationedit = get_string('editcalculation', 'core_grades');
 
 $PAGE->navbar->add($strcalculationedit);
 print_grade_page_head($courseid, 'settings', null, $strcalculationedit, false, false, false);
@@ -131,7 +131,7 @@ echo '
     </div>
 
     <fieldset id="idnumbers" class="clearfix">
-        <legend class="ftoggler">'.get_string('idnumbers', 'grades').'</legend>
+        <legend class="ftoggler">'.get_string('idnumbers', 'core_grades').'</legend>
         <div class="fcontainer clearfix">
             <ul>
             ' . get_grade_tree($gtree, $gtree->top_element, $id, $errors) . '
@@ -139,7 +139,7 @@ echo '
         </div>
     </fieldset>
     <div class="fitem" style="text-align: center;">
-        <input id="id_addidnumbers" type="submit" class="btn btn-secondary" value="' . get_string('addidnumbers', 'grades') . '" name="addidnumbers" />
+        <input id="id_addidnumbers" type="submit" class="btn btn-secondary" value="' . get_string('addidnumbers', 'core_grades') . '" name="addidnumbers" />
     </div>
 </form>';
 
@@ -170,7 +170,7 @@ function get_grade_tree(&$gtree, $element, $current_itemid=null, $errors=null) {
 
     //TODO: improve outcome visualisation
     if ($type == 'item' and !empty($object->outcomeid)) {
-        $name = $name.' ('.get_string('outcome', 'grades').')';
+        $name = $name.' ('.get_string('outcome', 'core_grades').')';
     }
 
     $idnumber = $object->get_idnumber();
@@ -186,7 +186,7 @@ function get_grade_tree(&$gtree, $element, $current_itemid=null, $errors=null) {
                     $name .= '<div class="error"><span class="error">' . $errors[$grade_item->id].'</span><br />'."\n";
                     $closingdiv = "</div>\n";
                 }
-                $name .= '<label class="accesshide" for="id_idnumber_' . $grade_item->id . '">' . get_string('gradeitems', 'grades')  .'</label>';
+                $name .= '<label class="accesshide" for="id_idnumber_' . $grade_item->id . '">' . get_string('gradeitems', 'core_grades')  .'</label>';
                 $name .= '<input class="idnumber" id="id_idnumber_'.$grade_item->id.'" type="text" name="idnumbers['.$grade_item->id.']" />' . "\n";
                 $name .= $closingdiv;
             }

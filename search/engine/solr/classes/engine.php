@@ -1292,7 +1292,7 @@ class engine extends \core_search\engine {
         }
 
         if (!$client = $this->get_search_client(false)) {
-            return get_string('engineserverstatus', 'search');
+            return get_string('engineserverstatus', 'core_search');
         }
 
         try {
@@ -1302,10 +1302,10 @@ class engine extends \core_search\engine {
             }
         } catch (\SolrClientException $ex) {
             debugging('Solr client error: ' . html_to_text($ex->getMessage()), DEBUG_DEVELOPER);
-            return get_string('engineserverstatus', 'search');
+            return get_string('engineserverstatus', 'core_search');
         } catch (\SolrServerException $ex) {
             debugging('Solr server error: ' . html_to_text($ex->getMessage()), DEBUG_DEVELOPER);
-            return get_string('engineserverstatus', 'search');
+            return get_string('engineserverstatus', 'core_search');
         }
 
         return true;
@@ -1496,7 +1496,7 @@ class engine extends \core_search\engine {
             // If we don't know about the schema version we might not have implemented the
             // change correctly, so return.
             default:
-                return get_string('schemaversionunknown', 'search');
+                return get_string('schemaversionunknown', 'core_search');
         }
 
         if ($setup) {
@@ -1519,7 +1519,7 @@ class engine extends \core_search\engine {
         $coursecontext = $context->get_course_context(false);
         if ($coursecontext) {
             // Within a course or activity/block, support sort by location.
-            $orders['location'] = get_string('order_location', 'search',
+            $orders['location'] = get_string('order_location', 'core_search',
                     $context->get_context_name());
         }
 

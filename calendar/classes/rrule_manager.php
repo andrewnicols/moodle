@@ -312,7 +312,7 @@ class rrule_manager {
                 break;
             default:
                 // We should never get here, something is very wrong.
-                throw new moodle_exception('errorrrule', 'calendar');
+                throw new moodle_exception('errorrrule', 'core_calendar');
         }
     }
 
@@ -347,7 +347,7 @@ class rrule_manager {
                 break;
             default:
                 // We should never get here, something is very wrong.
-                throw new moodle_exception('errorrrulefreq', 'calendar');
+                throw new moodle_exception('errorrrulefreq', 'core_calendar');
         }
     }
 
@@ -384,7 +384,7 @@ class rrule_manager {
                 break;
             default:
                 // We should never get here, something is very wrong.
-                throw new moodle_exception('errorrruleday', 'calendar');
+                throw new moodle_exception('errorrruleday', 'core_calendar');
         }
     }
 
@@ -427,7 +427,7 @@ class rrule_manager {
     protected function set_interval($intervalstr) {
         $interval = intval($intervalstr);
         if ($interval < 1) {
-            throw new moodle_exception('errorinvalidinterval', 'calendar');
+            throw new moodle_exception('errorinvalidinterval', 'core_calendar');
         }
         $this->interval = $interval;
     }
@@ -446,7 +446,7 @@ class rrule_manager {
         $bysecondrules = [];
         foreach ($seconds as $second) {
             if ($second < 0 || $second > 59) {
-                throw new moodle_exception('errorinvalidbysecond', 'calendar');
+                throw new moodle_exception('errorinvalidbysecond', 'core_calendar');
             }
             $bysecondrules[] = (int)$second;
         }
@@ -467,7 +467,7 @@ class rrule_manager {
         $byminuterules = [];
         foreach ($minutes as $minute) {
             if ($minute < 0 || $minute > 59) {
-                throw new moodle_exception('errorinvalidbyminute', 'calendar');
+                throw new moodle_exception('errorinvalidbyminute', 'core_calendar');
             }
             $byminuterules[] = (int)$minute;
         }
@@ -488,7 +488,7 @@ class rrule_manager {
         $byhourrules = [];
         foreach ($hours as $hour) {
             if ($hour < 0 || $hour > 23) {
-                throw new moodle_exception('errorinvalidbyhour', 'calendar');
+                throw new moodle_exception('errorinvalidbyhour', 'core_calendar');
             }
             $byhourrules[] = (int)$hour;
         }
@@ -524,7 +524,7 @@ class rrule_manager {
         foreach ($days as $day) {
             $suffix = substr($day, -2);
             if (!in_array($suffix, $weekdays)) {
-                throw new moodle_exception('errorinvalidbydaysuffix', 'calendar');
+                throw new moodle_exception('errorinvalidbydaysuffix', 'core_calendar');
             }
 
             $bydayrule = new stdClass();
@@ -552,7 +552,7 @@ class rrule_manager {
         foreach ($monthdays as $day) {
             // Valid values are 1 to 31 or -31 to -1.
             if ($day < -31 || $day > 31 || $day == 0) {
-                throw new moodle_exception('errorinvalidbymonthday', 'calendar');
+                throw new moodle_exception('errorinvalidbymonthday', 'core_calendar');
             }
             $bymonthdayrules[] = (int)$day;
         }
@@ -579,7 +579,7 @@ class rrule_manager {
         foreach ($yeardays as $day) {
             // Valid values are 1 to 366 or -366 to -1.
             if ($day < -366 || $day > 366 || $day == 0) {
-                throw new moodle_exception('errorinvalidbyyearday', 'calendar');
+                throw new moodle_exception('errorinvalidbyyearday', 'core_calendar');
             }
             $byyeardayrules[] = (int)$day;
         }
@@ -607,7 +607,7 @@ class rrule_manager {
         foreach ($weeknumbers as $week) {
             // Valid values are 1 to 53 or -53 to -1.
             if ($week < -53 || $week > 53 || $week == 0) {
-                throw new moodle_exception('errorinvalidbyweekno', 'calendar');
+                throw new moodle_exception('errorinvalidbyweekno', 'core_calendar');
             }
             $byweeknorules[] = (int)$week;
         }
@@ -629,7 +629,7 @@ class rrule_manager {
         foreach ($months as $month) {
             // Valid values are 1 to 12.
             if ($month < 1 || $month > 12) {
-                throw new moodle_exception('errorinvalidbymonth', 'calendar');
+                throw new moodle_exception('errorinvalidbymonth', 'core_calendar');
             }
             $bymonthrules[] = (int)$month;
         }
@@ -654,7 +654,7 @@ class rrule_manager {
         foreach ($setposes as $pos) {
             // Valid values are 1 to 366 or -366 to -1.
             if ($pos < -366 || $pos > 366 || $pos == 0) {
-                throw new moodle_exception('errorinvalidbysetpos', 'calendar');
+                throw new moodle_exception('errorinvalidbysetpos', 'core_calendar');
             }
             $bysetposrules[] = (int)$pos;
         }
@@ -669,26 +669,26 @@ class rrule_manager {
     protected function validate_rules() {
         // UNTIL and COUNT cannot be in the same recurrence rule.
         if (!empty($this->until) && !empty($this->count)) {
-            throw new moodle_exception('errorhasuntilandcount', 'calendar');
+            throw new moodle_exception('errorhasuntilandcount', 'core_calendar');
         }
 
         // BYSETPOS only be used in conjunction with another BYxxx rule part.
         if (!empty($this->bysetpos) && empty($this->bymonth) && empty($this->bymonthday) && empty($this->bysecond)
             && empty($this->byday) && empty($this->byweekno) && empty($this->byhour) && empty($this->byminute)
             && empty($this->byyearday)) {
-            throw new moodle_exception('errormustbeusedwithotherbyrule', 'calendar');
+            throw new moodle_exception('errormustbeusedwithotherbyrule', 'core_calendar');
         }
 
         // Integer values preceding BYDAY rules can only be present for MONTHLY or YEARLY RRULE.
         foreach ($this->byday as $bydayrule) {
             if (!empty($bydayrule->value) && $this->freq != self::FREQ_MONTHLY && $this->freq != self::FREQ_YEARLY) {
-                throw new moodle_exception('errorinvalidbydayprefix', 'calendar');
+                throw new moodle_exception('errorinvalidbydayprefix', 'core_calendar');
             }
         }
 
         // The BYWEEKNO rule is only valid for YEARLY rules.
         if (!empty($this->byweekno) && $this->freq != self::FREQ_YEARLY) {
-            throw new moodle_exception('errornonyearlyfreqwithbyweekno', 'calendar');
+            throw new moodle_exception('errornonyearlyfreqwithbyweekno', 'core_calendar');
         }
     }
 
@@ -885,7 +885,7 @@ class rrule_manager {
                 break;
             default:
                 // We should never get here, something is very wrong.
-                throw new moodle_exception('errorrrulefreq', 'calendar');
+                throw new moodle_exception('errorrrulefreq', 'core_calendar');
         }
 
         return new DateInterval($intervalspec);
@@ -1341,7 +1341,7 @@ class rrule_manager {
                 break;
             default:
                 // We should never get here, something is very wrong.
-                throw new moodle_exception('errorrrulefreq', 'calendar');
+                throw new moodle_exception('errorrrulefreq', 'core_calendar');
         }
 
         $eventstart = new DateTime($timestart);

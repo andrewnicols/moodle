@@ -382,7 +382,7 @@ function blog_get_all_options(moodle_page $page, stdClass $userid = null) {
         && has_capability('moodle/blog:view', context_system::instance())) {
 
         $options[CONTEXT_SYSTEM] = array('viewsite' => array(
-            'string' => get_string('viewsiteentries', 'blog'),
+            'string' => get_string('viewsiteentries', 'core_blog'),
             'link' => new moodle_url('/blog/index.php')
         ));
     }
@@ -430,7 +430,7 @@ function blog_get_options_for_user(stdClass $user=null) {
     if (!$iscurrentuser && $canview && ($CFG->bloglevel >= BLOG_SITE_LEVEL)) {
         // Not the current user, but we can view and its blogs are enabled for SITE or GLOBAL.
         $options['userentries'] = array(
-            'string' => get_string('viewuserentries', 'blog', fullname($user)),
+            'string' => get_string('viewuserentries', 'core_blog', fullname($user)),
             'link' => new moodle_url('/blog/index.php', array('userid' => $user->id))
         );
     } else {
@@ -438,21 +438,21 @@ function blog_get_options_for_user(stdClass $user=null) {
         if ($canview) {
             // We can view our own blogs .... BIG surprise.
             $options['view'] = array(
-                'string' => get_string('blogentries', 'blog'),
+                'string' => get_string('blogentries', 'core_blog'),
                 'link' => new moodle_url('/blog/index.php', array('userid' => $USER->id))
             );
         }
         if (has_capability('moodle/blog:create', $sitecontext)) {
             // We can add to our own blog.
             $options['add'] = array(
-                'string' => get_string('addnewentry', 'blog'),
+                'string' => get_string('addnewentry', 'core_blog'),
                 'link' => new moodle_url('/blog/edit.php', array('action' => 'add'))
             );
         }
     }
     if ($canview && $CFG->enablerssfeeds) {
         $options['rss'] = array(
-            'string' => get_string('rssfeed', 'blog'),
+            'string' => get_string('rssfeed', 'core_blog'),
             'link' => new moodle_url(rss_get_url($sitecontext->id, $USER->id, 'blog', 'user/'.$user->id))
         );
     }
@@ -502,19 +502,19 @@ function blog_get_options_for_course(stdClass $course, stdClass $user=null) {
         if ($CFG->bloglevel >= BLOG_SITE_LEVEL) {
             // View entries about this course.
             $options['courseview'] = array(
-                'string' => get_string('viewcourseblogs', 'blog'),
+                'string' => get_string('viewcourseblogs', 'core_blog'),
                 'link' => new moodle_url('/blog/index.php', array('courseid' => $course->id))
             );
         }
         // View MY entries about this course.
         $options['courseviewmine'] = array(
-            'string' => get_string('viewmyentriesaboutcourse', 'blog'),
+            'string' => get_string('viewmyentriesaboutcourse', 'core_blog'),
             'link' => new moodle_url('/blog/index.php', array('courseid' => $course->id, 'userid' => $USER->id))
         );
         if (!empty($user) && ($CFG->bloglevel >= BLOG_SITE_LEVEL)) {
             // View the provided users entries about this course.
             $options['courseviewuser'] = array(
-                'string' => get_string('viewentriesbyuseraboutcourse', 'blog', fullname($user)),
+                'string' => get_string('viewentriesbyuseraboutcourse', 'core_blog', fullname($user)),
                 'link' => new moodle_url('/blog/index.php', array('courseid' => $course->id, 'userid' => $user->id))
             );
         }
@@ -523,7 +523,7 @@ function blog_get_options_for_course(stdClass $course, stdClass $user=null) {
     if (has_capability('moodle/blog:create', $sitecontext)) {
         // We can blog about this course.
         $options['courseadd'] = array(
-            'string' => get_string('blogaboutthiscourse', 'blog'),
+            'string' => get_string('blogaboutthiscourse', 'core_blog'),
             'link' => new moodle_url('/blog/edit.php', array('action' => 'add', 'courseid' => $course->id))
         );
     }
@@ -577,13 +577,13 @@ function blog_get_options_for_module($module, $user=null) {
             $a = new stdClass;
             $a->type = $modulename;
             $options['moduleview'] = array(
-                'string' => get_string('viewallmodentries', 'blog', $a),
+                'string' => get_string('viewallmodentries', 'core_blog', $a),
                 'link' => new moodle_url('/blog/index.php', array('modid' => $module->id))
             );
         }
         // View MY entries about this module.
         $options['moduleviewmine'] = array(
-            'string' => get_string('viewmyentriesaboutmodule', 'blog', $modulename),
+            'string' => get_string('viewmyentriesaboutmodule', 'core_blog', $modulename),
             'link' => new moodle_url('/blog/index.php', array('modid' => $module->id, 'userid' => $USER->id))
         );
         if (!empty($user) && ($CFG->bloglevel >= BLOG_SITE_LEVEL)) {
@@ -592,7 +592,7 @@ function blog_get_options_for_module($module, $user=null) {
             $a->mod = $modulename;
             $a->user = fullname($user);
             $options['moduleviewuser'] = array(
-                'string' => get_string('blogentriesbyuseraboutmodule', 'blog', $a),
+                'string' => get_string('blogentriesbyuseraboutmodule', 'core_blog', $a),
                 'link' => new moodle_url('/blog/index.php', array('modid' => $module->id, 'userid' => $user->id))
             );
         }
@@ -601,7 +601,7 @@ function blog_get_options_for_module($module, $user=null) {
     if (has_capability('moodle/blog:create', $sitecontext)) {
         // The user can blog about this module.
         $options['moduleadd'] = array(
-            'string' => get_string('blogaboutthismodule', 'blog', $modulename),
+            'string' => get_string('blogaboutthismodule', 'core_blog', $modulename),
             'link' => new moodle_url('/blog/edit.php', array('action' => 'add', 'modid' => $module->id))
         );
     }
@@ -667,14 +667,14 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
 
     $blogurl = new moodle_url('/blog/index.php');
 
-    $headers['stradd'] = get_string('addnewentry', 'blog');
+    $headers['stradd'] = get_string('addnewentry', 'core_blog');
     $headers['strview'] = null;
 
     $site = $DB->get_record('course', array('id' => SITEID));
     $sitecontext = context_system::instance();
     // Common Lang strings.
     $strparticipants = get_string("participants");
-    $strblogentries  = get_string("blogentries", 'blog');
+    $strblogentries  = get_string("blogentries", 'core_blog');
 
     // Prepare record objects as needed.
     if (!empty($courseid)) {
@@ -708,15 +708,15 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $a = new stdClass();
         $a->type = get_string('modulename', $cm->modname);
         $PAGE->set_cm($cm, $course);
-        $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
-        $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
+        $headers['stradd'] = get_string('blogaboutthis', 'core_blog', $a);
+        $headers['strview'] = get_string('viewallmodentries', 'core_blog', $a);
     }
 
     // Case 1: No entry, mod, course or user params: all site entries to be shown (filtered by search and tag/tagid)
     // Note: if action is set to 'add' or 'edit', we do this at the end.
     if (empty($entryid) && empty($modid) && empty($courseid) && empty($userid) && !in_array($action, array('edit', 'add'))) {
         $PAGE->navbar->add($strblogentries, $blogurl);
-        $strsiteblog = get_string('siteblogheading', 'blog');
+        $strsiteblog = get_string('siteblogheading', 'core_blog');
         $PAGE->set_title($strsiteblog);
         $PAGE->set_heading($site->fullname);
         $headers['heading'] = $strsiteblog;
@@ -743,7 +743,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
 
         $blogurl->remove_params('userid');
         $PAGE->navbar->add($entry->subject, $blogurl);
-        $blogentryby = get_string('blogentrybyuser', 'blog', fullname($user));
+        $blogentryby = get_string('blogentrybyuser', 'core_blog', fullname($user));
         $PAGE->set_title($entry->subject . moodle_page::TITLE_SEPARATOR . $blogentryby);
         $PAGE->set_heading("$shortname: " . fullname($user) . ": $entry->subject");
         $headers['heading'] = $blogentryby;
@@ -760,15 +760,15 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
 
         $shortname = format_string($site->shortname, true, array('context' => context_course::instance(SITEID)));
         $blogurl->param('userid', $userid);
-        $PAGE->set_title(fullname($user) . ": " . get_string('blog', 'blog'));
-        $PAGE->set_heading("$shortname: " . fullname($user) . ": " . get_string('blog', 'blog'));
-        $headers['heading'] = get_string('userblog', 'blog', fullname($user));
-        $headers['strview'] = get_string('viewuserentries', 'blog', fullname($user));
+        $PAGE->set_title(fullname($user) . ": " . get_string('blog', 'core_blog'));
+        $PAGE->set_heading("$shortname: " . fullname($user) . ": " . get_string('blog', 'core_blog'));
+        $headers['heading'] = get_string('userblog', 'core_blog', fullname($user));
+        $headers['strview'] = get_string('viewuserentries', 'core_blog', fullname($user));
 
     } else if (!$CFG->useblogassociations && empty($userid) && !in_array($action, array('edit', 'add'))) {
         // Case 4: No blog associations, no userid.
 
-        $strsiteblog = get_string('siteblogheading', 'blog');
+        $strsiteblog = get_string('siteblogheading', 'core_blog');
         $PAGE->set_title($strsiteblog);
         $PAGE->set_heading($site->fullname);
         $headers['heading'] = $strsiteblog;
@@ -784,16 +784,16 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $PAGE->navbar->add(fullname($user), "$CFG->wwwroot/user/view.php?id=$user->id");
         $PAGE->navbar->add($strblogentries, $blogurl);
 
-        $PAGE->set_title(fullname($user) . ': ' . get_string('blogentries', 'blog') . moodle_page::TITLE_SEPARATOR . $cm->name);
-        $PAGE->set_heading("$shortname: $cm->name: " . fullname($user) . ': ' . get_string('blogentries', 'blog'));
+        $PAGE->set_title(fullname($user) . ': ' . get_string('blogentries', 'core_blog') . moodle_page::TITLE_SEPARATOR . $cm->name);
+        $PAGE->set_heading("$shortname: $cm->name: " . fullname($user) . ': ' . get_string('blogentries', 'core_blog'));
 
         $a = new stdClass();
         $a->user = fullname($user);
         $a->mod = $cm->name;
         $a->type = get_string('modulename', $cm->modname);
-        $headers['heading'] = get_string('blogentriesbyuseraboutmodule', 'blog', $a);
-        $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
-        $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
+        $headers['heading'] = get_string('blogentriesbyuseraboutmodule', 'core_blog', $a);
+        $headers['stradd'] = get_string('blogaboutthis', 'core_blog', $a);
+        $headers['strview'] = get_string('viewallmodentries', 'core_blog', $a);
     } else if (!empty($userid) && !empty($courseid) && empty($modid) && empty($entryid)) {
         // Case 6: Blog entries associated with a course by a specific user.
 
@@ -807,9 +807,9 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $a->user = fullname($user);
         $a->course = format_string($course->fullname, true, array('context' => context_course::instance($course->id)));
         $a->type = get_string('course');
-        $headers['heading'] = get_string('blogentriesbyuseraboutcourse', 'blog', $a);
-        $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
-        $headers['strview'] = get_string('viewblogentries', 'blog', $a);
+        $headers['heading'] = get_string('blogentriesbyuseraboutcourse', 'core_blog', $a);
+        $headers['stradd'] = get_string('blogaboutthis', 'core_blog', $a);
+        $headers['strview'] = get_string('viewblogentries', 'core_blog', $a);
 
         // Remove the userid from the URL to inform the blog_menu block correctly.
         $blogurl->remove_params(array('userid'));
@@ -830,9 +830,9 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $a->group = $group->name;
         $a->course = format_string($course->fullname, true, array('context' => context_course::instance($course->id)));
         $a->type = get_string('course');
-        $headers['heading'] = get_string('blogentriesbygroupaboutcourse', 'blog', $a);
-        $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
-        $headers['strview'] = get_string('viewblogentries', 'blog', $a);
+        $headers['heading'] = get_string('blogentriesbygroupaboutcourse', 'core_blog', $a);
+        $headers['stradd'] = get_string('blogaboutthis', 'core_blog', $a);
+        $headers['strview'] = get_string('viewblogentries', 'core_blog', $a);
     } else if (!empty($groupid) && !empty($modid) && empty($entryid)) {
         // Case 8: Blog entries by members of a group, associated with an activity in that course.
 
@@ -850,9 +850,9 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $a->group = $group->name;
         $a->mod = $cm->name;
         $a->type = get_string('modulename', $cm->modname);
-        $headers['heading'] = get_string('blogentriesbygroupaboutmodule', 'blog', $a);
-        $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
-        $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
+        $headers['heading'] = get_string('blogentriesbygroupaboutmodule', 'core_blog', $a);
+        $headers['stradd'] = get_string('blogaboutthis', 'core_blog', $a);
+        $headers['strview'] = get_string('viewallmodentries', 'core_blog', $a);
 
     } else if (!empty($modid) && empty($userid) && empty($groupid) && empty($entryid)) {
         // Case 9: All blog entries associated with an activity.
@@ -862,11 +862,11 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $PAGE->navbar->add($strblogentries, $blogurl);
         $PAGE->set_title($course->fullname);
         $PAGE->set_heading($course->fullname);
-        $headers['heading'] = get_string('blogentriesabout', 'blog', $cm->name);
+        $headers['heading'] = get_string('blogentriesabout', 'core_blog', $cm->name);
         $a = new stdClass();
         $a->type = get_string('modulename', $cm->modname);
-        $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
-        $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
+        $headers['stradd'] = get_string('blogaboutthis', 'core_blog', $a);
+        $headers['strview'] = get_string('viewallmodentries', 'core_blog', $a);
     } else if (!empty($courseid) && empty($userid) && empty($groupid) && empty($modid) && empty($entryid)) {
         // Case 10: All blog entries associated with a course.
 
@@ -877,12 +877,12 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $a = new stdClass();
         $a->type = get_string('course');
         $headers['heading'] = get_string('blogentriesabout',
-                                         'blog',
+                                         'core_blog',
                                          format_string($course->fullname,
                                                        true,
                                                        array('context' => context_course::instance($course->id))));
-        $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
-        $headers['strview'] = get_string('viewblogentries', 'blog', $a);
+        $headers['stradd'] = get_string('blogaboutthis', 'core_blog', $a);
+        $headers['strview'] = get_string('viewblogentries', 'core_blog', $a);
         $blogurl->remove_params(array('userid'));
     }
 
@@ -898,7 +898,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
                 $tagid = $tagrec->id;
                 $headers['filters']['tag'] = $tagid;
                 $blogurl->param('tag', $tag);
-                $PAGE->navbar->add(get_string('tagparam', 'blog', $tag), $blogurl);
+                $PAGE->navbar->add(get_string('tagparam', 'core_blog', $tag), $blogurl);
             }
         }
 
@@ -906,7 +906,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         if (!empty($search) && has_capability('moodle/blog:search', $sitecontext)) {
             $headers['filters']['search'] = $search;
             $blogurl->param('search', $search);
-            $PAGE->navbar->add(get_string('searchterm', 'blog', s($search)), $blogurl->out());
+            $PAGE->navbar->add(get_string('searchterm', 'core_blog', s($search)), $blogurl->out());
         }
     }
 
@@ -914,7 +914,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
     if (!empty($action) && $action == 'add') {
 
     } else if (!empty($action) && $action == 'edit') {
-        $PAGE->navbar->add(get_string('editentry', 'blog'));
+        $PAGE->navbar->add(get_string('editentry', 'core_blog'));
     }
 
     if (empty($headers['url'])) {
@@ -1035,10 +1035,10 @@ function blog_comment_validate($commentparam) {
  */
 function blog_page_type_list($pagetype, $parentcontext, $currentcontext) {
     return array(
-        '*' => get_string('page-x', 'pagetype'),
-        'blog-*' => get_string('page-blog-x', 'blog'),
-        'blog-index' => get_string('page-blog-index', 'blog'),
-        'blog-edit' => get_string('page-blog-edit', 'blog')
+        '*' => get_string('page-x', 'mod_pagetype'),
+        'blog-*' => get_string('page-blog-x', 'core_blog'),
+        'blog-index' => get_string('page-blog-index', 'core_blog'),
+        'blog-edit' => get_string('page-blog-edit', 'core_blog')
     );
 }
 
@@ -1207,7 +1207,7 @@ function blog_validate_access($courseid, $modid, $groupid, $entryid, $userid) {
     if (!$userid && has_capability('moodle/blog:view', $sitecontext) && $CFG->bloglevel > BLOG_USER_LEVEL) {
         if ($entryid) {
             if (!$entryobject = $DB->get_record('post', array('id' => $entryid))) {
-                throw new \moodle_exception('nosuchentry', 'blog');
+                throw new \moodle_exception('nosuchentry', 'core_blog');
             }
             $userid = $entryobject->userid;
         }
@@ -1217,20 +1217,20 @@ function blog_validate_access($courseid, $modid, $groupid, $entryid, $userid) {
 
     if (!empty($modid)) {
         if ($CFG->bloglevel < BLOG_SITE_LEVEL) {
-            throw new \moodle_exception('courseblogdisable', 'blog');
+            throw new \moodle_exception('courseblogdisable', 'core_blog');
         }
         if (!$mod = $DB->get_record('course_modules', array('id' => $modid))) {
-            throw new \moodle_exception('invalidmoduleid', 'error', $modid);
+            throw new \moodle_exception('invalidmoduleid', 'mod_error', $modid);
         }
         $courseid = $mod->course;
     }
 
     if ((empty($courseid) ? true : $courseid == SITEID) && empty($userid)) {
         if ($CFG->bloglevel < BLOG_SITE_LEVEL) {
-            throw new \moodle_exception('siteblogdisable', 'blog');
+            throw new \moodle_exception('siteblogdisable', 'core_blog');
         }
         if (!has_capability('moodle/blog:view', $sitecontext)) {
-            throw new \moodle_exception('cannotviewsiteblog', 'blog');
+            throw new \moodle_exception('cannotviewsiteblog', 'core_blog');
         }
 
         $COURSE = $DB->get_record('course', array('format' => 'site'));
@@ -1245,7 +1245,7 @@ function blog_validate_access($courseid, $modid, $groupid, $entryid, $userid) {
         $courseid = $course->id;
 
         if (!has_capability('moodle/blog:view', $sitecontext)) {
-            throw new \moodle_exception('cannotviewcourseblog', 'blog');
+            throw new \moodle_exception('cannotviewcourseblog', 'core_blog');
         }
     } else {
         $coursecontext = context_course::instance(SITEID);
@@ -1253,11 +1253,11 @@ function blog_validate_access($courseid, $modid, $groupid, $entryid, $userid) {
 
     if (!empty($groupid)) {
         if ($CFG->bloglevel < BLOG_SITE_LEVEL) {
-            throw new \moodle_exception('groupblogdisable', 'blog');
+            throw new \moodle_exception('groupblogdisable', 'core_blog');
         }
 
         if (! $group = groups_get_group($groupid)) {
-            throw new \moodle_exception('invalidgroupid', 'blog');
+            throw new \moodle_exception('invalidgroupid', 'core_blog');
         }
 
         if (!$course = $DB->get_record('course', array('id' => $group->courseid))) {
@@ -1268,7 +1268,7 @@ function blog_validate_access($courseid, $modid, $groupid, $entryid, $userid) {
         $courseid = $course->id;
 
         if (!has_capability('moodle/blog:view', $sitecontext)) {
-            throw new \moodle_exception('cannotviewcourseorgroupblog', 'blog');
+            throw new \moodle_exception('cannotviewcourseorgroupblog', 'core_blog');
         }
 
         if (groups_get_course_groupmode($course) == SEPARATEGROUPS &&
@@ -1282,7 +1282,7 @@ function blog_validate_access($courseid, $modid, $groupid, $entryid, $userid) {
 
     if (!empty($userid)) {
         if ($CFG->bloglevel < BLOG_USER_LEVEL) {
-            throw new \moodle_exception('blogdisable', 'blog');
+            throw new \moodle_exception('blogdisable', 'core_blog');
         }
 
         if (!$user = $DB->get_record('user', array('id' => $userid))) {
@@ -1296,11 +1296,11 @@ function blog_validate_access($courseid, $modid, $groupid, $entryid, $userid) {
         if ($USER->id == $userid) {
             if (!has_capability('moodle/blog:create', $sitecontext)
               && !has_capability('moodle/blog:view', $sitecontext)) {
-                throw new \moodle_exception('donothaveblog', 'blog');
+                throw new \moodle_exception('donothaveblog', 'core_blog');
             }
         } else {
             if (!has_capability('moodle/blog:view', $sitecontext) || !blog_user_can_view_user_entry($userid)) {
-                throw new \moodle_exception('cannotviewcourseblog', 'blog');
+                throw new \moodle_exception('cannotviewcourseblog', 'core_blog');
             }
         }
     }

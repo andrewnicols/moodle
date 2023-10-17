@@ -107,7 +107,7 @@ foreach ($_FILES as $fieldname => $uploadedfile) {
         // Oversize file will be ignored, error added to array to notify
         // web service client.
         $file->errortype = 'fileoversized';
-        $file->error = get_string('maxbytes', 'error');
+        $file->error = get_string('maxbytes', 'mod_error');
     } else {
         $file->filepath = $_FILES[$fieldname]['tmp_name'];
         // Calculate total size of upload.
@@ -157,7 +157,7 @@ foreach ($files as $file) {
                 $filerecord->itemid, $filerecord->filepath, $filerecord->filename);
     if ($existingfile) {
         $file->errortype = 'filenameexist';
-        $file->error = get_string('filenameexist', 'webservice', $file->filename);
+        $file->error = get_string('filenameexist', 'core_webservice', $file->filename);
         $results[] = $file;
     } else {
         $storedfile = $fs->create_file_from_pathname($filerecord, $file->filepath);

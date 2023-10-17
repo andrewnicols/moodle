@@ -156,7 +156,7 @@ abstract class question_edit_form extends question_wizard_form {
         $mform = $this->_form;
 
         // Standard fields at the start of the form.
-        $mform->addElement('header', 'generalheader', get_string("general", 'form'));
+        $mform->addElement('header', 'generalheader', get_string("general", 'core_form'));
 
         if (!isset($this->question->id)) {
             if (!empty($this->question->formoptions->mustbeusable)) {
@@ -166,12 +166,12 @@ abstract class question_edit_form extends question_wizard_form {
             }
 
             // Adding question.
-            $mform->addElement('questioncategory', 'category', get_string('category', 'question'),
+            $mform->addElement('questioncategory', 'category', get_string('category', 'core_question'),
                     array('contexts' => $contexts));
         } else if (!($this->question->formoptions->canmove ||
                 $this->question->formoptions->cansaveasnew)) {
             // Editing question with no permission to move from category.
-            $mform->addElement('questioncategory', 'category', get_string('category', 'question'),
+            $mform->addElement('questioncategory', 'category', get_string('category', 'core_question'),
                     array('contexts' => array($this->categorycontext)));
             $mform->addElement('hidden', 'usecurrentcat', 1);
             $mform->setType('usecurrentcat', PARAM_BOOL);
@@ -180,7 +180,7 @@ abstract class question_edit_form extends question_wizard_form {
             // Editing question with permission to move from category or save as new q.
             $currentgrp = array();
             $currentgrp[0] = $mform->createElement('questioncategory', 'category',
-                    get_string('categorycurrent', 'question'),
+                    get_string('categorycurrent', 'core_question'),
                     array('contexts' => array($this->categorycontext)));
             // Validate if the question is being duplicated.
             $beingcopied = false;
@@ -191,17 +191,17 @@ abstract class question_edit_form extends question_wizard_form {
                     $this->question->formoptions->cansaveasnew) && ($beingcopied)) {
                 // Not move only form.
                 $currentgrp[1] = $mform->createElement('checkbox', 'usecurrentcat', '',
-                        get_string('categorycurrentuse', 'question'));
+                        get_string('categorycurrentuse', 'core_question'));
                 $mform->setDefault('usecurrentcat', 1);
             }
             $currentgrp[0]->freeze();
             $currentgrp[0]->setPersistantFreeze(false);
             $mform->addGroup($currentgrp, 'currentgrp',
-                    get_string('categorycurrent', 'question'), null, false);
+                    get_string('categorycurrent', 'core_question'), null, false);
 
             if (($beingcopied)) {
                 $mform->addElement('questioncategory', 'categorymoveto',
-                    get_string('categorymoveto', 'question'),
+                    get_string('categorymoveto', 'core_question'),
                     array('contexts' => array($this->categorycontext)));
                 if ($this->question->formoptions->canedit ||
                     $this->question->formoptions->cansaveasnew) {
@@ -225,12 +225,12 @@ abstract class question_edit_form extends question_wizard_form {
                 $PAGE->get_renderer('qbank_editquestion')->render_question_info($questiondata));
         }
 
-        $mform->addElement('text', 'name', get_string('questionname', 'question'),
+        $mform->addElement('text', 'name', get_string('questionname', 'core_question'),
                 array('size' => 50, 'maxlength' => 255));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
 
-        $mform->addElement('editor', 'questiontext', get_string('questiontext', 'question'),
+        $mform->addElement('editor', 'questiontext', get_string('questiontext', 'core_question'),
                 array('rows' => 15), $this->editoroptions);
         $mform->setType('questiontext', PARAM_RAW);
         $mform->addRule('questiontext', null, 'required', null, 'client');
@@ -238,17 +238,17 @@ abstract class question_edit_form extends question_wizard_form {
         $mform->addElement('select', 'status', get_string('status', 'qbank_editquestion'),
                             \qbank_editquestion\editquestion_helper::get_question_status_list());
 
-        $mform->addElement('float', 'defaultmark', get_string('defaultmark', 'question'),
+        $mform->addElement('float', 'defaultmark', get_string('defaultmark', 'core_question'),
                 array('size' => 7));
         $mform->setDefault('defaultmark', $this->get_default_value('defaultmark', 1));
         $mform->addRule('defaultmark', null, 'required', null, 'client');
 
-        $mform->addElement('editor', 'generalfeedback', get_string('generalfeedback', 'question'),
+        $mform->addElement('editor', 'generalfeedback', get_string('generalfeedback', 'core_question'),
                 array('rows' => 10), $this->editoroptions);
         $mform->setType('generalfeedback', PARAM_RAW);
         $mform->addHelpButton('generalfeedback', 'generalfeedback', 'question');
 
-        $mform->addElement('text', 'idnumber', get_string('idnumber', 'question'), 'maxlength="100"  size="10"');
+        $mform->addElement('text', 'idnumber', get_string('idnumber', 'core_question'), 'maxlength="100"  size="10"');
         $mform->addHelpButton('idnumber', 'idnumber', 'question');
         $mform->setType('idnumber', PARAM_RAW);
 
@@ -277,7 +277,7 @@ abstract class question_edit_form extends question_wizard_form {
 
         $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'updatebutton',
-                get_string('savechangesandcontinueediting', 'question'));
+                get_string('savechangesandcontinueediting', 'core_question'));
         if ($this->can_preview()) {
             if (\core\plugininfo\qbank::is_plugin_enabled('qbank_previewquestion')) {
                 $previewlink = $PAGE->get_renderer('qbank_previewquestion')->question_preview_link(
@@ -347,7 +347,7 @@ abstract class question_edit_form extends question_wizard_form {
         $repeated[] = $mform->createElement('group', 'answeroptions',
                 $label, $answeroptions, null, false);
         $repeated[] = $mform->createElement('editor', 'feedback',
-                get_string('feedback', 'question'), array('rows' => 5), $this->editoroptions);
+                get_string('feedback', 'core_question'), array('rows' => 5), $this->editoroptions);
         $repeatedoptions['answer']['type'] = PARAM_RAW;
         $repeatedoptions['fraction']['default'] = 0;
         $answersoption = 'answers';
@@ -400,7 +400,7 @@ abstract class question_edit_form extends question_wizard_form {
         $options = [
             'tags' => true,
             'multiple' => true,
-            'noselectionstring' => get_string('anytags', 'quiz'),
+            'noselectionstring' => get_string('anytags', 'mod_quiz'),
         ];
         $mform->addElement('autocomplete', 'tags',  get_string('tags'), $tagstrings, $options);
 
@@ -436,7 +436,7 @@ abstract class question_edit_form extends question_wizard_form {
     protected function add_per_answer_fields(&$mform, $label, $gradeoptions,
             $minoptions = QUESTION_NUMANS_START, $addoptions = QUESTION_NUMANS_ADD) {
         $mform->addElement('header', 'answerhdr',
-                get_string('answers', 'question'), '');
+                get_string('answers', 'core_question'), '');
         $mform->setExpanded('answerhdr', 1);
         $answersoption = '';
         $repeatedoptions = array();
@@ -458,28 +458,28 @@ abstract class question_edit_form extends question_wizard_form {
      * Language string to use for 'Add {no} more {whatever we call answers}'.
      */
     protected function get_more_choices_string() {
-        return get_string('addmorechoiceblanks', 'question');
+        return get_string('addmorechoiceblanks', 'core_question');
     }
 
     protected function add_combined_feedback_fields($withshownumpartscorrect = false) {
         $mform = $this->_form;
 
         $mform->addElement('header', 'combinedfeedbackhdr',
-                get_string('combinedfeedback', 'question'));
+                get_string('combinedfeedback', 'core_question'));
 
         $fields = array('correctfeedback', 'partiallycorrectfeedback', 'incorrectfeedback');
         foreach ($fields as $feedbackname) {
             $element = $mform->addElement('editor', $feedbackname,
-                    get_string($feedbackname, 'question'),
+                    get_string($feedbackname, 'core_question'),
                     array('rows' => 5), $this->editoroptions);
             $mform->setType($feedbackname, PARAM_RAW);
             // Using setValue() as setDefault() does not work for the editor class.
-            $element->setValue(array('text' => get_string($feedbackname.'default', 'question')));
+            $element->setValue(array('text' => get_string($feedbackname.'default', 'core_question')));
 
             if ($withshownumpartscorrect && $feedbackname == 'partiallycorrectfeedback') {
                 $mform->addElement('advcheckbox', 'shownumcorrect',
-                        get_string('options', 'question'),
-                        get_string('shownumpartscorrectwhenfinished', 'question'));
+                        get_string('options', 'core_question'),
+                        get_string('shownumpartscorrectwhenfinished', 'core_question'));
                 $mform->setDefault('shownumcorrect', true);
             }
         }
@@ -496,23 +496,23 @@ abstract class question_edit_form extends question_wizard_form {
 
         $repeatedoptions = array();
         $repeated = array();
-        $repeated[] = $mform->createElement('editor', 'hint', get_string('hintn', 'question'),
+        $repeated[] = $mform->createElement('editor', 'hint', get_string('hintn', 'core_question'),
                 array('rows' => 5), $this->editoroptions);
         $repeatedoptions['hint']['type'] = PARAM_RAW;
 
         $optionelements = array();
         if ($withclearwrong) {
             $optionelements[] = $mform->createElement('advcheckbox', 'hintclearwrong',
-                    get_string('options', 'question'), get_string('clearwrongparts', 'question'));
+                    get_string('options', 'core_question'), get_string('clearwrongparts', 'core_question'));
         }
         if ($withshownumpartscorrect) {
             $optionelements[] = $mform->createElement('advcheckbox', 'hintshownumcorrect', '',
-                    get_string('shownumpartscorrect', 'question'));
+                    get_string('shownumpartscorrect', 'core_question'));
         }
 
         if (count($optionelements)) {
             $repeated[] = $mform->createElement('group', 'hintoptions',
-                    get_string('hintnoptions', 'question'), $optionelements, null, false);
+                    get_string('hintnoptions', 'core_question'), $optionelements, null, false);
         }
 
         return array($repeated, $repeatedoptions);
@@ -523,7 +523,7 @@ abstract class question_edit_form extends question_wizard_form {
         $mform = $this->_form;
 
         $mform->addElement('header', 'multitriesheader',
-                get_string('settingsformultipletries', 'question'));
+                get_string('settingsformultipletries', 'core_question'));
 
         $penalties = array(
             1.0000000,
@@ -543,7 +543,7 @@ abstract class question_edit_form extends question_wizard_form {
             $penaltyoptions["{$penalty}"] = format_float(100 * $penalty, 5, true, true) . '%';
         }
         $mform->addElement('select', 'penalty',
-                get_string('penaltyforeachincorrecttry', 'question'), $penaltyoptions);
+                get_string('penaltyforeachincorrecttry', 'core_question'), $penaltyoptions);
         $mform->addHelpButton('penalty', 'penaltyforeachincorrecttry', 'question');
         $mform->setDefault('penalty', $this->get_default_value('penalty',  0.3333333));
 
@@ -562,7 +562,7 @@ abstract class question_edit_form extends question_wizard_form {
         list($repeated, $repeatedoptions) = $this->get_hint_fields(
                 $withclearwrong, $withshownumpartscorrect);
         $this->repeat_elements($repeated, $repeatsatstart, $repeatedoptions,
-                'numhints', 'addhint', 1, get_string('addanotherhint', 'question'), true);
+                'numhints', 'addhint', 1, get_string('addanotherhint', 'core_question'), true);
     }
 
     public function set_data($question) {
@@ -849,7 +849,7 @@ abstract class question_edit_form extends question_wizard_form {
         // Make sure that the user can edit the question.
         if (empty($fromform['makecopy']) && isset($this->question->id)
             && !$this->question->formoptions->canedit) {
-            $errors['currentgrp'] = get_string('nopermissionedit', 'question');
+            $errors['currentgrp'] = get_string('nopermissionedit', 'core_question');
         }
 
         // Category.
@@ -860,7 +860,7 @@ abstract class question_edit_form extends question_wizard_form {
 
         // Default mark.
         if (array_key_exists('defaultmark', $fromform) && $fromform['defaultmark'] < 0) {
-            $errors['defaultmark'] = get_string('defaultmarkmustbepositive', 'question');
+            $errors['defaultmark'] = get_string('defaultmarkmustbepositive', 'core_question');
         }
 
         // Can only have one idnumber per category.
@@ -890,7 +890,7 @@ abstract class question_edit_form extends question_wizard_form {
             }
 
             if ($DB->record_exists_select('question_bank_entries', $conditions, $params)) {
-                $errors['idnumber'] = get_string('idnumbertaken', 'error');
+                $errors['idnumber'] = get_string('idnumbertaken', 'mod_error');
             }
         }
 

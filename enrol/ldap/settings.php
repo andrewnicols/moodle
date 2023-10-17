@@ -87,11 +87,11 @@ if ($ADMIN->fulltree) {
         }
 
         $settings->add(new admin_setting_configcheckbox('enrol_ldap/ignorehiddencourses', get_string('ignorehiddencourses', 'enrol_database'), get_string('ignorehiddencourses_desc', 'enrol_database'), 0));
-        $options = array(ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'enrol'),
-                         ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'enrol'),
-                         ENROL_EXT_REMOVED_SUSPEND        => get_string('extremovedsuspend', 'enrol'),
-                         ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'));
-        $settings->add(new admin_setting_configselect('enrol_ldap/unenrolaction', get_string('extremovedaction', 'enrol'), get_string('extremovedaction_help', 'enrol'), ENROL_EXT_REMOVED_UNENROL, $options));
+        $options = array(ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'core_enrol'),
+                         ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'core_enrol'),
+                         ENROL_EXT_REMOVED_SUSPEND        => get_string('extremovedsuspend', 'core_enrol'),
+                         ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'core_enrol'));
+        $settings->add(new admin_setting_configselect('enrol_ldap/unenrolaction', get_string('extremovedaction', 'core_enrol'), get_string('extremovedaction_help', 'core_enrol'), ENROL_EXT_REMOVED_UNENROL, $options));
 
         //--- course creation settings ---
         $settings->add(new admin_setting_heading('enrol_ldap_autocreation_settings', get_string('autocreation_settings', 'enrol_ldap'), ''));

@@ -449,10 +449,10 @@ class provider implements
      */
     protected static function get_permissions_name() {
         $strpermissions = array(
-            CAP_INHERIT => get_string('inherit', 'role'),
-            CAP_ALLOW => get_string('allow', 'role'),
-            CAP_PREVENT => get_string('prevent', 'role'),
-            CAP_PROHIBIT => get_string('prohibit', 'role')
+            CAP_INHERIT => get_string('inherit', 'core_role'),
+            CAP_ALLOW => get_string('allow', 'core_role'),
+            CAP_PREVENT => get_string('prevent', 'core_role'),
+            CAP_PROHIBIT => get_string('prohibit', 'core_role')
         );
         return $strpermissions;
     }

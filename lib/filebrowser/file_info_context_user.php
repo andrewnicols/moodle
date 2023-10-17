@@ -122,7 +122,7 @@ class file_info_context_user extends file_info {
 
         //TODO: user quota from $CFG->userquota
 
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areauserpersonal', 'repository'), false, true, true, false);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areauserpersonal', 'core_repository'), false, true, true, false);
     }
 
     /**
@@ -164,7 +164,7 @@ class file_info_context_user extends file_info {
         }
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
         return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase,
-                get_string('areauserprofile', 'repository'), false, $readaccess, $writeaccess, false);
+                get_string('areauserprofile', 'core_repository'), false, $readaccess, $writeaccess, false);
     }
 
     /**
@@ -202,7 +202,7 @@ class file_info_context_user extends file_info {
             }
         }
         $urlbase = $CFG->wwwroot.'/draftfile.php';
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areauserdraft', 'repository'), true, true, true, true);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areauserdraft', 'core_repository'), true, true, true, true);
     }
 
     /**
@@ -241,7 +241,7 @@ class file_info_context_user extends file_info {
             }
         }
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areauserbackup', 'repository'), false, true, true, false);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areauserbackup', 'core_repository'), false, true, true, false);
     }
 
     /**

@@ -188,8 +188,8 @@ class provider_test extends provider_testcase {
             if ($context->instanceid == $user->id && $context->contextlevel == CONTEXT_USER) {
                 // Test the content contains Calendar Event user data.
                 $subcontexts = [
-                    get_string('calendar', 'calendar'),
-                    get_string('events', 'calendar'),
+                    get_string('calendar', 'core_calendar'),
+                    get_string('events', 'core_calendar'),
                     date('c', $event1->timestart)
                 ];
                 $name = "user-event";
@@ -201,8 +201,8 @@ class provider_test extends provider_testcase {
             if ($context->instanceid == $category->id && $context->contextlevel == CONTEXT_COURSECAT) {
                 // Test the content contains Calendar Event category data.
                 $subcontexts = [
-                    get_string('calendar', 'calendar'),
-                    get_string('events', 'calendar'),
+                    get_string('calendar', 'core_calendar'),
+                    get_string('events', 'core_calendar'),
                     date('c', $event2->timestart)
                 ];
                 $name = "category-event";
@@ -214,8 +214,8 @@ class provider_test extends provider_testcase {
             if ($context->instanceid == $course1->id && $context->contextlevel == CONTEXT_COURSE) {
                 // Test the content contains Calendar Event course data set with the same time, and the exported files are uniquely identified.
                 $subcontext1 = [
-                    get_string('calendar', 'calendar'),
-                    get_string('events', 'calendar'),
+                    get_string('calendar', 'core_calendar'),
+                    get_string('events', 'core_calendar'),
                     date('c', $event3->timestart)
                 ];
                 $name1 = "course-event-1";
@@ -223,8 +223,8 @@ class provider_test extends provider_testcase {
                 $this->assertEquals('Standard Calendar Event course -- ABC', $data1->name);
 
                 $subcontext2 = [
-                    get_string('calendar', 'calendar'),
-                    get_string('events', 'calendar'),
+                    get_string('calendar', 'core_calendar'),
+                    get_string('events', 'core_calendar'),
                     date('c', $event4->timestart)
                 ];
                 $name2 = "course-event-2";
@@ -236,8 +236,8 @@ class provider_test extends provider_testcase {
             if ($context->instanceid == $cm->id  && $context->contextlevel == CONTEXT_MODULE) {
                 // Test the content contains Calendar Action Event course data.
                 $subcontexts = [
-                    get_string('calendar', 'calendar'),
-                    get_string('events', 'calendar'),
+                    get_string('calendar', 'core_calendar'),
+                    get_string('events', 'core_calendar'),
                     date('c', $event5->timestart)
                 ];
                 $name = "duedate-event";
@@ -249,8 +249,8 @@ class provider_test extends provider_testcase {
             if ($context->instanceid == $course3->id && $context->contextlevel == CONTEXT_COURSE) {
                 // Test the content contains Calendar Subscription data also created for the test Course 3.
                 $subcontexts = [
-                    get_string('calendar', 'calendar'),
-                    get_string('subscriptions', 'calendar')
+                    get_string('calendar', 'core_calendar'),
+                    get_string('subscriptions', 'core_calendar')
                 ];
                 $name = "course-subscription";
                 $data = $writer->get_related_data($subcontexts, $name);
@@ -258,8 +258,8 @@ class provider_test extends provider_testcase {
 
                 // Test the content contains Calendar Event group data also created for the test Course 3.
                 $subcontexts = [
-                    get_string('calendar', 'calendar'),
-                    get_string('events', 'calendar'),
+                    get_string('calendar', 'core_calendar'),
+                    get_string('events', 'core_calendar'),
                     date('c', $event6->timestart)
                 ];
                 $name = "group-event";

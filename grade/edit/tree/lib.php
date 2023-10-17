@@ -879,7 +879,7 @@ class grade_edit_tree_column_name extends grade_edit_tree_column {
         if (($this->deepest_level > 1) && ($params['itemtype'] != 'course') && ($params['itemtype'] != 'category')) {
             global $OUTPUT;
 
-            $label = get_string('select', 'grades', $params['name']);
+            $label = get_string('select', 'core_grades', $params['name']);
 
             if (empty($params['itemtype']) || empty($params['eid'])) {
                 throw new \moodle_exception('missingitemtypeoreid', 'core_grades');
@@ -937,7 +937,7 @@ class grade_edit_tree_column_weight extends grade_edit_tree_column {
     public function get_header_cell() {
         global $OUTPUT;
         $headercell = clone($this->headercell);
-        $headercell->text = get_string('weights', 'grades').$OUTPUT->help_icon('aggregationcoefweight', 'grades');
+        $headercell->text = get_string('weights', 'core_grades').$OUTPUT->help_icon('aggregationcoefweight', 'grades');
         return $headercell;
     }
 
@@ -979,7 +979,7 @@ class grade_edit_tree_column_range extends grade_edit_tree_column {
 
     public function get_header_cell() {
         $headercell = clone($this->headercell);
-        $headercell->text = get_string('maxgrade', 'grades');
+        $headercell->text = get_string('maxgrade', 'core_grades');
         return $headercell;
     }
 
@@ -1029,8 +1029,8 @@ class grade_edit_tree_column_range extends grade_edit_tree_column {
             }
         }
         if ($isextracredit) {
-            $grademax .= ' ' . html_writer::tag('abbr', get_string('aggregationcoefextrasumabbr', 'grades'),
-                array('title' => get_string('aggregationcoefextrasum', 'grades')));
+            $grademax .= ' ' . html_writer::tag('abbr', get_string('aggregationcoefextrasumabbr', 'core_grades'),
+                array('title' => get_string('aggregationcoefextrasum', 'core_grades')));
         }
 
         $itemcell = parent::get_item_cell($item, $params);
@@ -1077,7 +1077,7 @@ class grade_edit_tree_column_status extends grade_edit_tree_column {
 
         $context = new stdClass();
         if ($category->grade_item->is_calculated()) {
-            $context->calculatedgrade = get_string('calculatedgrade', 'grades');
+            $context->calculatedgrade = get_string('calculatedgrade', 'core_grades');
         } else {
             // Aggregation type.
             $aggrstrings = grade_helper::get_aggregation_strings();
@@ -1256,7 +1256,7 @@ class grade_edit_tree_column_select extends grade_edit_tree_column {
             $checkbox = new \core\output\checkbox_toggleall($togglegroup, false, [
                 'id' => $checkboxid,
                 'name' => $checkboxid,
-                'label' => get_string('select', 'grades', $item->itemname),
+                'label' => get_string('select', 'core_grades', $item->itemname),
                 'labelclasses' => 'accesshide',
                 'classes' => 'itemselect ignoredirty',
             ]);

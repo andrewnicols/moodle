@@ -63,12 +63,12 @@ class core_tag_manage_table extends table_sql {
 
         $tablecolumns = array('select', 'name', 'fullname', 'count', 'flag', 'timemodified', 'isstandard', 'controls');
         $tableheaders = array($OUTPUT->render($checkboxall),
-                              get_string('name', 'tag'),
-                              get_string('owner', 'tag'),
-                              get_string('count', 'tag'),
-                              get_string('flag', 'tag'),
-                              get_string('timemodified', 'tag'),
-                              get_string('standardtag', 'tag'),
+                              get_string('name', 'core_tag'),
+                              get_string('owner', 'core_tag'),
+                              get_string('count', 'core_tag'),
+                              get_string('flag', 'core_tag'),
+                              get_string('timemodified', 'core_tag'),
+                              get_string('standardtag', 'core_tag'),
                               '');
 
         $this->define_columns($tablecolumns);
@@ -276,7 +276,7 @@ class core_tag_manage_table extends table_sql {
             'name' => 'tagschecked[]',
             'value' => $tag->id,
             'checked' => false,
-            'label' => get_string('selecttag', 'tag', $tag->rawname),
+            'label' => get_string('selecttag', 'core_tag', $tag->rawname),
             'labelclasses' => 'accesshide',
         ]);
 
@@ -294,11 +294,11 @@ class core_tag_manage_table extends table_sql {
         $o = '';
         // Edit.
         $url = new moodle_url('/tag/edit.php', array('id' => $tag->id, 'returnurl' => $PAGE->url->out_as_local_url()));
-        $o .= $OUTPUT->action_icon($url, new pix_icon('t/edit', get_string('edittag', 'tag')));
+        $o .= $OUTPUT->action_icon($url, new pix_icon('t/edit', get_string('edittag', 'core_tag')));
         // Delete.
         $url = new moodle_url($this->baseurl, array('action' => 'delete',
             'tagid' => $tag->id, 'sesskey' => sesskey()));
-        $o .= $OUTPUT->action_icon($url, new pix_icon('t/delete', get_string('delete', 'tag')),
+        $o .= $OUTPUT->action_icon($url, new pix_icon('t/delete', get_string('delete', 'core_tag')),
                 null, array('class' => 'action-icon tagdelete'));
         return $o;
     }

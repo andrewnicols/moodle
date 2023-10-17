@@ -145,7 +145,7 @@ class core_tag_collection {
         if (!empty($record->name)) {
             return format_string($record->name, true, array('context' => $syscontext));
         } else if ($record->isdefault) {
-            return get_string('defautltagcoll', 'tag');
+            return get_string('defautltagcoll', 'core_tag');
         } else {
             return $record->id;
         }

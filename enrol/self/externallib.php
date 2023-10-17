@@ -58,7 +58,7 @@ class enrol_self_external extends external_api {
         // Retrieve self enrolment plugin.
         $enrolplugin = enrol_get_plugin('self');
         if (empty($enrolplugin)) {
-            throw new moodle_exception('invaliddata', 'error');
+            throw new moodle_exception('invaliddata', 'mod_error');
         }
 
         self::validate_context(context_system::instance());

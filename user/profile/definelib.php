@@ -35,10 +35,10 @@ class profile_define_base {
      * @param MoodleQuickForm $form instance of the moodleform class
      */
     public function define_form(&$form) {
-        $form->addElement('header', '_commonsettings', get_string('profilecommonsettings', 'admin'));
+        $form->addElement('header', '_commonsettings', get_string('profilecommonsettings', 'core_admin'));
         $this->define_form_common($form);
 
-        $form->addElement('header', '_specificsettings', get_string('profilespecificsettings', 'admin'));
+        $form->addElement('header', '_specificsettings', get_string('profilespecificsettings', 'core_admin'));
         $this->define_form_specific($form);
     }
 
@@ -54,36 +54,36 @@ class profile_define_base {
         // Accepted values for 'shortname' would follow [a-zA-Z0-9_] pattern,
         // but we are accepting any PARAM_TEXT value here,
         // and checking [a-zA-Z0-9_] pattern in define_validate_common() function to throw an error when needed.
-        $form->addElement('text', 'shortname', get_string('profileshortname', 'admin'), 'maxlength="100" size="25"');
+        $form->addElement('text', 'shortname', get_string('profileshortname', 'core_admin'), 'maxlength="100" size="25"');
         $form->addRule('shortname', $strrequired, 'required', null, 'client');
         $form->setType('shortname', PARAM_TEXT);
 
-        $form->addElement('text', 'name', get_string('profilename', 'admin'), 'size="50"');
+        $form->addElement('text', 'name', get_string('profilename', 'core_admin'), 'size="50"');
         $form->addRule('name', $strrequired, 'required', null, 'client');
         $form->setType('name', PARAM_TEXT);
 
-        $form->addElement('editor', 'description', get_string('profiledescription', 'admin'), null, null);
+        $form->addElement('editor', 'description', get_string('profiledescription', 'core_admin'), null, null);
 
-        $form->addElement('selectyesno', 'required', get_string('profilerequired', 'admin'));
+        $form->addElement('selectyesno', 'required', get_string('profilerequired', 'core_admin'));
 
-        $form->addElement('selectyesno', 'locked', get_string('profilelocked', 'admin'));
+        $form->addElement('selectyesno', 'locked', get_string('profilelocked', 'core_admin'));
 
-        $form->addElement('selectyesno', 'forceunique', get_string('profileforceunique', 'admin'));
+        $form->addElement('selectyesno', 'forceunique', get_string('profileforceunique', 'core_admin'));
 
-        $form->addElement('selectyesno', 'signup', get_string('profilesignup', 'admin'));
+        $form->addElement('selectyesno', 'signup', get_string('profilesignup', 'core_admin'));
 
         $choices = array();
-        $choices[PROFILE_VISIBLE_NONE]    = get_string('profilevisiblenone', 'admin');
-        $choices[PROFILE_VISIBLE_PRIVATE] = get_string('profilevisibleprivate', 'admin');
-        $choices[PROFILE_VISIBLE_TEACHERS] = get_string('profilevisibleteachers', 'admin');
-        $choices[PROFILE_VISIBLE_ALL]     = get_string('profilevisibleall', 'admin');
+        $choices[PROFILE_VISIBLE_NONE]    = get_string('profilevisiblenone', 'core_admin');
+        $choices[PROFILE_VISIBLE_PRIVATE] = get_string('profilevisibleprivate', 'core_admin');
+        $choices[PROFILE_VISIBLE_TEACHERS] = get_string('profilevisibleteachers', 'core_admin');
+        $choices[PROFILE_VISIBLE_ALL]     = get_string('profilevisibleall', 'core_admin');
 
-        $form->addElement('select', 'visible', get_string('profilevisible', 'admin'), $choices);
+        $form->addElement('select', 'visible', get_string('profilevisible', 'core_admin'), $choices);
         $form->addHelpButton('visible', 'profilevisible', 'admin');
         $form->setDefault('visible', PROFILE_VISIBLE_ALL);
 
         $choices = profile_list_categories();
-        $form->addElement('select', 'categoryid', get_string('profilecategory', 'admin'), $choices);
+        $form->addElement('select', 'categoryid', get_string('profilecategory', 'core_admin'), $choices);
     }
 
     /**
@@ -135,13 +135,13 @@ class profile_define_base {
         } else {
             // Check allowed pattern (numbers, letters and underscore).
             if (!preg_match('/^[a-zA-Z0-9_]+$/', $data->shortname)) {
-                $err['shortname'] = get_string('profileshortnameinvalid', 'admin');
+                $err['shortname'] = get_string('profileshortnameinvalid', 'core_admin');
             } else {
                 // Fetch field-record from DB.
                 $field = profile_get_custom_field_data_by_shortname($data->shortname);
                 // Check the shortname is unique.
                 if ($field and $field->id <> $data->id) {
-                    $err['shortname'] = get_string('profileshortnamenotunique', 'admin');
+                    $err['shortname'] = get_string('profileshortnamenotunique', 'core_admin');
                 }
                 // NOTE: since 2.0 the shortname may collide with existing fields in $USER because we load these fields into
                 // $USER->profile array instead.
@@ -288,7 +288,7 @@ function profile_delete_category($id) {
     }
 
     if (!$categories = $DB->get_records('user_info_category', null, 'sortorder ASC')) {
-        throw new \moodle_exception('nocate', 'debug');
+        throw new \moodle_exception('nocate', 'mod_debug');
     }
 
     unset($categories[$category->id]);

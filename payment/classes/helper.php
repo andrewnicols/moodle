@@ -232,7 +232,7 @@ class helper {
             $gateway = $account->get_gateways()[$gatewayname] ?? null;
         }
         if (!$gateway) {
-            throw new \moodle_exception('gatewaynotfound', 'payment');
+            throw new \moodle_exception('gatewaynotfound', 'core_payment');
         }
         return $gateway->get_configuration();
     }

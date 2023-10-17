@@ -45,7 +45,7 @@ class mod_imscp_mod_form extends moodleform_mod {
         $config = get_config('imscp');
 
         // Title and description.
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
         $mform->addElement('text', 'name', get_string('name'), array('size' => '48'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -57,13 +57,13 @@ class mod_imscp_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         // IMS-CP file upload.
-        $mform->addElement('header', 'content', get_string('contentheader', 'imscp'));
+        $mform->addElement('header', 'content', get_string('contentheader', 'mod_imscp'));
         $mform->setExpanded('content', true);
-        $mform->addElement('filepicker', 'package', get_string('packagefile', 'imscp'));
+        $mform->addElement('filepicker', 'package', get_string('packagefile', 'mod_imscp'));
 
         $options = array('-1' => get_string('all'), '0' => get_string('no'),
                          '1' => '1', '2' => '2', '5' => '5', '10' => '10', '20' => '20');
-        $mform->addElement('select', 'keepold', get_string('keepold', 'imscp'), $options);
+        $mform->addElement('select', 'keepold', get_string('keepold', 'mod_imscp'), $options);
         $mform->setDefault('keepold', $config->keepold);
         $mform->setAdvanced('keepold', $config->keepold_adv);
 
@@ -95,7 +95,7 @@ class mod_imscp_mod_form extends moodleform_mod {
         } else {
             $file = reset($files);
             if ($file->get_mimetype() != 'application/zip') {
-                $errors['package'] = get_string('invalidfiletype', 'error', '', $file);
+                $errors['package'] = get_string('invalidfiletype', 'mod_error', '', $file);
                 // Better delete current file, it is not usable anyway.
                 $fs->delete_area_files($usercontext->id, 'user', 'draft', $data['package']);
             }

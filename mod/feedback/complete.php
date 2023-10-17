@@ -64,7 +64,7 @@ if (!$feedbackcompletion->can_complete()) {
     throw new \moodle_exception('error');
 }
 
-$PAGE->navbar->add(get_string('feedback:complete', 'feedback'));
+$PAGE->navbar->add(get_string('feedback:complete', 'mod_feedback'));
 $PAGE->set_heading($course->fullname);
 $PAGE->set_title($feedback->name);
 $PAGE->set_pagelayout('incourse');
@@ -75,7 +75,7 @@ $PAGE->add_body_class('limitedwidth');
 if (!$feedbackcompletion->is_open()) {
     echo $OUTPUT->header();
     echo $OUTPUT->box_start('generalbox boxaligncenter');
-    echo $OUTPUT->notification(get_string('feedback_is_not_open', 'feedback'));
+    echo $OUTPUT->notification(get_string('feedback_is_not_open', 'mod_feedback'));
     echo $OUTPUT->continue_button(course_get_url($courseid ?: $feedback->course));
     echo $OUTPUT->box_end();
     echo $OUTPUT->footer();
@@ -101,13 +101,13 @@ if (!$feedbackcompletion->is_empty() && $cansubmit) {
 }
 
 // Print the page header.
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 echo $OUTPUT->header();
 
 if ($feedbackcompletion->is_empty()) {
-    \core\notification::error(get_string('no_items_available_yet', 'feedback'));
+    \core\notification::error(get_string('no_items_available_yet', 'mod_feedback'));
 } else if ($cansubmit) {
     if ($feedbackcompletion->just_completed()) {
         // Display information after the submit.
@@ -118,7 +118,7 @@ if ($feedbackcompletion->is_empty()) {
         if (!$PAGE->has_secondary_navigation() && $feedbackcompletion->can_view_analysis()) {
             echo '<p class="text-center">';
             $analysisurl = new moodle_url('/mod/feedback/analysis.php', array('id' => $cm->id, 'courseid' => $courseid));
-            echo html_writer::link($analysisurl, get_string('completed_feedbacks', 'feedback'));
+            echo html_writer::link($analysisurl, get_string('completed_feedbacks', 'mod_feedback'));
             echo '</p>';
         }
 
@@ -134,7 +134,7 @@ if ($feedbackcompletion->is_empty()) {
     }
 } else {
     echo $OUTPUT->box_start('generalbox boxaligncenter');
-    echo $OUTPUT->notification(get_string('this_feedback_is_already_submitted', 'feedback'));
+    echo $OUTPUT->notification(get_string('this_feedback_is_already_submitted', 'mod_feedback'));
     echo $OUTPUT->continue_button(course_get_url($courseid ?: $course->id));
     echo $OUTPUT->box_end();
 }

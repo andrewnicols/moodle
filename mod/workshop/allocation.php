@@ -47,7 +47,7 @@ require_capability('mod/workshop:allocate', $context);
 
 $PAGE->set_title($workshop->name);
 $PAGE->set_heading($course->fullname);
-$PAGE->navbar->add(get_string('allocation', 'workshop'), $workshop->allocation_url($method));
+$PAGE->navbar->add(get_string('allocation', 'mod_workshop'), $workshop->allocation_url($method));
 $PAGE->activityheader->set_attrs([
     'hidecompletion' => true,
     'description' => ''

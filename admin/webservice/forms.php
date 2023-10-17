@@ -35,19 +35,19 @@ class external_service_authorised_user_settings_form extends moodleform {
         $data = $this->_customdata;
 
         $mform->addElement('header', 'serviceusersettings',
-                get_string('serviceusersettings', 'webservice'));
+                get_string('serviceusersettings', 'core_webservice'));
 
         $mform->addElement('text', 'iprestriction',
-                get_string('iprestriction', 'webservice'));
+                get_string('iprestriction', 'core_webservice'));
         $mform->addHelpButton('iprestriction', 'iprestriction', 'webservice');
         $mform->setType('iprestriction', PARAM_RAW_TRIMMED);
 
         $mform->addElement('date_selector', 'validuntil',
-                get_string('validuntil', 'webservice'), array('optional' => true));
+                get_string('validuntil', 'core_webservice'), array('optional' => true));
         $mform->addHelpButton('validuntil', 'validuntil', 'webservice');
         $mform->setType('validuntil', PARAM_INT);
 
-        $this->add_action_buttons(true, get_string('updateusersettings', 'webservice'));
+        $this->add_action_buttons(true, get_string('updateusersettings', 'core_webservice'));
 
         $this->set_data($data);
     }
@@ -61,7 +61,7 @@ class external_service_form extends moodleform {
         $service = isset($this->_customdata) ? $this->_customdata : new stdClass();
 
         $mform->addElement('header', 'extservice',
-                get_string('externalservice', 'webservice'));
+                get_string('externalservice', 'core_webservice'));
 
         $mform->addElement('text', 'name', get_string('name'));
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
@@ -74,21 +74,21 @@ class external_service_form extends moodleform {
             $mform->setConstants('shortname', $service->shortname);
         }
 
-        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'webservice'));
+        $mform->addElement('advcheckbox', 'enabled', get_string('enabled', 'core_webservice'));
         $mform->setType('enabled', PARAM_BOOL);
         $mform->addElement('advcheckbox', 'restrictedusers',
-                get_string('restrictedusers', 'webservice'));
+                get_string('restrictedusers', 'core_webservice'));
         $mform->addHelpButton('restrictedusers', 'restrictedusers', 'webservice');
         $mform->setType('restrictedusers', PARAM_BOOL);
 
         // Can users download files?
-        $mform->addElement('advcheckbox', 'downloadfiles', get_string('downloadfiles', 'webservice'));
+        $mform->addElement('advcheckbox', 'downloadfiles', get_string('downloadfiles', 'core_webservice'));
         $mform->setAdvanced('downloadfiles');
         $mform->addHelpButton('downloadfiles', 'downloadfiles', 'webservice');
         $mform->setType('downloadfiles', PARAM_BOOL);
 
         // Can users upload files?
-        $mform->addElement('advcheckbox', 'uploadfiles', get_string('uploadfiles', 'webservice'));
+        $mform->addElement('advcheckbox', 'uploadfiles', get_string('uploadfiles', 'core_webservice'));
         $mform->setAdvanced('uploadfiles');
         $mform->addHelpButton('uploadfiles', 'uploadfiles', 'webservice');
 
@@ -104,7 +104,7 @@ class external_service_form extends moodleform {
         $allcapabilities = $systemcontext->get_capabilities();
         $capabilitychoices = array();
         $capabilitychoices['norequiredcapability'] = get_string('norequiredcapability',
-                        'webservice');
+                        'core_webservice');
         foreach ($allcapabilities as $cap) {
             $capabilitychoices[$cap->name] = $cap->name . ': '
                     . get_capability_string($cap->name);
@@ -115,7 +115,7 @@ class external_service_form extends moodleform {
         }
 
         $mform->addElement('searchableselector', 'requiredcapability',
-                get_string('requiredcapability', 'webservice'), $capabilitychoices);
+                get_string('requiredcapability', 'core_webservice'), $capabilitychoices);
         $mform->addHelpButton('requiredcapability', 'requiredcapability', 'webservice');
         $mform->setAdvanced('requiredcapability');
         $mform->setType('requiredcapability', PARAM_RAW);
@@ -124,7 +124,7 @@ class external_service_form extends moodleform {
             global $OUTPUT;
             $mform->addElement('static', 'capabilityerror', '',
                     $OUTPUT->notification(get_string('selectedcapabilitydoesntexit',
-                                    'webservice', $service->requiredcapability)));
+                                    'core_webservice', $service->requiredcapability)));
             $service->requiredcapability = "norequiredcapability";
         }
 
@@ -134,7 +134,7 @@ class external_service_form extends moodleform {
         if (!empty($service->id)) {
             $buttonlabel = get_string('savechanges');
         } else {
-            $buttonlabel = get_string('addaservice', 'webservice');
+            $buttonlabel = get_string('addaservice', 'core_webservice');
         }
 
         $this->add_action_buttons(true, $buttonlabel);
@@ -160,7 +160,7 @@ class external_service_form extends moodleform {
         // Add field validation check for duplicate name.
         if ($webservice = $DB->get_record('external_services', array('name' => $data['name']))) {
             if (empty($data['id']) || $webservice->id != $data['id']) {
-                $errors['name'] = get_string('nameexists', 'webservice');
+                $errors['name'] = get_string('nameexists', 'core_webservice');
             }
         }
 
@@ -169,7 +169,7 @@ class external_service_form extends moodleform {
         if (!empty($data['shortname'])) {
             if ($service = $DB->get_record('external_services', array('shortname' => $data['shortname']), '*', IGNORE_MULTIPLE)) {
                 if (empty($data['id']) || $service->id != $data['id']) {
-                    $errors['shortname'] = get_string('shortnametaken', 'webservice', $service->name);
+                    $errors['shortname'] = get_string('shortnametaken', 'core_webservice', $service->name);
                 }
             }
         }
@@ -187,7 +187,7 @@ class external_service_functions_form extends moodleform {
         $mform = $this->_form;
         $data = $this->_customdata;
 
-        $mform->addElement('header', 'addfunction', get_string('addfunctions', 'webservice'));
+        $mform->addElement('header', 'addfunction', get_string('addfunctions', 'core_webservice'));
 
         require_once($CFG->dirroot . "/webservice/lib.php");
         $webservicemanager = new webservice();
@@ -215,7 +215,7 @@ class external_service_functions_form extends moodleform {
         $mform->addElement('hidden', 'action');
         $mform->setType('action', PARAM_ALPHANUMEXT);
 
-        $this->add_action_buttons(true, get_string('addfunctions', 'webservice'));
+        $this->add_action_buttons(true, get_string('addfunctions', 'core_webservice'));
 
         $this->set_data($data);
     }

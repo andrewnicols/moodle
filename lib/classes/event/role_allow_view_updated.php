@@ -51,7 +51,7 @@ class role_allow_view_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventroleallowviewupdated', 'role');
+        return get_string('eventroleallowviewupdated', 'core_role');
     }
 
     /**

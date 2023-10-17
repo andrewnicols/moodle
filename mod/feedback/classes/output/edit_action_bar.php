@@ -62,9 +62,9 @@ class edit_action_bar extends base_action_bar {
             $importurl = new moodle_url('/mod/feedback/import.php', $this->urlparams);
 
             $options = [
-                $editurl->out(false) => get_string('add_item', 'feedback'),
-                $templateurl->out(false) => get_string('using_templates', 'feedback'),
-                $importurl->out(false) => get_string('import_questions', 'feedback')
+                $editurl->out(false) => get_string('add_item', 'mod_feedback'),
+                $templateurl->out(false) => get_string('using_templates', 'mod_feedback'),
+                $importurl->out(false) => get_string('import_questions', 'mod_feedback')
             ];
 
             $selected = $this->currenturl;
@@ -85,7 +85,7 @@ class edit_action_bar extends base_action_bar {
                 $exporturl = new moodle_url('/mod/feedback/export.php', $this->urlparams + ['action' => 'exportfile']);
                 $items['export'] = new action_link(
                     $exporturl,
-                    get_string('export_questions', 'feedback'),
+                    get_string('export_questions', 'mod_feedback'),
                     null,
                     ['class' => 'btn btn-secondary']);
             }

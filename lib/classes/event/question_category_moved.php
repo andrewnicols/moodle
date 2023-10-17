@@ -50,7 +50,7 @@ class question_category_moved extends question_category_base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventquestioncategorymoved', 'question');
+        return get_string('eventquestioncategorymoved', 'core_question');
     }
 
     /**

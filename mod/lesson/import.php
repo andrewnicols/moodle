@@ -42,8 +42,8 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/lesson:edit', $context);
 
-$strimportquestions = get_string("importquestions", "lesson");
-$strlessons = get_string("modulenameplural", "lesson");
+$strimportquestions = get_string("importquestions", 'mod_lesson');
+$strlessons = get_string("modulenameplural", 'mod_lesson');
 
 $manager = lesson_page_type_manager::get($lesson);
 
@@ -88,17 +88,17 @@ if ($data = $mform->get_data()) {
 
     // Do anything before that we need to
     if (! $format->importpreprocess()) {
-                throw new \moodle_exception('preprocesserror', 'lesson');
+                throw new \moodle_exception('preprocesserror', 'mod_lesson');
             }
 
     // Process the uploaded file
     if (! $format->importprocess($importfile, $lesson, $pageid)) {
-                throw new \moodle_exception('processerror', 'lesson');
+                throw new \moodle_exception('processerror', 'mod_lesson');
             }
 
     // In case anything needs to be done after
     if (! $format->importpostprocess()) {
-                throw new \moodle_exception('postprocesserror', 'lesson');
+                throw new \moodle_exception('postprocesserror', 'mod_lesson');
             }
 
             echo "<hr>";

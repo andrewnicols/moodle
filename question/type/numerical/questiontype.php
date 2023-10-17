@@ -464,7 +464,7 @@ class qtype_numerical extends question_type {
 
         if (!$starfound) {
             $responses[0] = new question_possible_response(
-                    get_string('didnotmatchanyanswer', 'question'), 0);
+                    get_string('didnotmatchanyanswer', 'core_question'), 0);
         }
 
         $responses[null] = question_possible_response::no_response();

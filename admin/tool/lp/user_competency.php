@@ -38,7 +38,7 @@ $url = new moodle_url('/admin/tool/lp/user_competency.php', $params);
 
 $user = core_user::get_user($uc->get('userid'));
 if (!$user || !core_user::is_real_user($user->id)) {
-    throw new moodle_exception('invaliduser', 'error');
+    throw new moodle_exception('invaliduser', 'mod_error');
 }
 $iscurrentuser = ($USER->id == $user->id);
 

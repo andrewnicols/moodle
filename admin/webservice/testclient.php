@@ -35,8 +35,8 @@ $authmethod = optional_param('authmethod', '', PARAM_ALPHA);
 $PAGE->set_url('/' . $CFG->admin . '/webservice/testclient.php');
 $PAGE->navbar->ignore_active(true);
 $PAGE->navbar->add(get_string('administrationsite'));
-$PAGE->navbar->add(get_string('development', 'admin'));
-$PAGE->navbar->add(get_string('testclient', 'webservice'),
+$PAGE->navbar->add(get_string('development', 'core_admin'));
+$PAGE->navbar->add(get_string('testclient', 'core_webservice'),
         new moodle_url('/' . $CFG->admin . '/webservice/testclient.php'));
 if (!empty($function)) {
     $PAGE->navbar->add($function);
@@ -89,14 +89,14 @@ if (!isset($protocols[$protocol])) {
 if (!$function or !$protocol) {
     $mform = new webservice_test_client_form(null, array($functions, $protocols));
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('testclient', 'webservice'));
+    echo $OUTPUT->heading(get_string('testclient', 'core_webservice'));
     echo $OUTPUT->box_start();
     $url = new moodle_url('/' . $CFG->admin . '/settings.php?section=debugging');
-    $atag =html_writer::start_tag('a', array('href' => $url)).get_string('debug', 'admin').html_writer::end_tag('a');
+    $atag =html_writer::start_tag('a', array('href' => $url)).get_string('debug', 'core_admin').html_writer::end_tag('a');
     $descparams = new stdClass();
     $descparams->atag = $atag;
-    $descparams->mode = get_string('debugnormal', 'admin');
-    echo get_string('testclientdescription', 'webservice', $descparams);
+    $descparams->mode = get_string('debugnormal', 'core_admin');
+    echo get_string('testclientdescription', 'core_webservice', $descparams);
     echo $OUTPUT->box_end();
 
     $mform->display();

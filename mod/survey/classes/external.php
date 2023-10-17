@@ -97,7 +97,7 @@ class mod_survey_external extends external_api {
                 $context = context_module::instance($survey->coursemodule);
                 if (empty(trim($survey->intro))) {
                     $tempo = $DB->get_field("survey", "intro", array("id" => $survey->template));
-                    $survey->intro = get_string($tempo, "survey");
+                    $survey->intro = get_string($tempo, 'mod_survey');
                 }
 
                 // Entry to return.
@@ -358,7 +358,7 @@ class mod_survey_external extends external_api {
         require_capability('mod/survey:participate', $context);
 
         if (survey_already_done($survey->id, $USER->id)) {
-            throw new moodle_exception("alreadysubmitted", "survey");
+            throw new moodle_exception("alreadysubmitted", 'mod_survey');
         }
 
         // Build the answers array. Data is cleaned inside the survey_save_answers function.

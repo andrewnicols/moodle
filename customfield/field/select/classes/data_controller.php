@@ -99,7 +99,7 @@ class data_controller extends \core_customfield\data_controller {
             // Standard required rule does not work on select element.
             $elementname = $this->get_form_element_name();
             if (empty($data[$elementname])) {
-                $errors[$elementname] = get_string('err_required', 'form');
+                $errors[$elementname] = get_string('err_required', 'core_form');
             }
         }
         return $errors;

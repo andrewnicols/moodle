@@ -33,7 +33,7 @@ $data = [];
 $pageurl = new moodle_url('/calendar/import.php');
 $managesubscriptionsurl = new moodle_url('/calendar/managesubscriptions.php');
 
-$headingstr = $calendarstr = get_string('calendar', 'calendar');
+$headingstr = $calendarstr = get_string('calendar', 'core_calendar');
 
 if (!empty($courseid) && $courseid != SITEID) {
     $course = get_course($courseid);
@@ -70,10 +70,10 @@ if (!empty($groupcourseid)) {
 
 require_login($course, false);
 if (!calendar_user_can_add_event($course)) {
-    throw new \moodle_exception('errorcannotimport', 'calendar');
+    throw new \moodle_exception('errorcannotimport', 'core_calendar');
 }
 
-$heading = get_string('importcalendar', 'calendar');
+$heading = get_string('importcalendar', 'core_calendar');
 $pagetitle = $course->shortname . ': ' . $calendarstr . ': ' . $heading;
 
 $PAGE->set_secondary_navigation(false);
@@ -81,7 +81,7 @@ $PAGE->set_title($pagetitle);
 $PAGE->set_heading($headingstr);
 $PAGE->set_url($pageurl);
 $PAGE->set_pagelayout('admin');
-$PAGE->navbar->add(get_string('managesubscriptions', 'calendar'), $managesubscriptionsurl);
+$PAGE->navbar->add(get_string('managesubscriptions', 'core_calendar'), $managesubscriptionsurl);
 $PAGE->navbar->add($heading, $pageurl);
 
 // Populate the 'group' select box based on the given 'groupcourseid', if necessary.

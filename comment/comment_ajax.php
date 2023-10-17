@@ -52,7 +52,7 @@ if (!empty($cm)) {
 }
 
 if (!confirm_sesskey()) {
-    $error = array('error'=>get_string('invalidsesskey', 'error'));
+    $error = array('error'=>get_string('invalidsesskey', 'mod_error'));
     die(json_encode($error));
 }
 

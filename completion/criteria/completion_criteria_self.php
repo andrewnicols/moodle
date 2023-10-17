@@ -112,7 +112,7 @@ class completion_criteria_self extends completion_criteria {
      * @return string
      */
     public function get_title() {
-        return get_string('selfcompletion', 'completion');
+        return get_string('selfcompletion', 'core_completion');
     }
 
     /**
@@ -130,7 +130,7 @@ class completion_criteria_self extends completion_criteria {
      * @return string
      */
     public function get_type_title() {
-        return get_string('self', 'completion');
+        return get_string('self', 'core_completion');
     }
 
     /**
@@ -144,7 +144,7 @@ class completion_criteria_self extends completion_criteria {
         $details = array();
         $details['type'] = $this->get_title();
         $details['criteria'] = $this->get_title();
-        $details['requirement'] = get_string('markingyourselfcomplete', 'completion');
+        $details['requirement'] = get_string('markingyourselfcomplete', 'core_completion');
         $details['status'] = '';
 
         return $details;

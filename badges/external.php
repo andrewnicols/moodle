@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/badgeslib.php');
 $json = optional_param('badge', null, PARAM_RAW);
 // Redirect to homepage if users are trying to access external badge through old url.
 if ($json) {
-    redirect($CFG->wwwroot, get_string('invalidrequest', 'error'), 3);
+    redirect($CFG->wwwroot, get_string('invalidrequest', 'mod_error'), 3);
 }
 
 $hash = required_param('hash', PARAM_ALPHANUM);
@@ -55,7 +55,7 @@ $out = get_backpack_settings($userid);
 
 // If we didn't find any badges then print an error.
 if (is_null($out)) {
-    throw new \moodle_exception('error:externalbadgedoesntexist', 'badges');
+    throw new \moodle_exception('error:externalbadgedoesntexist', 'core_badges');
 }
 
 $badges = $out->badges;
@@ -73,7 +73,7 @@ foreach ($badges as $b) {
 
 // If we didn't find the badge a user might be trying to replace the userid parameter.
 if (empty($badge)) {
-    throw new \moodle_exception('error:externalbadgedoesntexist', 'badges');
+    throw new \moodle_exception('error:externalbadgedoesntexist', 'core_badges');
 }
 
 $output = $PAGE->get_renderer('core', 'badges');
@@ -81,7 +81,7 @@ $output = $PAGE->get_renderer('core', 'badges');
 $badge = new \core_badges\output\external_badge($badge, $userid);
 
 $PAGE->set_pagelayout('base');
-$PAGE->set_title(get_string('issuedbadge', 'badges'));
+$PAGE->set_title(get_string('issuedbadge', 'core_badges'));
 $badgename = '';
 if (!empty($badge->issued->name)) {
     $badgename = s($badge->issued->name);

@@ -922,7 +922,7 @@ abstract class section_renderer extends core_course_renderer {
             // We actually already check this in course/view.php but just in case exit from this function as well.
             throw new \moodle_exception(
                 'unknowncoursesection',
-                'error',
+                'mod_error',
                 course_get_url($course),
                 format_string($course->fullname)
             );

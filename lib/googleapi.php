@@ -203,10 +203,10 @@ class google_docs {
             if (isset($info['http_code']) && $info['http_code'] == 200) {
                 return array('path'=>$path, 'url'=>$url);
             } else {
-                throw new moodle_exception('cannotdownload', 'repository');
+                throw new moodle_exception('cannotdownload', 'core_repository');
             }
         } else {
-            throw new moodle_exception('errorwhiledownload', 'repository', '', $result);
+            throw new moodle_exception('errorwhiledownload', 'core_repository', '', $result);
         }
     }
 }

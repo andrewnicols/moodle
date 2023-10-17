@@ -29,7 +29,7 @@ if ($ADMIN->fulltree) {
 
     // Presentation options heading.
     $settings->add(new admin_setting_heading('block_myoverview/appearance',
-            get_string('appearance', 'admin'),
+            get_string('appearance', 'core_admin'),
             ''));
 
     // Display Course Categories on Dashboard course items (cards, lists, summary items).

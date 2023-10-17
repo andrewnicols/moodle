@@ -1105,20 +1105,20 @@ class course_enrolment_manager {
                         }
                     }
                 }
-                $roletext = get_string('rolefromthiscourse', 'enrol', $a);
+                $roletext = get_string('rolefromthiscourse', 'core_enrol', $a);
             } else {
                 $changeable = false;
                 switch ($userrole->contextlevel) {
                     case CONTEXT_COURSE :
                         // Meta course
-                        $roletext = get_string('rolefrommetacourse', 'enrol', $a);
+                        $roletext = get_string('rolefrommetacourse', 'core_enrol', $a);
                         break;
                     case CONTEXT_COURSECAT :
-                        $roletext = get_string('rolefromcategory', 'enrol', $a);
+                        $roletext = get_string('rolefromcategory', 'core_enrol', $a);
                         break;
                     case CONTEXT_SYSTEM:
                     default:
-                        $roletext = get_string('rolefromsystem', 'enrol', $a);
+                        $roletext = get_string('rolefromsystem', 'core_enrol', $a);
                         break;
                 }
             }
@@ -1150,8 +1150,8 @@ class course_enrolment_manager {
         $users = $this->get_users($sort, $direction, $page, $perpage);
 
         $now = time();
-        $straddgroup = get_string('addgroup', 'group');
-        $strunenrol = get_string('unenrol', 'enrol');
+        $straddgroup = get_string('addgroup', 'core_group');
+        $strunenrol = get_string('unenrol', 'core_enrol');
         $stredit = get_string('edit');
 
         $visibleroles   = $this->get_viewable_roles();
@@ -1181,7 +1181,7 @@ class course_enrolment_manager {
                 if (isset($visibleroles[$rid])) {
                     $label = $visibleroles[$rid];
                 } else {
-                    $label = get_string('novisibleroles', 'role');
+                    $label = get_string('novisibleroles', 'core_role');
                     $unchangeable = true;
                 }
 
@@ -1207,17 +1207,17 @@ class course_enrolment_manager {
                     );
                     continue;
                 } else if ($ue->timestart and $ue->timeend) {
-                    $period = get_string('periodstartend', 'enrol', array('start'=>userdate($ue->timestart), 'end'=>userdate($ue->timeend)));
+                    $period = get_string('periodstartend', 'core_enrol', array('start'=>userdate($ue->timestart), 'end'=>userdate($ue->timeend)));
                     $periodoutside = ($ue->timestart && $ue->timeend && ($now < $ue->timestart || $now > $ue->timeend));
                 } else if ($ue->timestart) {
-                    $period = get_string('periodstart', 'enrol', userdate($ue->timestart));
+                    $period = get_string('periodstart', 'core_enrol', userdate($ue->timestart));
                     $periodoutside = ($ue->timestart && $now < $ue->timestart);
                 } else if ($ue->timeend) {
-                    $period = get_string('periodend', 'enrol', userdate($ue->timeend));
+                    $period = get_string('periodend', 'core_enrol', userdate($ue->timeend));
                     $periodoutside = ($ue->timeend && $now > $ue->timeend);
                 } else {
                     // If there is no start or end show when user was enrolled.
-                    $period = get_string('periodnone', 'enrol', userdate($ue->timecreated));
+                    $period = get_string('periodnone', 'core_enrol', userdate($ue->timecreated));
                     $periodoutside = false;
                 }
                 $details['enrolments'][$ue->id] = array(

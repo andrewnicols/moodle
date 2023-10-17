@@ -31,7 +31,7 @@ require_once(__DIR__ . '/../config.php');
 header('Access-Control-Allow-Origin: *');
 
 if (!$CFG->enablewebservices) {
-    throw new moodle_exception('enablewsdescription', 'webservice');
+    throw new moodle_exception('enablewsdescription', 'core_webservice');
 }
 
 // This script is used by the mobile app to check that the site is available and web services
@@ -49,7 +49,7 @@ echo $OUTPUT->header();
 
 $username = trim(core_text::strtolower($username));
 if (is_restored_user($username)) {
-    throw new moodle_exception('restoredaccountresetpassword', 'webservice');
+    throw new moodle_exception('restoredaccountresetpassword', 'core_webservice');
 }
 
 $systemcontext = context_system::instance();
@@ -61,7 +61,7 @@ if (!empty($user)) {
     // Cannot authenticate unless maintenance access is granted.
     $hasmaintenanceaccess = has_capability('moodle/site:maintenanceaccess', $systemcontext, $user);
     if (!empty($CFG->maintenance_enabled) and !$hasmaintenanceaccess) {
-        throw new moodle_exception('sitemaintenance', 'admin');
+        throw new moodle_exception('sitemaintenance', 'core_admin');
     }
 
     if (isguestuser($user)) {
@@ -75,7 +75,7 @@ if (!empty($user)) {
     if (!empty($userauth->config->expiration) and $userauth->config->expiration == 1) {
         $days2expire = $userauth->password_expire($user->username);
         if (intval($days2expire) < 0 ) {
-            throw new moodle_exception('passwordisexpired', 'webservice');
+            throw new moodle_exception('passwordisexpired', 'core_webservice');
         }
     }
 
@@ -89,7 +89,7 @@ if (!empty($user)) {
     $service = $DB->get_record('external_services', array('shortname' => $serviceshortname, 'enabled' => 1));
     if (empty($service)) {
         // will throw exception if no token found
-        throw new moodle_exception('servicenotavailable', 'webservice');
+        throw new moodle_exception('servicenotavailable', 'core_webservice');
     }
 
     // Get an existing token or create a new one.

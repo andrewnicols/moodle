@@ -56,7 +56,7 @@ class mod_data_renderer extends plugin_renderer_base {
      */
     public function importing_preset(stdClass $datamodule, \mod_data\local\importer\preset_importer $importer): string {
 
-        $strwarning = get_string('mappingwarning', 'data');
+        $strwarning = get_string('mappingwarning', 'mod_data');
 
         $params = $importer->settings;
         $newfields = $params->importfields;
@@ -93,23 +93,23 @@ class mod_data_renderer extends plugin_renderer_base {
                     if ($currentfield->name == $newfield->name) {
                         $row[1] .= html_writer::tag(
                             'option',
-                            get_string('mapexistingfield', 'data', $currentfield->name),
+                            get_string('mapexistingfield', 'mod_data', $currentfield->name),
                             ['value' => $cid, 'selected' => 'selected']
                         );
                         $selected = true;
                     } else {
                         $row[1] .= html_writer::tag(
                             'option',
-                            get_string('mapexistingfield', 'data', $currentfield->name),
+                            get_string('mapexistingfield', 'mod_data', $currentfield->name),
                             ['value' => $cid]
                         );
                     }
                 }
 
                 if ($selected) {
-                    $row[1] .= html_writer::tag('option', get_string('mapnewfield', 'data'), array('value'=>'-1'));
+                    $row[1] .= html_writer::tag('option', get_string('mapnewfield', 'mod_data'), array('value'=>'-1'));
                 } else {
-                    $row[1] .= html_writer::tag('option', get_string('mapnewfield', 'data'), array('value'=>'-1', 'selected'=>'selected'));
+                    $row[1] .= html_writer::tag('option', get_string('mapnewfield', 'mod_data'), array('value'=>'-1', 'selected'=>'selected'));
                 }
 
                 $row[1] .= html_writer::end_tag('select');
@@ -118,13 +118,13 @@ class mod_data_renderer extends plugin_renderer_base {
             $html .= html_writer::table($table);
             $html .= html_writer::tag('p', $strwarning);
         } else {
-            $html .= $this->output->notification(get_string('nodefinedfields', 'data'));
+            $html .= $this->output->notification(get_string('nodefinedfields', 'mod_data'));
         }
 
         $html .= html_writer::start_tag('div', array('class'=>'overwritesettings'));
         $attrs = ['type' => 'checkbox', 'name' => 'overwritesettings', 'id' => 'overwritesettings', 'class' => 'mr-2'];
         $html .= html_writer::empty_tag('input', $attrs);
-        $html .= html_writer::tag('label', get_string('overwritesettings', 'data'), ['for' => 'overwritesettings']);
+        $html .= html_writer::tag('label', get_string('overwritesettings', 'mod_data'), ['for' => 'overwritesettings']);
         $html .= html_writer::end_tag('div');
 
         $actionbuttons = html_writer::start_div();

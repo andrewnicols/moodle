@@ -43,15 +43,15 @@ if ($id) {
 }
 
 if (empty($account) || empty($gateway)) {
-    throw new moodle_exception('gatewaynotfound', 'payment');
+    throw new moodle_exception('gatewaynotfound', 'core_payment');
 }
 require_capability('moodle/payment:manageaccounts', $account->get_context());
 
 $PAGE->set_secondary_active_tab('siteadminnode');
 $PAGE->set_primary_active_tab('siteadminnode');
-$PAGE->navbar->add(get_string('createaccount', 'payment'), $PAGE->url);
+$PAGE->navbar->add(get_string('createaccount', 'core_payment'), $PAGE->url);
 
-$PAGE->set_heading($id ? format_string($account->get('name')) : get_string('createaccount', 'payment'));
+$PAGE->set_heading($id ? format_string($account->get('name')) : get_string('createaccount', 'core_payment'));
 
 $form = new \core_payment\form\account_gateway($pageurl->out(false), ['persistent' => $gateway]);
 

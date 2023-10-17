@@ -78,7 +78,7 @@ class webservice {
         // Obtain token record
         if (!$token = $DB->get_record('external_tokens', array('token' => $token))) {
             //client may want to display login form => moodle_exception
-            throw new moodle_exception('invalidtoken', 'webservice');
+            throw new moodle_exception('invalidtoken', 'core_webservice');
         }
 
         $loginfaileddefaultparams = array(
@@ -133,7 +133,7 @@ class webservice {
         $hasmaintenanceaccess = has_capability('moodle/site:maintenanceaccess', context_system::instance(), $user);
         if (!empty($CFG->maintenance_enabled) and !$hasmaintenanceaccess) {
             //this is usually temporary, client want to implement code logic  => moodle_exception
-            throw new moodle_exception('sitemaintenance', 'admin');
+            throw new moodle_exception('sitemaintenance', 'core_admin');
         }
 
         //retrieve web service record
@@ -208,7 +208,7 @@ class webservice {
                 $event = \core\event\webservice_login_failed::create($params);
                 $event->add_record_snapshot('external_tokens', $token);
                 $event->trigger();
-                throw new moodle_exception('passwordisexpired', 'webservice');
+                throw new moodle_exception('passwordisexpired', 'core_webservice');
             }
         }
 
@@ -1029,11 +1029,11 @@ abstract class webservice_server implements webservice_server_interface {
             $this->restricted_context = context_system::instance();
 
             if (!$this->username) {
-                throw new moodle_exception('missingusername', 'webservice');
+                throw new moodle_exception('missingusername', 'core_webservice');
             }
 
             if (!$this->password) {
-                throw new moodle_exception('missingpassword', 'webservice');
+                throw new moodle_exception('missingpassword', 'core_webservice');
             }
 
             if (!$auth->user_login_webservice($this->username, $this->password)) {
@@ -1045,7 +1045,7 @@ abstract class webservice_server implements webservice_server_interface {
                 $event = \core\event\webservice_login_failed::create($params);
                 $event->trigger();
 
-                throw new moodle_exception('wrongusernamepassword', 'webservice');
+                throw new moodle_exception('wrongusernamepassword', 'core_webservice');
             }
 
             $user = $DB->get_record('user', array('username'=>$this->username, 'mnethostid'=>$CFG->mnet_localhost_id), '*', MUST_EXIST);
@@ -1059,7 +1059,7 @@ abstract class webservice_server implements webservice_server_interface {
         // Cannot authenticate unless maintenance access is granted.
         $hasmaintenanceaccess = has_capability('moodle/site:maintenanceaccess', context_system::instance(), $user);
         if (!empty($CFG->maintenance_enabled) and !$hasmaintenanceaccess) {
-            throw new moodle_exception('sitemaintenance', 'admin');
+            throw new moodle_exception('sitemaintenance', 'core_admin');
         }
 
         //only confirmed user should be able to call web service
@@ -1069,7 +1069,7 @@ abstract class webservice_server implements webservice_server_interface {
             $params['other']['username'] = $user->username;
             $event = \core\event\webservice_login_failed::create($params);
             $event->trigger();
-            throw new moodle_exception('wsaccessuserdeleted', 'webservice', '', $user->username);
+            throw new moodle_exception('wsaccessuserdeleted', 'core_webservice', '', $user->username);
         }
 
         //only confirmed user should be able to call web service
@@ -1079,7 +1079,7 @@ abstract class webservice_server implements webservice_server_interface {
             $params['other']['username'] = $user->username;
             $event = \core\event\webservice_login_failed::create($params);
             $event->trigger();
-            throw new moodle_exception('wsaccessuserunconfirmed', 'webservice', '', $user->username);
+            throw new moodle_exception('wsaccessuserunconfirmed', 'core_webservice', '', $user->username);
         }
 
         //check the user is suspended
@@ -1089,7 +1089,7 @@ abstract class webservice_server implements webservice_server_interface {
             $params['other']['username'] = $user->username;
             $event = \core\event\webservice_login_failed::create($params);
             $event->trigger();
-            throw new moodle_exception('wsaccessusersuspended', 'webservice', '', $user->username);
+            throw new moodle_exception('wsaccessusersuspended', 'core_webservice', '', $user->username);
         }
 
         //retrieve the authentication plugin if no previously done
@@ -1106,7 +1106,7 @@ abstract class webservice_server implements webservice_server_interface {
                 $params['other']['username'] = $user->username;
                 $event = \core\event\webservice_login_failed::create($params);
                 $event->trigger();
-                throw new moodle_exception('wsaccessuserexpired', 'webservice', '', $user->username);
+                throw new moodle_exception('wsaccessuserexpired', 'core_webservice', '', $user->username);
             }
         }
 
@@ -1117,7 +1117,7 @@ abstract class webservice_server implements webservice_server_interface {
             $params['other']['username'] = $user->username;
             $event = \core\event\webservice_login_failed::create($params);
             $event->trigger();
-            throw new moodle_exception('wsaccessusernologin', 'webservice', '', $user->username);
+            throw new moodle_exception('wsaccessusernologin', 'core_webservice', '', $user->username);
         }
 
         // now fake user login, the session is completely empty too
@@ -1157,7 +1157,7 @@ abstract class webservice_server implements webservice_server_interface {
             $params['other']['reason'] = 'invalid_token';
             $event = \core\event\webservice_login_failed::create($params);
             $event->trigger();
-            throw new moodle_exception('invalidtoken', 'webservice');
+            throw new moodle_exception('invalidtoken', 'core_webservice');
         }
 
         if ($token->validuntil and $token->validuntil < time()) {
@@ -1669,7 +1669,7 @@ EOD;
             $paramanddefault = $param;
             if ($keydesc->required == VALUE_OPTIONAL) {
                 // It does not make sense to declare a parameter VALUE_OPTIONAL. VALUE_OPTIONAL is used only for array/object key.
-                throw new moodle_exception('erroroptionalparamarray', 'webservice', '', $name);
+                throw new moodle_exception('erroroptionalparamarray', 'core_webservice', '', $name);
             } else if ($keydesc->required == VALUE_DEFAULT) {
                 // Need to generate the default, if there is any.
                 if ($keydesc instanceof external_value) {
@@ -1697,7 +1697,7 @@ EOD;
                         $paramanddefault .= ' = array()';
                     } else {
                         // For the moment we do not support default for other structure types.
-                        throw new moodle_exception('errornotemptydefaultparamarray', 'webservice', '', $name);
+                        throw new moodle_exception('errornotemptydefaultparamarray', 'core_webservice', '', $name);
                     }
                 }
             }

@@ -55,7 +55,7 @@ class badge_criteria_deleted extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventbadgecriteriadeleted', 'badges');
+        return get_string('eventbadgecriteriadeleted', 'core_badges');
     }
 
     /**

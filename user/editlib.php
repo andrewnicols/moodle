@@ -80,7 +80,7 @@ function useredit_setup_preference_page($userid, $courseid) {
     if (is_mnet_remote_user($user)) {
         if (user_not_fully_set_up($user, false)) {
             $hostwwwroot = $DB->get_field('mnet_host', 'wwwroot', array('id' => $user->mnethostid));
-            throw new \moodle_exception('usernotfullysetup', 'mnet', '', $hostwwwroot);
+            throw new \moodle_exception('usernotfullysetup', 'core_mnet', '', $hostwwwroot);
         }
         redirect($CFG->wwwroot . "/user/view.php?course={$course->id}");
     }
@@ -282,9 +282,9 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
 
     // Do not show email field if change confirmation is pending.
     if ($user->id > 0 and !empty($CFG->emailchangeconfirmation) and !empty($user->preference_newemail)) {
-        $notice = get_string('emailchangepending', 'auth', $user);
+        $notice = get_string('emailchangepending', 'core_auth', $user);
         $notice .= '<br /><a href="edit.php?cancelemailchange=1&amp;id='.$user->id.'">'
-                . get_string('emailchangecancel', 'auth') . '</a>';
+                . get_string('emailchangecancel', 'core_auth') . '</a>';
         $mform->addElement('static', 'emailpending', get_string('email'), $notice);
     } else {
         $purpose = user_edit_map_field_purpose($user->id, 'email');
@@ -302,7 +302,7 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
     $mform->addHelpButton('maildisplay', 'emaildisplay');
 
     if (get_config('tool_moodlenet', 'enablemoodlenet')) {
-        $mform->addElement('text', 'moodlenetprofile', get_string('moodlenetprofile', 'user'), 'maxlength="255" size="30"');
+        $mform->addElement('text', 'moodlenetprofile', get_string('moodlenetprofile', 'core_user'), 'maxlength="255" size="30"');
         $mform->setType('moodlenetprofile', PARAM_NOTAGS);
         $mform->addHelpButton('moodlenetprofile', 'moodlenetprofile', 'user');
     }
@@ -395,7 +395,7 @@ function useredit_shared_definition(&$mform, $editoroptions, $filemanageroptions
     }
 
     // Moodle optional fields.
-    $mform->addElement('header', 'moodle_optional', get_string('optional', 'form'));
+    $mform->addElement('header', 'moodle_optional', get_string('optional', 'core_form'));
 
     $mform->addElement('text', 'idnumber', get_string('idnumber'), 'maxlength="255" size="25"');
     $mform->setType('idnumber', core_user::get_property_type('idnumber'));

@@ -124,13 +124,13 @@ class qtype_ddmarker_edit_form extends qtype_ddtoimage_edit_form_base {
         $mform = $this->_form;
 
         $repeated = array();
-        $repeated[] = $mform->createElement('editor', 'hint', get_string('hintn', 'question'),
+        $repeated[] = $mform->createElement('editor', 'hint', get_string('hintn', 'core_question'),
                 array('rows' => 5), $this->editoroptions);
         $repeatedoptions['hint']['type'] = PARAM_RAW;
 
         $repeated[] = $mform->createElement('checkbox', 'hintshownumcorrect',
-                        get_string('options', 'question'),
-                        get_string('shownumpartscorrect', 'question'));
+                        get_string('options', 'core_question'),
+                        get_string('shownumpartscorrect', 'core_question'));
         $repeated[] = $mform->createElement('checkbox', 'hintoptions',
                         '',
                         get_string('stateincorrectlyplaced', 'qtype_ddmarker'));

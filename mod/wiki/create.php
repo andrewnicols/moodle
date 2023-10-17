@@ -44,14 +44,14 @@ if (!empty($swid)) {
     $subwiki = wiki_get_subwiki($swid);
 
     if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
     }
 
 } else {
     $subwiki = wiki_get_subwiki_by_group($wid, $group, $uid);
 
     if (!$wiki = wiki_get_wiki($wid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
     }
 
 }
@@ -85,7 +85,7 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 require_login($course, true, $cm);
 
 // The title of the new page, cannot be empty.
-$title = optional_param('title', get_string('newpage', 'wiki'), PARAM_TEXT);
+$title = optional_param('title', get_string('newpage', 'mod_wiki'), PARAM_TEXT);
 $wikipage = new page_wiki_create($wiki, $subwiki, $cm);
 
 if (!empty($swid)) {
@@ -111,7 +111,7 @@ case 'create':
     break;
 case 'new':
     // Go straight to editing if we know the page title and we're in force format mode.
-    if ((int)$wiki->forceformat == 1 && $title != get_string('newpage', 'wiki')) {
+    if ((int)$wiki->forceformat == 1 && $title != get_string('newpage', 'mod_wiki')) {
         $newpageid = $wikipage->create_page($title);
         redirect($CFG->wwwroot . '/mod/wiki/edit.php?pageid='.$newpageid);
     } else {

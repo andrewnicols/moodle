@@ -171,12 +171,12 @@ class core_calendar_renderer extends plugin_renderer_base {
 
             $commands  = html_writer::start_tag('div', array('class' => 'commands float-sm-right'));
             $commands .= html_writer::start_tag('a', array('href' => $editlink));
-            $str = get_string('tt_editevent', 'calendar');
+            $str = get_string('tt_editevent', 'core_calendar');
             $commands .= $this->output->pix_icon('t/edit', $str);
             $commands .= html_writer::end_tag('a');
             if ($deletelink != null) {
                 $commands .= html_writer::start_tag('a', array('href' => $deletelink));
-                $str = get_string('tt_deleteevent', 'calendar');
+                $str = get_string('tt_deleteevent', 'core_calendar');
                 $commands .= $this->output->pix_icon('t/delete', $str);
                 $commands .= html_writer::end_tag('a');
             }
@@ -202,10 +202,10 @@ class core_calendar_renderer extends plugin_renderer_base {
         if (!empty($event->subscription) && $CFG->calendar_showicalsource) {
             if (!empty($event->subscription->url)) {
                 $source = html_writer::link($event->subscription->url,
-                        get_string('subscriptionsource', 'calendar', $event->subscription->name));
+                        get_string('subscriptionsource', 'core_calendar', $event->subscription->name));
             } else {
                 // File based ical.
-                $source = get_string('subscriptionsource', 'calendar', $event->subscription->name);
+                $source = get_string('subscriptionsource', 'core_calendar', $event->subscription->name);
             }
             $output .= html_writer::tag('div', $source, array('class' => 'subscription'));
         }
@@ -325,18 +325,18 @@ class core_calendar_renderer extends plugin_renderer_base {
      */
     public function render_subscriptions_header(): string {
         $importcalendarbutton = new single_button(new moodle_url('/calendar/import.php', calendar_get_export_import_link_params()),
-                get_string('importcalendar', 'calendar'), 'get', single_button::BUTTON_PRIMARY);
+                get_string('importcalendar', 'core_calendar'), 'get', single_button::BUTTON_PRIMARY);
         $importcalendarbutton->class .= ' float-sm-right float-right';
         $exportcalendarbutton = new single_button(new moodle_url('/calendar/export.php', calendar_get_export_import_link_params()),
-                get_string('exportcalendar', 'calendar'), 'get', single_button::BUTTON_PRIMARY);
+                get_string('exportcalendar', 'core_calendar'), 'get', single_button::BUTTON_PRIMARY);
         $exportcalendarbutton->class .= ' float-sm-right float-right';
-        $output = $this->output->heading(get_string('managesubscriptions', 'calendar'));
+        $output = $this->output->heading(get_string('managesubscriptions', 'core_calendar'));
         $output .= html_writer::start_div('header d-flex flex-wrap mt-5');
         $headerattr = [
             'class' => 'mr-auto',
             'aria-describedby' => 'subscription_details_table',
         ];
-        $output .= html_writer::tag('h3', get_string('yoursubscriptions', 'calendar'), $headerattr);
+        $output .= html_writer::tag('h3', get_string('yoursubscriptions', 'core_calendar'), $headerattr);
         $output .= $this->output->render($importcalendarbutton);
         $output .= $this->output->render($exportcalendarbutton);
         $output .= html_writer::end_div();
@@ -352,8 +352,8 @@ class core_calendar_renderer extends plugin_renderer_base {
     public function render_no_calendar_subscriptions(): string {
         $output = html_writer::start_div('mt-5');
         $importlink = html_writer::link((new moodle_url('/calendar/import.php', calendar_get_export_import_link_params()))->out(),
-                get_string('importcalendarexternal', 'calendar'));
-        $output .= get_string('nocalendarsubscriptions', 'calendar', $importlink);
+                get_string('importcalendarexternal', 'core_calendar'));
+        $output .= get_string('nocalendarsubscriptions', 'core_calendar', $importlink);
         $output .= html_writer::end_div();
 
         return $output;
@@ -370,21 +370,21 @@ class core_calendar_renderer extends plugin_renderer_base {
     public function subscription_details($unused, $subscriptions, $unused2 = '') {
         $table = new html_table();
         $table->head  = array(
-            get_string('colcalendar', 'calendar'),
-            get_string('collastupdated', 'calendar'),
-            get_string('eventkind', 'calendar'),
-            get_string('colpoll', 'calendar'),
-            get_string('colactions', 'calendar')
+            get_string('colcalendar', 'core_calendar'),
+            get_string('collastupdated', 'core_calendar'),
+            get_string('eventkind', 'core_calendar'),
+            get_string('colpoll', 'core_calendar'),
+            get_string('colactions', 'core_calendar')
         );
         $table->data  = array();
         $table->id = 'subscription_details_table';
 
         if (empty($subscriptions)) {
-            $cell = new html_table_cell(get_string('nocalendarsubscriptions', 'calendar'));
+            $cell = new html_table_cell(get_string('nocalendarsubscriptions', 'core_calendar'));
             $cell->colspan = 5;
             $table->data[] = new html_table_row(array($cell));
         }
-        $strnever = new lang_string('never', 'calendar');
+        $strnever = new lang_string('never', 'core_calendar');
         foreach ($subscriptions as $sub) {
             $label = $sub->name;
             if (!empty($sub->url)) {
@@ -403,7 +403,7 @@ class core_calendar_renderer extends plugin_renderer_base {
             $tablerow = new html_table_row(array(
                 $calendarname,
                 new html_table_cell($lastupdated),
-                new html_table_cell(get_string($type, 'calendar')),
+                new html_table_cell(get_string($type, 'core_calendar')),
                 new html_table_cell($this->render_subscription_update_interval($sub)),
                 new html_table_cell($this->subscription_action_links())
             ));

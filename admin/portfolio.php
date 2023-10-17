@@ -37,7 +37,7 @@ admin_externalpage_setup($pagename);
 
 $baseurl    = "$CFG->wwwroot/$CFG->admin/portfolio.php";
 $sesskeyurl = "$CFG->wwwroot/$CFG->admin/portfolio.php?sesskey=" . sesskey();
-$configstr  = get_string('manageportfolios', 'portfolio');
+$configstr  = get_string('manageportfolios', 'core_portfolio');
 
 $return = true; // direct back to the main page
 
@@ -87,12 +87,12 @@ if (($action == 'edit') || ($action == 'new')) {
             portfolio_static_function($plugin, 'create_instance', $plugin, $fromform->name, $fromform);
         }
         core_plugin_manager::reset_caches();
-        $savedstr = get_string('instancesaved', 'portfolio');
+        $savedstr = get_string('instancesaved', 'core_portfolio');
         redirect($baseurl, $savedstr, 1);
         exit;
     } else {
         echo $OUTPUT->header();
-        echo $OUTPUT->heading(get_string('configplugin', 'portfolio'));
+        echo $OUTPUT->heading(get_string('configplugin', 'core_portfolio'));
         echo $OUTPUT->box_start();
         $mform->display();
         echo $OUTPUT->box_end();
@@ -119,26 +119,26 @@ if (($action == 'edit') || ($action == 'new')) {
             throw new \moodle_exception('confirmsesskeybad', '', $baseurl);
         }
         if ($instance->delete()) {
-            $deletedstr = get_string('instancedeleted', 'portfolio');
+            $deletedstr = get_string('instancedeleted', 'core_portfolio');
             redirect($baseurl, $deletedstr, 1);
         } else {
-            throw new \moodle_exception('instancenotdeleted', 'portfolio', $baseurl);
+            throw new \moodle_exception('instancenotdeleted', 'core_portfolio', $baseurl);
         }
         exit;
     } else {
         echo $OUTPUT->header();
-        echo $OUTPUT->confirm(get_string('sure', 'portfolio', $instance->get('name')), $sesskeyurl . '&pf='.$portfolio.'&action=delete&sure=yes', $baseurl);
+        echo $OUTPUT->confirm(get_string('sure', 'core_portfolio', $instance->get('name')), $sesskeyurl . '&pf='.$portfolio.'&action=delete&sure=yes', $baseurl);
         $return = false;
     }
 } else {
     // If page is loaded directly
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('manageportfolios', 'portfolio'));
+    echo $OUTPUT->heading(get_string('manageportfolios', 'core_portfolio'));
 
     // Get strings that are used
-    $strshow = get_string('on', 'portfolio');
-    $strhide = get_string('off', 'portfolio');
-    $strdelete = get_string('disabledinstance', 'portfolio');
+    $strshow = get_string('on', 'core_portfolio');
+    $strhide = get_string('off', 'core_portfolio');
+    $strdelete = get_string('disabledinstance', 'core_portfolio');
     $strsettings = get_string('settings');
 
     $actionchoicesforexisting = array(
@@ -167,7 +167,7 @@ if (($action == 'edit') || ($action == 'new')) {
     $insaneinstances = portfolio_instance_sanity_check($instances);
 
     $table = new html_table();
-    $table->head = array(get_string('plugin', 'portfolio'), '', '');
+    $table->head = array(get_string('plugin', 'core_portfolio'), '', '');
     $table->data = array();
 
     foreach ($instances as $i) {

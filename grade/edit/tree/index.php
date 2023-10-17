@@ -78,7 +78,7 @@ if (empty($eid)) {
 $switch = grade_get_setting($course->id, 'aggregationposition', $CFG->grade_aggregationposition);
 
 $strgrades             = get_string('grades');
-$strgraderreport       = get_string('graderreport', 'grades');
+$strgraderreport       = get_string('graderreport', 'core_grades');
 
 $moving = false;
 $movingeid = false;
@@ -261,7 +261,7 @@ $tpldata = (object) [
 
 // Check to see if we have a normalisation message to send.
 if ($weightsadjusted) {
-    $notification = new \core\output\notification(get_string('weightsadjusted', 'grades'), \core\output\notification::NOTIFY_INFO);
+    $notification = new \core\output\notification(get_string('weightsadjusted', 'core_grades'), \core\output\notification::NOTIFY_INFO);
     $tpldata->notification = $notification->export_for_template($OUTPUT);
 }
 

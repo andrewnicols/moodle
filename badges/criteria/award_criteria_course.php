@@ -89,7 +89,7 @@ class award_criteria_course extends award_criteria {
         }
 
         if (!empty($this->params)) {
-            echo $OUTPUT->box(get_string('criteria_descr_' . $this->criteriatype, 'badges') . $this->get_details(), array('clearfix'));
+            echo $OUTPUT->box(get_string('criteria_descr_' . $this->criteriatype, 'core_badges') . $this->get_details(), array('clearfix'));
         }
         echo $OUTPUT->box_end();
     }
@@ -105,15 +105,15 @@ class award_criteria_course extends award_criteria {
 
         $course = $DB->get_record('course', array('id' => $param['course']));
         if (!$course) {
-            $str = $OUTPUT->error_text(get_string('error:nosuchcourse', 'badges'));
+            $str = $OUTPUT->error_text(get_string('error:nosuchcourse', 'core_badges'));
         } else {
             $options = array('context' => context_course::instance($course->id));
             $str = html_writer::tag('b', '"' . format_string($course->fullname, true, $options) . '"');
             if (isset($param['bydate'])) {
-                $str .= get_string('criteria_descr_bydate', 'badges', userdate($param['bydate'], get_string('strftimedate', 'core_langconfig')));
+                $str .= get_string('criteria_descr_bydate', 'core_badges', userdate($param['bydate'], get_string('strftimedate', 'core_langconfig')));
             }
             if (isset($param['grade'])) {
-                $str .= get_string('criteria_descr_grade', 'badges', $param['grade']);
+                $str .= get_string('criteria_descr_grade', 'core_badges', $param['grade']);
             }
         }
         return $str;
@@ -137,14 +137,14 @@ class award_criteria_course extends award_criteria {
 
         if (!($course->enablecompletion == COMPLETION_ENABLED)) {
             $none = true;
-            $message = get_string('completionnotenabled', 'badges');
+            $message = get_string('completionnotenabled', 'core_badges');
         } else {
             $mform->addElement('header', 'criteria_course', $this->get_title());
             $mform->addHelpButton('criteria_course', 'criteria_' . $this->criteriatype, 'badges');
             $parameter = array();
-            $parameter[] =& $mform->createElement('static', 'mgrade_', null, get_string('mingrade', 'badges'));
+            $parameter[] =& $mform->createElement('static', 'mgrade_', null, get_string('mingrade', 'core_badges'));
             $parameter[] =& $mform->createElement('text', 'grade_' . $param['course'], '', array('size' => '5'));
-            $parameter[] =& $mform->createElement('static', 'complby_' . $param['course'], null, get_string('bydate', 'badges'));
+            $parameter[] =& $mform->createElement('static', 'complby_' . $param['course'], null, get_string('bydate', 'core_badges'));
             $parameter[] =& $mform->createElement('date_selector', 'bydate_' . $param['course'], '', array('optional' => true));
             $mform->setType('grade_' . $param['course'], PARAM_INT);
             $mform->addGroup($parameter, 'param_' . $param['course'], '', array(' '), false);

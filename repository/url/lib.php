@@ -67,7 +67,7 @@ class repository_url extends repository {
      * @return mixed
      */
     public function print_login() {
-        $strdownload = get_string('download', 'repository');
+        $strdownload = get_string('download', 'core_repository');
         $strname     = get_string('rename', 'repository_url');
         $strurl      = get_string('url', 'repository_url');
         if ($this->options['ajax']) {

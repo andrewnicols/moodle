@@ -109,7 +109,7 @@ $PAGE->set_primary_active_tab('siteadminnode');
 $PAGE->set_secondary_active_tab('users');
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('download', 'admin'));
-echo $OUTPUT->download_dataformat_selector(get_string('userbulkdownload', 'admin'), 'user_bulk_download.php');
+echo $OUTPUT->heading(get_string('download', 'core_admin'));
+echo $OUTPUT->download_dataformat_selector(get_string('userbulkdownload', 'core_admin'), 'user_bulk_download.php');
 echo $OUTPUT->footer();
 

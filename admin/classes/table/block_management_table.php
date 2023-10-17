@@ -83,9 +83,9 @@ class block_management_table extends \core_admin\table\plugin_management_table {
         $columns = parent::get_column_list();
         return array_merge(
             array_slice($columns, 0, 1, true),
-            ['instances' => get_string('blockinstances', 'admin')],
+            ['instances' => get_string('blockinstances', 'core_admin')],
             array_slice($columns, 1, 2, true),
-            ['protect' => get_string('blockprotect', 'admin')],
+            ['protect' => get_string('blockprotect', 'core_admin')],
             array_slice($columns, 3, null, true),
         );
     }
@@ -133,10 +133,10 @@ class block_management_table extends \core_admin\table\plugin_management_table {
         $pluginname = $row->plugininfo->displayname;
         if ($protected) {
             $params['unprotect'] = $row->plugininfo->name;
-            $icon = $OUTPUT->pix_icon('t/unlock', get_string('blockunprotectblock', 'admin', $pluginname));
+            $icon = $OUTPUT->pix_icon('t/unlock', get_string('blockunprotectblock', 'core_admin', $pluginname));
         } else {
             $params['protect'] = $row->plugininfo->name;
-            $icon = $OUTPUT->pix_icon('t/lock', get_string('blockprotectblock', 'admin', $pluginname));
+            $icon = $OUTPUT->pix_icon('t/lock', get_string('blockprotectblock', 'core_admin', $pluginname));
         }
 
         return html_writer::link(

@@ -408,7 +408,7 @@ class question_type {
         }
 
         if ($question->penalty > 1 or $question->penalty < 0) {
-            $question->errors['penalty'] = get_string('invalidpenalty', 'question');
+            $question->errors['penalty'] = get_string('invalidpenalty', 'core_question');
         }
 
         if (isset($form->defaultmark)) {
@@ -1657,6 +1657,6 @@ class question_possible_response {
     }
 
     public static function no_response() {
-        return new question_possible_response(get_string('noresponse', 'question'), 0);
+        return new question_possible_response(get_string('noresponse', 'core_question'), 0);
     }
 }

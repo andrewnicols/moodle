@@ -44,19 +44,19 @@ class purge_caches extends \moodleform {
         $mform = $this->_form;
         $mform->addElement('hidden', 'returnurl', $this->_customdata['returnurl']);
         $mform->setType('returnurl', PARAM_LOCALURL);
-        $mform->addElement('submit', 'all', get_string('purgecaches', 'admin'));
-        $mform->addElement('header', 'purgecacheheader', get_string('purgeselectedcaches', 'admin'));
+        $mform->addElement('submit', 'all', get_string('purgecaches', 'core_admin'));
+        $mform->addElement('header', 'purgecacheheader', get_string('purgeselectedcaches', 'core_admin'));
         $checkboxes = [
-            $mform->createElement('advcheckbox', 'theme', '', get_string('purgethemecache', 'admin')),
-            $mform->createElement('advcheckbox', 'lang', '', get_string('purgelangcache', 'admin')),
-            $mform->createElement('advcheckbox', 'js', '', get_string('purgejscache', 'admin')),
-            $mform->createElement('advcheckbox', 'template', '', get_string('purgetemplates', 'admin')),
-            $mform->createElement('advcheckbox', 'filter', '', get_string('purgefiltercache', 'admin')),
-            $mform->createElement('advcheckbox', 'muc', '', get_string('purgemuc', 'admin')),
-            $mform->createElement('advcheckbox', 'other', '', get_string('purgeothercaches', 'admin'))
+            $mform->createElement('advcheckbox', 'theme', '', get_string('purgethemecache', 'core_admin')),
+            $mform->createElement('advcheckbox', 'lang', '', get_string('purgelangcache', 'core_admin')),
+            $mform->createElement('advcheckbox', 'js', '', get_string('purgejscache', 'core_admin')),
+            $mform->createElement('advcheckbox', 'template', '', get_string('purgetemplates', 'core_admin')),
+            $mform->createElement('advcheckbox', 'filter', '', get_string('purgefiltercache', 'core_admin')),
+            $mform->createElement('advcheckbox', 'muc', '', get_string('purgemuc', 'core_admin')),
+            $mform->createElement('advcheckbox', 'other', '', get_string('purgeothercaches', 'core_admin'))
         ];
         $mform->addGroup($checkboxes, 'purgeselectedoptions');
-        $mform->addElement('submit', 'purgeselectedcaches', get_string('purgeselectedcaches', 'admin'));
+        $mform->addElement('submit', 'purgeselectedcaches', get_string('purgeselectedcaches', 'core_admin'));
     }
 
     /**
@@ -69,7 +69,7 @@ class purge_caches extends \moodleform {
     public function validation($data, $files) {
         $errors = [];
         if (isset($data['purgeselectedcaches']) && empty(array_filter($data['purgeselectedoptions']))) {
-            $errors['purgeselectedoptions'] = get_string('purgecachesnoneselected', 'admin');
+            $errors['purgeselectedoptions'] = get_string('purgecachesnoneselected', 'core_admin');
         }
         return $errors;
     }

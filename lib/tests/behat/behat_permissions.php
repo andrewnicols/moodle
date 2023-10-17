@@ -65,10 +65,10 @@ class behat_permissions extends behat_base {
         $role = reset($matched);
 
         $permissionmap = [
-            get_string('inherit', 'role') => 'inherit',
-            get_string('allow', 'role') => 'allow',
-            get_string('prevent', 'role') => 'prevent',
-            get_string('prohibit', 'role') => 'prohibit',
+            get_string('inherit', 'core_role') => 'inherit',
+            get_string('allow', 'core_role') => 'allow',
+            get_string('prevent', 'core_role') => 'prevent',
+            get_string('prohibit', 'core_role') => 'prohibit',
         ];
 
         $columns = ['role'];
@@ -102,7 +102,7 @@ class behat_permissions extends behat_base {
         $roleoption = $this->find('xpath', '//select[@name="roleid"]/option[contains(.,"' . $this->escape($rolename) . '")]');
 
         $this->execute('behat_forms::i_set_the_field_to',
-            array(get_string('advancedoverride', 'role'), $this->escape($roleoption->getText()))
+            array(get_string('advancedoverride', 'core_role'), $this->escape($roleoption->getText()))
         );
 
         if (!$this->running_javascript()) {
@@ -130,7 +130,7 @@ class behat_permissions extends behat_base {
         // Ensure we are using the advanced view.
         // Wrapped in a try/catch to capture the exception and continue execution, we don't know if advanced mode was already enabled.
         try {
-            $advancedtoggle = $this->find_button(get_string('showadvanced', 'form'));
+            $advancedtoggle = $this->find_button(get_string('showadvanced', 'core_form'));
             if ($advancedtoggle) {
                 $advancedtoggle->click();
 
@@ -193,16 +193,16 @@ class behat_permissions extends behat_base {
         $checkedradio = $this->find('xpath', $radioxpath);
 
         switch ($permission) {
-            case get_string('notset', 'role'):
+            case get_string('notset', 'core_role'):
                 $perm = CAP_INHERIT;
                 break;
-            case get_string('allow', 'role'):
+            case get_string('allow', 'core_role'):
                 $perm = CAP_ALLOW;
                 break;
-            case get_string('prevent', 'role'):
+            case get_string('prevent', 'core_role'):
                 $perm = CAP_PREVENT;
                 break;
-            case get_string('prohibit', 'role'):
+            case get_string('prohibit', 'core_role'):
                 $perm = CAP_PROHIBIT;
                 break;
             default:
@@ -224,15 +224,15 @@ class behat_permissions extends behat_base {
      * @return void Executes other steps
      */
     public function i_define_the_allowed_role_assignments_for_a_role_as($rolename, $table) {
-        $parentnodes = get_string('users', 'admin') . ' > ' .
-            get_string('permissions', 'role');
+        $parentnodes = get_string('users', 'core_admin') . ' > ' .
+            get_string('permissions', 'core_role');
 
         // Go to home page.
         $this->execute("behat_general::i_am_on_homepage");
 
         // Navigate to Define roles page via site administration menu.
         $this->execute("behat_navigation::i_navigate_to_in_site_administration",
-                $parentnodes .' > '. get_string('defineroles', 'role')
+                $parentnodes .' > '. get_string('defineroles', 'core_role')
         );
 
         $this->execute("behat_general::click_link", "Allow role assignments");

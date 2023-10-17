@@ -38,8 +38,8 @@ if (isguestuser()) {
     redirect($return);
 }
 
-$strunsubscribeall = get_string('unsubscribeall', 'forum');
-$PAGE->navbar->add(get_string('modulename', 'forum'));
+$strunsubscribeall = get_string('unsubscribeall', 'mod_forum');
+$PAGE->navbar->add(get_string('modulename', 'mod_forum'));
 $PAGE->navbar->add($strunsubscribeall);
 $PAGE->set_title($strunsubscribeall);
 $PAGE->set_heading($COURSE->fullname);
@@ -55,7 +55,7 @@ if (data_submitted() and $confirm and confirm_sesskey()) {
     $DB->delete_records('forum_discussion_subs', array('userid' => $USER->id));
     $DB->set_field('user', 'autosubscribe', 0, array('id'=>$USER->id));
 
-    echo $OUTPUT->box(get_string('unsubscribealldone', 'forum'));
+    echo $OUTPUT->box(get_string('unsubscribealldone', 'mod_forum'));
     echo $OUTPUT->continue_button($return);
     echo $OUTPUT->footer();
     die;
@@ -67,18 +67,18 @@ if (data_submitted() and $confirm and confirm_sesskey()) {
 
     if ($count->forums || $count->discussions) {
         if ($count->forums && $count->discussions) {
-            $msg = get_string('unsubscribeallconfirm', 'forum', $count);
+            $msg = get_string('unsubscribeallconfirm', 'mod_forum', $count);
         } else if ($count->forums) {
-            $msg = get_string('unsubscribeallconfirmforums', 'forum', $count);
+            $msg = get_string('unsubscribeallconfirmforums', 'mod_forum', $count);
         } else if ($count->discussions) {
-            $msg = get_string('unsubscribeallconfirmdiscussions', 'forum', $count);
+            $msg = get_string('unsubscribeallconfirmdiscussions', 'mod_forum', $count);
         }
         echo $OUTPUT->confirm($msg, new moodle_url('unsubscribeall.php', array('confirm'=>1)), $return);
         echo $OUTPUT->footer();
         die;
 
     } else {
-        echo $OUTPUT->box(get_string('unsubscribeallempty', 'forum'));
+        echo $OUTPUT->box(get_string('unsubscribeallempty', 'mod_forum'));
         echo $OUTPUT->continue_button($return);
         echo $OUTPUT->footer();
         die;

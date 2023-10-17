@@ -65,12 +65,12 @@ class behat_grade extends behat_base {
             $this->execute("behat_grades::i_click_on_grade_item_menu", [$gradeitem, $type, $page]);
         }
 
-        $linktext = $type == 'gradeitem' ? get_string('itemsedit', 'grades') : get_string('categoryedit', 'grades');
+        $linktext = $type == 'gradeitem' ? get_string('itemsedit', 'core_grades') : get_string('categoryedit', 'core_grades');
 
         $this->execute("behat_action_menu::i_choose_in_the_open_action_menu", $linktext);
 
         if ($type !== 'gradeitem') {
-            $this->execute('behat_general::i_click_on_in_the', [get_string('showmore', 'form'),
+            $this->execute('behat_general::i_click_on_in_the', [get_string('showmore', 'core_form'),
                 'link', '.modal-dialog', 'css_element']);
         }
 
@@ -80,7 +80,7 @@ class behat_grade extends behat_base {
             $node = $this->find('xpath', './/button[@data-action="save"]', false, $container);
             $node->press();
         } else {
-            $savechanges = get_string('savechanges', 'grades');
+            $savechanges = get_string('savechanges', 'core_grades');
             $this->execute('behat_forms::press_button', $this->escape($savechanges));
         }
     }
@@ -135,14 +135,14 @@ class behat_grade extends behat_base {
      */
     public function i_set_calculation_for_grade_item_with_idnumbers($calculation, $gradeitem, TableNode $data) {
 
-        $edit = get_string('editcalculation', 'grades');
+        $edit = get_string('editcalculation', 'core_grades');
 
         if ($this->running_javascript()) {
             $this->execute("behat_grades::i_click_on_grade_item_menu", [$gradeitem, 'gradeitem', 'setup']);
         }
         $this->execute("behat_action_menu::i_choose_in_the_open_action_menu", $edit);
 
-        $savechanges = get_string('savechanges', 'grades');
+        $savechanges = get_string('savechanges', 'core_grades');
 
         // Mapping names to idnumbers.
         $datahash = $data->getRowsHash();
@@ -158,8 +158,8 @@ class behat_grade extends behat_base {
             $this->execute('behat_forms::i_set_the_field_with_xpath_to', [$inputxpath, $idnumber]);
         }
 
-        $this->execute('behat_forms::press_button', get_string('addidnumbers', 'grades'));
-        $this->execute('behat_forms::i_set_the_field_to', [get_string('calculation', 'grades'), $calculation]);
+        $this->execute('behat_forms::press_button', get_string('addidnumbers', 'core_grades'));
+        $this->execute('behat_forms::i_set_the_field_to', [get_string('calculation', 'core_grades'), $calculation]);
         $this->execute('behat_forms::press_button', $savechanges);
 
     }
@@ -175,14 +175,14 @@ class behat_grade extends behat_base {
      */
     public function i_set_calculation_for_grade_category_with_idnumbers(string $calculation, string $gradeitem, TableNode $data) {
 
-        $edit = get_string('editcalculation', 'grades');
+        $edit = get_string('editcalculation', 'core_grades');
 
         if ($this->running_javascript()) {
             $this->execute("behat_grades::i_click_on_grade_item_menu", [$gradeitem, 'gradeitem', 'setup']);
         }
         $this->execute("behat_action_menu::i_choose_in_the_open_action_menu", $edit);
 
-        $savechanges = get_string('savechanges', 'grades');
+        $savechanges = get_string('savechanges', 'core_grades');
 
         // Mapping names to idnumbers.
         $datahash = $data->getRowsHash();
@@ -198,9 +198,9 @@ class behat_grade extends behat_base {
             $this->execute('behat_forms::i_set_the_field_with_xpath_to', array($inputxpath, $idnumber));
         }
 
-        $this->execute('behat_forms::press_button', get_string('addidnumbers', 'grades'));
+        $this->execute('behat_forms::press_button', get_string('addidnumbers', 'core_grades'));
 
-        $this->execute('behat_forms::i_set_the_field_to', [get_string('calculation', 'grades'), $calculation]);
+        $this->execute('behat_forms::i_set_the_field_to', [get_string('calculation', 'core_grades'), $calculation]);
         $this->execute('behat_forms::press_button', $savechanges);
     }
 
@@ -217,7 +217,7 @@ class behat_grade extends behat_base {
         if ($this->running_javascript()) {
             $this->execute("behat_grades::i_click_on_grade_item_menu", [$gradeitem, 'category', 'setup']);
         }
-        $linktext = get_string('resetweightsshort', 'grades');
+        $linktext = get_string('resetweightsshort', 'core_grades');
         $this->execute("behat_action_menu::i_choose_in_the_open_action_menu", [$this->escape($linktext), "link"]);
     }
 
@@ -292,7 +292,7 @@ class behat_grade extends behat_base {
             $this->execute('behat_navigation::i_select_from_secondary_navigation', get_string('grades'));
         }
 
-        $this->execute('behat_forms::i_set_the_field_to', [get_string('gradebooknavigationmenu', 'grades'), $gradepath]);
+        $this->execute('behat_forms::i_set_the_field_to', [get_string('gradebooknavigationmenu', 'core_grades'), $gradepath]);
     }
 
     /**
@@ -307,7 +307,7 @@ class behat_grade extends behat_base {
      */
     public function i_navigate_to_import_page_in_the_course_gradebook($gradeimportoption) {
         $this->i_navigate_to_in_the_course_gradebook("More > Import");
-        $this->execute('behat_forms::i_set_the_field_to', [get_string('importas', 'grades'), $gradeimportoption]);
+        $this->execute('behat_forms::i_set_the_field_to', [get_string('importas', 'core_grades'), $gradeimportoption]);
     }
 
     /**
@@ -322,7 +322,7 @@ class behat_grade extends behat_base {
      */
     public function i_navigate_to_export_page_in_the_course_gradebook($gradeexportoption) {
         $this->i_navigate_to_in_the_course_gradebook("More > Export");
-        $this->execute('behat_forms::i_set_the_field_to', [get_string('exportas', 'grades'), $gradeexportoption]);
+        $this->execute('behat_forms::i_set_the_field_to', [get_string('exportas', 'core_grades'), $gradeexportoption]);
     }
 
     /**

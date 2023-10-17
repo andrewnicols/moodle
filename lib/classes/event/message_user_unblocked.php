@@ -51,7 +51,7 @@ class message_user_unblocked extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventmessageuserunblocked', 'message');
+        return get_string('eventmessageuserunblocked', 'core_message');
     }
 
     /**

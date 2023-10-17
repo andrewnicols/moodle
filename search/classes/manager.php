@@ -531,32 +531,32 @@ class manager {
 
         $categories[self::SEARCH_AREA_CATEGORY_ALL] = new area_category(
             self::SEARCH_AREA_CATEGORY_ALL,
-            get_string('core-all', 'search'),
+            get_string('core-all', 'core_search'),
             0,
             self::get_search_areas_list(true)
         );
 
         $categories[self::SEARCH_AREA_CATEGORY_COURSE_CONTENT] = new area_category(
             self::SEARCH_AREA_CATEGORY_COURSE_CONTENT,
-            get_string('core-course-content', 'search'),
+            get_string('core-course-content', 'core_search'),
             1
         );
 
         $categories[self::SEARCH_AREA_CATEGORY_COURSES] = new area_category(
             self::SEARCH_AREA_CATEGORY_COURSES,
-            get_string('core-courses', 'search'),
+            get_string('core-courses', 'core_search'),
             2
         );
 
         $categories[self::SEARCH_AREA_CATEGORY_USERS] = new area_category(
             self::SEARCH_AREA_CATEGORY_USERS,
-            get_string('core-users', 'search'),
+            get_string('core-users', 'core_search'),
             3
         );
 
         $categories[self::SEARCH_AREA_CATEGORY_OTHER] = new area_category(
             self::SEARCH_AREA_CATEGORY_OTHER,
-            get_string('core-other', 'search'),
+            get_string('core-other', 'core_search'),
             4
         );
 
@@ -1504,7 +1504,7 @@ class manager {
         if (!empty($areaid)) {
             $searchareas = array();
             if (!$searchareas[$areaid] = static::get_search_area($areaid)) {
-                throw new \moodle_exception('errorareanotavailable', 'search', '', $areaid);
+                throw new \moodle_exception('errorareanotavailable', 'core_search', '', $areaid);
             }
         } else {
             // Only the enabled ones.
@@ -1790,10 +1790,10 @@ class manager {
             }
             switch ($item->indexpriority) {
                 case self::INDEX_PRIORITY_REINDEXING :
-                    $item->priorityname = get_string('priority_reindexing', 'search');
+                    $item->priorityname = get_string('priority_reindexing', 'core_search');
                     break;
                 case self::INDEX_PRIORITY_NORMAL :
-                    $item->priorityname = get_string('priority_normal', 'search');
+                    $item->priorityname = get_string('priority_normal', 'core_search');
                     break;
             }
         }

@@ -179,7 +179,7 @@ class portfolio_format_file extends portfolio_format {
      *              attributes => hash of existing html attributes (eg title, height, width, etc)
      */
     public static function file_output($file, $options=null) {
-        throw new portfolio_exception('fileoutputnotsupported', 'portfolio');
+        throw new portfolio_exception('fileoutputnotsupported', 'core_portfolio');
     }
 }
 

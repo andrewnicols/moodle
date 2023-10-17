@@ -84,7 +84,7 @@ if (!empty($config->disabledbehaviours)) {
 // Disable.
 if (($disable = optional_param('disable', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($behaviours[$disable])) {
-        throw new \moodle_exception('unknownbehaviour', 'question', $thispageurl, $disable);
+        throw new \moodle_exception('unknownbehaviour', 'core_question', $thispageurl, $disable);
     }
 
     if (array_search($disable, $disabledbehaviours) === false) {
@@ -97,11 +97,11 @@ if (($disable = optional_param('disable', '', PARAM_PLUGIN)) && confirm_sesskey(
 // Enable.
 if (($enable = optional_param('enable', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($behaviours[$enable])) {
-        throw new \moodle_exception('unknownbehaviour', 'question', $thispageurl, $enable);
+        throw new \moodle_exception('unknownbehaviour', 'core_question', $thispageurl, $enable);
     }
 
     if (!$archetypal[$enable]) {
-        throw new \moodle_exception('cannotenablebehaviour', 'question', $thispageurl, $enable);
+        throw new \moodle_exception('cannotenablebehaviour', 'core_question', $thispageurl, $enable);
     }
 
     if (($key = array_search($enable, $disabledbehaviours)) !== false) {
@@ -114,7 +114,7 @@ if (($enable = optional_param('enable', '', PARAM_PLUGIN)) && confirm_sesskey())
 // Move up in order.
 if (($up = optional_param('up', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($behaviours[$up])) {
-        throw new \moodle_exception('unknownbehaviour', 'question', $thispageurl, $up);
+        throw new \moodle_exception('unknownbehaviour', 'core_question', $thispageurl, $up);
     }
 
     // This function works fine for behaviours, as well as qtypes.
@@ -126,7 +126,7 @@ if (($up = optional_param('up', '', PARAM_PLUGIN)) && confirm_sesskey()) {
 // Move down in order.
 if (($down = optional_param('down', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($behaviours[$down])) {
-        throw new \moodle_exception('unknownbehaviour', 'question', $thispageurl, $down);
+        throw new \moodle_exception('unknownbehaviour', 'core_question', $thispageurl, $down);
     }
 
     // This function works fine for behaviours, as well as qtypes.
@@ -139,16 +139,16 @@ if (($down = optional_param('down', '', PARAM_PLUGIN)) && confirm_sesskey()) {
 
 // Print the page heading.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('manageqbehaviours', 'admin'));
+echo $OUTPUT->heading(get_string('manageqbehaviours', 'core_admin'));
 
 // Set up the table.
 $table = new flexible_table('qbehaviouradmintable');
 $table->define_baseurl($thispageurl);
 $table->define_columns(array('behaviour', 'numqas', 'version', 'requires',
         'available', 'uninstall'));
-$table->define_headers(array(get_string('behaviour', 'question'), get_string('numqas', 'question'),
-        get_string('version'), get_string('requires', 'admin'),
-        get_string('availableq', 'question'), get_string('uninstallplugin', 'core_admin')));
+$table->define_headers(array(get_string('behaviour', 'core_question'), get_string('numqas', 'core_question'),
+        get_string('version'), get_string('requires', 'core_admin'),
+        get_string('availableq', 'core_question'), get_string('uninstallplugin', 'core_admin')));
 $table->set_attribute('id', 'qbehaviours');
 $table->set_attribute('class', 'generaltable admintable');
 $table->setup();
@@ -168,7 +168,7 @@ foreach ($sortedbehaviours as $behaviour => $behaviourname) {
     if ($version) {
         $row[] = $version;
     } else {
-        $row[] = html_writer::tag('span', get_string('nodatabase', 'admin'), array('class' => 'text-muted'));
+        $row[] = html_writer::tag('span', get_string('nodatabase', 'core_admin'), array('class' => 'text-muted'));
     }
 
     // Other question types required by this one.
@@ -208,7 +208,7 @@ foreach ($sortedbehaviours as $behaviour => $behaviourname) {
         $uninstallurl = core_plugin_manager::instance()->get_uninstall_url('qbehaviour_'.$behaviour, 'manage');
         if ($uninstallurl) {
             $row[] = html_writer::link($uninstallurl, get_string('uninstallplugin', 'core_admin'),
-                array('title' => get_string('uninstallbehaviour', 'question')));
+                array('title' => get_string('uninstallbehaviour', 'core_question')));
         }
     }
 
@@ -222,10 +222,10 @@ echo $OUTPUT->footer();
 function question_behaviour_enable_disable_icons($behaviour, $enabled) {
     if ($enabled) {
         return question_behaviour_icon_html('disable', $behaviour, 't/hide',
-                get_string('enabled', 'question'), get_string('disable'));
+                get_string('enabled', 'core_question'), get_string('disable'));
     } else {
         return question_behaviour_icon_html('enable', $behaviour, 't/show',
-                get_string('disabled', 'question'), get_string('enable'));
+                get_string('disabled', 'core_question'), get_string('enable'));
     }
 }
 

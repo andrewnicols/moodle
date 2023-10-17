@@ -73,7 +73,7 @@ abstract class base implements templatable {
      */
     final public function require_access() {
         if (!$this->is_available()) {
-            throw new moodle_exception('nopermissiontoaccesspage', 'error');
+            throw new moodle_exception('nopermissiontoaccesspage', 'mod_error');
         }
     }
 

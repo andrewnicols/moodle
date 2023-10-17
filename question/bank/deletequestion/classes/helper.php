@@ -67,7 +67,7 @@ class helper {
                 $a->name = $questionname;
                 $a->version = $questionversions[$questionid];
                 $questionnames .= get_string('questionnameandquestionversion',
-                    'question', $a) . '<br />';
+                    'core_question', $a) . '<br />';
             } else {
                 $questionnames .= $questionname . '<br />';
             }
@@ -75,25 +75,25 @@ class helper {
 
         // Add the in-use message if required.
         if ($inuse) {
-            $questionnames .= '<br />'.get_string('questionsinuse', 'question');
+            $questionnames .= '<br />'.get_string('questionsinuse', 'core_question');
         }
 
         // Add in the right tile and message text.
         $confirmtitle = [
             'confirmtitle' => $countselectedquestion > 1 ? get_string('deleteversiontitle_plural',
-                'question') : get_string('deleteversiontitle', 'question'),
+                'core_question') : get_string('deleteversiontitle', 'core_question'),
         ];
-        $message = get_string('deleteselectedquestioncheck', 'question', $questionnames);
+        $message = get_string('deleteselectedquestioncheck', 'core_question', $questionnames);
         if ($deleteallversions) {
             $confirmtitle = [
-                'confirmtitle' => get_string('deletequestiontitle', 'question'),
+                'confirmtitle' => get_string('deletequestiontitle', 'core_question'),
             ];
-            $message = get_string('deletequestioncheck', 'question', $questionnames);
+            $message = get_string('deletequestioncheck', 'core_question', $questionnames);
             if ($countselectedquestion > 1) {
                 $confirmtitle = [
-                    'confirmtitle' => get_string('deletequestiontitle_plural', 'question'),
+                    'confirmtitle' => get_string('deletequestiontitle_plural', 'core_question'),
                 ];
-                $message = get_string('deletequestionscheck', 'question', $questionnames);
+                $message = get_string('deletequestionscheck', 'core_question', $questionnames);
             }
         }
 

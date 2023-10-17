@@ -251,7 +251,7 @@ XPATH
             array("//textarea[@data-region='send-message-txt']", $this->escape($messagecontent))
         );
 
-        $this->execute("behat_forms::press_button", get_string('sendmessage', 'message'));
+        $this->execute("behat_forms::press_button", get_string('sendmessage', 'core_message'));
     }
 
     /**

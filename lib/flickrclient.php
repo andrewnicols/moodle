@@ -202,7 +202,7 @@ class flickr_client extends oauth_helper {
         }
 
         if ($url === false) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
 
         } else {
             $cache->set('photourl_'.$photoid, $url);

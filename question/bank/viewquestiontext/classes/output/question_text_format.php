@@ -71,17 +71,17 @@ class question_text_format implements \renderable, \templatable {
             'returnurl' => $this->returnurl->out(false),
             'options' => [
                 (object)[
-                    'label' => get_string('showquestiontext_off', 'question'),
+                    'label' => get_string('showquestiontext_off', 'core_question'),
                     'value' => self::OFF,
                     'selected' => $this->preference === self::OFF,
                 ],
                 (object)[
-                    'label' => get_string('showquestiontext_plain', 'question'),
+                    'label' => get_string('showquestiontext_plain', 'core_question'),
                     'value' => self::PLAIN,
                     'selected' => $this->preference === self::PLAIN,
                 ],
                 (object)[
-                    'label' => get_string('showquestiontext_full', 'question'),
+                    'label' => get_string('showquestiontext_full', 'core_question'),
                     'value' => self::FULL,
                     'selected' => $this->preference === self::FULL,
                 ],

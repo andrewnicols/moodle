@@ -917,7 +917,7 @@ function file_restore_source_field_from_draft_file($storedfile) {
             $restoredsource = $source->source;
             $storedfile->set_source($restoredsource);
         } else {
-            throw new moodle_exception('invalidsourcefield', 'error');
+            throw new moodle_exception('invalidsourcefield', 'mod_error');
         }
     }
     return $storedfile;
@@ -2044,11 +2044,11 @@ function get_mimetype_description($obj, $capitalise=false) {
         $result = format_string($customdescription, true,
                 array('context' => context_system::instance()));
     } else if (get_string_manager()->string_exists($safemimetype, 'mimetypes')) {
-        $result = get_string($safemimetype, 'mimetypes', (object)$a);
+        $result = get_string($safemimetype, 'mod_mimetypes', (object)$a);
     } else if (get_string_manager()->string_exists($safemimetypestr, 'mimetypes')) {
-        $result = get_string($safemimetypestr, 'mimetypes', (object)$a);
+        $result = get_string($safemimetypestr, 'mod_mimetypes', (object)$a);
     } else if (get_string_manager()->string_exists('default', 'mimetypes')) {
-        $result = get_string('default', 'mimetypes', (object)$a);
+        $result = get_string('default', 'mod_mimetypes', (object)$a);
     } else {
         $result = $mimetype;
     }
@@ -2145,7 +2145,7 @@ function send_file_not_found() {
     }
 
     send_header_404();
-    throw new \moodle_exception('filenotfound', 'error',
+    throw new \moodle_exception('filenotfound', 'mod_error',
         $CFG->wwwroot.'/course/view.php?id='.$COURSE->id); // This is not displayed on IIS?
 }
 /**
@@ -2381,7 +2381,7 @@ function send_temp_file($path, $filename, $pathisstring=false) {
     if (!$pathisstring) {
         if (!file_exists($path)) {
             send_header_404();
-            throw new \moodle_exception('filenotfound', 'error', $CFG->wwwroot.'/');
+            throw new \moodle_exception('filenotfound', 'mod_error', $CFG->wwwroot.'/');
         }
         // executed after normal finish or abort
         core_shutdown_manager::register_function('send_temp_file_finished', array($path));
@@ -2926,7 +2926,7 @@ function file_overwrite_existing_draftfile(stored_file $newfile, stored_file $ex
     if ($newfile->is_external_file()) {
         // New file is a reference. Check that existing file does not have any other files referencing to it
         if (isset($source->original) && $fs->search_references_count($source->original)) {
-            throw new moodle_exception('errordoublereference', 'repository');
+            throw new moodle_exception('errordoublereference', 'core_repository');
         }
     }
 
@@ -4092,7 +4092,7 @@ class curl {
             // open file
             if (!($options['file'] = fopen($options['filepath'], 'w'))) {
                 $this->errno = 100;
-                return get_string('cannotwritefile', 'error', $options['filepath']);
+                return get_string('cannotwritefile', 'mod_error', $options['filepath']);
             }
             $filepath = $options['filepath'];
         }
@@ -4425,7 +4425,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null, $offlin
         }
 
         if (empty($CFG->enableblogs)) {
-            throw new \moodle_exception('siteblogdisable', 'blog');
+            throw new \moodle_exception('siteblogdisable', 'core_blog');
         }
 
         $entryid = (int)array_shift($args);

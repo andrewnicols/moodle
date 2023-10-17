@@ -129,7 +129,7 @@ class repository_merlot extends repository {
         $author->type = 'text';
         $author->id   = 'merlog_author';
         $author->name = 'merlot_author';
-        $author->label = get_string('author', 'search').': ';
+        $author->label = get_string('author', 'core_search').': ';
 
         $ret['login'] = array($search, $author);
         $ret['login_btn_label'] = get_string('search');

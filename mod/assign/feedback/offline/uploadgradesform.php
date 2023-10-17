@@ -56,15 +56,15 @@ class assignfeedback_offline_upload_grades_form extends moodleform {
         $mform->addHelpButton('gradesfile', 'gradesfile', 'assignfeedback_offline');
 
         $encodings = core_text::get_encodings();
-        $mform->addElement('select', 'encoding', get_string('encoding', 'grades'), $encodings);
+        $mform->addElement('select', 'encoding', get_string('encoding', 'core_grades'), $encodings);
         $mform->addHelpButton('encoding', 'encoding', 'grades');
 
         $radio = array();
-        $radio[] = $mform->createElement('radio', 'separator', null, get_string('septab', 'grades'), 'tab');
-        $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcomma', 'grades'), 'comma');
-        $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcolon', 'grades'), 'colon');
-        $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepsemicolon', 'grades'), 'semicolon');
-        $mform->addGroup($radio, 'separator', get_string('separator', 'grades'), ' ', false);
+        $radio[] = $mform->createElement('radio', 'separator', null, get_string('septab', 'core_grades'), 'tab');
+        $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcomma', 'core_grades'), 'comma');
+        $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcolon', 'core_grades'), 'colon');
+        $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepsemicolon', 'core_grades'), 'semicolon');
+        $mform->addGroup($radio, 'separator', get_string('separator', 'core_grades'), ' ', false);
         $mform->addHelpButton('separator', 'separator', 'grades');
         $mform->setDefault('separator', 'comma');
 

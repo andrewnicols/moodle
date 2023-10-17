@@ -1104,7 +1104,7 @@ ORDER BY
     public function update_question_attempt_flag($qubaid, $questionid, $qaid, $slot, $newstate) {
         if (!$this->db->record_exists('question_attempts', array('id' => $qaid,
                 'questionusageid' => $qubaid, 'questionid' => $questionid, 'slot' => $slot))) {
-            throw new moodle_exception('errorsavingflags', 'question');
+            throw new moodle_exception('errorsavingflags', 'core_question');
         }
 
         $this->db->set_field('question_attempts', 'flagged', $newstate, array('id' => $qaid));

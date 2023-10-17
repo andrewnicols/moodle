@@ -155,7 +155,7 @@ class auth_plugin_mnet extends auth_plugin_base {
         require_once $CFG->dirroot . '/mnet/xmlrpc/client.php';
 
         if (\core\session\manager::is_loggedinas()) {
-            throw new \moodle_exception('notpermittedtojumpas', 'mnet');
+            throw new \moodle_exception('notpermittedtojumpas', 'core_mnet');
         }
 
         // check remote login permissions
@@ -163,12 +163,12 @@ class auth_plugin_mnet extends auth_plugin_base {
                 or is_mnet_remote_user($USER)
                 or isguestuser()
                 or !isloggedin()) {
-            throw new \moodle_exception('notpermittedtojump', 'mnet');
+            throw new \moodle_exception('notpermittedtojump', 'core_mnet');
         }
 
         // check for SSO publish permission first
         if ($this->has_service($mnethostid, 'sso_sp') == false) {
-            throw new \moodle_exception('hostnotconfiguredforsso', 'mnet');
+            throw new \moodle_exception('hostnotconfiguredforsso', 'core_mnet');
         }
 
         // set RPC timeout to 30 seconds if not configured
@@ -233,7 +233,7 @@ class auth_plugin_mnet extends auth_plugin_base {
 
         // verify the remote host is configured locally before attempting RPC call
         if (! $remotehost = $DB->get_record('mnet_host', array('wwwroot' => $remotepeer->wwwroot, 'deleted' => 0))) {
-            throw new \moodle_exception('notpermittedtoland', 'mnet');
+            throw new \moodle_exception('notpermittedtoland', 'core_mnet');
         }
 
         // set up the RPC request
@@ -252,7 +252,7 @@ class auth_plugin_mnet extends auth_plugin_base {
                 list($code, $message) = array_map('trim',explode(':', $errormessage, 2));
                 if($code == 702) {
                     $site = get_site();
-                    throw new \moodle_exception('mnet_session_prohibited', 'mnet', $remotepeer->wwwroot,
+                    throw new \moodle_exception('mnet_session_prohibited', 'core_mnet', $remotepeer->wwwroot,
                         format_string($site->fullname));
                     exit;
                 }
@@ -263,12 +263,12 @@ class auth_plugin_mnet extends auth_plugin_base {
         unset($mnetrequest);
 
         if (empty($remoteuser) or empty($remoteuser->username)) {
-            throw new \moodle_exception('unknownerror', 'mnet');
+            throw new \moodle_exception('unknownerror', 'core_mnet');
             exit;
         }
 
         if (user_not_fully_set_up($remoteuser, false)) {
-            throw new \moodle_exception('notenoughidpinfo', 'mnet');
+            throw new \moodle_exception('notenoughidpinfo', 'core_mnet');
             exit;
         }
 
@@ -307,7 +307,7 @@ class auth_plugin_mnet extends auth_plugin_base {
 
         // check sso access control list for permission first
         if (!$this->can_login_remotely($localuser->username, $remotehost->id)) {
-            throw new \moodle_exception('sso_mnet_login_refused', 'mnet', '',
+            throw new \moodle_exception('sso_mnet_login_refused', 'core_mnet', '',
                 array('user' => $localuser->username, 'host' => $remotehost->name));
         }
 
@@ -414,7 +414,7 @@ class auth_plugin_mnet extends auth_plugin_base {
                         $courses[$id] = (array)$courses[$id];
                     }
                 } else {
-                    throw new moodle_exception('unknownrole', 'error', '', 'student');
+                    throw new moodle_exception('unknownrole', 'mod_error', '', 'student');
                 }
             } else {
                 // if the array is empty, send it anyway
@@ -1097,7 +1097,7 @@ class auth_plugin_mnet extends auth_plugin_base {
 
         // Generate warning if MNET is disabled.
         if (empty($CFG->mnet_dispatcher_mode) || $CFG->mnet_dispatcher_mode !== 'strict') {
-                echo $OUTPUT->notification(get_string('mnetdisabled', 'mnet'), 'notifyproblem');
+                echo $OUTPUT->notification(get_string('mnetdisabled', 'core_mnet'), 'notifyproblem');
                 return;
         }
 

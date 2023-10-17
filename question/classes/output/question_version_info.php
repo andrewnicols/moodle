@@ -109,7 +109,7 @@ class question_version_info implements \renderable, \templatable {
             $identifier = 'short' . $identifier;
         }
         return [
-            'versioninfo' => get_string($identifier, 'question', $this)
+            'versioninfo' => get_string($identifier, 'core_question', $this)
         ];
     }
 }

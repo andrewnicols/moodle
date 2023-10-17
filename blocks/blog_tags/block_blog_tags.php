@@ -71,7 +71,7 @@ class block_blog_tags extends block_base {
             $this->content = new stdClass();
             $this->content->text = '';
             if ($this->page->user_is_editing()) {
-                $this->content->text = get_string('blogdisable', 'blog');
+                $this->content->text = get_string('blogdisable', 'core_blog');
             }
             return $this->content;
 
@@ -79,7 +79,7 @@ class block_blog_tags extends block_base {
             $this->content = new stdClass();
             $this->content->text = '';
             if ($this->page->user_is_editing()) {
-                $this->content->text = get_string('tagsaredisabled', 'tag');
+                $this->content->text = get_string('tagsaredisabled', 'core_tag');
             }
             return $this->content;
 
@@ -198,7 +198,7 @@ class block_blog_tags extends block_base {
                 $blogurl->param('tagid', $tag->id);
                 $link = html_writer::link($blogurl, core_tag_tag::make_display_name($tag),
                         array('class' => $tag->class,
-                            'title' => get_string('numberofentries', 'blog', $tag->ct)));
+                            'title' => get_string('numberofentries', 'core_blog', $tag->ct)));
                 $this->content->text .= '<li>' . $link . '</li> ';
             }
             $this->content->text .= "\n</ul>\n";

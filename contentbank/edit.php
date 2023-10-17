@@ -124,9 +124,9 @@ if ($editorform->is_cancelled()) {
     redirect($returnurl);
 } else if ($data = $editorform->get_data()) {
     if (empty($id)) {
-        $msg = get_string('contentcreated', 'contentbank');
+        $msg = get_string('contentcreated', 'core_contentbank');
     } else {
-        $msg = get_string('contentupdated', 'contentbank');
+        $msg = get_string('contentupdated', 'core_contentbank');
     }
     $id = $editorform->save_content($data);
     // Just in case we've created a new content.

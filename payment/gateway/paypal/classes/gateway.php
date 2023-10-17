@@ -83,7 +83,7 @@ class gateway extends \core_payment\gateway {
                                                  \stdClass $data, array $files, array &$errors): void {
         if ($data->enabled &&
                 (empty($data->brandname) || empty($data->clientid) || empty($data->secret))) {
-            $errors['enabled'] = get_string('gatewaycannotbeenabled', 'payment');
+            $errors['enabled'] = get_string('gatewaycannotbeenabled', 'core_payment');
         }
     }
 }

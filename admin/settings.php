@@ -23,13 +23,13 @@ if (empty($settingspage) or !($settingspage instanceof admin_settingpage)) {
     if (moodle_needs_upgrading()) {
         redirect(new moodle_url('/admin/index.php'));
     } else {
-        throw new \moodle_exception('sectionerror', 'admin', "$CFG->wwwroot/$CFG->admin/");
+        throw new \moodle_exception('sectionerror', 'core_admin', "$CFG->wwwroot/$CFG->admin/");
     }
     die;
 }
 
 if (!($settingspage->check_access())) {
-    throw new \moodle_exception('accessdenied', 'admin');
+    throw new \moodle_exception('accessdenied', 'core_admin');
     die;
 }
 
@@ -70,7 +70,7 @@ if ($data = data_submitted() and confirm_sesskey() and isset($data->action) and 
         }
         redirect($PAGE->url);
     } else {
-        $errormsg = get_string('errorwithsettings', 'admin');
+        $errormsg = get_string('errorwithsettings', 'core_admin');
         $firsterror = reset($adminroot->errors);
     }
     $settingspage = $adminroot->locate($section, true);
@@ -86,7 +86,7 @@ if (empty($SITE->fullname)) {
     $PAGE->set_heading($settingspage->visiblename);
 
     echo $OUTPUT->header();
-    echo $OUTPUT->box(get_string('configintrosite', 'admin'));
+    echo $OUTPUT->box(get_string('configintrosite', 'core_admin'));
 
     if ($errormsg !== '') {
         echo $OUTPUT->notification($errormsg);

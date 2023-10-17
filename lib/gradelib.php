@@ -394,7 +394,7 @@ function grade_regrade_final_grades_if_required($course, callable $callback = nu
             $PAGE->set_heading($course->fullname);
             echo $OUTPUT->header();
         }
-        echo $OUTPUT->heading(get_string('recalculatinggrades', 'grades'));
+        echo $OUTPUT->heading(get_string('recalculatinggrades', 'core_grades'));
         $progress = new \core\progress\display(true);
         $status = grade_regrade_final_grades($course->id, null, null, $progress);
 
@@ -551,7 +551,7 @@ function grade_get_grades($courseid, $itemtype, $itemmodule, $iteminstance, $use
                                 $a = new stdClass();
                                 $a->grade = $grade->str_grade;
                                 $a->max   = grade_format_gradevalue($grade_item->grademax, $grade_item);
-                                $grade->str_long_grade = get_string('gradelong', 'grades', $a);
+                                $grade->str_long_grade = get_string('gradelong', 'core_grades', $a);
                             }
                         }
 
@@ -625,7 +625,7 @@ function grade_get_grades($courseid, $itemtype, $itemmodule, $iteminstance, $use
 
                         } else if (is_null($grade->grade)) {
                             $grade->grade = 0;
-                            $grade->str_grade = get_string('nooutcome', 'grades');
+                            $grade->str_grade = get_string('nooutcome', 'core_grades');
 
                         } else {
                             $grade->grade = (int)$grade->grade;
@@ -942,12 +942,12 @@ function grade_get_categories_menu($courseid, $includenew=false) {
     }
     foreach ($categories as $key=>$category) {
         if ($category->is_course_category()) {
-            $result[$category->id] = get_string('uncategorised', 'grades');
+            $result[$category->id] = get_string('uncategorised', 'core_grades');
             unset($categories[$key]);
         }
     }
     if ($includenew) {
-        $result[-1] = get_string('newcategory', 'grades');
+        $result[-1] = get_string('newcategory', 'core_grades');
     }
     $cats = array();
     foreach ($categories as $category) {
@@ -1164,7 +1164,7 @@ function grade_regrade_final_grades($courseid, $userid=null, $updated_item=null,
     if ($userid) {
         // one raw grade updated for one user
         if (empty($updated_item)) {
-            throw new \moodle_exception("cannotbenull", 'debug', '', "updated_item");
+            throw new \moodle_exception("cannotbenull", 'mod_debug', '', "updated_item");
         }
         if ($course_item->needsupdate) {
             $updated_item->force_regrading();
@@ -1323,7 +1323,7 @@ function grade_regrade_final_grades($courseid, $userid=null, $updated_item=null,
                 $grade_items[$gid]->force_regrading();
                 if (!empty($grade_items[$gid]->calculation) && empty($errors[$gid])) {
                     $itemname = $grade_items[$gid]->get_name();
-                    $errors[$gid] = get_string('errorcalculationbroken', 'grades', $itemname);
+                    $errors[$gid] = get_string('errorcalculationbroken', 'core_grades', $itemname);
                 }
             }
             break; // Found error.
@@ -1367,7 +1367,7 @@ function grade_grab_course_grades($courseid, $modname=null, $userid=0) {
     }
 
     if (!$mods = core_component::get_plugin_list('mod') ) {
-        throw new \moodle_exception('nomodules', 'debug');
+        throw new \moodle_exception('nomodules', 'mod_debug');
     }
 
     foreach ($mods as $mod => $fullmod) {
@@ -1447,7 +1447,7 @@ function remove_grade_letters($context, $showfeedback) {
         $event->trigger();
     }
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.' - '.get_string('letters', 'grades'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.' - '.get_string('letters', 'core_grades'), 'notifysuccess');
     }
 
     $cache = cache::make('core', 'grade_letters');
@@ -1471,7 +1471,7 @@ function remove_course_grades($courseid, $showfeedback) {
     $course_category->delete('coursedelete');
     $fs->delete_area_files(context_course::instance($courseid)->id, 'grade', 'feedback');
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.' - '.get_string('grades', 'grades').', '.get_string('items', 'grades').', '.get_string('categories', 'grades'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.' - '.get_string('grades', 'core_grades').', '.get_string('items', 'core_grades').', '.get_string('categories', 'core_grades'), 'notifysuccess');
     }
 
     if ($outcomes = grade_outcome::fetch_all(array('courseid'=>$courseid))) {
@@ -1481,7 +1481,7 @@ function remove_course_grades($courseid, $showfeedback) {
     }
     $DB->delete_records('grade_outcomes_courses', array('courseid'=>$courseid));
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.' - '.get_string('outcomes', 'grades'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.' - '.get_string('outcomes', 'core_grades'), 'notifysuccess');
     }
 
     if ($scales = grade_scale::fetch_all(array('courseid'=>$courseid))) {
@@ -1495,7 +1495,7 @@ function remove_course_grades($courseid, $showfeedback) {
 
     $DB->delete_records('grade_settings', array('courseid'=>$courseid));
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.' - '.get_string('settings', 'grades'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.' - '.get_string('settings', 'core_grades'), 'notifysuccess');
     }
 }
 

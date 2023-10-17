@@ -61,7 +61,7 @@ class mobile {
 
         $instance = instance::get_from_cmid($args->cmid);
         if (!$instance) {
-            return self::mobile_print_error(get_string('view_error_url_missing_parameters', 'bigbluebuttonbn'));
+            return self::mobile_print_error(get_string('view_error_url_missing_parameters', 'mod_bigbluebuttonbn'));
         }
 
         $cm = $instance->get_cm();
@@ -69,7 +69,7 @@ class mobile {
 
         // Check activity status.
         if ($instance->before_start_time()) {
-            $message = get_string('view_message_conference_not_started', 'bigbluebuttonbn');
+            $message = get_string('view_message_conference_not_started', 'mod_bigbluebuttonbn');
 
             $notstarted = [
                 'starts_at' => '',
@@ -78,7 +78,7 @@ class mobile {
             if (!empty($instance->get_instance_var('openingtime'))) {
                 $notstarted['starts_at'] = sprintf(
                     '%s: %s',
-                    get_string('mod_form_field_openingtime', 'bigbluebuttonbn'),
+                    get_string('mod_form_field_openingtime', 'mod_bigbluebuttonbn'),
                     userdate($instance->get_instance_var('openingtime'))
                 );
             }
@@ -86,7 +86,7 @@ class mobile {
             if (!empty($instance->get_instance_var('closingtime'))) {
                 $notstarted['ends_at'] = sprintf(
                     '%s: %s',
-                    get_string('mod_form_field_closingtime', 'bigbluebuttonbn'),
+                    get_string('mod_form_field_closingtime', 'mod_bigbluebuttonbn'),
                     userdate($instance->get_instance_var('closingtime'))
                 );
             }
@@ -95,7 +95,7 @@ class mobile {
         }
 
         if ($instance->has_ended()) {
-            $message = get_string('view_message_conference_has_ended', 'bigbluebuttonbn');
+            $message = get_string('view_message_conference_has_ended', 'mod_bigbluebuttonbn');
             return self::mobile_print_notification($instance, $message);
         }
 
@@ -111,7 +111,7 @@ class mobile {
 
         // Validate if the user is in a role allowed to join.
         if (!$instance->can_join()) {
-            return self::mobile_print_error(get_string('view_nojoin', 'bigbluebuttonbn'));
+            return self::mobile_print_error(get_string('view_nojoin', 'mod_bigbluebuttonbn'));
         }
 
         // Note: This logic should match bbb_view.php.
@@ -121,7 +121,7 @@ class mobile {
             // If user is not administrator nor moderator (user is student) and waiting is required.
             return self::mobile_print_notification(
                 $instance,
-                get_string('view_message_conference_wait_for_moderator', 'bigbluebuttonbn')
+                get_string('view_message_conference_wait_for_moderator', 'mod_bigbluebuttonbn')
             );
         }
 
@@ -139,7 +139,7 @@ class mobile {
         $msjgroup = [];
         $groupmode = groups_get_activity_groupmode($instance->get_cm());
         if ($groupmode != NOGROUPS) {
-            $msjgroup['message'] = get_string('view_mobile_message_groups_not_supported', 'bigbluebuttonbn');
+            $msjgroup['message'] = get_string('view_mobile_message_groups_not_supported', 'mod_bigbluebuttonbn');
         }
 
         $data = [

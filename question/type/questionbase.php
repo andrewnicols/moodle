@@ -242,7 +242,7 @@ abstract class question_definition {
      */
     public function validate_can_regrade_with_other_version(question_definition $otherversion): ?string {
         if (get_class($otherversion) !== get_class($this)) {
-            return get_string('cannotregradedifferentqtype', 'question');
+            return get_string('cannotregradedifferentqtype', 'core_question');
         }
 
         return null;
@@ -681,7 +681,7 @@ class question_classified_response {
     }
 
     public static function no_response() {
-        return new question_classified_response(null, get_string('noresponse', 'question'), null);
+        return new question_classified_response(null, get_string('noresponse', 'core_question'), null);
     }
 }
 

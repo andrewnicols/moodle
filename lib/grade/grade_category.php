@@ -2353,13 +2353,13 @@ class grade_category extends grade_object {
         }
 
         if ($this->droplow && $this->can_apply_limit_rules()) {
-            $allhelp[] = get_string('droplowestvalues', 'grades', $this->droplow);
+            $allhelp[] = get_string('droplowestvalues', 'core_grades', $this->droplow);
         }
         if ($this->keephigh && $this->can_apply_limit_rules()) {
-            $allhelp[] = get_string('keephighestvalues', 'grades', $this->keephigh);
+            $allhelp[] = get_string('keephighestvalues', 'core_grades', $this->keephigh);
         }
         if (!$this->aggregateonlygraded) {
-            $allhelp[] = get_string('aggregatenotonlygraded', 'grades');
+            $allhelp[] = get_string('aggregatenotonlygraded', 'core_grades');
         }
         if ($allhelp) {
             return implode('. ', $allhelp) . '.';

@@ -88,12 +88,12 @@ class core_completion_external extends external_api {
         // Set up completion object and check it is enabled.
         $completion = new completion_info($course);
         if (!$completion->is_enabled()) {
-            throw new moodle_exception('completionnotenabled', 'completion');
+            throw new moodle_exception('completionnotenabled', 'core_completion');
         }
 
         // Check completion state is manual.
         if ($cm->completion != COMPLETION_TRACKING_MANUAL) {
-            throw new moodle_exception('cannotmanualctrack', 'error');
+            throw new moodle_exception('cannotmanualctrack', 'mod_error');
         }
 
         $targetstate = ($completed) ? COMPLETION_COMPLETE : COMPLETION_INCOMPLETE;
@@ -162,7 +162,7 @@ class core_completion_external extends external_api {
         // Set up completion object and check it is enabled.
         $completion = new completion_info($course);
         if (!$completion->is_enabled()) {
-            throw new moodle_exception('completionnotenabled', 'completion');
+            throw new moodle_exception('completionnotenabled', 'core_completion');
         }
 
         // Update completion state and get the new state back.
@@ -250,7 +250,7 @@ class core_completion_external extends external_api {
             require_capability('report/progress:view', $context);
             if (!groups_user_groups_visible($course, $user->id)) {
                 // We are not in the same group!
-                throw new moodle_exception('accessdenied', 'admin');
+                throw new moodle_exception('accessdenied', 'core_admin');
             }
         }
 
@@ -409,7 +409,7 @@ class core_completion_external extends external_api {
         if ($user->id != $USER->id) {
             if (!groups_user_groups_visible($course, $user->id)) {
                 // We are not in the same group!
-                throw new moodle_exception('accessdenied', 'admin');
+                throw new moodle_exception('accessdenied', 'core_admin');
             }
         }
 
@@ -418,15 +418,15 @@ class core_completion_external extends external_api {
         // Check this user is enroled.
         if (!$info->is_tracked_user($user->id)) {
             if ($USER->id == $user->id) {
-                throw new moodle_exception('notenroled', 'completion');
+                throw new moodle_exception('notenroled', 'core_completion');
             } else {
-                throw new moodle_exception('usernotenroled', 'completion');
+                throw new moodle_exception('usernotenroled', 'core_completion');
             }
         }
 
         $completions = $info->get_completions($user->id);
         if (empty($completions)) {
-            throw new moodle_exception('nocriteriaset', 'completion');
+            throw new moodle_exception('nocriteriaset', 'core_completion');
         }
 
         // Load course completion.
@@ -538,23 +538,23 @@ class core_completion_external extends external_api {
         // Set up completion object and check it is enabled.
         $completion = new completion_info($course);
         if (!$completion->is_enabled()) {
-            throw new moodle_exception('completionnotenabled', 'completion');
+            throw new moodle_exception('completionnotenabled', 'core_completion');
         }
 
         if (!$completion->is_tracked_user($USER->id)) {
-            throw new moodle_exception('nottracked', 'completion');
+            throw new moodle_exception('nottracked', 'core_completion');
         }
 
         $completion = $completion->get_completion($USER->id, COMPLETION_CRITERIA_TYPE_SELF);
 
         // Self completion criteria not enabled.
         if (!$completion) {
-            throw new moodle_exception('noselfcompletioncriteria', 'completion');
+            throw new moodle_exception('noselfcompletioncriteria', 'core_completion');
         }
 
         // Check if the user has already marked himself as complete.
         if ($completion->is_complete()) {
-            throw new moodle_exception('useralreadymarkedcomplete', 'completion');
+            throw new moodle_exception('useralreadymarkedcomplete', 'core_completion');
         }
 
         // Mark the course complete.

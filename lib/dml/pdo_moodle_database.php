@@ -116,7 +116,7 @@ abstract class pdo_moodle_database extends moodle_database {
      * @return string
      */
     public function get_name() {
-        return get_string('pdo'.$this->get_dbtype(), 'install');
+        return get_string('pdo'.$this->get_dbtype(), 'mod_install');
     }
 
     /**
@@ -125,7 +125,7 @@ abstract class pdo_moodle_database extends moodle_database {
      * @return string
      */
     public function get_configuration_help() {
-        return get_string('pdo'.$this->get_dbtype().'help', 'install');
+        return get_string('pdo'.$this->get_dbtype().'help', 'mod_install');
     }
 
     /**
@@ -527,7 +527,7 @@ abstract class pdo_moodle_database extends moodle_database {
                 break;
             default:
                 $this->lastError = __FILE__ . ' LINE: ' . __LINE__ . '.';
-                throw new \moodle_exception(unknowparamtype, 'error', '', $this->lastError);
+                throw new \moodle_exception(unknowparamtype, 'mod_error', '', $this->lastError);
             }
         }
         $sql = "UPDATE {{$table}} SET $newfield $select";

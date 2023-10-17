@@ -218,7 +218,7 @@ class forum_portfolio_caller extends portfolio_module_caller_base {
             if ($writingleap) {
                 // add on an extra 'selection' entry
                 $selection = new portfolio_format_leap2a_entry('forumdiscussion' . $this->discussionid,
-                    get_string('discussion', 'forum') . ': ' . $this->discussion->name, 'selection');
+                    get_string('discussion', 'mod_forum') . ': ' . $this->discussion->name, 'selection');
                 $leapwriter->add_entry($selection);
                 $leapwriter->make_selection($selection, $ids, 'Grouping');
                 $content = $leapwriter->to_xml();
@@ -329,7 +329,7 @@ class forum_portfolio_caller extends portfolio_module_caller_base {
         $by = new stdClass();
         $by->name = $fullname;
         $by->date = userdate($post->modified, '', core_date::get_user_timezone($this->user));
-        $output .= '<div class="author">'.get_string('bynameondate', 'forum', $by).'</div>';
+        $output .= '<div class="author">'.get_string('bynameondate', 'mod_forum', $by).'</div>';
 
         $output .= '</td></tr>';
 
@@ -341,7 +341,7 @@ class forum_portfolio_caller extends portfolio_module_caller_base {
 
         if (is_array($this->keyedfiles) && array_key_exists($post->id, $this->keyedfiles) && is_array($this->keyedfiles[$post->id]) && count($this->keyedfiles[$post->id]) > 0) {
             $output .= '<div class="attachments">';
-            $output .= '<br /><b>' .  get_string('attachments', 'forum') . '</b>:<br /><br />';
+            $output .= '<br /><b>' .  get_string('attachments', 'mod_forum') . '</b>:<br /><br />';
             foreach ($this->keyedfiles[$post->id] as $file) {
                 $output .= $format->file_output($file)  . '<br/ >';
             }
@@ -399,7 +399,7 @@ class forum_portfolio_caller extends portfolio_module_caller_base {
      * @return string
      */
     public static function display_name() {
-        return get_string('modulename', 'forum');
+        return get_string('modulename', 'mod_forum');
     }
 
     public static function base_supported_formats() {
@@ -725,7 +725,7 @@ function forum_update_calendar($forum, $cmid) {
     $event = new stdClass();
 
     if (!empty($forum->duedate)) {
-        $event->name = get_string('calendardue', 'forum', $forum->name);
+        $event->name = get_string('calendardue', 'mod_forum', $forum->name);
         $event->description = format_module_intro('forum', $forum, $cmid, false);
         $event->format = FORMAT_HTML;
         $event->courseid = $forum->course;

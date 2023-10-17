@@ -36,7 +36,7 @@ class tag_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('tasktagcron', 'admin');
+        return get_string('tasktagcron', 'core_admin');
     }
 
     /**

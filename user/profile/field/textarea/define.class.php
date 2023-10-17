@@ -36,7 +36,7 @@ class profile_define_textarea extends profile_define_base {
      */
     public function define_form_specific($form) {
         // Default data.
-        $form->addElement('editor', 'defaultdata', get_string('profiledefaultdata', 'admin'));
+        $form->addElement('editor', 'defaultdata', get_string('profiledefaultdata', 'core_admin'));
         $form->setType('defaultdata', PARAM_RAW); // We have to trust person with capability to edit this default description.
     }
 

@@ -103,7 +103,7 @@ if (has_capability('moodle/contentbank:upload', $context)) {
     if (!empty($accepted)) {
         $importurl = new moodle_url('/contentbank/index.php', ['contextid' => $contextid]);
         $toolbar[] = [
-            'name' => get_string('upload', 'contentbank'),
+            'name' => get_string('upload', 'core_contentbank'),
             'link' => $importurl->out(false),
             'icon' => 'i/upload',
             'action' => 'upload'

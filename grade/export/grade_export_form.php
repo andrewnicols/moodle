@@ -38,11 +38,11 @@ class grade_export_form extends moodleform {
             debugging('Grade export plugin needs updating to support one step exports.', DEBUG_DEVELOPER);
         }
 
-        $mform->addElement('header', 'gradeitems', get_string('gradeitemsinc', 'grades'));
+        $mform->addElement('header', 'gradeitems', get_string('gradeitemsinc', 'core_grades'));
         $mform->setExpanded('gradeitems', true);
 
         if (!empty($features['idnumberrequired'])) {
-            $mform->addElement('static', 'idnumberwarning', get_string('useridnumberwarning', 'grades'));
+            $mform->addElement('static', 'idnumberwarning', get_string('useridnumberwarning', 'core_grades'));
         }
 
         $switch = grade_get_setting($COURSE->id, 'aggregationposition', $CFG->grade_aggregationposition);
@@ -61,7 +61,7 @@ class grade_export_form extends moodleform {
                 }
 
                 if (!empty($features['idnumberrequired']) and empty($grade_item->idnumber)) {
-                    $mform->addElement('checkbox', 'itemids['.$grade_item->id.']', $grade_item->get_name(), get_string('noidnumber', 'grades'));
+                    $mform->addElement('checkbox', 'itemids['.$grade_item->id.']', $grade_item->get_name(), get_string('noidnumber', 'core_grades'));
                     $mform->hardFreeze('itemids['.$grade_item->id.']');
                 } else {
                     $mform->addElement('advcheckbox', 'itemids['.$grade_item->id.']', $grade_item->get_name(), null, array('group' => 1));
@@ -76,17 +76,17 @@ class grade_export_form extends moodleform {
         }
 
 
-        $mform->addElement('header', 'options', get_string('exportformatoptions', 'grades'));
+        $mform->addElement('header', 'options', get_string('exportformatoptions', 'core_grades'));
         if (!empty($features['simpleui'])) {
             $mform->setExpanded('options', false);
         }
 
-        $mform->addElement('advcheckbox', 'export_feedback', get_string('exportfeedback', 'grades'));
+        $mform->addElement('advcheckbox', 'export_feedback', get_string('exportfeedback', 'core_grades'));
         $exportfeedback = isset($CFG->grade_export_exportfeedback) ? $CFG->grade_export_exportfeedback : 0;
         $mform->setDefault('export_feedback', $exportfeedback);
         $coursecontext = context_course::instance($COURSE->id);
         if (has_capability('moodle/course:viewsuspendedusers', $coursecontext)) {
-            $mform->addElement('advcheckbox', 'export_onlyactive', get_string('exportonlyactive', 'grades'));
+            $mform->addElement('advcheckbox', 'export_onlyactive', get_string('exportonlyactive', 'core_grades'));
             $mform->setType('export_onlyactive', PARAM_BOOL);
             $mform->setDefault('export_onlyactive', 1);
             $mform->addHelpButton('export_onlyactive', 'exportonlyactive', 'grades');
@@ -98,19 +98,19 @@ class grade_export_form extends moodleform {
 
         if (empty($features['simpleui'])) {
             $options = array('10'=>10, '20'=>20, '100'=>100, '1000'=>1000, '100000'=>100000);
-            $mform->addElement('select', 'previewrows', get_string('previewrows', 'grades'), $options);
+            $mform->addElement('select', 'previewrows', get_string('previewrows', 'core_grades'), $options);
         }
 
 
 
         if (!empty($features['updategradesonly'])) {
-            $mform->addElement('advcheckbox', 'updatedgradesonly', get_string('updatedgradesonly', 'grades'));
+            $mform->addElement('advcheckbox', 'updatedgradesonly', get_string('updatedgradesonly', 'core_grades'));
         }
         /// selections for decimal points and format, MDL-11667, defaults to site settings, if set
         //$default_gradedisplaytype = $CFG->grade_export_displaytype;
-        $options = array(GRADE_DISPLAY_TYPE_REAL       => get_string('real', 'grades'),
-                         GRADE_DISPLAY_TYPE_PERCENTAGE => get_string('percentage', 'grades'),
-                         GRADE_DISPLAY_TYPE_LETTER     => get_string('letter', 'grades'));
+        $options = array(GRADE_DISPLAY_TYPE_REAL       => get_string('real', 'core_grades'),
+                         GRADE_DISPLAY_TYPE_PERCENTAGE => get_string('percentage', 'core_grades'),
+                         GRADE_DISPLAY_TYPE_LETTER     => get_string('letter', 'core_grades'));
 
         /*
         foreach ($options as $key=>$option) {
@@ -126,22 +126,22 @@ class grade_export_form extends moodleform {
              * The method format_column_name requires the lang file string and the format_grade method requires the constant.
              */
             $checkboxes = array();
-            $checkboxes[] = $mform->createElement('advcheckbox', 'display[real]', null, get_string('real', 'grades'), null, array(0, GRADE_DISPLAY_TYPE_REAL));
-            $checkboxes[] = $mform->createElement('advcheckbox', 'display[percentage]', null, get_string('percentage', 'grades'), null, array(0, GRADE_DISPLAY_TYPE_PERCENTAGE));
-            $checkboxes[] = $mform->createElement('advcheckbox', 'display[letter]', null, get_string('letter', 'grades'), null, array(0, GRADE_DISPLAY_TYPE_LETTER));
-            $mform->addGroup($checkboxes, 'displaytypes', get_string('gradeexportdisplaytypes', 'grades'), ' ', false);
+            $checkboxes[] = $mform->createElement('advcheckbox', 'display[real]', null, get_string('real', 'core_grades'), null, array(0, GRADE_DISPLAY_TYPE_REAL));
+            $checkboxes[] = $mform->createElement('advcheckbox', 'display[percentage]', null, get_string('percentage', 'core_grades'), null, array(0, GRADE_DISPLAY_TYPE_PERCENTAGE));
+            $checkboxes[] = $mform->createElement('advcheckbox', 'display[letter]', null, get_string('letter', 'core_grades'), null, array(0, GRADE_DISPLAY_TYPE_LETTER));
+            $mform->addGroup($checkboxes, 'displaytypes', get_string('gradeexportdisplaytypes', 'core_grades'), ' ', false);
             $mform->setDefault('display[real]', $CFG->grade_export_displaytype == GRADE_DISPLAY_TYPE_REAL);
             $mform->setDefault('display[percentage]', $CFG->grade_export_displaytype == GRADE_DISPLAY_TYPE_PERCENTAGE);
             $mform->setDefault('display[letter]', $CFG->grade_export_displaytype == GRADE_DISPLAY_TYPE_LETTER);
         } else {
             // Only used by XML grade export format.
-            $mform->addElement('select', 'display', get_string('gradeexportdisplaytype', 'grades'), $options);
+            $mform->addElement('select', 'display', get_string('gradeexportdisplaytype', 'core_grades'), $options);
             $mform->setDefault('display', $CFG->grade_export_displaytype);
         }
 
         //$default_gradedecimals = $CFG->grade_export_decimalpoints;
         $options = array(0=>0, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
-        $mform->addElement('select', 'decimals', get_string('gradeexportdecimalpoints', 'grades'), $options);
+        $mform->addElement('select', 'decimals', get_string('gradeexportdecimalpoints', 'core_grades'), $options);
         $mform->setDefault('decimals', $CFG->grade_export_decimalpoints);
         $mform->disabledIf('decimals', 'display', 'eq', GRADE_DISPLAY_TYPE_LETTER);
         /*
@@ -152,20 +152,20 @@ class grade_export_form extends moodleform {
 
         if (!empty($features['includeseparator'])) {
             $radio = array();
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('septab', 'grades'), 'tab');
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcomma', 'grades'), 'comma');
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcolon', 'grades'), 'colon');
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepsemicolon', 'grades'), 'semicolon');
-            $mform->addGroup($radio, 'separator', get_string('separator', 'grades'), ' ', false);
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('septab', 'core_grades'), 'tab');
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcomma', 'core_grades'), 'comma');
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcolon', 'core_grades'), 'colon');
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepsemicolon', 'core_grades'), 'semicolon');
+            $mform->addGroup($radio, 'separator', get_string('separator', 'core_grades'), ' ', false);
             $mform->setDefault('separator', 'comma');
         }
 
         if (!empty($CFG->gradepublishing) and !empty($features['publishing'])) {
-            $mform->addElement('header', 'publishing', get_string('publishingoptions', 'grades'));
+            $mform->addElement('header', 'publishing', get_string('publishingoptions', 'core_grades'));
             if (!empty($features['simpleui'])) {
                 $mform->setExpanded('publishing', false);
             }
-            $options = array(get_string('nopublish', 'grades'), get_string('createnewkey', 'userkey'));
+            $options = array(get_string('nopublish', 'core_grades'), get_string('createnewkey', 'core_userkey'));
             $keys = $DB->get_records_select('user_private_key', "script='grade/export' AND instance=? AND userid=?",
                             array($COURSE->id, $USER->id));
             if ($keys) {
@@ -173,17 +173,17 @@ class grade_export_form extends moodleform {
                     $options[$key->value] = $key->value; // TODO: add more details - ip restriction, valid until ??
                 }
             }
-            $mform->addElement('select', 'key', get_string('userkey', 'userkey'), $options);
+            $mform->addElement('select', 'key', get_string('userkey', 'core_userkey'), $options);
             $mform->addHelpButton('key', 'userkey', 'userkey');
-            $mform->addElement('static', 'keymanagerlink', get_string('keymanager', 'userkey'),
-                    '<a href="'.$CFG->wwwroot.'/grade/export/keymanager.php?id='.$COURSE->id.'">'.get_string('keymanager', 'userkey').'</a>');
+            $mform->addElement('static', 'keymanagerlink', get_string('keymanager', 'core_userkey'),
+                    '<a href="'.$CFG->wwwroot.'/grade/export/keymanager.php?id='.$COURSE->id.'">'.get_string('keymanager', 'core_userkey').'</a>');
 
-            $mform->addElement('text', 'iprestriction', get_string('keyiprestriction', 'userkey'), array('size'=>80));
+            $mform->addElement('text', 'iprestriction', get_string('keyiprestriction', 'core_userkey'), array('size'=>80));
             $mform->addHelpButton('iprestriction', 'keyiprestriction', 'userkey');
             $mform->setDefault('iprestriction', getremoteaddr()); // own IP - just in case somebody does not know what user key is
             $mform->setType('iprestriction', PARAM_RAW_TRIMMED);
 
-            $mform->addElement('date_time_selector', 'validuntil', get_string('keyvaliduntil', 'userkey'), array('optional'=>true));
+            $mform->addElement('date_time_selector', 'validuntil', get_string('keyvaliduntil', 'core_userkey'), array('optional'=>true));
             $mform->addHelpButton('validuntil', 'keyvaliduntil', 'userkey');
             $mform->setDefault('validuntil', time()+3600*24*7); // only 1 week default duration - just in case somebody does not know what user key is
             $mform->setType('validuntil', PARAM_INT);
@@ -198,7 +198,7 @@ class grade_export_form extends moodleform {
         if (empty($features['simpleui'])) {
             $submitstring = get_string('submit');
         } else if (!empty($CFG->gradepublishing)) {
-            $submitstring = get_string('export', 'grades');
+            $submitstring = get_string('export', 'core_grades');
         }
 
         $this->add_sticky_action_buttons(false, $submitstring);

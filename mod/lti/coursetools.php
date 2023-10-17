@@ -36,7 +36,7 @@ require_course_login($course, false);
 
 $context = context_course::instance($course->id);
 if (!has_capability('mod/lti:addpreconfiguredinstance', $context)) {
-    throw new \moodle_exception('nopermissions', 'error', '', get_string('courseexternaltoolsnoviewpermissions', 'mod_lti'));
+    throw new \moodle_exception('nopermissions', 'mod_error', '', get_string('courseexternaltoolsnoviewpermissions', 'mod_lti'));
 }
 
 // Page setup.

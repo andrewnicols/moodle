@@ -48,7 +48,7 @@ $returnurl = $CFG->wwwroot.'/group/index.php?id='.$course->id;
 
 $strgroups           = get_string('groups');
 $strparticipants     = get_string('participants');
-$strautocreategroups = get_string('autocreategroups', 'group');
+$strautocreategroups = get_string('autocreategroups', 'core_group');
 
 $PAGE->set_title($strgroups);
 $PAGE->set_heading($course->fullname. ': '.$strgroups);
@@ -162,12 +162,12 @@ if ($editform->is_cancelled()) {
     if (isset($data->preview)) {
         $table = new html_table();
         if ($data->allocateby == 'no') {
-            $table->head  = array(get_string('groupscount', 'group', $numgrps));
+            $table->head  = array(get_string('groupscount', 'core_group', $numgrps));
             $table->size  = array('100%');
             $table->align = array('left');
             $table->width = '40%';
         } else {
-            $table->head  = array(get_string('groupscount', 'group', $numgrps), get_string('groupmembers', 'group'), get_string('usercounttotal', 'group', $usercnt));
+            $table->head  = array(get_string('groupscount', 'core_group', $numgrps), get_string('groupmembers', 'core_group'), get_string('usercounttotal', 'core_group', $usercnt));
             $table->size  = array('20%', '70%', '10%');
             $table->align = array('left', 'left', 'center');
             $table->width = '90%';
@@ -177,8 +177,8 @@ if ($editform->is_cancelled()) {
         foreach ($groups as $group) {
             $line = array();
             if (groups_get_group_by_name($courseid, $group['name'])) {
-                $line[] = '<span class="notifyproblem">'.get_string('groupnameexists', 'group', $group['name']).'</span>';
-                $error = get_string('groupnameexists', 'group', $group['name']);
+                $line[] = '<span class="notifyproblem">'.get_string('groupnameexists', 'core_group', $group['name']).'</span>';
+                $error = get_string('groupnameexists', 'core_group', $group['name']);
             } else {
                 $line[] = $group['name'];
             }
@@ -226,7 +226,7 @@ if ($editform->is_cancelled()) {
         // Save the groups data
         foreach ($groups as $key=>$group) {
             if (groups_get_group_by_name($courseid, $group['name'])) {
-                $error = get_string('groupnameexists', 'group', $group['name']);
+                $error = get_string('groupnameexists', 'core_group', $group['name']);
                 $failed = true;
                 break;
             }
@@ -277,7 +277,7 @@ if ($error != '') {
 $editform->display();
 
 if($preview !== '') {
-    echo $OUTPUT->heading(get_string('groupspreview', 'group'));
+    echo $OUTPUT->heading(get_string('groupspreview', 'core_group'));
 
     echo $preview;
 }

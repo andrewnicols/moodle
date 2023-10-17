@@ -69,11 +69,11 @@ class custom_category_condition_helper extends \qbank_managecategories\helper {
                             $a->questioncount = $category->questioncount;
                         }
                         if (isset($a->idnumber) && isset($a->questioncount)) {
-                            $formattedname = get_string('categorynamewithidnumberandcount', 'question', $a);
+                            $formattedname = get_string('categorynamewithidnumberandcount', 'core_question', $a);
                         } else if (isset($a->idnumber)) {
-                            $formattedname = get_string('categorynamewithidnumber', 'question', $a);
+                            $formattedname = get_string('categorynamewithidnumber', 'core_question', $a);
                         } else if (isset($a->questioncount)) {
-                            $formattedname = get_string('categorynamewithcount', 'question', $a);
+                            $formattedname = get_string('categorynamewithcount', 'core_question', $a);
                         } else {
                             $formattedname = $a->name;
                         }

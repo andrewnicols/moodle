@@ -60,7 +60,7 @@ class mnet_access_control_created extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventaccesscontrolcreated', 'mnet');
+        return get_string('eventaccesscontrolcreated', 'core_mnet');
     }
 
     /**

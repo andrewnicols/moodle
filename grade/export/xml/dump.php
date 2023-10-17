@@ -44,7 +44,7 @@ require_capability('gradeexport/xml:publish', $context);
 require_capability('gradeexport/xml:view', $context);
 
 if (!groups_group_visible($groupid, $COURSE)) {
-    throw new \moodle_exception('cannotaccessgroup', 'grades');
+    throw new \moodle_exception('cannotaccessgroup', 'core_grades');
 }
 
 // Get all url parameters and create an object to simulate a form submission.

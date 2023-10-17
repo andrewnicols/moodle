@@ -269,8 +269,8 @@ if ($mform->is_cancelled()) {
 }
 
 $strgrades       = get_string('grades');
-$strgraderreport = get_string('graderreport', 'grades');
-$strgradeedit    = get_string('editgrade', 'grades');
+$strgraderreport = get_string('graderreport', 'core_grades');
+$strgradeedit    = get_string('editgrade', 'core_grades');
 $struser         = get_string('user');
 
 grade_build_nav(__FILE__, $strgradeedit, array('courseid' => $courseid));

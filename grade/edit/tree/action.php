@@ -63,7 +63,7 @@ switch ($action) {
                 $object->insert();
             }
             if (!$object->can_control_visibility()) {
-                throw new \moodle_exception('componentcontrolsvisibility', 'grades', $returnurl);
+                throw new \moodle_exception('componentcontrolsvisibility', 'core_grades', $returnurl);
             }
             $object->set_hidden(1, true);
         }
@@ -78,7 +78,7 @@ switch ($action) {
                 $object->insert();
             }
             if (!$object->can_control_visibility()) {
-                throw new \moodle_exception('componentcontrolsvisibility', 'grades', $returnurl);
+                throw new \moodle_exception('componentcontrolsvisibility', 'core_grades', $returnurl);
             }
             $object->set_hidden(0, true);
         }
@@ -115,7 +115,7 @@ switch ($action) {
             // only be done by someone who can manage the grades.
             if ($type != 'category' || $object->aggregation != GRADE_AGGREGATE_SUM ||
                     !has_capability('moodle/grade:manage', $context)) {
-                throw new \moodle_exception('nopermissiontoresetweights', 'grades', $returnurl);
+                throw new \moodle_exception('nopermissiontoresetweights', 'core_grades', $returnurl);
             }
 
             // Remove the weightoverride flag from the children.

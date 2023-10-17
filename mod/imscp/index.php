@@ -37,8 +37,8 @@ $params = array(
 $event = \mod_imscp\event\course_module_instance_list_viewed::create($params);
 $event->trigger();
 
-$strimscp       = get_string('modulename', 'imscp');
-$strimscps      = get_string('modulenameplural', 'imscp');
+$strimscp       = get_string('modulename', 'mod_imscp');
+$strimscps      = get_string('modulenameplural', 'mod_imscp');
 $strname         = get_string('name');
 $strintro        = get_string('moduleintro');
 $strlastmodified = get_string('lastmodified');

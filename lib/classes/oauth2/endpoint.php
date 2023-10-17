@@ -66,7 +66,7 @@ class endpoint extends persistent {
      */
     protected function validate_url($value) {
         if (strpos($value, 'https://') !== 0) {
-            return new lang_string('sslonlyaccess', 'error');
+            return new lang_string('sslonlyaccess', 'mod_error');
         }
         return true;
     }

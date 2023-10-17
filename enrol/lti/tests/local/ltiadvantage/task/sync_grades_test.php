@@ -82,7 +82,7 @@ class sync_grades_test extends \lti_advantage_testcase {
 
         $task = new \enrol_lti\local\ltiadvantage\task\sync_grades();
         $this->expectOutputRegex('/Skipping task - ' .
-            get_string('pluginnotenabled', 'auth', get_string('pluginname', 'auth_lti')) . '/');
+            get_string('pluginnotenabled', 'core_auth', get_string('pluginname', 'auth_lti')) . '/');
         $task->execute();
     }
 

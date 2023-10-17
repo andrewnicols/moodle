@@ -55,20 +55,20 @@ class mnet_profile_form extends moodleform {
         $fields = mnet_profile_field_options();
 
         // Fields to import ----------------------------------------------------
-        $mform->addElement('header', 'import', get_string('importfields', 'mnet'));
+        $mform->addElement('header', 'import', get_string('importfields', 'core_mnet'));
 
-        $select = $mform->addElement('select', 'importfields', get_string('importfields', 'mnet'), $fields['optional']);
+        $select = $mform->addElement('select', 'importfields', get_string('importfields', 'core_mnet'), $fields['optional']);
         $select->setMultiple(true);
 
-        $mform->addElement('checkbox', 'importdefault', get_string('leavedefault', 'mnet'), $mnetprofileimportfields);
+        $mform->addElement('checkbox', 'importdefault', get_string('leavedefault', 'core_mnet'), $mnetprofileimportfields);
 
         // Fields to export ----------------------------------------------------
-        $mform->addElement('header', 'export', get_string('exportfields', 'mnet'));
+        $mform->addElement('header', 'export', get_string('exportfields', 'core_mnet'));
 
-        $select = $mform->addElement('select', 'exportfields', get_string('exportfields', 'mnet'), $fields['optional']);
+        $select = $mform->addElement('select', 'exportfields', get_string('exportfields', 'core_mnet'), $fields['optional']);
         $select->setMultiple(true);
 
-        $mform->addElement('checkbox', 'exportdefault', get_string('leavedefault', 'mnet'), $mnetprofileexportfields);
+        $mform->addElement('checkbox', 'exportdefault', get_string('leavedefault', 'core_mnet'), $mnetprofileexportfields);
 
         $this->add_action_buttons();
     }

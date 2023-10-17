@@ -67,7 +67,7 @@ class quiz_overview_table extends attempts_report_table {
                      WHERE {$this->groupstudentsjoins->wheres}
                     ", $this->groupstudentsjoins->params);
             if ($hasgroupstudents) {
-                $this->add_average_row(get_string('groupavg', 'grades'), $this->groupstudentsjoins);
+                $this->add_average_row(get_string('groupavg', 'core_grades'), $this->groupstudentsjoins);
             }
         }
 
@@ -79,7 +79,7 @@ class quiz_overview_table extends attempts_report_table {
                      WHERE {$this->studentsjoins->wheres}
                     " , $this->studentsjoins->params);
             if ($hasstudents) {
-                $this->add_average_row(get_string('overallaverage', 'grades'), $this->studentsjoins);
+                $this->add_average_row(get_string('overallaverage', 'core_grades'), $this->studentsjoins);
             }
         }
     }
@@ -253,7 +253,7 @@ class quiz_overview_table extends attempts_report_table {
         }
         return html_writer::link(new moodle_url('/mod/quiz/review.php',
                 ['attempt' => $attempt->attempt]), $grade,
-                ['title' => get_string('reviewattempt', 'quiz')]);
+                ['title' => get_string('reviewattempt', 'mod_quiz')]);
     }
 
     /**
@@ -281,7 +281,7 @@ class quiz_overview_table extends attempts_report_table {
             $grade = '-';
         } else if (is_null($stepdata->fraction)) {
             if ($state == question_state::$needsgrading) {
-                $grade = get_string('requiresgrading', 'question');
+                $grade = get_string('requiresgrading', 'core_question');
             } else {
                 $grade = '-';
             }

@@ -176,7 +176,7 @@ function data_get_exportdata($dataid, $fields, $selectedfields, $currentgroup=0,
         }
     }
     if ($tags) {
-        $exportdata[0][] = get_string('tags', 'data');
+        $exportdata[0][] = get_string('tags', 'mod_data');
     }
     if ($userdetails) {
         $exportdata[0][] = get_string('user');
@@ -184,11 +184,11 @@ function data_get_exportdata($dataid, $fields, $selectedfields, $currentgroup=0,
         $exportdata[0][] = get_string('email');
     }
     if ($time) {
-        $exportdata[0][] = get_string('timeadded', 'data');
-        $exportdata[0][] = get_string('timemodified', 'data');
+        $exportdata[0][] = get_string('timeadded', 'mod_data');
+        $exportdata[0][] = get_string('timemodified', 'mod_data');
     }
     if ($approval) {
-        $exportdata[0][] = get_string('approved', 'data');
+        $exportdata[0][] = get_string('approved', 'mod_data');
     }
 
     $datarecords = $DB->get_records('data_records', array('dataid'=>$dataid));

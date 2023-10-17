@@ -197,7 +197,7 @@ class blog_entry implements renderable {
         if ($this->uniquehash && $this->content) {
             if ($externalblog = $DB->get_record('blog_external', array('id' => $this->content))) {
                 $urlparts = parse_url($externalblog->url);
-                $this->renderable->externalblogtext = get_string('retrievedfrom', 'blog') . get_string('labelsep', 'core_langconfig');
+                $this->renderable->externalblogtext = get_string('retrievedfrom', 'core_blog') . get_string('labelsep', 'core_langconfig');
                 $this->renderable->externalblogtext .= html_writer::link($urlparts['scheme'] . '://' . $urlparts['host'],
                                                                          $externalblog->name);
             }
@@ -600,15 +600,15 @@ class blog_entry implements renderable {
 
         // Everyone gets draft access.
         if ($CFG->bloglevel >= BLOG_USER_LEVEL) {
-            $options['draft'] = get_string('publishtonoone', 'blog');
+            $options['draft'] = get_string('publishtonoone', 'core_blog');
         }
 
         if ($CFG->bloglevel > BLOG_USER_LEVEL) {
-            $options['site'] = get_string('publishtosite', 'blog');
+            $options['site'] = get_string('publishtosite', 'core_blog');
         }
 
         if ($CFG->bloglevel >= BLOG_GLOBAL_LEVEL) {
-            $options['public'] = get_string('publishtoworld', 'blog');
+            $options['public'] = get_string('publishtoworld', 'core_blog');
         }
 
         return $options;
@@ -843,7 +843,7 @@ class blog_listing {
             echo $OUTPUT->render($pagingbar);
 
             if (!$count) {
-                print '<br /><div style="text-align:center">'. get_string('noentriesyet', 'blog') .'</div><br />';
+                print '<br /><div style="text-align:center">'. get_string('noentriesyet', 'core_blog') .'</div><br />';
             }
 
             print $morelink.'<br />'."\n";

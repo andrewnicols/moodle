@@ -41,10 +41,10 @@ if ($ADMIN->fulltree) {
 
     //--- enrol instance defaults ----------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('enrol_guest_defaults',
-        get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
+        get_string('enrolinstancedefaults', 'core_admin'), get_string('enrolinstancedefaults_desc', 'core_admin')));
 
     $settings->add(new admin_setting_configcheckbox('enrol_guest/defaultenrol',
-        get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 1));
+        get_string('defaultenrol', 'core_enrol'), get_string('defaultenrol_desc', 'core_enrol'), 1));
 
     $options = array(ENROL_INSTANCE_ENABLED  => get_string('yes'),
                      ENROL_INSTANCE_DISABLED => get_string('no'));

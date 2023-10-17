@@ -110,7 +110,7 @@ case 'upload':
     // redirect to default page
     try {
         $repo->upload('', $maxbytes);
-        redirect($home_url, get_string('uploadsucc','repository'));
+        redirect($home_url, get_string('uploadsucc','core_repository'));
     } catch (moodle_exception $e) {
         // inject target URL
         $e->link = $PAGE->url->out();
@@ -120,7 +120,7 @@ case 'upload':
     break;
 
 case 'search':
-    echo '<div><a href="' . $home_url->out() . '">'.get_string('back', 'repository')."</a></div>";
+    echo '<div><a href="' . $home_url->out() . '">'.get_string('back', 'core_repository')."</a></div>";
     try {
         $search_result = $repo->search($search_text);
         $search_result['issearchresult'] = true;
@@ -156,7 +156,7 @@ case 'search':
             echo '<input type="hidden" name="action" value="confirm"/>';
             echo '<input type="hidden" name="filename" value="'.s($item['title']).'"/>';
             echo '<input type="hidden" name="thumbnail" value="'.s($item['thumbnail']).'"/>';
-            echo '<input type="submit" value="'.s(get_string('select','repository')).'" />';
+            echo '<input type="submit" value="'.s(get_string('select','core_repository')).'" />';
             echo '</form>';
             echo '</td>';
             echo '</tr>';
@@ -171,7 +171,7 @@ case 'sign':
     echo $OUTPUT->header();
 
     echo $OUTPUT->container_start();
-    echo html_writer::link($url, get_string('back', 'repository'));
+    echo html_writer::link($url, get_string('back', 'core_repository'));
     echo $OUTPUT->container_end();
 
     if ($repo->check_login()) {
@@ -185,7 +185,7 @@ case 'sign':
             echo '<input type="hidden" name="draftpath" value="'.s($draftpath).'" /><br />';
             echo '<input type="hidden" name="savepath" value="'.s($savepath).'" /><br />';
             echo '<input type="hidden" name="repo_id" value="'.s($repo_id).'" /><br />';
-            echo '<input type="submit" value="'.s(get_string('upload', 'repository')).'" />';
+            echo '<input type="submit" value="'.s(get_string('upload', 'core_repository')).'" />';
             echo '</form>';
         } else {
             if (!empty($list['path'])) {
@@ -255,12 +255,12 @@ case 'sign':
                     echo '<input type="hidden" name="savepath" value="'.s($savepath).'" /><br />';
                     echo '<input type="hidden" name="filename" value="'.s($item['title']).'"/>';
                     echo '<input type="hidden" name="thumbnail" value="'.s($item['thumbnail']).'"/>';
-                    echo '<input type="submit" value="'.s(get_string('select','repository')).'" />';
+                    echo '<input type="submit" value="'.s(get_string('select','core_repository')).'" />';
                     echo '</form>';
                 } else {
                     echo '<form method="post">';
                     echo '<input type="hidden" name="p" value="'.s($item['path']).'"/>';
-                    echo '<input type="submit" value="'.s(get_string('enter', 'repository')).'" />';
+                    echo '<input type="submit" value="'.s(get_string('enter', 'core_repository')).'" />';
                     echo '</form>';
                 }
                 echo '</td>';
@@ -320,7 +320,7 @@ case 'download':
 
     if ($repo->has_moodle_files()) {
         $fileinfo = $repo->copy_to_area($reference, $record, $maxbytes, $areamaxbytes);
-        redirect($home_url, get_string('downloadsucc', 'repository'));
+        redirect($home_url, get_string('downloadsucc', 'core_repository'));
     } else {
         $thefile = $repo->get_file($reference, $filename);
         if (!empty($thefile['path'])) {
@@ -341,7 +341,7 @@ case 'download':
             }
             try {
                 $info = repository::move_to_filepool($thefile['path'], $record);
-                redirect($home_url, get_string('downloadsucc', 'repository'));
+                redirect($home_url, get_string('downloadsucc', 'core_repository'));
             } catch (moodle_exception $e) {
                 // inject target URL
                 $e->link = $PAGE->url->out();
@@ -349,7 +349,7 @@ case 'download':
                 throw $e;
             }
         } else {
-            throw new \moodle_exception('cannotdownload', 'repository');
+            throw new \moodle_exception('cannotdownload', 'core_repository');
         }
     }
 
@@ -357,12 +357,12 @@ case 'download':
 
 case 'confirm':
     echo $OUTPUT->header();
-    echo '<div><a href="'.s($PAGE->url->out(false)).'">'.get_string('back', 'repository').'</a></div>';
+    echo '<div><a href="'.s($PAGE->url->out(false)).'">'.get_string('back', 'core_repository').'</a></div>';
     echo '<img src="'.$thumbnail.'" />';
     echo '<form method="post">';
     echo '<table>';
     echo '  <tr>';
-    echo '    <td>'. html_writer::label(get_string('filename', 'repository'), 'filename'). '</td>';
+    echo '    <td>'. html_writer::label(get_string('filename', 'core_repository'), 'filename'). '</td>';
     echo '    <td><input type="text" id="filename" name="filename" value="'.s($filename).'" /></td>';
     echo '    <td><input type="hidden" name="fileurl" value="'.s($fileurl).'" /></td>';
     echo '    <td><input type="hidden" name="action" value="download" /></td>';
@@ -373,7 +373,7 @@ case 'confirm':
     // the save path
     echo ' <input name="draftpath" type="hidden" value="'.s($draftpath).'" />';
     echo ' <input name="savepath" type="hidden" value="'.s($savepath).'" />';
-    echo ' <input type="submit" value="'.s(get_string('download', 'repository')).'" />';
+    echo ' <input type="submit" value="'.s(get_string('download', 'core_repository')).'" />';
     echo '</div>';
     echo '</form>';
     echo $OUTPUT->footer();
@@ -388,7 +388,7 @@ case 'plugins':
 
     $repos = repository::get_instances($params);
     echo $OUTPUT->header();
-    echo html_writer::link($home_url->out(false), get_string('backtodraftfiles', 'repository'));
+    echo html_writer::link($home_url->out(false), get_string('backtodraftfiles', 'core_repository'));
     echo '<div>';
     echo '<ul>';
     foreach($repos as $repo) {

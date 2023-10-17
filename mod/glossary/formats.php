@@ -18,7 +18,7 @@ $PAGE->set_url($url);
 admin_externalpage_setup('managemodules'); // this is hacky, tehre should be a special hidden page for it
 
 if ( !$displayformat = $DB->get_record("glossary_formats", array("id"=>$id))) {
-    throw new \moodle_exception('invalidglossaryformat', 'glossary');
+    throw new \moodle_exception('invalidglossaryformat', 'mod_glossary');
 }
 
 $form = data_submitted();
@@ -53,14 +53,14 @@ if ( $mode == 'visible' and confirm_sesskey()) {
     die;
 }
 
-$strmodulename = get_string("modulename", "glossary");
-$strdisplayformats = get_string("displayformats","glossary");
+$strmodulename = get_string("modulename", 'mod_glossary');
+$strdisplayformats = get_string("displayformats",'mod_glossary');
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading($strmodulename . ': ' . get_string("displayformats","glossary"));
+echo $OUTPUT->heading($strmodulename . ': ' . get_string("displayformats",'mod_glossary'));
 
-echo $OUTPUT->box(get_string("configwarning", 'admin'), "generalbox boxaligncenter boxwidthnormal");
+echo $OUTPUT->box(get_string("configwarning", 'core_admin'), "generalbox boxaligncenter boxwidthnormal");
 echo "<br />";
 
 $yes = get_string("yes");
@@ -71,11 +71,11 @@ echo '<table width="90%" align="center" class="generalbox">';
 ?>
 <tr>
     <td colspan="3" align="center"><strong>
-    <?php echo get_string('displayformat'.$displayformat->name,'glossary'); ?>
+    <?php echo get_string('displayformat'.$displayformat->name,'mod_glossary'); ?>
     </strong></td>
 </tr>
 <tr valign="top">
-    <td align="right" width="20%"><?php echo html_writer::label(get_string('popupformat','glossary'), 'menupopupformatname'); ?></td>
+    <td align="right" width="20%"><?php echo html_writer::label(get_string('popupformat','mod_glossary'), 'menupopupformatname'); ?></td>
     <td>
  <?php
     // Get available formats.
@@ -85,7 +85,7 @@ echo '<table width="90%" align="center" class="generalbox">';
 
     //Take names
     foreach ($recformats as $format) {
-       $formats[$format->name] = get_string("displayformat$format->name", "glossary");
+       $formats[$format->name] = get_string("displayformat$format->name", 'mod_glossary');
     }
     //Sort it
     asort($formats);
@@ -161,10 +161,10 @@ echo '<table width="90%" align="center" class="generalbox">';
     break;
     }
 ?>
-    <option value="ALL" <?php p($sall)?>><?php p(get_string("allentries","glossary"))?></option>
-    <option value="SPECIAL" <?php p($sspecial)?>><?php p(get_string("special","glossary"))?></option>
-    <option value="0" <?php p($sallcategories)?>><?php p(get_string("allcategories","glossary"))?></option>
-    <option value="-1" <?php p($snocategorised)?>><?php p(get_string("notcategorised","glossary"))?></option>
+    <option value="ALL" <?php p($sall)?>><?php p(get_string("allentries",'mod_glossary'))?></option>
+    <option value="SPECIAL" <?php p($sspecial)?>><?php p(get_string("special",'mod_glossary'))?></option>
+    <option value="0" <?php p($sallcategories)?>><?php p(get_string("allcategories",'mod_glossary'))?></option>
+    <option value="-1" <?php p($snocategorised)?>><?php p(get_string("notcategorised",'mod_glossary'))?></option>
     </select>
     </td>
     <td width="60%">
@@ -198,8 +198,8 @@ echo '<table width="90%" align="center" class="generalbox">';
     break;
     }
 ?>
-    <option value="CREATION" <?php p($screation)?>><?php p(get_string("sortbycreation","glossary"))?></option>
-    <option value="UPDATE" <?php p($supdate)?>><?php p(get_string("sortbylastupdate","glossary"))?></option>
+    <option value="CREATION" <?php p($screation)?>><?php p(get_string("sortbycreation",'mod_glossary'))?></option>
+    <option value="UPDATE" <?php p($supdate)?>><?php p(get_string("sortbylastupdate",'mod_glossary'))?></option>
     <option value="FIRSTNAME" <?php p($sfname)?>><?php p(get_string("firstname"))?></option>
     <option value="LASTNAME" <?php p($slname)?>><?php p(get_string("lastname"))?></option>
     </select>
@@ -225,8 +225,8 @@ echo '<table width="90%" align="center" class="generalbox">';
     break;
     }
 ?>
-    <option value="asc" <?php p($sasc)?>><?php p(get_string("ascending","glossary"))?></option>
-    <option value="desc" <?php p($sdesc)?>><?php p(get_string("descending","glossary"))?></option>
+    <option value="asc" <?php p($sasc)?>><?php p(get_string("ascending",'mod_glossary'))?></option>
+    <option value="desc" <?php p($sdesc)?>><?php p(get_string("descending",'mod_glossary'))?></option>
     </select>
     </td>
     <td width="60%">

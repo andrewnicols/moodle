@@ -94,7 +94,7 @@ class login_signup_form extends moodleform implements renderable, templatable {
         profile_signup_fields($mform);
 
         if (signup_captcha_enabled()) {
-            $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'auth'));
+            $mform->addElement('recaptcha', 'recaptcha_element', get_string('security_question', 'core_auth'));
             $mform->addHelpButton('recaptcha_element', 'recaptcha', 'auth');
             $mform->closeHeaderBefore('recaptcha_element');
         }
@@ -142,7 +142,7 @@ class login_signup_form extends moodleform implements renderable, templatable {
             if (!empty($this->_form->_submitValues['g-recaptcha-response'])) {
                 $response = $this->_form->_submitValues['g-recaptcha-response'];
                 if (!$recaptchaelement->verify($response)) {
-                    $errors['recaptcha_element'] = get_string('incorrectpleasetryagain', 'auth');
+                    $errors['recaptcha_element'] = get_string('incorrectpleasetryagain', 'core_auth');
                 }
             } else {
                 $errors['recaptcha_element'] = get_string('missingrecaptchachallengefield');

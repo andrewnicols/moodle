@@ -127,7 +127,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -229,7 +229,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -304,7 +304,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $params['courseid'];
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
         }
         require_capability('moodle/course:managegroups', $context);
 
@@ -394,7 +394,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -452,7 +452,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -532,7 +532,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -610,13 +610,13 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
             if (!groups_remove_member_allowed($group, $user)) {
                 $fullname = fullname($user, has_capability('moodle/site:viewfullnames', $context));
-                throw new moodle_exception('errorremovenotpermitted', 'group', '', $fullname);
+                throw new moodle_exception('errorremovenotpermitted', 'core_group', '', $fullname);
             }
             groups_remove_member($group, $user);
         }
@@ -694,7 +694,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $grouping->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -807,7 +807,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $grouping->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -888,7 +888,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $grouping->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -1006,7 +1006,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $params['courseid'];
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
         }
         require_capability('moodle/course:managegroups', $context);
 
@@ -1088,7 +1088,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $grouping->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -1164,7 +1164,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -1240,7 +1240,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 
@@ -1456,7 +1456,7 @@ class core_group_external extends external_api {
          // Check if we have permissions for retrieve the information.
         if ($user->id != $USER->id) {
             if (!has_capability('moodle/course:managegroups', $context)) {
-                throw new moodle_exception('accessdenied', 'admin');
+                throw new moodle_exception('accessdenied', 'core_admin');
             }
 
             // Validate if the user is enrolled in the course.
@@ -1668,7 +1668,7 @@ class core_group_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $group->courseid;
-                throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid', 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:managegroups', $context);
 

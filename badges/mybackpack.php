@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/badgeslib.php');
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 $context = context_user::instance($USER->id);
@@ -45,7 +45,7 @@ if (empty($CFG->badges_allowexternalbackpack)) {
 $PAGE->set_url(new moodle_url('/badges/mybackpack.php'));
 $PAGE->set_context($context);
 
-$title = get_string('backpackdetails', 'badges');
+$title = get_string('backpackdetails', 'core_badges');
 $PAGE->set_title($title);
 $PAGE->set_heading(fullname($USER));
 $PAGE->set_pagelayout('standard');
@@ -59,7 +59,7 @@ if ($disconnect && $backpack) {
     if ($sitebackpack->apiversion == OPEN_BADGES_V2P1) {
         $bp = new \core_badges\backpack_api2p1($sitebackpack);
         $bp->disconnect_backpack($backpack);
-        redirect(new moodle_url('/badges/mybackpack.php'), get_string('backpackdisconnected', 'badges'), null,
+        redirect(new moodle_url('/badges/mybackpack.php'), get_string('backpackdisconnected', 'core_badges'), null,
             \core\output\notification::NOTIFY_SUCCESS);
     } else {
         // If backpack is connected, need to select collections.
@@ -81,8 +81,8 @@ if ($backpack) {
         $groups = $request->groups;
     }
     if (empty($groups)) {
-        $err = get_string('error:nogroupssummary', 'badges');
-        $err .= get_string('error:nogroupslink', 'badges', $sitebackpack->backpackweburl);
+        $err = get_string('error:nogroupssummary', 'core_badges');
+        $err .= get_string('error:nogroupslink', 'core_badges', $sitebackpack->backpackweburl);
         $params['nogroups'] = $err;
     } else {
         $params['groups'] = $groups;
@@ -145,10 +145,10 @@ if ($backpack) {
                 if (badges_send_verification_email($data->backpackemail, $data->externalbackpackid, $data->password)) {
                     $a = get_user_preferences('badges_email_verify_backpackid');
                     redirect(new moodle_url('/badges/mybackpack.php'),
-                        get_string('backpackemailverifypending', 'badges', $data->backpackemail),
+                        get_string('backpackemailverifypending', 'core_badges', $data->backpackemail),
                         null, \core\output\notification::NOTIFY_INFO);
                 } else {
-                    throw new \moodle_exception('backpackcannotsendverification', 'badges');
+                    throw new \moodle_exception('backpackcannotsendverification', 'core_badges');
                 }
             }
         }

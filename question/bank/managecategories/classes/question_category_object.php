@@ -84,24 +84,24 @@ class question_category_object {
 
         $this->str = new stdClass();
         $this->str->course         = get_string('course');
-        $this->str->category       = get_string('category', 'question');
-        $this->str->categoryinfo   = get_string('categoryinfo', 'question');
-        $this->str->questions      = get_string('questions', 'question');
+        $this->str->category       = get_string('category', 'core_question');
+        $this->str->categoryinfo   = get_string('categoryinfo', 'core_question');
+        $this->str->questions      = get_string('questions', 'core_question');
         $this->str->add            = get_string('add');
         $this->str->delete         = get_string('delete');
         $this->str->moveup         = get_string('moveup');
         $this->str->movedown       = get_string('movedown');
-        $this->str->edit           = get_string('editthiscategory', 'question');
+        $this->str->edit           = get_string('editthiscategory', 'core_question');
         $this->str->hide           = get_string('hide');
         $this->str->order          = get_string('order');
-        $this->str->parent         = get_string('parent', 'question');
+        $this->str->parent         = get_string('parent', 'core_question');
         $this->str->add            = get_string('add');
         $this->str->action         = get_string('action');
         $this->str->top            = get_string('top');
-        $this->str->addcategory    = get_string('addcategory', 'question');
-        $this->str->editcategory   = get_string('editcategory', 'question');
+        $this->str->addcategory    = get_string('addcategory', 'core_question');
+        $this->str->editcategory   = get_string('editcategory', 'core_question');
         $this->str->cancel         = get_string('cancel');
-        $this->str->editcategories = get_string('editcategories', 'question');
+        $this->str->editcategories = get_string('editcategories', 'core_question');
         $this->str->page           = get_string('page');
 
         $this->pageurl = $pageurl;
@@ -168,7 +168,7 @@ class question_category_object {
     public function output_edit_lists(): void {
         global $OUTPUT;
 
-        echo $OUTPUT->heading_with_help(get_string('questioncategories', 'question'), 'editcategories', 'question');
+        echo $OUTPUT->heading_with_help(get_string('questioncategories', 'core_question'), 'editcategories', 'question');
 
         foreach ($this->editlists as $context => $list) {
             $listhtml = $list->to_html(0, ['str' => $this->str]);
@@ -176,7 +176,7 @@ class question_category_object {
                 echo $OUTPUT->box_start('boxwidthwide boxaligncenter generalbox questioncategories contextlevel' .
                     $list->context->contextlevel);
                 $fullcontext = context::instance_by_id($context);
-                echo $OUTPUT->heading(get_string('questioncatsfor', 'question', $fullcontext->get_context_name()), 3);
+                echo $OUTPUT->heading(get_string('questioncatsfor', 'core_question', $fullcontext->get_context_name()), 3);
                 echo $listhtml;
                 echo $OUTPUT->box_end();
             }
@@ -214,7 +214,7 @@ class question_category_object {
             // Editing an existing category.
             $category = $DB->get_record("question_categories", ["id" => $categoryid], '*', MUST_EXIST);
             if ($category->parent == 0) {
-                throw new moodle_exception('cannotedittopcat', 'question', '', $categoryid);
+                throw new moodle_exception('cannotedittopcat', 'core_question', '', $categoryid);
             }
 
             $category->parent = "{$category->parent},{$category->contextid}";
@@ -318,7 +318,7 @@ class question_category_object {
         $vars = new stdClass();
         $vars->name = $category->name;
         $vars->count = $questionsincategory;
-        echo $OUTPUT->box(get_string('categorymove', 'question', $vars), 'generalbox boxaligncenter');
+        echo $OUTPUT->box(get_string('categorymove', 'core_question', $vars), 'generalbox boxaligncenter');
         $this->moveform->display();
     }
 
@@ -353,7 +353,7 @@ class question_category_object {
             $idnumber = null): int {
         global $DB;
         if (empty($newcategory)) {
-            throw new moodle_exception('categorynamecantbeblank', 'question');
+            throw new moodle_exception('categorynamecantbeblank', 'core_question');
         }
         list($parentid, $contextid) = explode(',', $newparent);
         // ...moodle_form makes sure select element output is legal no need for further cleaning.
@@ -361,7 +361,7 @@ class question_category_object {
 
         if ($parentid) {
             if (!($DB->get_field('question_categories', 'contextid', ['id' => $parentid]) == $contextid)) {
-                throw new moodle_exception('cannotinsertquestioncatecontext', 'question', '',
+                throw new moodle_exception('cannotinsertquestioncatecontext', 'core_question', '',
                     ['cat' => $newcategory, 'ctx' => $contextid]);
             }
         }
@@ -419,7 +419,7 @@ class question_category_object {
             $idnumber = null, $redirect = true): void {
         global $CFG, $DB;
         if (empty($newname)) {
-            throw new moodle_exception('categorynamecantbeblank', 'question');
+            throw new moodle_exception('categorynamecantbeblank', 'core_question');
         }
 
         // Get the record we are updating.

@@ -70,7 +70,7 @@ if ($hassiteconfig) {
     // Get all the issuers.
     $issuers = \core\oauth2\api::get_all_issuers();
     $oauth2services = [
-        '' => new lang_string('none', 'admin'),
+        '' => new lang_string('none', 'core_admin'),
     ];
     foreach ($issuers as $issuer) {
         // Get the enabled issuer only.

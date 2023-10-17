@@ -182,7 +182,7 @@ class api {
      */
     public static function get_communication_plugin_list_for_form(): array {
         // Add the option to have communication disabled.
-        $selection[processor::PROVIDER_NONE] = get_string('nocommunicationselected', 'communication');
+        $selection[processor::PROVIDER_NONE] = get_string('nocommunicationselected', 'core_communication');
         $communicationplugins = \core\plugininfo\communication::get_enabled_plugins();
         foreach ($communicationplugins as $pluginname => $notusing) {
             $provider = 'communication_' . $pluginname;
@@ -229,7 +229,7 @@ class api {
         $mform->addElement(
             'select',
             'selectedcommunication',
-            get_string('selectcommunicationprovider', 'communication'),
+            get_string('selectcommunicationprovider', 'core_communication'),
             $communicationproviders,
             ['data-communicationchooser-field' => 'selector'],
         );
@@ -265,7 +265,7 @@ class api {
             $mform->createElement(
                 'text',
                 'communicationroomname',
-                get_string('communicationroomname', 'communication'),
+                get_string('communicationroomname', 'core_communication'),
                 'maxlength="100" size="20"'
             ),
             'addcommunicationoptionshere'
@@ -277,7 +277,7 @@ class api {
                 'static',
                 'communicationroomnameinfo',
                 '',
-                get_string('communicationroomnameinfo', 'communication'),
+                get_string('communicationroomnameinfo', 'core_communication'),
             ),
             'addcommunicationoptionshere',
         );
@@ -627,7 +627,7 @@ class api {
 
         $roomstatus = $this->get_communication_room_url() ? 'ready' : 'pending';
         $pluginname = get_string('pluginname', $this->get_provider());
-        $message = get_string('communicationroom' . $roomstatus, 'communication', $pluginname);
+        $message = get_string('communicationroom' . $roomstatus, 'core_communication', $pluginname);
 
         switch ($roomstatus) {
             case 'pending':

@@ -34,7 +34,7 @@ class manage_payment_gateway_plugins extends \admin_setting_manage_plugins {
      * @return string
      */
     public function get_section_title() {
-        return get_string('type_paygw_plural', 'plugin');
+        return get_string('type_paygw_plural', 'mod_plugin');
     }
 
     /**

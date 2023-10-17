@@ -81,7 +81,7 @@ class completion_validate extends external_api {
                     'item' => 'mod_bigbluebuttonbn',
                     'itemid' => $instance->get_instance_id(),
                     'warningcode' => 'nopermissions',
-                    'message' => get_string('nopermissions', 'error', 'completion_validate')
+                    'message' => get_string('nopermissions', 'mod_error', 'completion_validate')
                 ];
             }
         } else {

@@ -37,7 +37,7 @@ $tool = \enrol_lti\helper::get_lti_tool($toolid);
 
 // Check if the authentication plugin is disabled.
 if (!is_enabled_auth('lti')) {
-    throw new \moodle_exception('pluginnotenabled', 'auth', '', get_string('pluginname', 'auth_lti'));
+    throw new \moodle_exception('pluginnotenabled', 'core_auth', '', get_string('pluginname', 'auth_lti'));
     exit();
 }
 

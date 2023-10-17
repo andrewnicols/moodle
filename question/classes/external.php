@@ -173,7 +173,7 @@ class core_question_external extends external_api {
                 FROM {question} q
                 JOIN {question_categories} qc ON qc.id = q.category
                 WHERE q.id = ?', [$questionid])) {
-            throw new \moodle_exception('questiondoesnotexist', 'question');
+            throw new \moodle_exception('questiondoesnotexist', 'core_question');
         }
 
         require_once($CFG->libdir . '/questionlib.php');

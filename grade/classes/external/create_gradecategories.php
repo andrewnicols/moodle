@@ -204,7 +204,7 @@ class create_gradecategories extends external_api {
             if (array_key_exists('grade_item_gradetype', $data) and $data['grade_item_gradetype'] == GRADE_TYPE_SCALE) {
                 if (empty($data['grade_item_scaleid'])) {
                     $warnings[] = ['item' => 'scaleid', 'warningcode' => 'invalidscale',
-                        'message' => get_string('missingscale', 'grades')];
+                        'message' => get_string('missingscale', 'core_grades')];
                 }
             }
             if (array_key_exists('grade_item_grademin', $data) and array_key_exists('grade_item_grademax', $data)) {
@@ -212,7 +212,7 @@ class create_gradecategories extends external_api {
                     ($data['grade_item_grademax'] == $data['grade_item_grademin'] OR
                     $data['grade_item_grademax'] < $data['grade_item_grademin'])) {
                     $warnings[] = ['item' => 'grademax', 'warningcode' => 'invalidgrade',
-                        'message' => get_string('incorrectminmax', 'grades')];
+                        'message' => get_string('incorrectminmax', 'core_grades')];
                 }
             }
 

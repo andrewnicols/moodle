@@ -38,7 +38,7 @@ class core_role_define_role_table_basic extends core_role_define_role_table_adva
     protected function print_show_hide_advanced_button() {
         echo '<div class="advancedbutton">';
         echo '<input type="submit" class="btn btn-secondary" name="toggleadvanced"
-            value="' . get_string('showadvanced', 'form') . '" />';
+            value="' . get_string('showadvanced', 'core_form') . '" />';
         echo '</div>';
     }
 

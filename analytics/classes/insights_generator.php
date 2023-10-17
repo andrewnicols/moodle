@@ -226,7 +226,7 @@ class insights_generator {
             $actiondata = (object)['url' => $action->get_url()->out(false), 'text' => $action->get_text()];
 
             // Basic message for people who still lives in the 90s.
-            $fullmessageplaintext .= get_string('insightinfomessageaction', 'analytics', $actiondata) . PHP_EOL;
+            $fullmessageplaintext .= get_string('insightinfomessageaction', 'core_analytics', $actiondata) . PHP_EOL;
 
             // We now process the HTML version actions, with a special treatment for useful/notuseful.
             if ($action->get_action_name() === 'useful') {

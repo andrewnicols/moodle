@@ -76,7 +76,7 @@ class viewcontent implements renderable, templatable {
                     break;
                 default:
                     $url = new \moodle_url('/contentbank/index.php', ['contextid' => $this->content->get_contextid()]);
-                    throw new moodle_exception('contentvisibilitynotfound', 'error', $url, $this->content->get_visibility());
+                    throw new moodle_exception('contentvisibilitynotfound', 'mod_error', $url, $this->content->get_visibility());
             }
 
             if ($visibilitylabel) {
@@ -95,7 +95,7 @@ class viewcontent implements renderable, templatable {
             ];
 
             if ($this->contenttype->can_upload()) {
-                $options[get_string('replacecontent', 'contentbank')] = ['data-action' => 'upload'];
+                $options[get_string('replacecontent', 'core_contentbank')] = ['data-action' => 'upload'];
 
                 $PAGE->requires->js_call_amd(
                     'core_contentbank/upload',
@@ -119,9 +119,9 @@ class viewcontent implements renderable, templatable {
 
         if ($this->contenttype->can_copy($this->content)) {
             // Add the copy content item to the menu.
-            $options[get_string('copycontent', 'contentbank')] = [
+            $options[get_string('copycontent', 'core_contentbank')] = [
                 'data-action' => 'copycontent',
-                'data-contentname' => get_string('copyof', 'contentbank', $this->content->get_name()),
+                'data-contentname' => get_string('copyof', 'core_contentbank', $this->content->get_name()),
                 'data-contentid' => $this->content->get_id(),
             ];
         }
@@ -193,7 +193,7 @@ class viewcontent implements renderable, templatable {
         $data->actionmenu = $this->get_edit_actions_dropdown();
         $data->heading = $this->content->get_name();
         if ($this->content->get_visibility() == content::VISIBILITY_UNLISTED) {
-            $data->heading = get_string('visibilitytitleunlisted', 'contentbank', $data->heading);
+            $data->heading = get_string('visibilitytitleunlisted', 'core_contentbank', $data->heading);
         }
 
         return $data;

@@ -35,9 +35,9 @@ class use_template_form extends dynamic_form {
     public function definition() {
         $mform =& $this->_form;
 
-        $mform->addElement('static', 'generalheader', '', get_string("whatfor", 'feedback'));
-        $mform->addElement('radio', 'deleteolditems', '', get_string('delete_old_items', 'feedback'), 1);
-        $mform->addElement('radio', 'deleteolditems', '', get_string('append_new_items', 'feedback'), 0);
+        $mform->addElement('static', 'generalheader', '', get_string("whatfor", 'mod_feedback'));
+        $mform->addElement('radio', 'deleteolditems', '', get_string('delete_old_items', 'mod_feedback'), 1);
+        $mform->addElement('radio', 'deleteolditems', '', get_string('append_new_items', 'mod_feedback'), 0);
         $mform->setType('deleteolditems', PARAM_INT);
         $mform->setDefault('deleteolditems', 1);
 
@@ -86,7 +86,7 @@ class use_template_form extends dynamic_form {
 
         if ($response !== false) {
             // Provide a notification on success as the user will be redirected.
-            \core\notification::add(get_string('feedbackupdated', 'feedback'), \core\notification::SUCCESS);
+            \core\notification::add(get_string('feedbackupdated', 'mod_feedback'), \core\notification::SUCCESS);
         }
 
         return [

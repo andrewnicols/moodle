@@ -94,7 +94,7 @@ $sortedqtypes = question_bank::sort_qtype_array($sortedqtypes, $config);
 // Disable.
 if (($disable = optional_param('disable', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($qtypes[$disable])) {
-        throw new \moodle_exception('unknownquestiontype', 'question', $thispageurl, $disable);
+        throw new \moodle_exception('unknownquestiontype', 'core_question', $thispageurl, $disable);
     }
 
     $class = \core_plugin_manager::resolve_plugininfo_class('qtype');
@@ -105,11 +105,11 @@ if (($disable = optional_param('disable', '', PARAM_PLUGIN)) && confirm_sesskey(
 // Enable.
 if (($enable = optional_param('enable', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($qtypes[$enable])) {
-        throw new \moodle_exception('unknownquestiontype', 'question', $thispageurl, $enable);
+        throw new \moodle_exception('unknownquestiontype', 'core_question', $thispageurl, $enable);
     }
 
     if (!$qtypes[$enable]->menu_name()) {
-        throw new \moodle_exception('cannotenable', 'question', $thispageurl, $enable);
+        throw new \moodle_exception('cannotenable', 'core_question', $thispageurl, $enable);
     }
 
     $class = \core_plugin_manager::resolve_plugininfo_class('qtype');
@@ -120,7 +120,7 @@ if (($enable = optional_param('enable', '', PARAM_PLUGIN)) && confirm_sesskey())
 // Move up in order.
 if (($up = optional_param('up', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($qtypes[$up])) {
-        throw new \moodle_exception('unknownquestiontype', 'question', $thispageurl, $up);
+        throw new \moodle_exception('unknownquestiontype', 'core_question', $thispageurl, $up);
     }
 
     $neworder = question_reorder_qtypes($sortedqtypes, $up, -1);
@@ -131,7 +131,7 @@ if (($up = optional_param('up', '', PARAM_PLUGIN)) && confirm_sesskey()) {
 // Move down in order.
 if (($down = optional_param('down', '', PARAM_PLUGIN)) && confirm_sesskey()) {
     if (!isset($qtypes[$down])) {
-        throw new \moodle_exception('unknownquestiontype', 'question', $thispageurl, $down);
+        throw new \moodle_exception('unknownquestiontype', 'core_question', $thispageurl, $down);
     }
 
     $neworder = question_reorder_qtypes($sortedqtypes, $down, +1);
@@ -143,15 +143,15 @@ if (($down = optional_param('down', '', PARAM_PLUGIN)) && confirm_sesskey()) {
 
 // Print the page heading.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('manageqtypes', 'admin'));
+echo $OUTPUT->heading(get_string('manageqtypes', 'core_admin'));
 
 // Set up the table.
 $table = new flexible_table('qtypeadmintable');
 $table->define_baseurl($thispageurl);
 $table->define_columns(array('questiontype', 'numquestions', 'version', 'requires',
         'availableto', 'uninstall', 'settings'));
-$table->define_headers(array(get_string('questiontype', 'question'), get_string('numquestions', 'question'),
-        get_string('version'), get_string('requires', 'admin'), get_string('availableq', 'question'),
+$table->define_headers(array(get_string('questiontype', 'core_question'), get_string('numquestions', 'core_question'),
+        get_string('version'), get_string('requires', 'core_admin'), get_string('availableq', 'core_question'),
         get_string('settings'), get_string('uninstallplugin', 'core_admin')));
 $table->set_attribute('id', 'qtypes');
 $table->set_attribute('class', 'admintable generaltable');
@@ -172,13 +172,13 @@ foreach ($sortedqtypes as $qtypename => $localname) {
     // Number of questions of this type.
     if ($counts[$qtypename]->numquestions + $counts[$qtypename]->numhidden + $counts[$qtypename]->numdraft > 0) {
         if ($counts[$qtypename]->numhidden + $counts[$qtypename]->numdraft > 0) {
-            $strcount = get_string('numquestionsandhidden', 'question', $counts[$qtypename]);
+            $strcount = get_string('numquestionsandhidden', 'core_question', $counts[$qtypename]);
         } else {
             $strcount = $counts[$qtypename]->numquestions;
         }
         if ($canviewreports) {
             $row[] = html_writer::link(new moodle_url('/report/questioninstances/index.php',
-                    array('qtype' => $qtypename)), $strcount, array('title' => get_string('showdetails', 'admin')));
+                    array('qtype' => $qtypename)), $strcount, array('title' => get_string('showdetails', 'core_admin')));
         } else {
             $strcount;
         }
@@ -191,7 +191,7 @@ foreach ($sortedqtypes as $qtypename => $localname) {
     if ($version) {
         $row[] = $version;
     } else {
-        $row[] = html_writer::tag('span', get_string('nodatabase', 'admin'), array('class' => 'text-muted'));
+        $row[] = html_writer::tag('span', get_string('nodatabase', 'core_admin'), array('class' => 'text-muted'));
     }
 
     // Other question types required by this one.
@@ -242,7 +242,7 @@ foreach ($sortedqtypes as $qtypename => $localname) {
         $uninstallurl = core_plugin_manager::instance()->get_uninstall_url('qtype_'.$qtypename, 'manage');
         if ($uninstallurl) {
             $row[] = html_writer::link($uninstallurl, get_string('uninstallplugin', 'core_admin'),
-                array('title' => get_string('uninstallqtype', 'question')));
+                array('title' => get_string('uninstallqtype', 'core_question')));
         }
     }
 
@@ -256,10 +256,10 @@ echo $OUTPUT->footer();
 function question_types_enable_disable_icons($qtypename, $createable) {
     if ($createable) {
         return question_type_icon_html('disable', $qtypename, 't/hide',
-                get_string('enabled', 'question'), get_string('disable'));
+                get_string('enabled', 'core_question'), get_string('disable'));
     } else {
         return question_type_icon_html('enable', $qtypename, 't/show',
-                get_string('disabled', 'question'), get_string('enable'));
+                get_string('disabled', 'core_question'), get_string('enable'));
     }
 }
 

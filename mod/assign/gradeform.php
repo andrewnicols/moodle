@@ -85,18 +85,18 @@ class mod_assign_grade_form extends moodleform {
 
         if ($instance->grade > 0) {
             if (unformat_float($data['grade'], true) === false && (!empty($data['grade']))) {
-                $errors['grade'] = get_string('invalidfloatforgrade', 'assign', $data['grade']);
+                $errors['grade'] = get_string('invalidfloatforgrade', 'mod_assign', $data['grade']);
             } else if (unformat_float($data['grade']) > $instance->grade) {
-                $errors['grade'] = get_string('gradeabovemaximum', 'assign', $instance->grade);
+                $errors['grade'] = get_string('gradeabovemaximum', 'mod_assign', $instance->grade);
             } else if (unformat_float($data['grade']) < 0) {
-                $errors['grade'] = get_string('gradebelowzero', 'assign');
+                $errors['grade'] = get_string('gradebelowzero', 'mod_assign');
             }
         } else {
             // This is a scale.
             if ($scale = $DB->get_record('scale', array('id'=>-($instance->grade)))) {
                 $scaleoptions = make_menu_from_list($scale->scale);
                 if ((int)$data['grade'] !== -1 && !array_key_exists((int)$data['grade'], $scaleoptions)) {
-                    $errors['grade'] = get_string('invalidgradeforscale', 'assign');
+                    $errors['grade'] = get_string('invalidgradeforscale', 'mod_assign');
                 }
             }
         }

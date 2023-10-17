@@ -133,9 +133,9 @@ $params = array(
 $event = \mod_forum\event\course_searched::create($params);
 $event->trigger();
 
-$strforums = get_string("modulenameplural", "forum");
-$strsearch = get_string("search", "forum");
-$strsearchresults = get_string("searchresults", "forum");
+$strforums = get_string("modulenameplural", 'mod_forum');
+$strsearch = get_string("search", 'mod_forum');
+$strsearchresults = get_string("searchresults", 'mod_forum');
 $strpage = get_string("page");
 
 if (!$search || $showform) {
@@ -143,7 +143,7 @@ if (!$search || $showform) {
     $url = new moodle_url('/mod/forum/index.php', array('id' => $course->id));
     $PAGE->navbar->add($strforums, $url);
     $url = new moodle_url('/mod/forum/search.php', array('id' => $course->id));
-    $PAGE->navbar->add(get_string('advancedsearch', 'forum'), $url);
+    $PAGE->navbar->add(get_string('advancedsearch', 'mod_forum'), $url);
 
     $PAGE->set_title($strsearch);
     $PAGE->set_heading($course->fullname);
@@ -171,7 +171,7 @@ if (!$posts = forum_search_posts($searchterms, $course->id, $page*$perpage, $per
         echo $OUTPUT->heading($strforums, 2);
     }
     echo $OUTPUT->heading($strsearchresults, 3);
-    echo $OUTPUT->heading(get_string("noposts", "forum"), 4);
+    echo $OUTPUT->heading(get_string("noposts", 'mod_forum'), 4);
 
     if (!$individualparams) {
         $words = $search;
@@ -219,7 +219,7 @@ $url    = new moodle_url("/mod/forum/search.php", $params);
 foreach ($tags as $tag) {
     $url .= "&tags[]=$tag";
 }
-echo html_writer::link($url, get_string('advancedsearch', 'forum').'...');
+echo html_writer::link($url, get_string('advancedsearch', 'mod_forum').'...');
 
 echo '</div>';
 
@@ -284,12 +284,12 @@ foreach ($posts as $post) {
     // Replace the simple subject with the three items forum name -> thread name -> subject
     // (if all three are appropriate) each as a link.
     if (!isset($discussionsbyid[$post->discussion])) {
-        throw new \moodle_exception('invaliddiscussionid', 'forum');
+        throw new \moodle_exception('invaliddiscussionid', 'mod_forum');
     }
 
     $discussion = $discussionsbyid[$post->discussion];
     if (!isset($forumsbyid[$discussion->get_forum_id()])) {
-        throw new \moodle_exception('invalidforumid', 'forum');
+        throw new \moodle_exception('invalidforumid', 'mod_forum');
     }
 
     $forum = $forumsbyid[$discussion->get_forum_id()];

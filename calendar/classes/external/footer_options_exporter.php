@@ -103,14 +103,14 @@ class footer_options_exporter extends exporter {
         if ($this->showfullcalendarlink) {
             $values->footerlinks[] = (object)[
                 'url' => $this->get_calendar_url(),
-                'linkname' => get_string('fullcalendar', 'calendar'),
+                'linkname' => get_string('fullcalendar', 'core_calendar'),
             ];
         }
 
         if (!empty($CFG->enablecalendarexport) && $managesubscriptionlink = $this->get_manage_subscriptions_link()) {
             $values->footerlinks[] = (object)[
                 'url' => $managesubscriptionlink,
-                'linkname' => get_string('managesubscriptions', 'calendar'),
+                'linkname' => get_string('managesubscriptions', 'core_calendar'),
             ];
         }
 

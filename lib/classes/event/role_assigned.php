@@ -59,7 +59,7 @@ class role_assigned extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventroleassigned', 'role');
+        return get_string('eventroleassigned', 'core_role');
     }
 
     /**

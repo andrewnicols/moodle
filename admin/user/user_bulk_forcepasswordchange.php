@@ -61,7 +61,7 @@ if ($confirm and confirm_sesskey()) {
     if (count($SESSION->bulk_users) > MAX_BULK_USERS) {
         $usernames .= ', ...';
     }
-    echo $OUTPUT->heading(get_string('confirmation', 'admin'));
+    echo $OUTPUT->heading(get_string('confirmation', 'core_admin'));
     $formcontinue = new single_button(new moodle_url('/admin/user/user_bulk_forcepasswordchange.php', array('confirm' => 1)), get_string('yes'));
     $formcancel = new single_button(new moodle_url('/admin/user/user_bulk.php'), get_string('no'), 'get');
     echo $OUTPUT->confirm(get_string('forcepasswordchangecheckfull', '', $usernames), $formcontinue, $formcancel);

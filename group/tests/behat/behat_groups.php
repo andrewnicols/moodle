@@ -52,7 +52,7 @@ class behat_groups extends behat_base {
         $this->execute('behat_forms::i_set_the_field_to', [get_string('groups', 'core'), $this->escape($groupname)]);
 
         // Press "Add/remove users".
-        $this->execute('behat_general::i_click_on', [get_string('adduserstogroup', 'group'), "button"]);
+        $this->execute('behat_general::i_click_on', [get_string('adduserstogroup', 'core_group'), "button"]);
 
         // Select the user.
         $this->execute('behat_forms::i_set_the_field_to', ["addselect", $this->escape($userfullname)]);
@@ -61,7 +61,7 @@ class behat_groups extends behat_base {
         $this->execute('behat_general::i_click_on', [get_string('add', 'core'), "button"]);
 
         // Returning to the main groups page.
-        $this->execute('behat_general::i_click_on', [get_string('backtogroups', 'group'), "button"]);
+        $this->execute('behat_general::i_click_on', [get_string('backtogroups', 'core_group'), "button"]);
     }
 
     /**

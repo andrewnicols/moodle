@@ -57,7 +57,7 @@ class badge_revoked extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventbadgerevoked', 'badges');
+        return get_string('eventbadgerevoked', 'core_badges');
     }
 
     /**

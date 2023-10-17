@@ -275,9 +275,9 @@ abstract class grade_export {
         }
 
         // We can't have feedback and display type at the same time.
-        $column->extra = ($feedback) ? get_string('feedback') : get_string($gradedisplayname, 'grades');
+        $column->extra = ($feedback) ? get_string('feedback') : get_string($gradedisplayname, 'core_grades');
 
-        return html_to_text(get_string('gradeexportcolumntype', 'grades', $column), 0, false);
+        return html_to_text(get_string('gradeexportcolumntype', 'core_grades', $column), 0, false);
     }
 
     /**
@@ -322,7 +322,7 @@ abstract class grade_export {
         $formatoptions = new stdClass();
         $formatoptions->para = false;
 
-        echo $OUTPUT->heading(get_string('previewrows', 'grades'));
+        echo $OUTPUT->heading(get_string('previewrows', 'core_grades'));
 
         echo '<table>';
         echo '<tr>';
@@ -369,7 +369,7 @@ abstract class grade_export {
                 $status = $g->track($grade_grade);
 
                 if ($this->updatedgradesonly && ($status == 'nochange' || $status == 'unknown')) {
-                    $rowstr .= '<td>'.get_string('unchangedgrade', 'grades').'</td>';
+                    $rowstr .= '<td>'.get_string('unchangedgrade', 'core_grades').'</td>';
                 } else {
                     $rowstr .= "<td>$gradetxt</td>";
                     $gradeupdated = true;
@@ -457,14 +457,14 @@ abstract class grade_export {
         debugging('function grade_export::print_continue is deprecated.', DEBUG_DEVELOPER);
         $params = $this->get_export_params();
 
-        echo $OUTPUT->heading(get_string('export', 'grades'));
+        echo $OUTPUT->heading(get_string('export', 'core_grades'));
 
         echo $OUTPUT->container_start('gradeexportlink');
 
         if (!$this->userkey) {
             // This button should trigger a download prompt.
             $url = new moodle_url('/grade/export/'.$this->plugin.'/export.php', $params);
-            echo $OUTPUT->single_button($url, get_string('download', 'admin'));
+            echo $OUTPUT->single_button($url, get_string('download', 'core_admin'));
 
         } else {
             $paramstr = '';
@@ -476,7 +476,7 @@ abstract class grade_export {
 
             $link = $CFG->wwwroot.'/grade/export/'.$this->plugin.'/dump.php'.$paramstr.'&key='.$this->userkey;
 
-            echo get_string('download', 'admin').': ' . html_writer::link($link, $link);
+            echo get_string('download', 'core_admin').': ' . html_writer::link($link, $link);
         }
         echo $OUTPUT->container_end();
 
@@ -587,7 +587,7 @@ abstract class grade_export {
     public function get_grade_publishing_url() {
         $url = $this->get_export_url();
         $output =  html_writer::start_div();
-        $output .= html_writer::tag('p', get_string('gradepublishinglink', 'grades', html_writer::link($url, $url)));
+        $output .= html_writer::tag('p', get_string('gradepublishinglink', 'core_grades', html_writer::link($url, $url)));
         $output .=  html_writer::end_div();
         return $output;
     }
@@ -715,6 +715,6 @@ class grade_export_update_buffer {
  */
 function export_verify_grades($courseid) {
     if (grade_needs_regrade_final_grades($courseid)) {
-        throw new moodle_exception('gradesneedregrading', 'grades');
+        throw new moodle_exception('gradesneedregrading', 'core_grades');
     }
 }

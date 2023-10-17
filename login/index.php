@@ -250,7 +250,7 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
             $PAGE->set_heading("$site->fullname");
             if (intval($days2expire) > 0 && intval($days2expire) < intval($userauth->config->expiration_warning)) {
                 echo $OUTPUT->header();
-                echo $OUTPUT->confirm(get_string('auth_passwordwillexpire', 'auth', $days2expire), $passwordchangeurl, $urltogo);
+                echo $OUTPUT->confirm(get_string('auth_passwordwillexpire', 'core_auth', $days2expire), $passwordchangeurl, $urltogo);
                 echo $OUTPUT->footer();
                 exit;
             } elseif (intval($days2expire) < 0 ) {
@@ -264,7 +264,7 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
                     set_user_preference('auth_forcepasswordchange', 1, $USER);
                 }
                 echo $OUTPUT->header();
-                echo $OUTPUT->confirm(get_string('auth_passwordisexpired', 'auth'), $passwordchangeurl, $urltogo);
+                echo $OUTPUT->confirm(get_string('auth_passwordisexpired', 'core_auth'), $passwordchangeurl, $urltogo);
                 echo $OUTPUT->footer();
                 exit;
             }
@@ -294,7 +294,7 @@ if ($frm and isset($frm->username)) {                             // Login WITH 
 
 /// Detect problems with timedout sessions
 if ($session_has_timed_out and !data_submitted()) {
-    $errormsg = get_string('sessionerroruser', 'error');
+    $errormsg = get_string('sessionerroruser', 'mod_error');
     $errorcode = 4;
 }
 
@@ -379,7 +379,7 @@ if (isloggedin() and !isguestuser()) {
     echo $OUTPUT->box_start();
     $logout = new single_button(new moodle_url('/login/logout.php', array('sesskey'=>sesskey(),'loginpage'=>1)), get_string('logout'), 'post');
     $continue = new single_button(new moodle_url('/'), get_string('cancel'), 'get');
-    echo $OUTPUT->confirm(get_string('alreadyloggedin', 'error', fullname($USER)), $logout, $continue);
+    echo $OUTPUT->confirm(get_string('alreadyloggedin', 'mod_error', fullname($USER)), $logout, $continue);
     echo $OUTPUT->box_end();
 } else {
     $loginform = new \core_auth\output\login($authsequence, $frm->username);

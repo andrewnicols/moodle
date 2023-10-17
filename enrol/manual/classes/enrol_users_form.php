@@ -86,7 +86,7 @@ class enrol_manual_enrol_users_form extends moodleform {
         $basemenu[3] = get_string('today') . ' (' . userdate($today, $dateformat) . ')';
         $basemenu[4] = get_string('now', 'enrol_manual') . ' (' . userdate($now, get_string('strftimedatetimeshort')) . ')';
 
-        $mform->addElement('header', 'main', get_string('enrolmentoptions', 'enrol'));
+        $mform->addElement('header', 'main', get_string('enrolmentoptions', 'core_enrol'));
         $options = array(
             'ajax' => 'enrol_manual/form-potential-user-selector',
             'multiple' => true,
@@ -122,17 +122,17 @@ class enrol_manual_enrol_users_form extends moodleform {
 
         $mform->addAdvancedStatusElement('main');
 
-        $mform->addElement('checkbox', 'recovergrades', get_string('recovergrades', 'enrol'));
+        $mform->addElement('checkbox', 'recovergrades', get_string('recovergrades', 'core_enrol'));
         $mform->setAdvanced('recovergrades');
         $mform->setDefault('recovergrades', $CFG->recovergradesdefault);
         $mform->addElement('select', 'startdate', get_string('startingfrom'), $basemenu);
         $mform->setDefault('startdate', $extendbase);
         $mform->setAdvanced('startdate');
-        $mform->addElement('select', 'duration', get_string('enrolperiod', 'enrol'), $periodmenu);
+        $mform->addElement('select', 'duration', get_string('enrolperiod', 'core_enrol'), $periodmenu);
         $mform->setDefault('duration', $defaultperiod);
         $mform->setAdvanced('duration');
         $mform->disabledIf('duration', 'timeend[enabled]', 'checked', 1);
-        $mform->addElement('date_time_selector', 'timeend', get_string('enroltimeend', 'enrol'), ['optional' => true]);
+        $mform->addElement('date_time_selector', 'timeend', get_string('enroltimeend', 'core_enrol'), ['optional' => true]);
         $mform->setAdvanced('timeend');
         $mform->addElement('hidden', 'id', $course->id);
         $mform->setType('id', PARAM_INT);
@@ -154,7 +154,7 @@ class enrol_manual_enrol_users_form extends moodleform {
         $errors = parent::validation($data, $files);
         if (!empty($data['startdate']) && !empty($data['timeend'])) {
             if ($data['startdate'] >= $data['timeend']) {
-                $errors['timeend'] = get_string('enroltimeendinvalid', 'enrol');
+                $errors['timeend'] = get_string('enroltimeendinvalid', 'core_enrol');
             }
         }
         return $errors;

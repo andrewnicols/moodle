@@ -237,8 +237,8 @@ function imscp_delete_instance($id) {
 function imscp_get_file_areas($course, $cm, $context) {
     $areas = array();
 
-    $areas['content'] = get_string('areacontent', 'imscp');
-    $areas['backup']  = get_string('areabackup', 'imscp');
+    $areas['content'] = get_string('areacontent', 'mod_imscp');
+    $areas['backup']  = get_string('areabackup', 'mod_imscp');
 
     return $areas;
 }
@@ -364,7 +364,7 @@ function imscp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
  * @return array $modulepagetype list
  */
 function imscp_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $modulepagetype = array('mod-imscp-*' => get_string('page-mod-imscp-x', 'imscp'));
+    $modulepagetype = array('mod-imscp-*' => get_string('page-mod-imscp-x', 'mod_imscp'));
     return $modulepagetype;
 }
 

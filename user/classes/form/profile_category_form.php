@@ -43,7 +43,7 @@ class profile_category_form extends dynamic_form {
         $mform->addElement('hidden', 'action', 'editcategory');
         $mform->setType('action', PARAM_ALPHANUMEXT);
 
-        $mform->addElement('text', 'name', get_string('profilecategoryname', 'admin'), 'maxlength="255" size="30"');
+        $mform->addElement('text', 'name', get_string('profilecategoryname', 'core_admin'), 'maxlength="255" size="30"');
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', $strrequired, 'required', null, 'client');
     }
@@ -71,7 +71,7 @@ class profile_category_form extends dynamic_form {
         }
 
         if ($dupfound ) {
-            $errors['name'] = get_string('profilecategorynamenotunique', 'admin');
+            $errors['name'] = get_string('profilecategorynamenotunique', 'core_admin');
         }
 
         return $errors;

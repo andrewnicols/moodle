@@ -88,7 +88,7 @@ class core_notes_external extends external_api {
 
         // Check if note system is enabled.
         if (!$CFG->enablenotes) {
-            throw new moodle_exception('notesdisabled', 'notes');
+            throw new moodle_exception('notesdisabled', 'core_notes');
         }
 
         // Retrieve all courses.
@@ -115,7 +115,7 @@ class core_notes_external extends external_api {
             // Check the course exists.
             if (empty($courses[$note['courseid']])) {
                 $success = false;
-                $errormessage = get_string('invalidcourseid', 'error');
+                $errormessage = get_string('invalidcourseid', 'mod_error');
             } else {
                 // Ensure the current user is allowed to run this function.
                 $context = context_course::instance($note['courseid']);
@@ -126,7 +126,7 @@ class core_notes_external extends external_api {
             // Check the user exists.
             if (empty($users[$note['userid']])) {
                 $success = false;
-                $errormessage = get_string('invaliduserid', 'notes', $note['userid']);
+                $errormessage = get_string('invaliduserid', 'core_notes', $note['userid']);
             }
 
             // Build the resultnote.
@@ -238,7 +238,7 @@ class core_notes_external extends external_api {
 
         // Check if note system is enabled.
         if (!$CFG->enablenotes) {
-            throw new moodle_exception('notesdisabled', 'notes');
+            throw new moodle_exception('notesdisabled', 'core_notes');
         }
         $warnings = array();
         foreach ($params['notes'] as $noteid) {
@@ -300,7 +300,7 @@ class core_notes_external extends external_api {
         $params = self::validate_parameters(self::get_notes_parameters(), array('notes' => $notes));
         // Check if note system is enabled.
         if (!$CFG->enablenotes) {
-            throw new moodle_exception('notesdisabled', 'notes');
+            throw new moodle_exception('notesdisabled', 'core_notes');
         }
         $resultnotes = array();
         foreach ($params['notes'] as $noteid) {
@@ -400,7 +400,7 @@ class core_notes_external extends external_api {
 
         // Check if note system is enabled.
         if (!$CFG->enablenotes) {
-            throw new moodle_exception('notesdisabled', 'notes');
+            throw new moodle_exception('notesdisabled', 'core_notes');
         }
 
         $warnings = array();
@@ -522,7 +522,7 @@ class core_notes_external extends external_api {
         global $CFG, $USER;
 
         if (empty($CFG->enablenotes)) {
-            throw new moodle_exception('notesdisabled', 'notes');
+            throw new moodle_exception('notesdisabled', 'core_notes');
         }
 
         $warnings = array();
@@ -670,7 +670,7 @@ class core_notes_external extends external_api {
         require_once($CFG->dirroot . "/notes/lib.php");
 
         if (empty($CFG->enablenotes)) {
-            throw new moodle_exception('notesdisabled', 'notes');
+            throw new moodle_exception('notesdisabled', 'core_notes');
         }
 
         $warnings = array();

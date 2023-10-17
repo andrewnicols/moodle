@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/blog/lib.php');
 require_login();
 
 if (empty($CFG->usetags)) {
-    throw new \moodle_exception('tagsaredisabled', 'tag');
+    throw new \moodle_exception('tagsaredisabled', 'core_tag');
 }
 
 $tagid       = optional_param('id', 0, PARAM_INT); // tag id
@@ -90,7 +90,7 @@ $PAGE->set_blocks_editing_capability('moodle/tag:editblocks');
 $buttons = '';
 if (has_capability('moodle/tag:manage', context_system::instance())) {
     $buttons .= $OUTPUT->single_button(new moodle_url('/tag/manage.php'),
-            get_string('managetags', 'tag'), 'GET');
+            get_string('managetags', 'core_tag'), 'GET');
 }
 if ($PAGE->user_allowed_editing()) {
     if ($edit != -1) {
@@ -100,7 +100,7 @@ if ($PAGE->user_allowed_editing()) {
 }
 
 $PAGE->navbar->add($tagname, $pageurl);
-$PAGE->set_title(get_string('tag', 'tag') .' - '. $tag->get_display_name());
+$PAGE->set_title(get_string('tag', 'core_tag') .' - '. $tag->get_display_name());
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->set_button($buttons);
 

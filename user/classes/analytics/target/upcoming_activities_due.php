@@ -72,7 +72,7 @@ class upcoming_activities_due extends \core_analytics\local\target\binary {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:upcomingactivitiesdue', 'user');
+        return new \lang_string('target:upcomingactivitiesdue', 'core_user');
     }
 
     /**
@@ -265,9 +265,9 @@ class upcoming_activities_due extends \core_analytics\local\target\binary {
 
         // We force a lookahead of 30 days so we are sure that the upcoming activities due are shown.
         $url = new \moodle_url('/calendar/view.php', ['view' => 'upcoming', 'lookahead' => '30']);
-        $pix = new \pix_icon('i/calendar', get_string('viewupcomingactivitiesdue', 'calendar'));
+        $pix = new \pix_icon('i/calendar', get_string('viewupcomingactivitiesdue', 'core_calendar'));
         $action = new \core_analytics\prediction_action('viewupcoming', $prediction,
-            $url, $pix, get_string('viewupcomingactivitiesdue', 'calendar'));
+            $url, $pix, get_string('viewupcomingactivitiesdue', 'core_calendar'));
 
         return array_merge([$action], $parentactions);
     }

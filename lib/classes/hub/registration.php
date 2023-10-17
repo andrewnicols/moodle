@@ -107,9 +107,9 @@ class registration {
             return $registration;
         }
         if (has_capability('moodle/site:config', context_system::instance())) {
-            throw new moodle_exception('registrationwarning', 'admin', new moodle_url('/admin/registration/index.php'));
+            throw new moodle_exception('registrationwarning', 'core_admin', new moodle_url('/admin/registration/index.php'));
         } else {
-            throw new moodle_exception('registrationwarningcontactadmin', 'admin');
+            throw new moodle_exception('registrationwarningcontactadmin', 'core_admin');
         }
     }
 
@@ -229,7 +229,7 @@ class registration {
      */
     public static function get_stats_summary($siteinfo) {
         $fieldsneedconfirm = self::get_new_registration_fields();
-        $summary = html_writer::tag('p', get_string('sendfollowinginfo_help', 'hub')) .
+        $summary = html_writer::tag('p', get_string('sendfollowinginfo_help', 'mod_hub')) .
             html_writer::start_tag('ul');
 
         $mobileservicesenabled = $siteinfo['mobileservicesenabled'] ? get_string('yes') : get_string('no');
@@ -239,34 +239,34 @@ class registration {
             $moodlerelease = $matches[1];
         }
         $senddata = [
-            'moodlerelease' => get_string('sitereleasenum', 'hub', $moodlerelease),
-            'courses' => get_string('coursesnumber', 'hub', $siteinfo['courses']),
-            'users' => get_string('usersnumber', 'hub', $siteinfo['users']),
-            'activeusers' => get_string('activeusersnumber', 'hub', $siteinfo['activeusers']),
-            'enrolments' => get_string('roleassignmentsnumber', 'hub', $siteinfo['enrolments']),
-            'posts' => get_string('postsnumber', 'hub', $siteinfo['posts']),
-            'questions' => get_string('questionsnumber', 'hub', $siteinfo['questions']),
-            'resources' => get_string('resourcesnumber', 'hub', $siteinfo['resources']),
-            'badges' => get_string('badgesnumber', 'hub', $siteinfo['badges']),
-            'issuedbadges' => get_string('issuedbadgesnumber', 'hub', $siteinfo['issuedbadges']),
-            'participantnumberaverage' => get_string('participantnumberaverage', 'hub',
+            'moodlerelease' => get_string('sitereleasenum', 'mod_hub', $moodlerelease),
+            'courses' => get_string('coursesnumber', 'mod_hub', $siteinfo['courses']),
+            'users' => get_string('usersnumber', 'mod_hub', $siteinfo['users']),
+            'activeusers' => get_string('activeusersnumber', 'mod_hub', $siteinfo['activeusers']),
+            'enrolments' => get_string('roleassignmentsnumber', 'mod_hub', $siteinfo['enrolments']),
+            'posts' => get_string('postsnumber', 'mod_hub', $siteinfo['posts']),
+            'questions' => get_string('questionsnumber', 'mod_hub', $siteinfo['questions']),
+            'resources' => get_string('resourcesnumber', 'mod_hub', $siteinfo['resources']),
+            'badges' => get_string('badgesnumber', 'mod_hub', $siteinfo['badges']),
+            'issuedbadges' => get_string('issuedbadgesnumber', 'mod_hub', $siteinfo['issuedbadges']),
+            'participantnumberaverage' => get_string('participantnumberaverage', 'mod_hub',
                 format_float($siteinfo['participantnumberaverage'], 2)),
-            'activeparticipantnumberaverage' => get_string('activeparticipantnumberaverage', 'hub',
+            'activeparticipantnumberaverage' => get_string('activeparticipantnumberaverage', 'mod_hub',
                 format_float($siteinfo['activeparticipantnumberaverage'], 2)),
-            'modulenumberaverage' => get_string('modulenumberaverage', 'hub',
+            'modulenumberaverage' => get_string('modulenumberaverage', 'mod_hub',
                 format_float($siteinfo['modulenumberaverage'], 2)),
-            'mobileservicesenabled' => get_string('mobileservicesenabled', 'hub', $mobileservicesenabled),
-            'mobilenotificationsenabled' => get_string('mobilenotificationsenabled', 'hub', $mobilenotificationsenabled),
-            'registereduserdevices' => get_string('registereduserdevices', 'hub', $siteinfo['registereduserdevices']),
-            'registeredactiveuserdevices' => get_string('registeredactiveuserdevices', 'hub', $siteinfo['registeredactiveuserdevices']),
-            'analyticsenabledmodels' => get_string('analyticsenabledmodels', 'hub', $siteinfo['analyticsenabledmodels']),
-            'analyticspredictions' => get_string('analyticspredictions', 'hub', $siteinfo['analyticspredictions']),
-            'analyticsactions' => get_string('analyticsactions', 'hub', $siteinfo['analyticsactions']),
-            'analyticsactionsnotuseful' => get_string('analyticsactionsnotuseful', 'hub', $siteinfo['analyticsactionsnotuseful']),
-            'dbtype' => get_string('dbtype', 'hub', $siteinfo['dbtype']),
-            'coursesnodates' => get_string('coursesnodates', 'hub', $siteinfo['coursesnodates']),
-            'sitetheme' => get_string('sitetheme', 'hub', $siteinfo['sitetheme']),
-            'primaryauthtype' => get_string('primaryauthtype', 'hub', $siteinfo['primaryauthtype']),
+            'mobileservicesenabled' => get_string('mobileservicesenabled', 'mod_hub', $mobileservicesenabled),
+            'mobilenotificationsenabled' => get_string('mobilenotificationsenabled', 'mod_hub', $mobilenotificationsenabled),
+            'registereduserdevices' => get_string('registereduserdevices', 'mod_hub', $siteinfo['registereduserdevices']),
+            'registeredactiveuserdevices' => get_string('registeredactiveuserdevices', 'mod_hub', $siteinfo['registeredactiveuserdevices']),
+            'analyticsenabledmodels' => get_string('analyticsenabledmodels', 'mod_hub', $siteinfo['analyticsenabledmodels']),
+            'analyticspredictions' => get_string('analyticspredictions', 'mod_hub', $siteinfo['analyticspredictions']),
+            'analyticsactions' => get_string('analyticsactions', 'mod_hub', $siteinfo['analyticsactions']),
+            'analyticsactionsnotuseful' => get_string('analyticsactionsnotuseful', 'mod_hub', $siteinfo['analyticsactionsnotuseful']),
+            'dbtype' => get_string('dbtype', 'mod_hub', $siteinfo['dbtype']),
+            'coursesnodates' => get_string('coursesnodates', 'mod_hub', $siteinfo['coursesnodates']),
+            'sitetheme' => get_string('sitetheme', 'mod_hub', $siteinfo['sitetheme']),
+            'primaryauthtype' => get_string('primaryauthtype', 'mod_hub', $siteinfo['primaryauthtype']),
         ];
 
         foreach ($senddata as $key => $str) {
@@ -310,12 +310,12 @@ class registration {
                 // proceed to site registration. This method will redirect away.
                 self::register('');
             }
-            \core\notification::add(get_string('errorregistrationupdate', 'hub', $e->getMessage()),
+            \core\notification::add(get_string('errorregistrationupdate', 'mod_hub', $e->getMessage()),
                 \core\output\notification::NOTIFY_ERROR);
             return false;
         }
         $DB->update_record('registration_hubs', ['id' => $registration->id, 'timemodified' => time()]);
-        \core\notification::add(get_string('siteregistrationupdated', 'hub'),
+        \core\notification::add(get_string('siteregistrationupdated', 'mod_hub'),
             \core\output\notification::NOTIFY_SUCCESS);
         self::$registration = null;
         return true;
@@ -330,19 +330,19 @@ class registration {
         global $DB;
 
         if (!$registration = self::get_registration()) {
-            mtrace(get_string('registrationwarning', 'admin'));
+            mtrace(get_string('registrationwarning', 'core_admin'));
             return;
         }
 
         if (self::get_new_registration_fields()) {
-            mtrace(get_string('pleaserefreshregistrationnewdata', 'admin'));
+            mtrace(get_string('pleaserefreshregistrationnewdata', 'core_admin'));
             return;
         }
 
         $siteinfo = self::get_site_info();
         api::update_registration($siteinfo);
         $DB->update_record('registration_hubs', ['id' => $registration->id, 'timemodified' => time()]);
-        mtrace(get_string('siteregistrationupdated', 'hub'));
+        mtrace(get_string('siteregistrationupdated', 'mod_hub'));
         self::$registration = null;
     }
 
@@ -359,7 +359,7 @@ class registration {
 
         $registration = self::get_registration(false);
         if (!$registration || $registration->token !== $token) {
-            throw new moodle_exception('wrongtoken', 'hub', new moodle_url('/admin/registration/index.php'));
+            throw new moodle_exception('wrongtoken', 'mod_hub', new moodle_url('/admin/registration/index.php'));
         }
         $record = ['id' => $registration->id];
         $record['token'] = $newtoken;
@@ -391,9 +391,9 @@ class registration {
      */
     public static function site_privacy_options() {
         return [
-            self::HUB_SITENOTPUBLISHED => get_string('siteprivacynotpublished', 'hub'),
-            self::HUB_SITENAMEPUBLISHED => get_string('siteprivacypublished', 'hub'),
-            self::HUB_SITELINKPUBLISHED => get_string('siteprivacylinked', 'hub')
+            self::HUB_SITENOTPUBLISHED => get_string('siteprivacynotpublished', 'mod_hub'),
+            self::HUB_SITENAMEPUBLISHED => get_string('siteprivacypublished', 'mod_hub'),
+            self::HUB_SITELINKPUBLISHED => get_string('siteprivacylinked', 'mod_hub')
         ];
     }
 
@@ -466,7 +466,7 @@ class registration {
         try {
             api::unregister_site();
         } catch (moodle_exception $e) {
-            \core\notification::add(get_string('unregistrationerror', 'hub', $e->getMessage()),
+            \core\notification::add(get_string('unregistrationerror', 'mod_hub', $e->getMessage()),
                 \core\output\notification::NOTIFY_ERROR);
             return false;
         }
@@ -501,7 +501,7 @@ class registration {
 
         $registration = self::get_registration(false);
         if (!$registration || $registration->token != $token) {
-            throw new moodle_exception('wrongtoken', 'hub',
+            throw new moodle_exception('wrongtoken', 'mod_hub',
                new moodle_url('/admin/registration/index.php'));
         }
 

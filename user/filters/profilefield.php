@@ -58,14 +58,14 @@ class user_filter_profilefield extends user_filter_type {
      * @return array of comparison operators
      */
     public function get_operators() {
-        return array(0 => get_string('contains', 'filters'),
-                     1 => get_string('doesnotcontain', 'filters'),
-                     2 => get_string('isequalto', 'filters'),
-                     3 => get_string('startswith', 'filters'),
-                     4 => get_string('endswith', 'filters'),
-                     5 => get_string('isempty', 'filters'),
-                     6 => get_string('isnotdefined', 'filters'),
-                     7 => get_string('isdefined', 'filters'));
+        return array(0 => get_string('contains', 'core_filters'),
+                     1 => get_string('doesnotcontain', 'core_filters'),
+                     2 => get_string('isequalto', 'core_filters'),
+                     3 => get_string('startswith', 'core_filters'),
+                     4 => get_string('endswith', 'core_filters'),
+                     5 => get_string('isempty', 'core_filters'),
+                     6 => get_string('isnotdefined', 'core_filters'),
+                     7 => get_string('isdefined', 'core_filters'));
     }
 
     /**
@@ -82,7 +82,7 @@ class user_filter_profilefield extends user_filter_type {
         }
         $fields = array_combine(array_keys($fieldrecords), array_column($fieldrecords, 'name'));
         core_collator::asort($fields);
-        $res = array(0 => get_string('anyfield', 'filters'));
+        $res = array(0 => get_string('anyfield', 'core_filters'));
 
         return $res + $fields;
     }
@@ -100,9 +100,9 @@ class user_filter_profilefield extends user_filter_type {
         $objs['field'] = $mform->createElement('select', $this->_name.'_fld', null, $profilefields);
         $objs['op'] = $mform->createElement('select', $this->_name.'_op', null, $this->get_operators());
         $objs['value'] = $mform->createElement('text', $this->_name, null);
-        $objs['field']->setLabel(get_string('profilefilterfield', 'filters'));
-        $objs['op']->setLabel(get_string('profilefilterlimiter', 'filters'));
-        $objs['value']->setLabel(get_string('valuefor', 'filters', $this->_label));
+        $objs['field']->setLabel(get_string('profilefilterfield', 'core_filters'));
+        $objs['op']->setLabel(get_string('profilefilterlimiter', 'core_filters'));
+        $objs['value']->setLabel(get_string('valuefor', 'core_filters', $this->_label));
         $grp =& $mform->addElement('group', $this->_name.'_grp', $this->_label, $objs, '', false);
         $mform->setType($this->_name, PARAM_RAW);
         if ($this->_advanced) {
@@ -244,11 +244,11 @@ class user_filter_profilefield extends user_filter_type {
             case 2: // Equal to.
             case 3: // Starts with.
             case 4: // Ends with.
-                return get_string('profilelabel', 'filters', $a);
+                return get_string('profilelabel', 'core_filters', $a);
             case 5: // Empty.
             case 6: // Is not defined.
             case 7: // Is defined.
-                return get_string('profilelabelnovalue', 'filters', $a);
+                return get_string('profilelabelnovalue', 'core_filters', $a);
         }
         return '';
     }

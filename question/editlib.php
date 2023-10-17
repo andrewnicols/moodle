@@ -364,7 +364,7 @@ function question_build_edit_resources($edittab, $baseurl, $params,
         $catparts = explode(',', $pagevars['cat']);
         if (!$catparts[0] || (false !== array_search($catparts[1], $contextlistarr)) ||
                 !$DB->count_records_select("question_categories", "id = ? AND contextid = ?", array($catparts[0], $catparts[1]))) {
-            throw new \moodle_exception('invalidcategory', 'question');
+            throw new \moodle_exception('invalidcategory', 'core_question');
         }
     } else {
         $category = $defaultcategory;

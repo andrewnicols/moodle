@@ -39,7 +39,7 @@ $controller = $manager->get_controller('guide');
 $options = $controller->get_options();
 
 if (!$controller->is_form_defined() || empty($options['alwaysshowdefinition'])) {
-    throw new moodle_exception('nopermissions', 'error', '', get_string('previewmarkingguide', 'gradingform_guide'));
+    throw new moodle_exception('nopermissions', 'mod_error', '', get_string('previewmarkingguide', 'gradingform_guide'));
 }
 
 $title = get_string('gradingof', 'gradingform_guide', $manager->get_area_title());

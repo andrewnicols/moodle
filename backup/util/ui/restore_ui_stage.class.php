@@ -77,7 +77,7 @@ abstract class restore_ui_stage extends base_ui_stage {
      * @return string
      */
     final public function get_name() {
-        return get_string('restorestage'.$this->stage, 'backup');
+        return get_string('restorestage'.$this->stage, 'core_backup');
     }
 
     /**
@@ -180,7 +180,7 @@ abstract class restore_ui_independent_stage {
             } else if ($stage < $currentstage) {
                 $classes[] = 'backup_stage_complete';
             }
-            $item = array('text' => strlen(decbin($stage)).'. '.get_string('restorestage'.$stage, 'backup'), 'class' => join(' ', $classes));
+            $item = array('text' => strlen(decbin($stage)).'. '.get_string('restorestage'.$stage, 'core_backup'), 'class' => join(' ', $classes));
             if ($stage < $currentstage && $currentstage < restore_ui::STAGE_COMPLETE) {
                 // By default you can't go back to independent stages, if that changes in the future uncomment the next line.
                 // $item['link'] = new moodle_url($PAGE->url, array('restore' => $this->get_restoreid(), 'stage' => $stage));
@@ -391,7 +391,7 @@ class restore_ui_stage_confirm extends restore_ui_independent_stage implements f
      * @throws coding_exception
      */
     public function get_stage_name() {
-        return get_string('restorestage'.restore_ui::STAGE_CONFIRM, 'backup');
+        return get_string('restorestage'.restore_ui::STAGE_CONFIRM, 'core_backup');
     }
 
     /**
@@ -491,7 +491,7 @@ class restore_ui_stage_destination extends restore_ui_independent_stage {
         $targetid = optional_param('targetid', null, PARAM_INT);
         if (!is_null($this->target) && !is_null($targetid) && confirm_sesskey()) {
             if ($this->target == backup::TARGET_NEW_COURSE) {
-                list($fullname, $shortname) = restore_dbops::calculate_course_names(0, get_string('restoringcourse', 'backup'), get_string('restoringcourseshortname', 'backup'));
+                list($fullname, $shortname) = restore_dbops::calculate_course_names(0, get_string('restoringcourse', 'core_backup'), get_string('restoringcourseshortname', 'core_backup'));
                 $this->courseid = restore_dbops::create_new_course($fullname, $shortname, $targetid);
             } else {
                 $this->courseid = $targetid;
@@ -548,7 +548,7 @@ class restore_ui_stage_destination extends restore_ui_independent_stage {
      * @throws coding_exception
      */
     public function get_stage_name() {
-        return get_string('restorestage'.restore_ui::STAGE_DESTINATION, 'backup');
+        return get_string('restorestage'.restore_ui::STAGE_DESTINATION, 'core_backup');
     }
 
     /**
@@ -665,7 +665,7 @@ class restore_ui_stage_settings extends restore_ui_stage {
                 // For the initial stage we are only interested in the root settings.
                 if ($task instanceof restore_root_task) {
                     if (!$headingprinted) {
-                        $form->add_heading('rootsettings', get_string('restorerootsettings', 'backup'));
+                        $form->add_heading('rootsettings', get_string('restorerootsettings', 'core_backup'));
                         $headingprinted = true;
                     }
                     $settings = $task->get_settings();
@@ -786,7 +786,7 @@ class restore_ui_stage_schema extends restore_ui_stage {
                 if (!($task instanceof restore_root_task)) {
                     if (!$courseheading) {
                         // If we haven't already display a course heading to group nicely.
-                        $form->add_heading('coursesettings', get_string('coursesettings', 'backup'));
+                        $form->add_heading('coursesettings', get_string('coursesettings', 'core_backup'));
                         $courseheading = true;
                     }
                     // Put each setting into an array of settings to add. Adding
@@ -798,7 +798,7 @@ class restore_ui_stage_schema extends restore_ui_stage {
                 } else if ($this->ui->enforce_changed_dependencies()) {
                     // Only show these settings if dependencies changed them.
                     // Add a root settings heading to group nicely.
-                    $form->add_heading('rootsettings', get_string('rootsettings', 'backup'));
+                    $form->add_heading('rootsettings', get_string('rootsettings', 'core_backup'));
                     // Iterate all settings and add them to the form as a fixed
                     // setting. We only want schema settings to be editable.
                     foreach ($task->get_settings() as $setting) {
@@ -906,10 +906,10 @@ class restore_ui_stage_review extends restore_ui_stage {
             foreach ($tasks as $task) {
                 if ($task instanceof restore_root_task) {
                     // If its a backup root add a root settings heading to group nicely.
-                    $form->add_heading('rootsettings', get_string('restorerootsettings', 'backup'));
+                    $form->add_heading('rootsettings', get_string('restorerootsettings', 'core_backup'));
                 } else if (!$courseheading) {
                     // We haven't already add a course heading.
-                    $form->add_heading('coursesettings', get_string('coursesettings', 'backup'));
+                    $form->add_heading('coursesettings', get_string('coursesettings', 'core_backup'));
                     $courseheading = true;
                 }
                 // Iterate all settings, doesnt need to happen by reference.
@@ -1081,7 +1081,7 @@ class restore_ui_stage_process extends restore_ui_stage {
                             }
                         }
                         if ($rolemapping->name == null) {
-                            $rolemapping->name = get_string('undefinedrolemapping', 'backup', $rolemapping->archetype);
+                            $rolemapping->name = get_string('undefinedrolemapping', 'core_backup', $rolemapping->archetype);
                         }
                     }, $rolemappings);
 
@@ -1163,9 +1163,9 @@ class restore_ui_stage_complete extends restore_ui_stage_process {
         }
         $html .= $renderer->box_start();
         if (array_key_exists('file_missing_in_backup', $this->results)) {
-            $html .= $renderer->notification(get_string('restorefileweremissing', 'backup'), 'notifyproblem');
+            $html .= $renderer->notification(get_string('restorefileweremissing', 'core_backup'), 'notifyproblem');
         }
-        $html .= $renderer->notification(get_string('restoreexecutionsuccess', 'backup'), 'notifysuccess');
+        $html .= $renderer->notification(get_string('restoreexecutionsuccess', 'core_backup'), 'notifysuccess');
 
         $courseurl = course_get_url($this->get_ui()->get_controller()->get_courseid());
         $html .= $renderer->continue_button($courseurl, 'get');

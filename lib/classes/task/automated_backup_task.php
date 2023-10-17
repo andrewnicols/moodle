@@ -34,7 +34,7 @@ class automated_backup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskautomatedbackup', 'admin');
+        return get_string('taskautomatedbackup', 'core_admin');
     }
 
     /**

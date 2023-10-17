@@ -48,7 +48,7 @@ final class copy_helper {
 
         $missingfields = array_diff($requiredfields, array_keys((array)$formdata));
         if ($missingfields) {
-            throw new \moodle_exception('copyfieldnotfound', 'backup', '', null, implode(", ", $missingfields));
+            throw new \moodle_exception('copyfieldnotfound', 'core_backup', '', null, implode(", ", $missingfields));
         }
 
         // Remove any extra stuff in the form data.
@@ -83,7 +83,7 @@ final class copy_helper {
 
         // Create the initial restore contoller.
         list($fullname, $shortname) = \restore_dbops::calculate_course_names(
-            0, get_string('copyingcourse', 'backup'), get_string('copyingcourseshortname', 'backup'));
+            0, get_string('copyingcourse', 'core_backup'), get_string('copyingcourseshortname', 'core_backup'));
         $newcourseid = \restore_dbops::create_new_course($fullname, $shortname, $copydata->category);
         $rc = new \restore_controller($copyids['backupid'], $newcourseid, \backup::INTERACTIVE_NO,
             \backup::MODE_COPY, $USER->id, \backup::TARGET_NEW_COURSE, null,

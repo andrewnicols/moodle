@@ -2,9 +2,9 @@
 
 // This file defines settingpages and externalpages under the "users" category.
 
-$ADMIN->add('users', new admin_category('accounts', new lang_string('accounts', 'admin')));
-$ADMIN->add('users', new admin_category('roles', new lang_string('permissions', 'role')));
-$ADMIN->add('users', new admin_category('privacy', new lang_string('privacyandpolicies', 'admin')));
+$ADMIN->add('users', new admin_category('accounts', new lang_string('accounts', 'core_admin')));
+$ADMIN->add('users', new admin_category('roles', new lang_string('permissions', 'core_role')));
+$ADMIN->add('users', new admin_category('privacy', new lang_string('privacyandpolicies', 'core_admin')));
 
 if ($hassiteconfig
  or has_capability('moodle/user:create', $systemcontext)
@@ -17,12 +17,12 @@ if ($hassiteconfig
 
 
     // Stuff under the "accounts" subcategory.
-    $ADMIN->add('accounts', new admin_externalpage('editusers', new lang_string('userlist','admin'), "$CFG->wwwroot/$CFG->admin/user.php", array('moodle/user:update', 'moodle/user:delete')));
-    $ADMIN->add('accounts', new admin_externalpage('userbulk', new lang_string('userbulk','admin'), "$CFG->wwwroot/$CFG->admin/user/user_bulk.php", array('moodle/user:update', 'moodle/user:delete')));
+    $ADMIN->add('accounts', new admin_externalpage('editusers', new lang_string('userlist','core_admin'), "$CFG->wwwroot/$CFG->admin/user.php", array('moodle/user:update', 'moodle/user:delete')));
+    $ADMIN->add('accounts', new admin_externalpage('userbulk', new lang_string('userbulk','core_admin'), "$CFG->wwwroot/$CFG->admin/user/user_bulk.php", array('moodle/user:update', 'moodle/user:delete')));
     $ADMIN->add('accounts', new admin_externalpage('addnewuser', new lang_string('addnewuser'), "$CFG->wwwroot/user/editadvanced.php?id=-1", 'moodle/user:create'));
 
     // User management settingpage.
-    $temp = new admin_settingpage('usermanagement', new lang_string('usermanagement', 'admin'));
+    $temp = new admin_settingpage('usermanagement', new lang_string('usermanagement', 'core_admin'));
     if ($ADMIN->fulltree) {
         $choices = array();
         $choices['realname'] = new lang_string('fullnameuser');
@@ -32,30 +32,30 @@ if ($hassiteconfig
         $choices['email'] = new lang_string('email');
         $choices['city'] = new lang_string('city');
         $choices['country'] = new lang_string('country');
-        $choices['confirmed'] = new lang_string('confirmed', 'admin');
-        $choices['suspended'] = new lang_string('suspended', 'auth');
-        $choices['profile'] = new lang_string('profilefields', 'admin');
-        $choices['courserole'] = new lang_string('courserole', 'filters');
-        $choices['anycourses'] = new lang_string('anycourses', 'filters');
-        $choices['systemrole'] = new lang_string('globalrole', 'role');
+        $choices['confirmed'] = new lang_string('confirmed', 'core_admin');
+        $choices['suspended'] = new lang_string('suspended', 'core_auth');
+        $choices['profile'] = new lang_string('profilefields', 'core_admin');
+        $choices['courserole'] = new lang_string('courserole', 'core_filters');
+        $choices['anycourses'] = new lang_string('anycourses', 'core_filters');
+        $choices['systemrole'] = new lang_string('globalrole', 'core_role');
         $choices['cohort'] = new lang_string('idnumber', 'core_cohort');
-        $choices['firstaccess'] = new lang_string('firstaccess', 'filters');
+        $choices['firstaccess'] = new lang_string('firstaccess', 'core_filters');
         $choices['lastaccess'] = new lang_string('lastaccess');
-        $choices['neveraccessed'] = new lang_string('neveraccessed', 'filters');
+        $choices['neveraccessed'] = new lang_string('neveraccessed', 'core_filters');
         $choices['timecreated'] = new lang_string('timecreated');
         $choices['timemodified'] = new lang_string('lastmodified');
-        $choices['nevermodified'] = new lang_string('nevermodified', 'filters');
+        $choices['nevermodified'] = new lang_string('nevermodified', 'core_filters');
         $choices['auth'] = new lang_string('authentication');
         $choices['idnumber'] = new lang_string('idnumber');
         $choices['lastip'] = new lang_string('lastip');
-        $choices['mnethostid'] = new lang_string('mnetidprovider', 'mnet');
-        $temp->add(new admin_setting_configmultiselect('userfiltersdefault', new lang_string('userfiltersdefault', 'admin'),
-            new lang_string('userfiltersdefault_desc', 'admin'), array('realname'), $choices));
+        $choices['mnethostid'] = new lang_string('mnetidprovider', 'core_mnet');
+        $temp->add(new admin_setting_configmultiselect('userfiltersdefault', new lang_string('userfiltersdefault', 'core_admin'),
+            new lang_string('userfiltersdefault_desc', 'core_admin'), array('realname'), $choices));
     }
     $ADMIN->add('accounts', $temp);
 
     // User default preferences settingpage.
-    $temp = new admin_settingpage('userdefaultpreferences', new lang_string('userdefaultpreferences', 'admin'));
+    $temp = new admin_settingpage('userdefaultpreferences', new lang_string('userdefaultpreferences', 'core_admin'));
     if ($ADMIN->fulltree) {
         $choices = array();
         $choices['0'] = new lang_string('emaildisplayno');
@@ -99,13 +99,13 @@ if ($hassiteconfig
     }
     $ADMIN->add('accounts', $temp);
 
-    $ADMIN->add('accounts', new admin_externalpage('profilefields', new lang_string('profilefields','admin'), "$CFG->wwwroot/user/profile/index.php", 'moodle/site:config'));
-    $ADMIN->add('accounts', new admin_externalpage('cohorts', new lang_string('cohorts', 'cohort'), $CFG->wwwroot . '/cohort/index.php', array('moodle/cohort:manage', 'moodle/cohort:view')));
+    $ADMIN->add('accounts', new admin_externalpage('profilefields', new lang_string('profilefields','core_admin'), "$CFG->wwwroot/user/profile/index.php", 'moodle/site:config'));
+    $ADMIN->add('accounts', new admin_externalpage('cohorts', new lang_string('cohorts', 'core_cohort'), $CFG->wwwroot . '/cohort/index.php', array('moodle/cohort:manage', 'moodle/cohort:view')));
     $ADMIN->add(
         'accounts',
         new admin_externalpage(
             'cohort_customfield',
-            new lang_string('cohort_customfield', 'admin'),
+            new lang_string('cohort_customfield', 'core_admin'),
             $CFG->wwwroot . '/cohort/customfield.php',
             ['moodle/cohort:configurecustomfields']
         )
@@ -114,7 +114,7 @@ if ($hassiteconfig
     // Stuff under the "roles" subcategory.
 
     // User policies settingpage.
-    $temp = new admin_settingpage('userpolicies', new lang_string('userpolicies', 'admin'));
+    $temp = new admin_settingpage('userpolicies', new lang_string('userpolicies', 'core_admin'));
     if ($ADMIN->fulltree) {
         if (!during_initial_install()) {
             $context = context_system::instance();
@@ -176,16 +176,16 @@ if ($hassiteconfig
             $restorersnewrole = $creatornewroles;
             $restorersnewrole[0] = new lang_string('none');
 
-            $temp->add(new admin_setting_configselect('notloggedinroleid', new lang_string('notloggedinroleid', 'admin'),
-                          new lang_string('confignotloggedinroleid', 'admin'), $defaultguestid, ($guestroles + $otherroles)));
-            $temp->add(new admin_setting_configselect('guestroleid', new lang_string('guestroleid', 'admin'),
-                          new lang_string('guestroleid_help', 'admin'), $defaultguestid, ($guestroles + $otherroles)));
-            $temp->add(new admin_setting_configselect('defaultuserroleid', new lang_string('defaultuserroleid', 'admin'),
-                          new lang_string('configdefaultuserroleid', 'admin'), $defaultuserid, ($userroles + $otherroles)));
-            $temp->add(new admin_setting_configselect('creatornewroleid', new lang_string('creatornewroleid', 'admin'),
-                          new lang_string('creatornewroleid_help', 'admin'), $defaultteacherid, $creatornewroles));
-            $temp->add(new admin_setting_configselect('restorernewroleid', new lang_string('restorernewroleid', 'admin'),
-                          new lang_string('restorernewroleid_help', 'admin'), $defaultteacherid, $restorersnewrole));
+            $temp->add(new admin_setting_configselect('notloggedinroleid', new lang_string('notloggedinroleid', 'core_admin'),
+                          new lang_string('confignotloggedinroleid', 'core_admin'), $defaultguestid, ($guestroles + $otherroles)));
+            $temp->add(new admin_setting_configselect('guestroleid', new lang_string('guestroleid', 'core_admin'),
+                          new lang_string('guestroleid_help', 'core_admin'), $defaultguestid, ($guestroles + $otherroles)));
+            $temp->add(new admin_setting_configselect('defaultuserroleid', new lang_string('defaultuserroleid', 'core_admin'),
+                          new lang_string('configdefaultuserroleid', 'core_admin'), $defaultuserid, ($userroles + $otherroles)));
+            $temp->add(new admin_setting_configselect('creatornewroleid', new lang_string('creatornewroleid', 'core_admin'),
+                          new lang_string('creatornewroleid_help', 'core_admin'), $defaultteacherid, $creatornewroles));
+            $temp->add(new admin_setting_configselect('restorernewroleid', new lang_string('restorernewroleid', 'core_admin'),
+                          new lang_string('restorernewroleid_help', 'core_admin'), $defaultteacherid, $restorersnewrole));
 
             // Release memory.
             unset($otherroles);
@@ -195,25 +195,25 @@ if ($hassiteconfig
             unset($restorersnewrole);
         }
 
-        $temp->add(new admin_setting_configcheckbox('enroladminnewcourse', new lang_string('enroladminnewcourse', 'admin'),
-            new lang_string('enroladminnewcourse_help', 'admin'), 1));
+        $temp->add(new admin_setting_configcheckbox('enroladminnewcourse', new lang_string('enroladminnewcourse', 'core_admin'),
+            new lang_string('enroladminnewcourse_help', 'core_admin'), 1));
 
-        $temp->add(new admin_setting_configcheckbox('autologinguests', new lang_string('autologinguests', 'admin'), new lang_string('configautologinguests', 'admin'), 0));
+        $temp->add(new admin_setting_configcheckbox('autologinguests', new lang_string('autologinguests', 'core_admin'), new lang_string('configautologinguests', 'core_admin'), 0));
 
-        $temp->add(new admin_setting_configmultiselect('hiddenuserfields', new lang_string('hiddenuserfields', 'admin'),
-                   new lang_string('confighiddenuserfields', 'admin'), array(),
+        $temp->add(new admin_setting_configmultiselect('hiddenuserfields', new lang_string('hiddenuserfields', 'core_admin'),
+                   new lang_string('confighiddenuserfields', 'core_admin'), array(),
                        array('description' => new lang_string('description'),
                              'email' => new lang_string('email'),
                              'city' => new lang_string('city'),
                              'country' => new lang_string('country'),
-                             'moodlenetprofile' => new lang_string('moodlenetprofile', 'user'),
+                             'moodlenetprofile' => new lang_string('moodlenetprofile', 'core_user'),
                              'timezone' => new lang_string('timezone'),
                              'firstaccess' => new lang_string('firstaccess'),
                              'lastaccess' => new lang_string('lastaccess'),
                              'lastip' => new lang_string('lastip'),
                              'mycourses' => new lang_string('mycourses'),
                              'groups' => new lang_string('groups'),
-                             'suspended' => new lang_string('suspended', 'auth'),
+                             'suspended' => new lang_string('suspended', 'core_auth'),
                        )));
 
         // Select fields to display as part of user identity (only to those
@@ -222,8 +222,8 @@ if ($hassiteconfig
         // distinguish when adding or listing users ('I want to add the John
         // Smith from Science faculty') and any custom profile fields.
         $temp->add(new admin_setting_configmulticheckbox('showuseridentity',
-                new lang_string('showuseridentity', 'admin'),
-                new lang_string('showuseridentity_desc', 'admin'), ['email' => 1],
+                new lang_string('showuseridentity', 'core_admin'),
+                new lang_string('showuseridentity_desc', 'core_admin'), ['email' => 1],
                 function() {
                     global $CFG;
                     require_once($CFG->dirroot.'/user/profile/lib.php');
@@ -254,32 +254,32 @@ if ($hassiteconfig
 
                     return $fields;
                 }));
-        $setting = new admin_setting_configtext('fullnamedisplay', new lang_string('fullnamedisplay', 'admin'),
-            new lang_string('configfullnamedisplay', 'admin'), 'language', PARAM_TEXT, 50);
+        $setting = new admin_setting_configtext('fullnamedisplay', new lang_string('fullnamedisplay', 'core_admin'),
+            new lang_string('configfullnamedisplay', 'core_admin'), 'language', PARAM_TEXT, 50);
         $setting->set_force_ltr(true);
         $temp->add($setting);
-        $temp->add(new admin_setting_configtext('alternativefullnameformat', new lang_string('alternativefullnameformat', 'admin'),
-                new lang_string('alternativefullnameformat_desc', 'admin'),
+        $temp->add(new admin_setting_configtext('alternativefullnameformat', new lang_string('alternativefullnameformat', 'core_admin'),
+                new lang_string('alternativefullnameformat_desc', 'core_admin'),
                 'language', PARAM_RAW, 50));
-        $temp->add(new admin_setting_configtext('maxusersperpage', new lang_string('maxusersperpage','admin'), new lang_string('configmaxusersperpage','admin'), 100, PARAM_INT));
-        $temp->add(new admin_setting_configcheckbox('enablegravatar', new lang_string('enablegravatar', 'admin'), new lang_string('enablegravatar_help', 'admin'), 0));
-        $temp->add(new admin_setting_configtext('gravatardefaulturl', new lang_string('gravatardefaulturl', 'admin'), new lang_string('gravatardefaulturl_help', 'admin'), 'mm'));
+        $temp->add(new admin_setting_configtext('maxusersperpage', new lang_string('maxusersperpage','core_admin'), new lang_string('configmaxusersperpage','core_admin'), 100, PARAM_INT));
+        $temp->add(new admin_setting_configcheckbox('enablegravatar', new lang_string('enablegravatar', 'core_admin'), new lang_string('enablegravatar_help', 'core_admin'), 0));
+        $temp->add(new admin_setting_configtext('gravatardefaulturl', new lang_string('gravatardefaulturl', 'core_admin'), new lang_string('gravatardefaulturl_help', 'core_admin'), 'mm'));
     }
 
     $ADMIN->add('roles', $temp);
 
     if (is_siteadmin()) {
-        $ADMIN->add('roles', new admin_externalpage('admins', new lang_string('siteadministrators', 'role'), "$CFG->wwwroot/$CFG->admin/roles/admins.php"));
+        $ADMIN->add('roles', new admin_externalpage('admins', new lang_string('siteadministrators', 'core_role'), "$CFG->wwwroot/$CFG->admin/roles/admins.php"));
     }
-    $ADMIN->add('roles', new admin_externalpage('defineroles', new lang_string('defineroles', 'role'), "$CFG->wwwroot/$CFG->admin/roles/manage.php", 'moodle/role:manage'));
-    $ADMIN->add('roles', new admin_externalpage('assignroles', new lang_string('assignglobalroles', 'role'), "$CFG->wwwroot/$CFG->admin/roles/assign.php?contextid=".$systemcontext->id, 'moodle/role:assign'));
-    $ADMIN->add('roles', new admin_externalpage('checkpermissions', new lang_string('checkglobalpermissions', 'role'), "$CFG->wwwroot/$CFG->admin/roles/check.php?contextid=".$systemcontext->id, array('moodle/role:assign', 'moodle/role:safeoverride', 'moodle/role:override', 'moodle/role:manage')));
+    $ADMIN->add('roles', new admin_externalpage('defineroles', new lang_string('defineroles', 'core_role'), "$CFG->wwwroot/$CFG->admin/roles/manage.php", 'moodle/role:manage'));
+    $ADMIN->add('roles', new admin_externalpage('assignroles', new lang_string('assignglobalroles', 'core_role'), "$CFG->wwwroot/$CFG->admin/roles/assign.php?contextid=".$systemcontext->id, 'moodle/role:assign'));
+    $ADMIN->add('roles', new admin_externalpage('checkpermissions', new lang_string('checkglobalpermissions', 'core_role'), "$CFG->wwwroot/$CFG->admin/roles/check.php?contextid=".$systemcontext->id, array('moodle/role:assign', 'moodle/role:safeoverride', 'moodle/role:override', 'moodle/role:manage')));
 
 } // End of speedup.
 
 // Privacy settings.
 if ($hassiteconfig) {
-    $temp = new admin_settingpage('privacysettings', new lang_string('privacysettings', 'admin'));
+    $temp = new admin_settingpage('privacysettings', new lang_string('privacysettings', 'core_admin'));
 
     $options = array(
         0 => get_string('no'),
@@ -288,8 +288,8 @@ if ($hassiteconfig) {
     $url = new moodle_url('/admin/settings.php?section=supportcontact');
     $url = $url->out();
     $setting = new admin_setting_configselect('agedigitalconsentverification',
-        new lang_string('agedigitalconsentverification', 'admin'),
-        new lang_string('agedigitalconsentverification_desc', 'admin', $url), 0, $options);
+        new lang_string('agedigitalconsentverification', 'core_admin'),
+        new lang_string('agedigitalconsentverification_desc', 'core_admin', $url), 0, $options);
     $setting->set_force_ltr(true);
     $temp->add($setting);
 
@@ -319,8 +319,8 @@ if ($hassiteconfig) {
         'US, 13'
     ]);
     $setting = new admin_setting_agedigitalconsentmap('agedigitalconsentmap',
-        new lang_string('ageofdigitalconsentmap', 'admin'),
-        new lang_string('ageofdigitalconsentmap_desc', 'admin'),
+        new lang_string('ageofdigitalconsentmap', 'core_admin'),
+        new lang_string('ageofdigitalconsentmap_desc', 'core_admin'),
         $ageofdigitalconsentmap,
         PARAM_RAW
     );
@@ -329,7 +329,7 @@ if ($hassiteconfig) {
     $ADMIN->add('privacy', $temp);
 
     // Policy settings.
-    $temp = new admin_settingpage('policysettings', new lang_string('policysettings', 'admin'));
+    $temp = new admin_settingpage('policysettings', new lang_string('policysettings', 'core_admin'));
     $temp->add(new admin_settings_sitepolicy_handler_select('sitepolicyhandler', new lang_string('sitepolicyhandler', 'core_admin'),
         new lang_string('sitepolicyhandler_desc', 'core_admin')));
     $temp->add(new admin_setting_configtext('sitepolicy', new lang_string('sitepolicy', 'core_admin'),

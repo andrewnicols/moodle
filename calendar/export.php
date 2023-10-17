@@ -89,7 +89,7 @@ if ($courseid != SITEID && !empty($courseid)) {
 
     navigation_node::override_active_url(new moodle_url('/course/view.php', ['id' => $course->id]));
     $PAGE->navbar->add(
-        get_string('calendar', 'calendar'),
+        get_string('calendar', 'core_calendar'),
         new moodle_url('/calendar/view.php', ['view' => 'month', 'course' => $course->id])
     );
 } else {
@@ -102,11 +102,11 @@ if ($courseid != SITEID && !empty($courseid)) {
         navigation_node::override_active_url(new moodle_url('/course/index.php', ['categoryid' => $categoryid]));
         $PAGE->set_category_by_id($categoryid);
         $PAGE->navbar->add(
-            get_string('calendar', 'calendar'),
+            get_string('calendar', 'core_calendar'),
             new moodle_url('/calendar/view.php', ['view' => 'month', 'category' => $categoryid])
         );
     } else {
-        $PAGE->navbar->add(get_string('calendar', 'calendar'), new moodle_url('/calendar/view.php', ['view' => 'month']));
+        $PAGE->navbar->add(get_string('calendar', 'core_calendar'), new moodle_url('/calendar/view.php', ['view' => 'month']));
     }
 }
 require_login($course, false);
@@ -120,15 +120,15 @@ $PAGE->set_url($url);
 $calendar = new calendar_information(0, 0, 0, $time);
 $calendar->set_sources($course, $courses);
 
-$pagetitle = get_string('export', 'calendar');
+$pagetitle = get_string('export', 'core_calendar');
 
-$PAGE->navbar->add(get_string('managesubscriptions', 'calendar'), $managesubscriptionsurl);
-$PAGE->navbar->add(get_string('exportcalendar', 'calendar'), $url);
+$PAGE->navbar->add(get_string('managesubscriptions', 'core_calendar'), $managesubscriptionsurl);
+$PAGE->navbar->add(get_string('exportcalendar', 'core_calendar'), $url);
 
 // Print title and header.
 $headingstr = get_string('calendar', 'core_calendar');
 $headingstr = ($courseid != SITEID && !empty($courseid)) ? "{$headingstr}: {$COURSE->shortname}" : $headingstr;
-$PAGE->set_title($course->shortname.': '.get_string('calendar', 'calendar').': '.$pagetitle);
+$PAGE->set_title($course->shortname.': '.get_string('calendar', 'core_calendar').': '.$pagetitle);
 $PAGE->set_heading($headingstr);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_secondary_navigation(false);
@@ -180,7 +180,7 @@ if ($data = $exportform->get_data()) {
 
 echo $OUTPUT->header();
 echo $renderer->start_layout();
-echo $OUTPUT->heading(get_string('exportcalendar', 'calendar'));
+echo $OUTPUT->heading(get_string('exportcalendar', 'core_calendar'));
 
 if ($action != 'advanced') {
     $exportform->display();

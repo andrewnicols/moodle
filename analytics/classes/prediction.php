@@ -141,7 +141,7 @@ class prediction {
 
         $context = \context::instance_by_id($this->get_prediction_data()->contextid, IGNORE_MISSING);
         if (!$context) {
-            throw new \moodle_exception('errorpredictioncontextnotavailable', 'analytics');
+            throw new \moodle_exception('errorpredictioncontextnotavailable', 'core_analytics');
         }
 
         // Check that the provided action exists.
@@ -158,7 +158,7 @@ class prediction {
             }
         }
         if (empty($found)) {
-            throw new \moodle_exception('errorunknownaction', 'analytics');
+            throw new \moodle_exception('errorunknownaction', 'core_analytics');
         }
 
         $predictionid = $this->get_prediction_data()->id;
@@ -222,7 +222,7 @@ class prediction {
                 // Time range indicators don't belong to any indicator class, we don't store them.
                 continue;
             } else if (!\core_analytics\manager::is_valid($indicatorclass, '\core_analytics\local\indicator\base')) {
-                throw new \moodle_exception('errorpredictionformat', 'analytics');
+                throw new \moodle_exception('errorpredictionformat', 'core_analytics');
             }
 
             $this->calculations[$featurename] = new \stdClass();

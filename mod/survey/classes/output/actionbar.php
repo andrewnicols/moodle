@@ -93,10 +93,10 @@ class actionbar implements renderable, templatable {
 
         $actions = [];
         if ($survey && ($survey->template != SURVEY_CIQ)) {
-            $actions['summary'] = get_string('summary', 'survey');
-            $actions['scales'] = get_string('scales', 'survey');
+            $actions['summary'] = get_string('summary', 'mod_survey');
+            $actions['scales'] = get_string('scales', 'mod_survey');
         }
-        $actions['questions'] = get_string('questions', 'survey');
+        $actions['questions'] = get_string('questions', 'mod_survey');
         $actions['students'] = get_string('participants');
 
         return $actions;

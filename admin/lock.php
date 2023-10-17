@@ -60,9 +60,9 @@ if (null !== $confirm && confirm_sesskey()) {
     $context->set_locked(!empty($confirm));
 
     if ($context->locked) {
-        $lockmessage = get_string('managecontextlocklocked', 'admin', $a);
+        $lockmessage = get_string('managecontextlocklocked', 'core_admin', $a);
     } else {
-        $lockmessage = get_string('managecontextlockunlocked', 'admin', $a);
+        $lockmessage = get_string('managecontextlockunlocked', 'core_admin', $a);
     }
 
     if (empty($returnurl)) {
@@ -73,17 +73,17 @@ if (null !== $confirm && confirm_sesskey()) {
     redirect($returnurl, $lockmessage);
 }
 
-$heading = get_string('managecontextlock', 'admin');
+$heading = get_string('managecontextlock', 'core_admin');
 $PAGE->set_title($heading);
 $PAGE->set_heading($heading);
 
 echo $OUTPUT->header();
 
 if ($context->locked) {
-    $confirmstring = get_string('confirmcontextunlock', 'admin', $a);
+    $confirmstring = get_string('confirmcontextunlock', 'core_admin', $a);
     $target = 0;
 } else {
-    $confirmstring = get_string('confirmcontextlock', 'admin', $a);
+    $confirmstring = get_string('confirmcontextlock', 'core_admin', $a);
     $target = 1;
 }
 

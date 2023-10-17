@@ -50,7 +50,7 @@ class question_category_deleted extends question_category_base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventquestioncategorydeleted', 'question');
+        return get_string('eventquestioncategorydeleted', 'core_question');
     }
 
     /**

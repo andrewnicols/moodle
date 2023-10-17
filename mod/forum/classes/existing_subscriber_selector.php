@@ -63,7 +63,7 @@ class mod_forum_existing_subscriber_selector extends mod_forum_subscriber_select
         $info = new \core_availability\info_module($modinfo->get_cm($cm->id));
         $subscribers = $info->filter_user_list($subscribers);
 
-        return array(get_string("existingsubscribers", 'forum') => $subscribers);
+        return array(get_string("existingsubscribers", 'mod_forum') => $subscribers);
     }
 
 }

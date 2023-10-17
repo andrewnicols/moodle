@@ -212,7 +212,7 @@ class quiz_statistics_report extends report_base {
         } else if ($qid) {
             // Report on an individual sub-question indexed questionid.
             if (!$questionstats->has_subq($qid, $variantno)) {
-                throw new \moodle_exception('questiondoesnotexist', 'question');
+                throw new \moodle_exception('questiondoesnotexist', 'core_question');
             }
 
             $this->output_individual_question_data($quiz, $questionstats->for_subq($qid, $variantno));
@@ -229,7 +229,7 @@ class quiz_statistics_report extends report_base {
         } else if ($slot) {
             // Report on an individual question indexed by position.
             if (!isset($questions[$slot])) {
-                throw new \moodle_exception('questiondoesnotexist', 'question');
+                throw new \moodle_exception('questiondoesnotexist', 'core_question');
             }
 
             if ($variantno === null &&
@@ -306,7 +306,7 @@ class quiz_statistics_report extends report_base {
         $questioninfotable->attributes['class'] = 'generaltable titlesleft';
 
         $questioninfotable->data = [];
-        $questioninfotable->data[] = [get_string('modulename', 'quiz'), $quiz->name];
+        $questioninfotable->data[] = [get_string('modulename', 'mod_quiz'), $quiz->name];
         $questioninfotable->data[] = [get_string('questionname', 'quiz_statistics'),
                 $questionstat->question->name.'&nbsp;'.$datumfromtable['actions']];
 
@@ -892,8 +892,8 @@ class quiz_statistics_report extends report_base {
         foreach ($questions as $qs => $question) {
             if ($question->qtype === 'random') {
                 $question->id = 0;
-                $question->name = get_string('random', 'quiz');
-                $question->questiontext = get_string('random', 'quiz');
+                $question->name = get_string('random', 'mod_quiz');
+                $question->questiontext = get_string('random', 'mod_quiz');
                 $question->parenttype = 'random';
                 $questiondata[$question->slot] = $question;
             } else if ($question->qtype === 'missingtype') {

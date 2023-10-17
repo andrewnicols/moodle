@@ -60,8 +60,8 @@ if ($ADMIN->fulltree) {
 
             // Alternate connection.
             $settings->add(new admin_setting_heading('search_solr_alternatesettings',
-                    new lang_string('searchalternatesettings', 'admin'),
-                    new lang_string('searchalternatesettings_desc', 'admin')));
+                    new lang_string('searchalternatesettings', 'core_admin'),
+                    new lang_string('searchalternatesettings_desc', 'core_admin')));
             $settings->add(new admin_setting_configtext('search_solr/alternateserver_hostname',
                     new lang_string('solrserverhostname', 'search_solr'),
                     new lang_string('solrserverhostname_desc', 'search_solr'), '127.0.0.1', PARAM_HOST));

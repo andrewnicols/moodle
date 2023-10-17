@@ -72,8 +72,8 @@ if ($attemptid > 0) {
             $i--;
         }
     } else {
-        $scoreoptions[0] = get_string('nocredit', 'lesson');
-        $scoreoptions[1] = get_string('credit', 'lesson');
+        $scoreoptions[0] = get_string('nocredit', 'mod_lesson');
+        $scoreoptions[1] = get_string('credit', 'mod_lesson');
     }
 }
 
@@ -84,13 +84,13 @@ switch ($mode) {
         require_sesskey();
 
         if (empty($attempt)) {
-            throw new \moodle_exception('cannotfindattempt', 'lesson');
+            throw new \moodle_exception('cannotfindattempt', 'mod_lesson');
         }
         if (empty($user)) {
-            throw new \moodle_exception('cannotfinduser', 'lesson');
+            throw new \moodle_exception('cannotfinduser', 'mod_lesson');
         }
         if (empty($answer)) {
-            throw new \moodle_exception('cannotfindanswer', 'lesson');
+            throw new \moodle_exception('cannotfindanswer', 'mod_lesson');
         }
         break;
 
@@ -98,10 +98,10 @@ switch ($mode) {
         require_sesskey();
 
         if (empty($attempt)) {
-            throw new \moodle_exception('cannotfindattempt', 'lesson');
+            throw new \moodle_exception('cannotfindattempt', 'mod_lesson');
         }
         if (empty($user)) {
-            throw new \moodle_exception('cannotfinduser', 'lesson');
+            throw new \moodle_exception('cannotfinduser', 'mod_lesson');
         }
 
         $editoroptions = array('noclean' => true, 'maxfiles' => EDITOR_UNLIMITED_FILES,
@@ -116,7 +116,7 @@ switch ($mode) {
         }
         if ($form = $mform->get_data()) {
             if (!$grades = $DB->get_records('lesson_grades', array("lessonid"=>$lesson->id, "userid"=>$attempt->userid), 'completed', '*', $attempt->retry, 1)) {
-                throw new \moodle_exception('cannotfindgrade', 'lesson');
+                throw new \moodle_exception('cannotfindgrade', 'mod_lesson');
             }
 
             $essayinfo->graded = 1;
@@ -178,7 +178,7 @@ switch ($mode) {
         if ($userid = optional_param('userid', 0, PARAM_INT)) {
             $queryadd = " AND userid = ?";
             if (! $users = $DB->get_records('user', array('id' => $userid))) {
-                throw new \moodle_exception('cannotfinduser', 'lesson');
+                throw new \moodle_exception('cannotfinduser', 'mod_lesson');
             }
         } else {
             $queryadd = '';
@@ -199,7 +199,7 @@ switch ($mode) {
                        ) ui ON u.id = ui.userid
                   JOIN ($esql) ue ON ue.id = u.id
                   ORDER BY $sort", $params)) {
-                throw new \moodle_exception('cannotfinduser', 'lesson');
+                throw new \moodle_exception('cannotfinduser', 'mod_lesson');
             }
         }
 
@@ -216,13 +216,13 @@ switch ($mode) {
             $params[] = $userid;
         }
         if (!$attempts = $DB->get_records_select('lesson_attempts', "pageid $usql".$queryadd, $params)) {
-            throw new \moodle_exception('nooneansweredthisquestion', 'lesson');
+            throw new \moodle_exception('nooneansweredthisquestion', 'mod_lesson');
         }
         // Get the answers
         list($answerUsql, $parameters) = $DB->get_in_or_equal(array_keys($pages));
         array_unshift($parameters, $lesson->id);
         if (!$answers = $DB->get_records_select('lesson_answers', "lessonid = ? AND pageid $answerUsql", $parameters, '', 'pageid, score')) {
-            throw new \moodle_exception('cannotfindanswer', 'lesson');
+            throw new \moodle_exception('cannotfindanswer', 'mod_lesson');
         }
 
         $userpicture = new user_picture($USER);
@@ -261,14 +261,14 @@ switch ($mode) {
                 $a->lesson = format_string($lesson->name, true);
 
                 // Fetch message HTML and plain text formats
-                $message  = get_string('essayemailmessage2', 'lesson', $a);
+                $message  = get_string('essayemailmessage2', 'mod_lesson', $a);
                 $plaintext = format_text_email($message, FORMAT_HTML);
 
-                $smallmessage = get_string('essayemailmessagesmall', 'lesson', $a);
+                $smallmessage = get_string('essayemailmessagesmall', 'mod_lesson', $a);
                 $smallmessage = format_text_email($smallmessage, FORMAT_HTML);
 
                 // Subject
-                $subject = get_string('essayemailsubject', 'lesson');
+                $subject = get_string('essayemailsubject', 'mod_lesson');
 
                 // Context url.
                 $contexturl = new moodle_url('/grade/report/user/index.php', array('id' => $course->id));
@@ -302,7 +302,7 @@ switch ($mode) {
                 $DB->update_record('lesson_attempts', $attempt);
             }
         }
-        $lesson->add_message(get_string('emailsuccess', 'lesson'), 'notifysuccess');
+        $lesson->add_message(get_string('emailsuccess', 'mod_lesson'), 'notifysuccess');
         redirect(new moodle_url('/mod/lesson/essay.php', array('id'=>$cm->id)));
         break;
     case 'display':  // Default view - get the necessary data
@@ -342,29 +342,29 @@ switch ($mode) {
                     $mode = 'none'; // not displaying anything
                     if (!empty($currentgroup)) {
                         $groupname = groups_get_group_name($currentgroup);
-                        $lesson->add_message(get_string('noonehasansweredgroup', 'lesson', $groupname));
+                        $lesson->add_message(get_string('noonehasansweredgroup', 'mod_lesson', $groupname));
                     } else {
-                        $lesson->add_message(get_string('noonehasanswered', 'lesson'));
+                        $lesson->add_message(get_string('noonehasanswered', 'mod_lesson'));
                     }
                 }
             } else {
                 $mode = 'none'; // not displaying anything
                 if (!empty($currentgroup)) {
                     $groupname = groups_get_group_name($currentgroup);
-                    $lesson->add_message(get_string('noonehasansweredgroup', 'lesson', $groupname));
+                    $lesson->add_message(get_string('noonehasansweredgroup', 'mod_lesson', $groupname));
                 } else {
-                    $lesson->add_message(get_string('noonehasanswered', 'lesson'));
+                    $lesson->add_message(get_string('noonehasanswered', 'mod_lesson'));
                 }
             }
         } else {
             $mode = 'none'; // not displaying anything
-            $lesson->add_message(get_string('noessayquestionsfound', 'lesson'));
+            $lesson->add_message(get_string('noessayquestionsfound', 'mod_lesson'));
         }
         break;
 }
 
 $lessonoutput = $PAGE->get_renderer('mod_lesson');
-echo $lessonoutput->header($lesson, $cm, 'essay', false, null, get_string('manualgrading', 'lesson'));
+echo $lessonoutput->header($lesson, $cm, 'essay', false, null, get_string('manualgrading', 'mod_lesson'));
 
 switch ($mode) {
     case 'display':
@@ -382,8 +382,8 @@ switch ($mode) {
 
         // Setup table
         $table = new html_table();
-        $table->head = array(get_string('name'), get_string('essays', 'lesson'), get_string('status'),
-            get_string('email', 'lesson'));
+        $table->head = array(get_string('name'), get_string('essays', 'mod_lesson'), get_string('status'),
+            get_string('email', 'mod_lesson'));
         $table->attributes['class'] = 'standardtable generaltable';
         $table->align = array('left', 'left', 'left');
         $table->wrap = array('nowrap', 'nowrap', '');
@@ -422,13 +422,13 @@ switch ($mode) {
                     // Different colors for all the states of an essay (graded, if sent, not graded)
                     if (!$essayinfo->graded) {
                         $class = "badge badge-warning";
-                        $status = get_string('notgraded', 'lesson');
+                        $status = get_string('notgraded', 'mod_lesson');
                     } elseif (!$essayinfo->sent) {
                         $class = "badge badge-success";
-                        $status = get_string('graded', 'lesson');
+                        $status = get_string('graded', 'mod_lesson');
                     } else {
                         $class = "badge badge-success";
-                        $status = get_string('sent', 'lesson');
+                        $status = get_string('sent', 'mod_lesson');
                     }
                     $attributes = array('tabindex' => 0);
 
@@ -438,7 +438,7 @@ switch ($mode) {
             }
             // email link for this user
             $url = new moodle_url('/mod/lesson/essay.php', array('id'=>$cm->id,'mode'=>'email','userid'=>$userid,'sesskey'=>sesskey()));
-            $emaillink = html_writer::link($url, get_string('emailgradedessays', 'lesson'));
+            $emaillink = html_writer::link($url, get_string('emailgradedessays', 'mod_lesson'));
 
             $table->data[] = array($OUTPUT->user_picture($users[$userid], array('courseid' => $course->id)) . $studentname,
                 implode("<br />", $essaylinks), implode("<br />", $essaystatuses), $emaillink);
@@ -446,7 +446,7 @@ switch ($mode) {
 
         // email link for all users
         $url = new moodle_url('/mod/lesson/essay.php', array('id'=>$cm->id,'mode'=>'email','sesskey'=>sesskey()));
-        $emailalllink = html_writer::link($url, get_string('emailallgradedessays', 'lesson'));
+        $emailalllink = html_writer::link($url, get_string('emailallgradedessays', 'mod_lesson'));
 
         $table->data[] = array(' ', ' ', ' ', $emailalllink);
 

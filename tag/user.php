@@ -47,7 +47,7 @@ switch ($action) {
         $id = required_param('id', PARAM_INT);
         $tagobject = core_tag_tag::get($id, '*', MUST_EXIST);
         $tagobject->flag();
-        redirect($tagobject->get_view_url(), get_string('responsiblewillbenotified', 'tag'));
+        redirect($tagobject->get_view_url(), get_string('responsiblewillbenotified', 'core_tag'));
         break;
 
     default:

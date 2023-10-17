@@ -52,7 +52,7 @@ admin_externalpage_setup($pagename);
 $sesskeyurl = $CFG->wwwroot.'/'.$CFG->admin.'/repository.php?sesskey=' . sesskey();
 $baseurl    = $CFG->wwwroot.'/'.$CFG->admin.'/repository.php';
 
-$configstr  = get_string('manage', 'repository');
+$configstr  = get_string('manage', 'core_repository');
 
 $return = true;
 
@@ -152,7 +152,7 @@ if (($action == 'edit') || ($action == 'new')) {
             core_plugin_manager::reset_caches();
             redirect($baseurl);
         } else {
-            throw new \moodle_exception('instancenotsaved', 'repository', $baseurl);
+            throw new \moodle_exception('instancenotsaved', 'core_repository', $baseurl);
         }
         exit;
     } else {
@@ -209,13 +209,13 @@ if (($action == 'edit') || ($action == 'new')) {
             core_plugin_manager::reset_caches();
             redirect($baseurl);
         } else {
-            throw new \moodle_exception('instancenotdeleted', 'repository', $baseurl);
+            throw new \moodle_exception('instancenotdeleted', 'core_repository', $baseurl);
         }
         exit;
     } else {
         echo $OUTPUT->header();
 
-        $message = get_string('confirmremove', 'repository', $repositorytype->get_readablename());
+        $message = get_string('confirmremove', 'core_repository', $repositorytype->get_readablename());
 
         $output = $OUTPUT->box_start('generalbox', 'notice');
         $output .= html_writer::tag('p', $message);
@@ -235,8 +235,8 @@ if (($action == 'edit') || ($action == 'new')) {
             'downloadcontents' => 1,
         ));
 
-        $output .= $OUTPUT->single_button($removeurl, get_string('continueuninstall', 'repository'));
-        $output .= $OUTPUT->single_button($removeanddownloadurl, get_string('continueuninstallanddownload', 'repository'));
+        $output .= $OUTPUT->single_button($removeurl, get_string('continueuninstall', 'core_repository'));
+        $output .= $OUTPUT->single_button($removeanddownloadurl, get_string('continueuninstallanddownload', 'core_repository'));
         $output .= $OUTPUT->single_button($baseurl, get_string('cancel'));
         $output .= $OUTPUT->box_end();
 
@@ -253,12 +253,12 @@ if (($action == 'edit') || ($action == 'new')) {
 } else {
     // If page is loaded directly
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('manage', 'repository'));
+    echo $OUTPUT->heading(get_string('manage', 'core_repository'));
 
     // Get strings that are used
-    $strshow = get_string('on', 'repository');
-    $strhide = get_string('off', 'repository');
-    $strdelete = get_string('disabled', 'repository');
+    $strshow = get_string('on', 'core_repository');
+    $strhide = get_string('off', 'core_repository');
+    $strdelete = get_string('disabled', 'core_repository');
     $struninstall = get_string('uninstallplugin', 'core_admin');
 
     $actionchoicesforexisting = array(
@@ -282,7 +282,7 @@ if (($action == 'edit') || ($action == 'new')) {
 
     // Table to list plug-ins
     $table = new html_table();
-    $table->head = array(get_string('name'), get_string('isactive', 'repository'), get_string('order'), $settingsstr, $struninstall);
+    $table->head = array(get_string('name'), get_string('isactive', 'core_repository'), get_string('order'), $settingsstr, $struninstall);
 
     $table->colclasses = array('leftalign', 'centeralign', 'centeralign', 'centeralign', 'centeralign', 'centeralign');
     $table->id = 'repositoriessetting';
@@ -312,7 +312,7 @@ if (($action == 'edit') || ($action == 'new')) {
                     $params['type'] = $typename;
                     $admininstancenumber = count(repository::static_function($typename, 'get_instances', $params));
                     // site instances
-                    $admininstancenumbertext = get_string('instancesforsite', 'repository', $admininstancenumber);
+                    $admininstancenumbertext = get_string('instancesforsite', 'core_repository', $admininstancenumber);
                     $params['context'] = array();
                     $instances = repository::static_function($typename, 'get_instances', $params);
                     $courseinstances = array();
@@ -328,11 +328,11 @@ if (($action == 'edit') || ($action == 'new')) {
                     }
                     // course instances
                     $instancenumber = count($courseinstances);
-                    $courseinstancenumbertext = get_string('instancesforcourses', 'repository', $instancenumber);
+                    $courseinstancenumbertext = get_string('instancesforcourses', 'core_repository', $instancenumber);
 
                     // user private instances
                     $instancenumber =  count($userinstances);
-                    $userinstancenumbertext = get_string('instancesforusers', 'repository', $instancenumber);
+                    $userinstancenumbertext = get_string('instancesforusers', 'core_repository', $instancenumber);
                 } else {
                     $admininstancenumbertext = "";
                     $courseinstancenumbertext = "";

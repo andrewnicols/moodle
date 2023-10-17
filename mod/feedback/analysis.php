@@ -64,7 +64,7 @@ groups_print_activity_menu($cm, $url);
 if (has_capability('mod/feedback:viewreports', $context) && $feedbackstructure->get_items()) {
     echo $OUTPUT->container_start('form-buttons');
     $aurl = new moodle_url('/mod/feedback/analysis_to_excel.php', ['sesskey' => sesskey(), 'id' => $id]);
-    echo $OUTPUT->single_button($aurl, get_string('export_to_excel', 'feedback'));
+    echo $OUTPUT->single_button($aurl, get_string('export_to_excel', 'mod_feedback'));
     echo $OUTPUT->container_end();
 }
 
@@ -92,7 +92,7 @@ if ($check_anonymously) {
         $itemobj->print_analysed($item, $printnr, $mygroupid);
     }
 } else {
-    echo $OUTPUT->heading_with_help(get_string('insufficient_responses_for_this_group', 'feedback'),
+    echo $OUTPUT->heading_with_help(get_string('insufficient_responses_for_this_group', 'mod_feedback'),
                                     'insufficient_responses',
                                     'feedback', '', '', 3);
 }

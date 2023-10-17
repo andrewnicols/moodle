@@ -65,7 +65,7 @@ $PAGE->set_url($url);
 // Display a list of overrides.
 $PAGE->set_pagelayout('admin');
 $PAGE->add_body_class('limitedwidth');
-$PAGE->set_title(get_string('overrides', 'lesson'));
+$PAGE->set_title(get_string('overrides', 'mod_lesson'));
 $PAGE->set_heading($course->fullname);
 $PAGE->activityheader->set_attrs([
     'hidecompletion' => true,
@@ -147,14 +147,14 @@ if ($groupmode) {
     if (empty($groups)) {
         // There are no groups.
         $canoverride = false;
-        $errormessage = get_string('groupsnone', 'lesson');
+        $errormessage = get_string('groupsnone', 'mod_lesson');
     }
 } else {
     $users = array();
     // See if there are any users in the lesson.
     if ($accessallgroups) {
         $users = get_enrolled_users($context, '', 0, 'u.id');
-        $nousermessage = get_string('usersnone', 'lesson');
+        $nousermessage = get_string('usersnone', 'mod_lesson');
     } else if ($groups) {
         $enrolledjoin = get_enrolled_join($context, 'u.id');
         list($ingroupsql, $ingroupparams) = $DB->get_in_or_equal(array_keys($groups), SQL_PARAMS_NAMED);
@@ -167,9 +167,9 @@ if ($groupmode) {
                        AND {$enrolledjoin->wheres}
               ORDER BY $sort";
         $users = $DB->get_records_sql($sql, $params);
-        $nousermessage = get_string('usersnone', 'lesson');
+        $nousermessage = get_string('usersnone', 'mod_lesson');
     } else {
-        $nousermessage = get_string('groupsnone', 'lesson');
+        $nousermessage = get_string('groupsnone', 'mod_lesson');
     }
     $info = new \core_availability\info_module($cm);
     $users = $info->filter_user_list($users);
@@ -187,7 +187,7 @@ $table->headspan = array(1, 2, 1);
 $table->colclasses = array('colname', 'colsetting', 'colvalue', 'colaction');
 $table->head = array(
         $colname,
-        get_string('overrides', 'lesson'),
+        get_string('overrides', 'mod_lesson'),
         get_string('action'),
 );
 
@@ -218,51 +218,51 @@ foreach ($overrides as $override) {
 
     // Format available.
     if (isset($override->available)) {
-        $fields[] = get_string('lessonopens', 'lesson');
+        $fields[] = get_string('lessonopens', 'mod_lesson');
         $values[] = $override->available > 0 ?
-                userdate($override->available) : get_string('noopen', 'lesson');
+                userdate($override->available) : get_string('noopen', 'mod_lesson');
     }
 
     // Format deadline.
     if (isset($override->deadline)) {
-        $fields[] = get_string('lessoncloses', 'lesson');
+        $fields[] = get_string('lessoncloses', 'mod_lesson');
         $values[] = $override->deadline > 0 ?
-                userdate($override->deadline) : get_string('noclose', 'lesson');
+                userdate($override->deadline) : get_string('noclose', 'mod_lesson');
     }
 
     // Format timelimit.
     if (isset($override->timelimit)) {
-        $fields[] = get_string('timelimit', 'lesson');
+        $fields[] = get_string('timelimit', 'mod_lesson');
         $values[] = $override->timelimit > 0 ?
-                format_time($override->timelimit) : get_string('none', 'lesson');
+                format_time($override->timelimit) : get_string('none', 'mod_lesson');
     }
 
     // Format option to try a question again.
     if (isset($override->review)) {
-        $fields[] = get_string('displayreview', 'lesson');
+        $fields[] = get_string('displayreview', 'mod_lesson');
         $values[] = $override->review ?
                 get_string('yes') : get_string('no');
     }
 
     // Format number of attempts.
     if (isset($override->maxattempts)) {
-        $fields[] = get_string('maximumnumberofattempts', 'lesson');
+        $fields[] = get_string('maximumnumberofattempts', 'mod_lesson');
         $values[] = $override->maxattempts > 0 ?
                 $override->maxattempts : get_string('unlimited');
     }
 
     // Format retake allowed.
     if (isset($override->retake)) {
-        $fields[] = get_string('retakesallowed', 'lesson');
+        $fields[] = get_string('retakesallowed', 'mod_lesson');
         $values[] = $override->retake ?
                 get_string('yes') : get_string('no');
     }
 
     // Format password.
     if (isset($override->password)) {
-        $fields[] = get_string('usepassword', 'lesson');
+        $fields[] = get_string('usepassword', 'mod_lesson');
         $values[] = $override->password !== '' ?
-                get_string('enabled', 'lesson') : get_string('none', 'lesson');
+                get_string('enabled', 'mod_lesson') : get_string('none', 'mod_lesson');
     }
 
     // Icons.
@@ -335,11 +335,11 @@ if (count($table->data)) {
 
 // No overrides to be displayed.
 if (!$overrides) {
-    echo $OUTPUT->notification(get_string('nooverridecreated', 'lesson'), 'info', false);
+    echo $OUTPUT->notification(get_string('nooverridecreated', 'mod_lesson'), 'info', false);
 }
 
 if ($hasinactive) {
-    echo $OUTPUT->notification(get_string('inactiveoverridehelp', 'lesson'), 'dimmed_text');
+    echo $OUTPUT->notification(get_string('inactiveoverridehelp', 'mod_lesson'), 'dimmed_text');
 }
 
 echo html_writer::start_tag('div', array('class' => 'buttons'));

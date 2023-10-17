@@ -36,7 +36,7 @@ class completion_daily_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcompletiondaily', 'admin');
+        return get_string('taskcompletiondaily', 'core_admin');
     }
 
     /**

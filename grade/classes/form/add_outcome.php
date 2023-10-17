@@ -140,11 +140,11 @@ class add_outcome extends dynamic_form {
         }
 
         // Visible elements.
-        $mform->addElement('text', 'itemname', get_string('itemname', 'grades'));
+        $mform->addElement('text', 'itemname', get_string('itemname', 'core_grades'));
         $mform->addRule('itemname', get_string('required'), 'required', null, 'client');
         $mform->setType('itemname', PARAM_TEXT);
 
-        $mform->addElement('selectwithlink', 'outcomeid', get_string('outcome', 'grades'), $outcomeoptions);
+        $mform->addElement('selectwithlink', 'outcomeid', get_string('outcome', 'core_grades'), $outcomeoptions);
         $mform->addHelpButton('outcomeid', 'outcome', 'grades');
         $mform->addRule('outcomeid', get_string('required'), 'required');
 
@@ -156,23 +156,23 @@ class add_outcome extends dynamic_form {
                 }
             }
         }
-        $mform->addElement('select', 'cmid', get_string('linkedactivity', 'grades'), $options);
+        $mform->addElement('select', 'cmid', get_string('linkedactivity', 'core_grades'), $options);
         $mform->addHelpButton('cmid', 'linkedactivity', 'grades');
         $mform->setDefault('cmid', 0);
 
         // Hiding.
-        $mform->addElement('checkbox', 'hidden', get_string('hidden', 'grades'));
+        $mform->addElement('checkbox', 'hidden', get_string('hidden', 'core_grades'));
         $mform->addHelpButton('hidden', 'hidden', 'grades');
 
         // Locking.
-        $mform->addElement('advcheckbox', 'locked', get_string('locked', 'grades'));
+        $mform->addElement('advcheckbox', 'locked', get_string('locked', 'core_grades'));
         $mform->addHelpButton('locked', 'locked', 'grades');
 
         // Parent category related settings.
-        $mform->addElement('advcheckbox', 'weightoverride', get_string('adjustedweight', 'grades'));
+        $mform->addElement('advcheckbox', 'weightoverride', get_string('adjustedweight', 'core_grades'));
         $mform->addHelpButton('weightoverride', 'weightoverride', 'grades');
 
-        $mform->addElement('text', 'aggregationcoef2', get_string('weight', 'grades'));
+        $mform->addElement('text', 'aggregationcoef2', get_string('weight', 'core_grades'));
         $mform->addHelpButton('aggregationcoef2', 'weight', 'grades');
         $mform->setType('aggregationcoef2', PARAM_RAW);
         $mform->hideIf('aggregationcoef2', 'weightoverride');
@@ -205,16 +205,16 @@ class add_outcome extends dynamic_form {
         }
 
         if (count($categories) > 1) {
-            $mform->addElement('select', 'parentcategory', get_string('gradecategory', 'grades'), $options);
+            $mform->addElement('select', 'parentcategory', get_string('gradecategory', 'core_grades'), $options);
             $mform->disabledIf('parentcategory', 'cmid', 'noteq', 0);
         }
 
         if ($coefstring !== '') {
             if ($coefstring == 'aggregationcoefextrasum' || $coefstring == 'aggregationcoefextraweightsum') {
                 $coefstring = 'aggregationcoefextrasum';
-                $mform->addElement('checkbox', 'aggregationcoef', get_string($coefstring, 'grades'));
+                $mform->addElement('checkbox', 'aggregationcoef', get_string($coefstring, 'core_grades'));
             } else {
-                $mform->addElement('text', 'aggregationcoef', get_string($coefstring, 'grades'));
+                $mform->addElement('text', 'aggregationcoef', get_string($coefstring, 'core_grades'));
             }
             $mform->addHelpButton('aggregationcoef', $coefstring, 'grades');
         }
@@ -267,7 +267,7 @@ class add_outcome extends dynamic_form {
                 }
 
                 if ($aggcoef !== '') {
-                    $agg_el->setLabel(get_string($aggcoef, 'grades'));
+                    $agg_el->setLabel(get_string($aggcoef, 'core_grades'));
                     $mform->addHelpButton('aggregationcoef', $aggcoef, 'grades');
                 }
             }
@@ -287,7 +287,7 @@ class add_outcome extends dynamic_form {
 
         $url = new moodle_url('/grade/edit/tree/outcomeitem.php', ['id' => $id, 'courseid' => $courseid]);
         $url = $this->gpr->add_url_params($url);
-        $url = '<a class="showadvancedform" href="' . $url . '">' . get_string('showmore', 'form') .'</a>';
+        $url = '<a class="showadvancedform" href="' . $url . '">' . get_string('showmore', 'core_form') .'</a>';
         $mform->addElement('static', 'advancedform', $url);
 
         // Add return tracking info.

@@ -28,12 +28,12 @@
 
     $row[] = new tabobject('courseoutcomes',
                            $CFG->wwwroot.'/grade/edit/outcome/course.php?id='.$courseid,
-                           get_string('outcomescourse', 'grades'));
+                           get_string('outcomescourse', 'core_grades'));
 
     if (has_capability('moodle/grade:manage', $context)) {
         $row[] = new tabobject('outcomes',
                                $CFG->wwwroot.'/grade/edit/outcome/index.php?id='.$courseid,
-                               get_string('editoutcomes', 'grades'));
+                               get_string('editoutcomes', 'core_grades'));
     }
 
     $tabs[] = $row;

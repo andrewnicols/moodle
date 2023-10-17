@@ -28,7 +28,7 @@ if (! $course = $DB->get_record("course", array("id"=>$cm->course))) {
 }
 
 if (! $glossary = $DB->get_record("glossary", array("id"=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    throw new \moodle_exception('invalidid', 'mod_glossary');
 }
 
 require_login($course, false, $cm);
@@ -36,15 +36,15 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/glossary:export', $context);
 
-$strglossaries = get_string("modulenameplural", "glossary");
-$strglossary = get_string("modulename", "glossary");
-$strallcategories = get_string("allcategories", "glossary");
-$straddentry = get_string("addentry", "glossary");
-$strnoentries = get_string("noentries", "glossary");
-$strsearchindefinition = get_string("searchindefinition", "glossary");
+$strglossaries = get_string("modulenameplural", 'mod_glossary');
+$strglossary = get_string("modulename", 'mod_glossary');
+$strallcategories = get_string("allcategories", 'mod_glossary');
+$straddentry = get_string("addentry", 'mod_glossary');
+$strnoentries = get_string("noentries", 'mod_glossary');
+$strsearchindefinition = get_string("searchindefinition", 'mod_glossary');
 $strsearch = get_string("search");
-$strexportfile = get_string("exportfile", "glossary");
-$strexportentries = get_string('exportentriestoxml', 'glossary');
+$strexportfile = get_string("exportfile", 'mod_glossary');
+$strexportentries = get_string('exportentriestoxml', 'mod_glossary');
 
 $PAGE->set_url('/mod/glossary/export.php', array('id'=>$cm->id));
 $PAGE->navbar->add($strexportentries);

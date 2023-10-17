@@ -68,7 +68,7 @@ class utils {
             }
         }
         if ($tags) {
-            $header[] = get_string('tags', 'data');
+            $header[] = get_string('tags', 'mod_data');
         }
         if ($userdetails) {
             $header[] = get_string('user');
@@ -76,11 +76,11 @@ class utils {
             $header[] = get_string('email');
         }
         if ($time) {
-            $header[] = get_string('timeadded', 'data');
-            $header[] = get_string('timemodified', 'data');
+            $header[] = get_string('timeadded', 'mod_data');
+            $header[] = get_string('timemodified', 'mod_data');
         }
         if ($approval) {
-            $header[] = get_string('approved', 'data');
+            $header[] = get_string('approved', 'mod_data');
         }
         $exporter->add_row($header);
 

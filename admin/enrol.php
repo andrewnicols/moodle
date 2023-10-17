@@ -106,7 +106,7 @@ switch ($action) {
         unset($enabled[$enrol]);
         set_config('enrol_plugins_enabled', implode(',', array_keys($enabled)));
 
-        echo $OUTPUT->heading(get_string('uninstallmigrating', 'enrol', 'enrol_'.$enrol));
+        echo $OUTPUT->heading(get_string('uninstallmigrating', 'core_enrol', 'enrol_'.$enrol));
 
         require_once("$CFG->dirroot/enrol/manual/locallib.php");
         enrol_manual_migrate_plugin_enrolments($enrol);

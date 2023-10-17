@@ -33,7 +33,7 @@ $PAGE->set_context($context);
 $output = $PAGE->get_renderer('core', 'badges');
 $PAGE->set_url('/badges/badgeclass.php', ['id' => $badgeid]);
 $PAGE->set_pagelayout('base');
-$PAGE->set_title(get_string('badgedetails', 'badges'));
+$PAGE->set_title(get_string('badgedetails', 'core_badges'));
 
 if (!empty($badgeclass->badge)) {
     $PAGE->navbar->add($badgeclass->badge->name);
@@ -44,7 +44,7 @@ if (!empty($badgeclass->badge)) {
     echo $output->render($badgeclass);
 } else {
     echo $OUTPUT->header();
-    echo $OUTPUT->notification(get_string('error:relatedbadgedoesntexist', 'badges'));
+    echo $OUTPUT->notification(get_string('error:relatedbadgedoesntexist', 'core_badges'));
 }
 
 // Trigger event, badge viewed.

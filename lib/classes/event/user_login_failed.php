@@ -59,7 +59,7 @@ class user_login_failed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventuserloginfailed', 'auth');
+        return get_string('eventuserloginfailed', 'core_auth');
     }
 
     /**

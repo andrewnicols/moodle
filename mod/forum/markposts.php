@@ -41,7 +41,7 @@ if (null !== $return) {
 $PAGE->set_url($url);
 
 if (! $forum = $DB->get_record("forum", array("id" => $f))) {
-    throw new \moodle_exception('invalidforumid', 'forum');
+    throw new \moodle_exception('invalidforumid', 'mod_forum');
 }
 
 if (! $course = $DB->get_record("course", array("id" => $forum->course))) {
@@ -67,7 +67,7 @@ if (isguestuser()) {   // Guests can't change forum
     $PAGE->set_title($course->shortname);
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
-    echo $OUTPUT->confirm(get_string('noguesttracking', 'forum').'<br /><br />'.get_string('liketologin'), get_login_url(), $returnto);
+    echo $OUTPUT->confirm(get_string('noguesttracking', 'mod_forum').'<br /><br />'.get_string('liketologin'), get_login_url(), $returnto);
     echo $OUTPUT->footer();
     exit;
 }
@@ -79,7 +79,7 @@ $info->forum = format_string($forum->name);
 if ($mark == 'read') {
     if (!empty($d)) {
         if (! $discussion = $DB->get_record('forum_discussions', array('id'=> $d, 'forum'=> $forum->id))) {
-            throw new \moodle_exception('invaliddiscussionid', 'forum');
+            throw new \moodle_exception('invaliddiscussionid', 'mod_forum');
         }
 
         forum_tp_mark_discussion_read($user, $d);

@@ -34,7 +34,7 @@ class grade_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskgradecron', 'admin');
+        return get_string('taskgradecron', 'core_admin');
     }
 
     /**

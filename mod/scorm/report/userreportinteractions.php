@@ -81,7 +81,7 @@ $questioncount = get_scorm_question_count($scorm->id);
 
 $courseshortname = format_string($course->shortname, true,
     array('context' => context_course::instance($course->id)));
-$exportfilename = $courseshortname . '-' . format_string($scorm->name, true) . '-' . get_string('interactions', 'scorm');
+$exportfilename = $courseshortname . '-' . format_string($scorm->name, true) . '-' . get_string('interactions', 'mod_scorm');
 
 
 // Set up the table.
@@ -89,8 +89,8 @@ $table = new flexible_table('mod-scorm-userreport-interactions');
 if (!$table->is_downloading($download, $exportfilename)) {
 
     // Print the page header.
-    $strattempt = get_string('attempt', 'scorm');
-    $strreport = get_string('report', 'scorm');
+    $strattempt = get_string('attempt', 'mod_scorm');
+    $strreport = get_string('report', 'mod_scorm');
 
     $PAGE->set_title("$course->shortname: ".format_string($scorm->name));
     $PAGE->set_heading($course->fullname);
@@ -119,9 +119,9 @@ if (!$table->is_downloading($download, $exportfilename)) {
 }
 $table->define_baseurl($PAGE->url);
 $table->define_columns(array('id', 'studentanswer', 'correctanswer', 'result', 'calcweight'));
-$table->define_headers(array(get_string('trackid', 'scorm'), get_string('response', 'scorm'),
-    get_string('rightanswer', 'scorm'), get_string('result', 'scorm'),
-    get_string('calculatedweight', 'scorm')));
+$table->define_headers(array(get_string('trackid', 'mod_scorm'), get_string('response', 'mod_scorm'),
+    get_string('rightanswer', 'mod_scorm'), get_string('result', 'mod_scorm'),
+    get_string('calculatedweight', 'mod_scorm')));
 $table->set_attribute('class', 'generaltable generalbox boxaligncenter boxwidthwide');
 
 $table->show_download_buttons_at(array(TABLE_P_BOTTOM));

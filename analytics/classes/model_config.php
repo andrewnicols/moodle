@@ -68,7 +68,7 @@ class model_config {
         }
 
         if (!$this->model->can_export_configuration()) {
-            throw new \moodle_exception('errornoexportconfigrequirements', 'analytics');
+            throw new \moodle_exception('errornoexportconfigrequirements', 'core_analytics');
         }
 
         $zip = new \zip_packer();
@@ -80,7 +80,7 @@ class model_config {
         $exporttmpdir = make_request_directory();
         $jsonfilepath = $exporttmpdir . DIRECTORY_SEPARATOR . 'model-config.json';
         if (!file_put_contents($jsonfilepath, json_encode($modeldata))) {
-            throw new \moodle_exception('errornoexportconfig', 'analytics');
+            throw new \moodle_exception('errornoexportconfig', 'core_analytics');
         }
         $zipfiles[self::CONFIG_FILE_NAME] = $jsonfilepath;
 
@@ -129,7 +129,7 @@ class model_config {
         if ($mlbackenddir) {
             $modeldir = $model->get_output_dir(['execution']);
             if (!$model->get_predictions_processor(true)->import($model->get_unique_id(), $modeldir, $mlbackenddir)) {
-                throw new \moodle_exception('errorimport', 'analytics');
+                throw new \moodle_exception('errorimport', 'core_analytics');
             }
             $model->mark_as_trained();
         }
@@ -202,18 +202,18 @@ class model_config {
         }
 
         if (!empty($missingcomponents)) {
-            return get_string('errorimportmissingcomponents', 'analytics', join(', ', $missingcomponents));
+            return get_string('errorimportmissingcomponents', 'core_analytics', join(', ', $missingcomponents));
         }
 
         if (!empty($versionmismatches)) {
-            return get_string('errorimportversionmismatches', 'analytics', implode(', ', $versionmismatches));
+            return get_string('errorimportversionmismatches', 'core_analytics', implode(', ', $versionmismatches));
         }
 
         if (!empty($missingclasses)) {
             $a = (object)[
                 'missingclasses' => implode(', ', $missingclasses),
             ];
-            return get_string('errorimportmissingclasses', 'analytics', $a);
+            return get_string('errorimportmissingclasses', 'core_analytics', $a);
         }
 
         // No issues found.
@@ -263,17 +263,17 @@ class model_config {
 
         if (empty($filelist[self::CONFIG_FILE_NAME])) {
             // Missing required file.
-            throw new \moodle_exception('errorimport', 'analytics');
+            throw new \moodle_exception('errorimport', 'core_analytics');
         }
 
         $jsonmodeldata = file_get_contents($importtempdir . DIRECTORY_SEPARATOR . self::CONFIG_FILE_NAME);
 
         if (!$modeldata = json_decode($jsonmodeldata)) {
-            throw new \moodle_exception('errorimport', 'analytics');
+            throw new \moodle_exception('errorimport', 'core_analytics');
         }
 
         if (empty($modeldata->target) || empty($modeldata->timesplitting) || empty($modeldata->indicators)) {
-            throw new \moodle_exception('errorimport', 'analytics');
+            throw new \moodle_exception('errorimport', 'core_analytics');
         }
 
         $mlbackenddir = $importtempdir . DIRECTORY_SEPARATOR . 'mlbackend';

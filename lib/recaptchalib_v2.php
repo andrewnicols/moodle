@@ -112,7 +112,7 @@ function recaptcha_get_challenge_html($apiurl, $pubkey, $lang = null, bool $comp
 
     // To use reCAPTCHA you must have an API key.
     if ($pubkey === null || $pubkey === '') {
-        return get_string('getrecaptchaapi', 'auth');
+        return get_string('getrecaptchaapi', 'core_auth');
     }
 
     $jscode = "

@@ -195,9 +195,9 @@ class custom_completion extends activity_custom_completion {
         }
 
         return [
-            'completionstatusrequired' => get_string("completiondetail:completionstatus{$statusrequired}", 'scorm'),
-            'completionscorerequired' => get_string('completiondetail:completionscore', 'scorm', $scorerequired),
-            'completionstatusallscos' => get_string('completiondetail:allscos', 'scorm'),
+            'completionstatusrequired' => get_string("completiondetail:completionstatus{$statusrequired}", 'mod_scorm'),
+            'completionscorerequired' => get_string('completiondetail:completionscore', 'mod_scorm', $scorerequired),
+            'completionstatusallscos' => get_string('completiondetail:allscos', 'mod_scorm'),
         ];
     }
 

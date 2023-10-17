@@ -1366,7 +1366,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('add', 'data'), $actionevent->get_name());
+        $this->assertEquals(get_string('add', 'mod_data'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -1404,7 +1404,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('add', 'data'), $actionevent->get_name());
+        $this->assertEquals(get_string('add', 'mod_data'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -1489,7 +1489,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('add', 'data'), $actionevent->get_name());
+        $this->assertEquals(get_string('add', 'mod_data'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -1527,7 +1527,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('add', 'data'), $actionevent->get_name());
+        $this->assertEquals(get_string('add', 'mod_data'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -1555,7 +1555,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('add', 'data'), $actionevent->get_name());
+        $this->assertEquals(get_string('add', 'mod_data'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -1592,7 +1592,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('add', 'data'), $actionevent->get_name());
+        $this->assertEquals(get_string('add', 'mod_data'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -1655,7 +1655,7 @@ class lib_test extends \advanced_testcase {
         $moddefaults->customdata = ['customcompletionrules' => ['completionentries' => 3]];
         $moddefaults->completion = 2;
 
-        $activeruledescriptions = [get_string('completionentriesdesc', 'data', 3)];
+        $activeruledescriptions = [get_string('completionentriesdesc', 'mod_data', 3)];
         $this->assertEquals(mod_data_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_data_get_completion_active_rule_descriptions($cm2), []);
         $this->assertEquals(mod_data_get_completion_active_rule_descriptions($moddefaults), $activeruledescriptions);

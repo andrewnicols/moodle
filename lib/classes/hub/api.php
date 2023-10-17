@@ -92,12 +92,12 @@ class api {
         $info = $curl->get_info();
         if ($curl->get_errno()) {
             // Connection error.
-            throw new moodle_exception('errorconnect', 'hub', '', $curl->error);
+            throw new moodle_exception('errorconnect', 'mod_hub', '', $curl->error);
         } else if (isset($curloutput['exception'])) {
             // Exception occurred on the remote side.
             self::process_curl_exception($token, $curloutput);
         } else if ($info['http_code'] != 200) {
-            throw new moodle_exception('errorconnect', 'hub', '', $info['http_code']);
+            throw new moodle_exception('errorconnect', 'mod_hub', '', $info['http_code']);
         } else {
             return $curloutput;
         }
@@ -120,10 +120,10 @@ class api {
                     || $curloutput['exception'] === 'registration_exception') {
                 // Force admin to repeat site registration process.
                 registration::reset_token();
-                throw new moodle_exception('errorwstokenreset', 'hub', '', $curloutput['message']);
+                throw new moodle_exception('errorwstokenreset', 'mod_hub', '', $curloutput['message']);
             }
         }
-        throw new moodle_exception('errorws', 'hub', '', $curloutput['message']);
+        throw new moodle_exception('errorws', 'mod_hub', '', $curloutput['message']);
     }
 
     /**
@@ -330,7 +330,7 @@ class api {
      */
     public static function register_course($courseinfo) {
         debugging("This function has been deprecated as part of the Moodle.net sunsetting process.");
-        throw new moodle_exception('errorcoursewronglypublished', 'hub');
+        throw new moodle_exception('errorcoursewronglypublished', 'mod_hub');
     }
 
     /**

@@ -208,17 +208,17 @@ class mathslib_test extends \basic_testcase {
         $formula = new calc_formula('=pi( + a', array('a'=>10));
         $res = $formula->evaluate();
         $this->assertFalse($res);
-        $this->assertSame(get_string('unexpectedoperator', 'mathslib', '+'), $formula->get_error());
+        $this->assertSame(get_string('unexpectedoperator', 'mod_mathslib', '+'), $formula->get_error());
 
         $formula = new calc_formula('=pi(');
         $res = $formula->evaluate();
         $this->assertSame($res, false);
-        $this->assertSame(get_string('expectingaclosingbracket', 'mathslib'), $formula->get_error());
+        $this->assertSame(get_string('expectingaclosingbracket', 'mod_mathslib'), $formula->get_error());
 
         $formula = new calc_formula('=pi()^');
         $res = $formula->evaluate();
         $this->assertSame($res, false);
-        $this->assertSame(get_string('operatorlacksoperand', 'mathslib', '^'), $formula->get_error());
+        $this->assertSame(get_string('operatorlacksoperand', 'mod_mathslib', '^'), $formula->get_error());
 
     }
 

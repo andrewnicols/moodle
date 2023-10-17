@@ -30,7 +30,7 @@
  */
 class block_tag_flickr_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'core_block'));
 
         $mform->addElement('text', 'config_title', get_string('configtitle', 'block_tag_flickr'));
         $mform->setType('config_title', PARAM_TEXT);

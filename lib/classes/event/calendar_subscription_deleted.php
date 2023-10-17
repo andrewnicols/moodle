@@ -59,7 +59,7 @@ class calendar_subscription_deleted extends base
      * @return string
      */
     public static function get_name() {
-        return get_string('eventsubscriptiondeleted', 'calendar');
+        return get_string('eventsubscriptiondeleted', 'core_calendar');
     }
 
     /**

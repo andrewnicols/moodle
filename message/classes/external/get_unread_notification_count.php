@@ -79,7 +79,7 @@ class get_unread_notification_count extends external_api {
 
         // Check if the current user is the sender/receiver or just a privileged user.
         if ($useridto != $USER->id and !has_capability('moodle/site:readallmessages', $context)) {
-            throw new moodle_exception('accessdenied', 'admin');
+            throw new moodle_exception('accessdenied', 'core_admin');
         }
 
         return $DB->count_records_sql(

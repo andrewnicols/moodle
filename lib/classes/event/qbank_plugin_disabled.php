@@ -27,7 +27,7 @@ namespace core\event;
 class qbank_plugin_disabled extends qbank_plugin_base {
 
     public static function get_name() {
-        return get_string('eventqbankdisabled', 'question');
+        return get_string('eventqbankdisabled', 'core_question');
     }
 
     public function get_description() {

@@ -236,7 +236,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
         }
 
         if (!$resultobj = json_decode($result)) {
-            throw new \moodle_exception('errorpredictwrongformat', 'analytics', '', json_last_error_msg());
+            throw new \moodle_exception('errorpredictwrongformat', 'core_analytics', '', json_last_error_msg());
         }
 
         if ($resultobj->status != 0) {
@@ -273,7 +273,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
         }
 
         if (!$resultobj = json_decode($result)) {
-            throw new \moodle_exception('errorpredictwrongformat', 'analytics', '', json_last_error_msg());
+            throw new \moodle_exception('errorpredictwrongformat', 'core_analytics', '', json_last_error_msg());
         }
 
         if ($resultobj->status != 0) {
@@ -312,7 +312,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
 
             list($result, $exitcode) = $this->exec_command('evaluation', $params, 'errornopredictresults');
             if (!$resultobj = json_decode($result)) {
-                throw new \moodle_exception('errorpredictwrongformat', 'analytics', '', json_last_error_msg());
+                throw new \moodle_exception('errorpredictwrongformat', 'core_analytics', '', json_last_error_msg());
             }
 
         } else {
@@ -330,7 +330,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
             list($result, $httpcode) = $this->server_request($url, 'post', $requestparams);
 
             if (!$resultobj = json_decode($result)) {
-                throw new \moodle_exception('errorpredictwrongformat', 'analytics', '', json_last_error_msg());
+                throw new \moodle_exception('errorpredictwrongformat', 'core_analytics', '', json_last_error_msg());
             }
 
             // We need an extra request to get the resources generated during the evaluation process.
@@ -348,14 +348,14 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
 
             $rundir = $outputdir . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . $resultobj->runid;
             if (!mkdir($rundir, $CFG->directorypermissions, true)) {
-                throw new \moodle_exception('errorexportmodelresult', 'analytics');
+                throw new \moodle_exception('errorexportmodelresult', 'core_analytics');
             }
 
             $zip = new \zip_packer();
             $success = $zip->extract_to_pathname($evaluationzippath, $rundir, null, null, true);
             if (!$success) {
                 $a = 'The evaluation files can not be exported to ' . $rundir;
-                throw new \moodle_exception('errorpredictionsprocessor', 'analytics', '', $a);
+                throw new \moodle_exception('errorpredictionsprocessor', 'core_analytics', '', $a);
             }
 
             $resultobj->dir = $rundir;
@@ -387,7 +387,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
                 'errorexportmodelresult');
 
             if ($exitcode != 0) {
-                throw new \moodle_exception('errorexportmodelresult', 'analytics');
+                throw new \moodle_exception('errorexportmodelresult', 'core_analytics');
             }
 
         } else {
@@ -404,7 +404,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
             $zip = new \zip_packer();
             $success = $zip->extract_to_pathname($exportzippath, $exportdir, null, null, true);
             if (!$success) {
-                throw new \moodle_exception('errorexportmodelresult', 'analytics');
+                throw new \moodle_exception('errorexportmodelresult', 'core_analytics');
             }
         }
 
@@ -428,7 +428,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
                 'errorimportmodelresult');
 
             if ($exitcode != 0) {
-                throw new \moodle_exception('errorimportmodelresult', 'analytics');
+                throw new \moodle_exception('errorimportmodelresult', 'core_analytics');
             }
 
         } else {
@@ -438,7 +438,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
             $importzipfile = $this->zip_dir($importdir);
             if (!$importzipfile) {
                 // There was an error zipping the directory.
-                throw new \moodle_exception('errorimportmodelresult', 'analytics');
+                throw new \moodle_exception('errorimportmodelresult', 'core_analytics');
             }
 
             $requestparams = ['uniqueid' => $uniqueid, 'dirhash' => $this->hash_dir($modeldir),
@@ -564,7 +564,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
         $result = exec($cmd, $output, $exitcode);
 
         if (!$result) {
-            throw new \moodle_exception($errorlangstr, 'analytics');
+            throw new \moodle_exception($errorlangstr, 'core_analytics');
         }
 
         return [$result, $exitcode];
@@ -589,7 +589,7 @@ class processor implements  \core_analytics\classifier, \core_analytics\regresso
                 $errors = implode(', ', $errors);
             }
         }
-        $resultobj->info = array(get_string('errorpredictionsprocessor', 'analytics', $errors));
+        $resultobj->info = array(get_string('errorpredictionsprocessor', 'core_analytics', $errors));
 
         return $resultobj;
     }

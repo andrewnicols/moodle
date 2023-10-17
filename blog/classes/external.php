@@ -58,7 +58,7 @@ class external extends external_api {
         global $CFG;
 
         if (empty($CFG->enableblogs)) {
-            throw new moodle_exception('blogdisable', 'blog');
+            throw new moodle_exception('blogdisable', 'core_blog');
         }
 
         // Init filters.
@@ -86,7 +86,7 @@ class external extends external_api {
         foreach ($rawwsfilters as $filter) {
             $name = trim($filter['name']);
             if (!isset($filterstype[$name])) {
-                throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
             }
             $filters[$name] = clean_param($filter['value'], $filterstype[$name]);
         }

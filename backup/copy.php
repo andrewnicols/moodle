@@ -52,8 +52,8 @@ if ($returnurl != '') {
 }
 
 // Setup the page.
-$title = get_string('copycoursetitle', 'backup', $course->shortname);
-$heading = get_string('copycourseheading', 'backup');
+$title = get_string('copycoursetitle', 'core_backup', $course->shortname);
+$heading = get_string('copycourseheading', 'core_backup');
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title($title);

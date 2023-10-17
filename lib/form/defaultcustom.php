@@ -71,7 +71,7 @@ class MoodleQuickForm_defaultcustom extends MoodleQuickForm_group {
             'type' => 'text', // Type of the element. Supported are 'text' and 'date_selector'.
             'defaultvalue' => null, // Value to be used when not overridden.
             'customvalue' => null, // Value to be used when overwriting.
-            'customlabel' => get_string('custom', 'form'), // Label for 'customize' checkbox
+            'customlabel' => get_string('custom', 'core_form'), // Label for 'customize' checkbox
             // Other options are the same as the ones that can be passed to 'date_selector' element.
             'timezone' => 99,
             'startyear' => $calendartype->get_min_year(),
@@ -134,7 +134,7 @@ class MoodleQuickForm_defaultcustom extends MoodleQuickForm_group {
 
         if ($this->_options['type'] === 'text') {
             $element = $this->createFormElement($this->_options['type'], 'value',
-                get_string('newvaluefor', 'form', $this->getLabel()), $this->getAttributes());
+                get_string('newvaluefor', 'core_form', $this->getLabel()), $this->getAttributes());
             $element->setHiddenLabel(true);
         } else if ($this->_options['type'] === 'date_selector') {
             $element = $this->createFormElement($this->_options['type'], 'value', '', $this->_options,

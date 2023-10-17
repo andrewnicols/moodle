@@ -50,24 +50,24 @@ class behat_cohort extends behat_base {
         $cohortsurl = new moodle_url('/cohort/index.php');
         if (strpos($this->getSession()->getCurrentUrl(), $cohortsurl->out(false)) !== 0) {
             // With JS enabled we should expand a few tree nodes.
-            $parentnodes = get_string('users', 'admin') . ' > ' .
-                get_string('accounts', 'admin');
+            $parentnodes = get_string('users', 'core_admin') . ' > ' .
+                get_string('accounts', 'core_admin');
 
             $this->execute("behat_general::i_am_on_homepage");
             $this->execute("behat_navigation::i_navigate_to_in_site_administration",
-                $parentnodes . ' > ' . get_string('cohorts', 'cohort')
+                $parentnodes . ' > ' . get_string('cohorts', 'core_cohort')
             );
         }
 
         $this->execute('behat_reportbuilder::i_press_action_in_the_report_row',
-            [get_string('assign', 'cohort'), $this->escape($cohortidnumber)]);
+            [get_string('assign', 'core_cohort'), $this->escape($cohortidnumber)]);
 
         $this->execute("behat_forms::i_set_the_field_to",
-            array(get_string('potusers', 'cohort'), $this->escape($user))
+            array(get_string('potusers', 'core_cohort'), $this->escape($user))
         );
 
         $this->execute("behat_forms::press_button", get_string('add'));
-        $this->execute("behat_forms::press_button", get_string('backtocohorts', 'cohort'));
+        $this->execute("behat_forms::press_button", get_string('backtocohorts', 'core_cohort'));
 
     }
 }

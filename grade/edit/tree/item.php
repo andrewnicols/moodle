@@ -54,7 +54,7 @@ require_capability('moodle/grade:manage', $context);
 $gpr = new grade_plugin_return();
 $returnurl = $gpr->get_return_url('index.php?id='.$course->id);
 
-$heading = get_string('itemsedit', 'grades');
+$heading = get_string('itemsedit', 'core_grades');
 
 if ($grade_item = grade_item::fetch(array('id'=>$id, 'courseid'=>$courseid))) {
     // redirect if outcomeid present
@@ -73,7 +73,7 @@ if ($grade_item = grade_item::fetch(array('id'=>$id, 'courseid'=>$courseid))) {
     $item->parentcategory = $parent_category->id;
 
 } else {
-    $heading = get_string('newitem', 'grades');
+    $heading = get_string('newitem', 'core_grades');
     $grade_item = new grade_item(array('courseid'=>$courseid, 'itemtype'=>'manual'), false);
     $item = $grade_item->get_record_data();
     $parent_category = grade_category::fetch_course_category($courseid);

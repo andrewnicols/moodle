@@ -36,7 +36,7 @@ class refreshintervalcollection extends inplace_editable {
     public function __construct(\stdClass $subscription) {
         $collection = calendar_get_pollinterval_choices();
         parent::__construct('core_calendar', 'refreshinterval', $subscription->id, true, null, $subscription->pollinterval, null,
-                get_string('pollinterval', 'calendar'));
+                get_string('pollinterval', 'core_calendar'));
         $this->set_type_select($collection);
     }
 
@@ -48,7 +48,7 @@ class refreshintervalcollection extends inplace_editable {
             $tmpl = new self($subscription);
             return $tmpl;
         } else {
-            throw new \moodle_exception('nopermissions', 'error', '', get_string('managesubscriptions', 'calendar'));
+            throw new \moodle_exception('nopermissions', 'mod_error', '', get_string('managesubscriptions', 'core_calendar'));
         }
     }
 }

@@ -107,7 +107,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $contextlist = new \core_privacy\local\request\approved_contextlist($user, 'core_portfolio', [$context->id]);
         provider::export_user_data($contextlist);
         $writer = \core_privacy\local\request\writer::with_context($context);
-        $portfoliodata = $writer->get_data([get_string('privacy:path', 'portfolio')]);
+        $portfoliodata = $writer->get_data([get_string('privacy:path', 'core_portfolio')]);
         $this->assertEquals('Google Docs', $portfoliodata->{'Google Docs'}->name);
     }
 

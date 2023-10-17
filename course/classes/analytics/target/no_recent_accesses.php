@@ -52,7 +52,7 @@ class no_recent_accesses extends course_enrolments {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:norecentaccesses', 'course');
+        return new \lang_string('target:norecentaccesses', 'core_course');
     }
 
     /**
@@ -68,9 +68,9 @@ class no_recent_accesses extends course_enrolments {
         global $OUTPUT;
 
         $a = (object)['coursename' => $contextname, 'userfirstname' => $user->firstname];
-        $fullmessage = get_string('norecentaccessesinfomessage', 'course', $a) . PHP_EOL . PHP_EOL . $insighturl->out(false);
+        $fullmessage = get_string('norecentaccessesinfomessage', 'core_course', $a) . PHP_EOL . PHP_EOL . $insighturl->out(false);
         $fullmessagehtml = $OUTPUT->render_from_template('core_analytics/insight_info_message',
-            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('norecentaccessesinfomessage', 'course', $a)]
+            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('norecentaccessesinfomessage', 'core_course', $a)]
         );
 
         return [$fullmessage, $fullmessagehtml];
@@ -96,11 +96,11 @@ class no_recent_accesses extends course_enrolments {
     public function is_valid_analysable(\core_analytics\analysable $course, $fortraining = true) {
 
         if (!$course->was_started()) {
-            return get_string('coursenotyetstarted', 'course');
+            return get_string('coursenotyetstarted', 'core_course');
         }
 
         if (!$this->students = $course->get_students()) {
-            return get_string('nocoursestudents', 'course');
+            return get_string('nocoursestudents', 'core_course');
         }
 
         if (!$fortraining && !$course->get_course_data()->visible) {
@@ -108,12 +108,12 @@ class no_recent_accesses extends course_enrolments {
         }
 
         if ($course->get_end() && $course->get_end() < $course->get_start()) {
-            return get_string('errorendbeforestart', 'course');
+            return get_string('errorendbeforestart', 'core_course');
         }
 
         // Finished courses can not be used to get predictions.
         if (!$fortraining && $course->is_finished()) {
-            return get_string('coursealreadyfinished', 'course');
+            return get_string('coursealreadyfinished', 'core_course');
         }
 
         return true;

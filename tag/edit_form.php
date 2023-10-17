@@ -46,7 +46,7 @@ class tag_edit_form extends moodleform {
 
         $mform =& $this->_form;
 
-        $mform->addElement('header', 'tag', get_string('description','tag'));
+        $mform->addElement('header', 'tag', get_string('description','core_tag'));
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -57,21 +57,21 @@ class tag_edit_form extends moodleform {
         $systemcontext   = context_system::instance();
 
         if (has_capability('moodle/tag:manage', $systemcontext)) {
-            $mform->addElement('text', 'rawname', get_string('name', 'tag'),
+            $mform->addElement('text', 'rawname', get_string('name', 'core_tag'),
                     'maxlength="'.TAG_MAX_LENGTH.'" size="'.TAG_MAX_LENGTH.'"');
             $mform->setType('rawname', PARAM_TAG);
         }
 
-        $mform->addElement('editor', 'description_editor', get_string('description', 'tag'), null, $this->_customdata['editoroptions']);
+        $mform->addElement('editor', 'description_editor', get_string('description', 'core_tag'), null, $this->_customdata['editoroptions']);
 
         if (has_capability('moodle/tag:manage', $systemcontext)) {
-            $mform->addElement('checkbox', 'isstandard', get_string('standardtag', 'tag'));
+            $mform->addElement('checkbox', 'isstandard', get_string('standardtag', 'core_tag'));
         }
 
-        $mform->addElement('tags', 'relatedtags', get_string('relatedtags', 'tag'),
+        $mform->addElement('tags', 'relatedtags', get_string('relatedtags', 'core_tag'),
                 array('tagcollid' => $this->_customdata['tag']->tagcollid));
 
-        $this->add_action_buttons(true, get_string('updatetag', 'tag'));
+        $this->add_action_buttons(true, get_string('updatetag', 'core_tag'));
 
     }
 
@@ -92,7 +92,7 @@ class tag_edit_form extends moodleform {
                 // The name has changed, let's make sure it's not another existing tag.
                 if (core_tag_tag::get_by_name($tag->tagcollid, $newname)) {
                     // Something exists already, so flag an error.
-                    $errors['rawname'] = get_string('namesalreadybeeingused', 'tag');
+                    $errors['rawname'] = get_string('namesalreadybeeingused', 'core_tag');
                 }
             }
         }

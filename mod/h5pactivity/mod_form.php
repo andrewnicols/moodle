@@ -47,7 +47,7 @@ class mod_h5pactivity_mod_form extends moodleform_mod {
         $mform = $this->_form;
 
         // Adding the "general" fieldset, where all the common settings are shown.
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
         // Adding the standard "name" field.
         $mform->addElement('text', 'name', get_string('name'), ['size' => '64']);

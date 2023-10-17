@@ -93,7 +93,7 @@ class invalid_analysables implements \renderable, \templatable {
             if ($validtraining === true) {
                 if ($this->model->is_static()) {
                     // We still want to show this analysable if it is not valid to get predictions.
-                    $validtraining = get_string('notrainingbasedassumptions', 'analytics');
+                    $validtraining = get_string('notrainingbasedassumptions', 'core_analytics');
                 } else {
                     // We skip analysables that are valid for training or valid for prediction.
                     continue;

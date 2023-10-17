@@ -239,7 +239,7 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, COMPLETION_INCOMPLETE, null, null, [
                     'completionview' => (object)[
                         'status' => COMPLETION_INCOMPLETE,
-                        'description' => get_string('detail_desc:view', 'completion'),
+                        'description' => get_string('detail_desc:view', 'core_completion'),
                     ]
                 ]
             ],
@@ -247,7 +247,7 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, COMPLETION_COMPLETE, null, null, [
                     'completionview' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:view', 'completion'),
+                        'description' => get_string('detail_desc:view', 'core_completion'),
                     ]
                 ]
             ],
@@ -255,7 +255,7 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, null, COMPLETION_INCOMPLETE, null, [
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_INCOMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ]
                 ]
             ],
@@ -263,7 +263,7 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, null, COMPLETION_COMPLETE, null, [
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ]
                 ]
             ],
@@ -271,11 +271,11 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, COMPLETION_COMPLETE, COMPLETION_INCOMPLETE, null, [
                     'completionview' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:view', 'completion'),
+                        'description' => get_string('detail_desc:view', 'core_completion'),
                     ],
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_INCOMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ]
                 ]
             ],
@@ -283,11 +283,11 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, COMPLETION_INCOMPLETE, COMPLETION_COMPLETE, null, [
                     'completionview' => (object)[
                         'status' => COMPLETION_INCOMPLETE,
-                        'description' => get_string('detail_desc:view', 'completion'),
+                        'description' => get_string('detail_desc:view', 'core_completion'),
                     ],
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ]
                 ]
             ],
@@ -295,11 +295,11 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, null, COMPLETION_COMPLETE, COMPLETION_COMPLETE, [
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ],
                     'completionpassgrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivepassgrade', 'completion'),
+                        'description' => get_string('detail_desc:receivepassgrade', 'core_completion'),
                     ],
                 ]
             ],
@@ -307,11 +307,11 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, null, COMPLETION_COMPLETE, COMPLETION_INCOMPLETE, [
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ],
                     'completionpassgrade' => (object)[
                         'status' => COMPLETION_INCOMPLETE,
-                        'description' => get_string('detail_desc:receivepassgrade', 'completion'),
+                        'description' => get_string('detail_desc:receivepassgrade', 'core_completion'),
                     ],
                 ]
             ],
@@ -319,15 +319,15 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, COMPLETION_COMPLETE, COMPLETION_COMPLETE, COMPLETION_COMPLETE, [
                     'completionview' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:view', 'completion'),
+                        'description' => get_string('detail_desc:view', 'core_completion'),
                     ],
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ],
                     'completionpassgrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivepassgrade', 'completion'),
+                        'description' => get_string('detail_desc:receivepassgrade', 'core_completion'),
                     ],
                 ]
             ],
@@ -335,15 +335,15 @@ class cm_completion_details_test extends advanced_testcase {
                 COMPLETION_TRACKING_AUTOMATIC, COMPLETION_INCOMPLETE, COMPLETION_COMPLETE, COMPLETION_COMPLETE, [
                     'completionview' => (object)[
                         'status' => COMPLETION_INCOMPLETE,
-                        'description' => get_string('detail_desc:view', 'completion'),
+                        'description' => get_string('detail_desc:view', 'core_completion'),
                     ],
                     'completionusegrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivegrade', 'completion'),
+                        'description' => get_string('detail_desc:receivegrade', 'core_completion'),
                     ],
                     'completionpassgrade' => (object)[
                         'status' => COMPLETION_COMPLETE,
-                        'description' => get_string('detail_desc:receivepassgrade', 'completion'),
+                        'description' => get_string('detail_desc:receivepassgrade', 'core_completion'),
                     ],
                 ]
             ],

@@ -62,12 +62,12 @@ if ($canmanage) {
 } elseif ($isreviewer and $workshop->assessing_examples_allowed()) {
     // ok you can go
 } else {
-    throw new \moodle_exception('nopermissions', 'error', $workshop->view_url(), 'compare example assessment');
+    throw new \moodle_exception('nopermissions', 'mod_error', $workshop->view_url(), 'compare example assessment');
 }
 
 $PAGE->set_title($workshop->name);
 $PAGE->set_heading($course->fullname);
-$PAGE->navbar->add(get_string('examplecomparing', 'workshop'));
+$PAGE->navbar->add(get_string('examplecomparing', 'mod_workshop'));
 
 // Output starts here
 $output = $PAGE->get_renderer('mod_workshop');
@@ -77,7 +77,7 @@ echo $output->single_button($workshop->view_url(), get_string('back'), 'get', ['
 if (!$PAGE->has_secondary_navigation()) {
     echo $output->heading(format_string($workshop->name));
 }
-echo $output->heading(get_string('assessedexample', 'workshop'), 3);
+echo $output->heading(get_string('assessedexample', 'mod_workshop'), 3);
 
 echo $output->render($workshop->prepare_example_submission($example));
 
@@ -89,7 +89,7 @@ if (!empty($mformreference)) {
         'showform'      => true,
     );
     $reference = $workshop->prepare_example_reference_assessment($reference, $mformreference, $options);
-    $reference->title = get_string('assessmentreference', 'workshop');
+    $reference->title = get_string('assessmentreference', 'mod_workshop');
     if ($canmanage) {
         $reference->url = $workshop->exassess_url($reference->id);
     }
@@ -103,11 +103,11 @@ if ($isreviewer) {
         'showform'      => true,
     );
     $assessment = $workshop->prepare_example_assessment($assessment, $mformassessment, $options);
-    $assessment->title = get_string('assessmentbyyourself', 'workshop');
+    $assessment->title = get_string('assessmentbyyourself', 'mod_workshop');
     if ($workshop->assessing_examples_allowed()) {
         $assessment->add_action(
             new moodle_url($workshop->exsubmission_url($example->id), array('assess' => 'on', 'sesskey' => sesskey())),
-            get_string('reassess', 'workshop')
+            get_string('reassess', 'mod_workshop')
         );
     }
     echo $output->render($assessment);

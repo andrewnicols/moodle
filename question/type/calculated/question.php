@@ -244,7 +244,7 @@ class qtype_calculated_dataset_loader {
             $a = new stdClass();
             $a->id = $this->questionid;
             $a->item = $itemnumber;
-            throw new moodle_exception('cannotgetdsfordependent', 'question', '', $a);
+            throw new moodle_exception('cannotgetdsfordependent', 'core_question', '', $a);
         }
 
         return $this->load_values($itemnumber);

@@ -73,7 +73,7 @@ class get_join_url extends external_api {
         $instance = instance::get_from_cmid($cmid);
         if (empty($instance)) {
             throw new \moodle_exception('nosuchinstance', 'mod_bigbluebuttonbn', null,
-                ['entity' => get_string('module', 'course'), 'id' => $cmid]);
+                ['entity' => get_string('module', 'core_course'), 'id' => $cmid]);
         }
         // Validate the groupid.
         if (!groups_group_visible($groupid, $instance->get_course(), $instance->get_cm())) {

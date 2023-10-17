@@ -27,14 +27,14 @@ class feedback_item_captcha extends feedback_item_base {
 
         // There are no settings for recaptcha.
         if (isset($item->id) AND $item->id > 0) {
-            notice(get_string('there_are_no_settings_for_recaptcha', 'feedback'), $editurl->out());
+            notice(get_string('there_are_no_settings_for_recaptcha', 'mod_feedback'), $editurl->out());
             exit;
         }
 
         // Only one recaptcha can be in a feedback.
         $params = array('feedback' => $feedback->id, 'typ' => $this->type);
         if ($DB->record_exists('feedback_item', $params)) {
-            notice(get_string('only_one_captcha_allowed', 'feedback'), $editurl->out());
+            notice(get_string('only_one_captcha_allowed', 'mod_feedback'), $editurl->out());
             exit;
         }
 
@@ -45,7 +45,7 @@ class feedback_item_captcha extends feedback_item_base {
 
         $this->item->feedback = $feedback->id;
         $this->item->template = 0;
-        $this->item->name = get_string('captcha', 'feedback');
+        $this->item->name = get_string('captcha', 'mod_feedback');
         $this->item->label = '';
         $this->item->presentation = '';
         $this->item->typ = $this->type;
@@ -106,7 +106,7 @@ class feedback_item_captcha extends feedback_item_base {
      * @return string
      */
     public function get_display_name($item, $withpostfix = true) {
-        return get_string('captcha', 'feedback');
+        return get_string('captcha', 'mod_feedback');
     }
 
     /**

@@ -102,7 +102,7 @@ class edit_model extends \moodleform {
             $optionname = \tool_analytics\output\helper::class_to_option($classname);
             $timesplittings[$optionname] = $timesplitting->get_name();
         }
-        $mform->addElement('select', 'timesplitting', get_string('timesplittingmethod', 'analytics'), $timesplittings);
+        $mform->addElement('select', 'timesplitting', get_string('timesplittingmethod', 'core_analytics'), $timesplittings);
         $mform->addHelpButton('timesplitting', 'timesplittingmethod', 'analytics');
 
         // Contexts restriction.
@@ -132,7 +132,7 @@ class edit_model extends \moodleform {
             $defaultprocessor = \core_analytics\manager::get_predictions_processor_name(
                 \core_analytics\manager::get_predictions_processor()
             );
-            $predictionprocessors = ['' => get_string('defaultpredictoroption', 'analytics', $defaultprocessor)];
+            $predictionprocessors = ['' => get_string('defaultpredictoroption', 'core_analytics', $defaultprocessor)];
             foreach ($this->_customdata['predictionprocessors'] as $classname => $predictionsprocessor) {
                 if ($predictionsprocessor->is_ready() !== true) {
                     continue;
@@ -141,7 +141,7 @@ class edit_model extends \moodleform {
                 $predictionprocessors[$optionname] = \core_analytics\manager::get_predictions_processor_name($predictionsprocessor);
             }
 
-            $mform->addElement('select', 'predictionsprocessor', get_string('predictionsprocessor', 'analytics'),
+            $mform->addElement('select', 'predictionsprocessor', get_string('predictionsprocessor', 'core_analytics'),
                 $predictionprocessors);
             $mform->addHelpButton('predictionsprocessor', 'predictionsprocessor', 'analytics');
         }
@@ -174,7 +174,7 @@ class edit_model extends \moodleform {
         if (!empty($data['timesplitting'])) {
             $timesplittingclass = \tool_analytics\output\helper::option_to_class($data['timesplitting']);
             if (\core_analytics\manager::is_valid($timesplittingclass, '\core_analytics\local\time_splitting\base') === false) {
-                $errors['timesplitting'] = get_string('errorinvalidtimesplitting', 'analytics');
+                $errors['timesplitting'] = get_string('errorinvalidtimesplitting', 'core_analytics');
             }
 
             $timesplitting = \core_analytics\manager::get_time_splitting($timesplittingclass);
@@ -187,26 +187,26 @@ class edit_model extends \moodleform {
 
             $analyserclass = $target->get_analyser_class();
             if (!$potentialcontexts = $analyserclass::potential_context_restrictions()) {
-                $errors['contexts'] = get_string('errornocontextrestrictions', 'analytics');
+                $errors['contexts'] = get_string('errornocontextrestrictions', 'core_analytics');
             } else {
 
                 // Flip the contexts array so we can just diff by key.
                 $selectedcontexts = array_flip($data['contexts']);
                 $invalidcontexts = array_diff_key($selectedcontexts, $potentialcontexts);
                 if (!empty($invalidcontexts)) {
-                    $errors['contexts'] = get_string('errorinvalidcontexts', 'analytics');
+                    $errors['contexts'] = get_string('errorinvalidcontexts', 'core_analytics');
                 }
             }
         }
 
         if (!$this->_customdata['staticmodel']) {
             if (empty($data['indicators'])) {
-                $errors['indicators'] = get_string('errornoindicators', 'analytics');
+                $errors['indicators'] = get_string('errornoindicators', 'core_analytics');
             } else {
                 foreach ($data['indicators'] as $indicator) {
                     $realindicatorname = \tool_analytics\output\helper::option_to_class($indicator);
                     if (\core_analytics\manager::is_valid($realindicatorname, '\core_analytics\local\indicator\base') === false) {
-                        $errors['indicators'] = get_string('errorinvalidindicator', 'analytics', $realindicatorname);
+                        $errors['indicators'] = get_string('errorinvalidindicator', 'core_analytics', $realindicatorname);
                     }
                 }
             }

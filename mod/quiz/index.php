@@ -41,7 +41,7 @@ $event = \mod_quiz\event\course_module_instance_list_viewed::create($params);
 $event->trigger();
 
 // Print the header.
-$strquizzes = get_string("modulenameplural", "quiz");
+$strquizzes = get_string("modulenameplural", 'mod_quiz');
 $PAGE->navbar->add($strquizzes);
 $PAGE->set_title($strquizzes);
 $PAGE->set_heading($course->fullname);
@@ -69,7 +69,7 @@ foreach ($quizzes as $quiz) {
 $headings = [get_string('name')];
 $align = ['left'];
 
-array_push($headings, get_string('quizcloses', 'quiz'));
+array_push($headings, get_string('quizcloses', 'mod_quiz'));
 array_push($align, 'left');
 
 if (course_format_uses_sections($course->format)) {
@@ -82,16 +82,16 @@ array_unshift($align, 'center');
 $showing = '';
 
 if (has_capability('mod/quiz:viewreports', $coursecontext)) {
-    array_push($headings, get_string('attempts', 'quiz'));
+    array_push($headings, get_string('attempts', 'mod_quiz'));
     array_push($align, 'left');
     $showing = 'stats';
 
 } else if (has_any_capability(['mod/quiz:reviewmyattempts', 'mod/quiz:attempt'],
         $coursecontext)) {
-    array_push($headings, get_string('grade', 'quiz'));
+    array_push($headings, get_string('grade', 'mod_quiz'));
     array_push($align, 'left');
     if ($showfeedback) {
-        array_push($headings, get_string('feedback', 'quiz'));
+        array_push($headings, get_string('feedback', 'mod_quiz'));
         array_push($align, 'left');
     }
     $showing = 'grades';
@@ -143,7 +143,7 @@ foreach ($quizzes as $quiz) {
     if (($timeclosedates[$quiz->id]->usertimeclose != 0)) {
         $data[] = userdate($timeclosedates[$quiz->id]->usertimeclose);
     } else {
-        $data[] = get_string('noclose', 'quiz');
+        $data[] = get_string('noclose', 'mod_quiz');
     }
 
     if ($showing == 'stats') {
@@ -164,7 +164,7 @@ foreach ($quizzes as $quiz) {
                 $a = new stdClass();
                 $a->grade = quiz_format_grade($quiz, $grades[$quiz->id]);
                 $a->maxgrade = quiz_format_grade($quiz, $quiz->grade);
-                $grade = get_string('outofshort', 'quiz', $a);
+                $grade = get_string('outofshort', 'mod_quiz', $a);
             }
             if ($alloptions->overallfeedback) {
                 $feedback = quiz_feedback_for_grade($grades[$quiz->id], $quiz, $context);

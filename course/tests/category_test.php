@@ -1028,7 +1028,7 @@ class category_test extends \advanced_testcase {
 
         // Expecting to get an exception as this new user does not have the moodle/category:viewhiddencategories capability.
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('cannotviewcategory', 'error'));
+        $this->expectExceptionMessage(get_string('cannotviewcategory', 'mod_error'));
         core_course_category::get($category2->id);
     }
 
@@ -1054,7 +1054,7 @@ class category_test extends \advanced_testcase {
 
         $this->assertEquals($category1->id, core_course_category::get($category1->id, MUST_EXIST, false, $user2)->id);
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('cannotviewcategory', 'error'));
+        $this->expectExceptionMessage(get_string('cannotviewcategory', 'mod_error'));
         core_course_category::get($category2->id, MUST_EXIST, false, $user2);
     }
 

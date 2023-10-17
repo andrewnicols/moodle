@@ -60,7 +60,7 @@ class calendar_subscription_updated extends base
      * @return string
      */
     public static function get_name() {
-        return get_string('eventsubscriptionupdated', 'calendar');
+        return get_string('eventsubscriptionupdated', 'core_calendar');
     }
 
     /**

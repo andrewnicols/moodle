@@ -31,7 +31,7 @@ $settings->add(new \core_admin\admin\admin_setting_plugin_manager(
     'tiny',
     \editor_tiny\table\plugin_management_table::class,
     'editor_tiny_settings',
-    get_string('editorsettings', 'editor'),
+    get_string('editorsettings', 'core_editor'),
 ));
 
 if ($ADMIN->fulltree) {

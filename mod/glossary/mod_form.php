@@ -13,7 +13,7 @@ class mod_glossary_mod_form extends moodleform_mod {
         $mform    =& $this->_form;
 
 //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
         $mform->addElement('text', 'name', get_string('name'), array('size'=>'64'));
         if (!empty($CFG->formatstringstriptags)) {
@@ -27,7 +27,7 @@ class mod_glossary_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         if (has_capability('mod/glossary:manageentries', context_system::instance())) {
-            $mform->addElement('checkbox', 'globalglossary', get_string('isglobal', 'glossary'));
+            $mform->addElement('checkbox', 'globalglossary', get_string('isglobal', 'mod_glossary'));
             $mform->addHelpButton('globalglossary', 'isglobal', 'glossary');
 
         }else{
@@ -35,31 +35,31 @@ class mod_glossary_mod_form extends moodleform_mod {
             $mform->setType('globalglossary', PARAM_INT);
         }
 
-        $options = array(1=>get_string('mainglossary', 'glossary'), 0=>get_string('secondaryglossary', 'glossary'));
-        $mform->addElement('select', 'mainglossary', get_string('glossarytype', 'glossary'), $options);
+        $options = array(1=>get_string('mainglossary', 'mod_glossary'), 0=>get_string('secondaryglossary', 'mod_glossary'));
+        $mform->addElement('select', 'mainglossary', get_string('glossarytype', 'mod_glossary'), $options);
         $mform->addHelpButton('mainglossary', 'glossarytype', 'glossary');
         $mform->setDefault('mainglossary', 0);
 
         // ----------------------------------------------------------------------
-        $mform->addElement('header', 'entrieshdr', get_string('entries', 'glossary'));
+        $mform->addElement('header', 'entrieshdr', get_string('entries', 'mod_glossary'));
 
-        $mform->addElement('selectyesno', 'defaultapproval', get_string('defaultapproval', 'glossary'));
+        $mform->addElement('selectyesno', 'defaultapproval', get_string('defaultapproval', 'mod_glossary'));
         $mform->setDefault('defaultapproval', $CFG->glossary_defaultapproval);
         $mform->addHelpButton('defaultapproval', 'defaultapproval', 'glossary');
 
-        $mform->addElement('selectyesno', 'editalways', get_string('editalways', 'glossary'));
+        $mform->addElement('selectyesno', 'editalways', get_string('editalways', 'mod_glossary'));
         $mform->setDefault('editalways', 0);
         $mform->addHelpButton('editalways', 'editalways', 'glossary');
 
-        $mform->addElement('selectyesno', 'allowduplicatedentries', get_string('allowduplicatedentries', 'glossary'));
+        $mform->addElement('selectyesno', 'allowduplicatedentries', get_string('allowduplicatedentries', 'mod_glossary'));
         $mform->setDefault('allowduplicatedentries', $CFG->glossary_dupentries);
         $mform->addHelpButton('allowduplicatedentries', 'allowduplicatedentries', 'glossary');
 
-        $mform->addElement('selectyesno', 'allowcomments', get_string('allowcomments', 'glossary'));
+        $mform->addElement('selectyesno', 'allowcomments', get_string('allowcomments', 'mod_glossary'));
         $mform->setDefault('allowcomments', $CFG->glossary_allowcomments);
         $mform->addHelpButton('allowcomments', 'allowcomments', 'glossary');
 
-        $mform->addElement('selectyesno', 'usedynalink', get_string('usedynalink', 'glossary'));
+        $mform->addElement('selectyesno', 'usedynalink', get_string('usedynalink', 'mod_glossary'));
         $mform->setDefault('usedynalink', $CFG->glossary_linkbydefault);
         $mform->addHelpButton('usedynalink', 'usedynalink', 'glossary');
 
@@ -70,37 +70,37 @@ class mod_glossary_mod_form extends moodleform_mod {
         $recformats = glossary_get_available_formats();
         $formats = array();
         foreach ($recformats as $format) {
-           $formats[$format->name] = get_string('displayformat'.$format->name, 'glossary');
+           $formats[$format->name] = get_string('displayformat'.$format->name, 'mod_glossary');
         }
         asort($formats);
-        $mform->addElement('select', 'displayformat', get_string('displayformat', 'glossary'), $formats);
+        $mform->addElement('select', 'displayformat', get_string('displayformat', 'mod_glossary'), $formats);
         $mform->setDefault('displayformat', 'dictionary');
         $mform->addHelpButton('displayformat', 'displayformat', 'glossary');
 
-        $displayformats['default'] = get_string('displayformatdefault', 'glossary');
+        $displayformats['default'] = get_string('displayformatdefault', 'mod_glossary');
         $displayformats = array_merge($displayformats, $formats);
-        $mform->addElement('select', 'approvaldisplayformat', get_string('approvaldisplayformat', 'glossary'), $displayformats);
+        $mform->addElement('select', 'approvaldisplayformat', get_string('approvaldisplayformat', 'mod_glossary'), $displayformats);
         $mform->setDefault('approvaldisplayformat', 'default');
         $mform->addHelpButton('approvaldisplayformat', 'approvaldisplayformat', 'glossary');
 
-        $mform->addElement('text', 'entbypage', get_string('entbypage', 'glossary'));
+        $mform->addElement('text', 'entbypage', get_string('entbypage', 'mod_glossary'));
         $mform->setDefault('entbypage', $this->get_default_entbypage());
         $mform->addRule('entbypage', null, 'numeric', null, 'client');
         $mform->setType('entbypage', PARAM_INT);
 
-        $mform->addElement('selectyesno', 'showalphabet', get_string('showalphabet', 'glossary'));
+        $mform->addElement('selectyesno', 'showalphabet', get_string('showalphabet', 'mod_glossary'));
         $mform->setDefault('showalphabet', 1);
         $mform->addHelpButton('showalphabet', 'showalphabet', 'glossary');
 
-        $mform->addElement('selectyesno', 'showall', get_string('showall', 'glossary'));
+        $mform->addElement('selectyesno', 'showall', get_string('showall', 'mod_glossary'));
         $mform->setDefault('showall', 1);
         $mform->addHelpButton('showall', 'showall', 'glossary');
 
-        $mform->addElement('selectyesno', 'showspecial', get_string('showspecial', 'glossary'));
+        $mform->addElement('selectyesno', 'showspecial', get_string('showspecial', 'mod_glossary'));
         $mform->setDefault('showspecial', 1);
         $mform->addHelpButton('showspecial', 'showspecial', 'glossary');
 
-        $mform->addElement('selectyesno', 'allowprintview', get_string('allowprintview', 'glossary'));
+        $mform->addElement('selectyesno', 'allowprintview', get_string('allowprintview', 'mod_glossary'));
         $mform->setDefault('allowprintview', 1);
         $mform->addHelpButton('allowprintview', 'allowprintview', 'glossary');
 
@@ -109,9 +109,9 @@ class mod_glossary_mod_form extends moodleform_mod {
             $mform->addElement('header', 'rssheader', get_string('rss'));
             $choices = array();
             $choices[0] = get_string('none');
-            $choices[1] = get_string('withauthor', 'glossary');
-            $choices[2] = get_string('withoutauthor', 'glossary');
-            $mform->addElement('select', 'rsstype', get_string('rsstype', 'glossary'), $choices);
+            $choices[1] = get_string('withauthor', 'mod_glossary');
+            $choices[2] = get_string('withoutauthor', 'mod_glossary');
+            $mform->addElement('select', 'rsstype', get_string('rsstype', 'mod_glossary'), $choices);
             $mform->addHelpButton('rsstype', 'rsstype', 'glossary');
 
             $choices = array();
@@ -199,7 +199,7 @@ class mod_glossary_mod_form extends moodleform_mod {
             'checkbox',
             $completionentriesenabledel,
             '',
-            get_string('completionentries', 'glossary')
+            get_string('completionentries', 'mod_glossary')
         );
         $completionentriesel = 'completionentries' . $suffix;
         $group[] =& $mform->createElement('text', $completionentriesel, '', ['size' => 3]);

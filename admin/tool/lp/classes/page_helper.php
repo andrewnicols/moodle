@@ -194,7 +194,7 @@ class page_helper {
         // Check that the user is a valid user.
         $user = core_user::get_user($userid);
         if (!$user || !core_user::is_real_user($userid)) {
-            throw new \moodle_exception('invaliduser', 'error');
+            throw new \moodle_exception('invaliduser', 'mod_error');
         }
 
         $context = context_user::instance($user->id);
@@ -267,7 +267,7 @@ class page_helper {
         // Check that the user is a valid user.
         $user = core_user::get_user($userid);
         if (!$user || !core_user::is_real_user($userid)) {
-            throw new \moodle_exception('invaliduser', 'error');
+            throw new \moodle_exception('invaliduser', 'mod_error');
         }
 
         $context = context_user::instance($user->id);

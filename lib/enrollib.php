@@ -1714,9 +1714,9 @@ function count_enrolled_users(context $context, $withcapability = '', $groupids 
 function enrol_send_welcome_email_options() {
     return [
         ENROL_DO_NOT_SEND_EMAIL                 => get_string('no'),
-        ENROL_SEND_EMAIL_FROM_COURSE_CONTACT    => get_string('sendfromcoursecontact', 'enrol'),
-        ENROL_SEND_EMAIL_FROM_KEY_HOLDER        => get_string('sendfromkeyholder', 'enrol'),
-        ENROL_SEND_EMAIL_FROM_NOREPLY           => get_string('sendfromnoreply', 'enrol')
+        ENROL_SEND_EMAIL_FROM_COURSE_CONTACT    => get_string('sendfromcoursecontact', 'core_enrol'),
+        ENROL_SEND_EMAIL_FROM_KEY_HOLDER        => get_string('sendfromkeyholder', 'core_enrol'),
+        ENROL_SEND_EMAIL_FROM_NOREPLY           => get_string('sendfromnoreply', 'core_enrol')
     ];
 }
 
@@ -2959,7 +2959,7 @@ abstract class enrol_plugin {
 
         // Edit enrolment action.
         if ($this->allow_manage($instance) && has_capability("enrol/{$instance->enrol}:manage", $context)) {
-            $title = get_string('editenrolment', 'enrol');
+            $title = get_string('editenrolment', 'core_enrol');
             $icon = new pix_icon('t/edit', $title);
             $url = new moodle_url('/enrol/editenrolment.php', $params);
             $actionparams = [
@@ -2972,7 +2972,7 @@ abstract class enrol_plugin {
 
         // Unenrol action.
         if ($this->allow_unenrol_user($instance, $ue) && has_capability("enrol/{$instance->enrol}:unenrol", $context)) {
-            $title = get_string('unenrol', 'enrol');
+            $title = get_string('unenrol', 'core_enrol');
             $icon = new pix_icon('t/delete', $title);
             $url = new moodle_url('/enrol/unenroluser.php', $params);
             $actionparams = [
@@ -3454,7 +3454,7 @@ abstract class enrol_plugin {
      */
     public function validate_param_types($data, $rules) {
         $errors = array();
-        $invalidstr = get_string('invaliddata', 'error');
+        $invalidstr = get_string('invaliddata', 'mod_error');
         foreach ($rules as $fieldname => $rule) {
             if (is_array($rule)) {
                 if (!in_array($data[$fieldname], $rule)) {

@@ -214,7 +214,7 @@ function forum_update_instance($forum, $mform) {
         $discussions = $DB->get_records('forum_discussions', array('forum'=>$forum->id), 'timemodified ASC');
         if (!empty($discussions)) {
             if (count($discussions) > 1) {
-                echo $OUTPUT->notification(get_string('warnformorepost', 'forum'));
+                echo $OUTPUT->notification(get_string('warnformorepost', 'mod_forum'));
             }
             $discussion = array_pop($discussions);
         } else {
@@ -235,11 +235,11 @@ function forum_update_instance($forum, $mform) {
             forum_add_discussion($discussion, null, $message);
 
             if (! $discussion = $DB->get_record('forum_discussions', array('forum'=>$forum->id))) {
-                throw new \moodle_exception('cannotadd', 'forum');
+                throw new \moodle_exception('cannotadd', 'mod_forum');
             }
         }
         if (! $post = $DB->get_record('forum_posts', array('id'=>$discussion->firstpost))) {
-            throw new \moodle_exception('cannotfindfirstpost', 'forum');
+            throw new \moodle_exception('cannotfindfirstpost', 'mod_forum');
         }
 
         $cm         = get_coursemodule_from_instance('forum', $forum->id);
@@ -410,9 +410,9 @@ function forum_user_outline($course, $user, $mod, $forum) {
         $grade = reset($grades->items[0]->grades);
         $gradetime = max($gradetime, grade_get_date_for_user_grade($grade, $user));
         if (!$grade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-            $gradeinfo .= get_string('gradeforrating', 'forum', $grade) .  html_writer::empty_tag('br');
+            $gradeinfo .= get_string('gradeforrating', 'mod_forum', $grade) .  html_writer::empty_tag('br');
         } else {
-            $gradeinfo .= get_string('gradeforratinghidden', 'forum') . html_writer::empty_tag('br');
+            $gradeinfo .= get_string('gradeforratinghidden', 'mod_forum') . html_writer::empty_tag('br');
         }
     }
 
@@ -421,15 +421,15 @@ function forum_user_outline($course, $user, $mod, $forum) {
         $grade = reset($grades->items[1]->grades);
         $gradetime = max($gradetime, grade_get_date_for_user_grade($grade, $user));
         if (!$grade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-            $gradeinfo .= get_string('gradeforwholeforum', 'forum', $grade) .  html_writer::empty_tag('br');
+            $gradeinfo .= get_string('gradeforwholeforum', 'mod_forum', $grade) .  html_writer::empty_tag('br');
         } else {
-            $gradeinfo .= get_string('gradeforwholeforumhidden', 'forum') . html_writer::empty_tag('br');
+            $gradeinfo .= get_string('gradeforwholeforumhidden', 'mod_forum') . html_writer::empty_tag('br');
         }
     }
 
     $count = forum_count_user_posts($forum->id, $user->id);
     if ($count && $count->postcount > 0) {
-        $info = get_string("numposts", "forum", $count->postcount);
+        $info = get_string("numposts", 'mod_forum', $count->postcount);
         $time = $count->lastpost;
 
         if ($gradeinfo) {
@@ -474,12 +474,12 @@ function forum_user_complete($course, $user, $mod, $forum) {
         $result = '';
         $grade = reset($grades);
         if (!$grade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-            $result .= $OUTPUT->container(get_string("gradefor{$type}", "forum", $grade));
+            $result .= $OUTPUT->container(get_string("gradefor{$type}", 'mod_forum', $grade));
             if ($grade->str_feedback) {
                 $result .= $OUTPUT->container(get_string('feedback').': '.$grade->str_feedback);
             }
         } else {
-            $result .= $OUTPUT->container(get_string("gradefor{$type}hidden", "forum"));
+            $result .= $OUTPUT->container(get_string("gradefor{$type}hidden", 'mod_forum'));
         }
 
         return $result;
@@ -521,7 +521,7 @@ function forum_user_complete($course, $user, $mod, $forum) {
             }, $posts)
         );
     } else {
-        echo "<p>".get_string("noposts", "forum")."</p>";
+        echo "<p>".get_string("noposts", 'mod_forum')."</p>";
     }
 }
 
@@ -707,7 +707,7 @@ function forum_print_recent_activity($course, $viewfullnames, $timestart) {
         return false;
     }
 
-    echo $OUTPUT->heading(get_string('newforumposts', 'forum') . ':', 6);
+    echo $OUTPUT->heading(get_string('newforumposts', 'mod_forum') . ':', 6);
     $list = html_writer::start_tag('ul', ['class' => 'unlist']);
 
     foreach ($printposts as $post) {
@@ -820,7 +820,7 @@ function forum_grade_item_update($forum, $ratings = null, $forumgrades = null): 
 
     // Update the rating.
     $item = [
-        'itemname' => get_string('gradeitemnameforrating', 'forum', $forum),
+        'itemname' => get_string('gradeitemnameforrating', 'mod_forum', $forum),
         'idnumber' => $forum->cmidnumber,
     ];
 
@@ -844,7 +844,7 @@ function forum_grade_item_update($forum, $ratings = null, $forumgrades = null): 
 
     // Whole forum grade.
     $item = [
-        'itemname' => get_string('gradeitemnameforwholeforum', 'forum', $forum),
+        'itemname' => get_string('gradeitemnameforwholeforum', 'mod_forum', $forum),
         // Note: We do not need to store the idnumber here.
     ];
 
@@ -1008,7 +1008,7 @@ function forum_get_readable_forums($userid, $courseid=0) {
     require_once($CFG->dirroot.'/course/lib.php');
 
     if (!$forummod = $DB->get_record('modules', array('name' => 'forum'))) {
-        throw new \moodle_exception('notinstalled', 'forum');
+        throw new \moodle_exception('notinstalled', 'mod_forum');
     }
 
     if ($courseid) {
@@ -2092,8 +2092,8 @@ function forum_get_course_forum($courseid, $type) {
     }
     switch ($forum->type) {
         case "news":
-            $forum->name  = get_string("namenews", "forum");
-            $forum->intro = get_string("intronews", "forum");
+            $forum->name  = get_string("namenews", 'mod_forum');
+            $forum->intro = get_string("intronews", 'mod_forum');
             $forum->introformat = FORMAT_HTML;
             $forum->forcesubscribe = FORUM_FORCESUBSCRIBE;
             $forum->assessed = 0;
@@ -2103,15 +2103,15 @@ function forum_get_course_forum($courseid, $type) {
             }
             break;
         case "social":
-            $forum->name  = get_string("namesocial", "forum");
-            $forum->intro = get_string("introsocial", "forum");
+            $forum->name  = get_string("namesocial", 'mod_forum');
+            $forum->intro = get_string("introsocial", 'mod_forum');
             $forum->introformat = FORMAT_HTML;
             $forum->assessed = 0;
             $forum->forcesubscribe = 0;
             break;
         case "blog":
-            $forum->name = get_string('blogforum', 'forum');
-            $forum->intro = get_string('introblog', 'forum');
+            $forum->name = get_string('blogforum', 'mod_forum');
+            $forum->intro = get_string('introblog', 'mod_forum');
             $forum->introformat = FORMAT_HTML;
             $forum->assessed = 0;
             $forum->forcesubscribe = 0;
@@ -2337,13 +2337,13 @@ function forum_get_discussion_subscription_icon($forum, $discussionid, $returnur
     }
 
     if ($subscriptionstatus) {
-        $output = $OUTPUT->pix_icon('t/subscribed', get_string('clicktounsubscribe', 'forum'), 'mod_forum');
+        $output = $OUTPUT->pix_icon('t/subscribed', get_string('clicktounsubscribe', 'mod_forum'), 'mod_forum');
         if ($includetext) {
             $output .= get_string('subscribed', 'mod_forum');
         }
 
         return html_writer::link($subscriptionlink, $output, array(
-                'title' => get_string('clicktounsubscribe', 'forum'),
+                'title' => get_string('clicktounsubscribe', 'mod_forum'),
                 'class' => 'discussiontoggle btn btn-link',
                 'data-forumid' => $forum->id,
                 'data-discussionid' => $discussionid,
@@ -2351,13 +2351,13 @@ function forum_get_discussion_subscription_icon($forum, $discussionid, $returnur
             ));
 
     } else {
-        $output = $OUTPUT->pix_icon('t/unsubscribed', get_string('clicktosubscribe', 'forum'), 'mod_forum');
+        $output = $OUTPUT->pix_icon('t/unsubscribed', get_string('clicktosubscribe', 'mod_forum'), 'mod_forum');
         if ($includetext) {
             $output .= get_string('notsubscribed', 'mod_forum');
         }
 
         return html_writer::link($subscriptionlink, $output, array(
-                'title' => get_string('clicktosubscribe', 'forum'),
+                'title' => get_string('clicktosubscribe', 'mod_forum'),
                 'class' => 'discussiontoggle btn btn-link',
                 'data-forumid' => $forum->id,
                 'data-discussionid' => $discussionid,
@@ -2401,7 +2401,7 @@ function forum_print_mode_form($id, $mode, $forumtype='') {
             null,
             "mode"
         );
-        $select->set_label(get_string('displaymode', 'forum'), array('class' => 'accesshide'));
+        $select->set_label(get_string('displaymode', 'mod_forum'), array('class' => 'accesshide'));
         $select->class = "forummode";
     } else {
         $select = new single_select(
@@ -2413,7 +2413,7 @@ function forum_print_mode_form($id, $mode, $forumtype='') {
             null,
             "mode"
         );
-        $select->set_label(get_string('displaymode', 'forum'), array('class' => 'accesshide'));
+        $select->set_label(get_string('displaymode', 'mod_forum'), array('class' => 'accesshide'));
     }
     echo $OUTPUT->render($select);
 }
@@ -2552,7 +2552,7 @@ function forum_print_attachments($post, $cm, $type) {
     if (!$context = context_module::instance($cm->id)) {
         return $type !== 'separateimages' ? '' : array('', '');
     }
-    $strattachment = get_string('attachment', 'forum');
+    $strattachment = get_string('attachment', 'mod_forum');
 
     $fs = get_file_storage();
 
@@ -3327,11 +3327,11 @@ function forum_post_subscription($fromform, $forum, $discussion) {
 
     if (isset($fromform->discussionsubscribe) && $fromform->discussionsubscribe) {
         if ($result = \mod_forum\subscriptions::subscribe_user_to_discussion($USER->id, $discussion)) {
-            return html_writer::tag('p', get_string('discussionnowsubscribed', 'forum', $info));
+            return html_writer::tag('p', get_string('discussionnowsubscribed', 'mod_forum', $info));
         }
     } else {
         if ($result = \mod_forum\subscriptions::unsubscribe_user_from_discussion($USER->id, $discussion)) {
-            return html_writer::tag('p', get_string('discussionnownotsubscribed', 'forum', $info));
+            return html_writer::tag('p', get_string('discussionnownotsubscribed', 'mod_forum', $info));
         }
     }
 
@@ -3357,11 +3357,11 @@ function forum_get_subscribe_link($forum, $context, $messages = array(), $cantac
     $backtoindex = false, $unused2 = null) {
     global $CFG, $USER, $PAGE, $OUTPUT;
     $defaultmessages = array(
-        'subscribed' => get_string('unsubscribe', 'forum'),
-        'unsubscribed' => get_string('subscribe', 'forum'),
+        'subscribed' => get_string('unsubscribe', 'mod_forum'),
+        'unsubscribed' => get_string('subscribe', 'mod_forum'),
         'cantaccessgroup' => get_string('no'),
-        'forcesubscribed' => get_string('everyoneissubscribed', 'forum'),
-        'cantsubscribe' => get_string('disallowsubscribe','forum')
+        'forcesubscribed' => get_string('everyoneissubscribed', 'mod_forum'),
+        'cantsubscribe' => get_string('disallowsubscribe','mod_forum')
     );
     $messages = $messages + $defaultmessages;
 
@@ -3380,10 +3380,10 @@ function forum_get_subscribe_link($forum, $context, $messages = array(), $cantac
         $subscribed = \mod_forum\subscriptions::is_subscribed($USER->id, $forum);
         if ($subscribed) {
             $linktext = $messages['subscribed'];
-            $linktitle = get_string('subscribestop', 'forum');
+            $linktitle = get_string('subscribestop', 'mod_forum');
         } else {
             $linktext = $messages['unsubscribed'];
-            $linktitle = get_string('subscribestart', 'forum');
+            $linktitle = get_string('subscribestart', 'mod_forum');
         }
 
         $options = array();
@@ -4071,7 +4071,7 @@ function forum_print_recent_mod_activity($activity, $courseid, $detail, $modname
         $by = new stdClass();
         $by->name = html_writer::link($userurl, $fullname);
         $by->date = $timestamp;
-        $authornamedate = get_string('bynameondate', 'forum', $by);
+        $authornamedate = get_string('bynameondate', 'mod_forum', $by);
     }
     $output .= html_writer::div($authornamedate, 'user');
     $output .= html_writer::end_tag('td');
@@ -4850,10 +4850,10 @@ function forum_get_view_actions() {
  */
 function forum_get_subscriptionmode_options() {
     $options = array();
-    $options[FORUM_CHOOSESUBSCRIBE] = get_string('subscriptionoptional', 'forum');
-    $options[FORUM_FORCESUBSCRIBE] = get_string('subscriptionforced', 'forum');
-    $options[FORUM_INITIALSUBSCRIBE] = get_string('subscriptionauto', 'forum');
-    $options[FORUM_DISALLOWSUBSCRIBE] = get_string('subscriptiondisabled', 'forum');
+    $options[FORUM_CHOOSESUBSCRIBE] = get_string('subscriptionoptional', 'mod_forum');
+    $options[FORUM_FORCESUBSCRIBE] = get_string('subscriptionforced', 'mod_forum');
+    $options[FORUM_INITIALSUBSCRIBE] = get_string('subscriptionauto', 'mod_forum');
+    $options[FORUM_DISALLOWSUBSCRIBE] = get_string('subscriptiondisabled', 'mod_forum');
     return $options;
 }
 
@@ -5026,7 +5026,7 @@ function forum_reset_userdata($data) {
     global $CFG, $DB;
     require_once($CFG->dirroot.'/rating/lib.php');
 
-    $componentstr = get_string('modulenameplural', 'forum');
+    $componentstr = get_string('modulenameplural', 'mod_forum');
     $status = array();
 
     $params = array($data->courseid);
@@ -5035,7 +5035,7 @@ function forum_reset_userdata($data) {
     $typesql     = "";
     if (!empty($data->reset_forum_all)) {
         $removeposts = true;
-        $typesstr    = get_string('resetforumsall', 'forum');
+        $typesstr    = get_string('resetforumsall', 'mod_forum');
         $types       = array();
     } else if (!empty($data->reset_forum_types)){
         $removeposts = true;
@@ -5054,7 +5054,7 @@ function forum_reset_userdata($data) {
             $typesql = " AND f.type " . $typesql;
             $params = array_merge($params, $typeparams);
         }
-        $typesstr = get_string('resetforums', 'forum').': '.implode(', ', $types);
+        $typesstr = get_string('resetforums', 'mod_forum').': '.implode(', ', $types);
     }
     $alldiscussionssql = "SELECT fd.id
                             FROM {forum_discussions} fd, {forum} f
@@ -5170,26 +5170,26 @@ function forum_reset_userdata($data) {
             }
         }
 
-        $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'forum'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'mod_forum'), 'error' => false);
     }
 
     // remove all digest settings unconditionally - even for users still enrolled in course.
     if (!empty($data->reset_forum_digests)) {
         $DB->delete_records_select('forum_digests', "forum IN ($allforumssql)", $params);
-        $status[] = array('component' => $componentstr, 'item' => get_string('resetdigests', 'forum'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('resetdigests', 'mod_forum'), 'error' => false);
     }
 
     // remove all subscriptions unconditionally - even for users still enrolled in course
     if (!empty($data->reset_forum_subscriptions)) {
         $DB->delete_records_select('forum_subscriptions', "forum IN ($allforumssql)", $params);
         $DB->delete_records_select('forum_discussion_subs', "forum IN ($allforumssql)", $params);
-        $status[] = array('component' => $componentstr, 'item' => get_string('resetsubscriptions', 'forum'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('resetsubscriptions', 'mod_forum'), 'error' => false);
     }
 
     // remove all tracking prefs unconditionally - even for users still enrolled in course
     if (!empty($data->reset_forum_track_prefs)) {
         $DB->delete_records_select('forum_track_prefs', "forumid IN ($allforumssql)", $params);
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('resettrackprefs','forum'), 'error'=>false);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('resettrackprefs','mod_forum'), 'error'=>false);
     }
 
     /// updating dates - shift may be negative too
@@ -5209,28 +5209,28 @@ function forum_reset_userdata($data) {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function forum_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'forumheader', get_string('modulenameplural', 'forum'));
+    $mform->addElement('header', 'forumheader', get_string('modulenameplural', 'mod_forum'));
 
-    $mform->addElement('checkbox', 'reset_forum_all', get_string('resetforumsall','forum'));
+    $mform->addElement('checkbox', 'reset_forum_all', get_string('resetforumsall','mod_forum'));
 
-    $mform->addElement('select', 'reset_forum_types', get_string('resetforums', 'forum'), forum_get_forum_types_all(), array('multiple' => 'multiple'));
+    $mform->addElement('select', 'reset_forum_types', get_string('resetforums', 'mod_forum'), forum_get_forum_types_all(), array('multiple' => 'multiple'));
     $mform->setAdvanced('reset_forum_types');
     $mform->disabledIf('reset_forum_types', 'reset_forum_all', 'checked');
 
-    $mform->addElement('checkbox', 'reset_forum_digests', get_string('resetdigests','forum'));
+    $mform->addElement('checkbox', 'reset_forum_digests', get_string('resetdigests','mod_forum'));
     $mform->setAdvanced('reset_forum_digests');
 
-    $mform->addElement('checkbox', 'reset_forum_subscriptions', get_string('resetsubscriptions','forum'));
+    $mform->addElement('checkbox', 'reset_forum_subscriptions', get_string('resetsubscriptions','mod_forum'));
     $mform->setAdvanced('reset_forum_subscriptions');
 
-    $mform->addElement('checkbox', 'reset_forum_track_prefs', get_string('resettrackprefs','forum'));
+    $mform->addElement('checkbox', 'reset_forum_track_prefs', get_string('resettrackprefs','mod_forum'));
     $mform->setAdvanced('reset_forum_track_prefs');
     $mform->disabledIf('reset_forum_track_prefs', 'reset_forum_all', 'checked');
 
     $mform->addElement('checkbox', 'reset_forum_ratings', get_string('deleteallratings'));
     $mform->disabledIf('reset_forum_ratings', 'reset_forum_all', 'checked');
 
-    $mform->addElement('checkbox', 'reset_forum_tags', get_string('removeallforumtags', 'forum'));
+    $mform->addElement('checkbox', 'reset_forum_tags', get_string('removeallforumtags', 'mod_forum'));
     $mform->disabledIf('reset_forum_tags', 'reset_forum_all', 'checked');
 }
 
@@ -5250,15 +5250,15 @@ function forum_reset_course_form_defaults($course) {
  */
 function forum_get_layout_modes(bool $useexperimentalui = false) {
     $modes = [
-        FORUM_MODE_FLATOLDEST => get_string('modeflatoldestfirst', 'forum'),
-        FORUM_MODE_FLATNEWEST => get_string('modeflatnewestfirst', 'forum'),
-        FORUM_MODE_THREADED   => get_string('modethreaded', 'forum')
+        FORUM_MODE_FLATOLDEST => get_string('modeflatoldestfirst', 'mod_forum'),
+        FORUM_MODE_FLATNEWEST => get_string('modeflatnewestfirst', 'mod_forum'),
+        FORUM_MODE_THREADED   => get_string('modethreaded', 'mod_forum')
     ];
 
     if ($useexperimentalui) {
-        $modes[FORUM_MODE_NESTED_V2] = get_string('modenestedv2', 'forum');
+        $modes[FORUM_MODE_NESTED_V2] = get_string('modenestedv2', 'mod_forum');
     } else {
-        $modes[FORUM_MODE_NESTED] = get_string('modenested', 'forum');
+        $modes[FORUM_MODE_NESTED] = get_string('modenested', 'mod_forum');
     }
 
     return $modes;
@@ -5270,11 +5270,11 @@ function forum_get_layout_modes(bool $useexperimentalui = false) {
  * @return array
  */
 function forum_get_forum_types() {
-    return array ('general'  => get_string('generalforum', 'forum'),
-                  'eachuser' => get_string('eachuserforum', 'forum'),
-                  'single'   => get_string('singleforum', 'forum'),
-                  'qanda'    => get_string('qandaforum', 'forum'),
-                  'blog'     => get_string('blogforum', 'forum'));
+    return array ('general'  => get_string('generalforum', 'mod_forum'),
+                  'eachuser' => get_string('eachuserforum', 'mod_forum'),
+                  'single'   => get_string('singleforum', 'mod_forum'),
+                  'qanda'    => get_string('qandaforum', 'mod_forum'),
+                  'blog'     => get_string('blogforum', 'mod_forum'));
 }
 
 /**
@@ -5283,13 +5283,13 @@ function forum_get_forum_types() {
  * @return array
  */
 function forum_get_forum_types_all() {
-    return array ('news'     => get_string('namenews','forum'),
-                  'social'   => get_string('namesocial','forum'),
-                  'general'  => get_string('generalforum', 'forum'),
-                  'eachuser' => get_string('eachuserforum', 'forum'),
-                  'single'   => get_string('singleforum', 'forum'),
-                  'qanda'    => get_string('qandaforum', 'forum'),
-                  'blog'     => get_string('blogforum', 'forum'));
+    return array ('news'     => get_string('namenews','mod_forum'),
+                  'social'   => get_string('namesocial','mod_forum'),
+                  'general'  => get_string('generalforum', 'mod_forum'),
+                  'eachuser' => get_string('eachuserforum', 'mod_forum'),
+                  'single'   => get_string('singleforum', 'mod_forum'),
+                  'qanda'    => get_string('qandaforum', 'mod_forum'),
+                  'blog'     => get_string('blogforum', 'mod_forum'));
 }
 
 /**
@@ -5336,12 +5336,12 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
             (!\mod_forum\subscriptions::subscription_disabled($forumobject) || $canmanage);
 
     if ($canmanage) {
-        $mode = $forumnode->add(get_string('subscriptionmode', 'forum'), null, navigation_node::TYPE_CONTAINER);
+        $mode = $forumnode->add(get_string('subscriptionmode', 'mod_forum'), null, navigation_node::TYPE_CONTAINER);
         $mode->add_class('subscriptionmode');
         $mode->set_show_in_secondary_navigation(false);
 
         // Optional subscription mode.
-        $allowchoicestring = get_string('subscriptionoptional', 'forum');
+        $allowchoicestring = get_string('subscriptionoptional', 'mod_forum');
         $allowchoiceaction = new action_link(
             new moodle_url('/mod/forum/subscribe.php', [
                 'id' => $forumobject->id,
@@ -5354,7 +5354,7 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
         $allowchoice = $mode->add($allowchoicestring, $allowchoiceaction, navigation_node::TYPE_SETTING);
 
         // Forced subscription mode.
-        $forceforeverstring = get_string('subscriptionforced', 'forum');
+        $forceforeverstring = get_string('subscriptionforced', 'mod_forum');
         $forceforeveraction = new action_link(
             new moodle_url('/mod/forum/subscribe.php', [
                 'id' => $forumobject->id,
@@ -5367,7 +5367,7 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
         $forceforever = $mode->add($forceforeverstring, $forceforeveraction, navigation_node::TYPE_SETTING);
 
         // Initial subscription mode.
-        $forceinitiallystring = get_string('subscriptionauto', 'forum');
+        $forceinitiallystring = get_string('subscriptionauto', 'mod_forum');
         $forceinitiallyaction = new action_link(
             new moodle_url('/mod/forum/subscribe.php', [
                 'id' => $forumobject->id,
@@ -5380,7 +5380,7 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
         $forceinitially = $mode->add($forceinitiallystring, $forceinitiallyaction, navigation_node::TYPE_SETTING);
 
         // Disabled subscription mode.
-        $disallowchoicestring = get_string('subscriptiondisabled', 'forum');
+        $disallowchoicestring = get_string('subscriptiondisabled', 'mod_forum');
         $disallowchoiceaction = new action_link(
             new moodle_url('/mod/forum/subscribe.php', [
                 'id' => $forumobject->id,
@@ -5419,23 +5419,23 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
 
         switch ($subscriptionmode) {
             case FORUM_CHOOSESUBSCRIBE : // 0
-                $notenode = $forumnode->add(get_string('subscriptionoptional', 'forum'));
+                $notenode = $forumnode->add(get_string('subscriptionoptional', 'mod_forum'));
                 break;
             case FORUM_FORCESUBSCRIBE : // 1
-                $notenode = $forumnode->add(get_string('subscriptionforced', 'forum'));
+                $notenode = $forumnode->add(get_string('subscriptionforced', 'mod_forum'));
                 break;
             case FORUM_INITIALSUBSCRIBE : // 2
-                $notenode = $forumnode->add(get_string('subscriptionauto', 'forum'));
+                $notenode = $forumnode->add(get_string('subscriptionauto', 'mod_forum'));
                 break;
             case FORUM_DISALLOWSUBSCRIBE : // 3
-                $notenode = $forumnode->add(get_string('subscriptiondisabled', 'forum'));
+                $notenode = $forumnode->add(get_string('subscriptiondisabled', 'mod_forum'));
                 break;
         }
     }
 
     if (has_capability('mod/forum:viewsubscribers', $settingsnav->get_page()->context)) {
         $url = new moodle_url('/mod/forum/subscribers.php', ['id' => $forumobject->id, 'edit' => 'off']);
-        $forumnode->add(get_string('subscriptions', 'forum'), $url, navigation_node::TYPE_SETTING, null, 'forumsubscriptions');
+        $forumnode->add(get_string('subscriptions', 'mod_forum'), $url, navigation_node::TYPE_SETTING, null, 'forumsubscriptions');
     }
 
     // Display all forum reports user has access to.
@@ -5458,9 +5458,9 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
         if ($forumobject->trackingtype == FORUM_TRACKING_OPTIONAL
                 || ((!$CFG->forum_allowforcedreadtracking) && $forumobject->trackingtype == FORUM_TRACKING_FORCED)) {
             if (forum_tp_is_tracked($forumobject)) {
-                $linktext = get_string('notrackforum', 'forum');
+                $linktext = get_string('notrackforum', 'mod_forum');
             } else {
-                $linktext = get_string('trackforum', 'forum');
+                $linktext = get_string('trackforum', 'mod_forum');
             }
             $url = new moodle_url('/mod/forum/settracking.php', array(
                     'id' => $forumobject->id,
@@ -5487,9 +5487,9 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
         }
 
         if ($forumobject->rsstype == 1) {
-            $string = get_string('rsssubscriberssdiscussions','forum');
+            $string = get_string('rsssubscriberssdiscussions','mod_forum');
         } else {
-            $string = get_string('rsssubscriberssposts','forum');
+            $string = get_string('rsssubscriberssposts','mod_forum');
         }
 
         $url = new moodle_url(rss_get_url($settingsnav->get_page()->cm->context->id, $userid, "mod_forum",
@@ -5512,9 +5512,9 @@ function forum_extend_settings_navigation(settings_navigation $settingsnav, navi
  */
 function forum_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $forum_pagetype = array(
-        'mod-forum-*'=>get_string('page-mod-forum-x', 'forum'),
-        'mod-forum-view'=>get_string('page-mod-forum-view', 'forum'),
-        'mod-forum-discuss'=>get_string('page-mod-forum-discuss', 'forum')
+        'mod-forum-*'=>get_string('page-mod-forum-x', 'mod_forum'),
+        'mod-forum-view'=>get_string('page-mod-forum-view', 'mod_forum'),
+        'mod-forum-discuss'=>get_string('page-mod-forum-discuss', 'mod_forum')
     );
     return $forum_pagetype;
 }
@@ -5695,7 +5695,7 @@ function forum_get_posts_by_user($user, array $courses, $musthaveaccess = false,
             if (!is_viewing($coursecontext, $user) && !is_enrolled($coursecontext, $user)) {
                 // Need to have full access to a course to see the rest of own info
                 if ($musthaveaccess) {
-                    throw new \moodle_exception('errorenrolmentrequired', 'forum');
+                    throw new \moodle_exception('errorenrolmentrequired', 'mod_forum');
                 }
                 continue;
             }
@@ -5704,7 +5704,7 @@ function forum_get_posts_by_user($user, array $courses, $musthaveaccess = false,
             // if they don't we immediately have a problem.
             if (!can_access_course($course)) {
                 if ($musthaveaccess) {
-                    throw new \moodle_exception('errorenrolmentrequired', 'forum');
+                    throw new \moodle_exception('errorenrolmentrequired', 'mod_forum');
                 }
                 continue;
             }
@@ -6515,17 +6515,17 @@ function mod_forum_get_completion_active_rule_descriptions($cm) {
         switch ($key) {
             case 'completiondiscussions':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completiondiscussionsdesc', 'forum', $val);
+                    $descriptions[] = get_string('completiondiscussionsdesc', 'mod_forum', $val);
                 }
                 break;
             case 'completionreplies':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionrepliesdesc', 'forum', $val);
+                    $descriptions[] = get_string('completionrepliesdesc', 'mod_forum', $val);
                 }
                 break;
             case 'completionposts':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionpostsdesc', 'forum', $val);
+                    $descriptions[] = get_string('completionpostsdesc', 'mod_forum', $val);
                 }
                 break;
             default:
@@ -6609,7 +6609,7 @@ function mod_forum_core_calendar_get_valid_event_timestart_range(\calendar_event
         if (!empty($forum->cutoffdate)) {
             $maxdate = [
                 $forum->cutoffdate,
-                get_string('cutoffdatevalidation', 'forum'),
+                get_string('cutoffdatevalidation', 'mod_forum'),
             ];
         }
     }
@@ -6823,7 +6823,7 @@ function mod_forum_user_preferences() {
  */
 function forum_grading_areas_list() {
     return [
-        'forum' => get_string('grade_forum_header', 'forum'),
+        'forum' => get_string('grade_forum_header', 'mod_forum'),
     ];
 }
 
@@ -6837,12 +6837,12 @@ function mod_forum_core_calendar_get_event_action_string(string $eventtype): str
     global $CFG;
     require_once($CFG->dirroot . '/mod/forum/locallib.php');
 
-    $modulename = get_string('modulename', 'forum');
+    $modulename = get_string('modulename', 'mod_forum');
 
     if ($eventtype == FORUM_EVENT_TYPE_DUE) {
-        return get_string('calendardue', 'forum', $modulename);
+        return get_string('calendardue', 'mod_forum', $modulename);
     } else {
-        return get_string('requiresaction', 'calendar', $modulename);
+        return get_string('requiresaction', 'core_calendar', $modulename);
     }
 }
 

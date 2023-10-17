@@ -81,24 +81,24 @@ class cronrunning extends check {
             if (empty($lastcron)) {
                 if (empty($CFG->cronclionly)) {
                     $url = new \moodle_url('/admin/cron.php');
-                    $summary = get_string('cronwarningneverweb', 'admin', [
+                    $summary = get_string('cronwarningneverweb', 'core_admin', [
                         'url' => $url->out(),
                         'expected' => $formatexpected,
                     ]);
                 } else {
-                    $summary = get_string('cronwarningnever', 'admin', [
+                    $summary = get_string('cronwarningnever', 'core_admin', [
                         'expected' => $formatexpected,
                     ]);
                 }
             } else if (empty($CFG->cronclionly)) {
                 $url = new \moodle_url('/admin/cron.php');
-                $summary = get_string('cronwarning', 'admin', [
+                $summary = get_string('cronwarning', 'core_admin', [
                     'url' => $url->out(),
                     'actual'   => $formatdelta,
                     'expected' => $formatexpected,
                 ]);
             } else {
-                $summary = get_string('cronwarningcli', 'admin', [
+                $summary = get_string('cronwarningcli', 'core_admin', [
                     'actual'   => $formatdelta,
                     'expected' => $formatexpected,
                 ]);
@@ -109,7 +109,7 @@ class cronrunning extends check {
         // Add MINSECS to avoid spurious warning if cron is only a few seconds overdue.
         if ($lastcroninterval > $expectedfrequency + MINSECS) {
             $status = result::WARNING;
-            $summary = get_string('croninfrequent', 'admin', [
+            $summary = get_string('croninfrequent', 'core_admin', [
                 'actual'   => $formatinterval,
                 'expected' => $formatexpected,
             ]);

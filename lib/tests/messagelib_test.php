@@ -64,7 +64,7 @@ class messagelib_test extends \advanced_testcase {
         message_send($message);
         $emails = $sink->get_messages();
         $email = reset($emails);
-        $this->assertEquals(get_string('unreadnewmessage', 'message', fullname(get_admin())), $email->subject);
+        $this->assertEquals(get_string('unreadnewmessage', 'core_message', fullname(get_admin())), $email->subject);
     }
     public function test_message_get_providers_for_user() {
         global $CFG, $DB;
@@ -554,7 +554,7 @@ class messagelib_test extends \advanced_testcase {
         $savedmessage = $DB->get_record('messages', array('id' => $messageid), '*', MUST_EXIST);
         $this->assertSame($user1->email, $email->from);
         $this->assertSame($user2->email, $email->to);
-        $this->assertSame(get_string('unreadnewmessage', 'message', fullname($user1)), $email->subject);
+        $this->assertSame(get_string('unreadnewmessage', 'core_message', fullname($user1)), $email->subject);
         $this->assertNotEmpty($email->header);
         $this->assertNotEmpty($email->body);
         $sink->clear();
@@ -587,7 +587,7 @@ class messagelib_test extends \advanced_testcase {
         $savedmessage = $DB->get_record('messages', array('id' => $messageid), '*', MUST_EXIST);
         $this->assertSame($user1->email, $email->from);
         $this->assertSame($user2->email, $email->to);
-        $this->assertSame(get_string('unreadnewmessage', 'message', fullname($user1)), $email->subject);
+        $this->assertSame(get_string('unreadnewmessage', 'core_message', fullname($user1)), $email->subject);
         $this->assertNotEmpty($email->header);
         $this->assertNotEmpty($email->body);
         $sink->clear();
@@ -801,7 +801,7 @@ class messagelib_test extends \advanced_testcase {
 
         // The message subject is generated during the call for conversation messages,
         // as the conversation may have many members having different lang preferences.
-        $this->assertSame(get_string('unreadnewmessage', 'message', fullname($user1)), $email->subject);
+        $this->assertSame(get_string('unreadnewmessage', 'core_message', fullname($user1)), $email->subject);
 
         // The email content will have had an emailtagline appended to it, based on lang prefs,
         // so verify the expected beginning and ends.

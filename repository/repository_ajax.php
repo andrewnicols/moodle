@@ -62,12 +62,12 @@ echo $OUTPUT->header(); // send headers
 
 // If uploaded file is larger than post_max_size (php.ini) setting, $_POST content will be empty.
 if (empty($_POST) && !empty($action)) {
-    $err->error = get_string('errorpostmaxsize', 'repository');
+    $err->error = get_string('errorpostmaxsize', 'core_repository');
     die(json_encode($err));
 }
 
 if (!confirm_sesskey()) {
-    $err->error = get_string('invalidsesskey', 'error');
+    $err->error = get_string('invalidsesskey', 'mod_error');
     die(json_encode($err));
 }
 
@@ -143,7 +143,7 @@ switch ($action) {
                 $mimetypes[] = mimeinfo('type', $type);
             }
             if (!in_array(mimeinfo('type', $saveas_filename), $mimetypes)) {
-                throw new moodle_exception('invalidfiletype', 'repository', '', get_mimetype_description(array('filename' => $saveas_filename)));
+                throw new moodle_exception('invalidfiletype', 'core_repository', '', get_mimetype_description(array('filename' => $saveas_filename)));
             }
         }
 
@@ -161,12 +161,12 @@ switch ($action) {
 
         // Validate the sourcekey.
         if (empty($sourcekey)) {
-            throw new moodle_exception('missingsourcekey', 'repository');
+            throw new moodle_exception('missingsourcekey', 'core_repository');
         }
 
         // Check that the sourcekey matches.
         if (sha1($source . repository::get_secret_key() . sesskey()) !== $sourcekey) {
-            throw new moodle_exception('sourcekeymismatch', 'repository');
+            throw new moodle_exception('sourcekeymismatch', 'core_repository');
         }
 
         $reference = $repo->get_file_reference($source);
@@ -294,7 +294,7 @@ switch ($action) {
                     $record->filename = $downloadedfile['newfilename'];
                 }
                 if (empty($downloadedfile['path'])) {
-                    $err->error = get_string('cannotdownload', 'repository');
+                    $err->error = get_string('cannotdownload', 'core_repository');
                     die(json_encode($err));
                 }
 

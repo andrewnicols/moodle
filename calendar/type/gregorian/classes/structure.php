@@ -160,32 +160,32 @@ class structure extends type_base {
     public function get_weekdays() {
         return array(
             0 => array(
-                'shortname' => get_string('sun', 'calendar'),
-                'fullname' => get_string('sunday', 'calendar')
+                'shortname' => get_string('sun', 'core_calendar'),
+                'fullname' => get_string('sunday', 'core_calendar')
             ),
             1 => array(
-                'shortname' => get_string('mon', 'calendar'),
-                'fullname' => get_string('monday', 'calendar')
+                'shortname' => get_string('mon', 'core_calendar'),
+                'fullname' => get_string('monday', 'core_calendar')
             ),
             2 => array(
-                'shortname' => get_string('tue', 'calendar'),
-                'fullname' => get_string('tuesday', 'calendar')
+                'shortname' => get_string('tue', 'core_calendar'),
+                'fullname' => get_string('tuesday', 'core_calendar')
             ),
             3 => array(
-                'shortname' => get_string('wed', 'calendar'),
-                'fullname' => get_string('wednesday', 'calendar')
+                'shortname' => get_string('wed', 'core_calendar'),
+                'fullname' => get_string('wednesday', 'core_calendar')
             ),
             4 => array(
-                'shortname' => get_string('thu', 'calendar'),
-                'fullname' => get_string('thursday', 'calendar')
+                'shortname' => get_string('thu', 'core_calendar'),
+                'fullname' => get_string('thursday', 'core_calendar')
             ),
             5 => array(
-                'shortname' => get_string('fri', 'calendar'),
-                'fullname' => get_string('friday', 'calendar')
+                'shortname' => get_string('fri', 'core_calendar'),
+                'fullname' => get_string('friday', 'core_calendar')
             ),
             6 => array(
-                'shortname' => get_string('sat', 'calendar'),
-                'fullname' => get_string('saturday', 'calendar')
+                'shortname' => get_string('sat', 'core_calendar'),
+                'fullname' => get_string('saturday', 'core_calendar')
             ),
         );
     }

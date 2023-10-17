@@ -57,7 +57,7 @@ if ($filter !== '') {
 admin_externalpage_setup('managetags', '', $params, '', array('pagelayout' => 'report'));
 
 if (empty($CFG->usetags)) {
-    throw new \moodle_exception('tagsaredisabled', 'tag');
+    throw new \moodle_exception('tagsaredisabled', 'core_tag');
 }
 
 $tagobject = null;
@@ -193,7 +193,7 @@ if (!$tagcoll) {
     echo $OUTPUT->heading(get_string('tagcollections', 'core_tag') . $OUTPUT->help_icon('tagcollection', 'tag'), 3);
     echo html_writer::table($colltable);
     $url = new moodle_url($manageurl, array('action' => 'colladd'));
-    echo html_writer::div(html_writer::link('#', get_string('addtagcoll', 'tag'), array('data-url' => $url)),
+    echo html_writer::div(html_writer::link('#', get_string('addtagcoll', 'core_tag'), array('data-url' => $url)),
             'mdl-right addtagcoll');
 
     echo $OUTPUT->heading(get_string('tagareas', 'core_tag'), 3);
@@ -216,7 +216,7 @@ $hiddenfields = [
 $otherfields = '';
 if ($filter !== '') {
     $otherfields = html_writer::link(new moodle_url($PAGE->url, ['filter' => null]),
-        get_string('resetfilter', 'tag'));
+        get_string('resetfilter', 'core_tag'));
 }
 
 $data = [
@@ -233,7 +233,7 @@ echo $OUTPUT->render_from_template('core/search_input', $data);
 // Link to add an standard tags.
 $img = $OUTPUT->pix_icon('t/add', '');
 echo '<div class="addstandardtags visibleifjs">' .
-    html_writer::link('#', $img . get_string('addotags', 'tag'), array('data-action' => 'addstandardtag')) .
+    html_writer::link('#', $img . get_string('addotags', 'core_tag'), array('data-action' => 'addstandardtag')) .
     '</div>';
 
 $table = new core_tag_manage_table($tagcollid);
@@ -247,10 +247,10 @@ echo $table->out($perpage, true);
 
 if ($table->rawdata) {
     echo html_writer::start_tag('p');
-    echo html_writer::tag('button', get_string('deleteselected', 'tag'),
+    echo html_writer::tag('button', get_string('deleteselected', 'core_tag'),
             array('id' => 'tag-management-delete', 'type' => 'submit',
                   'class' => 'tagdeleteselected btn btn-secondary', 'name' => 'bulkdelete'));
-    echo html_writer::tag('button', get_string('combineselected', 'tag'),
+    echo html_writer::tag('button', get_string('combineselected', 'core_tag'),
         array('id' => 'tag-management-combine', 'type' => 'submit',
               'class' => 'tagcombineselected btn btn-secondary', 'name' => 'bulkcombine'));
     echo html_writer::end_tag('p');

@@ -56,7 +56,7 @@ class enrolment extends base {
      * @return lang_string
      */
     protected function get_default_entity_title(): lang_string {
-        return new lang_string('enrolment', 'enrol');
+        return new lang_string('enrolment', 'core_enrol');
     }
 
     /**
@@ -91,7 +91,7 @@ class enrolment extends base {
         // Enrolment method column (Deprecated since Moodle 4.3, to remove in MDL-78118).
         $columns[] = (new column(
             'method',
-            new lang_string('method', 'enrol'),
+            new lang_string('method', 'core_enrol'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -116,7 +116,7 @@ class enrolment extends base {
         // Enrolment time started.
         $columns[] = (new column(
             'timestarted',
-            new lang_string('timestarted', 'enrol'),
+            new lang_string('timestarted', 'core_enrol'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -132,7 +132,7 @@ class enrolment extends base {
         // Enrolment time ended.
         $columns[] = (new column(
             'timeended',
-            new lang_string('timeended', 'enrol'),
+            new lang_string('timeended', 'core_enrol'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -223,7 +223,7 @@ class enrolment extends base {
         $filters[] = (new filter(
             select::class,
             'method',
-            new lang_string('method', 'enrol'),
+            new lang_string('method', 'core_enrol'),
             $this->get_entity_name(),
             "{$enrol}.enrol"
         ))
@@ -253,7 +253,7 @@ class enrolment extends base {
         $filters[] = (new filter(
             date::class,
             'timestarted',
-            new lang_string('timestarted', 'enrol'),
+            new lang_string('timestarted', 'core_enrol'),
             $this->get_entity_name(),
             "CASE WHEN {$userenrolments}.timestart = 0
                           THEN {$userenrolments}.timecreated
@@ -274,7 +274,7 @@ class enrolment extends base {
         $filters[] = (new filter(
             date::class,
             'timeended',
-            new lang_string('timeended', 'enrol'),
+            new lang_string('timeended', 'core_enrol'),
             $this->get_entity_name(),
             "{$userenrolments}.timeend"
         ))

@@ -69,6 +69,6 @@ class geoplugin_test extends \advanced_testcase {
      */
     public function test_ipv6(): void {
         $result = iplookup_find_location('2a01:8900:2:3:8c6c:c0db:3d33:9ce6');
-        $this->assertEquals($result['error'], get_string('invalidipformat', 'error'));
+        $this->assertEquals($result['error'], get_string('invalidipformat', 'mod_error'));
     }
 }

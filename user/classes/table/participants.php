@@ -174,7 +174,7 @@ class participants extends \table_sql implements dynamic_table {
         $canreviewenrol = has_capability('moodle/course:enrolreview', $this->context);
         if ($canreviewenrol && $this->courseid != SITEID) {
             $columns[] = 'status';
-            $headers[] = get_string('participationstatus', 'enrol');
+            $headers[] = get_string('participationstatus', 'core_enrol');
             $this->no_sorting('status');
         };
 
@@ -348,7 +348,7 @@ class participants extends \table_sql implements dynamic_table {
                 $instancename = $ue->enrolmentinstancename;
 
                 // Default status field label and value.
-                $status = get_string('participationactive', 'enrol');
+                $status = get_string('participationactive', 'core_enrol');
                 $statusval = status_field::STATUS_ACTIVE;
                 switch ($ue->status) {
                     case ENROL_USER_ACTIVE:
@@ -358,12 +358,12 @@ class participants extends \table_sql implements dynamic_table {
                         $enrolmentdisabled = $ue->enrolmentinstance->status == ENROL_INSTANCE_DISABLED;
                         // If user enrolment status has not yet started/already ended or the enrolment instance is disabled.
                         if ($isexpired || $enrolmentdisabled) {
-                            $status = get_string('participationnotcurrent', 'enrol');
+                            $status = get_string('participationnotcurrent', 'core_enrol');
                             $statusval = status_field::STATUS_NOT_CURRENT;
                         }
                         break;
                     case ENROL_USER_SUSPENDED:
-                        $status = get_string('participationsuspended', 'enrol');
+                        $status = get_string('participationsuspended', 'core_enrol');
                         $statusval = status_field::STATUS_SUSPENDED;
                         break;
                 }

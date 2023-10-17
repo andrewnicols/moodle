@@ -27,7 +27,7 @@ require_once($CFG->dirroot . '/admin/tool/mobile/lib.php');
 require_once($CFG->dirroot . '/webservice/lib.php');
 
 if (!$CFG->enablemobilewebservice) {
-    throw new \moodle_exception('enablewsdescription', 'webservice');
+    throw new \moodle_exception('enablewsdescription', 'core_webservice');
 }
 
 require_login(null, false);

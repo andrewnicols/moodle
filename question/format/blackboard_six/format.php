@@ -88,7 +88,7 @@ class qformat_blackboard_six extends qformat_blackboard_six_base {
         // Find if we are importing a .dat file.
         if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) == 'dat') {
             if (!is_readable($filename)) {
-                $this->error(get_string('filenotreadable', 'error'));
+                $this->error(get_string('filenotreadable', 'mod_error'));
                 return false;
             }
 
@@ -118,7 +118,7 @@ class qformat_blackboard_six extends qformat_blackboard_six_base {
         $this->tempdir = make_temp_directory('bbquiz_import/' . $uniquecode);
         if (is_readable($filename)) {
             if (!copy($filename, $this->tempdir . '/bboard.zip')) {
-                $this->error(get_string('cannotcopybackup', 'question'));
+                $this->error(get_string('cannotcopybackup', 'core_question'));
                 fulldelete($this->tempdir);
                 return false;
             }
@@ -167,15 +167,15 @@ class qformat_blackboard_six extends qformat_blackboard_six_base {
                 if ($qfile) {
                     return $qfile;
                 } else {
-                    $this->error(get_string('cannotfindquestionfile', 'question'));
+                    $this->error(get_string('cannotfindquestionfile', 'core_question'));
                     fulldelete($this->tempdir);
                 }
             } else {
-                $this->error(get_string('cannotunzip', 'question'));
+                $this->error(get_string('cannotunzip', 'core_question'));
                 fulldelete($this->temp_dir);
             }
         } else {
-            $this->error(get_string('cannotreaduploadfile', 'error'));
+            $this->error(get_string('cannotreaduploadfile', 'mod_error'));
             fulldelete($this->tempdir);
         }
         return false;

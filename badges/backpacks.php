@@ -42,7 +42,7 @@ if (empty($CFG->badges_allowexternalbackpack)) {
 }
 
 $PAGE->set_url($url);
-$PAGE->set_title(get_string('managebackpacks', 'badges'));
+$PAGE->set_title(get_string('managebackpacks', 'core_badges'));
 $PAGE->set_heading($SITE->fullname);
 
 $output = $PAGE->get_renderer('core', 'badges');
@@ -51,10 +51,10 @@ $msg = '';
 $msgtype = 'error';
 if ($action == 'delete' && $confirm && confirm_sesskey()) {
     if (badges_delete_site_backpack($id)) {
-        $msg = get_string('sitebackpackdeleted', 'badges');
+        $msg = get_string('sitebackpackdeleted', 'core_badges');
         $msgtype = 'notifysuccess';
     } else {
-        $msg = get_string('sitebackpacknotdeleted', 'badges');
+        $msg = get_string('sitebackpacknotdeleted', 'core_badges');
     }
 } else if ($action == 'moveup' || $action == 'movedown') {
     // If no backpack has been selected, there isn't anything to move.
@@ -92,7 +92,7 @@ if ($action == 'edit') {
     }
 
     echo $OUTPUT->header();
-    echo $output->heading(get_string('managebackpacks', 'badges'));
+    echo $output->heading(get_string('managebackpacks', 'core_badges'));
 
     $form->display();
 } else if ($action == 'test') {
@@ -105,7 +105,7 @@ if ($action == 'edit') {
     echo $output->render_test_backpack_result($id);
 } else {
     echo $OUTPUT->header();
-    echo $output->heading(get_string('managebackpacks', 'badges'));
+    echo $output->heading(get_string('managebackpacks', 'core_badges'));
 
     if ($msg) {
         echo $OUTPUT->notification($msg, $msgtype);

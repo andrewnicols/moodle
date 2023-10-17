@@ -80,8 +80,8 @@ class uu_progress_tracker {
             'email' => get_string('email'),
             'password' => get_string('password'),
             'auth' => get_string('authentication'),
-            'enrolments' => get_string('enrolments', 'enrol'),
-            'suspended' => get_string('suspended', 'auth'),
+            'enrolments' => get_string('enrolments', 'core_enrol'),
+            'suspended' => get_string('suspended', 'core_auth'),
             'theme' => get_string('theme'),
             'deleted' => get_string('delete'),
         ];
@@ -192,12 +192,12 @@ function uu_validate_user_upload_columns(csv_import_reader $cir, $stdfields, $pr
     if (empty($columns)) {
         $cir->close();
         $cir->cleanup();
-        throw new \moodle_exception('cannotreadtmpfile', 'error', $returnurl);
+        throw new \moodle_exception('cannotreadtmpfile', 'mod_error', $returnurl);
     }
     if (count($columns) < 2) {
         $cir->close();
         $cir->cleanup();
-        throw new \moodle_exception('csvfewcolumns', 'error', $returnurl);
+        throw new \moodle_exception('csvfewcolumns', 'mod_error', $returnurl);
     }
 
     // test columns
@@ -240,12 +240,12 @@ function uu_validate_user_upload_columns(csv_import_reader $cir, $stdfields, $pr
         } else {
             $cir->close();
             $cir->cleanup();
-            throw new \moodle_exception('invalidfieldname', 'error', $returnurl, $field);
+            throw new \moodle_exception('invalidfieldname', 'mod_error', $returnurl, $field);
         }
         if (in_array($newfield, $processed)) {
             $cir->close();
             $cir->cleanup();
-            throw new \moodle_exception('duplicatefieldname', 'error', $returnurl, $newfield);
+            throw new \moodle_exception('duplicatefieldname', 'mod_error', $returnurl, $newfield);
         }
         $processed[$key] = $newfield;
     }
@@ -494,7 +494,7 @@ function uu_check_custom_profile_data(&$data, array &$profilefieldvalues = []) {
                 if ($formfield->get_shortname() === $shortname) {
                     if (method_exists($formfield, 'convert_external_data') &&
                             is_null($formfield->convert_external_data($value))) {
-                        $data['status'][] = get_string('invaliduserfield', 'error', $shortname);
+                        $data['status'][] = get_string('invaliduserfield', 'mod_error', $shortname);
                         $noerror = false;
                     }
 

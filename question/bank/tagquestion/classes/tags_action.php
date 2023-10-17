@@ -45,7 +45,7 @@ class tags_action extends question_action_base {
             global $PAGE;
             $PAGE->requires->js_call_amd('qbank_tagquestion/edit_tags', 'init', ['#questionscontainer']);
         }
-        $this->managetags = get_string('managetags', 'tag');
+        $this->managetags = get_string('managetags', 'core_tag');
     }
 
     protected function check_tags_status(): void {

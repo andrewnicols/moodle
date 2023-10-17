@@ -46,8 +46,8 @@ class default_bulk_actions {
         ] + self::bulk_action_base_attrs();
 
         return new bulk_action(prediction::ACTION_FIXED,
-            new \moodle_url(''), new \pix_icon('t/check', get_string('fixedack', 'analytics')),
-            get_string('fixedack', 'analytics'), false, $attrs, action::TYPE_POSITIVE);
+            new \moodle_url(''), new \pix_icon('t/check', get_string('fixedack', 'core_analytics')),
+            get_string('fixedack', 'core_analytics'), false, $attrs, action::TYPE_POSITIVE);
     }
 
     /**
@@ -61,8 +61,8 @@ class default_bulk_actions {
         ] + self::bulk_action_base_attrs();
 
         return new bulk_action(prediction::ACTION_NOT_APPLICABLE,
-            new \moodle_url(''), new \pix_icon('fp/cross', get_string('notapplicable', 'analytics'), 'theme'),
-            get_string('notapplicable', 'analytics'), false, $attrs, action::TYPE_NEUTRAL);
+            new \moodle_url(''), new \pix_icon('fp/cross', get_string('notapplicable', 'core_analytics'), 'theme'),
+            get_string('notapplicable', 'core_analytics'), false, $attrs, action::TYPE_NEUTRAL);
     }
 
     /**
@@ -76,8 +76,8 @@ class default_bulk_actions {
         ] + self::bulk_action_base_attrs();
 
         return new bulk_action(prediction::ACTION_INCORRECTLY_FLAGGED,
-            new \moodle_url(''), new \pix_icon('i/incorrect', get_string('incorrectlyflagged', 'analytics')),
-            get_string('incorrectlyflagged', 'analytics'), false, $attrs, action::TYPE_NEGATIVE);
+            new \moodle_url(''), new \pix_icon('i/incorrect', get_string('incorrectlyflagged', 'core_analytics')),
+            get_string('incorrectlyflagged', 'core_analytics'), false, $attrs, action::TYPE_NEGATIVE);
     }
 
     /**
@@ -91,8 +91,8 @@ class default_bulk_actions {
         ] + self::bulk_action_base_attrs();
 
         return new bulk_action(prediction::ACTION_USEFUL,
-            new \moodle_url(''), new \pix_icon('t/check', get_string('useful', 'analytics')),
-            get_string('useful', 'analytics'), false, $attrs, action::TYPE_POSITIVE);
+            new \moodle_url(''), new \pix_icon('t/check', get_string('useful', 'core_analytics')),
+            get_string('useful', 'core_analytics'), false, $attrs, action::TYPE_POSITIVE);
 
     }
 
@@ -107,8 +107,8 @@ class default_bulk_actions {
         ] + self::bulk_action_base_attrs();
 
         return new bulk_action(prediction::ACTION_NOT_USEFUL,
-            new \moodle_url(''), new \pix_icon('t/delete', get_string('notuseful', 'analytics')),
-            get_string('notuseful', 'analytics'), false, $attrs, action::TYPE_NEGATIVE);
+            new \moodle_url(''), new \pix_icon('t/delete', get_string('notuseful', 'core_analytics')),
+            get_string('notuseful', 'core_analytics'), false, $attrs, action::TYPE_NEGATIVE);
     }
 
     /**

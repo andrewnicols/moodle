@@ -65,13 +65,13 @@ class block_completionstatus extends block_base {
         // Don't display if completion isn't enabled!
         if (!completion_info::is_enabled_for_site()) {
             if ($can_edit) {
-                $this->content->text .= get_string('completionnotenabledforsite', 'completion');
+                $this->content->text .= get_string('completionnotenabledforsite', 'core_completion');
             }
             return $this->content;
 
         } else if (!$info->is_enabled()) {
             if ($can_edit) {
-                $this->content->text .= get_string('completionnotenabledforcourse', 'completion');
+                $this->content->text .= get_string('completionnotenabledforcourse', 'core_completion');
             }
             return $this->content;
         }
@@ -82,7 +82,7 @@ class block_completionstatus extends block_base {
         // Check if this course has any criteria.
         if (empty($completions)) {
             if ($can_edit) {
-                $this->content->text .= get_string('nocriteriaset', 'completion');
+                $this->content->text .= get_string('nocriteriaset', 'core_completion');
             }
             return $this->content;
         }
@@ -148,7 +148,7 @@ class block_completionstatus extends block_base {
                 $a->second = count($activities);
 
                 $row = new html_table_row();
-                $row->cells[0] = new html_table_cell(get_string('activitiescompleted', 'completion'));
+                $row->cells[0] = new html_table_cell(get_string('activitiescompleted', 'core_completion'));
                 $row->cells[1] = new html_table_cell(get_string('firstofsecond', 'block_completionstatus', $a));
                 $row->cells[1]->style = 'text-align: right;';
                 $srows[] = $row;
@@ -161,7 +161,7 @@ class block_completionstatus extends block_base {
                 $a->second = count($prerequisites);
 
                 $row = new html_table_row();
-                $row->cells[0] = new html_table_cell(get_string('dependenciescompleted', 'completion'));
+                $row->cells[0] = new html_table_cell(get_string('dependenciescompleted', 'core_completion'));
                 $row->cells[1] = new html_table_cell(get_string('firstofsecond', 'block_completionstatus', $a));
                 $row->cells[1]->style = 'text-align: right;';
                 $prows[] = $row;
@@ -191,13 +191,13 @@ class block_completionstatus extends block_base {
             $criteriacomplete = $info->count_course_user_data($USER->id);
 
             if ($pending_update) {
-                $content .= html_writer::tag('i', get_string('pending', 'completion'));
+                $content .= html_writer::tag('i', get_string('pending', 'core_completion'));
             } else if ($coursecomplete) {
                 $content .= get_string('complete');
             } else if (!$criteriacomplete && !$ccompletion->timestarted) {
-                $content .= html_writer::tag('i', get_string('notyetstarted', 'completion'));
+                $content .= html_writer::tag('i', get_string('notyetstarted', 'core_completion'));
             } else {
-                $content .= html_writer::tag('i', get_string('inprogress', 'completion'));
+                $content .= html_writer::tag('i', get_string('inprogress', 'core_completion'));
             }
 
             $row->cells[0] = new html_table_cell($content);
@@ -209,9 +209,9 @@ class block_completionstatus extends block_base {
             // Get overall aggregation method.
             $overall = $info->get_aggregation_method();
             if ($overall == COMPLETION_AGGREGATION_ALL) {
-                $content .= get_string('criteriarequiredall', 'completion');
+                $content .= get_string('criteriarequiredall', 'core_completion');
             } else {
-                $content .= get_string('criteriarequiredany', 'completion');
+                $content .= get_string('criteriarequiredany', 'core_completion');
             }
             $content .= ':';
             $row->cells[0] = new html_table_cell($content);
@@ -219,7 +219,7 @@ class block_completionstatus extends block_base {
             $rows[] = $row;
 
             $row = new html_table_row();
-            $row->cells[0] = new html_table_cell(html_writer::tag('b', get_string('requiredcriteria', 'completion')));
+            $row->cells[0] = new html_table_cell(html_writer::tag('b', get_string('requiredcriteria', 'core_completion')));
             $row->cells[1] = new html_table_cell(html_writer::tag('b', get_string('status')));
             $row->cells[1]->style = 'text-align: right;';
             $rows[] = $row;
@@ -232,10 +232,10 @@ class block_completionstatus extends block_base {
 
             // Display link to detailed view.
             $details = new moodle_url('/blocks/completionstatus/details.php', array('course' => $course->id));
-            $this->content->footer .= html_writer::link($details, get_string('moredetails', 'completion'));
+            $this->content->footer .= html_writer::link($details, get_string('moredetails', 'core_completion'));
         } else {
             // If user is not enrolled, show error.
-            $this->content->text = get_string('nottracked', 'completion');
+            $this->content->text = get_string('nottracked', 'core_completion');
         }
 
         if (has_capability('report/completion:view', $context)) {
@@ -244,7 +244,7 @@ class block_completionstatus extends block_base {
                 $this->content->footer = '';
             }
             $this->content->footer .= html_writer::empty_tag('br');
-            $this->content->footer .= html_writer::link($report, get_string('viewcoursereport', 'completion'));
+            $this->content->footer .= html_writer::link($report, get_string('viewcoursereport', 'core_completion'));
         }
 
         return $this->content;

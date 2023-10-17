@@ -51,7 +51,7 @@ class role_allow_assign_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventroleallowassignupdated', 'role');
+        return get_string('eventroleallowassignupdated', 'core_role');
     }
 
     /**

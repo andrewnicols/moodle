@@ -251,9 +251,9 @@ class example extends \moodleform {
         }
         $options = [
             'multiple' => true,
-            'noselectionstring' => get_string('allareas', 'search'),
+            'noselectionstring' => get_string('allareas', 'core_search'),
         ];
-        $mform->addElement('autocomplete', 'autocomplete', get_string('searcharea', 'search'), $areanames, $options);
+        $mform->addElement('autocomplete', 'autocomplete', get_string('searcharea', 'core_search'), $areanames, $options);
         if ($required) {
             $mform->addRule('autocomplete', 'This element is required', 'required', null, 'client');
         }

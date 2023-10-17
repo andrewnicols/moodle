@@ -55,7 +55,7 @@ class admin_setting_predictor extends \admin_setting_configselect {
         $selectedprocessor = \core_analytics\manager::get_predictions_processor($data, false);
         $isready = $selectedprocessor->is_ready();
         if ($isready !== true) {
-            return get_string('errorprocessornotready', 'analytics', $isready);
+            return get_string('errorprocessornotready', 'core_analytics', $isready);
         }
 
         $currentvalue = get_config('analytics', 'predictionsprocessor');
@@ -67,6 +67,6 @@ class admin_setting_predictor extends \admin_setting_configselect {
             }
         }
 
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 }

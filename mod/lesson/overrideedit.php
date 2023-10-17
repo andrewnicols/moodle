@@ -38,7 +38,7 @@ $override = null;
 if ($overrideid) {
 
     if (! $override = $DB->get_record('lesson_overrides', array('id' => $overrideid))) {
-        throw new \moodle_exception('invalidoverrideid', 'lesson');
+        throw new \moodle_exception('invalidoverrideid', 'mod_lesson');
     }
 
     $lesson = new lesson($DB->get_record('lesson', array('id' => $override->lessonid), '*',  MUST_EXIST));
@@ -79,11 +79,11 @@ if ($overrideid) {
 
     if ($override->groupid) {
         if (!groups_group_visible($override->groupid, $course, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'lesson');
+            throw new \moodle_exception('invalidoverrideid', 'mod_lesson');
         }
     } else {
         if (!groups_user_groups_visible($course, $override->userid, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'lesson');
+            throw new \moodle_exception('invalidoverrideid', 'mod_lesson');
         }
     }
 } else {
@@ -232,7 +232,7 @@ if ($mform->is_cancelled()) {
 }
 
 // Print the form.
-$pagetitle = get_string('editoverride', 'lesson');
+$pagetitle = get_string('editoverride', 'mod_lesson');
 $PAGE->navbar->add($pagetitle);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_secondary_active_tab('mod_lesson_useroverrides');

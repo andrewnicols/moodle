@@ -34,7 +34,7 @@ class delete_incomplete_users_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskdeleteincompleteusers', 'admin');
+        return get_string('taskdeleteincompleteusers', 'core_admin');
     }
 
     /**

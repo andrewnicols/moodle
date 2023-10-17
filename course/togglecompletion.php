@@ -55,9 +55,9 @@ if ($courseid) {
     $trackeduser = ($user ? $user : $USER->id);
 
     if (!$completion->is_enabled()) {
-        throw new moodle_exception('completionnotenabled', 'completion');
+        throw new moodle_exception('completionnotenabled', 'core_completion');
     } else if (!$completion->is_tracked_user($trackeduser)) {
-        throw new moodle_exception('nottracked', 'completion');
+        throw new moodle_exception('nottracked', 'core_completion');
     }
 
     if ($user && $rolec) {
@@ -93,12 +93,12 @@ if ($courseid) {
             $completion = $completion->get_completion($USER->id, COMPLETION_CRITERIA_TYPE_SELF);
 
             if (!$completion) {
-                throw new \moodle_exception('noselfcompletioncriteria', 'completion');
+                throw new \moodle_exception('noselfcompletioncriteria', 'core_completion');
             }
 
             // Check if the user has already marked themselves as complete
             if ($completion->is_complete()) {
-                throw new \moodle_exception('useralreadymarkedcomplete', 'completion');
+                throw new \moodle_exception('useralreadymarkedcomplete', 'core_completion');
             }
 
             $completion->mark_complete();
@@ -107,7 +107,7 @@ if ($courseid) {
             return;
         }
 
-        $strconfirm = get_string('confirmselfcompletion', 'completion');
+        $strconfirm = get_string('confirmselfcompletion', 'core_completion');
         $PAGE->set_title($strconfirm);
         $PAGE->set_heading($course->fullname);
         $PAGE->navbar->add($strconfirm);
@@ -147,7 +147,7 @@ if (isguestuser() or !confirm_sesskey()) {
 // Set up completion object and check it is enabled.
 $completion = new completion_info($course);
 if (!$completion->is_enabled()) {
-    throw new moodle_exception('completionnotenabled', 'completion');
+    throw new moodle_exception('completionnotenabled', 'core_completion');
 }
 
 // NOTE: All users are allowed to toggle their completion state, including

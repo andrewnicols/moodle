@@ -109,7 +109,7 @@ function grade_get_course_grades($courseid, $userid_or_ids=null) {
                     $a = new stdClass();
                     $a->grade = $grade->str_grade;
                     $a->max   = grade_format_gradevalue($grade_item->grademax, $grade_item);
-                    $grade->str_long_grade = get_string('gradelong', 'grades', $a);
+                    $grade->str_long_grade = get_string('gradelong', 'core_grades', $a);
                 }
             }
 
@@ -223,7 +223,7 @@ function grade_get_course_grade($userid, $courseid_or_ids=null) {
                 $a = new stdClass();
                 $a->grade = $grade->str_grade;
                 $a->max   = grade_format_gradevalue($grade_item->grademax, $grade_item);
-                $grade->str_long_grade = get_string('gradelong', 'grades', $a);
+                $grade->str_long_grade = get_string('gradelong', 'core_grades', $a);
             }
         }
 

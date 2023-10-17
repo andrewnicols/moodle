@@ -211,7 +211,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $writer = \core_privacy\local\request\writer::with_context($this->c1context);
         $this->assertTrue($writer->has_any_data());
         $u1c1 = $DB->get_record('search_simpledb_index', ['userid' => $this->u1->id, 'contextid' => $this->c1context->id]);
-        $data = $writer->get_data([get_string('search', 'search'), $u1c1->docid]);
+        $data = $writer->get_data([get_string('search', 'core_search'), $u1c1->docid]);
 
         $this->assertEquals($this->c1context->get_context_name(true, true), $data->context);
         $this->assertEquals('vi', $data->title);

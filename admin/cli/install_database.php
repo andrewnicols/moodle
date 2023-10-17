@@ -110,7 +110,7 @@ list($options, $unrecognized) = cli_get_params(
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 // We show help text even if tables are installed.
@@ -121,7 +121,7 @@ if ($options['help']) {
 
 // Make sure no tables are installed yet.
 if ($DB->get_tables() ) {
-    cli_error(get_string('clitablesexist', 'install'));
+    cli_error(get_string('clitablesexist', 'mod_install'));
 }
 
 if (!$options['agree-license']) {
@@ -135,7 +135,7 @@ if ($options['adminpass'] === true or $options['adminpass'] === '') {
 // Validate that the address provided was an e-mail address.
 if (!empty($options['adminemail']) && !validate_email($options['adminemail'])) {
     $a = (object) array('option' => 'adminemail', 'value' => $options['adminemail']);
-    cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+    cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
 }
 
 // Validate that the supportemail provided was an e-mail address.
@@ -144,7 +144,7 @@ if (!empty($options['supportemail']) && !validate_email($options['supportemail']
         'option' => 'supportemail',
         'value' => $options['supportemail']
     ];
-    cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+    cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
 }
 
 $options['lang'] = clean_param($options['lang'], PARAM_SAFEDIR);
@@ -163,7 +163,7 @@ if ($CFG->lang !== 'en') {
             $a       = new stdClass();
             $a->url  = $installer->lang_pack_url($langcode);
             $a->dest = $CFG->dataroot.'/lang';
-            cli_problem(get_string('remotedownloaderror', 'error', $a));
+            cli_problem(get_string('remotedownloaderror', 'mod_error', $a));
         }
     }
 }
@@ -179,7 +179,7 @@ require_once($CFG->libdir . '/environmentlib.php');
 list($envstatus, $environment_results) = check_moodle_environment(normalize_version($release), ENV_SELECT_RELEASE);
 if (!$envstatus) {
     $errors = environment_get_errors($environment_results);
-    cli_heading(get_string('environment', 'admin'));
+    cli_heading(get_string('environment', 'core_admin'));
     foreach ($errors as $error) {
         list($info, $report) = $error;
         echo "!! $info !!\n$report\n\n";
@@ -190,8 +190,8 @@ if (!$envstatus) {
 // Test plugin dependencies.
 $failed = array();
 if (!core_plugin_manager::instance()->all_plugins_ok($version, $failed)) {
-    cli_problem(get_string('pluginscheckfailed', 'admin', array('pluginslist' => implode(', ', array_unique($failed)))));
-    cli_error(get_string('pluginschecktodo', 'admin'));
+    cli_problem(get_string('pluginscheckfailed', 'core_admin', array('pluginslist' => implode(', ', array_unique($failed)))));
+    cli_error(get_string('pluginschecktodo', 'core_admin'));
 }
 
 install_cli_database($options, true);
@@ -203,5 +203,5 @@ install_cli_database($options, true);
 require_once($CFG->libdir.'/upgradelib.php');
 upgrade_themes();
 
-echo get_string('cliinstallfinished', 'install')."\n";
+echo get_string('cliinstallfinished', 'mod_install')."\n";
 exit(0); // 0 means success

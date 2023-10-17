@@ -53,7 +53,7 @@ class mod_survey_generator extends testing_module_generator {
             $this->templates = $DB->get_records_menu('survey', array('template' => 0), 'name', 'id, name');
         }
         if (empty($this->templates)) {
-            throw new moodle_exception('cannotfindsurveytmpt', 'survey');
+            throw new moodle_exception('cannotfindsurveytmpt', 'mod_survey');
         }
         $record = (array)$record;
         if (isset($record['template']) && !is_number($record['template'])) {
@@ -61,7 +61,7 @@ class mod_survey_generator extends testing_module_generator {
             $record['template'] = array_search($record['template'], $this->templates);
         }
         if (isset($record['template']) && !array_key_exists($record['template'], $this->templates)) {
-            throw new moodle_exception('cannotfindsurveytmpt', 'survey');
+            throw new moodle_exception('cannotfindsurveytmpt', 'mod_survey');
         }
 
         // Add default values for survey.

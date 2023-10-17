@@ -312,21 +312,21 @@ class meeting {
      */
     protected function get_status_message(object $meetinginfo, instance $instance): string {
         if ($instance->has_user_limit_been_reached($meetinginfo->totalusercount)) {
-            return get_string('view_message_conference_user_limit_reached', 'bigbluebuttonbn');
+            return get_string('view_message_conference_user_limit_reached', 'mod_bigbluebuttonbn');
         }
         if ($meetinginfo->statusrunning) {
-            return get_string('view_message_conference_in_progress', 'bigbluebuttonbn');
+            return get_string('view_message_conference_in_progress', 'mod_bigbluebuttonbn');
         }
         if ($instance->user_must_wait_to_join() && !$instance->user_can_force_join()) {
-            return get_string('view_message_conference_wait_for_moderator', 'bigbluebuttonbn');
+            return get_string('view_message_conference_wait_for_moderator', 'mod_bigbluebuttonbn');
         }
         if ($instance->before_start_time()) {
-            return get_string('view_message_conference_not_started', 'bigbluebuttonbn');
+            return get_string('view_message_conference_not_started', 'mod_bigbluebuttonbn');
         }
         if ($instance->has_ended()) {
-            return get_string('view_message_conference_has_ended', 'bigbluebuttonbn');
+            return get_string('view_message_conference_has_ended', 'mod_bigbluebuttonbn');
         }
-        return get_string('view_message_conference_room_ready', 'bigbluebuttonbn');
+        return get_string('view_message_conference_room_ready', 'mod_bigbluebuttonbn');
     }
 
     /**

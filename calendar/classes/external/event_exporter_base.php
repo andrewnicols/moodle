@@ -106,7 +106,7 @@ class event_exporter_base extends exporter {
             $component = 'mod_' . $data->modulename;
             if (!component_callback_exists($component, 'core_calendar_get_event_action_string')) {
                 $modulename = get_string('modulename', $data->modulename);
-                $data->activitystr = get_string('requiresaction', 'calendar', $modulename);
+                $data->activitystr = get_string('requiresaction', 'core_calendar', $modulename);
             } else {
                 $data->activitystr = component_callback(
                     $component,
@@ -332,7 +332,7 @@ class event_exporter_base extends exporter {
             // Property normalisedeventtype is used to build the name of the CSS class for the events.
             $values['normalisedeventtype'] = 'other';
         }
-        $values['normalisedeventtypetext'] = $stringexists ? get_string($identifier, 'calendar') : '';
+        $values['normalisedeventtypetext'] = $stringexists ? get_string($identifier, 'core_calendar') : '';
 
         $purpose = 'none';
         if ($moduleproxy) {

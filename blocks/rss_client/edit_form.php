@@ -33,7 +33,7 @@ class block_rss_client_edit_form extends block_edit_form {
         global $CFG, $DB, $USER;
 
         // Fields for editing block contents.
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'core_block'));
 
         $mform->addElement('selectyesno', 'config_display_description', get_string('displaydescriptionlabel', 'block_rss_client'));
         $mform->setDefault('config_display_description', 0);

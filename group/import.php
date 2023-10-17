@@ -69,11 +69,11 @@ if ($importform->is_cancelled()) {
     $readcount = $csvimport->load_csv_content($text, $encoding, $delimiter);
 
     if ($readcount === false) {
-        throw new \moodle_exception('csvfileerror', 'error', $PAGE->url, $csvimport->get_error());
+        throw new \moodle_exception('csvfileerror', 'mod_error', $PAGE->url, $csvimport->get_error());
     } else if ($readcount == 0) {
-        throw new \moodle_exception('csvemptyfile', 'error', $PAGE->url, $csvimport->get_error());
+        throw new \moodle_exception('csvemptyfile', 'mod_error', $PAGE->url, $csvimport->get_error());
     } else if ($readcount == 1) {
-        throw new \moodle_exception('csvnodata', 'error', $PAGE->url);
+        throw new \moodle_exception('csvnodata', 'mod_error', $PAGE->url);
     }
 
     $csvimport->init();
@@ -117,7 +117,7 @@ if ($importform->is_cancelled()) {
         $h = trim($h);
         $header[$i] = $h;
         if (!isset($required[$h]) && !isset($optionaldefaults[$h]) && !isset($optional[$h]) && !isset($customfieldnames[$h])) {
-            throw new \moodle_exception('invalidfieldname', 'error', $PAGE->url, $h);
+            throw new \moodle_exception('invalidfieldname', 'mod_error', $PAGE->url, $h);
         }
         if (isset($required[$h])) {
             $required[$h] = 2;
@@ -126,7 +126,7 @@ if ($importform->is_cancelled()) {
     // check for required fields
     foreach ($required as $key => $value) {
         if ($value < 2) {
-            throw new \moodle_exception('fieldrequired', 'error', $PAGE->url, $key);
+            throw new \moodle_exception('fieldrequired', 'mod_error', $PAGE->url, $key);
         }
     }
     $linenum = 2; // since header is line 1
@@ -147,7 +147,7 @@ if ($importform->is_cancelled()) {
             foreach ($record as $name => $value) {
                 // check for required values
                 if (isset($required[$name]) and !$value) {
-                    throw new \moodle_exception('missingfield', 'error', $PAGE->url, $name);
+                    throw new \moodle_exception('missingfield', 'mod_error', $PAGE->url, $name);
                 } else if ($name == "groupname") {
                     $newgroup->name = $value;
                 } else {
@@ -160,7 +160,7 @@ if ($importform->is_cancelled()) {
                 //if idnumber is set, we use that.
                 //unset invalid courseid
                 if (!$mycourse = $DB->get_record('course', array('idnumber'=>$newgroup->idnumber))) {
-                    echo $OUTPUT->notification(get_string('unknowncourseidnumber', 'error', $newgroup->idnumber));
+                    echo $OUTPUT->notification(get_string('unknowncourseidnumber', 'mod_error', $newgroup->idnumber));
                     unset($newgroup->courseid);//unset so 0 doesn't get written to database
                 } else {
                     $newgroup->courseid = $mycourse->id;
@@ -170,7 +170,7 @@ if ($importform->is_cancelled()) {
                 //else use course short name to look up
                 //unset invalid coursename (if no id)
                 if (!$mycourse = $DB->get_record('course', array('shortname' => $newgroup->coursename))) {
-                    echo $OUTPUT->notification(get_string('unknowncourse', 'error', $newgroup->coursename));
+                    echo $OUTPUT->notification(get_string('unknowncourse', 'mod_error', $newgroup->coursename));
                     unset($newgroup->courseid);//unset so 0 doesn't get written to database
                 } else {
                     $newgroup->courseid = $mycourse->id;
@@ -191,7 +191,7 @@ if ($importform->is_cancelled()) {
 
                 ///Users cannot upload groups in courses they cannot update.
                 if (!has_capability('moodle/course:managegroups', $newgrpcoursecontext) or (!is_enrolled($newgrpcoursecontext) and !has_capability('moodle/course:view', $newgrpcoursecontext))) {
-                    echo $OUTPUT->notification(get_string('nopermissionforcreation', 'group', $groupname));
+                    echo $OUTPUT->notification(get_string('nopermissionforcreation', 'core_group', $groupname));
 
                 } else {
                     if (isset($newgroup->groupidnumber)) {
@@ -205,7 +205,7 @@ if ($importform->is_cancelled()) {
                                 $existing->name = s($existing->name);
                                 $existing->idnumber = s($existing->idnumber);
                                 $existing->problemgroup = $groupname;
-                                echo $OUTPUT->notification(get_string('groupexistforcoursewithidnumber', 'error', $existing));
+                                echo $OUTPUT->notification(get_string('groupexistforcoursewithidnumber', 'mod_error', $existing));
                                 unset($newgroup->idnumber);
                             }
                         }
@@ -213,11 +213,11 @@ if ($importform->is_cancelled()) {
                         unset($newgroup->groupidnumber);
                     }
                     if ($groupid = groups_get_group_by_name($newgroup->courseid, $groupname)) {
-                        echo $OUTPUT->notification("$groupname :".get_string('groupexistforcourse', 'error', $groupname));
+                        echo $OUTPUT->notification("$groupname :".get_string('groupexistforcourse', 'mod_error', $groupname));
                     } else if ($groupid = groups_create_group($newgroup)) {
-                        echo $OUTPUT->notification(get_string('groupaddedsuccesfully', 'group', $groupname), 'notifysuccess');
+                        echo $OUTPUT->notification(get_string('groupaddedsuccesfully', 'core_group', $groupname), 'notifysuccess');
                     } else {
-                        echo $OUTPUT->notification(get_string('groupnotaddederror', 'error', $groupname));
+                        echo $OUTPUT->notification(get_string('groupnotaddederror', 'mod_error', $groupname));
                         continue;
                     }
 
@@ -235,9 +235,9 @@ if ($importform->is_cancelled()) {
                                 }
                             }
                             if ($groupingid = groups_create_grouping($data)) {
-                                echo $OUTPUT->notification(get_string('groupingaddedsuccesfully', 'group', $groupingname), 'notifysuccess');
+                                echo $OUTPUT->notification(get_string('groupingaddedsuccesfully', 'core_group', $groupingname), 'notifysuccess');
                             } else {
-                                echo $OUTPUT->notification(get_string('groupingnotaddederror', 'error', $groupingname));
+                                echo $OUTPUT->notification(get_string('groupingnotaddederror', 'mod_error', $groupingname));
                                 continue;
                             }
                         }
@@ -246,9 +246,9 @@ if ($importform->is_cancelled()) {
                         $a = array('groupname' => $groupname, 'groupingname' => $groupingname);
                         try {
                             groups_assign_grouping($groupingid, $groupid);
-                            echo $OUTPUT->notification(get_string('groupaddedtogroupingsuccesfully', 'group', $a), 'notifysuccess');
+                            echo $OUTPUT->notification(get_string('groupaddedtogroupingsuccesfully', 'core_group', $a), 'notifysuccess');
                         } catch (Exception $e) {
-                            echo $OUTPUT->notification(get_string('groupnotaddedtogroupingerror', 'error', $a));
+                            echo $OUTPUT->notification(get_string('groupnotaddedtogroupingerror', 'mod_error', $a));
                         }
 
                     }

@@ -41,7 +41,7 @@ class recording_protected extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_recording_protected', 'bigbluebuttonbn');
+        return get_string('event_recording_protected', 'mod_bigbluebuttonbn');
     }
 
     /**

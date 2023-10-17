@@ -75,7 +75,7 @@ class copy_form extends \moodleform {
         $copies = \copy_helper::get_copies($USER->id, $course->id);
         if (!empty($copies)) {
             $progresslink = new \moodle_url('/backup/copyprogress.php?', array('id' => $course->id));
-            $notificationmsg = get_string('copiesinprogress', 'backup', $progresslink->out());
+            $notificationmsg = get_string('copiesinprogress', 'core_backup', $progresslink->out());
             $notification = $OUTPUT->notification($notificationmsg, 'notifymessage');
             $mform->addElement('html', $notification);
         }
@@ -86,7 +86,7 @@ class copy_form extends \moodleform {
         $mform->setConstant('returnurl', $returnurl);
 
         // Form heading.
-        $mform->addElement('html', \html_writer::div(get_string('copycoursedesc', 'backup'), 'form-description mb-3'));
+        $mform->addElement('html', \html_writer::div(get_string('copycoursedesc', 'core_backup'), 'form-description mb-3'));
 
         // Course fullname.
         $mform->addElement('text', 'fullname', get_string('fullnamecourse'), 'maxlength="254" size="50"');
@@ -164,7 +164,7 @@ class copy_form extends \moodleform {
         }
 
         // Keep source course user data.
-        $mform->addElement('select', 'userdata', get_string('userdata', 'backup'),
+        $mform->addElement('select', 'userdata', get_string('userdata', 'core_backup'),
             [0 => get_string('no'), 1 => get_string('yes')]);
         $mform->setDefault('userdata', 0);
         $mform->addHelpButton('userdata', 'userdata', 'backup');
@@ -190,14 +190,14 @@ class copy_form extends \moodleform {
                     $role->localname, '', array('group' => 2), array(0, $role->id));
             }
 
-            $mform->addGroup($rolearray, 'rolearray', get_string('keptroles', 'backup'), ' ', false);
+            $mform->addGroup($rolearray, 'rolearray', get_string('keptroles', 'core_backup'), ' ', false);
             $mform->addHelpButton('rolearray', 'keptroles', 'backup');
             $this->add_checkbox_controller(2);
         }
 
         $buttonarray = array();
-        $buttonarray[] = $mform->createElement('submit', 'submitreturn', get_string('copyreturn', 'backup'));
-        $buttonarray[] = $mform->createElement('submit', 'submitdisplay', get_string('copyview', 'backup'));
+        $buttonarray[] = $mform->createElement('submit', 'submitreturn', get_string('copyreturn', 'core_backup'));
+        $buttonarray[] = $mform->createElement('submit', 'submitdisplay', get_string('copyview', 'core_backup'));
         $buttonarray[] = $mform->createElement('cancel');
         $mform->addGroup($buttonarray, 'buttonar', '', ' ', false);
 
@@ -224,13 +224,13 @@ class copy_form extends \moodleform {
         if (!empty($data['idnumber'])) {
             $courseidnumber = $DB->get_record('course', array('idnumber' => $data['idnumber']), 'fullname', IGNORE_MULTIPLE);
             if ($courseidnumber) {
-                $errors['idnumber'] = get_string('courseidnumbertaken', 'error', $courseidnumber->fullname);
+                $errors['idnumber'] = get_string('courseidnumbertaken', 'mod_error', $courseidnumber->fullname);
             }
         }
 
         // Validate the dates (make sure end isn't greater than start).
         if ($errorcode = course_validate_dates($data)) {
-            $errors['enddate'] = get_string($errorcode, 'error');
+            $errors['enddate'] = get_string($errorcode, 'mod_error');
         }
 
         return $errors;

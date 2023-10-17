@@ -106,13 +106,13 @@ class user_editadvanced_form extends moodleform {
             $mform->disabledIf('username', 'auth', 'in', $cannotchangeusername);
         }
 
-        $mform->addElement('selectgroups', 'auth', get_string('chooseauthmethod', 'auth'), $authoptions);
+        $mform->addElement('selectgroups', 'auth', get_string('chooseauthmethod', 'core_auth'), $authoptions);
         $mform->addHelpButton('auth', 'chooseauthmethod', 'auth');
 
-        $mform->addElement('advcheckbox', 'suspended', get_string('suspended', 'auth'));
+        $mform->addElement('advcheckbox', 'suspended', get_string('suspended', 'core_auth'));
         $mform->addHelpButton('suspended', 'suspended', 'auth');
 
-        $mform->addElement('checkbox', 'createpassword', get_string('createpassword', 'auth'));
+        $mform->addElement('checkbox', 'createpassword', get_string('createpassword', 'core_auth'));
         $mform->disabledIf('createpassword', 'auth', 'in', $cannotchangepass);
 
         if (!empty($CFG->passwordpolicy)) {
@@ -137,7 +137,7 @@ class user_editadvanced_form extends moodleform {
                 foreach ($tokens as $token) {
                     $services .= format_string($token->servicename) . ',';
                 }
-                $services = get_string('userservices', 'webservice', rtrim($services, ','));
+                $services = get_string('userservices', 'core_webservice', rtrim($services, ','));
                 $mform->addElement('advcheckbox', 'signoutofotherservices', get_string('signoutofotherservices'), $services);
                 $mform->addHelpButton('signoutofotherservices', 'signoutofotherservices');
                 $mform->disabledIf('signoutofotherservices', 'newpassword', 'eq', '');

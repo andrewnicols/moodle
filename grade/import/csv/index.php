@@ -52,7 +52,7 @@ $separatemode = (groups_get_course_groupmode($COURSE) == SEPARATEGROUPS and
 $currentgroup = groups_get_course_group($course);
 
 $actionbar = new \core_grades\output\import_action_bar($context, null, 'csv');
-print_grade_page_head($course->id, 'import', 'csv', get_string('importcsv', 'grades'), false, false, true,
+print_grade_page_head($course->id, 'import', 'csv', get_string('importcsv', 'core_grades'), false, false, true,
     'importcsv', 'grades', null, $actionbar);
 
 $renderer = $PAGE->get_renderer('gradeimport_csv');
@@ -121,7 +121,7 @@ if ($formdata = $mform2->get_data()) {
         grade_import_commit($course->id, $importcode);
     } else {
         $errors = $gradeimport->get_gradebookerrors();
-        $errors[] = get_string('importfailed', 'grades');
+        $errors[] = get_string('importfailed', 'core_grades');
         echo $renderer->errors($errors);
         echo $OUTPUT->continue_button(new moodle_url('/grade/import/csv/index.php', ['id' => $course->id]));
     }

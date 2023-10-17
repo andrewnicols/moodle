@@ -70,7 +70,7 @@ if (!$singlegroup) {
         case 'showgroupsettingsform':
         case 'showaddmembersform':
         case 'updatemembers':
-            throw new \moodle_exception('errorselectone', 'group', $returnurl);
+            throw new \moodle_exception('errorselectone', 'core_group', $returnurl);
     }
 }
 
@@ -120,7 +120,7 @@ switch ($action) {
 
     case 'deletegroup':
         if (count($groupids) == 0) {
-            throw new \moodle_exception('errorselectsome', 'group', $returnurl);
+            throw new \moodle_exception('errorselectsome', 'core_group', $returnurl);
         }
         $groupidlist = implode(',', $groupids);
         redirect(new moodle_url('/group/delete.php', array('courseid' => $courseid, 'groups' => $groupidlist)));
@@ -157,13 +157,13 @@ switch ($action) {
 
     case 'enablemessaging':
         set_groups_messaging($groupids, true);
-        redirect($returnurl, get_string('messagingenabled', 'group', count($groupids)), null,
+        redirect($returnurl, get_string('messagingenabled', 'core_group', count($groupids)), null,
             \core\output\notification::NOTIFY_SUCCESS);
         break;
 
     case 'disablemessaging':
         set_groups_messaging($groupids, false);
-        redirect($returnurl, get_string('messagingdisabled', 'group', count($groupids)), null,
+        redirect($returnurl, get_string('messagingdisabled', 'core_group', count($groupids)), null,
             \core\output\notification::NOTIFY_SUCCESS);
         break;
 

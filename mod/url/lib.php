@@ -258,7 +258,7 @@ function url_get_coursemodule_info($coursemodule) {
  * @param stdClass $currentcontext Current context of block
  */
 function url_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-url-*'=>get_string('page-mod-url-x', 'url'));
+    $module_pagetype = array('mod-url-*'=>get_string('page-mod-url-x', 'mod_url'));
     return $module_pagetype;
 }
 
@@ -305,7 +305,7 @@ function url_export_contents($cm, $baseurl) {
  */
 function url_dndupload_register() {
     return array('types' => array(
-                     array('identifier' => 'url', 'message' => get_string('createurl', 'url'))
+                     array('identifier' => 'url', 'message' => get_string('createurl', 'mod_url'))
                  ));
 }
 

@@ -1269,11 +1269,11 @@ class grouplib_test extends \advanced_testcase {
 
     public function test_groups_sort_menu_options_user_both() {
         $this->assertEquals(array(
-            1 => array(get_string('mygroups', 'group') => array(
+            1 => array(get_string('mygroups', 'core_group') => array(
                 100 => 'test group 100',
                 101 => 'test group 101',
             )),
-            2 => array(get_string('othergroups', 'group') => array(
+            2 => array(get_string('othergroups', 'core_group') => array(
                 102 => 'test group 102',
                 103 => 'test group 103',
             )),
@@ -1282,11 +1282,11 @@ class grouplib_test extends \advanced_testcase {
 
     public function test_groups_sort_menu_options_user_both_many_groups() {
         $this->assertEquals(array(
-            1 => array(get_string('mygroups', 'group') => array(
+            1 => array(get_string('mygroups', 'core_group') => array(
                 100 => 'test group 100',
                 101 => 'test group 101',
             )),
-            2 => array (get_string('othergroups', 'group') => array(
+            2 => array (get_string('othergroups', 'core_group') => array(
                 102 => 'test group 102',
                 103 => 'test group 103',
                 104 => 'test group 104',

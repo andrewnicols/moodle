@@ -69,10 +69,10 @@ class view_sessions extends external_api {
             'end'   => $end,
         ]);
         if (!$cm = get_coursemodule_from_id('chat', $cmid)) {
-            throw new \moodle_exception('invalidcoursemodule', 'error');
+            throw new \moodle_exception('invalidcoursemodule', 'mod_error');
         }
         if (!$chat = $DB->get_record('chat', ['id' => $cm->instance])) {
-            throw new \moodle_exception('invalidcoursemodule', 'error');
+            throw new \moodle_exception('invalidcoursemodule', 'mod_error');
         }
 
         $context = \context_module::instance($cm->id);
@@ -96,7 +96,7 @@ class view_sessions extends external_api {
             $warnings[] = [
                 'item'        => $cm->id,
                 'warningcode' => 'nopermissiontoseethechatlog',
-                'message'     => get_string('nopermissiontoseethechatlog', 'chat')
+                'message'     => get_string('nopermissiontoseethechatlog', 'mod_chat')
             ];
         }
 

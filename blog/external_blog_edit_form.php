@@ -36,24 +36,24 @@ class blog_edit_external_form extends moodleform {
 
         $mform =& $this->_form;
 
-        $mform->addElement('url', 'url', get_string('url', 'blog'), array('size' => 60), array('usefilepicker' => false));
+        $mform->addElement('url', 'url', get_string('url', 'core_blog'), array('size' => 60), array('usefilepicker' => false));
         $mform->setType('url', PARAM_URL);
-        $mform->addRule('url', get_string('emptyurl', 'blog'), 'required', null, 'client');
+        $mform->addRule('url', get_string('emptyurl', 'core_blog'), 'required', null, 'client');
         $mform->addHelpButton('url', 'url', 'blog');
 
-        $mform->addElement('text', 'name', get_string('name', 'blog'));
+        $mform->addElement('text', 'name', get_string('name', 'core_blog'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addHelpButton('name', 'name', 'blog');
 
-        $mform->addElement('textarea', 'description', get_string('description', 'blog'), array('cols' => 50, 'rows' => 7));
+        $mform->addElement('textarea', 'description', get_string('description', 'core_blog'), array('cols' => 50, 'rows' => 7));
         $mform->addHelpButton('description', 'description', 'blog');
 
         // To filter external blogs by their tags we do not need to check if tags in moodle are enabled.
-        $mform->addElement('text', 'filtertags', get_string('filtertags', 'blog'), array('size' => 50));
+        $mform->addElement('text', 'filtertags', get_string('filtertags', 'core_blog'), array('size' => 50));
         $mform->setType('filtertags', PARAM_TAGLIST);
         $mform->addHelpButton('filtertags', 'filtertags', 'blog');
 
-        $mform->addElement('tags', 'autotags', get_string('autotags', 'blog'),
+        $mform->addElement('tags', 'autotags', get_string('autotags', 'core_blog'),
                 array('itemtype' => 'blog_external', 'component' => 'core'));
         $mform->addHelpButton('autotags', 'autotags', 'blog');
 
@@ -83,11 +83,11 @@ class blog_edit_external_form extends moodleform {
         $filetest = $rss->registry->create('Locator', array($rssfile));
 
         if (!$filetest->is_feed($rssfile)) {
-            $errors['url'] = get_string('feedisinvalid', 'blog');
+            $errors['url'] = get_string('feedisinvalid', 'core_blog');
         } else {
             $rss->set_feed_url($data['url']);
             if (!$rss->init()) {
-                $errors['url'] = get_string('emptyrssfeed', 'blog');
+                $errors['url'] = get_string('emptyrssfeed', 'core_blog');
             }
         }
 

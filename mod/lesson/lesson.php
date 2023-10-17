@@ -54,63 +54,63 @@ $lessonoutput = $PAGE->get_renderer('mod_lesson');
 /// Process the action
 switch ($action) {
     case 'confirmdelete':
-        $PAGE->navbar->add(get_string($action, 'lesson'));
+        $PAGE->navbar->add(get_string($action, 'mod_lesson'));
 
         $thispage = $lesson->load_page($pageid);
 
-        echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('deletingpage', 'lesson', format_string($thispage->title)));
-        echo $OUTPUT->heading(get_string("deletingpage", "lesson", format_string($thispage->title)));
+        echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('deletingpage', 'mod_lesson', format_string($thispage->title)));
+        echo $OUTPUT->heading(get_string("deletingpage", 'mod_lesson', format_string($thispage->title)));
         // print the jumps to this page
         $params = array("lessonid" => $lesson->id, "pageid" => $pageid);
         if ($answers = $DB->get_records_select("lesson_answers", "lessonid = :lessonid AND jumpto = :pageid + 1", $params)) {
-            echo $OUTPUT->heading(get_string("thefollowingpagesjumptothispage", "lesson"));
+            echo $OUTPUT->heading(get_string("thefollowingpagesjumptothispage", 'mod_lesson'));
             echo "<p align=\"center\">\n";
             foreach ($answers as $answer) {
                 if (!$title = $DB->get_field("lesson_pages", "title", array("id" => $answer->pageid))) {
-                    throw new \moodle_exception('cannotfindpagetitle', 'lesson');
+                    throw new \moodle_exception('cannotfindpagetitle', 'mod_lesson');
                 }
                 echo $title."<br />\n";
             }
         }
-        echo $OUTPUT->confirm(get_string("confirmdeletionofthispage","lesson"),"lesson.php?action=delete&id=$cm->id&pageid=$pageid","view.php?id=$cm->id");
+        echo $OUTPUT->confirm(get_string("confirmdeletionofthispage",'mod_lesson'),"lesson.php?action=delete&id=$cm->id&pageid=$pageid","view.php?id=$cm->id");
 
         break;
     case 'move':
-        $PAGE->navbar->add(get_string($action, 'lesson'));
+        $PAGE->navbar->add(get_string($action, 'mod_lesson'));
 
         $title = $DB->get_field("lesson_pages", "title", array("id" => $pageid));
 
-        echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('moving', 'lesson', format_String($title)));
+        echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('moving', 'mod_lesson', format_String($title)));
         $headinglevel = $PAGE->activityheader->get_heading_level();
-        echo $OUTPUT->heading(get_string("moving", "lesson", format_string($title)), $headinglevel);
+        echo $OUTPUT->heading(get_string("moving", 'mod_lesson', format_string($title)), $headinglevel);
 
         $params = array ("lessonid" => $lesson->id, "prevpageid" => 0);
         if (!$page = $DB->get_record_select("lesson_pages", "lessonid = :lessonid AND prevpageid = :prevpageid", $params)) {
-            throw new \moodle_exception('cannotfindfirstpage', 'lesson');
+            throw new \moodle_exception('cannotfindfirstpage', 'mod_lesson');
         }
 
         echo html_writer::start_tag('div', array('class' => 'move-page'));
 
         echo html_writer::start_tag('div', array('class' => 'available-position'));
         $moveurl = "lesson.php?id=$cm->id&sesskey=".sesskey()."&action=moveit&pageid=$pageid&after=0";
-        echo html_writer::link($moveurl, get_string("movepagehere", "lesson"));
+        echo html_writer::link($moveurl, get_string("movepagehere", 'mod_lesson'));
         echo html_writer::end_tag('div');
 
         while (true) {
             if ($page->id != $pageid) {
                 if (!$title = trim(format_string($page->title))) {
-                    $title = "<< ".get_string("notitle", "lesson")."  >>";
+                    $title = "<< ".get_string("notitle", 'mod_lesson')."  >>";
                 }
                 echo html_writer::tag('div', $title, array('class' => 'page'));
 
                 echo html_writer::start_tag('div', array('class' => 'available-position'));
                 $moveurl = "lesson.php?id=$cm->id&sesskey=".sesskey()."&action=moveit&pageid=$pageid&after={$page->id}";
-                echo html_writer::link($moveurl, get_string("movepagehere", "lesson"));
+                echo html_writer::link($moveurl, get_string("movepagehere", 'mod_lesson'));
                 echo html_writer::end_tag('div');
             }
             if ($page->nextpageid) {
                 if (!$page = $DB->get_record("lesson_pages", array("id" => $page->nextpageid))) {
-                    throw new \moodle_exception('cannotfindnextpage', 'lesson');
+                    throw new \moodle_exception('cannotfindnextpage', 'mod_lesson');
                 }
             } else {
                 // last page reached

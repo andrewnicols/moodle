@@ -163,7 +163,7 @@ class manager {
                 $license->shortname = $data->shortname;
             } else {
                 if (empty(license_manager::get_license_by_shortname($licenseshortname))) {
-                    throw new \moodle_exception('licensenotfoundshortname', 'license',
+                    throw new \moodle_exception('licensenotfoundshortname', 'mod_license',
                         helper::get_licensemanager_url(),
                         $licenseshortname);
                 }

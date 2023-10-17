@@ -31,7 +31,7 @@ class h5p_clean_orphaned_records_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskh5pcleanup', 'admin');
+        return get_string('taskh5pcleanup', 'core_admin');
     }
 
     /**

@@ -169,7 +169,7 @@ class badges extends system_report {
             new pix_icon('t/show', '', 'core'),
             [],
             false,
-            new lang_string('activate', 'badges')
+            new lang_string('activate', 'core_badges')
         ))->add_callback(static function(stdclass $row): bool {
             $badge = new \core_badges\badge($row->id);
 
@@ -194,7 +194,7 @@ class badges extends system_report {
             new pix_icon('t/hide', '', 'core'),
             [],
             false,
-            new lang_string('deactivate', 'badges')
+            new lang_string('deactivate', 'core_badges')
         ))->add_callback(static function(stdclass $row): bool {
             $badge = new \core_badges\badge($row->id);
             return has_capability('moodle/badges:configuredetails', $badge->get_context()) &&
@@ -210,7 +210,7 @@ class badges extends system_report {
             new pix_icon('t/award', '', 'core'),
             [],
             false,
-            new lang_string('award', 'badges')
+            new lang_string('award', 'core_badges')
         ))->add_callback(static function(stdclass $row): bool {
             $badge = new \core_badges\badge($row->id);
             return has_capability('moodle/badges:awardbadge', $badge->get_context()) &&
@@ -244,7 +244,7 @@ class badges extends system_report {
             new pix_icon('t/copy', '', 'core'),
             [],
             false,
-            new lang_string('copy', 'badges')
+            new lang_string('copy', 'core_badges')
         ))->add_callback(static function(stdclass $row): bool {
             $context = self::get_badge_context((int)$row->type, (int)$row->courseid);
             return has_capability('moodle/badges:createbadge', $context);

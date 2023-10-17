@@ -74,7 +74,7 @@ class qbank_action_menu implements templatable, renderable {
     public function export_for_template(renderer_base $output): array {
         $questionslink = new moodle_url('/question/edit.php', $this->currenturl->params());
         $menu = [
-            $questionslink->out(false) => get_string('questions', 'question'),
+            $questionslink->out(false) => get_string('questions', 'core_question'),
         ];
         $plugins = \core_component::get_plugin_list_with_class('qbank', 'plugin_feature', 'plugin_feature.php');
         foreach ($plugins as $componentname => $pluginfeaturesclass) {
@@ -102,7 +102,7 @@ class qbank_action_menu implements templatable, renderable {
         }
 
         $urlselect = new url_select($menu, $this->currenturl->out(false), null, 'questionbankaction');
-        $urlselect->set_label(get_string('questionbanknavigation', 'question'), ['class' => 'accesshide']);
+        $urlselect->set_label(get_string('questionbanknavigation', 'core_question'), ['class' => 'accesshide']);
 
         return [
             'questionbankselect' => $urlselect->export_for_template($output),

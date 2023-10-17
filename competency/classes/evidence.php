@@ -177,7 +177,7 @@ class evidence extends persistent {
      */
     protected function validate_actionuserid($value) {
         if ($value !== null && !\core_user::is_real_user($value)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }
@@ -193,7 +193,7 @@ class evidence extends persistent {
             context::instance_by_id($value);
         } catch (moodle_exception $e) {
             // That does not look good...
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }
@@ -211,7 +211,7 @@ class evidence extends persistent {
 
         $desc = json_decode($value);
         if ($desc === null && json_last_error() !== JSON_ERROR_NONE) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;
@@ -278,7 +278,7 @@ class evidence extends persistent {
      */
     protected function validate_usercompetencyid($value) {
         if (!user_competency::record_exists($value)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }

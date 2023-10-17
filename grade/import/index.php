@@ -31,7 +31,7 @@ $PAGE->set_url(new moodle_url('/grade/import/index.php', ['id' => $courseid]));
 
 // Basic access checks.
 if (!$course = $DB->get_record('course', ['id' => $courseid])) {
-    throw new moodle_exception('invalidcourseid', 'error');
+    throw new moodle_exception('invalidcourseid', 'mod_error');
 }
 require_login($course);
 $context = context_course::instance($courseid);
@@ -52,12 +52,12 @@ if (!empty($importplugins)) {
 }
 
 // Otherwise, output the page with a notification stating that there are no available grade import options.
-$PAGE->set_title(get_string('import', 'grades'));
+$PAGE->set_title(get_string('import', 'core_grades'));
 $PAGE->set_pagelayout('incourse');
 $PAGE->set_heading($course->fullname);
 $PAGE->set_pagetype('course-view-' . $course->format);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('import', 'grades'));
-echo html_writer::div($OUTPUT->notification(get_string('nogradeimport', 'grades'), 'error'), 'mt-3');
+echo $OUTPUT->heading(get_string('import', 'core_grades'));
+echo html_writer::div($OUTPUT->notification(get_string('nogradeimport', 'core_grades'), 'error'), 'mt-3');
 echo $OUTPUT->footer();

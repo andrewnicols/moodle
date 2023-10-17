@@ -39,8 +39,8 @@ $event = \mod_folder\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strfolder       = get_string('modulename', 'folder');
-$strfolders      = get_string('modulenameplural', 'folder');
+$strfolder       = get_string('modulename', 'mod_folder');
+$strfolders      = get_string('modulenameplural', 'mod_folder');
 $strname         = get_string('name');
 $strintro        = get_string('moduleintro');
 $strlastmodified = get_string('lastmodified');

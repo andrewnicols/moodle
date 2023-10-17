@@ -62,7 +62,7 @@ class related_competency extends persistent {
      */
     protected function validate_competencyid($data) {
         if (!competency::record_exists($data)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }
@@ -77,18 +77,18 @@ class related_competency extends persistent {
 
         if ($this->get('competencyid') == $data) {
             // A competency cannot be related to itself.
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
 
         } if ($this->get('competencyid') > $data) {
             // The competency ID must be lower than the related competency ID.
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
 
         } else if (!competency::record_exists($data)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
 
         } else if (!competency::share_same_framework(array($data, $this->get('competencyid')))) {
             // The competencies must belong to the same framework.
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;

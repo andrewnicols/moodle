@@ -45,7 +45,7 @@ $context = context_user::instance($USER->id);
 
 $PAGE->set_context($context);
 $PAGE->set_url($url);
-$title = get_string('badges', 'badges');
+$title = get_string('badges', 'core_badges');
 $PAGE->set_title($title);
 $PAGE->set_heading(fullname($USER));
 $PAGE->set_pagelayout('standard');

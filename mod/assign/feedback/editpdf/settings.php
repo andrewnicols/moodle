@@ -40,8 +40,8 @@ $settings->add($setting);
 
 // Ghostscript setting.
 $systempathslink = new moodle_url('/admin/settings.php', array('section' => 'systempaths'));
-$systempathlink = html_writer::link($systempathslink, get_string('systempaths', 'admin'));
-$settings->add(new admin_setting_heading('pathtogs', get_string('pathtogs', 'admin'),
+$systempathlink = html_writer::link($systempathslink, get_string('systempaths', 'core_admin'));
+$settings->add(new admin_setting_heading('pathtogs', get_string('pathtogs', 'core_admin'),
         get_string('pathtogspathdesc', 'assignfeedback_editpdf', $systempathlink)));
 
 $url = new moodle_url('/mod/assign/feedback/editpdf/testgs.php');

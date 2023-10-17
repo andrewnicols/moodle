@@ -76,7 +76,7 @@ class big_search_form implements renderable, templatable {
         $this->showfullwords = $DB->get_dbfamily() == 'mysql' || $DB->get_dbfamily() == 'postgres';
         $this->actionurl = new moodle_url('/mod/forum/search.php');
 
-        $forumoptions = ['' => get_string('allforums', 'forum')] + forum_menu_list($course);
+        $forumoptions = ['' => get_string('allforums', 'mod_forum')] + forum_menu_list($course);
         $this->forumoptions = array_map(function($option) use ($forumoptions) {
             return [
                 'value' => $option,
@@ -207,7 +207,7 @@ class big_search_form implements renderable, templatable {
         $typenewtags = ($tagtypestoshow != \core_tag_tag::STANDARD_ONLY);
 
         $PAGE->requires->js_call_amd('core/form-autocomplete', 'enhance', $params = array('#tags', $typenewtags, '',
-                              get_string('entertags', 'tag'), false, $showstandard, get_string('noselection', 'form')));
+                              get_string('entertags', 'core_tag'), false, $showstandard, get_string('noselection', 'core_form')));
 
         $data->tagsenabled = \core_tag_tag::is_enabled('mod_forum', 'forum_posts');
         $namefield = empty($CFG->keeptagnamecase) ? 'name' : 'rawname';

@@ -60,7 +60,7 @@ class user_loggedinas extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventuserloggedinas', 'auth');
+        return get_string('eventuserloggedinas', 'core_auth');
     }
 
     /**

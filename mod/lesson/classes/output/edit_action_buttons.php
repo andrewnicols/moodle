@@ -84,7 +84,7 @@ class edit_action_buttons implements templatable, renderable {
                 'edit'     => 1,
                 'returnto' => $PAGE->url->out_as_local_url(false)
             ]);
-            $editcontent = new single_button($url, get_string('editpagecontent', 'lesson'));
+            $editcontent = new single_button($url, get_string('editpagecontent', 'mod_lesson'));
             $data['editcontents']['button'] = $editcontent->export_for_template($output);
         }
 

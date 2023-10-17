@@ -121,7 +121,7 @@ if ($submission->id and ($ownsubmission or $canviewall or $isreviewer)) {
 } elseif (is_null($submission->id) and $cansubmit) {
     // ok you can go
 } else {
-    throw new \moodle_exception('nopermissions', 'error', $workshop->view_url(), 'view or create submission');
+    throw new \moodle_exception('nopermissions', 'mod_error', $workshop->view_url(), 'view or create submission');
 }
 
 if ($submission->id) {
@@ -180,25 +180,25 @@ $PAGE->activityheader->set_attrs([
     'description' => ''
 ]);
 if ($edit) {
-    $PAGE->navbar->add(get_string('mysubmission', 'workshop'), $workshop->submission_url(), navigation_node::TYPE_CUSTOM);
-    $PAGE->navbar->add(get_string('editingsubmission', 'workshop'));
+    $PAGE->navbar->add(get_string('mysubmission', 'mod_workshop'), $workshop->submission_url(), navigation_node::TYPE_CUSTOM);
+    $PAGE->navbar->add(get_string('editingsubmission', 'mod_workshop'));
 } elseif ($ownsubmission) {
-    $PAGE->navbar->add(get_string('mysubmission', 'workshop'));
+    $PAGE->navbar->add(get_string('mysubmission', 'mod_workshop'));
 } else {
-    $PAGE->navbar->add(get_string('submission', 'workshop'));
+    $PAGE->navbar->add(get_string('submission', 'mod_workshop'));
 }
 
 // Output starts here
 $output = $PAGE->get_renderer('mod_workshop');
 echo $output->header();
-echo $output->heading(get_string('mysubmission', 'workshop'), 3);
+echo $output->heading(get_string('mysubmission', 'mod_workshop'), 3);
 
 // show instructions for submitting as thay may contain some list of questions and we need to know them
 // while reading the submitted answer
 if (trim($workshop->instructauthors)) {
     $instructions = file_rewrite_pluginfile_urls($workshop->instructauthors, 'pluginfile.php', $PAGE->context->id,
         'mod_workshop', 'instructauthors', null, workshop::instruction_editors_options($PAGE->context));
-    print_collapsible_region_start('', 'workshop-viewlet-instructauthors', get_string('instructauthors', 'workshop'),
+    print_collapsible_region_start('', 'workshop-viewlet-instructauthors', get_string('instructauthors', 'mod_workshop'),
             'workshop-viewlet-instructauthors-collapsed');
     echo $output->box(format_text($instructions, $workshop->instructauthorsformat, array('overflowdiv'=>true)), array('generalbox', 'instructions'));
     print_collapsible_region_end();
@@ -218,11 +218,11 @@ if ($edit) {
 
 // Confirm deletion (if requested).
 if ($deletable and $delete) {
-    $prompt = get_string('submissiondeleteconfirm', 'workshop');
+    $prompt = get_string('submissiondeleteconfirm', 'mod_workshop');
     if ($candeleteall) {
         $count = count($workshop->get_assessments_of_submission($submission->id));
         if ($count > 0) {
-            $prompt = get_string('submissiondeleteconfirmassess', 'workshop', ['count' => $count]);
+            $prompt = get_string('submissiondeleteconfirmassess', 'mod_workshop', ['count' => $count]);
         }
     }
     echo $output->confirm($prompt, new moodle_url($PAGE->url, ['delete' => 1, 'confirm' => 1]), $workshop->view_url());
@@ -238,7 +238,7 @@ if ($submission->id) {
     }
     echo $output->render($workshop->prepare_submission($submission, $showauthor));
 } else {
-    echo $output->box(get_string('noyoursubmission', 'workshop'));
+    echo $output->box(get_string('noyoursubmission', 'mod_workshop'));
 }
 
 // If not at removal confirmation screen, some action buttons can be displayed.
@@ -247,10 +247,10 @@ if (!$delete) {
     if ($editable) {
         if ($submission->id) {
             $btnurl = new moodle_url($PAGE->url, array('edit' => 'on', 'id' => $submission->id));
-            $btntxt = get_string('editsubmission', 'workshop');
+            $btntxt = get_string('editsubmission', 'mod_workshop');
         } else {
             $btnurl = new moodle_url($PAGE->url, array('edit' => 'on'));
-            $btntxt = get_string('createsubmission', 'workshop');
+            $btntxt = get_string('createsubmission', 'mod_workshop');
         }
         echo $output->box($output->single_button($btnurl, $btntxt, 'get'), 'mr-1 inline');
     }
@@ -258,13 +258,13 @@ if (!$delete) {
     // Display delete button.
     if ($submission->id and $deletable) {
         $url = new moodle_url($PAGE->url, array('delete' => 1));
-        echo $output->box($output->single_button($url, get_string('deletesubmission', 'workshop'), 'get'), 'mr-1 inline');
+        echo $output->box($output->single_button($url, get_string('deletesubmission', 'mod_workshop'), 'get'), 'mr-1 inline');
     }
 
     // Display assess button.
     if ($submission->id and !$edit and !$isreviewer and $canallocate and $workshop->assessing_allowed($USER->id)) {
         $url = new moodle_url($PAGE->url, array('assess' => 1));
-        echo $output->box($output->single_button($url, get_string('assess', 'workshop'), 'post'), 'mr-1 inline');
+        echo $output->box($output->single_button($url, get_string('assess', 'mod_workshop'), 'post'), 'mr-1 inline');
     }
 }
 
@@ -287,17 +287,17 @@ if ($isreviewer) {
         'showweight'    => true,
     );
     $assessment = $workshop->prepare_assessment($userassessment, $mform, $options);
-    $assessment->title = get_string('assessmentbyyourself', 'workshop');
+    $assessment->title = get_string('assessmentbyyourself', 'mod_workshop');
 
     if ($workshop->assessing_allowed($USER->id)) {
         if (is_null($userassessment->grade)) {
-            $assessment->add_action($workshop->assess_url($assessment->id), get_string('assess', 'workshop'));
+            $assessment->add_action($workshop->assess_url($assessment->id), get_string('assess', 'mod_workshop'));
         } else {
-            $assessment->add_action($workshop->assess_url($assessment->id), get_string('reassess', 'workshop'));
+            $assessment->add_action($workshop->assess_url($assessment->id), get_string('reassess', 'mod_workshop'));
         }
     }
     if ($canoverride) {
-        $assessment->add_action($workshop->assess_url($assessment->id), get_string('assessmentsettings', 'workshop'));
+        $assessment->add_action($workshop->assess_url($assessment->id), get_string('assessmentsettings', 'mod_workshop'));
     }
 
     echo $output->render($assessment);
@@ -332,7 +332,7 @@ if (has_capability('mod/workshop:viewallassessments', $workshop->context) or ($o
         );
         $displayassessment = $workshop->prepare_assessment($assessment, $mform, $options);
         if ($canoverride) {
-            $displayassessment->add_action($workshop->assess_url($assessment->id), get_string('assessmentsettings', 'workshop'));
+            $displayassessment->add_action($workshop->assess_url($assessment->id), get_string('assessmentsettings', 'mod_workshop'));
         }
         echo $output->render($displayassessment);
 
@@ -363,7 +363,7 @@ if (!empty($CFG->enableportfolios)) {
             ), 'mod_workshop');
             $button->set_formats(PORTFOLIO_FORMAT_RICHHTML);
             echo html_writer::start_tag('div', array('class' => 'singlebutton'));
-            echo $button->to_html(PORTFOLIO_ADD_FULL_FORM, get_string('exportsubmission', 'workshop'));
+            echo $button->to_html(PORTFOLIO_ADD_FULL_FORM, get_string('exportsubmission', 'mod_workshop'));
             echo html_writer::end_tag('div');
         }
     }

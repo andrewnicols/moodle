@@ -156,7 +156,7 @@ class cache_config_testing extends cache_config_writer {
                 if ($directory !== $CFG->dataroot && !file_exists($directory)) {
                     $result = make_writable_directory($directory, false);
                     if (!$result) {
-                        throw new cache_exception('ex_configcannotsave', 'cache', '', null, 'Cannot create config directory. Check the permissions on your moodledata directory.');
+                        throw new cache_exception('ex_configcannotsave', 'core_cache', '', null, 'Cannot create config directory. Check the permissions on your moodledata directory.');
                     }
                 }
                 // We don't care that this fails but we should let the developer know.

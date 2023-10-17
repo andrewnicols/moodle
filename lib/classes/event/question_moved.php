@@ -57,7 +57,7 @@ class question_moved extends question_base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventquestionmoved', 'question');
+        return get_string('eventquestionmoved', 'core_question');
     }
 
     /**

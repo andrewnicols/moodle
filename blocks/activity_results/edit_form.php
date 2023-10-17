@@ -46,7 +46,7 @@ class block_activity_results_edit_form extends block_edit_form {
         $blockconfig = get_config('block_activity_results');
 
         // Fields for editing activity_results block title and contents.
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'core_block'));
 
         // Get supported modules (Only modules using grades or scales will be listed).
         $sql = 'SELECT id, itemname FROM {grade_items} WHERE courseid = ? and itemtype = ? and (gradetype = ? or gradetype = ?)';

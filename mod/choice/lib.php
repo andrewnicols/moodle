@@ -101,7 +101,7 @@ function choice_user_complete($course, $user, $mod, $choice) {
             $info[] = "'" . format_string(choice_get_option_text($choice, $answer->optionid)) . "'";
         }
         core_collator::asort($info);
-        echo get_string("answered", "choice") . ": ". join(', ', $info) . ". " .
+        echo get_string("answered", 'mod_choice') . ": ". join(', ', $info) . ". " .
                 get_string("updated", '', userdate($answer->timemodified));
     } else {
         print_string("notanswered", "choice");
@@ -508,7 +508,7 @@ function choice_show_reportlink($user, $cm) {
     $responsecount = count(array_unique($userschosen));
 
     echo '<div class="reportlink">';
-    echo "<a href=\"report.php?id=$cm->id\">".get_string("viewallresponses", "choice", $responsecount)."</a>";
+    echo "<a href=\"report.php?id=$cm->id\">".get_string("viewallresponses", 'mod_choice', $responsecount)."</a>";
     echo '</div>';
 }
 
@@ -662,7 +662,7 @@ function choice_get_option_text($choice, $id) {
     if ($result = $DB->get_record("choice_options", array("id" => $id))) {
         return $result->text;
     } else {
-        return get_string("notanswered", "choice");
+        return get_string("notanswered", 'mod_choice');
     }
 }
 
@@ -1365,7 +1365,7 @@ function mod_choice_core_calendar_get_event_action_string(string $eventtype): st
             $identifier = 'calendarend';
             break;
         default:
-            return get_string('requiresaction', 'calendar', $modulename);
+            return get_string('requiresaction', 'core_calendar', $modulename);
     }
 
     return get_string($identifier, 'mod_choice', $modulename);

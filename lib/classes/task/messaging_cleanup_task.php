@@ -34,7 +34,7 @@ class messaging_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskmessagingcleanup', 'admin');
+        return get_string('taskmessagingcleanup', 'core_admin');
     }
 
     /**

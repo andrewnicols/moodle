@@ -79,17 +79,17 @@ class general_action_bar_test extends advanced_testcase {
                 get_string('pluginname', 'gradereport_summary'),
                 get_string('pluginname', 'gradereport_user'),
             ],
-            get_string('setup', 'grades') => [
-                get_string('gradebooksetup', 'grades'),
-                get_string('coursegradesettings', 'grades'),
-                get_string('preferences', 'grades') . ': ' . get_string('pluginname', 'gradereport_grader'),
+            get_string('setup', 'core_grades') => [
+                get_string('gradebooksetup', 'core_grades'),
+                get_string('coursegradesettings', 'core_grades'),
+                get_string('preferences', 'core_grades') . ': ' . get_string('pluginname', 'gradereport_grader'),
             ],
             get_string('moremenu') => [
                 get_string('scales'),
-                get_string('outcomes', 'grades'),
-                get_string('gradeletters', 'grades'),
-                get_string('import', 'grades'),
-                get_string('export', 'grades'),
+                get_string('outcomes', 'core_grades'),
+                get_string('gradeletters', 'core_grades'),
+                get_string('import', 'core_grades'),
+                get_string('export', 'core_grades'),
             ],
         ];
 
@@ -165,18 +165,18 @@ class general_action_bar_test extends advanced_testcase {
         $userpluginname = get_string('pluginname', 'gradereport_user');
 
         $viewstr = get_string('view');
-        $setupstr = get_string('setup', 'grades');
+        $setupstr = get_string('setup', 'core_grades');
         $morestr = get_string('moremenu');
 
-        $gradebooksetupstr = get_string('gradebooksetup', 'grades');
-        $coursegradesettingsstr = get_string('coursegradesettings', 'grades');
-        $graderpreferencesstr = get_string('preferences', 'grades') . ': ' . get_string('pluginname', 'gradereport_grader');
+        $gradebooksetupstr = get_string('gradebooksetup', 'core_grades');
+        $coursegradesettingsstr = get_string('coursegradesettings', 'core_grades');
+        $graderpreferencesstr = get_string('preferences', 'core_grades') . ': ' . get_string('pluginname', 'gradereport_grader');
 
         $scalesstr = get_string('scales');
-        $outcomesstr = get_string('outcomes', 'grades');
-        $gradelettersstr = get_string('gradeletters', 'grades');
-        $importstr = get_string('import', 'grades');
-        $exportstr = get_string('export', 'grades');
+        $outcomesstr = get_string('outcomes', 'core_grades');
+        $gradelettersstr = get_string('gradeletters', 'core_grades');
+        $importstr = get_string('import', 'core_grades');
+        $exportstr = get_string('export', 'core_grades');
 
         return [
             'Gradebook general navigation for admin; outcomes disabled.' => [

@@ -53,7 +53,7 @@ class virus_infected_data_detected extends \core\event\base {
         if (isset($this->other['incidentdetails'])) {
             return format_text($this->other['incidentdetails'], FORMAT_MOODLE);
         } else {
-            return get_string('datainfecteddesc', 'antivirus');
+            return get_string('datainfecteddesc', 'core_antivirus');
         }
     }
 
@@ -64,7 +64,7 @@ class virus_infected_data_detected extends \core\event\base {
      * @throws \coding_exception
      */
     public static function get_name() {
-        return get_string('datainfectedname', 'antivirus');
+        return get_string('datainfectedname', 'core_antivirus');
     }
 
     /**

@@ -118,8 +118,8 @@ function report_completion_can_access_user_report($user, $course) {
  */
 function report_completion_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $array = array(
-        '*'                       => get_string('page-x', 'pagetype'),
-        'report-*'                => get_string('page-report-x', 'pagetype'),
+        '*'                       => get_string('page-x', 'mod_pagetype'),
+        'report-*'                => get_string('page-report-x', 'mod_pagetype'),
         'report-completion-*'     => get_string('page-report-completion-x',  'report_completion'),
         'report-completion-index' => get_string('page-report-completion-index',  'report_completion'),
         'report-completion-user'  => get_string('page-report-completion-user',  'report_completion')

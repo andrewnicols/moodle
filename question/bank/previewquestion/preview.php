@@ -97,19 +97,19 @@ if ($previewid) {
     } catch (Exception $e) {
         // This may not seem like the right error message to display, but
         // actually from the user point of view, it makes sense.
-        throw new moodle_exception('submissionoutofsequencefriendlymessage', 'question',
+        throw new moodle_exception('submissionoutofsequencefriendlymessage', 'core_question',
                 helper::question_preview_url($question->id, $options->behaviour,
                         $options->maxmark, $options, $options->variant, $context, null, $restartversion), null, $e);
     }
 
     if ($quba->get_owning_context()->instanceid != $USER->id) {
-        throw new moodle_exception('notyourpreview', 'question');
+        throw new moodle_exception('notyourpreview', 'core_question');
     }
 
     $slot = $quba->get_first_question_number();
     $usedquestion = $quba->get_question($slot, false);
     if ($usedquestion->id != $question->id) {
-        throw new moodle_exception('questionidmismatch', 'question');
+        throw new moodle_exception('questionidmismatch', 'core_question');
     }
     $question = $usedquestion;
     $options->variant = $quba->get_variant($slot);
@@ -206,7 +206,7 @@ if (data_submitted() && confirm_sesskey()) {
         }
 
     } catch (question_out_of_sequence_exception $e) {
-        throw new moodle_exception('submissionoutofsequencefriendlymessage', 'question', $actionurl);
+        throw new moodle_exception('submissionoutofsequencefriendlymessage', 'core_question', $actionurl);
 
     } catch (Exception $e) {
         // This sucks, if we display our own custom error message, there is no way
@@ -215,7 +215,7 @@ if (data_submitted() && confirm_sesskey()) {
         if (!empty($e->debuginfo)) {
             $debuginfo = $e->debuginfo;
         }
-        throw new moodle_exception('errorprocessingresponses', 'question', $actionurl,
+        throw new moodle_exception('errorprocessingresponses', 'core_question', $actionurl,
                 $e->getMessage(), $debuginfo);
     }
 }
@@ -243,18 +243,18 @@ if (!$previewid) {
 // Prepare technical info to be output.
 $qa = $quba->get_question_attempt($slot);
 $technical = [];
-$technical[] = get_string('behaviourbeingused', 'question',
+$technical[] = get_string('behaviourbeingused', 'core_question',
         question_engine::get_behaviour_name($qa->get_behaviour_name()));
-$technical[] = get_string('technicalinfominfraction', 'question', $qa->get_min_fraction());
-$technical[] = get_string('technicalinfomaxfraction', 'question', $qa->get_max_fraction());
-$technical[] = get_string('technicalinfovariant', 'question', $qa->get_variant());
-$technical[] = get_string('technicalinfoquestionsummary', 'question', s($qa->get_question_summary()));
-$technical[] = get_string('technicalinforightsummary', 'question', s($qa->get_right_answer_summary()));
-$technical[] = get_string('technicalinforesponsesummary', 'question', s($qa->get_response_summary()));
-$technical[] = get_string('technicalinfostate', 'question', '' . $qa->get_state());
+$technical[] = get_string('technicalinfominfraction', 'core_question', $qa->get_min_fraction());
+$technical[] = get_string('technicalinfomaxfraction', 'core_question', $qa->get_max_fraction());
+$technical[] = get_string('technicalinfovariant', 'core_question', $qa->get_variant());
+$technical[] = get_string('technicalinfoquestionsummary', 'core_question', s($qa->get_question_summary()));
+$technical[] = get_string('technicalinforightsummary', 'core_question', s($qa->get_right_answer_summary()));
+$technical[] = get_string('technicalinforesponsesummary', 'core_question', s($qa->get_response_summary()));
+$technical[] = get_string('technicalinfostate', 'core_question', '' . $qa->get_state());
 
 // Start output.
-$title = get_string('previewquestion', 'question', format_string($question->name));
+$title = get_string('previewquestion', 'core_question', format_string($question->name));
 $headtags = question_engine::initialise_js() . $quba->render_question_head_html($slot);
 $PAGE->set_title($title);
 $PAGE->set_heading($title);
@@ -290,7 +290,7 @@ $previewdata['restartdisabled'] = html_writer::attributes($restartdisabled);
 $previewdata['finishdisabled'] = html_writer::attributes($finishdisabled);
 $previewdata['filldisabled'] = html_writer::attributes($filldisabled);
 // Output the technical info.
-$previewdata['techinfo'] = print_collapsible_region_start('', 'techinfo', get_string('technicalinfo', 'question'),
+$previewdata['techinfo'] = print_collapsible_region_start('', 'techinfo', get_string('technicalinfo', 'core_question'),
         'core_question_preview_techinfo_collapsed', true, true, $OUTPUT->help_icon('technicalinfo', 'question'));
 foreach ($technical as $info) {
     $previewdata['techinfo'] .= html_writer::tag('p', $info, ['class' => 'notifytiny']);

@@ -36,7 +36,7 @@ $PAGE->set_pagelayout('incourse');
 $PAGE->set_url('/mod/workshop/index.php', array('id' => $course->id));
 $PAGE->set_title($course->fullname);
 $PAGE->set_heading($course->shortname);
-$PAGE->navbar->add(get_string('modulenameplural', 'workshop'));
+$PAGE->navbar->add(get_string('modulenameplural', 'mod_workshop'));
 
 /// Output starts here
 
@@ -50,8 +50,8 @@ $event->trigger();
 /// Get all the appropriate data
 
 if (! $workshops = get_all_instances_in_course('workshop', $course)) {
-    echo $OUTPUT->heading(get_string('modulenameplural', 'workshop'));
-    notice(get_string('noworkshops', 'workshop'), new moodle_url('/course/view.php', array('id' => $course->id)));
+    echo $OUTPUT->heading(get_string('modulenameplural', 'mod_workshop'));
+    notice(get_string('noworkshops', 'mod_workshop'), new moodle_url('/course/view.php', array('id' => $course->id)));
     echo $OUTPUT->footer();
     die();
 }
@@ -86,6 +86,6 @@ foreach ($workshops as $workshop) {
         $table->data[] = array($link);
     }
 }
-echo $OUTPUT->heading(get_string('modulenameplural', 'workshop'), 3);
+echo $OUTPUT->heading(get_string('modulenameplural', 'mod_workshop'), 3);
 echo html_writer::table($table);
 echo $OUTPUT->footer();

@@ -236,7 +236,7 @@ class feedback_item_multichoice extends feedback_item_base {
             }
             $chart = new \core\chart_bar();
             $chart->set_horizontal(true);
-            $series = new \core\chart_series(format_string(get_string("responses", "feedback")), $data['series']);
+            $series = new \core\chart_series(format_string(get_string("responses", 'mod_feedback')), $data['series']);
             $series->set_labels($data['series_labels']);
             $chart->add_series($series);
             $chart->set_labels($data['labels']);
@@ -298,7 +298,7 @@ class feedback_item_multichoice extends feedback_item_base {
             $options[$idx + 1] = format_text($optiontext, FORMAT_HTML, array('noclean' => true, 'para' => false));
         }
         if ($info->subtype === 'r' && !$this->hidenoselect($item)) {
-            $options = array(0 => get_string('not_selected', 'feedback')) + $options;
+            $options = array(0 => get_string('not_selected', 'mod_feedback')) + $options;
         }
 
         return $options;

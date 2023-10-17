@@ -63,7 +63,7 @@ class portfolio extends base {
             $instance = portfolio_instance($plugin->id);
             $oldvalue = $instance->get('visible');
             if (empty($oldvalue) && $instance->instance_sanity_check()) {
-                throw new \moodle_exception('cannotsetvisible', 'portfolio');
+                throw new \moodle_exception('cannotsetvisible', 'core_portfolio');
             }
 
             // Only set visibility if it's different from the current value.

@@ -117,7 +117,7 @@ class qformat_default {
      */
     protected function validate_is_utf8_file(stored_file $file): string {
         if (!mb_check_encoding($file->get_content(), "UTF-8")) {
-            return get_string('importwrongfileencoding', 'question',  $this->get_name());
+            return get_string('importwrongfileencoding', 'core_question',  $this->get_name());
         }
         return '';
     }
@@ -267,7 +267,7 @@ class qformat_default {
      * Handle parsing error
      */
     protected function error($message, $text='', $questionname='') {
-        $importerrorquestion = get_string('importerrorquestion', 'question');
+        $importerrorquestion = get_string('importerrorquestion', 'core_question');
 
         echo "<div class=\"importerror\">\n";
         echo "<strong>{$importerrorquestion} {$questionname}</strong>";
@@ -342,28 +342,28 @@ class qformat_default {
 
         // STAGE 1: Parse the file
         if ($this->displayprogress) {
-            echo $OUTPUT->notification(get_string('parsingquestions', 'question'), 'notifysuccess');
+            echo $OUTPUT->notification(get_string('parsingquestions', 'core_question'), 'notifysuccess');
         }
 
         if (! $lines = $this->readdata($this->filename)) {
-            echo $OUTPUT->notification(get_string('cannotread', 'question'));
+            echo $OUTPUT->notification(get_string('cannotread', 'core_question'));
             return false;
         }
 
         if (!$questions = $this->readquestions($lines)) {   // Extract all the questions
-            echo $OUTPUT->notification(get_string('noquestionsinfile', 'question'));
+            echo $OUTPUT->notification(get_string('noquestionsinfile', 'core_question'));
             return false;
         }
 
         // STAGE 2: Write data to database
         if ($this->displayprogress) {
-            echo $OUTPUT->notification(get_string('importingquestions', 'question',
+            echo $OUTPUT->notification(get_string('importingquestions', 'core_question',
                     $this->count_questions($questions)), 'notifysuccess');
         }
 
         // check for errors before we continue
         if ($this->stoponerror and ($this->importerrors>0)) {
-            echo $OUTPUT->notification(get_string('importparseerror', 'question'));
+            echo $OUTPUT->notification(get_string('importparseerror', 'core_question'));
             return true;
         }
 
@@ -388,7 +388,7 @@ class qformat_default {
                     }
                 }
                 if ($invalidfractions) {
-                    echo $OUTPUT->notification(get_string('invalidgrade', 'question',
+                    echo $OUTPUT->notification(get_string('invalidgrade', 'core_question',
                             implode(', ', $invalidfractions)));
                     ++$gradeerrors;
                     continue;
@@ -1030,7 +1030,7 @@ class qformat_default {
 
         // did we actually process anything
         if ($count==0) {
-            throw new \moodle_exception('noquestions', 'question', $continuepath);
+            throw new \moodle_exception('noquestions', 'core_question', $continuepath);
         }
 
         // final pre-process on exported data
@@ -1067,7 +1067,7 @@ class qformat_default {
         global $DB;
 
         if (!$category = $DB->get_record('question_categories', array('id' => $id))) {
-            throw new \moodle_exception('cannotfindcategory', 'error', '', $id);
+            throw new \moodle_exception('cannotfindcategory', 'mod_error', '', $id);
         }
         $contextstring = $this->translator->context_to_string($category->contextid);
 

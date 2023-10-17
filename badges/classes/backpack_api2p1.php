@@ -270,7 +270,7 @@ class backpack_api2p1 {
         $response = $this->curl_request('post.assertions', $data);
         if ($response && isset($response->status->statusCode) && $response->status->statusCode == 200) {
             $msg['status'] = \core\output\notification::NOTIFY_SUCCESS;
-            $msg['message'] = get_string('addedtobackpack', 'badges');
+            $msg['message'] = get_string('addedtobackpack', 'core_badges');
         } else {
             if ($response) {
                 // Although the specification defines that status error is a string, some providers, like Badgr, are wrongly
@@ -299,7 +299,7 @@ class backpack_api2p1 {
             ];
 
             $msg['status'] = \core\output\notification::NOTIFY_ERROR;
-            $msg['message'] = get_string('backpackexporterrorwithinfo', 'badges', $data);
+            $msg['message'] = get_string('backpackexporterrorwithinfo', 'core_badges', $data);
         }
         return $msg;
     }

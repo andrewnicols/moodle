@@ -52,7 +52,7 @@ class context_locked extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventcontextlocked', 'access');
+        return get_string('eventcontextlocked', 'mod_access');
     }
 
     /**

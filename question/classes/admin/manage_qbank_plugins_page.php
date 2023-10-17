@@ -40,7 +40,7 @@ class manage_qbank_plugins_page extends \admin_setting {
     public function __construct() {
         $this->nosave = true;
         parent::__construct('manageqbanks',
-                new \lang_string('manageqbanks', 'admin'), '', '');
+                new \lang_string('manageqbanks', 'core_admin'), '', '');
     }
 
     public function get_setting(): bool {
@@ -77,7 +77,7 @@ class manage_qbank_plugins_page extends \admin_setting {
         $pluginmanager = \core_plugin_manager::instance();
         $types = $pluginmanager->get_plugins_of_type('qbank');
         if (empty($types)) {
-            return get_string('noquestionbanks', 'question');
+            return get_string('noquestionbanks', 'core_question');
         }
         $txt = get_strings(['settings', 'name', 'enable', 'disable', 'default']);
         $txt->uninstall = get_string('uninstallplugin', 'core_admin');

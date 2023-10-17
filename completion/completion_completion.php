@@ -178,12 +178,12 @@ class completion_completion extends data_object {
 
         // Notify user.
         $course = get_course($data->course);
-        $messagesubject = get_string('coursecompleted', 'completion');
+        $messagesubject = get_string('coursecompleted', 'core_completion');
         $a = [
             'coursename' => get_course_display_name_for_list($course),
             'courselink' => (string) new moodle_url('/course/view.php', array('id' => $course->id)),
         ];
-        $messagebody = get_string('coursecompletedmessage', 'completion', $a);
+        $messagebody = get_string('coursecompletedmessage', 'core_completion', $a);
         $messageplaintext = html_to_text($messagebody);
 
         $eventdata = new \core\message\message();

@@ -187,19 +187,19 @@ class provider implements
             $ccompletion = new \completion_completion(['userid' => $user->id, 'course' => $course->id]);
 
             if (!$criteriacomplete && !$ccompletion->timestarted) {
-                $status = get_string('notyetstarted', 'completion');
+                $status = get_string('notyetstarted', 'core_completion');
             } else {
-                $status = get_string('inprogress', 'completion');
+                $status = get_string('inprogress', 'core_completion');
             }
         }
 
         $completions = $completioninfo->get_completions($user->id);
-        $overall = get_string('nocriteriaset', 'completion');
+        $overall = get_string('nocriteriaset', 'core_completion');
         if (!empty($completions)) {
             if ($completioninfo->get_aggregation_method() == COMPLETION_AGGREGATION_ALL) {
-                $overall = get_string('criteriarequiredall', 'completion');
+                $overall = get_string('criteriarequiredall', 'core_completion');
             } else {
-                $overall = get_string('criteriarequiredany', 'completion');
+                $overall = get_string('criteriarequiredany', 'core_completion');
             }
         }
 
@@ -211,8 +211,8 @@ class provider implements
         $coursecompletiondata['criteria'] = array_map(function($completion) use ($completioninfo) {
             $criteria = $completion->get_criteria();
             $aggregation = $completioninfo->get_aggregation_method($criteria->criteriatype);
-            $required = ($aggregation == COMPLETION_AGGREGATION_ALL) ? get_string('all', 'completion') :
-                    get_string('any', 'completion');
+            $required = ($aggregation == COMPLETION_AGGREGATION_ALL) ? get_string('all', 'core_completion') :
+                    get_string('any', 'core_completion');
             $data = [
                 'required' => $required,
                 'completed' => transform::yesno($completion->is_complete()),

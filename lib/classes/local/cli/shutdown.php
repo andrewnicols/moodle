@@ -68,11 +68,11 @@ class shutdown {
     public static function signal_handler(int $signo): bool {
 
         if (self::$cligracefulexit) {
-            cli_heading(get_string('cliexitnow', 'admin'));
+            cli_heading(get_string('cliexitnow', 'core_admin'));
             return true;
         }
 
-        cli_heading(get_string('cliexitgraceful', 'admin'));
+        cli_heading(get_string('cliexitgraceful', 'core_admin'));
         self::$cligracefulexit = true;
         return false;
     }

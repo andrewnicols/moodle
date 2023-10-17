@@ -1544,7 +1544,7 @@ class completionlib_test extends advanced_testcase {
         $this->assertEquals(core_user::get_noreply_user()->id, $message->useridfrom);
         $this->assertEquals($this->user->id, $message->useridto);
         $this->assertEquals('coursecompleted', $message->eventtype);
-        $this->assertEquals(get_string('coursecompleted', 'completion'), $message->subject);
+        $this->assertEquals(get_string('coursecompleted', 'core_completion'), $message->subject);
         $this->assertStringContainsString($this->course->fullname, $message->fullmessage);
     }
 

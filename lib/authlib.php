@@ -139,7 +139,7 @@ class auth_plugin_base {
      * @return bool Authentication success or failure.
      */
     function user_login($username, $password) {
-        throw new \moodle_exception('mustbeoveride', 'debug', '', 'user_login()' );
+        throw new \moodle_exception('mustbeoveride', 'mod_debug', '', 'user_login()' );
     }
 
     /**
@@ -308,7 +308,7 @@ class auth_plugin_base {
      */
     function user_signup($user, $notify=true) {
         //override when can signup
-        throw new \moodle_exception('mustbeoveride', 'debug', '', 'user_signup()' );
+        throw new \moodle_exception('mustbeoveride', 'mod_debug', '', 'user_signup()' );
     }
 
     /**
@@ -341,7 +341,7 @@ class auth_plugin_base {
      */
     function user_confirm($username, $confirmsecret) {
         //override when can confirm
-        throw new \moodle_exception('mustbeoveride', 'debug', '', 'user_confirm()' );
+        throw new \moodle_exception('mustbeoveride', 'mod_debug', '', 'user_confirm()' );
     }
 
     /**
@@ -656,8 +656,8 @@ class auth_plugin_base {
         // Get the current user record.
         $user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id));
         if (empty($user)) { // Trouble.
-            error_log($this->errorlogtag . get_string('auth_usernotexist', 'auth', $username));
-            throw new \moodle_exception('auth_usernotexist', 'auth', '', $username);
+            error_log($this->errorlogtag . get_string('auth_usernotexist', 'core_auth', $username));
+            throw new \moodle_exception('auth_usernotexist', 'core_auth', '', $username);
             die;
         }
 
@@ -1005,8 +1005,8 @@ function login_lock_account($user) {
         $data->link      = $CFG->wwwroot.'/login/unlock_account.php?u='.$user->id.'&s='.$secret;
         $data->admin     = generate_email_signoff();
 
-        $message = get_string('lockoutemailbody', 'admin', $data);
-        $subject = get_string('lockoutemailsubject', 'admin', format_string($site->fullname));
+        $message = get_string('lockoutemailbody', 'core_admin', $data);
+        $subject = get_string('lockoutemailsubject', 'core_admin', format_string($site->fullname));
 
         if ($message) {
             // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
@@ -1031,7 +1031,7 @@ function login_unlock_account($user, bool $notify = false) {
     unset_user_preference('login_failed_last', $user);
 
     if ($notify) {
-        $SESSION->logininfomsg = get_string('accountunlocked', 'admin');
+        $SESSION->logininfomsg = get_string('accountunlocked', 'core_admin');
     }
     // Note: do not clear the lockout secret because user might click on the link repeatedly.
 }
@@ -1255,19 +1255,19 @@ function display_auth_lock_options($settings, $auth, $userfields, $helptext, $ma
 
     // Introductory explanation and help text.
     if ($mapremotefields) {
-        $settings->add(new admin_setting_heading($auth.'/data_mapping', new lang_string('auth_data_mapping', 'auth'), $helptext));
+        $settings->add(new admin_setting_heading($auth.'/data_mapping', new lang_string('auth_data_mapping', 'core_auth'), $helptext));
     } else {
-        $settings->add(new admin_setting_heading($auth.'/auth_fieldlocks', new lang_string('auth_fieldlocks', 'auth'), $helptext));
+        $settings->add(new admin_setting_heading($auth.'/auth_fieldlocks', new lang_string('auth_fieldlocks', 'core_auth'), $helptext));
     }
 
     // Generate the list of options.
-    $lockoptions = array ('unlocked'        => get_string('unlocked', 'auth'),
-                          'unlockedifempty' => get_string('unlockedifempty', 'auth'),
-                          'locked'          => get_string('locked', 'auth'));
-    $updatelocaloptions = array('oncreate'  => get_string('update_oncreate', 'auth'),
-                                'onlogin'   => get_string('update_onlogin', 'auth'));
-    $updateextoptions = array('0'  => get_string('update_never', 'auth'),
-                              '1'  => get_string('update_onupdate', 'auth'));
+    $lockoptions = array ('unlocked'        => get_string('unlocked', 'core_auth'),
+                          'unlockedifempty' => get_string('unlockedifempty', 'core_auth'),
+                          'locked'          => get_string('locked', 'core_auth'));
+    $updatelocaloptions = array('oncreate'  => get_string('update_oncreate', 'core_auth'),
+                                'onlogin'   => get_string('update_onlogin', 'core_auth'));
+    $updateextoptions = array('0'  => get_string('update_never', 'core_auth'),
+                              '1'  => get_string('update_onupdate', 'core_auth'));
 
     // Generate the list of profile fields to allow updates / lock.
     if (!empty($customfields)) {
@@ -1303,31 +1303,31 @@ function display_auth_lock_options($settings, $auth, $userfields, $helptext, $ma
             $url = new moodle_url('/user/profile/index.php');
             $a = (object)['fieldname' => s($fieldname), 'shortname' => s($field), 'charlimit' => 67, 'link' => $url->out()];
             $settings->add(new admin_setting_heading($auth.'/field_not_mapped_'.sha1($field), '',
-                get_string('cannotmapfield', 'auth', $a)));
+                get_string('cannotmapfield', 'core_auth', $a)));
         } else if ($mapremotefields) {
             // We are mapping to a remote field here.
             // Mapping.
             $settings->add(new admin_setting_configtext("auth_{$auth}/field_map_{$field}",
-                    get_string('auth_fieldmapping', 'auth', $fieldname), '', '', PARAM_RAW, 30));
+                    get_string('auth_fieldmapping', 'core_auth', $fieldname), '', '', PARAM_RAW, 30));
 
             // Update local.
             $settings->add(new admin_setting_configselect("auth_{$auth}/field_updatelocal_{$field}",
-                    get_string('auth_updatelocalfield', 'auth', $fieldname), '', 'oncreate', $updatelocaloptions));
+                    get_string('auth_updatelocalfield', 'core_auth', $fieldname), '', 'oncreate', $updatelocaloptions));
 
             // Update remote.
             if ($updateremotefields) {
                     $settings->add(new admin_setting_configselect("auth_{$auth}/field_updateremote_{$field}",
-                        get_string('auth_updateremotefield', 'auth', $fieldname), '', 0, $updateextoptions));
+                        get_string('auth_updateremotefield', 'core_auth', $fieldname), '', 0, $updateextoptions));
             }
 
             // Lock fields.
             $settings->add(new admin_setting_configselect("auth_{$auth}/field_lock_{$field}",
-                    get_string('auth_fieldlockfield', 'auth', $fieldname), '', 'unlocked', $lockoptions));
+                    get_string('auth_fieldlockfield', 'core_auth', $fieldname), '', 'unlocked', $lockoptions));
 
         } else {
             // Lock fields Only.
             $settings->add(new admin_setting_configselect("auth_{$auth}/field_lock_{$field}",
-                    get_string('auth_fieldlockfield', 'auth', $fieldname), '', 'unlocked', $lockoptions));
+                    get_string('auth_fieldlockfield', 'core_auth', $fieldname), '', 'unlocked', $lockoptions));
         }
     }
 }

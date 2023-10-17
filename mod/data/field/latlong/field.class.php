@@ -80,9 +80,9 @@ class data_field_latlong extends data_field_base {
         $str .= '<fieldset><legend><span class="accesshide">'.$this->field->name.'</span></legend>';
         $str .= '<table class="form-inline"><tr><td align="right">';
         $classes = 'mod-data-input form-control-static';
-        $str .= '<label for="field_'.$this->field->id.'_0" class="' . $classes . '">' . get_string('latitude', 'data');
+        $str .= '<label for="field_'.$this->field->id.'_0" class="' . $classes . '">' . get_string('latitude', 'mod_data');
         if ($this->field->required) {
-            $str .= $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $str .= $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
         }
         $classes = 'form-control mx-1';
         $str .= '</label></td><td>';
@@ -91,9 +91,9 @@ class data_field_latlong extends data_field_base {
         $str .= s($lat).'" size="10" />°N</td></tr>';
         $classes = 'mod-data-input form-control-static';
         $str .= '<tr><td align="right"><label for="field_'.$this->field->id.'_1" class="' . $classes . '">';
-        $str .= get_string('longitude', 'data');
+        $str .= get_string('longitude', 'mod_data');
         if ($this->field->required) {
-            $str .= $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $str .= $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
         }
         $classes = 'form-control mx-1';
         $str .= '</label></td><td><input class="' . $classes . '" type="text" ';
@@ -128,9 +128,9 @@ class data_field_latlong extends data_field_base {
         $latlongsrs->close();
 
         $classes = array('class' => 'accesshide');
-        $return = html_writer::label(get_string('latlong', 'data'), 'menuf_'.$this->field->id, false, $classes);
+        $return = html_writer::label(get_string('latlong', 'mod_data'), 'menuf_'.$this->field->id, false, $classes);
         $classes = array('class' => 'custom-select');
-        $return .= html_writer::select($options, 'f_'.$this->field->id, $value, array('' => get_string('menuchoose', 'data')),
+        $return .= html_writer::select($options, 'f_'.$this->field->id, $value, array('' => get_string('menuchoose', 'mod_data')),
             $classes);
        return $return;
     }
@@ -322,7 +322,7 @@ class data_field_latlong extends data_field_base {
             return false;
         }
         // If we get here then only one field has been filled in.
-        return get_string('latlongboth', 'data');
+        return get_string('latlongboth', 'mod_data');
     }
 
     /**

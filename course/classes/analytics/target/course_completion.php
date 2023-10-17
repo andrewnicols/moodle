@@ -47,7 +47,7 @@ class course_completion extends course_enrolments {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:coursecompletion', 'course');
+        return new \lang_string('target:coursecompletion', 'core_course');
     }
 
     /**
@@ -57,8 +57,8 @@ class course_completion extends course_enrolments {
      */
     protected static function classes_description() {
         return array(
-            get_string('targetlabelstudentcompletionno', 'course'),
-            get_string('targetlabelstudentcompletionyes', 'course')
+            get_string('targetlabelstudentcompletionno', 'core_course'),
+            get_string('targetlabelstudentcompletionyes', 'core_course')
         );
     }
 
@@ -79,7 +79,7 @@ class course_completion extends course_enrolments {
         // Not a valid target if completion is not enabled or there are not completion criteria defined.
         $completion = new \completion_info($course->get_course_data());
         if (!$completion->is_enabled() || !$completion->has_criteria()) {
-            return get_string('completionnotenabledforcourse', 'completion');
+            return get_string('completionnotenabledforcourse', 'core_completion');
         }
 
         return true;

@@ -44,7 +44,7 @@ class lesson_page_type_endofbranch extends lesson_page {
     }
     public function get_typestring() {
         if ($this->string===null) {
-            $this->string = get_string($this->typeidstring, 'lesson');
+            $this->string = get_string($this->typeidstring, 'mod_lesson');
         }
         return $this->string;
     }
@@ -108,7 +108,7 @@ class lesson_page_type_endofbranch extends lesson_page {
         global $PAGE, $CFG;
         if ($previd != 0) {
             $addurl = new moodle_url('/mod/lesson/editpage.php', array('id'=>$PAGE->cm->id, 'pageid'=>$previd, 'sesskey'=>sesskey(), 'qtype'=>LESSON_PAGE_ENDOFBRANCH));
-            return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_ENDOFBRANCH, 'name'=>get_string('addanendofbranch', 'lesson'));
+            return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_ENDOFBRANCH, 'name'=>get_string('addanendofbranch', 'mod_lesson'));
         }
         return false;
     }
@@ -136,7 +136,7 @@ class lesson_add_page_form_endofbranch extends lesson_add_page_form_base {
         $mform->addElement('hidden', 'qtype');
         $mform->setType('qtype', PARAM_TEXT);
 
-        $mform->addElement('text', 'title', get_string("pagetitle", "lesson"), array('size'=>70));
+        $mform->addElement('text', 'title', get_string("pagetitle", 'mod_lesson'), array('size'=>70));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('title', PARAM_TEXT);
         } else {
@@ -144,7 +144,7 @@ class lesson_add_page_form_endofbranch extends lesson_add_page_form_base {
         }
 
         $this->editoroptions = array('noclean'=>true, 'maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$PAGE->course->maxbytes);
-        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", "lesson"), null, $this->editoroptions);
+        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", 'mod_lesson'), null, $this->editoroptions);
         $mform->setType('contents_editor', PARAM_RAW);
 
         $this->add_jumpto(0);
@@ -160,7 +160,7 @@ class lesson_add_page_form_endofbranch extends lesson_add_page_form_base {
 
         // the new page is not the first page (end of branch always comes after an existing page)
         if (!$page = $DB->get_record("lesson_pages", array("id" => $pageid))) {
-            throw new \moodle_exception('cannotfindpagerecord', 'lesson');
+            throw new \moodle_exception('cannotfindpagerecord', 'mod_lesson');
         }
         // chain back up to find the (nearest branch table)
         $btpage = clone($page);
@@ -168,7 +168,7 @@ class lesson_add_page_form_endofbranch extends lesson_add_page_form_base {
         while (($btpage->qtype != LESSON_PAGE_BRANCHTABLE) && ($btpage->prevpageid > 0)) {
             $btpageid = $btpage->prevpageid;
             if (!$btpage = $DB->get_record("lesson_pages", array("id" => $btpageid))) {
-                throw new \moodle_exception('cannotfindpagerecord', 'lesson');
+                throw new \moodle_exception('cannotfindpagerecord', 'mod_lesson');
             }
         }
 
@@ -179,8 +179,8 @@ class lesson_add_page_form_endofbranch extends lesson_add_page_form_base {
             $newpage->nextpageid = $page->nextpageid;
             $newpage->qtype = $this->qtype;
             $newpage->timecreated = $timenow;
-            $newpage->title = get_string("endofbranch", "lesson");
-            $newpage->contents = get_string("endofbranch", "lesson");
+            $newpage->title = get_string("endofbranch", 'mod_lesson');
+            $newpage->contents = get_string("endofbranch", 'mod_lesson');
             $newpageid = $DB->insert_record("lesson_pages", $newpage);
             // update the linked list...
             $DB->set_field("lesson_pages", "nextpageid", $newpageid, array("id" => $pageid));
@@ -195,9 +195,9 @@ class lesson_add_page_form_endofbranch extends lesson_add_page_form_base {
             $newanswer->timecreated = $timenow;
             $newanswer->jumpto = $btpageid;
             $newanswerid = $DB->insert_record("lesson_answers", $newanswer);
-            $lesson->add_message(get_string('addedanendofbranch', 'lesson'), 'notifysuccess');
+            $lesson->add_message(get_string('addedanendofbranch', 'mod_lesson'), 'notifysuccess');
         } else {
-            $lesson->add_message(get_string('nobranchtablefound', 'lesson'));
+            $lesson->add_message(get_string('nobranchtablefound', 'mod_lesson'));
         }
 
         redirect($CFG->wwwroot."/mod/lesson/edit.php?id=".$PAGE->cm->id);

@@ -40,15 +40,15 @@ if ($data = $form->get_data()) {
     // Valid request. Purge, and redirect the user back to where they came from.
     if (isset($data->all)) {
         purge_caches();
-        $message = get_string('purgecachesfinished', 'admin');
+        $message = get_string('purgecachesfinished', 'core_admin');
     } else {
         purge_caches($data->purgeselectedoptions);
-        $message = get_string('purgeselectedcachesfinished', 'admin');
+        $message = get_string('purgeselectedcachesfinished', 'core_admin');
     }
 
 } else if ($confirm && confirm_sesskey()) {
     purge_caches();
-    $message = get_string('purgecachesfinished', 'admin');
+    $message = get_string('purgecachesfinished', 'core_admin');
 }
 
 // Redirect and/or show notification message confirming cache(s) were purged.
@@ -64,10 +64,10 @@ if (isset($message)) {
 // Otherwise, show a form to actually purge the caches.
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('purgecachespage', 'admin'));
+echo $OUTPUT->heading(get_string('purgecachespage', 'core_admin'));
 
 echo $OUTPUT->box_start('generalbox', 'notice');
-echo html_writer::tag('p', get_string('purgecachesconfirm', 'admin'));
+echo html_writer::tag('p', get_string('purgecachesconfirm', 'core_admin'));
 echo $form->render();
 echo $OUTPUT->box_end();
 

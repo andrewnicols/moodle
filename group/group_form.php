@@ -49,9 +49,9 @@ class group_form extends moodleform {
         $editoroptions = $this->_customdata['editoroptions'];
         $group = $this->_customdata['group'];
 
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
-        $mform->addElement('text','name', get_string('groupname', 'group'),'maxlength="254" size="50"');
+        $mform->addElement('text','name', get_string('groupname', 'core_group'),'maxlength="254" size="50"');
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
         $mform->setType('name', PARAM_TEXT);
 
@@ -62,24 +62,24 @@ class group_form extends moodleform {
             $mform->hardFreeze('idnumber');
         }
 
-        $mform->addElement('editor', 'description_editor', get_string('groupdescription', 'group'), null, $editoroptions);
+        $mform->addElement('editor', 'description_editor', get_string('groupdescription', 'core_group'), null, $editoroptions);
         $mform->setType('description_editor', PARAM_RAW);
 
-        $mform->addElement('passwordunmask', 'enrolmentkey', get_string('enrolmentkey', 'group'), 'maxlength="254" size="24"', get_string('enrolmentkey', 'group'));
+        $mform->addElement('passwordunmask', 'enrolmentkey', get_string('enrolmentkey', 'core_group'), 'maxlength="254" size="24"', get_string('enrolmentkey', 'core_group'));
         $mform->addHelpButton('enrolmentkey', 'enrolmentkey', 'group');
         $mform->setType('enrolmentkey', PARAM_RAW);
 
         $visibilityoptions = [
-            GROUPS_VISIBILITY_ALL => get_string('visibilityall', 'group'),
-            GROUPS_VISIBILITY_MEMBERS => get_string('visibilitymembers', 'group'),
-            GROUPS_VISIBILITY_OWN => get_string('visibilityown', 'group'),
-            GROUPS_VISIBILITY_NONE => get_string('visibilitynone', 'group')
+            GROUPS_VISIBILITY_ALL => get_string('visibilityall', 'core_group'),
+            GROUPS_VISIBILITY_MEMBERS => get_string('visibilitymembers', 'core_group'),
+            GROUPS_VISIBILITY_OWN => get_string('visibilityown', 'core_group'),
+            GROUPS_VISIBILITY_NONE => get_string('visibilitynone', 'core_group')
         ];
-        $mform->addElement('select', 'visibility', get_string('visibility', 'group'), $visibilityoptions);
+        $mform->addElement('select', 'visibility', get_string('visibility', 'core_group'), $visibilityoptions);
         $mform->addHelpButton('visibility', 'visibility', 'group');
         $mform->setType('visibility', PARAM_INT);
 
-        $mform->addElement('advcheckbox', 'participation', '', get_string('participation', 'group'));
+        $mform->addElement('advcheckbox', 'participation', '', get_string('participation', 'core_group'));
         $mform->addHelpButton('participation', 'participation', 'group');
         $mform->setType('participation', PARAM_BOOL);
         $mform->setDefault('participation', 1);
@@ -87,7 +87,7 @@ class group_form extends moodleform {
 
         // Group conversation messaging.
         if (\core_message\api::can_create_group_conversation($USER->id, $coursecontext)) {
-            $mform->addElement('selectyesno', 'enablemessaging', get_string('enablemessaging', 'group'));
+            $mform->addElement('selectyesno', 'enablemessaging', get_string('enablemessaging', 'core_group'));
             $mform->addHelpButton('enablemessaging', 'enablemessaging', 'group');
             $mform->hideIf('enablemessaging', 'visibility', 'in', [GROUPS_VISIBILITY_OWN, GROUPS_VISIBILITY_NONE]);
         }
@@ -97,7 +97,7 @@ class group_form extends moodleform {
         $mform->addElement('checkbox', 'deletepicture', get_string('delete'));
         $mform->setDefault('deletepicture', 0);
 
-        $mform->addElement('filepicker', 'imagefile', get_string('newpicture', 'group'));
+        $mform->addElement('filepicker', 'imagefile', get_string('newpicture', 'core_group'));
         $mform->addHelpButton('imagefile', 'newpicture', 'group');
 
         $handler = \core_group\customfield\group_handler::create();
@@ -183,7 +183,7 @@ class group_form extends moodleform {
         if ($data['id'] and $group = $DB->get_record('groups', array('id'=>$data['id']))) {
             if (core_text::strtolower($group->name) != core_text::strtolower($name)) {
                 if (groups_get_group_by_name($COURSE->id,  $name)) {
-                    $errors['name'] = get_string('groupnameexists', 'group', $name);
+                    $errors['name'] = get_string('groupnameexists', 'core_group', $name);
                 }
             }
             if (!empty($idnumber) && $group->idnumber != $idnumber) {
@@ -203,13 +203,13 @@ class group_form extends moodleform {
                     $sql = "SELECT id FROM {groups} WHERE id <> :groupid AND courseid = :courseid AND enrolmentkey = :key";
                     $params = array('groupid' => $data['id'], 'courseid' => $COURSE->id, 'key' => $data['enrolmentkey']);
                     if ($DB->record_exists_sql($sql, $params)) {
-                        $errors['enrolmentkey'] = get_string('enrolmentkeyalreadyinuse', 'group');
+                        $errors['enrolmentkey'] = get_string('enrolmentkeyalreadyinuse', 'core_group');
                     }
                 }
             }
 
         } else if (groups_get_group_by_name($COURSE->id, $name)) {
-            $errors['name'] = get_string('groupnameexists', 'group', $name);
+            $errors['name'] = get_string('groupnameexists', 'core_group', $name);
         } else if (!empty($idnumber) && groups_get_group_by_idnumber($COURSE->id, $idnumber)) {
             $errors['idnumber']= get_string('idnumbertaken');
         } else if ($data['enrolmentkey'] != '') {
@@ -219,7 +219,7 @@ class group_form extends moodleform {
                 $errors['enrolmentkey'] = $errmsg;
             } else if ($DB->record_exists('groups', array('courseid' => $COURSE->id, 'enrolmentkey' => $data['enrolmentkey']))) {
                 // Prevent the same enrolment key from being used multiple times in course groups.
-                $errors['enrolmentkey'] = get_string('enrolmentkeyalreadyinuse', 'group');
+                $errors['enrolmentkey'] = get_string('enrolmentkeyalreadyinuse', 'core_group');
             }
         }
 

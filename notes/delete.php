@@ -33,7 +33,7 @@ if (!$course = $DB->get_record('course', array('id' => $note->courseid))) {
 require_login($course);
 
 if (empty($CFG->enablenotes)) {
-    throw new \moodle_exception('notesdisabled', 'notes');
+    throw new \moodle_exception('notesdisabled', 'core_notes');
 }
 
 if (!$user = $DB->get_record('user', array('id' => $note->userid))) {
@@ -43,7 +43,7 @@ if (!$user = $DB->get_record('user', array('id' => $note->userid))) {
 $context = context_course::instance($course->id);
 
 if (!has_capability('moodle/notes:manage', $context)) {
-    throw new \moodle_exception('nopermissiontodelete', 'notes');
+    throw new \moodle_exception('nopermissiontodelete', 'core_notes');
 }
 
 if (data_submitted() && confirm_sesskey()) {
@@ -54,7 +54,7 @@ if (data_submitted() && confirm_sesskey()) {
 
 } else {
     // If data was not submitted yet, then show note data with a delete confirmation form.
-    $strnotes = get_string('notes', 'notes');
+    $strnotes = get_string('notes', 'core_notes');
     $optionsyes = array('id' => $noteid, 'sesskey' => sesskey());
     $optionsno  = array('course' => $course->id, 'user' => $note->userid);
 
@@ -65,13 +65,13 @@ if (data_submitted() && confirm_sesskey()) {
     }
     $PAGE->navbar->add(get_string('participants'), $link);
     $PAGE->navbar->add(fullname($user), new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $course->id)));
-    $PAGE->navbar->add(get_string('notes', 'notes'),
+    $PAGE->navbar->add(get_string('notes', 'core_notes'),
                        new moodle_url('/notes/index.php', array('user' => $user->id, 'course' => $course->id)));
     $PAGE->navbar->add(get_string('delete'));
     $PAGE->set_title($course->shortname . ': ' . $strnotes);
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
-    echo $OUTPUT->confirm(get_string('deleteconfirm', 'notes'),
+    echo $OUTPUT->confirm(get_string('deleteconfirm', 'core_notes'),
                           new moodle_url('delete.php', $optionsyes),
                           new moodle_url('index.php', $optionsno));
     echo '<br />';

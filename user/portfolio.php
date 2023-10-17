@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../config.php');
 
 if (empty($CFG->enableportfolios)) {
-    throw new \moodle_exception('disabled', 'portfolio');
+    throw new \moodle_exception('disabled', 'core_portfolio');
 }
 
 require_once($CFG->libdir . '/portfoliolib.php');
@@ -46,13 +46,13 @@ if (! $course = $DB->get_record("course", array("id" => $courseid))) {
 
 $user = $USER;
 $fullname = fullname($user);
-$strportfolios = get_string('portfolios', 'portfolio');
-$configstr = get_string('manageyourportfolios', 'portfolio');
+$strportfolios = get_string('portfolios', 'core_portfolio');
+$configstr = get_string('manageyourportfolios', 'core_portfolio');
 $namestr = get_string('name');
-$pluginstr = get_string('plugin', 'portfolio');
+$pluginstr = get_string('plugin', 'core_portfolio');
 $baseurl = $CFG->wwwroot . '/user/portfolio.php';
-$introstr = get_string('intro', 'portfolio');
-$showhide = get_string('showhide', 'portfolio');
+$introstr = get_string('intro', 'core_portfolio');
+$showhide = get_string('showhide', 'core_portfolio');
 
 $display = true; // Set this to false in the conditions to stop processing.
 
@@ -81,11 +81,11 @@ if (!empty($config)) {
         // This branch is where you process validated data.
         $instance->set_user_config($fromform, $USER->id);
         core_plugin_manager::reset_caches();
-        redirect($baseurl, get_string('instancesaved', 'portfolio'), 3);
+        redirect($baseurl, get_string('instancesaved', 'core_portfolio'), 3);
 
         exit;
     } else {
-        echo $OUTPUT->heading(get_string('configplugin', 'portfolio'));
+        echo $OUTPUT->heading(get_string('configplugin', 'core_portfolio'));
         echo $OUTPUT->box_start();
         $mform->display();
         echo $OUTPUT->box_end();
@@ -105,7 +105,7 @@ if ($display) {
     echo html_writer::tag('p', $introstr);
 
     if (!$instances = portfolio_instances(true, false)) {
-        throw new \moodle_exception('noinstances', 'portfolio', $CFG->wwwroot . '/user/view.php');
+        throw new \moodle_exception('noinstances', 'core_portfolio', $CFG->wwwroot . '/user/view.php');
     }
 
     $table = new html_table();
@@ -120,7 +120,7 @@ if ($display) {
         if ($i->has_user_config()) {
             $configurl = new moodle_url($baseurl);
             $configurl->param('config', $i->get('id'));
-            $actions .= html_writer::link($configurl, $OUTPUT->pix_icon('t/edit', get_string('configure', 'portfolio')));
+            $actions .= html_writer::link($configurl, $OUTPUT->pix_icon('t/edit', get_string('configure', 'core_portfolio')));
         }
 
         // Hide/show icon.

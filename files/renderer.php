@@ -56,7 +56,7 @@ class core_files_renderer extends plugin_renderer_base {
 
         $html .= $this->output->box_start();
         $table = new html_table();
-        $table->head = array(get_string('name'), get_string('lastmodified'), get_string('size', 'repository'), get_string('type', 'repository'));
+        $table->head = array(get_string('name'), get_string('lastmodified'), get_string('size', 'core_repository'), get_string('type', 'core_repository'));
         $table->align = array('left', 'left', 'left', 'left');
         $table->width = '100%';
         $table->data = array();
@@ -226,7 +226,7 @@ class core_files_renderer extends plugin_renderer_base {
         $rv = '
 <div class="filemanager fp-mkdir-dlg" role="dialog" aria-live="assertive" aria-labelledby="fp-mkdir-dlg-title">
     <div class="fp-mkdir-dlg-text">
-        <label id="fp-mkdir-dlg-title">' . get_string('newfoldername', 'repository') . '</label><br/>
+        <label id="fp-mkdir-dlg-title">' . get_string('newfoldername', 'core_repository') . '</label><br/>
         <input type="text" class="form-control"/>
     </div>
     <button class="fp-dlg-butcreate btn-primary btn">'.get_string('makeafolder').'</button>
@@ -550,7 +550,7 @@ class core_files_renderer extends plugin_renderer_base {
 
         $iconcontext = new stdClass();
         $iconcontext->text = $helptext;
-        $iconcontext->alt = get_string('helpprefix2', 'moodle', get_string('chooselicense', 'repository'));
+        $iconcontext->alt = get_string('helpprefix2', 'moodle', get_string('chooselicense', 'core_repository'));
 
         return $iconcontext;
     }

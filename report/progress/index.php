@@ -192,7 +192,7 @@ if ($csv && $grandtotal && count($activities)>0) { // Only show CSV if there are
 
     // Navigation and header
     $strreports = get_string("reports");
-    $strcompletion = get_string('activitycompletion', 'completion');
+    $strcompletion = get_string('activitycompletion', 'core_completion');
 
     $PAGE->set_title($strcompletion);
     $PAGE->set_heading($course->fullname);
@@ -230,14 +230,14 @@ if ($csv && $grandtotal && count($activities)>0) { // Only show CSV if there are
 }
 
 if (count($activities)==0) {
-    echo $OUTPUT->container(get_string('err_noactivities', 'completion'), 'errorbox errorboxcontent');
+    echo $OUTPUT->container(get_string('err_noactivities', 'core_completion'), 'errorbox errorboxcontent');
     echo $OUTPUT->footer();
     exit;
 }
 
 // If no users in this course what-so-ever
 if (!$grandtotal) {
-    echo $OUTPUT->container(get_string('err_nousers', 'completion'), 'errorbox errorboxcontent');
+    echo $OUTPUT->container(get_string('err_nousers', 'core_completion'), 'errorbox errorboxcontent');
     echo $OUTPUT->footer();
     exit;
 }
@@ -407,16 +407,16 @@ foreach($progress as $user) {
 
         if ($overrideby) {
             $overridebyuser = \core_user::get_user($overrideby, '*', MUST_EXIST);
-            $describe = get_string('completion-' . $completiontype, 'completion', fullname($overridebyuser));
+            $describe = get_string('completion-' . $completiontype, 'core_completion', fullname($overridebyuser));
         } else {
-            $describe = get_string('completion-' . $completiontype, 'completion');
+            $describe = get_string('completion-' . $completiontype, 'core_completion');
         }
         $a=new StdClass;
         $a->state=$describe;
         $a->date=$date;
         $a->user = fullname($user, has_capability('moodle/site:viewfullnames', $context));
         $a->activity = $formattedactivities[$activity->id]->displayname;
-        $fulldescribe=get_string('progress-title','completion',$a);
+        $fulldescribe=get_string('progress-title','core_completion',$a);
 
         if ($csv) {
             if ($date != '') {

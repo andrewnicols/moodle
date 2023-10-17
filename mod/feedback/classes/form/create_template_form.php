@@ -41,14 +41,14 @@ class create_template_form extends dynamic_form {
 
         $mform->addElement('text',
             'templatename',
-            get_string('name', 'feedback'),
+            get_string('name', 'mod_feedback'),
             ['maxlength' => '200', 'size' => '50']);
         $mform->setType('templatename', PARAM_TEXT);
 
         if (has_capability('mod/feedback:createpublictemplate', context_system::instance())) {
             $mform->addElement('checkbox',
                 'ispublic', '',
-                get_string('public', 'feedback'));
+                get_string('public', 'mod_feedback'));
         }
     }
 

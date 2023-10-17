@@ -86,7 +86,7 @@ if (!empty($unprotect) && confirm_sesskey()) {
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading($strmanageblocks);
-echo $OUTPUT->notification(get_string('noteunneededblocks', 'admin'), 'info', false);
+echo $OUTPUT->notification(get_string('noteunneededblocks', 'core_admin'), 'info', false);
 
 // Print the table of all blocks.
 $table = new \core_admin\table\block_management_table();

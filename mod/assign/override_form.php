@@ -102,7 +102,7 @@ class assign_override_form extends moodleform {
         $accessallgroups = ($assigngroupmode == NOGROUPS) || has_capability('moodle/site:accessallgroups', $this->context);
 
         if ($this->groupmode) {
-            $mform->addElement('header', 'override', get_string('groupoverrides', 'assign'));
+            $mform->addElement('header', 'override', get_string('groupoverrides', 'mod_assign'));
             // Group override.
             if ($this->groupid) {
                 // There is already a groupid, so freeze the selector.
@@ -110,7 +110,7 @@ class assign_override_form extends moodleform {
                     $this->groupid => format_string(groups_get_group_name($this->groupid), true, $this->context),
                 ];
                 $mform->addElement('select', 'groupid',
-                        get_string('overridegroup', 'assign'), $groupchoices);
+                        get_string('overridegroup', 'mod_assign'), $groupchoices);
                 $mform->freeze('groupid');
                 // Add a sortorder element.
                 $mform->addElement('hidden', 'sortorder', $this->sortorder);
@@ -123,7 +123,7 @@ class assign_override_form extends moodleform {
                 if (empty($groups)) {
                     // Generate an error.
                     $link = new moodle_url('/mod/assign/overrides.php', array('cmid' => $cm->id));
-                    throw new \moodle_exception('groupsnone', 'assign', $link);
+                    throw new \moodle_exception('groupsnone', 'mod_assign', $link);
                 }
 
                 $groupchoices = array();
@@ -139,11 +139,11 @@ class assign_override_form extends moodleform {
                 }
 
                 $mform->addElement('select', 'groupid',
-                        get_string('overridegroup', 'assign'), $groupchoices);
+                        get_string('overridegroup', 'mod_assign'), $groupchoices);
                 $mform->addRule('groupid', get_string('required'), 'required', null, 'client');
             }
         } else {
-            $mform->addElement('header', 'override', get_string('useroverrides', 'assign'));
+            $mform->addElement('header', 'override', get_string('useroverrides', 'mod_assign'));
             // User override.
             if ($this->userid) {
                 // There is already a userid, so freeze the selector.
@@ -151,7 +151,7 @@ class assign_override_form extends moodleform {
                 $userchoices = array();
                 $userchoices[$this->userid] = fullname($user);
                 $mform->addElement('select', 'userid',
-                        get_string('overrideuser', 'assign'), $userchoices);
+                        get_string('overrideuser', 'mod_assign'), $userchoices);
                 $mform->freeze('userid');
             } else {
                 // Prepare the list of users.
@@ -176,7 +176,7 @@ class assign_override_form extends moodleform {
                 if (empty($users)) {
                     // Generate an error.
                     $link = new moodle_url('/mod/assign/overrides.php', array('cmid' => $cm->id));
-                    throw new \moodle_exception('usersnone', 'assign', $link);
+                    throw new \moodle_exception('usersnone', 'mod_assign', $link);
                 }
 
                 $userchoices = array();
@@ -198,7 +198,7 @@ class assign_override_form extends moodleform {
                     $userchoices[0] = get_string('none');
                 }
                 $mform->addElement('searchableselector', 'userid',
-                        get_string('overrideuser', 'assign'), $userchoices);
+                        get_string('overrideuser', 'mod_assign'), $userchoices);
                 $mform->addRule('userid', get_string('required'), 'required', null, 'client');
 
                 if ($inrelativedatesmode) {
@@ -220,7 +220,7 @@ class assign_override_form extends moodleform {
                     ];
                     $html = $OUTPUT->render_from_template('mod_assign/override_form_user_defaults', $templatecontext);
                 } else {
-                    $html = get_string('noselection', 'form');
+                    $html = get_string('noselection', 'core_form');
                 }
 
                 $groupelements = [];
@@ -248,34 +248,34 @@ class assign_override_form extends moodleform {
 
         // Open and close dates.
         $mform->addElement('date_time_selector', 'allowsubmissionsfromdate',
-            get_string('allowsubmissionsfromdate', 'assign'), array('optional' => true));
+            get_string('allowsubmissionsfromdate', 'mod_assign'), array('optional' => true));
         $mform->setDefault('allowsubmissionsfromdate', $assigninstance->allowsubmissionsfromdate);
 
-        $mform->addElement('date_time_selector', 'duedate', get_string('duedate', 'assign'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'duedate', get_string('duedate', 'mod_assign'), array('optional' => true));
         $mform->setDefault('duedate', $assigninstance->duedate);
 
-        $mform->addElement('date_time_selector', 'cutoffdate', get_string('cutoffdate', 'assign'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'cutoffdate', get_string('cutoffdate', 'mod_assign'), array('optional' => true));
         $mform->setDefault('cutoffdate', $assigninstance->cutoffdate);
 
         if (isset($assigninstance->extensionduedate)) {
-            $mform->addElement('static', 'extensionduedate', get_string('extensionduedate', 'assign'),
+            $mform->addElement('static', 'extensionduedate', get_string('extensionduedate', 'mod_assign'),
                 userdate($assigninstance->extensionduedate));
         }
 
         // Time limit.
         $mform->addElement('duration', 'timelimit',
-            get_string('timelimit', 'assign'), array('optional' => true));
+            get_string('timelimit', 'mod_assign'), array('optional' => true));
         $mform->setDefault('timelimit', $assigninstance->timelimit);
 
         // Submit buttons.
         $mform->addElement('submit', 'resetbutton',
-                get_string('reverttodefaults', 'assign'));
+                get_string('reverttodefaults', 'mod_assign'));
 
         $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'submitbutton',
-                get_string('save', 'assign'));
+                get_string('save', 'mod_assign'));
         $buttonarray[] = $mform->createElement('submit', 'againbutton',
-                get_string('saveoverrideandstay', 'assign'));
+                get_string('saveoverrideandstay', 'mod_assign'));
         $buttonarray[] = $mform->createElement('cancel');
 
         $mform->addGroup($buttonarray, 'buttonbar', '', array(' '), false);
@@ -312,31 +312,31 @@ class assign_override_form extends moodleform {
         // Ensure that the dates make sense.
         if (!empty($data['allowsubmissionsfromdate']) && !empty($data['cutoffdate'])) {
             if ($data['cutoffdate'] < $data['allowsubmissionsfromdate']) {
-                $errors['cutoffdate'] = get_string('cutoffdatefromdatevalidation', 'assign');
+                $errors['cutoffdate'] = get_string('cutoffdatefromdatevalidation', 'mod_assign');
             }
         }
 
         if (!empty($data['allowsubmissionsfromdate']) && !empty($data['duedate'])) {
             if ($data['duedate'] <= $data['allowsubmissionsfromdate']) {
-                $errors['duedate'] = get_string('duedateaftersubmissionvalidation', 'assign');
+                $errors['duedate'] = get_string('duedateaftersubmissionvalidation', 'mod_assign');
             }
         }
 
         if (!empty($data['cutoffdate']) && !empty($data['duedate'])) {
             if ($data['cutoffdate'] < $data['duedate'] ) {
-                $errors['cutoffdate'] = get_string('cutoffdatevalidation', 'assign');
+                $errors['cutoffdate'] = get_string('cutoffdatevalidation', 'mod_assign');
             }
         }
 
         // Ensure that override duedate/allowsubmissionsfromdate are before extension date if exist.
         if (!empty($assigninstance->extensionduedate) && !empty($data['duedate'])) {
             if ($assigninstance->extensionduedate < $data['duedate']) {
-                $errors['duedate'] = get_string('extensionnotafterduedate', 'assign');
+                $errors['duedate'] = get_string('extensionnotafterduedate', 'mod_assign');
             }
         }
         if (!empty($assigninstance->extensionduedate) && !empty($data['allowsubmissionsfromdate'])) {
             if ($assigninstance->extensionduedate < $data['allowsubmissionsfromdate']) {
-                $errors['allowsubmissionsfromdate'] = get_string('extensionnotafterfromdate', 'assign');
+                $errors['allowsubmissionsfromdate'] = get_string('extensionnotafterfromdate', 'mod_assign');
             }
         }
 
@@ -351,7 +351,7 @@ class assign_override_form extends moodleform {
         }
 
         if (!$changed) {
-            $errors['allowsubmissionsfromdate'] = get_string('nooverridedata', 'assign');
+            $errors['allowsubmissionsfromdate'] = get_string('nooverridedata', 'mod_assign');
         }
 
         return $errors;

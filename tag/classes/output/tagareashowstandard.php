@@ -54,9 +54,9 @@ class tagareashowstandard extends \core\output\inplace_editable {
                 null, $value, $edithint, $editlabel);
 
         $standardchoices = array(
-            core_tag_tag::BOTH_STANDARD_AND_NOT => get_string('standardsuggest', 'tag'),
-            core_tag_tag::STANDARD_ONLY => get_string('standardforce', 'tag'),
-            core_tag_tag::HIDE_STANDARD => get_string('standardhide', 'tag')
+            core_tag_tag::BOTH_STANDARD_AND_NOT => get_string('standardsuggest', 'core_tag'),
+            core_tag_tag::STANDARD_ONLY => get_string('standardforce', 'core_tag'),
+            core_tag_tag::HIDE_STANDARD => get_string('standardhide', 'core_tag')
         );
         $this->set_type_select($standardchoices);
     }

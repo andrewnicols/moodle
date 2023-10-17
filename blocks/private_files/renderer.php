@@ -36,7 +36,7 @@ class block_private_files_renderer extends plugin_renderer_base {
 
     public function render_private_files_tree(private_files_tree $tree) {
         if (empty($tree->dir['subdirs']) && empty($tree->dir['files'])) {
-            $html = $this->output->box(get_string('nofilesavailable', 'repository'));
+            $html = $this->output->box(get_string('nofilesavailable', 'core_repository'));
         } else {
             $htmlid = 'private_files_tree_'.uniqid();
             $this->page->requires->js_call_amd('block_private_files/files_tree', 'init', [$htmlid]);

@@ -50,7 +50,7 @@ class badge_created extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventbadgecreated', 'badges');
+        return get_string('eventbadgecreated', 'core_badges');
     }
 
     /**

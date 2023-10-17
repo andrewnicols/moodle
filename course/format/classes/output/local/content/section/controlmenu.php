@@ -298,7 +298,7 @@ class controlmenu implements named_templatable, renderable {
             $controls['permalink'] = [
                 'url' => $sectionlink,
                 'icon' => 'i/link',
-                'name' => get_string('sectionlink', 'course'),
+                'name' => get_string('sectionlink', 'core_course'),
                 'pixattr' => ['class' => ''],
                 'attr' => [
                     'class' => 'icon',

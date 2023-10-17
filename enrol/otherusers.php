@@ -63,7 +63,7 @@ foreach ($extrafields as $field) {
 $fields = array(
     'userdetails' => $userdetails,
     'lastaccess' => get_string('lastaccess'),
-    'role' => get_string('roles', 'role')
+    'role' => get_string('roles', 'core_role')
 );
 
 // Remove hidden fields if the user has no access
@@ -90,7 +90,7 @@ foreach ($users as $userid=>&$user) {
 $table->set_total_users($manager->get_total_other_users());
 $table->set_users($users);
 
-$PAGE->set_title($course->fullname.': '.get_string('totalotherusers', 'enrol', $manager->get_total_other_users()));
+$PAGE->set_title($course->fullname.': '.get_string('totalotherusers', 'core_enrol', $manager->get_total_other_users()));
 $PAGE->set_heading($PAGE->title);
 
 echo $OUTPUT->header();

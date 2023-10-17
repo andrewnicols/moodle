@@ -156,7 +156,7 @@ class provider implements
         }
 
         $userid = $contextlist->get_user()->id;
-        $subcontext = [get_string('gradingmethod', 'grading')];
+        $subcontext = [get_string('gradingmethod', 'core_grading')];
         foreach ($contexts as $context) {
             // Export grading definitions created or modified on this context.
             self::export_definitions($context, $subcontext, $userid);

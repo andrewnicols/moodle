@@ -40,54 +40,54 @@ function cc_convert ($dir) {
             $detected_requirements = detect_requirements();
 
             if (!$detected_requirements["php5"]) {
-                echo $OUTPUT->notification(get_string('cc_import_req_php5', 'imscc'));
+                echo $OUTPUT->notification(get_string('cc_import_req_php5', 'mod_imscc'));
                 return false;
             }
 
             if (!$detected_requirements["dom"]) {
-                echo $OUTPUT->notification(get_string('cc_import_req_dom', 'imscc'));
+                echo $OUTPUT->notification(get_string('cc_import_req_dom', 'mod_imscc'));
                 return false;
             }
 
             if (!$detected_requirements["libxml"]) {
-                echo $OUTPUT->notification(get_string('cc_import_req_libxml', 'imscc'));
+                echo $OUTPUT->notification(get_string('cc_import_req_libxml', 'mod_imscc'));
                 return false;
             }
 
             if (!$detected_requirements["libxmlminversion"]) {
-                echo $OUTPUT->notification(get_string('cc_import_req_libxmlminversion', 'imscc'));
+                echo $OUTPUT->notification(get_string('cc_import_req_libxmlminversion', 'mod_imscc'));
                 return false;
             }
             if (!$detected_requirements["xsl"]) {
-                echo $OUTPUT->notification(get_string('cc_import_req_xsl', 'imscc'));
+                echo $OUTPUT->notification(get_string('cc_import_req_xsl', 'mod_imscc'));
                 return false;
             }
 
-            echo get_string('cc2moodle_checking_schema', 'imscc') . '<br />';
+            echo get_string('cc2moodle_checking_schema', 'mod_imscc') . '<br />';
 
             $cc_manifest = new DOMDocument();
 
             if ($cc_manifest->load($manifest_file)) {
                 if ($cc_manifest->schemaValidate($schema_file)) {
 
-                    echo get_string('cc2moodle_valid_schema', 'imscc') . '<br />';
+                    echo get_string('cc2moodle_valid_schema', 'mod_imscc') . '<br />';
 
                     $cc2moodle = new cc2moodle($manifest_file);
 
                     if (!$cc2moodle->is_auth()) {
                         return $cc2moodle->generate_moodle_xml();
                     } else {
-                        echo $OUTPUT->notification(get_string('cc2moodle_req_auth', 'imscc'));
+                        echo $OUTPUT->notification(get_string('cc2moodle_req_auth', 'mod_imscc'));
                         return false;
                     }
 
                 } else {
-                    echo $OUTPUT->notification(get_string('cc2moodle_invalid_schema', 'imscc'));
+                    echo $OUTPUT->notification(get_string('cc2moodle_invalid_schema', 'mod_imscc'));
                     return false;
                 }
 
             } else {
-                echo $OUTPUT->notification(get_string('cc2moodle_manifest_dont_load', 'imscc'));
+                echo $OUTPUT->notification(get_string('cc2moodle_manifest_dont_load', 'mod_imscc'));
                 return false;
             }
         }

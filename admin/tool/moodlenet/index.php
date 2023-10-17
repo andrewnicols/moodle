@@ -73,7 +73,7 @@ if ($cancel) {
             $context = import_backup_helper::get_context_for_user($USER->id);
 
             if (is_null($context)) {
-                throw new \moodle_exception('nopermissions', 'error', '', get_string('restore:uploadfile', 'core_role'));
+                throw new \moodle_exception('nopermissions', 'mod_error', '', get_string('restore:uploadfile', 'core_role'));
             }
         } else {
             $context = context_course::instance($importinfo->get_config()->course);

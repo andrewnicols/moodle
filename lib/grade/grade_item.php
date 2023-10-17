@@ -501,7 +501,7 @@ class grade_item extends grade_object {
         }
 
         // Addendum to name.
-        $copy["itemname"] = get_string('duplicatedgradeitem', 'grades', $copy["itemname"]);
+        $copy["itemname"] = get_string('duplicatedgradeitem', 'core_grades', $copy["itemname"]);
 
         // Create new grade item.
         $gradeitem = new grade_item($copy);
@@ -1509,7 +1509,7 @@ class grade_item extends grade_object {
 
             // Make it obvious to users if the course module to which this grade item relates, is currently being removed.
             $deletionpending = course_module_instance_pending_deletion($this->courseid, $this->itemmodule, $this->iteminstance);
-            $deletionnotice = get_string('gradesmoduledeletionprefix', 'grades');
+            $deletionnotice = get_string('gradesmoduledeletionprefix', 'core_grades');
 
             $options = ['context' => context_course::instance($this->courseid), 'escape' => $escape];
             return $deletionpending ?
@@ -1517,16 +1517,16 @@ class grade_item extends grade_object {
                 format_string($this->itemname, true, $options);
 
         } else if ($this->is_course_item()) {
-            return get_string('coursetotal', 'grades');
+            return get_string('coursetotal', 'core_grades');
 
         } else if ($this->is_category_item()) {
             if ($fulltotal) {
                 $category = $this->load_parent_category();
                 $a = new stdClass();
                 $a->category = $category->get_name($escape);
-                return get_string('categorytotalfull', 'grades', $a);
+                return get_string('categorytotalfull', 'core_grades', $a);
             } else {
-            return get_string('categorytotal', 'grades');
+            return get_string('categorytotal', 'core_grades');
             }
 
         } else {
@@ -2401,7 +2401,7 @@ class grade_item extends grade_object {
         }
 
         if (strpos($formulastr, '=') !== 0) {
-            return get_string('errorcalculationnoequal', 'grades');
+            return get_string('errorcalculationnoequal', 'core_grades');
         }
 
         // get used items
@@ -2457,7 +2457,7 @@ class grade_item extends grade_object {
         // false as result indicates some problem
         if ($result === false) {
             // TODO: add more error hints
-            return get_string('errorcalculationunknown', 'grades');
+            return get_string('errorcalculationunknown', 'core_grades');
         } else {
             return true;
         }
@@ -2605,7 +2605,7 @@ class grade_item extends grade_object {
             // database is in an invalid state - we will log an error and return
             // the course context but the calling code should be updated.
             if (!isset($modinfo->instances[$this->itemmodule][$this->iteminstance])) {
-                mtrace(get_string('moduleinstancedoesnotexist', 'error'));
+                mtrace(get_string('moduleinstancedoesnotexist', 'mod_error'));
                 $context = \context_course::instance($this->courseid);
             } else {
                 $cm = $modinfo->instances[$this->itemmodule][$this->iteminstance];

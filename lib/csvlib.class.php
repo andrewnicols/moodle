@@ -116,7 +116,7 @@ class csv_import_reader {
         // to split rows properly - fgetcsv() itself can not do it.
         $tempfile = tempnam(make_temp_directory('/csvimport'), 'tmp');
         if (!$fp = fopen($tempfile, 'w+b')) {
-            $this->_error = get_string('cannotsavedata', 'error');
+            $this->_error = get_string('cannotsavedata', 'mod_error');
             @unlink($tempfile);
             return false;
         }
@@ -141,7 +141,7 @@ class csv_import_reader {
 
         // process header - list of columns
         if (!isset($columns[0])) {
-            $this->_error = get_string('csvemptyfile', 'error');
+            $this->_error = get_string('csvemptyfile', 'mod_error');
             fclose($fp);
             unlink($tempfile);
             return false;
@@ -164,7 +164,7 @@ class csv_import_reader {
         // check to make sure that the data columns match up with the headers.
         foreach ($columns as $rowdata) {
             if (count($rowdata) !== $col_count) {
-                $this->_error = get_string('csvweirdcolumns', 'error');
+                $this->_error = get_string('csvweirdcolumns', 'mod_error');
                 fclose($fp);
                 unlink($tempfile);
                 $this->cleanup();

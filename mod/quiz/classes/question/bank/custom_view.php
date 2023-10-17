@@ -199,7 +199,7 @@ class custom_view extends \core_question\local\bank\view {
                 'type' => 'submit',
                 'name' => 'add',
                 'class' => 'btn btn-primary',
-                'value' => get_string('addselectedquestionstoquiz', 'quiz'),
+                'value' => get_string('addselectedquestionstoquiz', 'mod_quiz'),
                 'data-action' => 'toggle',
                 'data-togglegroup' => 'qbank',
                 'data-toggle' => 'action',

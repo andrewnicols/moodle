@@ -49,7 +49,7 @@ list($options, $unrecognized) = cli_get_params($longparams, $shortparams);
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 if ($options['help']) {

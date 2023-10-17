@@ -195,7 +195,7 @@ class course_competency extends persistent {
     protected function validate_courseid($data) {
         global $DB;
         if (!$DB->record_exists('course', array('id' => $data))) {
-            return new lang_string('invalidcourseid', 'error');
+            return new lang_string('invalidcourseid', 'mod_error');
         }
         return true;
     }
@@ -208,7 +208,7 @@ class course_competency extends persistent {
      */
     protected function validate_competencyid($data) {
         if (!competency::record_exists($data)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }

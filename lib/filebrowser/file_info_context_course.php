@@ -155,7 +155,7 @@ class file_info_context_course extends file_info {
             }
         }
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areacourseintro', 'repository'), false, true, true, false);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areacourseintro', 'core_repository'), false, true, true, false);
     }
 
     /**
@@ -189,7 +189,7 @@ class file_info_context_course extends file_info {
             }
         }
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areacourseoverviewfiles', 'repository'), false, true, true, false);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areacourseoverviewfiles', 'core_repository'), false, true, true, false);
     }
 
     /**
@@ -306,7 +306,7 @@ class file_info_context_course extends file_info {
         $uploadable   = has_capability('moodle/restore:uploadfile', $this->context);
 
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('coursebackup', 'repository'), false, $downloadable, $uploadable, false);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('coursebackup', 'core_repository'), false, $downloadable, $uploadable, false);
     }
 
     /**
@@ -346,7 +346,7 @@ class file_info_context_course extends file_info {
         $uploadable   = false;
 
         $urlbase = $CFG->wwwroot.'/pluginfile.php';
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('automatedbackup', 'repository'), true, $downloadable, $uploadable, false);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('automatedbackup', 'core_repository'), true, $downloadable, $uploadable, false);
     }
 
     /**
@@ -399,7 +399,7 @@ class file_info_context_course extends file_info {
      * @return string
      */
     public function get_visible_name() {
-        return ($this->course->id == SITEID) ? get_string('frontpage', 'admin') : format_string(get_course_display_name_for_list($this->course), true, array('context'=>$this->context));
+        return ($this->course->id == SITEID) ? get_string('frontpage', 'core_admin') : format_string(get_course_display_name_for_list($this->course), true, array('context'=>$this->context));
     }
 
     /**
@@ -900,7 +900,7 @@ class file_info_area_backup_section extends file_info {
      * @return string
      */
     public function get_visible_name() {
-        return get_string('sectionbackup', 'repository');
+        return get_string('sectionbackup', 'core_repository');
     }
 
     /**

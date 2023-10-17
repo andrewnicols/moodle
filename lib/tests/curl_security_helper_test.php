@@ -291,6 +291,6 @@ class curl_security_helper_test extends \advanced_testcase {
      */
     public function test_curl_security_helper_get_blocked_url_string() {
         $helper = new \core\files\curl_security_helper();
-        $this->assertEquals(get_string('curlsecurityurlblocked', 'admin'), $helper->get_blocked_url_string());
+        $this->assertEquals(get_string('curlsecurityurlblocked', 'core_admin'), $helper->get_blocked_url_string());
     }
 }

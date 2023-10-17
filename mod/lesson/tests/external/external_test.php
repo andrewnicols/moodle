@@ -395,7 +395,7 @@ class external_test extends externallib_advanced_testcase {
         $this->assertCount(1, $result['preventaccessreasons']);
         $this->assertEquals('noretake', $result['preventaccessreasons'][0]['reason']);
         $this->assertEquals(null, $result['preventaccessreasons'][0]['data']);
-        $this->assertEquals(get_string('noretake', 'lesson'), $result['preventaccessreasons'][0]['message']);
+        $this->assertEquals(get_string('noretake', 'mod_lesson'), $result['preventaccessreasons'][0]['message']);
 
         // Now check permissions as admin.
         $this->setAdminUser();

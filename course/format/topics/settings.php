@@ -26,7 +26,7 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
     $url = new moodle_url('/admin/course/resetindentation.php', ['format' => 'topics']);
-    $link = html_writer::link($url, get_string('resetindentation', 'admin'));
+    $link = html_writer::link($url, get_string('resetindentation', 'core_admin'));
     $settings->add(new admin_setting_configcheckbox(
         'format_topics/indentation',
         new lang_string('indentation', 'format_topics'),

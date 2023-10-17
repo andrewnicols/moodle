@@ -98,7 +98,7 @@ $modinfo = get_fast_modinfo($course);
 $completion = new completion_info($course);
 
 if (!$completion->has_criteria()) {
-    throw new \moodle_exception('nocriteriaset', 'completion', $CFG->wwwroot.'/course/report.php?id='.$course->id);
+    throw new \moodle_exception('nocriteriaset', 'core_completion', $CFG->wwwroot.'/course/report.php?id='.$course->id);
 }
 
 // Get criteria and put in correct order
@@ -211,7 +211,7 @@ $grandtotal = $completion->get_num_tracked_users('', array(), $group);
 
 // If no users in this course what-so-ever
 if (!$grandtotal) {
-    echo $OUTPUT->container(get_string('err_nousers', 'completion'), 'errorbox errorboxcontent');
+    echo $OUTPUT->container(get_string('err_nousers', 'core_completion'), 'errorbox errorboxcontent');
     echo $OUTPUT->footer();
     exit;
 }
@@ -318,7 +318,7 @@ if (!$csv) {
     // Print criteria group names
     print PHP_EOL.'<thead><tr style="vertical-align: top">';
     echo '<th scope="row" class="rowheader" colspan="' . $leftcols . '">' .
-            get_string('criteriagroup', 'completion') . '</th>';
+            get_string('criteriagroup', 'core_completion') . '</th>';
 
     $current_group = false;
     $col_count = 0;
@@ -353,7 +353,7 @@ if (!$csv) {
     // Print aggregation methods
     print PHP_EOL.'<tr style="vertical-align: top">';
     echo '<th scope="row" class="rowheader" colspan="' . $leftcols . '">' .
-            get_string('aggregationmethod', 'completion').'</th>';
+            get_string('aggregationmethod', 'core_completion').'</th>';
 
     $current_group = false;
     $col_count = 0;
@@ -412,7 +412,7 @@ if (!$csv) {
 
         print PHP_EOL.'<tr>';
         echo '<th scope="row" class="rowheader" colspan="' . $leftcols . '">' .
-                get_string('criteria', 'completion') . '</th>';
+                get_string('criteria', 'core_completion') . '</th>';
 
         foreach ($criteria as $criterion) {
             // Get criteria details
@@ -424,7 +424,7 @@ if (!$csv) {
 
         // Overall course completion status
         print '<th scope="col" class="colheader criterianame">';
-        print '<div class="rotated-text-container"><span class="rotated-text">'.get_string('coursecomplete', 'completion').'</span></div>';
+        print '<div class="rotated-text-container"><span class="rotated-text">'.get_string('coursecomplete', 'core_completion').'</span></div>';
         print '</th></tr>';
     }
 
@@ -508,7 +508,7 @@ if (!$csv) {
 
     // Overall course completion status
     print '<th class="criteriaicon">';
-    print $OUTPUT->pix_icon('i/course', get_string('coursecomplete', 'completion'));
+    print $OUTPUT->pix_icon('i/course', get_string('coursecomplete', 'core_completion'));
     print '</th>';
 
     print '</tr></thead>';
@@ -542,7 +542,7 @@ if (!$csv) {
         }
     }
 
-    $row[] = get_string('coursecomplete', 'completion');
+    $row[] = get_string('coursecomplete', 'core_completion');
 
     $export->add_data($row);
 }
@@ -613,13 +613,13 @@ foreach ($progress as $user) {
             $auto = $activity->completion == COMPLETION_TRACKING_AUTOMATIC;
             $completionicon = 'completion-'.($auto ? 'auto' : 'manual').'-'.$completiontype;
 
-            $describe = get_string('completion-'.$completiontype, 'completion');
+            $describe = get_string('completion-'.$completiontype, 'core_completion');
             $a = new StdClass();
             $a->state     = $describe;
             $a->date      = $date;
             $a->user      = fullname($user);
             $a->activity  = $activity->get_formatted_name();
-            $fulldescribe = get_string('progress-title', 'completion', $a);
+            $fulldescribe = get_string('progress-title', 'core_completion', $a);
 
             if ($csv) {
                 $row[] = $describe;
@@ -639,7 +639,7 @@ foreach ($progress as $user) {
         $completiontype = $is_complete ? 'y' : 'n';
         $completionicon = 'completion-auto-'.$completiontype;
 
-        $describe = get_string('completion-'.$completiontype, 'completion');
+        $describe = get_string('completion-'.$completiontype, 'core_completion');
 
         $a = new stdClass();
         $a->state    = $describe;
@@ -652,7 +652,7 @@ foreach ($progress as $user) {
 
         $a->user     = fullname($user);
         $a->activity = strip_tags($criterion->get_title());
-        $fulldescribe = get_string('progress-title', 'completion', $a);
+        $fulldescribe = get_string('progress-title', 'core_completion', $a);
 
         if ($csv) {
             $row[] = $a->date;
@@ -661,7 +661,7 @@ foreach ($progress as $user) {
             print '<td class="completion-progresscell">';
 
             if ($allow_marking_criteria === $criterion->id) {
-                $describe = get_string('completion-'.$completiontype, 'completion');
+                $describe = get_string('completion-'.$completiontype, 'core_completion');
 
                 $toggleurl = new moodle_url(
                     '/course/togglecompletion.php',
@@ -694,7 +694,7 @@ foreach ($progress as $user) {
     $ccompletion = new completion_completion($params);
     $completiontype =  $ccompletion->is_complete() ? 'y' : 'n';
 
-    $describe = get_string('completion-'.$completiontype, 'completion');
+    $describe = get_string('completion-'.$completiontype, 'core_completion');
 
     $a = new StdClass;
 
@@ -706,8 +706,8 @@ foreach ($progress as $user) {
 
     $a->state    = $describe;
     $a->user     = fullname($user);
-    $a->activity = strip_tags(get_string('coursecomplete', 'completion'));
-    $fulldescribe = get_string('progress-title', 'completion', $a);
+    $a->activity = strip_tags(get_string('coursecomplete', 'core_completion'));
+    $fulldescribe = get_string('progress-title', 'core_completion', $a);
 
     if ($csv) {
         $row[] = $a->date;
@@ -740,8 +740,8 @@ $csvurl = new moodle_url('/report/completion/index.php', array('course' => $cour
 $excelurl = new moodle_url('/report/completion/index.php', array('course' => $course->id, 'format' => 'excelcsv'));
 
 print '<ul class="export-actions">';
-print '<li><a href="'.$csvurl->out().'">'.get_string('csvdownload','completion').'</a></li>';
-print '<li><a href="'.$excelurl->out().'">'.get_string('excelcsvdownload','completion').'</a></li>';
+print '<li><a href="'.$csvurl->out().'">'.get_string('csvdownload','core_completion').'</a></li>';
+print '<li><a href="'.$excelurl->out().'">'.get_string('excelcsvdownload','core_completion').'</a></li>';
 print '</ul>';
 
 echo $OUTPUT->footer($course);

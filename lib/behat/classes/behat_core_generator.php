@@ -652,13 +652,13 @@ class behat_core_generator extends behat_generator_base {
         $context = $this->get_context($data['contextlevel'], $data['reference']);
 
         switch ($data['permission']) {
-            case get_string('allow', 'role'):
+            case get_string('allow', 'core_role'):
                 $permission = CAP_ALLOW;
                 break;
-            case get_string('prevent', 'role'):
+            case get_string('prevent', 'core_role'):
                 $permission = CAP_PREVENT;
                 break;
-            case get_string('prohibit', 'role'):
+            case get_string('prohibit', 'core_role'):
                 $permission = CAP_PROHIBIT;
                 break;
             default:

@@ -143,14 +143,14 @@ class filesize extends \admin_setting {
         }
 
         if (!is_numeric($data['v']) || $data['v'] < 0) {
-            return get_string('errorsetting', 'admin');
+            return get_string('errorsetting', 'core_admin');
         }
 
         // Calculate size in bytes, ensuring we don't overflow PHP_INT_MAX.
         $bytes = $data['v'] * $data['u'];
         $result = (is_int($bytes) && $this->config_write($this->name, $bytes));
 
-        return ($result ? '' : get_string('errorsetting', 'admin'));
+        return ($result ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**

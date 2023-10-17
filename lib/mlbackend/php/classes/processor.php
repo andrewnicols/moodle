@@ -468,7 +468,7 @@ class processor implements \core_analytics\classifier, \core_analytics\regressor
         $modelfilepath = $this->get_model_filepath($modeldir);
 
         if (!file_exists($modelfilepath)) {
-            throw new \moodle_exception('errorexportmodelresult', 'analytics');
+            throw new \moodle_exception('errorexportmodelresult', 'core_analytics');
         }
 
         // We can use the actual $modeldir as the directory is not modified during export, just copied into a zip.

@@ -165,7 +165,7 @@ class mod_helper {
         $event = (object) [
             'eventtype' => logger::EVENT_MEETING_START,
             'type' => CALENDAR_EVENT_TYPE_ACTION,
-            'name' => get_string('calendarstarts', 'bigbluebuttonbn', $bigbluebuttonbn->name),
+            'name' => get_string('calendarstarts', 'mod_bigbluebuttonbn', $bigbluebuttonbn->name),
             'description' => format_module_intro('bigbluebuttonbn', $bigbluebuttonbn, $bigbluebuttonbn->coursemodule, false),
             'format' => FORMAT_HTML,
             'courseid' => $bigbluebuttonbn->course,

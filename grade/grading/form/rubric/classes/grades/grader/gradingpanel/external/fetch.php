@@ -150,7 +150,7 @@ class fetch extends external_api {
         $grade = $gradeitem->get_formatted_grade_for_user($gradeduser, $USER);
         $instance = $gradeitem->get_advanced_grading_instance($USER, $grade);
         if (!$instance) {
-            throw new moodle_exception('error:gradingunavailable', 'grading');
+            throw new moodle_exception('error:gradingunavailable', 'core_grading');
         }
 
         $controller = $instance->get_controller();

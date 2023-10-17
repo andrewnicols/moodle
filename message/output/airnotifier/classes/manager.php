@@ -234,11 +234,11 @@ class message_airnotifier_manager {
         $results = [];
         // Check Mobile services enabled.
         $summary = html_writer::link((new moodle_url('/admin/settings.php', ['section' => 'mobilesettings'])),
-                get_string('enablemobilewebservice', 'admin'));
+                get_string('enablemobilewebservice', 'core_admin'));
         if (empty($CFG->enablewebservices) || empty($CFG->enablemobilewebservice)) {
-            $results[] = new core\check\result(core\check\result::CRITICAL, $summary, get_string('enablewsdescription', 'webservice'));
+            $results[] = new core\check\result(core\check\result::CRITICAL, $summary, get_string('enablewsdescription', 'core_webservice'));
         } else {
-            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('enabled', 'admin'));
+            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('enabled', 'core_admin'));
         }
 
         // Check message outputs are not disabled in config.php.
@@ -247,7 +247,7 @@ class message_airnotifier_manager {
             $results[] = new core\check\result(core\check\result::CRITICAL, $summary,
                 get_string('noemaileverset', 'message_airnotifier'));
         } else {
-            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('disabled', 'admin'));
+            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('disabled', 'core_admin'));
         }
 
         // Check Mobile notifications enabled.
@@ -262,7 +262,7 @@ class message_airnotifier_manager {
 
         $summary = html_writer::link((new moodle_url('/admin/message.php')), get_string('enableprocessor', 'message_airnotifier'));
         if ($enabled) {
-            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('enabled', 'admin'));
+            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('enabled', 'core_admin'));
         } else {
             $results[] = new core\check\result(core\check\result::CRITICAL, $summary,
                 get_string('mobilenotificationsdisabledwarning', 'tool_mobile'));
@@ -300,7 +300,7 @@ class message_airnotifier_manager {
 
         $summary = html_writer::link($url, get_string('airnotifierurl', 'message_airnotifier'));
         if (!empty($info['http_code']) && ($info['http_code'] == 200 || $info['http_code'] == 302)) {
-            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('online', 'message'));
+            $results[] = new core\check\result(core\check\result::OK, $summary, get_string('online', 'core_message'));
         } else {
             $details = get_string('serverconnectivityerror', 'message_airnotifier', $url);
             $curlerrno = $curl->get_errno();
@@ -329,7 +329,7 @@ class message_airnotifier_manager {
                 if ($key['error'] == 'Invalid access key') {
                     $results[] = new core\check\result(core\check\result::ERROR, $summary, $key['error']);
                 } else {
-                    $results[] = new core\check\result(core\check\result::OK, $summary, get_string('enabled', 'admin'));
+                    $results[] = new core\check\result(core\check\result::OK, $summary, get_string('enabled', 'core_admin'));
                 }
             }
         } else {
@@ -350,7 +350,7 @@ class message_airnotifier_manager {
             }
         }
 
-        $summary = html_writer::link((new moodle_url('/admin/message.php')), get_string('managemessageoutputs', 'message'));
+        $summary = html_writer::link((new moodle_url('/admin/message.php')), get_string('managemessageoutputs', 'core_message'));
         if ($providersconfigured == 0) {
             $results[] = new core\check\result(core\check\result::ERROR, $summary,
                 get_string('messageprovidersempty', 'message_airnotifier'));

@@ -671,7 +671,7 @@ abstract class engine {
      */
     protected function update_schema($oldversion, $newversion) {
         debugging('Unable to update search engine schema: ' . $this->pluginname, DEBUG_DEVELOPER);
-        return get_string('schemanotupdated', 'search');
+        return get_string('schemanotupdated', 'core_search');
     }
 
     /**
@@ -703,7 +703,7 @@ abstract class engine {
      * @return array Array from order name => display text
      */
     public function get_supported_orders(\context $context) {
-        return ['relevance' => get_string('order_relevance', 'search')];
+        return ['relevance' => get_string('order_relevance', 'core_search')];
     }
 
     /**

@@ -42,7 +42,7 @@ function tool_dataprivacy_myprofile_navigation(tree $tree, $user, $iscurrentuser
     // Get the Privacy and policies category.
     if (!array_key_exists('privacyandpolicies', $tree->__get('categories'))) {
         // Create the category.
-        $categoryname = get_string('privacyandpolicies', 'admin');
+        $categoryname = get_string('privacyandpolicies', 'core_admin');
         $category = new core_user\output\myprofile\category('privacyandpolicies', $categoryname, 'contact');
         $tree->add_category($category);
     } else {

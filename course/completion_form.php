@@ -52,9 +52,9 @@ class course_completion_form extends moodleform {
 
         // Check if there are existing criteria completions.
         if ($completion->is_course_locked()) {
-            $mform->addElement('header', 'completionsettingslocked', get_string('completionsettingslocked', 'completion'));
-            $mform->addElement('static', '', '', get_string('err_settingslocked', 'completion'));
-            $mform->addElement('submit', 'settingsunlock', get_string('unlockcompletiondelete', 'completion'));
+            $mform->addElement('header', 'completionsettingslocked', get_string('completionsettingslocked', 'core_completion'));
+            $mform->addElement('static', '', '', get_string('err_settingslocked', 'core_completion'));
+            $mform->addElement('submit', 'settingsunlock', get_string('unlockcompletiondelete', 'core_completion'));
         }
 
         // Get array of all available aggregation methods.
@@ -115,7 +115,7 @@ class course_completion_form extends moodleform {
             }
 
         } else {
-            $mform->addElement('static', 'noactivities', '', get_string('err_noactivities', 'completion'));
+            $mform->addElement('static', 'noactivities', '', get_string('err_noactivities', 'core_completion'));
         }
 
         // Course prerequisite completion criteria.
@@ -132,7 +132,7 @@ class course_completion_form extends moodleform {
         unset($hasselectablecourses[$course->id]);
         if ($hasselectablecourses) {
             // Show multiselect box.
-            $mform->addElement('course', 'criteria_course', get_string('coursesavailable', 'completion'),
+            $mform->addElement('course', 'criteria_course', get_string('coursesavailable', 'core_completion'),
                 array('multiple' => 'multiple', 'onlywithcompletion' => true, 'exclude' => $course->id));
             $mform->setType('criteria_course', PARAM_INT);
 
@@ -154,7 +154,7 @@ class course_completion_form extends moodleform {
             $mform->addElement('select', 'course_aggregation', get_string('courseaggregation', 'core_completion'), $courseaggregationmenu);
             $mform->setDefault('course_aggregation', $completion->get_aggregation_method(COMPLETION_CRITERIA_TYPE_COURSE));
         } else {
-            $mform->addElement('static', 'nocourses', '', get_string('err_nocourses', 'completion'));
+            $mform->addElement('static', 'nocourses', '', get_string('err_nocourses', 'core_completion'));
         }
 
         // Completion on date
@@ -249,7 +249,7 @@ class course_completion_form extends moodleform {
             $mform->setDefault('role_aggregation', $completion->get_aggregation_method(COMPLETION_CRITERIA_TYPE_ROLE));
 
         } else {
-            $mform->addElement('static', 'noroles', '', get_string('err_noroles', 'completion'));
+            $mform->addElement('static', 'noroles', '', get_string('err_noroles', 'core_completion'));
         }
 
         // Add common action buttons.
@@ -286,7 +286,7 @@ class course_completion_form extends moodleform {
             $completioninfo = new completion_info($course);
 
             if (! $completioninfo->is_enabled()) {
-                $errors[] = get_string('completionnotenabledforcourse', 'completion');
+                $errors[] = get_string('completionnotenabledforcourse', 'core_completion');
                 break;
             }
         }

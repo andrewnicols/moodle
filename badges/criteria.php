@@ -33,7 +33,7 @@ $update = optional_param('update', 0, PARAM_INT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 $badge = new badge($badgeid);
@@ -44,7 +44,7 @@ require_capability('moodle/badges:configurecriteria', $context);
 
 if ($badge->type == BADGE_TYPE_COURSE) {
     if (empty($CFG->badges_allowcoursebadges)) {
-        throw new \moodle_exception('coursebadgesdisabled', 'badges');
+        throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
     }
     require_login($badge->courseid);
     $course = get_course($badge->courseid);
@@ -78,7 +78,7 @@ if ((($update == BADGE_CRITERIA_AGGREGATION_ALL) || ($update == BADGE_CRITERIA_A
     if ($DB->update_record('badge_criteria', $obj)) {
         $msg = 'criteriaupdated';
     } else {
-        $emsg = get_string('error:save', 'badges');
+        $emsg = get_string('error:save', 'core_badges');
     }
 }
 
@@ -90,7 +90,7 @@ echo $OUTPUT->heading(print_badge_image($badge, $context, 'small') . ' ' . $badg
 if ($emsg !== '') {
     echo $OUTPUT->notification($emsg);
 } else if ($msg !== '') {
-    echo $OUTPUT->notification(get_string($msg, 'badges'), 'notifysuccess');
+    echo $OUTPUT->notification(get_string($msg, 'core_badges'), 'notifysuccess');
 }
 echo $output->print_badge_status_box($badge);
 
@@ -105,7 +105,7 @@ if ($badge->has_criteria()) {
         $crit->config_form_criteria($badge);
     }
 } else {
-    echo $OUTPUT->box(get_string('addcriteriatext', 'badges'));
+    echo $OUTPUT->box(get_string('addcriteriatext', 'core_badges'));
 }
 
 echo $OUTPUT->footer();

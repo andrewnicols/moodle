@@ -84,7 +84,7 @@ class setuplib_test extends \advanced_testcase {
                 $expected .= "[$cfgname] ";
             }
         }
-        $exception     = new \moodle_exception('generalexceptionmessage', 'error', '', $fixture, $fixture);
+        $exception     = new \moodle_exception('generalexceptionmessage', 'mod_error', '', $fixture, $fixture);
         $exceptioninfo = get_exception_info($exception);
 
         $this->assertStringContainsString($expected, $exceptioninfo->message,
@@ -364,45 +364,45 @@ class setuplib_test extends \advanced_testcase {
 
         // Simple local URL.
         $url = $CFG->wwwroot . '/something/here?really=yes';
-        $exception = new \moodle_exception('none', 'error', $url);
+        $exception = new \moodle_exception('none', 'mod_error', $url);
         $infos = $this->get_exception_info($exception);
         $this->assertSame($url, $infos->link);
 
         // Relative local URL.
         $url = '/something/here?really=yes';
-        $exception = new \moodle_exception('none', 'error', $url);
+        $exception = new \moodle_exception('none', 'mod_error', $url);
         $infos = $this->get_exception_info($exception);
         $this->assertSame($CFG->wwwroot . '/', $infos->link);
 
         // HTTPS URL when login HTTPS is not enabled (default) and site is HTTP.
         $CFG->wwwroot = str_replace('https:', 'http:', $CFG->wwwroot);
         $url = $httpswwwroot . '/something/here?really=yes';
-        $exception = new \moodle_exception('none', 'error', $url);
+        $exception = new \moodle_exception('none', 'mod_error', $url);
         $infos = $this->get_exception_info($exception);
         $this->assertSame($CFG->wwwroot . '/', $infos->link);
 
         // HTTPS URL when login HTTPS is not enabled and site is HTTPS.
         $CFG->wwwroot = str_replace('http:', 'https:', $CFG->wwwroot);
         $url = $httpswwwroot . '/something/here?really=yes';
-        $exception = new \moodle_exception('none', 'error', $url);
+        $exception = new \moodle_exception('none', 'mod_error', $url);
         $infos = $this->get_exception_info($exception);
         $this->assertSame($url, $infos->link);
 
         // External HTTP URL.
         $url = 'http://moodle.org/something/here?really=yes';
-        $exception = new \moodle_exception('none', 'error', $url);
+        $exception = new \moodle_exception('none', 'mod_error', $url);
         $infos = $this->get_exception_info($exception);
         $this->assertSame($CFG->wwwroot . '/', $infos->link);
 
         // External HTTPS URL.
         $url = 'https://moodle.org/something/here?really=yes';
-        $exception = new \moodle_exception('none', 'error', $url);
+        $exception = new \moodle_exception('none', 'mod_error', $url);
         $infos = $this->get_exception_info($exception);
         $this->assertSame($CFG->wwwroot . '/', $infos->link);
 
         // External URL containing local URL.
         $url = 'http://moodle.org/something/here?' . $CFG->wwwroot;
-        $exception = new \moodle_exception('none', 'error', $url);
+        $exception = new \moodle_exception('none', 'mod_error', $url);
         $infos = $this->get_exception_info($exception);
         $this->assertSame($CFG->wwwroot . '/', $infos->link);
     }

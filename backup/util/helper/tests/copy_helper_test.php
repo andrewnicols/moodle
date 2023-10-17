@@ -322,8 +322,8 @@ class copy_helper_test extends \advanced_testcase {
         $newcourseid = $rc->get_courseid();
         $newcourse = get_course($newcourseid);
 
-        $this->assertEquals(get_string('copyingcourse', 'backup'), $newcourse->fullname);
-        $this->assertEquals(get_string('copyingcourseshortname', 'backup'), $newcourse->shortname);
+        $this->assertEquals(get_string('copyingcourse', 'core_backup'), $newcourse->fullname);
+        $this->assertEquals(get_string('copyingcourseshortname', 'core_backup'), $newcourse->shortname);
         $this->assertEquals(backup::MODE_COPY, $rc->get_mode());
         $this->assertEquals($newcourseid, $rc->get_courseid());
 

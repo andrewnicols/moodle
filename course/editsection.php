@@ -85,7 +85,7 @@ if ($deletesection) {
             exit;
         }
     } else {
-        notice(get_string('nopermissions', 'error', get_string('deletesection')), $cancelurl);
+        notice(get_string('nopermissions', 'mod_error', get_string('deletesection')), $cancelurl);
     }
 }
 

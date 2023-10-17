@@ -94,7 +94,7 @@ class column extends persistent {
      */
     protected function validate_reportid(int $reportid) {
         if (!report::record_exists($reportid)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;

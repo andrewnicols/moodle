@@ -570,8 +570,8 @@ abstract class component_gradeitem {
         $eventdata->name              = 'gradenotifications';
         $eventdata->userfrom          = $grader;
         $eventdata->userto            = $gradeduser;
-        $eventdata->subject           = get_string('gradenotificationsubject', 'grades');
-        $eventdata->fullmessage       = get_string('gradenotificationmessage', 'grades', $contextname);
+        $eventdata->subject           = get_string('gradenotificationsubject', 'core_grades');
+        $eventdata->fullmessage       = get_string('gradenotificationmessage', 'core_grades', $contextname);
         $eventdata->contexturl        = $this->context->get_url();
         $eventdata->contexturlname    = $contextname;
         $eventdata->fullmessageformat = FORMAT_HTML;

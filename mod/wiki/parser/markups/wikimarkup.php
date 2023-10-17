@@ -181,7 +181,7 @@ abstract class wiki_markup_parser extends generic_parser {
         $toctext = $text = trim($text);
 
         if (!$this->pretty_print && $level == 1) {
-            $editlink = '[' . get_string('editsection', 'wiki') . ']';
+            $editlink = '[' . get_string('editsection', 'mod_wiki') . ']';
             $url = array('href' => "edit.php?pageid={$this->wiki_page_id}&section=" . urlencode($text),
                 'class' => 'wiki_edit_section');
             $text .= ' ' . parser_utils::h('a', $this->protect($editlink), $url);
@@ -246,7 +246,7 @@ abstract class wiki_markup_parser extends generic_parser {
             $i++;
         }
 
-        $this->returnvalues['toc'] = "<div class=\"wiki-toc\"><p class=\"wiki-toc-title\">" . get_string('tableofcontents', 'wiki') . "</p>$toc</div>";
+        $this->returnvalues['toc'] = "<div class=\"wiki-toc\"><p class=\"wiki-toc-title\">" . get_string('tableofcontents', 'mod_wiki') . "</p>$toc</div>";
     }
 
     /**

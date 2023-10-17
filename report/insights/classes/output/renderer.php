@@ -95,7 +95,7 @@ class renderer extends plugin_renderer_base {
         $this->page->set_heading($context->get_context_name());
 
         $output = $this->output->header();
-        $output .= $this->output->notification(get_string('noinsights', 'analytics'),
+        $output .= $this->output->notification(get_string('noinsights', 'core_analytics'),
                 \core\output\notification::NOTIFY_INFO);
         $output .= $this->output->footer();
 
@@ -115,7 +115,7 @@ class renderer extends plugin_renderer_base {
         $this->page->set_heading($context->get_context_name());
 
         $output = $this->output->header();
-        $output .= $this->output->notification(get_string('noinsightsmodel', 'analytics'),
+        $output .= $this->output->notification(get_string('noinsightsmodel', 'core_analytics'),
                 \core\output\notification::NOTIFY_INFO);
         $output .= $this->output->footer();
 
@@ -135,7 +135,7 @@ class renderer extends plugin_renderer_base {
         $this->page->set_heading(get_string('pluginname', 'report_insights'));
 
         $output = $this->output->header();
-        $output .= $this->output->notification(get_string('analyticsdisabled', 'analytics'),
+        $output .= $this->output->notification(get_string('analyticsdisabled', 'core_analytics'),
                 \core\output\notification::NOTIFY_INFO);
         $output .= \html_writer::tag('a', get_string('continue'), ['class' => 'btn btn-primary',
             'href' => (new \moodle_url('/'))->out()]);

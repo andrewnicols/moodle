@@ -67,8 +67,8 @@ if ($id) {
             $managementurl->param('categoryid', $parent);
         }
         $PAGE->set_primary_active_tab('home');
-        $PAGE->navbar->add(get_string('coursemgmt', 'admin'), $managementurl);
-        $PAGE->navbar->add(get_string('addcategory', 'admin'));
+        $PAGE->navbar->add(get_string('coursemgmt', 'core_admin'), $managementurl);
+        $PAGE->navbar->add(get_string('addcategory', 'core_admin'));
     } else {
         $context = context_system::instance();
         $fullname = $SITE->fullname;

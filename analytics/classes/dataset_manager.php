@@ -313,7 +313,7 @@ class dataset_manager {
         // Start writing to the merge file.
         $wh = fopen($tmpfilepath, 'w');
         if (!$wh) {
-            throw new \moodle_exception('errorcannotwritedataset', 'analytics', '', $tmpfilepath);
+            throw new \moodle_exception('errorcannotwritedataset', 'core_analytics', '', $tmpfilepath);
         }
 
         fputcsv($wh, $varnames);

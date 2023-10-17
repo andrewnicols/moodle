@@ -53,8 +53,8 @@ $feedbackstructure = new mod_feedback_structure($feedback, $cm, $courseid);
 $PAGE->set_pagelayout('popup');
 
 // Print the page header.
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 $feedback_url = new moodle_url('/mod/feedback/index.php', array('id'=>$course->id));
 $PAGE->navbar->add($strfeedbacks, $feedback_url);

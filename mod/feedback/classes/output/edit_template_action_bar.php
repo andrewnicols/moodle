@@ -77,7 +77,7 @@ class edit_template_action_bar extends base_action_bar {
                 'sesskey' => sesskey()
             ];
             $deleteurl = new moodle_url('/mod/feedback/manage_templates.php', $params);
-            $deleteaction = new confirm_action(get_string('confirmdeletetemplate', 'feedback'));
+            $deleteaction = new confirm_action(get_string('confirmdeletetemplate', 'mod_feedback'));
             $items['export'] = new action_link($deleteurl, get_string('delete'), $deleteaction, ['class' => 'btn btn-secondary']);
         }
 

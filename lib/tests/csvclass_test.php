@@ -110,7 +110,7 @@ class csvclass_test extends \advanced_testcase {
         $this->assertSame($dataset, $this->testdata);
 
         // Testing for the wrong count of columns.
-        $errortext = get_string('csvweirdcolumns', 'error');
+        $errortext = get_string('csvweirdcolumns', 'mod_error');
         $iid = csv_import_reader::get_new_iid('lib');
         $csvimport = new csv_import_reader($iid, 'lib');
         $contentcount = $csvimport->load_csv_content($this->teststring2, 'utf-8', 'comma');
@@ -120,7 +120,7 @@ class csvclass_test extends \advanced_testcase {
         $this->assertSame($importerror, $errortext);
 
         // Testing for empty content.
-        $errortext = get_string('csvemptyfile', 'error');
+        $errortext = get_string('csvemptyfile', 'mod_error');
 
         $iid = csv_import_reader::get_new_iid('lib');
         $csvimport = new csv_import_reader($iid, 'lib');

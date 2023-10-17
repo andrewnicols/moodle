@@ -541,7 +541,7 @@ class core_role_define_role_table_advanced extends core_role_capability_table_wi
         $options = array();
         $options[''] = get_string('none');
         foreach (get_role_archetypes() as $type) {
-            $options[$type] = get_string('archetype'.$type, 'role');
+            $options[$type] = get_string('archetype'.$type, 'core_role');
         }
         return html_writer::select($options, 'archetype', $this->role->archetype, false,
             array('class' => 'custom-select'));
@@ -676,7 +676,7 @@ class core_role_define_role_table_advanced extends core_role_capability_table_wi
         echo '<p class="definenotice">' . get_string('highlightedcellsshowdefault', 'core_role') . ' </p>';
         echo '<div class="advancedbutton">';
         echo '<input type="submit" class="btn btn-secondary" name="toggleadvanced" value="' .
-            get_string('hideadvanced', 'form') . '" />';
+            get_string('hideadvanced', 'core_form') . '" />';
         echo '</div>';
     }
 

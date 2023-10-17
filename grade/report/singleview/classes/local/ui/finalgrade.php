@@ -183,7 +183,7 @@ class finalgrade extends grade_attribute_format implements unique_value, be_disa
                 $gradestr->username = fullname($user);
             }
             $gradestr->itemname = $this->grade->grade_item->get_name();
-            $errorstr = get_string($errorstr, 'grades', $gradestr);
+            $errorstr = get_string($errorstr, 'core_grades', $gradestr);
             return $errorstr;
         }
 

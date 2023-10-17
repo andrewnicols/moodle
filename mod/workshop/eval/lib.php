@@ -90,7 +90,7 @@ class workshop_evaluation_settings_form extends moodleform {
 
         $this->definition_sub();
 
-        $mform->addElement('submit', 'submit', get_string('aggregategrades', 'workshop'));
+        $mform->addElement('submit', 'submit', get_string('aggregategrades', 'mod_workshop'));
     }
 
     /**

@@ -40,26 +40,26 @@ class endorsement_form extends moodleform {
     public function definition() {
         $mform = $this->_form;
         $badge = $this->_customdata['badge'];
-        $mform->addElement('header', 'endorsement', get_string('issuerdetails', 'badges'));
-        $mform->addElement('text', 'issuername', get_string('issuername_endorsement', 'badges'), array('size' => '70'));
+        $mform->addElement('header', 'endorsement', get_string('issuerdetails', 'core_badges'));
+        $mform->addElement('text', 'issuername', get_string('issuername_endorsement', 'core_badges'), array('size' => '70'));
         $mform->setType('issuername', PARAM_TEXT);
         $mform->addRule('issuername', null, 'required');
         $mform->addHelpButton('issuername', 'issuername_endorsement', 'badges');
-        $mform->addElement('text', 'issueremail', get_string('issueremail', 'badges'), array('size' => '70'));
+        $mform->addElement('text', 'issueremail', get_string('issueremail', 'core_badges'), array('size' => '70'));
         $mform->addRule('issueremail', null, 'required');
         $mform->setType('issueremail', PARAM_RAW);
         $mform->addHelpButton('issueremail', 'issueremail', 'badges');
-        $mform->addElement('text', 'issuerurl', get_string('issuerurl', 'badges'), array('size' => '70'));
+        $mform->addElement('text', 'issuerurl', get_string('issuerurl', 'core_badges'), array('size' => '70'));
         $mform->setType('issuerurl', PARAM_URL);
         $mform->addRule('issuerurl', null, 'required');
         $mform->addHelpButton('issuerurl', 'issuerurl', 'badges');
         $mform->addElement('date_time_selector', 'dateissued',
-            get_string('dateawarded', 'badges'));
-        $mform->addElement('header', 'claim', get_string('claim', 'badges'));
-        $mform->addElement('text', 'claimid', get_string('claimid', 'badges'), array('size' => '70'));
+            get_string('dateawarded', 'core_badges'));
+        $mform->addElement('header', 'claim', get_string('claim', 'core_badges'));
+        $mform->addElement('text', 'claimid', get_string('claimid', 'core_badges'), array('size' => '70'));
         $mform->setType('claimid', PARAM_URL);
         $mform->addRule('claimid', null, 'required');
-        $mform->addElement('textarea', 'claimcomment', get_string('claimcomment', 'badges'), 'wrap="virtual" rows="8" cols="70"');
+        $mform->addElement('textarea', 'claimcomment', get_string('claimcomment', 'core_badges'), 'wrap="virtual" rows="8" cols="70"');
         $mform->setType('claimcomment', PARAM_NOTAGS);
         $endorsement = new stdClass();
         $endorsement = $badge->get_endorsement();
@@ -87,10 +87,10 @@ class endorsement_form extends moodleform {
             $errors['issueremail'] = get_string('invalidemail');
         }
         if ($data['issuerurl'] && !preg_match('@^https?://.+@', $data['issuerurl'])) {
-            $errors['issuerurl'] = get_string('invalidurl', 'badges');
+            $errors['issuerurl'] = get_string('invalidurl', 'core_badges');
         }
         if ($data['claimid'] && !preg_match('@^https?://.+@', $data['claimid'])) {
-            $errors['claimid'] = get_string('invalidurl', 'badges');
+            $errors['claimid'] = get_string('invalidurl', 'core_badges');
         }
         return $errors;
     }

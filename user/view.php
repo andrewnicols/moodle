@@ -67,7 +67,7 @@ if (!empty($CFG->forceloginforprofiles)) {
     if (isguestuser()) {
         $PAGE->set_secondary_navigation(false);
         echo $OUTPUT->header();
-        echo $OUTPUT->confirm(get_string('guestcantaccessprofiles', 'error'),
+        echo $OUTPUT->confirm(get_string('guestcantaccessprofiles', 'mod_error'),
                               get_login_url(),
                               $CFG->wwwroot);
         echo $OUTPUT->footer();

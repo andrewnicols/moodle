@@ -70,7 +70,7 @@ if ($courseid) {
     $courseid = null;
     $topchildren = core_course_category::top()->get_children();
     if (empty($topchildren)) {
-        throw new moodle_exception('cannotviewcategory', 'error');
+        throw new moodle_exception('cannotviewcategory', 'mod_error');
     }
     $category = reset($topchildren);
     $categoryid = $category->id;
@@ -159,7 +159,7 @@ if ($category && !has_any_capability($capabilities, $systemcontext)) {
     navigation_node::require_admin_tree();
     navigation_node::override_active_url(new moodle_url('/course/index.php'));
 }
-$PAGE->navbar->add(get_string('coursemgmt', 'admin'), $PAGE->url->out_omit_querystring());
+$PAGE->navbar->add(get_string('coursemgmt', 'core_admin'), $PAGE->url->out_omit_querystring());
 $PAGE->set_primary_active_tab('home');
 
 $notificationspass = array();
@@ -238,7 +238,7 @@ if ($action !== false && confirm_sesskey()) {
             // They must have specified a category.
             required_param('categoryid', PARAM_INT);
             if (!$category->can_delete()) {
-                throw new moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_resort');
+                throw new moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_resort');
             }
             $mform = new core_course_deletecategory_form(null, $category);
             if ($mform->is_cancelled()) {
@@ -317,12 +317,12 @@ if ($action !== false && confirm_sesskey()) {
                 foreach ($categoryids as $id) {
                     $cattomove = core_course_category::get($id);
                     if ($id == $movetocatid) {
-                        $notificationsfail[] = get_string('movecategoryownparent', 'error', $cattomove->get_formatted_name());
+                        $notificationsfail[] = get_string('movecategoryownparent', 'mod_error', $cattomove->get_formatted_name());
                         continue;
                     }
                     // Don't allow user to move selected category into one of it's own sub-categories.
                     if (strpos($movetocat->path, $cattomove->path . '/') === 0) {
-                        $notificationsfail[] = get_string('movecategoryparentconflict', 'error', $cattomove->get_formatted_name());
+                        $notificationsfail[] = get_string('movecategoryparentconflict', 'mod_error', $cattomove->get_formatted_name());
                         continue;
                     }
                     if ($cattomove->parent != $movetocatid) {
@@ -330,7 +330,7 @@ if ($action !== false && confirm_sesskey()) {
                             $cattomove->change_parent($movetocatid);
                             $movecount++;
                         } else {
-                            $notificationsfail[] = get_string('movecategorynotpossible', 'error', $cattomove->get_formatted_name());
+                            $notificationsfail[] = get_string('movecategorynotpossible', 'mod_error', $cattomove->get_formatted_name());
                         }
                     }
                 }

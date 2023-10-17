@@ -32,8 +32,8 @@
  */
 function coursereport_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $array = array(
-        '*' => get_string('page-x', 'pagetype'),
-        'course-report-*' => get_string('page-course-report-x', 'pagetype')
+        '*' => get_string('page-x', 'mod_pagetype'),
+        'course-report-*' => get_string('page-course-report-x', 'mod_pagetype')
     );
     return $array;
 }

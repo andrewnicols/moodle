@@ -949,7 +949,7 @@ class view {
             DEBUG_DEVELOPER
         );
         echo \html_writer::start_tag('p', ['style' => "\"text-align:center;\""]);
-        echo \html_writer::tag('b', get_string('selectcategoryabove', 'question'));
+        echo \html_writer::tag('b', get_string('selectcategoryabove', 'core_question'));
         echo \html_writer::end_tag('p');
     }
 
@@ -1051,7 +1051,7 @@ class view {
             DEBUG_DEVELOPER
         );
         print_collapsible_region_start('', 'advancedsearch',
-            get_string('advancedsearchoptions', 'question'),
+            get_string('advancedsearchoptions', 'core_question'),
             'question_bank_advanced_search');
         foreach ($advancedsearch as $searchcondition) {
             echo $searchcondition->display_options_adv();
@@ -1083,7 +1083,7 @@ class view {
      */
     protected function display_question_bank_header(): void {
         global $OUTPUT;
-        echo $OUTPUT->heading(get_string('questionbank', 'question'), 2);
+        echo $OUTPUT->heading(get_string('questionbank', 'core_question'), 2);
     }
 
     /**

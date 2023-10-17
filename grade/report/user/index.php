@@ -71,7 +71,7 @@ if (has_capability('moodle/grade:viewall', $context)) {
 
 if (!$access) {
     // The user has no access to grades.
-    throw new \moodle_exception('nopermissiontoviewgrades', 'error',  $CFG->wwwroot.'/course/view.php?id='.$courseid);
+    throw new \moodle_exception('nopermissiontoviewgrades', 'mod_error',  $CFG->wwwroot.'/course/view.php?id='.$courseid);
 }
 
 // Initialise the grade tracking object.
@@ -181,7 +181,7 @@ if (has_capability('moodle/grade:viewall', $context)) {
         print_grade_page_head($courseid, 'report', 'user', false, false, false, true, null, null, $report->user, $actionbar);
 
         if ($currentgroup && !groups_is_member($currentgroup, $userid)) {
-            echo $OUTPUT->notification(get_string('groupusernotmember', 'error'));
+            echo $OUTPUT->notification(get_string('groupusernotmember', 'mod_error'));
         } else {
             if ($report->fill_table()) {
                 echo $report->print_table(true);

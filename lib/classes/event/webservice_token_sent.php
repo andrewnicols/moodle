@@ -50,7 +50,7 @@ class webservice_token_sent extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventwebservicetokensent', 'webservice');
+        return get_string('eventwebservicetokensent', 'core_webservice');
     }
 
     /**

@@ -50,7 +50,7 @@ class core_message_renderer extends plugin_renderer_base {
         $output .= html_writer::empty_tag('input', array('type' => 'hidden', 'name' => 'sesskey', 'value' => sesskey()));
 
         // Add message output processors enabled/disabled and settings.
-        $output .= $this->heading(get_string('messageoutputs', 'message'));
+        $output .= $this->heading(get_string('messageoutputs', 'core_message'));
         $output .= $this->manage_messageoutputs($allprocessors);
 
         // Add active message output processors settings.
@@ -58,7 +58,7 @@ class core_message_renderer extends plugin_renderer_base {
 
         $output .= html_writer::start_tag('div', array('class' => 'form-buttons'));
         $output .= html_writer::empty_tag('input',
-            array('type' => 'submit', 'value' => get_string('savechanges', 'admin'), 'class' => 'form-submit btn btn-primary')
+            array('type' => 'submit', 'value' => get_string('savechanges', 'core_admin'), 'class' => 'form-submit btn btn-primary')
         );
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('form');
@@ -93,7 +93,7 @@ class core_message_renderer extends plugin_renderer_base {
             $name = new html_table_cell(get_string('pluginname', 'message_'.$processor->name));
             $enable = new html_table_cell();
             if (!$processor->available) {
-                $enable->text = html_writer::nonempty_tag('span', get_string('outputnotavailable', 'message'),
+                $enable->text = html_writer::nonempty_tag('span', get_string('outputnotavailable', 'core_message'),
                     array('class' => 'error')
                 );
             } else {
@@ -105,7 +105,7 @@ class core_message_renderer extends plugin_renderer_base {
             $settings = new html_table_cell();
             if ($processor->available && $processor->hassettings) {
                 $settingsurl = new moodle_url('/admin/settings.php', array('section' => 'messagesetting'.$processor->name));
-                $settings->text = html_writer::link($settingsurl, get_string('settings', 'message'));
+                $settings->text = html_writer::link($settingsurl, get_string('settings', 'core_message'));
             }
 
             $row->cells = array($name, $enable, $settings);
@@ -137,7 +137,7 @@ class core_message_renderer extends plugin_renderer_base {
             $providersettingprefix = $provider->component.'_'.$provider->name.'_';
             $provider->enabledsetting = $providersettingprefix.'disable';
             $provider->enabled = empty($preferences->{$provider->enabledsetting});
-            $provider->enabledlabel = get_string('providerenabled', 'message', $provider->displayname);
+            $provider->enabledlabel = get_string('providerenabled', 'core_message', $provider->displayname);
             $provider->settings = [];
 
             // Settings for each processor
@@ -163,8 +163,8 @@ class core_message_renderer extends plugin_renderer_base {
                     'provider'  => $provider->displayname,
                     'processor' => $processor->displayname,
                 ];
-                $setting->enabledlabel = get_string('sendingviaenabled', 'message', $labelparams);
-                $setting->lockedlabel = get_string('sendingvialocked', 'message', $labelparams);
+                $setting->enabledlabel = get_string('sendingviaenabled', 'core_message', $labelparams);
+                $setting->lockedlabel = get_string('sendingvialocked', 'core_message', $labelparams);
 
                 $provider->settings[] = $setting;
             }
@@ -266,19 +266,19 @@ class core_message_renderer extends plugin_renderer_base {
         $choices = array();
         $choices[] = [
             'value' => \core_message\api::MESSAGE_PRIVACY_ONLYCONTACTS,
-            'text' => get_string('contactableprivacy_onlycontacts', 'message'),
+            'text' => get_string('contactableprivacy_onlycontacts', 'core_message'),
             'checked' => ($privacysetting == \core_message\api::MESSAGE_PRIVACY_ONLYCONTACTS)
         ];
         $choices[] = [
             'value' => \core_message\api::MESSAGE_PRIVACY_COURSEMEMBER,
-            'text' => get_string('contactableprivacy_coursemember', 'message'),
+            'text' => get_string('contactableprivacy_coursemember', 'core_message'),
             'checked' => ($privacysetting == \core_message\api::MESSAGE_PRIVACY_COURSEMEMBER)
         ];
         if (!empty($CFG->messagingallusers)) {
             // Add the MESSAGE_PRIVACY_SITE option when site-wide messaging between users is enabled.
             $choices[] = [
                 'value' => \core_message\api::MESSAGE_PRIVACY_SITE,
-                'text' => get_string('contactableprivacy_site', 'message'),
+                'text' => get_string('contactableprivacy_site', 'core_message'),
                 'checked' => ($privacysetting == \core_message\api::MESSAGE_PRIVACY_SITE)
             ];
         }

@@ -1088,7 +1088,7 @@ class externallib_test extends externallib_advanced_testcase {
         $draftid = $draftfile['itemid'];
 
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('maxareabytes', 'error'));
+        $this->expectExceptionMessage(get_string('maxareabytes', 'mod_error'));
 
         // Call the external function to include the new file.
         core_user_external::add_user_private_files($draftid);

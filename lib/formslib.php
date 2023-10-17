@@ -460,7 +460,7 @@ abstract class moodleform {
                     $context = context_user::instance($USER->id);
                     $files = $fs->get_area_files($context->id, 'user', 'draft', $draftid, '', false);
                     if (count($files) > $maxfiles) {
-                        $errors[$element->getName()] = get_string('err_maxfiles', 'form', $maxfiles);
+                        $errors[$element->getName()] = get_string('err_maxfiles', 'core_form', $maxfiles);
                     }
                 }
             }
@@ -1166,7 +1166,7 @@ abstract class moodleform {
                                     $addfieldsname, $addfieldsno = 5, $addstring = null, $addbuttoninside = false,
                                     $deletebuttonname = '') {
         if ($addstring === null) {
-            $addstring = get_string('addfields', 'form', $addfieldsno);
+            $addstring = get_string('addfields', 'core_form', $addfieldsno);
         } else {
             $addstring = str_ireplace('{no}', $addfieldsno, $addstring);
         }
@@ -1308,7 +1308,7 @@ abstract class moodleform {
 
         // Set the default text if none was specified
         if (empty($text)) {
-            $text = get_string('selectallornone', 'form');
+            $text = get_string('selectallornone', 'core_form');
         }
 
         $mform = $this->_form;
@@ -1774,9 +1774,9 @@ class MoodleQuickForm extends HTML_QuickForm_DHTMLRulesTableless {
         }else {
             $this->updateAttributes(array('class'=>'mform'));
         }
-        $this->_reqHTML = '<span class="req">' . $OUTPUT->pix_icon('req', get_string('requiredelement', 'form')) . '</span>';
-        $this->_advancedHTML = '<span class="adv">' . $OUTPUT->pix_icon('adv', get_string('advancedelement', 'form')) . '</span>';
-        $this->setRequiredNote(get_string('somefieldsrequired', 'form', $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'))));
+        $this->_reqHTML = '<span class="req">' . $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form')) . '</span>';
+        $this->_advancedHTML = '<span class="adv">' . $OUTPUT->pix_icon('adv', get_string('advancedelement', 'core_form')) . '</span>';
+        $this->setRequiredNote(get_string('somefieldsrequired', 'core_form', $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'))));
     }
 
     /**
@@ -2387,7 +2387,7 @@ class MoodleQuickForm extends HTML_QuickForm_DHTMLRulesTableless {
             $element = $this->_elements[$this->_elementIndex[$elementname]];
             $element->_helpbutton = $OUTPUT->help_icon($identifier, $component, $linktext, $a);
         } else if (!$suppresscheck) {
-            debugging(get_string('nonexistentformelements', 'form', $elementname));
+            debugging(get_string('nonexistentformelements', 'core_form', $elementname));
         }
     }
 
@@ -2833,7 +2833,7 @@ require([
                 if ($rule['message']===null){
                     $a=new stdClass();
                     $a->format=$rule['format'];
-                    $str=get_string('err_'.$rule['type'], 'form', $a);
+                    $str=get_string('err_'.$rule['type'], 'core_form', $a);
                     if (strpos($str, '[[')!==0){
                         $this->_rules[$field][$key]['message']=$str;
                     }

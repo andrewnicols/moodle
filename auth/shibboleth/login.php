@@ -67,7 +67,7 @@
         $params = array('sesskey' => sesskey(), 'loginpage' => 1);
         $logout = new single_button(new moodle_url('/login/logout.php', $params), get_string('logout'), 'post');
         $continue = new single_button(new moodle_url('/'), get_string('cancel'), 'get');
-        echo $OUTPUT->confirm(get_string('alreadyloggedin', 'error', fullname($USER)), $logout, $continue);
+        echo $OUTPUT->confirm(get_string('alreadyloggedin', 'mod_error', fullname($USER)), $logout, $continue);
         echo $OUTPUT->box_end();
     } else {
         // Print login page.

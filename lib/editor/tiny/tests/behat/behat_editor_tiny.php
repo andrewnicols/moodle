@@ -204,7 +204,7 @@ class behat_editor_tiny extends behat_base implements \core_behat\settable_edito
 
         $fileinput->attachFile($filepath);
         $this->execute('behat_general::i_click_on_in_the', [
-            get_string('upload', 'repository'), 'button',
+            get_string('upload', 'core_repository'), 'button',
             $reporegion, 'NodeElement',
         ]);
     }

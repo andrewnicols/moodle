@@ -73,7 +73,7 @@ class grade_items extends base {
      * @return lang_string
      */
     protected function get_default_entity_title(): lang_string {
-        return new lang_string('gradeitem', 'grades');
+        return new lang_string('gradeitem', 'core_grades');
     }
 
     /**
@@ -188,7 +188,7 @@ class grade_items extends base {
         // Average column.
         $columns[] = (new column(
             'average',
-            new lang_string('average', 'grades'),
+            new lang_string('average', 'core_grades'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())

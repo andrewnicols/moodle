@@ -71,11 +71,11 @@ function toggleLog () {
     if (getLoggingActive() == "A") {
         AppendToLog("Moodle Logging Deactivated", 0);
         setLoggingActive('N');
-        logButton.innerHTML = '-><?php echo addslashes_js(get_string('scormloggingoff', 'scorm')); ?>';
+        logButton.innerHTML = '-><?php echo addslashes_js(get_string('scormloggingoff', 'mod_scorm')); ?>';
     } else {
         setLoggingActive('A');
         AppendToLog("Moodle Logging Activated", 0);
-        logButton.innerHTML = '<?php echo addslashes_js(get_string('scormloggingon', 'scorm')); ?>';
+        logButton.innerHTML = '<?php echo addslashes_js(get_string('scormloggingon', 'mod_scorm')); ?>';
         logPopUpWindow.focus();
     }
 }
@@ -762,9 +762,9 @@ if (!document.getElementById('mod-scorm-log-toggle')) {
     logButton.name = 'logToggle';
     logButton.href = 'javascript:toggleLog();';
     if (getLoggingActive() == "A") {
-        logButton.innerHTML = '<?php echo addslashes_js(get_string('scormloggingon', 'scorm')); ?>';
+        logButton.innerHTML = '<?php echo addslashes_js(get_string('scormloggingon', 'mod_scorm')); ?>';
     } else {
-        logButton.innerHTML = '<?php echo addslashes_js(get_string('scormloggingoff', 'scorm')); ?>';
+        logButton.innerHTML = '<?php echo addslashes_js(get_string('scormloggingoff', 'mod_scorm')); ?>';
     }
     var content = safeGetElement(document, 'scormpage');
     content.insertBefore(logButton, content.firstChild);

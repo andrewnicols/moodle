@@ -147,9 +147,9 @@ class grading_app implements templatable, renderable {
         // Time remaining.
         $due = '';
         if ($export->duedate - $time <= 0) {
-            $due = get_string('assignmentisdue', 'assign');
+            $due = get_string('assignmentisdue', 'mod_assign');
         } else {
-            $due = get_string('timeremainingcolon', 'assign', format_time($export->duedate - $time));
+            $due = get_string('timeremainingcolon', 'mod_assign', format_time($export->duedate - $time));
         }
         $export->timeremainingstr = $due;
 
@@ -158,9 +158,9 @@ class grading_app implements templatable, renderable {
             $cutoffdate = $export->cutoffdate;
             if ($cutoffdate) {
                 if ($cutoffdate > $time) {
-                    $late = get_string('latesubmissionsaccepted', 'assign', userdate($export->cutoffdate));
+                    $late = get_string('latesubmissionsaccepted', 'mod_assign', userdate($export->cutoffdate));
                 } else {
-                    $late = get_string('nomoresubmissionsaccepted', 'assign');
+                    $late = get_string('nomoresubmissionsaccepted', 'mod_assign');
                 }
                 $export->cutoffdatestr = $late;
             }

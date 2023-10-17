@@ -140,7 +140,7 @@ switch ($mode) {
             require_once($CFG->dirroot . '/user/lib.php');
             // Get the correct 'Grades' url to point to.
             $activeurl = user_mygrades_url();
-            $navbar = $PAGE->navbar->add(get_string('grades', 'grades'), $activeurl, navigation_node::TYPE_SETTING, null, 'grades');
+            $navbar = $PAGE->navbar->add(get_string('grades', 'core_grades'), $activeurl, navigation_node::TYPE_SETTING, null, 'grades');
             $activenode = $navbar->add($course->shortname);
             $activenode->make_active();
             // Find the course node and collapse it.
@@ -174,7 +174,7 @@ switch ($mode) {
             $PAGE->navbar->add(get_string('report'));
             $gradeurl = new moodle_url('/course/user.php', array('id' => $id, 'user' => $user->id, 'mode' => $mode));
             // Add the 'grades' node to the navbar.
-            $navbar = $PAGE->navbar->add(get_string('grades', 'grades'), $gradeurl, navigation_node::TYPE_SETTING);
+            $navbar = $PAGE->navbar->add(get_string('grades', 'core_grades'), $gradeurl, navigation_node::TYPE_SETTING);
         }
 
         echo $OUTPUT->header();

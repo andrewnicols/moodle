@@ -347,7 +347,7 @@ class quiz_settings {
         $questions = [];
         foreach ($questionids as $id) {
             if (!array_key_exists($id, $this->questions)) {
-                throw new moodle_exception('cannotstartmissingquestion', 'quiz', $this->view_url());
+                throw new moodle_exception('cannotstartmissingquestion', 'mod_quiz', $this->view_url());
             }
             $questions[$id] = $this->questions[$id];
             if ($requirequestionfullyloaded) {
@@ -515,10 +515,10 @@ class quiz_settings {
         } else {
             if ($when == display_options::LATER_WHILE_OPEN && $this->quiz->timeclose &&
                     $this->quiz->reviewattempt & display_options::AFTER_CLOSE) {
-                return get_string('noreviewuntil' . $langstrsuffix, 'quiz',
+                return get_string('noreviewuntil' . $langstrsuffix, 'mod_quiz',
                         userdate($this->quiz->timeclose, $dateformat));
             } else {
-                return get_string('noreview' . $langstrsuffix, 'quiz');
+                return get_string('noreview' . $langstrsuffix, 'mod_quiz');
             }
         }
     }
@@ -544,7 +544,7 @@ class quiz_settings {
      */
     protected function ensure_question_loaded($id) {
         if (isset($this->questions[$id]->_partiallyloaded)) {
-            throw new moodle_exception('questionnotloaded', 'quiz', $this->view_url(), $id);
+            throw new moodle_exception('questionnotloaded', 'mod_quiz', $this->view_url(), $id);
         }
     }
 

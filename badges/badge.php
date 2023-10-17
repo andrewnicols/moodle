@@ -36,7 +36,7 @@ $output = $PAGE->get_renderer('core', 'badges');
 
 $PAGE->set_url('/badges/badge.php', array('hash' => $id));
 $PAGE->set_pagelayout('base');
-$PAGE->set_title(get_string('issuedbadge', 'badges'));
+$PAGE->set_title(get_string('issuedbadge', 'core_badges'));
 
 $badge = new \core_badges\output\issued_badge($id);
 if (!empty($badge->recipient->id)) {
@@ -71,7 +71,7 @@ if (!empty($badge->recipient->id)) {
 } else {
     echo $OUTPUT->header();
 
-    echo $OUTPUT->container($OUTPUT->error_text(get_string('error:badgeawardnotfound', 'badges')) .
+    echo $OUTPUT->container($OUTPUT->error_text(get_string('error:badgeawardnotfound', 'core_badges')) .
                             html_writer::tag('p', $OUTPUT->close_window_button()), 'important', 'notice');
 }
 

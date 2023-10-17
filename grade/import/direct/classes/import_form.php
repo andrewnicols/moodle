@@ -56,24 +56,24 @@ class gradeimport_direct_import_form extends moodleform {
         $mform->setType('userdata', PARAM_RAW);
 
         $encodings = core_text::get_encodings();
-        $mform->addElement('select', 'encoding', get_string('encoding', 'grades'), $encodings);
+        $mform->addElement('select', 'encoding', get_string('encoding', 'core_grades'), $encodings);
         $mform->addHelpButton('encoding', 'encoding', 'grades');
 
         if (!empty($features['verbosescales'])) {
             $options = array(1 => get_string('yes'), 0 => get_string('no'));
-            $mform->addElement('select', 'verbosescales', get_string('verbosescales', 'grades'), $options);
+            $mform->addElement('select', 'verbosescales', get_string('verbosescales', 'core_grades'), $options);
             $mform->addHelpButton('verbosescales', 'verbosescales', 'grades');
         }
 
         $options = array('10' => 10, '20' => 20, '100' => 100, '1000' => 1000, '100000' => 100000);
-        $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'grades'), $options);
+        $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'core_grades'), $options);
         $mform->addHelpButton('previewrows', 'rowpreviewnum', 'grades');
         $mform->setType('previewrows', PARAM_INT);
         $mform->addElement('hidden', 'groupid', groups_get_course_group($COURSE));
         $mform->setType('groupid', PARAM_INT);
-        $mform->addElement('advcheckbox', 'forceimport', get_string('forceimport', 'grades'));
+        $mform->addElement('advcheckbox', 'forceimport', get_string('forceimport', 'core_grades'));
         $mform->addHelpButton('forceimport', 'forceimport', 'grades');
         $mform->setDefault('forceimport', false);
-        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'grades'));
+        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'core_grades'));
     }
 }

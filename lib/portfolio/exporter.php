@@ -148,7 +148,7 @@ class portfolio_exporter {
             return $this->{$field};
         }
         $a = (object)array('property' => $field, 'class' => get_class($this));
-        throw new portfolio_export_exception($this, 'invalidproperty', 'portfolio', null, $a);
+        throw new portfolio_export_exception($this, 'invalidproperty', 'core_portfolio', null, $a);
     }
 
     /**
@@ -170,7 +170,7 @@ class portfolio_exporter {
             return true;
         }
         $a = (object)array('property' => $field, 'class' => get_class($this));
-        throw new portfolio_export_exception($this, 'invalidproperty', 'portfolio', null, $a);
+        throw new portfolio_export_exception($this, 'invalidproperty', 'core_portfolio', null, $a);
 
     }
 
@@ -241,7 +241,7 @@ class portfolio_exporter {
         } catch (portfolio_export_exception $e) {
             throw $e;
         } catch (Exception $e) {
-            debugging(get_string('thirdpartyexception', 'portfolio', get_class($e)));
+            debugging(get_string('thirdpartyexception', 'core_portfolio', get_class($e)));
             debugging($e);
             portfolio_export_rethrow_exception($this, $e);
         }
@@ -283,7 +283,7 @@ class portfolio_exporter {
         $expectedtime = $this->instance->expected_time($this->caller->expected_time());
         if (count($formats) == 0) {
             // something went wrong, we should not have gotten this far.
-            throw new portfolio_export_exception($this, 'nocommonformats', 'portfolio', null, array('location' => get_class($this->caller), 'formats' => implode(',', $formats)));
+            throw new portfolio_export_exception($this, 'nocommonformats', 'core_portfolio', null, array('location' => get_class($this->caller), 'formats' => implode(',', $formats)));
         }
         // even if neither plugin or caller wants any config, we have to let the user choose their format, and decide to wait.
         if ($pluginobj || $callerobj || count($formats) > 1 || ($expectedtime != PORTFOLIO_TIME_LOW && $expectedtime != PORTFOLIO_TIME_FORCEQUEUE)) {
@@ -329,7 +329,7 @@ class portfolio_exporter {
                 $this->set('format', $fromform->format);
                 return true;
             } else {
-                $this->print_header(get_string('configexport', 'portfolio'));
+                $this->print_header(get_string('configexport', 'core_portfolio'));
                 echo $OUTPUT->box_start();
                 $mform->display();
                 echo $OUTPUT->box_end();
@@ -375,19 +375,19 @@ class portfolio_exporter {
         if (isset($this->noexportconfig) && empty($previous)) {
             return true;
         }
-        $strconfirm = get_string('confirmexport', 'portfolio');
+        $strconfirm = get_string('confirmexport', 'core_portfolio');
         $baseurl = $CFG->wwwroot . '/portfolio/add.php?sesskey=' . sesskey() . '&id=' . $this->get('id');
         $yesurl = $baseurl . '&stage=' . PORTFOLIO_STAGE_QUEUEORWAIT;
         $nourl  = $baseurl . '&cancel=1';
-        $this->print_header(get_string('confirmexport', 'portfolio'));
+        $this->print_header(get_string('confirmexport', 'core_portfolio'));
         echo $OUTPUT->box_start();
-        echo $OUTPUT->heading(get_string('confirmsummary', 'portfolio'), 3);
+        echo $OUTPUT->heading(get_string('confirmsummary', 'core_portfolio'), 3);
         $mainsummary = array();
         if (!$this->instance->get_export_config('hideformat')) {
-            $mainsummary[get_string('selectedformat', 'portfolio')] = get_string('format_' . $this->instance->get_export_config('format'), 'portfolio');
+            $mainsummary[get_string('selectedformat', 'core_portfolio')] = get_string('format_' . $this->instance->get_export_config('format'), 'core_portfolio');
         }
         if (!$this->instance->get_export_config('hidewait')) {
-            $mainsummary[get_string('selectedwait', 'portfolio')] = get_string(($this->instance->get_export_config('wait') ? 'yes' : 'no'));
+            $mainsummary[get_string('selectedwait', 'core_portfolio')] = get_string(($this->instance->get_export_config('wait') ? 'yes' : 'no'));
         }
         if ($previous) {
             $previousstr = '';
@@ -405,7 +405,7 @@ class portfolio_exporter {
                 }
                 $previousstr .= '<br />';
             }
-            $mainsummary[get_string('exportedpreviously', 'portfolio')] = $previousstr;
+            $mainsummary[get_string('exportedpreviously', 'core_portfolio')] = $previousstr;
         }
         if (!$csummary = $this->caller->get_export_summary()) {
             $csummary = array();
@@ -457,19 +457,19 @@ class portfolio_exporter {
         try {
             $this->caller->prepare_package();
         } catch (portfolio_exception $e) {
-            throw new portfolio_export_exception($this, 'callercouldnotpackage', 'portfolio', null, $e->getMessage());
+            throw new portfolio_export_exception($this, 'callercouldnotpackage', 'core_portfolio', null, $e->getMessage());
         }
         catch (file_exception $e) {
-            throw new portfolio_export_exception($this, 'callercouldnotpackage', 'portfolio', null, $e->getMessage());
+            throw new portfolio_export_exception($this, 'callercouldnotpackage', 'core_portfolio', null, $e->getMessage());
         }
         try {
             $this->instance->prepare_package();
         }
         catch (portfolio_exception $e) {
-            throw new portfolio_export_exception($this, 'plugincouldnotpackage', 'portfolio', null, $e->getMessage());
+            throw new portfolio_export_exception($this, 'plugincouldnotpackage', 'core_portfolio', null, $e->getMessage());
         }
         catch (file_exception $e) {
-            throw new portfolio_export_exception($this, 'plugincouldnotpackage', 'portfolio', null, $e->getMessage());
+            throw new portfolio_export_exception($this, 'plugincouldnotpackage', 'core_portfolio', null, $e->getMessage());
         }
         return true;
     }
@@ -511,7 +511,7 @@ class portfolio_exporter {
         catch (portfolio_plugin_exception $e) {
             // not catching anything more general here. plugins with dependencies on other libraries that throw exceptions should catch and rethrow.
             // eg curl exception
-            throw new portfolio_export_exception($this, 'failedtosendpackage', 'portfolio', null, $e->getMessage());
+            throw new portfolio_export_exception($this, 'failedtosendpackage', 'core_portfolio', null, $e->getMessage());
         }
         // only log push types, pull happens in send_file
         if ($this->get('instance')->is_push()) {
@@ -573,7 +573,7 @@ class portfolio_exporter {
                 $key = 'exportqueuedforced';
             }
         }
-        $this->print_header(get_string($key, 'portfolio'), false);
+        $this->print_header(get_string($key, 'core_portfolio'), false);
         self::print_finish_info($returnurl, $continueurl, $extras);
         echo $OUTPUT->footer();
         return false;
@@ -589,8 +589,8 @@ class portfolio_exporter {
      */
     public function print_header($headingstr, $summary=true) {
         global $OUTPUT, $PAGE;
-        $titlestr = get_string('exporting', 'portfolio');
-        $headerstr = get_string('exporting', 'portfolio');
+        $titlestr = get_string('exporting', 'core_portfolio');
+        $headerstr = get_string('exporting', 'core_portfolio');
 
         $PAGE->set_title($titlestr);
         $PAGE->set_heading($headerstr);
@@ -683,7 +683,7 @@ class portfolio_exporter {
             if ($log = $DB->get_record('portfolio_log', array('tempdataid' => $id))) {
                 self::print_cleaned_export($log);
             }
-            throw new portfolio_exception('invalidtempid', 'portfolio');
+            throw new portfolio_exception('invalidtempid', 'core_portfolio');
         }
         $exporter = unserialize(base64_decode($data->data));
         if ($exporter->instancefile) {
@@ -735,7 +735,7 @@ class portfolio_exporter {
     public function verify_rewaken($readonly=false) {
         global $USER, $CFG;
         if ($this->get('user')->id != $USER->id) { // make sure it belongs to the right user
-            throw new portfolio_exception('notyours', 'portfolio');
+            throw new portfolio_exception('notyours', 'core_portfolio');
         }
         if (!$readonly && $this->get('instance') && !$this->get('instance')->allows_multiple_exports()) {
             $already = portfolio_existing_exports($this->get('user')->id, $this->get('instance')->get('plugin'));
@@ -747,7 +747,7 @@ class portfolio_exporter {
                     'plugin'  => $this->get('instance')->get('plugin'),
                     'link'    => $CFG->wwwroot . '/user/portfoliologs.php',
                 );
-                throw new portfolio_exception('nomultipleexports', 'portfolio', '', $a);
+                throw new portfolio_exception('nomultipleexports', 'core_portfolio', '', $a);
             }
         }
         if (!$this->caller->check_permissions()) { // recall the caller permission check
@@ -868,12 +868,12 @@ class portfolio_exporter {
      */
     public static function print_expired_export() {
         global $CFG, $OUTPUT, $PAGE;
-        $title = get_string('exportexpired', 'portfolio');
-        $PAGE->navbar->add(get_string('exportexpired', 'portfolio'));
+        $title = get_string('exportexpired', 'core_portfolio');
+        $PAGE->navbar->add(get_string('exportexpired', 'core_portfolio'));
         $PAGE->set_title($title);
         $PAGE->set_heading($title);
         echo $OUTPUT->header();
-        echo $OUTPUT->notification(get_string('exportexpireddesc', 'portfolio'));
+        echo $OUTPUT->notification(get_string('exportexpireddesc', 'core_portfolio'));
         echo $OUTPUT->continue_button($CFG->wwwroot);
         echo $OUTPUT->footer();
         exit;
@@ -891,12 +891,12 @@ class portfolio_exporter {
         if (empty($instance) || !$instance instanceof portfolio_plugin_base) {
             $instance = portfolio_instance($log->portfolio);
         }
-        $title = get_string('exportalreadyfinished', 'portfolio');
+        $title = get_string('exportalreadyfinished', 'core_portfolio');
         $PAGE->navbar->add($title);
         $PAGE->set_title($title);
         $PAGE->set_heading($title);
         echo $OUTPUT->header();
-        echo $OUTPUT->notification(get_string('exportalreadyfinished', 'portfolio'));
+        echo $OUTPUT->notification(get_string('exportalreadyfinished', 'core_portfolio'));
         self::print_finish_info($log->returnurl, $instance->resolve_static_continue_url($log->continueurl));
         echo $OUTPUT->continue_button($CFG->wwwroot);
         echo $OUTPUT->footer();
@@ -912,10 +912,10 @@ class portfolio_exporter {
      */
     public static function print_finish_info($returnurl, $continueurl, $extras=null) {
         if ($returnurl) {
-            echo '<a href="' . $returnurl . '">' . get_string('returntowhereyouwere', 'portfolio') . '</a><br />';
+            echo '<a href="' . $returnurl . '">' . get_string('returntowhereyouwere', 'core_portfolio') . '</a><br />';
         }
         if ($continueurl) {
-            echo '<a href="' . $continueurl . '">' . get_string('continuetoportfolio', 'portfolio') . '</a><br />';
+            echo '<a href="' . $continueurl . '">' . get_string('continuetoportfolio', 'core_portfolio') . '</a><br />';
         }
         if (is_array($extras)) {
             foreach ($extras as $link => $string) {

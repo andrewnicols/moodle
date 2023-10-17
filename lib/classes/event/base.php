@@ -319,7 +319,7 @@ abstract class base implements \IteratorAggregate {
         // Override in subclass with real lang string.
         $parts = explode('\\', get_called_class());
         if (count($parts) !== 3) {
-            return get_string('unknownevent', 'error');
+            return get_string('unknownevent', 'mod_error');
         }
         return $parts[0].': '.str_replace('_', ' ', $parts[2]);
     }

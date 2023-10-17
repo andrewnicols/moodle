@@ -48,31 +48,31 @@ class managesubscriptions extends \moodleform {
         }
 
         // Name.
-        $mform->addElement('text', 'name', get_string('subscriptionname', 'calendar'), array('maxsize' => '255', 'size' => '40'));
+        $mform->addElement('text', 'name', get_string('subscriptionname', 'core_calendar'), array('maxsize' => '255', 'size' => '40'));
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
         $mform->setType('name', PARAM_TEXT);
 
         // Import from (url | importfile).
-        $choices = array(CALENDAR_IMPORT_FROM_FILE => get_string('importfromfile', 'calendar'),
-            CALENDAR_IMPORT_FROM_URL  => get_string('importfromurl',  'calendar'));
-        $mform->addElement('select', 'importfrom', get_string('importcalendarfrom', 'calendar'), $choices);
+        $choices = array(CALENDAR_IMPORT_FROM_FILE => get_string('importfromfile', 'core_calendar'),
+            CALENDAR_IMPORT_FROM_URL  => get_string('importfromurl',  'core_calendar'));
+        $mform->addElement('select', 'importfrom', get_string('importcalendarfrom', 'core_calendar'), $choices);
         $mform->setDefault('importfrom', CALENDAR_IMPORT_FROM_URL);
 
         // URL.
-        $mform->addElement('text', 'url', get_string('importfromurl', 'calendar'), array('maxsize' => '255', 'size' => '50'));
+        $mform->addElement('text', 'url', get_string('importfromurl', 'core_calendar'), array('maxsize' => '255', 'size' => '50'));
         // Cannot set as PARAM_URL since we need to allow webcal:// protocol.
         $mform->setType('url', PARAM_RAW);
         $mform->setForceLtr('url');
 
         // Poll interval
         $choices = calendar_get_pollinterval_choices();
-        $mform->addElement('select', 'pollinterval', get_string('pollinterval', 'calendar'), $choices);
+        $mform->addElement('select', 'pollinterval', get_string('pollinterval', 'core_calendar'), $choices);
         $mform->setDefault('pollinterval', 604800);
         $mform->addHelpButton('pollinterval', 'pollinterval', 'calendar');
         $mform->setType('pollinterval', PARAM_INT);
 
         // Import file
-        $mform->addElement('filepicker', 'importfile', get_string('importfromfile', 'calendar'), null, array('accepted_types' => '.ics'));
+        $mform->addElement('filepicker', 'importfile', get_string('importfromfile', 'core_calendar'), null, array('accepted_types' => '.ics'));
 
         // Disable appropriate elements depending on import from value.
         $mform->hideIf('pollinterval', 'importfrom', 'eq', CALENDAR_IMPORT_FROM_FILE);
@@ -83,7 +83,7 @@ class managesubscriptions extends \moodleform {
         $this->add_event_type_elements($mform, $eventtypes);
 
         // Eventtype: 0 = user, 1 = site, anything else = course ID.
-        $mform->addElement('submit', 'add', get_string('importcalendar', 'calendar'));
+        $mform->addElement('submit', 'add', get_string('importcalendar', 'core_calendar'));
 
         // Add the javascript required to enhance this mform.
         $PAGE->requires->js_call_amd('core_calendar/event_form', 'init', [$mform->getAttribute('id')]);
@@ -107,12 +107,12 @@ class managesubscriptions extends \moodleform {
         $eventtypes = calendar_get_allowed_event_types($courseid);
 
         if (empty($eventtype) || !isset($eventtypes[$eventtype])) {
-            $errors['eventtype'] = get_string('invalideventtype', 'calendar');
+            $errors['eventtype'] = get_string('invalideventtype', 'core_calendar');
         }
 
         if ($data['importfrom'] == CALENDAR_IMPORT_FROM_FILE) {
             if (empty($data['importfile'])) {
-                $errors['importfile'] = get_string('errorrequiredurlorfile', 'calendar');
+                $errors['importfile'] = get_string('errorrequiredurlorfile', 'core_calendar');
             } else {
                 // Make sure the file area is not empty and contains only one file.
                 $draftitemid = $data['importfile'];
@@ -120,24 +120,24 @@ class managesubscriptions extends \moodleform {
                 $usercontext = \context_user::instance($USER->id);
                 $files = $fs->get_area_files($usercontext->id, 'user', 'draft', $draftitemid, 'id DESC', false);
                 if (count($files) !== 1) {
-                    $errors['importfile'] = get_string('errorrequiredurlorfile', 'calendar');
+                    $errors['importfile'] = get_string('errorrequiredurlorfile', 'core_calendar');
                 }
             }
         } else if (($data['importfrom'] == CALENDAR_IMPORT_FROM_URL)) {
             if (empty($data['url'])) {
-                $errors['url'] = get_string('errorrequiredurlorfile', 'calendar');
+                $errors['url'] = get_string('errorrequiredurlorfile', 'core_calendar');
             } else {
                 // Clean input calendar url.
                 $url = clean_param($data['url'], PARAM_URL);
                 try {
                     calendar_get_icalendar($url);
                 } catch (\moodle_exception $e) {
-                    $errors['url'] = get_string('errorinvalidicalurl', 'calendar');
+                    $errors['url'] = get_string('errorinvalidicalurl', 'core_calendar');
                 }
             }
         } else {
             // Shouldn't happen.
-            $errors['url'] = get_string('errorrequiredurlorfile', 'calendar');
+            $errors['url'] = get_string('errorrequiredurlorfile', 'core_calendar');
         }
 
         // Validate course/category event types (ensure appropriate field is also filled in).

@@ -106,11 +106,11 @@ class provider_test extends provider_testcase {
 
         $this->export_context_data_for_user($this->student0->id, $this->context, 'mod_scorm');
         $subcontextattempt1 = [
-            get_string('myattempts', 'scorm'),
-            get_string('attempt', 'scorm'). " 1"
+            get_string('myattempts', 'mod_scorm'),
+            get_string('attempt', 'mod_scorm'). " 1"
         ];
         $subcontextaicc = [
-            get_string('myaiccsessions', 'scorm')
+            get_string('myaiccsessions', 'mod_scorm')
         ];
         $data = $writer->get_data($subcontextattempt1);
         $this->assertEmpty($data);
@@ -131,15 +131,15 @@ class provider_test extends provider_testcase {
         $this->assertCount(1, $data);
         $this->assertCount(2, (array) reset($data));
         $subcontextattempt2 = [
-            get_string('myattempts', 'scorm'),
-            get_string('attempt', 'scorm'). " 2"
+            get_string('myattempts', 'mod_scorm'),
+            get_string('attempt', 'mod_scorm'). " 2"
         ];
         $data = (array)$writer->get_data($subcontextattempt2);
         $this->assertCount(2, (array) reset($data));
         // The student1 has only 2 scoes_track attempts.
         $subcontextattempt3 = [
-            get_string('myattempts', 'scorm'),
-            get_string('attempt', 'scorm'). " 3"
+            get_string('myattempts', 'mod_scorm'),
+            get_string('attempt', 'mod_scorm'). " 3"
         ];
         $data = $writer->get_data($subcontextattempt3);
         $this->assertEmpty($data);

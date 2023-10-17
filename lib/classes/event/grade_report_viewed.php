@@ -57,7 +57,7 @@ abstract class grade_report_viewed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventgradeviewed', 'grades');
+        return get_string('eventgradeviewed', 'core_grades');
     }
 
     /**

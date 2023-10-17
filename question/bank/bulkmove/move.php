@@ -50,7 +50,7 @@ if ($cmid) {
     require_login($courseid, false);
     $thiscontext = context_course::instance($courseid);
 } else {
-    throw new moodle_exception('missingcourseorcmid', 'question');
+    throw new moodle_exception('missingcourseorcmid', 'core_question');
 }
 
 $contexts = new core_question\local\bank\question_edit_contexts($thiscontext);
@@ -67,7 +67,7 @@ if ($category) {
     list($tocategoryid, $contextid) = explode(',', $category);
     if (! $tocategory = $DB->get_record('question_categories',
         ['id' => $tocategoryid, 'contextid' => $contextid])) {
-        throw new \moodle_exception('cannotfindcate', 'question');
+        throw new \moodle_exception('cannotfindcate', 'core_question');
     }
 }
 

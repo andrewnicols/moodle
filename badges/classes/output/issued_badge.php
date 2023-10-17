@@ -149,7 +149,7 @@ class issued_badge implements renderable {
             $strdata = new stdClass();
             $strdata->user = fullname($this->recipient);
             $strdata->site = format_string($SITE->fullname, true, ['context' => context_system::instance()]);
-            $data->recipientname = get_string('error:userdeleted', 'badges', $strdata);
+            $data->recipientname = get_string('error:userdeleted', 'core_badges', $strdata);
         } else {
             $data->recipientname = fullname($this->recipient);
         }

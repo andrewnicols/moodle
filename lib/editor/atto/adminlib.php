@@ -244,7 +244,7 @@ class editor_atto_subplugins_setting extends admin_setting {
             $table->data[] = $row;
         }
         $return .= html_writer::table($table);
-        $return .= html_writer::tag('p', get_string('tablenosave', 'admin'));
+        $return .= html_writer::tag('p', get_string('tablenosave', 'core_admin'));
         $return .= $OUTPUT->box_end();
         return highlight($query, $return);
     }

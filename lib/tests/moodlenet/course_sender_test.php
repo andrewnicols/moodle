@@ -94,7 +94,7 @@ class course_sender_test extends \advanced_testcase {
 
         // Test with invalid share format.
         $this->expectException(\moodle_exception::class);
-        $this->expectExceptionMessage(get_string('moodlenet:invalidshareformat', 'error'));
+        $this->expectExceptionMessage(get_string('moodlenet:invalidshareformat', 'mod_error'));
 
         $httpclient = new http_client();
         $moodlenetclient = new moodlenet_client($httpclient, $this->mockoauthclient);

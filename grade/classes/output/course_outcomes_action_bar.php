@@ -55,7 +55,7 @@ class course_outcomes_action_bar extends action_bar {
         if (has_capability('moodle/grade:manageoutcomes', $this->context)) {
             // Add a button to the action bar with a link to the 'manage outcomes' page.
             $manageoutcomeslink = new moodle_url('/grade/edit/outcome/index.php', ['id' => $courseid]);
-            $manageoutcomesbutton = new \single_button($manageoutcomeslink, get_string('manageoutcomes', 'grades'),
+            $manageoutcomesbutton = new \single_button($manageoutcomeslink, get_string('manageoutcomes', 'core_grades'),
                 'get', \single_button::BUTTON_PRIMARY);
             $data['manageoutcomesbutton'] = $manageoutcomesbutton->export_for_template($output);
         }

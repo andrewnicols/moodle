@@ -44,8 +44,8 @@ class mod_feedback_use_templ_form extends moodleform {
         $mform =& $this->_form;
 
         // visible elements
-        $mform->addElement('radio', 'deleteolditems', '', get_string('delete_old_items', 'feedback'), 1);
-        $mform->addElement('radio', 'deleteolditems', '', get_string('append_new_items', 'feedback'), 0);
+        $mform->addElement('radio', 'deleteolditems', '', get_string('delete_old_items', 'mod_feedback'), 1);
+        $mform->addElement('radio', 'deleteolditems', '', get_string('append_new_items', 'mod_feedback'), 0);
         $mform->setType('deleteolditems', PARAM_INT);
         $mform->setDefault('deleteolditems', 1);
 

@@ -36,6 +36,6 @@ $handler = group_handler::create();
 $outputpage = new management($handler);
 
 echo $output->header(),
-     $output->heading(new lang_string('group_customfield', 'admin')),
+     $output->heading(new lang_string('group_customfield', 'core_admin')),
      $output->render($outputpage),
      $output->footer();

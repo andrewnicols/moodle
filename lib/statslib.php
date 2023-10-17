@@ -1577,7 +1577,7 @@ function stats_check_uptodate($courseid=0) {
     }
 
     //return error as string
-    return get_string('statscatchupmode','error',$a);
+    return get_string('statscatchupmode','mod_error',$a);
 }
 
 /**

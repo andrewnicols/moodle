@@ -41,11 +41,11 @@ $adminroot = admin_get_root(); // need all settings
 $settingspage = $adminroot->locate($category, true);
 
 if (empty($settingspage) or !($settingspage instanceof admin_category)) {
-    throw new \moodle_exception('categoryerror', 'error', "$CFG->wwwroot/$CFG->admin/");
+    throw new \moodle_exception('categoryerror', 'mod_error', "$CFG->wwwroot/$CFG->admin/");
 }
 
 if (!($settingspage->check_access())) {
-    throw new \moodle_exception('accessdenied', 'admin');
+    throw new \moodle_exception('accessdenied', 'core_admin');
 }
 
 $hassiteconfig = has_capability('moodle/site:config', $PAGE->context);
@@ -71,7 +71,7 @@ if ($data = data_submitted() and confirm_sesskey()) {
             }
         }
     } else {
-        $errormsg = get_string('errorwithsettings', 'admin');
+        $errormsg = get_string('errorwithsettings', 'core_admin');
         $firsterror = reset($adminroot->errors);
     }
     $settingspage = $adminroot->locate($category, true);
@@ -122,12 +122,12 @@ foreach ($settingspage->children as $childpage) {
             $outputhtml .= html_writer::end_tag('fieldset');
         }
     } else if ($childpage instanceof admin_category) {
-        $outputhtml .= $OUTPUT->heading(html_writer::link(new moodle_url('/'.$CFG->admin.'/category.php', array('category' => $childpage->name)), get_string('admincategory', 'admin', $childpage->visiblename)), 3);
+        $outputhtml .= $OUTPUT->heading(html_writer::link(new moodle_url('/'.$CFG->admin.'/category.php', array('category' => $childpage->name)), get_string('admincategory', 'core_admin', $childpage->visiblename)), 3);
     }
 }
 if ($savebutton) {
     $outputhtml .= html_writer::start_tag('div', array('class' => 'form-buttons'));
-    $outputhtml .= html_writer::empty_tag('input', array('class' => 'btn btn-primary form-submit', 'type' => 'submit', 'value' => get_string('savechanges','admin')));
+    $outputhtml .= html_writer::empty_tag('input', array('class' => 'btn btn-primary form-submit', 'type' => 'submit', 'value' => get_string('savechanges','core_admin')));
     $outputhtml .= html_writer::end_tag('div');
 }
 
@@ -145,7 +145,7 @@ if ($errormsg !== '') {
     echo $OUTPUT->notification($statusmsg, 'notifysuccess');
 }
 
-echo $OUTPUT->heading(get_string('admincategory', 'admin', $settingspage->visiblename), 2);
+echo $OUTPUT->heading(get_string('admincategory', 'core_admin', $settingspage->visiblename), 2);
 
 echo html_writer::start_tag('form', array('action' => '', 'method' => 'post', 'id' => 'adminsettings'));
 echo html_writer::start_tag('div');

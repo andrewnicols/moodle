@@ -44,7 +44,7 @@ class quiz_responses_settings_form extends attempts_report_options_form {
 
         if ($data['attempts'] != attempts_report::ENROLLED_WITHOUT && !(
                 $data['qtext'] || $data['resp'] || $data['right'])) {
-            $errors['coloptions'] = get_string('reportmustselectstate', 'quiz');
+            $errors['coloptions'] = get_string('reportmustselectstate', 'mod_quiz');
         }
 
         return $errors;
@@ -53,10 +53,10 @@ class quiz_responses_settings_form extends attempts_report_options_form {
     protected function other_attempt_fields(MoodleQuickForm $mform) {
         parent::other_attempt_fields($mform);
         if (quiz_allows_multiple_tries($this->_customdata['quiz'])) {
-            $mform->addElement('select', 'whichtries', get_string('whichtries', 'question'), [
-                                           question_attempt::FIRST_TRY    => get_string('firsttry', 'question'),
-                                           question_attempt::LAST_TRY     => get_string('lasttry', 'question'),
-                                           question_attempt::ALL_TRIES    => get_string('alltries', 'question')]
+            $mform->addElement('select', 'whichtries', get_string('whichtries', 'core_question'), [
+                                           question_attempt::FIRST_TRY    => get_string('firsttry', 'core_question'),
+                                           question_attempt::LAST_TRY     => get_string('lasttry', 'core_question'),
+                                           question_attempt::ALL_TRIES    => get_string('alltries', 'core_question')]
             );
             $mform->setDefault('whichtries', question_attempt::LAST_TRY);
             $mform->disabledIf('whichtries', 'attempts', 'eq', attempts_report::ENROLLED_WITHOUT);

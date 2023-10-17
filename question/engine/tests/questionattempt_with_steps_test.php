@@ -177,13 +177,13 @@ class questionattempt_with_steps_test extends \advanced_testcase {
             [0, 1, 2, '0', ''],
             [0, 1, 2, '0.0', ''],
             [0, 1, 2, '2,0', ''],
-            [0, 1, 2, 'frog', get_string('manualgradeinvalidformat', 'question')],
-            [0, 1, 2, '2.1', get_string('manualgradeoutofrange', 'question')],
-            [0, 1, 2, '-0,01', get_string('manualgradeoutofrange', 'question')],
+            [0, 1, 2, 'frog', get_string('manualgradeinvalidformat', 'core_question')],
+            [0, 1, 2, '2.1', get_string('manualgradeoutofrange', 'core_question')],
+            [0, 1, 2, '-0,01', get_string('manualgradeoutofrange', 'core_question')],
             [-0.3333333, 1, 0.75, '0.75', ''],
-            [-0.3333333, 1, 0.75, '0.7500001', get_string('manualgradeoutofrange', 'question')],
+            [-0.3333333, 1, 0.75, '0.7500001', get_string('manualgradeoutofrange', 'core_question')],
             [-0.3333333, 1, 0.75, '-0.25', ''],
-            [-0.3333333, 1, 0.75, '-0.2500001', get_string('manualgradeoutofrange', 'question')],
+            [-0.3333333, 1, 0.75, '-0.2500001', get_string('manualgradeoutofrange', 'core_question')],
         ];
     }
 

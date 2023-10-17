@@ -33,7 +33,7 @@ $mode = optional_param('mode', 'show', PARAM_ALPHAEXT);
 require_login();
 
 if (!$context = context_system::instance()) {
-    throw new moodle_exception('wrongcontext', 'error');
+    throw new moodle_exception('wrongcontext', 'mod_error');
 }
 
 require_capability('moodle/site:config', $context);

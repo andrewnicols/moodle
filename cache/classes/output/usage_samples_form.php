@@ -52,7 +52,7 @@ class usage_samples_form extends \moodleform {
             $radioarray[] = $mform->createElement('radio', 'samples', '', $samples, $samples);
         }
         $mform->setDefault('samples', 50);
-        $mform->addGroup($radioarray, 'samplesradios', get_string('usage_samples', 'cache'), [' '], false);
+        $mform->addGroup($radioarray, 'samplesradios', get_string('usage_samples', 'core_cache'), [' '], false);
         $mform->addElement('submit', 'submit', get_string('update'));
     }
 }

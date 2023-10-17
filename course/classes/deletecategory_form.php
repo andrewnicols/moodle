@@ -67,7 +67,7 @@ class core_course_deletecategory_form extends moodleform {
             $options[1] = get_string('deleteallcannotundo');
         }
         if (empty($options)) {
-            throw new \moodle_exception('youcannotdeletecategory', 'error', 'index.php', $categoryname);
+            throw new \moodle_exception('youcannotdeletecategory', 'mod_error', 'index.php', $categoryname);
         }
 
         // Now build the form.
@@ -142,7 +142,7 @@ class core_course_deletecategory_form extends moodleform {
         }
 
         if (!empty($data['newparent']) && !$this->coursecat->can_move_content_to($data['newparent'])) {
-            $errors['newparent'] = get_string('movecatcontentstoselected', 'error');
+            $errors['newparent'] = get_string('movecatcontentstoselected', 'mod_error');
         }
 
         return $errors;

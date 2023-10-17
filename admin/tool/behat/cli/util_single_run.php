@@ -133,7 +133,7 @@ require_once($CFG->libdir.'/testing/classes/test_lock.php');
 
 if ($unrecognized) {
     $unrecognized = implode(PHP_EOL . "  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 // Behat utilities.

@@ -147,7 +147,7 @@ class participants extends datasource {
      * @return string
      */
     public static function get_name(): string {
-        return get_string('courseparticipants', 'course');
+        return get_string('courseparticipants', 'core_course');
     }
 
     /**

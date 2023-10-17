@@ -72,9 +72,9 @@ class overrides_actions implements renderable, templatable {
                 ['cmid' => $this->cmid, 'action' => 'add' . $this->mode]);
 
         if ($this->mode === 'group') {
-            $label = get_string('addnewgroupoverride', 'quiz');
+            $label = get_string('addnewgroupoverride', 'mod_quiz');
         } else {
-            $label = get_string('addnewuseroverride', 'quiz');
+            $label = get_string('addnewuseroverride', 'mod_quiz');
         }
 
         $addoverridebutton = new \single_button($addoverrideurl, $label, 'get', \single_button::BUTTON_PRIMARY);
@@ -94,8 +94,8 @@ class overrides_actions implements renderable, templatable {
         $groupoverridesurl = new moodle_url('/mod/quiz/overrides.php', ['cmid' => $this->cmid, 'mode' => 'group']);
 
         $menu = [
-            $useroverridesurl->out(false) => get_string('useroverrides', 'quiz'),
-            $groupoverridesurl->out(false) => get_string('groupoverrides', 'quiz')
+            $useroverridesurl->out(false) => get_string('useroverrides', 'mod_quiz'),
+            $groupoverridesurl->out(false) => get_string('groupoverrides', 'mod_quiz')
         ];
 
         $overridesnav = new url_select($menu, $PAGE->url->out(false), null, 'quizoverrides');

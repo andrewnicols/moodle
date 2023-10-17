@@ -406,7 +406,7 @@ class core_backup_external extends external_api {
             $copydata = \copy_helper::process_formdata($mdata);
             $copyids = \copy_helper::create_copy($copydata);
         } else {
-            throw new moodle_exception('copyformfail', 'backup');
+            throw new moodle_exception('copyformfail', 'core_backup');
         }
 
         return json_encode($copyids);

@@ -24,6 +24,6 @@
 
 $ADMIN->add('payment', new admin_externalpage(
     'paymentaccounts',
-    new lang_string('paymentaccounts', 'payment'),
+    new lang_string('paymentaccounts', 'core_payment'),
     new moodle_url("/payment/accounts.php"),
     ['moodle/payment:manageaccounts', 'moodle/payment:viewpayments']));

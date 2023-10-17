@@ -45,9 +45,9 @@ class core_tag_collections_table extends html_table {
 
         $this->head = array(
             get_string('name'),
-            get_string('component', 'tag'),
-            get_string('tagareas', 'tag'),
-            get_string('searchable', 'tag') . $OUTPUT->help_icon('searchable', 'tag'),
+            get_string('component', 'core_tag'),
+            get_string('tagareas', 'core_tag'),
+            get_string('searchable', 'core_tag') . $OUTPUT->help_icon('searchable', 'tag'),
             ''
         );
 

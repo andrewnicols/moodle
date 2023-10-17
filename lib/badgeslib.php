@@ -202,8 +202,8 @@ function badges_notify_badge_award(badge $badge, $userid, $issued, $filepathhash
         $a = new stdClass();
         $a->user = fullname($userto);
         $a->link = $issuedlink;
-        $creatormessage = get_string('creatorbody', 'badges', $a);
-        $creatorsubject = get_string('creatorsubject', 'badges', $badge->name);
+        $creatormessage = get_string('creatorbody', 'core_badges', $a);
+        $creatorsubject = get_string('creatorsubject', 'core_badges', $badge->name);
 
         $eventdata = new \core\message\message();
         $eventdata->courseid          = $badge->courseid;
@@ -1095,9 +1095,9 @@ function badges_change_sortorder_backpacks(int $backpackid, int $direction): voi
  */
 function badges_get_badge_api_versions() {
     return [
-        (string)OPEN_BADGES_V1 => get_string('openbadgesv1', 'badges'),
-        (string)OPEN_BADGES_V2 => get_string('openbadgesv2', 'badges'),
-        (string)OPEN_BADGES_V2P1 => get_string('openbadgesv2p1', 'badges')
+        (string)OPEN_BADGES_V1 => get_string('openbadgesv1', 'core_badges'),
+        (string)OPEN_BADGES_V2 => get_string('openbadgesv2', 'core_badges'),
+        (string)OPEN_BADGES_V2P1 => get_string('openbadgesv2p1', 'core_badges')
     ];
 }
 
@@ -1283,7 +1283,7 @@ function badges_send_verification_email($email, $backpackid, $backpackpassword) 
     $button = html_writer::start_tag('center') .
         html_writer::tag(
             'button',
-            get_string('verifyemail', 'badges'),
+            get_string('verifyemail', 'core_badges'),
             ['style' => implode(';', $buttonstyles)]) .
         html_writer::end_tag('center');
     $args = [
@@ -1294,8 +1294,8 @@ function badges_send_verification_email($email, $backpackid, $backpackpassword) 
         'userfirstname' => $USER->firstname,
     ];
 
-    $messagesubject = get_string('backpackemailverifyemailsubject', 'badges', $site->fullname);
-    $messagetext = get_string('backpackemailverifyemailbody', 'badges', $args);
+    $messagesubject = get_string('backpackemailverifyemailsubject', 'core_badges', $site->fullname);
+    $messagetext = get_string('backpackemailverifyemailbody', 'core_badges', $args);
     $messagehtml = text_to_html($messagetext, false, false, true);
 
     return email_to_user($tempuser, $noreplyuser, $messagesubject, $messagetext, $messagehtml);
@@ -1372,7 +1372,7 @@ function badge_assemble_notification(stdClass $badge) {
     if ($msgs = $DB->get_records_select('badge_issued', 'issuernotified IS NULL AND badgeid = ?', array($badge->id))) {
         // Get badge creator.
         $creator = $DB->get_record('user', array('id' => $badge->creator), '*', MUST_EXIST);
-        $creatorsubject = get_string('creatorsubject', 'badges', $badge->name);
+        $creatorsubject = get_string('creatorsubject', 'core_badges', $badge->name);
         $creatormessage = '';
 
         // Put all messages in one digest.
@@ -1383,7 +1383,7 @@ function badge_assemble_notification(stdClass $badge) {
             $a = new stdClass();
             $a->user = fullname($recipient);
             $a->link = $issuedlink;
-            $creatormessage .= get_string('creatorbody', 'badges', $a);
+            $creatormessage .= get_string('creatorbody', 'core_badges', $a);
             $DB->set_field('badge_issued', 'issuernotified', time(), array('badgeid' => $msg->badgeid, 'userid' => $msg->userid));
         }
 
@@ -1448,7 +1448,7 @@ function badges_verify_backpack(int $backpackid) {
             $params = ['id' => $backpack->id, 'action' => 'edit'];
             $backpackurl = (new moodle_url('/badges/backpacks.php', $params))->out(false);
 
-            $message = get_string('sitebackpackwarning', 'badges', ['url' => $backpackurl, 'warning' => $warning]);
+            $message = get_string('sitebackpackwarning', 'core_badges', ['url' => $backpackurl, 'warning' => $warning]);
             $icon = $OUTPUT->pix_icon('i/warning', get_string('warning', 'moodle'));
             return $OUTPUT->container($icon . $message, 'text-danger');
         }

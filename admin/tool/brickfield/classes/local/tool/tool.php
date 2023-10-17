@@ -292,7 +292,7 @@ abstract class tool {
             $thiscourse = get_fast_modinfo($courseid)->get_course();
             $instancename = $thiscourse->shortname;
         } else if ($component == 'core_question') {
-            $instancename = get_string('questions', 'question');
+            $instancename = get_string('questions', 'core_question');
         } else {
             if (($cmid == 0) || ($cmid == null)) {
                 return $instancename;

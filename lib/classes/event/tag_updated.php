@@ -61,7 +61,7 @@ class tag_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventtagupdated', 'tag');
+        return get_string('eventtagupdated', 'core_tag');
     }
 
     /**

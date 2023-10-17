@@ -142,7 +142,7 @@ class repository_s3 extends repository {
             } catch (S3Exception $e) {
                 throw new moodle_exception(
                     'errorwhilecommunicatingwith',
-                    'repository',
+                    'core_repository',
                     '',
                     $this->get_name(),
                     $e->getMessage()
@@ -167,7 +167,7 @@ class repository_s3 extends repository {
             } catch (S3Exception $e) {
                 throw new moodle_exception(
                     'errorwhilecommunicatingwith',
-                    'repository',
+                    'core_repository',
                     '',
                     $this->get_name(),
                     $e->getMessage()
@@ -248,7 +248,7 @@ class repository_s3 extends repository {
         } catch (S3Exception $e) {
             throw new moodle_exception(
                 'errorwhilecommunicatingwith',
-                'repository',
+                'core_repository',
                 '',
                 $this->get_name(),
                 $e->getMessage()

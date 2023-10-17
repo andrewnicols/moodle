@@ -71,7 +71,7 @@ class admin_setting_configtext_trim_lower extends admin_setting_configtext {
         if (!$this->enabled) {
             return '';
         }
-        return ($this->config_write($this->name, trim($data)) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, trim($data)) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
 }
@@ -123,10 +123,10 @@ class admin_setting_ldap_rolemapping extends admin_setting {
         $result = '';
         foreach ($data as $roleid => $data) {
             if (!$this->config_write('contexts_role'.$roleid, trim($data['contexts']))) {
-                $return = get_string('errorsetting', 'admin');
+                $return = get_string('errorsetting', 'core_admin');
             }
             if (!$this->config_write('memberattribute_role'.$roleid, core_text::strtolower(trim($data['memberattribute'])))) {
-                $return = get_string('errorsetting', 'admin');
+                $return = get_string('errorsetting', 'core_admin');
             }
         }
         return $result;
@@ -147,7 +147,7 @@ class admin_setting_ldap_rolemapping extends admin_setting {
      */
     public function output_html($data, $query='') {
         $return  = html_writer::start_tag('div', array('style' =>'float:left; width:auto; margin-right: 0.5em;'));
-        $return .= html_writer::tag('div', get_string('roles', 'role'), array('style' => 'height: 2em;'));
+        $return .= html_writer::tag('div', get_string('roles', 'core_role'), array('style' => 'height: 2em;'));
         foreach ($data as $role) {
             $return .= html_writer::tag('div', s($role['name']), array('style' => 'height: 2em;'));
         }

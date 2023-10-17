@@ -99,9 +99,9 @@ class content extends \core_contentbank\content {
                 notification::error($error->message);
             }
             if (empty($errors) || count($errors) > 1) {
-                throw new \moodle_exception('notvalidpackage', 'h5p');
+                throw new \moodle_exception('notvalidpackage', 'core_h5p');
             }
-            throw new \moodle_exception($errors[0]->code, 'h5p');
+            throw new \moodle_exception($errors[0]->code, 'core_h5p');
         }
         return parent::import_file($file);
     }

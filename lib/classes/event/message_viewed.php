@@ -57,7 +57,7 @@ class message_viewed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventmessageviewed', 'message');
+        return get_string('eventmessageviewed', 'core_message');
     }
 
     /**

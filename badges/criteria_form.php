@@ -65,7 +65,7 @@ class edit_criteria_form extends moodleform {
                 );
 
                 $mform->closeHeaderBefore('buttonar');
-                $this->add_action_buttons(true, get_string('save', 'badges'));
+                $this->add_action_buttons(true, get_string('save', 'core_badges'));
             }
         }
     }
@@ -94,7 +94,7 @@ class edit_criteria_form extends moodleform {
             }
 
             $warning = $this->_form->createElement('html',
-                    $OUTPUT->notification(get_string('error:parameter', 'badges'), 'notifyproblem'), 'submissionerror');
+                    $OUTPUT->notification(get_string('error:parameter', 'core_badges'), 'notifyproblem'), 'submissionerror');
 
             if (!$ok) {
                 $errors['formerrors'] = 'Error';

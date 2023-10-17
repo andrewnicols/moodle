@@ -60,13 +60,13 @@ if ($context->contextlevel == CONTEXT_COURSECAT) {
 } else {
     navigation_node::override_active_url(new moodle_url('/cohort/index.php', array()));
 }
-$PAGE->navbar->add(get_string('assign', 'cohort'));
+$PAGE->navbar->add(get_string('assign', 'core_cohort'));
 
-$PAGE->set_title(get_string('assigncohorts', 'cohort'));
+$PAGE->set_title(get_string('assigncohorts', 'core_cohort'));
 $PAGE->set_heading($COURSE->fullname);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('assignto', 'cohort', format_string($cohort->name)));
+echo $OUTPUT->heading(get_string('assignto', 'core_cohort', format_string($cohort->name)));
 
 echo $OUTPUT->notification(get_string('removeuserwarning', 'core_cohort'));
 
@@ -131,7 +131,7 @@ if (optional_param('remove', false, PARAM_BOOL) && confirm_sesskey()) {
       </td>
     </tr>
     <tr><td colspan="3" id='backcell'>
-      <input class="btn btn-secondary" type="submit" name="cancel" value="<?php p(get_string('backtocohorts', 'cohort')); ?>" />
+      <input class="btn btn-secondary" type="submit" name="cancel" value="<?php p(get_string('backtocohorts', 'core_cohort')); ?>" />
     </td></tr>
   </table>
 </div></form>

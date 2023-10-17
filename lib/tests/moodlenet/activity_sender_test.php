@@ -99,7 +99,7 @@ class activity_sender_test extends \advanced_testcase {
 
         // Test with invalid share format.
         $this->expectException(\moodle_exception::class);
-        $this->expectExceptionMessage(get_string('moodlenet:invalidshareformat', 'error'));
+        $this->expectExceptionMessage(get_string('moodlenet:invalidshareformat', 'mod_error'));
         $package = $method->invoke(new activity_sender(
             $this->moduleinstance->cmid,
             $USER->id,

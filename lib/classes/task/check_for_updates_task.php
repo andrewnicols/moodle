@@ -34,7 +34,7 @@ class check_for_updates_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcheckforupdates', 'admin');
+        return get_string('taskcheckforupdates', 'core_admin');
     }
 
     /**

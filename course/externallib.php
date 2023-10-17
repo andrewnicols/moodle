@@ -122,7 +122,7 @@ class core_course_external extends external_api {
                             if (is_numeric($value)) {
                                 $filters[$name] = $value;
                             } else {
-                                throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                                throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
                             }
                             break;
                         case 'modname':
@@ -130,11 +130,11 @@ class core_course_external extends external_api {
                             if ($value) {
                                 $filters[$name] = $value;
                             } else {
-                                throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                                throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
                             }
                             break;
                         default:
-                            throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                            throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
                     }
                 }
             }
@@ -151,7 +151,7 @@ class core_course_external extends external_api {
             $exceptionparam = new stdClass();
             $exceptionparam->message = $e->getMessage();
             $exceptionparam->courseid = $course->id;
-            throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
+            throw new moodle_exception('errorcoursecontextnotvalid', 'core_webservice', '', $exceptionparam);
         }
 
         $canupdatecourse = has_capability('moodle/course:update', $context);
@@ -650,7 +650,7 @@ class core_course_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $course->id;
-                throw new moodle_exception('errorcoursecontextnotvalid', 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcoursecontextnotvalid', 'core_webservice', '', $exceptionparam);
             }
             if ($course->id != SITEID) {
                 require_capability('moodle/course:view', $context);
@@ -929,21 +929,21 @@ class core_course_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->catid = $course['categoryid'];
-                throw new moodle_exception('errorcatcontextnotvalid', 'webservice', '', $exceptionparam);
+                throw new moodle_exception('errorcatcontextnotvalid', 'core_webservice', '', $exceptionparam);
             }
             require_capability('moodle/course:create', $context);
 
             // Fullname and short name are required to be non-empty.
             if (trim($course['fullname']) === '') {
-                throw new moodle_exception('errorinvalidparam', 'webservice', '', 'fullname');
+                throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'fullname');
             } else if (trim($course['shortname']) === '') {
-                throw new moodle_exception('errorinvalidparam', 'webservice', '', 'shortname');
+                throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'shortname');
             }
 
             // Make sure lang is valid
             if (array_key_exists('lang', $course)) {
                 if (empty($availablelangs[$course['lang']])) {
-                    throw new moodle_exception('errorinvalidparam', 'webservice', '', 'lang');
+                    throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'lang');
                 }
                 if (!has_capability('moodle/course:setforcedlanguage', $context)) {
                     unset($course['lang']);
@@ -954,7 +954,7 @@ class core_course_external extends external_api {
             if (array_key_exists('forcetheme', $course)) {
                 if (!empty($CFG->allowcoursethemes)) {
                     if (empty($availablethemes[$course['forcetheme']])) {
-                        throw new moodle_exception('errorinvalidparam', 'webservice', '', 'forcetheme');
+                        throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'forcetheme');
                     } else {
                         $course['theme'] = $course['forcetheme'];
                     }
@@ -1129,7 +1129,7 @@ class core_course_external extends external_api {
                 if (array_key_exists('fullname', $course) && ($oldcourse->fullname != $course['fullname'])) {
                     require_capability('moodle/course:changefullname', $context);
                     if (trim($course['fullname']) === '') {
-                        throw new moodle_exception('errorinvalidparam', 'webservice', '', 'fullname');
+                        throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'fullname');
                     }
                 }
 
@@ -1137,7 +1137,7 @@ class core_course_external extends external_api {
                 if (array_key_exists('shortname', $course) && ($oldcourse->shortname != $course['shortname'])) {
                     require_capability('moodle/course:changeshortname', $context);
                     if (trim($course['shortname']) === '') {
-                        throw new moodle_exception('errorinvalidparam', 'webservice', '', 'shortname');
+                        throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'shortname');
                     }
                 }
 
@@ -1166,7 +1166,7 @@ class core_course_external extends external_api {
                 if (array_key_exists('lang', $course) && ($oldcourse->lang != $course['lang'])) {
                     require_capability('moodle/course:setforcedlanguage', $context);
                     if (empty($availablelangs[$course['lang']])) {
-                        throw new moodle_exception('errorinvalidparam', 'webservice', '', 'lang');
+                        throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'lang');
                     }
                 }
 
@@ -1174,7 +1174,7 @@ class core_course_external extends external_api {
                 if (array_key_exists('forcetheme', $course)) {
                     if (!empty($CFG->allowcoursethemes)) {
                         if (empty($availablethemes[$course['forcetheme']])) {
-                            throw new moodle_exception('errorinvalidparam', 'webservice', '', 'forcetheme');
+                            throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'forcetheme');
                         } else {
                             $course['theme'] = $course['forcetheme'];
                         }
@@ -1403,7 +1403,7 @@ class core_course_external extends external_api {
         // Context validation.
 
         if (! ($course = $DB->get_record('course', array('id'=>$params['courseid'])))) {
-            throw new moodle_exception('invalidcourseid', 'error');
+            throw new moodle_exception('invalidcourseid', 'mod_error');
         }
 
         // Category where duplicated course is going to be created.
@@ -1436,11 +1436,11 @@ class core_course_external extends external_api {
                 $value = clean_param($option['value'], PARAM_INT);
 
                 if ($value !== 0 and $value !== 1) {
-                    throw new moodle_exception('invalidextparam', 'webservice', '', $option['name']);
+                    throw new moodle_exception('invalidextparam', 'core_webservice', '', $option['name']);
                 }
 
                 if (!isset($backupdefaults[$option['name']])) {
-                    throw new moodle_exception('invalidextparam', 'webservice', '', $option['name']);
+                    throw new moodle_exception('invalidextparam', 'core_webservice', '', $option['name']);
                 }
 
                 $backupsettings[$option['name']] = $value;
@@ -1528,7 +1528,7 @@ class core_course_external extends external_api {
                     }
                 }
 
-                throw new moodle_exception('backupprecheckerrors', 'webservice', '', $errorinfo);
+                throw new moodle_exception('backupprecheckerrors', 'core_webservice', '', $errorinfo);
             }
         }
 
@@ -1624,17 +1624,17 @@ class core_course_external extends external_api {
         );
 
         if ($params['deletecontent'] !== 0 and $params['deletecontent'] !== 1) {
-            throw new moodle_exception('invalidextparam', 'webservice', '', $params['deletecontent']);
+            throw new moodle_exception('invalidextparam', 'core_webservice', '', $params['deletecontent']);
         }
 
         // Context validation.
 
         if (! ($importfrom = $DB->get_record('course', array('id'=>$params['importfrom'])))) {
-            throw new moodle_exception('invalidcourseid', 'error');
+            throw new moodle_exception('invalidcourseid', 'mod_error');
         }
 
         if (! ($importto = $DB->get_record('course', array('id'=>$params['importto'])))) {
-            throw new moodle_exception('invalidcourseid', 'error');
+            throw new moodle_exception('invalidcourseid', 'mod_error');
         }
 
         $importfromcontext = context_course::instance($importfrom->id);
@@ -1659,11 +1659,11 @@ class core_course_external extends external_api {
                 $value = clean_param($option['value'], PARAM_INT);
 
                 if ($value !== 0 and $value !== 1) {
-                    throw new moodle_exception('invalidextparam', 'webservice', '', $option['name']);
+                    throw new moodle_exception('invalidextparam', 'core_webservice', '', $option['name']);
                 }
 
                 if (!isset($backupdefaults[$option['name']])) {
-                    throw new moodle_exception('invalidextparam', 'webservice', '', $option['name']);
+                    throw new moodle_exception('invalidextparam', 'core_webservice', '', $option['name']);
                 }
 
                 $backupsettings[$option['name']] = $value;
@@ -1723,7 +1723,7 @@ class core_course_external extends external_api {
                     }
                 }
 
-                throw new moodle_exception('backupprecheckerrors', 'webservice', '', $errorinfo);
+                throw new moodle_exception('backupprecheckerrors', 'core_webservice', '', $errorinfo);
             }
         } else {
             if ($restoretarget == backup::TARGET_EXISTING_DELETING) {
@@ -1840,7 +1840,7 @@ class core_course_external extends external_api {
                                 // We must throw an exception.
                                 // Otherwise the dev client would think no idnumber exists.
                                 throw new moodle_exception('criteriaerror',
-                                        'webservice', '', null,
+                                        'core_webservice', '', null,
                                         'You don\'t have the permissions to search on the "idnumber" field.');
                             }
                             break;
@@ -1864,7 +1864,7 @@ class core_course_external extends external_api {
                                 $wheres[] = $key . " = :" . $key;
                             } else {
                                 throw new moodle_exception('criteriaerror',
-                                        'webservice', '', null,
+                                        'core_webservice', '', null,
                                         'You don\'t have the permissions to search on the "visible" field.');
                             }
                             break;
@@ -1876,14 +1876,14 @@ class core_course_external extends external_api {
                                 $wheres[] = $key . " = :" . $key;
                             } else {
                                 throw new moodle_exception('criteriaerror',
-                                        'webservice', '', null,
+                                        'core_webservice', '', null,
                                         'You don\'t have the permissions to search on the "theme" field.');
                             }
                             break;
 
                         default:
                             throw new moodle_exception('criteriaerror',
-                                    'webservice', '', null,
+                                    'core_webservice', '', null,
                                     'You can not search on this criteria: ' . $key);
                     }
                 }
@@ -1960,7 +1960,7 @@ class core_course_external extends external_api {
                     $exceptionparam = new stdClass();
                     $exceptionparam->message = $e->getMessage();
                     $exceptionparam->catid = $category->id;
-                    throw new moodle_exception('errorcatcontextnotvalid', 'webservice', '', $exceptionparam);
+                    throw new moodle_exception('errorcatcontextnotvalid', 'core_webservice', '', $exceptionparam);
                 }
             }
 

@@ -106,7 +106,7 @@ if ($cmid) {
     $module = null;
     $cm = null;
 } else {
-    throw new moodle_exception('missingcourseorcmid', 'question');
+    throw new moodle_exception('missingcourseorcmid', 'core_question');
 }
 $contexts = new core_question\local\bank\question_edit_contexts($thiscontext);
 $PAGE->set_pagelayout('admin');
@@ -117,7 +117,7 @@ if (optional_param('addcancel', false, PARAM_BOOL)) {
 
 if ($id) {
     if (!$question = $DB->get_record('question', array('id' => $id))) {
-        throw new moodle_exception('questiondoesnotexist', 'question', $returnurl);
+        throw new moodle_exception('questiondoesnotexist', 'core_question', $returnurl);
     }
     // We can use $COURSE here because it's been initialised as part of the
     // require_login above. Passing it as the third parameter tells the function
@@ -132,7 +132,7 @@ if ($id) {
 
     // Check that users are allowed to create this question type at the moment.
     if (!question_bank::qtype_enabled($qtype)) {
-        throw new moodle_exception('cannotenable', 'question', $returnurl, $qtype);
+        throw new moodle_exception('cannotenable', 'core_question', $returnurl, $qtype);
     }
 
 } else if ($categoryid) {
@@ -143,7 +143,7 @@ if ($id) {
     redirect($addurl);
 
 } else {
-    throw new moodle_exception('notenoughdatatoeditaquestion', 'question', $returnurl);
+    throw new moodle_exception('notenoughdatatoeditaquestion', 'core_question', $returnurl);
 }
 
 $qtypeobj = question_bank::get_qtype($question->qtype);
@@ -153,7 +153,7 @@ if (isset($question->categoryobject)) {
 } else {
     // Validate the question category.
     if (!$category = $DB->get_record('question_categories', array('id' => $question->category))) {
-        throw new moodle_exception('categorydoesnotexist', 'question', $returnurl);
+        throw new moodle_exception('categorydoesnotexist', 'core_question', $returnurl);
     }
 }
 
@@ -177,7 +177,7 @@ if ($id) {
     $question->beingcopied = false;
     if ($makecopy) {
         // If we are duplicating a question, add some indication to the question name.
-        $question->name = get_string('questionnamecopy', 'question', $question->name);
+        $question->name = get_string('questionnamecopy', 'core_question', $question->name);
         $question->idnumber = isset($question->idnumber) ?
             core_question_find_next_unused_idnumber($question->idnumber, $category->id) : '';
         $question->beingcopied = true;

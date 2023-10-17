@@ -17,7 +17,7 @@ if (empty($SESSION->bulk_users)) {
 }
 
 if (empty($CFG->messaging)) {
-    throw new \moodle_exception('messagingdisable', 'error');
+    throw new \moodle_exception('messagingdisable', 'mod_error');
 }
 
 $PAGE->set_primary_active_tab('siteadminnode');
@@ -56,12 +56,12 @@ if ($msgform->is_cancelled()) {
     $userlist = $DB->get_records_select_menu('user', "id $in", $params, 'fullname', 'id,'.$DB->sql_fullname().' AS fullname');
     $usernames = implode(', ', $userlist);
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('confirmation', 'admin'));
+    echo $OUTPUT->heading(get_string('confirmation', 'core_admin'));
     echo $OUTPUT->box($msg, 'boxwidthnarrow boxaligncenter generalbox', 'preview'); //TODO: clean once we start using proper text formats here
 
     $formcontinue = new single_button(new moodle_url('user_bulk_message.php', array('confirm' => 1, 'msg' => $msg)), get_string('yes')); //TODO: clean once we start using proper text formats here
     $formcancel = new single_button(new moodle_url('user_bulk.php'), get_string('no'), 'get');
-    echo $OUTPUT->confirm(get_string('confirmmessage', 'bulkusers', $usernames), $formcontinue, $formcancel);
+    echo $OUTPUT->confirm(get_string('confirmmessage', 'mod_bulkusers', $usernames), $formcontinue, $formcancel);
     echo $OUTPUT->footer();
     die;
 }

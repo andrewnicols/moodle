@@ -279,7 +279,7 @@ abstract class question_state {
      * @return string a string from the lang pack that can be used in the UI.
      */
     public function default_string($showcorrectness) {
-        return get_string($this->get_state_class($showcorrectness), 'question');
+        return get_string($this->get_state_class($showcorrectness), 'core_question');
     }
 }
 

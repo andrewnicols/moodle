@@ -146,7 +146,7 @@ class course_module_competency extends persistent {
     protected function validate_cmid($data) {
         global $DB;
         if (!$DB->record_exists('course_modules', array('id' => $data))) {
-            return new lang_string('invalidmodule', 'error');
+            return new lang_string('invalidmodule', 'mod_error');
         }
         return true;
     }
@@ -159,7 +159,7 @@ class course_module_competency extends persistent {
      */
     protected function validate_competencyid($data) {
         if (!competency::record_exists($data)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }

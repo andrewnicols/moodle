@@ -109,7 +109,7 @@ class block_login extends block_base {
 
             if (!empty($potentialidps)) {
                 $this->content->text .= '<div class="potentialidps">';
-                $this->content->text .= '<h6>' . get_string('potentialidps', 'auth') . '</h6>';
+                $this->content->text .= '<h6>' . get_string('potentialidps', 'core_auth') . '</h6>';
                 $this->content->text .= '<div class="potentialidplist">';
                 foreach ($potentialidps as $idp) {
                     $this->content->text .= '<div class="potentialidp">';

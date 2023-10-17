@@ -49,7 +49,7 @@ if ($cmid) {
     require_login($courseid, false);
     $thiscontext = context_course::instance($courseid);
 } else {
-    throw new moodle_exception('missingcourseorcmid', 'question');
+    throw new moodle_exception('missingcourseorcmid', 'core_question');
 }
 
 $contexts = new core_question\local\bank\question_edit_contexts($thiscontext);
@@ -84,7 +84,7 @@ if ($deleteselected && ($confirm = optional_param('confirm', '', PARAM_ALPHANUM)
         }
         redirect($returnurl);
     } else {
-        throw new \moodle_exception('invalidconfirm', 'question');
+        throw new \moodle_exception('invalidconfirm', 'core_question');
     }
 }
 

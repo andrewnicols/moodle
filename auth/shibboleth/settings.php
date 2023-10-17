@@ -79,7 +79,7 @@ if ($ADMIN->fulltree) {
     // Password change URL.
     $settings->add(new admin_setting_configtext('auth_shibboleth/changepasswordurl',
             get_string('auth_shib_changepasswordurl', 'auth_shibboleth'),
-            get_string('changepasswordhelp', 'auth'), '', PARAM_URL));
+            get_string('changepasswordhelp', 'core_auth'), '', PARAM_URL));
 
     // Display locking / mapping of profile fields.
     $authplugin = get_auth_plugin('shibboleth');

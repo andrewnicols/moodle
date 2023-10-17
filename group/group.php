@@ -119,9 +119,9 @@ $strgroups = get_string('groups');
 $strparticipants = get_string('participants');
 
 if ($id) {
-    $strheading = get_string('editgroupsettings', 'group');
+    $strheading = get_string('editgroupsettings', 'core_group');
 } else {
-    $strheading = get_string('creategroup', 'group');
+    $strheading = get_string('creategroup', 'core_group');
 }
 
 $PAGE->navbar->add($strparticipants, new moodle_url('/user/index.php', array('id'=>$courseid)));

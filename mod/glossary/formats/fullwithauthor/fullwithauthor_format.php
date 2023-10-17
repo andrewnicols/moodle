@@ -5,7 +5,7 @@ function glossary_show_entry_fullwithauthor($course, $cm, $glossary, $entry, $mo
 
 
     $user = $DB->get_record('user', array('id'=>$entry->userid));
-    $strby = get_string('writtenby', 'glossary');
+    $strby = get_string('writtenby', 'mod_glossary');
 
     if ($entry) {
         echo '<table class="glossarypost fullwithauthor" cellspacing="0">';
@@ -25,7 +25,7 @@ function glossary_show_entry_fullwithauthor($course, $cm, $glossary, $entry, $mo
         $by = new stdClass();
         $by->name = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$course->id.'">'.$fullname.'</a>';
         $by->date = userdate($entry->timemodified);
-        echo '<span class="author">'.get_string('bynameondate', 'forum', $by).'</span>';
+        echo '<span class="author">'.get_string('bynameondate', 'mod_forum', $by).'</span>';
 
         echo '</th>';
         echo '<td class="entryattachment">';

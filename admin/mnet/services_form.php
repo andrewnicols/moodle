@@ -59,15 +59,15 @@ class mnet_services_form extends moodleform {
             // Temporary fix until MDL-38885 gets integrated.
             $mform->setType('exists', PARAM_BOOL);
 
-            $pubstr = get_string('publish','mnet');
+            $pubstr = get_string('publish','core_mnet');
             if (!empty($version['hostsubscribes'])) {
-                $pubstr .= ' <a class="notifysuccess" title="'.s(get_string('issubscribed','mnet', $mnet_peer->name)).'">&radic;</a> ';
+                $pubstr .= ' <a class="notifysuccess" title="'.s(get_string('issubscribed','core_mnet', $mnet_peer->name)).'">&radic;</a> ';
             }
             $mform->addElement('advcheckbox', 'publish[' . $version['serviceid'] . ']', $pubstr);
 
-            $substr = get_string('subscribe','mnet');
+            $substr = get_string('subscribe','core_mnet');
             if (!empty($version['hostpublishes'])) {
-                $substr .= ' <a class="notifysuccess" title="'.s(get_string('ispublished','mnet', $mnet_peer->name)).'">&radic;</a> ';
+                $substr .= ' <a class="notifysuccess" title="'.s(get_string('ispublished','core_mnet', $mnet_peer->name)).'">&radic;</a> ';
             }
             $mform->addElement('advcheckbox', 'subscribe[' . $version['serviceid']. ']', $substr);
             $count++;

@@ -48,9 +48,9 @@ if ($courseid) {
         redirect('../../index.php?id='.$courseid);
     }
     navigation_node::override_active_url(new moodle_url('/grade/edit/outcome/course.php', ['id' => $courseid]));
-    $PAGE->navbar->add(get_string('manageoutcomes', 'grades'),
+    $PAGE->navbar->add(get_string('manageoutcomes', 'core_grades'),
         new moodle_url('/grade/edit/outcome/index.php', ['id' => $courseid]));
-    $PAGE->navbar->add(get_string('importoutcomes', 'grades'),
+    $PAGE->navbar->add(get_string('importoutcomes', 'core_grades'),
         new moodle_url('/grade/edit/outcome/import.php', ['courseid' => $courseid]));
 
 } else {
@@ -68,7 +68,7 @@ if ($upload_form->is_cancelled()) {
     die;
 }
 
-print_grade_page_head($courseid, 'outcome', 'import', get_string('importoutcomes', 'grades'),
+print_grade_page_head($courseid, 'outcome', 'import', get_string('importoutcomes', 'core_grades'),
     false, false, false);
 
 if (!$upload_form->get_data()) { // Display the import form.
@@ -82,7 +82,7 @@ make_temp_directory('outcomeimport');
 
 // copying imported file
 if (!$upload_form->save_file('userfile', $imported_file, true)) {
-    redirect('import.php'. ($courseid ? "?courseid=$courseid" : ''), get_string('importfilemissing', 'grades'));
+    redirect('import.php'. ($courseid ? "?courseid=$courseid" : ''), get_string('importfilemissing', 'core_grades'));
 }
 
 /// which scope are we importing the outcomes in?
@@ -94,7 +94,7 @@ if (isset($courseid) && ($scope  == 'custom')) {
     $local_scope = false;
 } else {
     // shouldn't happen .. user might be trying to access this script without the right permissions.
-    redirect('index.php', get_string('importerror', 'grades'));
+    redirect('index.php', get_string('importerror', 'core_grades'));
 }
 
 // open the file, start importing data
@@ -135,7 +135,7 @@ if ($handle = fopen($imported_file, 'r')) {
             }
             if ($error) {
                 $fatal_error = true;
-                $errormessage = get_string('importoutcomenofile', 'grades', $line);
+                $errormessage = get_string('importoutcomenofile', 'core_grades', $line);
                 break;
             }
 
@@ -151,7 +151,7 @@ if ($handle = fopen($imported_file, 'r')) {
         // headers.  If not, processing stops.
         if ( count($csv_data) != count($file_headers) ) {
             $fatal_error = true;
-            $errormessage = get_string('importoutcomenofile', 'grades', $line);
+            $errormessage = get_string('importoutcomenofile', 'core_grades', $line);
             break;
         }
 
@@ -159,7 +159,7 @@ if ($handle = fopen($imported_file, 'r')) {
         foreach ($headers as $header => $position) {
             if ($csv_data[$imported_headers[$header]] == '') {
                 $fatal_error = true;
-                $errormessage = get_string('importoutcomenofile', 'grades', $line);
+                $errormessage = get_string('importoutcomenofile', 'core_grades', $line);
                 break;
             }
         }
@@ -182,7 +182,7 @@ if ($handle = fopen($imported_file, 'r')) {
 
         if ($outcome) {
             // already exists, print a message and skip.
-            echo $OUTPUT->notification(get_string('importskippedoutcome', 'grades',
+            echo $OUTPUT->notification(get_string('importskippedoutcome', 'core_grades',
                 $csv_data[$imported_headers['outcome_shortname']]), 'info', false);
             continue;
         }
@@ -197,7 +197,7 @@ if ($handle = fopen($imported_file, 'r')) {
             $scale_id = key($scale);
         } else {
             if (!has_capability('moodle/course:managescales', $context)) {
-                echo $OUTPUT->notification(get_string('importskippedoutcome', 'grades',
+                echo $OUTPUT->notification(get_string('importskippedoutcome', 'core_grades',
                     $csv_data[$imported_headers['outcome_shortname']]), 'warning', false);
                 continue;
             } else {
@@ -235,7 +235,7 @@ if ($handle = fopen($imported_file, 'r')) {
         $outcome_success_strings = new StdClass();
         $outcome_success_strings->name = $outcome_data['fullname'];
         $outcome_success_strings->id = $outcome_id;
-        echo $OUTPUT->notification(get_string('importoutcomesuccess', 'grades', $outcome_success_strings),
+        echo $OUTPUT->notification(get_string('importoutcomesuccess', 'core_grades', $outcome_success_strings),
             'success', false);
     }
 
@@ -248,7 +248,7 @@ if ($handle = fopen($imported_file, 'r')) {
             get_string('continue'), 'get');
     }
 } else {
-    echo $OUTPUT->box(get_string('importoutcomenofile', 'grades', 0));
+    echo $OUTPUT->box(get_string('importoutcomenofile', 'core_grades', 0));
 }
 
 // finish

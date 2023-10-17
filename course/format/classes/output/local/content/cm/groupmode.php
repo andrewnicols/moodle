@@ -92,16 +92,16 @@ class groupmode implements named_templatable, renderable {
     protected function build_static_data(\renderer_base $output): stdClass {
         switch ($this->mod->effectivegroupmode) {
             case SEPARATEGROUPS:
-                $groupalt = get_string('groupsseparate', 'group');
+                $groupalt = get_string('groupsseparate', 'core_group');
                 $groupicon = $this->get_action_icon('cmSeparateGroups', $groupalt);
                 break;
             case VISIBLEGROUPS:
-                $groupalt = get_string('groupsvisible', 'group');
+                $groupalt = get_string('groupsvisible', 'core_group');
                 $groupicon = $this->get_action_icon('cmVisibleGroups', $groupalt);
                 break;
             case NOGROUPS:
             default:
-                $groupalt = get_string('groupsnone', 'group');
+                $groupalt = get_string('groupsnone', 'core_group');
                 $groupicon = $this->get_action_icon('cmNoGroups', $groupalt);
                 break;
         }
@@ -156,17 +156,17 @@ class groupmode implements named_templatable, renderable {
         $choice = new choicelist();
         $choice->add_option(
             NOGROUPS,
-            get_string('groupsnone', 'group'),
+            get_string('groupsnone', 'core_group'),
             $this->get_option_data(null, 'cmNoGroups', $this->mod->id)
         );
         $choice->add_option(
             SEPARATEGROUPS,
-            get_string('groupsseparate', 'group'),
+            get_string('groupsseparate', 'core_group'),
             $this->get_option_data('groupsseparate', 'cmSeparateGroups', $this->mod->id)
         );
         $choice->add_option(
             VISIBLEGROUPS,
-            get_string('groupsvisible', 'group'),
+            get_string('groupsvisible', 'core_group'),
             $this->get_option_data('groupsvisible', 'cmVisibleGroups', $this->mod->id)
         );
         $choice->set_selected_value($this->mod->effectivegroupmode);
@@ -182,7 +182,7 @@ class groupmode implements named_templatable, renderable {
      */
     private function get_option_data(?string $name, string $action, int $id): array {
         return [
-            'description' => ($name) ? get_string("groupmode_{$name}_help", 'group') : null,
+            'description' => ($name) ? get_string("groupmode_{$name}_help", 'core_group') : null,
             // The dropdown icons are decorative, so we don't need to provide alt text.
             'icon' => $this->get_action_icon($action),
             'extras' => [

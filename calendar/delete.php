@@ -57,10 +57,10 @@ require_login($course);
 if (!$course) {
     $PAGE->set_context(context_system::instance()); //TODO: wrong
 }
-$title = get_string('deleteevent', 'calendar');
+$title = get_string('deleteevent', 'core_calendar');
 // Check the user has the required capabilities to delete an event
 if (!calendar_delete_event_allowed($event)) {
-    throw new \moodle_exception('nopermissions', 'error', $PAGE->url, $title);
+    throw new \moodle_exception('nopermissions', 'mod_error', $PAGE->url, $title);
 }
 
 // Count the repeats, do we need to consider the possibility of deleting repeats
@@ -88,7 +88,7 @@ if ($confirm) {
 }
 
 // Prepare the page to show the confirmation form
-$strcalendar = get_string('calendar', 'calendar');
+$strcalendar = get_string('calendar', 'core_calendar');
 
 $PAGE->navbar->add($strcalendar, $viewcalendarurl);
 $PAGE->navbar->add($title);
@@ -109,13 +109,13 @@ $buttons .= $OUTPUT->single_button($viewcalendarurl, get_string('cancel'));
 
 // And show the buttons and notes.
 echo $OUTPUT->box_start('generalbox', 'notice');
-echo html_writer::tag('p', get_string('confirmeventdelete', 'calendar', format_string($event->name)));
+echo html_writer::tag('p', get_string('confirmeventdelete', 'core_calendar', format_string($event->name)));
 
 // If there are repeated events then add a Delete Repeated button.
 if (!empty($event->eventrepeats) && $event->eventrepeats > 0) {
     $url = new moodle_url(CALENDAR_URL.'delete.php', array('id'=>$event->repeatid, 'confirm'=>true, 'repeats'=>true));
     $buttons .= $OUTPUT->single_button($url, get_string('deleteall'));
-    echo html_writer::tag('p', get_string('youcandeleteallrepeats', 'calendar', $event->eventrepeats));
+    echo html_writer::tag('p', get_string('youcandeleteallrepeats', 'core_calendar', $event->eventrepeats));
 }
 
 echo $OUTPUT->box($buttons, 'buttons');

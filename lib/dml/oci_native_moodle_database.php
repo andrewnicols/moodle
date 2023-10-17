@@ -59,7 +59,7 @@ class oci_native_moodle_database extends moodle_database {
      */
     public function driver_installed() {
         if (!extension_loaded('oci8')) {
-            return get_string('ociextensionisnotpresentinphp', 'install');
+            return get_string('ociextensionisnotpresentinphp', 'mod_install');
         }
         return true;
     }
@@ -97,7 +97,7 @@ class oci_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_name() {
-        return get_string('nativeoci', 'install');
+        return get_string('nativeoci', 'mod_install');
     }
 
     /**
@@ -106,7 +106,7 @@ class oci_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_configuration_help() {
-        return get_string('nativeocihelp', 'install');
+        return get_string('nativeocihelp', 'mod_install');
     }
 
     /**

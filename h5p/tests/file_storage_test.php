@@ -654,7 +654,7 @@ class file_storage_test extends \advanced_testcase {
         $filename = 'fake.png';
         $h5pcontentfolder = $tempfolder . '/fakeH5Pcontent/content' . $filepath;
         if (!check_dir_exists($h5pcontentfolder, true, true)) {
-            throw new moodle_exception('error_creating_temp_dir', 'error', $h5pcontentfolder);
+            throw new moodle_exception('error_creating_temp_dir', 'mod_error', $h5pcontentfolder);
         }
 
         $file = $h5pcontentfolder . $filename;
@@ -781,7 +781,7 @@ class file_storage_test extends \advanced_testcase {
         $h5pcontentfolder = $tempfolder . '/fakeH5Pcontent';
         $contentfolder = $h5pcontentfolder . '/content';
         if (!check_dir_exists($contentfolder, true, true)) {
-            throw new moodle_exception('error_creating_temp_dir', 'error', $contentfolder);
+            throw new moodle_exception('error_creating_temp_dir', 'mod_error', $contentfolder);
         }
 
         // Add content.json file.
@@ -794,7 +794,7 @@ class file_storage_test extends \advanced_testcase {
             $foldername = '/folder' . $numfolder;
             $newfolder = $contentfolder . $foldername;
             if (!check_dir_exists($newfolder, true, true)) {
-                throw new moodle_exception('error_creating_temp_dir', 'error', $newfolder);
+                throw new moodle_exception('error_creating_temp_dir', 'mod_error', $newfolder);
             }
             $numfiles = random_int(2, 5);
             for ($numfile = 1; $numfile < $numfiles; $numfile++) {

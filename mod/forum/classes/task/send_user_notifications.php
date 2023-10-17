@@ -335,7 +335,7 @@ class send_user_notifications extends \core\task\adhoc_task {
             'coursefullname' => $data->get_coursefullname(),
             'courseshortname' => $data->get_coursename(),
         ];
-        $postsubject = html_to_text(get_string('postmailsubject', 'forum', $a), 0);
+        $postsubject = html_to_text(get_string('postmailsubject', 'mod_forum', $a), 0);
 
         // Message headers are stored against the message author.
         $author->customheaders = $this->get_message_headers($course, $forum, $discussion, $post, $a, $data);
@@ -364,7 +364,7 @@ class send_user_notifications extends \core\task\adhoc_task {
                 ]);
         }
 
-        $eventdata->smallmessage = get_string('smallmessage', 'forum', (object) [
+        $eventdata->smallmessage = get_string('smallmessage', 'mod_forum', (object) [
                 'user' => fullname($author),
                 'forumname' => "$shortname: " . format_string($forum->name, true) . ": " . $discussion->name,
                 'message' => $post->message,
@@ -491,7 +491,7 @@ class send_user_notifications extends \core\task\adhoc_task {
         // Thread-Topic which overrides the Subject and shouldn't contain Re: or Fwd: etc.
         $aclone = (object) (array) $a;
         $aclone->subject = $discussion->name;
-        $threadtopic = html_to_text(get_string('postmailsubject', 'forum', $aclone), 0);
+        $threadtopic = html_to_text(get_string('postmailsubject', 'mod_forum', $aclone), 0);
         $headers[] = "Thread-Topic: $threadtopic";
         $headers[] = "Thread-Index: " . substr($rootid, 1, 28);
 

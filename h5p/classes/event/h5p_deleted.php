@@ -51,7 +51,7 @@ class h5p_deleted extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventh5pdeleted', 'h5p');
+        return get_string('eventh5pdeleted', 'core_h5p');
     }
 
     /**

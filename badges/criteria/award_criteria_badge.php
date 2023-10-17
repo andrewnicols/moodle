@@ -52,7 +52,7 @@ class award_criteria_badge extends award_criteria {
         foreach ($this->params as $p) {
             $badgename = $DB->get_field('badge', 'name', array('id' => $p['badge']));
             if (!$badgename) {
-                $str = $OUTPUT->error_text(get_string('error:nosuchbadge', 'badges'));
+                $str = $OUTPUT->error_text(get_string('error:nosuchbadge', 'core_badges'));
             } else {
                 $str = html_writer::tag('b', '"' . $badgename . '"');
             }
@@ -113,24 +113,24 @@ class award_criteria_badge extends award_criteria {
                 $selected = array_keys($this->params);
             }
             $settings = array('multiple' => 'multiple', 'size' => 20, 'class' => 'selectbadge', 'required' => 'required');
-            $mform->addElement('select', 'badge_badges', get_string('addbadge', 'badges'), $select, $settings);
-            $mform->addRule('badge_badges', get_string('requiredbadge', 'badges'), 'required');
+            $mform->addElement('select', 'badge_badges', get_string('addbadge', 'core_badges'), $select, $settings);
+            $mform->addRule('badge_badges', get_string('requiredbadge', 'core_badges'), 'required');
             $mform->addHelpButton('badge_badges', 'addbadge', 'badges');
 
             if ($this->id !== 0) {
                 $mform->setDefault('badge_badges', $selected);
             }
         } else {
-            $mform->addElement('static', 'nobadges', '', get_string('error:nobadges', 'badges'));
+            $mform->addElement('static', 'nobadges', '', get_string('error:nobadges', 'core_badges'));
             $none = true;
         }
 
         // Add aggregation.
         if (!$none) {
-            $mform->addElement('header', 'aggregation', get_string('method', 'badges'));
+            $mform->addElement('header', 'aggregation', get_string('method', 'core_badges'));
             $agg = array();
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodbadges', 'badges'), 1);
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodbadges', 'badges'), 2);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodbadges', 'core_badges'), 1);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodbadges', 'core_badges'), 2);
             $mform->addGroup($agg, 'methodgr', '', array('<br/>'), false);
             if ($this->id !== 0) {
                 $mform->setDefault('agg', $this->method);
@@ -139,7 +139,7 @@ class award_criteria_badge extends award_criteria {
             }
         }
 
-        return array($none, get_string('noparamstoadd', 'badges'));
+        return array($none, get_string('noparamstoadd', 'core_badges'));
     }
 
     /**
@@ -222,7 +222,7 @@ class award_criteria_badge extends award_criteria {
             // Or there are more than one parameter with aggregation ALL.
 
             if (($singleparam || $method) && !$DB->record_exists('badge', array('id' => $param))) {
-                return array(false, get_string('error:invalidparambadge', 'badges'));
+                return array(false, get_string('error:invalidparambadge', 'core_badges'));
             }
         }
 

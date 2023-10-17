@@ -97,12 +97,12 @@ foreach ($outcomes as $outcomeid => $outcome) {
 }
 
 $html = '<table class="generaltable boxaligncenter" width="90%" cellspacing="1" cellpadding="5" summary="Outcomes Report">' . "\n";
-$html .= '<tr><th class="header c0" scope="col">' . get_string('outcomeshortname', 'grades') . '</th>';
-$html .= '<th class="header c1" scope="col">' . get_string('courseavg', 'grades') . '</th>';
-$html .= '<th class="header c2" scope="col">' . get_string('sitewide', 'grades') . '</th>';
-$html .= '<th class="header c3" scope="col">' . get_string('activities', 'grades') . '</th>';
-$html .= '<th class="header c4" scope="col">' . get_string('average', 'grades') . '</th>';
-$html .= '<th class="header c5" scope="col">' . get_string('numberofgrades', 'grades') . '</th></tr>' . "\n";
+$html .= '<tr><th class="header c0" scope="col">' . get_string('outcomeshortname', 'core_grades') . '</th>';
+$html .= '<th class="header c1" scope="col">' . get_string('courseavg', 'core_grades') . '</th>';
+$html .= '<th class="header c2" scope="col">' . get_string('sitewide', 'core_grades') . '</th>';
+$html .= '<th class="header c3" scope="col">' . get_string('activities', 'core_grades') . '</th>';
+$html .= '<th class="header c4" scope="col">' . get_string('average', 'core_grades') . '</th>';
+$html .= '<th class="header c5" scope="col">' . get_string('numberofgrades', 'core_grades') . '</th></tr>' . "\n";
 
 $row = 0;
 foreach ($report_info as $outcomeid => $outcomedata) {

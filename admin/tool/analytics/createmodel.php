@@ -66,7 +66,7 @@ if ($mform->is_cancelled()) {
     // Converting option names to class names.
     $targetclass = \tool_analytics\output\helper::option_to_class($data->target);
     if (empty($targets[$targetclass])) {
-        throw new \moodle_exception('errorinvalidtarget', 'analytics', '', $targetclass);
+        throw new \moodle_exception('errorinvalidtarget', 'core_analytics', '', $targetclass);
     }
     $target = $targets[$targetclass];
 

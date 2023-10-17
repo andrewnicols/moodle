@@ -32,7 +32,7 @@ class block_tags_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
         global $CFG;
         // Fields for editing HTML block title and contents.
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'core_block'));
 
         $mform->addElement('text', 'config_title', get_string('configtitle', 'block_tags'));
         $mform->setType('config_title', PARAM_TEXT);
@@ -44,7 +44,7 @@ class block_tags_edit_form extends block_edit_form {
         for ($i = 1; $i <= 200; $i++) {
             $numberoftags[$i] = $i;
         }
-        $mform->addElement('select', 'config_numberoftags', get_string('numberoftags', 'blog'), $numberoftags);
+        $mform->addElement('select', 'config_numberoftags', get_string('numberoftags', 'core_blog'), $numberoftags);
         $mform->setDefault('config_numberoftags', 80);
 
         $defaults = array(

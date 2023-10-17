@@ -54,7 +54,7 @@ class core_availability_renderer extends plugin_renderer_base {
         // Get initial message.
         $out = get_string('list_' . ($renderable->root ? 'root_' : '') .
                 ($renderable->andoperator ? 'and' : 'or') . ($renderable->treehidden ? '_hidden' : ''),
-                'availability');
+                'core_availability');
 
         // Make the list.
         $out .= html_writer::start_tag('ul');

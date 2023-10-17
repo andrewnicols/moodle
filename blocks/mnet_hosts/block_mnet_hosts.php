@@ -50,7 +50,7 @@ class block_mnet_hosts extends block_list {
         if (\core\session\manager::is_loggedinas()) {
             $this->content = new stdClass();
             $this->content->footer = html_writer::tag('span',
-                get_string('notpermittedtojumpas', 'mnet'));
+                get_string('notpermittedtojumpas', 'core_mnet'));
             return $this->content;
         }
 

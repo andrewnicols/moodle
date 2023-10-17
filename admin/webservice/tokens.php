@@ -37,11 +37,11 @@ $fservices = optional_param_array('fservices', [], PARAM_INT);
 admin_externalpage_setup('webservicetokens');
 
 $PAGE->set_primary_active_tab('siteadminnode');
-$PAGE->navbar->add(get_string('managetokens', 'webservice'),
+$PAGE->navbar->add(get_string('managetokens', 'core_webservice'),
     new moodle_url('/admin/webservice/tokens.php'));
 
 if ($action === 'create') {
-    $PAGE->navbar->add(get_string('createtoken', 'webservice'), $PAGE->url);
+    $PAGE->navbar->add(get_string('createtoken', 'core_webservice'), $PAGE->url);
     $webservicemanager = new webservice();
     $mform = new \core_webservice\token_form(null, ['action' => 'create']);
     $data = $mform->get_data();
@@ -59,7 +59,7 @@ if ($action === 'create') {
             $restricteduser = $webservicemanager->get_ws_authorised_user($data->service, $data->user);
 
             if (empty($restricteduser)) {
-                $errormsg = $OUTPUT->notification(get_string('usernotallowed', 'webservice', $selectedservice->name));
+                $errormsg = $OUTPUT->notification(get_string('usernotallowed', 'core_webservice', $selectedservice->name));
             }
         }
 
@@ -82,7 +82,7 @@ if ($action === 'create') {
     }
 
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('createtoken', 'webservice'));
+    echo $OUTPUT->heading(get_string('createtoken', 'core_webservice'));
     if (!empty($errormsg)) {
         echo $errormsg;
     }
@@ -92,7 +92,7 @@ if ($action === 'create') {
 }
 
 if ($action === 'delete') {
-    $PAGE->navbar->add(get_string('deletetoken', 'webservice'), $PAGE->url);
+    $PAGE->navbar->add(get_string('deletetoken', 'core_webservice'), $PAGE->url);
     $webservicemanager = new webservice();
     $token = $webservicemanager->get_token_by_id_with_details($tokenid);
 
@@ -108,7 +108,7 @@ if ($action === 'delete') {
     echo $OUTPUT->header();
 
     echo $OUTPUT->confirm(
-        get_string('deletetokenconfirm', 'webservice', [
+        get_string('deletetokenconfirm', 'core_webservice', [
             'user' => $token->firstname . ' ' . $token->lastname,
             'service' => $token->name,
         ]),

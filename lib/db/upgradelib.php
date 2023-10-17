@@ -286,9 +286,9 @@ function make_default_scale() {
     $defaultscale->userid = 0;
     $defaultscale->name  = get_string('separateandconnected');
     $defaultscale->description = get_string('separateandconnectedinfo');
-    $defaultscale->scale = get_string('postrating1', 'forum').','.
-                           get_string('postrating2', 'forum').','.
-                           get_string('postrating3', 'forum');
+    $defaultscale->scale = get_string('postrating1', 'mod_forum').','.
+                           get_string('postrating2', 'mod_forum').','.
+                           get_string('postrating3', 'mod_forum');
     $defaultscale->timemodified = time();
 
     $defaultscale->id = $DB->insert_record('scale', $defaultscale);

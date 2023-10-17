@@ -84,7 +84,7 @@ if ($options['help']) {
 }
 
 if (empty($CFG->version)) {
-    cli_error(get_string('missingconfigversion', 'debug'));
+    cli_error(get_string('missingconfigversion', 'mod_debug'));
 }
 
 echo "\n".get_string('cliheading', 'tool_dbtransfer')."\n\n";
@@ -98,8 +98,8 @@ if (!isset($options['dbtype'])) {
         $choose[$dbtype] = $dbtype;
     }
     $optionsstr = implode(', ', $choose);
-    cli_heading(get_string('databasetypehead', 'install')." ($optionsstr)");
-    $options['dbtype'] = cli_input(get_string('clitypevalue', 'admin'), '', $choose, true);
+    cli_heading(get_string('databasetypehead', 'mod_install')." ($optionsstr)");
+    $options['dbtype'] = cli_input(get_string('clitypevalue', 'core_admin'), '', $choose, true);
 }
 
 $choose = array();
@@ -112,43 +112,43 @@ foreach ($drivers as $driver => $name) {
 if (!isset($options['dblibrary']) or !isset($choose[$options['dblibrary']])) {
     $optionsstr = implode(', ', $choose);
     cli_heading('Database library'." ($optionsstr)"); // Note: no need to localise unless we add real PDO drivers.
-    $options['dblibrary'] = cli_input(get_string('clitypevalue', 'admin'), '', $choose, true);
+    $options['dblibrary'] = cli_input(get_string('clitypevalue', 'core_admin'), '', $choose, true);
 }
 
 if (!isset($options['dbhost'])) {
-    cli_heading(get_string('databasehost', 'install'));
-    $options['dbhost'] = cli_input(get_string('clitypevalue', 'admin'));
+    cli_heading(get_string('databasehost', 'mod_install'));
+    $options['dbhost'] = cli_input(get_string('clitypevalue', 'core_admin'));
 }
 
 if (!isset($options['dbname'])) {
-    cli_heading(get_string('databasename', 'install'));
-    $options['dbname'] = cli_input(get_string('clitypevalue', 'admin'));
+    cli_heading(get_string('databasename', 'mod_install'));
+    $options['dbname'] = cli_input(get_string('clitypevalue', 'core_admin'));
 }
 
 if (!isset($options['dbuser'])) {
-    cli_heading(get_string('databaseuser', 'install'));
-    $options['dbuser'] = cli_input(get_string('clitypevalue', 'admin'));
+    cli_heading(get_string('databaseuser', 'mod_install'));
+    $options['dbuser'] = cli_input(get_string('clitypevalue', 'core_admin'));
 }
 
 if (!isset($options['dbpass'])) {
-    cli_heading(get_string('databasepass', 'install'));
-    $options['dbpass'] = cli_input(get_string('clitypevalue', 'admin'));
+    cli_heading(get_string('databasepass', 'mod_install'));
+    $options['dbpass'] = cli_input(get_string('clitypevalue', 'core_admin'));
 }
 
 if (!isset($options['prefix'])) {
-    cli_heading(get_string('dbprefix', 'install'));
-    $options['prefix'] = cli_input(get_string('clitypevalue', 'admin'));
+    cli_heading(get_string('dbprefix', 'mod_install'));
+    $options['prefix'] = cli_input(get_string('clitypevalue', 'core_admin'));
 }
 
 if (!isset($options['dbport'])) {
-    cli_heading(get_string('dbport', 'install'));
-    $options['dbport'] = cli_input(get_string('clitypevalue', 'admin'));
+    cli_heading(get_string('dbport', 'mod_install'));
+    $options['dbport'] = cli_input(get_string('clitypevalue', 'core_admin'));
 }
 
 if ($CFG->ostype !== 'WINDOWS') {
     if (!isset($options['dbsocket'])) {
-        cli_heading(get_string('databasesocket', 'install'));
-        $options['dbsocket'] = cli_input(get_string('clitypevalue', 'admin'));
+        cli_heading(get_string('databasesocket', 'mod_install'));
+        $options['dbsocket'] = cli_input(get_string('clitypevalue', 'core_admin'));
     }
 }
 

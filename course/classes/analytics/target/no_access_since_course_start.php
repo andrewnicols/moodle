@@ -53,7 +53,7 @@ class no_access_since_course_start extends no_recent_accesses {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:noaccesssincecoursestart', 'course');
+        return new \lang_string('target:noaccesssincecoursestart', 'core_course');
     }
 
     /**
@@ -69,9 +69,9 @@ class no_access_since_course_start extends no_recent_accesses {
         global $OUTPUT;
 
         $a = (object)['coursename' => $contextname, 'userfirstname' => $user->firstname];
-        $fullmessage = get_string('noaccesssincestartinfomessage', 'course', $a) . PHP_EOL . PHP_EOL . $insighturl->out(false);
+        $fullmessage = get_string('noaccesssincestartinfomessage', 'core_course', $a) . PHP_EOL . PHP_EOL . $insighturl->out(false);
         $fullmessagehtml = $OUTPUT->render_from_template('core_analytics/insight_info_message',
-            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('noaccesssincestartinfomessage', 'course', $a)]
+            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('noaccesssincestartinfomessage', 'core_course', $a)]
         );
 
         return [$fullmessage, $fullmessagehtml];

@@ -46,8 +46,8 @@ class tags_form extends \moodleform {
         $mform->addElement('hidden', 'contextid');
         $mform->setType('contextid', PARAM_INT);
 
-        $mform->addElement('static', 'questionname', get_string('questionname', 'question'));
-        $mform->addElement('static', 'questioncategory', get_string('categorycurrent', 'question'));
+        $mform->addElement('static', 'questionname', get_string('questionname', 'core_question'));
+        $mform->addElement('static', 'questioncategory', get_string('categorycurrent', 'core_question'));
         $mform->addElement('static', 'context', '');
 
         if (\core_tag_tag::is_enabled('core_question', 'question')) {
@@ -60,7 +60,7 @@ class tags_form extends \moodleform {
             $options = [
                 'tags' => true,
                 'multiple' => true,
-                'noselectionstring' => get_string('anytags', 'quiz'),
+                'noselectionstring' => get_string('anytags', 'mod_quiz'),
             ];
             $mform->addElement('autocomplete', 'tags',  get_string('tags'), $tagstrings, $options);
 

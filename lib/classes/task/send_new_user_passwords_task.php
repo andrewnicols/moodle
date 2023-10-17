@@ -34,7 +34,7 @@ class send_new_user_passwords_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('tasksendnewuserpasswords', 'admin');
+        return get_string('tasksendnewuserpasswords', 'core_admin');
     }
 
     /**

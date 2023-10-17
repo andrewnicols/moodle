@@ -42,7 +42,7 @@ $struninstall = get_string('uninstallplugin', 'core_admin');
 
 $table = new flexible_table('reportplugins_administration_table');
 $table->define_columns(array('name', 'logstoressupported', 'version', 'uninstall'));
-$table->define_headers(array(get_string('plugin'), get_string('logstoressupported', 'admin'), get_string('version'),
+$table->define_headers(array(get_string('plugin'), get_string('logstoressupported', 'core_admin'), get_string('version'),
         $struninstall));
 $table->define_baseurl($PAGE->url);
 $table->set_attribute('id', 'reportplugins');
@@ -86,11 +86,11 @@ foreach ($plugins as $plugin => $name) {
         $stores = $logmanager->get_supported_logstores('report_' . $plugin);
     }
     if ($stores === false) {
-        $supportedstores = get_string('logstorenotrequired', 'admin');
+        $supportedstores = get_string('logstorenotrequired', 'core_admin');
     } else if (!empty($stores)) {
         $supportedstores = implode(', ', $stores);
     } else {
-        $supportedstores = get_string('nosupportedlogstore', 'admin');;
+        $supportedstores = get_string('nosupportedlogstore', 'core_admin');;
     }
 
     if (!isset($versions[$plugin])) {

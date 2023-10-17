@@ -162,7 +162,7 @@ class message_test extends \advanced_testcase {
         $this->assertSame(true, $recordexists);
         $this->assertSame($user1->email, $email->from);
         $this->assertSame($user2->email, $email->to);
-        $this->assertSame(get_string('unreadnewmessage', 'message', fullname($user1)), $email->subject);
+        $this->assertSame(get_string('unreadnewmessage', 'core_message', fullname($user1)), $email->subject);
         $this->assertNotEmpty($email->header);
         $this->assertNotEmpty($email->body);
         $this->assertMatchesRegularExpression('/test.*message body.*test/s', $email->body);
@@ -202,7 +202,7 @@ class message_test extends \advanced_testcase {
         $this->assertSame(true, $recordexists);
         $this->assertSame($user1->email, $email->from);
         $this->assertSame($user2->email, $email->to);
-        $this->assertSame(get_string('unreadnewmessage', 'message', fullname($user1)), $email->subject);
+        $this->assertSame(get_string('unreadnewmessage', 'core_message', fullname($user1)), $email->subject);
         $this->assertNotEmpty($email->header);
         $this->assertNotEmpty($email->body);
         $this->assertDoesNotMatchRegularExpression('/test.*message body test/', $email->body);
@@ -241,7 +241,7 @@ class message_test extends \advanced_testcase {
         $message->name = 'instantmessage';
         $message->userfrom = $user1;
         $message->userto = $user2;
-        $message->subject = get_string('unreadnewmessage', 'message', fullname($user1));
+        $message->subject = get_string('unreadnewmessage', 'core_message', fullname($user1));
         $message->fullmessage = 'message body';
         $message->fullmessageformat = FORMAT_MARKDOWN;
         $message->fullmessagehtml = '<p>message body</p>';
@@ -254,7 +254,7 @@ class message_test extends \advanced_testcase {
         $emails = $sink->get_messages();
         $this->assertCount(1, $emails);
         $email = reset($emails);
-        $this->assertSame('[Prefix Text] '. get_string('unreadnewmessage', 'message', fullname($user1)), $email->subject);
+        $this->assertSame('[Prefix Text] '. get_string('unreadnewmessage', 'core_message', fullname($user1)), $email->subject);
         $sink->clear();
     }
 }

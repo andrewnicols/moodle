@@ -43,7 +43,7 @@ class meeting_left extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_meeting_left', 'bigbluebuttonbn');
+        return get_string('event_meeting_left', 'mod_bigbluebuttonbn');
     }
 
     /**

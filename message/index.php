@@ -31,7 +31,7 @@ if (isguestuser()) {
 }
 
 if (empty($CFG->messaging)) {
-    throw new \moodle_exception('disabled', 'message');
+    throw new \moodle_exception('disabled', 'core_message');
 }
 
 // The id of the user we want to view messages from.
@@ -70,7 +70,7 @@ $PAGE->set_url($url);
 $PAGE->set_context(context_user::instance($USER->id));
 $PAGE->set_pagelayout('mydashboard');
 
-$strmessages = get_string('messages', 'message');
+$strmessages = get_string('messages', 'core_message');
 
 $PAGE->set_title("$strmessages");
 $PAGE->set_heading("$strmessages");
@@ -85,7 +85,7 @@ $settings->make_active();
 echo $OUTPUT->header();
 // Display a message if the messages have not been migrated yet.
 if (!get_user_preferences('core_message_migrate_data', false)) {
-    $notify = new \core\output\notification(get_string('messagingdatahasnotbeenmigrated', 'message'),
+    $notify = new \core\output\notification(get_string('messagingdatahasnotbeenmigrated', 'core_message'),
         \core\output\notification::NOTIFY_WARNING);
     echo $OUTPUT->render($notify);
 }

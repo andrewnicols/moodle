@@ -28,11 +28,11 @@
 
     $row[] = new tabobject('groupings',
                            new moodle_url('/group/groupings.php', array('id' => $courseid)),
-                           get_string('groupings', 'group'));
+                           get_string('groupings', 'core_group'));
 
     $row[] = new tabobject('overview',
                            new moodle_url('/group/overview.php', array('id' => $courseid)),
-                           get_string('overview', 'group'));
+                           get_string('overview', 'core_group'));
     echo '<div class="groupdisplay">';
     echo $OUTPUT->tabtree($row, $currenttab);
     echo '</div>';

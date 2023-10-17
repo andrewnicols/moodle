@@ -41,7 +41,7 @@ class quizaccess_numattempts extends access_rule_base {
 
     public function prevent_new_attempt($numprevattempts, $lastattempt) {
         if ($numprevattempts >= $this->quiz->attempts) {
-            return get_string('nomoreattempts', 'quiz');
+            return get_string('nomoreattempts', 'mod_quiz');
         }
         return false;
     }

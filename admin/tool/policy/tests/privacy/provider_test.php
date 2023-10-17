@@ -196,7 +196,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $managercontext = \context_user::instance($this->manager->id);
         $systemcontext = \context_system::instance();
         $agreementsubcontext = [
-            get_string('privacyandpolicies', 'admin'),
+            get_string('privacyandpolicies', 'core_admin'),
             get_string('useracceptances', 'tool_policy')
         ];
         $versionsubcontext = [
@@ -256,7 +256,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         // Create policies and agree to them as manager.
         $this->setUser($this->manager);
         $agreementsubcontext = [
-            get_string('privacyandpolicies', 'admin'),
+            get_string('privacyandpolicies', 'core_admin'),
             get_string('useracceptances', 'tool_policy')
         ];
         $versionsubcontext = [
@@ -313,7 +313,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $managercontext = \context_user::instance($this->manager->id);
         $systemcontext = \context_system::instance();
         $agreementsubcontext = [
-            get_string('privacyandpolicies', 'admin'),
+            get_string('privacyandpolicies', 'core_admin'),
             get_string('useracceptances', 'tool_policy')
         ];
         $versionsubcontext = [

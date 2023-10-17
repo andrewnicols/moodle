@@ -97,7 +97,7 @@ class participants_action_bar implements \renderable {
         }
 
         $formattedcontent = [];
-        $enrolmentsheading = get_string('enrolments', 'enrol');
+        $enrolmentsheading = get_string('enrolments', 'core_enrol');
         if ($this->page->context->contextlevel != CONTEXT_MODULE &&
                 $this->page->context->contextlevel != CONTEXT_COURSECAT) {
             // Pre-populate the formatted tertiary nav items with the "Enrolled users" node if user can view the participants page.
@@ -107,7 +107,7 @@ class participants_action_bar implements \renderable {
                 $participantsurl = (new moodle_url('/user/index.php', ['id' => $this->course->id]))->out();
                 $formattedcontent[] = [
                     $enrolmentsheading => [
-                        $participantsurl => get_string('enrolledusers', 'enrol'),
+                        $participantsurl => get_string('enrolledusers', 'core_enrol'),
                     ]
                 ];
             }
@@ -128,8 +128,8 @@ class participants_action_bar implements \renderable {
                     if ($key === 'groups') {
                         $params = ['id' => $this->course->id];
                         $items += [
-                            (new moodle_url('/group/groupings.php', $params))->out() => get_string('groupings', 'group'),
-                            (new moodle_url('/group/overview.php', $params))->out() => get_string('overview', 'group')
+                            (new moodle_url('/group/groupings.php', $params))->out() => get_string('groupings', 'core_group'),
+                            (new moodle_url('/group/overview.php', $params))->out() => get_string('overview', 'core_group')
                         ];
                     }
                 }
@@ -203,7 +203,7 @@ class participants_action_bar implements \renderable {
             $activeurl = $activeurl ?: $this->find_active_page($urlselectcontent, URL_MATCH_BASE);
 
             $selectmenu = new select_menu('participantsnavigation', $urlselectcontent, $activeurl);
-            $selectmenu->set_label(get_string('participantsnavigation', 'course'), ['class' => 'sr-only']);
+            $selectmenu->set_label(get_string('participantsnavigation', 'core_course'), ['class' => 'sr-only']);
 
             return $selectmenu->export_for_template($output);
         }

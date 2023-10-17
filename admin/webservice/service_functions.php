@@ -41,9 +41,9 @@ if ($node) {
     $node->make_active();
 }
 $PAGE->set_primary_active_tab('siteadminnode');
-$PAGE->navbar->add(get_string('externalservices', 'webservice'),
+$PAGE->navbar->add(get_string('externalservices', 'core_webservice'),
    new moodle_url('/admin/settings.php', ['section' => 'externalservices']));
-$PAGE->navbar->add(get_string('functions', 'webservice'),
+$PAGE->navbar->add(get_string('functions', 'core_webservice'),
         new moodle_url('/' . $CFG->admin . '/webservice/service_functions.php', array('id' => $serviceid)));
 
 $service = $DB->get_record('external_services', array('id' => $serviceid), '*', MUST_EXIST);
@@ -55,7 +55,7 @@ $functionlisturl = new moodle_url('/' . $CFG->admin . '/webservice/service_funct
 // Add or Delete operations
 switch ($action) {
     case 'add':
-        $PAGE->navbar->add(get_string('addfunctions', 'webservice'));
+        $PAGE->navbar->add(get_string('addfunctions', 'core_webservice'));
         /// Add function operation
         if (confirm_sesskey() and $service and empty($service->component)) {
             $mform = new external_service_functions_form(null,
@@ -93,7 +93,7 @@ switch ($action) {
         break;
 
     case 'delete':
-        $PAGE->navbar->add(get_string('removefunction', 'webservice'));
+        $PAGE->navbar->add(get_string('removefunction', 'core_webservice'));
         /// Delete function operation
         if (confirm_sesskey() and $service and empty($service->component)) {
             //check that the function to remove exists
@@ -118,7 +118,7 @@ switch ($action) {
 
 /// OUTPUT function list page
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('addservicefunction', 'webservice', $service->name));
+echo $OUTPUT->heading(get_string('addservicefunction', 'core_webservice', $service->name));
 $functions = $webservicemanager->get_external_functions(array($service->id));
 echo $renderer->admin_service_function_list($functions, $service);
 echo $OUTPUT->footer();

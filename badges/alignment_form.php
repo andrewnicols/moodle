@@ -44,26 +44,26 @@ class alignment_form extends moodleform {
         $badge = $this->_customdata['badge'];
         $action = $this->_customdata['action'];
         $alignmentid = $this->_customdata['alignmentid'];
-        $mform->addElement('header', 'alignment', get_string('alignment', 'badges'));
-        $mform->addElement('text', 'targetname', get_string('targetname', 'badges'), array('size' => '70'));
+        $mform->addElement('header', 'alignment', get_string('alignment', 'core_badges'));
+        $mform->addElement('text', 'targetname', get_string('targetname', 'core_badges'), array('size' => '70'));
         $mform->setType('targetname', PARAM_TEXT);
         $mform->addRule('targetname', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addRule('targetname', null, 'required');
         $mform->addHelpButton('targetname', 'targetname', 'badges');
-        $mform->addElement('text', 'targeturl', get_string('targeturl', 'badges'), array('size' => '70'));
+        $mform->addElement('text', 'targeturl', get_string('targeturl', 'core_badges'), array('size' => '70'));
         $mform->setType('targeturl', PARAM_URL);
         $mform->addRule('targeturl', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addRule('targeturl', null, 'required');
         $mform->addHelpButton('targeturl', 'targeturl', 'badges');
-        $mform->addElement('text', 'targetframework', get_string('targetframework', 'badges'), array('size' => '70'));
+        $mform->addElement('text', 'targetframework', get_string('targetframework', 'core_badges'), array('size' => '70'));
         $mform->setType('targetframework', PARAM_TEXT);
         $mform->addRule('targetframework', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('targetframework', 'targetframework', 'badges');
-        $mform->addElement('text', 'targetcode', get_string('targetcode', 'badges'), array('size' => '70'));
+        $mform->addElement('text', 'targetcode', get_string('targetcode', 'core_badges'), array('size' => '70'));
         $mform->setType('targetcode', PARAM_TEXT);
         $mform->addRule('targetcode', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
         $mform->addHelpButton('targetcode', 'targetcode', 'badges');
-        $mform->addElement('textarea', 'targetdescription', get_string('targetdescription', 'badges'),
+        $mform->addElement('textarea', 'targetdescription', get_string('targetdescription', 'core_badges'),
             'wrap="virtual" rows="8" cols="70"');
         $this->add_action_buttons();
         if ($action == 'edit' || $alignmentid) {
@@ -87,7 +87,7 @@ class alignment_form extends moodleform {
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
         if (!empty($data['targeturl']) && !preg_match('@^https?://.+@', $data['targeturl'])) {
-            $errors['targeturl'] = get_string('invalidurl', 'badges');
+            $errors['targeturl'] = get_string('invalidurl', 'core_badges');
         }
         return $errors;
     }

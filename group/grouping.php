@@ -66,7 +66,7 @@ require_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/course:managegroups', $context);
 
-$strgroupings = get_string('groupings', 'group');
+$strgroupings = get_string('groupings', 'core_group');
 $PAGE->set_title($strgroupings);
 $PAGE->set_heading($course->fullname. ': '.$strgroupings);
 $PAGE->set_pagelayout('admin');
@@ -79,14 +79,14 @@ if ($id and $delete) {
         throw new \moodle_exception('groupinghasidnumber', '', '', $grouping->name);
     }
     if (!$confirm) {
-        $PAGE->set_title(get_string('deletegrouping', 'group'));
-        $PAGE->set_heading($course->fullname. ': '. get_string('deletegrouping', 'group'));
+        $PAGE->set_title(get_string('deletegrouping', 'core_group'));
+        $PAGE->set_heading($course->fullname. ': '. get_string('deletegrouping', 'core_group'));
         echo $OUTPUT->header();
         $optionsyes = array('id'=>$id, 'delete'=>1, 'courseid'=>$courseid, 'sesskey'=>sesskey(), 'confirm'=>1);
         $optionsno  = array('id'=>$courseid);
         $formcontinue = new single_button(new moodle_url('grouping.php', $optionsyes), get_string('yes'), 'get');
         $formcancel = new single_button(new moodle_url('groupings.php', $optionsno), get_string('no'), 'get');
-        echo $OUTPUT->confirm(get_string('deletegroupingconfirm', 'group', $grouping->name), $formcontinue, $formcancel);
+        echo $OUTPUT->confirm(get_string('deletegroupingconfirm', 'core_group', $grouping->name), $formcontinue, $formcancel);
         echo $OUTPUT->footer();
         die;
 
@@ -94,7 +94,7 @@ if ($id and $delete) {
         if (groups_delete_grouping($id)) {
             redirect($returnurl);
         } else {
-            throw new \moodle_exception('erroreditgrouping', 'group', $returnurl);
+            throw new \moodle_exception('erroreditgrouping', 'core_group', $returnurl);
         }
     }
 }
@@ -133,9 +133,9 @@ if ($editform->is_cancelled()) {
 
 $strparticipants = get_string('participants');
 if ($id) {
-    $strheading = get_string('editgroupingsettings', 'group');
+    $strheading = get_string('editgroupingsettings', 'core_group');
 } else {
-    $strheading = get_string('creategrouping', 'group');
+    $strheading = get_string('creategrouping', 'core_group');
 }
 
 $PAGE->navbar->add($strparticipants, new moodle_url('/user/index.php', array('id'=>$courseid)));

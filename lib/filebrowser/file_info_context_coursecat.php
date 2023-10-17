@@ -126,7 +126,7 @@ class file_info_context_coursecat extends file_info {
             }
         }
 
-        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areacategoryintro', 'repository'), false, true, true, false);
+        return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase, get_string('areacategoryintro', 'core_repository'), false, true, true, false);
     }
 
     /**

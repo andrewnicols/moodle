@@ -392,7 +392,7 @@ class backpack_api {
             case "missing":
                 $response = array(
                     'status'  => $status,
-                    'message' => get_string('error:nosuchuser', 'badges')
+                    'message' => get_string('error:nosuchuser', 'core_badges')
                 );
                 return $response;
         }

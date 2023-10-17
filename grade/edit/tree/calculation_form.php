@@ -55,9 +55,9 @@ class edit_calculation_form extends moodleform {
         }
 
 /// visible elements
-        $mform->addElement('header', 'general', get_string('gradeitem', 'grades'));
-        $mform->addElement('static', 'itemname', get_string('itemname', 'grades'));
-        $mform->addElement('textarea', 'calculation', get_string('calculation', 'grades'), 'cols="60" rows="5"');
+        $mform->addElement('header', 'general', get_string('gradeitem', 'core_grades'));
+        $mform->addElement('static', 'itemname', get_string('itemname', 'core_grades'));
+        $mform->addElement('textarea', 'calculation', get_string('calculation', 'core_grades'), 'cols="60" rows="5"');
         $mform->addHelpButton('calculation', 'calculation', 'grades');
         $mform->setForceLtr('calculation');
 

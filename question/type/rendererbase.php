@@ -56,7 +56,7 @@ abstract class qtype_renderer extends plugin_renderer_base {
      * @return string to use as the heading.
      */
     public function formulation_heading() {
-        return get_string('questiontext', 'question');
+        return get_string('questiontext', 'core_question');
     }
 
     /**
@@ -152,7 +152,7 @@ abstract class qtype_renderer extends plugin_renderer_base {
         if (is_null($a->outof)) {
             return '';
         } else {
-            return get_string('yougotnright', 'question', $a);
+            return get_string('yougotnright', 'core_question', $a);
         }
     }
 
@@ -228,7 +228,7 @@ abstract class qtype_renderer extends plugin_renderer_base {
     protected function feedback_image($fraction, $selected = true) {
         $feedbackclass = question_state::graded_state_for_fraction($fraction)->get_feedback_class();
 
-        return $this->output->pix_icon('i/grade_' . $feedbackclass, get_string($feedbackclass, 'question'));
+        return $this->output->pix_icon('i/grade_' . $feedbackclass, get_string($feedbackclass, 'core_question'));
     }
 }
 

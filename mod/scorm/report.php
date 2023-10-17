@@ -45,7 +45,7 @@ $url->param('id', $id);
 if (empty($mode)) {
     $mode = reset($reportlist);
 } else if (!in_array($mode, $reportlist)) {
-    throw new \moodle_exception('erroraccessingreport', 'scorm');
+    throw new \moodle_exception('erroraccessingreport', 'mod_scorm');
 }
 $url->param('mode', $mode);
 
@@ -60,7 +60,7 @@ require_capability('mod/scorm:viewreport', $contextmodule);
 navigation_node::override_active_url(new moodle_url('/mod/scorm/report.php', ['id' => $id]));
 
 if (count($reportlist) < 1) {
-    throw new \moodle_exception('erroraccessingreport', 'scorm');
+    throw new \moodle_exception('erroraccessingreport', 'mod_scorm');
 }
 
 // Trigger a report viewed event.
@@ -81,8 +81,8 @@ if (!empty($download)) {
 }
 // Print the page header.
 if (empty($noheader)) {
-    $strreport = get_string('report', 'scorm');
-    $strattempt = get_string('attempt', 'scorm');
+    $strreport = get_string('report', 'mod_scorm');
+    $strattempt = get_string('attempt', 'mod_scorm');
 
     $PAGE->set_title("$course->shortname: ".format_string($scorm->name));
     $PAGE->set_heading($course->fullname);

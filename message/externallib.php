@@ -83,7 +83,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Ensure the current user is allowed to run this function.
@@ -99,7 +99,7 @@ class core_message_external extends external_api {
         foreach ($params['messages'] as $message) {
             // Check message length.
             if (strlen($message['text']) > \core_message\api::MESSAGE_MAX_LENGTH) {
-                throw new moodle_exception('errormessagetoolong', 'message');
+                throw new moodle_exception('errormessagetoolong', 'core_message');
             }
         }
 
@@ -166,7 +166,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Ensure the current user is allowed to run this function
@@ -199,20 +199,20 @@ class core_message_external extends external_api {
             // Check the user exists.
             if (empty($tousers[$message['touserid']])) {
                 $success = false;
-                $errormessage = get_string('touserdoesntexist', 'message', $message['touserid']);
+                $errormessage = get_string('touserdoesntexist', 'core_message', $message['touserid']);
             }
 
             // Check message length.
             if ($success && strlen($message['text']) > \core_message\api::MESSAGE_MAX_LENGTH) {
                 $success = false;
-                $errormessage = get_string('errormessagetoolong', 'message');
+                $errormessage = get_string('errormessagetoolong', 'core_message');
             }
 
             // TODO MDL-31118 performance improvement - edit the function so we can pass an array instead userid
             // Check if the recipient can be messaged by the sender.
             if ($success && !\core_message\api::can_send_message($tousers[$message['touserid']]->id, $USER->id)) {
                 $success = false;
-                $errormessage = get_string('usercantbemessaged', 'message', fullname(\core_user::get_user($message['touserid'])));
+                $errormessage = get_string('usercantbemessaged', 'core_message', fullname(\core_user::get_user($message['touserid'])));
             }
 
             // Now we can send the message (at least try).
@@ -236,7 +236,7 @@ class core_message_external extends external_api {
                 //          We should have thrown exceptions as these errors prevent results to be returned.
                 $resultmsg['msgid'] = -1;
                 if (!isset($errormessage)) { // Nobody has set a message error or thrown an exception, let's set it.
-                    $errormessage = get_string('messageundeliveredbynotificationsettings', 'error');
+                    $errormessage = get_string('messageundeliveredbynotificationsettings', 'mod_error');
                 }
                 $resultmsg['errormessage'] = $errormessage;
             }
@@ -323,7 +323,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         if (empty($userid)) {
@@ -387,7 +387,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -447,7 +447,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -504,7 +504,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -565,7 +565,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -626,7 +626,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -684,7 +684,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -750,7 +750,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -817,7 +817,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -903,7 +903,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -957,7 +957,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate context.
@@ -1221,7 +1221,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $systemcontext = context_system::instance();
@@ -1339,7 +1339,7 @@ class core_message_external extends external_api {
 
         // All the standard BL checks.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $params = array(
@@ -1438,7 +1438,7 @@ class core_message_external extends external_api {
 
         // All the standard BL checks.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $params = [
@@ -1474,7 +1474,7 @@ class core_message_external extends external_api {
         } else {
             // We have to throw an exception here because the external functions annoyingly
             // don't accept null to be returned for a single structure.
-            throw new \moodle_exception('errorconversationdoesnotexist', 'message');
+            throw new \moodle_exception('errorconversationdoesnotexist', 'core_message');
         }
     }
 
@@ -1538,7 +1538,7 @@ class core_message_external extends external_api {
 
         // All the standard BL checks.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $params = [
@@ -1579,7 +1579,7 @@ class core_message_external extends external_api {
         } else {
             // We have to throw an exception here because the external functions annoyingly
             // don't accept null to be returned for a single structure.
-            throw new \moodle_exception('errorconversationdoesnotexist', 'message');
+            throw new \moodle_exception('errorconversationdoesnotexist', 'core_message');
         }
     }
 
@@ -1629,7 +1629,7 @@ class core_message_external extends external_api {
 
         // All the standard BL checks.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $params = [
@@ -1664,7 +1664,7 @@ class core_message_external extends external_api {
         } else {
             // We have to throw an exception here because the external functions annoyingly
             // don't accept null to be returned for a single structure.
-            throw new \moodle_exception('errorconversationdoesnotexist', 'message');
+            throw new \moodle_exception('errorconversationdoesnotexist', 'core_message');
         }
     }
 
@@ -1716,7 +1716,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $systemcontext = context_system::instance();
@@ -1819,7 +1819,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $systemcontext = context_system::instance();
@@ -1880,7 +1880,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         require_once($CFG->libdir . '/enrollib.php');
@@ -2034,7 +2034,7 @@ class core_message_external extends external_api {
         if (empty($CFG->messaging)) {
             // If we are retreiving only conversations, and messaging is disabled, throw an exception.
             if ($type == "conversations") {
-                throw new moodle_exception('disabled', 'message');
+                throw new moodle_exception('disabled', 'core_message');
             }
             if ($type == "both") {
                 $warning = array();
@@ -2063,7 +2063,7 @@ class core_message_external extends external_api {
         // Check if the current user is the sender/receiver or just a privileged user.
         if ($useridto != $USER->id and $useridfrom != $USER->id and
              !has_capability('moodle/site:readallmessages', $context)) {
-            throw new moodle_exception('accessdenied', 'admin');
+            throw new moodle_exception('accessdenied', 'core_admin');
         }
 
         // Which type of messages to retrieve.
@@ -2265,7 +2265,7 @@ class core_message_external extends external_api {
         if ($useridto != $USER->id and $useridfrom != $USER->id and
             // The deleteanymessage cap seems more reasonable here than readallmessages.
              !has_capability('moodle/site:deleteanymessage', $context)) {
-            throw new moodle_exception('accessdenied', 'admin');
+            throw new moodle_exception('accessdenied', 'core_admin');
         }
 
         \core_message\api::mark_all_notifications_as_read($useridto, $useridfrom, $timecreatedto);
@@ -2311,7 +2311,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $params = self::validate_parameters(
@@ -2336,7 +2336,7 @@ class core_message_external extends external_api {
 
         // Check if the current user is the receiver or just a privileged user.
         if ($useridto != $USER->id and !has_capability('moodle/site:readallmessages', $context)) {
-            throw new moodle_exception('accessdenied', 'admin');
+            throw new moodle_exception('accessdenied', 'core_admin');
         }
 
         return \core_message\api::count_unread_conversations($userto);
@@ -2394,7 +2394,7 @@ class core_message_external extends external_api {
 
         // Check if private messaging between users is allowed.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $user = core_user::get_user($userid, '*', MUST_EXIST);
@@ -2485,7 +2485,7 @@ class core_message_external extends external_api {
 
         // Check if private messaging between users is allowed.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Warnings array, it can be empty at the end but is mandatory.
@@ -2661,7 +2661,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $params = array(
@@ -2679,7 +2679,7 @@ class core_message_external extends external_api {
         if (\core_message\api::can_mark_all_messages_as_read($params['userid'], $params['conversationid'])) {
             \core_message\api::mark_all_messages_as_read($params['userid'], $params['conversationid']);
         } else {
-            throw new moodle_exception('accessdenied', 'admin');
+            throw new moodle_exception('accessdenied', 'core_admin');
         }
     }
 
@@ -2725,7 +2725,7 @@ class core_message_external extends external_api {
 
         // Check if private messaging between users is allowed.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate params.
@@ -2794,7 +2794,7 @@ class core_message_external extends external_api {
 
         // Check if private messaging between users is allowed.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Warnings array, it can be empty at the end but is mandatory.
@@ -2948,7 +2948,7 @@ class core_message_external extends external_api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         $params = self::validate_parameters(
@@ -3271,7 +3271,7 @@ class core_message_external extends external_api {
 
         // All the business logic checks that really shouldn't be in here.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
         $params = [
             'userid' => $userid,
@@ -3330,7 +3330,7 @@ class core_message_external extends external_api {
 
         // All the business logic checks that really shouldn't be in here.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
         $params = [
             'userid' => $userid,
@@ -3399,7 +3399,7 @@ class core_message_external extends external_api {
 
         // All the business logic checks that really shouldn't be in here.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
         $params = [
             'referenceuserid' => $referenceuserid,
@@ -3468,7 +3468,7 @@ class core_message_external extends external_api {
 
         // All the business logic checks that really shouldn't be in here.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         if (empty($userid)) {
@@ -3545,7 +3545,7 @@ class core_message_external extends external_api {
 
         // All the business logic checks that really shouldn't be in here.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         if (empty($userid)) {
@@ -3616,7 +3616,7 @@ class core_message_external extends external_api {
 
         // Check if private messaging between users is allowed.
         if (empty($CFG->messaging)) {
-            throw new moodle_exception('disabled', 'message');
+            throw new moodle_exception('disabled', 'core_message');
         }
 
         // Validate params.

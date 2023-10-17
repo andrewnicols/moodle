@@ -300,7 +300,7 @@ class provider implements
                 'timemodified' => transform::datetime($payment->timemodified),
             ];
             $subcontext = array_merge(
-                [get_string('payments', 'payment')],
+                [get_string('payments', 'core_payment')],
                 $subpath,
                 ['payment-' . $payment->id]
             );

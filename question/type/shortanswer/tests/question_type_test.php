@@ -86,7 +86,7 @@ class question_type_test extends \advanced_testcase {
         $this->assertEquals(array(
             $q->id => array(
                 13 => new question_possible_response('frog', 1),
-                0 => new question_possible_response(get_string('didnotmatchanyanswer', 'question'), 0),
+                0 => new question_possible_response(get_string('didnotmatchanyanswer', 'core_question'), 0),
                 null => question_possible_response::no_response()
             ),
         ), $this->qtype->get_possible_responses($q));

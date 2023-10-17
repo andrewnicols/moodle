@@ -350,23 +350,23 @@ class enrol_meta_plugin extends enrol_plugin {
                 if ($DB->record_exists_select('enrol', $existssql, $existsparams)) {
                     // We may leave right here as further checks do not make sense in case we have existing enrol records
                     // with the parameters from above.
-                    $errors['customint1'] = get_string('invalidcourseid', 'error');
+                    $errors['customint1'] = get_string('invalidcourseid', 'mod_error');
                 } else {
                     foreach ($coursesrecords as $coursesrecord) {
                         $coursecontext = context_course::instance($coursesrecord->id);
                         if (!$coursesrecord->visible and !has_capability('moodle/course:viewhiddencourses', $coursecontext)) {
-                            $errors['customint1'] = get_string('nopermissions', 'error',
+                            $errors['customint1'] = get_string('nopermissions', 'mod_error',
                                 'moodle/course:viewhiddencourses');
                         } else if (!has_capability('enrol/meta:selectaslinked', $coursecontext)) {
-                            $errors['customint1'] = get_string('nopermissions', 'error',
+                            $errors['customint1'] = get_string('nopermissions', 'mod_error',
                                 'enrol/meta:selectaslinked');
                         } else if ($coursesrecord->id == SITEID or $coursesrecord->id == $thiscourseid) {
-                            $errors['customint1'] = get_string('invalidcourseid', 'error');
+                            $errors['customint1'] = get_string('invalidcourseid', 'mod_error');
                         }
                     }
                 }
             } else {
-                $errors['customint1'] = get_string('invalidcourseid', 'error');
+                $errors['customint1'] = get_string('invalidcourseid', 'mod_error');
             }
         } else {
             $errors['customint1'] = get_string('required');

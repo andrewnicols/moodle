@@ -293,7 +293,7 @@ class stored_file {
             // The new file is a reference.
             // The current file has other local files referencing to it.
             // Double reference is not allowed.
-            throw new moodle_exception('errordoublereference', 'repository');
+            throw new moodle_exception('errordoublereference', 'core_repository');
         }
 
         $filerecord = new stdClass;

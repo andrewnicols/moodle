@@ -108,16 +108,16 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $users = new restore_users_setting('users', base_setting::IS_BOOLEAN, $defaultvalue);
-        $users->set_ui(new backup_setting_ui_checkbox($users, get_string('rootsettingusers', 'backup')));
+        $users->set_ui(new backup_setting_ui_checkbox($users, get_string('rootsettingusers', 'core_backup')));
         $users->get_ui()->set_changeable($changeable);
         $this->add_setting($users);
 
         // Restore enrolment methods.
         if ($changeable) {
             $options = [
-                backup::ENROL_NEVER     => get_string('rootsettingenrolments_never', 'backup'),
-                backup::ENROL_WITHUSERS => get_string('rootsettingenrolments_withusers', 'backup'),
-                backup::ENROL_ALWAYS    => get_string('rootsettingenrolments_always', 'backup'),
+                backup::ENROL_NEVER     => get_string('rootsettingenrolments_never', 'core_backup'),
+                backup::ENROL_WITHUSERS => get_string('rootsettingenrolments_withusers', 'core_backup'),
+                backup::ENROL_ALWAYS    => get_string('rootsettingenrolments_always', 'core_backup'),
             ];
             $enroldefault = backup::ENROL_WITHUSERS;
         } else {
@@ -129,7 +129,7 @@ class restore_root_task extends restore_task {
             $enroldefault = backup::ENROL_NEVER;
         }
         $enrolments = new restore_users_setting('enrolments', base_setting::IS_INTEGER, $enroldefault);
-        $enrolments->set_ui(new backup_setting_ui_select($enrolments, get_string('rootsettingenrolments', 'backup'),
+        $enrolments->set_ui(new backup_setting_ui_select($enrolments, get_string('rootsettingenrolments', 'core_backup'),
             $options));
         $this->add_setting($enrolments);
 
@@ -141,7 +141,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $roleassignments = new restore_role_assignments_setting('role_assignments', base_setting::IS_BOOLEAN, $defaultvalue);
-        $roleassignments->set_ui(new backup_setting_ui_checkbox($roleassignments,get_string('rootsettingroleassignments', 'backup')));
+        $roleassignments->set_ui(new backup_setting_ui_checkbox($roleassignments,get_string('rootsettingroleassignments', 'core_backup')));
         $roleassignments->get_ui()->set_changeable($changeable);
         $this->add_setting($roleassignments);
         $users->add_dependency($roleassignments);
@@ -155,7 +155,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $permissions = new restore_permissions_setting('permissions', base_setting::IS_BOOLEAN, $defaultvalue);
-        $permissions->set_ui(new backup_setting_ui_checkbox($permissions, get_string('rootsettingpermissions', 'backup')));
+        $permissions->set_ui(new backup_setting_ui_checkbox($permissions, get_string('rootsettingpermissions', 'core_backup')));
         $permissions->get_ui()->set_changeable($changeable);
         $this->add_setting($permissions);
 
@@ -167,7 +167,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $activities = new restore_activities_setting('activities', base_setting::IS_BOOLEAN, $defaultvalue);
-        $activities->set_ui(new backup_setting_ui_checkbox($activities, get_string('rootsettingactivities', 'backup')));
+        $activities->set_ui(new backup_setting_ui_checkbox($activities, get_string('rootsettingactivities', 'core_backup')));
         $activities->get_ui()->set_changeable($changeable);
         $this->add_setting($activities);
 
@@ -179,7 +179,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $blocks = new restore_generic_setting('blocks', base_setting::IS_BOOLEAN, $defaultvalue);
-        $blocks->set_ui(new backup_setting_ui_checkbox($blocks, get_string('rootsettingblocks', 'backup')));
+        $blocks->set_ui(new backup_setting_ui_checkbox($blocks, get_string('rootsettingblocks', 'core_backup')));
         $blocks->get_ui()->set_changeable($changeable);
         $this->add_setting($blocks);
 
@@ -191,7 +191,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $filters = new restore_generic_setting('filters', base_setting::IS_BOOLEAN, $defaultvalue);
-        $filters->set_ui(new backup_setting_ui_checkbox($filters, get_string('rootsettingfilters', 'backup')));
+        $filters->set_ui(new backup_setting_ui_checkbox($filters, get_string('rootsettingfilters', 'core_backup')));
         $filters->get_ui()->set_changeable($changeable);
         $this->add_setting($filters);
 
@@ -203,7 +203,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $comments = new restore_comments_setting('comments', base_setting::IS_BOOLEAN, $defaultvalue);
-        $comments->set_ui(new backup_setting_ui_checkbox($comments, get_string('rootsettingcomments', 'backup')));
+        $comments->set_ui(new backup_setting_ui_checkbox($comments, get_string('rootsettingcomments', 'core_backup')));
         $comments->get_ui()->set_changeable($changeable);
         $this->add_setting($comments);
         $users->add_dependency($comments);
@@ -216,7 +216,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $badges = new restore_badges_setting('badges', base_setting::IS_BOOLEAN, $defaultvalue);
-        $badges->set_ui(new backup_setting_ui_checkbox($badges, get_string('rootsettingbadges', 'backup')));
+        $badges->set_ui(new backup_setting_ui_checkbox($badges, get_string('rootsettingbadges', 'core_backup')));
         $badges->get_ui()->set_changeable($changeable);
         $this->add_setting($badges);
         $activities->add_dependency($badges);
@@ -230,7 +230,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $events = new restore_calendarevents_setting('calendarevents', base_setting::IS_BOOLEAN, $defaultvalue);
-        $events->set_ui(new backup_setting_ui_checkbox($events, get_string('rootsettingcalendarevents', 'backup')));
+        $events->set_ui(new backup_setting_ui_checkbox($events, get_string('rootsettingcalendarevents', 'core_backup')));
         $events->get_ui()->set_changeable($changeable);
         $this->add_setting($events);
 
@@ -242,7 +242,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $completion = new restore_userscompletion_setting('userscompletion', base_setting::IS_BOOLEAN, $defaultvalue);
-        $completion->set_ui(new backup_setting_ui_checkbox($completion, get_string('rootsettinguserscompletion', 'backup')));
+        $completion->set_ui(new backup_setting_ui_checkbox($completion, get_string('rootsettinguserscompletion', 'core_backup')));
         $completion->get_ui()->set_changeable($changeable);
         $this->add_setting($completion);
         $users->add_dependency($completion);
@@ -255,7 +255,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $logs = new restore_logs_setting('logs', base_setting::IS_BOOLEAN, $defaultvalue);
-        $logs->set_ui(new backup_setting_ui_checkbox($logs, get_string('rootsettinglogs', 'backup')));
+        $logs->set_ui(new backup_setting_ui_checkbox($logs, get_string('rootsettinglogs', 'core_backup')));
         $logs->get_ui()->set_changeable($changeable);
         $this->add_setting($logs);
         $users->add_dependency($logs);
@@ -268,7 +268,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $gradehistories = new restore_grade_histories_setting('grade_histories', base_setting::IS_BOOLEAN, $defaultvalue);
-        $gradehistories->set_ui(new backup_setting_ui_checkbox($gradehistories, get_string('rootsettinggradehistories', 'backup')));
+        $gradehistories->set_ui(new backup_setting_ui_checkbox($gradehistories, get_string('rootsettinggradehistories', 'core_backup')));
         $gradehistories->get_ui()->set_changeable($changeable);
         $this->add_setting($gradehistories);
         $users->add_dependency($gradehistories);
@@ -290,18 +290,18 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $groups = new restore_groups_setting('groups', base_setting::IS_BOOLEAN, $defaultvalue);
-        $groups->set_ui(new backup_setting_ui_checkbox($groups, get_string('rootsettinggroups', 'backup')));
+        $groups->set_ui(new backup_setting_ui_checkbox($groups, get_string('rootsettinggroups', 'core_backup')));
         $groups->get_ui()->set_changeable($changeable);
         $this->add_setting($groups);
 
         // Competencies restore setting. Show when competencies is enabled and the setting is available.
         $hascompetencies = !empty($rootsettings['competencies']);
         $competencies = new restore_competencies_setting($hascompetencies);
-        $competencies->set_ui(new backup_setting_ui_checkbox($competencies, get_string('rootsettingcompetencies', 'backup')));
+        $competencies->set_ui(new backup_setting_ui_checkbox($competencies, get_string('rootsettingcompetencies', 'core_backup')));
         $this->add_setting($competencies);
 
         $customfields = new restore_customfield_setting('customfields', base_setting::IS_BOOLEAN, $defaultvalue);
-        $customfields->set_ui(new backup_setting_ui_checkbox($customfields, get_string('rootsettingcustomfield', 'backup')));
+        $customfields->set_ui(new backup_setting_ui_checkbox($customfields, get_string('rootsettingcustomfield', 'core_backup')));
         $this->add_setting($customfields);
 
         // Define Content bank content.
@@ -312,7 +312,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $contents = new restore_contentbankcontent_setting('contentbankcontent', base_setting::IS_BOOLEAN, $defaultvalue);
-        $contents->set_ui(new backup_setting_ui_checkbox($contents, get_string('rootsettingcontentbankcontent', 'backup')));
+        $contents->set_ui(new backup_setting_ui_checkbox($contents, get_string('rootsettingcontentbankcontent', 'core_backup')));
         $contents->get_ui()->set_changeable($changeable);
         $this->add_setting($contents);
 
@@ -324,7 +324,7 @@ class restore_root_task extends restore_task {
             $changeable = true;
         }
         $xapistate = new restore_xapistate_setting('xapistate', base_setting::IS_BOOLEAN, $defaultvalue);
-        $xapistate->set_ui(new backup_setting_ui_checkbox($xapistate, get_string('rootsettingxapistate', 'backup')));
+        $xapistate->set_ui(new backup_setting_ui_checkbox($xapistate, get_string('rootsettingxapistate', 'core_backup')));
         $xapistate->get_ui()->set_changeable($changeable);
         $this->add_setting($xapistate);
 
@@ -332,7 +332,7 @@ class restore_root_task extends restore_task {
         $defaultvalue = true;
         $changeable = true;
         $legacyfiles = new restore_generic_setting('legacyfiles', base_setting::IS_BOOLEAN, $defaultvalue);
-        $legacyfiles->set_ui(new backup_setting_ui_checkbox($legacyfiles, get_string('rootsettinglegacyfiles', 'backup')));
+        $legacyfiles->set_ui(new backup_setting_ui_checkbox($legacyfiles, get_string('rootsettinglegacyfiles', 'core_backup')));
         $legacyfiles->get_ui()->set_changeable($changeable);
         $this->add_setting($legacyfiles);
     }

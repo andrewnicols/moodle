@@ -38,7 +38,7 @@ if (isloggedin() and !isguestuser()) {
     if ($USER->id == $userid) {
         redirect($urltogo);
     } else {
-        throw new moodle_exception('alreadyloggedin', 'error', '', format_string(fullname($USER)));
+        throw new moodle_exception('alreadyloggedin', 'mod_error', '', format_string(fullname($USER)));
     }
 }
 

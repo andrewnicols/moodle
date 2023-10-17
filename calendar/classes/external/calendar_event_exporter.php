@@ -140,7 +140,7 @@ class calendar_event_exporter extends event_exporter_base {
                 'name' => $values['popupname'],
                 'source' => $subscription->get('name'),
             ];
-            $values['popupname'] = get_string('namewithsource', 'calendar', $a);
+            $values['popupname'] = get_string('namewithsource', 'core_calendar', $a);
         } else {
             if ($values['islastday']) {
                 $startdate = $this->related['type']->timestamp_to_date_array($times->get_start_time()->getTimestamp());
@@ -150,7 +150,7 @@ class calendar_event_exporter extends event_exporter_base {
                 $samedate = $samedate && $startdate['mday'] == $enddate['mday'];
 
                 if (!$samedate) {
-                    $values['popupname'] = get_string('eventendtimewrapped', 'calendar', $values['popupname']);
+                    $values['popupname'] = get_string('eventendtimewrapped', 'core_calendar', $values['popupname']);
                 }
             }
         }
@@ -163,7 +163,7 @@ class calendar_event_exporter extends event_exporter_base {
                 'name' => $values['popupname'],
                 'category' => $category->get_formatted_name(),
             ];
-            $values['popupname'] = get_string('eventnameandcategory', 'calendar', $eventnameparams);
+            $values['popupname'] = get_string('eventnameandcategory', 'core_calendar', $eventnameparams);
         }
 
         // Include course's shortname into the event name, if applicable.
@@ -172,7 +172,7 @@ class calendar_event_exporter extends event_exporter_base {
                 'name' => $values['popupname'],
                 'course' => $values['course']->shortname,
             ];
-            $values['popupname'] = get_string('eventnameandcourse', 'calendar', $eventnameparams);
+            $values['popupname'] = get_string('eventnameandcourse', 'core_calendar', $eventnameparams);
         }
 
         if ($event->get_course_module()) {

@@ -44,7 +44,7 @@ class mariadb_native_moodle_database extends mysqli_native_moodle_database {
      * @return string
      */
     public function get_name() {
-        return get_string('nativemariadb', 'install');
+        return get_string('nativemariadb', 'mod_install');
     }
 
     /**
@@ -53,7 +53,7 @@ class mariadb_native_moodle_database extends mysqli_native_moodle_database {
      * @return string
      */
     public function get_configuration_help() {
-        return get_string('nativemariadbhelp', 'install');
+        return get_string('nativemariadbhelp', 'mod_install');
     }
 
     /**

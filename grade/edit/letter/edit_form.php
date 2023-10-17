@@ -38,16 +38,16 @@ class edit_letter_form extends moodleform {
             'admin' => $admin,
         ] = $this->_customdata;
 
-        $mform->addElement('header', 'gradeletters', get_string('gradeletters', 'grades'));
+        $mform->addElement('header', 'gradeletters', get_string('gradeletters', 'core_grades'));
 
         // Only show "override site defaults" checkbox if editing the course grade letters
         if (!$admin) {
-            $mform->addElement('checkbox', 'override', get_string('overridesitedefaultgradedisplaytype', 'grades'));
+            $mform->addElement('checkbox', 'override', get_string('overridesitedefaultgradedisplaytype', 'core_grades'));
             $mform->addHelpButton('override', 'overridesitedefaultgradedisplaytype', 'grades');
         }
 
-        $gradeletter       = get_string('gradeletter', 'grades');
-        $gradeboundary     = get_string('gradeboundary', 'grades');
+        $gradeletter       = get_string('gradeletter', 'core_grades');
+        $gradeboundary     = get_string('gradeboundary', 'core_grades');
 
         // The fields to create the grade letter/boundary.
         $elements = [];

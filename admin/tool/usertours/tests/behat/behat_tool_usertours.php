@@ -91,7 +91,7 @@ class behat_tool_usertours extends behat_base {
      */
     public function i_open_the_user_tour_settings_page() {
         $this->execute('behat_navigation::i_navigate_to_in_site_administration',
-                get_string('appearance', 'admin') . ' > ' .
+                get_string('appearance', 'core_admin') . ' > ' .
                 get_string('usertours', 'tool_usertours')
         );
     }

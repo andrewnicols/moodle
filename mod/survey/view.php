@@ -44,11 +44,11 @@ $context = context_module::instance($cm->id);
 require_capability('mod/survey:participate', $context);
 
 if (! $survey = $DB->get_record("survey", array("id" => $cm->instance))) {
-    throw new \moodle_exception('invalidsurveyid', 'survey');
+    throw new \moodle_exception('invalidsurveyid', 'mod_survey');
 }
 
 if (! $template = $DB->get_record("survey", array("id" => $survey->template))) {
-    throw new \moodle_exception('invalidtmptid', 'survey');
+    throw new \moodle_exception('invalidtmptid', 'mod_survey');
 }
 
 $showscales = ($template->name != 'ciqname');
@@ -62,7 +62,7 @@ if ($surveyalreadydone) {
     survey_view($survey, $course, $cm, $context, 'form');
 }
 
-$strsurvey = get_string("modulename", "survey");
+$strsurvey = get_string("modulename", 'mod_survey');
 $PAGE->set_title($survey->name);
 $PAGE->set_heading($course->fullname);
 // No need to show the description if the survey is done and a graph page is to be shown.
@@ -73,7 +73,7 @@ if ($surveyalreadydone && $showscales) {
     $trimmedintro = trim($survey->intro);
     if (empty($trimmedintro)) {
         $tempo = $DB->get_field("survey", "intro", array("id" => $survey->template));
-        $PAGE->activityheader->set_description(get_string($tempo, "survey"));
+        $PAGE->activityheader->set_description(get_string($tempo, 'mod_survey'));
     }
 }
 $PAGE->add_body_class('limitedwidth');
@@ -97,7 +97,7 @@ if (!$cm->visible) {
 }
 
 if (!is_enrolled($context)) {
-    echo $OUTPUT->notification(get_string("guestsnotallowed", "survey"));
+    echo $OUTPUT->notification(get_string("guestsnotallowed", 'mod_survey'));
 }
 
 if ($surveyalreadydone) {
@@ -106,15 +106,15 @@ if ($surveyalreadydone) {
         // Ensure that graph.php will allow the user to see the graph.
         if (has_capability('mod/survey:readresponses', $context) || !$groupmode || groups_is_member($currentgroup)) {
 
-            echo $OUTPUT->box(get_string("surveycompleted", "survey"));
-            echo $OUTPUT->box(get_string("peoplecompleted", "survey", $numusers));
+            echo $OUTPUT->box(get_string("surveycompleted", 'mod_survey'));
+            echo $OUTPUT->box(get_string("peoplecompleted", 'mod_survey', $numusers));
 
             echo '<div class="resultgraph">';
             survey_print_graph("id=$cm->id&amp;sid=$USER->id&amp;group=$currentgroup&amp;type=student.png");
             echo '</div>';
         } else {
-            echo $OUTPUT->box(get_string("surveycompletednograph", "survey"));
-            echo $OUTPUT->box(get_string("peoplecompleted", "survey", $numusers));
+            echo $OUTPUT->box(get_string("surveycompletednograph", 'mod_survey'));
+            echo $OUTPUT->box(get_string("peoplecompleted", 'mod_survey', $numusers));
         }
 
     } else {
@@ -127,7 +127,7 @@ if ($surveyalreadydone) {
             if ($question->type == 0 or $question->type == 1) {
                 if ($answer = survey_get_user_answer($survey->id, $question->id, $USER->id)) {
                     $table = new html_table();
-                    $table->head = array(get_string($question->text, "survey"));
+                    $table->head = array(get_string($question->text, 'mod_survey'));
                     $table->align = array ("left");
                     $table->data[] = array(s($answer->answer1));// No html here, just plain text.
                     echo html_writer::table($table);
@@ -146,7 +146,7 @@ echo '<div>';
 echo "<input type=\"hidden\" name=\"id\" value=\"$id\" />";
 echo "<input type=\"hidden\" name=\"sesskey\" value=\"".sesskey()."\" />";
 
-echo '<div>'. get_string('allquestionrequireanswer', 'survey'). '</div>';
+echo '<div>'. get_string('allquestionrequireanswer', 'mod_survey'). '</div>';
 
 // Get all the major questions in order.
 $questions = survey_get_questions($survey);

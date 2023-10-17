@@ -149,7 +149,7 @@ class MoodleQuickForm_url extends HTML_QuickForm_text implements templatable {
         $options = $fp->options;
 
         if (count($options->repositories) > 0) {
-            $straddlink = get_string('choosealink', 'repository');
+            $straddlink = get_string('choosealink', 'core_repository');
             $str .= <<<EOD
 <button type="button" id="filepicker-button-js-{$clientid}" class="visibleifjs btn btn-secondary">
 $straddlink

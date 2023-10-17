@@ -59,15 +59,15 @@ class mod_wiki_edit_form extends moodleform {
 
         if (isset($this->_customdata['pagetitle'])) {
             // Page title must be formatted properly here as this is output and not an element.
-            $pagetitle = get_string('editingpage', 'wiki', format_string($this->_customdata['pagetitle'], true, array('context' => context::instance_by_id($contextid, MUST_EXIST))));
+            $pagetitle = get_string('editingpage', 'mod_wiki', format_string($this->_customdata['pagetitle'], true, array('context' => context::instance_by_id($contextid, MUST_EXIST))));
         } else {
-            $pagetitle = get_string('editing', 'wiki');
+            $pagetitle = get_string('editing', 'mod_wiki');
         }
 
         //editor
         $mform->addElement('header', 'general', $pagetitle);
 
-        $fieldname = get_string('format' . $format, 'wiki');
+        $fieldname = get_string('format' . $format, 'mod_wiki');
         if ($format != 'html') {
             // Use wiki editor
             $extensions = file_get_typegroup('extension', 'web_image');
@@ -101,13 +101,13 @@ class mod_wiki_edit_form extends moodleform {
         $mform->setType('contentformat', PARAM_ALPHANUMEXT);
 
         if (core_tag_tag::is_enabled('mod_wiki', 'wiki_pages')) {
-            $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
+            $mform->addElement('header', 'tagshdr', get_string('tags', 'core_tag'));
         }
         $mform->addElement('tags', 'tags', get_string('tags'),
                 array('itemtype' => 'wiki_pages', 'component' => 'mod_wiki'));
 
         $buttongroup = array();
-        $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('save', 'wiki'), array('id' => 'save'));
+        $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('save', 'mod_wiki'), array('id' => 'save'));
         $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('preview'), array('id' => 'preview'), false);
         $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('cancel'), array('id' => 'cancel'), false);
 

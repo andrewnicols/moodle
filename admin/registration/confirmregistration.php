@@ -54,11 +54,11 @@ if (parse_url($url, PHP_URL_HOST) !== parse_url(HUB_MOODLEORGHUBURL, PHP_URL_HOS
             $callback('confirm');
         }
     }
-    throw new moodle_exception('errorotherhubsnotsupported', 'hub');
+    throw new moodle_exception('errorotherhubsnotsupported', 'mod_hub');
 }
 
 if (!empty($error) and $error == 'urlalreadyexist') {
-    throw new moodle_exception('urlalreadyregistered', 'hub',
+    throw new moodle_exception('urlalreadyregistered', 'mod_hub',
             $CFG->wwwroot . '/' . $CFG->admin . '/registration/index.php');
 }
 
@@ -66,10 +66,10 @@ if (!empty($error) and $error == 'urlalreadyexist') {
 core\hub\registration::confirm_registration($token, $newtoken, $hubname);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('registrationconfirmed', 'hub'), 3, 'main');
+echo $OUTPUT->heading(get_string('registrationconfirmed', 'mod_hub'), 3, 'main');
 
 // Display notification message.
-echo $OUTPUT->notification(get_string('registrationconfirmedon', 'hub'), 'notifysuccess');
+echo $OUTPUT->notification(get_string('registrationconfirmedon', 'mod_hub'), 'notifysuccess');
 
 // Display continue button.
 $returnurl = !empty($SESSION->registrationredirect) ? clean_param($SESSION->registrationredirect, PARAM_LOCALURL) : null;

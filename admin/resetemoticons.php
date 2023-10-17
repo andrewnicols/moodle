@@ -32,8 +32,8 @@ $confirm = optional_param('confirm', false, PARAM_BOOL);
 
 if (!$confirm or !confirm_sesskey()) {
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('confirmation', 'admin'));
-    echo $OUTPUT->confirm(get_string('emoticonsreset', 'admin'),
+    echo $OUTPUT->heading(get_string('confirmation', 'core_admin'));
+    echo $OUTPUT->confirm(get_string('emoticonsreset', 'core_admin'),
         new moodle_url($PAGE->url, array('confirm' => 1)),
         new moodle_url('/admin/settings.php', array('section' => 'htmlsettings')));
     echo $OUTPUT->footer();

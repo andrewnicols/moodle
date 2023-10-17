@@ -125,7 +125,7 @@ if ($formdata = $mform2->get_data()) {
         grade_import_commit($course->id, $importcode);
     } else {
         $errors = $gradeimport->get_gradebookerrors();
-        $errors[] = get_string('importfailed', 'grades');
+        $errors[] = get_string('importfailed', 'core_grades');
         echo $renderer->errors($errors);
     }
     echo $OUTPUT->footer();

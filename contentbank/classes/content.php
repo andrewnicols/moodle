@@ -65,16 +65,16 @@ abstract class content {
         // Content type should exist and be linked to plugin classname.
         $classname = $record->contenttype.'\\content';
         if (get_class($this) != $classname) {
-            throw new coding_exception(get_string('contenttypenotfound', 'error', $record->contenttype));
+            throw new coding_exception(get_string('contenttypenotfound', 'mod_error', $record->contenttype));
         }
         $typeclass = $record->contenttype.'\\contenttype';
         if (!class_exists($typeclass)) {
-            throw new coding_exception(get_string('contenttypenotfound', 'error', $record->contenttype));
+            throw new coding_exception(get_string('contenttypenotfound', 'mod_error', $record->contenttype));
         }
         // A record with the id must exist in 'contentbank_content' table.
         // To improve performance, we are only checking the id is set, but no querying the database.
         if (!isset($record->id)) {
-            throw new coding_exception(get_string('invalidcontentid', 'error'));
+            throw new coding_exception(get_string('invalidcontentid', 'mod_error'));
         }
         $this->content = $record;
     }
@@ -129,7 +129,7 @@ abstract class content {
         // A record with the id must exist in 'contentbank_content' table.
         // To improve performance, we are only checking the id is set, but no querying the database.
         if (!isset($this->content->id)) {
-            throw new coding_exception(get_string('invalidcontentid', 'error'));
+            throw new coding_exception(get_string('invalidcontentid', 'mod_error'));
         }
         $this->content->usermodified = $USER->id;
         $this->content->timemodified = time();

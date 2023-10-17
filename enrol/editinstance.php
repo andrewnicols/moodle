@@ -34,7 +34,7 @@ $context = context_course::instance($course->id, MUST_EXIST);
 
 $plugin = enrol_get_plugin($type);
 if (!$plugin) {
-    throw new moodle_exception('invaliddata', 'error');
+    throw new moodle_exception('invaliddata', 'mod_error');
 }
 
 require_login($course);

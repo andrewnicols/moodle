@@ -117,6 +117,6 @@ class availability_info implements renderable, templatable {
             ($availability->andoperator ? 'and' : 'or') .
             ($availability->treehidden ? '_hidden' : '');
 
-        return get_string($stridentifier, 'availability');
+        return get_string($stridentifier, 'core_availability');
     }
 }

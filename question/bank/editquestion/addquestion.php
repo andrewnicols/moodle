@@ -42,7 +42,7 @@ $hiddenparams = array('category' => $categoryid);
 
 // Validate params.
 if (!$category = $DB->get_record('question_categories', array('id' => $categoryid))) {
-    throw new moodle_exception('categorydoesnotexist', 'question', $returnurl);
+    throw new moodle_exception('categorydoesnotexist', 'core_question', $returnurl);
 }
 
 if ($cmid) {
@@ -57,7 +57,7 @@ if ($cmid) {
     $cm = null;
     $hiddenparams['courseid'] = $courseid;
 } else {
-    throw new moodle_exception('missingcourseorcmid', 'question');
+    throw new moodle_exception('missingcourseorcmid', 'core_question');
 }
 
 // Check permissions.
@@ -80,14 +80,14 @@ if ($cmid) {
 }
 navigation_node::override_active_url($questionbankurl);
 
-$chooseqtype = get_string('chooseqtypetoadd', 'question');
+$chooseqtype = get_string('chooseqtypetoadd', 'core_question');
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->navbar->add($chooseqtype);
 $PAGE->set_title($chooseqtype);
 
 // Display a form to choose the question type.
 echo $OUTPUT->header();
-echo $OUTPUT->notification(get_string('youmustselectaqtype', 'question'));
+echo $OUTPUT->notification(get_string('youmustselectaqtype', 'core_question'));
 echo $OUTPUT->box_start('generalbox boxwidthnormal boxaligncenter', 'chooseqtypebox');
 echo editquestion_helper::print_choose_qtype_to_add_form($hiddenparams, null, false);
 echo $OUTPUT->box_end();

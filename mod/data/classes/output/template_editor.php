@@ -59,7 +59,7 @@ class template_editor implements templatable, renderable {
         $cm = $this->manager->get_coursemodule();
 
         $data = [
-            'title' => get_string('header' . $this->templatename, 'data'),
+            'title' => get_string('header' . $this->templatename, 'mod_data'),
             'sesskey' => sesskey(),
             'disableeditor' => true,
             'url' => new moodle_url('/mod/data/templates.php', ['id' => $cm->id, 'mode' => $this->templatename]),
@@ -182,7 +182,7 @@ class template_editor implements templatable, renderable {
         ];
 
         $result = [
-            'name' => get_string($name, 'data'),
+            'name' => get_string($name, 'mod_data'),
             'fieldname' => $fieldname,
             'value' => $value,
         ];

@@ -40,7 +40,7 @@ admin_externalpage_setup('mnetenrol', '', array('host'=>$hostid, 'course'=>$cour
 $service = mnetservice_enrol::get_instance();
 
 if (!$service->is_available()) {
-    echo $OUTPUT->box(get_string('mnetdisabled','mnet'), 'noticebox');
+    echo $OUTPUT->box(get_string('mnetdisabled','core_mnet'), 'noticebox');
     echo $OUTPUT->footer();
     die();
 }
@@ -147,7 +147,7 @@ if (!empty($error)) {
               <input name="add" id="add" type="submit" value="<?php echo $OUTPUT->larrow().'&nbsp;'.get_string('add'); ?>" title="<?php print_string('add'); ?>" /><br />
 
               <div class="enroloptions">
-                  <p><?php echo get_string('assignrole', 'role') .': '. s($course->rolename); ?></p>
+                  <p><?php echo get_string('assignrole', 'core_role') .': '. s($course->rolename); ?></p>
               </div>
 
           </div>

@@ -62,7 +62,7 @@ class no_teaching extends \core_analytics\local\target\binary {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:noteachingactivity', 'course');
+        return new \lang_string('target:noteachingactivity', 'core_course');
     }
 
     /**
@@ -89,9 +89,9 @@ class no_teaching extends \core_analytics\local\target\binary {
         global $OUTPUT;
 
         $a = (object)['userfirstname' => $user->firstname];
-        $fullmessage = get_string('noteachinginfomessage', 'course', $a) . PHP_EOL . PHP_EOL . $insighturl->out(false);
+        $fullmessage = get_string('noteachinginfomessage', 'core_course', $a) . PHP_EOL . PHP_EOL . $insighturl->out(false);
         $fullmessagehtml = $OUTPUT->render_from_template('core_analytics/insight_info_message',
-            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('noteachinginfomessage', 'course', $a)]
+            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('noteachinginfomessage', 'core_course', $a)]
         );
 
         return [$fullmessage, $fullmessagehtml];
@@ -140,8 +140,8 @@ class no_teaching extends \core_analytics\local\target\binary {
      */
     protected static function classes_description() {
         return array(
-            get_string('targetlabelteachingyes', 'course'),
-            get_string('targetlabelteachingno', 'course'),
+            get_string('targetlabelteachingyes', 'core_course'),
+            get_string('targetlabelteachingno', 'core_course'),
         );
     }
 

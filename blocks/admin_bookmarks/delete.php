@@ -41,7 +41,7 @@ if ($section = optional_param('section', '', PARAM_SAFEPATH) and confirm_sesskey
         $key = array_search($section, $bookmarks);
 
         if ($key === false) {
-            throw new \moodle_exception('nonexistentbookmark', 'admin');
+            throw new \moodle_exception('nonexistentbookmark', 'core_admin');
             die;
         }
 
@@ -52,7 +52,7 @@ if ($section = optional_param('section', '', PARAM_SAFEPATH) and confirm_sesskey
         $temp = $adminroot->locate($section);
 
         if ($temp instanceof admin_externalpage) {
-            redirect($temp->url, get_string('bookmarkdeleted','admin'));
+            redirect($temp->url, get_string('bookmarkdeleted','core_admin'));
         } elseif ($temp instanceof admin_settingpage) {
             redirect($CFG->wwwroot . '/' . $CFG->admin . '/settings.php?section=' . $section);
         } else if ($temp instanceof admin_category) {
@@ -65,11 +65,11 @@ if ($section = optional_param('section', '', PARAM_SAFEPATH) and confirm_sesskey
 
     }
 
-    throw new \moodle_exception('nobookmarksforuser', 'admin');
+    throw new \moodle_exception('nobookmarksforuser', 'core_admin');
     die;
 
 } else {
-    throw new \moodle_exception('invalidsection', 'admin');
+    throw new \moodle_exception('invalidsection', 'core_admin');
     die;
 }
 

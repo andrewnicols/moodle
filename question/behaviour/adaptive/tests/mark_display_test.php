@@ -54,7 +54,7 @@ class mark_display_test extends \basic_testcase {
     }
 
     public function test_correct_no_penalty() {
-        $this->assertEquals('<div class="correctness badge correct">' . get_string('correct', 'question') . '</div>' .
+        $this->assertEquals('<div class="correctness badge correct">' . get_string('correct', 'core_question') . '</div>' .
                 '<div class="gradingdetails">' .
                 get_string('gradingdetails', 'qbehaviour_adaptive',
                         array('cur' => '1.00', 'raw' => '1.00', 'max' => '1.00')) . '</div>',
@@ -63,7 +63,7 @@ class mark_display_test extends \basic_testcase {
     }
 
     public function test_partial_first_try() {
-        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'question') .
+        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'core_question') .
                 '</div><div class="gradingdetails">' .
                 get_string('gradingdetails', 'qbehaviour_adaptive',
                         array('cur' => '0.50', 'raw' => '0.50', 'max' => '1.00')) . ' ' .
@@ -74,7 +74,7 @@ class mark_display_test extends \basic_testcase {
 
     public function test_partial_second_try() {
         $mark = array('cur' => '0.80', 'raw' => '0.90', 'max' => '1.00');
-        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'question') .
+        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'core_question') .
                 '</div><div class="gradingdetails">' .
                 get_string('gradingdetails', 'qbehaviour_adaptive', $mark) . ' ' .
                 get_string('gradingdetailsadjustment', 'qbehaviour_adaptive', $mark) . ' ' .
@@ -86,7 +86,7 @@ class mark_display_test extends \basic_testcase {
 
     public function test_correct_third_try() {
         $mark = array('cur' => '0.80', 'raw' => '1.00', 'max' => '1.00');
-        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'question') .
+        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'core_question') .
                 '</div><div class="gradingdetails">' .
                 get_string('gradingdetails', 'qbehaviour_adaptive', $mark) . ' ' .
                 get_string('gradingdetailsadjustment', 'qbehaviour_adaptive', $mark) . '</div>',
@@ -96,7 +96,7 @@ class mark_display_test extends \basic_testcase {
 
     public function test_correct_third_try_if_we_dont_increase_penalties_for_wrong() {
         $mark = array('cur' => '0.80', 'raw' => '1.00', 'max' => '1.00');
-        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'question') .
+        $this->assertEquals('<div class="correctness badge partiallycorrect">' . get_string('partiallycorrect', 'core_question') .
                 '</div><div class="gradingdetails">' .
                 get_string('gradingdetails', 'qbehaviour_adaptive', $mark) . ' ' .
                 get_string('gradingdetailsadjustment', 'qbehaviour_adaptive', $mark) . '</div>',

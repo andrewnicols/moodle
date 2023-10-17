@@ -56,7 +56,7 @@ class edit_action extends question_action_base {
 
     public function init(): void {
         parent::init();
-        $this->stredit = get_string('editquestion', 'question');
+        $this->stredit = get_string('editquestion', 'core_question');
         $this->strview = get_string('view');
         $this->editquestionurl = new \moodle_url('/question/bank/editquestion/question.php',
                 array('returnurl' => $this->qbank->returnurl));

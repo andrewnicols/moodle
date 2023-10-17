@@ -275,7 +275,7 @@ class qformat_gift extends qformat_default {
 
         // Set question name if not already set.
         if ($question->name === false) {
-            $question->name = $this->create_default_question_name($question->questiontext, get_string('questionname', 'question'));
+            $question->name = $this->create_default_question_name($question->questiontext, get_string('questionname', 'core_question'));
         }
 
         // Determine question type.

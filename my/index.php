@@ -60,7 +60,7 @@ if (empty($CFG->enabledashboard)) {
         redirect(new moodle_url('/my/courses.php'));
     } else {
         // Otherwise, raise an exception to inform the dashboard is disabled.
-        throw new moodle_exception('error:dashboardisdisabled', 'my');
+        throw new moodle_exception('error:dashboardisdisabled', 'core_my');
     }
 }
 
@@ -120,7 +120,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
         if (!is_null($userid)) {
             require_sesskey();
             if (!$currentpage = my_reset_page($userid, MY_PAGE_PRIVATE)) {
-                throw new \moodle_exception('reseterror', 'my');
+                throw new \moodle_exception('reseterror', 'core_my');
             }
             redirect(new moodle_url('/my'));
         }
@@ -151,7 +151,7 @@ if (empty($CFG->forcedefaultmymoodle) && $PAGE->user_allowed_editing()) {
     $params = array('edit' => !$edit);
 
     $resetbutton = '';
-    $resetstring = get_string('resetpage', 'my');
+    $resetstring = get_string('resetpage', 'core_my');
     $reseturl = new moodle_url("$CFG->wwwroot/my/index.php", array('edit' => 1, 'reset' => 1));
 
     if (!$currentpage->userid) {

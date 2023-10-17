@@ -305,8 +305,8 @@ if ($config->stage == INSTALL_SAVE) {
             }
 
             install_print_header($config, 'config.php',
-                                          get_string('configurationcompletehead', 'install'),
-                                          get_string('configurationcompletesub', 'install').get_string('configfilenotwritten', 'install'), 'alert-error');
+                                          get_string('configurationcompletehead', 'mod_install'),
+                                          get_string('configurationcompletesub', 'mod_install').get_string('configfilenotwritten', 'mod_install'), 'alert-error');
             echo '<div class="configphp"><pre>';
             echo p($configphp);
             echo '</pre></div>';
@@ -327,7 +327,7 @@ if ($config->stage == INSTALL_DOWNLOADLANG) {
         $config->stage = INSTALL_PATHS;
 
     } else if (is_dataroot_insecure()) {
-        $hint_dataroot = get_string('pathsunsecuredataroot', 'install');
+        $hint_dataroot = get_string('pathsunsecuredataroot', 'mod_install');
         $config->stage = INSTALL_PATHS;
 
     } else if (!file_exists($CFG->dataroot)) {
@@ -335,27 +335,27 @@ if ($config->stage == INSTALL_DOWNLOADLANG) {
         $a->parent = dirname($CFG->dataroot);
         $a->dataroot = $CFG->dataroot;
         if (!is_writable($a->parent)) {
-            $hint_dataroot = get_string('pathsroparentdataroot', 'install', $a);
+            $hint_dataroot = get_string('pathsroparentdataroot', 'mod_install', $a);
             $config->stage = INSTALL_PATHS;
         } else {
             if (!install_init_dataroot($CFG->dataroot, $CFG->directorypermissions)) {
-                $hint_dataroot = get_string('pathserrcreatedataroot', 'install', $a);
+                $hint_dataroot = get_string('pathserrcreatedataroot', 'mod_install', $a);
                 $config->stage = INSTALL_PATHS;
             }
         }
 
     } else if (!install_init_dataroot($CFG->dataroot, $CFG->directorypermissions)) {
-        $hint_dataroot = get_string('pathserrcreatedataroot', 'install', array('dataroot' => $CFG->dataroot));
+        $hint_dataroot = get_string('pathserrcreatedataroot', 'mod_install', array('dataroot' => $CFG->dataroot));
         $config->stage = INSTALL_PATHS;
     }
 
     if (empty($hint_dataroot) and !is_writable($CFG->dataroot)) {
-        $hint_dataroot = get_string('pathsrodataroot', 'install');
+        $hint_dataroot = get_string('pathsrodataroot', 'mod_install');
         $config->stage = INSTALL_PATHS;
     }
 
     if ($config->admin === '' or !file_exists($CFG->dirroot.'/'.$config->admin.'/environment.xml')) {
-        $hint_admindir = get_string('pathswrongadmindir', 'install');
+        $hint_admindir = get_string('pathswrongadmindir', 'mod_install');
         $config->stage = INSTALL_PATHS;
     }
 }
@@ -390,12 +390,12 @@ if ($config->stage == INSTALL_DOWNLOADLANG) {
             $a       = new stdClass();
             $a->url  = $installer->lang_pack_url($langcode);
             $a->dest = $CFG->dataroot.'/lang';
-            $downloaderror = get_string('remotedownloaderror', 'error', $a);
+            $downloaderror = get_string('remotedownloaderror', 'mod_error', $a);
         }
     }
 
     if ($downloaderror !== '') {
-        install_print_header($config, get_string('language'), get_string('langdownloaderror', 'install', $CFG->lang), $downloaderror);
+        install_print_header($config, get_string('language'), get_string('langdownloaderror', 'mod_install', $CFG->lang), $downloaderror);
         install_print_footer($config);
         die;
     } else {
@@ -421,15 +421,15 @@ if ($config->stage == INSTALL_DATABASE) {
 
     $sub = '<h3>'.$database->get_name().'</h3>'.$database->get_configuration_help();
 
-    install_print_header($config, get_string('database', 'install'), get_string('databasehead', 'install'), $sub);
+    install_print_header($config, get_string('database', 'mod_install'), get_string('databasehead', 'mod_install'), $sub);
 
-    $strdbhost   = get_string('databasehost', 'install');
-    $strdbname   = get_string('databasename', 'install');
-    $strdbuser   = get_string('databaseuser', 'install');
-    $strdbpass   = get_string('databasepass', 'install');
-    $strprefix   = get_string('dbprefix', 'install');
-    $strdbport   = get_string('databaseport', 'install');
-    $strdbsocket = get_string('databasesocket', 'install');
+    $strdbhost   = get_string('databasehost', 'mod_install');
+    $strdbname   = get_string('databasename', 'mod_install');
+    $strdbuser   = get_string('databaseuser', 'mod_install');
+    $strdbpass   = get_string('databasepass', 'mod_install');
+    $strprefix   = get_string('dbprefix', 'mod_install');
+    $strdbport   = get_string('databaseport', 'mod_install');
+    $strdbsocket = get_string('databasesocket', 'mod_install');
 
     echo '<div class="row mb-4">';
 
@@ -492,9 +492,9 @@ if ($config->stage == INSTALL_DATABASETYPE) {
     $CFG->early_install_lang = false;
 
     // Finally ask for DB type
-    install_print_header($config, get_string('database', 'install'),
-                                  get_string('databasetypehead', 'install'),
-                                  get_string('databasetypesub', 'install'));
+    install_print_header($config, get_string('database', 'mod_install'),
+                                  get_string('databasetypehead', 'mod_install'),
+                                  get_string('databasetypesub', 'mod_install'));
 
     $databases = array('mysqli' => moodle_database::get_driver_instance('mysqli', 'native'),
                        'auroramysql' => moodle_database::get_driver_instance('auroramysql', 'native'),
@@ -505,7 +505,7 @@ if ($config->stage == INSTALL_DATABASETYPE) {
                       );
 
     echo '<div class="row mb-4">';
-    echo '<div class="col-md-3 text-md-right pt-1"><label for="dbtype">'.get_string('dbtype', 'install').'</label></div>';
+    echo '<div class="col-md-3 text-md-right pt-1"><label for="dbtype">'.get_string('dbtype', 'mod_install').'</label></div>';
     echo '<div class="col-md-9" data-fieldtype="select">';
     echo '<select class="form-control" id="dbtype" name="dbtype">';
     $disabled = array();
@@ -539,16 +539,16 @@ if ($config->stage == INSTALL_ENVIRONMENT or $config->stage == INSTALL_PATHS) {
     if ($curl_fail or $zip_fail) {
         $config->stage = INSTALL_ENVIRONMENT;
 
-        install_print_header($config, get_string('environmenthead', 'install'),
-                                      get_string('errorsinenvironment', 'install'),
-                                      get_string('environmentsub2', 'install'));
+        install_print_header($config, get_string('environmenthead', 'mod_install'),
+                                      get_string('errorsinenvironment', 'mod_install'),
+                                      get_string('environmentsub2', 'mod_install'));
 
         echo '<div id="envresult"><dl>';
         if ($curl_fail) {
-            echo '<dt>'.get_string('phpextension', 'install', 'cURL').'</dt><dd>'.get_string('environmentrequireinstall', 'admin').'</dd>';
+            echo '<dt>'.get_string('phpextension', 'mod_install', 'cURL').'</dt><dd>'.get_string('environmentrequireinstall', 'core_admin').'</dd>';
         }
         if ($zip_fail) {
-            echo '<dt>'.get_string('phpextension', 'install', 'Zip').'</dt><dd>'.get_string('environmentrequireinstall', 'admin').'</dd>';
+            echo '<dt>'.get_string('phpextension', 'mod_install', 'Zip').'</dt><dd>'.get_string('environmentrequireinstall', 'core_admin').'</dd>';
         }
         echo '</dl></div>';
 
@@ -563,25 +563,25 @@ if ($config->stage == INSTALL_ENVIRONMENT or $config->stage == INSTALL_PATHS) {
 
 
 if ($config->stage == INSTALL_PATHS) {
-    $paths = array('wwwroot'  => get_string('wwwroot', 'install'),
-                   'dirroot'  => get_string('dirroot', 'install'),
-                   'dataroot' => get_string('dataroot', 'install'));
+    $paths = array('wwwroot'  => get_string('wwwroot', 'mod_install'),
+                   'dirroot'  => get_string('dirroot', 'mod_install'),
+                   'dataroot' => get_string('dataroot', 'mod_install'));
 
     $sub = '<dl>';
     foreach ($paths as $path=>$name) {
-        $sub .= '<dt>'.$name.'</dt><dd>'.get_string('pathssub'.$path, 'install').'</dd>';
+        $sub .= '<dt>'.$name.'</dt><dd>'.get_string('pathssub'.$path, 'mod_install').'</dd>';
     }
     if (!file_exists("$CFG->dirroot/admin/environment.xml")) {
-        $sub .= '<dt>'.get_string('admindirname', 'install').'</dt><dd>'.get_string('pathssubadmindir', 'install').'</dd>';
+        $sub .= '<dt>'.get_string('admindirname', 'mod_install').'</dt><dd>'.get_string('pathssubadmindir', 'mod_install').'</dd>';
     }
     $sub .= '</dl>';
 
-    install_print_header($config, get_string('paths', 'install'), get_string('pathshead', 'install'), $sub);
+    install_print_header($config, get_string('paths', 'mod_install'), get_string('pathshead', 'mod_install'), $sub);
 
-    $strwwwroot      = get_string('wwwroot', 'install');
-    $strdirroot      = get_string('dirroot', 'install');
-    $strdataroot     = get_string('dataroot', 'install');
-    $stradmindirname = get_string('admindirname', 'install');
+    $strwwwroot      = get_string('wwwroot', 'mod_install');
+    $strdirroot      = get_string('dirroot', 'mod_install');
+    $strdataroot     = get_string('dataroot', 'mod_install');
+    $stradmindirname = get_string('admindirname', 'mod_install');
 
     echo '<div class="row mb-4">';
     echo '<div class="col-md-3 text-md-right pt-1"><label for="id_wwwroot">'.$paths['wwwroot'].'</label></div>';
@@ -633,13 +633,13 @@ if ($distro) {
     $sub = ob_get_clean();
 
     install_print_header($config, get_string('language'),
-                                  get_string('chooselanguagehead', 'install'),
+                                  get_string('chooselanguagehead', 'mod_install'),
                                   $sub, 'alert-success');
 
 } else {
     install_print_header($config, get_string('language'),
-                                  get_string('chooselanguagehead', 'install'),
-                                  get_string('chooselanguagesub', 'install'));
+                                  get_string('chooselanguagehead', 'mod_install'),
+                                  get_string('chooselanguagesub', 'mod_install'));
 }
 
 $languages = get_string_manager()->get_list_of_translations();

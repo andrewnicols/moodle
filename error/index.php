@@ -36,7 +36,7 @@ if ($ME === '/.well-known/change-password') {
 }
 
 $context = context_system::instance();
-$title = get_string('pagenotexisttitle', 'error');
+$title = get_string('pagenotexisttitle', 'mod_error');
 $PAGE->set_url('/error/index.php');
 $PAGE->set_context($context);
 $PAGE->set_title($title);
@@ -84,16 +84,16 @@ if ($data = $mform->get_data()) {
     $message->contexturl = $data->requested;
     message_send($message);
 
-    redirect($CFG->wwwroot, get_string('sendmessagesent', 'error', $data->requested), 5);
+    redirect($CFG->wwwroot, get_string('sendmessagesent', 'mod_error', $data->requested), 5);
     exit;
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->notification(get_string('pagenotexist', 'error', s($ME)), 'error');
+echo $OUTPUT->notification(get_string('pagenotexist', 'mod_error', s($ME)), 'error');
 echo $OUTPUT->supportemail(['class' => 'text-center d-block mb-3 font-weight-bold']);
 
 if ($canmessage) {
-    echo \html_writer::tag('h4', get_string('sendmessage', 'error'));
+    echo \html_writer::tag('h4', get_string('sendmessage', 'mod_error'));
     $mform->display();
 } else {
     echo $OUTPUT->continue_button($CFG->wwwroot);

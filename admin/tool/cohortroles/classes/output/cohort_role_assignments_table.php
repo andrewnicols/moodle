@@ -137,7 +137,7 @@ class cohort_role_assignments_table extends table_sql {
 
         // Define headers and columns.
         $cols = array(
-            'cohortname' => get_string('cohort', 'cohort'),
+            'cohortname' => get_string('cohort', 'core_cohort'),
             'rolename' => get_string('role'),
             'fullname' => get_string('name'),
         );

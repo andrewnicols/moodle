@@ -135,7 +135,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($this->instancecontext1);
         $this->assertFalse($writer->has_any_data());
         $this->export_context_data_for_user($this->user0->id, $this->instancecontext1, 'core_grading');
-        $data = $writer->get_data([get_string('gradingmethod', 'grading')]);
+        $data = $writer->get_data([get_string('gradingmethod', 'core_grading')]);
         $this->assertEmpty($data);
 
         // Validate exported data: instance0 - user1 has NO data.
@@ -144,7 +144,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($this->instancecontext0);
         $this->assertFalse($writer->has_any_data());
         $this->export_context_data_for_user($this->user1->id, $this->instancecontext0, 'core_grading');
-        $data = $writer->get_data([get_string('gradingmethod', 'grading')]);
+        $data = $writer->get_data([get_string('gradingmethod', 'core_grading')]);
         $this->assertEmpty($data);
 
         // Validate exported data: instance1 - user1 has data (user has created and modified it).
@@ -152,7 +152,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($this->instancecontext1);
         $this->assertFalse($writer->has_any_data());
         $this->export_context_data_for_user($this->user1->id, $this->instancecontext1, 'core_grading');
-        $data = $writer->get_data([get_string('gradingmethod', 'grading')]);
+        $data = $writer->get_data([get_string('gradingmethod', 'core_grading')]);
         $this->assertCount(1, $data->definitions);
 
         $firstkey = reset($data->definitions);
@@ -167,7 +167,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($this->instancecontext2);
         $this->assertFalse($writer->has_any_data());
         $this->export_context_data_for_user($this->user1->id, $this->instancecontext2, 'core_grading');
-        $data = $writer->get_data([get_string('gradingmethod', 'grading')]);
+        $data = $writer->get_data([get_string('gradingmethod', 'core_grading')]);
         $this->assertCount(1, $data->definitions);
 
         $firstkey = reset($data->definitions);
@@ -183,7 +183,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($this->instancecontext1);
         $this->assertFalse($writer->has_any_data());
         $this->export_context_data_for_user($this->user2->id, $this->instancecontext1, 'core_grading');
-        $data = $writer->get_data([get_string('gradingmethod', 'grading')]);
+        $data = $writer->get_data([get_string('gradingmethod', 'core_grading')]);
         $this->assertEmpty($data);
 
         // Validate exported data: instance2 - user2 has data (user has modified it).
@@ -192,7 +192,7 @@ class provider_test extends provider_testcase {
         $writer = writer::with_context($this->instancecontext2);
         $this->assertFalse($writer->has_any_data());
         $this->export_context_data_for_user($this->user2->id, $this->instancecontext2, 'core_grading');
-        $data = $writer->get_data([get_string('gradingmethod', 'grading')]);
+        $data = $writer->get_data([get_string('gradingmethod', 'core_grading')]);
         $this->assertCount(1, $data->definitions);
     }
 

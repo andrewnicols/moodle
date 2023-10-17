@@ -37,7 +37,7 @@ if ($ADMIN->fulltree) {
 
     // Host.
     $settings->add(new admin_setting_configtext('auth_db/host', get_string('auth_dbhost_key', 'auth_db'),
-            get_string('auth_dbhost', 'auth_db') . ' ' .get_string('auth_multiplehosts', 'auth'),
+            get_string('auth_dbhost', 'auth_db') . ' ' .get_string('auth_multiplehosts', 'core_auth'),
             '127.0.0.1', PARAM_RAW));
 
     // Type.
@@ -90,11 +90,11 @@ if ($ADMIN->fulltree) {
 
     // DB Password Type.
     $passtype = array();
-    $passtype["plaintext"]   = get_string("plaintext", "auth");
-    $passtype["md5"]         = get_string("md5", "auth");
-    $passtype["sha1"]        = get_string("sha1", "auth");
+    $passtype["plaintext"]   = get_string("plaintext", 'core_auth');
+    $passtype["md5"]         = get_string("md5", 'core_auth');
+    $passtype["sha1"]        = get_string("sha1", 'core_auth');
     $passtype["saltedcrypt"] = get_string("auth_dbsaltedcrypt", "auth_db");
-    $passtype["internal"]    = get_string("internal", "auth");
+    $passtype["internal"]    = get_string("internal", 'core_auth');
 
     $settings->add(new admin_setting_configselect('auth_db/passtype',
         new lang_string('auth_dbpasstype_key', 'auth_db'), new lang_string('auth_dbpasstype', 'auth_db'), 'plaintext', $passtype));
@@ -114,20 +114,20 @@ if ($ADMIN->fulltree) {
     // Password change URL.
     $settings->add(new auth_db_admin_setting_special_auth_configtext('auth_db/changepasswordurl',
             get_string('auth_dbchangepasswordurl_key', 'auth_db'),
-            get_string('changepasswordhelp', 'auth'), '', PARAM_URL));
+            get_string('changepasswordhelp', 'core_auth'), '', PARAM_URL));
 
     // Label and Sync Options.
-    $settings->add(new admin_setting_heading('auth_db/usersync', new lang_string('auth_sync_script', 'auth'), ''));
+    $settings->add(new admin_setting_heading('auth_db/usersync', new lang_string('auth_sync_script', 'core_auth'), ''));
 
     // Sync Options.
     $deleteopt = array();
-    $deleteopt[AUTH_REMOVEUSER_KEEP] = get_string('auth_remove_keep', 'auth');
-    $deleteopt[AUTH_REMOVEUSER_SUSPEND] = get_string('auth_remove_suspend', 'auth');
-    $deleteopt[AUTH_REMOVEUSER_FULLDELETE] = get_string('auth_remove_delete', 'auth');
+    $deleteopt[AUTH_REMOVEUSER_KEEP] = get_string('auth_remove_keep', 'core_auth');
+    $deleteopt[AUTH_REMOVEUSER_SUSPEND] = get_string('auth_remove_suspend', 'core_auth');
+    $deleteopt[AUTH_REMOVEUSER_FULLDELETE] = get_string('auth_remove_delete', 'core_auth');
 
     $settings->add(new admin_setting_configselect('auth_db/removeuser',
-        new lang_string('auth_remove_user_key', 'auth'),
-        new lang_string('auth_remove_user', 'auth'), AUTH_REMOVEUSER_KEEP, $deleteopt));
+        new lang_string('auth_remove_user_key', 'core_auth'),
+        new lang_string('auth_remove_user', 'core_auth'), AUTH_REMOVEUSER_KEEP, $deleteopt));
 
     // Update users.
     $settings->add(new admin_setting_configselect('auth_db/updateusers',

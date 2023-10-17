@@ -43,7 +43,7 @@ class live_session_event extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_live_session', 'bigbluebuttonbn');
+        return get_string('event_live_session', 'mod_bigbluebuttonbn');
     }
 
     /**

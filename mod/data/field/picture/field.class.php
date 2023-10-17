@@ -90,8 +90,8 @@ class data_field_picture extends data_field_base {
         $str .= '<fieldset><legend><span class="accesshide">'.$this->field->name;
 
         if ($this->field->required) {
-            $str .= '&nbsp;' . get_string('requiredelement', 'form') . '</span></legend>';
-            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $str .= '&nbsp;' . get_string('requiredelement', 'core_form') . '</span></legend>';
+            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
             $str .= html_writer::div($image, 'inline-req');
         } else {
             $str .= '</span></legend>';
@@ -125,7 +125,7 @@ class data_field_picture extends data_field_base {
         $str .= '<div class="mdl-left">';
         $str .= '<input type="hidden" name="field_' . $this->field->id . '_file" value="' . s($itemid) . '" />';
         $str .= '<label for="field_' . $this->field->id . '_alttext">' .
-                get_string('alttext', 'data') .
+                get_string('alttext', 'mod_data') .
                 '</label>&nbsp;<input type="text" class="form-control" name="field_' .
                 $this->field->id . '_alttext" id="field_' . $this->field->id . '_alttext" value="' . s($alttext) . '" />';
         $str .= '</div>';
@@ -178,7 +178,7 @@ class data_field_picture extends data_field_base {
     }
 
     function display_search_field($value = '') {
-        return '<label class="accesshide" for="f_' . $this->field->id . '">' . get_string('fieldname', 'data') . '</label>' .
+        return '<label class="accesshide" for="f_' . $this->field->id . '">' . get_string('fieldname', 'mod_data') . '</label>' .
                '<input type="text" size="16" id="f_' . $this->field->id . '" name="f_' . $this->field->id . '" ' .
                'value="' . s($value) . '" class="form-control"/>';
     }
@@ -253,7 +253,7 @@ class data_field_picture extends data_field_base {
             if ($contents = $DB->get_records('data_content', array('fieldid'=>$this->field->id))) {
                 $fs = get_file_storage();
                 if (count($contents) > 20) {
-                    echo $OUTPUT->notification(get_string('resizingimages', 'data'), 'notifysuccess');
+                    echo $OUTPUT->notification(get_string('resizingimages', 'mod_data'), 'notifysuccess');
                     echo "\n\n";
                     // To make sure that ob_flush() has the desired effect
                     ob_flush();
@@ -310,7 +310,7 @@ class data_field_picture extends data_field_base {
 
                     if ($file->get_imageinfo() === false) {
                         $url = new moodle_url('/mod/data/edit.php', array('d' => $this->field->dataid));
-                        redirect($url, get_string('invalidfiletype', 'error', $file->get_filename()));
+                        redirect($url, get_string('invalidfiletype', 'mod_error', $file->get_filename()));
                     }
                     $content->content = $file->get_filename();
                     $this->update_thumbnail($content, $file);

@@ -28,7 +28,7 @@ define('NO_MOODLE_COOKIES', true); // Because it interferes with caching
         $image    = $args[0];
         $pathname = $CFG->dataroot.'/filter/tex/'.$image;
     } else {
-        throw new \moodle_exception('invalidarguments', 'error');
+        throw new \moodle_exception('invalidarguments', 'mod_error');
     }
 
     if (!file_exists($pathname)) {

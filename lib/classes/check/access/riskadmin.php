@@ -57,7 +57,7 @@ class riskadmin extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/roles/admins.php'),
-            get_string('siteadministrators', 'role'));
+            get_string('siteadministrators', 'core_role'));
     }
 
     /**

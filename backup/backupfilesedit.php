@@ -66,7 +66,7 @@ if ($context->contextlevel == CONTEXT_COURSECAT) {
 // Set the restore course node active in the settings navigation block.
 navigation_node::override_active_url(new moodle_url('/backup/restorefile.php', ['contextid' => $contextid]));
 
-$title = get_string('managefiles', 'backup');
+$title = get_string('managefiles', 'core_backup');
 $PAGE->navbar->add($title);
 $PAGE->set_title($title);
 $PAGE->set_pagelayout('admin');

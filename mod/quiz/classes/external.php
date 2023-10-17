@@ -741,7 +741,7 @@ class mod_quiz_external extends external_api {
 
         // Check questions.
         if (!$quizobj->has_questions()) {
-            throw new moodle_exception('noquestionsfound', 'quiz', $quizobj->view_url());
+            throw new moodle_exception('noquestionsfound', 'mod_quiz', $quizobj->view_url());
         }
 
         // Create an object to manage all the other (non-roles) access rules.
@@ -775,7 +775,7 @@ class mod_quiz_external extends external_api {
                 $errors = $accessmanager->validate_preflight_check($provideddata, [], $currentattemptid);
 
                 if (!empty($errors)) {
-                    throw new moodle_exception(array_shift($errors), 'quiz', $quizobj->view_url());
+                    throw new moodle_exception(array_shift($errors), 'mod_quiz', $quizobj->view_url());
                 }
 
                 // Pre-flight check passed.
@@ -784,9 +784,9 @@ class mod_quiz_external extends external_api {
 
             if ($currentattemptid) {
                 if ($lastattempt->state == quiz_attempt::OVERDUE) {
-                    throw new moodle_exception('stateoverdue', 'quiz', $quizobj->view_url());
+                    throw new moodle_exception('stateoverdue', 'mod_quiz', $quizobj->view_url());
                 } else {
-                    throw new moodle_exception('attemptstillinprogress', 'quiz', $quizobj->view_url());
+                    throw new moodle_exception('attemptstillinprogress', 'mod_quiz', $quizobj->view_url());
                 }
             }
             $offlineattempt = WS_SERVER ? true : false;
@@ -833,7 +833,7 @@ class mod_quiz_external extends external_api {
 
         // Check that this attempt belongs to this user.
         if ($attemptobj->get_userid() != $USER->id) {
-            throw new moodle_exception('notyourattempt', 'quiz', $attemptobj->view_url());
+            throw new moodle_exception('notyourattempt', 'mod_quiz', $attemptobj->view_url());
         }
 
         // General capabilities check.
@@ -851,15 +851,15 @@ class mod_quiz_external extends external_api {
 
             $messages = $accessmanager->prevent_access();
             if (!$ispreviewuser && $messages) {
-                throw new moodle_exception('attempterror', 'quiz', $attemptobj->view_url());
+                throw new moodle_exception('attempterror', 'mod_quiz', $attemptobj->view_url());
             }
         }
 
         // Attempt closed?.
         if ($attemptobj->is_finished()) {
-            throw new moodle_exception('attemptalreadyclosed', 'quiz', $attemptobj->view_url());
+            throw new moodle_exception('attemptalreadyclosed', 'mod_quiz', $attemptobj->view_url());
         } else if ($failifoverdue && $attemptobj->get_state() == quiz_attempt::OVERDUE) {
-            throw new moodle_exception('stateoverdue', 'quiz', $attemptobj->view_url());
+            throw new moodle_exception('stateoverdue', 'mod_quiz', $attemptobj->view_url());
         }
 
         // User submitted data (like the quiz password).
@@ -871,7 +871,7 @@ class mod_quiz_external extends external_api {
 
             $errors = $accessmanager->validate_preflight_check($provideddata, [], $params['attemptid']);
             if (!empty($errors)) {
-                throw new moodle_exception(array_shift($errors), 'quiz', $attemptobj->view_url());
+                throw new moodle_exception(array_shift($errors), 'mod_quiz', $attemptobj->view_url());
             }
             // Pre-flight check passed.
             $accessmanager->notify_preflight_check_passed($params['attemptid']);
@@ -880,19 +880,19 @@ class mod_quiz_external extends external_api {
         if (isset($params['page'])) {
             // Check if the page is out of range.
             if ($params['page'] != $attemptobj->force_page_number_into_range($params['page'])) {
-                throw new moodle_exception('Invalid page number', 'quiz', $attemptobj->view_url());
+                throw new moodle_exception('Invalid page number', 'mod_quiz', $attemptobj->view_url());
             }
 
             // Prevent out of sequence access.
             if (!$attemptobj->check_page_access($params['page'])) {
-                throw new moodle_exception('Out of sequence access', 'quiz', $attemptobj->view_url());
+                throw new moodle_exception('Out of sequence access', 'mod_quiz', $attemptobj->view_url());
             }
 
             // Check slots.
             $slots = $attemptobj->get_slots($params['page']);
 
             if (empty($slots)) {
-                throw new moodle_exception('noquestionsfound', 'quiz', $attemptobj->view_url());
+                throw new moodle_exception('noquestionsfound', 'mod_quiz', $attemptobj->view_url());
             }
         }
 
@@ -1393,13 +1393,13 @@ class mod_quiz_external extends external_api {
         $displayoptions = $attemptobj->get_display_options(true);
         if ($attemptobj->is_own_attempt()) {
             if (!$attemptobj->is_finished()) {
-                throw new moodle_exception('attemptclosed', 'quiz', $attemptobj->view_url());
+                throw new moodle_exception('attemptclosed', 'mod_quiz', $attemptobj->view_url());
             } else if (!$displayoptions->attempt) {
-                throw new moodle_exception('noreview', 'quiz', $attemptobj->view_url(), null,
+                throw new moodle_exception('noreview', 'mod_quiz', $attemptobj->view_url(), null,
                     $attemptobj->cannot_review_message());
             }
         } else if (!$attemptobj->is_review_allowed()) {
-            throw new moodle_exception('noreviewattempt', 'quiz', $attemptobj->view_url());
+            throw new moodle_exception('noreviewattempt', 'mod_quiz', $attemptobj->view_url());
         }
         return [$attemptobj, $displayoptions];
     }
@@ -1471,7 +1471,7 @@ class mod_quiz_external extends external_api {
         if ($displayoptions->overallfeedback && $feedback) {
             $result['additionaldata'][] = [
                 'id' => 'feedback',
-                'title' => get_string('feedback', 'quiz'),
+                'title' => get_string('feedback', 'mod_quiz'),
                 'content' => $feedback,
             ];
         }
@@ -1556,7 +1556,7 @@ class mod_quiz_external extends external_api {
 
         // Update attempt page, throwing an exception if $page is not valid.
         if (!$attemptobj->set_currentpage($params['page'])) {
-            throw new moodle_exception('Out of sequence access', 'quiz', $attemptobj->view_url());
+            throw new moodle_exception('Out of sequence access', 'mod_quiz', $attemptobj->view_url());
         }
 
         $result = [];
@@ -1899,7 +1899,7 @@ class mod_quiz_external extends external_api {
         if (!empty($params['attemptid'])) {
             $attemptobj = quiz_attempt::create($params['attemptid']);
             if ($attemptobj->get_userid() != $USER->id) {
-                throw new moodle_exception('notyourattempt', 'quiz', $attemptobj->view_url());
+                throw new moodle_exception('notyourattempt', 'mod_quiz', $attemptobj->view_url());
             }
             $attempttocheck = $attemptobj->get_attempt();
         }

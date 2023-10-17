@@ -109,7 +109,7 @@ class core_rating_external extends external_api {
                         'scaleid' => $scaleid);
         if (!has_capability('moodle/rating:view', $context) ||
                 !component_callback($component, 'rating_can_see_item_ratings', array($callbackparams), true)) {
-            throw new moodle_exception('noviewrate', 'rating');
+            throw new moodle_exception('noviewrate', 'core_rating');
         }
 
         list($context, $course, $cm) = get_context_info_array($context->id);
@@ -271,7 +271,7 @@ class core_rating_external extends external_api {
                                     $params['rating'], $params['rateduserid'], $params['aggregation']);
 
         if (!empty($result->error)) {
-            throw new moodle_exception($result->error, 'rating');
+            throw new moodle_exception($result->error, 'core_rating');
         }
 
         $returndata = array(

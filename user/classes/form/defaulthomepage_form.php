@@ -51,9 +51,9 @@ class defaulthomepage_form extends \moodleform {
 
         $options = [HOMEPAGE_SITE => new lang_string('home')];
         if (!empty($CFG->enabledashboard)) {
-            $options[HOMEPAGE_MY] = new lang_string('mymoodle', 'admin');
+            $options[HOMEPAGE_MY] = new lang_string('mymoodle', 'core_admin');
         }
-        $options[HOMEPAGE_MYCOURSES] = new lang_string('mycourses', 'admin');
+        $options[HOMEPAGE_MYCOURSES] = new lang_string('mycourses', 'core_admin');
 
         $mform->addElement('select', 'defaulthomepage', get_string('defaulthomepageuser'), $options);
         $mform->addHelpButton('defaulthomepage', 'defaulthomepageuser');

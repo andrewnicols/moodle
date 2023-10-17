@@ -408,10 +408,10 @@ function quiz_no_questions_message($quiz, $cm, $context) {
     global $OUTPUT;
 
     $output = '';
-    $output .= $OUTPUT->notification(get_string('noquestions', 'quiz'));
+    $output .= $OUTPUT->notification(get_string('noquestions', 'mod_quiz'));
     if (has_capability('mod/quiz:manage', $context)) {
         $output .= $OUTPUT->single_button(new moodle_url('/mod/quiz/edit.php',
-        ['cmid' => $cm->id]), get_string('editquiz', 'quiz'), 'get');
+        ['cmid' => $cm->id]), get_string('editquiz', 'mod_quiz'), 'get');
     }
 
     return $output;

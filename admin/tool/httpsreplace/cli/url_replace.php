@@ -41,7 +41,7 @@ list($options, $unrecognized) = cli_get_params(
 );
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized), 2);
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized), 2);
 }
 if ($options['help'] || (!$options['list'] && !$options['replace'])) {
     $help = "Examines DB for non-https src or data links, and lists broken links or replaces all links.

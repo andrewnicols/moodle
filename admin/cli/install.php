@@ -114,9 +114,9 @@ if (file_exists($configfile)) {
     }
 
     if ($DB->get_manager()->table_exists('config')) {
-        cli_error(get_string('clialreadyinstalled', 'install'));
+        cli_error(get_string('clialreadyinstalled', 'mod_install'));
     } else {
-        cli_error(get_string('clialreadyconfigured', 'install'));
+        cli_error(get_string('clialreadyconfigured', 'mod_install'));
     }
 }
 
@@ -288,7 +288,7 @@ if (!empty($sitepreset)) {
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 if ($options['help']) {
@@ -299,22 +299,22 @@ if ($options['help']) {
 //Print header
 cli_logo();
 echo PHP_EOL;
-echo get_string('cliinstallheader', 'install', $CFG->target_release)."\n";
+echo get_string('cliinstallheader', 'mod_install', $CFG->target_release)."\n";
 
 //Fist select language
 if ($interactive) {
     cli_separator();
     // Do not put the langs into columns because it is not compatible with RTL.
     $default = $CFG->lang;
-    cli_heading(get_string('chooselanguagehead', 'install'));
+    cli_heading(get_string('chooselanguagehead', 'mod_install'));
     if (array_key_exists($default, $languages)) {
         echo $default.' - '.$languages[$default]."\n";
     }
     if ($default !== 'en') {
         echo 'en - English (en)'."\n";
     }
-    echo '? - '.get_string('availablelangs', 'install')."\n";
-    $prompt = get_string('clitypevaluedefault', 'admin', $CFG->lang);
+    echo '? - '.get_string('availablelangs', 'mod_install')."\n";
+    $prompt = get_string('clitypevaluedefault', 'core_admin', $CFG->lang);
     $error = '';
     do {
         echo $error;
@@ -328,7 +328,7 @@ if ($interactive) {
             $input = clean_param($input, PARAM_SAFEDIR);
 
             if (!array_key_exists($input, $languages)) {
-                $error = get_string('cliincorrectvalueretry', 'admin')."\n";
+                $error = get_string('cliincorrectvalueretry', 'core_admin')."\n";
             } else {
                 $error = '';
             }
@@ -343,15 +343,15 @@ if ($interactive) {
 $chmod = octdec(clean_param($options['chmod'], PARAM_INT));
 if ($interactive) {
     cli_separator();
-    cli_heading(get_string('datarootpermission', 'install'));
-    $prompt = get_string('clitypevaluedefault', 'admin', decoct($chmod));
+    cli_heading(get_string('datarootpermission', 'mod_install'));
+    $prompt = get_string('clitypevaluedefault', 'core_admin', decoct($chmod));
     $error = '';
     do {
         echo $error;
         $input = cli_input($prompt, decoct($chmod));
         $input = octdec(clean_param($input, PARAM_INT));
         if (empty($input)) {
-            $error = get_string('cliincorrectvalueretry', 'admin')."\n";
+            $error = get_string('cliincorrectvalueretry', 'core_admin')."\n";
         } else {
             $error = '';
         }
@@ -361,7 +361,7 @@ if ($interactive) {
 } else {
     if (empty($chmod)) {
         $a = (object)array('option' => 'chmod', 'value' => decoct($chmod));
-        cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+        cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
     }
 }
 $CFG->directorypermissions = $chmod;
@@ -373,12 +373,12 @@ $wwwroot = clean_param($options['wwwroot'], PARAM_URL);
 $wwwroot = trim($wwwroot, '/');
 if ($interactive) {
     cli_separator();
-    cli_heading(get_string('wwwroot', 'install'));
+    cli_heading(get_string('wwwroot', 'mod_install'));
     if (strpos($wwwroot, 'http') === 0) {
-        $prompt = get_string('clitypevaluedefault', 'admin', $wwwroot);
+        $prompt = get_string('clitypevaluedefault', 'core_admin', $wwwroot);
     } else {
         $wwwroot = null;
-        $prompt = get_string('clitypevalue', 'admin');
+        $prompt = get_string('clitypevalue', 'core_admin');
     }
     $error = '';
     do {
@@ -387,7 +387,7 @@ if ($interactive) {
         $input = clean_param($input, PARAM_URL);
         $input = trim($input, '/');
         if (strpos($input, 'http') !== 0) {
-            $error = get_string('cliincorrectvalueretry', 'admin')."\n";
+            $error = get_string('cliincorrectvalueretry', 'core_admin')."\n";
         } else {
             $error = '';
         }
@@ -397,7 +397,7 @@ if ($interactive) {
 } else {
     if (strpos($wwwroot, 'http') !== 0) {
         $a = (object)array('option'=>'wwwroot', 'value'=>$wwwroot);
-        cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+        cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
     }
 }
 $CFG->wwwroot       = $wwwroot;
@@ -417,27 +417,27 @@ if ($interactive) {
         }
         $CFG->dataroot = dirname($parrent).'/moodledata';
     }
-    cli_heading(get_string('dataroot', 'install'));
+    cli_heading(get_string('dataroot', 'mod_install'));
     $error = '';
     do {
         if ($CFG->dataroot !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $CFG->dataroot);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $CFG->dataroot);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
         echo $error;
         $CFG->dataroot = cli_input($prompt, $CFG->dataroot);
         if ($CFG->dataroot === '') {
-            $error = get_string('cliincorrectvalueretry', 'admin')."\n";
+            $error = get_string('cliincorrectvalueretry', 'core_admin')."\n";
         } else if (is_dataroot_insecure()) {
             $CFG->dataroot = '';
-            $error = get_string('pathsunsecuredataroot', 'install')."\n";
+            $error = get_string('pathsunsecuredataroot', 'mod_install')."\n";
         } else {
             if (install_init_dataroot($CFG->dataroot, $CFG->directorypermissions)) {
                 $error = '';
             } else {
                 $a = (object)array('dataroot' => $CFG->dataroot);
-                $error = get_string('pathserrcreatedataroot', 'install', $a)."\n";
+                $error = get_string('pathserrcreatedataroot', 'mod_install', $a)."\n";
             }
         }
 
@@ -445,11 +445,11 @@ if ($interactive) {
 
 } else {
     if (is_dataroot_insecure()) {
-        cli_error(get_string('pathsunsecuredataroot', 'install'));
+        cli_error(get_string('pathsunsecuredataroot', 'mod_install'));
     }
     if (!install_init_dataroot($CFG->dataroot, $CFG->directorypermissions)) {
         $a = (object)array('dataroot' => $CFG->dataroot);
-        cli_error(get_string('pathserrcreatedataroot', 'install', $a));
+        cli_error(get_string('pathserrcreatedataroot', 'mod_install', $a));
     }
 }
 $CFG->tempdir       = $CFG->dataroot.'/temp';
@@ -466,7 +466,7 @@ if ($CFG->lang !== 'en') {
             $a       = new stdClass();
             $a->url  = $installer->lang_pack_url($langcode);
             $a->dest = $CFG->dataroot.'/lang';
-            cli_problem(get_string('remotedownloaderror', 'error', $a));
+            cli_problem(get_string('remotedownloaderror', 'mod_error', $a));
         }
     }
 }
@@ -480,22 +480,22 @@ get_string_manager(true);
 // make sure we are installing stable release or require a confirmation
 if (isset($maturity)) {
     if (($maturity < MATURITY_STABLE) and !$options['allow-unstable']) {
-        $maturitylevel = get_string('maturity'.$maturity, 'admin');
+        $maturitylevel = get_string('maturity'.$maturity, 'core_admin');
 
         if ($interactive) {
             cli_separator();
             cli_heading(get_string('notice'));
-            echo get_string('maturitycorewarning', 'admin', $maturitylevel) . PHP_EOL;
+            echo get_string('maturitycorewarning', 'core_admin', $maturitylevel) . PHP_EOL;
             echo get_string('morehelp') . ': ' . get_docs_url('admin/versions') . PHP_EOL;
             echo get_string('continue') . PHP_EOL;
-            $prompt = get_string('cliyesnoprompt', 'admin');
-            $input = cli_input($prompt, '', array(get_string('clianswerno', 'admin'), get_string('cliansweryes', 'admin')));
-            if ($input == get_string('clianswerno', 'admin')) {
+            $prompt = get_string('cliyesnoprompt', 'core_admin');
+            $input = cli_input($prompt, '', array(get_string('clianswerno', 'core_admin'), get_string('cliansweryes', 'core_admin')));
+            if ($input == get_string('clianswerno', 'core_admin')) {
                 exit(1);
             }
         } else {
-            cli_problem(get_string('maturitycorewarning', 'admin', $maturitylevel));
-            cli_error(get_string('maturityallowunstable', 'admin'));
+            cli_problem(get_string('maturitycorewarning', 'core_admin', $maturitylevel));
+            cli_error(get_string('maturityallowunstable', 'core_admin'));
         }
     }
 }
@@ -504,21 +504,21 @@ if (isset($maturity)) {
 if ($interactive) {
     $options['dbtype'] = strtolower($options['dbtype']);
     cli_separator();
-    cli_heading(get_string('databasetypehead', 'install'));
+    cli_heading(get_string('databasetypehead', 'mod_install'));
     foreach ($databases as $type=>$database) {
         echo " $type \n";
     }
     if (!empty($databases[$options['dbtype']])) {
-        $prompt = get_string('clitypevaluedefault', 'admin', $options['dbtype']);
+        $prompt = get_string('clitypevaluedefault', 'core_admin', $options['dbtype']);
     } else {
-        $prompt = get_string('clitypevalue', 'admin');
+        $prompt = get_string('clitypevalue', 'core_admin');
     }
     $CFG->dbtype = cli_input($prompt, $options['dbtype'], array_keys($databases));
 
 } else {
     if (empty($databases[$options['dbtype']])) {
         $a = (object)array('option'=>'dbtype', 'value'=>$options['dbtype']);
-        cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+        cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
     }
     $CFG->dbtype = $options['dbtype'];
 }
@@ -533,11 +533,11 @@ do {
     // Ask for db host.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('databasehost', 'install'));
+        cli_heading(get_string('databasehost', 'mod_install'));
         if ($options['dbhost'] !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['dbhost']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['dbhost']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
         $CFG->dbhost = cli_input($prompt, $options['dbhost']);
 
@@ -548,11 +548,11 @@ do {
     // Ask for db name.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('databasename', 'install'));
+        cli_heading(get_string('databasename', 'mod_install'));
         if ($options['dbname'] !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['dbname']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['dbname']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
         $CFG->dbname = cli_input($prompt, $options['dbname']);
 
@@ -563,12 +563,12 @@ do {
     // Ask for db prefix.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('dbprefix', 'install'));
+        cli_heading(get_string('dbprefix', 'mod_install'));
         //TODO: solve somehow the prefix trouble for oci.
         if ($options['prefix'] !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['prefix']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['prefix']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
         $CFG->prefix = cli_input($prompt, $options['prefix']);
 
@@ -579,8 +579,8 @@ do {
     // Ask for db port.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('databaseport', 'install'));
-        $prompt = get_string('clitypevaluedefault', 'admin', $options['dbport']);
+        cli_heading(get_string('databaseport', 'mod_install'));
+        $prompt = get_string('clitypevaluedefault', 'core_admin', $options['dbport']);
         $CFG->dboptions['dbport'] = (int) cli_input($prompt, $options['dbport']);
 
     } else {
@@ -596,8 +596,8 @@ do {
 
     } else if ($interactive and empty($CFG->dboptions['dbport'])) {
         cli_separator();
-        cli_heading(get_string('databasesocket', 'install'));
-        $prompt = get_string('clitypevaluedefault', 'admin', $options['dbsocket']);
+        cli_heading(get_string('databasesocket', 'mod_install'));
+        $prompt = get_string('clitypevaluedefault', 'core_admin', $options['dbsocket']);
         $CFG->dboptions['dbsocket'] = cli_input($prompt, $options['dbsocket']);
 
     } else {
@@ -607,11 +607,11 @@ do {
     // Ask for db user.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('databaseuser', 'install'));
+        cli_heading(get_string('databaseuser', 'mod_install'));
         if ($options['dbuser'] !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['dbuser']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['dbuser']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
         $CFG->dbuser = cli_input($prompt, $options['dbuser']);
 
@@ -622,12 +622,12 @@ do {
     // Ask for db password.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('databasepass', 'install'));
+        cli_heading(get_string('databasepass', 'mod_install'));
 
         if ($options['dbpass'] !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['dbpass']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['dbpass']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
 
         $CFG->dbpass = cli_input($prompt, $options['dbpass']);
@@ -644,7 +644,7 @@ do {
         $hintdatabase = install_db_validate($database, $CFG->dbhost, $CFG->dbuser, $CFG->dbpass, $CFG->dbname, $CFG->prefix,
                 array('dbpersist' => 0, 'dbport' => $CFG->dboptions['dbport'], 'dbsocket' => $CFG->dboptions['dbsocket']));
         if ($hintdatabase !== '') {
-            cli_error(get_string('dbconnectionerror', 'install'));
+            cli_error(get_string('dbconnectionerror', 'mod_install'));
         }
     }
 } while ($hintdatabase !== '');
@@ -658,9 +658,9 @@ if (!$skipdatabase) {
         cli_heading(get_string('fullsitename', 'moodle'));
 
         if ($options['fullname'] !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['fullname']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['fullname']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
 
         do {
@@ -669,7 +669,7 @@ if (!$skipdatabase) {
     } else {
         if (empty($options['fullname'])) {
             $a = (object)['option' => 'fullname', 'value' => $options['fullname']];
-            cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+            cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
         }
     }
 
@@ -679,9 +679,9 @@ if (!$skipdatabase) {
         cli_heading(get_string('shortsitename', 'moodle'));
 
         if ($options['shortname'] !== '') {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['shortname']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['shortname']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
 
         do {
@@ -690,18 +690,18 @@ if (!$skipdatabase) {
     } else {
         if (empty($options['shortname'])) {
             $a = (object)['option' => 'shortname', 'value' => $options['shortname']];
-            cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+            cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
         }
     }
 
     // Ask for admin user name.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('cliadminusername', 'install'));
+        cli_heading(get_string('cliadminusername', 'mod_install'));
         if (!empty($options['adminuser'])) {
-            $prompt = get_string('clitypevaluedefault', 'admin', $options['adminuser']);
+            $prompt = get_string('clitypevaluedefault', 'core_admin', $options['adminuser']);
         } else {
-            $prompt = get_string('clitypevalue', 'admin');
+            $prompt = get_string('clitypevalue', 'core_admin');
         }
         do {
             $options['adminuser'] = cli_input($prompt, $options['adminuser']);
@@ -709,63 +709,63 @@ if (!$skipdatabase) {
     } else {
         if ((empty($options['adminuser']) || $options['adminuser'] === 'guest')) {
             $a = (object)['option' => 'adminuser', 'value' => $options['adminuser']];
-            cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+            cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
         }
     }
 
     // Ask for admin user password.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('cliadminpassword', 'install'));
-        $prompt = get_string('clitypevalue', 'admin');
+        cli_heading(get_string('cliadminpassword', 'mod_install'));
+        $prompt = get_string('clitypevalue', 'core_admin');
         do {
             $options['adminpass'] = cli_input($prompt);
         } while (empty($options['adminpass']) or $options['adminpass'] === 'admin');
     } else {
         if ((empty($options['adminpass']) or $options['adminpass'] === 'admin')) {
             $a = (object)['option' => 'adminpass', 'value' => $options['adminpass']];
-            cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+            cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
         }
     }
 
     // Ask for the admin email address.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('cliadminemail', 'install'));
-        $prompt = get_string('clitypevaluedefault', 'admin', $options['adminemail']);
+        cli_heading(get_string('cliadminemail', 'mod_install'));
+        $prompt = get_string('clitypevaluedefault', 'core_admin', $options['adminemail']);
         $options['adminemail'] = cli_input($prompt, $options['adminemail']);
     }
 
     // Validate that the address provided was an e-mail address.
     if (!empty($options['adminemail']) && !validate_email($options['adminemail'])) {
         $a = (object)['option' => 'adminemail', 'value' => $options['adminemail']];
-        cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+        cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
     }
 
     // Ask for the support email address.
     if ($interactive) {
         cli_separator();
-        cli_heading(get_string('clisupportemail', 'install'));
-        $prompt = get_string('clitypevaluedefault', 'admin', $options['supportemail']);
+        cli_heading(get_string('clisupportemail', 'mod_install'));
+        $prompt = get_string('clitypevaluedefault', 'core_admin', $options['supportemail']);
         $options['supportemail'] = cli_input($prompt, $options['supportemail']);
     }
 
     // Validate that the support email address provided is valid.
     if (!empty($options['supportemail']) && !validate_email($options['supportemail'])) {
         $a = (object)['option' => 'supportemail', 'value' => $options['supportemail']];
-        cli_error(get_string('cliincorrectvalueerror', 'admin', $a));
+        cli_error(get_string('cliincorrectvalueerror', 'core_admin', $a));
     }
 }
 
 // Ask for the upgrade key.
 if ($interactive) {
     cli_separator();
-    cli_heading(get_string('upgradekeyset', 'admin'));
+    cli_heading(get_string('upgradekeyset', 'core_admin'));
     if ($options['upgradekey'] !== '') {
-        $prompt = get_string('clitypevaluedefault', 'admin', $options['upgradekey']);
+        $prompt = get_string('clitypevaluedefault', 'core_admin', $options['upgradekey']);
         $options['upgradekey'] = cli_input($prompt, $options['upgradekey']);
     } else {
-        $prompt = get_string('clitypevalue', 'admin');
+        $prompt = get_string('clitypevalue', 'core_admin');
         $options['upgradekey'] = cli_input($prompt);
     }
 }
@@ -785,15 +785,15 @@ if (!$skipdatabase) {
             echo "Moodle  - Modular Object-Oriented Dynamic Learning Environment\n";
             echo get_string('gpl3')."\n\n";
             echo get_string('doyouagree')."\n";
-            $prompt = get_string('cliyesnoprompt', 'admin');
-            $input = cli_input($prompt, '', array(get_string('clianswerno', 'admin'), get_string('cliansweryes', 'admin')));
-            if ($input == get_string('clianswerno', 'admin')) {
+            $prompt = get_string('cliyesnoprompt', 'core_admin');
+            $input = cli_input($prompt, '', array(get_string('clianswerno', 'core_admin'), get_string('cliansweryes', 'core_admin')));
+            if ($input == get_string('clianswerno', 'core_admin')) {
                 exit(1);
             }
         }
     } else {
         if (!$options['agree-license'] && !$skipdatabase) {
-            cli_error(get_string('climustagreelicense', 'install'));
+            cli_error(get_string('climustagreelicense', 'mod_install'));
         }
     }
 }
@@ -828,7 +828,7 @@ require_once($CFG->libdir . '/environmentlib.php');
 list($envstatus, $environment_results) = check_moodle_environment(normalize_version($release), ENV_SELECT_RELEASE);
 if (!$envstatus) {
     $errors = environment_get_errors($environment_results);
-    cli_heading(get_string('environment', 'admin'));
+    cli_heading(get_string('environment', 'core_admin'));
     foreach ($errors as $error) {
         list($info, $report) = $error;
         echo "!! $info !!\n$report\n\n";
@@ -839,8 +839,8 @@ if (!$envstatus) {
 // Test plugin dependencies.
 $failed = array();
 if (!core_plugin_manager::instance()->all_plugins_ok($version, $failed)) {
-    cli_problem(get_string('pluginscheckfailed', 'admin', array('pluginslist' => implode(', ', array_unique($failed)))));
-    cli_error(get_string('pluginschecktodo', 'admin'));
+    cli_problem(get_string('pluginscheckfailed', 'core_admin', array('pluginslist' => implode(', ', array_unique($failed)))));
+    cli_error(get_string('pluginschecktodo', 'core_admin'));
 }
 
 if (!$skipdatabase) {
@@ -852,8 +852,8 @@ if (!$skipdatabase) {
     require_once($CFG->libdir.'/upgradelib.php');
     upgrade_themes();
 } else {
-    echo get_string('cliskipdatabase', 'install')."\n";
+    echo get_string('cliskipdatabase', 'mod_install')."\n";
 }
 
-echo get_string('cliinstallfinished', 'install')."\n";
+echo get_string('cliinstallfinished', 'mod_install')."\n";
 exit(0); // 0 means success

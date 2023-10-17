@@ -34,19 +34,19 @@ $tokenid = required_param('id', PARAM_INT);
 // PAGE settings
 $PAGE->set_context($usercontext);
 $PAGE->set_url('/user/wsdoc.php');
-$PAGE->set_title(get_string('wsdocumentation', 'webservice'));
+$PAGE->set_title(get_string('wsdocumentation', 'core_webservice'));
 $PAGE->set_pagelayout('standard');
 
 // nav bar
 $PAGE->navbar->ignore_active(true);
 $PAGE->navbar->add(get_string('preferences'), new moodle_url('/user/preferences.php'));
 $PAGE->navbar->add(get_string('useraccount'));
-$PAGE->navbar->add(get_string('securitykeys', 'webservice'), new moodle_url('/user/managetoken.php'));
-$PAGE->navbar->add(get_string('wsdocumentation', 'webservice'));
+$PAGE->navbar->add(get_string('securitykeys', 'core_webservice'), new moodle_url('/user/managetoken.php'));
+$PAGE->navbar->add(get_string('wsdocumentation', 'core_webservice'));
 
 // check web service are enabled
 if (empty($CFG->enablewsdocumentation)) {
-    echo get_string('wsdocumentationdisable', 'webservice');
+    echo get_string('wsdocumentationdisable', 'core_webservice');
     die;
 }
 
@@ -55,7 +55,7 @@ $webservice = new webservice();
 $token = $webservice->get_token_by_id($tokenid);
 if (empty($token) or empty($token->userid) or empty($USER->id)
         or ($token->userid != $USER->id)) {
-    throw new moodle_exception('docaccessrefused', 'webservice');
+    throw new moodle_exception('docaccessrefused', 'core_webservice');
 }
 
 // get the list of all functions related to the token

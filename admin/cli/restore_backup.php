@@ -43,7 +43,7 @@ list($options, $unrecognized) = cli_get_params([
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 if ($options['help'] || !($options['file']) || !($options['categoryid'])) {
@@ -83,14 +83,14 @@ if (!$category = $DB->get_record('course_categories', ['id' => $options['categor
 $backupdir = "restore_" . uniqid();
 $path = $CFG->tempdir . DIRECTORY_SEPARATOR . "backup" . DIRECTORY_SEPARATOR . $backupdir;
 
-cli_heading(get_string('extractingbackupfileto', 'backup', $path));
+cli_heading(get_string('extractingbackupfileto', 'core_backup', $path));
 $fp = get_file_packer('application/vnd.moodle.backup');
 $fp->extract_to_pathname($options['file'], $path);
 
 cli_heading(get_string('preprocessingbackupfile'));
 try {
-    list($fullname, $shortname) = restore_dbops::calculate_course_names(0, get_string('restoringcourse', 'backup'),
-        get_string('restoringcourseshortname', 'backup'));
+    list($fullname, $shortname) = restore_dbops::calculate_course_names(0, get_string('restoringcourse', 'core_backup'),
+        get_string('restoringcourseshortname', 'core_backup'));
 
     $courseid = restore_dbops::create_new_course($fullname, $shortname, $category->id);
 
@@ -102,8 +102,8 @@ try {
 } catch (Exception $e) {
     cli_heading(get_string('cleaningtempdata'));
     fulldelete($path);
-    throw new \moodle_exception('generalexceptionmessage', 'error', '', $e->getMessage());
+    throw new \moodle_exception('generalexceptionmessage', 'mod_error', '', $e->getMessage());
 }
 
-cli_heading(get_string('restoredcourseid', 'backup', $courseid));
+cli_heading(get_string('restoredcourseid', 'core_backup', $courseid));
 exit(0);

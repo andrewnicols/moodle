@@ -49,7 +49,7 @@ ob_end_clean();
 // Get the questions (item-names).
 $feedbackstructure = new mod_feedback_structure($feedback, $cm, $course->id);
 if (!$items = $feedbackstructure->get_items(true)) {
-    throw new \moodle_exception('no_items_available_yet', 'feedback', $cm->url);
+    throw new \moodle_exception('no_items_available_yet', 'mod_feedback', $cm->url);
 }
 
 $mygroupid = groups_get_activity_group($cm);
@@ -86,19 +86,19 @@ $completedscount = $feedbackstructure->count_completed_responses($mygroupid);
 $rowoffset1++;
 $worksheet1->write_string($rowoffset1,
     0,
-    get_string('completed_feedbacks', 'feedback').': '.strval($completedscount),
+    get_string('completed_feedbacks', 'mod_feedback').': '.strval($completedscount),
     $xlsformats->head1);
 
 $rowoffset1++;
 $worksheet1->write_string($rowoffset1,
     0,
-    get_string('questions', 'feedback').': '. strval(count($items)),
+    get_string('questions', 'mod_feedback').': '. strval(count($items)),
     $xlsformats->head1);
 
 $rowoffset1 += 2;
-$worksheet1->write_string($rowoffset1, 0, get_string('item_label', 'feedback'), $xlsformats->head1);
-$worksheet1->write_string($rowoffset1, 1, get_string('question', 'feedback'), $xlsformats->head1);
-$worksheet1->write_string($rowoffset1, 2, get_string('responses', 'feedback'), $xlsformats->head1);
+$worksheet1->write_string($rowoffset1, 0, get_string('item_label', 'mod_feedback'), $xlsformats->head1);
+$worksheet1->write_string($rowoffset1, 1, get_string('question', 'mod_feedback'), $xlsformats->head1);
+$worksheet1->write_string($rowoffset1, 2, get_string('responses', 'mod_feedback'), $xlsformats->head1);
 $rowoffset1++;
 
 foreach ($items as $item) {

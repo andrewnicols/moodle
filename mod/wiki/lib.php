@@ -166,7 +166,7 @@ function wiki_reset_userdata($data) {
     require_once($CFG->dirroot . '/mod/wiki/pagelib.php');
     require_once($CFG->dirroot . "/mod/wiki/locallib.php");
 
-    $componentstr = get_string('modulenameplural', 'wiki');
+    $componentstr = get_string('modulenameplural', 'mod_wiki');
     $status = array();
 
     //get the wiki(s) in this course.
@@ -214,11 +214,11 @@ function wiki_reset_userdata($data) {
             }
 
             if (!empty($data->reset_wiki_pages)) {
-                $status[] = array('component' => $componentstr, 'item' => get_string('deleteallpages', 'wiki'),
+                $status[] = array('component' => $componentstr, 'item' => get_string('deleteallpages', 'mod_wiki'),
                     'error' => false);
             }
             if (!empty($data->reset_wiki_tags)) {
-                $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'wiki'), 'error' => false);
+                $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'mod_wiki'), 'error' => false);
             }
         }
 
@@ -241,9 +241,9 @@ function wiki_reset_userdata($data) {
 
 
 function wiki_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'wikiheader', get_string('modulenameplural', 'wiki'));
-    $mform->addElement('advcheckbox', 'reset_wiki_pages', get_string('deleteallpages', 'wiki'));
-    $mform->addElement('advcheckbox', 'reset_wiki_tags', get_string('removeallwikitags', 'wiki'));
+    $mform->addElement('header', 'wikiheader', get_string('modulenameplural', 'mod_wiki'));
+    $mform->addElement('advcheckbox', 'reset_wiki_pages', get_string('deleteallpages', 'mod_wiki'));
+    $mform->addElement('advcheckbox', 'reset_wiki_tags', get_string('removeallwikitags', 'mod_wiki'));
     $mform->addElement('advcheckbox', 'reset_wiki_comments', get_string('deleteallcomments'));
 }
 
@@ -340,7 +340,7 @@ function wiki_print_recent_activity($course, $viewfullnames, $timestart) {
     if (!$wikis) {
         return false;
     }
-    echo $OUTPUT->heading(get_string("updatedwikipages", 'wiki') . ':', 6);
+    echo $OUTPUT->heading(get_string("updatedwikipages", 'mod_wiki') . ':', 6);
     foreach ($wikis as $wiki) {
         $cm = $modinfo->instances['wiki'][$wiki->wikiid];
         $link = $CFG->wwwroot . '/mod/wiki/view.php?pageid=' . $wiki->id;
@@ -467,7 +467,7 @@ function wiki_search_form($cm, $search = '', $subwiki = null) {
         'hiddenfields' => $hiddenfields,
         'inputname' => 'searchstring',
         'query' => s($search, true),
-        'searchstring' => get_string('searchwikis', 'wiki'),
+        'searchstring' => get_string('searchwikis', 'mod_wiki'),
         'extraclasses' => 'mt-2'
     ];
     return $OUTPUT->render_from_template('core/search_input', $data);
@@ -505,7 +505,7 @@ function wiki_extend_navigation(navigation_node $navref, stdClass $course, stdCl
 
     if (wiki_can_create_pages($context)) {
         $link = new moodle_url('/mod/wiki/create.php', ['action' => 'new', 'swid' => $subwiki->id]);
-        $navref->add(get_string('newpage', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('newpage', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
     }
 
     if (empty($pageid)) {
@@ -516,33 +516,33 @@ function wiki_extend_navigation(navigation_node $navref, stdClass $course, stdCl
 
     if ($canviewpage) {
         $link = new moodle_url('/mod/wiki/view.php', ['pageid' => $pageid]);
-        $navref->add(get_string('view', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('view', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
     }
 
     if (wiki_user_can_edit($subwiki)) {
         $link = new moodle_url('/mod/wiki/edit.php', ['pageid' => $pageid]);
-        $navref->add(get_string('edit', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('edit', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
     }
 
     if (has_capability('mod/wiki:viewcomment', $context)) {
         $link = new moodle_url('/mod/wiki/comments.php', ['pageid' => $pageid]);
-        $navref->add(get_string('comments', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('comments', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
     }
 
     if ($canviewpage) {
         $link = new moodle_url('/mod/wiki/history.php', ['pageid' => $pageid]);
-        $navref->add(get_string('history', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('history', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
 
         $link = new moodle_url('/mod/wiki/map.php', ['pageid' => $pageid]);
-        $navref->add(get_string('map', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('map', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
 
         $link = new moodle_url('/mod/wiki/files.php', ['pageid' => $pageid]);
-        $navref->add(get_string('files', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('files', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
     }
 
     if (has_capability('mod/wiki:managewiki', $context)) {
         $link = new moodle_url('/mod/wiki/admin.php', ['pageid' => $pageid]);
-        $navref->add(get_string('admin', 'wiki'), $link, navigation_node::TYPE_SETTING);
+        $navref->add(get_string('admin', 'mod_wiki'), $link, navigation_node::TYPE_SETTING);
     }
 }
 /**
@@ -609,7 +609,7 @@ function wiki_comment_validate($comment_param) {
         throw new comment_exception('invalidsubwikiid');
     }
     if (!$wiki = wiki_get_wiki_from_pageid($comment_param->itemid)) {
-        throw new comment_exception('invalidid', 'data');
+        throw new comment_exception('invalidid', 'mod_data');
     }
     if (!$course = $DB->get_record('course', array('id'=>$wiki->course))) {
         throw new comment_exception('coursemisconf');
@@ -658,11 +658,11 @@ function wiki_comment_validate($comment_param) {
  */
 function wiki_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $module_pagetype = array(
-        'mod-wiki-*'=>get_string('page-mod-wiki-x', 'wiki'),
-        'mod-wiki-view'=>get_string('page-mod-wiki-view', 'wiki'),
-        'mod-wiki-comments'=>get_string('page-mod-wiki-comments', 'wiki'),
-        'mod-wiki-history'=>get_string('page-mod-wiki-history', 'wiki'),
-        'mod-wiki-map'=>get_string('page-mod-wiki-map', 'wiki')
+        'mod-wiki-*'=>get_string('page-mod-wiki-x', 'mod_wiki'),
+        'mod-wiki-view'=>get_string('page-mod-wiki-view', 'mod_wiki'),
+        'mod-wiki-comments'=>get_string('page-mod-wiki-comments', 'mod_wiki'),
+        'mod-wiki-history'=>get_string('page-mod-wiki-history', 'mod_wiki'),
+        'mod-wiki-map'=>get_string('page-mod-wiki-map', 'mod_wiki')
     );
     return $module_pagetype;
 }

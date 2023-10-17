@@ -49,7 +49,7 @@ class message extends base {
         global $DB;
 
         if (!$plugin = $DB->get_record('message_processors', ['name' => $pluginname])) {
-            throw new \moodle_exception('invalidplugin', 'message', '', $pluginname);
+            throw new \moodle_exception('invalidplugin', 'core_message', '', $pluginname);
         }
 
         $haschanged = false;

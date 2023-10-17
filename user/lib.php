@@ -305,7 +305,7 @@ function user_get_user_details($user, $course = null, array $userfields = array(
 
     foreach ($userfields as $thefield) {
         if (!in_array($thefield, $defaultfields)) {
-            throw new moodle_exception('invaliduserfield', 'error', '', $thefield);
+            throw new moodle_exception('invaliduserfield', 'mod_error', '', $thefield);
         }
     }
 
@@ -675,7 +675,7 @@ function can_view_user_details_cap($user, $course = null) {
  * @return array
  */
 function user_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    return array('user-profile' => get_string('page-user-profile', 'pagetype'));
+    return array('user-profile' => get_string('page-user-profile', 'mod_pagetype'));
 }
 
 /**

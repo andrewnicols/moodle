@@ -36,7 +36,7 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('standard');
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 $mform = new badges_preferences_form();

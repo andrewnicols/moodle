@@ -34,7 +34,7 @@ class cache_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcachecron', 'admin');
+        return get_string('taskcachecron', 'core_admin');
     }
 
     /**

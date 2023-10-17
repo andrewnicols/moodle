@@ -412,10 +412,10 @@ function workshop_user_outline($course, $user, $mod, $workshop) {
         $submissiongrade = reset($grades->items[0]->grades);
         $time = max($time, $submissiongrade->dategraded);
         if (!$submissiongrade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-            $info .= get_string('submissiongrade', 'workshop') . ': ' . $submissiongrade->str_long_grade
+            $info .= get_string('submissiongrade', 'mod_workshop') . ': ' . $submissiongrade->str_long_grade
                 . html_writer::empty_tag('br');
         } else {
-            $info .= get_string('submissiongrade', 'workshop') . ': ' . get_string('hidden', 'grades')
+            $info .= get_string('submissiongrade', 'mod_workshop') . ': ' . get_string('hidden', 'core_grades')
                 . html_writer::empty_tag('br');
         }
     }
@@ -423,9 +423,9 @@ function workshop_user_outline($course, $user, $mod, $workshop) {
         $assessmentgrade = reset($grades->items[1]->grades);
         $time = max($time, $assessmentgrade->dategraded);
         if (!$assessmentgrade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-            $info .= get_string('gradinggrade', 'workshop') . ': ' . $assessmentgrade->str_long_grade;
+            $info .= get_string('gradinggrade', 'mod_workshop') . ': ' . $assessmentgrade->str_long_grade;
         } else {
-            $info .= get_string('gradinggrade', 'workshop') . ': ' . get_string('hidden', 'grades');
+            $info .= get_string('gradinggrade', 'mod_workshop') . ': ' . get_string('hidden', 'core_grades');
         }
     }
 
@@ -460,18 +460,18 @@ function workshop_user_complete($course, $user, $mod, $workshop) {
     if (!empty($grades->items[0]->grades)) {
         $submissiongrade = reset($grades->items[0]->grades);
         if (!$submissiongrade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-            $info = get_string('submissiongrade', 'workshop') . ': ' . $submissiongrade->str_long_grade;
+            $info = get_string('submissiongrade', 'mod_workshop') . ': ' . $submissiongrade->str_long_grade;
         } else {
-            $info = get_string('submissiongrade', 'workshop') . ': ' . get_string('hidden', 'grades');
+            $info = get_string('submissiongrade', 'mod_workshop') . ': ' . get_string('hidden', 'core_grades');
         }
         echo html_writer::tag('li', $info, array('class'=>'submissiongrade'));
     }
     if (!empty($grades->items[1]->grades)) {
         $assessmentgrade = reset($grades->items[1]->grades);
         if (!$assessmentgrade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-            $info = get_string('gradinggrade', 'workshop') . ': ' . $assessmentgrade->str_long_grade;
+            $info = get_string('gradinggrade', 'mod_workshop') . ': ' . $assessmentgrade->str_long_grade;
         } else {
-            $info = get_string('gradinggrade', 'workshop') . ': ' . get_string('hidden', 'grades');
+            $info = get_string('gradinggrade', 'mod_workshop') . ': ' . get_string('hidden', 'core_grades');
         }
         echo html_writer::tag('li', $info, array('class'=>'gradinggrade'));
     }
@@ -493,7 +493,7 @@ function workshop_user_complete($course, $user, $mod, $workshop) {
             $title      = format_string($submission->title);
             $url        = $workshop->submission_url($submission->id);
             $link       = html_writer::link($url, $title);
-            $info       = get_string('submission', 'workshop').': '.$link;
+            $info       = get_string('submission', 'mod_workshop').': '.$link;
             echo html_writer::tag('li', $info, array('class'=>'submission'));
         }
     }
@@ -505,7 +505,7 @@ function workshop_user_complete($course, $user, $mod, $workshop) {
                 $a->submissionurl = $workshop->submission_url($assessment->submissionid)->out();
                 $a->assessmenturl = $workshop->assess_url($assessment->id)->out();
                 $a->submissiontitle = s($assessment->submissiontitle);
-                echo html_writer::tag('li', get_string('assessmentofsubmission', 'workshop', $a));
+                echo html_writer::tag('li', get_string('assessmentofsubmission', 'mod_workshop', $a));
             }
         }
     }
@@ -687,7 +687,7 @@ function workshop_print_recent_activity($course, $viewfullnames, $timestart) {
 
     if (!empty($submissions)) {
         $shown = true;
-        echo $OUTPUT->heading(get_string('recentsubmissions', 'workshop') . ':', 6);
+        echo $OUTPUT->heading(get_string('recentsubmissions', 'mod_workshop') . ':', 6);
         foreach ($submissions as $id => $submission) {
             $link = new moodle_url('/mod/workshop/submission.php', array('id'=>$id, 'cmid'=>$submission->cmid));
             if ($submission->authornamevisible) {
@@ -701,7 +701,7 @@ function workshop_print_recent_activity($course, $viewfullnames, $timestart) {
 
     if (!empty($assessments)) {
         $shown = true;
-        echo $OUTPUT->heading(get_string('recentassessments', 'workshop') . ':', 6);
+        echo $OUTPUT->heading(get_string('recentassessments', 'mod_workshop') . ':', 6);
         core_collator::asort_objects_by_property($assessments, 'timemodified');
         foreach ($assessments as $id => $assessment) {
             $link = new moodle_url('/mod/workshop/assessment.php', array('asid' => $id));
@@ -1006,12 +1006,12 @@ function workshop_print_recent_mod_activity($activity, $courseid, $detail, $modn
             $url = new moodle_url('/user/view.php', array('id'=>$activity->user->id, 'course'=>$courseid));
             $name = fullname($activity->user);
             $link = html_writer::link($url, $name);
-            echo get_string('submissionby', 'workshop', $link);
+            echo get_string('submissionby', 'mod_workshop', $link);
             echo ' - '.userdate($activity->timestamp);
             echo html_writer::end_tag('div');
         } else {
             echo html_writer::start_tag('div', array('class'=>'anonymous'));
-            echo get_string('submission', 'workshop');
+            echo get_string('submission', 'mod_workshop');
             echo ' - '.userdate($activity->timestamp);
             echo html_writer::end_tag('div');
         }
@@ -1043,12 +1043,12 @@ function workshop_print_recent_mod_activity($activity, $courseid, $detail, $modn
             $url = new moodle_url('/user/view.php', array('id'=>$activity->user->id, 'course'=>$courseid));
             $name = fullname($activity->user);
             $link = html_writer::link($url, $name);
-            echo get_string('assessmentbyfullname', 'workshop', $link);
+            echo get_string('assessmentbyfullname', 'mod_workshop', $link);
             echo ' - '.userdate($activity->timestamp);
             echo html_writer::end_tag('div');
         } else {
             echo html_writer::start_tag('div', array('class'=>'anonymous'));
-            echo get_string('assessment', 'workshop');
+            echo get_string('assessment', 'mod_workshop');
             echo ' - '.userdate($activity->timestamp);
             echo html_writer::end_tag('div');
         }
@@ -1123,14 +1123,14 @@ function workshop_grade_item_update(stdclass $workshop, $submissiongrades=null, 
     $a->workshopname = clean_param($workshop->name, PARAM_NOTAGS);
 
     $item = array();
-    $item['itemname'] = get_string('gradeitemsubmission', 'workshop', $a);
+    $item['itemname'] = get_string('gradeitemsubmission', 'mod_workshop', $a);
     $item['gradetype'] = GRADE_TYPE_VALUE;
     $item['grademax']  = $workshop->grade;
     $item['grademin']  = 0;
     grade_update('mod/workshop', $workshop->course, 'mod', 'workshop', $workshop->id, 0, $submissiongrades , $item);
 
     $item = array();
-    $item['itemname'] = get_string('gradeitemassessment', 'workshop', $a);
+    $item['itemname'] = get_string('gradeitemassessment', 'mod_workshop', $a);
     $item['gradetype'] = GRADE_TYPE_VALUE;
     $item['grademax']  = $workshop->gradinggrade;
     $item['grademin']  = 0;
@@ -1253,13 +1253,13 @@ function workshop_grade_item_category_update($workshop) {
  */
 function workshop_get_file_areas($course, $cm, $context) {
     $areas = array();
-    $areas['instructauthors']          = get_string('areainstructauthors', 'workshop');
-    $areas['instructreviewers']        = get_string('areainstructreviewers', 'workshop');
-    $areas['submission_content']       = get_string('areasubmissioncontent', 'workshop');
-    $areas['submission_attachment']    = get_string('areasubmissionattachment', 'workshop');
-    $areas['conclusion']               = get_string('areaconclusion', 'workshop');
-    $areas['overallfeedback_content']  = get_string('areaoverallfeedbackcontent', 'workshop');
-    $areas['overallfeedback_attachment'] = get_string('areaoverallfeedbackattachment', 'workshop');
+    $areas['instructauthors']          = get_string('areainstructauthors', 'mod_workshop');
+    $areas['instructreviewers']        = get_string('areainstructreviewers', 'mod_workshop');
+    $areas['submission_content']       = get_string('areasubmissioncontent', 'mod_workshop');
+    $areas['submission_attachment']    = get_string('areasubmissionattachment', 'mod_workshop');
+    $areas['conclusion']               = get_string('areaconclusion', 'mod_workshop');
+    $areas['overallfeedback_content']  = get_string('areaoverallfeedbackcontent', 'mod_workshop');
+    $areas['overallfeedback_attachment'] = get_string('areaoverallfeedbackattachment', 'mod_workshop');
 
     return $areas;
 }
@@ -1613,7 +1613,7 @@ function workshop_extend_navigation(navigation_node $navref, stdclass $course, s
 
     if (has_capability('mod/workshop:submit', context_module::instance($cm->id))) {
         $url = new moodle_url('/mod/workshop/submission.php', array('cmid' => $cm->id));
-        $mysubmission = $navref->add(get_string('mysubmission', 'workshop'), $url);
+        $mysubmission = $navref->add(get_string('mysubmission', 'mod_workshop'), $url);
         $mysubmission->mainnavonly = true;
     }
 }
@@ -1630,12 +1630,12 @@ function workshop_extend_navigation(navigation_node $navref, stdclass $course, s
 function workshop_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $workshopnode=null) {
     if (has_capability('mod/workshop:editdimensions', $settingsnav->get_page()->cm->context)) {
         $url = new moodle_url('/mod/workshop/editform.php', array('cmid' => $settingsnav->get_page()->cm->id));
-        $workshopnode->add(get_string('assessmentform', 'workshop'), $url,
+        $workshopnode->add(get_string('assessmentform', 'mod_workshop'), $url,
         settings_navigation::TYPE_SETTING, null, 'workshopassessement');
     }
     if (has_capability('mod/workshop:allocate', $settingsnav->get_page()->cm->context)) {
         $url = new moodle_url('/mod/workshop/allocation.php', array('cmid' => $settingsnav->get_page()->cm->id));
-        $workshopnode->add(get_string('submissionsallocation', 'workshop'), $url, settings_navigation::TYPE_SETTING);
+        $workshopnode->add(get_string('submissionsallocation', 'mod_workshop'), $url, settings_navigation::TYPE_SETTING);
     }
 }
 
@@ -1646,7 +1646,7 @@ function workshop_extend_settings_navigation(settings_navigation $settingsnav, n
  * @param stdClass $currentcontext Current context of block
  */
 function workshop_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-workshop-*'=>get_string('page-mod-workshop-x', 'workshop'));
+    $module_pagetype = array('mod-workshop-*'=>get_string('page-mod-workshop-x', 'mod_workshop'));
     return $module_pagetype;
 }
 
@@ -1792,7 +1792,7 @@ function mod_workshop_core_calendar_provide_event_action(calendar_event $event,
     }
 
     return $factory->create_instance(
-        get_string('viewworkshopsummary', 'workshop'),
+        get_string('viewworkshopsummary', 'mod_workshop'),
         new \moodle_url('/mod/workshop/view.php', array('id' => $cm->id)),
         1,
         true
@@ -2026,7 +2026,7 @@ function workshop_reset_userdata(stdClass $data) {
     shift_course_mod_dates('workshop', array('submissionstart', 'submissionend', 'assessmentstart', 'assessmentend'),
         $data->timeshift, $data->courseid);
     $status = array();
-    $status[] = array('component' => get_string('modulenameplural', 'workshop'), 'item' => get_string('datechanged'),
+    $status[] = array('component' => get_string('modulenameplural', 'mod_workshop'), 'item' => get_string('datechanged'),
         'error' => false);
 
     if (empty($data->reset_workshop_submissions)
@@ -2291,7 +2291,7 @@ function mod_workshop_user_preferences(): array {
  * @return lang_string The event type lang string.
  */
 function mod_workshop_core_calendar_get_event_action_string($eventtype): string {
-    $modulename = get_string('modulename', 'workshop');
+    $modulename = get_string('modulename', 'mod_workshop');
 
     switch ($eventtype) {
         case WORKSHOP_EVENT_TYPE_SUBMISSION_OPEN:
@@ -2307,8 +2307,8 @@ function mod_workshop_core_calendar_get_event_action_string($eventtype): string 
             $identifier = 'assessmentendevent';
             break;
         default:
-            return get_string('requiresaction', 'calendar', $modulename);
+            return get_string('requiresaction', 'core_calendar', $modulename);
     }
 
-    return get_string($identifier, 'workshop', $modulename);
+    return get_string($identifier, 'mod_workshop', $modulename);
 }

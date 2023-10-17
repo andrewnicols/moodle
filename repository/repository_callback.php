@@ -55,7 +55,7 @@ if (file_exists($CFG->dirroot.'/repository/'.$type.'/lib.php')) {
     $classname = 'repository_' . $type;
     $repo = new $classname($repo_id, $repository->contextid, array('type'=>$type));
 } else {
-    throw new \moodle_exception('invalidplugin', 'repository', $type);
+    throw new \moodle_exception('invalidplugin', 'core_repository', $type);
 }
 
 // post callback
@@ -67,8 +67,8 @@ $repo->callback();
 // If Moodle is working on HTTPS mode, then we are not allowed to access
 // parent window, in this case, we need to alert user to refresh the repository
 // manually.
-$strhttpsbug = json_encode(get_string('cannotaccessparentwin', 'repository'));
-$strrefreshnonjs = get_string('refreshnonjsfilepicker', 'repository');
+$strhttpsbug = json_encode(get_string('cannotaccessparentwin', 'core_repository'));
+$strrefreshnonjs = get_string('refreshnonjsfilepicker', 'core_repository');
 $reloadparent = optional_param('reloadparent', false, PARAM_BOOL);
 // If this request is coming from a popup, close window and reload parent window.
 if ($reloadparent == true) {

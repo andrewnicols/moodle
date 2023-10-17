@@ -51,16 +51,16 @@ class workshop_random_allocator_form extends moodleform {
         $gmode = groups_get_activity_groupmode($workshop->cm, $workshop->course);
         switch ($gmode) {
         case NOGROUPS:
-            $grouplabel = get_string('groupsnone', 'group');
+            $grouplabel = get_string('groupsnone', 'core_group');
             break;
         case VISIBLEGROUPS:
-            $grouplabel = get_string('groupsvisible', 'group');
+            $grouplabel = get_string('groupsvisible', 'core_group');
             break;
         case SEPARATEGROUPS:
-            $grouplabel = get_string('groupsseparate', 'group');
+            $grouplabel = get_string('groupsseparate', 'core_group');
             break;
         }
-        $mform->addElement('static', 'groupmode', get_string('groupmode', 'group'), $grouplabel);
+        $mform->addElement('static', 'groupmode', get_string('groupmode', 'core_group'), $grouplabel);
 
         $options_numper = array(
             workshop_random_allocator_setting::NUMPER_SUBMISSION => get_string('numperauthor', 'workshopallocation_random'),
@@ -91,7 +91,7 @@ class workshop_random_allocator_form extends moodleform {
 
         if (empty($workshop->useselfassessment)) {
             $mform->addElement('static', 'addselfassessment', get_string('addselfassessment', 'workshopallocation_random'),
-                                                                 get_string('selfassessmentdisabled', 'workshop'));
+                                                                 get_string('selfassessmentdisabled', 'mod_workshop'));
         } else {
             $mform->addElement('checkbox', 'addselfassessment', get_string('addselfassessment', 'workshopallocation_random'));
         }

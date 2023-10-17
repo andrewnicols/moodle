@@ -38,22 +38,22 @@ class cohort_edit_form extends moodleform {
         $editoroptions = $this->_customdata['editoroptions'];
         $cohort = $this->_customdata['data'];
 
-        $mform->addElement('text', 'name', get_string('name', 'cohort'), 'maxlength="254" size="50"');
+        $mform->addElement('text', 'name', get_string('name', 'core_cohort'), 'maxlength="254" size="50"');
         $mform->addRule('name', get_string('required'), 'required', null, 'client');
         $mform->setType('name', PARAM_TEXT);
 
         $options = $this->get_category_options($cohort->contextid);
-        $mform->addElement('autocomplete', 'contextid', get_string('context', 'role'), $options);
+        $mform->addElement('autocomplete', 'contextid', get_string('context', 'core_role'), $options);
         $mform->addRule('contextid', null, 'required', null, 'client');
 
-        $mform->addElement('text', 'idnumber', get_string('idnumber', 'cohort'), 'maxlength="254" size="50"');
+        $mform->addElement('text', 'idnumber', get_string('idnumber', 'core_cohort'), 'maxlength="254" size="50"');
         $mform->setType('idnumber', PARAM_RAW); // Idnumbers are plain text, must not be changed.
 
-        $mform->addElement('advcheckbox', 'visible', get_string('visible', 'cohort'));
+        $mform->addElement('advcheckbox', 'visible', get_string('visible', 'core_cohort'));
         $mform->setDefault('visible', 1);
         $mform->addHelpButton('visible', 'visible', 'cohort');
 
-        $mform->addElement('editor', 'description_editor', get_string('description', 'cohort'), null, $editoroptions);
+        $mform->addElement('editor', 'description_editor', get_string('description', 'core_cohort'), null, $editoroptions);
         $mform->setType('description_editor', PARAM_RAW);
 
         if (!empty($CFG->allowcohortthemes)) {
@@ -91,13 +91,13 @@ class cohort_edit_form extends moodleform {
             $current = $DB->get_record('cohort', array('id'=>$data['id']), '*', MUST_EXIST);
             if ($current->idnumber !== $idnumber) {
                 if ($DB->record_exists('cohort', array('idnumber'=>$idnumber))) {
-                    $errors['idnumber'] = get_string('duplicateidnumber', 'cohort');
+                    $errors['idnumber'] = get_string('duplicateidnumber', 'core_cohort');
                 }
             }
 
         } else {
             if ($DB->record_exists('cohort', array('idnumber'=>$idnumber))) {
-                $errors['idnumber'] = get_string('duplicateidnumber', 'cohort');
+                $errors['idnumber'] = get_string('duplicateidnumber', 'core_cohort');
             }
         }
 

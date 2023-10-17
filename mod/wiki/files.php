@@ -34,7 +34,7 @@ $userid       = optional_param('uid', 0, PARAM_INT); // User ID
 $groupanduser = optional_param('groupanduser', null, PARAM_TEXT);
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    throw new \moodle_exception('incorrectpageid', 'mod_wiki');
 }
 
 if ($groupanduser) {
@@ -46,7 +46,7 @@ if ($groupanduser) {
 if ($wid) {
     // in group mode
     if (!$wiki = wiki_get_wiki($wid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
     }
     if (!$subwiki = wiki_get_subwiki_by_group($wiki->id, $currentgroup, $userid)) {
         // create subwiki if doesn't exist
@@ -56,12 +56,12 @@ if ($wid) {
 } else {
     // no group
     if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-        throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+        throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
     }
 
     // Checking wiki instance of that subwiki
     if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
     }
 }
 
@@ -80,13 +80,13 @@ $PAGE->set_url($url);
 require_course_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewfiles', 'wiki');
+    throw new \moodle_exception('cannotviewfiles', 'mod_wiki');
 }
 
-$PAGE->set_title(get_string('wikifiles', 'wiki'));
+$PAGE->set_title(get_string('wikifiles', 'mod_wiki'));
 $PAGE->set_heading($course->fullname);
 $PAGE->add_body_class('limitedwidth');
-$PAGE->navbar->add(format_string(get_string('wikifiles', 'wiki')));
+$PAGE->navbar->add(format_string(get_string('wikifiles', 'mod_wiki')));
 $PAGE->set_secondary_active_tab('modulepage');
 
 echo $OUTPUT->header();
@@ -102,6 +102,6 @@ echo $renderer->wiki_files_tree($context, $subwiki);
 echo $OUTPUT->box_end();
 
 if (has_capability('mod/wiki:managefiles', $context)) {
-    echo $OUTPUT->single_button(new moodle_url('/mod/wiki/filesedit.php', array('subwiki'=>$subwiki->id, 'pageid'=>$pageid)), get_string('editfiles', 'wiki'), 'get');
+    echo $OUTPUT->single_button(new moodle_url('/mod/wiki/filesedit.php', array('subwiki'=>$subwiki->id, 'pageid'=>$pageid)), get_string('editfiles', 'mod_wiki'), 'get');
 }
 echo $OUTPUT->footer();

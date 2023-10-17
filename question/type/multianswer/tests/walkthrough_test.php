@@ -379,10 +379,10 @@ class walkthrough_test extends \qbehaviour_walkthrough_test_base {
                 $this->get_contains_select_expectation('sub4_answer', $choices, null, true));
         $this->render();
         $a = array('mark' => '0.00', 'max' => '1.00');
-        $this->assertDoesNotMatchRegularExpression('~' . preg_quote(get_string('markoutofmax', 'question', $a), '~') . '~',
+        $this->assertDoesNotMatchRegularExpression('~' . preg_quote(get_string('markoutofmax', 'core_question', $a), '~') . '~',
                 $this->currentoutput);
         $a['mark'] = '1.00';
-        $this->assertDoesNotMatchRegularExpression('~' . preg_quote(get_string('markoutofmax', 'question', $a), '~') . '~',
+        $this->assertDoesNotMatchRegularExpression('~' . preg_quote(get_string('markoutofmax', 'core_question', $a), '~') . '~',
                 $this->currentoutput);
     }
 

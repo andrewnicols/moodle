@@ -62,13 +62,13 @@ class block_selfcompletion extends block_base {
         // Don't display if completion isn't enabled!
         if (!completion_info::is_enabled_for_site()) {
             if ($can_edit) {
-                $this->content->text = get_string('completionnotenabledforsite', 'completion');
+                $this->content->text = get_string('completionnotenabledforsite', 'core_completion');
             }
             return $this->content;
 
         } else if (!$info->is_enabled()) {
             if ($can_edit) {
-                $this->content->text = get_string('completionnotenabledforcourse', 'completion');
+                $this->content->text = get_string('completionnotenabledforcourse', 'core_completion');
             }
             return $this->content;
         }
@@ -86,13 +86,13 @@ class block_selfcompletion extends block_base {
 
         // Check this user is enroled
         if (!$info->is_tracked_user($USER->id)) {
-            $this->content->text = get_string('nottracked', 'completion');
+            $this->content->text = get_string('nottracked', 'core_completion');
             return $this->content;
         }
 
         // Is course complete?
         if ($info->is_course_complete($USER->id)) {
-            $this->content->text = get_string('coursealreadycompleted', 'completion');
+            $this->content->text = get_string('coursealreadycompleted', 'core_completion');
             return $this->content;
 
         // Check if the user has already marked themselves as complete

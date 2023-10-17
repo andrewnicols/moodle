@@ -1328,7 +1328,7 @@ class calendar_information {
             $filters = new block_contents();
             $filters->content = $renderer->event_filter();
             $filters->footer = '';
-            $filters->title = get_string('eventskey', 'calendar');
+            $filters->title = get_string('eventskey', 'core_calendar');
             $renderer->add_pretend_calendar_block($filters, BLOCK_POS_RIGHT);
         }
     }
@@ -1623,11 +1623,11 @@ function calendar_add_event_metadata($event) {
         $event->cmid = $module->id;
     } else if ($event->courseid == SITEID) { // Site event.
         $event->icon = '<img src="' . $OUTPUT->image_url('i/siteevent') . '" alt="' .
-            get_string('siteevent', 'calendar') . '" class="icon" />';
+            get_string('siteevent', 'core_calendar') . '" class="icon" />';
         $event->cssclass = 'calendar_event_site';
     } else if ($event->courseid != 0 && $event->courseid != SITEID && $event->groupid == 0) { // Course event.
         $event->icon = '<img src="' . $OUTPUT->image_url('i/courseevent') . '" alt="' .
-            get_string('courseevent', 'calendar') . '" class="icon" />';
+            get_string('courseevent', 'core_calendar') . '" class="icon" />';
         $event->courselink = calendar_get_courselink($event->courseid);
         $event->cssclass = 'calendar_event_course';
     } else if ($event->groupid) { // Group event.
@@ -1637,12 +1637,12 @@ function calendar_add_event_metadata($event) {
             $groupname = '';
         }
         $event->icon = \html_writer::empty_tag('image', array('src' => $OUTPUT->image_url('i/groupevent'),
-            'alt' => get_string('groupevent', 'calendar'), 'title' => $groupname, 'class' => 'icon'));
+            'alt' => get_string('groupevent', 'core_calendar'), 'title' => $groupname, 'class' => 'icon'));
         $event->courselink = calendar_get_courselink($event->courseid) . ', ' . $groupname;
         $event->cssclass = 'calendar_event_group';
     } else if ($event->userid) { // User event.
         $event->icon = '<img src="' . $OUTPUT->image_url('i/userevent') . '" alt="' .
-            get_string('userevent', 'calendar') . '" class="icon" />';
+            get_string('userevent', 'core_calendar') . '" class="icon" />';
         $event->cssclass = 'calendar_event_user';
     }
 
@@ -1731,9 +1731,9 @@ function calendar_top_controls($type, $data) {
 
     switch ($type) {
         case 'frontpage':
-            $prevlink = calendar_get_link_previous(get_string('monthprev', 'calendar'), $urlbase, false, false, false,
+            $prevlink = calendar_get_link_previous(get_string('monthprev', 'core_calendar'), $urlbase, false, false, false,
                 true, $prevmonthtime);
-            $nextlink = calendar_get_link_next(get_string('monthnext', 'calendar'), $urlbase, false, false, false, true,
+            $nextlink = calendar_get_link_next(get_string('monthnext', 'core_calendar'), $urlbase, false, false, false, true,
                 $nextmonthtime);
             $calendarlink = calendar_get_link_href(new \moodle_url(CALENDAR_URL . 'view.php', array('view' => 'month')),
                 false, false, false, $time);
@@ -1747,7 +1747,7 @@ function calendar_top_controls($type, $data) {
             $content .= \html_writer::start_tag('div', array('class' => 'calendar-controls'));
             $content .= $prevlink . '<span class="hide"> | </span>';
             $content .= \html_writer::tag('span', \html_writer::link($calendarlink,
-                userdate($time, get_string('strftimemonthyear')), array('title' => get_string('monththis', 'calendar'))
+                userdate($time, get_string('strftimemonthyear')), array('title' => get_string('monththis', 'core_calendar'))
             ), array('class' => 'current'));
             $content .= '<span class="hide"> | </span>' . $right;
             $content .= "<span class=\"clearer\"><!-- --></span>\n";
@@ -1755,9 +1755,9 @@ function calendar_top_controls($type, $data) {
 
             break;
         case 'course':
-            $prevlink = calendar_get_link_previous(get_string('monthprev', 'calendar'), $urlbase, false, false, false,
+            $prevlink = calendar_get_link_previous(get_string('monthprev', 'core_calendar'), $urlbase, false, false, false,
                 true, $prevmonthtime);
-            $nextlink = calendar_get_link_next(get_string('monthnext', 'calendar'), $urlbase, false, false, false,
+            $nextlink = calendar_get_link_next(get_string('monthnext', 'core_calendar'), $urlbase, false, false, false,
                 true, $nextmonthtime);
             $calendarlink = calendar_get_link_href(new \moodle_url(CALENDAR_URL . 'view.php', array('view' => 'month')),
                 false, false, false, $time);
@@ -1769,7 +1769,7 @@ function calendar_top_controls($type, $data) {
             $content .= \html_writer::start_tag('div', array('class' => 'calendar-controls'));
             $content .= $prevlink . '<span class="hide"> | </span>';
             $content .= \html_writer::tag('span', \html_writer::link($calendarlink,
-                userdate($time, get_string('strftimemonthyear')), array('title' => get_string('monththis', 'calendar'))
+                userdate($time, get_string('strftimemonthyear')), array('title' => get_string('monththis', 'core_calendar'))
             ), array('class' => 'current'));
             $content .= '<span class="hide"> | </span>' . $nextlink;
             $content .= "<span class=\"clearer\"><!-- --></span>";
@@ -1865,15 +1865,15 @@ function calendar_day_representation($tstamp, $now = false, $usecommonwords = tr
         // We don't want words, just a date.
         return $formal;
     } else if ($datestamp['year'] == $datenow['year'] && $datestamp['yday'] == $datenow['yday']) {
-        return get_string('today', 'calendar');
+        return get_string('today', 'core_calendar');
     } else if (($datestamp['year'] == $datenow['year'] && $datestamp['yday'] == $datenow['yday'] - 1 ) ||
         ($datestamp['year'] == $datenow['year'] - 1 && $datestamp['mday'] == 31 && $datestamp['mon'] == 12
             && $datenow['yday'] == 1)) {
-        return get_string('yesterday', 'calendar');
+        return get_string('yesterday', 'core_calendar');
     } else if (($datestamp['year'] == $datenow['year'] && $datestamp['yday'] == $datenow['yday'] + 1 ) ||
         ($datestamp['year'] == $datenow['year'] + 1 && $datenow['mday'] == 31 && $datenow['mon'] == 12
             && $datestamp['yday'] == 1)) {
-        return get_string('tomorrow', 'calendar');
+        return get_string('tomorrow', 'core_calendar');
     } else {
         return $formal;
     }
@@ -2524,7 +2524,7 @@ function calendar_format_event_time($event, $now, $linkparams = null, $usecommon
         if ($usermidnightstart == $usermidnightend) {
             // Check if we are running all day.
             if ($event->timeduration == DAYSECS) {
-                $time = get_string('allday', 'calendar');
+                $time = get_string('allday', 'core_calendar');
             } else { // Specify the time we will be running this from.
                 $datestart = calendar_time_representation($starttime);
                 $dateend = calendar_time_representation($endtime);
@@ -2792,12 +2792,12 @@ function calendar_add_event_allowed($event) {
  */
 function calendar_get_pollinterval_choices() {
     return array(
-        '0' => get_string('never', 'calendar'),
-        HOURSECS => get_string('hourly', 'calendar'),
-        DAYSECS => get_string('daily', 'calendar'),
-        WEEKSECS => get_string('weekly', 'calendar'),
-        '2628000' => get_string('monthly', 'calendar'),
-        YEARSECS => get_string('annually', 'calendar')
+        '0' => get_string('never', 'core_calendar'),
+        HOURSECS => get_string('hourly', 'core_calendar'),
+        DAYSECS => get_string('daily', 'core_calendar'),
+        WEEKSECS => get_string('weekly', 'core_calendar'),
+        '2628000' => get_string('monthly', 'core_calendar'),
+        YEARSECS => get_string('annually', 'core_calendar')
     );
 }
 
@@ -2813,16 +2813,16 @@ function calendar_get_eventtype_choices($courseid) {
     calendar_get_allowed_types($allowed, $courseid);
 
     if ($allowed->user) {
-        $choices['user'] = get_string('userevents', 'calendar');
+        $choices['user'] = get_string('userevents', 'core_calendar');
     }
     if ($allowed->site) {
-        $choices['site'] = get_string('siteevents', 'calendar');
+        $choices['site'] = get_string('siteevents', 'core_calendar');
     }
     if (!empty($allowed->courses)) {
-        $choices['course'] = get_string('courseevents', 'calendar');
+        $choices['course'] = get_string('courseevents', 'core_calendar');
     }
     if (!empty($allowed->categories)) {
-        $choices['category'] = get_string('categoryevents', 'calendar');
+        $choices['category'] = get_string('categoryevents', 'core_calendar');
     }
     if (!empty($allowed->groups) and is_array($allowed->groups)) {
         $choices['group'] = get_string('group');
@@ -2909,7 +2909,7 @@ function calendar_add_subscription($sub) {
             return $sub->id;
         }
     } else {
-        throw new \moodle_exception('errorbadsubscription', 'importcalendar');
+        throw new \moodle_exception('errorbadsubscription', 'mod_importcalendar');
     }
 }
 
@@ -3095,7 +3095,7 @@ function calendar_get_icalendar($url) {
 
     // Http code validation should actually be the job of curl class.
     if (!$calendar || $curl->info['http_code'] != 200 || !empty($curl->errorno)) {
-        throw new \moodle_exception('errorinvalidicalurl', 'calendar');
+        throw new \moodle_exception('errorinvalidicalurl', 'core_calendar');
     }
 
     $ical = new \iCalendar();
@@ -3158,7 +3158,7 @@ function calendar_import_events_from_ical(iCalendar $ical, int $subscriptionid =
                 break;
             case 0:
                 if (empty($event->properties['SUMMARY'])) {
-                    $errors[] = '(' . get_string('notitle', 'calendar') . ')';
+                    $errors[] = '(' . get_string('notitle', 'core_calendar') . ')';
                 } else {
                     $errors[] = $event->properties['SUMMARY'][0]->value;
                 }
@@ -3706,7 +3706,7 @@ function calendar_output_fragment_event_form($args) {
         // If so display a warning on edit.
         if (isset($event->subscriptionid) && ($event->subscriptionid != null)) {
             $renderable = new \core\output\notification(
-                get_string('eventsubscriptioneditwarning', 'calendar'),
+                get_string('eventsubscriptioneditwarning', 'core_calendar'),
                 \core\output\notification::NOTIFY_INFO
             );
 
@@ -3791,7 +3791,7 @@ function calendar_get_filter_types() {
     return array_map(function($type) {
         return [
             'eventtype' => $type,
-            'name' => get_string("eventtype{$type}", "calendar"),
+            'name' => get_string("eventtype{$type}", 'core_calendar'),
             'icon' => true,
             'key' => 'i/' . $type . 'event',
             'component' => 'core'

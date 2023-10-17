@@ -95,7 +95,7 @@ class completion_criteria_unenrol extends completion_criteria {
      * @return string
      */
     public function get_title() {
-        return get_string('unenrol', 'enrol');
+        return get_string('unenrol', 'core_enrol');
     }
 
     /**
@@ -113,7 +113,7 @@ class completion_criteria_unenrol extends completion_criteria {
      * @return string
      */
     public function get_type_title() {
-        return get_string('unenrol', 'enrol');
+        return get_string('unenrol', 'core_enrol');
     }
 
     /**
@@ -125,9 +125,9 @@ class completion_criteria_unenrol extends completion_criteria {
      */
     public function get_details($completion) {
         $details = array();
-        $details['type'] = get_string('unenrolment', 'completion');
-        $details['criteria'] = get_string('unenrolment', 'completion');
-        $details['requirement'] = get_string('unenrolingfromcourse', 'completion');
+        $details['type'] = get_string('unenrolment', 'core_completion');
+        $details['criteria'] = get_string('unenrolment', 'core_completion');
+        $details['requirement'] = get_string('unenrolingfromcourse', 'core_completion');
         $details['status'] = '';
         return $details;
     }

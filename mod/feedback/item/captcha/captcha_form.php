@@ -28,20 +28,20 @@ class feedback_captcha_form extends feedback_item_form {
 
         $mform =& $this->_form;
 
-        $mform->addElement('header', 'general', get_string($this->type, 'feedback'));
-        $mform->addElement('advcheckbox', 'required', get_string('required', 'feedback'), '' , null , array(0, 1));
+        $mform->addElement('header', 'general', get_string($this->type, 'mod_feedback'));
+        $mform->addElement('advcheckbox', 'required', get_string('required', 'mod_feedback'), '' , null , array(0, 1));
         $mform->addElement('text',
                             'name',
-                            get_string('item_name', 'feedback'),
+                            get_string('item_name', 'mod_feedback'),
                             array('size'=>FEEDBACK_ITEM_NAME_TEXTBOX_SIZE, 'maxlength'=>255));
         $mform->addElement('text',
                             'label',
-                            get_string('item_label', 'feedback'),
+                            get_string('item_label', 'mod_feedback'),
                             array('size'=>FEEDBACK_ITEM_LABEL_TEXTBOX_SIZE, 'maxlength'=>255));
 
         $mform->addElement('select',
                             'presentation',
-                            get_string('count_of_nums', 'feedback').'&nbsp;',
+                            get_string('count_of_nums', 'mod_feedback').'&nbsp;',
                             array_slice(range(0, 10), 3, 10, true));
 
         parent::definition();

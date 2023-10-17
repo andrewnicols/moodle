@@ -1843,7 +1843,7 @@ class mod_assign_external extends \mod_assign\external\external_api {
 
         $assignment->update_effective_access($USER->id);
         if (!$assignment->submissions_open($USER->id)) {
-            $notices[] = get_string('duedatereached', 'assign');
+            $notices[] = get_string('duedatereached', 'mod_assign');
         } else {
             $submissiondata = (object)$params['plugindata'];
             $assignment->save_submission($submissiondata, $notices);
@@ -2693,7 +2693,7 @@ class mod_assign_external extends \mod_assign\external\external_api {
             if ($key !== false) {
                 unset($userfields[$key]);
             } else {
-                throw new moodle_exception('invaliduserfield', 'error', '', 'enrolledcourses');
+                throw new moodle_exception('invaliduserfield', 'mod_error', '', 'enrolledcourses');
             }
         }
 

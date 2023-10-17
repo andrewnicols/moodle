@@ -96,10 +96,10 @@ class provider implements
                     $prefname = $name;
                     switch ($value) {
                         case GRADE_REPORT_MEAN_ALL:
-                            $transformedvalue = get_string('meanall', 'grades');
+                            $transformedvalue = get_string('meanall', 'core_grades');
                             break;
                         case GRADE_REPORT_MEAN_GRADED:
-                            $transformedvalue = get_string('meangraded', 'grades');
+                            $transformedvalue = get_string('meangraded', 'core_grades');
                             break;
                     }
                     break;
@@ -114,16 +114,16 @@ class provider implements
                     $prefname = $name;
                     switch ($value) {
                         case GRADE_REPORT_PREFERENCE_INHERIT:
-                            $transformedvalue = get_string('inherit', 'grades');
+                            $transformedvalue = get_string('inherit', 'core_grades');
                             break;
                         case GRADE_DISPLAY_TYPE_REAL:
-                            $transformedvalue = get_string('real', 'grades');
+                            $transformedvalue = get_string('real', 'core_grades');
                             break;
                         case GRADE_DISPLAY_TYPE_PERCENTAGE:
-                            $transformedvalue = get_string('percentage', 'grades');
+                            $transformedvalue = get_string('percentage', 'core_grades');
                             break;
                         case GRADE_DISPLAY_TYPE_LETTER:
-                            $transformedvalue = get_string('letter', 'grades');
+                            $transformedvalue = get_string('letter', 'core_grades');
                             break;
                     }
                     break;
@@ -131,10 +131,10 @@ class provider implements
                     $prefname = $name;
                     switch ($value) {
                         case GRADE_REPORT_AGGREGATION_POSITION_FIRST:
-                            $transformedvalue = get_string('positionfirst', 'grades');
+                            $transformedvalue = get_string('positionfirst', 'core_grades');
                             break;
                         case GRADE_REPORT_AGGREGATION_POSITION_LAST:
-                            $transformedvalue = get_string('positionlast', 'grades');
+                            $transformedvalue = get_string('positionlast', 'core_grades');
                             break;
                     }
                     break;

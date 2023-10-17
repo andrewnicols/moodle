@@ -136,13 +136,13 @@ class course extends base {
             'startdate' => new lang_string('startdate'),
             'enddate' => new lang_string('enddate'),
             'visible' => new lang_string('coursevisibility'),
-            'groupmode' => new lang_string('groupmode', 'group'),
-            'groupmodeforce' => new lang_string('groupmodeforce', 'group'),
+            'groupmode' => new lang_string('groupmode', 'core_group'),
+            'groupmodeforce' => new lang_string('groupmodeforce', 'core_group'),
             'lang' => new lang_string('forcelanguage'),
-            'calendartype' => new lang_string('forcecalendartype', 'calendar'),
+            'calendartype' => new lang_string('forcecalendartype', 'core_calendar'),
             'theme' => new lang_string('forcetheme'),
-            'enablecompletion' => new lang_string('enablecompletion', 'completion'),
-            'downloadcontent' => new lang_string('downloadcoursecontent', 'course'),
+            'enablecompletion' => new lang_string('enablecompletion', 'core_completion'),
+            'downloadcontent' => new lang_string('downloadcoursecontent', 'core_course'),
         ];
     }
 
@@ -376,9 +376,9 @@ class course extends base {
      */
     public static function get_options_for_groupmode(): array {
         return [
-            NOGROUPS => get_string('groupsnone', 'group'),
-            SEPARATEGROUPS => get_string('groupsseparate', 'group'),
-            VISIBLEGROUPS => get_string('groupsvisible', 'group'),
+            NOGROUPS => get_string('groupsnone', 'core_group'),
+            SEPARATEGROUPS => get_string('groupsseparate', 'core_group'),
+            VISIBLEGROUPS => get_string('groupsvisible', 'core_group'),
         ];
     }
 

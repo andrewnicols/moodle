@@ -47,7 +47,7 @@ class stats extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/search.php', ['query' => 'enablestats']),
-            get_string('enablestats', 'admin'));
+            get_string('enablestats', 'core_admin'));
     }
 
     /**

@@ -278,7 +278,7 @@ class cli_helper {
         $csvloaderror = $cir->get_error();
 
         if (!is_null($csvloaderror)) {
-            $this->cli_error(get_string('csvloaderror', 'error', $csvloaderror), 1);
+            $this->cli_error(get_string('csvloaderror', 'mod_error', $csvloaderror), 1);
         }
 
         // Start upload user process.

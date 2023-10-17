@@ -285,7 +285,7 @@ class portfolio_add_button {
                 $a = new stdClass();
                 $a->key = $key;
                 $a->value = print_r($value, true);
-                debugging(get_string('nonprimative', 'portfolio', $a));
+                debugging(get_string('nonprimative', 'core_portfolio', $a));
                 return;
             }
             $url->param('ca_' . $key, $value);
@@ -344,7 +344,7 @@ class portfolio_add_button {
         }
 
         if (empty($addstr)) {
-            $addstr = get_string('addtoportfolio', 'portfolio');
+            $addstr = get_string('addtoportfolio', 'core_portfolio');
         }
         if (empty($format)) {
             $format = PORTFOLIO_ADD_FULL_FORM;
@@ -374,7 +374,7 @@ class portfolio_add_button {
                     'title' => $addstr));
             break;
             default:
-                debugging(get_string('invalidaddformat', 'portfolio', $format));
+                debugging(get_string('invalidaddformat', 'core_portfolio', $format));
         }
         $output = (in_array($format, array(PORTFOLIO_ADD_FULL_FORM, PORTFOLIO_ADD_ICON_FORM)) ? $formoutput : $linkoutput);
         return $output;
@@ -463,7 +463,7 @@ function portfolio_instance_select($instances, $callerformats, $callbackclass, $
     $pinsane = portfolio_plugin_sanity_check();
 
     $count = 0;
-    $selectoutput = "\n" . '<label class="accesshide" for="instanceid">' . get_string('plugin', 'portfolio') . '</label>';
+    $selectoutput = "\n" . '<label class="accesshide" for="instanceid">' . get_string('plugin', 'core_portfolio') . '</label>';
     $selectoutput .= "\n" . '<select id="instanceid" name="' . $selectname . '" class="custom-select">' . "\n";
     $existingexports = portfolio_existing_exports_by_plugin($USER->id);
     foreach ($instances as $instance) {
@@ -635,7 +635,7 @@ function portfolio_supported_formats_intersect($callerformats, $pluginformats) {
     foreach ($callerformats as $cf) {
         if (!array_key_exists($cf, $allformats)) {
             if (!portfolio_format_is_abstract($cf)) {
-                debugging(get_string('invalidformat', 'portfolio', $cf));
+                debugging(get_string('invalidformat', 'core_portfolio', $cf));
             }
             continue;
         }
@@ -644,7 +644,7 @@ function portfolio_supported_formats_intersect($callerformats, $pluginformats) {
         foreach ($pluginformats as $p => $pf) {
             if (!array_key_exists($pf, $allformats)) {
                 if (!portfolio_format_is_abstract($pf)) {
-                    debugging(get_string('invalidformat', 'portfolio', $pf));
+                    debugging(get_string('invalidformat', 'core_portfolio', $pf));
                 }
                 unset($pluginformats[$p]); // to avoid the same warning over and over
                 continue;
@@ -781,7 +781,7 @@ function portfolio_instance($instanceid, $record=null) {
         $instance  = $record;
     } else {
         if (!$instance = $DB->get_record('portfolio_instance', array('id' => $instanceid))) {
-            throw new portfolio_exception('invalidinstance', 'portfolio');
+            throw new portfolio_exception('invalidinstance', 'core_portfolio');
         }
     }
     require_once($CFG->libdir . '/portfolio/plugin.php');
@@ -910,12 +910,12 @@ function portfolio_report_insane($insane, $instances=false, $return=false) {
 
     static $pluginstr;
     if (empty($pluginstr)) {
-        $pluginstr = get_string('plugin', 'portfolio');
+        $pluginstr = get_string('plugin', 'core_portfolio');
     }
     if ($instances) {
-        $headerstr = get_string('someinstancesdisabled', 'portfolio');
+        $headerstr = get_string('someinstancesdisabled', 'core_portfolio');
     } else {
-        $headerstr = get_string('somepluginsdisabled', 'portfolio');
+        $headerstr = get_string('somepluginsdisabled', 'core_portfolio');
     }
 
     $output = $OUTPUT->notification($headerstr, 'notifyproblem');
@@ -1080,10 +1080,10 @@ function portfolio_insane_notify_admins($insane, $instances=false) {
         }
     }
 
-    $subject   = get_string('insanesubject', 'portfolio');
-    $plainbody = get_string('insanebody', 'portfolio', $a);
-    $htmlbody  = get_string('insanebodyhtml', 'portfolio', $a);
-    $smallbody = get_string('insanebodysmall', 'portfolio', $a);
+    $subject   = get_string('insanesubject', 'core_portfolio');
+    $plainbody = get_string('insanebody', 'core_portfolio', $a);
+    $htmlbody  = get_string('insanebodyhtml', 'core_portfolio', $a);
+    $smallbody = get_string('insanebodysmall', 'core_portfolio', $a);
 
     foreach ($admins as $admin) {
         $eventdata = new \core\message\message();
@@ -1123,7 +1123,7 @@ function portfolio_export_pagesetup($PAGE, $caller) {
     foreach ($extranav as $navitem) {
         $PAGE->navbar->add($navitem['name']);
     }
-    $PAGE->navbar->add(get_string('exporting', 'portfolio'));
+    $PAGE->navbar->add(get_string('exporting', 'core_portfolio'));
 }
 
 /**

@@ -90,7 +90,7 @@ $event = \report_stats\event\user_report_viewed::create(array('context' => $cour
 $event->trigger();
 
 if (empty($CFG->enablestats)) {
-    throw new \moodle_exception('statsdisable', 'error');
+    throw new \moodle_exception('statsdisable', 'mod_error');
 }
 
 $statsstatus = stats_check_uptodate($course->id);
@@ -175,7 +175,7 @@ $param->table = str_replace('user_','',$param->table);
 switch ($param->table) {
     case 'daily'  : $period = get_string('day'); break;
     case 'weekly' : $period = get_string('week'); break;
-    case 'monthly': $period = get_string('month', 'form'); break;
+    case 'monthly': $period = get_string('month', 'core_form'); break;
     default : $period = '';
 }
 $table->head = array(get_string('periodending','moodle',$period),$param->line1,$param->line2,$param->line3);

@@ -160,10 +160,10 @@ class restore_section_task extends restore_task {
         $settingname = $settingprefix . 'included';
         $section_included = new restore_section_included_setting($settingname, base_setting::IS_BOOLEAN, true);
         if (is_number($this->info->title)) {
-            $label = get_string('includesection', 'backup', $this->info->title);
+            $label = get_string('includesection', 'core_backup', $this->info->title);
         } elseif (empty($this->info->title)) { // Don't throw error if title is empty, gracefully continue restore.
             $this->log('Section title missing in backup for section id '.$this->info->sectionid, backup::LOG_WARNING, $this->name);
-            $label = get_string('unnamedsection', 'backup');
+            $label = get_string('unnamedsection', 'core_backup');
         } else {
             $label = $this->info->title;
         }
@@ -189,10 +189,10 @@ class restore_section_task extends restore_task {
             // It would probably be better design to have a special UI class
             // setting_ui_checkbox_or_no, rather than this hack, but I am not
             // going to do that today.
-            $section_userinfo->set_ui(new backup_setting_ui_select($section_userinfo, get_string('includeuserinfo','backup'),
+            $section_userinfo->set_ui(new backup_setting_ui_select($section_userinfo, get_string('includeuserinfo','core_backup'),
                     array(0 => get_string('no'))));
         } else {
-            $section_userinfo->get_ui()->set_label(get_string('includeuserinfo','backup'));
+            $section_userinfo->get_ui()->set_label(get_string('includeuserinfo','core_backup'));
         }
 
         $this->add_setting($section_userinfo);

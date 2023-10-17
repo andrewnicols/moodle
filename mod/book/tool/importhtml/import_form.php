@@ -73,7 +73,7 @@ class booktool_importhtml_form extends moodleform {
         } else {
             $file = reset($files);
             if ($file->get_mimetype() != 'application/zip') {
-                $errors['importfile'] = get_string('invalidfiletype', 'error', $file->get_filename());
+                $errors['importfile'] = get_string('invalidfiletype', 'mod_error', $file->get_filename());
                 // better delete current file, it is not usable anyway
                 $fs->delete_area_files($usercontext->id, 'user', 'draft', $data['importfile']);
             } else {

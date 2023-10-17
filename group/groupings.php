@@ -38,17 +38,17 @@ require_login($course);
 $context = context_course::instance($course->id);
 require_capability('moodle/course:managegroups', $context);
 
-$strgrouping     = get_string('grouping', 'group');
+$strgrouping     = get_string('grouping', 'core_group');
 $strgroups       = get_string('groups');
 $strname         = get_string('name');
 $strdelete       = get_string('delete');
 $stredit         = get_string('edit');
-$srtnewgrouping  = get_string('creategrouping', 'group');
+$srtnewgrouping  = get_string('creategrouping', 'core_group');
 $strgroups       = get_string('groups');
-$strgroupings    = get_string('groupings', 'group');
+$strgroupings    = get_string('groupings', 'core_group');
 $struses         = get_string('activities');
 $strparticipants = get_string('participants');
-$strmanagegrping = get_string('showgroupsingrouping', 'group');
+$strmanagegrping = get_string('showgroupsingrouping', 'core_group');
 
 navigation_node::override_active_url(new moodle_url('/group/index.php', array('id'=>$courseid)));
 $PAGE->navbar->add($strgroupings);

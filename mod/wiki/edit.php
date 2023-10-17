@@ -51,15 +51,15 @@ if (!empty($newcontent) && is_array($newcontent)) {
 }
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    throw new \moodle_exception('incorrectpageid', 'mod_wiki');
 }
 
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
 }
 
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
 }
 
 if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
@@ -69,7 +69,7 @@ if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 if (!empty($section) && !$sectioncontent = wiki_get_section_page($page, $section)) {
-    throw new \moodle_exception('invalidsection', 'wiki');
+    throw new \moodle_exception('invalidsection', 'mod_wiki');
 }
 
 require_login($course, true, $cm);
@@ -77,12 +77,12 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 
 if (!wiki_user_can_edit($subwiki)) {
-    throw new \moodle_exception('cannoteditpage', 'wiki');
+    throw new \moodle_exception('cannoteditpage', 'mod_wiki');
 }
 
-if ($option == get_string('save', 'wiki')) {
+if ($option == get_string('save', 'mod_wiki')) {
     if (!confirm_sesskey()) {
-        throw new \moodle_exception(get_string('invalidsesskey', 'wiki'));
+        throw new \moodle_exception(get_string('invalidsesskey', 'mod_wiki'));
     }
     $wikipage = new page_wiki_save($wiki, $subwiki, $cm);
     $wikipage->set_page($page);
@@ -91,7 +91,7 @@ if ($option == get_string('save', 'wiki')) {
 } else {
     if ($option == get_string('preview')) {
         if (!confirm_sesskey()) {
-            throw new \moodle_exception(get_string('invalidsesskey', 'wiki'));
+            throw new \moodle_exception(get_string('invalidsesskey', 'mod_wiki'));
         }
         $wikipage = new page_wiki_preview($wiki, $subwiki, $cm, 'modulepage');
         $wikipage->set_page($page);
@@ -104,7 +104,7 @@ if ($option == get_string('save', 'wiki')) {
         } else {
             $wikipage = new page_wiki_edit($wiki, $subwiki, $cm, 'modulepage');
             $wikipage->set_page($page);
-            $wikipage->set_upload($option == get_string('upload', 'wiki'));
+            $wikipage->set_upload($option == get_string('upload', 'mod_wiki'));
         }
     }
 

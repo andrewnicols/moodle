@@ -226,7 +226,7 @@ if (!empty($CFG->messaging) && has_all_capabilities(['moodle/site:sendmessage', 
     $displaylist['#messageselect'] = get_string('messageselectadd');
 }
 if (!empty($CFG->enablenotes) && has_capability('moodle/notes:manage', $context) && $context->id != $frontpagectx->id) {
-    $displaylist['#addgroupnote'] = get_string('addnewnote', 'notes');
+    $displaylist['#addgroupnote'] = get_string('addnewnote', 'core_notes');
 }
 
 $params = ['operation' => 'download_participants'];
@@ -242,7 +242,7 @@ foreach ($formats as $format) {
 }
 
 if (!empty($downloadoptions)) {
-    $displaylist[] = [get_string('downloadas', 'table') => $downloadoptions];
+    $displaylist[] = [get_string('downloadas', 'core_table') => $downloadoptions];
 }
 
 if ($context->id != $frontpagectx->id) {

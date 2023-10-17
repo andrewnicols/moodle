@@ -667,7 +667,7 @@ class manager {
                     throw new \moodle_exception('redirecterrordetected', 'tool_mfa',
                         $SESSION->mfa_redir_referer, $SESSION->mfa_redir_referer);
                 } else {
-                    throw new \moodle_exception('redirecterrordetected', 'error');
+                    throw new \moodle_exception('redirecterrordetected', 'mod_error');
                 }
             }
         }

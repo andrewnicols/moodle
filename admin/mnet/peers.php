@@ -52,11 +52,11 @@ $PAGE->set_url('/admin/mnet/peers.php');
 admin_externalpage_setup($adminsection);
 
 if (!extension_loaded('openssl')) {
-    throw new \moodle_exception('requiresopenssl', 'mnet');
+    throw new \moodle_exception('requiresopenssl', 'core_mnet');
 }
 
 if (!function_exists('curl_init') ) {
-    throw new \moodle_exception('nocurl', 'mnet');
+    throw new \moodle_exception('nocurl', 'core_mnet');
 }
 
 if (!isset($CFG->mnet_dispatcher_mode)) {
@@ -120,7 +120,7 @@ if (!empty($hostid)) {
         echo $OUTPUT->box_end();
     } else {
         // no options for allhosts host - just let the tabs display and print a notification
-        echo $OUTPUT->notification(get_string('allhosts_no_options', 'mnet'));
+        echo $OUTPUT->notification(get_string('allhosts_no_options', 'core_mnet'));
     }
     echo $OUTPUT->footer();
     exit;
@@ -167,7 +167,7 @@ if ($formdata = $reviewform->get_data()) {
     if ($mnet_peer->commit()) {
         redirect(new moodle_url('/admin/mnet/peers.php', array('hostid' => $mnet_peer->id)), get_string('changessaved'));
     } else {
-        throw new \moodle_exception('invalidaction', 'error', 'index.php');
+        throw new \moodle_exception('invalidaction', 'mod_error', 'index.php');
     }
 } else if ($reviewform->is_submitted()) { // submitted, but errors
     echo $OUTPUT->header();
@@ -185,26 +185,26 @@ $hosts = mnet_get_hosts(true);
 
 // print the table to display the register all hosts setting
 $table = new html_table();
-$table->head = array(get_string('registerallhosts', 'mnet'));
+$table->head = array(get_string('registerallhosts', 'core_mnet'));
 
 $registerrow = '';
 $registerstr = '';
 $registerurl = new moodle_url('/admin/mnet/peers.php', array('updateregisterall' => 1));
 if (!empty($CFG->mnet_register_allhosts)) {
-    $registerrow = get_string('registerhostson', 'mnet');
+    $registerrow = get_string('registerhostson', 'core_mnet');
     $registerurl->param('registerallhosts', 0);
-    $registerstr = get_string('turnitoff', 'mnet');
+    $registerstr = get_string('turnitoff', 'core_mnet');
 } else {
-    $registerrow = get_string('registerhostsoff', 'mnet');
+    $registerrow = get_string('registerhostsoff', 'core_mnet');
     $registerurl->param('registerallhosts', 1);
-    $registerstr = get_string('turniton', 'mnet');
+    $registerstr = get_string('turniton', 'core_mnet');
 }
 $registerrow .= $OUTPUT->single_button($registerurl, $registerstr);
 
 // simple table with two rows of a single cell
 $table->data = array(
     array(
-        get_string('registerallhostsexplain', 'mnet'),
+        get_string('registerallhostsexplain', 'core_mnet'),
     ),
     array(
         $registerrow
@@ -216,8 +216,8 @@ echo html_writer::table($table);
 $table = new html_table();
 $table->head = array(
     get_string('site'),
-    get_string('system', 'mnet'),
-    get_string('last_connect_time', 'mnet'),
+    get_string('system', 'core_mnet'),
+    get_string('last_connect_time', 'core_mnet'),
     '',
 );
 $table->wrap = array('nowrap', 'nowrap', 'nowrap', 'nowrap');
@@ -261,7 +261,7 @@ if ($deleted) {
 
 // finally, print the initial form to add a new host
 echo $OUTPUT->box_start();
-echo $OUTPUT->heading(get_string('addnewhost', 'mnet'), 3);
+echo $OUTPUT->heading(get_string('addnewhost', 'core_mnet'), 3);
 $simpleform->display();
 echo $OUTPUT->box_end();
 

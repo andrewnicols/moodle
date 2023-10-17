@@ -184,7 +184,7 @@ abstract class administration_helper extends cache_helper {
         $storenames = array();
         foreach ($config->get_all_stores() as $key => $store) {
             if (!empty($store['default'])) {
-                $storenames[$key] = new \lang_string('store_'.$key, 'cache');
+                $storenames[$key] = new \lang_string('store_'.$key, 'core_cache');
             } else {
                 $storenames[$store['name']] = $store['name'];
             }
@@ -225,11 +225,11 @@ abstract class administration_helper extends cache_helper {
         global $OUTPUT;
         $instance = cache_config::instance();
         $adequatestores = cache_helper::get_stores_suitable_for_mode_default();
-        $icon = new \pix_icon('i/warning', new \lang_string('inadequatestoreformapping', 'cache'));
+        $icon = new \pix_icon('i/warning', new \lang_string('inadequatestoreformapping', 'core_cache'));
         $storenames = array();
         foreach ($instance->get_all_stores() as $key => $store) {
             if (!empty($store['default'])) {
-                $storenames[$key] = new \lang_string('store_'.$key, 'cache');
+                $storenames[$key] = new \lang_string('store_'.$key, 'core_cache');
             }
         }
         $modemappings = array(
@@ -267,7 +267,7 @@ abstract class administration_helper extends cache_helper {
         foreach ($instance->get_locks() as $lock) {
             $default = !empty($lock['default']);
             if ($default) {
-                $name = new \lang_string($lock['name'], 'cache');
+                $name = new \lang_string($lock['name'], 'core_cache');
             } else {
                 $name = $lock['name'];
             }
@@ -299,16 +299,16 @@ abstract class administration_helper extends cache_helper {
         $options = array();
         $prefix = ($isselectedoptions) ? 'sharingselected' : 'sharing';
         if ($sharingoption & cache_definition::SHARING_ALL) {
-            $options[cache_definition::SHARING_ALL] = new \lang_string($prefix.'_all', 'cache');
+            $options[cache_definition::SHARING_ALL] = new \lang_string($prefix.'_all', 'core_cache');
         }
         if ($sharingoption & cache_definition::SHARING_SITEID) {
-            $options[cache_definition::SHARING_SITEID] = new \lang_string($prefix.'_siteid', 'cache');
+            $options[cache_definition::SHARING_SITEID] = new \lang_string($prefix.'_siteid', 'core_cache');
         }
         if ($sharingoption & cache_definition::SHARING_VERSION) {
-            $options[cache_definition::SHARING_VERSION] = new \lang_string($prefix.'_version', 'cache');
+            $options[cache_definition::SHARING_VERSION] = new \lang_string($prefix.'_version', 'core_cache');
         }
         if ($sharingoption & cache_definition::SHARING_INPUT) {
-            $options[cache_definition::SHARING_INPUT] = new \lang_string($prefix.'_input', 'cache');
+            $options[cache_definition::SHARING_INPUT] = new \lang_string($prefix.'_input', 'core_cache');
         }
         return $options;
     }

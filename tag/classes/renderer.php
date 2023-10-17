@@ -41,7 +41,7 @@ class core_tag_renderer extends plugin_renderer_base {
      * @return string
      */
     public function tag_search_page($query = '', $tagcollid = 0) {
-        $rv = $this->output->heading(get_string('searchtags', 'tag'), 2);
+        $rv = $this->output->heading(get_string('searchtags', 'core_tag'), 2);
 
         $searchbox = $this->search_form($query, $tagcollid);
         $rv .= html_writer::div($searchbox, '', array('id' => 'tag-search-box'));
@@ -53,7 +53,7 @@ class core_tag_renderer extends plugin_renderer_base {
                     $tagcloud->export_for_template($this->output));
             $rv .= html_writer::div($searchresults, '', array('id' => 'tag-search-results'));
         } else if (strval($query) !== '') {
-            $rv .= '<div class="tag-search-empty">' . get_string('notagsfound', 'tag', s($query)) . '</div>';
+            $rv .= '<div class="tag-search-empty">' . get_string('notagsfound', 'core_tag', s($query)) . '</div>';
         }
 
         return $rv;
@@ -96,7 +96,7 @@ class core_tag_renderer extends plugin_renderer_base {
 
         $relatedtagslimit = 10;
         $relatedtags = $tag->get_related_tags();
-        $taglist = new \core_tag\output\taglist($relatedtags, get_string('relatedtags', 'tag'),
+        $taglist = new \core_tag\output\taglist($relatedtags, get_string('relatedtags', 'core_tag'),
                 'tag-relatedtags', $relatedtagslimit);
         $rv .= $this->output->render_from_template('core_tag/taglist',
                 $taglist->export_for_template($this->output));
@@ -113,7 +113,7 @@ class core_tag_renderer extends plugin_renderer_base {
         if (count($entitylinks) > 1) {
             $rv .= '<div class="tag-index-toc"><ul class="inline-list">' . join('', $entitylinks) . '</ul></div>';
         } else if (!$entitylinks) {
-            $rv .= '<div class="tag-noresults">' . get_string('noresultsfor', 'tag', $tagname) . '</div>';
+            $rv .= '<div class="tag-noresults">' . get_string('noresultsfor', 'core_tag', $tagname) . '</div>';
         }
 
         // Display entities tagged with the tag.
@@ -134,7 +134,7 @@ class core_tag_renderer extends plugin_renderer_base {
         if ($tagareaid) {
             $url = $tag->get_view_url(0, $fromctx, $ctx, $rec);
             $rv .= '<div class="tag-backtoallitems">' .
-                    html_writer::link($url, get_string('backtoallitems', 'tag', $tag->get_display_name())) .
+                    html_writer::link($url, get_string('backtoallitems', 'core_tag', $tag->get_display_name())) .
                     '</div>';
         }
 
@@ -165,14 +165,14 @@ class core_tag_renderer extends plugin_renderer_base {
     protected function search_form($query = '', $tagcollid = 0) {
         $searchurl = new moodle_url('/tag/search.php');
         $output = '<form action="' . $searchurl . '">';
-        $output .= '<label class="accesshide" for="searchform_query">' . get_string('searchtags', 'tag') . '</label>';
+        $output .= '<label class="accesshide" for="searchform_query">' . get_string('searchtags', 'core_tag') . '</label>';
         $output .= '<input id="searchform_query" name="query" type="text" size="40" value="' . s($query) . '" />';
-        $tagcolls = core_tag_collection::get_collections_menu(false, true, get_string('inalltagcoll', 'tag'));
+        $tagcolls = core_tag_collection::get_collections_menu(false, true, get_string('inalltagcoll', 'core_tag'));
         if (count($tagcolls) > 1) {
-            $output .= '<label class="accesshide" for="searchform_tc">' . get_string('selectcoll', 'tag') . '</label>';
+            $output .= '<label class="accesshide" for="searchform_tc">' . get_string('selectcoll', 'core_tag') . '</label>';
             $output .= html_writer::select($tagcolls, 'tc', $tagcollid, null, array('id' => 'searchform_tc'));
         }
-        $output .= '<input name="go" type="submit" size="40" value="' . s(get_string('search', 'tag')) . '" />';
+        $output .= '<input name="go" type="submit" size="40" value="' . s(get_string('search', 'core_tag')) . '" />';
         $output .= '</form>';
 
         return $output;

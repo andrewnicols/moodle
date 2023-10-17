@@ -69,7 +69,7 @@ class tool_generator_make_course_form extends moodleform {
             $additionalmodules,
             [
                 'multiple' => true,
-                'noselectionstring' => get_string('noselection', 'form')
+                'noselectionstring' => get_string('noselection', 'core_form')
             ]
         );
         $mform->addHelpButton('additionalmodules', 'additionalmodules', 'tool_generator');

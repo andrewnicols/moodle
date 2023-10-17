@@ -850,8 +850,8 @@ function groups_sort_menu_options($allowedgroups, $usergroups) {
 
     if ($useroptions && $allowedoptions) {
         return array(
-            1 => array(get_string('mygroups', 'group') => $useroptions),
-            2 => array(get_string('othergroups', 'group') => $allowedoptions)
+            1 => array(get_string('mygroups', 'core_group') => $useroptions),
+            2 => array(get_string('othergroups', 'core_group') => $allowedoptions)
         );
     } else if ($useroptions) {
         return $useroptions;

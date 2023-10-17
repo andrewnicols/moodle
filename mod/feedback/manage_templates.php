@@ -69,7 +69,7 @@ if ($templateid) {
 
     feedback_delete_template($template);
     $successurl = new moodle_url('/mod/feedback/manage_templates.php', ['id' => $id]);
-    redirect($url, get_string('template_deleted', 'feedback'), null, \core\output\notification::NOTIFY_SUCCESS);
+    redirect($url, get_string('template_deleted', 'mod_feedback'), null, \core\output\notification::NOTIFY_SUCCESS);
 }
 $PAGE->activityheader->set_attrs([
     "hidecompletion" => true,
@@ -95,7 +95,7 @@ echo $OUTPUT->box_end();
 
 $templates = feedback_get_template_list($course, 'public');
 echo $OUTPUT->box_start('publictemplates');
-echo $OUTPUT->heading(get_string('public', 'feedback'), 4);
+echo $OUTPUT->heading(get_string('public', 'mod_feedback'), 4);
 $tablepublic = new mod_feedback_templates_table('feedback_template_public_table', $baseurl, $mode);
 $tablepublic->display($templates);
 echo $OUTPUT->box_end();

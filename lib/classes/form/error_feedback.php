@@ -51,8 +51,8 @@ class error_feedback extends moodleform {
         $mform->addElement('hidden', 'requested', (empty($_SERVER['REDIRECT_URL']) ? '' : $_SERVER['REDIRECT_URL']));
         $mform->setType('requested', PARAM_URL);
 
-        $mform->addElement('textarea', 'text', get_string('pleasereport', 'error'), 'wrap="virtual" rows="10" cols="50"');
-        $mform->addElement('submit', 'submitbutton', get_string('sendmessage', 'error'));
+        $mform->addElement('textarea', 'text', get_string('pleasereport', 'mod_error'), 'wrap="virtual" rows="10" cols="50"');
+        $mform->addElement('submit', 'submitbutton', get_string('sendmessage', 'mod_error'));
     }
 }
 

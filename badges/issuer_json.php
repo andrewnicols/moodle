@@ -46,7 +46,7 @@ if (empty($id)) {
         header("HTTP/1.0 410 Gone");
         $badgeurl = new moodle_url('/badges/issuer_json.php', array('id' => $id));
         $json = ['id' => $badgeurl->out()];
-        $json['error'] = get_string('error:relatedbadgedoesntexist', 'badges');
+        $json['error'] = get_string('error:relatedbadgedoesntexist', 'core_badges');
     }
 }
 

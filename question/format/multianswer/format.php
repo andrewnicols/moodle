@@ -85,7 +85,7 @@ class qformat_multianswer extends qformat_default {
         $question->questionbankentryid = 0;
 
         if (!empty($question)) {
-            $question->name = $this->create_default_question_name($question->questiontext, get_string('questionname', 'question'));
+            $question->name = $this->create_default_question_name($question->questiontext, get_string('questionname', 'core_question'));
             $questions[] = $question;
         }
 

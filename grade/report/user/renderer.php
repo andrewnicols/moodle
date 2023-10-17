@@ -70,12 +70,12 @@ class gradereport_user_renderer extends plugin_renderer_base {
         }
 
         $options = [
-            GRADE_REPORT_USER_VIEW_USER => get_string('otheruser', 'grades'),
-            GRADE_REPORT_USER_VIEW_SELF => get_string('myself', 'grades')
+            GRADE_REPORT_USER_VIEW_USER => get_string('otheruser', 'core_grades'),
+            GRADE_REPORT_USER_VIEW_SELF => get_string('myself', 'core_grades')
         ];
         $select = new single_select($url, 'userview', $options, $userview, null);
 
-        $select->label = get_string('viewas', 'grades');
+        $select->label = get_string('viewas', 'core_grades');
 
         $output = html_writer::tag('div', $this->output->render($select), ['class' => 'view_users_selector']);
 

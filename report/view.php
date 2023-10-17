@@ -60,6 +60,6 @@ if ($reportnode = $PAGE->settingsnav->find('coursereports', \navigation_node::TY
 if ($hasreports) {
     echo $OUTPUT->render_from_template('core/report_link_page', ['node' => $reportnode]);
 } else {
-    echo html_writer::div($OUTPUT->notification(get_string('noreports', 'debug'), 'error'), 'mt-3');
+    echo html_writer::div($OUTPUT->notification(get_string('noreports', 'mod_debug'), 'error'), 'mt-3');
 }
 echo $OUTPUT->footer();

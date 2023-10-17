@@ -59,13 +59,13 @@ function xmldb_main_install() {
     // Make sure system context exists
     $syscontext = context_system::instance(0, MUST_EXIST, false);
     if ($syscontext->id != SYSCONTEXTID) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new system context id!');
+        throw new moodle_exception('generalexceptionmessage', 'mod_error', '', 'Unexpected new system context id!');
     }
 
 
     // Create site course
     if ($DB->record_exists('course', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create frontpage course, courses already exist.');
+        throw new moodle_exception('generalexceptionmessage', 'mod_error', '', 'Can not create frontpage course, courses already exist.');
     }
     $newsite = new stdClass();
     $newsite->fullname     = '';
@@ -92,7 +92,7 @@ function xmldb_main_install() {
         'sectionid' => 0, 'name' => 'numsections', 'value' => $newsite->numsections));
     $SITE = get_site();
     if ($newsite->id != $SITE->id) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Unexpected new site course id!');
+        throw new moodle_exception('generalexceptionmessage', 'mod_error', '', 'Unexpected new site course id!');
     }
     // Make sure site course context exists
     context_course::instance($SITE->id);
@@ -102,7 +102,7 @@ function xmldb_main_install() {
 
     // Create default course category
     if ($DB->record_exists('course_categories', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default course category, categories already exist.');
+        throw new moodle_exception('generalexceptionmessage', 'mod_error', '', 'Can not create default course category, categories already exist.');
     }
     $cat = new stdClass();
     $cat->name         = get_string('defaultcategoryname');
@@ -198,7 +198,7 @@ function xmldb_main_install() {
 
     // Create guest record - do not assign any role, guest user gets the default guest role automatically on the fly
     if ($DB->record_exists('user', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default users, users already exist.');
+        throw new moodle_exception('generalexceptionmessage', 'mod_error', '', 'Can not create default users, users already exist.');
     }
     $guest = new stdClass();
     $guest->auth        = 'manual';
@@ -299,7 +299,7 @@ function xmldb_main_install() {
 
     // Init profile pages defaults
     if ($DB->record_exists('my_pages', array())) {
-        throw new moodle_exception('generalexceptionmessage', 'error', '', 'Can not create default profile pages, records already exist.');
+        throw new moodle_exception('generalexceptionmessage', 'mod_error', '', 'Can not create default profile pages, records already exist.');
     }
     $mypage = new stdClass();
     $mypage->userid = NULL;

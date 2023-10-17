@@ -182,14 +182,14 @@ class qbank_helper {
                 $slot->category = $slot->filtercondition['filter']['category']['values'][0] ?? 0;
 
                 $slot->qtype = 'random';
-                $slot->name = get_string('random', 'quiz');
+                $slot->name = get_string('random', 'mod_quiz');
                 $slot->length = 1;
             } else if ($slot->qtype === null) {
                 // This question must have gone missing. Put in a placeholder.
                 $slot->questionid = 's' . $slot->id; // Sometimes this is used as an array key, so needs to be unique.
                 $slot->category = 0;
                 $slot->qtype = 'missingtype';
-                $slot->name = get_string('missingquestion', 'quiz');
+                $slot->name = get_string('missingquestion', 'mod_quiz');
                 $slot->questiontext = ' ';
                 $slot->questiontextformat = FORMAT_HTML;
                 $slot->length = 1;
@@ -270,7 +270,7 @@ class qbank_helper {
         $newqusetionid = $randomloader->get_next_filtered_question_id($filter);
 
         if ($newqusetionid === null) {
-            throw new \moodle_exception('notenoughrandomquestions', 'quiz');
+            throw new \moodle_exception('notenoughrandomquestions', 'mod_quiz');
         }
         return $newqusetionid;
     }

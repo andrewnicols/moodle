@@ -69,7 +69,7 @@ class remove_temp_access_task extends scheduled_task {
 
         if ($systemauth === false) {
             $details = 'Cannot connect as system user';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         $systemservice = new \repository_onedrive\rest($systemauth);
 

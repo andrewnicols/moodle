@@ -81,17 +81,17 @@ require_login($course, false, $cm);
 switch ($type) {
     case backup::TYPE_1COURSE :
         require_capability('moodle/backup:backupcourse', $coursecontext);
-        $heading = get_string('backupcourse', 'backup', $course->shortname);
+        $heading = get_string('backupcourse', 'core_backup', $course->shortname);
         $PAGE->set_secondary_active_tab('coursereuse');
         break;
     case backup::TYPE_1SECTION :
         require_capability('moodle/backup:backupsection', $coursecontext);
         if ((string)$section->name !== '') {
             $sectionname = format_string($section->name, true, array('context' => $coursecontext));
-            $heading = get_string('backupsection', 'backup', $sectionname);
+            $heading = get_string('backupsection', 'core_backup', $sectionname);
             $PAGE->navbar->add($sectionname);
         } else {
-            $heading = get_string('backupsection', 'backup', $section->section);
+            $heading = get_string('backupsection', 'core_backup', $section->section);
             $PAGE->navbar->add(get_string('section').' '.$section->section);
         }
         break;
@@ -99,7 +99,7 @@ switch ($type) {
         $activitycontext = context_module::instance($cm->id);
         require_capability('moodle/backup:backupactivity', $activitycontext);
         $contextid = $activitycontext->id;
-        $heading = get_string('backupactivity', 'backup', $cm->name);
+        $heading = get_string('backupactivity', 'core_backup', $cm->name);
         break;
     default :
         throw new \moodle_exception('unknownbackuptype');
@@ -131,7 +131,7 @@ if (!async_helper::is_async_pending($id, 'course', 'backup')) {
 
     // Prepare a progress bar which can display optionally during long-running
     // operations while setting up the UI.
-    $slowprogress = new \core\progress\display_if_slow(get_string('preparingui', 'backup'));
+    $slowprogress = new \core\progress\display_if_slow(get_string('preparingui', 'core_backup'));
     $renderer = $PAGE->get_renderer('core', 'backup');
     $backup = new backup_ui($bc);
 
@@ -245,8 +245,8 @@ if (!async_helper::is_async_pending($id, 'course', 'backup')) {
     unset($backup);
 
 } else { // User has a pending async operation.
-    echo $OUTPUT->notification(get_string('pendingasyncerror', 'backup'), 'error');
-    echo $OUTPUT->container(get_string('pendingasyncdetail', 'backup'));
+    echo $OUTPUT->notification(get_string('pendingasyncerror', 'core_backup'), 'error');
+    echo $OUTPUT->container(get_string('pendingasyncdetail', 'core_backup'));
     echo $OUTPUT->continue_button($courseurl);
 }
 

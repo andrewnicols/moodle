@@ -43,17 +43,17 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configcheckbox('enrol_flatfile/mailadmins', get_string('notifyadmin', 'enrol_flatfile'), '', 0));
 
-    $options = array(ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'enrol'),
-                     ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'enrol'),
-                     ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'));
-    $settings->add(new admin_setting_configselect('enrol_flatfile/unenrolaction', get_string('extremovedaction', 'enrol'), get_string('extremovedaction_help', 'enrol'), ENROL_EXT_REMOVED_SUSPENDNOROLES, $options));
+    $options = array(ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'core_enrol'),
+                     ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'core_enrol'),
+                     ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'core_enrol'));
+    $settings->add(new admin_setting_configselect('enrol_flatfile/unenrolaction', get_string('extremovedaction', 'core_enrol'), get_string('extremovedaction_help', 'core_enrol'), ENROL_EXT_REMOVED_SUSPENDNOROLES, $options));
 
     // Note: let's reuse the ext sync constants and strings here, internally it is very similar,
     //       it describes what should happen when users are not supposed to be enrolled any more.
     $options = array(
-        ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'enrol'),
-        ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'),
-        ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'enrol'),
+        ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'core_enrol'),
+        ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'core_enrol'),
+        ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'core_enrol'),
     );
     $settings->add(new admin_setting_configselect('enrol_flatfile/expiredaction', get_string('expiredaction', 'enrol_flatfile'), get_string('expiredaction_help', 'enrol_flatfile'), ENROL_EXT_REMOVED_SUSPENDNOROLES, $options));
 

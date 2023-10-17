@@ -159,7 +159,7 @@ class badge {
         $data = $DB->get_record('badge', array('id' => $badgeid));
 
         if (empty($data)) {
-            throw new moodle_exception('error:nosuchbadge', 'badges', '', $badgeid);
+            throw new moodle_exception('error:nosuchbadge', 'core_badges', '', $badgeid);
         }
 
         foreach ((array)$data as $field => $value) {
@@ -201,8 +201,8 @@ class badge {
      */
     public static function get_aggregation_methods() {
         return array(
-                BADGE_CRITERIA_AGGREGATION_ALL => get_string('all', 'badges'),
-                BADGE_CRITERIA_AGGREGATION_ANY => get_string('any', 'badges'),
+                BADGE_CRITERIA_AGGREGATION_ALL => get_string('all', 'core_badges'),
+                BADGE_CRITERIA_AGGREGATION_ANY => get_string('any', 'core_badges'),
         );
     }
 
@@ -277,7 +277,7 @@ class badge {
             $event->trigger();
             return true;
         } else {
-            throw new moodle_exception('error:save', 'badges');
+            throw new moodle_exception('error:save', 'core_badges');
             return false;
         }
     }
@@ -296,7 +296,7 @@ class badge {
             $fordb->{$k} = $v;
         }
 
-        $fordb->name = get_string('copyof', 'badges', $this->name);
+        $fordb->name = get_string('copyof', 'core_badges', $this->name);
         $fordb->status = BADGE_STATUS_INACTIVE;
         $fordb->usercreated = $USER->id;
         $fordb->usermodified = $USER->id;
@@ -337,7 +337,7 @@ class badge {
 
             return $new;
         } else {
-            throw new moodle_exception('error:clone', 'badges');
+            throw new moodle_exception('error:clone', 'core_badges');
             return false;
         }
     }
@@ -362,7 +362,7 @@ class badge {
      * @return string
      */
     public function get_status_name() {
-        return get_string('badgestatus_' . $this->status, 'badges');
+        return get_string('badgestatus_' . $this->status, 'core_badges');
     }
 
     /**
@@ -905,7 +905,7 @@ class badge {
     public function markdown_badge_criteria() {
         $agg = $this->get_aggregation_methods();
         if (empty($this->criteria)) {
-            return get_string('nocriteria', 'badges');
+            return get_string('nocriteria', 'core_badges');
         }
         $overalldescr = '';
         $overall = $this->criteria[BADGE_CRITERIA_TYPE_OVERALL];
@@ -915,9 +915,9 @@ class badge {
         }
         // Get the condition string.
         if (count($this->criteria) == 2) {
-            $condition = get_string('criteria_descr', 'badges');
+            $condition = get_string('criteria_descr', 'core_badges');
         } else {
-            $condition = get_string('criteria_descr_' . BADGE_CRITERIA_TYPE_OVERALL, 'badges',
+            $condition = get_string('criteria_descr_' . BADGE_CRITERIA_TYPE_OVERALL, 'core_badges',
                 core_text::strtoupper($agg[$this->get_aggregation_method()]));
         }
         unset($this->criteria[BADGE_CRITERIA_TYPE_OVERALL]);
@@ -929,10 +929,10 @@ class badge {
                 $overalldescr = $c->description . '\n';
             }
             if (count($c->params) == 1) {
-                $items[] = ' * ' . get_string('criteria_descr_single_' . $c->criteriatype, 'badges') .
+                $items[] = ' * ' . get_string('criteria_descr_single_' . $c->criteriatype, 'core_badges') .
                     $c->get_details();
             } else {
-                $items[] = '* ' . get_string('criteria_descr_' . $c->criteriatype, 'badges',
+                $items[] = '* ' . get_string('criteria_descr_' . $c->criteriatype, 'core_badges',
                         core_text::strtoupper($agg[$this->get_aggregation_method($c->criteriatype)])) .
                     $c->get_details();
             }
@@ -943,10 +943,10 @@ class badge {
                     $criteriadescr = $c->description;
                 }
                 if (count($c->params) == 1) {
-                    $items[] = ' * ' . get_string('criteria_descr_single_' . $type, 'badges') .
+                    $items[] = ' * ' . get_string('criteria_descr_single_' . $type, 'core_badges') .
                         $c->get_details() . $criteriadescr;
                 } else {
-                    $items[] = '* ' . get_string('criteria_descr_' . $type, 'badges',
+                    $items[] = '* ' . get_string('criteria_descr_' . $type, 'core_badges',
                             core_text::strtoupper($agg[$this->get_aggregation_method($type)])) .
                         $c->get_details() . $criteriadescr;
                 }

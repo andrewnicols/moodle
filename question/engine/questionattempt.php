@@ -664,7 +664,7 @@ class question_attempt {
     public function get_state_string($showcorrectness) {
         // Special case when attempt is based on previous one, see MDL-31226.
         if ($this->get_num_steps() == 1 && $this->get_state() == question_state::$complete) {
-            return get_string('notchanged', 'question');
+            return get_string('notchanged', 'core_question');
         }
         return $this->behaviour->get_state_string($showcorrectness);
     }
@@ -1159,13 +1159,13 @@ class question_attempt {
 
         $mark = question_utils::clean_param_mark($currentmark);
         if ($mark === null) {
-            return get_string('manualgradeinvalidformat', 'question');
+            return get_string('manualgradeinvalidformat', 'core_question');
         }
 
         $maxmark = $this->get_max_mark();
         if ($mark > $maxmark * $this->get_max_fraction() + question_utils::MARK_TOLERANCE ||
                 $mark < $maxmark * $this->get_min_fraction() - question_utils::MARK_TOLERANCE) {
-            return get_string('manualgradeoutofrange', 'question');
+            return get_string('manualgradeoutofrange', 'core_question');
         }
 
         return '';

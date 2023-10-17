@@ -758,7 +758,7 @@ function groups_delete_groups($courseid, $showfeedback=false) {
     \core_group\visibility::update_hiddengroups_cache($courseid);
 
     if ($showfeedback) {
-        echo $OUTPUT->notification(get_string('deleted').' - '.get_string('groups', 'group'), 'notifysuccess');
+        echo $OUTPUT->notification(get_string('deleted').' - '.get_string('groups', 'core_group'), 'notifysuccess');
     }
 
     return true;
@@ -786,7 +786,7 @@ function groups_delete_groupings($courseid, $showfeedback=false) {
     cache_helper::purge_by_definition('core', 'user_group_groupings');
 
     if ($showfeedback) {
-        echo $OUTPUT->notification(get_string('deleted').' - '.get_string('groupings', 'group'), 'notifysuccess');
+        echo $OUTPUT->notification(get_string('deleted').' - '.get_string('groupings', 'core_group'), 'notifysuccess');
     }
 
     return true;
@@ -1111,12 +1111,12 @@ function groups_calculate_role_people($rs, $context) {
 
     // Add pseudo-role for multiple roles
     $roledata = new stdClass();
-    $roledata->name = get_string('multipleroles','role');
+    $roledata->name = get_string('multipleroles','core_role');
     $roledata->users = array();
     $roles['*'] = $roledata;
 
     $roledata = new stdClass();
-    $roledata->name = get_string('noroles','role');
+    $roledata->name = get_string('noroles','core_role');
     $roledata->users = array();
     $roles[0] = $roledata;
 

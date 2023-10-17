@@ -387,7 +387,7 @@ class structure {
         if (!$this->can_be_edited()) {
             $reportlink = quiz_attempt_summary_link_to_reports($this->get_quiz(),
                     $this->quizobj->get_cm(), $this->quizobj->get_context());
-            throw new \moodle_exception('cannoteditafterattempts', 'quiz',
+            throw new \moodle_exception('cannoteditafterattempts', 'mod_quiz',
                     new \moodle_url('/mod/quiz/edit.php', ['cmid' => $this->get_cmid()]), $reportlink);
         }
     }
@@ -661,7 +661,7 @@ class structure {
         if (quiz_has_attempts($this->quizobj->get_quizid())) {
             $reviewlink = quiz_attempt_summary_link_to_reports($this->quizobj->get_quiz(),
                     $this->quizobj->get_cm(), $this->quizobj->get_context());
-            $warnings[] = get_string('cannoteditafterattempts', 'quiz', $reviewlink);
+            $warnings[] = get_string('cannoteditafterattempts', 'mod_quiz', $reviewlink);
         }
 
         return $warnings;
@@ -680,34 +680,34 @@ class structure {
         $dates = [];
         if ($quiz->timeopen > 0) {
             if ($timenow > $quiz->timeopen) {
-                $dates[] = get_string('quizopenedon', 'quiz', userdate($quiz->timeopen));
+                $dates[] = get_string('quizopenedon', 'mod_quiz', userdate($quiz->timeopen));
             } else {
-                $dates[] = get_string('quizwillopen', 'quiz', userdate($quiz->timeopen));
+                $dates[] = get_string('quizwillopen', 'mod_quiz', userdate($quiz->timeopen));
             }
         }
         if ($quiz->timeclose > 0) {
             if ($timenow > $quiz->timeclose) {
-                $dates[] = get_string('quizclosed', 'quiz', userdate($quiz->timeclose));
+                $dates[] = get_string('quizclosed', 'mod_quiz', userdate($quiz->timeclose));
             } else {
-                $dates[] = get_string('quizcloseson', 'quiz', userdate($quiz->timeclose));
+                $dates[] = get_string('quizcloseson', 'mod_quiz', userdate($quiz->timeclose));
             }
         }
         if (empty($dates)) {
-            $dates[] = get_string('alwaysavailable', 'quiz');
+            $dates[] = get_string('alwaysavailable', 'mod_quiz');
         }
         $explanation = implode(', ', $dates);
 
         // Brief summary on the page.
         if ($timenow < $quiz->timeopen) {
-            $currentstatus = get_string('quizisclosedwillopen', 'quiz',
+            $currentstatus = get_string('quizisclosedwillopen', 'mod_quiz',
                     userdate($quiz->timeopen, get_string('strftimedatetimeshort', 'core_langconfig')));
         } else if ($quiz->timeclose && $timenow <= $quiz->timeclose) {
-            $currentstatus = get_string('quizisopenwillclose', 'quiz',
+            $currentstatus = get_string('quizisopenwillclose', 'mod_quiz',
                     userdate($quiz->timeclose, get_string('strftimedatetimeshort', 'core_langconfig')));
         } else if ($quiz->timeclose && $timenow > $quiz->timeclose) {
-            $currentstatus = get_string('quizisclosed', 'quiz');
+            $currentstatus = get_string('quizisclosed', 'mod_quiz');
         } else {
-            $currentstatus = get_string('quizisopen', 'quiz');
+            $currentstatus = get_string('quizisopen', 'mod_quiz');
         }
 
         return [$currentstatus, $explanation];
@@ -762,7 +762,7 @@ class structure {
             $question = $this->questions[$slot->questionid];
             if ($question->length == 0) {
                 $slot->displaynumber = null;
-                $slot->defaultnumber = get_string('infoshort', 'quiz');
+                $slot->defaultnumber = get_string('infoshort', 'mod_quiz');
             } else {
                 $slot->defaultnumber = $number;
             }
@@ -793,9 +793,9 @@ class structure {
             $version->selected = $version->version === $slot->requestedversion;
 
             if ($version->version === $latestversion->version) {
-                $version->versionvalue = get_string('questionversionlatest', 'quiz', $version->version);
+                $version->versionvalue = get_string('questionversionlatest', 'mod_quiz', $version->version);
             } else {
-                $version->versionvalue = get_string('questionversion', 'quiz', $version->version);
+                $version->versionvalue = get_string('questionversion', 'mod_quiz', $version->version);
             }
 
             $versionoptions[] = $version;
@@ -805,7 +805,7 @@ class structure {
         $alwaysuselatest = new stdClass();
         $alwaysuselatest->versionid = 0;
         $alwaysuselatest->version = 0;
-        $alwaysuselatest->versionvalue = get_string('alwayslatest', 'quiz');
+        $alwaysuselatest->versionvalue = get_string('alwayslatest', 'mod_quiz');
         $alwaysuselatest->selected = $slot->requestedversion === null;
         array_unshift($versionoptions, $alwaysuselatest);
 
@@ -1253,7 +1253,7 @@ class structure {
         if ($heading !== null) {
             $section->heading = $heading;
         } else {
-            $section->heading = get_string('newsectionheading', 'quiz');
+            $section->heading = get_string('newsectionheading', 'mod_quiz');
         }
         $section->quizid = $this->get_quizid();
         $slotsonpage = $DB->get_records('quiz_slots', ['quizid' => $this->get_quizid(), 'page' => $pagenumber], 'slot DESC');

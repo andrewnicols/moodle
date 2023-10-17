@@ -35,7 +35,7 @@ class send_enable_notification extends \core\task\adhoc_task {
         $message->notification = 1;
         $message->contexturl = (new \moodle_url('/admin/settings.php',
             ['section' => 'optionalsubsystems'], 'admin-enablemoodlenet'))->out(false);
-        $message->contexturlname = get_string('advancedfeatures', 'admin');
+        $message->contexturlname = get_string('advancedfeatures', 'core_admin');
         $message->subject = get_string('autoenablenotification_subject', 'tool_moodlenet');
         $message->fullmessageformat = FORMAT_HTML;
         $message->fullmessagehtml = get_string('autoenablenotification', 'tool_moodlenet', (object) [

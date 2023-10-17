@@ -406,11 +406,11 @@ class provider implements
         writer::with_context($context)->export_area_files([], 'user', 'profile', 0)
                 ->export_data([], $data);
         // Export profile images.
-        writer::with_context($context)->export_area_files([get_string('privacy:profileimagespath', 'user')], 'user', 'icon', 0);
+        writer::with_context($context)->export_area_files([get_string('privacy:profileimagespath', 'core_user')], 'user', 'icon', 0);
         // Export private files.
-        writer::with_context($context)->export_area_files([get_string('privacy:privatefilespath', 'user')], 'user', 'private', 0);
+        writer::with_context($context)->export_area_files([get_string('privacy:privatefilespath', 'core_user')], 'user', 'private', 0);
         // Export draft files.
-        writer::with_context($context)->export_area_files([get_string('privacy:draftfilespath', 'user')], 'user', 'draft', false);
+        writer::with_context($context)->export_area_files([get_string('privacy:draftfilespath', 'core_user')], 'user', 'draft', false);
     }
 
     /**
@@ -434,7 +434,7 @@ class provider implements
                     'timeaccess' => transform::datetime($record->timeaccess)
                 ];
             }, $records);
-            writer::with_context($context)->export_data([get_string('privacy:lastaccesspath', 'user')], $lastaccess);
+            writer::with_context($context)->export_data([get_string('privacy:lastaccesspath', 'core_user')], $lastaccess);
         }
     }
 
@@ -454,7 +454,7 @@ class provider implements
                     'timererequested' => transform::datetime($record->timererequested)
                 ];
             }, $records);
-            writer::with_context($context)->export_data([get_string('privacy:passwordresetpath', 'user')], $passwordresets);
+            writer::with_context($context)->export_data([get_string('privacy:passwordresetpath', 'core_user')], $passwordresets);
         }
     }
 
@@ -479,7 +479,7 @@ class provider implements
                     'timemodified' => transform::datetime($record->timemodified)
                 ];
             }, $records);
-            writer::with_context($context)->export_data([get_string('privacy:devicespath', 'user')], $userdevices);
+            writer::with_context($context)->export_data([get_string('privacy:devicespath', 'core_user')], $userdevices);
         }
     }
 
@@ -498,7 +498,7 @@ class provider implements
         $params = ['userid' => $userid];
         $records = $DB->get_records_sql($sql, $params);
         if ($records) {
-            writer::with_context($context)->export_data([get_string('privacy:courserequestpath', 'user')], (object) $records);
+            writer::with_context($context)->export_data([get_string('privacy:courserequestpath', 'core_user')], (object) $records);
         }
     }
 
@@ -515,7 +515,7 @@ class provider implements
         $recordcount = $DB->count_records('user_password_history', ['userid' => $userid]);
         if ($recordcount) {
             $passwordhistory = (object) ['password_history_count' => $recordcount];
-            writer::with_context($context)->export_data([get_string('privacy:passwordhistorypath', 'user')], $passwordhistory);
+            writer::with_context($context)->export_data([get_string('privacy:passwordhistorypath', 'core_user')], $passwordhistory);
         }
     }
 
@@ -540,7 +540,7 @@ class provider implements
                     'lastip' => $record->lastip
                 ];
             }, $records);
-            writer::with_context($context)->export_data([get_string('privacy:sessionpath', 'user')], $sessiondata);
+            writer::with_context($context)->export_data([get_string('privacy:sessionpath', 'core_user')], $sessiondata);
         }
     }
 

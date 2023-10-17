@@ -101,7 +101,7 @@ class get_user_attempts extends external_api {
         $manager = manager::create_from_coursemodule($cm);
         $instance = $manager->get_instance();
         if (!$manager->can_view_all_attempts()) {
-            throw new moodle_exception('nopermissiontoviewattempts', 'error', '', null,
+            throw new moodle_exception('nopermissiontoviewattempts', 'mod_error', '', null,
                 'h5pactivity:reviewattempts required view attempts of all enrolled users.');
         }
 

@@ -173,7 +173,7 @@ $PAGE->set_pagetype('mod-quiz-edit');
 
 $output = $PAGE->get_renderer('mod_quiz', 'edit');
 
-$PAGE->set_title(get_string('editingquizx', 'quiz', format_string($quiz->name)));
+$PAGE->set_title(get_string('editingquizx', 'mod_quiz', format_string($quiz->name)));
 $PAGE->set_heading($course->fullname);
 $PAGE->activityheader->disable();
 $node = $PAGE->settingsnav->find('mod_quiz_edit', navigation_node::TYPE_SETTING);

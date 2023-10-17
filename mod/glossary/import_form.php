@@ -12,14 +12,14 @@ class mod_glossary_import_form extends moodleform {
         $mform =& $this->_form;
         $cmid = $this->_customdata['id'] ?? null;
 
-        $mform->addElement('filepicker', 'file', get_string('filetoimport', 'glossary'));
+        $mform->addElement('filepicker', 'file', get_string('filetoimport', 'mod_glossary'));
         $mform->addHelpButton('file', 'filetoimport', 'glossary');
         $options = array();
-        $options['current'] = get_string('currentglossary', 'glossary');
-        $options['newglossary'] = get_string('newglossary', 'glossary');
-        $mform->addElement('select', 'dest', get_string('destination', 'glossary'), $options);
+        $options['current'] = get_string('currentglossary', 'mod_glossary');
+        $options['newglossary'] = get_string('newglossary', 'mod_glossary');
+        $mform->addElement('select', 'dest', get_string('destination', 'mod_glossary'), $options);
         $mform->addHelpButton('dest', 'destination', 'glossary');
-        $mform->addElement('checkbox', 'catsincl', get_string('importcategories', 'glossary'));
+        $mform->addElement('checkbox', 'catsincl', get_string('importcategories', 'mod_glossary'));
         $submit_string = get_string('submit');
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);

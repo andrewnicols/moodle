@@ -37,7 +37,7 @@ class grade_import_form extends moodleform {
         // course id needs to be passed for auth purposes
         $mform->addElement('hidden', 'id', optional_param('id', 0, PARAM_INT));
         $mform->setType('id', PARAM_INT);
-        $mform->addElement('header', 'general', get_string('importfile', 'grades'));
+        $mform->addElement('header', 'general', get_string('importfile', 'core_grades'));
 
         // Restrict the possible upload file types.
         if (!empty($features['acceptedtypes'])) {
@@ -50,37 +50,37 @@ class grade_import_form extends moodleform {
         $mform->addElement('filepicker', 'userfile', get_string('file'), null, array('accepted_types' => $acceptedtypes));
         $mform->addRule('userfile', null, 'required');
         $encodings = core_text::get_encodings();
-        $mform->addElement('select', 'encoding', get_string('encoding', 'grades'), $encodings);
+        $mform->addElement('select', 'encoding', get_string('encoding', 'core_grades'), $encodings);
         $mform->addHelpButton('encoding', 'encoding', 'grades');
 
         if (!empty($features['includeseparator'])) {
             $radio = array();
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('septab', 'grades'), 'tab');
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcomma', 'grades'), 'comma');
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcolon', 'grades'), 'colon');
-            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepsemicolon', 'grades'), 'semicolon');
-            $mform->addGroup($radio, 'separator', get_string('separator', 'grades'), ' ', false);
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('septab', 'core_grades'), 'tab');
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcomma', 'core_grades'), 'comma');
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepcolon', 'core_grades'), 'colon');
+            $radio[] = $mform->createElement('radio', 'separator', null, get_string('sepsemicolon', 'core_grades'), 'semicolon');
+            $mform->addGroup($radio, 'separator', get_string('separator', 'core_grades'), ' ', false);
             $mform->addHelpButton('separator', 'separator', 'grades');
             $mform->setDefault('separator', 'comma');
         }
 
         if (!empty($features['verbosescales'])) {
             $options = array(1=>get_string('yes'), 0=>get_string('no'));
-            $mform->addElement('select', 'verbosescales', get_string('verbosescales', 'grades'), $options);
+            $mform->addElement('select', 'verbosescales', get_string('verbosescales', 'core_grades'), $options);
             $mform->addHelpButton('verbosescales', 'verbosescales', 'grades');
         }
 
         $options = array('10'=>10, '20'=>20, '100'=>100, '1000'=>1000, '100000'=>100000);
-        $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'grades'), $options); // TODO: localize
+        $mform->addElement('select', 'previewrows', get_string('rowpreviewnum', 'core_grades'), $options); // TODO: localize
         $mform->addHelpButton('previewrows', 'rowpreviewnum', 'grades');
         $mform->setType('previewrows', PARAM_INT);
-        $mform->addElement('checkbox', 'forceimport', get_string('forceimport', 'grades'));
+        $mform->addElement('checkbox', 'forceimport', get_string('forceimport', 'core_grades'));
         $mform->addHelpButton('forceimport', 'forceimport', 'grades');
         $mform->setDefault('forceimport', false);
         $mform->setType('forceimport', PARAM_BOOL);
         $mform->addElement('hidden', 'groupid', groups_get_course_group($COURSE));
         $mform->setType('groupid', PARAM_INT);
-        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'grades'));
+        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'core_grades'));
     }
 }
 
@@ -94,7 +94,7 @@ class grade_import_mapping_form extends moodleform {
         $header = $this->_customdata['header'];
         // course id
 
-        $mform->addElement('header', 'general', get_string('identifier', 'grades'));
+        $mform->addElement('header', 'general', get_string('identifier', 'core_grades'));
         $mapfromoptions = array();
 
         if ($header) {
@@ -102,27 +102,27 @@ class grade_import_mapping_form extends moodleform {
                 $mapfromoptions[$i] = s($h);
             }
         }
-        $mform->addElement('select', 'mapfrom', get_string('mapfrom', 'grades'), $mapfromoptions);
+        $mform->addElement('select', 'mapfrom', get_string('mapfrom', 'core_grades'), $mapfromoptions);
         $mform->addHelpButton('mapfrom', 'mapfrom', 'grades');
 
         $maptooptions = array(
-            'userid'       => get_string('userid', 'grades'),
+            'userid'       => get_string('userid', 'core_grades'),
             'username'     => get_string('username'),
             'useridnumber' => get_string('idnumber'),
             'useremail'    => get_string('email'),
-            '0'            => get_string('ignore', 'grades')
+            '0'            => get_string('ignore', 'core_grades')
         );
-        $mform->addElement('select', 'mapto', get_string('mapto', 'grades'), $maptooptions);
+        $mform->addElement('select', 'mapto', get_string('mapto', 'core_grades'), $maptooptions);
 
         $mform->addHelpButton('mapto', 'mapto', 'grades');
-        $mform->addElement('header', 'general_map', get_string('mappings', 'grades'));
+        $mform->addElement('header', 'general_map', get_string('mappings', 'core_grades'));
         $mform->addHelpButton('general_map', 'mappings', 'grades');
 
         // Add a feedback option.
         $feedbacks = [];
         $gradeitems = (array) $this->_customdata['gradeitems'];
         foreach ($gradeitems as $itemid => $itemname) {
-            $feedbacks['feedback_'.$itemid] = get_string('feedbackforgradeitems', 'grades', $itemname);
+            $feedbacks['feedback_'.$itemid] = get_string('feedbackforgradeitems', 'core_grades', $itemname);
         }
 
         if ($header) {
@@ -131,12 +131,12 @@ class grade_import_mapping_form extends moodleform {
                 $h = trim($h);
                 // This is what each header maps to.
                 $headermapsto = array(
-                    get_string('others', 'grades')     => array(
-                        '0'   => get_string('ignore', 'grades'),
-                        'new' => get_string('newitem', 'grades')
+                    get_string('others', 'core_grades')     => array(
+                        '0'   => get_string('ignore', 'core_grades'),
+                        'new' => get_string('newitem', 'core_grades')
                     ),
-                    get_string('gradeitems', 'grades') => $gradeitems,
-                    get_string('feedbacks', 'grades')  => $feedbacks
+                    get_string('gradeitems', 'core_grades') => $gradeitems,
+                    get_string('feedbacks', 'core_grades')  => $feedbacks
                 );
                 $mform->addElement('selectgroups', 'mapping_'.$i, s($h), $headermapsto);
                 $i++;
@@ -165,7 +165,7 @@ class grade_import_mapping_form extends moodleform {
         $mform->addElement('hidden', 'forceimport', $this->_customdata['forceimport']);
         $mform->setType('forceimport', PARAM_BOOL);
         $mform->setConstant('forceimport', $this->_customdata['forceimport']);
-        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'grades'));
+        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'core_grades'));
 
     }
 }

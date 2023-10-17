@@ -190,7 +190,7 @@ class provider implements
 
         // User context / Privacy and policies / Data requests.
         $subcontext = [
-            get_string('privacyandpolicies', 'admin'),
+            get_string('privacyandpolicies', 'core_admin'),
             get_string('datarequests', 'tool_dataprivacy'),
         ];
         writer::with_context($context)->export_data($subcontext, (object)$contextdatatowrite);

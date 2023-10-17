@@ -149,14 +149,14 @@ class behat_course extends behat_base {
      */
     public function i_go_to_the_courses_management_page() {
 
-        $parentnodes = get_string('courses', 'admin');
+        $parentnodes = get_string('courses', 'core_admin');
 
         // Go to home page.
         $this->execute("behat_general::i_am_on_homepage");
 
         // Navigate to course management via system administration.
         $this->execute("behat_navigation::i_navigate_to_in_site_administration",
-            array($parentnodes . ' > ' . get_string('coursemgmt', 'admin'))
+            array($parentnodes . ' > ' . get_string('coursemgmt', 'core_admin'))
         );
 
     }

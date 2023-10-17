@@ -26,46 +26,46 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig && \core_analytics\manager::is_analytics_enabled()) {
 
-    $settings = new admin_settingpage('analyticssite', new lang_string('analyticssiteinfo', 'analytics'));
+    $settings = new admin_settingpage('analyticssite', new lang_string('analyticssiteinfo', 'core_analytics'));
     $ADMIN->add('analytics', $settings);
 
     if ($ADMIN->fulltree) {
         $modeinstructions = [
-            'facetoface' => get_string('modeinstructionfacetoface', 'analytics'),
-            'blendedhybrid' => get_string('modeinstructionblendedhybrid', 'analytics'),
-            'fullyonline' => get_string('modeinstructionfullyonline', 'analytics'),
+            'facetoface' => get_string('modeinstructionfacetoface', 'core_analytics'),
+            'blendedhybrid' => get_string('modeinstructionblendedhybrid', 'core_analytics'),
+            'fullyonline' => get_string('modeinstructionfullyonline', 'core_analytics'),
         ];
-        $settings->add(new admin_setting_configmultiselect('analytics/modeinstruction', get_string('modeinstruction', 'analytics'),
+        $settings->add(new admin_setting_configmultiselect('analytics/modeinstruction', get_string('modeinstruction', 'core_analytics'),
             '', [], $modeinstructions));
 
         $settings->add(new admin_setting_configtext_with_maxlength('analytics/percentonline',
-            get_string('percentonline', 'analytics'),
-            get_string('percentonline_help', 'analytics'), '', PARAM_INT, 3, 3));
+            get_string('percentonline', 'core_analytics'),
+            get_string('percentonline_help', 'core_analytics'), '', PARAM_INT, 3, 3));
 
         $typeinstitutions = [
-            'typeinstitutionacademic' => get_string('typeinstitutionacademic', 'analytics'),
-            'typeinstitutiontraining' => get_string('typeinstitutiontraining', 'analytics'),
-            'typeinstitutionngo' => get_string('typeinstitutionngo', 'analytics'),
+            'typeinstitutionacademic' => get_string('typeinstitutionacademic', 'core_analytics'),
+            'typeinstitutiontraining' => get_string('typeinstitutiontraining', 'core_analytics'),
+            'typeinstitutionngo' => get_string('typeinstitutionngo', 'core_analytics'),
         ];
-        $settings->add(new admin_setting_configmultiselect('analytics/typeinstitution', get_string('typeinstitution', 'analytics'),
+        $settings->add(new admin_setting_configmultiselect('analytics/typeinstitution', get_string('typeinstitution', 'core_analytics'),
             '', [], $typeinstitutions));
 
         $levelinstitutions = [
-            'levelinstitutionisced0' => get_string('levelinstitutionisced0', 'analytics'),
-            'levelinstitutionisced1' => get_string('levelinstitutionisced1', 'analytics'),
-            'levelinstitutionisced2' => get_string('levelinstitutionisced2', 'analytics'),
-            'levelinstitutionisced3' => get_string('levelinstitutionisced3', 'analytics'),
-            'levelinstitutionisced4' => get_string('levelinstitutionisced4', 'analytics'),
-            'levelinstitutionisced5' => get_string('levelinstitutionisced5', 'analytics'),
-            'levelinstitutionisced6' => get_string('levelinstitutionisced6', 'analytics'),
-            'levelinstitutionisced7' => get_string('levelinstitutionisced7', 'analytics'),
-            'levelinstitutionisced8' => get_string('levelinstitutionisced8', 'analytics'),
+            'levelinstitutionisced0' => get_string('levelinstitutionisced0', 'core_analytics'),
+            'levelinstitutionisced1' => get_string('levelinstitutionisced1', 'core_analytics'),
+            'levelinstitutionisced2' => get_string('levelinstitutionisced2', 'core_analytics'),
+            'levelinstitutionisced3' => get_string('levelinstitutionisced3', 'core_analytics'),
+            'levelinstitutionisced4' => get_string('levelinstitutionisced4', 'core_analytics'),
+            'levelinstitutionisced5' => get_string('levelinstitutionisced5', 'core_analytics'),
+            'levelinstitutionisced6' => get_string('levelinstitutionisced6', 'core_analytics'),
+            'levelinstitutionisced7' => get_string('levelinstitutionisced7', 'core_analytics'),
+            'levelinstitutionisced8' => get_string('levelinstitutionisced8', 'core_analytics'),
         ];
         $settings->add(new admin_setting_configmultiselect('analytics/levelinstitution',
-            get_string('levelinstitution', 'analytics'), '', [], $levelinstitutions));
+            get_string('levelinstitution', 'core_analytics'), '', [], $levelinstitutions));
     }
 
-    $settings = new admin_settingpage('analyticssettings', new lang_string('analyticssettings', 'analytics'));
+    $settings = new admin_settingpage('analyticssettings', new lang_string('analyticssettings', 'core_analytics'));
     $ADMIN->add('analytics', $settings);
 
     if ($ADMIN->fulltree) {
@@ -79,7 +79,7 @@ if ($hassiteconfig && \core_analytics\manager::is_analytics_enabled()) {
             $predictors[$fullclassname] = new lang_string('pluginname', $pluginname);
         }
         $settings->add(new \core_analytics\admin_setting_predictor('analytics/predictionsprocessor',
-            new lang_string('defaultpredictionsprocessor', 'analytics'), new lang_string('predictionsprocessor_help', 'analytics'),
+            new lang_string('defaultpredictionsprocessor', 'core_analytics'), new lang_string('predictionsprocessor_help', 'core_analytics'),
             \core_analytics\manager::default_mlbackend(), $predictors)
         );
 
@@ -113,7 +113,7 @@ if ($hassiteconfig && \core_analytics\manager::is_analytics_enabled()) {
             }
         }
         $settings->add(new admin_setting_configselect('analytics/logstore',
-            new lang_string('analyticslogstore', 'analytics'), new lang_string('analyticslogstore_help', 'analytics'),
+            new lang_string('analyticslogstore', 'core_analytics'), new lang_string('analyticslogstore_help', 'core_analytics'),
             $defaultreader, $options));
 
         // Enable/disable time splitting methods.
@@ -126,26 +126,26 @@ if ($hassiteconfig && \core_analytics\manager::is_analytics_enabled()) {
             $timesplittingoptions[$key] = $timesplitting->get_name();
         }
         $settings->add(new admin_setting_configmultiselect('analytics/defaulttimesplittingsevaluation',
-            new lang_string('defaulttimesplittingmethods', 'analytics'),
-            new lang_string('defaulttimesplittingmethods_help', 'analytics'),
+            new lang_string('defaulttimesplittingmethods', 'core_analytics'),
+            new lang_string('defaulttimesplittingmethods_help', 'core_analytics'),
             $timesplittingdefaults, $timesplittingoptions)
         );
 
         // Predictions processor output dir - specify default in setting description (used if left blank).
         $defaultmodeloutputdir = \core_analytics\model::default_output_dir();
-        $settings->add(new admin_setting_configdirectory('analytics/modeloutputdir', new lang_string('modeloutputdir', 'analytics'),
-            new lang_string('modeloutputdirwithdefaultinfo', 'analytics', $defaultmodeloutputdir), ''));
+        $settings->add(new admin_setting_configdirectory('analytics/modeloutputdir', new lang_string('modeloutputdir', 'core_analytics'),
+            new lang_string('modeloutputdirwithdefaultinfo', 'core_analytics', $defaultmodeloutputdir), ''));
 
         // Disable web interface evaluation and get predictions.
-        $settings->add(new admin_setting_configcheckbox('analytics/onlycli', new lang_string('onlycli', 'analytics'),
-            new lang_string('onlycliinfo', 'analytics'), 1));
+        $settings->add(new admin_setting_configcheckbox('analytics/onlycli', new lang_string('onlycli', 'core_analytics'),
+            new lang_string('onlycliinfo', 'core_analytics'), 1));
 
         // Training and prediction time limit per model.
-        $settings->add(new admin_setting_configduration('analytics/modeltimelimit', new lang_string('modeltimelimit', 'analytics'),
-            new lang_string('modeltimelimitinfo', 'analytics'), 20 * MINSECS));
+        $settings->add(new admin_setting_configduration('analytics/modeltimelimit', new lang_string('modeltimelimit', 'core_analytics'),
+            new lang_string('modeltimelimitinfo', 'core_analytics'), 20 * MINSECS));
 
         $options = array(
-            0    => new lang_string('neverdelete', 'analytics'),
+            0    => new lang_string('neverdelete', 'core_analytics'),
             1000 => new lang_string('numdays', '', 1000),
             365  => new lang_string('numdays', '', 365),
             180  => new lang_string('numdays', '', 180),
@@ -155,8 +155,8 @@ if ($hassiteconfig && \core_analytics\manager::is_analytics_enabled()) {
             60   => new lang_string('numdays', '', 60),
             35   => new lang_string('numdays', '', 35));
         $settings->add(new admin_setting_configselect('analytics/calclifetime',
-            new lang_string('calclifetime', 'analytics'),
-            new lang_string('configlcalclifetime', 'analytics'), 35, $options));
+            new lang_string('calclifetime', 'core_analytics'),
+            new lang_string('configlcalclifetime', 'core_analytics'), 35, $options));
 
 
     }

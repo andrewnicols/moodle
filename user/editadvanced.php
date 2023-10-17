@@ -209,7 +209,7 @@ if ($userform->is_cancelled()) {
         if (!$authplugin->is_internal() and $authplugin->can_change_password() and !empty($usernew->newpassword)) {
             if (!$authplugin->user_update_password($usernew, $usernew->newpassword)) {
                 // Do not stop here, we need to finish user creation.
-                debugging(get_string('cannotupdatepasswordonextauth', 'error', $usernew->auth), DEBUG_NONE);
+                debugging(get_string('cannotupdatepasswordonextauth', 'mod_error', $usernew->auth), DEBUG_NONE);
             }
         }
         $usercreated = true;
@@ -338,7 +338,7 @@ if ($user->id == -1 or ($user->id != $USER->id)) {
         echo $OUTPUT->heading($userfullname);
     }
 } else if (!empty($USER->newadminuser)) {
-    $strinstallation = get_string('installation', 'install');
+    $strinstallation = get_string('installation', 'mod_install');
     $strprimaryadminsetup = get_string('primaryadminsetup');
 
     $PAGE->navbar->add($strprimaryadminsetup);
@@ -347,7 +347,7 @@ if ($user->id == -1 or ($user->id != $USER->id)) {
     $PAGE->set_cacheable(false);
 
     echo $OUTPUT->header();
-    echo $OUTPUT->box(get_string('configintroadmin', 'admin'), 'generalbox boxwidthnormal boxaligncenter');
+    echo $OUTPUT->box(get_string('configintroadmin', 'core_admin'), 'generalbox boxwidthnormal boxaligncenter');
     echo '<br />';
 } else {
     $streditmyprofile = get_string('editmyprofile');

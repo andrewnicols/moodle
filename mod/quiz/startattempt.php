@@ -54,7 +54,7 @@ if (!$quizobj->has_questions()) {
     if ($quizobj->has_capability('mod/quiz:manage')) {
         redirect($quizobj->edit_url());
     } else {
-        throw new \moodle_exception('cannotstartnoquestions', 'quiz', $quizobj->view_url());
+        throw new \moodle_exception('cannotstartnoquestions', 'mod_quiz', $quizobj->view_url());
     }
 }
 
@@ -69,7 +69,7 @@ list($currentattemptid, $attemptnumber, $lastattempt, $messages, $page) =
 // Check access.
 if (!$quizobj->is_preview_user() && $messages) {
     $output = $PAGE->get_renderer('mod_quiz');
-    throw new \moodle_exception('attempterror', 'quiz', $quizobj->view_url(),
+    throw new \moodle_exception('attempterror', 'mod_quiz', $quizobj->view_url(),
             $output->access_messages($messages));
 }
 

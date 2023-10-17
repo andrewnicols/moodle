@@ -144,7 +144,7 @@ class externallib_test extends externallib_advanced_testcase {
         $survey2->groupmode = 0;
         $survey2->groupingid = 0;
         $tempo = $DB->get_field("survey", "intro", array("id" => $survey2->template));
-        $survey2->intro = nl2br(get_string($tempo, "survey"));
+        $survey2->intro = nl2br(get_string($tempo, 'mod_survey'));
         $survey2->introfiles = [];
         $survey2->lang = '';
 
@@ -305,14 +305,14 @@ class externallib_test extends externallib_advanced_testcase {
         // Check we receive the same questions.
         $this->assertCount(0, $result['warnings']);
         foreach ($result['questions'] as $q) {
-            $this->assertEquals(get_string($expectedquestions[$q['id']]->text, 'survey'), $q['text']);
-            $this->assertEquals(get_string($expectedquestions[$q['id']]->shorttext, 'survey'), $q['shorttext']);
+            $this->assertEquals(get_string($expectedquestions[$q['id']]->text, 'mod_survey'), $q['text']);
+            $this->assertEquals(get_string($expectedquestions[$q['id']]->shorttext, 'mod_survey'), $q['shorttext']);
             $this->assertEquals($expectedquestions[$q['id']]->multi, $q['multi']);
             $this->assertEquals($expectedquestions[$q['id']]->type, $q['type']);
             // Parent questions must have parent eq to 0.
             if ($q['multi']) {
                 $this->assertEquals(0, $q['parent']);
-                $this->assertEquals(get_string($expectedquestions[$q['id']]->options, 'survey'), $q['options']);
+                $this->assertEquals(get_string($expectedquestions[$q['id']]->options, 'mod_survey'), $q['options']);
             }
         }
 

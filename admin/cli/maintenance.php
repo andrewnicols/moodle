@@ -36,7 +36,7 @@ list($options, $unrecognized) = cli_get_params(array('enable'=>false, 'enablelat
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 if ($options['help']) {
@@ -59,19 +59,19 @@ Example:
     die;
 }
 
-cli_heading(get_string('sitemaintenancemode', 'admin')." ($CFG->wwwroot)");
+cli_heading(get_string('sitemaintenancemode', 'core_admin')." ($CFG->wwwroot)");
 
 if ($options['enablelater']) {
     if (file_exists("$CFG->dataroot/climaintenance.html")) {
         // Already enabled, sorry.
-        echo get_string('clistatusenabled', 'admin')."\n";
+        echo get_string('clistatusenabled', 'core_admin')."\n";
         return 1;
     }
 
     $time = time() + ($options['enablelater']*60);
     set_config('maintenance_later', $time);
 
-    echo get_string('clistatusenabledlater', 'admin', userdate($time))."\n";
+    echo get_string('clistatusenabledlater', 'core_admin', userdate($time))."\n";
     return 0;
 
 } else if ($options['enable']) {
@@ -82,13 +82,13 @@ if ($options['enablelater']) {
     }
     set_config('maintenance_enabled', 0);
     unset_config('maintenance_later');
-    echo get_string('sitemaintenanceoncli', 'admin')."\n";
+    echo get_string('sitemaintenanceoncli', 'core_admin')."\n";
     exit(0);
 
 } else if ($options['enableold']) {
     set_config('maintenance_enabled', 1);
     unset_config('maintenance_later');
-    echo get_string('sitemaintenanceon', 'admin')."\n";
+    echo get_string('sitemaintenanceon', 'core_admin')."\n";
     exit(0);
 
 } else if ($options['disable']) {
@@ -97,16 +97,16 @@ if ($options['enablelater']) {
     if (file_exists("$CFG->dataroot/climaintenance.html")) {
         unlink("$CFG->dataroot/climaintenance.html");
     }
-    echo get_string('sitemaintenanceoff', 'admin')."\n";
+    echo get_string('sitemaintenanceoff', 'core_admin')."\n";
     exit(0);
 }
 
 if (!empty($CFG->maintenance_enabled) or file_exists("$CFG->dataroot/climaintenance.html")) {
-    echo get_string('clistatusenabled', 'admin')."\n";
+    echo get_string('clistatusenabled', 'core_admin')."\n";
 
 } else if (isset($CFG->maintenance_later)) {
-    echo get_string('clistatusenabledlater', 'admin', userdate($CFG->maintenance_later))."\n";
+    echo get_string('clistatusenabledlater', 'core_admin', userdate($CFG->maintenance_later))."\n";
 
 } else {
-    echo get_string('clistatusdisabled', 'admin')."\n";
+    echo get_string('clistatusdisabled', 'core_admin')."\n";
 }

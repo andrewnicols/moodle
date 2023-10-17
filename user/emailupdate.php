@@ -40,7 +40,7 @@ if (!$user = $DB->get_record('user', array('id' => $id))) {
 $preferences = get_user_preferences(null, null, $user->id);
 $a = new stdClass();
 $a->fullname = fullname($user, true);
-$stremailupdate = get_string('emailupdate', 'auth', $a);
+$stremailupdate = get_string('emailupdate', 'core_auth', $a);
 
 $PAGE->set_title($stremailupdate);
 $PAGE->set_heading(format_string($SITE->fullname) . ": $stremailupdate");
@@ -52,7 +52,7 @@ if (empty($preferences['newemailattemptsleft'])) {
     cancel_email_update($user->id);
 
     echo $OUTPUT->header();
-    echo $OUTPUT->box(get_string('auth_outofnewemailupdateattempts', 'auth'), 'center');
+    echo $OUTPUT->box(get_string('auth_outofnewemailupdateattempts', 'core_auth'), 'center');
     echo $OUTPUT->footer();
 } else if ($key == $preferences['newemailkey']) {
     $olduser = clone($user);
@@ -70,7 +70,7 @@ if (empty($preferences['newemailattemptsleft'])) {
         );
         // If there are other user(s) that already have the same email, cancel and redirect.
         if ($DB->record_exists_select('user', $select, $params)) {
-            redirect(new moodle_url('/user/view.php', ['id' => $user->id]), get_string('emailnowexists', 'auth'));
+            redirect(new moodle_url('/user/view.php', ['id' => $user->id]), get_string('emailnowexists', 'core_auth'));
         }
     }
 
@@ -81,7 +81,7 @@ if (empty($preferences['newemailattemptsleft'])) {
     $a->email = $user->email;
     redirect(
         new moodle_url('/user/view.php', ['id' => $user->id]),
-        get_string('emailupdatesuccess', 'auth', $a),
+        get_string('emailupdatesuccess', 'core_auth', $a),
         null,
         \core\output\notification::NOTIFY_SUCCESS
     );
@@ -90,6 +90,6 @@ if (empty($preferences['newemailattemptsleft'])) {
     $preferences['newemailattemptsleft']--;
     set_user_preference('newemailattemptsleft', $preferences['newemailattemptsleft'], $user->id);
     echo $OUTPUT->header();
-    echo $OUTPUT->box(get_string('auth_invalidnewemailkey', 'auth'), 'center');
+    echo $OUTPUT->box(get_string('auth_invalidnewemailkey', 'core_auth'), 'center');
     echo $OUTPUT->footer();
 }

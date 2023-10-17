@@ -42,12 +42,12 @@ $txt->uninstall = get_string('uninstallplugin', 'core_admin');
 
 $plagiarismplugins = core_component::get_plugin_list('plagiarism');
 if (empty($plagiarismplugins)) {
-    echo $OUTPUT->notification(get_string('nopluginsinstalled', 'plagiarism'));
+    echo $OUTPUT->notification(get_string('nopluginsinstalled', 'core_plagiarism'));
     echo $OUTPUT->footer();
     exit;
 }
 
-echo $OUTPUT->heading(get_string('availableplugins', 'plagiarism'), 3, 'main');
+echo $OUTPUT->heading(get_string('availableplugins', 'core_plagiarism'), 3, 'main');
 echo $OUTPUT->box_start('generalbox authsui');
 
 $table = new html_table();
@@ -80,7 +80,7 @@ foreach ($plagiarismplugins as $plugin => $dir) {
     }
 }
 echo html_writer::table($table);
-echo get_string('configplagiarismplugins', 'plagiarism');
+echo get_string('configplagiarismplugins', 'core_plagiarism');
 echo $OUTPUT->box_end();
 
 echo $OUTPUT->footer();

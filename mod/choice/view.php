@@ -31,8 +31,8 @@ if (!$choice = choice_get_choice($cm->instance)) {
     throw new \moodle_exception('invalidcoursemodule');
 }
 
-$strchoice = get_string('modulename', 'choice');
-$strchoices = get_string('modulenameplural', 'choice');
+$strchoice = get_string('modulename', 'mod_choice');
+$strchoices = get_string('modulenameplural', 'mod_choice');
 
 $context = context_module::instance($cm->id);
 
@@ -79,7 +79,7 @@ if (data_submitted() && !empty($action) && confirm_sesskey()) {
 
     if (!$choiceavailable) {
         $reason = current(array_keys($warnings));
-        throw new moodle_exception($reason, 'choice', '', $warnings[$reason]);
+        throw new moodle_exception($reason, 'mod_choice', '', $warnings[$reason]);
     }
 
     if ($answer && is_enrolled($context, null, 'mod/choice:choose')) {
@@ -103,9 +103,9 @@ echo $OUTPUT->header();
 
 if ($notify and confirm_sesskey()) {
     if ($notify === 'choicesaved') {
-        echo $OUTPUT->notification(get_string('choicesaved', 'choice'), 'notifysuccess');
+        echo $OUTPUT->notification(get_string('choicesaved', 'mod_choice'), 'notifysuccess');
     } else if ($notify === 'mustchooseone') {
-        echo $OUTPUT->notification(get_string('mustchooseone', 'choice'), 'notifyproblem');
+        echo $OUTPUT->notification(get_string('mustchooseone', 'mod_choice'), 'notifyproblem');
     }
 }
 
@@ -138,14 +138,14 @@ if (isloggedin() && (!empty($current)) &&
     foreach ($current as $c) {
         $choicetexts[] = format_string(choice_get_option_text($choice, $c->optionid));
     }
-    echo $OUTPUT->box(get_string("yourselection", "choice") . ": " . implode('; ', $choicetexts), 'generalbox', 'yourselection');
+    echo $OUTPUT->box(get_string("yourselection", 'mod_choice') . ": " . implode('; ', $choicetexts), 'generalbox', 'yourselection');
 }
 
 /// Print the form
 $choiceopen = true;
 if ((!empty($choice->timeopen)) && ($choice->timeopen > $timenow)) {
     if ($choice->showpreview) {
-        echo $OUTPUT->box(get_string('previewing', 'choice'), 'generalbox alert');
+        echo $OUTPUT->box(get_string('previewing', 'mod_choice'), 'generalbox alert');
     } else {
         echo $OUTPUT->footer();
         exit;
@@ -160,22 +160,22 @@ if ( (!$current or $choice->allowupdate) and $choiceopen and is_enrolled($contex
     $publishinfo = null;
     switch ($choice->showresults) {
         case CHOICE_SHOWRESULTS_NOT:
-            $publishinfo = get_string('publishinfonever', 'choice');
+            $publishinfo = get_string('publishinfonever', 'mod_choice');
             break;
 
         case CHOICE_SHOWRESULTS_AFTER_ANSWER:
             if ($choice->publish == CHOICE_PUBLISH_ANONYMOUS) {
-                $publishinfo = get_string('publishinfoanonafter', 'choice');
+                $publishinfo = get_string('publishinfoanonafter', 'mod_choice');
             } else {
-                $publishinfo = get_string('publishinfofullafter', 'choice');
+                $publishinfo = get_string('publishinfofullafter', 'mod_choice');
             }
             break;
 
         case CHOICE_SHOWRESULTS_AFTER_CLOSE:
             if ($choice->publish == CHOICE_PUBLISH_ANONYMOUS) {
-                $publishinfo = get_string('publishinfoanonclose', 'choice');
+                $publishinfo = get_string('publishinfoanonclose', 'mod_choice');
             } else {
-                $publishinfo = get_string('publishinfofullclose', 'choice');
+                $publishinfo = get_string('publishinfofullclose', 'mod_choice');
             }
             break;
 
@@ -204,7 +204,7 @@ if (!$choiceformshown) {
 
     if (isguestuser()) {
         // Guest account
-        echo $OUTPUT->confirm(get_string('noguestchoose', 'choice').'<br /><br />'.get_string('liketologin'),
+        echo $OUTPUT->confirm(get_string('noguestchoose', 'mod_choice').'<br /><br />'.get_string('liketologin'),
                      get_login_url(), new moodle_url('/course/view.php', array('id'=>$course->id)));
     } else if (!is_enrolled($context)) {
         // Only people enrolled can make a choice
@@ -215,7 +215,7 @@ if (!$choiceformshown) {
         $courseshortname = format_string($course->shortname, true, array('context' => $coursecontext));
 
         echo $OUTPUT->box_start('generalbox', 'notice');
-        echo '<p align="center">'. get_string('notenrolledchoose', 'choice') .'</p>';
+        echo '<p align="center">'. get_string('notenrolledchoose', 'mod_choice') .'</p>';
         echo $OUTPUT->container_start('continuebutton');
         echo $OUTPUT->single_button(new moodle_url('/enrol/index.php?', array('id'=>$course->id)), get_string('enrolme', 'core_enrol', $courseshortname));
         echo $OUTPUT->container_end();
@@ -229,7 +229,7 @@ if (choice_can_view_results($choice, $current, $choiceopen)) {
     $results = prepare_choice_show_results($choice, $course, $cm, $allresponses);
     $renderer = $PAGE->get_renderer('mod_choice');
     if ($results->publish) { // If set to publish full results, display a heading for the responses section.
-        echo html_writer::tag('h3', format_string(get_string("responses", "choice")), ['class' => 'mt-4']);
+        echo html_writer::tag('h3', format_string(get_string("responses", 'mod_choice')), ['class' => 'mt-4']);
     }
 
     if ($groupmode) { // If group mode is enabled, display the groups selector.
@@ -243,7 +243,7 @@ if (choice_can_view_results($choice, $current, $choiceopen)) {
     echo $OUTPUT->box($resultstable);
 
 } else if (!$choiceformshown) {
-    echo $OUTPUT->box(get_string('noresultsviewable', 'choice'));
+    echo $OUTPUT->box(get_string('noresultsviewable', 'mod_choice'));
 }
 
 echo $OUTPUT->footer();

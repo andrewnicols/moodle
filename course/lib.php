@@ -1666,8 +1666,8 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
             ],
             'moodle'
         );
-        $str->assign = get_string('assignroles', 'role');
-        $str->groupmode = get_string('groupmode', 'group');
+        $str->assign = get_string('assignroles', 'core_role');
+        $str->groupmode = get_string('groupmode', 'core_group');
     }
 
     $baseurl = new moodle_url('/course/mod.php', array('sesskey' => sesskey()));
@@ -2329,7 +2329,7 @@ function update_course($data, $editoroptions = NULL) {
 
     // Prevent changes on front page course.
     if ($data->id == SITEID) {
-        throw new moodle_exception('invalidcourse', 'error');
+        throw new moodle_exception('invalidcourse', 'mod_error');
     }
 
     $oldcourse = course_get_format($data->id)->get_course();
@@ -2812,7 +2812,7 @@ class course_request {
             $a->link = "$CFG->wwwroot/course/pending.php";
             $a->user = fullname($USER);
             $subject = get_string('courserequest');
-            $message = get_string('courserequestnotifyemail', 'admin', $a);
+            $message = get_string('courserequestnotifyemail', 'core_admin', $a);
             foreach ($users as $user) {
                 $request->notify($user, $USER, 'courserequested', $subject, $message);
             }
@@ -3139,17 +3139,17 @@ class course_request {
 function course_page_type_list($pagetype, $parentcontext, $currentcontext) {
     if ($pagetype === 'course-index' || $pagetype === 'course-index-category') {
         // For courses and categories browsing pages (/course/index.php) add option to show on ANY category page
-        $pagetypes = array('*' => get_string('page-x', 'pagetype'),
-            'course-index-*' => get_string('page-course-index-x', 'pagetype'),
+        $pagetypes = array('*' => get_string('page-x', 'mod_pagetype'),
+            'course-index-*' => get_string('page-course-index-x', 'mod_pagetype'),
         );
     } else if ($currentcontext && (!($coursecontext = $currentcontext->get_course_context(false)) || $coursecontext->instanceid == SITEID)) {
         // We know for sure that despite pagetype starts with 'course-' this is not a page in course context (i.e. /course/search.php, etc.)
-        $pagetypes = array('*' => get_string('page-x', 'pagetype'));
+        $pagetypes = array('*' => get_string('page-x', 'mod_pagetype'));
     } else {
         // Otherwise consider it a page inside a course even if $currentcontext is null
-        $pagetypes = array('*' => get_string('page-x', 'pagetype'),
-            'course-*' => get_string('page-course-x', 'pagetype'),
-            'course-view-*' => get_string('page-course-view-x', 'pagetype')
+        $pagetypes = array('*' => get_string('page-x', 'mod_pagetype'),
+            'course-*' => get_string('page-course-x', 'mod_pagetype'),
+            'course-view-*' => get_string('page-course-view-x', 'mod_pagetype')
         );
     }
     return $pagetypes;
@@ -3510,7 +3510,7 @@ function duplicate_module($course, $cm, int $sectionid = null, bool $changename 
     $a->modname = format_string($cm->name);
 
     if (!plugin_supports('mod', $cm->modname, FEATURE_BACKUP_MOODLE2)) {
-        throw new moodle_exception('duplicatenosupport', 'error', '', $a);
+        throw new moodle_exception('duplicatenosupport', 'mod_error', '', $a);
     }
 
     // Backup the activity.
@@ -3866,7 +3866,7 @@ function core_course_core_calendar_get_valid_event_timestart_range(\calendar_eve
     if ($course->startdate) {
         $mindate = [
             $course->startdate,
-            get_string('errorbeforecoursestart', 'calendar')
+            get_string('errorbeforecoursestart', 'core_calendar')
         ];
     }
 

@@ -45,7 +45,7 @@ class lesson_page_type_cluster extends lesson_page {
     }
     public function get_typestring() {
         if ($this->string===null) {
-            $this->string = get_string($this->typeidstring, 'lesson');
+            $this->string = get_string($this->typeidstring, 'mod_lesson');
         }
         return $this->string;
     }
@@ -72,7 +72,7 @@ class lesson_page_type_cluster extends lesson_page {
     public function add_page_link($previd) {
         global $PAGE, $CFG;
         $addurl = new moodle_url('/mod/lesson/editpage.php', array('id'=>$PAGE->cm->id, 'pageid'=>$previd, 'sesskey'=>sesskey(), 'qtype'=>LESSON_PAGE_CLUSTER));
-        return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_CLUSTER, 'name'=>get_string('addcluster', 'lesson'));
+        return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_CLUSTER, 'name'=>get_string('addcluster', 'mod_lesson'));
     }
     public function valid_page_and_view(&$validpages, &$pageviews) {
         $validpages[$this->properties->id] = 1;  // add the cluster page as a valid page
@@ -108,7 +108,7 @@ class lesson_add_page_form_cluster extends lesson_add_page_form_base {
         $mform->addElement('hidden', 'qtype');
         $mform->setType('qtype', PARAM_TEXT);
 
-        $mform->addElement('text', 'title', get_string("pagetitle", "lesson"), array('size'=>70));
+        $mform->addElement('text', 'title', get_string("pagetitle", 'mod_lesson'), array('size'=>70));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('title', PARAM_TEXT);
         } else {
@@ -116,7 +116,7 @@ class lesson_add_page_form_cluster extends lesson_add_page_form_base {
         }
 
         $this->editoroptions = array('noclean'=>true, 'maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$PAGE->course->maxbytes);
-        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", "lesson"), null, $this->editoroptions);
+        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", 'mod_lesson'), null, $this->editoroptions);
         $mform->setType('contents_editor', PARAM_RAW);
 
         $this->add_jumpto(0);
@@ -132,7 +132,7 @@ class lesson_add_page_form_cluster extends lesson_add_page_form_base {
         if ($pageid == 0) {
             if ($lesson->has_pages()) {
                 if (!$page = $DB->get_record("lesson_pages", array("prevpageid" => 0, "lessonid" => $lesson->id))) {
-                    throw new \moodle_exception('cannotfindpagerecord', 'lesson');
+                    throw new \moodle_exception('cannotfindpagerecord', 'mod_lesson');
                 }
             } else {
                 // This is the ONLY page
@@ -141,7 +141,7 @@ class lesson_add_page_form_cluster extends lesson_add_page_form_base {
             }
         } else {
             if (!$page = $DB->get_record("lesson_pages", array("id" => $pageid))) {
-                throw new \moodle_exception('cannotfindpagerecord', 'lesson');
+                throw new \moodle_exception('cannotfindpagerecord', 'mod_lesson');
             }
         }
         $newpage = new stdClass;
@@ -154,8 +154,8 @@ class lesson_add_page_form_cluster extends lesson_add_page_form_base {
         }
         $newpage->qtype = $this->qtype;
         $newpage->timecreated = $timenow;
-        $newpage->title = get_string("clustertitle", "lesson");
-        $newpage->contents = get_string("clustertitle", "lesson");
+        $newpage->title = get_string("clustertitle", 'mod_lesson');
+        $newpage->contents = get_string("clustertitle", 'mod_lesson');
         $newpageid = $DB->insert_record("lesson_pages", $newpage);
         // update the linked list...
         if ($pageid != 0) {
@@ -176,7 +176,7 @@ class lesson_add_page_form_cluster extends lesson_add_page_form_base {
         $newanswer->timecreated = $timenow;
         $newanswer->jumpto = LESSON_CLUSTERJUMP;
         $newanswerid = $DB->insert_record("lesson_answers", $newanswer);
-        $lesson->add_message(get_string('addedcluster', 'lesson'), 'notifysuccess');
+        $lesson->add_message(get_string('addedcluster', 'mod_lesson'), 'notifysuccess');
         redirect($CFG->wwwroot.'/mod/lesson/edit.php?id='.$PAGE->cm->id);
     }
 }

@@ -927,16 +927,16 @@ EOF;
             $welcomestring = config::get('welcome_default');
         }
         if (empty($welcomestring)) {
-            $welcomestring = get_string('mod_form_field_welcome_default', 'bigbluebuttonbn');
+            $welcomestring = get_string('mod_form_field_welcome_default', 'mod_bigbluebuttonbn');
         }
 
         $welcome = [$welcomestring];
 
         if ($this->is_recorded()) {
             if ($this->should_record_from_start()) {
-                $welcome[] = get_string('bbbrecordallfromstartwarning', 'bigbluebuttonbn');
+                $welcome[] = get_string('bbbrecordallfromstartwarning', 'mod_bigbluebuttonbn');
             } else {
-                $welcome[] = get_string('bbbrecordwarning', 'bigbluebuttonbn');
+                $welcome[] = get_string('bbbrecordwarning', 'mod_bigbluebuttonbn');
             }
         }
 

@@ -50,7 +50,7 @@ list($options, $unrecognized) = cli_get_params(
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized), 2);
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized), 2);
 }
 
 if (!$options['rebuild'] and !$options['file'] and !$options['print']) {

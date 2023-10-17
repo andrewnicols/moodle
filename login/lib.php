@@ -284,7 +284,7 @@ function core_login_process_password_set($token) {
         $DB->delete_records('user_password_resets', array('id' => $user->tokenid));
         $userauth = get_auth_plugin($user->auth);
         if (!$userauth->user_update_password($user, $data->password)) {
-            throw new \moodle_exception('errorpasswordupdate', 'auth');
+            throw new \moodle_exception('errorpasswordupdate', 'core_auth');
         }
         user_add_password_history($user->id, $data->password);
         if (!empty($CFG->passwordchangelogout)) {

@@ -162,7 +162,7 @@ class user_evidence extends persistent {
             // Check that the user exists. We do not need to do that on update because
             // the userid of an evidence should never change.
             if (!$DB->record_exists('user', array('id' => $value))) {
-                return new lang_string('invaliddata', 'error');
+                return new lang_string('invaliddata', 'mod_error');
             }
 
         }

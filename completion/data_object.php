@@ -191,7 +191,7 @@ abstract class data_object {
         if ($instances = self::fetch_all_helper($table, $classname, $params)) {
             if (count($instances) > 1) {
                 // we should not tolerate any errors here - problems might appear later
-                throw new \moodle_exception('morethanonerecordinfetch', 'debug');
+                throw new \moodle_exception('morethanonerecordinfetch', 'mod_debug');
             }
             return reset($instances);
         } else {

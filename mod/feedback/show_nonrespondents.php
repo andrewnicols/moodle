@@ -83,7 +83,7 @@ if ($action == 'sendmessage' AND $canbulkmessaging) {
     $shortname = format_string($course->shortname,
                             true,
                             array('context' => $coursecontext));
-    $strfeedbacks = get_string("modulenameplural", "feedback");
+    $strfeedbacks = get_string("modulenameplural", 'mod_feedback');
 
     $htmlmessage = "<body id=\"email\">";
 
@@ -249,12 +249,12 @@ if ($showall) {
 $students = feedback_get_incomplete_users($cm, $usedgroupid, $sort, $startpage, $pagecount, true);
 //####### viewreports-start
 //print the list of students
-echo $OUTPUT->heading(get_string('non_respondents_students', 'feedback', $matchcount), 4);
+echo $OUTPUT->heading(get_string('non_respondents_students', 'mod_feedback', $matchcount), 4);
 echo isset($groupselect) ? $groupselect : '';
 echo '<div class="clearer"></div>';
 
 if (empty($students)) {
-    echo $OUTPUT->notification(get_string('noexistingparticipants', 'enrol'));
+    echo $OUTPUT->notification(get_string('noexistingparticipants', 'core_enrol'));
 } else {
 
     if ($canbulkmessaging) {
@@ -268,9 +268,9 @@ if (empty($students)) {
         $data = array($OUTPUT->user_picture($student, array('courseid' => $course->id)), $profilelink);
 
         if ($student->feedbackstarted) {
-            $data[] = get_string('started', 'feedback');
+            $data[] = get_string('started', 'mod_feedback');
         } else {
-            $data[] = get_string('not_started', 'feedback');
+            $data[] = get_string('not_started', 'mod_feedback');
         }
 
         //selections to bulk messaging
@@ -302,16 +302,16 @@ if (empty($students)) {
     }
     if ($canbulkmessaging) {
         echo '<fieldset class="clearfix">';
-        echo '<legend class="ftoggler">'.get_string('send_message', 'feedback').'</legend>';
+        echo '<legend class="ftoggler">'.get_string('send_message', 'mod_feedback').'</legend>';
         echo '<div>';
-        echo '<label for="feedback_subject">'.get_string('subject', 'feedback').'&nbsp;</label>';
+        echo '<label for="feedback_subject">'.get_string('subject', 'mod_feedback').'&nbsp;</label>';
         echo '<input type="text" id="feedback_subject" size="50" maxlength="255" name="subject" value="'.s($subject).'" />';
         echo '</div>';
         echo $OUTPUT->print_textarea('message', 'edit-message', $message, 15, 25);
         print_string('formathtml');
         echo '<input type="hidden" name="format" value="'.FORMAT_HTML.'" />';
         echo '<br /><div class="buttons">';
-        echo '<input type="submit" name="send_message" value="'.get_string('send', 'feedback').'" class="btn btn-secondary" />';
+        echo '<input type="submit" name="send_message" value="'.get_string('send', 'mod_feedback').'" class="btn btn-secondary" />';
         echo '</div>';
         echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
         echo '<input type="hidden" name="action" value="sendmessage" />';

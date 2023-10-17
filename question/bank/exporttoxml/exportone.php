@@ -45,7 +45,7 @@ if ($cmid) {
     $thiscontext = context_course::instance($courseid);
     $urlparams['courseid'] = $courseid;
 } else {
-    throw new moodle_exception('missingcourseorcmid', 'question');
+    throw new moodle_exception('missingcourseorcmid', 'core_question');
 }
 require_sesskey();
 

@@ -490,7 +490,7 @@ class mod_workshop_external extends external_api {
         $canaddsubmission = $workshop->creating_submission_allowed($USER->id);
         $canaddsubmission = $canaddsubmission && $workshop->check_examples_assessed_before_submission($USER->id);
         if (!$canaddsubmission) {
-            throw new moodle_exception('nopermissions', 'error', '', 'add submission');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'add submission');
         }
 
         // Prepare the submission object.
@@ -507,7 +507,7 @@ class mod_workshop_external extends external_api {
         $submission->attachment_filemanager = $params['attachmentsid'];
 
         if (empty($submission->title)) {
-            throw new moodle_exception('errorinvalidparam', 'webservice', '', 'title');
+            throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'title');
         }
 
         $errors = $workshop->validate_submission_data((array) $submission);
@@ -606,13 +606,13 @@ class mod_workshop_external extends external_api {
         $canupdatesubmission = $canupdatesubmission && $workshop->modifying_submission_allowed($USER->id);
         $canupdatesubmission = $canupdatesubmission && $workshop->check_examples_assessed_before_submission($USER->id);
         if (!$canupdatesubmission) {
-            throw new moodle_exception('nopermissions', 'error', '', 'update submission');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'update submission');
         }
 
         // Prepare the submission object.
         $submission->title = trim($params['title']);
         if (empty($submission->title)) {
-            throw new moodle_exception('errorinvalidparam', 'webservice', '', 'title');
+            throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'title');
         }
         $submission->content_editor = array(
             'text' => $params['content'],
@@ -698,7 +698,7 @@ class mod_workshop_external extends external_api {
             $candeletesubmission = $candeletesubmission && $workshop->modifying_submission_allowed($USER->id);
             $candeletesubmission = $candeletesubmission && count($workshop->get_assessments_of_submission($submission->id)) == 0;
             if (!$candeletesubmission) {
-                throw new moodle_exception('nopermissions', 'error', '', 'delete submission');
+                throw new moodle_exception('nopermissions', 'mod_error', '', 'delete submission');
             }
         }
 
@@ -920,7 +920,7 @@ class mod_workshop_external extends external_api {
                 throw new moodle_exception('notingroup');
             }
         } else {
-            throw new moodle_exception('nopermissions', 'error', '', 'view submission');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'view submission');
         }
     }
 
@@ -1006,7 +1006,7 @@ class mod_workshop_external extends external_api {
                 throw new moodle_exception('notingroup');
             }
         } else {
-            throw new moodle_exception('nopermissions', 'error', '', 'view assessment');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'view assessment');
         }
     }
 
@@ -1179,7 +1179,7 @@ class mod_workshop_external extends external_api {
         $assessment = $workshop->get_assessment_by_id($assessment->id);
         $assessment = self::prepare_assessment_for_external($assessment, $workshop);
         if (empty($assessment)) {
-            throw new moodle_exception('nopermissions', 'error', '', 'view assessment');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'view assessment');
         }
         $related = array('context' => $context);
         $exporter = new assessment_exporter($assessment, $related);
@@ -1395,7 +1395,7 @@ class mod_workshop_external extends external_api {
                 throw new moodle_exception($notice, 'mod_workshop');
             }
             if ($workshop->phase < workshop::PHASE_ASSESSMENT) {    // Can view assessments only in assessment phase onwards.
-                throw new moodle_exception('nopermissions', 'error', '', 'view assessments');
+                throw new moodle_exception('nopermissions', 'mod_error', '', 'view assessments');
             }
         } else {
             require_capability('mod/workshop:viewallassessments', $context);
@@ -1719,7 +1719,7 @@ class mod_workshop_external extends external_api {
         $cansetassessmentweight = has_capability('mod/workshop:allocate', $context);
         $canoverridegrades      = has_capability('mod/workshop:overridegrades', $context);
         if (!$canoverridegrades && !$cansetassessmentweight) {
-            throw new moodle_exception('nopermissions', 'error', '', 'evaluate assessments');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'evaluate assessments');
         }
 
         // Process data.
@@ -1901,7 +1901,7 @@ class mod_workshop_external extends external_api {
                 );
             }
         }
-        throw new moodle_exception('nothingfound', 'workshop');
+        throw new moodle_exception('nothingfound', 'mod_workshop');
     }
 
     /**
@@ -2076,7 +2076,7 @@ class mod_workshop_external extends external_api {
             has_capability('mod/workshop:overridegrades', $context));
 
         if (!$canpublish && !$canoverride) {
-            throw new moodle_exception('nopermissions', 'error', '', 'evaluate submission');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'evaluate submission');
         }
 
         // Process data.

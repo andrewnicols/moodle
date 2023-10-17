@@ -34,17 +34,17 @@ class edit_outcome_form extends moodleform {
         $mform =& $this->_form;
 
         // visible elements
-        $mform->addElement('header', 'general', get_string('outcomes', 'grades'));
+        $mform->addElement('header', 'general', get_string('outcomes', 'core_grades'));
 
-        $mform->addElement('text', 'fullname', get_string('outcomefullname', 'grades'), 'size="40"');
+        $mform->addElement('text', 'fullname', get_string('outcomefullname', 'core_grades'), 'size="40"');
         $mform->addRule('fullname', get_string('required'), 'required');
         $mform->setType('fullname', PARAM_TEXT);
 
-        $mform->addElement('text', 'shortname', get_string('outcomeshortname', 'grades'), 'size="20"');
+        $mform->addElement('text', 'shortname', get_string('outcomeshortname', 'core_grades'), 'size="20"');
         $mform->addRule('shortname', get_string('required'), 'required');
         $mform->setType('shortname', PARAM_NOTAGS);
 
-        $mform->addElement('advcheckbox', 'standard', get_string('outcomestandard', 'grades'));
+        $mform->addElement('advcheckbox', 'standard', get_string('outcomestandard', 'core_grades'));
         $mform->addHelpButton('standard', 'outcomestandard', 'grades');
 
         $options = array();

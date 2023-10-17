@@ -151,7 +151,7 @@ class provider implements
 
             ];
 
-            $path = [get_string('search', 'search'), $record->docid];
+            $path = [get_string('search', 'core_search'), $record->docid];
             writer::with_context($context)->export_data($path, $document);
         }
         $records->close();

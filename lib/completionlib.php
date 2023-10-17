@@ -253,7 +253,7 @@ class completion_info {
     public static function get_aggregation_methods() {
         return array(
             COMPLETION_AGGREGATION_ALL => get_string('all'),
-            COMPLETION_AGGREGATION_ANY => get_string('any', 'completion'),
+            COMPLETION_AGGREGATION_ANY => get_string('any', 'core_completion'),
         );
     }
 
@@ -345,7 +345,7 @@ class completion_info {
         $result = '';
         if ($this->is_enabled() && !$PAGE->user_is_editing() && $this->is_tracked_user($USER->id) && isloggedin() &&
                 !isguestuser()) {
-            $result .= html_writer::tag('div', get_string('yourprogress','completion') .
+            $result .= html_writer::tag('div', get_string('yourprogress','core_completion') .
                     $OUTPUT->help_icon('completionicons', 'completion'), array('id' => 'completionprogressid',
                     'class' => 'completionprogress'));
         }
@@ -365,7 +365,7 @@ class completion_info {
         if (empty($completions)) {
             return false;
         } elseif (count($completions) > 1) {
-            throw new \moodle_exception('multipleselfcompletioncriteria', 'completion');
+            throw new \moodle_exception('multipleselfcompletioncriteria', 'core_completion');
         }
 
         return $completions[0];
@@ -1614,7 +1614,7 @@ class completion_info {
      */
     public function internal_systemerror($error) {
         global $CFG;
-        throw new moodle_exception('err_system','completion',
+        throw new moodle_exception('err_system','core_completion',
             $CFG->wwwroot.'/course/view.php?id='.$this->course->id,null,$error);
     }
 

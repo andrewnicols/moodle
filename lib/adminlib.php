@@ -650,15 +650,15 @@ function enable_cli_maintenance_mode() {
     if (isset($CFG->maintenance_message) and !html_is_blank($CFG->maintenance_message)) {
         $data = $CFG->maintenance_message;
         $data = bootstrap_renderer::early_error_content($data, null, null, null);
-        $data = bootstrap_renderer::plain_page(get_string('sitemaintenance', 'admin'), $data);
+        $data = bootstrap_renderer::plain_page(get_string('sitemaintenance', 'core_admin'), $data);
 
     } else if (file_exists("$CFG->dataroot/climaintenance.template.html")) {
         $data = file_get_contents("$CFG->dataroot/climaintenance.template.html");
 
     } else {
-        $data = get_string('sitemaintenance', 'admin');
+        $data = get_string('sitemaintenance', 'core_admin');
         $data = bootstrap_renderer::early_error_content($data, null, null, null);
-        $data = bootstrap_renderer::plain_page(get_string('sitemaintenancetitle', 'admin',
+        $data = bootstrap_renderer::plain_page(get_string('sitemaintenancetitle', 'core_admin',
             format_string($SITE->fullname, true, ['context' => context_system::instance()])), $data);
     }
 
@@ -2500,7 +2500,7 @@ class admin_setting_configtext extends admin_setting {
         if ($validated !== true) {
             return $validated;
         }
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -2514,7 +2514,7 @@ class admin_setting_configtext extends admin_setting {
             if (preg_match($this->paramtype, $data)) {
                 return true;
             } else {
-                return get_string('validateerror', 'admin');
+                return get_string('validateerror', 'core_admin');
             }
 
         } else if ($this->paramtype === PARAM_RAW) {
@@ -2525,7 +2525,7 @@ class admin_setting_configtext extends admin_setting {
             if ("$data" === "$cleaned") { // implicit conversion to string is needed to do exact comparison
                 return true;
             } else {
-                return get_string('validateerror', 'admin');
+                return get_string('validateerror', 'core_admin');
             }
         }
     }
@@ -2819,7 +2819,7 @@ class admin_setting_encryptedpassword extends admin_setting {
             // Encrypt value before saving it.
             $savedata = \core\encryption::encrypt($data);
         }
-        return ($this->config_write($this->name, $savedata) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $savedata) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     public function output_html($data, $query='') {
@@ -2920,7 +2920,7 @@ class admin_setting_configfile extends admin_setting_configtext {
         ];
 
         if ($context->readonly) {
-            $this->visiblename .= '<div class="alert alert-info">'.get_string('execpathnotallowed', 'admin').'</div>';
+            $this->visiblename .= '<div class="alert alert-info">'.get_string('execpathnotallowed', 'core_admin').'</div>';
         }
 
         $element = $OUTPUT->render_from_template('core_admin/setting_configfile', $context);
@@ -2981,7 +2981,7 @@ class admin_setting_configexecutable extends admin_setting_configfile {
         ];
 
         if (!empty($CFG->preventexecpath)) {
-            $this->visiblename .= '<div class="alert alert-info">'.get_string('execpathnotallowed', 'admin').'</div>';
+            $this->visiblename .= '<div class="alert alert-info">'.get_string('execpathnotallowed', 'core_admin').'</div>';
         }
 
         $element = $OUTPUT->render_from_template('core_admin/setting_configexecutable', $context);
@@ -3021,7 +3021,7 @@ class admin_setting_configdirectory extends admin_setting_configfile {
         ];
 
         if (!empty($CFG->preventexecpath)) {
-            $this->visiblename .= '<div class="alert alert-info">'.get_string('execpathnotallowed', 'admin').'</div>';
+            $this->visiblename .= '<div class="alert alert-info">'.get_string('execpathnotallowed', 'core_admin').'</div>';
         }
 
         $element = $OUTPUT->render_from_template('core_admin/setting_configdirectory', $context);
@@ -3081,7 +3081,7 @@ class admin_setting_configcheckbox extends admin_setting {
         } else {
             $data = $this->no;
         }
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -3106,9 +3106,9 @@ class admin_setting_configcheckbox extends admin_setting {
         $default = $this->get_defaultsetting();
         if (!is_null($default)) {
             if ((string)$default === $this->yes) {
-                $defaultinfo = get_string('checkboxyes', 'admin');
+                $defaultinfo = get_string('checkboxyes', 'core_admin');
             } else {
-                $defaultinfo = get_string('checkboxno', 'admin');
+                $defaultinfo = get_string('checkboxno', 'core_admin');
             }
         } else {
             $defaultinfo = NULL;
@@ -3237,7 +3237,7 @@ class admin_setting_configmulticheckbox extends admin_setting {
                 $result[] = $key;
             }
         }
-        return $this->config_write($this->name, implode(',', $result)) ? '' : get_string('errorsetting', 'admin');
+        return $this->config_write($this->name, implode(',', $result)) ? '' : get_string('errorsetting', 'core_admin');
     }
 
     /**
@@ -3359,7 +3359,7 @@ class admin_setting_configmulticheckbox2 extends admin_setting_configmulticheckb
                 $result .= '0';
             }
         }
-        return $this->config_write($this->name, $result) ? '' : get_string('errorsetting', 'admin');
+        return $this->config_write($this->name, $result) ? '' : get_string('errorsetting', 'core_admin');
     }
 }
 
@@ -3495,7 +3495,7 @@ class admin_setting_configselect extends admin_setting {
             return $error;
         }
 
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -3569,7 +3569,7 @@ class admin_setting_configselect extends admin_setting {
         } else if (empty($current) && (array_key_exists('', $this->choices) || array_key_exists(0, $this->choices))) {
             // No warning.
         } else if (!array_key_exists($current, $this->choices)) {
-            $warning = get_string('warningcurrentsetting', 'admin', $current);
+            $warning = get_string('warningcurrentsetting', 'core_admin', $current);
             if (!is_null($default) && $data == $current) {
                 $data = $default; // Use default instead of first value when showing the form.
             }
@@ -3673,7 +3673,7 @@ class admin_setting_configmultiselect extends admin_setting_configselect {
             $save[] = $value;
         }
 
-        return ($this->config_write($this->name, implode(',', $save)) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, implode(',', $save)) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -3831,7 +3831,7 @@ class admin_setting_configtime extends admin_setting {
         }
 
         $result = $this->config_write($this->name, (int)$data['h']) && $this->config_write($this->name2, (int)$data['m']);
-        return ($result ? '' : get_string('errorsetting', 'admin'));
+        return ($result ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -3971,13 +3971,13 @@ class admin_setting_configduration extends admin_setting {
         if ($data < $this->minduration) {
             return get_string(
                 'configduration_low',
-                'admin',
+                'core_admin',
                 self::get_duration_text($this->minduration, get_string('numseconds', 'core', 0))
             );
         }
 
         if ($this->maxduration && $data > $this->maxduration) {
-            return get_string('configduration_high', 'admin', self::get_duration_text($this->maxduration));
+            return get_string('configduration_high', 'core_admin', self::get_duration_text($this->maxduration));
         }
 
         // If validation function is specified, call it now.
@@ -4082,7 +4082,7 @@ class admin_setting_configduration extends admin_setting {
         }
 
         $result = $this->config_write($this->name, $seconds);
-        return ($result ? '' : get_string('errorsetting', 'admin'));
+        return ($result ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -4204,7 +4204,7 @@ class admin_setting_configiplist extends admin_setting_configtextarea {
         if($result) {
             return true;
         } else {
-            return get_string('validateiperror', 'admin', join(', ', $badips));
+            return get_string('validateiperror', 'core_admin', join(', ', $badips));
         }
     }
 }
@@ -4238,7 +4238,7 @@ class admin_setting_configmixedhostiplist extends admin_setting_configtextarea {
         foreach ($entries as $key => $entry) {
             $entry = trim($entry);
             if (empty($entry)) {
-                return get_string('validateemptylineerror', 'admin');
+                return get_string('validateemptylineerror', 'core_admin');
             }
 
             // Validate each string entry against the supported formats.
@@ -4253,7 +4253,7 @@ class admin_setting_configmixedhostiplist extends admin_setting_configtextarea {
         }
 
         if ($badentries) {
-            return get_string('validateerrorlist', 'admin', join(', ', $badentries));
+            return get_string('validateerrorlist', 'core_admin', join(', ', $badentries));
         }
         return true;
     }
@@ -4334,7 +4334,7 @@ class admin_setting_configmixedhostiplist extends admin_setting_configtextarea {
         if ($validated !== true) {
             return $validated;
         }
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 }
 
@@ -4362,7 +4362,7 @@ class admin_setting_configportlist extends admin_setting_configtextarea {
         foreach ($ports as $port) {
             $port = trim($port);
             if (empty($port)) {
-                return get_string('validateemptylineerror', 'admin');
+                return get_string('validateemptylineerror', 'core_admin');
             }
 
             // Is the string a valid integer number?
@@ -4371,7 +4371,7 @@ class admin_setting_configportlist extends admin_setting_configtextarea {
             }
         }
         if ($badentries) {
-            return get_string('validateerrorlist', 'admin', $badentries);
+            return get_string('validateerrorlist', 'core_admin', $badentries);
         }
         return true;
     }
@@ -4433,7 +4433,7 @@ class admin_setting_users_with_capability extends admin_setting_configmultiselec
         $users = get_users_by_capability(context_system::instance(), $this->capability, $userfields, $sort);
         $this->choices = array(
             '$@NONE@$' => get_string('nobody'),
-            '$@ALL@$' => get_string('everyonewhocan', 'admin', get_capability_string($this->capability)),
+            '$@ALL@$' => get_string('everyonewhocan', 'core_admin', get_capability_string($this->capability)),
         );
         if ($this->includeadmins) {
             $admins = get_admins();
@@ -4518,8 +4518,8 @@ class admin_setting_special_adminseesall extends admin_setting_configcheckbox {
      * defaultsetting => 0
      */
     public function __construct() {
-        parent::__construct('calendar_adminseesall', get_string('adminseesall', 'admin'),
-            get_string('helpadminseesall', 'admin'), '0');
+        parent::__construct('calendar_adminseesall', get_string('adminseesall', 'core_admin'),
+            get_string('helpadminseesall', 'core_admin'), '0');
     }
 
     /**
@@ -4593,7 +4593,7 @@ class admin_setting_sitesetselect extends admin_setting_configselect {
     public function write_setting($data) {
         global $DB, $SITE, $COURSE;
         if (!in_array($data, array_keys($this->choices))) {
-            return get_string('errorsetting', 'admin');
+            return get_string('errorsetting', 'core_admin');
         }
         $record = new stdClass();
         $record->id           = SITEID;
@@ -4679,8 +4679,8 @@ class admin_setting_courselist_frontpage extends admin_setting {
         global $CFG;
         require_once($CFG->dirroot.'/course/lib.php');
         $name        = 'frontpage'.($loggedin ? 'loggedin' : '');
-        $visiblename = get_string('frontpage'.($loggedin ? 'loggedin' : ''),'admin');
-        $description = get_string('configfrontpage'.($loggedin ? 'loggedin' : ''),'admin');
+        $visiblename = get_string('frontpage'.($loggedin ? 'loggedin' : ''),'core_admin');
+        $description = get_string('configfrontpage'.($loggedin ? 'loggedin' : ''),'core_admin');
         $defaults    = array(FRONTPAGEALLCOURSELIST);
         parent::__construct($name, $visiblename, $description, $defaults);
     }
@@ -4741,7 +4741,7 @@ class admin_setting_courselist_frontpage extends admin_setting {
             }
             $save[$datum] = $datum; // no duplicates
         }
-        return ($this->config_write($this->name, implode(',', $save)) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, implode(',', $save)) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -4885,12 +4885,12 @@ class admin_setting_sitesettext extends admin_setting_configtext {
         }
         if ($this->name ==='shortname' &&
                 $DB->record_exists_sql('SELECT id from {course} WHERE shortname = ? AND id <> ?', array($data, $SITE->id))) {
-            return get_string('shortnametaken', 'error', $data);
+            return get_string('shortnametaken', 'mod_error', $data);
         }
         if ("$data" == "$cleaned") { // implicit conversion to string is needed to do exact comparison
             return true;
         } else {
-            return get_string('validateerror', 'admin');
+            return get_string('validateerror', 'core_admin');
         }
     }
 
@@ -5059,7 +5059,7 @@ class admin_setting_emoticons extends admin_setting {
 
         $manager = get_emoticon_manager();
         $defaults = $this->prepare_form_data($manager->default_emoticons());
-        parent::__construct('emoticons', get_string('emoticons', 'admin'), get_string('emoticons_desc', 'admin'), $defaults);
+        parent::__construct('emoticons', get_string('emoticons', 'core_admin'), get_string('emoticons_desc', 'core_admin'), $defaults);
     }
 
     /**
@@ -5103,7 +5103,7 @@ class admin_setting_emoticons extends admin_setting {
         if ($this->config_write($this->name, $manager->encode_stored_config($emoticons))) {
             return ''; // success
         } else {
-            return get_string('errorsetting', 'admin') . $this->visiblename . html_writer::empty_tag('br');
+            return get_string('errorsetting', 'core_admin') . $this->visiblename . html_writer::empty_tag('br');
         }
     }
 
@@ -5251,7 +5251,7 @@ class admin_setting_langlist extends admin_setting_configtext {
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('langlist', get_string('langlist', 'admin'), get_string('configlanglist', 'admin'), '', PARAM_NOTAGS);
+        parent::__construct('langlist', get_string('langlist', 'core_admin'), get_string('configlanglist', 'core_admin'), '', PARAM_NOTAGS);
     }
 
     /**
@@ -5277,7 +5277,7 @@ class admin_setting_langlist extends admin_setting_configtext {
             [$langcode, ] = preg_split('/\s*\|\s*/', $langcode, 2);
 
             if (!get_string_manager()->translation_exists($langcode)) {
-                return get_string('invalidlanguagecode', 'error', $langcode);
+                return get_string('invalidlanguagecode', 'mod_error', $langcode);
             }
         }
 
@@ -5451,7 +5451,7 @@ class admin_setting_special_backupdays extends admin_setting_configmulticheckbox
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('backup_auto_weekdays', get_string('automatedbackupschedule','backup'), get_string('automatedbackupschedulehelp','backup'), array(), NULL);
+        parent::__construct('backup_auto_weekdays', get_string('automatedbackupschedule','core_backup'), get_string('automatedbackupschedulehelp','core_backup'), array(), NULL);
         $this->plugin = 'backup';
     }
 
@@ -5467,7 +5467,7 @@ class admin_setting_special_backupdays extends admin_setting_configmulticheckbox
         $this->choices = array();
         $days = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
         foreach ($days as $day) {
-            $this->choices[$day] = get_string($day, 'calendar');
+            $this->choices[$day] = get_string($day, 'core_calendar');
         }
         return true;
     }
@@ -5522,7 +5522,7 @@ class admin_setting_special_debug extends admin_setting_configselect {
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('debug', get_string('debug', 'admin'), get_string('configdebug', 'admin'), DEBUG_NONE, NULL);
+        parent::__construct('debug', get_string('debug', 'core_admin'), get_string('configdebug', 'core_admin'), DEBUG_NONE, NULL);
     }
 
     /**
@@ -5534,11 +5534,11 @@ class admin_setting_special_debug extends admin_setting_configselect {
         if (is_array($this->choices)) {
             return true;
         }
-        $this->choices = array(DEBUG_NONE      => get_string('debugnone', 'admin'),
-            DEBUG_MINIMAL   => get_string('debugminimal', 'admin'),
-            DEBUG_NORMAL    => get_string('debugnormal', 'admin'),
-            DEBUG_ALL       => get_string('debugall', 'admin'),
-            DEBUG_DEVELOPER => get_string('debugdeveloper', 'admin'));
+        $this->choices = array(DEBUG_NONE      => get_string('debugnone', 'core_admin'),
+            DEBUG_MINIMAL   => get_string('debugminimal', 'core_admin'),
+            DEBUG_NORMAL    => get_string('debugnormal', 'core_admin'),
+            DEBUG_ALL       => get_string('debugall', 'core_admin'),
+            DEBUG_DEVELOPER => get_string('debugdeveloper', 'core_admin'));
         return true;
     }
 }
@@ -5555,8 +5555,8 @@ class admin_setting_special_calendar_weekend extends admin_setting {
      */
     public function __construct() {
         $name = 'calendar_weekend';
-        $visiblename = get_string('calendar_weekend', 'admin');
-        $description = get_string('helpweekenddays', 'admin');
+        $visiblename = get_string('calendar_weekend', 'core_admin');
+        $description = get_string('helpweekenddays', 'core_admin');
         $default = array ('0', '6'); // Saturdays and Sundays
         parent::__construct($name, $visiblename, $description, $default);
     }
@@ -5598,7 +5598,7 @@ class admin_setting_special_calendar_weekend extends admin_setting {
         foreach($data as $index) {
             $result |= 1 << $index;
         }
-        return ($this->config_write($this->name, $result) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $result) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -5619,7 +5619,7 @@ class admin_setting_special_calendar_weekend extends admin_setting {
             'days' => array_map(function($index) use ($days, $data) {
                 return [
                     'index' => $index,
-                    'label' => get_string($days[$index], 'calendar'),
+                    'label' => get_string($days[$index], 'core_calendar'),
                     'checked' => in_array($index, $data)
                 ];
             }, array_keys($days))
@@ -5942,8 +5942,8 @@ class admin_setting_special_gradebookroles extends admin_setting_pickroles {
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('gradebookroles', get_string('gradebookroles', 'admin'),
-            get_string('configgradebookroles', 'admin'),
+        parent::__construct('gradebookroles', get_string('gradebookroles', 'core_admin'),
+            get_string('configgradebookroles', 'core_admin'),
             array('student'));
     }
 }
@@ -5987,8 +5987,8 @@ class admin_setting_special_coursecontact extends admin_setting_pickroles {
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('coursecontact', get_string('coursecontact', 'admin'),
-            get_string('coursecontact_desc', 'admin'),
+        parent::__construct('coursecontact', get_string('coursecontact', 'core_admin'),
+            get_string('coursecontact_desc', 'core_admin'),
             array('editingteacher'));
         $this->set_updatedcallback(function (){
             cache::make('core', 'coursecontacts')->purge();
@@ -6006,8 +6006,8 @@ class admin_setting_special_gradelimiting extends admin_setting_configcheckbox {
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('unlimitedgrades', get_string('unlimitedgrades', 'grades'),
-            get_string('unlimitedgrades_help', 'grades'), '0', '1', '0');
+        parent::__construct('unlimitedgrades', get_string('unlimitedgrades', 'core_grades'),
+            get_string('unlimitedgrades_help', 'core_grades'), '0', '1', '0');
     }
 
     /**
@@ -6047,7 +6047,7 @@ class admin_setting_special_gradelimiting extends admin_setting_configcheckbox {
                 $this->regrade_all();
             }
         }
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
 }
@@ -6065,11 +6065,11 @@ class admin_setting_special_grademinmaxtouse extends admin_setting_configselect 
      * Constructor.
      */
     public function __construct() {
-        parent::__construct('grade_minmaxtouse', new lang_string('minmaxtouse', 'grades'),
-            new lang_string('minmaxtouse_desc', 'grades'), GRADE_MIN_MAX_FROM_GRADE_ITEM,
+        parent::__construct('grade_minmaxtouse', new lang_string('minmaxtouse', 'core_grades'),
+            new lang_string('minmaxtouse_desc', 'core_grades'), GRADE_MIN_MAX_FROM_GRADE_ITEM,
             array(
-                GRADE_MIN_MAX_FROM_GRADE_ITEM => get_string('gradeitemminmax', 'grades'),
-                GRADE_MIN_MAX_FROM_GRADE_GRADE => get_string('gradegrademinmax', 'grades')
+                GRADE_MIN_MAX_FROM_GRADE_ITEM => get_string('gradeitemminmax', 'core_grades'),
+                GRADE_MIN_MAX_FROM_GRADE_GRADE => get_string('gradegrademinmax', 'core_grades')
             )
         );
     }
@@ -6108,8 +6108,8 @@ class admin_setting_special_gradeexport extends admin_setting_configmulticheckbo
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('gradeexport', get_string('gradeexport', 'admin'),
-            get_string('configgradeexport', 'admin'), array(), NULL);
+        parent::__construct('gradeexport', get_string('gradeexport', 'core_admin'),
+            get_string('configgradeexport', 'core_admin'), array(), NULL);
     }
 
     /**
@@ -6151,8 +6151,8 @@ class admin_setting_special_gradepointdefault extends admin_setting_configtext {
      */
     public function __construct($name = '', $visiblename = '', $description = '', $defaultsetting = '', $paramtype = PARAM_INT, $size = 5) {
         $name = 'gradepointdefault';
-        $visiblename = get_string('gradepointdefault', 'grades');
-        $description = get_string('gradepointdefault_help', 'grades');
+        $visiblename = get_string('gradepointdefault', 'core_grades');
+        $description = get_string('gradepointdefault_help', 'core_grades');
         $defaultsetting = 100;
         $paramtype = PARAM_INT;
         $size = 5;
@@ -6169,7 +6169,7 @@ class admin_setting_special_gradepointdefault extends admin_setting_configtext {
         if (((string)(int)$data === (string)$data && $data > 0 && $data <= $CFG->gradepointmax)) {
             return true;
         } else {
-            return get_string('gradepointdefault_validateerror', 'grades');
+            return get_string('gradepointdefault_validateerror', 'core_grades');
         }
     }
 }
@@ -6194,8 +6194,8 @@ class admin_setting_special_gradepointmax extends admin_setting_configtext {
      */
     public function __construct($name = '', $visiblename = '', $description = '', $defaultsetting = '', $paramtype = PARAM_INT, $size = 5) {
         $name = 'gradepointmax';
-        $visiblename = get_string('gradepointmax', 'grades');
-        $description = get_string('gradepointmax_help', 'grades');
+        $visiblename = get_string('gradepointmax', 'core_grades');
+        $description = get_string('gradepointmax_help', 'core_grades');
         $defaultsetting = 100;
         $paramtype = PARAM_INT;
         $size = 5;
@@ -6226,7 +6226,7 @@ class admin_setting_special_gradepointmax extends admin_setting_configtext {
         if (((string)(int)$data === (string)$data && $data > 0 && $data <= 10000)) {
             return true;
         } else {
-            return get_string('gradepointmax_validateerror', 'grades');
+            return get_string('gradepointmax_validateerror', 'core_grades');
         }
     }
 
@@ -6337,7 +6337,7 @@ class admin_setting_gradecat_combo extends admin_setting {
         if ($result1 and $result2) {
             return '';
         } else {
-            return get_string('errorsetting', 'admin');
+            return get_string('errorsetting', 'core_admin');
         }
     }
 
@@ -6404,7 +6404,7 @@ class admin_setting_grade_profilereport extends admin_setting_configselect {
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('grade_profilereport', get_string('profilereport', 'grades'), get_string('profilereport_help', 'grades'), 'user', null);
+        parent::__construct('grade_profilereport', get_string('profilereport', 'core_grades'), get_string('profilereport_help', 'core_grades'), 'user', null);
     }
 
     /**
@@ -6446,8 +6446,8 @@ class admin_setting_my_grades_report extends admin_setting_configselect {
      * Calls parent::__construct with specific arguments.
      */
     public function __construct() {
-        parent::__construct('grade_mygrades_report', new lang_string('mygrades', 'grades'),
-                new lang_string('mygrades_desc', 'grades'), 'overview', null);
+        parent::__construct('grade_mygrades_report', new lang_string('mygrades', 'core_grades'),
+                new lang_string('mygrades_desc', 'core_grades'), 'overview', null);
     }
 
     /**
@@ -6476,7 +6476,7 @@ class admin_setting_my_grades_report extends admin_setting_configselect {
             }
         }
         // Add an option to specify an external url.
-        $this->choices['external'] = get_string('externalurl', 'grades');
+        $this->choices['external'] = get_string('externalurl', 'core_grades');
         return true;
     }
 }
@@ -6491,7 +6491,7 @@ class admin_setting_special_registerauth extends admin_setting_configselect {
      * Calls parent::__construct with specific arguments
      */
     public function __construct() {
-        parent::__construct('registerauth', get_string('selfregistration', 'auth'), get_string('selfregistration_help', 'auth'), '', null);
+        parent::__construct('registerauth', get_string('selfregistration', 'core_auth'), get_string('selfregistration_help', 'core_auth'), '', null);
     }
 
     /**
@@ -6565,7 +6565,7 @@ class admin_page_managemods extends admin_externalpage {
      */
     public function __construct() {
         global $CFG;
-        parent::__construct('managemodules', get_string('modsettings', 'admin'), "$CFG->wwwroot/$CFG->admin/modules.php");
+        parent::__construct('managemodules', get_string('modsettings', 'core_admin'), "$CFG->wwwroot/$CFG->admin/modules.php");
     }
 
     /**
@@ -6621,7 +6621,7 @@ class admin_setting_manageenrols extends admin_setting {
      */
     public function __construct() {
         $this->nosave = true;
-        parent::__construct('enrolsui', get_string('manageenrols', 'enrol'), '', '');
+        parent::__construct('enrolsui', get_string('manageenrols', 'core_enrol'), '', '');
     }
 
     /**
@@ -6694,7 +6694,7 @@ class admin_setting_manageenrols extends admin_setting {
         $strenable    = get_string('enable');
         $strdisable   = get_string('disable');
         $struninstall = get_string('uninstallplugin', 'core_admin');
-        $strusage     = get_string('enrolusage', 'enrol');
+        $strusage     = get_string('enrolusage', 'core_enrol');
         $strversion   = get_string('version');
         $strtest      = get_string('testsettings', 'core_enrol');
 
@@ -6718,7 +6718,7 @@ class admin_setting_manageenrols extends admin_setting {
             }
         }
 
-        $return = $OUTPUT->heading(get_string('actenrolshhdr', 'enrol'), 3, 'main', true);
+        $return = $OUTPUT->heading(get_string('actenrolshhdr', 'core_enrol'), 3, 'main', true);
         $return .= $OUTPUT->box_start('generalbox enrolsui');
 
         $table = new html_table();
@@ -6828,7 +6828,7 @@ class admin_setting_manageenrols extends admin_setting {
         }
 
         $return .= html_writer::table($table);
-        $return .= get_string('configenrolplugins', 'enrol').'<br />'.get_string('tablenosave', 'admin');
+        $return .= get_string('configenrolplugins', 'core_enrol').'<br />'.get_string('tablenosave', 'core_admin');
         $return .= $OUTPUT->box_end();
         return highlight($query, $return);
     }
@@ -6846,7 +6846,7 @@ class admin_page_manageblocks extends admin_externalpage {
      */
     public function __construct() {
         global $CFG;
-        parent::__construct('manageblocks', get_string('blocksettings', 'admin'), "$CFG->wwwroot/$CFG->admin/blocks.php");
+        parent::__construct('manageblocks', get_string('blocksettings', 'core_admin'), "$CFG->wwwroot/$CFG->admin/blocks.php");
     }
 
     /**
@@ -6901,7 +6901,7 @@ class admin_page_managemessageoutputs extends admin_externalpage {
     public function __construct() {
         global $CFG;
         parent::__construct('managemessageoutputs',
-            get_string('defaultmessageoutputs', 'message'),
+            get_string('defaultmessageoutputs', 'core_message'),
             new moodle_url('/admin/message.php')
         );
     }
@@ -6958,7 +6958,7 @@ class admin_page_manageqbehaviours extends admin_externalpage {
      */
     public function __construct() {
         global $CFG;
-        parent::__construct('manageqbehaviours', get_string('manageqbehaviours', 'admin'),
+        parent::__construct('manageqbehaviours', get_string('manageqbehaviours', 'core_admin'),
                 new moodle_url('/admin/qbehaviours.php'));
     }
 
@@ -7006,7 +7006,7 @@ class admin_page_manageqtypes extends admin_externalpage {
      */
     public function __construct() {
         global $CFG;
-        parent::__construct('manageqtypes', get_string('manageqtypes', 'admin'),
+        parent::__construct('manageqtypes', get_string('manageqtypes', 'core_admin'),
                 new moodle_url('/admin/qtypes.php'));
     }
 
@@ -7048,7 +7048,7 @@ class admin_page_manageportfolios extends admin_externalpage {
      */
     public function __construct() {
         global $CFG;
-        parent::__construct('manageportfolios', get_string('manageportfolios', 'portfolio'),
+        parent::__construct('manageportfolios', get_string('manageportfolios', 'core_portfolio'),
                 "$CFG->wwwroot/$CFG->admin/portfolio.php");
     }
 
@@ -7100,7 +7100,7 @@ class admin_page_managerepositories extends admin_externalpage {
     public function __construct() {
         global $CFG;
         parent::__construct('managerepositories', get_string('manage',
-                'repository'), "$CFG->wwwroot/$CFG->admin/repository.php");
+                'core_repository'), "$CFG->wwwroot/$CFG->admin/repository.php");
     }
 
     /**
@@ -7155,7 +7155,7 @@ class admin_setting_manageauths extends admin_setting {
      */
     public function __construct() {
         $this->nosave = true;
-        parent::__construct('authsui', get_string('authsettings', 'admin'), '', '');
+        parent::__construct('authsui', get_string('authsettings', 'core_admin'), '', '');
     }
 
     /**
@@ -7269,7 +7269,7 @@ class admin_setting_manageauths extends admin_setting {
             }
         }
 
-        $return = $OUTPUT->heading(get_string('actauthhdr', 'auth'), 3, 'main');
+        $return = $OUTPUT->heading(get_string('actauthhdr', 'core_auth'), 3, 'main');
         $return .= $OUTPUT->box_start('generalbox authsui');
 
         $table = new html_table();
@@ -7364,7 +7364,7 @@ class admin_setting_manageauths extends admin_setting {
             $table->data[] = $row;
         }
         $return .= html_writer::table($table);
-        $return .= get_string('configauthenticationplugins', 'admin').'<br />'.get_string('tablenosave', 'filters');
+        $return .= get_string('configauthenticationplugins', 'core_admin').'<br />'.get_string('tablenosave', 'core_filters');
         $return .= $OUTPUT->box_end();
         return highlight($query, $return);
     }
@@ -7382,7 +7382,7 @@ class admin_setting_manageantiviruses extends admin_setting {
      */
     public function __construct() {
         $this->nosave = true;
-        parent::__construct('antivirusesui', get_string('antivirussettings', 'antivirus'), '', '');
+        parent::__construct('antivirusesui', get_string('antivirussettings', 'core_antivirus'), '', '');
     }
 
     /**
@@ -7468,7 +7468,7 @@ class admin_setting_manageantiviruses extends admin_setting {
             }
         }
         $antivirusesavailable = array_reverse($antivirusesavailable, true);
-        $return = $OUTPUT->heading(get_string('actantivirushdr', 'antivirus'), 3, 'main', true);
+        $return = $OUTPUT->heading(get_string('actantivirushdr', 'core_antivirus'), 3, 'main', true);
         $return .= $OUTPUT->box_start('generalbox antivirusesui');
 
         $table = new html_table();
@@ -7545,7 +7545,7 @@ class admin_setting_manageantiviruses extends admin_setting {
             $table->data[] = $row;
         }
         $return .= html_writer::table($table);
-        $return .= get_string('configantivirusplugins', 'antivirus') . html_writer::empty_tag('br') . get_string('tablenosave', 'admin');
+        $return .= get_string('configantivirusplugins', 'core_antivirus') . html_writer::empty_tag('br') . get_string('tablenosave', 'core_admin');
         $return .= $OUTPUT->box_end();
         return highlight($query, $return);
     }
@@ -7691,7 +7691,7 @@ class admin_setting_manageformats extends admin_setting {
         }
         $return .= html_writer::table($table);
         $link = html_writer::link(new moodle_url('/admin/settings.php', array('section' => 'coursesettings')), new lang_string('coursesettings'));
-        $return .= html_writer::tag('p', get_string('manageformatsgotosettings', 'admin', $link));
+        $return .= html_writer::tag('p', get_string('manageformatsgotosettings', 'core_admin', $link));
         $return .= $OUTPUT->box_end();
         return highlight($query, $return);
     }
@@ -7992,7 +7992,7 @@ class admin_page_managefilters extends admin_externalpage {
      */
     public function __construct() {
         global $CFG;
-        parent::__construct('managefilters', get_string('filtersettings', 'admin'), "$CFG->wwwroot/$CFG->admin/filters.php");
+        parent::__construct('managefilters', get_string('filtersettings', 'core_admin'), "$CFG->wwwroot/$CFG->admin/filters.php");
     }
 
     /**
@@ -8241,7 +8241,7 @@ abstract class admin_setting_manage_plugins extends admin_setting {
  */
 class admin_setting_manage_fileconverter_plugins extends admin_setting_manage_plugins {
     public function get_section_title() {
-        return get_string('type_fileconverter_plural', 'plugin');
+        return get_string('type_fileconverter_plural', 'mod_plugin');
     }
 
     public function get_plugin_type() {
@@ -8249,7 +8249,7 @@ class admin_setting_manage_fileconverter_plugins extends admin_setting_manage_pl
     }
 
     public function get_info_column_name() {
-        return get_string('supportedconversions', 'plugin');
+        return get_string('supportedconversions', 'mod_plugin');
     }
 
     public function get_info_column($plugininfo) {
@@ -8269,7 +8269,7 @@ class admin_setting_managemediaplayers extends admin_setting {
      */
     public function __construct() {
         $this->nosave = true;
-        parent::__construct('managemediaplayers', get_string('managemediaplayers', 'media'), '', '');
+        parent::__construct('managemediaplayers', get_string('managemediaplayers', 'core_media'), '', '');
     }
 
     /**
@@ -8670,15 +8670,15 @@ function admin_externalpage_setup($section, $extrabutton = '', array $extraurlpa
         if (!$hassiteconfig) {
             // The requested section could depend on a different capability
             // but most likely the user has inadequate capabilities
-            throw new \moodle_exception('accessdenied', 'admin');
+            throw new \moodle_exception('accessdenied', 'core_admin');
         } else {
-            throw new \moodle_exception('sectionerror', 'admin', "$CFG->wwwroot/$CFG->admin/");
+            throw new \moodle_exception('sectionerror', 'core_admin', "$CFG->wwwroot/$CFG->admin/");
         }
     }
 
     // this eliminates our need to authenticate on the actual pages
     if (!$extpage->check_access()) {
-        throw new \moodle_exception('accessdenied', 'admin');
+        throw new \moodle_exception('accessdenied', 'core_admin');
         die;
     }
 
@@ -8697,7 +8697,7 @@ function admin_externalpage_setup($section, $extrabutton = '', array $extraurlpa
 
     if (empty($SITE->fullname) || empty($SITE->shortname)) {
         // During initial install.
-        $strinstallation = get_string('installation', 'install');
+        $strinstallation = get_string('installation', 'mod_install');
         $strsettings = get_string('settings');
         $PAGE->navbar->add($strsettings);
         $PAGE->set_title($strinstallation);
@@ -9087,7 +9087,7 @@ function admin_output_new_settings_by_page($node) {
             }
             if (count($newsettings) > 0) {
                 $adminroot = admin_get_root();
-                $page = $OUTPUT->heading(get_string('upgradesettings','admin').' - '.$node->visiblename, 2, 'main');
+                $page = $OUTPUT->heading(get_string('upgradesettings','core_admin').' - '.$node->visiblename, 2, 'main');
                 $page .= '<fieldset class="adminsettings">'."\n";
                 foreach ($newsettings as $setting) {
                     $fullname = $setting->get_full_name();
@@ -9146,18 +9146,18 @@ function format_admin_setting($setting, $title='', $form='', $description='', $l
     $context->override = '';
     if (empty($setting->plugin)) {
         if ($setting->is_forceable() && array_key_exists($setting->name, $CFG->config_php_settings)) {
-            $context->override = get_string('configoverride', 'admin');
+            $context->override = get_string('configoverride', 'core_admin');
         }
     } else {
         if (array_key_exists($setting->plugin, $CFG->forced_plugin_settings) and array_key_exists($setting->name, $CFG->forced_plugin_settings[$setting->plugin])) {
-            $context->override = get_string('configoverride', 'admin');
+            $context->override = get_string('configoverride', 'core_admin');
         }
     }
 
     $defaults = array();
     if (!is_null($defaultinfo)) {
         if ($defaultinfo === '') {
-            $defaultinfo = get_string('emptysettingvalue', 'admin');
+            $defaultinfo = get_string('emptysettingvalue', 'core_admin');
         }
         $defaults[] = $defaultinfo;
     }
@@ -9167,7 +9167,7 @@ function format_admin_setting($setting, $title='', $form='', $description='', $l
     if (!empty($defaults)) {
         $defaultinfo = implode(', ', $defaults);
         $defaultinfo = highlight($query, nl2br(s($defaultinfo)));
-        $context->default = get_string('defaultsettinginfo', 'admin', $defaultinfo);
+        $context->default = get_string('defaultsettinginfo', 'core_admin', $defaultinfo);
     }
 
 
@@ -9178,7 +9178,7 @@ function format_admin_setting($setting, $title='', $form='', $description='', $l
     }
 
     if ($dependenton = $setting->get_dependent_on()) {
-        $context->dependenton = get_string('settingdependenton', 'admin', implode(', ', $dependenton));
+        $context->dependenton = get_string('settingdependenton', 'core_admin', implode(', ', $dependenton));
     }
 
     $context->id = 'admin-' . $setting->name;
@@ -9348,7 +9348,7 @@ class admin_setting_managerepository extends admin_setting {
      */
     public function __construct() {
         global $CFG;
-        parent::__construct('managerepository', get_string('manage', 'repository'), '', '');
+        parent::__construct('managerepository', get_string('manage', 'core_repository'), '', '');
         $this->baseurl = $CFG->wwwroot . '/' . $CFG->admin . '/repository.php?sesskey=' . sesskey();
     }
 
@@ -9438,9 +9438,9 @@ class admin_setting_managerepository extends admin_setting {
         global $CFG, $USER, $OUTPUT;
 
         // Get strings that are used
-        $strshow = get_string('on', 'repository');
-        $strhide = get_string('off', 'repository');
-        $strdelete = get_string('disabled', 'repository');
+        $strshow = get_string('on', 'core_repository');
+        $strhide = get_string('off', 'core_repository');
+        $strdelete = get_string('disabled', 'core_repository');
 
         $actionchoicesforexisting = array(
             'show' => $strshow,
@@ -9463,7 +9463,7 @@ class admin_setting_managerepository extends admin_setting {
 
         // Table to list plug-ins
         $table = new html_table();
-        $table->head = array(get_string('name'), get_string('isactive', 'repository'), get_string('order'), $settingsstr);
+        $table->head = array(get_string('name'), get_string('isactive', 'core_repository'), get_string('order'), $settingsstr);
         $table->align = array('left', 'center', 'center', 'center', 'center');
         $table->data = array();
 
@@ -9490,7 +9490,7 @@ class admin_setting_managerepository extends admin_setting {
                         $params['type'] = $typename;
                         $admininstancenumber = count(repository::static_function($typename, 'get_instances', $params));
                         // site instances
-                        $admininstancenumbertext = get_string('instancesforsite', 'repository', $admininstancenumber);
+                        $admininstancenumbertext = get_string('instancesforsite', 'core_repository', $admininstancenumber);
                         $params['context'] = array();
                         $instances = repository::static_function($typename, 'get_instances', $params);
                         $courseinstances = array();
@@ -9506,11 +9506,11 @@ class admin_setting_managerepository extends admin_setting {
                         }
                         // course instances
                         $instancenumber = count($courseinstances);
-                        $courseinstancenumbertext = get_string('instancesforcourses', 'repository', $instancenumber);
+                        $courseinstancenumbertext = get_string('instancesforcourses', 'core_repository', $instancenumber);
 
                         // user private instances
                         $instancenumber =  count($userinstances);
-                        $userinstancenumbertext = get_string('instancesforusers', 'repository', $instancenumber);
+                        $userinstancenumbertext = get_string('instancesforusers', 'core_repository', $instancenumber);
                     } else {
                         $admininstancenumbertext = "";
                         $courseinstancenumbertext = "";
@@ -9755,7 +9755,7 @@ class admin_setting_manageexternalservices extends admin_setting {
      */
     public function __construct() {
         $this->nosave = true;
-        parent::__construct('webservicesui', get_string('externalservices', 'webservice'), '', '');
+        parent::__construct('webservicesui', get_string('externalservices', 'core_webservice'), '', '');
     }
 
     /**
@@ -9821,13 +9821,13 @@ class admin_setting_manageexternalservices extends admin_setting {
         // display strings
         $stradministration = get_string('administration');
         $stredit = get_string('edit');
-        $strservice = get_string('externalservice', 'webservice');
+        $strservice = get_string('externalservice', 'core_webservice');
         $strdelete = get_string('delete');
-        $strplugin = get_string('plugin', 'admin');
+        $strplugin = get_string('plugin', 'core_admin');
         $stradd = get_string('add');
-        $strfunctions = get_string('functions', 'webservice');
+        $strfunctions = get_string('functions', 'core_webservice');
         $strusers = get_string('users');
-        $strserviceusers = get_string('serviceusers', 'webservice');
+        $strserviceusers = get_string('serviceusers', 'core_webservice');
 
         $esurl = "$CFG->wwwroot/$CFG->admin/webservice/service.php";
         $efurl = "$CFG->wwwroot/$CFG->admin/webservice/service_functions.php";
@@ -9837,7 +9837,7 @@ class admin_setting_manageexternalservices extends admin_setting {
          $services = $DB->get_records_select('external_services', 'component IS NOT NULL', null, 'name');
          $return = "";
          if (!empty($services)) {
-            $return .= $OUTPUT->heading(get_string('servicesbuiltin', 'webservice'), 3, 'main');
+            $return .= $OUTPUT->heading(get_string('servicesbuiltin', 'core_webservice'), 3, 'main');
 
 
 
@@ -9866,7 +9866,7 @@ class admin_setting_manageexternalservices extends admin_setting {
                 if ($service->restrictedusers) {
                     $users = "<a href=\"$euurl?id=$service->id\">$strserviceusers</a>";
                 } else {
-                    $users = get_string('allusers', 'webservice');
+                    $users = get_string('allusers', 'core_webservice');
                 }
 
                 $edit = "<a href=\"$esurl?id=$service->id\">$stredit</a>";
@@ -9878,7 +9878,7 @@ class admin_setting_manageexternalservices extends admin_setting {
         }
 
         // Custom services
-        $return .= $OUTPUT->heading(get_string('servicescustom', 'webservice'), 3, 'main');
+        $return .= $OUTPUT->heading(get_string('servicescustom', 'core_webservice'), 3, 'main');
         $services = $DB->get_records_select('external_services', 'component IS NULL', null, 'name');
 
         $table = new html_table();
@@ -9907,7 +9907,7 @@ class admin_setting_manageexternalservices extends admin_setting {
             if ($service->restrictedusers) {
                 $users = "<a href=\"$euurl?id=$service->id\">$strserviceusers</a>";
             } else {
-                $users = get_string('allusers', 'webservice');
+                $users = get_string('allusers', 'core_webservice');
             }
 
             $edit = "<a href=\"$esurl?id=$service->id\">$stredit</a>";
@@ -9939,7 +9939,7 @@ class admin_setting_webservicesoverview extends admin_setting {
     public function __construct() {
         $this->nosave = true;
         parent::__construct('webservicesoverviewui',
-                        get_string('webservicesoverview', 'webservice'), '', '');
+                        get_string('webservicesoverview', 'core_webservice'), '', '');
     }
 
     /**
@@ -9984,35 +9984,35 @@ class admin_setting_webservicesoverview extends admin_setting {
         $brtag = html_writer::empty_tag('br');
 
         /// One system controlling Moodle with Token
-        $return .= $OUTPUT->heading(get_string('onesystemcontrolling', 'webservice'), 3, 'main');
+        $return .= $OUTPUT->heading(get_string('onesystemcontrolling', 'core_webservice'), 3, 'main');
         $table = new html_table();
-        $table->head = array(get_string('step', 'webservice'), get_string('status'),
+        $table->head = array(get_string('step', 'core_webservice'), get_string('status'),
             get_string('description'));
         $table->colclasses = array('leftalign step', 'leftalign status', 'leftalign description');
         $table->id = 'onesystemcontrol';
         $table->attributes['class'] = 'admintable wsoverview generaltable';
         $table->data = array();
 
-        $return .= $brtag . get_string('onesystemcontrollingdescription', 'webservice')
+        $return .= $brtag . get_string('onesystemcontrollingdescription', 'core_webservice')
                 . $brtag . $brtag;
 
         /// 1. Enable Web Services
         $row = array();
         $url = new moodle_url("/admin/search.php?query=enablewebservices");
-        $row[0] = "1. " . html_writer::tag('a', get_string('enablews', 'webservice'),
+        $row[0] = "1. " . html_writer::tag('a', get_string('enablews', 'core_webservice'),
                         array('href' => $url));
         $status = html_writer::tag('span', get_string('no'), array('class' => 'badge badge-danger'));
         if ($CFG->enablewebservices) {
             $status = get_string('yes');
         }
         $row[1] = $status;
-        $row[2] = get_string('enablewsdescription', 'webservice');
+        $row[2] = get_string('enablewsdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 2. Enable protocols
         $row = array();
         $url = new moodle_url("/admin/settings.php?section=webserviceprotocols");
-        $row[0] = "2. " . html_writer::tag('a', get_string('enableprotocols', 'webservice'),
+        $row[0] = "2. " . html_writer::tag('a', get_string('enableprotocols', 'core_webservice'),
                         array('href' => $url));
         $status = html_writer::tag('span', get_string('none'), array('class' => 'badge badge-danger'));
         //retrieve activated protocol
@@ -10025,118 +10025,118 @@ class admin_setting_webservicesoverview extends admin_setting {
             }
         }
         $row[1] = $status;
-        $row[2] = get_string('enableprotocolsdescription', 'webservice');
+        $row[2] = get_string('enableprotocolsdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 3. Create user account
         $row = array();
         $url = new moodle_url("/user/editadvanced.php?id=-1");
-        $row[0] = "3. " . html_writer::tag('a', get_string('createuser', 'webservice'),
+        $row[0] = "3. " . html_writer::tag('a', get_string('createuser', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('createuserdescription', 'webservice');
+        $row[2] = get_string('createuserdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 4. Add capability to users
         $row = array();
         $url = new moodle_url("/admin/roles/check.php?contextid=1");
-        $row[0] = "4. " . html_writer::tag('a', get_string('checkusercapability', 'webservice'),
+        $row[0] = "4. " . html_writer::tag('a', get_string('checkusercapability', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('checkusercapabilitydescription', 'webservice');
+        $row[2] = get_string('checkusercapabilitydescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 5. Select a web service
         $row = array();
         $url = new moodle_url("/admin/settings.php?section=externalservices");
-        $row[0] = "5. " . html_writer::tag('a', get_string('selectservice', 'webservice'),
+        $row[0] = "5. " . html_writer::tag('a', get_string('selectservice', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('createservicedescription', 'webservice');
+        $row[2] = get_string('createservicedescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 6. Add functions
         $row = array();
         $url = new moodle_url("/admin/settings.php?section=externalservices");
-        $row[0] = "6. " . html_writer::tag('a', get_string('addfunctions', 'webservice'),
+        $row[0] = "6. " . html_writer::tag('a', get_string('addfunctions', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('addfunctionsdescription', 'webservice');
+        $row[2] = get_string('addfunctionsdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 7. Add the specific user
         $row = array();
         $url = new moodle_url("/admin/settings.php?section=externalservices");
-        $row[0] = "7. " . html_writer::tag('a', get_string('selectspecificuser', 'webservice'),
+        $row[0] = "7. " . html_writer::tag('a', get_string('selectspecificuser', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('selectspecificuserdescription', 'webservice');
+        $row[2] = get_string('selectspecificuserdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 8. Create token for the specific user
         $row = array();
         $url = new moodle_url('/admin/webservice/tokens.php', ['action' => 'create']);
-        $row[0] = "8. " . html_writer::tag('a', get_string('createtokenforuser', 'webservice'),
+        $row[0] = "8. " . html_writer::tag('a', get_string('createtokenforuser', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('createtokenforuserdescription', 'webservice');
+        $row[2] = get_string('createtokenforuserdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 9. Enable the documentation
         $row = array();
         $url = new moodle_url("/admin/search.php?query=enablewsdocumentation");
-        $row[0] = "9. " . html_writer::tag('a', get_string('enabledocumentation', 'webservice'),
+        $row[0] = "9. " . html_writer::tag('a', get_string('enabledocumentation', 'core_webservice'),
                         array('href' => $url));
         $status = '<span class="warning">' . get_string('no') . '</span>';
         if ($CFG->enablewsdocumentation) {
             $status = get_string('yes');
         }
         $row[1] = $status;
-        $row[2] = get_string('enabledocumentationdescription', 'webservice');
+        $row[2] = get_string('enabledocumentationdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 10. Test the service
         $row = array();
         $url = new moodle_url("/admin/webservice/testclient.php");
-        $row[0] = "10. " . html_writer::tag('a', get_string('testwithtestclient', 'webservice'),
+        $row[0] = "10. " . html_writer::tag('a', get_string('testwithtestclient', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('testwithtestclientdescription', 'webservice');
+        $row[2] = get_string('testwithtestclientdescription', 'core_webservice');
         $table->data[] = $row;
 
         $return .= html_writer::table($table);
 
         /// Users as clients with token
         $return .= $brtag . $brtag . $brtag;
-        $return .= $OUTPUT->heading(get_string('userasclients', 'webservice'), 3, 'main');
+        $return .= $OUTPUT->heading(get_string('userasclients', 'core_webservice'), 3, 'main');
         $table = new html_table();
-        $table->head = array(get_string('step', 'webservice'), get_string('status'),
+        $table->head = array(get_string('step', 'core_webservice'), get_string('status'),
             get_string('description'));
         $table->colclasses = array('leftalign step', 'leftalign status', 'leftalign description');
         $table->id = 'userasclients';
         $table->attributes['class'] = 'admintable wsoverview generaltable';
         $table->data = array();
 
-        $return .= $brtag . get_string('userasclientsdescription', 'webservice') .
+        $return .= $brtag . get_string('userasclientsdescription', 'core_webservice') .
                 $brtag . $brtag;
 
         /// 1. Enable Web Services
         $row = array();
         $url = new moodle_url("/admin/search.php?query=enablewebservices");
-        $row[0] = "1. " . html_writer::tag('a', get_string('enablews', 'webservice'),
+        $row[0] = "1. " . html_writer::tag('a', get_string('enablews', 'core_webservice'),
                         array('href' => $url));
         $status = html_writer::tag('span', get_string('no'), array('class' => 'badge badge-danger'));
         if ($CFG->enablewebservices) {
             $status = get_string('yes');
         }
         $row[1] = $status;
-        $row[2] = get_string('enablewsdescription', 'webservice');
+        $row[2] = get_string('enablewsdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 2. Enable protocols
         $row = array();
         $url = new moodle_url("/admin/settings.php?section=webserviceprotocols");
-        $row[0] = "2. " . html_writer::tag('a', get_string('enableprotocols', 'webservice'),
+        $row[0] = "2. " . html_writer::tag('a', get_string('enableprotocols', 'core_webservice'),
                         array('href' => $url));
         $status = html_writer::tag('span', get_string('none'), array('class' => 'badge badge-danger'));
         //retrieve activated protocol
@@ -10149,44 +10149,44 @@ class admin_setting_webservicesoverview extends admin_setting {
             }
         }
         $row[1] = $status;
-        $row[2] = get_string('enableprotocolsdescription', 'webservice');
+        $row[2] = get_string('enableprotocolsdescription', 'core_webservice');
         $table->data[] = $row;
 
 
         /// 3. Select a web service
         $row = array();
         $url = new moodle_url("/admin/settings.php?section=externalservices");
-        $row[0] = "3. " . html_writer::tag('a', get_string('selectservice', 'webservice'),
+        $row[0] = "3. " . html_writer::tag('a', get_string('selectservice', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('createserviceforusersdescription', 'webservice');
+        $row[2] = get_string('createserviceforusersdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 4. Add functions
         $row = array();
         $url = new moodle_url("/admin/settings.php?section=externalservices");
-        $row[0] = "4. " . html_writer::tag('a', get_string('addfunctions', 'webservice'),
+        $row[0] = "4. " . html_writer::tag('a', get_string('addfunctions', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('addfunctionsdescription', 'webservice');
+        $row[2] = get_string('addfunctionsdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 5. Add capability to users
         $row = array();
         $url = new moodle_url("/admin/roles/check.php?contextid=1");
-        $row[0] = "5. " . html_writer::tag('a', get_string('addcapabilitytousers', 'webservice'),
+        $row[0] = "5. " . html_writer::tag('a', get_string('addcapabilitytousers', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('addcapabilitytousersdescription', 'webservice');
+        $row[2] = get_string('addcapabilitytousersdescription', 'core_webservice');
         $table->data[] = $row;
 
         /// 6. Test the service
         $row = array();
         $url = new moodle_url("/admin/webservice/testclient.php");
-        $row[0] = "6. " . html_writer::tag('a', get_string('testwithtestclient', 'webservice'),
+        $row[0] = "6. " . html_writer::tag('a', get_string('testwithtestclient', 'core_webservice'),
                         array('href' => $url));
         $row[1] = "";
-        $row[2] = get_string('testauserwithtestclientdescription', 'webservice');
+        $row[2] = get_string('testauserwithtestclientdescription', 'core_webservice');
         $table->data[] = $row;
 
         $return .= html_writer::table($table);
@@ -10209,7 +10209,7 @@ class admin_setting_managewebserviceprotocols extends admin_setting {
      */
     public function __construct() {
         $this->nosave = true;
-        parent::__construct('webservicesui', get_string('manageprotocols', 'webservice'), '', '');
+        parent::__construct('webservicesui', get_string('manageprotocols', 'core_webservice'), '', '');
     }
 
     /**
@@ -10278,7 +10278,7 @@ class admin_setting_managewebserviceprotocols extends admin_setting {
         $stradministration = get_string('administration');
         $strsettings = get_string('settings');
         $stredit = get_string('edit');
-        $strprotocol = get_string('protocol', 'webservice');
+        $strprotocol = get_string('protocol', 'core_webservice');
         $strenable = get_string('enable');
         $strdisable = get_string('disable');
         $strversion = get_string('version');
@@ -10293,9 +10293,9 @@ class admin_setting_managewebserviceprotocols extends admin_setting {
             }
         }
 
-        $return = $OUTPUT->heading(get_string('actwebserviceshhdr', 'webservice'), 3, 'main');
+        $return = $OUTPUT->heading(get_string('actwebserviceshhdr', 'core_webservice'), 3, 'main');
         if (in_array('xmlrpc', $activeprotocols)) {
-            $notify = new \core\output\notification(get_string('xmlrpcwebserviceenabled', 'admin'),
+            $notify = new \core\output\notification(get_string('xmlrpcwebserviceenabled', 'core_admin'),
                 \core\output\notification::NOTIFY_WARNING);
             $return .= $OUTPUT->render($notify);
         }
@@ -10341,7 +10341,7 @@ class admin_setting_managewebserviceprotocols extends admin_setting {
             $table->data[] = array($displayname, $version, $hideshow, $settings);
         }
         $return .= html_writer::table($table);
-        $return .= get_string('configwebserviceplugins', 'webservice');
+        $return .= get_string('configwebserviceplugins', 'core_webservice');
         $return .= $OUTPUT->box_end();
 
         return highlight($query, $return);
@@ -10402,9 +10402,9 @@ class admin_setting_configcolourpicker extends admin_setting {
     public function write_setting($data) {
         $data = $this->validate($data);
         if ($data === false) {
-            return  get_string('validateerror', 'admin');
+            return  get_string('validateerror', 'core_admin');
         }
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -10492,7 +10492,7 @@ class admin_setting_configcolourpicker extends admin_setting {
     public function output_html($data, $query = '') {
         global $PAGE, $OUTPUT;
 
-        $icon = new pix_icon('i/loading', get_string('loading', 'admin'), 'moodle', ['class' => 'loadingicon']);
+        $icon = new pix_icon('i/loading', get_string('loading', 'core_admin'), 'moodle', ['class' => 'loadingicon']);
         $context = (object) [
             'id' => $this->get_id(),
             'name' => $this->get_full_name(),
@@ -10582,10 +10582,10 @@ class admin_setting_configstoredfile extends admin_setting {
         $current = $this->get_setting();
         if (empty($data) && ($current === null || $current === '')) {
             // This will be the case when applying default settings (installation).
-            return ($this->config_write($this->name, '') ? '' : get_string('errorsetting', 'admin'));
+            return ($this->config_write($this->name, '') ? '' : get_string('errorsetting', 'core_admin'));
         } else if (!is_number($data)) {
             // Draft item id is expected here!
-            return get_string('errorsetting', 'admin');
+            return get_string('errorsetting', 'core_admin');
         }
 
         $options = $this->get_options();
@@ -10607,7 +10607,7 @@ class admin_setting_configstoredfile extends admin_setting {
             // with an error because the draft area does not exist, as he did not use it.
             $usercontext = context_user::instance($USER->id);
             if (!$fs->file_exists($usercontext->id, 'user', 'draft', $data, '/', '.') && $current !== '') {
-                return get_string('errorsetting', 'admin');
+                return get_string('errorsetting', 'core_admin');
             }
         }
 
@@ -10621,7 +10621,7 @@ class admin_setting_configstoredfile extends admin_setting {
             $filepath = $file->get_filepath().$file->get_filename();
         }
 
-        return ($this->config_write($this->name, $filepath) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $filepath) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     public function post_write_settings($original) {
@@ -10758,7 +10758,7 @@ class admin_setting_devicedetectregex extends admin_setting {
         if ($this->config_write($this->name, $this->process_form_data($data))) {
             return ''; // success
         } else {
-            return get_string('errorsetting', 'admin') . $this->visiblename . html_writer::empty_tag('br');
+            return get_string('errorsetting', 'core_admin') . $this->visiblename . html_writer::empty_tag('br');
         }
     }
 
@@ -11151,21 +11151,21 @@ class admin_setting_searchsetupinfo extends admin_setting {
             }
         }
 
-        $return .= $OUTPUT->heading(get_string('searchsetupinfo', 'admin'), 3, 'main');
+        $return .= $OUTPUT->heading(get_string('searchsetupinfo', 'core_admin'), 3, 'main');
 
         $table = new html_table();
-        $table->head = array(get_string('step', 'search'), get_string('status'));
+        $table->head = array(get_string('step', 'core_search'), get_string('status'));
         $table->colclasses = array('leftalign step', 'leftalign status');
         $table->id = 'searchsetup';
         $table->attributes['class'] = 'admintable generaltable';
         $table->data = array();
 
-        $return .= $brtag . get_string('searchsetupdescription', 'search') . $brtag . $brtag;
+        $return .= $brtag . get_string('searchsetupdescription', 'core_search') . $brtag . $brtag;
 
         // Select a search engine.
         $row = array();
         $url = new moodle_url('/admin/settings.php?section=manageglobalsearch#admin-searchengine');
-        $row[0] = '1. ' . html_writer::tag('a', get_string('selectsearchengine', 'admin'),
+        $row[0] = '1. ' . html_writer::tag('a', get_string('selectsearchengine', 'core_admin'),
                         array('href' => $url));
 
         $status = html_writer::tag('span', get_string('no'), array('class' => 'badge badge-danger'));
@@ -11180,7 +11180,7 @@ class admin_setting_searchsetupinfo extends admin_setting {
         // Available areas.
         $row = array();
         $url = new moodle_url('/admin/searchareas.php');
-        $row[0] = '2. ' . html_writer::tag('a', get_string('enablesearchareas', 'admin'),
+        $row[0] = '2. ' . html_writer::tag('a', get_string('enablesearchareas', 'core_admin'),
                         array('href' => $url));
 
         $status = html_writer::tag('span', get_string('no'), array('class' => 'badge badge-danger'));
@@ -11194,7 +11194,7 @@ class admin_setting_searchsetupinfo extends admin_setting {
         // Setup search engine.
         $row = array();
         if (empty($CFG->searchengine)) {
-            $row[0] = '3. ' . get_string('setupsearchengine', 'admin');
+            $row[0] = '3. ' . get_string('setupsearchengine', 'core_admin');
             $row[1] = html_writer::tag('span', get_string('no'), array('class' => 'badge badge-danger'));
         } else {
             if ($ADMIN->locate('search' . $CFG->searchengine)) {
@@ -11223,7 +11223,7 @@ class admin_setting_searchsetupinfo extends admin_setting {
         // Indexed data.
         $row = array();
         $url = new moodle_url('/admin/searchareas.php');
-        $row[0] = '4. ' . html_writer::tag('a', get_string('indexdata', 'admin'), array('href' => $url));
+        $row[0] = '4. ' . html_writer::tag('a', get_string('indexdata', 'core_admin'), array('href' => $url));
         if ($anyindexed) {
             $status = html_writer::tag('span', get_string('yes'), array('class' => 'badge badge-success'));
         } else {
@@ -11235,7 +11235,7 @@ class admin_setting_searchsetupinfo extends admin_setting {
         // Enable global search.
         $row = array();
         $url = new moodle_url("/admin/search.php?query=enableglobalsearch");
-        $row[0] = '5. ' . html_writer::tag('a', get_string('enableglobalsearch', 'admin'),
+        $row[0] = '5. ' . html_writer::tag('a', get_string('enableglobalsearch', 'core_admin'),
                         array('href' => $url));
         $status = html_writer::tag('span', get_string('no'), array('class' => 'badge badge-danger'));
         if (\core_search\manager::is_global_search_enabled()) {
@@ -11247,7 +11247,7 @@ class admin_setting_searchsetupinfo extends admin_setting {
         // Replace front page search.
         $row = array();
         $url = new moodle_url("/admin/search.php?query=searchincludeallcourses");
-        $row[0] = '6. ' . html_writer::tag('a', get_string('replacefrontsearch', 'admin'),
+        $row[0] = '6. ' . html_writer::tag('a', get_string('replacefrontsearch', 'core_admin'),
                                            array('href' => $url));
         $status = html_writer::tag('span', get_string('no'), array('class' => 'badge badge-danger'));
         if (\core_search\manager::can_replace_course_search()) {
@@ -11290,7 +11290,7 @@ class admin_setting_scsscode extends admin_setting_configtextarea {
         try {
             $scss->compile($data);
         } catch (ScssPhp\ScssPhp\Exception\ParserException $e) {
-            return get_string('scssinvalid', 'admin', $e->getMessage());
+            return get_string('scssinvalid', 'core_admin', $e->getMessage());
         } catch (ScssPhp\ScssPhp\Exception\CompilerException $e) {
             // Silently ignore this - it could be a scss variable defined from somewhere
             // else which we are not examining here.
@@ -11465,7 +11465,7 @@ class admin_setting_agedigitalconsentmap extends admin_setting_configtextarea {
         try {
             \core_auth\digital_consent::parse_age_digital_consent_map($data);
         } catch (\moodle_exception $e) {
-            return get_string('invalidagedigitalconsent', 'admin', $e->getMessage());
+            return get_string('invalidagedigitalconsent', 'core_admin', $e->getMessage());
         }
 
         return true;
@@ -11552,7 +11552,7 @@ class admin_setting_configthemepreset extends admin_setting_configselect {
         if ($validated !== true) {
             return $validated;
         }
-        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, $data) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**
@@ -11595,7 +11595,7 @@ class admin_setting_configthemepreset extends admin_setting_configselect {
             try {
                 $compiler->to_css();
             } catch (Exception $e) {
-                return get_string('invalidthemepreset', 'admin', $e->getMessage());
+                return get_string('invalidthemepreset', 'core_admin', $e->getMessage());
             }
 
             // Try to save memory.

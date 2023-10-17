@@ -40,7 +40,7 @@ class conversion_cleanup_task extends \core\task\scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('fileconversioncleanuptask', 'admin');
+        return get_string('fileconversioncleanuptask', 'core_admin');
     }
 
     /**

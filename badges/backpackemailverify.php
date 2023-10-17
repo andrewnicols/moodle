@@ -50,7 +50,7 @@ if (!is_null($storedsecret)) {
         // Make sure we have all the required information before trying to save the connection.
         $backpackuid = $bp->authenticate();
         if (empty($backpackuid) || !empty($backpackuid->error)) {
-            redirect(new moodle_url($redirect), get_string('backpackconnectionunexpectedresult', 'badges', $backpackuid->error),
+            redirect(new moodle_url($redirect), get_string('backpackconnectionunexpectedresult', 'core_badges', $backpackuid->error),
                 null, \core\output\notification::NOTIFY_ERROR);
         }
 
@@ -69,11 +69,11 @@ if (!is_null($storedsecret)) {
         unset_user_preference('badges_email_verify_address');
         unset_user_preference('badges_email_verify_backpackid');
         unset_user_preference('badges_email_verify_password');
-        redirect(new moodle_url($redirect), get_string('backpackemailverifysuccess', 'badges'),
+        redirect(new moodle_url($redirect), get_string('backpackemailverifysuccess', 'core_badges'),
             null, \core\output\notification::NOTIFY_SUCCESS);
     } else {
         // Stored secret doesn't match the supplied secret. Take user back to the mybackpack page and present a warning message.
-        redirect(new moodle_url($redirect), get_string('backpackemailverifytokenmismatch', 'badges'),
+        redirect(new moodle_url($redirect), get_string('backpackemailverifytokenmismatch', 'core_badges'),
             null, \core\output\notification::NOTIFY_ERROR);
     }
 } else {

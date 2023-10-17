@@ -33,7 +33,7 @@ class block_glossary_random_edit_form extends block_edit_form {
         global $DB;
 
         // Fields for editing HTML block title and contents.
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'core_block'));
 
         $mform->addElement('text', 'config_title', get_string('title', 'block_glossary_random'));
         $mform->setDefault('config_title', get_string('pluginname','block_glossary_random'));

@@ -61,7 +61,7 @@ array(
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 $help =
@@ -196,7 +196,7 @@ unset($content);
 if ($readcount === false) {
     throw new \moodle_exception('csvfileerror', 'tool_uploadcourse', '', $cir->get_error());
 } else if ($readcount == 0) {
-    throw new \moodle_exception('csvemptyfile', 'error', '', $cir->get_error());
+    throw new \moodle_exception('csvemptyfile', 'mod_error', '', $cir->get_error());
 }
 $processor = new tool_uploadcourse_processor($cir, $processoroptions, $defaults);
 $processor->execute(new tool_uploadcourse_tracker(tool_uploadcourse_tracker::OUTPUT_PLAIN));

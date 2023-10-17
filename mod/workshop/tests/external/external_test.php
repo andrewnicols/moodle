@@ -1813,7 +1813,7 @@ class external_test extends externallib_advanced_testcase {
     public function test_get_grades_report_invalid_phase() {
         $this->setUser($this->teacher);
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('nothingfound', 'workshop'));
+        $this->expectExceptionMessage(get_string('nothingfound', 'mod_workshop'));
         mod_workshop_external::get_grades_report($this->workshop->id);
     }
 

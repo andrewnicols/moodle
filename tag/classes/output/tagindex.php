@@ -84,7 +84,7 @@ class tagindex implements templatable {
             'tag' => \core_tag_tag::make_display_name($tag)
         );
         if ($exclusivemode) {
-            $this->record->title = get_string('itemstaggedwith', 'tag', $a);
+            $this->record->title = get_string('itemstaggedwith', 'core_tag', $a);
         } else {
             $this->record->title = (string)$a->tagarea;
         }
@@ -105,7 +105,7 @@ class tagindex implements templatable {
         if (!$exclusivemode && ($totalpages > 1 || $page)) {
             $this->record->exclusiveurl = new moodle_url($url, $urlparams + array('excl' => 1));
         }
-        $this->record->exclusivetext = get_string('exclusivemode', 'tag', $a);
+        $this->record->exclusivetext = get_string('exclusivemode', 'core_tag', $a);
         $this->record->hascontent = ($totalpages > 1 || $page || $content);
         $this->record->anchor = $component . '_' . $itemtype;
     }

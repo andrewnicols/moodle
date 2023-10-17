@@ -34,7 +34,7 @@ require_capability('moodle/site:config', context_system::instance());
 
 $strheading = get_string('testgs', 'assignfeedback_editpdf');
 $PAGE->navbar->add(get_string('administrationsite'));
-$PAGE->navbar->add(get_string('plugins', 'admin'));
+$PAGE->navbar->add(get_string('plugins', 'core_admin'));
 $PAGE->navbar->add(get_string('assignmentplugins', 'mod_assign'));
 $PAGE->navbar->add(get_string('feedbackplugins', 'mod_assign'));
 $PAGE->navbar->add(get_string('pluginname', 'assignfeedback_editpdf'), new moodle_url('/admin/settings.php?section=assignfeedback_editpdf'));

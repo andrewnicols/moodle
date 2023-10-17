@@ -122,7 +122,7 @@ function lesson_save_question_options($question, $lesson, $contextid) {
             /// Perform sanity checks on fractional grades
             if ($maxfraction != 1) {
                 $maxfraction = $maxfraction * 100;
-                $result->notice = get_string("fractionsnomax", "lesson", $maxfraction);
+                $result->notice = get_string("fractionsnomax", 'mod_lesson', $maxfraction);
                 return $result;
             }
             break;
@@ -160,7 +160,7 @@ function lesson_save_question_options($question, $lesson, $contextid) {
             /// Perform sanity checks on fractional grades
             if ($maxfraction != 1) {
                 $maxfraction = $maxfraction * 100;
-                $result->notice = get_string("fractionsnomax", "lesson", $maxfraction);
+                $result->notice = get_string("fractionsnomax", 'mod_lesson', $maxfraction);
                 return $result;
             }
         break;
@@ -175,7 +175,7 @@ function lesson_save_question_options($question, $lesson, $contextid) {
             $answer->jumpto = LESSON_NEXTPAGE;
             $answer->score = 1;
             if ($question->correctanswer) {
-                $answer->answer = get_string("true", "lesson");
+                $answer->answer = get_string("true", 'mod_lesson');
                 if (isset($question->feedbacktrue)) {
                     $answer->response = $question->feedbacktrue['text'];
                     $answer->responseformat = $question->feedbacktrue['format'];
@@ -183,7 +183,7 @@ function lesson_save_question_options($question, $lesson, $contextid) {
                     lesson_import_question_files('response', $question->feedbacktrue, $answer, $contextid);
                 }
             } else {
-                $answer->answer = get_string("false", "lesson");
+                $answer->answer = get_string("false", 'mod_lesson');
                 if (isset($question->feedbackfalse)) {
                     $answer->response = $question->feedbackfalse['text'];
                     $answer->responseformat = $question->feedbackfalse['format'];
@@ -195,7 +195,7 @@ function lesson_save_question_options($question, $lesson, $contextid) {
             // Now the wrong answer.
             $answer = clone($defaultanswer);
             if ($question->correctanswer) {
-                $answer->answer = get_string("false", "lesson");
+                $answer->answer = get_string("false", 'mod_lesson');
                 if (isset($question->feedbackfalse)) {
                     $answer->response = $question->feedbackfalse['text'];
                     $answer->responseformat = $question->feedbackfalse['format'];
@@ -203,7 +203,7 @@ function lesson_save_question_options($question, $lesson, $contextid) {
                     lesson_import_question_files('response', $question->feedbackfalse, $answer, $contextid);
                 }
             } else {
-                $answer->answer = get_string("true", "lesson");
+                $answer->answer = get_string("true", 'mod_lesson');
                 if (isset($question->feedbacktrue)) {
                     $answer->response = $question->feedbacktrue['text'];
                     $answer->responseformat = $question->feedbacktrue['format'];
@@ -261,14 +261,14 @@ function lesson_save_question_options($question, $lesson, $contextid) {
             if ($question->single) {
                 if ($maxfraction != 1) {
                     $maxfraction = $maxfraction * 100;
-                    $result->notice = get_string("fractionsnomax", "lesson", $maxfraction);
+                    $result->notice = get_string("fractionsnomax", 'mod_lesson', $maxfraction);
                     return $result;
                 }
             } else {
                 $totalfraction = round($totalfraction,2);
                 if ($totalfraction != 1) {
                     $totalfraction = $totalfraction * 100;
-                    $result->notice = get_string("fractionsaddwrong", "lesson", $totalfraction);
+                    $result->notice = get_string("fractionsaddwrong", 'mod_lesson', $totalfraction);
                     return $result;
                 }
             }
@@ -280,14 +280,14 @@ function lesson_save_question_options($question, $lesson, $contextid) {
 
             // The first answer should always be the correct answer
             $correctanswer = clone($defaultanswer);
-            $correctanswer->answer = get_string('thatsthecorrectanswer', 'lesson');
+            $correctanswer->answer = get_string('thatsthecorrectanswer', 'mod_lesson');
             $correctanswer->jumpto = LESSON_NEXTPAGE;
             $correctanswer->score = 1;
             $DB->insert_record("lesson_answers", $correctanswer);
 
             // The second answer should always be the wrong answer
             $wronganswer = clone($defaultanswer);
-            $wronganswer->answer = get_string('thatsthewronganswer', 'lesson');
+            $wronganswer->answer = get_string('thatsthewronganswer', 'mod_lesson');
             $DB->insert_record("lesson_answers", $wronganswer);
 
             $i = 0;
@@ -311,7 +311,7 @@ function lesson_save_question_options($question, $lesson, $contextid) {
             }
 
             if (count($subquestions) < 3) {
-                $result->notice = get_string("notenoughsubquestions", "lesson");
+                $result->notice = get_string("notenoughsubquestions", 'mod_lesson');
                 return $result;
             }
             break;
@@ -369,7 +369,7 @@ class qformat_default {
      * @param string $questionname imported question name
      */
     protected function error($message, $text='', $questionname='') {
-        $importerrorquestion = get_string('importerrorquestion', 'question');
+        $importerrorquestion = get_string('importerrorquestion', 'core_question');
 
         echo "<div class=\"importerror\">\n";
         echo "<strong>$importerrorquestion $questionname</strong>";
@@ -417,7 +417,7 @@ class qformat_default {
         }
 
         //Avoid category as question type
-        echo $OUTPUT->notification(get_string('importcount', 'lesson',
+        echo $OUTPUT->notification(get_string('importcount', 'mod_lesson',
                 $this->count_questions($questions)), 'notifysuccess');
 
         $count = 0;
@@ -476,7 +476,7 @@ class qformat_default {
                     if ($pageid) {
                         // the new page follows on from this page
                         if (!$page = $DB->get_record("lesson_pages", array("id" => $pageid))) {
-                            throw new \moodle_exception('invalidpageid', 'lesson');
+                            throw new \moodle_exception('invalidpageid', 'mod_lesson');
                         }
                         $newpage->prevpageid = $pageid;
                         $newpage->nextpageid = $page->nextpageid;
@@ -549,7 +549,7 @@ class qformat_default {
             }
         }
         if ($unsupportedquestions) {
-            echo $OUTPUT->notification(get_string('unknownqtypesnotimported', 'lesson', $unsupportedquestions));
+            echo $OUTPUT->notification(get_string('unknownqtypesnotimported', 'mod_lesson', $unsupportedquestions));
         }
         return true;
     }

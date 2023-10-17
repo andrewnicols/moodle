@@ -55,14 +55,14 @@ $external = new stdClass();
 // Retrieve the external blog record.
 if (!empty($id)) {
     if (!$external = $DB->get_record('blog_external', array('id' => $id, 'userid' => $USER->id))) {
-        throw new \moodle_exception('wrongexternalid', 'blog');
+        throw new \moodle_exception('wrongexternalid', 'core_blog');
     }
     $external->autotags = core_tag_tag::get_item_tags_array('core', 'blog_external', $id);
 }
 
-$strformheading = ($action == 'edit') ? get_string('editexternalblog', 'blog') : get_string('addnewexternalblog', 'blog');
-$strexternalblogs = get_string('externalblogs', 'blog');
-$strblogs = get_string('blogs', 'blog');
+$strformheading = ($action == 'edit') ? get_string('editexternalblog', 'core_blog') : get_string('addnewexternalblog', 'core_blog');
+$strexternalblogs = get_string('externalblogs', 'core_blog');
+$strblogs = get_string('blogs', 'core_blog');
 
 $externalblogform = new blog_edit_external_form();
 
@@ -122,7 +122,7 @@ if ($externalblogform->is_cancelled()) {
                 core_tag_tag::set_item_tags('core', 'blog_external', $external->id,
                         context_user::instance($external->userid), $data->autotags);
             } else {
-                throw new \moodle_exception('wrongexternalid', 'blog');
+                throw new \moodle_exception('wrongexternalid', 'core_blog');
             }
 
             break;
@@ -135,7 +135,7 @@ if ($externalblogform->is_cancelled()) {
 }
 
 navigation_node::override_active_url(new moodle_url('/blog/external_blogs.php'));
-$PAGE->navbar->add(get_string('addnewexternalblog', 'blog'));
+$PAGE->navbar->add(get_string('addnewexternalblog', 'core_blog'));
 
 $PAGE->set_heading(fullname($USER));
 $PAGE->set_title("$strblogs: $strexternalblogs");

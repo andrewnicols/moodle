@@ -49,7 +49,7 @@ class mod extends base {
         global $DB;
 
         if (!$module = $DB->get_record('modules', ['name' => $pluginname])) {
-            throw new \moodle_exception('moduledoesnotexist', 'error');
+            throw new \moodle_exception('moduledoesnotexist', 'mod_error');
         }
 
         $haschanged = false;

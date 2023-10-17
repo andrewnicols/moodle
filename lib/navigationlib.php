@@ -985,10 +985,10 @@ class navigation_node implements renderable {
             if (empty($parentcontext) || !$parentcontext->locked) {
                 if ($context->locked) {
                     $lockicon = 'i/unlock';
-                    $lockstring = get_string('managecontextunlock', 'admin');
+                    $lockstring = get_string('managecontextunlock', 'core_admin');
                 } else {
                     $lockicon = 'i/lock';
-                    $lockstring = get_string('managecontextlock', 'admin');
+                    $lockstring = get_string('managecontextlock', 'core_admin');
                 }
                 $node->add(
                     $lockstring,
@@ -2570,9 +2570,9 @@ class global_navigation extends navigation_node {
                 // Add nodes for forum posts and discussions if the user can view either or both
                 // There are no capability checks here as the content of the page is based
                 // purely on the forums the current user has access too.
-                $forumtab = $usernode->add(get_string('forumposts', 'forum'));
-                $forumtab->add(get_string('posts', 'forum'), new moodle_url('/mod/forum/user.php', $baseargs));
-                $forumtab->add(get_string('discussions', 'forum'), new moodle_url('/mod/forum/user.php',
+                $forumtab = $usernode->add(get_string('forumposts', 'mod_forum'));
+                $forumtab->add(get_string('posts', 'mod_forum'), new moodle_url('/mod/forum/user.php', $baseargs));
+                $forumtab->add(get_string('discussions', 'mod_forum'), new moodle_url('/mod/forum/user.php',
                         array_merge($baseargs, array('mode' => 'discussions'))));
             }
 
@@ -2588,7 +2588,7 @@ class global_navigation extends navigation_node {
                 }
 
                 if (count($options) > 0) {
-                    $blogs = $usernode->add(get_string('blogs', 'blog'), null, navigation_node::TYPE_CONTAINER);
+                    $blogs = $usernode->add(get_string('blogs', 'core_blog'), null, navigation_node::TYPE_CONTAINER);
                     foreach ($options as $type => $option) {
                         if ($type == "rss") {
                             $blogs->add($option['string'], $option['link'], settings_navigation::TYPE_SETTING, null, null,
@@ -2608,7 +2608,7 @@ class global_navigation extends navigation_node {
                     $messageargs['user2'] = $user->id;
                 }
                 $url = new moodle_url('/message/index.php', $messageargs);
-                $usernode->add(get_string('messages', 'message'), $url, self::TYPE_SETTING, null, 'messages');
+                $usernode->add(get_string('messages', 'core_message'), $url, self::TYPE_SETTING, null, 'messages');
             }
 
             // Add the "My private files" link.
@@ -2625,7 +2625,7 @@ class global_navigation extends navigation_node {
                 if ($coursecontext->instanceid != SITEID) {
                     $url->param('course', $coursecontext->instanceid);
                 }
-                $usernode->add(get_string('notes', 'notes'), $url);
+                $usernode->add(get_string('notes', 'core_notes'), $url);
             }
 
             // Show the grades node.
@@ -2638,9 +2638,9 @@ class global_navigation extends navigation_node {
                     $url = new moodle_url('/course/user.php', array('mode' => 'grade', 'id' => $course->id, 'user' => $user->id));
                 }
                 if ($USER->id != $user->id) {
-                    $usernode->add(get_string('grades', 'grades'), $url, self::TYPE_SETTING, null, 'usergrades');
+                    $usernode->add(get_string('grades', 'core_grades'), $url, self::TYPE_SETTING, null, 'usergrades');
                 } else {
-                    $usernode->add(get_string('grades', 'grades'), $url);
+                    $usernode->add(get_string('grades', 'core_grades'), $url);
                 }
             }
 
@@ -2692,7 +2692,7 @@ class global_navigation extends navigation_node {
                     if (!empty($CFG->enablenotes) &&
                             has_any_capability(array('moodle/notes:manage', 'moodle/notes:view'), $usercoursecontext)) {
                         $url = new moodle_url('/notes/index.php', array('user' => $user->id, 'course' => $usercourse->id));
-                        $usercoursenode->add(get_string('notes', 'notes'), $url, self::TYPE_SETTING);
+                        $usercoursenode->add(get_string('notes', 'core_notes'), $url, self::TYPE_SETTING);
                     }
 
                     if (can_access_course($usercourse, $user->id, '', true)) {
@@ -4678,13 +4678,13 @@ class settings_navigation extends navigation_node {
         if ($adminoptions->editcompletion) {
             // Add the course completion settings link
             $url = new moodle_url('/course/completion.php', array('id' => $course->id));
-            $coursenode->add(get_string('coursecompletion', 'completion'), $url, self::TYPE_SETTING, null, 'coursecompletion',
+            $coursenode->add(get_string('coursecompletion', 'core_completion'), $url, self::TYPE_SETTING, null, 'coursecompletion',
                              new pix_icon('i/settings', ''));
         }
 
         if (!$adminoptions->update && $adminoptions->tags) {
             $url = new moodle_url('/course/tags.php', array('id' => $course->id));
-            $coursenode->add(get_string('coursetags', 'tag'), $url, self::TYPE_SETTING, null, 'coursetags', new pix_icon('i/settings', ''));
+            $coursenode->add(get_string('coursetags', 'core_tag'), $url, self::TYPE_SETTING, null, 'coursetags', new pix_icon('i/settings', ''));
             $coursenode->get('coursetags')->set_force_into_more_menu();
         }
 
@@ -4877,19 +4877,19 @@ class settings_navigation extends navigation_node {
         // Assign local roles
         if (count(get_assignable_roles($this->page->cm->context))>0) {
             $url = new moodle_url('/'.$CFG->admin.'/roles/assign.php', array('contextid'=>$this->page->cm->context->id));
-            $modulenode->add(get_string('localroles', 'role'), $url, self::TYPE_SETTING, null, 'roleassign',
+            $modulenode->add(get_string('localroles', 'core_role'), $url, self::TYPE_SETTING, null, 'roleassign',
                 new pix_icon('i/role', ''));
         }
         // Override roles
         if (has_capability('moodle/role:review', $this->page->cm->context) or count(get_overridable_roles($this->page->cm->context))>0) {
             $url = new moodle_url('/'.$CFG->admin.'/roles/permissions.php', array('contextid'=>$this->page->cm->context->id));
-            $modulenode->add(get_string('permissions', 'role'), $url, self::TYPE_SETTING, null, 'roleoverride',
+            $modulenode->add(get_string('permissions', 'core_role'), $url, self::TYPE_SETTING, null, 'roleoverride',
                 new pix_icon('i/permissions', ''));
         }
         // Check role permissions
         if (has_any_capability(array('moodle/role:assign', 'moodle/role:safeoverride','moodle/role:override', 'moodle/role:assign'), $this->page->cm->context)) {
             $url = new moodle_url('/'.$CFG->admin.'/roles/check.php', array('contextid'=>$this->page->cm->context->id));
-            $modulenode->add(get_string('checkpermissions', 'role'), $url, self::TYPE_SETTING, null, 'rolecheck',
+            $modulenode->add(get_string('checkpermissions', 'core_role'), $url, self::TYPE_SETTING, null, 'rolecheck',
                 new pix_icon('i/checkpermissions', ''));
         }
 
@@ -4899,7 +4899,7 @@ class settings_navigation extends navigation_node {
         // Manage filters
         if (has_capability('moodle/filter:manage', $this->page->cm->context) && count(filter_get_available_in_context($this->page->cm->context))>0) {
             $url = new moodle_url('/filter/manage.php', array('contextid'=>$this->page->cm->context->id));
-            $modulenode->add(get_string('filters', 'admin'), $url, self::TYPE_SETTING, null, 'filtermanage',
+            $modulenode->add(get_string('filters', 'core_admin'), $url, self::TYPE_SETTING, null, 'filtermanage',
                 new pix_icon('i/filter', ''));
         }
         // Add reports
@@ -5394,7 +5394,7 @@ class settings_navigation extends navigation_node {
         }
         if ($haseditabletypes) {
             $repositories = $usersetting->add(get_string('repositories', 'core_repository'), null, self::TYPE_SETTING);
-            $repositories->add(get_string('manageinstances', 'repository'), new moodle_url('/repository/manage_instances.php',
+            $repositories->add(get_string('manageinstances', 'core_repository'), new moodle_url('/repository/manage_instances.php',
                 array('contextid' => $usercontext->id)));
         }
 
@@ -5493,20 +5493,20 @@ class settings_navigation extends navigation_node {
         // Assign local roles
         if (get_assignable_roles($this->context, ROLENAME_ORIGINAL)) {
             $assignurl = new moodle_url('/'.$CFG->admin.'/roles/assign.php', array('contextid' => $this->context->id));
-            $blocknode->add(get_string('assignroles', 'role'), $assignurl, self::TYPE_SETTING, null,
+            $blocknode->add(get_string('assignroles', 'core_role'), $assignurl, self::TYPE_SETTING, null,
                 'roles', new pix_icon('i/assignroles', ''));
         }
 
         // Override roles
         if (has_capability('moodle/role:review', $this->context) or  count(get_overridable_roles($this->context))>0) {
             $url = new moodle_url('/'.$CFG->admin.'/roles/permissions.php', array('contextid'=>$this->context->id));
-            $blocknode->add(get_string('permissions', 'role'), $url, self::TYPE_SETTING, null,
+            $blocknode->add(get_string('permissions', 'core_role'), $url, self::TYPE_SETTING, null,
                 'permissions', new pix_icon('i/permissions', ''));
         }
         // Check role permissions
         if (has_any_capability(array('moodle/role:assign', 'moodle/role:safeoverride','moodle/role:override', 'moodle/role:assign'), $this->context)) {
             $url = new moodle_url('/'.$CFG->admin.'/roles/check.php', array('contextid'=>$this->context->id));
-            $blocknode->add(get_string('checkpermissions', 'role'), $url, self::TYPE_SETTING, null,
+            $blocknode->add(get_string('checkpermissions', 'core_role'), $url, self::TYPE_SETTING, null,
                 'checkpermissions', new pix_icon('i/checkpermissions', ''));
         }
 
@@ -5562,19 +5562,19 @@ class settings_navigation extends navigation_node {
         $assignableroles = get_assignable_roles($catcontext);
         if (!empty($assignableroles)) {
             $assignurl = new moodle_url('/'.$CFG->admin.'/roles/assign.php', array('contextid' => $catcontext->id));
-            $categorynode->add(get_string('assignroles', 'role'), $assignurl, self::TYPE_SETTING, null, 'roles', new pix_icon('i/assignroles', ''));
+            $categorynode->add(get_string('assignroles', 'core_role'), $assignurl, self::TYPE_SETTING, null, 'roles', new pix_icon('i/assignroles', ''));
         }
 
         // Override roles
         if (has_capability('moodle/role:review', $catcontext) or count(get_overridable_roles($catcontext)) > 0) {
             $url = new moodle_url('/'.$CFG->admin.'/roles/permissions.php', array('contextid' => $catcontext->id));
-            $categorynode->add(get_string('permissions', 'role'), $url, self::TYPE_SETTING, null, 'permissions', new pix_icon('i/permissions', ''));
+            $categorynode->add(get_string('permissions', 'core_role'), $url, self::TYPE_SETTING, null, 'permissions', new pix_icon('i/permissions', ''));
         }
         // Check role permissions
         if (has_any_capability(array('moodle/role:assign', 'moodle/role:safeoverride',
                 'moodle/role:override', 'moodle/role:assign'), $catcontext)) {
             $url = new moodle_url('/'.$CFG->admin.'/roles/check.php', array('contextid' => $catcontext->id));
-            $categorynode->add(get_string('checkpermissions', 'role'), $url, self::TYPE_SETTING, null, 'rolecheck', new pix_icon('i/checkpermissions', ''));
+            $categorynode->add(get_string('checkpermissions', 'core_role'), $url, self::TYPE_SETTING, null, 'rolecheck', new pix_icon('i/checkpermissions', ''));
         }
 
         // Add the context locking node.
@@ -5582,20 +5582,20 @@ class settings_navigation extends navigation_node {
 
         // Cohorts
         if (has_any_capability(array('moodle/cohort:view', 'moodle/cohort:manage'), $catcontext)) {
-            $categorynode->add(get_string('cohorts', 'cohort'), new moodle_url('/cohort/index.php',
+            $categorynode->add(get_string('cohorts', 'core_cohort'), new moodle_url('/cohort/index.php',
                 array('contextid' => $catcontext->id)), self::TYPE_SETTING, null, 'cohort', new pix_icon('i/cohort', ''));
         }
 
         // Manage filters
         if (has_capability('moodle/filter:manage', $catcontext) && count(filter_get_available_in_context($catcontext)) > 0) {
             $url = new moodle_url('/filter/manage.php', array('contextid' => $catcontext->id));
-            $categorynode->add(get_string('filters', 'admin'), $url, self::TYPE_SETTING, null, 'filters', new pix_icon('i/filter', ''));
+            $categorynode->add(get_string('filters', 'core_admin'), $url, self::TYPE_SETTING, null, 'filters', new pix_icon('i/filter', ''));
         }
 
         // Restore.
         if (has_capability('moodle/restore:restorecourse', $catcontext)) {
             $url = new moodle_url('/backup/restorefile.php', array('contextid' => $catcontext->id));
-            $categorynode->add(get_string('restorecourse', 'admin'), $url, self::TYPE_SETTING, null, 'restorecourse', new pix_icon('i/restore', ''));
+            $categorynode->add(get_string('restorecourse', 'core_admin'), $url, self::TYPE_SETTING, null, 'restorecourse', new pix_icon('i/restore', ''));
         }
 
         // Let plugins hook into category settings navigation.
@@ -5689,7 +5689,7 @@ class settings_navigation extends navigation_node {
         // Manage filters
         if ($adminoptions->filters) {
             $url = new moodle_url('/filter/manage.php', array('contextid'=>$coursecontext->id));
-            $frontpage->add(get_string('filters', 'admin'), $url, self::TYPE_SETTING,
+            $frontpage->add(get_string('filters', 'core_admin'), $url, self::TYPE_SETTING,
                 null, 'filtermanagement', new pix_icon('i/filter', ''));
         }
 

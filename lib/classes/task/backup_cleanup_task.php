@@ -38,7 +38,7 @@ class backup_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskbackupcleanup', 'admin');
+        return get_string('taskbackupcleanup', 'core_admin');
     }
 
     /**

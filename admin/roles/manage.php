@@ -61,7 +61,7 @@ $undeletableroles[$CFG->guestroleid] = 1;
 $undeletableroles[$CFG->defaultuserroleid] = 1;
 
 $PAGE->set_primary_active_tab('siteadminnode');
-$PAGE->navbar->add(get_string('defineroles', 'role'), $PAGE->url);
+$PAGE->navbar->add(get_string('defineroles', 'core_role'), $PAGE->url);
 
 // Process submitted data.
 $confirmed = (optional_param('confirm', false, PARAM_BOOL) && data_submitted() && confirm_sesskey());
@@ -89,7 +89,7 @@ switch ($action) {
         }
         if (!delete_role($roleid)) {
             // The delete failed.
-            throw new \moodle_exception('cannotdeleterolewithid', 'error', $baseurl, $roleid);
+            throw new \moodle_exception('cannotdeleterolewithid', 'mod_error', $baseurl, $roleid);
         }
         // Deleted a role sitewide...
         redirect($baseurl);
@@ -108,10 +108,10 @@ switch ($action) {
                 }
             }
             if (is_null($thisrole) || is_null($prevrole)) {
-                throw new \moodle_exception('cannotmoverolewithid', 'error', '', $roleid);
+                throw new \moodle_exception('cannotmoverolewithid', 'mod_error', '', $roleid);
             }
             if (!switch_roles($thisrole, $prevrole)) {
-                throw new \moodle_exception('cannotmoverolewithid', 'error', '', $roleid);
+                throw new \moodle_exception('cannotmoverolewithid', 'mod_error', '', $roleid);
             }
         }
 
@@ -131,10 +131,10 @@ switch ($action) {
                 }
             }
             if (is_null($nextrole)) {
-                throw new \moodle_exception('cannotmoverolewithid', 'error', '', $roleid);
+                throw new \moodle_exception('cannotmoverolewithid', 'mod_error', '', $roleid);
             }
             if (!switch_roles($thisrole, $nextrole)) {
-                throw new \moodle_exception('cannotmoverolewithid', 'error', '', $roleid);
+                throw new \moodle_exception('cannotmoverolewithid', 'mod_error', '', $roleid);
             }
         }
 

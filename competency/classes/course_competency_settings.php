@@ -125,7 +125,7 @@ class course_competency_settings extends persistent {
     protected function validate_courseid($data) {
         global $DB;
         if (!$DB->record_exists('course', array('id' => $data))) {
-            return new lang_string('invalidcourseid', 'error');
+            return new lang_string('invalidcourseid', 'mod_error');
         }
         return true;
     }

@@ -41,7 +41,7 @@ if (!preg_match('/^[a-zA-Z][a-zA-Z0-9-\+\.]*$/', $urlscheme)) {
 
 // Check web services enabled.
 if (!$CFG->enablewebservices) {
-    throw new moodle_exception('enablewsdescription', 'webservice');
+    throw new moodle_exception('enablewsdescription', 'core_webservice');
 }
 
 // We have been requested to start a SSO process via OpenID.
@@ -65,7 +65,7 @@ if (empty($SESSION->justloggedin) and
 // Check if the service exists and is enabled.
 $service = $DB->get_record('external_services', array('shortname' => $serviceshortname, 'enabled' => 1));
 if (empty($service)) {
-    throw new moodle_exception('servicenotavailable', 'webservice');
+    throw new moodle_exception('servicenotavailable', 'core_webservice');
 }
 
 require_login(0, false);

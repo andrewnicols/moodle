@@ -99,11 +99,11 @@ if ($CFG->bloglevel == BLOG_GLOBAL_LEVEL) {
 
 } else {
     // Weird!
-    throw new \moodle_exception('blogdisable', 'blog');
+    throw new \moodle_exception('blogdisable', 'core_blog');
 }
 
 if (empty($CFG->enableblogs)) {
-    throw new \moodle_exception('blogdisable', 'blog');
+    throw new \moodle_exception('blogdisable', 'core_blog');
 }
 
 list($courseid, $userid) = blog_validate_access($courseid, $modid, $groupid, $entryid, $userid);
@@ -146,7 +146,7 @@ if ($usernode && $courseid != SITEID) {
         $courseblogsnode->remove();
     }
     $blogurl = new moodle_url($PAGE->url);
-    $blognode = $usernode->add(get_string('blogscourse', 'blog'), $blogurl);
+    $blognode = $usernode->add(get_string('blogscourse', 'core_blog'), $blogurl);
     $blognode->make_active();
 }
 
@@ -174,7 +174,7 @@ $bloglisting = new blog_listing($blogheaders['filters']);
 $bloglisting->print_entries();
 
 if ($CFG->enablerssfeeds) {
-    blog_rss_print_link($rsscontext, $filtertype, $thingid, $tagid, get_string('rssfeed', 'blog'));
+    blog_rss_print_link($rsscontext, $filtertype, $thingid, $tagid, get_string('rssfeed', 'core_blog'));
 }
 
 echo $OUTPUT->footer();

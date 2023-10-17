@@ -130,7 +130,7 @@ class file_info_stored extends file_info {
             // use the special syntax for user private files - 'USERNAME Private files: PATH'
             $username = array_shift($fpath);
             array_shift($fpath); // get rid of "Private Files/" in the beginning of the path
-            return get_string('privatefilesof', 'repository', $username). ': '. join('/', $fpath);
+            return get_string('privatefilesof', 'core_repository', $username). ': '. join('/', $fpath);
         } else {
             // for all other files (except user private files) return 'Server files: PATH'
 
@@ -145,7 +145,7 @@ class file_info_stored extends file_info {
                 } else if (get_string_manager()->string_exists('pluginname', 'repository_local')) {
                     $replocalname = get_string('pluginname', 'repository_local');
                 } else {
-                    $replocalname = get_string('arearoot', 'repository');
+                    $replocalname = get_string('arearoot', 'core_repository');
                 }
             }
 

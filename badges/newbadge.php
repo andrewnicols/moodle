@@ -33,14 +33,14 @@ $courseid = optional_param('id', 0, PARAM_INT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 if (empty($CFG->badges_allowcoursebadges) && ($type == BADGE_TYPE_COURSE)) {
-    throw new \moodle_exception('coursebadgesdisabled', 'badges');
+    throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
 }
 
-$title = get_string('create', 'badges');
+$title = get_string('create', 'core_badges');
 $PAGE->add_body_class('limitedwidth');
 
 if (($type == BADGE_TYPE_COURSE) && ($course = $DB->get_record('course', array('id' => $courseid)))) {
@@ -101,9 +101,9 @@ if ($form->is_cancelled()) {
     $fordb->expireperiod = ($data->expiry == 2) ? $data->expireperiod : null;
     $fordb->type = $type;
     $fordb->courseid = ($type == BADGE_TYPE_COURSE) ? $courseid : null;
-    $fordb->messagesubject = get_string('messagesubject', 'badges');
-    $fordb->message = get_string('messagebody', 'badges',
-            html_writer::link($CFG->wwwroot . '/badges/mybadges.php', get_string('managebadges', 'badges')));
+    $fordb->messagesubject = get_string('messagesubject', 'core_badges');
+    $fordb->message = get_string('messagebody', 'core_badges',
+            html_writer::link($CFG->wwwroot . '/badges/mybadges.php', get_string('managebadges', 'core_badges')));
     $fordb->attachment = 1;
     $fordb->notification = BADGE_MESSAGE_NEVER;
     $fordb->status = BADGE_STATUS_INACTIVE;

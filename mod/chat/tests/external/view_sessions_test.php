@@ -107,7 +107,7 @@ class view_sessions_test extends externallib_advanced_testcase {
         $this->assertArrayHasKey('status', $result);
         $this->assertArrayHasKey('warnings', $result);
         $this->assertFalse($result['status']);
-        $this->assertEquals(get_string('nopermissiontoseethechatlog', 'chat'), $result['warnings'][0]['message']);
+        $this->assertEquals(get_string('nopermissiontoseethechatlog', 'mod_chat'), $result['warnings'][0]['message']);
     }
 
     /**

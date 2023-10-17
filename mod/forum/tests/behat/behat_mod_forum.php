@@ -46,7 +46,7 @@ class behat_mod_forum extends behat_base {
      * @param TableNode $table
      */
     public function i_add_a_new_topic_to_forum_with($forumname, TableNode $table) {
-        $this->add_new_discussion($forumname, $table, get_string('addanewdiscussion', 'forum'));
+        $this->add_new_discussion($forumname, $table, get_string('addanewdiscussion', 'mod_forum'));
     }
 
     /**
@@ -57,7 +57,7 @@ class behat_mod_forum extends behat_base {
      * @param TableNode $table
      */
     public function i_add_a_new_question_to_forum_with($forumname, TableNode $table) {
-        $this->add_new_discussion($forumname, $table, get_string('addanewdiscussion', 'forum'));
+        $this->add_new_discussion($forumname, $table, get_string('addanewdiscussion', 'mod_forum'));
     }
 
     /**
@@ -68,7 +68,7 @@ class behat_mod_forum extends behat_base {
      * @param TableNode $table
      */
     public function i_add_a_forum_discussion_to_forum_with($forumname, TableNode $table) {
-        $this->add_new_discussion($forumname, $table, get_string('addanewdiscussion', 'forum'));
+        $this->add_new_discussion($forumname, $table, get_string('addanewdiscussion', 'mod_forum'));
     }
 
     /**
@@ -80,7 +80,7 @@ class behat_mod_forum extends behat_base {
      * @param TableNode $table
      */
     public function i_add_a_forum_discussion_to_forum_inline_with($forumname, TableNode $table) {
-        $this->add_new_discussion_inline($forumname, $table, get_string('addanewdiscussion', 'forum'));
+        $this->add_new_discussion_inline($forumname, $table, get_string('addanewdiscussion', 'mod_forum'));
     }
 
     /**
@@ -99,7 +99,7 @@ class behat_mod_forum extends behat_base {
         // Fill form and post.
         $this->execute('behat_forms::i_set_the_following_fields_to_these_values', $table);
 
-        $this->execute('behat_forms::press_button', get_string('posttoforum', 'forum'));
+        $this->execute('behat_forms::press_button', get_string('posttoforum', 'mod_forum'));
         $this->execute('behat_general::i_wait_to_be_redirected');
     }
 
@@ -115,7 +115,7 @@ class behat_mod_forum extends behat_base {
         // Navigate to forum.
         $this->execute('behat_navigation::i_am_on_page_instance', [$this->escape($forumname), 'forum activity']);
         $this->execute('behat_general::click_link', $this->escape($postsubject));
-        $this->execute('behat_general::click_link', get_string('reply', 'forum'));
+        $this->execute('behat_general::click_link', get_string('reply', 'mod_forum'));
 
         // Fill form and post.
         $this->execute('behat_forms::i_set_the_following_fields_to_these_values', $table);
@@ -488,7 +488,7 @@ class behat_mod_forum extends behat_base {
     protected function fill_new_discussion_form(TableNode $table) {
         // Fill form and post.
         $this->execute('behat_forms::i_set_the_following_fields_to_these_values', $table);
-        $this->execute('behat_forms::press_button', get_string('posttoforum', 'forum'));
+        $this->execute('behat_forms::press_button', get_string('posttoforum', 'mod_forum'));
         $this->execute('behat_general::i_wait_to_be_redirected');
     }
 

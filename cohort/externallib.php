@@ -126,7 +126,7 @@ class core_cohort_external extends external_api {
             if (isset($cohort->theme)) {
                 if (!empty($CFG->allowcohortthemes)) {
                     if (empty($availablethemes[$cohort->theme])) {
-                        throw new moodle_exception('errorinvalidparam', 'webservice', '', 'theme');
+                        throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'theme');
                     }
                 }
             }
@@ -564,7 +564,7 @@ class core_cohort_external extends external_api {
             if (!empty($cohort->theme) && !empty($CFG->allowcohortthemes)) {
                 if (empty($availablethemes[$cohort->theme])) {
                     $debuginfo = 'The following cohort theme is not installed on this site: '.$cohort->theme;
-                    throw new moodle_exception('errorinvalidparam', 'webservice', '', 'theme', $debuginfo);
+                    throw new moodle_exception('errorinvalidparam', 'core_webservice', '', 'theme', $debuginfo);
                 }
             }
 
@@ -704,7 +704,7 @@ class core_cohort_external extends external_api {
                 }
                 self::validate_context($context);
             } catch (Exception $e) {
-                throw new moodle_exception('Error', 'cohort', '', $e->getMessage());
+                throw new moodle_exception('Error', 'core_cohort', '', $e->getMessage());
             }
             if (!has_any_capability(array('moodle/cohort:manage', 'moodle/cohort:assign'), $context)) {
                 throw new required_capability_exception($context, 'moodle/cohort:assign', 'nopermissions', '');

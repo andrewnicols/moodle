@@ -192,7 +192,7 @@ abstract class restore_dbops {
                 $rolemappings->mappings[$recrole->itemid] = $role;
                 // Prepare warning if no match found
                 if (!$match) {
-                    $problems['warnings'][] = get_string('cannotfindassignablerole', 'backup', $role->name);
+                    $problems['warnings'][] = get_string('cannotfindassignablerole', 'core_backup', $role->name);
                 }
             }
         }
@@ -655,12 +655,12 @@ abstract class restore_dbops {
                                 $movedcat->contextlevel = $fallbacks[$contextlevel];
                                 self::set_backup_ids_record($restoreid, 'question_category', $movedcat->id, 0, $contextid, $movedcat);
                                 // Warn about the performed fallback
-                                $warnings[] = get_string('qcategory2coursefallback', 'backup', $movedcat);
+                                $warnings[] = get_string('qcategory2coursefallback', 'core_backup', $movedcat);
                             }
 
                         // 4b) No fallback, error. End qcat loop.
                         } else {
-                            $errors[] = get_string('qcategorycannotberestored', 'backup', $category);
+                            $errors[] = get_string('qcategorycannotberestored', 'core_backup', $category);
                         }
                         break; // out from qcat loop (both 4a and 4b), we have decided about ALL categories in context (bank)
                     }
@@ -702,12 +702,12 @@ abstract class restore_dbops {
                                         $movedcat->contextlevel = $fallbacks[$contextlevel];
                                         self::set_backup_ids_record($restoreid, 'question_category', $movedcat->id, 0, $contextid, $movedcat);
                                         // Warn about the performed fallback
-                                        $warnings[] = get_string('question2coursefallback', 'backup', $movedcat);
+                                        $warnings[] = get_string('question2coursefallback', 'core_backup', $movedcat);
                                     }
 
                                 // 7b) No fallback, error. End qcat loop
                                 } else {
-                                    $errors[] = get_string('questioncannotberestored', 'backup', $question);
+                                    $errors[] = get_string('questioncannotberestored', 'core_backup', $question);
                                 }
                                 break 2; // out from qcat loop (both 7a and 7b), we have decided about ALL categories in context (bank)
                             }
@@ -726,7 +726,7 @@ abstract class restore_dbops {
 
             // 8) Check if backup is made on Moodle >= 3.5 and there are more than one top-level category in the context.
             if ($after35 && $topcats > 1) {
-                $errors[] = get_string('restoremultipletopcats', 'question', $contextid);
+                $errors[] = get_string('restoremultipletopcats', 'core_question', $contextid);
             }
 
         }

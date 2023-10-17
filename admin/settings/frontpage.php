@@ -20,7 +20,7 @@ if (!during_initial_install()) { //do not use during installation
             'moodle/question:moveall'), $frontpagecontext)) {
 
         // "frontpage" settingpage
-        $temp = new admin_settingpage('frontpagesettings', new lang_string('frontpagesettings','admin'), 'moodle/course:update', false, $frontpagecontext);
+        $temp = new admin_settingpage('frontpagesettings', new lang_string('frontpagesettings','core_admin'), 'moodle/course:update', false, $frontpagecontext);
         $temp->add(new admin_setting_sitesettext('fullname', new lang_string('fullsitename'), '', NULL)); // no default
         $temp->add(new admin_setting_sitesettext('shortname', new lang_string('shortsitename'), '', NULL)); // no default
         $temp->add(new admin_setting_special_frontpagedesc());
@@ -32,11 +32,11 @@ if (!during_initial_install()) { //do not use during installation
         for ($i=1; $i<100; $i++) {
             $options[$i] = $i;
         }
-        $temp->add(new admin_setting_configselect('maxcategorydepth', new lang_string('configsitemaxcategorydepth','admin'), new lang_string('configsitemaxcategorydepthhelp','admin'), 2, $options));
+        $temp->add(new admin_setting_configselect('maxcategorydepth', new lang_string('configsitemaxcategorydepth','core_admin'), new lang_string('configsitemaxcategorydepthhelp','core_admin'), 2, $options));
 
-        $temp->add(new admin_setting_configtext('frontpagecourselimit', new lang_string('configfrontpagecourselimit','admin'), new lang_string('configfrontpagecourselimithelp','admin'), 200, PARAM_INT));
+        $temp->add(new admin_setting_configtext('frontpagecourselimit', new lang_string('configfrontpagecourselimit','core_admin'), new lang_string('configfrontpagecourselimithelp','core_admin'), 200, PARAM_INT));
 
-        $temp->add(new admin_setting_sitesetcheckbox('numsections', new lang_string('sitesection'), new lang_string('sitesectionhelp','admin'), 1));
+        $temp->add(new admin_setting_sitesetcheckbox('numsections', new lang_string('sitesection'), new lang_string('sitesectionhelp','core_admin'), 1));
         $temp->add(new admin_setting_sitesetselect('newsitems', new lang_string('newsitemsnumber'), '', 3,
              array('0' => '0',
                    '1' => '1',
@@ -49,7 +49,7 @@ if (!during_initial_install()) { //do not use during installation
                    '8' => '8',
                    '9' => '9',
                    '10' => '10')));
-        $temp->add(new admin_setting_configtext('commentsperpage', new lang_string('commentsperpage', 'admin'), '', 15, PARAM_INT));
+        $temp->add(new admin_setting_configtext('commentsperpage', new lang_string('commentsperpage', 'core_admin'), '', 15, PARAM_INT));
 
         // front page default role
         $options = array(0=>new lang_string('none')); // roles to choose from
@@ -67,7 +67,7 @@ if (!during_initial_install()) { //do not use during installation
             //frotpage role may not exist in old upgraded sites
             unset($options[0]);
         }
-        $temp->add(new admin_setting_configselect('defaultfrontpageroleid', new lang_string('frontpagedefaultrole', 'admin'), '', $defaultfrontpageroleid, $options));
+        $temp->add(new admin_setting_configselect('defaultfrontpageroleid', new lang_string('frontpagedefaultrole', 'core_admin'), '', $defaultfrontpageroleid, $options));
 
         $ADMIN->add('frontpage', $temp);
     }

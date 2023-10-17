@@ -35,6 +35,6 @@ $handler = cohort_handler::create();
 $outputpage = new management($handler);
 
 echo $output->header(),
-     $output->heading(new lang_string('cohort_customfield', 'admin')),
+     $output->heading(new lang_string('cohort_customfield', 'core_admin')),
      $output->render($outputpage),
      $output->footer();

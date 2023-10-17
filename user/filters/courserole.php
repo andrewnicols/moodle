@@ -57,7 +57,7 @@ class user_filter_courserole extends user_filter_type {
      */
     public function get_roles() {
         $context = context_system::instance();
-        $roles = array(0 => get_string('anyrole', 'filters')) + get_default_enrol_roles($context);
+        $roles = array(0 => get_string('anyrole', 'core_filters')) + get_default_enrol_roles($context);
         return $roles;
     }
 
@@ -66,7 +66,7 @@ class user_filter_courserole extends user_filter_type {
      * @return array of course categories
      */
     public function get_course_categories() {
-        return array(0 => get_string('anycategory', 'filters')) + core_course_category::make_categories_list();
+        return array(0 => get_string('anycategory', 'core_filters')) + core_course_category::make_categories_list();
     }
 
     /**
@@ -76,11 +76,11 @@ class user_filter_courserole extends user_filter_type {
     public function setupForm(&$mform) {
         $objs = array();
         $objs['role'] = $mform->createElement('select', $this->_name .'_rl', null, $this->get_roles());
-        $objs['role']->setLabel(get_string('courserole', 'filters'));
+        $objs['role']->setLabel(get_string('courserole', 'core_filters'));
         $objs['category'] = $mform->createElement('select', $this->_name .'_ct', null, $this->get_course_categories());
-        $objs['category']->setLabel(get_string('coursecategory', 'filters'));
+        $objs['category']->setLabel(get_string('coursecategory', 'core_filters'));
         $objs['value'] = $mform->createElement('text', $this->_name, null);
-        $objs['value']->setLabel(get_string('coursevalue', 'filters'));
+        $objs['value']->setLabel(get_string('coursevalue', 'core_filters'));
         $grp =& $mform->addElement('group', $this->_name.'_grp', $this->_label, $objs, '', false);
         $mform->setType($this->_name, PARAM_TEXT);
         if ($this->_advanced) {
@@ -169,25 +169,25 @@ class user_filter_courserole extends user_filter_type {
             $role = $DB->get_record('role', array('id' => $roleid));
             $a->rolename = '"'.role_get_name($role).'"';
         } else {
-            $a->rolename = get_string('anyrole', 'filters');
+            $a->rolename = get_string('anyrole', 'core_filters');
         }
 
         if ($categoryid) {
             $catname = $DB->get_field('course_categories', 'name', array('id' => $categoryid));
             $a->categoryname = '"'.format_string($catname).'"';
         } else {
-            $a->categoryname = get_string('anycategory', 'filters');
+            $a->categoryname = get_string('anycategory', 'core_filters');
         }
 
         if ($value) {
             $a->coursename = '"'.s($value).'"';
             if (!$DB->record_exists('course', array('shortname' => $value))) {
-                return '<span class="notifyproblem">'.get_string('courserolelabelerror', 'filters', $a).'</span>';
+                return '<span class="notifyproblem">'.get_string('courserolelabelerror', 'core_filters', $a).'</span>';
             }
         } else {
-            $a->coursename = get_string('anycourse', 'filters');
+            $a->coursename = get_string('anycourse', 'core_filters');
         }
 
-        return get_string('courserolelabel', 'filters', $a);
+        return get_string('courserolelabel', 'core_filters', $a);
     }
 }

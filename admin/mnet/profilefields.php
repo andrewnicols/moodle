@@ -64,7 +64,7 @@ echo $OUTPUT->header();
 $currenttab = 'mnetprofilefields';
 require_once('tabs.php');
 
-echo $OUTPUT->heading(get_string('peerprofilefielddesc', 'mnet'), 4);
+echo $OUTPUT->heading(get_string('peerprofilefielddesc', 'core_mnet'), 4);
 
 $data = new Stdclass;
 $data->importdefault = get_config('mnet', 'host' . $hostid . 'importdefault');

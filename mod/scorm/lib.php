@@ -73,7 +73,7 @@ function scorm_status_options($withstrings = false) {
 
     if ($withstrings) {
         foreach ($options as $key => $value) {
-            $options[$key] = get_string('completionstatus_'.$value, 'scorm');
+            $options[$key] = get_string('completionstatus_'.$value, 'mod_scorm');
         }
     }
 
@@ -361,7 +361,7 @@ function scorm_user_outline($course, $user, $mod, $scorm) {
         if (!$grade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
             $result->info = get_string('gradenoun') . ': '. $grade->str_long_grade;
         } else {
-            $result->info = get_string('gradenoun') . ': ' . get_string('hidden', 'grades');
+            $result->info = get_string('gradenoun') . ': ' . get_string('hidden', 'core_grades');
         }
 
         return $result;
@@ -407,7 +407,7 @@ function scorm_user_complete($course, $user, $mod, $scorm) {
                 echo $OUTPUT->container(get_string('feedback').': '.$grade->str_feedback);
             }
         } else {
-            echo $OUTPUT->container(get_string('gradenoun') . ': ' . get_string('hidden', 'grades'));
+            echo $OUTPUT->container(get_string('gradenoun') . ': ' . get_string('hidden', 'core_grades'));
         }
     }
 
@@ -482,13 +482,13 @@ function scorm_user_complete($course, $user, $mod, $scorm) {
                             if ($usertrack->status == '') {
                                 $usertrack->status = 'notattempted';
                             }
-                            $strstatus = get_string($usertrack->status, 'scorm');
+                            $strstatus = get_string($usertrack->status, 'mod_scorm');
                             $report .= $OUTPUT->pix_icon($usertrack->status, $strstatus, 'scorm');
                         } else {
                             if ($sco->scormtype == 'sco') {
-                                $report .= $OUTPUT->pix_icon('notattempted', get_string('notattempted', 'scorm'), 'scorm');
+                                $report .= $OUTPUT->pix_icon('notattempted', get_string('notattempted', 'mod_scorm'), 'scorm');
                             } else {
-                                $report .= $OUTPUT->pix_icon('asset', get_string('asset', 'scorm'), 'scorm');
+                                $report .= $OUTPUT->pix_icon('asset', get_string('asset', 'mod_scorm'), 'scorm');
                             }
                         }
                         $report .= "&nbsp;$sco->title $score$totaltime".html_writer::end_tag('li');
@@ -517,13 +517,13 @@ function scorm_user_complete($course, $user, $mod, $scorm) {
     if ($sometoreport) {
         if ($firstmodify < $now) {
             $timeago = format_time($now - $firstmodify);
-            echo get_string('firstaccess', 'scorm').': '.userdate($firstmodify).' ('.$timeago.")".html_writer::empty_tag('br');
+            echo get_string('firstaccess', 'mod_scorm').': '.userdate($firstmodify).' ('.$timeago.")".html_writer::empty_tag('br');
         }
         if ($lastmodify > 0) {
             $timeago = format_time($now - $lastmodify);
-            echo get_string('lastaccess', 'scorm').': '.userdate($lastmodify).' ('.$timeago.")".html_writer::empty_tag('br');
+            echo get_string('lastaccess', 'mod_scorm').': '.userdate($lastmodify).' ('.$timeago.")".html_writer::empty_tag('br');
         }
-        echo get_string('report', 'scorm').":".html_writer::empty_tag('br');
+        echo get_string('report', 'mod_scorm').":".html_writer::empty_tag('br');
         echo $report;
     } else {
         print_string('noactivity', 'scorm');
@@ -775,8 +775,8 @@ function scorm_option2text($scorm) {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function scorm_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'scormheader', get_string('modulenameplural', 'scorm'));
-    $mform->addElement('advcheckbox', 'reset_scorm', get_string('deleteallattempts', 'scorm'));
+    $mform->addElement('header', 'scormheader', get_string('modulenameplural', 'mod_scorm'));
+    $mform->addElement('advcheckbox', 'reset_scorm', get_string('deleteallattempts', 'mod_scorm'));
 }
 
 /**
@@ -822,7 +822,7 @@ function scorm_reset_gradebook($courseid, $type='') {
 function scorm_reset_userdata($data) {
     global $DB;
 
-    $componentstr = get_string('modulenameplural', 'scorm');
+    $componentstr = get_string('modulenameplural', 'mod_scorm');
     $status = [];
 
     if (!empty($data->reset_scorm)) {
@@ -838,7 +838,7 @@ function scorm_reset_userdata($data) {
             scorm_reset_gradebook($data->courseid);
         }
 
-        $status[] = ['component' => $componentstr, 'item' => get_string('deleteallattempts', 'scorm'), 'error' => false];
+        $status[] = ['component' => $componentstr, 'item' => get_string('deleteallattempts', 'mod_scorm'), 'error' => false];
     }
 
     // Any changes to the list of dates that needs to be rolled should be same during course restore and course reset.
@@ -859,8 +859,8 @@ function scorm_reset_userdata($data) {
  */
 function scorm_get_file_areas($course, $cm, $context) {
     $areas = array();
-    $areas['content'] = get_string('areacontent', 'scorm');
-    $areas['package'] = get_string('areapackage', 'scorm');
+    $areas['content'] = get_string('areacontent', 'mod_scorm');
+    $areas['package'] = get_string('areapackage', 'mod_scorm');
     return $areas;
 }
 
@@ -1115,7 +1115,7 @@ function scorm_print_overview() {
  * @param stdClass $currentcontext Current context of block
  */
 function scorm_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $modulepagetype = array('mod-scorm-*' => get_string('page-mod-scorm-x', 'scorm'));
+    $modulepagetype = array('mod-scorm-*' => get_string('page-mod-scorm-x', 'mod_scorm'));
     return $modulepagetype;
 }
 
@@ -1160,7 +1160,7 @@ function scorm_version_check($scormversion, $version='') {
  */
 function scorm_dndupload_register() {
     return array('files' => array(
-        array('extension' => 'zip', 'message' => get_string('dnduploadscorm', 'scorm'))
+        array('extension' => 'zip', 'message' => get_string('dnduploadscorm', 'mod_scorm'))
     ));
 }
 
@@ -1244,7 +1244,7 @@ function scorm_validate_package($file) {
     $filelist = $file->list_files($packer);
 
     if (!is_array($filelist)) {
-        $errors['packagefile'] = get_string('badarchive', 'scorm');
+        $errors['packagefile'] = get_string('badarchive', 'mod_scorm');
     } else {
         $aiccfound = false;
         $badmanifestpresent = false;
@@ -1261,9 +1261,9 @@ function scorm_validate_package($file) {
         }
         if (!$aiccfound) {
             if ($badmanifestpresent) {
-                $errors['packagefile'] = get_string('badimsmanifestlocation', 'scorm');
+                $errors['packagefile'] = get_string('badimsmanifestlocation', 'mod_scorm');
             } else {
-                $errors['packagefile'] = get_string('nomanifest', 'scorm');
+                $errors['packagefile'] = get_string('nomanifest', 'mod_scorm');
             }
         }
     }
@@ -1579,7 +1579,7 @@ function mod_scorm_core_calendar_provide_event_action(calendar_event $event,
     list($actionable, $warnings) = scorm_get_availability_status($scorm, false, null, $userid);
 
     return $factory->create_instance(
-        get_string('enter', 'scorm'),
+        get_string('enter', 'mod_scorm'),
         new \moodle_url('/mod/scorm/view.php', array('id' => $cm->id)),
         1,
         $actionable
@@ -1658,17 +1658,17 @@ function mod_scorm_get_completion_active_rule_descriptions($cm) {
                         }
                     }
                     $statusstring = implode(', ', $cvalues);
-                    $descriptions[] = get_string('completionstatusrequireddesc', 'scorm', $statusstring);
+                    $descriptions[] = get_string('completionstatusrequireddesc', 'mod_scorm', $statusstring);
                 }
                 break;
             case 'completionscorerequired':
                 if (!is_null($val)) {
-                    $descriptions[] = get_string('completionscorerequireddesc', 'scorm', $val);
+                    $descriptions[] = get_string('completionscorerequireddesc', 'mod_scorm', $val);
                 }
                 break;
             case 'completionstatusallscos':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionstatusallscos', 'scorm');
+                    $descriptions[] = get_string('completionstatusallscos', 'mod_scorm');
                 }
                 break;
             default:
@@ -1775,7 +1775,7 @@ function mod_scorm_core_calendar_get_valid_event_timestart_range(\calendar_event
         if (!empty($instance->timeclose)) {
             $maxdate = [
                 $instance->timeclose,
-                get_string('openafterclose', 'scorm')
+                get_string('openafterclose', 'mod_scorm')
             ];
         }
     } else if ($event->eventtype == SCORM_EVENT_TYPE_CLOSE) {
@@ -1784,7 +1784,7 @@ function mod_scorm_core_calendar_get_valid_event_timestart_range(\calendar_event
         if (!empty($instance->timeopen)) {
             $mindate = [
                 $instance->timeopen,
-                get_string('closebeforeopen', 'scorm')
+                get_string('closebeforeopen', 'mod_scorm')
             ];
         }
     }
@@ -1823,7 +1823,7 @@ function mod_scorm_get_path_from_pluginfile(string $filearea, array $args) : arr
  * @return lang_string The event type lang string.
  */
 function mod_scorm_core_calendar_get_event_action_string(string $eventtype): string {
-    $modulename = get_string('modulename', 'scorm');
+    $modulename = get_string('modulename', 'mod_scorm');
 
     switch ($eventtype) {
         case SCORM_EVENT_TYPE_OPEN:
@@ -1833,10 +1833,10 @@ function mod_scorm_core_calendar_get_event_action_string(string $eventtype): str
             $identifier = 'calendarend';
             break;
         default:
-            return get_string('requiresaction', 'calendar', $modulename);
+            return get_string('requiresaction', 'core_calendar', $modulename);
     }
 
-    return get_string($identifier, 'scorm', $modulename);
+    return get_string($identifier, 'mod_scorm', $modulename);
 }
 
 /**
@@ -1852,6 +1852,6 @@ function mod_scorm_core_calendar_get_event_action_string(string $eventtype): str
 function scorm_extend_settings_navigation(settings_navigation $settings, navigation_node $scormnode): void {
     if (has_capability('mod/scorm:viewreport', $settings->get_page()->cm->context)) {
         $url = new moodle_url('/mod/scorm/report.php', ['id' => $settings->get_page()->cm->id]);
-        $scormnode->add(get_string("reports", "scorm"), $url, navigation_node::TYPE_CUSTOM, null, 'scormreport');
+        $scormnode->add(get_string("reports", 'mod_scorm'), $url, navigation_node::TYPE_CUSTOM, null, 'scormreport');
     }
 }

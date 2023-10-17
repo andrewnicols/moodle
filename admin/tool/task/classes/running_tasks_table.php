@@ -47,7 +47,7 @@ class running_tasks_table extends \table_sql {
 
         $columnheaders = [
             'classname'    => get_string('classname', 'tool_task'),
-            'type'         => get_string('tasktype', 'admin'),
+            'type'         => get_string('tasktype', 'core_admin'),
             'time'         => get_string('taskage', 'tool_task'),
             'timestarted'  => get_string('started', 'tool_task'),
             'hostname'     => get_string('hostname', 'tool_task'),

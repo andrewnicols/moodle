@@ -35,7 +35,7 @@ $PAGE->set_url($url);
 require_login();
 
 if (isguestuser()) {
-    throw new \moodle_exception('guestnoeditmessage', 'message');
+    throw new \moodle_exception('guestnoeditmessage', 'core_message');
 }
 
 $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
@@ -55,7 +55,7 @@ if ($user->id == $USER->id) {
     require_capability('moodle/user:editmessageprofile', $personalcontext);
     // No editing of guest user account.
     if (isguestuser($user->id)) {
-        throw new \moodle_exception('guestnoeditmessageother', 'message');
+        throw new \moodle_exception('guestnoeditmessageother', 'core_message');
     }
     // No editing of admins by non admins!
     if (is_siteadmin($user) and !is_siteadmin($USER)) {
@@ -66,7 +66,7 @@ if ($user->id == $USER->id) {
 }
 
 // Display page header.
-$strmessaging = get_string('notificationpreferences', 'message');
+$strmessaging = get_string('notificationpreferences', 'core_message');
 $PAGE->set_title($strmessaging);
 $PAGE->set_heading(fullname($user));
 

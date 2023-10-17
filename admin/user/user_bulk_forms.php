@@ -68,7 +68,7 @@ class user_bulk_action_form extends moodleform {
         if (has_capability('moodle/user:update', $syscontext)) {
             $actions['download'] = new action_link(
                 new moodle_url('/admin/user/user_bulk_download.php'),
-                get_string('download', 'admin'));
+                get_string('download', 'core_admin'));
         }
 
         if (has_capability('moodle/user:update', $syscontext)) {
@@ -142,12 +142,12 @@ class user_bulk_form extends moodleform {
 
         if (is_array($ausers)) {
             if ($total == $acount) {
-                $achoices[0] = get_string('allusers', 'bulkusers', $total);
+                $achoices[0] = get_string('allusers', 'mod_bulkusers', $total);
             } else {
                 $a = new stdClass();
                 $a->total  = $total;
                 $a->count = $acount;
-                $achoices[0] = get_string('allfilteredusers', 'bulkusers', $a);
+                $achoices[0] = get_string('allfilteredusers', 'mod_bulkusers', $a);
             }
             $achoices = $achoices + $ausers;
 
@@ -156,14 +156,14 @@ class user_bulk_form extends moodleform {
             }
 
         } else {
-            $achoices[-1] = get_string('nofilteredusers', 'bulkusers', $total);
+            $achoices[-1] = get_string('nofilteredusers', 'mod_bulkusers', $total);
         }
 
         if (is_array($susers)) {
             $a = new stdClass();
             $a->total  = $total;
             $a->count = $scount;
-            $schoices[0] = get_string('allselectedusers', 'bulkusers', $a);
+            $schoices[0] = get_string('allselectedusers', 'mod_bulkusers', $a);
             $schoices = $schoices + $susers;
 
             if ($scount > MAX_BULK_USERS) {
@@ -171,30 +171,30 @@ class user_bulk_form extends moodleform {
             }
 
         } else {
-            $schoices[-1] = get_string('noselectedusers', 'bulkusers');
+            $schoices[-1] = get_string('noselectedusers', 'mod_bulkusers');
         }
 
-        $mform->addElement('header', 'users', get_string('usersinlist', 'bulkusers'));
+        $mform->addElement('header', 'users', get_string('usersinlist', 'mod_bulkusers'));
 
         $objs = array();
-        $objs[0] =& $mform->createElement('select', 'ausers', get_string('available', 'bulkusers'), $achoices, 'size="15"');
+        $objs[0] =& $mform->createElement('select', 'ausers', get_string('available', 'mod_bulkusers'), $achoices, 'size="15"');
         $objs[0]->setMultiple(true);
-        $objs[1] =& $mform->createElement('select', 'susers', get_string('selected', 'bulkusers'), $schoices, 'size="15"');
+        $objs[1] =& $mform->createElement('select', 'susers', get_string('selected', 'mod_bulkusers'), $schoices, 'size="15"');
         $objs[1]->setMultiple(true);
 
-        $grp =& $mform->addElement('group', 'usersgrp', get_string('users', 'bulkusers'), $objs, ' ', false);
+        $grp =& $mform->addElement('group', 'usersgrp', get_string('users', 'mod_bulkusers'), $objs, ' ', false);
         $mform->addHelpButton('usersgrp', 'users', 'bulkusers');
 
         $mform->addElement('static', 'comment');
 
         $objs = array();
-        $objs[] =& $mform->createElement('submit', 'addsel', get_string('addsel', 'bulkusers'));
-        $objs[] =& $mform->createElement('submit', 'removesel', get_string('removesel', 'bulkusers'));
-        $grp =& $mform->addElement('group', 'buttonsgrp', get_string('selectedlist', 'bulkusers'), $objs, null, false);
+        $objs[] =& $mform->createElement('submit', 'addsel', get_string('addsel', 'mod_bulkusers'));
+        $objs[] =& $mform->createElement('submit', 'removesel', get_string('removesel', 'mod_bulkusers'));
+        $grp =& $mform->addElement('group', 'buttonsgrp', get_string('selectedlist', 'mod_bulkusers'), $objs, null, false);
         $mform->addHelpButton('buttonsgrp', 'selectedlist', 'bulkusers');
         $objs = array();
-        $objs[] =& $mform->createElement('submit', 'addall', get_string('addall', 'bulkusers'));
-        $objs[] =& $mform->createElement('submit', 'removeall', get_string('removeall', 'bulkusers'));
+        $objs[] =& $mform->createElement('submit', 'addall', get_string('addall', 'mod_bulkusers'));
+        $objs[] =& $mform->createElement('submit', 'removeall', get_string('removeall', 'mod_bulkusers'));
         $grp =& $mform->addElement('group', 'buttonsgrp2', '', $objs, null, false);
 
         $renderer =& $mform->defaultRenderer();

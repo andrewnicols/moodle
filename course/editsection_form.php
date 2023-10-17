@@ -50,14 +50,14 @@ class editsection_form extends moodleform {
 
         if (!empty($CFG->enableavailability)) {
             $mform->addElement('header', 'availabilityconditions',
-                get_string('restrictaccess', 'availability'));
+                get_string('restrictaccess', 'core_availability'));
             $mform->setExpanded('availabilityconditions', false);
 
             // Availability field. This is just a textarea; the user interface
             // interaction is all implemented in JavaScript. The field is named
             // availabilityconditionsjson for consistency with moodleform_mod.
             $mform->addElement('textarea', 'availabilityconditionsjson',
-                get_string('accessrestrictions', 'availability'),
+                get_string('accessrestrictions', 'core_availability'),
                 ['class' => 'd-none']
             );
             // Availability loading indicator.

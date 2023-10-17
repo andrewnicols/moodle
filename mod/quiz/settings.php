@@ -50,19 +50,19 @@ core_collator::ksort($rulesbyname);
 
 // Create the quiz settings page.
 if (empty($reportsbyname) && empty($rulesbyname)) {
-    $pagetitle = get_string('modulename', 'quiz');
+    $pagetitle = get_string('modulename', 'mod_quiz');
 } else {
-    $pagetitle = get_string('generalsettings', 'admin');
+    $pagetitle = get_string('generalsettings', 'core_admin');
 }
 $quizsettings = new admin_settingpage('modsettingquiz', $pagetitle, 'moodle/site:config');
 
 if ($ADMIN->fulltree) {
     // Introductory explanation that all the settings are defaults for the add quiz form.
-    $quizsettings->add(new admin_setting_heading('quizintro', '', get_string('configintro', 'quiz')));
+    $quizsettings->add(new admin_setting_heading('quizintro', '', get_string('configintro', 'mod_quiz')));
 
     // Time limit.
     $setting = new admin_setting_configduration('quiz/timelimit',
-            get_string('timelimit', 'quiz'), get_string('configtimelimitsec', 'quiz'),
+            get_string('timelimit', 'mod_quiz'), get_string('configtimelimitsec', 'mod_quiz'),
             '0', 60);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -70,18 +70,18 @@ if ($ADMIN->fulltree) {
 
     // Delay to notify graded attempts.
     $quizsettings->add(new admin_setting_configduration('quiz/notifyattemptgradeddelay',
-        get_string('attemptgradeddelay', 'quiz'), get_string('attemptgradeddelay_desc', 'quiz'), 5 * HOURSECS, HOURSECS));
+        get_string('attemptgradeddelay', 'mod_quiz'), get_string('attemptgradeddelay_desc', 'mod_quiz'), 5 * HOURSECS, HOURSECS));
 
     // What to do with overdue attempts.
     $setting = new \mod_quiz\admin\overdue_handling_setting('quiz/overduehandling',
-            get_string('overduehandling', 'quiz'), get_string('overduehandling_desc', 'quiz'),
+            get_string('overduehandling', 'mod_quiz'), get_string('overduehandling_desc', 'mod_quiz'),
             ['value' => 'autosubmit', 'adv' => false], null);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
 
     // Grace period time.
     $setting = new admin_setting_configduration('quiz/graceperiod',
-            get_string('graceperiod', 'quiz'), get_string('graceperiod_desc', 'quiz'),
+            get_string('graceperiod', 'mod_quiz'), get_string('graceperiod_desc', 'mod_quiz'),
             '86400');
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -89,7 +89,7 @@ if ($ADMIN->fulltree) {
 
     // Minimum grace period used behind the scenes.
     $quizsettings->add(new admin_setting_configduration('quiz/graceperiodmin',
-            get_string('graceperiodmin', 'quiz'), get_string('graceperiodmin_desc', 'quiz'),
+            get_string('graceperiodmin', 'mod_quiz'), get_string('graceperiodmin_desc', 'mod_quiz'),
             60, 1));
 
     // Number of attempts.
@@ -98,7 +98,7 @@ if ($ADMIN->fulltree) {
         $options[$i] = $i;
     }
     $setting = new admin_setting_configselect('quiz/attempts',
-            get_string('attemptsallowed', 'quiz'), get_string('configattemptsallowed', 'quiz'),
+            get_string('attemptsallowed', 'mod_quiz'), get_string('configattemptsallowed', 'mod_quiz'),
             0, $options);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -106,26 +106,26 @@ if ($ADMIN->fulltree) {
 
     // Grading method.
     $setting = new \mod_quiz\admin\grade_method_setting('quiz/grademethod',
-            get_string('grademethod', 'quiz'), get_string('configgrademethod', 'quiz'),
+            get_string('grademethod', 'mod_quiz'), get_string('configgrademethod', 'mod_quiz'),
             ['value' => QUIZ_GRADEHIGHEST, 'adv' => false], null);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
 
     // Maximum grade.
     $setting = new admin_setting_configtext('quiz/maximumgrade',
-            get_string('maximumgrade'), get_string('configmaximumgrade', 'quiz'), 10, PARAM_INT);
+            get_string('maximumgrade'), get_string('configmaximumgrade', 'mod_quiz'), 10, PARAM_INT);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
 
     // Questions per page.
     $perpage = [];
     $perpage[0] = get_string('never');
-    $perpage[1] = get_string('aftereachquestion', 'quiz');
+    $perpage[1] = get_string('aftereachquestion', 'mod_quiz');
     for ($i = 2; $i <= QUIZ_MAX_QPP_OPTION; ++$i) {
-        $perpage[$i] = get_string('afternquestions', 'quiz', $i);
+        $perpage[$i] = get_string('afternquestions', 'mod_quiz', $i);
     }
     $setting = new admin_setting_configselect('quiz/questionsperpage',
-            get_string('newpageevery', 'quiz'), get_string('confignewpageevery', 'quiz'),
+            get_string('newpageevery', 'mod_quiz'), get_string('confignewpageevery', 'mod_quiz'),
             1, $perpage);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -133,7 +133,7 @@ if ($ADMIN->fulltree) {
 
     // Navigation method.
     $setting = new admin_setting_configselect('quiz/navmethod',
-            get_string('navmethod', 'quiz'), get_string('confignavmethod', 'quiz'),
+            get_string('navmethod', 'mod_quiz'), get_string('confignavmethod', 'mod_quiz'),
             QUIZ_NAVMETHOD_FREE, quiz_get_navigation_options());
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, true);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -141,7 +141,7 @@ if ($ADMIN->fulltree) {
 
     // Shuffle within questions.
     $setting = new admin_setting_configcheckbox('quiz/shuffleanswers',
-            get_string('shufflewithin', 'quiz'), get_string('configshufflewithin', 'quiz'),
+            get_string('shufflewithin', 'mod_quiz'), get_string('configshufflewithin', 'mod_quiz'),
             1);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -149,24 +149,24 @@ if ($ADMIN->fulltree) {
 
     // Preferred behaviour.
     $setting = new admin_setting_question_behaviour('quiz/preferredbehaviour',
-            get_string('howquestionsbehave', 'question'), get_string('howquestionsbehave_desc', 'quiz'),
+            get_string('howquestionsbehave', 'core_question'), get_string('howquestionsbehave_desc', 'mod_quiz'),
             'deferredfeedback');
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
 
     // Can redo completed questions.
     $setting = new admin_setting_configselect('quiz/canredoquestions',
-            get_string('canredoquestions', 'quiz'), get_string('canredoquestions_desc', 'quiz'),
+            get_string('canredoquestions', 'mod_quiz'), get_string('canredoquestions_desc', 'mod_quiz'),
             0,
-            [0 => get_string('no'), 1 => get_string('canredoquestionsyes', 'quiz')]);
+            [0 => get_string('no'), 1 => get_string('canredoquestionsyes', 'mod_quiz')]);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, true);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
 
     // Each attempt builds on last.
     $setting = new admin_setting_configcheckbox('quiz/attemptonlast',
-            get_string('eachattemptbuildsonthelast', 'quiz'),
-            get_string('configeachattemptbuildsonthelast', 'quiz'),
+            get_string('eachattemptbuildsonthelast', 'mod_quiz'),
+            get_string('configeachattemptbuildsonthelast', 'mod_quiz'),
             0);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, true);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -174,7 +174,7 @@ if ($ADMIN->fulltree) {
 
     // Review options.
     $quizsettings->add(new admin_setting_heading('reviewheading',
-            get_string('reviewoptionsheading', 'quiz'), ''));
+            get_string('reviewoptionsheading', 'mod_quiz'), ''));
     foreach (review_setting::fields() as $field => $name) {
         $default = review_setting::all_on();
         $forceduring = null;
@@ -190,7 +190,7 @@ if ($ADMIN->fulltree) {
 
     // Show the user's picture.
     $setting = new \mod_quiz\admin\user_image_setting('quiz/showuserpicture',
-            get_string('showuserpicture', 'quiz'), get_string('configshowuserpicture', 'quiz'),
+            get_string('showuserpicture', 'mod_quiz'), get_string('configshowuserpicture', 'mod_quiz'),
             ['value' => 0, 'adv' => false], null);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
@@ -201,20 +201,20 @@ if ($ADMIN->fulltree) {
         $options[$i] = $i;
     }
     $setting = new admin_setting_configselect('quiz/decimalpoints',
-            get_string('decimalplaces', 'quiz'), get_string('configdecimalplaces', 'quiz'),
+            get_string('decimalplaces', 'mod_quiz'), get_string('configdecimalplaces', 'mod_quiz'),
             2, $options);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
 
     // Decimal places for question grades.
-    $options = [-1 => get_string('sameasoverall', 'quiz')];
+    $options = [-1 => get_string('sameasoverall', 'mod_quiz')];
     for ($i = 0; $i <= QUIZ_MAX_Q_DECIMAL_OPTION; $i++) {
         $options[$i] = $i;
     }
     $setting = new admin_setting_configselect('quiz/questiondecimalpoints',
-            get_string('decimalplacesquestion', 'quiz'),
-            get_string('configdecimalplacesquestion', 'quiz'),
+            get_string('decimalplacesquestion', 'mod_quiz'),
+            get_string('configdecimalplacesquestion', 'mod_quiz'),
             -1, $options);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -222,7 +222,7 @@ if ($ADMIN->fulltree) {
 
     // Show blocks during quiz attempts.
     $setting = new admin_setting_configcheckbox('quiz/showblocks',
-            get_string('showblocks', 'quiz'), get_string('configshowblocks', 'quiz'),
+            get_string('showblocks', 'mod_quiz'), get_string('configshowblocks', 'mod_quiz'),
             0);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, true);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -230,7 +230,7 @@ if ($ADMIN->fulltree) {
 
     // Password.
     $setting = new admin_setting_configpasswordunmask('quiz/quizpassword',
-            get_string('requirepassword', 'quiz'), get_string('configrequirepassword', 'quiz'),
+            get_string('requirepassword', 'mod_quiz'), get_string('configrequirepassword', 'mod_quiz'),
             '');
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
     $setting->set_required_flag_options(admin_setting_flag::ENABLED, false);
@@ -239,7 +239,7 @@ if ($ADMIN->fulltree) {
 
     // IP restrictions.
     $setting = new admin_setting_configtext('quiz/subnet',
-            get_string('requiresubnet', 'quiz'), get_string('configrequiresubnet', 'quiz'),
+            get_string('requiresubnet', 'mod_quiz'), get_string('configrequiresubnet', 'mod_quiz'),
             '', PARAM_TEXT);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, true);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -247,13 +247,13 @@ if ($ADMIN->fulltree) {
 
     // Enforced delay between attempts.
     $setting = new admin_setting_configduration('quiz/delay1',
-            get_string('delay1st2nd', 'quiz'), get_string('configdelay1st2nd', 'quiz'),
+            get_string('delay1st2nd', 'mod_quiz'), get_string('configdelay1st2nd', 'mod_quiz'),
             0, 60);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, true);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
     $setting = new admin_setting_configduration('quiz/delay2',
-            get_string('delaylater', 'quiz'), get_string('configdelaylater', 'quiz'),
+            get_string('delaylater', 'mod_quiz'), get_string('configdelaylater', 'mod_quiz'),
             0, 60);
     $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, true);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
@@ -261,25 +261,25 @@ if ($ADMIN->fulltree) {
 
     // Browser security.
     $setting = new \mod_quiz\admin\browser_security_setting('quiz/browsersecurity',
-            get_string('showinsecurepopup', 'quiz'), get_string('configpopup', 'quiz'),
+            get_string('showinsecurepopup', 'mod_quiz'), get_string('configpopup', 'mod_quiz'),
             ['value' => '-', 'adv' => true], null);
     $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
     $quizsettings->add($setting);
 
     $quizsettings->add(new admin_setting_configtext('quiz/initialnumfeedbacks',
-            get_string('initialnumfeedbacks', 'quiz'), get_string('initialnumfeedbacks_desc', 'quiz'),
+            get_string('initialnumfeedbacks', 'mod_quiz'), get_string('initialnumfeedbacks_desc', 'mod_quiz'),
             2, PARAM_INT, 5));
 
     // Allow user to specify if setting outcomes is an advanced setting.
     if (!empty($CFG->enableoutcomes)) {
         $quizsettings->add(new admin_setting_configcheckbox('quiz/outcomes_adv',
-            get_string('outcomesadvanced', 'quiz'), get_string('configoutcomesadvanced', 'quiz'),
+            get_string('outcomesadvanced', 'mod_quiz'), get_string('configoutcomesadvanced', 'mod_quiz'),
             '0'));
     }
 
     // Autosave frequency.
     $quizsettings->add(new admin_setting_configduration('quiz/autosaveperiod',
-            get_string('autosaveperiod', 'quiz'), get_string('autosaveperiod_desc', 'quiz'), 60, 1));
+            get_string('autosaveperiod', 'mod_quiz'), get_string('autosaveperiod_desc', 'mod_quiz'), 60, 1));
 }
 
 // Now, depending on whether any reports have their own settings page, add
@@ -288,7 +288,7 @@ if (empty($reportsbyname) && empty($rulesbyname)) {
     $ADMIN->add('modsettings', $quizsettings);
 } else {
     $ADMIN->add('modsettings', new admin_category('modsettingsquizcat',
-            get_string('modulename', 'quiz'), $module->is_enabled() === false));
+            get_string('modulename', 'mod_quiz'), $module->is_enabled() === false));
     $ADMIN->add('modsettingsquizcat', $quizsettings);
 
     // Add settings pages for the quiz report subplugins.

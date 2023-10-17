@@ -46,7 +46,7 @@ if (!isset($plugins['keymanager'])) {
 }
 
 $actionbar = new \core_grades\output\import_key_manager_action_bar($context);
-print_grade_page_head($course->id, 'import', 'keymanager', get_string('keymanager', 'grades'),
+print_grade_page_head($course->id, 'import', 'keymanager', get_string('keymanager', 'core_grades'),
     false, false, true, 'importcsv', 'grades', null, $actionbar);
 
 $stredit   = get_string('edit');
@@ -74,7 +74,7 @@ if ($keys = $DB->get_records_select('user_private_key', "script='grade/import' A
     }
 }
 $table = new html_table();
-$table->head  = array(get_string('keyvalue', 'userkey'), get_string('keyiprestriction', 'userkey'), get_string('keyvaliduntil', 'userkey'), $stredit);
+$table->head  = array(get_string('keyvalue', 'core_userkey'), get_string('keyiprestriction', 'core_userkey'), get_string('keyvaliduntil', 'core_userkey'), $stredit);
 $table->size  = array('50%', '30%', '10%', '10%');
 $table->align = array('left', 'left', 'left', 'center');
 $table->width = '90%';

@@ -75,7 +75,7 @@ $user->interests = core_tag_tag::get_item_tags_array('core', 'user', $user->id);
 if (is_mnet_remote_user($user)) {
     if (user_not_fully_set_up($user, true)) {
         $hostwwwroot = $DB->get_field('mnet_host', 'wwwroot', array('id' => $user->mnethostid));
-        throw new \moodle_exception('usernotfullysetup', 'mnet', '', $hostwwwroot);
+        throw new \moodle_exception('usernotfullysetup', 'core_mnet', '', $hostwwwroot);
     }
     redirect($CFG->wwwroot . "/user/view.php?course={$course->id}");
 }
@@ -84,7 +84,7 @@ if (is_mnet_remote_user($user)) {
 $userauth = get_auth_plugin($user->auth);
 
 if (!$userauth->can_edit_profile()) {
-    throw new \moodle_exception('noprofileedit', 'auth');
+    throw new \moodle_exception('noprofileedit', 'core_auth');
 }
 
 if ($editurl = $userauth->edit_profile_url()) {
@@ -207,7 +207,7 @@ if ($userform->is_cancelled()) {
             $a->newemail = $emailchanged = $usernew->email;
             $a->oldemail = $usernew->email = $user->email;
 
-            $emailchangedhtml = $OUTPUT->box(get_string('auth_changingemailaddress', 'auth', $a), 'generalbox', 'notice');
+            $emailchangedhtml = $OUTPUT->box(get_string('auth_changingemailaddress', 'core_auth', $a), 'generalbox', 'notice');
             $emailchangedhtml .= $OUTPUT->continue_button($returnurl);
         }
     }
@@ -266,8 +266,8 @@ if ($userform->is_cancelled()) {
         $a->fullname = fullname($tempuser, true);
         $a->supportemail = $OUTPUT->supportemail();
 
-        $emailupdatemessage = get_string('emailupdatemessage', 'auth', $a);
-        $emailupdatetitle = get_string('emailupdatetitle', 'auth', $a);
+        $emailupdatemessage = get_string('emailupdatemessage', 'core_auth', $a);
+        $emailupdatetitle = get_string('emailupdatetitle', 'core_auth', $a);
 
         // Email confirmation directly rather than using messaging so they will definitely get an email.
         $noreplyuser = core_user::get_noreply_user();

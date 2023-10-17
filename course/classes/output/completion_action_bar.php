@@ -64,7 +64,7 @@ class completion_action_bar implements templatable, renderable {
             $this->currenturl->out(false)
         );
         $selectmenu->set_label(
-            get_string('coursecompletionnavigation', 'completion'),
+            get_string('coursecompletionnavigation', 'core_completion'),
             ['class' => 'sr-only']
         );
 

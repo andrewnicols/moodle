@@ -73,7 +73,7 @@ require_sesskey();
 
 // Check that this attempt belongs to this user.
 if ($attemptobj->get_userid() != $USER->id) {
-    throw new moodle_exception('notyourattempt', 'quiz', $attemptobj->view_url());
+    throw new moodle_exception('notyourattempt', 'mod_quiz', $attemptobj->view_url());
 }
 
 // Check capabilities.
@@ -83,12 +83,12 @@ if (!$attemptobj->is_preview_user()) {
 
 // If the attempt is already closed, send them to the review page.
 if ($attemptobj->is_finished()) {
-    throw new moodle_exception('attemptalreadyclosed', 'quiz', $attemptobj->view_url());
+    throw new moodle_exception('attemptalreadyclosed', 'mod_quiz', $attemptobj->view_url());
 }
 
 // If this page cannot be accessed, notify user and send them to the correct page.
 if (!$finishattempt && !$attemptobj->check_page_access($thispage)) {
-    throw new moodle_exception('submissionoutofsequencefriendlymessage', 'question',
+    throw new moodle_exception('submissionoutofsequencefriendlymessage', 'core_question',
             $attemptobj->attempt_url(null, $attemptobj->get_currentpage()));
 }
 

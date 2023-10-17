@@ -122,14 +122,14 @@ Example:
 }
 
 if (empty($CFG->version)) {
-    cli_error(get_string('missingconfigversion', 'debug'));
+    cli_error(get_string('missingconfigversion', 'mod_debug'));
 }
 
 require("$CFG->dirroot/version.php");       // defines $version, $release, $branch and $maturity
 $CFG->target_release = $release;            // used during installation and upgrades
 
 if ($version < $CFG->version) {
-    cli_error(get_string('downgradedcore', 'error'));
+    cli_error(get_string('downgradedcore', 'mod_error'));
 }
 
 $oldversion = "$CFG->release ($CFG->version)";

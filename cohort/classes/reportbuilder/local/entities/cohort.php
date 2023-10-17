@@ -231,7 +231,7 @@ class cohort extends base {
                 }
 
                 return $component === ''
-                    ? get_string('nocomponent', 'cohort')
+                    ? get_string('nocomponent', 'core_cohort')
                     : get_string('pluginname', $component);
             });
 

@@ -51,7 +51,7 @@ class grouping_group_assigned extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventgroupinggroupassigned', 'group');
+        return get_string('eventgroupinggroupassigned', 'core_group');
     }
 
     /**

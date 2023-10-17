@@ -70,9 +70,9 @@ class data_field_checkbox extends data_field_base {
         $str = '<div title="' . s($this->field->description) . '">';
         $str .= '<fieldset><legend><span class="accesshide">'.$this->field->name;
         if ($this->field->required) {
-            $str .= '$nbsp;' . get_string('requiredelement', 'form');
+            $str .= '$nbsp;' . get_string('requiredelement', 'core_form');
             $str .= '</span></legend>';
-            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
             $str .= html_writer::div($image, 'inline-req');
         } else {
             $str .= '</span></legend>';
@@ -129,7 +129,7 @@ class data_field_checkbox extends data_field_base {
             return '';
         }
 
-        $requiredstr = get_string('selectedrequired', 'data');
+        $requiredstr = get_string('selectedrequired', 'mod_data');
         $str .= html_writer::checkbox('f_'.$this->field->id.'_allreq', null, $allrequired, $requiredstr, $marginclass);
         return $str;
     }

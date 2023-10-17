@@ -50,7 +50,7 @@ if (!\enrol_lti\helper::verify_proxy_token($toolid, $token)) {
 $tool = \enrol_lti\helper::get_lti_tool($toolid);
 
 if (!is_enabled_auth('lti')) {
-    throw new \moodle_exception('pluginnotenabled', 'auth', '', get_string('pluginname', 'auth_lti'));
+    throw new \moodle_exception('pluginnotenabled', 'core_auth', '', get_string('pluginname', 'auth_lti'));
     exit();
 }
 

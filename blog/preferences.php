@@ -61,7 +61,7 @@ $PAGE->set_context($usercontext);
 require_login($courseid);
 
 if (empty($CFG->enableblogs)) {
-    throw new \moodle_exception('blogdisable', 'blog');
+    throw new \moodle_exception('blogdisable', 'core_blog');
 }
 
 if (isguestuser()) {
@@ -93,7 +93,7 @@ if ($mform->is_cancelled()) {
 $site = get_site();
 
 $strpreferences = get_string('preferences');
-$strblogs       = get_string('blogs', 'blog');
+$strblogs       = get_string('blogs', 'core_blog');
 
 $title = "$strblogs : $strpreferences";
 $PAGE->set_title($title);

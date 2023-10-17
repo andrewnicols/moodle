@@ -59,9 +59,9 @@ class core_admin_renderer extends plugin_renderer_base {
     public function upgrade_stale_php_files_page() {
         $output = '';
         $output .= $this->header();
-        $output .= $this->heading(get_string('upgradestalefiles', 'admin'));
+        $output .= $this->heading(get_string('upgradestalefiles', 'core_admin'));
         $output .= $this->box_start('generalbox', 'notice');
-        $output .= format_text(get_string('upgradestalefilesinfo', 'admin', get_docs_url('Upgrading')), FORMAT_MARKDOWN);
+        $output .= format_text(get_string('upgradestalefilesinfo', 'core_admin', get_docs_url('Upgrading')), FORMAT_MARKDOWN);
         $output .= html_writer::empty_tag('br');
         $output .= html_writer::tag('div', $this->single_button($this->page->url, get_string('reload'), 'get'), array('class' => 'buttons'));
         $output .= $this->box_end();
@@ -92,7 +92,7 @@ class core_admin_renderer extends plugin_renderer_base {
         if (!$envstatus) {
             $output .= $this->upgrade_reload(new moodle_url($this->page->url, array('agreelicense' => 1, 'lang' => $CFG->lang)));
         } else {
-            $output .= $this->notification(get_string('environmentok', 'admin'), 'notifysuccess');
+            $output .= $this->notification(get_string('environmentok', 'core_admin'), 'notifysuccess');
             $output .= $this->continue_button(new moodle_url($this->page->url, array(
                 'agreelicense' => 1, 'confirmrelease' => 1, 'lang' => $CFG->lang)));
         }
@@ -113,10 +113,10 @@ class core_admin_renderer extends plugin_renderer_base {
         $output = '';
 
         $output .= $this->header();
-        $output .= $this->heading(get_string('pluginscheck', 'admin'));
-        $output .= $this->warning(get_string('pluginscheckfailed', 'admin', array('pluginslist' => implode(', ', array_unique($failed)))));
+        $output .= $this->heading(get_string('pluginscheck', 'core_admin'));
+        $output .= $this->warning(get_string('pluginscheckfailed', 'core_admin', array('pluginslist' => implode(', ', array_unique($failed)))));
         $output .= $this->plugins_check_table(core_plugin_manager::instance(), $version, array('xdep' => true));
-        $output .= $this->warning(get_string('pluginschecktodo', 'admin'));
+        $output .= $this->warning(get_string('pluginschecktodo', 'core_admin'));
         $output .= $this->continue_button($reloadurl);
 
         $output .= $this->footer();
@@ -142,7 +142,7 @@ class core_admin_renderer extends plugin_renderer_base {
         $output .= $this->header();
         $output .= $this->maturity_warning($maturity);
         $output .= $this->test_site_warning($testsite);
-        $output .= $this->confirm(get_string('upgradesure', 'admin', $strnewversion), $continue, $cancelurl);
+        $output .= $this->confirm(get_string('upgradesure', 'core_admin', $strnewversion), $continue, $cancelurl);
         $output .= $this->footer();
 
         return $output;
@@ -168,10 +168,10 @@ class core_admin_renderer extends plugin_renderer_base {
             $output .= $this->upgrade_reload(new moodle_url($this->page->url, array('confirmupgrade' => 1, 'cache' => 0)));
 
         } else {
-            $output .= $this->notification(get_string('environmentok', 'admin'), 'notifysuccess');
+            $output .= $this->notification(get_string('environmentok', 'core_admin'), 'notifysuccess');
 
             if (empty($CFG->skiplangupgrade) and current_language() !== 'en') {
-                $output .= $this->box(get_string('langpackwillbeupdated', 'admin'), 'generalbox', 'notice');
+                $output .= $this->box(get_string('langpackwillbeupdated', 'core_admin'), 'generalbox', 'notice');
             }
 
             $output .= $this->continue_button(new moodle_url($this->page->url, array(
@@ -213,7 +213,7 @@ class core_admin_renderer extends plugin_renderer_base {
             $output .= $this->container_end();
         }
 
-        $button = new single_button($continueurl, get_string('upgradestart', 'admin'), 'get', single_button::BUTTON_PRIMARY);
+        $button = new single_button($continueurl, get_string('upgradestart', 'core_admin'), 'get', single_button::BUTTON_PRIMARY);
         $button->class = 'continuebutton';
         $output .= $this->render($button);
         $output .= $this->footer();
@@ -294,7 +294,7 @@ class core_admin_renderer extends plugin_renderer_base {
         $output = '';
 
         $output .= $this->header();
-        $output .= $this->output->heading(get_string('notifications', 'admin'));
+        $output .= $this->output->heading(get_string('notifications', 'core_admin'));
         $output .= $this->maturity_info($maturity);
         $output .= empty($CFG->disableupdatenotifications) ? $this->available_updates($availableupdates, $availableupdatesfetch) : '';
         $output .= $this->insecure_dataroot_warning($insecuredataroot);
@@ -488,11 +488,11 @@ class core_admin_renderer extends plugin_renderer_base {
         // Print the component download link
         $output .= html_writer::tag('div', html_writer::link(
                     new moodle_url('/admin/environment.php', array('action' => 'updatecomponent', 'sesskey' => sesskey())),
-                    get_string('updatecomponent', 'admin')),
+                    get_string('updatecomponent', 'core_admin')),
                 array('class' => 'reportlink'));
 
         // Heading.
-        $output .= $this->heading(get_string('environment', 'admin'));
+        $output .= $this->heading(get_string('environment', 'core_admin'));
 
         // Box with info and a menu to choose the version.
         $output .= $this->box_start();
@@ -528,10 +528,10 @@ class core_admin_renderer extends plugin_renderer_base {
         global $CFG;
 
         if ($insecuredataroot == INSECURE_DATAROOT_WARNING) {
-            return $this->warning(get_string('datarootsecuritywarning', 'admin', $CFG->dataroot));
+            return $this->warning(get_string('datarootsecuritywarning', 'core_admin', $CFG->dataroot));
 
         } else if ($insecuredataroot == INSECURE_DATAROOT_ERROR) {
-            return $this->warning(get_string('datarootsecurityerror', 'admin', $CFG->dataroot), 'danger');
+            return $this->warning(get_string('datarootsecurityerror', 'core_admin', $CFG->dataroot), 'danger');
 
         } else {
             return '';
@@ -566,7 +566,7 @@ class core_admin_renderer extends plugin_renderer_base {
             return '';
         }
 
-        return $this->warning(get_string('displayerrorswarning', 'admin'));
+        return $this->warning(get_string('displayerrorswarning', 'core_admin'));
     }
 
     /**
@@ -579,7 +579,7 @@ class core_admin_renderer extends plugin_renderer_base {
             return '';
         }
 
-        return $this->warning(get_string('themedesignermodewarning', 'admin'));
+        return $this->warning(get_string('themedesignermodewarning', 'core_admin'));
     }
 
     /**
@@ -592,7 +592,7 @@ class core_admin_renderer extends plugin_renderer_base {
             return '';
         }
 
-        return $this->warning(get_string('warningiconvbuggy', 'admin'));
+        return $this->warning(get_string('warningiconvbuggy', 'core_admin'));
     }
 
     /**
@@ -668,7 +668,7 @@ class core_admin_renderer extends plugin_renderer_base {
                 $components .= $eventhandler->component . ', ';
             }
             $components = rtrim($components, ', ');
-            return $this->warning(get_string('eventshandlersinuse', 'admin', $components));
+            return $this->warning(get_string('eventshandlersinuse', 'core_admin', $components));
         }
     }
 
@@ -685,7 +685,7 @@ class core_admin_renderer extends plugin_renderer_base {
         $url = new moodle_url('/admin/settings.php', array('section' => 'maintenancemode'));
         $url = $url->out(); // get_string() does not support objects in params
 
-        return $this->warning(get_string('sitemaintenancewarning2', 'admin', $url));
+        return $this->warning(get_string('sitemaintenancewarning2', 'core_admin', $url));
     }
 
     /**
@@ -712,9 +712,9 @@ class core_admin_renderer extends plugin_renderer_base {
             return ''; // No worries.
         }
 
-        $maturitylevel = get_string('maturity' . $maturity, 'admin');
+        $maturitylevel = get_string('maturity' . $maturity, 'core_admin');
         return $this->warning(
-                    $this->container(get_string('maturitycorewarning', 'admin', $maturitylevel)) .
+                    $this->container(get_string('maturitycorewarning', 'core_admin', $maturitylevel)) .
                     $this->container($this->doc_link('admin/versions', get_string('morehelp'))),
                 'danger');
     }
@@ -731,7 +731,7 @@ class core_admin_renderer extends plugin_renderer_base {
             return '';
         }
 
-        $warning = (get_string('testsiteupgradewarning', 'admin', $testsite));
+        $warning = (get_string('testsiteupgradewarning', 'core_admin', $testsite));
         return $this->warning($warning, 'danger');
     }
 
@@ -770,8 +770,8 @@ class core_admin_renderer extends plugin_renderer_base {
             $level = 'danger';
         }
 
-        $maturitylevel = get_string('maturity' . $maturity, 'admin');
-        $warningtext = get_string('maturitycoreinfo', 'admin', $maturitylevel);
+        $maturitylevel = get_string('maturity' . $maturity, 'core_admin');
+        $warningtext = get_string('maturitycoreinfo', 'core_admin', $maturitylevel);
         $warningtext .= ' ' . $this->doc_link('admin/versions', get_string('morehelp'));
         return $this->warning($warningtext, $level);
     }
@@ -841,14 +841,14 @@ class core_admin_renderer extends plugin_renderer_base {
         if (!$registered && site_is_public()) {
             if (has_capability('moodle/site:config', context_system::instance())) {
                 $registerbutton = $this->single_button(new moodle_url('/admin/registration/index.php'),
-                    get_string('register', 'admin'));
+                    get_string('register', 'core_admin'));
                 $str = 'registrationwarning';
             } else {
                 $registerbutton = '';
                 $str = 'registrationwarningcontactadmin';
             }
 
-            return $this->warning( get_string($str, 'admin')
+            return $this->warning( get_string($str, 'core_admin')
                     . '&nbsp;' . $this->help_icon('registration', 'admin') . $registerbutton ,
                 'error alert alert-danger');
         }
@@ -875,8 +875,8 @@ class core_admin_renderer extends plugin_renderer_base {
         $output = '';
         if (!$mobileconfigured) {
             $settingslink = new moodle_url('/admin/settings.php', ['section' => 'mobilesettings']);
-            $configurebutton = $this->single_button($settingslink, get_string('enablemobilewebservice', 'admin'));
-            $output .= $this->warning(get_string('mobilenotconfiguredwarning', 'admin') . '&nbsp;' . $configurebutton);
+            $configurebutton = $this->single_button($settingslink, get_string('enablemobilewebservice', 'core_admin'));
+            $output .= $this->warning(get_string('mobilenotconfiguredwarning', 'core_admin') . '&nbsp;' . $configurebutton);
         }
 
         return $output;
@@ -898,7 +898,7 @@ class core_admin_renderer extends plugin_renderer_base {
         $params = [
             'url' => $url,
             'iframeid' => 'campaign-content',
-            'title' => get_string('campaign', 'admin'),
+            'title' => get_string('campaign', 'core_admin'),
         ];
 
         return $this->render_from_template('core/external_content_banner', $params);
@@ -920,7 +920,7 @@ class core_admin_renderer extends plugin_renderer_base {
         $params = [
             'url' => $url,
             'iframeid' => 'services-support-content',
-            'title' => get_string('supportandservices', 'admin'),
+            'title' => get_string('supportandservices', 'core_admin'),
         ];
 
         return $this->render_from_template('core/external_content_banner', $params);
@@ -937,7 +937,7 @@ class core_admin_renderer extends plugin_renderer_base {
         if ($invalidforgottenpasswordurl) {
             $settingslink = new moodle_url('/admin/settings.php', ['section' => 'manageauths']);
             $configurebutton = $this->single_button($settingslink, get_string('check', 'moodle'));
-            $output .= $this->warning(get_string('invalidforgottenpasswordurl', 'admin') . '&nbsp;' . $configurebutton,
+            $output .= $this->warning(get_string('invalidforgottenpasswordurl', 'core_admin') . '&nbsp;' . $configurebutton,
                 'error alert alert-danger');
         }
 
@@ -992,7 +992,7 @@ class core_admin_renderer extends plugin_renderer_base {
      * @return string HTML to output.
      */
     protected function release_notes_link() {
-        $releasenoteslink = get_string('releasenoteslink', 'admin', 'https://moodledev.io/general/releases');
+        $releasenoteslink = get_string('releasenoteslink', 'core_admin', 'https://moodledev.io/general/releases');
         $releasenoteslink = str_replace('target="_blank"', 'onclick="this.target=\'_blank\'"', $releasenoteslink); // extremely ugly validation hack
         return $this->box($releasenoteslink, 'generalbox alert alert-info');
     }
@@ -2103,9 +2103,9 @@ class core_admin_renderer extends plugin_renderer_base {
                 }
                 // Plugin environments do not have docs pages yet.
                 if (empty($CFG->docroot) or $environment_result->plugin) {
-                    $report = get_string($stringtouse, 'admin', $rec);
+                    $report = get_string($stringtouse, 'core_admin', $rec);
                 } else {
-                    $report = $this->doc_link(join('/', $linkparts), get_string($stringtouse, 'admin', $rec), true);
+                    $report = $this->doc_link(join('/', $linkparts), get_string($stringtouse, 'core_admin', $rec), true);
                 }
                 // Enclose report text in div so feedback text will be displayed underneath it.
                 $report = html_writer::div($report);
@@ -2148,16 +2148,16 @@ class core_admin_renderer extends plugin_renderer_base {
 
         // Print table
         $output = '';
-        $output .= $this->heading(get_string('serverchecks', 'admin'));
+        $output .= $this->heading(get_string('serverchecks', 'core_admin'));
         $output .= html_writer::table($servertable);
         if (count($othertable->data)){
-            $output .= $this->heading(get_string('customcheck', 'admin'));
+            $output .= $this->heading(get_string('customcheck', 'core_admin'));
             $output .= html_writer::table($othertable);
         }
 
         // Finally, if any error has happened, print the summary box
         if (!$result) {
-            $output .= $this->box(get_string('environmenterrortodo', 'admin'), 'environmentbox errorbox');
+            $output .= $this->box(get_string('environmenterrortodo', 'core_admin'), 'environmentbox errorbox');
         }
 
         return $output;
@@ -2234,7 +2234,7 @@ class core_admin_renderer extends plugin_renderer_base {
 
         if ($showfeedbackencouragement) {
             $settingslink = new moodle_url('/admin/settings.php', ['section' => 'userfeedback']);
-            $output .= $this->warning(get_string('userfeedbackencouragement', 'admin', $settingslink->out()), 'info');
+            $output .= $this->warning(get_string('userfeedbackencouragement', 'core_admin', $settingslink->out()), 'info');
         }
 
         return $output;

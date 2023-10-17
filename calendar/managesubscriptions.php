@@ -36,7 +36,7 @@ if ($courseid != SITEID && !empty($courseid)) {
     $url->param('course', $courseid);
     navigation_node::override_active_url(new moodle_url('/course/view.php', ['id' => $courseid]));
     $PAGE->navbar->add(
-        get_string('calendar', 'calendar'),
+        get_string('calendar', 'core_calendar'),
         new moodle_url('/calendar/view.php', ['view' => 'month', 'course' => $courseid])
     );
 } else if ($categoryid) {
@@ -44,11 +44,11 @@ if ($courseid != SITEID && !empty($courseid)) {
     navigation_node::override_active_url(new moodle_url('/course/index.php', ['categoryid' => $categoryid]));
     $PAGE->set_category_by_id($categoryid);
     $PAGE->navbar->add(
-        get_string('calendar', 'calendar'),
+        get_string('calendar', 'core_calendar'),
         new moodle_url('/calendar/view.php', ['view' => 'month', 'category' => $categoryid])
     );
 } else {
-    $PAGE->navbar->add(get_string('calendar', 'calendar'), new moodle_url('/calendar/view.php', ['view' => 'month']));
+    $PAGE->navbar->add(get_string('calendar', 'core_calendar'), new moodle_url('/calendar/view.php', ['view' => 'month']));
 }
 
 $PAGE->set_url($url);
@@ -66,9 +66,9 @@ if ($courseid != SITEID && !empty($courseid)) {
 require_login($course, false);
 
 if (!calendar_user_can_add_event($course)) {
-    throw new \moodle_exception('errorcannotimport', 'calendar');
+    throw new \moodle_exception('errorcannotimport', 'core_calendar');
 }
-$PAGE->navbar->add(get_string('managesubscriptions', 'calendar'), $PAGE->url);
+$PAGE->navbar->add(get_string('managesubscriptions', 'core_calendar'), $PAGE->url);
 
 $types = calendar_get_allowed_event_types($courseid);
 
@@ -139,7 +139,7 @@ $sql = "SELECT * FROM {event_subscriptions} WHERE " . implode(' OR ', $searches)
 $subscriptions = $DB->get_records_sql($sql, $params);
 
 // Print title and header.
-$PAGE->set_title("$course->shortname: ".get_string('calendar', 'calendar').": ".get_string('subscriptions', 'calendar'));
+$PAGE->set_title("$course->shortname: ".get_string('calendar', 'core_calendar').": ".get_string('subscriptions', 'core_calendar'));
 $heading = get_string('calendar', 'core_calendar');
 $heading = ($courseid != SITEID && !empty($courseid)) ? "{$heading}: {$COURSE->shortname}" : $heading;
 $PAGE->set_heading($heading);

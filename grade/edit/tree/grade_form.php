@@ -49,15 +49,15 @@ class edit_grade_form extends moodleform {
 
         /// information fields
         $mform->addElement('static', 'user', get_string('user'));
-        $mform->addElement('static', 'itemname', get_string('itemname', 'grades'));
+        $mform->addElement('static', 'itemname', get_string('itemname', 'core_grades'));
 
-        $mform->addElement('checkbox', 'overridden', get_string('overridden', 'grades'));
+        $mform->addElement('checkbox', 'overridden', get_string('overridden', 'core_grades'));
         $mform->addHelpButton('overridden', 'overridden', 'grades');
 
         /// actual grade - numeric or scale
         if ($grade_item->gradetype == GRADE_TYPE_VALUE) {
             // numeric grade
-            $mform->addElement('text', 'finalgrade', get_string('finalgrade', 'grades'));
+            $mform->addElement('text', 'finalgrade', get_string('finalgrade', 'core_grades'));
             $mform->setType('finalgrade', PARAM_RAW);
             $mform->addHelpButton('finalgrade', 'finalgrade', 'grades');
             $mform->disabledIf('finalgrade', 'overridden', 'notchecked');
@@ -69,7 +69,7 @@ class edit_grade_form extends moodleform {
             if (empty($grade_item->outcomeid)) {
                 $scaleopt[-1] = get_string('nograde');
             } else {
-                $scaleopt[-1] = get_string('nooutcome', 'grades');
+                $scaleopt[-1] = get_string('nooutcome', 'core_grades');
             }
 
             $i = 1;
@@ -80,30 +80,30 @@ class edit_grade_form extends moodleform {
                 }
             }
 
-            $mform->addElement('select', 'finalgrade', get_string('finalgrade', 'grades'), $scaleopt);
+            $mform->addElement('select', 'finalgrade', get_string('finalgrade', 'core_grades'), $scaleopt);
             $mform->addHelpButton('finalgrade', 'finalgrade', 'grades');
             $mform->disabledIf('finalgrade', 'overridden', 'notchecked');
         }
 
-        $mform->addElement('advcheckbox', 'excluded', get_string('excluded', 'grades'));
+        $mform->addElement('advcheckbox', 'excluded', get_string('excluded', 'core_grades'));
         $mform->addHelpButton('excluded', 'excluded', 'grades');
 
         /// hiding
         /// advcheckbox is not compatible with disabledIf !!
-        $mform->addElement('checkbox', 'hidden', get_string('hidden', 'grades'));
+        $mform->addElement('checkbox', 'hidden', get_string('hidden', 'core_grades'));
         $mform->addHelpButton('hidden', 'hidden', 'grades');
-        $mform->addElement('date_time_selector', 'hiddenuntil', get_string('hiddenuntil', 'grades'), array('optional'=>true));
+        $mform->addElement('date_time_selector', 'hiddenuntil', get_string('hiddenuntil', 'core_grades'), array('optional'=>true));
         $mform->disabledIf('hidden', 'hiddenuntil[enabled]', 'checked');
 
         /// locking
-        $mform->addElement('advcheckbox', 'locked', get_string('locked', 'grades'));
+        $mform->addElement('advcheckbox', 'locked', get_string('locked', 'core_grades'));
         $mform->addHelpButton('locked', 'locked', 'grades');
-        $mform->addElement('date_time_selector', 'locktime', get_string('locktime', 'grades'), array('optional'=>true));
+        $mform->addElement('date_time_selector', 'locktime', get_string('locktime', 'core_grades'), array('optional'=>true));
         $mform->disabledIf('locktime', 'gradetype', 'eq', GRADE_TYPE_NONE);
 
         // Feedback format is automatically converted to html if user has enabled editor
         $feedbackoptions = array('maxfiles'=>0, 'maxbytes'=>0); //TODO: no files here for now, if ever gets implemented use component 'grade' and filearea 'feedback'
-        $mform->addElement('editor', 'feedback', get_string('feedback', 'grades'), null, $feedbackoptions);
+        $mform->addElement('editor', 'feedback', get_string('feedback', 'core_grades'), null, $feedbackoptions);
         $mform->addHelpButton('feedback', 'feedback', 'grades');
         $mform->setType('text', PARAM_RAW); // to be cleaned before display, no XSS risk
         $mform->disabledIf('feedback', 'overridden');

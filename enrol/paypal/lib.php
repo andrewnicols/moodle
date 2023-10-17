@@ -308,7 +308,7 @@ class enrol_paypal_plugin extends enrol_plugin {
      */
     public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
 
-        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
+        $mform->addElement('text', 'name', get_string('custominstancename', 'core_enrol'));
         $mform->setType('name', PARAM_TEXT);
 
         $options = $this->get_status_options();

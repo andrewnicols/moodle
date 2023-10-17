@@ -145,7 +145,7 @@ class recording_row_actionbar implements renderable, templatable {
                     }
                     $icon = new pix_icon(
                         'i/' . $buttonpayload['icon'],
-                        get_string('view_recording_list_actionbar_' . $buttonpayload['action'], 'bigbluebuttonbn'),
+                        get_string('view_recording_list_actionbar_' . $buttonpayload['action'], 'mod_bigbluebuttonbn'),
                         'moodle',
                         $iconattributes
                     );

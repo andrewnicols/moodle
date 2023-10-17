@@ -63,7 +63,7 @@ class data_field_url extends data_field_base {
 
         $fieldid = 'field_url_'.$options->client_id;
 
-        $straddlink = get_string('choosealink', 'repository');
+        $straddlink = get_string('choosealink', 'core_repository');
         $url = '';
         $text = '';
         if ($formdata) {
@@ -86,9 +86,9 @@ class data_field_url extends data_field_base {
 
         $label = '<label for="' . $fieldid . '"><span class="accesshide">' . $this->field->name . '</span>';
         if ($this->field->required) {
-            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
             if ($autolinkable) {
-                $label .= html_writer::div(get_string('requiredelement', 'form'), 'accesshide');
+                $label .= html_writer::div(get_string('requiredelement', 'core_form'), 'accesshide');
             } else {
                 $label .= html_writer::div($image, 'inline-req');
             }
@@ -97,7 +97,7 @@ class data_field_url extends data_field_base {
 
         if ($autolinkable) {
             $str .= '<table><tr><td align="right">';
-            $str .= '<span class="mod-data-input">' . get_string('url', 'data') . ':</span>';
+            $str .= '<span class="mod-data-input">' . get_string('url', 'mod_data') . ':</span>';
             if (!empty($image)) {
                 $str .= $image;
             }
@@ -107,7 +107,7 @@ class data_field_url extends data_field_base {
                     'size="40" class="form-control d-inline"/>';
             $str .= '<button class="btn btn-secondary ml-1" id="filepicker-button-' . $options->client_id . '" ' .
                     'style="display:none">' . $straddlink . '</button></td></tr>';
-            $str .= '<tr><td align="right"><span class="mod-data-input">' . get_string('text', 'data') . ':</span></td><td>';
+            $str .= '<tr><td align="right"><span class="mod-data-input">' . get_string('text', 'mod_data') . ':</span></td><td>';
             $str .= '<input type="text" name="field_' . $this->field->id . '_1" id="field_' . $this->field->id . '_1" ' .
                     'value="' . s($text) . '" size="40" class="form-control d-inline"/></td></tr>';
             $str .= '</table>';
@@ -132,7 +132,7 @@ class data_field_url extends data_field_base {
     }
 
     function display_search_field($value = '') {
-        return '<label class="accesshide" for="f_' . $this->field->id . '">' . get_string('fieldname', 'data') . '</label>' .
+        return '<label class="accesshide" for="f_' . $this->field->id . '">' . get_string('fieldname', 'mod_data') . '</label>' .
                '<input type="text" size="16" id="f_' . $this->field->id . '" '.
                ' name="f_' . $this->field->id . '" value="' . s($value) . '" class="form-control d-inline"/>';
     }

@@ -60,7 +60,7 @@ class auth_plugin_db extends auth_plugin_base {
         global $CFG, $DB;
 
         if ($this->is_configured() === false) {
-            debugging(get_string('auth_notconfigured', 'auth', $this->authtype));
+            debugging(get_string('auth_notconfigured', 'core_auth', $this->authtype));
             return false;
         }
 

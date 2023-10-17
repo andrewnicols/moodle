@@ -60,9 +60,9 @@ class enrolment {
      */
     public static function enrolment_values(): array {
         return [
-            status_field::STATUS_ACTIVE => new lang_string('participationactive', 'enrol'),
-            status_field::STATUS_SUSPENDED => new lang_string('participationsuspended', 'enrol'),
-            status_field::STATUS_NOT_CURRENT => new lang_string('participationnotcurrent', 'enrol'),
+            status_field::STATUS_ACTIVE => new lang_string('participationactive', 'core_enrol'),
+            status_field::STATUS_SUSPENDED => new lang_string('participationsuspended', 'core_enrol'),
+            status_field::STATUS_NOT_CURRENT => new lang_string('participationnotcurrent', 'core_enrol'),
         ];
     }
 

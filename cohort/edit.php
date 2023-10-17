@@ -92,14 +92,14 @@ if ($delete and $cohort->id) {
         cohort_delete_cohort($cohort);
         redirect($returnurl);
     }
-    $strheading = get_string('delcohort', 'cohort');
+    $strheading = get_string('delcohort', 'core_cohort');
     $PAGE->navbar->add($strheading);
     $PAGE->set_title($strheading);
     echo $OUTPUT->header();
     echo $OUTPUT->heading($strheading);
     $yesurl = new moodle_url('/cohort/edit.php', array('id' => $cohort->id, 'delete' => 1,
         'confirm' => 1, 'sesskey' => sesskey(), 'returnurl' => $returnurl->out_as_local_url()));
-    $message = get_string('delconfirm', 'cohort', format_string($cohort->name));
+    $message = get_string('delconfirm', 'core_cohort', format_string($cohort->name));
     echo $OUTPUT->confirm($message, $yesurl, $returnurl);
     echo $OUTPUT->footer();
     die;
@@ -127,13 +127,13 @@ if ($cohort->id) {
     // Edit existing.
     $cohort = file_prepare_standard_editor($cohort, 'description', $editoroptions,
             $context, 'cohort', 'description', $cohort->id);
-    $strheading = get_string('editcohort', 'cohort');
+    $strheading = get_string('editcohort', 'core_cohort');
 
 } else {
     // Add new.
     $cohort = file_prepare_standard_editor($cohort, 'description', $editoroptions,
             $context, 'cohort', 'description', null);
-    $strheading = get_string('addcohort', 'cohort');
+    $strheading = get_string('addcohort', 'core_cohort');
 }
 
 $PAGE->set_title($strheading);

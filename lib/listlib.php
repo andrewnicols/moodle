@@ -562,7 +562,7 @@ abstract class list_item {
         global $CFG;
         $strmoveup = get_string('moveup');
         $strmovedown = get_string('movedown');
-        $strmoveleft = get_string('maketoplevelitem', 'question');
+        $strmoveleft = get_string('maketoplevelitem', 'core_question');
 
         if (right_to_left()) {   // Exchange arrows on RTL
             $rightarrow = 'left';
@@ -575,7 +575,7 @@ abstract class list_item {
         if (isset($this->parentlist->parentitem)) {
             $parentitem = $this->parentlist->parentitem;
             if (isset($parentitem->parentlist->parentitem)) {
-                $action = get_string('makechildof', 'question', $parentitem->parentlist->parentitem->name);
+                $action = get_string('makechildof', 'core_question', $parentitem->parentlist->parentitem->name);
             } else {
                 $action = $strmoveleft;
             }
@@ -600,7 +600,7 @@ abstract class list_item {
         }
 
         if (!empty($lastitem)) {
-            $makechildof = get_string('makechildof', 'question', $lastitem->name);
+            $makechildof = get_string('makechildof', 'core_question', $lastitem->name);
             $url = new moodle_url($this->parentlist->pageurl, (array('sesskey'=>sesskey(), 'right'=>$this->id)));
             $this->icons['right'] = $this->image_icon($makechildof, $url, $rightarrow);
         } else {

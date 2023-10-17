@@ -43,7 +43,7 @@ $result = new stdClass;
 
 // If session has expired and its an ajax request so we cant do a page redirect.
 if (!isloggedin()) {
-    $result->error = get_string('sessionerroruser', 'error');
+    $result->error = get_string('sessionerroruser', 'mod_error');
     echo json_encode($result);
     die();
 }
@@ -57,7 +57,7 @@ $PAGE->set_url('/rating/rate_ajax.php', array('contextid' => $context->id));
 
 if (!confirm_sesskey() || !has_capability('moodle/rating:rate', $context)) {
     echo $OUTPUT->header();
-    echo get_string('ratepermissiondenied', 'rating');
+    echo get_string('ratepermissiondenied', 'core_rating');
     echo $OUTPUT->footer();
     die();
 }
@@ -67,7 +67,7 @@ $result = $rm->add_rating($cm, $context, $component, $ratingarea, $itemid, $scal
 
 // Return translated error.
 if (!empty($result->error)) {
-    $result->error = get_string($result->error, 'rating');
+    $result->error = get_string($result->error, 'core_rating');
 }
 
 echo json_encode($result);

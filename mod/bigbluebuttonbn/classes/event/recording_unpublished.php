@@ -42,7 +42,7 @@ class recording_unpublished extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_recording_unpublished', 'bigbluebuttonbn');
+        return get_string('event_recording_unpublished', 'mod_bigbluebuttonbn');
     }
 
     /**

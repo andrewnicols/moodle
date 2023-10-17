@@ -34,7 +34,7 @@ class file_trash_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskfiletrashcleanup', 'admin');
+        return get_string('taskfiletrashcleanup', 'core_admin');
     }
 
     /**

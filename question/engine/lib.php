@@ -709,7 +709,7 @@ class question_display_options {
         if ($addbefore) {
             $fieldlang = 'fieldinquestionpre';
         }
-        return get_string($fieldlang, 'question', (object)['fieldname' => $label, 'questionindentifier' => $identifier]);
+        return get_string($fieldlang, 'core_question', (object)['fieldname' => $label, 'questionindentifier' => $identifier]);
     }
 
     /**
@@ -779,7 +779,7 @@ abstract class question_flags {
         // probably makes it sufficiently difficult for malicious users to toggle
         // other users flags.
         if ($checksum != self::get_toggle_checksum($qubaid, $questionid, $qaid, $slot)) {
-            throw new moodle_exception('errorsavingflags', 'question');
+            throw new moodle_exception('errorsavingflags', 'core_question');
         }
 
         $dm = new question_engine_data_mapper();
@@ -801,15 +801,15 @@ abstract class question_flags {
         $flagattributes = array(
             0 => array(
                 'src' => $OUTPUT->image_url('i/unflagged') . '',
-                'title' => get_string('clicktoflag', 'question'),
-                'alt' => get_string('flagged', 'question'), // Label on toggle should not change.
-                'text' => get_string('clickflag', 'question'),
+                'title' => get_string('clicktoflag', 'core_question'),
+                'alt' => get_string('flagged', 'core_question'), // Label on toggle should not change.
+                'text' => get_string('clickflag', 'core_question'),
             ),
             1 => array(
                 'src' => $OUTPUT->image_url('i/flagged') . '',
-                'title' => get_string('clicktounflag', 'question'),
-                'alt' => get_string('flagged', 'question'),
-                'text' => get_string('clickunflag', 'question'),
+                'title' => get_string('clicktounflag', 'core_question'),
+                'alt' => get_string('flagged', 'core_question'),
+                'text' => get_string('clickunflag', 'core_question'),
             ),
         );
         $PAGE->requires->js_init_call('M.core_question_flags.init',

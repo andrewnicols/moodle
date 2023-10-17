@@ -119,8 +119,8 @@ if (isset($SESSION->scorm)) {
     unset($SESSION->scorm);
 }
 
-$strscorms = get_string("modulenameplural", "scorm");
-$strscorm  = get_string("modulename", "scorm");
+$strscorms = get_string("modulenameplural", 'mod_scorm');
+$strscorm  = get_string("modulename", 'mod_scorm');
 
 $shortname = format_string($course->shortname, true, array('context' => $context));
 $pagetitle = strip_tags($shortname.': '.format_string($scorm->name));
@@ -147,14 +147,14 @@ echo $OUTPUT->header();
 if (!empty($action) && confirm_sesskey() && has_capability('mod/scorm:deleteownresponses', $contextmodule)) {
     if ($action == 'delete') {
         $confirmurl = new moodle_url($PAGE->url, array('action' => 'deleteconfirm'));
-        echo $OUTPUT->confirm(get_string('deleteuserattemptcheck', 'scorm'), $confirmurl, $PAGE->url);
+        echo $OUTPUT->confirm(get_string('deleteuserattemptcheck', 'mod_scorm'), $confirmurl, $PAGE->url);
         echo $OUTPUT->footer();
         exit;
     } else if ($action == 'deleteconfirm') {
         // Delete this users attempts.
         scorm_delete_tracks($scorm->id, null, $USER->id);
         scorm_update_grades($scorm, $USER->id, true);
-        echo $OUTPUT->notification(get_string('scormresponsedeleted', 'scorm'), 'notifysuccess');
+        echo $OUTPUT->notification(get_string('scormresponsedeleted', 'mod_scorm'), 'notifysuccess');
     }
 }
 
@@ -176,7 +176,7 @@ if ($available && empty($launch)) {
 echo $OUTPUT->box($attemptstatus);
 
 if (!empty($forcejs)) {
-    $message = $OUTPUT->box(get_string("forcejavascriptmessage", "scorm"), "forcejavascriptmessage");
+    $message = $OUTPUT->box(get_string("forcejavascriptmessage", 'mod_scorm'), "forcejavascriptmessage");
     echo html_writer::tag('noscript', $message);
 }
 

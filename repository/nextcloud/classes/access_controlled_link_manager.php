@@ -470,7 +470,7 @@ class access_controlled_link_manager{
         // Write file into temp location.
         if (!$this->systemwebdavclient->get_file($sourcepath, $targetpath)) {
             $this->systemwebdavclient->close();
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
         $this->systemwebdavclient->close();
     }

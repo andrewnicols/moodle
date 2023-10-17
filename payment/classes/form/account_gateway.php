@@ -50,10 +50,10 @@ class account_gateway extends persistent {
         $mform->addElement('hidden', 'accountid');
         $mform->addElement('hidden', 'gateway');
 
-        $mform->addElement('static', 'accountname', get_string('accountname', 'payment'),
+        $mform->addElement('static', 'accountname', get_string('accountname', 'core_payment'),
             $this->get_gateway_persistent()->get_account()->get_formatted_name());
 
-        $mform->addElement('static', 'gatewayname', get_string('type_paygw', 'plugin'),
+        $mform->addElement('static', 'gatewayname', get_string('type_paygw', 'mod_plugin'),
             $this->get_gateway_persistent()->get_display_name());
 
         $mform->addElement('advcheckbox', 'enabled', get_string('enable'));

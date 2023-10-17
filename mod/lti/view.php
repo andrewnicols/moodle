@@ -156,10 +156,10 @@ if (($launchcontainer == LTI_LAUNCH_CONTAINER_WINDOW)) {
         echo "window.open('{$launchurl->out(true)}','lti-$cm->id');";
         echo "//]]\n";
         echo "</script>\n";
-        echo "<p>".get_string("basiclti_in_new_window", "lti")."</p>\n";
+        echo "<p>".get_string("basiclti_in_new_window", 'mod_lti')."</p>\n";
     }
     echo html_writer::start_tag('p');
-    echo html_writer::link($launchurl->out(false), get_string("basiclti_in_new_window_open", "lti"), array('target' => '_blank'));
+    echo html_writer::link($launchurl->out(false), get_string("basiclti_in_new_window_open", 'mod_lti'), array('target' => '_blank'));
     echo html_writer::end_tag('p');
 } else {
     $content = '';

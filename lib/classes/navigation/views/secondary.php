@@ -639,7 +639,7 @@ class secondary extends view {
             }
 
             $menuselect = new url_select($menuarray, $selectedoverflownodeurl ?? $this->page->url, null);
-            $menuselect->set_label(get_string('browsecourseadminindex', 'course'), ['class' => 'sr-only']);
+            $menuselect->set_label(get_string('browsecourseadminindex', 'core_course'), ['class' => 'sr-only']);
             return $menuselect;
         } else {
             return $this->get_other_overflow_menu_data($activenode);
@@ -692,7 +692,7 @@ class secondary extends view {
         }
         $selectdata = static::create_menu_element([$menunode], false);
         $urlselect = new url_select($selectdata, $matchednode->action->out(false), null);
-        $urlselect->set_label(get_string('browsesettingindex', 'course'), ['class' => 'sr-only']);
+        $urlselect->set_label(get_string('browsesettingindex', 'core_course'), ['class' => 'sr-only']);
         return $urlselect;
     }
 

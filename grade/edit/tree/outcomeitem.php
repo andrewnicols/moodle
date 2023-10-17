@@ -60,7 +60,7 @@ if ($mform->is_cancelled() || empty($CFG->enableoutcomes)) {
     redirect($returnurl);
 }
 
-$heading = get_string('outcomeitemsedit', 'grades');
+$heading = get_string('outcomeitemsedit', 'core_grades');
 
 if ($grade_item = grade_item::fetch(array('id'=>$id, 'courseid'=>$courseid))) {
     // redirect if outcomeid present
@@ -81,7 +81,7 @@ if ($grade_item = grade_item::fetch(array('id'=>$id, 'courseid'=>$courseid))) {
     }
 
 } else {
-    $heading = get_string('newoutcomeitem', 'grades');
+    $heading = get_string('newoutcomeitem', 'core_grades');
     $grade_item = new grade_item(array('courseid'=>$courseid, 'itemtype'=>'manual'), false);
     $item = $grade_item->get_record_data();
     $item->cmid = 0;
@@ -244,7 +244,7 @@ $PAGE->navbar->add($heading);
 print_grade_page_head($courseid, 'settings', null, $heading, false, false, false);
 
 if (!grade_outcome::fetch_all_available($COURSE->id)) {
-    echo $OUTPUT->confirm(get_string('nooutcomes', 'grades'), $CFG->wwwroot.'/grade/edit/outcome/course.php?id='.$courseid, $returnurl);
+    echo $OUTPUT->confirm(get_string('nooutcomes', 'core_grades'), $CFG->wwwroot.'/grade/edit/outcome/course.php?id='.$courseid, $returnurl);
     echo $OUTPUT->footer();
     die();
 }

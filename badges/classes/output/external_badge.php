@@ -163,7 +163,7 @@ class external_badge implements renderable {
         $data->recipientname = fullname($this->recipient);
         if (!$this->valid) {
             $data->recipientnotification = new stdClass();
-            $data->recipientnotification->message = get_string('recipientvalidationproblem', 'badges');
+            $data->recipientnotification->message = get_string('recipientvalidationproblem', 'core_badges');
         }
 
         // Field: Criteria.

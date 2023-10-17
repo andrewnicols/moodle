@@ -195,8 +195,8 @@ class completion_criteria_date extends completion_criteria {
      */
     public function get_details($completion) {
         $details = array();
-        $details['type'] = get_string('datepassed', 'completion');
-        $details['criteria'] = get_string('remainingenroleduntildate', 'completion');
+        $details['type'] = get_string('datepassed', 'core_completion');
+        $details['criteria'] = get_string('remainingenroleduntildate', 'core_completion');
         $details['requirement'] = userdate($this->timeend, '%d %B %Y');
         $details['status'] = '';
 

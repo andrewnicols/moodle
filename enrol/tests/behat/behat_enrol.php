@@ -52,7 +52,7 @@ class behat_enrol extends behat_base {
 
         // Select enrolment method.
         $this->execute('behat_forms::i_select_from_the_singleselect',
-            array($this->escape($enrolmethod), get_string('addinstance', 'enrol'))
+            array($this->escape($enrolmethod), get_string('addinstance', 'core_enrol'))
         );
 
         // Wait again, for page to reloaded.
@@ -67,7 +67,7 @@ class behat_enrol extends behat_base {
         }
 
         // Save changes.
-        $this->execute("behat_forms::press_button", get_string('addinstance', 'enrol'));
+        $this->execute("behat_forms::press_button", get_string('addinstance', 'core_enrol'));
     }
 
     /**
@@ -84,15 +84,15 @@ class behat_enrol extends behat_base {
 
         // Navigate to enrolment page.
         try {
-            $parentnodes = get_string('users', 'admin');
+            $parentnodes = get_string('users', 'core_admin');
             $this->execute("behat_navigation::i_navigate_to_in_current_page_administration",
-                array($parentnodes . ' > '. get_string('enrolledusers', 'enrol'))
+                array($parentnodes . ' > '. get_string('enrolledusers', 'core_enrol'))
             );
         } catch (Exception $e) {
             $this->execute("behat_general::i_click_on", [get_string('participants'), 'link']);
         }
 
-        $this->execute("behat_forms::press_button", get_string('enrolusers', 'enrol'));
+        $this->execute("behat_forms::press_button", get_string('enrolusers', 'core_enrol'));
 
         if ($this->running_javascript()) {
             $this->execute('behat_forms::i_set_the_field_to', array(get_string('assignrole', 'enrol_manual'), $rolename));
@@ -104,7 +104,7 @@ class behat_enrol extends behat_base {
             $this->execute('behat_general::i_click_on_in_the', [$enrolusers, 'button', $enrolusers, 'dialogue']);
 
         } else {
-            $this->execute('behat_forms::i_set_the_field_to', array(get_string('assignrole', 'role'), $rolename));
+            $this->execute('behat_forms::i_set_the_field_to', array(get_string('assignrole', 'core_role'), $rolename));
             $this->execute('behat_forms::i_set_the_field_to', array("addselect", $userfullname));
             $this->execute("behat_forms::press_button", "add");
         }

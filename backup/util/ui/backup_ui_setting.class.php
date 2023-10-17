@@ -297,7 +297,7 @@ abstract class backup_setting_ui extends base_setting_ui {
         // we will attempt to improve it.
         if (!is_null($task) && $this->label == $this->setting->get_name() && strpos($this->setting->get_name(), '_include') !== false) {
             if ($this->setting->get_level() == backup_setting::SECTION_LEVEL) {
-                $this->label = get_string('includesection', 'backup', $task->get_name());
+                $this->label = get_string('includesection', 'core_backup', $task->get_name());
             } else if ($this->setting->get_level() == backup_setting::ACTIVITY_LEVEL) {
                 $this->label = $task->get_name();
             }
@@ -734,7 +734,7 @@ class backup_setting_ui_defaultcustom extends backup_setting_ui_text {
         if (!is_array($attributes)) {
             $attributes = [];
         }
-        $attributes += ['customlabel' => get_string('overwrite', 'backup'),
+        $attributes += ['customlabel' => get_string('overwrite', 'core_backup'),
             'type' => 'text'];
         parent::__construct($setting, $label, $attributes, $options);
     }

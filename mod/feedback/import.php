@@ -77,21 +77,21 @@ if ($choosefile) {
     $xmlcontent = $mform->get_file_content('choosefile');
 
     if (!$xmldata = feedback_load_xml_data($xmlcontent)) {
-        throw new \moodle_exception('cannotloadxml', 'feedback', 'edit.php?id='.$id);
+        throw new \moodle_exception('cannotloadxml', 'mod_feedback', 'edit.php?id='.$id);
     }
 
     $importerror = feedback_import_loaded_data($xmldata, $feedback->id);
     if ($importerror->stat == true) {
         $url = 'edit.php?id='.$id.'&do_show=templates';
-        redirect($url, get_string('import_successfully', 'feedback'), 3);
+        redirect($url, get_string('import_successfully', 'mod_feedback'), 3);
         exit;
     }
 }
 
 
 /// Print the page header
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 $PAGE->set_heading($course->fullname);
 $PAGE->set_title($feedback->name);
@@ -109,7 +109,7 @@ echo $renderer->main_action_bar($actionbar);
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
 if (!$PAGE->has_secondary_navigation()) {
-    echo $OUTPUT->heading(get_string('import_questions', 'feedback'), 3);
+    echo $OUTPUT->heading(get_string('import_questions', 'mod_feedback'), 3);
 }
 
 if (isset($importerror->msg) AND is_array($importerror->msg)) {
@@ -153,7 +153,7 @@ function feedback_import_loaded_data(&$data, $feedbackid) {
     $error->msg = array();
 
     if (!is_array($data)) {
-        $error->msg[] = get_string('data_is_not_an_array', 'feedback');
+        $error->msg[] = get_string('data_is_not_an_array', 'mod_feedback');
         $error->stat = false;
         return $error;
     }

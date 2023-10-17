@@ -144,7 +144,7 @@ class block_settings_renderer extends plugin_renderer_base {
         $data = [
             'action' => $formtarget,
             'inputname' => 'query',
-            'searchstring' => get_string('searchinsettings', 'admin'),
+            'searchstring' => get_string('searchinsettings', 'core_admin'),
             'query' => $searchvalue
         ];
         return $this->render_from_template('core/search_input', $data);

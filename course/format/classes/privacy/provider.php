@@ -70,7 +70,7 @@ class provider implements
             $preference = get_user_preferences($preferencename, null, $userid);
 
             if (isset($preference)) {
-                $preferencestring = get_string('preference:' . self::SECTION_PREFERENCES_PREFIX, 'courseformat', $course->fullname);
+                $preferencestring = get_string('preference:' . self::SECTION_PREFERENCES_PREFIX, 'core_courseformat', $course->fullname);
                 \core_privacy\local\request\writer::export_user_preference(
                     'core_courseformat',
                     $preferencename,

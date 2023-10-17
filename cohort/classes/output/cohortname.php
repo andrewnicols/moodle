@@ -47,8 +47,8 @@ class cohortname extends \core\output\inplace_editable {
         parent::__construct('core_cohort', 'cohortname', $cohort->id, $editable,
             $displayvalue,
             $cohort->name,
-            new lang_string('editcohortname', 'cohort'),
-            new lang_string('newnamefor', 'cohort', $displayvalue));
+            new lang_string('editcohortname', 'core_cohort'),
+            new lang_string('newnamefor', 'core_cohort', $displayvalue));
     }
 
     /**

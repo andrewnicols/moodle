@@ -62,7 +62,7 @@ class completion extends base {
      * @return lang_string
      */
     protected function get_default_entity_title(): lang_string {
-        return new lang_string('coursecompletion', 'completion');
+        return new lang_string('coursecompletion', 'core_completion');
     }
 
     /**
@@ -100,7 +100,7 @@ class completion extends base {
         // Completed column.
         $columns[] = (new column(
             'completed',
-            new lang_string('completed', 'completion'),
+            new lang_string('completed', 'core_completion'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -161,7 +161,7 @@ class completion extends base {
         // Progress percentage column.
         $columns[] = (new column(
             'progresspercent',
-            new lang_string('progress', 'completion'),
+            new lang_string('progress', 'core_completion'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -174,7 +174,7 @@ class completion extends base {
         // Time enrolled.
         $columns[] = (new column(
             'timeenrolled',
-            new lang_string('timeenrolled', 'enrol'),
+            new lang_string('timeenrolled', 'core_enrol'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -186,7 +186,7 @@ class completion extends base {
         // Time started.
         $columns[] = (new column(
             'timestarted',
-            new lang_string('timestarted', 'enrol'),
+            new lang_string('timestarted', 'core_enrol'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -198,7 +198,7 @@ class completion extends base {
         // Time completed.
         $columns[] = (new column(
             'timecompleted',
-            new lang_string('timecompleted', 'completion'),
+            new lang_string('timecompleted', 'core_completion'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -210,7 +210,7 @@ class completion extends base {
         // Time reaggregated.
         $columns[] = (new column(
             'reaggregate',
-            new lang_string('timereaggregated', 'enrol'),
+            new lang_string('timereaggregated', 'core_enrol'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -223,7 +223,7 @@ class completion extends base {
         $currenttime = time();
         $columns[] = (new column(
             'dayscourse',
-            new lang_string('daystakingcourse', 'course'),
+            new lang_string('daystakingcourse', 'core_course'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -242,7 +242,7 @@ class completion extends base {
         // Days since last completion (days since last enrolment date until completion or until current date if not completed).
         $columns[] = (new column(
             'daysuntilcompletion',
-            new lang_string('daysuntilcompletion', 'completion'),
+            new lang_string('daysuntilcompletion', 'core_completion'),
             $this->get_entity_name()
         ))
             ->add_joins($this->get_joins())
@@ -298,7 +298,7 @@ class completion extends base {
         $filters[] = (new filter(
             boolean_select::class,
             'completed',
-            new lang_string('completed', 'completion'),
+            new lang_string('completed', 'core_completion'),
             $this->get_entity_name(),
             "CASE WHEN {$coursecompletion}.timecompleted > 0 THEN 1 ELSE 0 END"
         ))
@@ -308,7 +308,7 @@ class completion extends base {
         $filters[] = (new filter(
             date::class,
             'timecompleted',
-            new lang_string('timecompleted', 'completion'),
+            new lang_string('timecompleted', 'core_completion'),
             $this->get_entity_name(),
             "{$coursecompletion}.timecompleted"
         ))
@@ -328,7 +328,7 @@ class completion extends base {
             $filters[] = (new filter(
                 date::class,
                 $field,
-                new lang_string($field, 'enrol'),
+                new lang_string($field, 'core_enrol'),
                 $this->get_entity_name(),
                 "{$coursecompletion}.{$field}"
             ))
@@ -347,7 +347,7 @@ class completion extends base {
         $filters[] = (new filter(
             date::class,
             'reaggregate',
-            new lang_string('timereaggregated', 'enrol'),
+            new lang_string('timereaggregated', 'core_enrol'),
             $this->get_entity_name(),
             "{$coursecompletion}.reaggregate"
         ))

@@ -38,7 +38,7 @@ class mod_page_mod_form extends moodleform_mod {
         $config = get_config('page');
 
         //-------------------------------------------------------
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
         $mform->addElement('text', 'name', get_string('name'), array('size'=>'48'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -50,8 +50,8 @@ class mod_page_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         //-------------------------------------------------------
-        $mform->addElement('header', 'contentsection', get_string('contentheader', 'page'));
-        $mform->addElement('editor', 'page', get_string('content', 'page'), null, page_get_editor_options($this->context));
+        $mform->addElement('header', 'contentsection', get_string('contentheader', 'mod_page'));
+        $mform->addElement('editor', 'page', get_string('content', 'mod_page'), null, page_get_editor_options($this->context));
         $mform->addRule('page', get_string('required'), 'required', null, 'client');
 
         //-------------------------------------------------------
@@ -68,19 +68,19 @@ class mod_page_mod_form extends moodleform_mod {
             reset($options);
             $mform->setDefault('display', key($options));
         } else {
-            $mform->addElement('select', 'display', get_string('displayselect', 'page'), $options);
+            $mform->addElement('select', 'display', get_string('displayselect', 'mod_page'), $options);
             $mform->setDefault('display', $config->display);
         }
 
         if (array_key_exists(RESOURCELIB_DISPLAY_POPUP, $options)) {
-            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'page'), array('size'=>3));
+            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'mod_page'), array('size'=>3));
             if (count($options) > 1) {
                 $mform->hideIf('popupwidth', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
             $mform->setType('popupwidth', PARAM_INT);
             $mform->setDefault('popupwidth', $config->popupwidth);
 
-            $mform->addElement('text', 'popupheight', get_string('popupheight', 'page'), array('size'=>3));
+            $mform->addElement('text', 'popupheight', get_string('popupheight', 'mod_page'), array('size'=>3));
             if (count($options) > 1) {
                 $mform->hideIf('popupheight', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
@@ -88,16 +88,16 @@ class mod_page_mod_form extends moodleform_mod {
             $mform->setDefault('popupheight', $config->popupheight);
         }
 
-        $mform->addElement('advcheckbox', 'printintro', get_string('printintro', 'page'));
+        $mform->addElement('advcheckbox', 'printintro', get_string('printintro', 'mod_page'));
         $mform->setDefault('printintro', $config->printintro);
-        $mform->addElement('advcheckbox', 'printlastmodified', get_string('printlastmodified', 'page'));
+        $mform->addElement('advcheckbox', 'printlastmodified', get_string('printlastmodified', 'mod_page'));
         $mform->setDefault('printlastmodified', $config->printlastmodified);
 
         // add legacy files flag only if used
         if (isset($this->current->legacyfiles) and $this->current->legacyfiles != RESOURCELIB_LEGACYFILES_NO) {
-            $options = array(RESOURCELIB_LEGACYFILES_DONE   => get_string('legacyfilesdone', 'page'),
-                             RESOURCELIB_LEGACYFILES_ACTIVE => get_string('legacyfilesactive', 'page'));
-            $mform->addElement('select', 'legacyfiles', get_string('legacyfiles', 'page'), $options);
+            $options = array(RESOURCELIB_LEGACYFILES_DONE   => get_string('legacyfilesdone', 'mod_page'),
+                             RESOURCELIB_LEGACYFILES_ACTIVE => get_string('legacyfilesactive', 'mod_page'));
+            $mform->addElement('select', 'legacyfiles', get_string('legacyfiles', 'mod_page'), $options);
             $mform->setAdvanced('legacyfiles', 1);
         }
 

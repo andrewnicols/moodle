@@ -108,7 +108,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Try to use an invalid secret.
         $this->expectException('\moodle_exception');
-        $this->expectExceptionMessage(get_string('invalidconfirmdata', 'error'));
+        $this->expectExceptionMessage(get_string('invalidconfirmdata', 'mod_error'));
         $result = core_auth_external::confirm_user($username, 'zzZZzz');
     }
 

@@ -27,7 +27,7 @@ require_once($CFG->libdir.'/adminlib.php');
 // This is an admin page.
 admin_externalpage_setup('testoutgoingmailconf');
 
-$headingtitle = get_string('testoutgoingmailconf', 'admin');
+$headingtitle = get_string('testoutgoingmailconf', 'core_admin');
 $homeurl = new moodle_url('/admin/category.php', array('category' => 'email'));
 $returnurl = new moodle_url('/admin/testoutgoingconf.php');
 
@@ -42,7 +42,7 @@ echo $OUTPUT->heading($headingtitle);
 
 // Displaying noemailever warning.
 if (!empty($CFG->noemailever)) {
-    $msg = get_string('noemaileverwarning', 'admin');
+    $msg = get_string('noemaileverwarning', 'core_admin');
     echo $OUTPUT->notification($msg, \core\output\notification::NOTIFY_ERROR);
 }
 
@@ -80,8 +80,8 @@ if ($data) {
     }
     $subjectparams->time = $timestamp;
 
-    $subject = get_string('testoutgoingmailconf_subject', 'admin', $subjectparams);
-    $messagetext = get_string('testoutgoingmailconf_message', 'admin', $timestamp);
+    $subject = get_string('testoutgoingmailconf_subject', 'core_admin', $subjectparams);
+    $messagetext = get_string('testoutgoingmailconf_message', 'core_admin', $timestamp);
 
     // Manage Moodle debugging options.
     $debuglevel = $CFG->debug;
@@ -111,13 +111,13 @@ if ($data) {
         $msgparams = new stdClass();
         $msgparams->fromemail = $emailuserfrom->email;
         $msgparams->toemail = $emailuser->email;
-        $msg = get_string('testoutgoingmailconf_sentmail', 'admin', $msgparams);
+        $msg = get_string('testoutgoingmailconf_sentmail', 'core_admin', $msgparams);
         $notificationtype = 'notifysuccess';
     } else {
         $notificationtype = 'notifyproblem';
         // No communication between Moodle and the SMTP server - no error output.
         if (trim($smtplog) == false) {
-            $msg = get_string('testoutgoingmailconf_errorcommunications', 'admin');
+            $msg = get_string('testoutgoingmailconf_errorcommunications', 'core_admin');
         } else {
             $msg = $smtplog;
         }

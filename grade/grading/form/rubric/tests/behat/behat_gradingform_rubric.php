@@ -478,7 +478,7 @@ class behat_gradingform_rubric extends behat_base {
             $this->execute('behat_general::i_click_on_in_the', [
                 get_string('yes'),
                 'button',
-                get_string('confirmation', 'admin'),
+                get_string('confirmation', 'core_admin'),
                 'dialogue',
             ]);
         }

@@ -37,7 +37,7 @@ class question_preview_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskquestioncron', 'admin');
+        return get_string('taskquestioncron', 'core_admin');
     }
 
     /**

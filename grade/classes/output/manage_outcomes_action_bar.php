@@ -70,14 +70,14 @@ class manage_outcomes_action_bar extends action_bar {
             // Add a button to the action bar with a link to the 'import outcomes' page. The import outcomes
             // functionality is currently only available in the course context.
             $importoutcomeslink = new moodle_url('/grade/edit/outcome/import.php', ['courseid' => $courseid]);
-            $importoutcomesbutton = new \single_button($importoutcomeslink, get_string('importoutcomes', 'grades'),
+            $importoutcomesbutton = new \single_button($importoutcomeslink, get_string('importoutcomes', 'core_grades'),
                 'get');
             $data['importoutcomesbutton'] = $importoutcomesbutton->export_for_template($output);
         }
 
         // Add a button to the action bar with a link to the 'add new outcome' page.
         $addoutcomelink = new moodle_url('/grade/edit/outcome/edit.php', ['courseid' => $courseid]);
-        $addoutcomebutton = new \single_button($addoutcomelink, get_string('outcomecreate', 'grades'),
+        $addoutcomebutton = new \single_button($addoutcomelink, get_string('outcomecreate', 'core_grades'),
             'get', \single_button::BUTTON_PRIMARY);
         $data['addoutcomebutton'] = $addoutcomebutton->export_for_template($output);
 
@@ -85,7 +85,7 @@ class manage_outcomes_action_bar extends action_bar {
             // Add a button to the action bar which enables export of all existing outcomes.
             $exportoutcomeslink = new moodle_url('/grade/edit/outcome/export.php',
                 ['id' => $courseid, 'sesskey' => sesskey()]);
-            $exportoutcomesbutton = new \single_button($exportoutcomeslink, get_string('exportalloutcomes', 'grades'),
+            $exportoutcomesbutton = new \single_button($exportoutcomeslink, get_string('exportalloutcomes', 'core_grades'),
                 'get');
             $data['exportoutcomesbutton'] = $exportoutcomesbutton->export_for_template($output);
         }

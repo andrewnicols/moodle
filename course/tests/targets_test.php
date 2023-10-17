@@ -52,7 +52,7 @@ class targets_test extends \advanced_testcase {
                     'enablecompletion' => 1,
                     'startdate' => mktime(0, 0, 0, 10, 24, $year + 1)
                 ],
-                'isvalid' => get_string('coursenotyetstarted', 'course')
+                'isvalid' => get_string('coursenotyetstarted', 'core_course')
             ],
             'coursenostudents' => [
                 'params' => [
@@ -60,7 +60,7 @@ class targets_test extends \advanced_testcase {
                     'startdate' => mktime(0, 0, 0, 10, 24, $year - 2),
                     'enddate' => mktime(0, 0, 0, 10, 24, $year - 1)
                 ],
-                'isvalid' => get_string('nocoursestudents', 'course')
+                'isvalid' => get_string('nocoursestudents', 'core_course')
             ],
             'coursenosections' => [
                 'params' => [
@@ -68,7 +68,7 @@ class targets_test extends \advanced_testcase {
                     'format' => 'social',
                     'students' => true
                 ],
-                'isvalid' => get_string('nocoursesections', 'course')
+                'isvalid' => get_string('nocoursesections', 'core_course')
             ],
             'coursenoendtime' => [
                 'params' => [
@@ -77,7 +77,7 @@ class targets_test extends \advanced_testcase {
                     'enddate' => 0,
                     'students' => true
                 ],
-                'isvalid' => get_string('nocourseendtime', 'course')
+                'isvalid' => get_string('nocourseendtime', 'core_course')
             ],
             'courseendbeforestart' => [
                 'params' => [
@@ -85,7 +85,7 @@ class targets_test extends \advanced_testcase {
                     'enddate' => mktime(0, 0, 0, 10, 23, $year - 2),
                     'students' => true
                 ],
-                'isvalid' => get_string('errorendbeforestart', 'course')
+                'isvalid' => get_string('errorendbeforestart', 'core_course')
             ],
             'coursetoolong' => [
                 'params' => [
@@ -94,7 +94,7 @@ class targets_test extends \advanced_testcase {
                     'enddate' => mktime(0, 0, 0, 10, 23, $year),
                     'students' => true
                 ],
-                'isvalid' => get_string('coursetoolong', 'course')
+                'isvalid' => get_string('coursetoolong', 'core_course')
             ],
             'coursealreadyfinished' => [
                 'params' => [
@@ -103,7 +103,7 @@ class targets_test extends \advanced_testcase {
                     'enddate' => mktime(0, 0, 0, 10, 23, $year - 1),
                     'students' => true
                 ],
-                'isvalid' => get_string('coursealreadyfinished', 'course'),
+                'isvalid' => get_string('coursealreadyfinished', 'core_course'),
                 'fortraining' => false
             ],
             'coursenotyetfinished' => [
@@ -113,7 +113,7 @@ class targets_test extends \advanced_testcase {
                     'enddate' => mktime(0, 0, 0, $month + 2, 23, $year),
                     'students' => true
                 ],
-                'isvalid' => get_string('coursenotyetfinished', 'course')
+                'isvalid' => get_string('coursenotyetfinished', 'core_course')
             ],
             'coursenocompletion' => [
                 'params' => [
@@ -122,7 +122,7 @@ class targets_test extends \advanced_testcase {
                     'enddate' => mktime(0, 0, 0, $month - 1, 23, $year),
                     'students' => true
                 ],
-                'isvalid' => get_string('completionnotenabledforcourse', 'completion')
+                'isvalid' => get_string('completionnotenabledforcourse', 'core_completion')
             ],
             'coursehiddentraining' => [
                 'params' => [
@@ -573,7 +573,7 @@ class targets_test extends \advanced_testcase {
 
         $analysable = new \core_analytics\course($course1);
         $target = new \core_course\analytics\target\course_gradetopass();
-        $this->assertEquals(get_string('gradetopassnotset', 'course'), $target->is_valid_analysable($analysable));
+        $this->assertEquals(get_string('gradetopassnotset', 'core_course'), $target->is_valid_analysable($analysable));
 
         // Set grade to pass.
         $courseitem = \grade_item::fetch_course_item($course1->id);

@@ -29,12 +29,12 @@ if (!empty($id)) {
         throw new \moodle_exception('coursemisconf');
     }
     if (! $glossary = $DB->get_record("glossary", array("id"=>$cm->instance))) {
-        throw new \moodle_exception('invalidid', 'glossary');
+        throw new \moodle_exception('invalidid', 'mod_glossary');
     }
 
 } else if (!empty($g)) {
     if (! $glossary = $DB->get_record("glossary", array("id"=>$g))) {
-        throw new \moodle_exception('invalidid', 'glossary');
+        throw new \moodle_exception('invalidid', 'mod_glossary');
     }
     if (! $course = $DB->get_record("course", array("id"=>$glossary->course))) {
         throw new \moodle_exception('invalidcourseid');
@@ -44,7 +44,7 @@ if (!empty($id)) {
     }
     $id = $cm->id;
 } else {
-    throw new \moodle_exception('invalidid', 'glossary');
+    throw new \moodle_exception('invalidid', 'mod_glossary');
 }
 $cm = cm_info::create($cm);
 
@@ -264,14 +264,14 @@ break;
 glossary_view($glossary, $course, $cm, $context, $mode);
 
 /// Printing the heading
-$strglossaries = get_string("modulenameplural", "glossary");
-$strglossary = get_string("modulename", "glossary");
-$strallcategories = get_string("allcategories", "glossary");
-$straddentry = get_string("addentry", "glossary");
-$strnoentries = get_string("noentries", "glossary");
-$strsearchindefinition = get_string("searchindefinition", "glossary");
+$strglossaries = get_string("modulenameplural", 'mod_glossary');
+$strglossary = get_string("modulename", 'mod_glossary');
+$strallcategories = get_string("allcategories", 'mod_glossary');
+$straddentry = get_string("addentry", 'mod_glossary');
+$strnoentries = get_string("noentries", 'mod_glossary');
+$strsearchindefinition = get_string("searchindefinition", 'mod_glossary');
 $strsearch = get_string("search");
-$strwaitingapproval = get_string('pendingapproval', 'glossary');
+$strwaitingapproval = get_string('pendingapproval', 'mod_glossary');
 
 /// If we are in approval mode, prit special header
 $PAGE->set_title($glossary->name);
@@ -382,7 +382,7 @@ if ($allentries) {
     //Decide if we must show the ALL link in the pagebar
     $specialtext = '';
     if ($glossary->showall) {
-        $specialtext = get_string("allentries","glossary");
+        $specialtext = get_string("allentries",'mod_glossary');
     }
 
     //Build paging bar
@@ -483,7 +483,7 @@ if ($allentries) {
     }
 }
 if ( !$entriesshown ) {
-    echo $OUTPUT->box(get_string("noentries","glossary"), "generalbox boxaligncenter boxwidthwide");
+    echo $OUTPUT->box(get_string("noentries",'mod_glossary'), "generalbox boxaligncenter boxwidthwide");
 }
 
 if (!empty($formsent)) {

@@ -51,7 +51,7 @@ class webservice_service_user_removed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventwebserviceserviceuserremoved', 'webservice');
+        return get_string('eventwebserviceserviceuserremoved', 'core_webservice');
     }
 
     /**

@@ -222,7 +222,7 @@ class provider implements
 
         list ($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
-        $rootpath = [get_string('analytics', 'analytics')];
+        $rootpath = [get_string('analytics', 'core_analytics')];
         $ctxfields = \context_helper::get_preload_record_columns_sql('ctx');
 
         foreach ($models as $modelid => $model) {
@@ -242,7 +242,7 @@ class provider implements
                 \context_helper::preload_from_record($prediction);
                 $context = \context::instance_by_id($prediction->contextid);
                 $path = $rootpath;
-                $path[] = get_string('privacy:metadata:analytics:predictions', 'analytics');
+                $path[] = get_string('privacy:metadata:analytics:predictions', 'core_analytics');
                 $path[] = $prediction->id;
 
                 $data = (object)[
@@ -269,7 +269,7 @@ class provider implements
                 \context_helper::preload_from_record($calculation);
                 $context = \context::instance_by_id($calculation->contextid);
                 $path = $rootpath;
-                $path[] = get_string('privacy:metadata:analytics:indicatorcalc', 'analytics');
+                $path[] = get_string('privacy:metadata:analytics:indicatorcalc', 'core_analytics');
                 $path[] = $calculation->id;
 
                 $indicator = \core_analytics\manager::get_indicator($calculation->indicator);
@@ -296,7 +296,7 @@ class provider implements
             \context_helper::preload_from_record($predictionaction);
             $context = \context::instance_by_id($predictionaction->contextid);
             $path = $rootpath;
-            $path[] = get_string('privacy:metadata:analytics:predictionactions', 'analytics');
+            $path[] = get_string('privacy:metadata:analytics:predictionactions', 'core_analytics');
             $path[] = $predictionaction->id;
 
             $data = (object)[

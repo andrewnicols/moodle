@@ -553,7 +553,7 @@ class core_user {
     public static function require_active_user($user, $checksuspended = false, $checknologin = false) {
 
         if (!self::is_real_user($user->id)) {
-            throw new moodle_exception('invaliduser', 'error');
+            throw new moodle_exception('invaliduser', 'mod_error');
         }
 
         if ($user->deleted) {
@@ -565,15 +565,15 @@ class core_user {
         }
 
         if (isguestuser($user)) {
-            throw new moodle_exception('guestsarenotallowed', 'error');
+            throw new moodle_exception('guestsarenotallowed', 'mod_error');
         }
 
         if ($checksuspended and $user->suspended) {
-            throw new moodle_exception('suspended', 'auth');
+            throw new moodle_exception('suspended', 'core_auth');
         }
 
         if ($checknologin and $user->auth == 'nologin') {
-            throw new moodle_exception('suspended', 'auth');
+            throw new moodle_exception('suspended', 'core_auth');
         }
     }
 

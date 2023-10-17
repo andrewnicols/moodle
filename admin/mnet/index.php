@@ -17,13 +17,13 @@
     if (!extension_loaded('openssl')) {
         echo $OUTPUT->header();
         set_config('mnet_dispatcher_mode', 'off');
-        throw new \moodle_exception('requiresopenssl', 'mnet');
+        throw new \moodle_exception('requiresopenssl', 'core_mnet');
     }
 
     if (!function_exists('curl_init') ) {
         echo $OUTPUT->header();
         set_config('mnet_dispatcher_mode', 'off');
-        throw new \moodle_exception('nocurl', 'mnet');
+        throw new \moodle_exception('nocurl', 'core_mnet');
     }
 
     if (!isset($CFG->mnet_dispatcher_mode)) {
@@ -48,7 +48,7 @@
             $formcancel = new single_button(new moodle_url('index.php', array()), get_string('no'));
 
             echo $OUTPUT->header();
-            echo $OUTPUT->confirm(get_string("deletekeycheck", "mnet"), $formcontinue, $formcancel);
+            echo $OUTPUT->confirm(get_string("deletekeycheck", 'core_mnet'), $formcontinue, $formcancel);
             echo $OUTPUT->footer();
             exit;
         } else {
@@ -58,7 +58,7 @@
             if (!isset($form->confirm)) {
                 redirect(
                     new moodle_url('/admin/mnet/index.php'),
-                    get_string('keydeletedcancelled', 'mnet'),
+                    get_string('keydeletedcancelled', 'core_mnet'),
                     null,
                     \core\output\notification::NOTIFY_SUCCESS
                 );
@@ -77,7 +77,7 @@
                 // fail - you're out of time.
                 redirect(
                     new moodle_url('/admin/mnet/index.php'),
-                    get_string('deleteoutoftime', 'mnet'),
+                    get_string('deleteoutoftime', 'core_mnet'),
                     null,
                     \core\output\notification::NOTIFY_WARNING
                 );
@@ -85,12 +85,12 @@
 
             if ($key != md5(sha1($mnet->keypair['keypair_PEM']))) {
                 // fail - you're being attacked?
-                throw new \moodle_exception ('deletewrongkeyvalue', 'mnet', 'index.php');
+                throw new \moodle_exception ('deletewrongkeyvalue', 'core_mnet', 'index.php');
                 exit;
             }
 
             $mnet->replace_keys();
-            redirect('index.php', get_string('keydeleted','mnet'));
+            redirect('index.php', get_string('keydeleted','core_mnet'));
         }
     }
     $hosts = $DB->get_records_select('mnet_host', "id <> ? AND deleted = 0", array($CFG->mnet_localhost_id), 'wwwroot ASC');

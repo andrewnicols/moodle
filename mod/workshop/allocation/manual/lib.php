@@ -175,7 +175,7 @@ class workshop_manual_allocator implements workshop_allocator {
                 break;
             case self::MSG_NOSUBMISSION:
                 $hlauthorid     = $m[1];
-                $message        = new workshop_message(get_string('nosubmissionfound', 'workshop'),
+                $message        = new workshop_message(get_string('nosubmissionfound', 'mod_workshop'),
                     workshop_message::TYPE_ERROR);
                 break;
             case self::MSG_CONFIRM_DEL:
@@ -189,19 +189,19 @@ class workshop_manual_allocator implements workshop_allocator {
                         workshop_message::TYPE_ERROR);
                 }
                 $url = new moodle_url($PAGE->url, array('mode' => 'del', 'what' => $m[1], 'confirm' => 1, 'sesskey' => sesskey()));
-                $label = get_string('iamsure', 'workshop');
+                $label = get_string('iamsure', 'mod_workshop');
                 $message->set_action($url, $label);
                 break;
             case self::MSG_DELETED:
                 $hlauthorid     = $m[1];
                 $hlreviewerid   = $m[2];
-                $message        = new workshop_message(get_string('assessmentdeleted', 'workshop'),
+                $message        = new workshop_message(get_string('assessmentdeleted', 'mod_workshop'),
                     workshop_message::TYPE_OK);
                 break;
             case self::MSG_DELETE_ERROR:
                 $hlauthorid     = $m[1];
                 $hlreviewerid   = $m[2];
-                $message        = new workshop_message(get_string('assessmentnotdeleted', 'workshop'),
+                $message        = new workshop_message(get_string('assessmentnotdeleted', 'mod_workshop'),
                     workshop_message::TYPE_ERROR);
                 break;
             }

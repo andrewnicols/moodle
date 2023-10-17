@@ -395,12 +395,12 @@ class process {
             // better never try this in mixed update types.
             $error = false;
             if (!isset($user->firstname) or $user->firstname === '') {
-                $this->upt->track('status', get_string('missingfield', 'error', 'firstname'), 'error');
+                $this->upt->track('status', get_string('missingfield', 'mod_error', 'firstname'), 'error');
                 $this->upt->track('firstname', get_string('error'), 'error');
                 $error = true;
             }
             if (!isset($user->lastname) or $user->lastname === '') {
-                $this->upt->track('status', get_string('missingfield', 'error', 'lastname'), 'error');
+                $this->upt->track('status', get_string('missingfield', 'mod_error', 'lastname'), 'error');
                 $this->upt->track('lastname', get_string('error'), 'error');
                 $error = true;
             }
@@ -423,18 +423,18 @@ class process {
 
         // Make sure we really have username.
         if (empty($user->username) && !$this->get_match_on_email()) {
-            $this->upt->track('status', get_string('missingfield', 'error', 'username'), 'error');
+            $this->upt->track('status', get_string('missingfield', 'mod_error', 'username'), 'error');
             $this->upt->track('username', get_string('error'), 'error');
             $this->userserrors++;
             return null;
         } else if ($user->username === 'guest') {
-            $this->upt->track('status', get_string('guestnoeditprofileother', 'error'), 'error');
+            $this->upt->track('status', get_string('guestnoeditprofileother', 'mod_error'), 'error');
             $this->userserrors++;
             return null;
         }
 
         if ($user->username !== \core_user::clean_field($user->username, 'username')) {
-            $this->upt->track('status', get_string('invalidusername', 'error', 'username'), 'error');
+            $this->upt->track('status', get_string('invalidusername', 'mod_error', 'username'), 'error');
             $this->upt->track('username', get_string('error'), 'error');
             $this->userserrors++;
         }
@@ -574,12 +574,12 @@ class process {
             if (!$this->get_allow_deletes() or $remoteuser or
                     !has_capability('moodle/user:delete', context_system::instance())) {
                 $this->usersskipped++;
-                $this->upt->track('status', get_string('usernotdeletedoff', 'error'), 'warning');
+                $this->upt->track('status', get_string('usernotdeletedoff', 'mod_error'), 'warning');
                 return;
             }
             if ($existinguser) {
                 if (is_siteadmin($existinguser->id)) {
-                    $this->upt->track('status', get_string('usernotdeletedadmin', 'error'), 'error');
+                    $this->upt->track('status', get_string('usernotdeletedadmin', 'mod_error'), 'error');
                     $this->deleteerrors++;
                     return;
                 }
@@ -587,11 +587,11 @@ class process {
                     $this->upt->track('status', get_string('userdeleted', 'tool_uploaduser'));
                     $this->deletes++;
                 } else {
-                    $this->upt->track('status', get_string('usernotdeletederror', 'error'), 'error');
+                    $this->upt->track('status', get_string('usernotdeletederror', 'mod_error'), 'error');
                     $this->deleteerrors++;
                 }
             } else {
-                $this->upt->track('status', get_string('usernotdeletedmissing', 'error'), 'error');
+                $this->upt->track('status', get_string('usernotdeletedmissing', 'mod_error'), 'error');
                 $this->deleteerrors++;
             }
             return;
@@ -609,18 +609,18 @@ class process {
         if (!empty($user->oldusername) ) {
             if (!$this->get_allow_renames()) {
                 $this->usersskipped++;
-                $this->upt->track('status', get_string('usernotrenamedoff', 'error'), 'warning');
+                $this->upt->track('status', get_string('usernotrenamedoff', 'mod_error'), 'warning');
                 return;
             }
 
             if ($existinguser) {
-                $this->upt->track('status', get_string('usernotrenamedexists', 'error'), 'error');
+                $this->upt->track('status', get_string('usernotrenamedexists', 'mod_error'), 'error');
                 $this->renameerrors++;
                 return;
             }
 
             if ($user->username === 'guest') {
-                $this->upt->track('status', get_string('guestnoeditprofileother', 'error'), 'error');
+                $this->upt->track('status', get_string('guestnoeditprofileother', 'mod_error'), 'error');
                 $this->renameerrors++;
                 return;
             }
@@ -636,7 +636,7 @@ class process {
                     ['username' => $oldusername, 'mnethostid' => $CFG->mnet_localhost_id])) {
                 $this->upt->track('id', $olduser->id, 'normal', false);
                 if (is_siteadmin($olduser->id)) {
-                    $this->upt->track('status', get_string('usernotrenamedadmin', 'error'), 'error');
+                    $this->upt->track('status', get_string('usernotrenamedadmin', 'mod_error'), 'error');
                     $this->renameerrors++;
                     return;
                 }
@@ -646,7 +646,7 @@ class process {
                 $this->upt->track('status', get_string('userrenamed', 'tool_uploaduser'));
                 $this->renames++;
             } else {
-                $this->upt->track('status', get_string('usernotrenamedmissing', 'error'), 'error');
+                $this->upt->track('status', get_string('usernotrenamedmissing', 'mod_error'), 'error');
                 $this->renameerrors++;
                 return;
             }
@@ -660,7 +660,7 @@ class process {
             case UU_USER_ADDNEW:
                 if ($existinguser) {
                     $this->usersskipped++;
-                    $this->upt->track('status', get_string('usernotaddedregistered', 'error'), 'warning');
+                    $this->upt->track('status', get_string('usernotaddedregistered', 'mod_error'), 'warning');
                     $skip = true;
                 }
                 break;
@@ -668,7 +668,7 @@ class process {
             case UU_USER_ADDINC:
                 if ($existinguser) {
                     // This should not happen!
-                    $this->upt->track('status', get_string('usernotaddederror', 'error'), 'error');
+                    $this->upt->track('status', get_string('usernotaddederror', 'mod_error'), 'error');
                     $this->userserrors++;
                     $skip = true;
                 }
@@ -680,7 +680,7 @@ class process {
             case UU_USER_UPDATE:
                 if (!$existinguser) {
                     $this->usersskipped++;
-                    $this->upt->track('status', get_string('usernotupdatednotexists', 'error'), 'warning');
+                    $this->upt->track('status', get_string('usernotupdatednotexists', 'mod_error'), 'warning');
                     $skip = true;
                 }
                 break;
@@ -703,7 +703,7 @@ class process {
             $this->upt->track('auth', $existinguser->auth, 'normal', false);
 
             if (is_siteadmin($user->id)) {
-                $this->upt->track('status', get_string('usernotupdatedadmin', 'error'), 'error');
+                $this->upt->track('status', get_string('usernotupdatedadmin', 'mod_error'), 'error');
                 $this->userserrors++;
                 return;
             }
@@ -726,7 +726,7 @@ class process {
                     $this->upt->track('auth', s($existinguser->auth).'-->'.s($user->auth), 'info', false);
                     $existinguser->auth = $user->auth;
                     if (!isset($this->supportedauths[$user->auth])) {
-                        $this->upt->track('auth', get_string('userauthunsupported', 'error'), 'warning');
+                        $this->upt->track('auth', get_string('userauthunsupported', 'mod_error'), 'warning');
                     }
                     $doupdate = true;
                     if ($existinguser->auth === 'nologin') {
@@ -769,12 +769,12 @@ class process {
                                     $user->$column = \core_text::strtolower($user->$column);
                                     continue;
                                 } else if (!$this->get_allow_email_duplicates()) {
-                                    $this->upt->track('email', get_string('useremailduplicate', 'error'), 'error');
-                                    $this->upt->track('status', get_string('usernotupdatederror', 'error'), 'error');
+                                    $this->upt->track('email', get_string('useremailduplicate', 'mod_error'), 'error');
+                                    $this->upt->track('status', get_string('usernotupdatederror', 'mod_error'), 'error');
                                     $this->userserrors++;
                                     return;
                                 } else {
-                                    $this->upt->track('email', get_string('useremailduplicate', 'error'), 'warning');
+                                    $this->upt->track('email', get_string('useremailduplicate', 'mod_error'), 'warning');
                                 }
                             }
                             if (!validate_email($user->email)) {
@@ -787,7 +787,7 @@ class process {
                                 // Do not change to not-set value.
                                 continue;
                             } else if (\core_user::clean_field($user->lang, 'lang') === '') {
-                                $this->upt->track('status', get_string('cannotfindlang', 'error', $user->lang), 'warning');
+                                $this->upt->track('status', get_string('cannotfindlang', 'mod_error', $user->lang), 'warning');
                                 continue;
                             }
                         }
@@ -804,8 +804,8 @@ class process {
             try {
                 $auth = get_auth_plugin($existinguser->auth);
             } catch (\Exception $e) {
-                $this->upt->track('auth', get_string('userautherror', 'error', s($existinguser->auth)), 'error');
-                $this->upt->track('status', get_string('usernotupdatederror', 'error'), 'error');
+                $this->upt->track('auth', get_string('userautherror', 'mod_error', s($existinguser->auth)), 'error');
+                $this->upt->track('status', get_string('usernotupdatederror', 'mod_error'), 'error');
                 $this->userserrors++;
                 return;
             }
@@ -851,7 +851,7 @@ class process {
                             ($this->get_reset_passwords() == UU_PWRESET_WEAK and $weak)) {
                         if ($weak) {
                             $this->weakpasswords++;
-                            $this->upt->track('password', get_string('invalidpasswordpolicy', 'error'), 'warning');
+                            $this->upt->track('password', get_string('invalidpasswordpolicy', 'mod_error'), 'warning');
                         }
                         set_user_preference('auth_forcepasswordchange', 1, $existinguser);
                     } else {
@@ -933,31 +933,31 @@ class process {
             try {
                 $auth = get_auth_plugin($user->auth);
             } catch (\Exception $e) {
-                $this->upt->track('auth', get_string('userautherror', 'error', s($user->auth)), 'error');
-                $this->upt->track('status', get_string('usernotaddederror', 'error'), 'error');
+                $this->upt->track('auth', get_string('userautherror', 'mod_error', s($user->auth)), 'error');
+                $this->upt->track('status', get_string('usernotaddederror', 'mod_error'), 'error');
                 $this->userserrors++;
                 return;
             }
             if (!isset($this->supportedauths[$user->auth])) {
-                $this->upt->track('auth', get_string('userauthunsupported', 'error'), 'warning');
+                $this->upt->track('auth', get_string('userauthunsupported', 'mod_error'), 'warning');
             }
 
             $isinternalauth = $auth->is_internal();
 
             if (empty($user->email)) {
                 $this->upt->track('email', get_string('invalidemail'), 'error');
-                $this->upt->track('status', get_string('usernotaddederror', 'error'), 'error');
+                $this->upt->track('status', get_string('usernotaddederror', 'mod_error'), 'error');
                 $this->userserrors++;
                 return;
 
             } else if ($DB->record_exists('user', ['email' => $user->email])) {
                 if (!$this->get_allow_email_duplicates()) {
-                    $this->upt->track('email', get_string('useremailduplicate', 'error'), 'error');
-                    $this->upt->track('status', get_string('usernotaddederror', 'error'), 'error');
+                    $this->upt->track('email', get_string('useremailduplicate', 'mod_error'), 'error');
+                    $this->upt->track('status', get_string('usernotaddederror', 'mod_error'), 'error');
                     $this->userserrors++;
                     return;
                 } else {
-                    $this->upt->track('email', get_string('useremailduplicate', 'error'), 'warning');
+                    $this->upt->track('email', get_string('useremailduplicate', 'mod_error'), 'warning');
                 }
             }
             if (!validate_email($user->email)) {
@@ -967,7 +967,7 @@ class process {
             if (empty($user->lang)) {
                 $user->lang = '';
             } else if (\core_user::clean_field($user->lang, 'lang') === '') {
-                $this->upt->track('status', get_string('cannotfindlang', 'error', $user->lang), 'warning');
+                $this->upt->track('status', get_string('cannotfindlang', 'mod_error', $user->lang), 'warning');
                 $user->lang = '';
             }
 
@@ -981,8 +981,8 @@ class process {
                         $this->upt->track('password', get_string('uupasswordcron', 'tool_uploaduser'), 'warning', false);
                     } else {
                         $this->upt->track('password', '', 'normal', false);
-                        $this->upt->track('password', get_string('missingfield', 'error', 'password'), 'error');
-                        $this->upt->track('status', get_string('usernotaddederror', 'error'), 'error');
+                        $this->upt->track('password', get_string('missingfield', 'mod_error', 'password'), 'error');
+                        $this->upt->track('status', get_string('usernotaddederror', 'mod_error'), 'error');
                         $this->userserrors++;
                         return;
                     }
@@ -993,7 +993,7 @@ class process {
                             ($this->get_reset_passwords() == UU_PWRESET_WEAK and $weak)) {
                         if ($weak) {
                             $this->weakpasswords++;
-                            $this->upt->track('password', get_string('invalidpasswordpolicy', 'error'), 'warning');
+                            $this->upt->track('password', get_string('invalidpasswordpolicy', 'mod_error'), 'warning');
                         }
                         $forcechangepassword = true;
                     }
@@ -1112,7 +1112,7 @@ class process {
                     if (array_key_exists($sysrolename, $this->sysrolecache)) {
                         $sysroleid = $this->sysrolecache[$sysrolename]->id;
                     } else {
-                        $this->upt->track('enrolments', get_string('unknownrole', 'error', s($sysrolename)), 'error');
+                        $this->upt->track('enrolments', get_string('unknownrole', 'mod_error', s($sysrolename)), 'error');
                         continue;
                     }
 
@@ -1150,7 +1150,7 @@ class process {
                 if (!array_key_exists($categoryidnumber, $categorycache)) {
                     $category = $DB->get_record('course_categories', ['idnumber' => $categoryidnumber], 'id, idnumber');
                     if (empty($category)) {
-                        $this->upt->track('enrolments', get_string('unknowncategory', 'error', s($categoryidnumber)), 'error');
+                        $this->upt->track('enrolments', get_string('unknowncategory', 'mod_error', s($categoryidnumber)), 'error');
                         continue;
                     }
                     $categoryrolecache[$categoryidnumber] = uu_allowed_roles_cache($category->id);
@@ -1166,11 +1166,11 @@ class process {
                         // Assign a role to user with category context.
                         role_assign($roleid, $user->id, $categorycache[$categoryidnumber]->id);
                     } else {
-                        $this->upt->track('enrolments', get_string('unknownrole', 'error', s($rolename)), 'error');
+                        $this->upt->track('enrolments', get_string('unknownrole', 'mod_error', s($rolename)), 'error');
                         continue;
                     }
                 } else {
-                    $this->upt->track('enrolments', get_string('missingcategoryrole', 'error', s($categoryidnumber)), 'error');
+                    $this->upt->track('enrolments', get_string('missingcategoryrole', 'mod_error', s($categoryidnumber)), 'error');
                     continue;
                 }
             }
@@ -1186,7 +1186,7 @@ class process {
             $shortname = $user->{'course'.$i};
             if (!array_key_exists($shortname, $this->ccache)) {
                 if (!$course = $DB->get_record('course', ['shortname' => $shortname], 'id, shortname')) {
-                    $this->upt->track('enrolments', get_string('unknowncourse', 'error', s($shortname)), 'error');
+                    $this->upt->track('enrolments', get_string('unknowncourse', 'mod_error', s($shortname)), 'error');
                     continue;
                 }
                 $this->ccache[$shortname] = $course;
@@ -1221,7 +1221,7 @@ class process {
                     if (array_key_exists($rolename, $this->rolecache[$courseid]) ) {
                         $roleid = $this->rolecache[$courseid][$rolename]->id;
                     } else {
-                        $this->upt->track('enrolments', get_string('unknownrole', 'error', s($rolename)), 'error');
+                        $this->upt->track('enrolments', get_string('unknownrole', 'mod_error', s($rolename)), 'error');
                         continue;
                     }
 
@@ -1242,7 +1242,7 @@ class process {
                     if (array_key_exists($rolename, $this->rolecache[$courseid])) {
                         $roleid = $this->rolecache[$courseid][$rolename]->id;
                     } else {
-                        $this->upt->track('enrolments', get_string('unknownrole', 'error', s($rolename)), 'error');
+                        $this->upt->track('enrolments', get_string('unknownrole', 'mod_error', s($rolename)), 'error');
                         continue;
                     }
 
@@ -1265,7 +1265,7 @@ class process {
                         $roleid = $defaultenrolroleid;
                     } else {
                         $role = $DB->get_record('role', ['id' => $defaultenrolroleid]);
-                        $this->upt->track('enrolments', get_string('unknownrole', 'error', s($role->shortname)), 'error');
+                        $this->upt->track('enrolments', get_string('unknownrole', 'mod_error', s($role->shortname)), 'error');
                         continue;
                     }
                 }
@@ -1352,7 +1352,7 @@ class process {
                         $this->ccache[$shortname]->groups[$addgroup]->id   = $gid;
                         $this->ccache[$shortname]->groups[$addgroup]->name = $newgroupdata->name;
                     } else {
-                        $this->upt->track('enrolments', get_string('unknowngroup', 'error', s($addgroup)), 'error');
+                        $this->upt->track('enrolments', get_string('unknowngroup', 'mod_error', s($addgroup)), 'error');
                         continue;
                     }
                 }

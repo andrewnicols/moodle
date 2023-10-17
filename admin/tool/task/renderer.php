@@ -377,7 +377,7 @@ class tool_task_renderer extends plugin_renderer_base {
                 html_writer::span('\\' . $classname, 'task-class text-ltr');
             if ($task->is_overridden()) {
                 // Let the user know the scheduled task is defined in config.
-                $namecellcontent .= "\n" . html_writer::div(get_string('configoverride', 'admin'), 'alert-info');
+                $namecellcontent .= "\n" . html_writer::div(get_string('configoverride', 'core_admin'), 'alert-info');
             }
             $namecell = new html_table_cell($namecellcontent);
             $namecell->header = true;

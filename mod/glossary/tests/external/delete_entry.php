@@ -77,7 +77,7 @@ class delete_entry_testcase extends externallib_advanced_testcase {
         $entry = $gg->create_content($glossary);
         // Test a different student is not able to delete.
         $this->setUser($anotherstudent);
-        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'error'));
+        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'mod_error'));
         delete_entry::execute($entry->id);
     }
 }

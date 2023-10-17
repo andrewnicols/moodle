@@ -1240,7 +1240,7 @@ class block_manager {
 
             if ($content->blockinstanceid == $this->movingblock) {
                 $content->add_class('beingmoved');
-                $content->annotation .= get_string('movingthisblockcancel', 'block',
+                $content->annotation .= get_string('movingthisblockcancel', 'core_block',
                         html_writer::link($this->page->url, get_string('cancel')));
             }
 
@@ -1319,7 +1319,7 @@ class block_manager {
 
         if ($this->page->user_can_edit_blocks()) {
             // Move icon.
-            $str = new lang_string('moveblock', 'block', $blocktitle);
+            $str = new lang_string('moveblock', 'core_block', $blocktitle);
             $controls[] = new action_menu_link_primary(
                 new moodle_url($actionurl, array('bui_moveid' => $block->instance->id)),
                 new pix_icon('t/move', $str, 'moodle', array('class' => 'iconsmall', 'title' => '')),
@@ -1331,7 +1331,7 @@ class block_manager {
 
         if ($this->page->user_can_edit_blocks() || $block->user_can_edit()) {
             // Edit config icon - always show - needed for positioning UI.
-            $str = new lang_string('configureblock', 'block', $blocktitle);
+            $str = new lang_string('configureblock', 'core_block', $blocktitle);
             $editactionurl = new moodle_url($actionurl, ['bui_editid' => $block->instance->id]);
             $editactionurl->remove_params(['sesskey']);
 
@@ -1358,12 +1358,12 @@ class block_manager {
         if ($this->page->user_can_edit_blocks() && $block->instance_can_be_hidden()) {
             // Show/hide icon.
             if ($block->instance->visible) {
-                $str = new lang_string('hideblock', 'block', $blocktitle);
+                $str = new lang_string('hideblock', 'core_block', $blocktitle);
                 $url = new moodle_url($actionurl, array('bui_hideid' => $block->instance->id));
                 $icon = new pix_icon('t/hide', $str, 'moodle', array('class' => 'iconsmall', 'title' => ''));
                 $attributes = array('class' => 'editing_hide');
             } else {
-                $str = new lang_string('showblock', 'block', $blocktitle);
+                $str = new lang_string('showblock', 'core_block', $blocktitle);
                 $url = new moodle_url($actionurl, array('bui_showid' => $block->instance->id));
                 $icon = new pix_icon('t/show', $str, 'moodle', array('class' => 'iconsmall', 'title' => ''));
                 $attributes = array('class' => 'editing_show');
@@ -1375,7 +1375,7 @@ class block_manager {
         if (get_assignable_roles($block->context, ROLENAME_SHORT)) {
             $rolesurl = new moodle_url('/admin/roles/assign.php', array('contextid' => $block->context->id,
                 'returnurl' => $this->page->url->out_as_local_url()));
-            $str = new lang_string('assignrolesinblock', 'block', $blocktitle);
+            $str = new lang_string('assignrolesinblock', 'core_block', $blocktitle);
             $controls[] = new action_menu_link_secondary(
                 $rolesurl,
                 new pix_icon('i/assignroles', $str, 'moodle', array('class' => 'iconsmall', 'title' => '')),
@@ -1387,7 +1387,7 @@ class block_manager {
         if (has_capability('moodle/role:review', $block->context) or get_overridable_roles($block->context)) {
             $rolesurl = new moodle_url('/admin/roles/permissions.php', array('contextid' => $block->context->id,
                 'returnurl' => $this->page->url->out_as_local_url()));
-            $str = get_string('permissions', 'role');
+            $str = get_string('permissions', 'core_role');
             $controls[] = new action_menu_link_secondary(
                 $rolesurl,
                 new pix_icon('i/permissions', $str, 'moodle', array('class' => 'iconsmall', 'title' => '')),
@@ -1399,7 +1399,7 @@ class block_manager {
         if (has_any_capability(array('moodle/role:safeoverride', 'moodle/role:override', 'moodle/role:assign'), $block->context)) {
             $rolesurl = new moodle_url('/admin/roles/check.php', array('contextid' => $block->context->id,
                 'returnurl' => $this->page->url->out_as_local_url()));
-            $str = get_string('checkpermissions', 'role');
+            $str = get_string('checkpermissions', 'core_role');
             $controls[] = new action_menu_link_secondary(
                 $rolesurl,
                 new pix_icon('i/checkpermissions', $str, 'moodle', array('class' => 'iconsmall', 'title' => '')),
@@ -1409,7 +1409,7 @@ class block_manager {
 
         if ($this->user_can_delete_block($block)) {
             // Delete icon.
-            $str = new lang_string('deleteblock', 'block', $blocktitle);
+            $str = new lang_string('deleteblock', 'core_block', $blocktitle);
             $deleteactionurl = new moodle_url($actionurl, ['bui_deleteid' => $block->instance->id]);
             $deleteactionurl->remove_params(['sesskey']);
 
@@ -1447,10 +1447,10 @@ class block_manager {
             if (empty($parentcontext) || empty($parentcontext->locked)) {
                 if ($block->context->locked) {
                     $lockicon = 'i/unlock';
-                    $lockstring = get_string('managecontextunlock', 'admin');
+                    $lockstring = get_string('managecontextunlock', 'core_admin');
                 } else {
                     $lockicon = 'i/lock';
-                    $lockstring = get_string('managecontextlock', 'admin');
+                    $lockstring = get_string('managecontextlock', 'core_admin');
                 }
                 $controls[] = new action_menu_link_secondary(
                     new moodle_url(
@@ -1618,8 +1618,8 @@ class block_manager {
 
             $site = get_site();
             $blocktitle = $block->get_title();
-            $strdeletecheck = get_string('deletecheck', 'block', $blocktitle);
-            $message = get_string('deleteblockcheck', 'block', $blocktitle);
+            $strdeletecheck = get_string('deletecheck', 'core_block', $blocktitle);
+            $message = get_string('deleteblockcheck', 'core_block', $blocktitle);
 
             // If the block is being shown in sub contexts display a warning.
             if ($block->instance->showinsubcontexts == 1) {
@@ -1630,7 +1630,7 @@ class block_manager {
 
                 // Checking for blocks that may have visibility on the front page and pages added on that.
                 if ($parentcontext->id != $systemcontext->id && is_inside_frontpage($parentcontext)) {
-                    $messagestring->pagetype = get_string('showonfrontpageandsubs', 'block');
+                    $messagestring->pagetype = get_string('showonfrontpageandsubs', 'core_block');
                 } else {
                     $pagetypes = generate_page_type_patterns($this->page->pagetype, $parentcontext);
                     $messagestring->pagetype = $block->instance->pagetypepattern;
@@ -1639,7 +1639,7 @@ class block_manager {
                     }
                 }
 
-                $message = get_string('deleteblockwarning', 'block', $messagestring);
+                $message = get_string('deleteblockwarning', 'core_block', $messagestring);
             }
 
             $PAGE->navbar->add($strdeletecheck);
@@ -2313,7 +2313,7 @@ function generate_page_type_patterns($pagetype, $parentcontext = null, $currentc
     // we always can 'bring back' it to the original context. MDL-30340
     if ((!isset($currentcontext) or !isset($parentcontext) or $currentcontext->id != $parentcontext->id) && !isset($patterns['*'])) {
         // TODO: We could change the string here, showing its 'bring back' meaning
-        $patterns['*'] = get_string('page-x', 'pagetype');
+        $patterns['*'] = get_string('page-x', 'mod_pagetype');
     }
 
     return $patterns;
@@ -2337,13 +2337,13 @@ function default_page_type_list($pagetype, $parentcontext = null, $currentcontex
         $pagetypestringname = 'page-'.str_replace('*', 'x', $pattern);
         // guessing page type description
         if (get_string_manager()->string_exists($pagetypestringname, 'pagetype')) {
-            $patterns[$pattern] = get_string($pagetypestringname, 'pagetype');
+            $patterns[$pattern] = get_string($pagetypestringname, 'mod_pagetype');
         } else {
             $patterns[$pattern] = $pattern;
         }
         array_pop($bits);
     }
-    $patterns['*'] = get_string('page-x', 'pagetype');
+    $patterns['*'] = get_string('page-x', 'mod_pagetype');
     return $patterns;
 }
 
@@ -2356,7 +2356,7 @@ function default_page_type_list($pagetype, $parentcontext = null, $currentcontex
  * @return array
  */
 function my_page_type_list($pagetype, $parentcontext = null, $currentcontext = null) {
-    return array('my-index' => get_string('page-my-index', 'pagetype'));
+    return array('my-index' => get_string('page-my-index', 'mod_pagetype'));
 }
 
 /**
@@ -2376,9 +2376,9 @@ function mod_page_type_list($pagetype, $parentcontext = null, $currentcontext = 
         $bits = explode('-', $pagetype);
         $patterns = array($pagetype => $pagetype);
         if ($bits[2] == 'view') {
-            $patterns['mod-*-view'] = get_string('page-mod-x-view', 'pagetype');
+            $patterns['mod-*-view'] = get_string('page-mod-x-view', 'mod_pagetype');
         } else if ($bits[2] == 'index') {
-            $patterns['mod-*-index'] = get_string('page-mod-x-index', 'pagetype');
+            $patterns['mod-*-index'] = get_string('page-mod-x-index', 'mod_pagetype');
         }
     }
     return $patterns;

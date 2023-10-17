@@ -301,7 +301,7 @@ class mnet_xmlrpc_client {
             }
             if (!empty($CFG->mnet_rpcdebug)) {
                 if (get_string_manager()->string_exists('error'.$this->response['faultCode'], 'mnet')) {
-                    $guidance = get_string('error'.$this->response['faultCode'], 'mnet');
+                    $guidance = get_string('error'.$this->response['faultCode'], 'core_mnet');
                 } else {
                     $guidance = '';
                 }

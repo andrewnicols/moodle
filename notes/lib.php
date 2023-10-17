@@ -213,9 +213,9 @@ function note_get_state_name($state) {
  */
 function note_get_state_names() {
     return array(
-        NOTES_STATE_DRAFT => get_string('personal', 'notes'),
-        NOTES_STATE_PUBLIC => get_string('course', 'notes'),
-        NOTES_STATE_SITE => get_string('site', 'notes'),
+        NOTES_STATE_DRAFT => get_string('personal', 'core_notes'),
+        NOTES_STATE_PUBLIC => get_string('course', 'core_notes'),
+        NOTES_STATE_SITE => get_string('site', 'core_notes'),
     );
 }
 
@@ -255,8 +255,8 @@ function note_print($note, $detail = NOTES_SHOW_FULL) {
         echo $OUTPUT->user_picture($user, array('courseid' => $note->courseid));
         echo fullname($user) . '</div>';
         echo '<div class="info">' .
-            get_string('bynameondate', 'notes', $authoring) .
-            ' (' . get_string('created', 'notes') . ': ' . userdate($note->created) . ')</div>';
+            get_string('bynameondate', 'core_notes', $authoring) .
+            ' (' . get_string('created', 'core_notes') . ': ' . userdate($note->created) . ')</div>';
         echo '</div>';
     }
 
@@ -317,10 +317,10 @@ function note_print_notes($header, $addcourseid = 0, $viewnotes = true, $coursei
     if ($addcourseid) {
         if ($userid) {
             echo '<p><a href="' . $CFG->wwwroot . '/notes/edit.php?courseid=' . $addcourseid . '&amp;userid=' . $userid .
-                '&amp;publishstate=' . $state . '">' . get_string('addnewnote', 'notes') . '</a></p>';
+                '&amp;publishstate=' . $state . '">' . get_string('addnewnote', 'core_notes') . '</a></p>';
         } else {
             echo '<p><a href="' . $CFG->wwwroot . '/user/index.php?id=' . $addcourseid. '">' .
-                get_string('addnewnoteselect', 'notes') . '</a></p>';
+                get_string('addnewnoteselect', 'core_notes') . '</a></p>';
         }
     }
     if ($viewnotes) {
@@ -329,7 +329,7 @@ function note_print_notes($header, $addcourseid = 0, $viewnotes = true, $coursei
             note_print_list($notes);
         }
     } else {
-        echo '<p>' . get_string('notesnotvisible', 'notes') . '</p>';
+        echo '<p>' . get_string('notesnotvisible', 'core_notes') . '</p>';
     }
     if ($header) {
         echo '</div>';  // The notesgroup div.
@@ -354,7 +354,7 @@ function note_delete_all($courseid) {
  * @param stdClass $currentcontext Current context of block
  */
 function note_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    return array('notes-*' => get_string('page-notes-x', 'notes'));
+    return array('notes-*' => get_string('page-notes-x', 'core_notes'));
 }
 
 /**

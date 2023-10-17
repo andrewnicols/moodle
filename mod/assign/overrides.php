@@ -81,7 +81,7 @@ if ($action == 'movegroupoverride') {
 // Display a list of overrides.
 $PAGE->set_pagelayout('admin');
 $PAGE->add_body_class('limitedwidth');
-$PAGE->set_title(get_string('overrides', 'assign'));
+$PAGE->set_title(get_string('overrides', 'mod_assign'));
 $PAGE->set_heading($course->fullname);
 $activityheader = $PAGE->activityheader;
 $activityheader->set_attrs([
@@ -162,7 +162,7 @@ $table->headspan = array(1, 2, 1);
 $table->colclasses = array('colname', 'colsetting', 'colvalue', 'colaction');
 $table->head = array(
         $colname,
-        get_string('overrides', 'assign'),
+        get_string('overrides', 'mod_assign'),
         get_string('action'),
 );
 
@@ -193,27 +193,27 @@ foreach ($overrides as $override) {
 
     // Format allowsubmissionsfromdate.
     if (isset($override->allowsubmissionsfromdate)) {
-        $fields[] = get_string('open', 'assign');
+        $fields[] = get_string('open', 'mod_assign');
         $values[] = $override->allowsubmissionsfromdate > 0 ? userdate($override->allowsubmissionsfromdate) : get_string('noopen',
-            'assign');
+            'mod_assign');
     }
 
     // Format duedate.
     if (isset($override->duedate)) {
-        $fields[] = get_string('duedate', 'assign');
-        $values[] = $override->duedate > 0 ? userdate($override->duedate) : get_string('noclose', 'assign');
+        $fields[] = get_string('duedate', 'mod_assign');
+        $values[] = $override->duedate > 0 ? userdate($override->duedate) : get_string('noclose', 'mod_assign');
     }
 
     // Format cutoffdate.
     if (isset($override->cutoffdate)) {
-        $fields[] = get_string('cutoffdate', 'assign');
-        $values[] = $override->cutoffdate > 0 ? userdate($override->cutoffdate) : get_string('noclose', 'assign');
+        $fields[] = get_string('cutoffdate', 'mod_assign');
+        $values[] = $override->cutoffdate > 0 ? userdate($override->cutoffdate) : get_string('noclose', 'mod_assign');
     }
 
     // Format timelimit.
     if (isset($override->timelimit)) {
-        $fields[] = get_string('timelimit', 'assign');
-        $values[] = $override->timelimit > 0 ? format_time($override->timelimit) : get_string('none', 'assign');
+        $fields[] = get_string('timelimit', 'mod_assign');
+        $values[] = $override->timelimit > 0 ? format_time($override->timelimit) : get_string('none', 'mod_assign');
     }
 
     // Icons.
@@ -309,7 +309,7 @@ if (count($table->data)) {
 }
 
 if ($hasinactive) {
-    echo $OUTPUT->notification(get_string('inactiveoverridehelp', 'assign'), 'dimmed_text');
+    echo $OUTPUT->notification(get_string('inactiveoverridehelp', 'mod_assign'), 'dimmed_text');
 }
 
 echo html_writer::start_tag('div', array('class' => 'buttons'));
@@ -317,7 +317,7 @@ $options = array();
 if ($groupmode) {
     if (empty($groups)) {
         // There are no groups.
-        echo $OUTPUT->notification(get_string('groupsnone', 'assign'), 'error');
+        echo $OUTPUT->notification(get_string('groupsnone', 'mod_assign'), 'error');
         $options['disabled'] = true;
     }
 } else {
@@ -325,7 +325,7 @@ if ($groupmode) {
     // See if there are any users in the assign.
     if ($accessallgroups) {
         $users = get_enrolled_users($context, '', 0, 'u.id');
-        $nousermessage = get_string('usersnone', 'assign');
+        $nousermessage = get_string('usersnone', 'mod_assign');
     } else if ($groups) {
         $enrolledjoin = get_enrolled_join($context, 'u.id');
         list($ingroupsql, $ingroupparams) = $DB->get_in_or_equal(array_keys($groups), SQL_PARAMS_NAMED);
@@ -338,9 +338,9 @@ if ($groupmode) {
                        AND {$enrolledjoin->wheres}
               ORDER BY $sort";
         $users = $DB->get_records_sql($sql, $params);
-        $nousermessage = get_string('usersnone', 'assign');
+        $nousermessage = get_string('usersnone', 'mod_assign');
     } else {
-        $nousermessage = get_string('groupsnone', 'assign');
+        $nousermessage = get_string('groupsnone', 'mod_assign');
     }
     $info = new \core_availability\info_module($cm);
     $users = $info->filter_user_list($users);

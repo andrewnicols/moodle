@@ -59,7 +59,7 @@ class award_criteria_cohort extends award_criteria {
         foreach ($this->params as $p) {
             $cohortname = $DB->get_field('cohort', 'name', array('id' => $p['cohort']));
             if (!$cohortname) {
-                $str = $OUTPUT->error_text(get_string('error:nosuchcohort', 'badges'));
+                $str = $OUTPUT->error_text(get_string('error:nosuchcohort', 'core_badges'));
             } else {
                 $str = html_writer::tag('b', '"' . format_string($cohortname, true) . '"');
             }
@@ -99,24 +99,24 @@ class award_criteria_cohort extends award_criteria {
                 $selected = array_keys($this->params);
             }
             $settings = array('multiple' => 'multiple', 'size' => 20, 'class' => 'selectcohort');
-            $mform->addElement('select', 'cohort_cohorts', get_string('addcohort', 'badges'), $select, $settings);
-            $mform->addRule('cohort_cohorts', get_string('requiredcohort', 'badges'), 'required');
+            $mform->addElement('select', 'cohort_cohorts', get_string('addcohort', 'core_badges'), $select, $settings);
+            $mform->addRule('cohort_cohorts', get_string('requiredcohort', 'core_badges'), 'required');
             $mform->addHelpButton('cohort_cohorts', 'addcohort', 'badges');
 
             if ($this->id !== 0) {
                 $mform->setDefault('cohort_cohorts', $selected);
             }
         } else {
-            $mform->addElement('static', 'nocohorts', '', get_string('error:nocohorts', 'badges'));
+            $mform->addElement('static', 'nocohorts', '', get_string('error:nocohorts', 'core_badges'));
             $none = true;
         }
 
         // Add aggregation.
         if (!$none) {
-            $mform->addElement('header', 'aggregation', get_string('method', 'badges'));
+            $mform->addElement('header', 'aggregation', get_string('method', 'core_badges'));
             $agg = array();
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodcohort', 'badges'), 1);
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodcohort', 'badges'), 2);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodcohort', 'core_badges'), 1);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodcohort', 'core_badges'), 2);
             $mform->addGroup($agg, 'methodgr', '', array('<br/>'), false);
             if ($this->id !== 0) {
                 $mform->setDefault('agg', $this->method);
@@ -125,7 +125,7 @@ class award_criteria_cohort extends award_criteria {
             }
         }
 
-        return array($none, get_string('noparamstoadd', 'badges'));
+        return array($none, get_string('noparamstoadd', 'core_badges'));
     }
 
     /**
@@ -204,7 +204,7 @@ class award_criteria_cohort extends award_criteria {
             // Perform check if there only one parameter with any type of aggregation,
             // Or there are more than one parameter with aggregation ALL.
             if (($singleparam || $method) && !$DB->record_exists('cohort', array('id' => $param))) {
-                return array(false, get_string('error:invalidparamcohort', 'badges'));
+                return array(false, get_string('error:invalidparamcohort', 'core_badges'));
             }
         }
 

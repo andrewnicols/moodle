@@ -50,9 +50,9 @@ class quiz_statistics_settings_form extends moodleform {
 
         if (quiz_allows_multiple_tries($this->_customdata['quiz'])) {
             $mform->addElement('select', 'whichtries', get_string('whichtries', 'quiz_statistics'), [
-                                           question_attempt::FIRST_TRY    => get_string('firsttry', 'question'),
-                                           question_attempt::LAST_TRY     => get_string('lasttry', 'question'),
-                                           question_attempt::ALL_TRIES    => get_string('alltries', 'question')]
+                                           question_attempt::FIRST_TRY    => get_string('firsttry', 'core_question'),
+                                           question_attempt::LAST_TRY     => get_string('lasttry', 'core_question'),
+                                           question_attempt::ALL_TRIES    => get_string('alltries', 'core_question')]
             );
             $mform->setDefault('whichtries', question_attempt::LAST_TRY);
         }

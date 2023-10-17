@@ -136,7 +136,7 @@ class edit_scale_form extends moodleform {
             $scaleoptioncount = count($scalearray);
 
             if (count($scalearray) < 1) {
-                $errors['scale'] = get_string('badlyformattedscale', 'grades');
+                $errors['scale'] = get_string('badlyformattedscale', 'core_grades');
             } else {
                 $thescale = implode(',',$scalearray);
 
@@ -148,10 +148,10 @@ class edit_scale_form extends moodleform {
                     //if this is a new scale but we found a duplice in the DB
                     //or we found a duplicate in another course report the error
                     if (empty($old->id) or $old->courseid != $courseid) {
-                        $errors['scale'] = get_string('duplicatescale', 'grades');
+                        $errors['scale'] = get_string('duplicatescale', 'core_grades');
                     } else if ($old->scale !== $thescale and $old->scale !== $data['scale']) {
                         //if the old scale from DB is different but we found a duplicate then we're trying to modify a scale to be a duplicate
-                        $errors['scale'] = get_string('duplicatescale', 'grades');
+                        $errors['scale'] = get_string('duplicatescale', 'core_grades');
                     }
                 }
             }

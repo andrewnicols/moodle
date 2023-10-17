@@ -270,9 +270,9 @@ class day_exporter extends exporter {
 
         $userdate = userdate($this->data[0], get_string('strftimedayshort'));
         if ($this->data['istoday']) {
-            $title = get_string('todayplustitle', 'calendar', $userdate);
+            $title = get_string('todayplustitle', 'core_calendar', $userdate);
         } else if (count($this->related['events'])) {
-            $title = get_string('eventsfor', 'calendar', $userdate);
+            $title = get_string('eventsfor', 'core_calendar', $userdate);
         }
 
         return $title;

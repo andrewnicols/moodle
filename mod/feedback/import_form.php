@@ -34,11 +34,11 @@ class feedback_import_form extends moodleform {
         global $CFG;
         $mform =& $this->_form;
 
-        $strdeleteolditmes = get_string('delete_old_items', 'feedback').
-                             ' ('.get_string('oldvalueswillbedeleted', 'feedback').')';
+        $strdeleteolditmes = get_string('delete_old_items', 'mod_feedback').
+                             ' ('.get_string('oldvalueswillbedeleted', 'mod_feedback').')';
 
-        $strnodeleteolditmes = get_string('append_new_items', 'feedback').
-                               ' ('.get_string('oldvaluespreserved', 'feedback').')';
+        $strnodeleteolditmes = get_string('append_new_items', 'mod_feedback').
+                               ' ('.get_string('oldvaluespreserved', 'mod_feedback').')';
 
         // hidden elements
         $mform->addElement('hidden', 'id');

@@ -56,7 +56,7 @@ class question_viewed extends question_base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventquestionviewed', 'question');
+        return get_string('eventquestionviewed', 'core_question');
     }
 
     /**

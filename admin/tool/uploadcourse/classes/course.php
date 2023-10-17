@@ -698,7 +698,7 @@ class tool_uploadcourse_course {
             }
         }
         if ($errorcode = course_validate_dates($coursedata)) {
-            $this->error($errorcode, new lang_string($errorcode, 'error'));
+            $this->error($errorcode, new lang_string($errorcode, 'mod_error'));
             return false;
         }
 

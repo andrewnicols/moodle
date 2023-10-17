@@ -313,7 +313,7 @@ class enrol_fee_plugin extends enrol_plugin {
      */
     public function edit_instance_form($instance, MoodleQuickForm $mform, $context) {
 
-        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'));
+        $mform->addElement('text', 'name', get_string('custominstancename', 'core_enrol'));
         $mform->setType('name', PARAM_TEXT);
 
         $options = $this->get_status_options();
@@ -323,10 +323,10 @@ class enrol_fee_plugin extends enrol_plugin {
         $accounts = \core_payment\helper::get_payment_accounts_menu($context);
         if ($accounts) {
             $accounts = ((count($accounts) > 1) ? ['' => ''] : []) + $accounts;
-            $mform->addElement('select', 'customint1', get_string('paymentaccount', 'payment'), $accounts);
+            $mform->addElement('select', 'customint1', get_string('paymentaccount', 'core_payment'), $accounts);
         } else {
-            $mform->addElement('static', 'customint1_text', get_string('paymentaccount', 'payment'),
-                html_writer::span(get_string('noaccountsavilable', 'payment'), 'alert alert-danger'));
+            $mform->addElement('static', 'customint1_text', get_string('paymentaccount', 'core_payment'),
+                html_writer::span(get_string('noaccountsavilable', 'core_payment'), 'alert alert-danger'));
             $mform->addElement('hidden', 'customint1');
             $mform->setType('customint1', PARAM_INT);
         }

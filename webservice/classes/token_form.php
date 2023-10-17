@@ -49,11 +49,11 @@ class token_form extends \moodleform {
         $mform = $this->_form;
         $data = $this->_customdata;
 
-        $mform->addElement('header', 'token', get_string('token', 'webservice'));
+        $mform->addElement('header', 'token', get_string('token', 'core_webservice'));
 
-        $mform->addElement('text', 'name', get_string('tokenname', 'webservice'));
+        $mform->addElement('text', 'name', get_string('tokenname', 'core_webservice'));
         $mform->setType('name', PARAM_TEXT);
-        $mform->addElement('static', 'tokennamehint', '', get_string('tokennamehint', 'webservice'));
+        $mform->addElement('static', 'tokennamehint', '', get_string('tokennamehint', 'core_webservice'));
 
         // User selector.
         $attributes = [
@@ -87,15 +87,15 @@ class token_form extends \moodleform {
 
         // Service selector.
         $options = $DB->get_records_menu('external_services', null, '', 'id, name');
-        $mform->addElement('select', 'service', get_string('service', 'webservice'), $options);
+        $mform->addElement('select', 'service', get_string('service', 'core_webservice'), $options);
         $mform->addRule('service', get_string('required'), 'required', null, 'client');
         $mform->setType('service', PARAM_INT);
 
-        $mform->addElement('text', 'iprestriction', get_string('iprestriction', 'webservice'));
+        $mform->addElement('text', 'iprestriction', get_string('iprestriction', 'core_webservice'));
         $mform->setType('iprestriction', PARAM_RAW_TRIMMED);
 
         $mform->addElement('date_selector', 'validuntil',
-                get_string('validuntil', 'webservice'), array('optional' => true));
+                get_string('validuntil', 'core_webservice'), array('optional' => true));
         // Expires in 30 days.
         $expires = new DateTime();
         $expires->add(new DateInterval("P30D"));

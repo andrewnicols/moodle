@@ -143,7 +143,7 @@ class chat_portfolio_caller extends portfolio_module_caller_base {
      * @return string
      */
     public static function display_name() {
-        return get_string('modulename', 'chat');
+        return get_string('modulename', 'mod_chat');
     }
 
     /**

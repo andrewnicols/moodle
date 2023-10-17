@@ -50,7 +50,7 @@ class block extends base {
         global $DB;
 
         if (!$block = $DB->get_record('block', ['name' => $pluginname])) {
-            throw new \moodle_exception('blockdoesnotexist', 'error');
+            throw new \moodle_exception('blockdoesnotexist', 'mod_error');
         }
 
         $haschanged = false;

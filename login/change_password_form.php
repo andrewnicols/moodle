@@ -48,7 +48,7 @@ class login_change_password_form extends moodleform {
             $policies[] = print_password_policy();
         }
         if (!empty($CFG->passwordreuselimit) and $CFG->passwordreuselimit > 0) {
-            $policies[] = get_string('informminpasswordreuselimit', 'auth', $CFG->passwordreuselimit);
+            $policies[] = get_string('informminpasswordreuselimit', 'core_auth', $CFG->passwordreuselimit);
         }
         if ($policies) {
             $mform->addElement('static', 'passwordpolicyinfo', '', implode('<br />', $policies));

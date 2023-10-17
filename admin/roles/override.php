@@ -94,7 +94,7 @@ $PAGE->activityheader->disable();
 $PAGE->navbar->add($straction);
 switch ($context->contextlevel) {
     case CONTEXT_SYSTEM:
-        throw new \moodle_exception('cannotoverridebaserole', 'error');
+        throw new \moodle_exception('cannotoverridebaserole', 'mod_error');
         break;
     case CONTEXT_USER:
         $fullname = fullname($user, has_capability('moodle/site:viewfullnames', $context));
@@ -106,7 +106,7 @@ switch ($context->contextlevel) {
         break;
     case CONTEXT_COURSE:
         if ($isfrontpage) {
-            $PAGE->set_heading(get_string('frontpage', 'admin'));
+            $PAGE->set_heading(get_string('frontpage', 'core_admin'));
         } else {
             $PAGE->set_heading($course->fullname);
         }

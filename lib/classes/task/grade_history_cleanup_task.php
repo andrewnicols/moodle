@@ -38,7 +38,7 @@ class grade_history_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskgradehistorycleanup', 'admin');
+        return get_string('taskgradehistorycleanup', 'core_admin');
     }
 
     /**

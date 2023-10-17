@@ -46,7 +46,7 @@ class send_bigbluebutton_module_disabled_notification extends adhoc_task {
         $message->userto = get_admin();
         $message->notification = 1;
         $message->contexturl = (new \moodle_url('/admin/modules.php'))->out(false);
-        $message->contexturlname = get_string('modsettings', 'admin');
+        $message->contexturlname = get_string('modsettings', 'core_admin');
         $message->subject = get_string('bigbluebuttondisablednotification_subject', 'mod_bigbluebuttonbn');
         $message->fullmessageformat = FORMAT_HTML;
         $message->fullmessagehtml = get_string('bigbluebuttondisablednotification', 'mod_bigbluebuttonbn',

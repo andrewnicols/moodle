@@ -36,9 +36,9 @@
         throw new \moodle_exception('invalidcoursemodule');
     }
 
-    $strchoice = get_string("modulename", "choice");
-    $strchoices = get_string("modulenameplural", "choice");
-    $strresponses = get_string("responses", "choice");
+    $strchoice = get_string("modulename", 'mod_choice');
+    $strchoices = get_string("modulenameplural", 'mod_choice');
+    $strresponses = get_string("responses", 'mod_choice');
 
     $eventdata = array();
     $eventdata['objectid'] = $choice->id;
@@ -128,7 +128,7 @@
         }
 
         $myxls->write_string(0, $i++, get_string("group"));
-        $myxls->write_string(0, $i++, get_string("choice", "choice"));
+        $myxls->write_string(0, $i++, get_string("choice", 'mod_choice'));
 
         // Generate the data for the body of the spreadsheet.
         $row = 1;
@@ -191,7 +191,7 @@
         }
 
         $myxls->write_string(0, $i++, get_string("group"));
-        $myxls->write_string(0, $i++, get_string("choice", "choice"));
+        $myxls->write_string(0, $i++, get_string("choice", 'mod_choice'));
 
         // Generate the data for the body of the spreadsheet.
         $row = 1;
@@ -249,7 +249,7 @@
         }
 
         echo get_string("group"). "\t";
-        echo get_string("choice","choice"). "\n";
+        echo get_string("choice",'mod_choice'). "\n";
 
         /// generate the data for the body of the spreadsheet
         $i=0;

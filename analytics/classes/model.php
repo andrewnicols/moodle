@@ -144,7 +144,7 @@ class model {
         if (is_scalar($model)) {
             $model = $DB->get_record('analytics_models', array('id' => $model), '*', MUST_EXIST);
             if (!$model) {
-                throw new \moodle_exception('errorunexistingmodel', 'analytics', '', $model);
+                throw new \moodle_exception('errorunexistingmodel', 'core_analytics', '', $model);
             }
         }
         $this->model = $model;
@@ -283,7 +283,7 @@ class model {
         $indicators = $this->get_indicators();
 
         if (empty($target)) {
-            throw new \moodle_exception('errornotarget', 'analytics');
+            throw new \moodle_exception('errornotarget', 'core_analytics');
         }
 
         $potentialtimesplittings = $this->get_potential_timesplittings();
@@ -296,7 +296,7 @@ class model {
                     $timesplitting = \core_analytics\manager::get_time_splitting($options['timesplitting']);
 
                     if (empty($potentialtimesplittings[$timesplitting->get_id()])) {
-                        throw new \moodle_exception('errorcannotusetimesplitting', 'analytics');
+                        throw new \moodle_exception('errorcannotusetimesplitting', 'core_analytics');
                     }
                     $timesplittings = array($timesplitting->get_id() => $timesplitting);
                 } else {
@@ -308,7 +308,7 @@ class model {
             } else {
 
                 if (empty($this->model->timesplitting)) {
-                    throw new \moodle_exception('invalidtimesplitting', 'analytics', '', $this->model->id);
+                    throw new \moodle_exception('invalidtimesplitting', 'core_analytics', '', $this->model->id);
                 }
 
                 // Returned as an array as all actions (evaluation, training and prediction) go through the same process.
@@ -316,7 +316,7 @@ class model {
             }
 
             if (empty($timesplittings)) {
-                throw new \moodle_exception('errornotimesplittings', 'analytics');
+                throw new \moodle_exception('errornotimesplittings', 'core_analytics');
             }
         }
 
@@ -393,10 +393,10 @@ class model {
 
         if ($timesplittingid) {
             if (!\core_analytics\manager::is_valid($timesplittingid, '\core_analytics\local\time_splitting\base')) {
-                throw new \moodle_exception('errorinvalidtimesplitting', 'analytics');
+                throw new \moodle_exception('errorinvalidtimesplitting', 'core_analytics');
             }
             if (substr($timesplittingid, 0, 1) !== '\\') {
-                throw new \moodle_exception('errorinvalidtimesplitting', 'analytics');
+                throw new \moodle_exception('errorinvalidtimesplitting', 'core_analytics');
             }
             $modelobj->timesplitting = $timesplittingid;
         }
@@ -581,7 +581,7 @@ class model {
         \core_analytics\manager::check_can_manage_models();
 
         if ($this->is_static()) {
-            $this->get_analyser()->add_log(get_string('noevaluationbasedassumptions', 'analytics'));
+            $this->get_analyser()->add_log(get_string('noevaluationbasedassumptions', 'core_analytics'));
             $result = new \stdClass();
             $result->status = self::NO_DATASET;
             return array($result);
@@ -608,13 +608,13 @@ class model {
                 break;
 
             default:
-                throw new \moodle_exception('errorunknownaction', 'analytics');
+                throw new \moodle_exception('errorunknownaction', 'core_analytics');
         }
 
         $this->init_analyser($options);
 
         if (empty($this->get_indicators())) {
-            throw new \moodle_exception('errornoindicators', 'analytics');
+            throw new \moodle_exception('errornoindicators', 'core_analytics');
         }
 
         $this->heavy_duty_mode();
@@ -633,7 +633,7 @@ class model {
         }
 
         if (!PHPUNIT_TEST && CLI_SCRIPT) {
-            echo PHP_EOL . get_string('processingsitecontents', 'analytics') . PHP_EOL;
+            echo PHP_EOL . get_string('processingsitecontents', 'core_analytics') . PHP_EOL;
         }
 
         $results = array();
@@ -692,18 +692,18 @@ class model {
         \core_analytics\manager::check_can_manage_models();
 
         if ($this->is_static()) {
-            $this->get_analyser()->add_log(get_string('notrainingbasedassumptions', 'analytics'));
+            $this->get_analyser()->add_log(get_string('notrainingbasedassumptions', 'core_analytics'));
             $result = new \stdClass();
             $result->status = self::OK;
             return $result;
         }
 
         if (!$this->is_enabled() || empty($this->model->timesplitting)) {
-            throw new \moodle_exception('invalidtimesplitting', 'analytics', '', $this->model->id);
+            throw new \moodle_exception('invalidtimesplitting', 'core_analytics', '', $this->model->id);
         }
 
         if (empty($this->get_indicators())) {
-            throw new \moodle_exception('errornoindicators', 'analytics');
+            throw new \moodle_exception('errornoindicators', 'core_analytics');
         }
 
         $this->heavy_duty_mode();
@@ -767,11 +767,11 @@ class model {
         \core_analytics\manager::check_can_manage_models();
 
         if (!$this->is_enabled() || empty($this->model->timesplitting)) {
-            throw new \moodle_exception('invalidtimesplitting', 'analytics', '', $this->model->id);
+            throw new \moodle_exception('invalidtimesplitting', 'core_analytics', '', $this->model->id);
         }
 
         if (empty($this->get_indicators())) {
-            throw new \moodle_exception('errornoindicators', 'analytics');
+            throw new \moodle_exception('errornoindicators', 'core_analytics');
         }
 
         $this->heavy_duty_mode();
@@ -800,7 +800,7 @@ class model {
             // We need to throw an exception if we are trying to predict stuff that was already predicted.
             $params = array('modelid' => $this->model->id, 'action' => 'predicted', 'fileid' => $samplesfile->get_id());
             if ($predicted = $DB->get_record('analytics_used_files', $params)) {
-                throw new \moodle_exception('erroralreadypredict', 'analytics', '', $samplesfile->get_id());
+                throw new \moodle_exception('erroralreadypredict', 'core_analytics', '', $samplesfile->get_id());
             }
 
             $indicatorcalculations = \core_analytics\dataset_manager::get_structured_data($samplesfile);
@@ -1153,11 +1153,11 @@ class model {
         if ($timesplittingid && $timesplittingid !== $this->model->timesplitting) {
 
             if (!\core_analytics\manager::is_valid($timesplittingid, '\core_analytics\local\time_splitting\base')) {
-                throw new \moodle_exception('errorinvalidtimesplitting', 'analytics');
+                throw new \moodle_exception('errorinvalidtimesplitting', 'core_analytics');
             }
 
             if (substr($timesplittingid, 0, 1) !== '\\') {
-                throw new \moodle_exception('errorinvalidtimesplitting', 'analytics');
+                throw new \moodle_exception('errorinvalidtimesplitting', 'core_analytics');
             }
 
             // Delete generated predictions before changing the model version.
@@ -1175,7 +1175,7 @@ class model {
             }
         } else if (empty($this->model->timesplitting)) {
             // A valid timesplitting method needs to be supplied before a model can be enabled.
-            throw new \moodle_exception('invalidtimesplitting', 'analytics', '', $this->model->id);
+            throw new \moodle_exception('invalidtimesplitting', 'core_analytics', '', $this->model->id);
 
         }
 
@@ -1440,7 +1440,7 @@ class model {
         list($unused, $samplesdata) = $this->get_samples(array($predictionobj->sampleid));
 
         if (empty($samplesdata[$predictionobj->sampleid])) {
-            throw new \moodle_exception('errorsamplenotavailable', 'analytics');
+            throw new \moodle_exception('errorsamplenotavailable', 'core_analytics');
         }
 
         return $samplesdata[$predictionobj->sampleid];
@@ -1762,7 +1762,7 @@ class model {
                 } else if (is_object($indicator)) {
                     $indicator = '\\' . get_class($indicator);
                 }
-                throw new \moodle_exception('errorinvalidindicator', 'analytics', '', $indicator);
+                throw new \moodle_exception('errorinvalidindicator', 'core_analytics', '', $indicator);
             }
             $indicatorclasses[] = $indicator->get_id();
         }

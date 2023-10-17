@@ -106,7 +106,7 @@ class tool_uploadcourse_step2_form extends tool_uploadcourse_base_form {
             $downloadchoices[DOWNLOAD_COURSE_CONTENT_SITE_DEFAULT] = get_string('sitedefaultspecified', '', $sitedefaultstring);
             $downloadselectdefault = $courseconfig->downloadcontent ?? DOWNLOAD_COURSE_CONTENT_SITE_DEFAULT;
 
-            $mform->addElement('select', 'defaults[downloadcontent]', get_string('enabledownloadcoursecontent', 'course'),
+            $mform->addElement('select', 'defaults[downloadcontent]', get_string('enabledownloadcoursecontent', 'core_course'),
                 $downloadchoices);
             $mform->addHelpButton('defaults[downloadcontent]', 'downloadcoursecontent', 'course');
             $mform->setDefault('defaults[downloadcontent]', $downloadselectdefault);
@@ -174,20 +174,20 @@ class tool_uploadcourse_step2_form extends tool_uploadcourse_base_form {
         $mform->setDefault('defaults[maxbytes]', $courseconfig->maxbytes);
 
         $choices = array();
-        $choices[NOGROUPS] = get_string('groupsnone', 'group');
-        $choices[SEPARATEGROUPS] = get_string('groupsseparate', 'group');
-        $choices[VISIBLEGROUPS] = get_string('groupsvisible', 'group');
-        $mform->addElement('select', 'defaults[groupmode]', get_string('groupmode', 'group'), $choices);
+        $choices[NOGROUPS] = get_string('groupsnone', 'core_group');
+        $choices[SEPARATEGROUPS] = get_string('groupsseparate', 'core_group');
+        $choices[VISIBLEGROUPS] = get_string('groupsvisible', 'core_group');
+        $mform->addElement('select', 'defaults[groupmode]', get_string('groupmode', 'core_group'), $choices);
         $mform->addHelpButton('defaults[groupmode]', 'groupmode', 'group');
         $mform->setDefault('defaults[groupmode]', $courseconfig->groupmode);
 
-        $mform->addElement('selectyesno', 'defaults[groupmodeforce]', get_string('groupmodeforce', 'group'));
+        $mform->addElement('selectyesno', 'defaults[groupmodeforce]', get_string('groupmodeforce', 'core_group'));
         $mform->addHelpButton('defaults[groupmodeforce]', 'groupmodeforce', 'group');
         $mform->setDefault('defaults[groupmodeforce]', $courseconfig->groupmodeforce);
 
         // Completion tracking.
         if (!empty($CFG->enablecompletion)) {
-            $mform->addElement('selectyesno', 'defaults[enablecompletion]', get_string('enablecompletion', 'completion'));
+            $mform->addElement('selectyesno', 'defaults[enablecompletion]', get_string('enablecompletion', 'core_completion'));
             $mform->setDefault('defaults[enablecompletion]', $courseconfig->enablecompletion);
             $mform->addHelpButton('defaults[enablecompletion]', 'enablecompletion', 'completion');
         }
@@ -268,7 +268,7 @@ class tool_uploadcourse_step2_form extends tool_uploadcourse_base_form {
         $errors = parent::validation($data, $files);
 
         if ($errorcode = course_validate_dates($data['defaults'])) {
-            $errors['defaults[enddate]'] = get_string($errorcode, 'error');
+            $errors['defaults[enddate]'] = get_string($errorcode, 'mod_error');
         }
 
         // Custom fields validation.

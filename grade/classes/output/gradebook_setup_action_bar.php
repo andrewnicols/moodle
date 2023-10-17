@@ -61,7 +61,7 @@ class gradebook_setup_action_bar extends action_bar {
         $actions[] = new \action_menu_link_secondary(
             $additemurl,
             null,
-            get_string('additem', 'grades'),
+            get_string('additem', 'core_grades'),
             [
                 'data-courseid' => $courseid,
                 'data-itemid' => -1,
@@ -76,7 +76,7 @@ class gradebook_setup_action_bar extends action_bar {
             $actions[] = new \action_menu_link_secondary(
                 $additemurl,
                 null,
-                get_string('addoutcomeitem', 'grades'),
+                get_string('addoutcomeitem', 'core_grades'),
                 [
                     'data-courseid' => $courseid,
                     'data-itemid' => -1,
@@ -90,7 +90,7 @@ class gradebook_setup_action_bar extends action_bar {
         $actions[] = new \action_menu_link_secondary(
             $additemurl,
             null,
-            get_string('addcategory', 'grades'),
+            get_string('addcategory', 'core_grades'),
             [
                 'data-courseid' => $courseid,
                 'data-category' => -1,

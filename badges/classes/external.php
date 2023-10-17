@@ -95,11 +95,11 @@ class core_badges_external extends external_api {
         $params = self::validate_parameters(self::get_user_badges_parameters(), $params);
 
         if (empty($CFG->enablebadges)) {
-            throw new moodle_exception('badgesdisabled', 'badges');
+            throw new moodle_exception('badgesdisabled', 'core_badges');
         }
 
         if (empty($CFG->badges_allowcoursebadges) && $params['courseid'] != 0) {
-            throw new moodle_exception('coursebadgesdisabled', 'badges');
+            throw new moodle_exception('coursebadgesdisabled', 'core_badges');
         }
 
         // Default value for userid.

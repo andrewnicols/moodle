@@ -54,7 +54,7 @@ class mod_feedback_responses_anon_table extends mod_feedback_responses_table {
         $this->request[TABLE_VAR_PAGE] = 'apage';
 
         $tablecolumns = ['random_response'];
-        $tableheaders = [get_string('response_nr', 'feedback')];
+        $tableheaders = [get_string('response_nr', 'mod_feedback')];
 
         if ($this->feedbackstructure->get_feedback()->course == SITEID && !$this->feedbackstructure->get_courseid()) {
             $tablecolumns[] = 'courseid';
@@ -108,7 +108,7 @@ class mod_feedback_responses_anon_table extends mod_feedback_responses_table {
             return $row->random_response;
         } else {
             return html_writer::link($this->get_link_single_entry($row),
-                    get_string('response_nr', 'feedback').': '. $row->random_response);
+                    get_string('response_nr', 'mod_feedback').': '. $row->random_response);
         }
     }
 

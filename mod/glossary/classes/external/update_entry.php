@@ -109,7 +109,7 @@ class update_entry extends external_api {
                 core_text::strtolower($entry->concept) != core_text::strtolower(trim($params['concept']))) {
 
             if (glossary_concept_exists($glossary, $params['concept'])) {
-                throw new moodle_exception('errconceptalreadyexists', 'glossary');
+                throw new moodle_exception('errconceptalreadyexists', 'mod_glossary');
             }
         }
 
@@ -149,7 +149,7 @@ class update_entry extends external_api {
                     }
                     break;
                 default:
-                    throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                    throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
             }
         }
 

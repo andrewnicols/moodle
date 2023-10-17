@@ -35,21 +35,21 @@ if ($hassiteconfig) {
     $link = html_writer::link($testurl, get_string('testsettings', 'logstore_database'), array('target' => '_blank'));
     $settings->add(new admin_setting_heading('dbsettings', get_string('databasesettings', 'logstore_database'),
         get_string('databasesettings_help', 'logstore_database', $link)));
-    $settings->add(new admin_setting_configselect('logstore_database/dbdriver', get_string('databasetypehead', 'install'), '',
+    $settings->add(new admin_setting_configselect('logstore_database/dbdriver', get_string('databasetypehead', 'mod_install'), '',
         '', $drivers));
 
-    $settings->add(new admin_setting_configtext('logstore_database/dbhost', get_string('databasehost', 'install'), '', ''));
-    $settings->add(new admin_setting_configtext('logstore_database/dbuser', get_string('databaseuser', 'install'), '', ''));
-    $settings->add(new admin_setting_configpasswordunmask('logstore_database/dbpass', get_string('databasepass', 'install'), '', ''));
-    $settings->add(new admin_setting_configtext('logstore_database/dbname', get_string('databasename', 'install'), '', ''));
+    $settings->add(new admin_setting_configtext('logstore_database/dbhost', get_string('databasehost', 'mod_install'), '', ''));
+    $settings->add(new admin_setting_configtext('logstore_database/dbuser', get_string('databaseuser', 'mod_install'), '', ''));
+    $settings->add(new admin_setting_configpasswordunmask('logstore_database/dbpass', get_string('databasepass', 'mod_install'), '', ''));
+    $settings->add(new admin_setting_configtext('logstore_database/dbname', get_string('databasename', 'mod_install'), '', ''));
     $settings->add(new admin_setting_configtext('logstore_database/dbtable', get_string('databasetable', 'logstore_database'),
         get_string('databasetable_help', 'logstore_database'), ''));
 
     $settings->add(new admin_setting_configcheckbox('logstore_database/dbpersist', get_string('databasepersist',
         'logstore_database'), '', '0'));
-    $settings->add(new admin_setting_configtext('logstore_database/dbsocket', get_string('databasesocket', 'install'), '',
+    $settings->add(new admin_setting_configtext('logstore_database/dbsocket', get_string('databasesocket', 'mod_install'), '',
         ''));
-    $settings->add(new admin_setting_configtext('logstore_database/dbport', get_string('databaseport', 'install'), '', ''));
+    $settings->add(new admin_setting_configtext('logstore_database/dbport', get_string('databaseport', 'mod_install'), '', ''));
     $settings->add(new admin_setting_configtext('logstore_database/dbschema', get_string('databaseschema',
         'logstore_database'), '', ''));
     $settings->add(new admin_setting_configtext('logstore_database/dbcollation', get_string('databasecollation',

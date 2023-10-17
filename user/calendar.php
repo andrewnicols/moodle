@@ -89,7 +89,7 @@ if ($calendarform->is_cancelled()) {
 }
 
 // Display page header.
-$streditmycalendar = get_string('calendarpreferences', 'calendar');
+$streditmycalendar = get_string('calendarpreferences', 'core_calendar');
 $userfullname     = fullname($user, true);
 
 $PAGE->navbar->includesettingsbase = true;

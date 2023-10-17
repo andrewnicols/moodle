@@ -89,17 +89,17 @@ $notificationtype = \core\output\notification::NOTIFY_ERROR;
 if (\core\hub\registration::is_registered()) {
     $lastupdated = \core\hub\registration::get_last_updated();
     if ($lastupdated == 0) {
-        $registrationmessage = get_string('pleaserefreshregistrationunknown', 'admin');
+        $registrationmessage = get_string('pleaserefreshregistrationunknown', 'core_admin');
     } else if (\core\hub\registration::get_new_registration_fields()) {
-        $registrationmessage = get_string('pleaserefreshregistrationnewdata', 'admin');
+        $registrationmessage = get_string('pleaserefreshregistrationnewdata', 'core_admin');
     } else {
         $lastupdated = userdate($lastupdated, get_string('strftimedate', 'core_langconfig'));
-        $registrationmessage = get_string('pleaserefreshregistration', 'admin', $lastupdated);
+        $registrationmessage = get_string('pleaserefreshregistration', 'core_admin', $lastupdated);
         $notificationtype = \core\output\notification::NOTIFY_INFO;
     }
     echo $OUTPUT->notification($registrationmessage, $notificationtype);
 } else if (!$isinitialregistration) {
-    $registrationmessage = get_string('registrationwarning', 'admin');
+    $registrationmessage = get_string('registrationwarning', 'core_admin');
     echo $OUTPUT->notification($registrationmessage, $notificationtype);
 }
 
@@ -120,9 +120,9 @@ $siteregistrationform->display();
 if (\core\hub\registration::is_registered()) {
     // Unregister link.
     $unregisterhuburl = new moodle_url("/admin/registration/index.php", ['unregistration' => 1]);
-    echo html_writer::div(html_writer::link($unregisterhuburl, get_string('unregister', 'hub')), 'unregister mt-2');
+    echo html_writer::div(html_writer::link($unregisterhuburl, get_string('unregister', 'mod_hub')), 'unregister mt-2');
 } else if ($isinitialregistration) {
-    echo html_writer::div(html_writer::link(new moodle_url($returnurl), get_string('skipregistration', 'hub')),
+    echo html_writer::div(html_writer::link(new moodle_url($returnurl), get_string('skipregistration', 'mod_hub')),
         'skipregistration mt-2');
 }
 echo $OUTPUT->footer();

@@ -850,9 +850,9 @@ class core_renderer extends renderer_base {
             $a->min = (int)(floor($timeleft / 60) % 60);
             $a->sec = (int)($timeleft % 60);
             if ($a->hour > 0) {
-                $output .= get_string('maintenancemodeisscheduledlong', 'admin', $a);
+                $output .= get_string('maintenancemodeisscheduledlong', 'core_admin', $a);
             } else {
-                $output .= get_string('maintenancemodeisscheduled', 'admin', $a);
+                $output .= get_string('maintenancemodeisscheduled', 'core_admin', $a);
             }
 
             $output .= $this->box_end();
@@ -934,8 +934,8 @@ class core_renderer extends renderer_base {
 
             // Add link to profiling report if necessary
             if (function_exists('profiling_is_running') && profiling_is_running()) {
-                $txt = get_string('profiledscript', 'admin');
-                $title = get_string('profiledscriptview', 'admin');
+                $txt = get_string('profiledscript', 'core_admin');
+                $title = get_string('profiledscriptview', 'core_admin');
                 $url = $CFG->wwwroot . '/admin/tool/profiling/index.php?script=' . urlencode($SCRIPT);
                 $link= '<a title="' . $title . '" href="' . $url . '">' . $txt . '</a>';
                 $output .= '<div class="profilingfooter">' . $link . '</div>';
@@ -1356,7 +1356,7 @@ class core_renderer extends renderer_base {
         $output .= $this->notification($message, $messagetype);
         $output .= '<div class="continuebutton">(<a href="'. $encodedurl .'">'. get_string('continue') .'</a>)</div>';
         if ($debugdisableredirect) {
-            $output .= '<p><strong>'.get_string('erroroutput', 'error').'</strong></p>';
+            $output .= '<p><strong>'.get_string('erroroutput', 'mod_error').'</strong></p>';
         }
         $output .= $this->footer();
         return $output;
@@ -1527,7 +1527,7 @@ class core_renderer extends renderer_base {
                     // performance debugging into it at the very end in the shutdown handler.
                     $PERF->perfdebugdeferred = true;
                     $performanceinfo .= html_writer::tag('div',
-                        get_string('perfdebugdeferred', 'admin'),
+                        get_string('perfdebugdeferred', 'core_admin'),
                         [
                             'id' => 'perfdebugfooter',
                             'style' => 'min-height: 30em',
@@ -2008,12 +2008,12 @@ class core_renderer extends renderer_base {
             if (empty($zones)) {
                 // There are no zones, probably because there are no blocks.
                 $regions = $this->page->theme->get_all_block_regions();
-                $position = get_string('moveblockinregion', 'block', $regions[$region]);
+                $position = get_string('moveblockinregion', 'core_block', $regions[$region]);
             } else {
-                $position = get_string('moveblockbefore', 'block', $zones[0]);
+                $position = get_string('moveblockbefore', 'core_block', $zones[0]);
             }
         } else {
-            $position = get_string('moveblockafter', 'block', $previous);
+            $position = get_string('moveblockafter', 'core_block', $previous);
         }
         return html_writer::tag('a', html_writer::tag('span', $position, array('class' => 'accesshide')), array('href' => $target->url, 'class' => 'blockmovetarget'));
     }
@@ -2424,7 +2424,7 @@ class core_renderer extends renderer_base {
         // Initialise the JavaScript so ratings can be done by AJAX.
         $ratingmanager->initialise_rating_javascript($this->page);
 
-        $strrate = get_string("rate", "rating");
+        $strrate = get_string("rate", 'core_rating');
         $ratinghtml = ''; //the string we'll return
 
         // permissions check - can they view the aggregate?
@@ -2491,7 +2491,7 @@ class core_renderer extends renderer_base {
             //output submit button
             $ratinghtml .= html_writer::start_tag('span', array('class'=>"ratingsubmit"));
 
-            $attributes = array('type' => 'submit', 'class' => 'postratingmenusubmit', 'id' => 'postratingsubmit'.$rating->itemid, 'value' => s(get_string('rate', 'rating')));
+            $attributes = array('type' => 'submit', 'class' => 'postratingmenusubmit', 'id' => 'postratingsubmit'.$rating->itemid, 'value' => s(get_string('rate', 'core_rating')));
             $ratinghtml .= html_writer::empty_tag('input', $attributes);
 
             if (!$rating->settings->scale->isnumeric) {
@@ -2815,9 +2815,9 @@ class core_renderer extends renderer_base {
     public function render_file_picker(file_picker $fp) {
         $options = $fp->options;
         $client_id = $options->client_id;
-        $strsaved = get_string('filesaved', 'repository');
-        $straddfile = get_string('openpicker', 'repository');
-        $strloading  = get_string('loading', 'repository');
+        $strsaved = get_string('filesaved', 'core_repository');
+        $straddfile = get_string('openpicker', 'core_repository');
+        $strloading  = get_string('loading', 'core_repository');
         $strdndenabled = get_string('dndenabled_inbox', 'moodle');
         $strdroptoupload = get_string('droptoupload', 'moodle');
         $iconprogress = $this->pix_icon('i/loading_small', $strloading).'';
@@ -3026,7 +3026,7 @@ EOD;
                 '<p class="errorcode"><a href="' . s($moreinfourl) . '">' .
                 get_string('moreinformation') . '</a></p>';
         if (empty($CFG->rolesactive)) {
-            $message .= '<p class="errormessage">' . get_string('installproblem', 'error') . '</p>';
+            $message .= '<p class="errormessage">' . get_string('installproblem', 'mod_error') . '</p>';
             //It is usually not possible to recover from errors triggered during installation, you may need to create a new database or use a different database prefix for new installation.
         }
         $output .= $this->box($message, 'errorbox alert alert-danger', null, array('data-rel' => 'fatalerror'));
@@ -3036,15 +3036,15 @@ EOD;
             if (!empty($debuginfo)) {
                 $debuginfo = s($debuginfo); // removes all nasty JS
                 $debuginfo = str_replace("\n", '<br />', $debuginfo); // keep newlines
-                $label = get_string('debuginfo', 'debug') . $labelsep;
+                $label = get_string('debuginfo', 'mod_debug') . $labelsep;
                 $output .= $this->notification("<strong>$label</strong> " . $debuginfo, 'notifytiny');
             }
             if (!empty($backtrace)) {
-                $label = get_string('stacktrace', 'debug') . $labelsep;
+                $label = get_string('stacktrace', 'mod_debug') . $labelsep;
                 $output .= $this->notification("<strong>$label</strong> " . format_backtrace($backtrace), 'notifytiny');
             }
             if ($obbuffer !== '' ) {
-                $label = get_string('outputbuffer', 'debug') . $labelsep;
+                $label = get_string('outputbuffer', 'mod_debug') . $labelsep;
                 $output .= $this->notification("<strong>$label</strong> " . s($obbuffer), 'notifytiny');
             }
         }
@@ -4517,7 +4517,7 @@ EOD;
                     $userbuttons = array(
                         'messages' => array(
                             'buttontype' => 'message',
-                            'title' => get_string('message', 'message'),
+                            'title' => get_string('message', 'core_message'),
                             'url' => new moodle_url('/message/index.php', array('id' => $user->id)),
                             'image' => 'message',
                             'linkattributes' => \core_message\helper::messageuser_link_params($user->id),
@@ -4532,7 +4532,7 @@ EOD;
                         $contactimage = $iscontact ? 'removecontact' : 'addcontact';
                         $userbuttons['togglecontact'] = array(
                                 'buttontype' => 'togglecontact',
-                                'title' => get_string($contacttitle, 'message'),
+                                'title' => get_string($contacttitle, 'core_message'),
                                 'url' => new moodle_url('/message/index.php', array(
                                         'user1' => $USER->id,
                                         'user2' => $user->id,

@@ -36,7 +36,7 @@ require_capability('moodle/site:config', context_system::instance());
 $strheading = get_string('checkconfiguration', 'message_airnotifier');
 $PAGE->navbar->add(get_string('administrationsite'));
 $returl = new moodle_url('/admin/category.php', ['category' => 'messaging']);
-$PAGE->navbar->add(get_string('messagingcategory', 'admin'), $returl);
+$PAGE->navbar->add(get_string('messagingcategory', 'core_admin'), $returl);
 $returl = new moodle_url('/admin/settings.php', ['section' => 'messagesettingairnotifier']);
 $PAGE->navbar->add(get_string('pluginname', 'message_airnotifier'), $returl);
 $PAGE->navbar->add($strheading);
@@ -53,7 +53,7 @@ if (data_submitted()) {
     if (optional_param('confirm', 0, PARAM_INT)) {
         $manager->send_test_notification($USER);
 
-        redirect($pageurl, get_string('eventnotificationsent', 'message'), 5);
+        redirect($pageurl, get_string('eventnotificationsent', 'core_message'), 5);
     } else {
 
         if (!$manager->has_enabled_devices($CFG->airnotifiermobileappname)) {

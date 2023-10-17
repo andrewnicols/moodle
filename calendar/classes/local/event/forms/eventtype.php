@@ -57,19 +57,19 @@ trait eventtype {
         $options = [];
 
         if (!empty($eventtypes['user'])) {
-            $options['user'] = get_string('user', 'calendar');
+            $options['user'] = get_string('user', 'core_calendar');
         }
         if (!empty($eventtypes['group'])) {
-            $options['group'] = get_string('group', 'calendar');
+            $options['group'] = get_string('group', 'core_calendar');
         }
         if (!empty($eventtypes['course'])) {
-            $options['course'] = get_string('course', 'calendar');
+            $options['course'] = get_string('course', 'core_calendar');
         }
         if (!empty($eventtypes['category'])) {
-            $options['category'] = get_string('category', 'calendar');
+            $options['category'] = get_string('category', 'core_calendar');
         }
         if (!empty($eventtypes['site'])) {
-            $options['site'] = get_string('site', 'calendar');
+            $options['site'] = get_string('site', 'core_calendar');
         }
 
         // If we only have one event type and it's 'user' event then don't bother
@@ -81,7 +81,7 @@ trait eventtype {
             $mform->setDefault('eventtype', 'user');
             return;
         } else {
-            $mform->addElement('select', 'eventtype', get_string('eventkind', 'calendar'), $options);
+            $mform->addElement('select', 'eventtype', get_string('eventkind', 'core_calendar'), $options);
         }
 
         if (!empty($eventtypes['category'])) {

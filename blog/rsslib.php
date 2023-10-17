@@ -157,7 +157,7 @@ function blog_rss_get_feed($context, $args) {
 
     if ($CFG->bloglevel == BLOG_SITE_LEVEL) {
         if (isguestuser()) {
-            debugging(get_string('nopermissiontoshow', 'error'));
+            debugging(get_string('nopermissiontoshow', 'mod_error'));
             return '';
         }
     }
@@ -258,9 +258,9 @@ function blog_rss_get_feed($context, $args) {
         $info .= ': '.$DB->get_field('tags', 'text', array('id' => $tagid));
     }
 
-    $header = rss_standard_header(get_string($type.'blog', 'blog', $info),
+    $header = rss_standard_header(get_string($type.'blog', 'core_blog', $info),
                                   $CFG->wwwroot.'/blog/index.php',
-                                  get_string('intro', 'blog'));
+                                  get_string('intro', 'core_blog'));
 
     $footer = rss_standard_footer();
 

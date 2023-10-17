@@ -226,7 +226,7 @@ if (!empty($course->id)) {
     // we need to manually tell the navigation we need it loaded. The second arg does this.
     navigation_node::override_active_url(new moodle_url('/course/index.php', ['categoryid' => $category->id]), true);
     $PAGE->set_primary_active_tab('home');
-    $PAGE->navbar->add(get_string('coursemgmt', 'admin'), $managementurl);
+    $PAGE->navbar->add(get_string('coursemgmt', 'core_admin'), $managementurl);
 
     $pagedesc = $straddnewcourse;
     $title = $straddnewcourse;

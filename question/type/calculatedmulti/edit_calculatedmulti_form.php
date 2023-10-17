@@ -107,7 +107,7 @@ class qtype_calculatedmulti_edit_form extends question_edit_form {
 
         // Add feedback.
         $repeated[] = $mform->createElement('editor', 'feedback',
-                get_string('feedback', 'question'), null, $this->editoroptions);
+                get_string('feedback', 'core_question'), null, $this->editoroptions);
 
         return $repeated;
     }

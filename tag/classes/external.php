@@ -75,7 +75,7 @@ class core_tag_external extends external_api {
         $warnings = array();
 
         if (empty($CFG->usetags)) {
-            throw new moodle_exception('tagsaredisabled', 'tag');
+            throw new moodle_exception('tagsaredisabled', 'core_tag');
         }
 
         $renderer = $PAGE->get_renderer('core');
@@ -109,7 +109,7 @@ class core_tag_external extends external_api {
                 $warnings[] = array(
                     'item' => $tag['id'],
                     'warningcode' => 'tagnotfound',
-                    'message' => get_string('tagnotfound', 'error')
+                    'message' => get_string('tagnotfound', 'mod_error')
                 );
                 continue;
             }
@@ -198,7 +198,7 @@ class core_tag_external extends external_api {
         $warnings = array();
 
         if (empty($CFG->usetags)) {
-            throw new moodle_exception('tagsaredisabled', 'tag');
+            throw new moodle_exception('tagsaredisabled', 'core_tag');
         }
 
         $renderer = $PAGE->get_renderer('core');
@@ -208,7 +208,7 @@ class core_tag_external extends external_api {
                 $warnings[] = array(
                     'item' => $tag['id'],
                     'warningcode' => 'tagnotfound',
-                    'message' => get_string('tagnotfound', 'error')
+                    'message' => get_string('tagnotfound', 'mod_error')
                 );
                 continue;
             }
@@ -381,7 +381,7 @@ class core_tag_external extends external_api {
         );
 
         if (empty($CFG->usetags)) {
-            throw new moodle_exception('tagsaredisabled', 'tag');
+            throw new moodle_exception('tagsaredisabled', 'core_tag');
         }
 
         if (!empty($params['tag'])) {
@@ -397,7 +397,7 @@ class core_tag_external extends external_api {
             } else {
                 if (!$tag = core_tag_tag::get_by_name($params['tc'], $params['tag'], '*')) {
                     // Not found in collection.
-                    throw new moodle_exception('notagsfound', 'tag');
+                    throw new moodle_exception('notagsfound', 'core_tag');
                 }
             }
         } else if (!empty($params['id'])) {
@@ -405,7 +405,7 @@ class core_tag_external extends external_api {
         }
 
         if (empty($tag)) {
-            throw new moodle_exception('notagsfound', 'tag');
+            throw new moodle_exception('notagsfound', 'core_tag');
         }
 
         // Login to the course / module if applicable.
@@ -470,7 +470,7 @@ class core_tag_external extends external_api {
         global $CFG, $PAGE;
 
         if (empty($CFG->usetags)) {
-            throw new moodle_exception('tagsaredisabled', 'tag');
+            throw new moodle_exception('tagsaredisabled', 'core_tag');
         }
 
         $context = context_system::instance();
@@ -537,7 +537,7 @@ class core_tag_external extends external_api {
         global $CFG, $PAGE;
 
         if (empty($CFG->usetags)) {
-            throw new moodle_exception('tagsaredisabled', 'tag');
+            throw new moodle_exception('tagsaredisabled', 'core_tag');
         }
 
         $context = context_system::instance();
@@ -632,7 +632,7 @@ class core_tag_external extends external_api {
         );
 
         if (empty($CFG->usetags)) {
-            throw new moodle_exception('tagsaredisabled', 'tag');
+            throw new moodle_exception('tagsaredisabled', 'core_tag');
         }
 
         $context = context_system::instance();

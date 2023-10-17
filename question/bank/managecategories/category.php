@@ -102,7 +102,7 @@ if ($param->moveupcontext || $param->movedowncontext) {
 
 if ($param->delete) {
     if (!$category = $DB->get_record("question_categories", ["id" => $param->delete])) {
-        throw new moodle_exception('nocate', 'question', $thispageurl->out(), $param->delete);
+        throw new moodle_exception('nocate', 'core_question', $thispageurl->out(), $param->delete);
     }
 
     helper::question_remove_stale_questions_from_category($param->delete);
@@ -149,10 +149,10 @@ if ($qcobject->catform->is_cancelled()) {
 if ($param->edit !== null || $qcobject->catform->is_submitted()) {
     // In the is_submitted case, we only get here if it was submitted,
     // but not valid, so we need to show the validation error.
-    $PAGE->navbar->add(get_string('editingcategory', 'question'));
+    $PAGE->navbar->add(get_string('editingcategory', 'core_question'));
 }
 
-$PAGE->set_title(get_string('editcategories', 'question'));
+$PAGE->set_title(get_string('editcategories', 'core_question'));
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->activityheader->disable();
 
@@ -164,7 +164,7 @@ $renderer = $PAGE->get_renderer('core_question', 'bank');
 $qbankaction = new \core_question\output\qbank_action_menu($url);
 if (is_null($param->edit)) {
     $actionurl = new moodle_url($url, ['edit' => 0]);
-    $qbankaction->set_action_button($actionurl, get_string('addcategory', 'question'));
+    $qbankaction->set_action_button($actionurl, get_string('addcategory', 'core_question'));
 }
 echo $renderer->render($qbankaction);
 
@@ -178,7 +178,7 @@ if ($param->edit !== null || $qcobject->catform->is_submitted()) {
     $vars = new stdClass();
     $vars->name = $category->name;
     $vars->count = $questionstomove;
-    echo $OUTPUT->box(get_string('categorymove', 'question', $vars), 'generalbox boxaligncenter');
+    echo $OUTPUT->box(get_string('categorymove', 'core_question', $vars), 'generalbox boxaligncenter');
     $moveform->display();
 } else {
     // Display the user interface.

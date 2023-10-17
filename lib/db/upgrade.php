@@ -3326,7 +3326,7 @@ privatefiles,moodle|/user/files.php';
         $sql = 'UPDATE {external_tokens}
                    SET name = ' . $DB->sql_concat(
                        // We only need the prefix, so leave the third param with an empty string.
-                           "'" . get_string('tokennameprefix', 'webservice', '') . "'",
+                           "'" . get_string('tokennameprefix', 'core_webservice', '') . "'",
                            "id");
         $DB->execute($sql);
         // Main savepoint reached.

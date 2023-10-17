@@ -73,7 +73,7 @@ class autocomplete extends \admin_setting_configmultiselect {
         }
 
         $this->placeholder = get_string('search');
-        $this->noselectionstring = get_string('noselection', 'form');
+        $this->noselectionstring = get_string('noselection', 'core_form');
         $defaultattributes = [
                 'tags',
                 'showsuggestions',
@@ -135,7 +135,7 @@ class autocomplete extends \admin_setting_configmultiselect {
             $save[] = $value;
         }
 
-        return ($this->config_write($this->name, implode($this->delimiter, $save)) ? '' : get_string('errorsetting', 'admin'));
+        return ($this->config_write($this->name, implode($this->delimiter, $save)) ? '' : get_string('errorsetting', 'core_admin'));
     }
 
     /**

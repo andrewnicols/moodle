@@ -191,7 +191,7 @@ abstract class grade_report {
         global $CFG, $COURSE, $DB;
 
         if (empty($CFG->gradebookroles)) {
-            throw new \moodle_exception('norolesdefined', 'grades');
+            throw new \moodle_exception('norolesdefined', 'core_grades');
         }
 
         $this->courseid  = $courseid;
@@ -932,7 +932,7 @@ abstract class grade_report {
             if (file_exists("$CFG->dirroot/mod/$itemtype/lib.php")) {
                 $modnames[$itemtype] = get_string("modulename", $itemtype, null, true);
             } else if ($itemtype == 'manual') {
-                $modnames[$itemtype] = get_string('manualitem', 'grades', null, true);
+                $modnames[$itemtype] = get_string('manualitem', 'core_grades', null, true);
             }
         }
 

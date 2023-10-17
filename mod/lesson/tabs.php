@@ -48,14 +48,14 @@ $tabs = $row = $inactive = $activated = array();
 /// user attempt count for reports link hover (completed attempts - much faster)
 $attemptscount = $DB->count_records('lesson_grades', array('lessonid'=>$lesson->id));
 
-$row[] = new tabobject('view', "$CFG->wwwroot/mod/lesson/view.php?id=$cm->id", get_string('preview', 'lesson'), get_string('previewlesson', 'lesson', format_string($lesson->name)));
-$row[] = new tabobject('edit', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id", get_string('edit', 'lesson'), get_string('edita', 'moodle', format_string($lesson->name)));
+$row[] = new tabobject('view', "$CFG->wwwroot/mod/lesson/view.php?id=$cm->id", get_string('preview', 'mod_lesson'), get_string('previewlesson', 'mod_lesson', format_string($lesson->name)));
+$row[] = new tabobject('edit', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id", get_string('edit', 'mod_lesson'), get_string('edita', 'moodle', format_string($lesson->name)));
 if (has_capability('mod/lesson:viewreports', $context)) {
-    $row[] = new tabobject('reports', "$CFG->wwwroot/mod/lesson/report.php?id=$cm->id", get_string('reports', 'lesson'),
-            get_string('viewreports2', 'lesson', $attemptscount));
+    $row[] = new tabobject('reports', "$CFG->wwwroot/mod/lesson/report.php?id=$cm->id", get_string('reports', 'mod_lesson'),
+            get_string('viewreports2', 'mod_lesson', $attemptscount));
 }
 if (has_capability('mod/lesson:grade', $context)) {
-    $row[] = new tabobject('essay', "$CFG->wwwroot/mod/lesson/essay.php?id=$cm->id", get_string('manualgrading', 'lesson'));
+    $row[] = new tabobject('essay', "$CFG->wwwroot/mod/lesson/essay.php?id=$cm->id", get_string('manualgrading', 'mod_lesson'));
 }
 
 $tabs[] = $row;
@@ -69,8 +69,8 @@ switch ($currenttab) {
         $activated[] = 'reports';
 
         $row    = array();
-        $row[]  = new tabobject('reportoverview', "$CFG->wwwroot/mod/lesson/report.php?id=$cm->id&amp;action=reportoverview", get_string('overview', 'lesson'));
-        $row[]  = new tabobject('reportdetail', "$CFG->wwwroot/mod/lesson/report.php?id=$cm->id&amp;action=reportdetail", get_string('detailedstats', 'lesson'));
+        $row[]  = new tabobject('reportoverview', "$CFG->wwwroot/mod/lesson/report.php?id=$cm->id&amp;action=reportoverview", get_string('overview', 'mod_lesson'));
+        $row[]  = new tabobject('reportdetail', "$CFG->wwwroot/mod/lesson/report.php?id=$cm->id&amp;action=reportdetail", get_string('detailedstats', 'mod_lesson'));
         $tabs[] = $row;
         break;
     case 'collapsed':
@@ -81,8 +81,8 @@ switch ($currenttab) {
         $activated[] = 'edit';
 
         $row    = array();
-        $row[]  = new tabobject('collapsed', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id&amp;mode=collapsed", get_string('collapsed', 'lesson'));
-        $row[]  = new tabobject('full', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id&amp;mode=full", get_string('full', 'lesson'));
+        $row[]  = new tabobject('collapsed', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id&amp;mode=collapsed", get_string('collapsed', 'mod_lesson'));
+        $row[]  = new tabobject('full', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id&amp;mode=full", get_string('full', 'mod_lesson'));
         $tabs[] = $row;
         break;
 }

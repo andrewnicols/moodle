@@ -32,8 +32,8 @@ $action   = optional_param('action', '', PARAM_ALPHA);
 
 $redirect = $CFG->wwwroot.'/user/profile/index.php';
 
-$strdefaultcategory = get_string('profiledefaultcategory', 'admin');
-$strcreatefield     = get_string('profilecreatefield', 'admin');
+$strdefaultcategory = get_string('profiledefaultcategory', 'core_admin');
+$strcreatefield     = get_string('profilecreatefield', 'core_admin');
 
 
 // Do we have any actions to perform before printing the header.
@@ -78,13 +78,13 @@ switch ($action) {
         // Ask for confirmation, as there is user data available for field.
         $fieldname = $DB->get_field('user_info_field', 'name', array('id' => $id));
         $optionsyes = array ('id' => $id, 'confirm' => 1, 'action' => 'deletefield', 'sesskey' => sesskey());
-        $strheading = get_string('profiledeletefield', 'admin', format_string($fieldname));
+        $strheading = get_string('profiledeletefield', 'core_admin', format_string($fieldname));
         $PAGE->navbar->add($strheading);
         echo $OUTPUT->header();
         echo $OUTPUT->heading($strheading);
         $formcontinue = new single_button(new moodle_url($redirect, $optionsyes), get_string('yes'), 'post');
         $formcancel = new single_button(new moodle_url($redirect), get_string('no'), 'get');
-        echo $OUTPUT->confirm(get_string('profileconfirmfielddeletion', 'admin', $datacount), $formcontinue, $formcancel);
+        echo $OUTPUT->confirm(get_string('profileconfirmfielddeletion', 'core_admin', $datacount), $formcontinue, $formcancel);
         echo $OUTPUT->footer();
         die;
         break;
@@ -106,7 +106,7 @@ if (empty($categories)) {
 
 // Print the header.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('profilefields', 'admin'));
+echo $OUTPUT->heading(get_string('profilefields', 'core_admin'));
 
 $outputcategories = [];
 $options = profile_list_datatypes();

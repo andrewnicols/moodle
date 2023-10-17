@@ -35,7 +35,7 @@ class context_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcontextcleanup', 'admin');
+        return get_string('taskcontextcleanup', 'core_admin');
     }
 
     /**

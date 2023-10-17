@@ -72,8 +72,8 @@ class data_field_radiobutton extends data_field_base {
         $str .= '<fieldset><legend><span class="accesshide">' . $this->field->name;
 
         if ($this->field->required) {
-            $str .= '&nbsp;' . get_string('requiredelement', 'form') . '</span></legend>';
-            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $str .= '&nbsp;' . get_string('requiredelement', 'core_form') . '</span></legend>';
+            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
             $str .= html_writer::div($image, 'inline-req');
         } else {
             $str .= '</span></legend>';

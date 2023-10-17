@@ -134,11 +134,11 @@ class MoodleQuickForm_date_selector extends MoodleQuickForm_group {
         }
         foreach ($dateformat as $key => $value) {
             // E_STRICT creating elements without forms is nasty because it internally uses $this
-            $this->_elements[] = $this->createFormElement('select', $key, get_string($key, 'form'), $value, $this->getAttributes(), true);
+            $this->_elements[] = $this->createFormElement('select', $key, get_string($key, 'core_form'), $value, $this->getAttributes(), true);
         }
         // The YUI2 calendar only supports the gregorian calendar type so only display the calendar image if this is being used.
         if ($calendartype->get_name() === 'gregorian') {
-            $image = $OUTPUT->pix_icon('i/calendar', get_string('calendar', 'calendar'), 'moodle');
+            $image = $OUTPUT->pix_icon('i/calendar', get_string('calendar', 'core_calendar'), 'moodle');
             $this->_elements[] = $this->createFormElement('link', 'calendar',
                     null, '#', $image);
         }

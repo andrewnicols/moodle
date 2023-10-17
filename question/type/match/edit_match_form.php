@@ -44,7 +44,7 @@ class qtype_match_edit_form extends question_edit_form {
         $repeated[] = $mform->createElement('editor', 'subquestions',
                 $label, array('rows'=>3), $this->editoroptions);
         $repeated[] = $mform->createElement('text', 'subanswers',
-                get_string('answer', 'question'), array('size' => 50, 'maxlength' => 255));
+                get_string('answer', 'core_question'), array('size' => 50, 'maxlength' => 255));
         $repeatedoptions['subquestions']['type'] = PARAM_RAW;
         $repeatedoptions['subanswers']['type'] = PARAM_TEXT;
         $answersoption = 'subquestions';
@@ -62,7 +62,7 @@ class qtype_match_edit_form extends question_edit_form {
         $mform->addHelpButton('shuffleanswers', 'shuffle', 'qtype_match');
         $mform->setDefault('shuffleanswers', $this->get_default_value('shuffleanswers', 1));
 
-        $this->add_per_answer_fields($mform, get_string('questionno', 'question', '{no}'), 0);
+        $this->add_per_answer_fields($mform, get_string('questionno', 'core_question', '{no}'), 0);
 
         $this->add_combined_feedback_fields(true);
         $this->add_interactive_settings(true, true);

@@ -43,13 +43,13 @@ if ($confirm) {
     }
     redirect(
         $backurl,
-        get_string('resetindentationsuccess', 'admin'),
+        get_string('resetindentationsuccess', 'core_admin'),
         null,
         \core\output\notification::NOTIFY_SUCCESS
     );
 }
 
-$strtitle = get_string('resetindentation', 'admin');
+$strtitle = get_string('resetindentation', 'core_admin');
 
 $PAGE->set_title($strtitle);
 $PAGE->set_heading($strtitle);
@@ -61,16 +61,16 @@ navigation_node::override_active_url(new moodle_url(
 
 echo $OUTPUT->header();
 
-$displayoptions = ['confirmtitle' => get_string('resetindentation_title', 'admin')];
+$displayoptions = ['confirmtitle' => get_string('resetindentation_title', 'core_admin')];
 $confirmbutton = new single_button(
     new moodle_url('/admin/course/resetindentation.php', ['confirm' => 1, 'format' => $format, 'sesskey' => sesskey()]),
-    get_string('resetindentation', 'admin'),
+    get_string('resetindentation', 'core_admin'),
     'post',
     single_button::BUTTON_DANGER
 );
 $cancelbutton = new single_button($backurl, get_string('cancel'));
 echo $OUTPUT->confirm(
-    get_string('resetindentation_help', 'admin', ['format' => get_string('pluginname', 'format_'.$format)]),
+    get_string('resetindentation_help', 'core_admin', ['format' => get_string('pluginname', 'format_'.$format)]),
     $confirmbutton,
     $cancelbutton,
     $displayoptions

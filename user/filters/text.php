@@ -61,12 +61,12 @@ class user_filter_text extends user_filter_type {
      * @return array of comparison operators
      */
     public function getOperators() {
-        return array(0 => get_string('contains', 'filters'),
-                     1 => get_string('doesnotcontain', 'filters'),
-                     2 => get_string('isequalto', 'filters'),
-                     3 => get_string('startswith', 'filters'),
-                     4 => get_string('endswith', 'filters'),
-                     5 => get_string('isempty', 'filters'));
+        return array(0 => get_string('contains', 'core_filters'),
+                     1 => get_string('doesnotcontain', 'core_filters'),
+                     2 => get_string('isequalto', 'core_filters'),
+                     3 => get_string('startswith', 'core_filters'),
+                     4 => get_string('endswith', 'core_filters'),
+                     5 => get_string('isempty', 'core_filters'));
     }
 
     /**
@@ -77,8 +77,8 @@ class user_filter_text extends user_filter_type {
         $objs = array();
         $objs['select'] = $mform->createElement('select', $this->_name.'_op', null, $this->getOperators());
         $objs['text'] = $mform->createElement('text', $this->_name, null);
-        $objs['select']->setLabel(get_string('limiterfor', 'filters', $this->_label));
-        $objs['text']->setLabel(get_string('valuefor', 'filters', $this->_label));
+        $objs['select']->setLabel(get_string('limiterfor', 'core_filters', $this->_label));
+        $objs['text']->setLabel(get_string('valuefor', 'core_filters', $this->_label));
         $grp =& $mform->addElement('group', $this->_name.'_grp', $this->_label, $objs, '', false);
         $mform->setType($this->_name, PARAM_RAW);
         $mform->disabledIf($this->_name, $this->_name.'_op', 'eq', 5);
@@ -190,9 +190,9 @@ class user_filter_text extends user_filter_type {
             case 2: // Equal to.
             case 3: // Starts with.
             case 4: // Ends with.
-                return get_string('textlabel', 'filters', $a);
+                return get_string('textlabel', 'core_filters', $a);
             case 5: // Empty.
-                return get_string('textlabelnovalue', 'filters', $a);
+                return get_string('textlabelnovalue', 'core_filters', $a);
         }
 
         return '';

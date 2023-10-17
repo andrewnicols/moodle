@@ -116,7 +116,7 @@ trait form_trait {
 
         // Unlock button if people have completed it. The button will be removed later in definition_after_data if they haven't.
         // The unlock buttons don't need suffix because they are only displayed in the module settings page.
-        $mform->addElement('submit', 'unlockcompletion', get_string('unlockcompletion', 'completion'));
+        $mform->addElement('submit', 'unlockcompletion', get_string('unlockcompletion', 'core_completion'));
         $mform->registerNoSubmitButton('unlockcompletion');
         $mform->addElement('hidden', 'completionunlocked', 0);
         $mform->setType('completionunlocked', PARAM_INT);
@@ -131,7 +131,7 @@ trait form_trait {
             'radio',
             $completionel,
             '',
-            get_string('completion_none', 'completion'),
+            get_string('completion_none', 'core_completion'),
             COMPLETION_TRACKING_NONE,
             ['class' => 'left-indented']
         );
@@ -139,7 +139,7 @@ trait form_trait {
             'radio',
             $completionel,
             '',
-            get_string('completion_manual', 'completion'),
+            get_string('completion_manual', 'core_completion'),
             COMPLETION_TRACKING_MANUAL,
             ['class' => 'left-indented']
         );
@@ -149,7 +149,7 @@ trait form_trait {
             'static',
             $allconditionsel,
             '',
-            get_string('allconditions', 'completion'));
+            get_string('allconditions', 'core_completion'));
 
         $conditionsgroupel = 'conditionsgroup' . $suffix;
         $mform->addGroup([$allconditions], $conditionsgroupel, '', null, false);
@@ -165,7 +165,7 @@ trait form_trait {
                 'checkbox',
                 $completionviewel,
                 '',
-                get_string('completionview_desc', 'completion')
+                get_string('completionview_desc', 'core_completion')
             );
             $mform->hideIf($completionviewel, $completionel, 'ne', COMPLETION_TRACKING_AUTOMATIC);
             // Check by default if automatic completion tracking is set.
@@ -199,7 +199,7 @@ trait form_trait {
                 'radio',
                 $completionel,
                 '',
-                get_string('completion_automatic', 'completion'),
+                get_string('completion_automatic', 'core_completion'),
                 COMPLETION_TRACKING_AUTOMATIC,
                 ['class' => 'left-indented']
             );
@@ -210,7 +210,7 @@ trait form_trait {
         // We don't show completion expected at site level default completion.
         if ($courseid != $SITE->id) {
             $completionexpectedel = 'completionexpected' . $suffix;
-            $mform->addElement('date_time_selector', $completionexpectedel, get_string('completionexpected', 'completion'),
+            $mform->addElement('date_time_selector', $completionexpectedel, get_string('completionexpected', 'core_completion'),
                 ['optional' => true]);
             $a = get_string('pluginname', $modname);
             $mform->addHelpButton($completionexpectedel, 'completionexpected', 'completion', '', false, $a);
@@ -250,7 +250,7 @@ trait form_trait {
                 'checkbox',
                 $completionusegradeel,
                 '',
-                get_string('completionusegrade_desc', 'completion')
+                get_string('completionusegrade_desc', 'core_completion')
             );
 
             // Complete if the user has reached any grade.
@@ -258,7 +258,7 @@ trait form_trait {
                 'radio',
                 $completionpassgradeel,
                 null,
-                get_string('completionanygrade_desc', 'completion'),
+                get_string('completionanygrade_desc', 'core_completion'),
                 0,
                 $indentation
             );
@@ -268,7 +268,7 @@ trait form_trait {
                 'radio',
                 $completionpassgradeel,
                 null,
-                get_string('completionpassgrade_desc', 'completion'),
+                get_string('completionpassgrade_desc', 'core_completion'),
                 1,
                 $indentation
             );
@@ -304,7 +304,7 @@ trait form_trait {
                 'checkbox',
                 $completionusegradeel,
                 null,
-                get_string('completionusegrade_desc', 'completion')
+                get_string('completionusegrade_desc', 'core_completion')
             )];
             $completiongradeitemnumberel = 'completiongradeitemnumber' . $suffix;
             $group[] =& $mform->createElement(
@@ -326,7 +326,7 @@ trait form_trait {
                 'radio',
                 $completionpassgradeel,
                 null,
-                get_string('completionanygrade_desc', 'completion'),
+                get_string('completionanygrade_desc', 'core_completion'),
                 0,
                 $indentation
             );
@@ -335,7 +335,7 @@ trait form_trait {
                 'radio',
                 $completionpassgradeel,
                 null,
-                get_string('completionpassgrade_desc', 'completion'),
+                get_string('completionpassgrade_desc', 'core_completion'),
                 1,
                 $indentation
             );
@@ -404,7 +404,7 @@ trait form_trait {
 
             if (!$rulesenabled) {
                 // No rules are enabled. Can't set automatically completed without rules.
-                $errors[$completionel] = get_string('badautocompletion', 'completion');
+                $errors[$completionel] = get_string('badautocompletion', 'core_completion');
             }
         }
 
@@ -448,8 +448,8 @@ trait form_trait {
                     $completedunlockedel = $mform->createElement(
                         'static',
                         'completedunlocked',
-                        get_string('completedunlocked', 'completion'),
-                        get_string('completedunlockedtext', 'completion')
+                        get_string('completedunlocked', 'core_completion'),
+                        get_string('completedunlockedtext', 'core_completion')
                     );
                     $mform->insertElementBefore($completedunlockedel, 'unlockcompletion');
                     $mform->removeElement('unlockcompletion');
@@ -459,8 +459,8 @@ trait form_trait {
                     $completedwarningel = $mform->createElement(
                         'static',
                         'completedwarning',
-                        get_string('completedwarning', 'completion'),
-                        get_string('completedwarningtext', 'completion', $completedcount)
+                        get_string('completedwarning', 'core_completion'),
+                        get_string('completedwarningtext', 'core_completion', $completedcount)
                     );
                     $mform->insertElementBefore($completedwarningel, 'unlockcompletion');
                     $freeze = true;

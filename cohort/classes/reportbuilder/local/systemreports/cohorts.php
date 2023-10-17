@@ -158,7 +158,7 @@ class cohorts extends system_report {
                 WHERE $cm.cohortid = {$entitymainalias}.id)";
         $this->add_column(new column(
             'memberscount',
-            new lang_string('memberscount', 'cohort'),
+            new lang_string('memberscount', 'core_cohort'),
             $cohortentity->get_entity_name()
         ))
             ->set_type(column::TYPE_INTEGER)

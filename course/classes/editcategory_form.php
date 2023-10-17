@@ -127,7 +127,7 @@ class core_course_editcategory_form extends moodleform {
         if (!empty($data['idnumber'])) {
             if ($existing = $DB->get_record('course_categories', array('idnumber' => $data['idnumber']))) {
                 if (!$data['id'] || $existing->id != $data['id']) {
-                    $errors['idnumber'] = get_string('categoryidnumbertaken', 'error');
+                    $errors['idnumber'] = get_string('categoryidnumbertaken', 'mod_error');
                 }
             }
         }

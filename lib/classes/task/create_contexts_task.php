@@ -34,7 +34,7 @@ class create_contexts_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcreatecontexts', 'admin');
+        return get_string('taskcreatecontexts', 'core_admin');
     }
 
     /**

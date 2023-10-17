@@ -47,10 +47,10 @@ class update extends create {
 
         if (!empty($event->repeatid)) {
             $group = [];
-            $group[] = $mform->createElement('radio', 'repeateditall', null, get_string('repeateditall', 'calendar',
+            $group[] = $mform->createElement('radio', 'repeateditall', null, get_string('repeateditall', 'core_calendar',
                     $event->eventrepeats), 1);
-            $group[] = $mform->createElement('radio', 'repeateditall', null, get_string('repeateditthis', 'calendar'), 0);
-            $mform->addGroup($group, 'repeatgroup', get_string('repeatedevents', 'calendar'), '<br />', false);
+            $group[] = $mform->createElement('radio', 'repeateditall', null, get_string('repeateditthis', 'core_calendar'), 0);
+            $mform->addGroup($group, 'repeatgroup', get_string('repeatedevents', 'core_calendar'), '<br />', false);
 
             $mform->setDefault('repeateditall', 1);
             $mform->setAdvanced('repeatgroup');

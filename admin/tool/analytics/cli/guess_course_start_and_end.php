@@ -142,7 +142,7 @@ function tool_analytics_calculate_course_dates($course, $options) {
             $notification .= PHP_EOL . '  ' . get_string('cantguessstartdate', 'tool_analytics');
         } else if ($lowerenddate) {
             $notification .= PHP_EOL . '  ' . get_string('cantguessstartdate', 'tool_analytics') . ': ' .
-                get_string('enddatebeforestartdate', 'error') . ' - ' . userdate($guessedstartdate);
+                get_string('enddatebeforestartdate', 'mod_error') . ' - ' . userdate($guessedstartdate);
         } else {
             // Update it to something we guess.
 
@@ -205,9 +205,9 @@ function tool_analytics_calculate_course_dates($course, $options) {
 
                 $updateit = false;
                 if ($course->enddate < $course->startdate) {
-                    $notification .= PHP_EOL . '  ' . get_string('errorendbeforestart', 'course', userdate($course->enddate));
+                    $notification .= PHP_EOL . '  ' . get_string('errorendbeforestart', 'core_course', userdate($course->enddate));
                 } else if ($course->startdate + (YEARSECS + (WEEKSECS * 4)) > $course->enddate) {
-                    $notification .= PHP_EOL . '  ' . get_string('coursetoolong', 'course');
+                    $notification .= PHP_EOL . '  ' . get_string('coursetoolong', 'core_course');
                 } else {
                     $notification .= PHP_EOL . '  ' . get_string('enddate') . ': ' . userdate($course->enddate);
                     $updateit = true;

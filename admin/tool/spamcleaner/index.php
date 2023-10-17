@@ -261,7 +261,7 @@ function print_user_list($users_rs, $keywords) {
         foreach ($rs as $user) {
             if (!$count) {
                 echo '<table class="table table-bordered" border="1" width="100%" id="data-grid"><tr><th>&nbsp;</th>
-                    <th>'.get_string('user', 'admin').'</th><th>'.get_string('spamdesc', 'tool_spamcleaner').'</th>
+                    <th>'.get_string('user', 'core_admin').'</th><th>'.get_string('spamdesc', 'tool_spamcleaner').'</th>
                     <th>'.get_string('spamoperation', 'tool_spamcleaner').'</th></tr>';
             }
             $count++;
@@ -364,9 +364,9 @@ function print_user_entry($user, $keywords, $count) {
         $html .= '<td align="left">'.format_text($user->description, $user->descriptionformat, array('overflowdiv'=>true)).'</td>';
         $html .= '<td width="100px" align="center">';
         $html .= '<button class="btn btn-primary" onclick="M.tool_spamcleaner.del_user(this,'.$user->id.')">'.
-            get_string('deleteuser', 'admin').'</button><br />';
+            get_string('deleteuser', 'core_admin').'</button><br />';
         $html .= '<button class="btn btn-secondary" onclick="M.tool_spamcleaner.ignore_user(this,'.$user->id.')">'.
-            get_string('ignore', 'admin').'</button>';
+            get_string('ignore', 'core_admin').'</button>';
         $html .= '</td>';
         $html .= '</tr>';
         return $html;

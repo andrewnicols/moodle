@@ -40,7 +40,7 @@ class role_created extends base {
     }
 
     public static function get_name() {
-        return get_string('eventrolecreated', 'role');
+        return get_string('eventrolecreated', 'core_role');
     }
 
     public function get_url() {

@@ -79,7 +79,7 @@ class pgsql_native_moodle_database extends moodle_database {
      */
     public function driver_installed() {
         if (!extension_loaded('pgsql')) {
-            return get_string('pgsqlextensionisnotpresentinphp', 'install');
+            return get_string('pgsqlextensionisnotpresentinphp', 'mod_install');
         }
         return true;
     }
@@ -117,7 +117,7 @@ class pgsql_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_name() {
-        return get_string('nativepgsql', 'install');
+        return get_string('nativepgsql', 'mod_install');
     }
 
     /**
@@ -126,7 +126,7 @@ class pgsql_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_configuration_help() {
-        return get_string('nativepgsqlhelp', 'install');
+        return get_string('nativepgsqlhelp', 'mod_install');
     }
 
     /**
@@ -199,7 +199,7 @@ class pgsql_native_moodle_database extends moodle_database {
         if (isset($this->dboptions['ssl'])) {
             $sslmode = $this->dboptions['ssl'];
             if (!in_array($sslmode, self::$sslmodes, true)) {
-                throw new moodle_exception('validateerrorlist', 'admin', '', "'dboptions''ssl': $sslmode");
+                throw new moodle_exception('validateerrorlist', 'core_admin', '', "'dboptions''ssl': $sslmode");
             }
             $connection .= " sslmode=$sslmode";
         }

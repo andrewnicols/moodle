@@ -41,7 +41,7 @@ class gradeimport_direct_mapping_form extends moodleform {
         $header = $this->_customdata['header'];
         // Course id.
 
-        $mform->addElement('header', 'general', get_string('identifier', 'grades'));
+        $mform->addElement('header', 'general', get_string('identifier', 'core_grades'));
         $mapfromoptions = array();
 
         if ($header) {
@@ -49,27 +49,27 @@ class gradeimport_direct_mapping_form extends moodleform {
                 $mapfromoptions[$i] = s($h);
             }
         }
-        $mform->addElement('select', 'mapfrom', get_string('mapfrom', 'grades'), $mapfromoptions);
+        $mform->addElement('select', 'mapfrom', get_string('mapfrom', 'core_grades'), $mapfromoptions);
         $mform->addHelpButton('mapfrom', 'mapfrom', 'grades');
 
         $maptooptions = array(
-            'userid'       => get_string('userid', 'grades'),
+            'userid'       => get_string('userid', 'core_grades'),
             'username'     => get_string('username'),
             'useridnumber' => get_string('idnumber'),
             'useremail'    => get_string('email'),
-            '0'            => get_string('ignore', 'grades')
+            '0'            => get_string('ignore', 'core_grades')
         );
-        $mform->addElement('select', 'mapto', get_string('mapto', 'grades'), $maptooptions);
+        $mform->addElement('select', 'mapto', get_string('mapto', 'core_grades'), $maptooptions);
         $mform->addHelpButton('mapto', 'mapto', 'grades');
 
-        $mform->addElement('header', 'general_map', get_string('mappings', 'grades'));
+        $mform->addElement('header', 'general_map', get_string('mappings', 'core_grades'));
         $mform->addHelpButton('general_map', 'mappings', 'grades');
 
         // Add a feedback option.
         $feedbacks = array();
         if ($gradeitems = $this->_customdata['gradeitems']) {
             foreach ($gradeitems as $itemid => $itemname) {
-                $feedbacks['feedback_'.$itemid] = get_string('feedbackforgradeitems', 'grades', $itemname);
+                $feedbacks['feedback_'.$itemid] = get_string('feedbackforgradeitems', 'core_grades', $itemname);
             }
         }
 
@@ -79,12 +79,12 @@ class gradeimport_direct_mapping_form extends moodleform {
                 $h = trim($h);
                 // This is what each header maps to.
                 $headermapsto = array(
-                    get_string('others', 'grades') => array(
-                        '0'   => get_string('ignore', 'grades'),
-                        'new' => get_string('newitem', 'grades')
+                    get_string('others', 'core_grades') => array(
+                        '0'   => get_string('ignore', 'core_grades'),
+                        'new' => get_string('newitem', 'core_grades')
                     ),
-                    get_string('gradeitems', 'grades') => $gradeitems,
-                    get_string('feedbacks', 'grades')  => $feedbacks
+                    get_string('gradeitems', 'core_grades') => $gradeitems,
+                    get_string('feedbacks', 'core_grades')  => $feedbacks
                 );
                 $mform->addElement('selectgroups', 'mapping_'.$i, s($h), $headermapsto);
                 $i++;
@@ -112,6 +112,6 @@ class gradeimport_direct_mapping_form extends moodleform {
         $mform->addElement('hidden', 'forceimport', $this->_customdata['forceimport']);
         $mform->setType('forceimport', PARAM_BOOL);
         $mform->setConstant('forceimport', $this->_customdata['forceimport']);
-        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'grades'));
+        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'core_grades'));
     }
 }

@@ -45,7 +45,7 @@ class antivirus_scan_file_error extends \core\event\base {
         if (isset($this->other['incidentdetails'])) {
             return format_text($this->other['incidentdetails'], FORMAT_MOODLE);
         } else {
-            return get_string('fileerrordesc', 'antivirus');
+            return get_string('fileerrordesc', 'core_antivirus');
         }
     }
 
@@ -56,7 +56,7 @@ class antivirus_scan_file_error extends \core\event\base {
      * @throws \coding_exception
      */
     public static function get_name() {
-        return get_string('fileerrorname', 'antivirus');
+        return get_string('fileerrorname', 'core_antivirus');
     }
 
     /**

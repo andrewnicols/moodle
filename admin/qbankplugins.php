@@ -46,7 +46,7 @@ $plugins = core_plugin_manager::instance()->get_plugins_of_type('qbank');
 $sortorder = array_flip(array_keys($plugins));
 
 if (!isset($plugins[$name])) {
-    throw new moodle_exception('qbanknotfound', 'question', $return, $name);
+    throw new moodle_exception('qbanknotfound', 'core_question', $return, $name);
 }
 
 $plugintypename = $plugins[$name]->type . '_' . $plugins[$name]->name;

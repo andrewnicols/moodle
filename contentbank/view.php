@@ -97,7 +97,7 @@ if (!empty($errormsg) && get_string_manager()->string_exists($errormsg, 'core_co
                 $visibilitymsg = get_string('unlisted', 'core_contentbank');
                 break;
             default:
-                throw new \moodle_exception('contentvisibilitynotfound', 'error', $returnurl, $content->get_visibility());
+                throw new \moodle_exception('contentvisibilitynotfound', 'mod_error', $returnurl, $content->get_visibility());
                 break;
         }
         $statusmsg = get_string($statusmsg, 'core_contentbank', $visibilitymsg);

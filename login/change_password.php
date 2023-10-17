@@ -82,18 +82,18 @@ if (\core\session\manager::is_loggedinas()) {
 }
 
 if (is_mnet_remote_user($USER)) {
-    $message = get_string('usercannotchangepassword', 'mnet');
+    $message = get_string('usercannotchangepassword', 'core_mnet');
     if ($idprovider = $DB->get_record('mnet_host', array('id'=>$USER->mnethostid))) {
-        $message .= get_string('userchangepasswordlink', 'mnet', $idprovider);
+        $message .= get_string('userchangepasswordlink', 'core_mnet', $idprovider);
     }
-    throw new \moodle_exception('userchangepasswordlink', 'mnet', '', $message);
+    throw new \moodle_exception('userchangepasswordlink', 'core_mnet', '', $message);
 }
 
 // load the appropriate auth plugin
 $userauth = get_auth_plugin($USER->auth);
 
 if (!$userauth->can_change_password()) {
-    throw new \moodle_exception('nopasswordchange', 'auth');
+    throw new \moodle_exception('nopasswordchange', 'core_auth');
 }
 
 if ($changeurl = $userauth->change_password_url()) {
@@ -112,7 +112,7 @@ if ($mform->is_cancelled()) {
 } else if ($data = $mform->get_data()) {
 
     if (!$userauth->user_update_password($USER, $data->newpassword1)) {
-        throw new \moodle_exception('errorpasswordupdate', 'auth');
+        throw new \moodle_exception('errorpasswordupdate', 'core_auth');
     }
 
     user_add_password_history($USER->id, $data->newpassword1);

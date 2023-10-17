@@ -50,7 +50,7 @@ class grouping_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventgroupingupdated', 'group');
+        return get_string('eventgroupingupdated', 'core_group');
     }
 
     /**

@@ -41,16 +41,16 @@ class mod_assign_batch_set_marking_workflow_state_form extends moodleform {
     public function definition() {
         $mform = $this->_form;
         $params = $this->_customdata;
-        $formheader = get_string('batchsetmarkingworkflowstateforusers', 'assign', $params['userscount']);
+        $formheader = get_string('batchsetmarkingworkflowstateforusers', 'mod_assign', $params['userscount']);
 
         $mform->addElement('header', 'general', $formheader);
-        $mform->addElement('static', 'userslist', get_string('selectedusers', 'assign'), $params['usershtml']);
+        $mform->addElement('static', 'userslist', get_string('selectedusers', 'mod_assign'), $params['usershtml']);
 
         $options = $params['markingworkflowstates'];
-        $mform->addElement('select', 'markingworkflowstate', get_string('markingworkflowstate', 'assign'), $options);
+        $mform->addElement('select', 'markingworkflowstate', get_string('markingworkflowstate', 'mod_assign'), $options);
 
         // Don't allow notification to be sent until in "Released" state.
-        $mform->addElement('selectyesno', 'sendstudentnotifications', get_string('sendstudentnotifications', 'assign'));
+        $mform->addElement('selectyesno', 'sendstudentnotifications', get_string('sendstudentnotifications', 'mod_assign'));
         $mform->setDefault('sendstudentnotifications', 0);
         $mform->disabledIf('sendstudentnotifications', 'markingworkflowstate', 'neq', ASSIGN_MARKING_WORKFLOW_STATE_RELEASED);
 
@@ -78,7 +78,7 @@ class mod_assign_batch_set_marking_workflow_state_form extends moodleform {
         // failure from this form, but this check ensures the form won't validate if someone
         // manipulates the 'sendstudentnotifications' field's disabled attribute client-side.
         if (!empty($data['sendstudentnotifications']) && $data['markingworkflowstate'] != ASSIGN_MARKING_WORKFLOW_STATE_RELEASED) {
-            $errors['sendstudentnotifications'] = get_string('studentnotificationworkflowstateerror', 'assign');
+            $errors['sendstudentnotifications'] = get_string('studentnotificationworkflowstateerror', 'mod_assign');
         }
 
         return $errors;

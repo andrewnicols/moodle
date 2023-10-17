@@ -58,7 +58,7 @@ class sync_grades extends \core\task\scheduled_task {
 
         // Check if the authentication plugin is disabled.
         if (!is_enabled_auth('lti')) {
-            mtrace('Skipping task - ' . get_string('pluginnotenabled', 'auth', get_string('pluginname', 'auth_lti')));
+            mtrace('Skipping task - ' . get_string('pluginnotenabled', 'core_auth', get_string('pluginname', 'auth_lti')));
             return true;
         }
 

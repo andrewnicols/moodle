@@ -1709,7 +1709,7 @@ class cache_application extends cache implements cache_loader_with_locking {
                 $releaseparent = false;
                 return true;
             } else {
-                throw new moodle_exception('ex_unabletolock', 'cache', '', null,
+                throw new moodle_exception('ex_unabletolock', 'core_cache', '', null,
                     'store: ' . get_class($this->get_store()) . ', lock: ' . $hashedkey);
             }
         } finally {

@@ -94,7 +94,7 @@ final class filter {
         array $fieldparams = []
     ) {
         if (!class_exists($filterclass) || !is_subclass_of($filterclass, base::class)) {
-            throw new moodle_exception('filterinvalid', 'reportbuilder', '', null, $filterclass);
+            throw new moodle_exception('filterinvalid', 'core_reportbuilder', '', null, $filterclass);
         }
 
         $this->filterclass = $filterclass;

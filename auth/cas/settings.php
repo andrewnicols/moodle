@@ -266,27 +266,27 @@ if ($ADMIN->fulltree) {
 
         // User Account Sync.
         $settings->add(new admin_setting_heading('auth_cas/syncusers',
-                new lang_string('auth_sync_script', 'auth'), ''));
+                new lang_string('auth_sync_script', 'core_auth'), ''));
 
         // Remove external user.
         $deleteopt = array();
-        $deleteopt[AUTH_REMOVEUSER_KEEP] = get_string('auth_remove_keep', 'auth');
-        $deleteopt[AUTH_REMOVEUSER_SUSPEND] = get_string('auth_remove_suspend', 'auth');
-        $deleteopt[AUTH_REMOVEUSER_FULLDELETE] = get_string('auth_remove_delete', 'auth');
+        $deleteopt[AUTH_REMOVEUSER_KEEP] = get_string('auth_remove_keep', 'core_auth');
+        $deleteopt[AUTH_REMOVEUSER_SUSPEND] = get_string('auth_remove_suspend', 'core_auth');
+        $deleteopt[AUTH_REMOVEUSER_FULLDELETE] = get_string('auth_remove_delete', 'core_auth');
 
         $settings->add(new admin_setting_configselect('auth_cas/removeuser',
-                new lang_string('auth_remove_user_key', 'auth'),
-                new lang_string('auth_remove_user', 'auth'), AUTH_REMOVEUSER_KEEP, $deleteopt));
+                new lang_string('auth_remove_user_key', 'core_auth'),
+                new lang_string('auth_remove_user', 'core_auth'), AUTH_REMOVEUSER_KEEP, $deleteopt));
     }
 
     // Display locking / mapping of profile fields.
     $authplugin = get_auth_plugin('cas');
     $help  = get_string('auth_ldapextrafields', 'auth_ldap');
-    $help .= get_string('auth_updatelocal_expl', 'auth');
-    $help .= get_string('auth_fieldlock_expl', 'auth');
-    $help .= get_string('auth_updateremote_expl', 'auth');
+    $help .= get_string('auth_updatelocal_expl', 'core_auth');
+    $help .= get_string('auth_fieldlock_expl', 'core_auth');
+    $help .= get_string('auth_updateremote_expl', 'core_auth');
     $help .= '<hr />';
-    $help .= get_string('auth_updateremote_ldap', 'auth');
+    $help .= get_string('auth_updateremote_ldap', 'core_auth');
     display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields, $help, true, true,
             $authplugin->get_custom_user_profile_fields());
 

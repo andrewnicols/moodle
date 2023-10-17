@@ -88,7 +88,7 @@ class context_freeze_test extends \advanced_testcase {
         $this->assertFalse($studentcomment->can_delete($newcomment->id));
         $this->assertFalse($studentcomment->can_post());
         $this->expectException(comment_exception::class);
-        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'error'));
+        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'mod_error'));
         core_comment_external::delete_comments([$newcomment->id]);
     }
 
@@ -111,7 +111,7 @@ class context_freeze_test extends \advanced_testcase {
         $this->assertFalse($studentcomment->can_delete($newcomment->id));
         $this->assertFalse($studentcomment->can_post());
         $this->expectException(comment_exception::class);
-        $this->expectExceptionMessage(get_string('nopermissiontocomment', 'error'));
+        $this->expectExceptionMessage(get_string('nopermissiontocomment', 'mod_error'));
         $studentcomment->delete($newcomment->id);
     }
 
@@ -133,7 +133,7 @@ class context_freeze_test extends \advanced_testcase {
         $this->assertFalse($admincomment->can_delete($newcomment->id));
         $this->assertFalse($admincomment->can_post());
         $this->expectException(comment_exception::class);
-        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'error'));
+        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'mod_error'));
         core_comment_external::delete_comments([$newcomment->id]);
     }
 
@@ -155,7 +155,7 @@ class context_freeze_test extends \advanced_testcase {
         $this->assertFalse($admincomment->can_delete($newcomment->id));
         $this->assertFalse($admincomment->can_post());
         $this->expectException(comment_exception::class);
-        $this->expectExceptionMessage(get_string('nopermissiontocomment', 'error'));
+        $this->expectExceptionMessage(get_string('nopermissiontocomment', 'mod_error'));
         $admincomment->delete($newcomment->id);
     }
 }

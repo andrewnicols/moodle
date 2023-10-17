@@ -437,7 +437,7 @@ class enrol_cohort_plugin extends enrol_plugin {
         $mform->addElement('select', 'status', get_string('status', 'enrol_cohort'), $options);
 
         $options = ['contextid' => $coursecontext->id, 'multiple' => true];
-        $mform->addElement('cohort', 'customint1', get_string('cohort', 'cohort'), $options);
+        $mform->addElement('cohort', 'customint1', get_string('cohort', 'core_cohort'), $options);
 
         if ($instance->id) {
             $mform->setConstant('customint1', $instance->customint1);
@@ -500,7 +500,7 @@ class enrol_cohort_plugin extends enrol_plugin {
         $errors = array_merge($errors, $typeerrors);
         // Check that the cohorts passed are valid.
         if (!empty(array_diff($cohorts, $validcohorts))) {
-            $errors['customint1'] = get_string('invaliddata', 'error');
+            $errors['customint1'] = get_string('invaliddata', 'mod_error');
         }
         return $errors;
     }
@@ -526,11 +526,11 @@ class enrol_cohort_plugin extends enrol_plugin {
             if (($addtogroup == - COHORT_CREATE_GROUP) || $addtogroup == COHORT_NOGROUP) {
                 if (isset($enrolmentdata['groupname'])) {
                     $errors['erroraddtogroupgroupname'] =
-                        new lang_string('erroraddtogroupgroupname', 'group');
+                        new lang_string('erroraddtogroupgroupname', 'core_group');
                 }
             } else {
                 $errors['erroraddtogroup'] =
-                    new lang_string('erroraddtogroup', 'group');
+                    new lang_string('erroraddtogroup', 'core_group');
             }
         }
 
@@ -545,7 +545,7 @@ class enrol_cohort_plugin extends enrol_plugin {
                 $groupname = $enrolmentdata['groupname'];
                 if (!groups_get_group_by_name($courseid, $groupname)) {
                     $errors['errorinvalidgroup'] =
-                        new lang_string('errorinvalidgroup', 'group', $groupname);
+                        new lang_string('errorinvalidgroup', 'core_group', $groupname);
                 }
             }
         }
@@ -561,7 +561,7 @@ class enrol_cohort_plugin extends enrol_plugin {
 
             if (!$cohortid) {
                 $errors['unknowncohort'] =
-                    new lang_string('unknowncohort', 'cohort', $cohortname);
+                    new lang_string('unknowncohort', 'core_cohort', $cohortname);
             }
         }
         return $errors;
@@ -605,7 +605,7 @@ class enrol_cohort_plugin extends enrol_plugin {
         $cohortid = $enrolmentdata['customint1'];
         $coursecontext = \context_course::instance($courseid);
         if (!cohort_get_cohort($cohortid, $coursecontext)) {
-            $error = new lang_string('contextcohortnotallowed', 'cohort', $enrolmentdata['cohortname']);
+            $error = new lang_string('contextcohortnotallowed', 'core_cohort', $enrolmentdata['cohortname']);
         }
         return $error;
     }

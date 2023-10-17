@@ -39,7 +39,7 @@ $context = context_system::instance();
 // create some kind of security problem by specifying a class that isn't a task or whatever).
 $task = \core\task\manager::get_scheduled_task($taskname);
 if (!$task) {
-    throw new moodle_exception('cannotfindinfo', 'error', new moodle_url('/admin/tool/task/scheduledtasks.php'), $taskname);
+    throw new moodle_exception('cannotfindinfo', 'mod_error', new moodle_url('/admin/tool/task/scheduledtasks.php'), $taskname);
 }
 
 if (!\core\task\manager::is_runnable()) {
@@ -48,7 +48,7 @@ if (!\core\task\manager::is_runnable()) {
 }
 
 if (!get_config('tool_task', 'enablerunnow') || !$task->can_run()) {
-    throw new moodle_exception('nopermissions', 'error', new moodle_url('/admin/tool/task/scheduledtasks.php'),
+    throw new moodle_exception('nopermissions', 'mod_error', new moodle_url('/admin/tool/task/scheduledtasks.php'),
         get_string('runnow', 'tool_task'), $task->get_name());
 }
 

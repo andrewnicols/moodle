@@ -180,7 +180,7 @@ class license_manager {
                 $countfilesselect = 'license = :license AND NOT (component = \'user\' AND filearea = \'draft\')';
                 $countfilesusinglicense = $DB->count_records_select('files', $countfilesselect, ['license' => $licenseshortname]);
                 if ($countfilesusinglicense > 0) {
-                    throw new moodle_exception('cannotdeletelicenseinuse', 'license');
+                    throw new moodle_exception('cannotdeletelicenseinuse', 'mod_license');
                 }
                 $deletedsortorder = $licensetodelete->sortorder;
                 $DB->delete_records('license', ['id' => $licensetodelete->id]);
@@ -200,10 +200,10 @@ class license_manager {
                 self::set_active_licenses();
 
             } else {
-                throw new moodle_exception('cannotdeletecore', 'license');
+                throw new moodle_exception('cannotdeletecore', 'mod_license');
             }
         } else {
-            throw new moodle_exception('licensenotfoundshortname', 'license', $licenseshortname);
+            throw new moodle_exception('licensenotfoundshortname', 'mod_license', $licenseshortname);
         }
     }
 

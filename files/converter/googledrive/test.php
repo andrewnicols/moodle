@@ -34,7 +34,7 @@ require_capability('moodle/site:config', context_system::instance());
 
 $strheading = get_string('test_conversion', 'fileconverter_googledrive');
 $PAGE->navbar->add(get_string('administrationsite'));
-$PAGE->navbar->add(get_string('plugins', 'admin'));
+$PAGE->navbar->add(get_string('plugins', 'core_admin'));
 $PAGE->navbar->add(get_string('pluginname', 'fileconverter_googledrive'),
         new moodle_url('/admin/settings.php', array('section' => 'fileconvertergoogledrive')));
 $PAGE->navbar->add($strheading);

@@ -102,8 +102,8 @@ class controller {
                     $a       = new \stdClass();
                     $a->url  = $this->installer->lang_pack_url($langcode);
                     $a->dest = $CFG->dataroot.'/lang';
-                    $this->errors[] = get_string('remotedownloaderror', 'error', $a);
-                    throw new \moodle_exception('remotedownloaderror', 'error', '', $a);
+                    $this->errors[] = get_string('remotedownloaderror', 'mod_error', $a);
+                    throw new \moodle_exception('remotedownloaderror', 'mod_error', '', $a);
                     break;
                 case \lang_installer::RESULT_INSTALLED:
                     $updatedpacks++;
@@ -181,7 +181,7 @@ class controller {
         global $CFG;
 
         if (!$availablelangs = $this->installer->get_remote_list_of_languages()) {
-            $this->errors[] = get_string('cannotdownloadlanguageupdatelist', 'error');
+            $this->errors[] = get_string('cannotdownloadlanguageupdatelist', 'mod_error');
             return false;
         }
 

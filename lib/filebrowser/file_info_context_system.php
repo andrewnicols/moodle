@@ -111,7 +111,7 @@ class file_info_context_system extends file_info_context_coursecat {
 
         $urlbase = $CFG->wwwroot . '/pluginfile.php';
         return new file_info_stored($this->browser, $this->context, $storedfile, $urlbase,
-            get_string('coursebackup', 'repository'), false, $downloadable, $uploadable, false);
+            get_string('coursebackup', 'core_repository'), false, $downloadable, $uploadable, false);
     }
 
     /**
@@ -120,7 +120,7 @@ class file_info_context_system extends file_info_context_coursecat {
      * @return string
      */
     public function get_visible_name() {
-        return get_string('arearoot', 'repository');
+        return get_string('arearoot', 'core_repository');
     }
 
     /**

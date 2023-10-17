@@ -90,7 +90,7 @@ class behat_workshopallocation_manual extends behat_base {
     public function i_allocate_submissions_in_workshop_as($workshopname, TableNode $table) {
         $this->execute("behat_navigation::go_to_breadcrumb_location", $workshopname);
         $this->execute('behat_navigation::i_navigate_to_in_current_page_administration',
-            get_string('submissionsallocation', 'workshop'));
+            get_string('submissionsallocation', 'mod_workshop'));
         $rows = $table->getRows();
         $reviewer = $participant = null;
         for ($i = 0; $i < count($rows[0]); $i++) {

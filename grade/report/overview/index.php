@@ -75,7 +75,7 @@ $access = grade_report_overview::check_access($systemcontext, $context, $persona
 
 if (!$access) {
     // no access to grades!
-    throw new \moodle_exception('nopermissiontoviewgrades', 'error',  $CFG->wwwroot.'/course/view.php?id='.$courseid);
+    throw new \moodle_exception('nopermissiontoviewgrades', 'mod_error',  $CFG->wwwroot.'/course/view.php?id='.$courseid);
 }
 
 /// return tracking object
@@ -137,7 +137,7 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
         }
 
         if ($currentgroup and !groups_is_member($currentgroup, $userid)) {
-            echo $OUTPUT->notification(get_string('groupusernotmember', 'error'));
+            echo $OUTPUT->notification(get_string('groupusernotmember', 'mod_error'));
         } else {
             if ($report->fill_table()) {
                 echo '<br />'.$report->print_table(true);
@@ -154,7 +154,7 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
         // Display a standard page.
         if ($courseid == SITEID) {
             $PAGE->set_pagelayout('standard');
-            $header = get_string('grades', 'grades') . ' - ' . fullname($report->user);
+            $header = get_string('grades', 'core_grades') . ' - ' . fullname($report->user);
             $PAGE->set_title($header);
             $PAGE->set_heading(fullname($report->user));
 
@@ -169,7 +169,7 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
 
             echo $OUTPUT->header();
             if ($report->fill_table(true, true)) {
-                echo html_writer::tag('h3', get_string('coursesiamtaking', 'grades'));
+                echo html_writer::tag('h3', get_string('coursesiamtaking', 'core_grades'));
                 echo '<br />' . $report->print_table(true);
             }
         } else { // We have a course context. We must be navigating from the gradebook.
@@ -182,20 +182,20 @@ if (has_capability('moodle/grade:viewall', $context) && $courseid != SITEID) {
         }
     } else {
         $PAGE->set_pagelayout('standard');
-        $header = get_string('grades', 'grades') . ' - ' . fullname($report->user);
+        $header = get_string('grades', 'core_grades') . ' - ' . fullname($report->user);
         $PAGE->set_title($header);
         $PAGE->set_heading(fullname($report->user));
         echo $OUTPUT->header();
     }
 
     if (count($report->teachercourses)) {
-        echo html_writer::tag('h3', get_string('coursesiamteaching', 'grades'));
+        echo html_writer::tag('h3', get_string('coursesiamteaching', 'core_grades'));
         $report->print_teacher_table();
     }
 
     if (empty($report->studentcourseids) && empty($report->teachercourses)) {
         // We have no report to show the user. Let them know something.
-        echo $OUTPUT->notification(get_string('noreports', 'grades'), 'notifymessage');
+        echo $OUTPUT->notification(get_string('noreports', 'core_grades'), 'notifymessage');
     }
 }
 

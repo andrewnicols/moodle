@@ -37,7 +37,7 @@ class block_section_links_edit_form extends block_edit_form {
      * @param MoodleQuickForm $mform
      */
     protected function specific_definition($mform) {
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'core_block'));
 
         $numberofsections = array();
         for ($i = 1; $i < 53; $i++){

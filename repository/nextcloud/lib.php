@@ -377,7 +377,7 @@ class repository_nextcloud extends repository {
 
         // Check this issuer is enabled.
         if ($this->disabled || $this->get_system_oauth_client() === false || $this->get_system_ocs_client() === null) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
 
         $linkmanager = new \repository_nextcloud\access_controlled_link_manager($this->ocsclient, $this->get_system_oauth_client(),
@@ -535,7 +535,7 @@ class repository_nextcloud extends repository {
         // Write file into temp location.
         if (!$this->dav->get_file($filetarget, $tmppath)) {
             $this->dav->close();
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
         $this->dav->close();
 
@@ -616,7 +616,7 @@ class repository_nextcloud extends repository {
             $ret['login'] = array($btn);
             return $ret;
         } else {
-            echo html_writer::link($loginurl, get_string('login', 'repository'),
+            echo html_writer::link($loginurl, get_string('login', 'core_repository'),
                     array('target' => '_blank',  'rel' => 'noopener noreferrer'));
         }
     }
@@ -672,7 +672,7 @@ class repository_nextcloud extends repository {
      */
     public static function instance_config_form($mform) {
         if (!has_capability('moodle/site:config', context_system::instance())) {
-            $mform->addElement('static', null, '',  get_string('nopermissions', 'error', get_string('configplugin',
+            $mform->addElement('static', null, '',  get_string('nopermissions', 'mod_error', get_string('configplugin',
                 'repository_nextcloud')));
             return false;
         }
@@ -856,7 +856,7 @@ class repository_nextcloud extends repository {
 
         echo $OUTPUT->header();
 
-        $button = new single_button($url, get_string('logintoaccount', 'repository', $this->get_name()),
+        $button = new single_button($url, get_string('logintoaccount', 'core_repository', $this->get_name()),
             'post', single_button::BUTTON_PRIMARY);
         $button->add_action(new popup_action('click', $url, 'Login'));
         $button->class = 'mdl-align';
@@ -918,10 +918,10 @@ class repository_nextcloud extends repository {
      */
     public function get_reference_details($reference, $filestatus = 0) {
         if ($this->disabled) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
         if (empty($reference)) {
-            return get_string('unknownsource', 'repository');
+            return get_string('unknownsource', 'core_repository');
         }
         $source = json_decode($reference);
         $path = '';

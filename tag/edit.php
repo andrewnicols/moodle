@@ -33,7 +33,7 @@ $returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
 require_login();
 
 if (empty($CFG->usetags)) {
-    throw new \moodle_exception('tagsaredisabled', 'tag');
+    throw new \moodle_exception('tagsaredisabled', 'core_tag');
 }
 
 //Editing a tag requires moodle/tag:edit capability
@@ -129,7 +129,7 @@ if ($tagform->is_cancelled()) {
 navigation_node::override_active_url(new moodle_url('/tag/search.php'));
 $PAGE->navbar->add($tagname);
 $PAGE->navbar->add(get_string('edit'));
-$PAGE->set_title(get_string('tag', 'tag') . ' - '. $tagname);
+$PAGE->set_title(get_string('tag', 'core_tag') . ' - '. $tagname);
 $PAGE->set_heading($COURSE->fullname);
 echo $OUTPUT->header();
 echo $OUTPUT->heading($tagname, 2);

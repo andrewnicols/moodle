@@ -87,8 +87,8 @@ class custom_completion extends activity_custom_completion {
         $timespent = format_time($this->cm->customdata['customcompletionrules']['completiontimespent'] ?? 0);
 
         return [
-            'completiontimespent' => get_string('completiondetail:timespent', 'lesson', $timespent),
-            'completionendreached' => get_string('completiondetail:reachend', 'lesson'),
+            'completiontimespent' => get_string('completiondetail:timespent', 'mod_lesson', $timespent),
+            'completionendreached' => get_string('completiondetail:reachend', 'mod_lesson'),
         ];
     }
 

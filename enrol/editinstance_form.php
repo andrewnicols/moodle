@@ -64,7 +64,7 @@ class enrol_instance_edit_form extends moodleform {
         $mform->setType('returnurl', PARAM_LOCALURL);
         $mform->setConstant('returnurl', $returnurl);
 
-        $this->add_action_buttons(true, ($instance->id ? null : get_string('addinstance', 'enrol')));
+        $this->add_action_buttons(true, ($instance->id ? null : get_string('addinstance', 'core_enrol')));
 
         $this->set_data($instance);
     }

@@ -328,10 +328,10 @@ class core_user_external extends \core_external\external_api {
             $user = $DB->get_record('user', array('id' => $userid, 'deleted' => 0), '*', MUST_EXIST);
             // Must not allow deleting of admins or self!!!
             if (is_siteadmin($user)) {
-                throw new moodle_exception('useradminodelete', 'error');
+                throw new moodle_exception('useradminodelete', 'mod_error');
             }
             if ($USER->id == $user->id) {
-                throw new moodle_exception('usernotdeletederror', 'error');
+                throw new moodle_exception('usernotdeletederror', 'mod_error');
             }
             user_delete_user($user);
         }
@@ -1729,7 +1729,7 @@ class core_user_external extends \core_external\external_api {
         self::validate_context($context);
 
         if (!empty($CFG->disableuserimages)) {
-            throw new moodle_exception('userimagesdisabled', 'admin');
+            throw new moodle_exception('userimagesdisabled', 'core_admin');
         }
 
         if (empty($params['userid']) or $params['userid'] == $USER->id) {
@@ -1749,7 +1749,7 @@ class core_user_external extends \core_external\external_api {
         // Load the appropriate auth plugin.
         $userauth = get_auth_plugin($user->auth);
         if (is_mnet_remote_user($user) or !$userauth->can_edit_profile() or $userauth->edit_profile_url()) {
-            throw new moodle_exception('noprofileedit', 'auth');
+            throw new moodle_exception('noprofileedit', 'core_auth');
         }
 
         $filemanageroptions = array(

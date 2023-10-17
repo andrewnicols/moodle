@@ -77,7 +77,7 @@ class encryption {
         }
 
         if (self::key_exists($method)) {
-            throw new \moodle_exception('encryption_keyalreadyexists', 'error');
+            throw new \moodle_exception('encryption_keyalreadyexists', 'mod_error');
         }
 
         // Don't make it read-only in Behat or it will fail to clear for future runs.
@@ -166,7 +166,7 @@ class encryption {
         }
         $result = @file_get_contents($keyfile);
         if ($result === false) {
-            throw new \moodle_exception('encryption_nokey', 'error');
+            throw new \moodle_exception('encryption_nokey', 'mod_error');
         }
         return $result;
     }
@@ -223,7 +223,7 @@ class encryption {
                     try {
                         $encrypted = sodium_crypto_secretbox($data, $iv, self::get_key($method));
                     } catch (\SodiumException $e) {
-                        throw new \moodle_exception('encryption_encryptfailed', 'error', '', null, $e->getMessage());
+                        throw new \moodle_exception('encryption_encryptfailed', 'mod_error', '', null, $e->getMessage());
                     }
                     break;
 
@@ -251,17 +251,17 @@ class encryption {
             if (preg_match('~^(' . self::METHOD_OPENSSL . '|' . self::METHOD_SODIUM . '):~', $data, $matches)) {
                 $method = $matches[1];
             } else {
-                throw new \moodle_exception('encryption_wrongmethod', 'error');
+                throw new \moodle_exception('encryption_wrongmethod', 'mod_error');
             }
             $realdata = base64_decode(substr($data, strlen($method) + 1), true);
             if ($realdata === false) {
-                throw new \moodle_exception('encryption_decryptfailed', 'error',
+                throw new \moodle_exception('encryption_decryptfailed', 'mod_error',
                         '', null, 'Invalid base64 data');
             }
 
             $ivlength = self::get_iv_length($method);
             if (strlen($realdata) < $ivlength + 1) {
-                throw new \moodle_exception('encryption_decryptfailed', 'error',
+                throw new \moodle_exception('encryption_decryptfailed', 'mod_error',
                         '', null, 'Insufficient data');
             }
             $iv = substr($realdata, 0, $ivlength);
@@ -272,19 +272,19 @@ class encryption {
                     try {
                         $decrypted = sodium_crypto_secretbox_open($encrypted, $iv, self::get_key($method));
                     } catch (\SodiumException $e) {
-                        throw new \moodle_exception('encryption_decryptfailed', 'error',
+                        throw new \moodle_exception('encryption_decryptfailed', 'mod_error',
                                 '', null, $e->getMessage());
                     }
                     // Sodium returns false if decryption fails because data is invalid.
                     if ($decrypted === false) {
-                        throw new \moodle_exception('encryption_decryptfailed', 'error',
+                        throw new \moodle_exception('encryption_decryptfailed', 'mod_error',
                                 '', null, 'Integrity check failed');
                     }
                     break;
 
                 case self::METHOD_OPENSSL:
                     if (strlen($encrypted) < 33) {
-                        throw new \moodle_exception('encryption_decryptfailed', 'error',
+                        throw new \moodle_exception('encryption_decryptfailed', 'mod_error',
                                 '', null, 'Insufficient data');
                     }
                     $hmac = substr($encrypted, -32);
@@ -292,7 +292,7 @@ class encryption {
                     $key = self::get_key($method);
                     $expectedhmac = hash_hmac('sha256', $iv . $encrypted, $key, true);
                     if ($hmac !== $expectedhmac) {
-                        throw new \moodle_exception('encryption_decryptfailed', 'error',
+                        throw new \moodle_exception('encryption_decryptfailed', 'mod_error',
                                 '', null, 'Integrity check failed');
                     }
 
@@ -300,7 +300,7 @@ class encryption {
 
                     $decrypted = @openssl_decrypt($encrypted, self::OPENSSL_CIPHER, $key, OPENSSL_RAW_DATA, $iv);
                     if ($decrypted === false) {
-                        throw new \moodle_exception('encryption_decryptfailed', 'error',
+                        throw new \moodle_exception('encryption_decryptfailed', 'mod_error',
                                 '', null, openssl_error_string());
                     }
                     break;

@@ -63,18 +63,18 @@ $event->add_record_snapshot('course', $course);
 $event->trigger();
 
 $PAGE->set_url('/mod/lti/index.php', array('id' => $course->id));
-$pagetitle = strip_tags($course->shortname.': '.get_string("modulenamepluralformatted", "lti"));
+$pagetitle = strip_tags($course->shortname.': '.get_string("modulenamepluralformatted", 'mod_lti'));
 $PAGE->set_title($pagetitle);
 $PAGE->set_heading($course->fullname);
 
 echo $OUTPUT->header();
 
 // Print the main part of the page.
-echo $OUTPUT->heading(get_string("modulenamepluralformatted", "lti"));
+echo $OUTPUT->heading(get_string("modulenamepluralformatted", 'mod_lti'));
 
 // Get all the appropriate data.
 if (! $basicltis = get_all_instances_in_course("lti", $course)) {
-    notice(get_string('noltis', 'lti'), "../../course/view.php?id=$course->id");
+    notice(get_string('noltis', 'mod_lti'), "../../course/view.php?id=$course->id");
     die;
 }
 

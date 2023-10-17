@@ -184,7 +184,7 @@ class repository_upload extends repository {
             // Check filetype.
             $filemimetype = file_storage::mimetype($_FILES[$elname]['tmp_name'], $record->filename);
             if (!in_array($filemimetype, $this->mimetypes)) {
-                throw new moodle_exception('invalidfiletype', 'repository', '',
+                throw new moodle_exception('invalidfiletype', 'core_repository', '',
                     get_mimetype_description(array('filename' => $_FILES[$elname]['name'])));
             }
         }
@@ -298,7 +298,7 @@ class repository_upload extends repository {
         $ret['norefresh'] = true;
         $ret['list'] = array();
         $ret['dynload'] = false;
-        $ret['upload'] = array('label' => get_string('attachment', 'repository'), 'id' => 'repo-form');
+        $ret['upload'] = array('label' => get_string('attachment', 'core_repository'), 'id' => 'repo-form');
         $ret['allowcaching'] = true; // Indicates that result of get_listing() can be cached in filepicker.js.
         return $ret;
     }

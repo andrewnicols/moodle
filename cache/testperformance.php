@@ -35,12 +35,12 @@ admin_externalpage_setup('cachetestperformance');
 
 $applicationtable = new html_table();
 $applicationtable->head = array(
-    get_string('plugin', 'cache'),
-    get_string('result', 'cache'),
-    get_string('set', 'cache'),
-    get_string('gethit', 'cache'),
-    get_string('getmiss', 'cache'),
-    get_string('delete', 'cache'),
+    get_string('plugin', 'core_cache'),
+    get_string('result', 'core_cache'),
+    get_string('set', 'core_cache'),
+    get_string('gethit', 'core_cache'),
+    get_string('getmiss', 'core_cache'),
+    get_string('delete', 'core_cache'),
 );
 $applicationtable->data = array();
 $sessiontable = clone($applicationtable);
@@ -51,11 +51,11 @@ $application = cache_definition::load_adhoc(cache_store::MODE_APPLICATION, 'cach
 $session = cache_definition::load_adhoc(cache_store::MODE_SESSION, 'cache', 'sessiontest');
 $request = cache_definition::load_adhoc(cache_store::MODE_REQUEST, 'cache', 'requesttest');
 
-$strinvalidplugin = new lang_string('invalidplugin', 'cache');
-$strunsupportedmode = new lang_string('unsupportedmode', 'cache');
-$struntestable = new lang_string('untestable', 'cache');
-$strtested = new lang_string('tested', 'cache');
-$strnotready = new lang_string('storenotready', 'cache');
+$strinvalidplugin = new lang_string('invalidplugin', 'core_cache');
+$strunsupportedmode = new lang_string('unsupportedmode', 'core_cache');
+$struntestable = new lang_string('untestable', 'core_cache');
+$strtested = new lang_string('tested', 'core_cache');
+$strnotready = new lang_string('storenotready', 'core_cache');
 
 foreach (core_component::get_plugin_list_with_file('cachestore', 'lib.php', true) as $plugin => $path) {
 
@@ -186,7 +186,7 @@ foreach (core_component::get_plugin_list_with_file('cachestore', 'lib.php', true
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('storeperformance', 'cache', $count));
+echo $OUTPUT->heading(get_string('storeperformance', 'core_cache', $count));
 
 $possiblecounts = array(1, 10, 100, 500, 1000, 5000, 10000, 50000, 100000);
 $links = array();
@@ -194,16 +194,16 @@ foreach ($possiblecounts as $pcount) {
     $links[] = html_writer::link(new moodle_url($PAGE->url, array('count' => $pcount)), $pcount);
 }
 echo $OUTPUT->box_start('generalbox performance-test-counts');
-echo get_string('requestcount', 'cache', join(', ', $links));
+echo get_string('requestcount', 'core_cache', join(', ', $links));
 echo $OUTPUT->box_end();
 
-echo $OUTPUT->heading(get_string('storeresults_application', 'cache'));
+echo $OUTPUT->heading(get_string('storeresults_application', 'core_cache'));
 echo html_writer::table($applicationtable);
 
-echo $OUTPUT->heading(get_string('storeresults_session', 'cache'));
+echo $OUTPUT->heading(get_string('storeresults_session', 'core_cache'));
 echo html_writer::table($sessiontable);
 
-echo $OUTPUT->heading(get_string('storeresults_request', 'cache'));
+echo $OUTPUT->heading(get_string('storeresults_request', 'core_cache'));
 echo html_writer::table($requesttable);
 
 echo $OUTPUT->footer();

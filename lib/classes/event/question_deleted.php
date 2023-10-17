@@ -56,7 +56,7 @@ class question_deleted extends question_base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventquestiondeleted', 'question');
+        return get_string('eventquestiondeleted', 'core_question');
     }
 
     /**

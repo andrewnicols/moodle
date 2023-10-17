@@ -362,7 +362,7 @@ class lib_test extends \advanced_testcase {
         $moddefaults->customdata = ['customcompletionrules' => ['completionentries' => 3]];
         $moddefaults->completion = 2;
 
-        $activeruledescriptions = [get_string('completionentriesdesc', 'glossary', $glossary1->completionentries)];
+        $activeruledescriptions = [get_string('completionentriesdesc', 'mod_glossary', $glossary1->completionentries)];
         $this->assertEquals(mod_glossary_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_glossary_get_completion_active_rule_descriptions($cm2), []);
         $this->assertEquals(mod_glossary_get_completion_active_rule_descriptions($moddefaults), $activeruledescriptions);
@@ -536,7 +536,7 @@ class lib_test extends \advanced_testcase {
         $this->assertFalse(mod_glossary_can_delete_entry($entry, $glossary, $context));
 
         // Test exception.
-        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'error'));
+        $this->expectExceptionMessage(get_string('nopermissiontodelentry', 'mod_error'));
         mod_glossary_can_delete_entry($entry, $glossary, $context, false);
     }
 
@@ -568,7 +568,7 @@ class lib_test extends \advanced_testcase {
 
         // Check exception.
         $entry->timecreated = time() - 2 * $CFG->maxeditingtime;
-        $this->expectExceptionMessage(get_string('errdeltimeexpired', 'glossary'));
+        $this->expectExceptionMessage(get_string('errdeltimeexpired', 'mod_glossary'));
         mod_glossary_can_delete_entry($entry, $glossary, $context, false);
     }
 
@@ -704,7 +704,7 @@ class lib_test extends \advanced_testcase {
         $this->assertFalse(mod_glossary_can_update_entry($entry, $glossary, $context, $cm));
 
         // Test exception.
-        $this->expectExceptionMessage(get_string('errcannoteditothers', 'glossary'));
+        $this->expectExceptionMessage(get_string('errcannoteditothers', 'mod_glossary'));
         mod_glossary_can_update_entry($entry, $glossary, $context, $cm, false);
     }
 
@@ -737,7 +737,7 @@ class lib_test extends \advanced_testcase {
 
         // Check exception.
         $entry->timecreated = time() - 2 * $CFG->maxeditingtime;
-        $this->expectExceptionMessage(get_string('erredittimeexpired', 'glossary'));
+        $this->expectExceptionMessage(get_string('erredittimeexpired', 'mod_glossary'));
         mod_glossary_can_update_entry($entry, $glossary, $context, $cm, false);
     }
 

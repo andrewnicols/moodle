@@ -179,7 +179,7 @@ abstract class portfolio_caller_base {
             return $this->{$field};
         }
         $a = (object)array('property' => $field, 'class' => get_class($this));
-        throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'portfolio', $this->get_return_url(), $a);
+        throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'core_portfolio', $this->get_return_url(), $a);
     }
 
     /**
@@ -198,7 +198,7 @@ abstract class portfolio_caller_base {
             return true;
         }
         $a = (object)array('property' => $field, 'class' => get_class($this));
-        throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'portfolio', $this->get_return_url(), $a);
+        throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'core_portfolio', $this->get_return_url(), $a);
     }
 
     /**
@@ -216,7 +216,7 @@ abstract class portfolio_caller_base {
         foreach ($config as $key => $value) {
             if (!in_array($key, $allowed)) {
                 $a = (object)array('property' => $key, 'class' => get_class($this));
-                throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'portfolio', $this->get_return_url(), $a);
+                throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'core_portfolio', $this->get_return_url(), $a);
             }
             $this->exportconfig[$key] = $value;
         }
@@ -236,7 +236,7 @@ abstract class portfolio_caller_base {
         );
         if (!in_array($key, $allowed)) {
             $a = (object)array('property' => $key, 'class' => get_class($this));
-            throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'portfolio', $this->get_return_url(), $a);
+            throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'core_portfolio', $this->get_return_url(), $a);
         }
         if (!array_key_exists($key, $this->exportconfig)) {
             return null;
@@ -353,7 +353,7 @@ abstract class portfolio_caller_base {
      * @return string
      */
     public function heading_summary() {
-        return get_string('exportingcontentfrom', 'portfolio', $this->display_name());
+        return get_string('exportingcontentfrom', 'core_portfolio', $this->display_name());
     }
 
     /**
@@ -558,7 +558,7 @@ abstract class portfolio_module_caller_base extends portfolio_caller_base {
      * @return string
      */
     public function heading_summary() {
-        return get_string('exportingcontentfrom', 'portfolio', $this->display_name() . ': ' . $this->cm->name);
+        return get_string('exportingcontentfrom', 'core_portfolio', $this->display_name() . ': ' . $this->cm->name);
     }
 
     /**

@@ -57,5 +57,5 @@ $info = $OUTPUT->notification(get_string($message, 'factor_iprange', ['ip' => ge
 $settings->add(new admin_setting_configiplist('factor_iprange/safeips',
     new lang_string('settings:safeips', 'factor_iprange'),
     new lang_string('settings:safeips_help', 'factor_iprange',
-            ['info' => $info, 'syntax' => get_string('ipblockersyntax', 'admin')]), '', PARAM_TEXT));
+            ['info' => $info, 'syntax' => get_string('ipblockersyntax', 'core_admin')]), '', PARAM_TEXT));
 

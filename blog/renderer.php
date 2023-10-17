@@ -75,7 +75,7 @@ class core_blog_renderer extends plugin_renderer_base {
         $by->name = html_writer::link(new moodle_url('/user/view.php', $userurlparams), $fullname);
 
         $by->date = userdate($entry->created);
-        $o .= $this->output->container(get_string('bynameondate', 'forum', $by), 'author');
+        $o .= $this->output->container(get_string('bynameondate', 'mod_forum', $by), 'author');
 
         // Adding external blog link.
         if (!empty($entry->renderable->externalblogtext)) {
@@ -95,13 +95,13 @@ class core_blog_renderer extends plugin_renderer_base {
         // Determine text for publish state.
         switch ($entry->publishstate) {
             case 'draft':
-                $blogtype = get_string('publishtonoone', 'blog');
+                $blogtype = get_string('publishtonoone', 'core_blog');
                 break;
             case 'site':
-                $blogtype = get_string('publishtosite', 'blog');
+                $blogtype = get_string('publishtosite', 'core_blog');
                 break;
             case 'public':
-                $blogtype = get_string('publishtoworld', 'blog');
+                $blogtype = get_string('publishtoworld', 'core_blog');
                 break;
             default:
                 $blogtype = '';
@@ -126,7 +126,7 @@ class core_blog_renderer extends plugin_renderer_base {
             $url = clean_param($entry->uniquehash, PARAM_URL);
             if (!empty($url)) {
                 $o .= $this->output->container_start('externalblog');
-                $o .= html_writer::link($url, get_string('linktooriginalentry', 'blog'));
+                $o .= html_writer::link($url, get_string('linktooriginalentry', 'core_blog'));
                 $o .= $this->output->container_end();
             }
         }
@@ -146,14 +146,14 @@ class core_blog_renderer extends plugin_renderer_base {
                 }
             }
             if (!empty($coursesarray)) {
-                $assocstr .= get_string('associated', 'blog', get_string('course')) . ': ' . implode(', ', $coursesarray);
+                $assocstr .= get_string('associated', 'core_blog', get_string('course')) . ': ' . implode(', ', $coursesarray);
             }
 
             // Now show mod association.
             $modulesarray = array();
             foreach ($entry->renderable->blogassociations as $assocrec) {
                 if ($assocrec->contextlevel == CONTEXT_MODULE) {
-                    $str = get_string('associated', 'blog', $assocrec->type) . ': ';
+                    $str = get_string('associated', 'core_blog', $assocrec->type) . ': ';
                     $str .= $this->output->action_icon($assocrec->url, $assocrec->icon, null, array(), true);
                     $modulesarray[] = $str;
                 }
@@ -170,7 +170,7 @@ class core_blog_renderer extends plugin_renderer_base {
         }
 
         if ($entry->renderable->unassociatedentry) {
-            $o .= $this->output->container(get_string('associationunviewable', 'blog'), 'noticebox');
+            $o .= $this->output->container(get_string('associationunviewable', 'core_blog'), 'noticebox');
         }
 
         // Commands.
@@ -189,7 +189,7 @@ class core_blog_renderer extends plugin_renderer_base {
         }
 
         $entryurl = new moodle_url('/blog/index.php', array('entryid' => $entry->id));
-        $o .= html_writer::link($entryurl, get_string('permalink', 'blog'));
+        $o .= html_writer::link($entryurl, get_string('permalink', 'core_blog'));
 
         $o .= $this->output->container_end();
 

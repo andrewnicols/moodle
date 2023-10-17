@@ -169,7 +169,7 @@ class behat_forms extends behat_base {
         try {
 
             // Expand all fields xpath.
-            $showmorexpath = "//a[normalize-space(.)='" . get_string('showmore', 'form') . "']" .
+            $showmorexpath = "//a[normalize-space(.)='" . get_string('showmore', 'core_form') . "']" .
                 "[contains(concat(' ', normalize-space(@class), ' '), ' moreless-toggler')]";
 
             // We don't wait here as we already waited when getting the expand fieldsets links.

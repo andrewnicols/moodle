@@ -72,7 +72,7 @@ class cohort_upload_form extends moodleform {
         $mform->addHelpButton('encoding', 'encoding', 'tool_uploadcourse');
 
         $options = $this->get_context_options();
-        $mform->addElement('select', 'contextid', get_string('defaultcontext', 'cohort'), $options);
+        $mform->addElement('select', 'contextid', get_string('defaultcontext', 'core_cohort'), $options);
 
         $this->add_cohort_upload_buttons(true);
         $this->set_data($data);
@@ -86,10 +86,10 @@ class cohort_upload_form extends moodleform {
 
         $buttonarray = array();
 
-        $submitlabel = get_string('uploadcohorts', 'cohort');
+        $submitlabel = get_string('uploadcohorts', 'core_cohort');
         $buttonarray[] = $mform->createElement('submit', 'submitbutton', $submitlabel);
 
-        $previewlabel = get_string('preview', 'cohort');
+        $previewlabel = get_string('preview', 'core_cohort');
         $buttonarray[] = $mform->createElement('submit', 'previewbutton', $previewlabel);
         $mform->registerNoSubmitButton('previewbutton');
 
@@ -223,7 +223,7 @@ class cohort_upload_form extends moodleform {
         $table = new html_table();
         $table->id = 'previewuploadedcohorts';
         $columns = $this->processeddata[0]['data'];
-        $columns['contextid'] = get_string('context', 'role');
+        $columns['contextid'] = get_string('context', 'core_role');
 
         // Add column names to the preview table.
         $table->head = array('');
@@ -258,7 +258,7 @@ class cohort_upload_form extends moodleform {
             $table->data[] = new html_table_row($cells);
         }
         if ($notdisplayed = count($this->processeddata) - count($previewdrows) - 1) {
-            $cell = new html_table_cell(get_string('displayedrows', 'cohort',
+            $cell = new html_table_cell(get_string('displayedrows', 'core_cohort',
                 (object)array('displayed' => count($previewdrows), 'total' => count($this->processeddata) - 1)));
             $cell->colspan = count($columns) + 2;
             $table->data[] = new html_table_row(array($cell));
@@ -339,7 +339,7 @@ class cohort_upload_form extends moodleform {
         // Read and parse the CSV file using csv library.
         $content = $file->get_content();
         if (!$content) {
-            $cohorts[0]['errors'][] = new lang_string('csvemptyfile', 'error');
+            $cohorts[0]['errors'][] = new lang_string('csvemptyfile', 'mod_error');
             return $cohorts;
         }
 
@@ -348,7 +348,7 @@ class cohort_upload_form extends moodleform {
         $readcount = $cir->load_csv_content($content, $encoding, $delimiter);
         unset($content);
         if (!$readcount) {
-            $cohorts[0]['errors'][] = get_string('csvloaderror', 'error', $cir->get_error());
+            $cohorts[0]['errors'][] = get_string('csvloaderror', 'mod_error', $cir->get_error());
             return $cohorts;
         }
         $columns = $cir->get_columns();
@@ -372,11 +372,11 @@ class cohort_upload_form extends moodleform {
             }
         }
         if (!in_array('name', $columnsmapping)) {
-            $cohorts[0]['errors'][] = new lang_string('namecolumnmissing', 'cohort');
+            $cohorts[0]['errors'][] = new lang_string('namecolumnmissing', 'core_cohort');
             return $cohorts;
         }
         if ($extracolumns) {
-            $cohorts[0]['warnings'][] = new lang_string('csvextracolumns', 'cohort', s(join(', ', $extracolumns)));
+            $cohorts[0]['warnings'][] = new lang_string('csvextracolumns', 'core_cohort', s(join(', ', $extracolumns)));
         }
 
         if (!isset($displaycolumns['contextid'])) {
@@ -410,19 +410,19 @@ class cohort_upload_form extends moodleform {
 
             if (!empty($hash['idnumber'])) {
                 if (isset($idnumbers[$hash['idnumber']]) || $DB->record_exists('cohort', array('idnumber' => $hash['idnumber']))) {
-                    $cohorts[$rownum]['errors'][] = new lang_string('duplicateidnumber', 'cohort');
+                    $cohorts[$rownum]['errors'][] = new lang_string('duplicateidnumber', 'core_cohort');
                 }
                 $idnumbers[$hash['idnumber']] = true;
             }
 
             if (empty($hash['name'])) {
-                $cohorts[$rownum]['errors'][] = new lang_string('namefieldempty', 'cohort');
+                $cohorts[$rownum]['errors'][] = new lang_string('namefieldempty', 'core_cohort');
             }
 
             if (!empty($hash['theme']) && !empty($CFG->allowcohortthemes)) {
                 $availablethemes = cohort_get_list_of_themes();
                 if (empty($availablethemes[$hash['theme']])) {
-                    $cohorts[$rownum]['errors'][] = new lang_string('invalidtheme', 'cohort');
+                    $cohorts[$rownum]['errors'][] = new lang_string('invalidtheme', 'core_cohort');
                 }
             }
 
@@ -432,11 +432,11 @@ class cohort_upload_form extends moodleform {
         }
 
         if ($haserrors) {
-            $cohorts[0]['errors'][] = new lang_string('csvcontainserrors', 'cohort');
+            $cohorts[0]['errors'][] = new lang_string('csvcontainserrors', 'core_cohort');
         }
 
         if ($haswarnings) {
-            $cohorts[0]['warnings'][] = new lang_string('csvcontainswarnings', 'cohort');
+            $cohorts[0]['warnings'][] = new lang_string('csvcontainswarnings', 'core_cohort');
         }
 
         return $cohorts;
@@ -491,7 +491,7 @@ class cohort_upload_form extends moodleform {
             // Contextid was specified, verify we can post there.
             $contextoptions = $this->get_context_options();
             if (!isset($contextoptions[$hash['contextid']])) {
-                $warnings[] = new lang_string('contextnotfound', 'cohort', $hash['contextid']);
+                $warnings[] = new lang_string('contextnotfound', 'core_cohort', $hash['contextid']);
                 $hash['contextid'] = $defaultcontext->id;
             }
             return $warnings;
@@ -506,7 +506,7 @@ class cohort_upload_form extends moodleform {
                 $hash['contextid'] = $systemcontext->id;
                 $contextoptions = $this->get_context_options();
                 if (!isset($contextoptions[$hash['contextid']])) {
-                    $warnings[] = new lang_string('contextnotfound', 'cohort', $hash['context']);
+                    $warnings[] = new lang_string('contextnotfound', 'core_cohort', $hash['context']);
                     $hash['contextid'] = $defaultcontext->id;
                 }
             } else {
@@ -519,7 +519,7 @@ class cohort_upload_form extends moodleform {
             // We already have array with available categories, look up the value.
             $contextoptions = $this->get_context_options();
             if (!$hash['contextid'] = array_search($hash['category_path'], $contextoptions)) {
-                $warnings[] = new lang_string('categorynotfound', 'cohort', s($hash['category_path']));
+                $warnings[] = new lang_string('categorynotfound', 'core_cohort', s($hash['category_path']));
                 $hash['contextid'] = $defaultcontext->id;
             }
             return $warnings;
@@ -557,7 +557,7 @@ class cohort_upload_form extends moodleform {
             if ($record && ($contextoptions = $this->get_context_options()) && isset($contextoptions[$record->contextid])) {
                 $contextid = $record->contextid;
             } else {
-                $warnings[] = new lang_string('categorynotfound', 'cohort', s($value));
+                $warnings[] = new lang_string('categorynotfound', 'core_cohort', s($value));
                 $contextid = $defaultcontext->id;
             }
             // Next time when we can look up and don't search by this value again.

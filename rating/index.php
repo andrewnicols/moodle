@@ -62,7 +62,7 @@ $params = array('contextid' => $contextid,
                 'scaleid' => $scaleid);
 if (!has_capability('moodle/rating:view', $context) ||
         !component_callback($component, 'rating_can_see_item_ratings', array($params), true)) {
-    throw new \moodle_exception('noviewrate', 'rating');
+    throw new \moodle_exception('noviewrate', 'core_rating');
 }
 
 $canviewallratings = has_capability('moodle/rating:viewall', $context);
@@ -80,11 +80,11 @@ switch ($sort) {
 
 $scalemenu = make_grades_menu($scaleid);
 
-$strrating  = get_string('rating', 'rating');
+$strrating  = get_string('rating', 'core_rating');
 $strname    = get_string('name');
 $strtime    = get_string('time');
 
-$PAGE->set_title(get_string('allratingsforitem', 'rating'));
+$PAGE->set_title(get_string('allratingsforitem', 'core_rating'));
 echo $OUTPUT->header();
 
 $ratingoptions = new stdClass;
@@ -97,7 +97,7 @@ $ratingoptions->sort = $sqlsort;
 $rm = new rating_manager();
 $ratings = $rm->get_all_ratings_for_item($ratingoptions);
 if (!$ratings) {
-    $msg = get_string('noratings', 'rating');
+    $msg = get_string('noratings', 'core_rating');
     echo html_writer::tag('div', $msg, array('class' => 'mdl-align'));
 } else {
     // To get the sort URL, copy the current URL and remove any previous sort.

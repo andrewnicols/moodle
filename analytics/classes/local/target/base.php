@@ -217,12 +217,12 @@ abstract class base extends \core_analytics\calculable {
         if ($this->based_on_assumptions()) {
             $analyserclass = $this->get_analyser_class();
             if ($analyserclass::one_sample_per_analysable()) {
-                $detailstext = get_string('viewinsightdetails', 'analytics');
+                $detailstext = get_string('viewinsightdetails', 'core_analytics');
             } else {
-                $detailstext = get_string('viewdetails', 'analytics');
+                $detailstext = get_string('viewdetails', 'core_analytics');
             }
         } else {
-            $detailstext = get_string('viewprediction', 'analytics');
+            $detailstext = get_string('viewprediction', 'core_analytics');
         }
 
         return $detailstext;
@@ -307,7 +307,7 @@ abstract class base extends \core_analytics\calculable {
      * @return string
      */
     public function get_insight_subject(int $modelid, \context $context) {
-        return get_string('insightmessagesubject', 'analytics', $context->get_context_name());
+        return get_string('insightmessagesubject', 'core_analytics', $context->get_context_name());
     }
 
     /**
@@ -325,9 +325,9 @@ abstract class base extends \core_analytics\calculable {
     public function get_insight_body(\context $context, string $contextname, \stdClass $user, \moodle_url $insighturl): array {
         global $OUTPUT;
 
-        $fullmessage = get_string('insightinfomessageplain', 'analytics', $insighturl->out(false));
+        $fullmessage = get_string('insightinfomessageplain', 'core_analytics', $insighturl->out(false));
         $fullmessagehtml = $OUTPUT->render_from_template('core_analytics/insight_info_message',
-            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('insightinfomessagehtml', 'analytics')]
+            ['url' => $insighturl->out(false), 'insightinfomessage' => get_string('insightinfomessagehtml', 'core_analytics')]
         );
 
         return [$fullmessage, $fullmessagehtml];

@@ -43,8 +43,8 @@ $PAGE->set_primary_active_tab('siteadminnode');
 $PAGE->set_secondary_active_tab('modules');
 
 // Start page output.
-$heading = get_string('gradualreindex', 'search', '');
-$PAGE->set_title($areaname . ' - ' . get_string('gradualreindex', 'search', ''));
+$heading = get_string('gradualreindex', 'core_search', '');
+$PAGE->set_title($areaname . ' - ' . get_string('gradualreindex', 'core_search', ''));
 $PAGE->navbar->add($heading);
 echo $OUTPUT->header();
 echo $OUTPUT->heading($heading);
@@ -76,12 +76,12 @@ if (optional_param('sesskey', '', PARAM_ALPHANUM)) {
     $progress->end_progress();
 
     $a = (object)['name' => html_writer::tag('strong', $areaname), 'count' => $count];
-    echo $OUTPUT->box(get_string('gradualreindex_queued', 'search', $a));
+    echo $OUTPUT->box(get_string('gradualreindex_queued', 'core_search', $a));
 
     echo $OUTPUT->continue_button(new moodle_url('/admin/searchareas.php'));
 } else {
     // Display confirmation prompt.
-    echo $OUTPUT->confirm(get_string('gradualreindex_confirm', 'search', html_writer::tag('strong', $areaname)),
+    echo $OUTPUT->confirm(get_string('gradualreindex_confirm', 'core_search', html_writer::tag('strong', $areaname)),
             new single_button(new moodle_url('/admin/searchreindex.php', ['areaid' => $areaid,
                 'sesskey' => sesskey()]), get_string('continue'), 'post', single_button::BUTTON_PRIMARY),
             new single_button(new moodle_url('/admin/searchareas.php'), get_string('cancel'), 'get'));

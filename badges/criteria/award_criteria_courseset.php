@@ -53,14 +53,14 @@ class award_criteria_courseset extends award_criteria {
         foreach ($this->params as $p) {
             $coursename = $DB->get_field('course', 'fullname', array('id' => $p['course']));
             if (!$coursename) {
-                $str = $OUTPUT->error_text(get_string('error:nosuchcourse', 'badges'));
+                $str = $OUTPUT->error_text(get_string('error:nosuchcourse', 'core_badges'));
             } else {
                 $str = html_writer::tag('b', '"' . $coursename . '"');
                 if (isset($p['bydate'])) {
-                    $str .= get_string('criteria_descr_bydate', 'badges', userdate($p['bydate'], get_string('strftimedate', 'core_langconfig')));
+                    $str .= get_string('criteria_descr_bydate', 'core_badges', userdate($p['bydate'], get_string('strftimedate', 'core_langconfig')));
                 }
                 if (isset($p['grade'])) {
-                    $str .= get_string('criteria_descr_grade', 'badges', $p['grade']);
+                    $str .= get_string('criteria_descr_grade', 'core_badges', $p['grade']);
                 }
             }
             $output[] = $str;
@@ -81,11 +81,11 @@ class award_criteria_courseset extends award_criteria {
         $hasselectablecourses = core_course_category::search_courses(['onlywithcompletion' => true], ['limit' => 1]);
         if ($hasselectablecourses) {
             $settings = array('multiple' => 'multiple', 'onlywithcompletion' => 1);
-            $mform->addElement('course', 'courses', get_string('addcourse', 'badges'), $settings);
-            $mform->addRule('courses', get_string('requiredcourse', 'badges'), 'required');
+            $mform->addElement('course', 'courses', get_string('addcourse', 'core_badges'), $settings);
+            $mform->addRule('courses', get_string('requiredcourse', 'core_badges'), 'required');
             $mform->addHelpButton('courses', 'addcourse', 'badges');
 
-            $buttonarray[] =& $mform->createElement('submit', 'submitcourse', get_string('addcourse', 'badges'));
+            $buttonarray[] =& $mform->createElement('submit', 'submitcourse', get_string('addcourse', 'core_badges'));
             $buttonarray[] =& $mform->createElement('submit', 'cancel', get_string('cancel'));
             $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
 
@@ -97,7 +97,7 @@ class award_criteria_courseset extends award_criteria {
             }
             $mform->setType('agg', PARAM_INT);
         } else {
-            $mform->addElement('static', 'nocourses', '', get_string('error:nocourses', 'badges'));
+            $mform->addElement('static', 'nocourses', '', get_string('error:nocourses', 'core_badges'));
             $buttonarray[] =& $mform->createElement('submit', 'cancel', get_string('continue'));
             $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
         }
@@ -142,7 +142,7 @@ class award_criteria_courseset extends award_criteria {
         $mform->addHelpButton('first_header', 'criteria_' . $this->criteriatype, 'badges');
 
         if ($courses = $DB->get_records('course', array('enablecompletion' => COMPLETION_ENABLED))) {
-            $mform->addElement('submit', 'addcourse', get_string('addcourse', 'badges'), array('class' => 'addcourse'));
+            $mform->addElement('submit', 'addcourse', get_string('addcourse', 'core_badges'), array('class' => 'addcourse'));
         }
 
         // In courseset, print out only the ones that were already selected.
@@ -166,16 +166,16 @@ class award_criteria_courseset extends award_criteria {
                 $none = false;
             } else {
                 $this->config_options($mform, array('id' => $p['course'], 'checked' => true,
-                        'name' => get_string('error:nosuchcourse', 'badges'), 'error' => true));
+                        'name' => get_string('error:nosuchcourse', 'core_badges'), 'error' => true));
             }
         }
 
         // Add aggregation.
         if (!$none) {
-            $mform->addElement('header', 'aggregation', get_string('method', 'badges'));
+            $mform->addElement('header', 'aggregation', get_string('method', 'core_badges'));
             $agg = array();
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodcourseset', 'badges'), 1);
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodcourseset', 'badges'), 2);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodcourseset', 'core_badges'), 1);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodcourseset', 'core_badges'), 2);
             $mform->addGroup($agg, 'methodgr', '', array('<br/>'), false);
             if ($this->id !== 0) {
                 $mform->setDefault('agg', $this->method);
@@ -184,7 +184,7 @@ class award_criteria_courseset extends award_criteria {
             }
         }
 
-        return array($none, get_string('noparamstoadd', 'badges'));
+        return array($none, get_string('noparamstoadd', 'core_badges'));
     }
 
     /**

@@ -158,15 +158,15 @@ if ($data = $form->get_data()) {
     redirect($redirect);
 }
 
-$PAGE->set_title(get_string('toolsetup', 'lti'));
+$PAGE->set_title(get_string('toolsetup', 'mod_lti'));
 $PAGE->set_primary_active_tab('siteadminnode');
 $PAGE->set_secondary_active_tab('ltitoolconfigure');
-$PAGE->navbar->add(get_string('manage_external_tools', 'lti'), new moodle_url('/mod/lti/toolconfigure.php'));
-$PAGE->navbar->add(get_string('toolsetup', 'lti'), $PAGE->url);
+$PAGE->navbar->add(get_string('manage_external_tools', 'mod_lti'), new moodle_url('/mod/lti/toolconfigure.php'));
+$PAGE->navbar->add(get_string('toolsetup', 'mod_lti'), $PAGE->url);
 $PAGE->requires->js_call_amd('mod_lti/coursecategory', 'init', [$type->lti_coursecategories]);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('toolsetup', 'lti'));
+echo $OUTPUT->heading(get_string('toolsetup', 'mod_lti'));
 echo $OUTPUT->box_start('generalbox');
 
 if ($action == 'update') {

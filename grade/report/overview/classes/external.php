@@ -203,7 +203,7 @@ class gradereport_overview_external extends external_api {
         $access = grade_report_overview::check_access($systemcontext, $context, $personalcontext, $course, $userid);
 
         if (!$access) {
-            throw new moodle_exception('nopermissiontoviewgrades', 'error');
+            throw new moodle_exception('nopermissiontoviewgrades', 'mod_error');
         }
 
         grade_report_overview::viewed($context, $course->id, $userid);

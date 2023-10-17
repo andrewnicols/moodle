@@ -177,10 +177,10 @@ class provider_test extends provider_testcase {
         $approvedcontextlist = new approved_contextlist($user, 'core_role', $contextlist->get_contextids());
 
         $strpermissions = array(
-            CAP_INHERIT => get_string('inherit', 'role'),
-            CAP_ALLOW => get_string('allow', 'role'),
-            CAP_PREVENT => get_string('prevent', 'role'),
-            CAP_PROHIBIT => get_string('prohibit', 'role')
+            CAP_INHERIT => get_string('inherit', 'core_role'),
+            CAP_ALLOW => get_string('allow', 'core_role'),
+            CAP_PREVENT => get_string('prevent', 'core_role'),
+            CAP_PROHIBIT => get_string('prohibit', 'core_role')
         );
         // Retrieve role capabilities and role assignments.
         provider::export_user_data($approvedcontextlist);

@@ -27,7 +27,7 @@
 require_once(__DIR__ . '/../config.php');
 
 if (empty($CFG->enableportfolios)) {
-    throw new \moodle_exception('disabled', 'portfolio');
+    throw new \moodle_exception('disabled', 'core_portfolio');
 }
 
 require_once($CFG->libdir . '/portfoliolib.php');
@@ -45,12 +45,12 @@ $exporter->verify_rewaken();
 
 // push plugins don't need to access this script.
 if ($exporter->get('instance')->is_push()) {
-    throw new portfolio_export_exception($exporter, 'filedenied', 'portfolio');
+    throw new portfolio_export_exception($exporter, 'filedenied', 'core_portfolio');
 }
 
 // it's up to the plugin to verify the request parameters, like a token or whatever
 if (!$exporter->get('instance')->verify_file_request_params(array_merge($_GET, $_POST))) {
-    throw new portfolio_export_exception($exporter, 'filedenied', 'portfolio');
+    throw new portfolio_export_exception($exporter, 'filedenied', 'core_portfolio');
 }
 
 // ok, we're good, send the file and finish the export.

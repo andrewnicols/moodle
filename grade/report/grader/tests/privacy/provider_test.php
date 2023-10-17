@@ -82,7 +82,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assertTrue($writer->has_any_data());
         $prefs = $writer->get_user_preferences('gradereport_grader');
         $this->assertCount(2, (array) $prefs);
-        $this->assertEquals(get_string('meangraded', 'grades'), $prefs->grade_report_meanselection->value);
+        $this->assertEquals(get_string('meangraded', 'core_grades'), $prefs->grade_report_meanselection->value);
         $this->assertEquals(50, $prefs->grade_report_studentsperpage->value);
     }
 

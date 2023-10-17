@@ -134,13 +134,13 @@ class week_day_exporter extends day_exporter {
 
         $userdate = userdate($this->data[0], get_string('strftimedayshort'));
         if (count($this->related['events'])) {
-            $title = get_string('eventsfor', 'calendar', $userdate);
+            $title = get_string('eventsfor', 'core_calendar', $userdate);
         } else if ($this->data['istoday']) {
             $title = $userdate;
         }
 
         if ($this->data['istoday']) {
-            $title = get_string('todayplustitle', 'calendar', $userdate);
+            $title = get_string('todayplustitle', 'core_calendar', $userdate);
         }
 
         return $title;
@@ -156,11 +156,11 @@ class week_day_exporter extends day_exporter {
 
         $numevents = count($this->related['events']);
         if ($numevents == 1) {
-            $title = get_string('dayeventsone', 'calendar', $userdate);
+            $title = get_string('dayeventsone', 'core_calendar', $userdate);
         } else if ($numevents) {
-            $title = get_string('dayeventsmany', 'calendar', ['num' => $numevents, 'day' => $userdate]);
+            $title = get_string('dayeventsmany', 'core_calendar', ['num' => $numevents, 'day' => $userdate]);
         } else {
-            $title = get_string('dayeventsnone', 'calendar', $userdate);
+            $title = get_string('dayeventsnone', 'core_calendar', $userdate);
         }
 
         return $title;

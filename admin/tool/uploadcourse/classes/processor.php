@@ -382,9 +382,9 @@ class tool_uploadcourse_processor {
      */
     protected function validate() {
         if (empty($this->columns)) {
-            throw new moodle_exception('cannotreadtmpfile', 'error');
+            throw new moodle_exception('cannotreadtmpfile', 'mod_error');
         } else if (count($this->columns) < 2) {
-            throw new moodle_exception('csvfewcolumns', 'error');
+            throw new moodle_exception('csvfewcolumns', 'mod_error');
         }
     }
 }

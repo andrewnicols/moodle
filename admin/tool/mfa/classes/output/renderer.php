@@ -449,7 +449,7 @@ class renderer extends \plugin_renderer_base {
         $table->attributes['class'] = 'generaltable table table-bordered w-auto';
         $table->attributes['style'] = 'width: auto; min-width: 50%';
         $table->head = [
-            'userid' => get_string('userid', 'grades'),
+            'userid' => get_string('userid', 'core_grades'),
             'fullname' => get_string('fullname'),
             'factorip' => get_string('ipatcreation', 'tool_mfa'),
             'lastip' => get_string('lastip'),

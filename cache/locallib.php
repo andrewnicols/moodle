@@ -74,11 +74,11 @@ class cache_config_writer extends cache_config {
         if ($directory !== $CFG->dataroot && !file_exists($directory)) {
             $result = make_writable_directory($directory, false);
             if (!$result) {
-                throw new cache_exception('ex_configcannotsave', 'cache', '', null, 'Cannot create config directory. Check the permissions on your moodledata directory.');
+                throw new cache_exception('ex_configcannotsave', 'core_cache', '', null, 'Cannot create config directory. Check the permissions on your moodledata directory.');
             }
         }
         if (!file_exists($directory) || !is_writable($directory)) {
-            throw new cache_exception('ex_configcannotsave', 'cache', '', null, 'Config directory is not writable. Check the permissions on the moodledata/muc directory.');
+            throw new cache_exception('ex_configcannotsave', 'core_cache', '', null, 'Config directory is not writable. Check the permissions on the moodledata/muc directory.');
         }
 
         // Prepare a configuration array to store.
@@ -124,7 +124,7 @@ class cache_config_writer extends cache_config {
             // Tell PHP to recompile the script.
             core_component::invalidate_opcode_php_cache($cachefile);
         } else {
-            throw new cache_exception('ex_configcannotsave', 'cache', '', null, 'Unable to open the cache config file.');
+            throw new cache_exception('ex_configcannotsave', 'core_cache', '', null, 'Unable to open the cache config file.');
         }
     }
 

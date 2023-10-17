@@ -84,7 +84,7 @@ $stractivity       = get_string('activity');
 $strlast           = get_string('lastaccess');
 $strreports        = get_string('reports');
 $strviews          = get_string('views');
-$strrelatedblogentries = get_string('relatedblogentries', 'blog');
+$strrelatedblogentries = get_string('relatedblogentries', 'core_blog');
 
 $PAGE->set_title($course->shortname .': '. $stractivityreport);
 $PAGE->set_heading($course->fullname);
@@ -121,7 +121,7 @@ if ($useinternalreader) {
 
 $filterform->display();
 
-echo $OUTPUT->container(get_string('computedfromlogs', 'admin', userdate($minlog)), 'loginfo');
+echo $OUTPUT->container(get_string('computedfromlogs', 'core_admin', userdate($minlog)), 'loginfo');
 
 $outlinetable = new html_table();
 $outlinetable->attributes['class'] = 'generaltable boxaligncenter';

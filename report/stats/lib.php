@@ -109,8 +109,8 @@ function report_stats_can_access_user_report($user, $course) {
  */
 function report_stats_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $array = array(
-        '*'                  => get_string('page-x', 'pagetype'),
-        'report-*'           => get_string('page-report-x', 'pagetype'),
+        '*'                  => get_string('page-x', 'mod_pagetype'),
+        'report-*'           => get_string('page-report-x', 'mod_pagetype'),
         'report-stats-*'     => get_string('page-report-stats-x',  'report_stats'),
         'report-stats-index' => get_string('page-report-stats-index',  'report_stats'),
         'report-stats-user'  => get_string('page-report-stats-user',  'report_stats')

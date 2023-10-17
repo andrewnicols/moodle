@@ -508,9 +508,9 @@ class mnetservice_enrol_existing_users_selector extends user_selector_base {
         }
 
         if ($search) {
-            $groupname = get_string('enrolledusersmatching', 'enrol', $search);
+            $groupname = get_string('enrolledusersmatching', 'core_enrol', $search);
         } else {
-            $groupname = get_string('enrolledusers', 'enrol');
+            $groupname = get_string('enrolledusers', 'core_enrol');
         }
 
         return array($groupname => $availableusers);
@@ -596,9 +596,9 @@ class mnetservice_enrol_potential_users_selector extends user_selector_base {
         }
 
         if ($search) {
-            $groupname = get_string('enrolcandidatesmatching', 'enrol', $search);
+            $groupname = get_string('enrolcandidatesmatching', 'core_enrol', $search);
         } else {
-            $groupname = get_string('enrolcandidates', 'enrol');
+            $groupname = get_string('enrolcandidates', 'core_enrol');
         }
 
         return array($groupname => $availableusers);

@@ -111,7 +111,7 @@ class MoodleQuickForm_tags extends MoodleQuickForm_autocomplete {
             // Option 'tags' allows us to type new tags.
             $attributes['tags'] = ($showstandard != core_tag_tag::STANDARD_ONLY);
             $attributes['multiple'] = 'multiple';
-            $attributes['placeholder'] = get_string('entertags', 'tag');
+            $attributes['placeholder'] = get_string('entertags', 'core_tag');
             $attributes['showsuggestions'] = $this->showstandard;
         }
 
@@ -199,7 +199,7 @@ class MoodleQuickForm_tags extends MoodleQuickForm_autocomplete {
         $managelink = '';
         if (has_capability('moodle/tag:manage', context_system::instance()) && $this->showstandard) {
             $url = new moodle_url('/tag/manage.php', array('tc' => $this->get_tag_collection()));
-            $managelink = ' ' . $OUTPUT->action_link($url, get_string('managestandardtags', 'tag'));
+            $managelink = ' ' . $OUTPUT->action_link($url, get_string('managestandardtags', 'core_tag'));
         }
 
         return parent::toHTML() . $managelink;

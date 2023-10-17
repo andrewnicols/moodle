@@ -61,21 +61,21 @@ class behat_backup extends behat_base {
 
         // Initial settings.
         $this->fill_backup_restore_form($this->get_step_options($options, "Initial"));
-        $this->execute("behat_forms::press_button", get_string('backupstage1action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('backupstage1action', 'core_backup'));
 
         // Schema settings.
         $this->fill_backup_restore_form($this->get_step_options($options, "Schema"));
-        $this->execute("behat_forms::press_button", get_string('backupstage2action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('backupstage2action', 'core_backup'));
 
         // Confirmation and review, backup filename can also be specified.
         $this->fill_backup_restore_form($this->get_step_options($options, "Confirmation"));
-        $this->execute("behat_forms::press_button", get_string('backupstage4action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('backupstage4action', 'core_backup'));
 
         // Waiting for it to finish.
         $this->execute("behat_general::wait_until_the_page_is_ready");
 
         // Last backup continue button.
-        $this->execute("behat_general::i_click_on", array(get_string('backupstage16action', 'backup'), 'button'));
+        $this->execute("behat_general::i_click_on", array(get_string('backupstage16action', 'core_backup'), 'button'));
     }
 
     /**
@@ -95,13 +95,13 @@ class behat_backup extends behat_base {
         $this->execute("behat_navigation::i_am_on_page_instance", [$backupcourse, 'backup']);
 
         // Initial settings.
-        $this->execute("behat_forms::press_button", get_string('jumptofinalstep', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('jumptofinalstep', 'core_backup'));
 
         // Waiting for it to finish.
         $this->execute("behat_general::wait_until_the_page_is_ready");
 
         // Last backup continue button.
-        $this->execute("behat_general::i_click_on", array(get_string('backupstage16action', 'backup'), 'button'));
+        $this->execute("behat_general::i_click_on", array(get_string('backupstage16action', 'core_backup'), 'button'));
     }
 
     /**
@@ -135,14 +135,14 @@ class behat_backup extends behat_base {
 
         // Initial settings.
         $this->fill_backup_restore_form($this->get_step_options($options, "Initial"));
-        $this->execute("behat_forms::press_button", get_string('importbackupstage1action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('importbackupstage1action', 'core_backup'));
 
         // Schema settings.
         $this->fill_backup_restore_form($this->get_step_options($options, "Schema"));
-        $this->execute("behat_forms::press_button", get_string('importbackupstage2action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('importbackupstage2action', 'core_backup'));
 
         // Run it.
-        $this->execute("behat_forms::press_button", get_string('importbackupstage4action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('importbackupstage4action', 'core_backup'));
 
         // Wait to ensure restore is complete.
         $this->execute("behat_general::wait_until_the_page_is_ready");
@@ -307,20 +307,20 @@ class behat_backup extends behat_base {
 
         // Settings.
         $this->fill_backup_restore_form($this->get_step_options($options, "Settings"));
-        $this->execute("behat_forms::press_button", get_string('restorestage4action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('restorestage4action', 'core_backup'));
 
         // Schema.
         $this->fill_backup_restore_form($this->get_step_options($options, "Schema"));
-        $this->execute("behat_forms::press_button", get_string('restorestage8action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('restorestage8action', 'core_backup'));
 
         // Review, no options here.
-        $this->execute("behat_forms::press_button", get_string('restorestage16action', 'backup'));
+        $this->execute("behat_forms::press_button", get_string('restorestage16action', 'core_backup'));
 
         // Wait till the final button is visible.
         $this->execute("behat_general::wait_until_the_page_is_ready");
 
         // Last restore continue button, redirected to restore course after this.
-        $this->execute("behat_general::i_click_on", array(get_string('restorestage32action', 'backup'), 'button'));
+        $this->execute("behat_general::i_click_on", array(get_string('restorestage32action', 'core_backup'), 'button'));
     }
 
     /**

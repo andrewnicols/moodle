@@ -99,7 +99,7 @@ class user_competency_plan extends persistent {
         global $DB;
 
         if (!$DB->record_exists('user', array('id' => $value))) {
-            return new lang_string('invaliduserid', 'error');
+            return new lang_string('invaliduserid', 'mod_error');
         }
 
         return true;

@@ -42,7 +42,7 @@ class cohortmember extends base {
      */
     public function get_config_form(MoodleQuickForm $mform): void {
         $cohorts = self::get_cohorts();
-        $mform->addElement('autocomplete', 'cohorts', get_string('selectfromcohort', 'cohort'),
+        $mform->addElement('autocomplete', 'cohorts', get_string('selectfromcohort', 'core_cohort'),
             $cohorts, ['multiple' => true]);
         $mform->addRule('cohorts', null, 'required', null, 'client');
     }
@@ -73,7 +73,7 @@ class cohortmember extends base {
      * @return string
      */
     public function get_name(): string {
-        return get_string('memberofcohort', 'cohort');
+        return get_string('memberofcohort', 'core_cohort');
     }
 
     /**

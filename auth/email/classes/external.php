@@ -59,7 +59,7 @@ class auth_email_external extends external_api {
         global $CFG;
 
         if (empty($CFG->registerauth) or $CFG->registerauth != 'email') {
-            throw new moodle_exception('registrationdisabled', 'error');
+            throw new moodle_exception('registrationdisabled', 'mod_error');
         }
     }
 

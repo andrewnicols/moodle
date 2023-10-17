@@ -50,7 +50,7 @@ echo $OUTPUT->box_start('generalbox boxwidthwide boxaligncenter centerpara');
 echo '<form method="get" action="." id="settingsform"><div>';
 echo $OUTPUT->heading(get_string('reportsettings', 'report_questioninstances'));
 echo '<p id="intro">', get_string('intro', 'report_questioninstances') , '</p>';
-echo '<p><label for="menuqtype"> ' . get_string('questiontype', 'admin') . '</label> ';
+echo '<p><label for="menuqtype"> ' . get_string('questiontype', 'core_admin') . '</label> ';
 echo html_writer::select($qtypechoices, 'qtype', $requestedqtype, array('_all_'=>get_string('all')));
 echo '</p>';
 echo '<p><input type="submit" class="btn btn-secondary" id="settingssubmit" value="' .
@@ -120,7 +120,7 @@ if ($requestedqtype) {
     // Initialise the table.
     $table = new html_table();
     $table->head = array(
-            get_string('context', 'role'),
+            get_string('context', 'core_role'),
             get_string('totalquestions', 'report_questioninstances'),
             get_string('visiblequestions', 'report_questioninstances'),
             get_string('hiddenquestions', 'report_questioninstances'));

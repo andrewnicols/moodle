@@ -84,10 +84,10 @@ class award_criteria_profile extends award_criteria {
         }
 
         if (!empty($missing)) {
-            $mform->addElement('header', 'category_errors', get_string('criterror', 'badges'));
+            $mform->addElement('header', 'category_errors', get_string('criterror', 'core_badges'));
             $mform->addHelpButton('category_errors', 'criterror', 'badges');
             foreach ($missing as $m) {
-                $this->config_options($mform, array('id' => $m, 'checked' => true, 'name' => get_string('error:nosuchfield', 'badges'), 'error' => true));
+                $this->config_options($mform, array('id' => $m, 'checked' => true, 'name' => get_string('error:nosuchfield', 'core_badges'), 'error' => true));
                 $none = false;
             }
         }
@@ -125,11 +125,11 @@ class award_criteria_profile extends award_criteria {
 
         // Add aggregation.
         if (!$none) {
-            $mform->addElement('header', 'aggregation', get_string('method', 'badges'));
+            $mform->addElement('header', 'aggregation', get_string('method', 'core_badges'));
             $agg = array();
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodprofile', 'badges'), 1);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodprofile', 'core_badges'), 1);
             $agg[] =& $mform->createElement('static', 'none_break', null, '<br/>');
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodprofile', 'badges'), 2);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodprofile', 'core_badges'), 2);
             $mform->addGroup($agg, 'methodgr', '', array(' '), false);
             if ($this->id !== 0) {
                 $mform->setDefault('agg', $this->method);
@@ -138,7 +138,7 @@ class award_criteria_profile extends award_criteria {
             }
         }
 
-        return array($none, get_string('noparamstoadd', 'badges'));
+        return array($none, get_string('noparamstoadd', 'core_badges'));
     }
 
     /**
@@ -161,7 +161,7 @@ class award_criteria_profile extends award_criteria {
                 $str = \core_user\fields::get_display_name($p['field']);
             }
             if (!$str) {
-                $output[] = $OUTPUT->error_text(get_string('error:nosuchfield', 'badges'));
+                $output[] = $OUTPUT->error_text(get_string('error:nosuchfield', 'core_badges'));
             } else {
                 $output[] = $str;
             }

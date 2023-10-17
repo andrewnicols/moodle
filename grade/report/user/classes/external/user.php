@@ -104,7 +104,7 @@ class user extends external_api {
         }
 
         if (!$access) {
-            throw new moodle_exception('nopermissiontoviewgrades', 'error');
+            throw new moodle_exception('nopermissiontoviewgrades', 'mod_error');
         }
 
         if (!empty($groupid)) {
@@ -413,7 +413,7 @@ class user extends external_api {
         }
 
         if (!$access) {
-            throw new moodle_exception('nopermissiontoviewgrades', 'error');
+            throw new moodle_exception('nopermissiontoviewgrades', 'mod_error');
         }
 
         // Create a report instance. We don't need the gpr second parameter.

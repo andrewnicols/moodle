@@ -39,7 +39,7 @@ if ($data = data_submitted() and confirm_sesskey() and isset($data->action) and 
     require_capability('moodle/site:config', $context);
     $count = admin_write_settings($data);
     if (!empty($adminroot->errors)) {
-        $errormsg = get_string('errorwithsettings', 'admin');
+        $errormsg = get_string('errorwithsettings', 'core_admin');
         $firsterror = reset($adminroot->errors);
         $focus = $firsterror->id;
     } else {

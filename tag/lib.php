@@ -36,10 +36,10 @@ use core_external\external_api;
  */
 function tag_page_type_list($pagetype, $parentcontext, $currentcontext) {
     return array(
-        'tag-*'=>get_string('page-tag-x', 'tag'),
-        'tag-index'=>get_string('page-tag-index', 'tag'),
-        'tag-search'=>get_string('page-tag-search', 'tag'),
-        'tag-manage'=>get_string('page-tag-manage', 'tag')
+        'tag-*'=>get_string('page-tag-x', 'core_tag'),
+        'tag-index'=>get_string('page-tag-index', 'core_tag'),
+        'tag-search'=>get_string('page-tag-search', 'core_tag'),
+        'tag-manage'=>get_string('page-tag-manage', 'core_tag')
     );
 }
 

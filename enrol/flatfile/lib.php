@@ -439,7 +439,7 @@ class enrol_flatfile_plugin extends enrol_plugin {
                 $a = new stdClass();
                 $a->coursename = format_string($course->fullname, true, array('context' => $context));
                 $a->profileurl = "$CFG->wwwroot/user/view.php?id=$user->id&amp;course=$course->id";
-                $subject = get_string('enrolmentnew', 'enrol', format_string($course->shortname, true, array('context' => $context)));
+                $subject = get_string('enrolmentnew', 'core_enrol', format_string($course->shortname, true, array('context' => $context)));
 
                 $eventdata = new \core\message\message();
                 $eventdata->courseid          = $course->id;
@@ -471,7 +471,7 @@ class enrol_flatfile_plugin extends enrol_plugin {
                 $a = new stdClass();
                 $a->course = format_string($course->fullname, true, array('context' => $context));
                 $a->user = fullname($user);
-                $subject = get_string('enrolmentnew', 'enrol', format_string($course->shortname, true, array('context' => $context)));
+                $subject = get_string('enrolmentnew', 'core_enrol', format_string($course->shortname, true, array('context' => $context)));
 
                 $eventdata = new \core\message\message();
                 $eventdata->courseid          = $course->id;
@@ -481,7 +481,7 @@ class enrol_flatfile_plugin extends enrol_plugin {
                 $eventdata->userfrom          = get_admin();
                 $eventdata->userto            = $enroller;
                 $eventdata->subject           = $subject;
-                $eventdata->fullmessage       = get_string('enrolmentnewuser', 'enrol', $a);
+                $eventdata->fullmessage       = get_string('enrolmentnewuser', 'core_enrol', $a);
                 $eventdata->fullmessageformat = FORMAT_PLAIN;
                 $eventdata->fullmessagehtml   = '';
                 $eventdata->smallmessage      = '';

@@ -251,7 +251,7 @@ if (!$manager->has_fields()) {
 
 // Detect entries not approved yet and show hint instead of not found error.
 if ($record and !data_can_view_record($data, $record, $currentgroup, $canmanageentries)) {
-    throw new \moodle_exception('notapprovederror', 'data');
+    throw new \moodle_exception('notapprovederror', 'mod_data');
 }
 
 // Do we need to show a link to the RSS feed for the records?
@@ -273,7 +273,7 @@ if ($data->intro and empty($page) and empty($record) and $mode != 'single') {
 if ($delete && confirm_sesskey() && (data_user_can_manage_entry($delete, $data, $context))) {
     if ($confirm = optional_param('confirm',0,PARAM_INT)) {
         if (data_delete_record($delete, $data, $course->id, $cm->id)) {
-            echo $OUTPUT->notification(get_string('recorddeleted','data'), 'notifysuccess');
+            echo $OUTPUT->notification(get_string('recorddeleted','mod_data'), 'notifysuccess');
         }
     } else {   // Print a confirmation page
         $userfieldsapi = \core_user\fields::for_userpic()->excluding('id');
@@ -290,7 +290,7 @@ if ($delete && confirm_sesskey() && (data_user_can_manage_entry($delete, $data, 
                     get_string('delete'), 'post',
                     single_button::BUTTON_DANGER
                 );
-                echo $OUTPUT->confirm(get_string('confirmdeleterecord','data'),
+                echo $OUTPUT->confirm(get_string('confirmdeleterecord','mod_data'),
                         $deletebutton, 'view.php?d='.$data->id);
 
                 $records[] = $deleterecord;
@@ -337,7 +337,7 @@ if ($multidelete && confirm_sesskey() && $canmanageentries) {
         $action = new moodle_url('/mod/data/view.php', $submitactions);
         $cancelurl = new moodle_url('/mod/data/view.php', array('d' => $data->id));
         $deletebutton = new single_button($action, get_string('delete'), 'post', single_button::BUTTON_DANGER);
-        echo $OUTPUT->confirm(get_string('confirmdeleterecords', 'data'), $deletebutton, $cancelurl);
+        echo $OUTPUT->confirm(get_string('confirmdeleterecords', 'mod_data'), $deletebutton, $cancelurl);
         $parser = $manager->get_template('listtemplate');
         echo $parser->parse_entries($validrecords);
         echo $OUTPUT->footer();
@@ -366,7 +366,7 @@ if ($showactivity) {
                 if ($approverecord->dataid == $data->id) {                       // Must be from this database
                     data_approve_entry($approverecord->id, $newapproved);
                     $msgkey = $newapproved ? 'recordapproved' : 'recorddisapproved';
-                    echo $OUTPUT->notification(get_string($msgkey, 'data'), 'notifysuccess');
+                    echo $OUTPUT->notification(get_string($msgkey, 'mod_data'), 'notifysuccess');
                 }
             }
         }
@@ -374,14 +374,14 @@ if ($showactivity) {
         $numentries = data_numentries($data);
     /// Check the number of entries required against the number of entries already made (doesn't apply to teachers)
         if ($data->entriesleft = data_get_entries_left_to_add($data, $numentries, $canmanageentries)) {
-            $strentrieslefttoadd = get_string('entrieslefttoadd', 'data', $data);
+            $strentrieslefttoadd = get_string('entrieslefttoadd', 'mod_data', $data);
             echo $OUTPUT->notification($strentrieslefttoadd);
         }
 
     /// Check the number of entries required before to view other participant's entries against the number of entries already made (doesn't apply to teachers)
         $requiredentries_allowed = true;
         if ($data->entrieslefttoview = data_get_entries_left_to_view($data, $numentries, $canmanageentries)) {
-            $strentrieslefttoaddtoview = get_string('entrieslefttoaddtoview', 'data', $data);
+            $strentrieslefttoaddtoview = get_string('entrieslefttoaddtoview', 'mod_data', $data);
             echo $OUTPUT->notification($strentrieslefttoaddtoview);
             $requiredentries_allowed = false;
         }
@@ -419,11 +419,11 @@ if ($showactivity) {
                 $a->max = $maxcount;
                 $a->reseturl = "view.php?id=$cm->id&amp;mode=$mode&amp;search=&amp;advanced=0";
                 echo $OUTPUT->box_start();
-                echo get_string('foundnorecords', 'data', $a);
+                echo get_string('foundnorecords', 'mod_data', $a);
                 echo $OUTPUT->box_end();
             } else {
                 echo $OUTPUT->box_start();
-                echo get_string('norecords', 'data');
+                echo get_string('norecords', 'mod_data');
                 echo $OUTPUT->box_end();
             }
 
@@ -438,7 +438,7 @@ if ($showactivity) {
                 $a->max = $maxcount;
                 $a->reseturl = "view.php?id=$cm->id&amp;mode=$mode&amp;search=&amp;advanced=0";
                 echo $OUTPUT->box_start();
-                echo get_string('foundrecords', 'data', $a);
+                echo get_string('foundrecords', 'mod_data', $a);
                 echo $OUTPUT->box_end();
             }
 

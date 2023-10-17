@@ -110,14 +110,14 @@ class award_criteria_competency extends award_criteria {
             }
         }
         $mform->getElement('competency_competencies')->setValue($competencies);
-        $mform->addRule('competency_competencies', get_string('requiredcompetency', 'badges'), 'required');
+        $mform->addRule('competency_competencies', get_string('requiredcompetency', 'core_badges'), 'required');
 
         // Add aggregation.
         if (!$none) {
-            $mform->addElement('header', 'aggregation', get_string('method', 'badges'));
+            $mform->addElement('header', 'aggregation', get_string('method', 'core_badges'));
             $agg = array();
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodcompetencies', 'badges'), 1);
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodcompetencies', 'badges'), 2);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodcompetencies', 'core_badges'), 1);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodcompetencies', 'core_badges'), 2);
             $mform->addGroup($agg, 'methodgr', '', array('<br/>'), false);
             if ($this->id !== 0) {
                 $mform->setDefault('agg', $this->method);
@@ -126,7 +126,7 @@ class award_criteria_competency extends award_criteria {
             }
         }
 
-        return array($none, get_string('noparamstoadd', 'badges'));
+        return array($none, get_string('noparamstoadd', 'core_badges'));
     }
 
     /**

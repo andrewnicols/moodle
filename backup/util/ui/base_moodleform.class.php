@@ -128,10 +128,10 @@ abstract class base_moodleform extends moodleform {
     public function definition_after_data() {
         $buttonarray = array();
         if (!$this->uistage->is_first_stage()) {
-            $buttonarray[] = $this->_form->createElement('submit', 'previous', get_string('previousstage', 'backup'));
+            $buttonarray[] = $this->_form->createElement('submit', 'previous', get_string('previousstage', 'core_backup'));
         } else if ($this->uistage instanceof backup_ui_stage) {
             // Only display the button on the first stage of backup, they only place where it has an effect.
-            $buttonarray[] = $this->_form->createElement('submit', 'oneclickbackup', get_string('jumptofinalstep', 'backup'),
+            $buttonarray[] = $this->_form->createElement('submit', 'oneclickbackup', get_string('jumptofinalstep', 'core_backup'),
                 array('class' => 'oneclickbackup'));
         }
 
@@ -167,7 +167,7 @@ abstract class base_moodleform extends moodleform {
         $buttonarray[] = $this->_form->createElement(
             'submit',
             'submitbutton',
-            get_string($this->uistage->get_ui()->get_name().'stage'.$this->uistage->get_stage().'action', 'backup'),
+            get_string($this->uistage->get_ui()->get_name().'stage'.$this->uistage->get_stage().'action', 'core_backup'),
             array('class' => 'proceedbutton')
         );
         $this->_form->addGroup($buttonarray, 'buttonar', '', array(' '), false);
@@ -328,15 +328,15 @@ abstract class base_moodleform extends moodleform {
             $this->add_html_formatting($setting);
             switch ($setting->get_status()) {
                 case backup_setting::LOCKED_BY_PERMISSION:
-                    $icon = ' '.$OUTPUT->pix_icon('i/permissionlock', get_string('lockedbypermission', 'backup'), 'moodle',
+                    $icon = ' '.$OUTPUT->pix_icon('i/permissionlock', get_string('lockedbypermission', 'core_backup'), 'moodle',
                             array('class' => 'smallicon lockedicon permissionlock'));
                     break;
                 case backup_setting::LOCKED_BY_CONFIG:
-                    $icon = ' '.$OUTPUT->pix_icon('i/configlock', get_string('lockedbyconfig', 'backup'), 'moodle',
+                    $icon = ' '.$OUTPUT->pix_icon('i/configlock', get_string('lockedbyconfig', 'core_backup'), 'moodle',
                             array('class' => 'smallicon lockedicon configlock'));
                     break;
                 case backup_setting::LOCKED_BY_HIERARCHY:
-                    $icon = ' '.$OUTPUT->pix_icon('i/hierarchylock', get_string('lockedbyhierarchy', 'backup'), 'moodle',
+                    $icon = ' '.$OUTPUT->pix_icon('i/hierarchylock', get_string('lockedbyhierarchy', 'core_backup'), 'moodle',
                             array('class' => 'smallicon lockedicon configlock'));
                     break;
                 default:

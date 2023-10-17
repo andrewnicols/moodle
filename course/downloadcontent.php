@@ -80,15 +80,15 @@ if ($isdownload) {
     }
 
 } else {
-    $PAGE->set_title(get_string('downloadcoursecontent', 'course'));
+    $PAGE->set_title(get_string('downloadcoursecontent', 'core_course'));
     $PAGE->set_heading(format_string($courseinfo->fullname));
 
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('downloadcoursecontent', 'course'));
+    echo $OUTPUT->heading(get_string('downloadcoursecontent', 'core_course'));
 
     // Prepare download confirmation information and display it.
     $maxfilesize = display_size($CFG->maxsizeperdownloadcoursefile, 0);
     $downloadlink = new moodle_url('/course/downloadcontent.php', ['contextid' => $contextid, 'download' => 1]);
 
-    echo $OUTPUT->confirm(get_string('downloadcourseconfirmation', 'course', $maxfilesize), $downloadlink, $courselink);
+    echo $OUTPUT->confirm(get_string('downloadcourseconfirmation', 'core_course', $maxfilesize), $downloadlink, $courselink);
 }

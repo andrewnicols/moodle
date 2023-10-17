@@ -183,7 +183,7 @@ function lesson_unseen_branch_jump($lesson, $userid) {
     }
 
     if (!$seenbranches = $lesson->get_content_pages_viewed($retakes, $userid, 'timeseen DESC')) {
-        throw new \moodle_exception('cannotfindrecords', 'lesson');
+        throw new \moodle_exception('cannotfindrecords', 'mod_lesson');
     }
 
     // get the lesson pages
@@ -237,7 +237,7 @@ function lesson_random_question_jump($lesson, $pageid) {
     // get the lesson pages
     $params = array ("lessonid" => $lesson->id);
     if (!$lessonpages = $DB->get_records_select("lesson_pages", "lessonid = :lessonid", $params)) {
-        throw new \moodle_exception('cannotfindpages', 'lesson');
+        throw new \moodle_exception('cannotfindpages', 'mod_lesson');
     }
 
     // go up the pages till branch table
@@ -467,10 +467,10 @@ function lesson_mediafile_block_contents($cmid, $lesson) {
 
     $link = new moodle_url('/mod/lesson/mediafile.php?id='.$cmid);
     $action = new popup_action('click', $link, 'lessonmediafile', $options);
-    $content = $OUTPUT->action_link($link, get_string('mediafilepopup', 'lesson'), $action, array('title'=>get_string('mediafilepopup', 'lesson')));
+    $content = $OUTPUT->action_link($link, get_string('mediafilepopup', 'mod_lesson'), $action, array('title'=>get_string('mediafilepopup', 'mod_lesson')));
 
     $bc = new block_contents();
-    $bc->title = get_string('linkedmedia', 'lesson');
+    $bc->title = get_string('linkedmedia', 'mod_lesson');
     $bc->attributes['class'] = 'mediafile block';
     $bc->content = $content;
 
@@ -504,7 +504,7 @@ function lesson_clock_block_contents($cmid, $lesson, $timer, $page) {
     $page->requires->js_init_call('show_clock');
 
     $bc = new block_contents();
-    $bc->title = get_string('timeremaining', 'lesson');
+    $bc->title = get_string('timeremaining', 'mod_lesson');
     $bc->attributes['class'] = 'clock block';
     $bc->content = $content;
 
@@ -540,7 +540,7 @@ function lesson_menu_block_contents($cmid, $lesson) {
     }
 
     $content = '<a href="#maincontent" class="accesshide">' .
-        get_string('skip', 'lesson') .
+        get_string('skip', 'mod_lesson') .
         "</a>\n<div class=\"menuwrapper\">\n<ul>\n";
 
     while ($pageid != 0) {
@@ -560,7 +560,7 @@ function lesson_menu_block_contents($cmid, $lesson) {
     $content .= "</ul>\n</div>\n";
 
     $bc = new block_contents();
-    $bc->title = get_string('lessonmenu', 'lesson');
+    $bc->title = get_string('lessonmenu', 'mod_lesson');
     $bc->attributes['class'] = 'menu block';
     $bc->content = $content;
 
@@ -584,7 +584,7 @@ function lesson_add_header_buttons($cm, $context, $extraeditbuttons=false, $less
 
     if (has_capability('mod/lesson:edit', $context) && $extraeditbuttons) {
         if ($lessonpageid === null) {
-            throw new \moodle_exception('invalidpageid', 'lesson');
+            throw new \moodle_exception('invalidpageid', 'mod_lesson');
         }
         if (!empty($lessonpageid) && $lessonpageid != LESSON_EOL) {
             $url = new moodle_url('/mod/lesson/editpage.php', array(
@@ -593,7 +593,7 @@ function lesson_add_header_buttons($cm, $context, $extraeditbuttons=false, $less
                 'edit'     => 1,
                 'returnto' => $PAGE->url->out_as_local_url(false)
             ));
-            $PAGE->set_button($OUTPUT->single_button($url, get_string('editpagecontent', 'lesson')));
+            $PAGE->set_button($OUTPUT->single_button($url, get_string('editpagecontent', 'mod_lesson')));
         }
     }
 }
@@ -916,10 +916,10 @@ function lesson_get_overview_report_table_and_data(lesson $lesson, $currentgroup
     }
 
     $caneditlesson = has_capability('mod/lesson:edit', $context);
-    $attemptsheader = get_string('attempts', 'lesson');
+    $attemptsheader = get_string('attempts', 'mod_lesson');
     if ($caneditlesson) {
-        $selectall = get_string('selectallattempts', 'lesson');
-        $deselectall = get_string('deselectallattempts', 'lesson');
+        $selectall = get_string('selectallattempts', 'mod_lesson');
+        $deselectall = get_string('deselectallattempts', 'mod_lesson');
         // Build the select/deselect all control.
         $selectallid = 'selectall-attempts';
         $mastercheckbox = new \core\output\checkbox_toggleall('lesson-attempts', true, [
@@ -937,7 +937,7 @@ function lesson_get_overview_report_table_and_data(lesson $lesson, $currentgroup
 
     // Set up the table object.
     if ($data->lessonscored) {
-        $headers [] = get_string('highscore', 'lesson');
+        $headers [] = get_string('highscore', 'mod_lesson');
     }
 
     $colcount = count($headers);
@@ -994,7 +994,7 @@ function lesson_get_overview_report_table_and_data(lesson $lesson, $currentgroup
                         'timestart' => userdate($try["timestart"]),
                         'duration' => format_time($timetotake),
                     ];
-                    $attemptlinkcontents = get_string('attemptinfowithgrade', 'lesson', $attemptdata);
+                    $attemptlinkcontents = get_string('attemptinfowithgrade', 'mod_lesson', $attemptdata);
 
                 } else {
                     if ($try["end"]) {
@@ -1004,14 +1004,14 @@ function lesson_get_overview_report_table_and_data(lesson $lesson, $currentgroup
                             'timestart' => userdate($try["timestart"]),
                             'duration' => format_time($timetotake),
                         ];
-                        $attemptlinkcontents = get_string('attemptinfonograde', 'lesson', $attemptdata);
+                        $attemptlinkcontents = get_string('attemptinfonograde', 'mod_lesson', $attemptdata);
                     } else {
                         // This is what the link does/looks like when the user has not completed the attempt.
                         if ($try['timestart'] !== 0) {
                             // Teacher previews do not track time spent.
-                            $attemptlinkcontents = get_string("notcompletedwithdate", "lesson", userdate($try["timestart"]));
+                            $attemptlinkcontents = get_string("notcompletedwithdate", 'mod_lesson', userdate($try["timestart"]));
                         } else {
-                            $attemptlinkcontents = get_string("notcompleted", "lesson");
+                            $attemptlinkcontents = get_string("notcompleted", 'mod_lesson');
                         }
                         $timetotake = null;
                     }
@@ -1365,9 +1365,9 @@ abstract class lesson_add_page_form_base extends moodleform {
 
         if ($this->qtypestring != 'selectaqtype') {
             if ($this->_customdata['edit']) {
-                $mform->addElement('header', 'qtypeheading', get_string('edit'. $this->qtypestring, 'lesson'));
+                $mform->addElement('header', 'qtypeheading', get_string('edit'. $this->qtypestring, 'mod_lesson'));
             } else {
-                $mform->addElement('header', 'qtypeheading', get_string('add'. $this->qtypestring, 'lesson'));
+                $mform->addElement('header', 'qtypeheading', get_string('add'. $this->qtypestring, 'mod_lesson'));
             }
         }
 
@@ -1386,7 +1386,7 @@ abstract class lesson_add_page_form_base extends moodleform {
             $mform->addElement('hidden', 'qtype');
             $mform->setType('qtype', PARAM_INT);
 
-            $mform->addElement('text', 'title', get_string('pagetitle', 'lesson'), array('size'=>70));
+            $mform->addElement('text', 'title', get_string('pagetitle', 'mod_lesson'), array('size'=>70));
             $mform->addRule('title', get_string('required'), 'required', null, 'client');
             if (!empty($CFG->formatstringstriptags)) {
                 $mform->setType('title', PARAM_TEXT);
@@ -1395,7 +1395,7 @@ abstract class lesson_add_page_form_base extends moodleform {
             }
 
             $this->editoroptions = array('noclean'=>true, 'maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$this->_customdata['maxbytes']);
-            $mform->addElement('editor', 'contents_editor', get_string('pagecontents', 'lesson'), null, $this->editoroptions);
+            $mform->addElement('editor', 'contents_editor', get_string('pagecontents', 'mod_lesson'), null, $this->editoroptions);
             $mform->setType('contents_editor', PARAM_RAW);
             $mform->addRule('contents_editor', get_string('required'), 'required', null, 'client');
         }
@@ -1405,11 +1405,11 @@ abstract class lesson_add_page_form_base extends moodleform {
         if ($this->_customdata['edit'] === true) {
             $mform->addElement('hidden', 'edit', 1);
             $mform->setType('edit', PARAM_BOOL);
-            $this->add_action_buttons(get_string('cancel'), get_string('savepage', 'lesson'));
+            $this->add_action_buttons(get_string('cancel'), get_string('savepage', 'mod_lesson'));
         } else if ($this->qtype === 'questiontype') {
-            $this->add_action_buttons(get_string('cancel'), get_string('addaquestionpage', 'lesson'));
+            $this->add_action_buttons(get_string('cancel'), get_string('addaquestionpage', 'mod_lesson'));
         } else {
-            $this->add_action_buttons(get_string('cancel'), get_string('savepage', 'lesson'));
+            $this->add_action_buttons(get_string('cancel'), get_string('savepage', 'mod_lesson'));
         }
     }
 
@@ -1421,7 +1421,7 @@ abstract class lesson_add_page_form_base extends moodleform {
      * @param int $selected The page to select by default
      */
     protected final function add_jumpto($name, $label=null, $selected=LESSON_NEXTPAGE) {
-        $title = get_string("jump", "lesson");
+        $title = get_string("jump", 'mod_lesson');
         if ($label === null) {
             $label = $title;
         }
@@ -1442,7 +1442,7 @@ abstract class lesson_add_page_form_base extends moodleform {
      */
     protected final function add_score($name, $label=null, $value=null) {
         if ($label === null) {
-            $label = get_string("score", "lesson");
+            $label = get_string("score", 'mod_lesson');
         }
 
         if (is_int($name)) {
@@ -1474,7 +1474,7 @@ abstract class lesson_add_page_form_base extends moodleform {
      */
     protected final function add_answer($count, $label = null, $required = false, $format= '', array $help = []) {
         if ($label === null) {
-            $label = get_string('answer', 'lesson');
+            $label = get_string('answer', 'mod_lesson');
         }
 
         if ($format == LESSON_ANSWER_HTML) {
@@ -1507,7 +1507,7 @@ abstract class lesson_add_page_form_base extends moodleform {
      */
     protected final function add_response($count, $label = null, $required = false) {
         if ($label === null) {
-            $label = get_string('response', 'lesson');
+            $label = get_string('response', 'mod_lesson');
         }
         $this->_form->addElement('editor', 'response_editor['.$count.']', $label,
                  array('rows' => '4', 'columns' => '80'),
@@ -2068,7 +2068,7 @@ class lesson extends lesson_base {
             if (!$this->loadedallpages) {
                 $firstpageid = $DB->get_field('lesson_pages', 'id', array('lessonid'=>$this->properties->id, 'prevpageid'=>0));
                 if (!$firstpageid) {
-                    throw new \moodle_exception('cannotfindfirstpage', 'lesson');
+                    throw new \moodle_exception('cannotfindfirstpage', 'mod_lesson');
                 }
                 $this->firstpageid = $firstpageid;
             } else {
@@ -2089,7 +2089,7 @@ class lesson extends lesson_base {
             if (!$this->loadedallpages) {
                 $lastpageid = $DB->get_field('lesson_pages', 'id', array('lessonid'=>$this->properties->id, 'nextpageid'=>0));
                 if (!$lastpageid) {
-                    throw new \moodle_exception('cannotfindlastpage', 'lesson');
+                    throw new \moodle_exception('cannotfindlastpage', 'mod_lesson');
                 }
                 $this->lastpageid = $lastpageid;
             } else {
@@ -2213,7 +2213,7 @@ class lesson extends lesson_base {
         }
         $DB->insert_record('lesson_timer', $startlesson);
         if ($this->properties->timelimit) {
-            $this->add_message(get_string('timelimitwarning', 'lesson', format_time($this->properties->timelimit)), 'center');
+            $this->add_message(get_string('timelimitwarning', 'mod_lesson', format_time($this->properties->timelimit)), 'center');
         }
         return true;
     }
@@ -2330,7 +2330,7 @@ class lesson extends lesson_base {
                 if ($instancename) {
                     return html_writer::link(new moodle_url('/mod/'.$modname.'/view.php',
                         array('id' => $this->properties->activitylink)), get_string('activitylinkname',
-                        'lesson', $instancename), array('class' => 'centerpadded lessonbutton standardbutton pr-3'));
+                        'mod_lesson', $instancename), array('class' => 'centerpadded lessonbutton standardbutton pr-3'));
                 }
             }
         }
@@ -2718,7 +2718,7 @@ class lesson extends lesson_base {
         $pages = $this->load_all_pages();
 
         if (!array_key_exists($pageid, $pages) || ($after!=0 && !array_key_exists($after, $pages))) {
-            throw new \moodle_exception('cannotfindpages', 'lesson', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id");
+            throw new \moodle_exception('cannotfindpages', 'mod_lesson', "$CFG->wwwroot/mod/lesson/edit.php?id=$cm->id");
         }
 
         $pagetomove = clone($pages[$pageid]);
@@ -2935,7 +2935,7 @@ class lesson extends lesson_base {
                     }
                 }
                 if (!$timespent) {
-                    $errors[] = get_string('timespenterror', 'lesson', $conditions->timespent);
+                    $errors[] = get_string('timespenterror', 'mod_lesson', $conditions->timespent);
                 }
             }
             // Check for the gradebetterthan condition.
@@ -2950,13 +2950,13 @@ class lesson extends lesson_base {
                     }
                 }
                 if (!$gradebetterthan) {
-                    $errors[] = get_string('gradebetterthanerror', 'lesson', $conditions->gradebetterthan);
+                    $errors[] = get_string('gradebetterthanerror', 'mod_lesson', $conditions->gradebetterthan);
                 }
             }
             // Check for the completed condition.
             if (!empty($conditions->completed)) {
                 if (!$DB->count_records('lesson_grades', array('userid' => $USER->id, 'lessonid' => $dependentlesson->id))) {
-                    $errors[] = get_string('completederror', 'lesson');
+                    $errors[] = get_string('completederror', 'mod_lesson');
                 }
             }
             if (!empty($errors)) {
@@ -3125,11 +3125,11 @@ class lesson extends lesson_base {
             $timeleft = $timer->starttime + $this->properties->timelimit - time();
             if ($timeleft <= 0) {
                 // Out of time.
-                $this->add_message(get_string('eolstudentoutoftime', 'lesson'));
+                $this->add_message(get_string('eolstudentoutoftime', 'mod_lesson'));
                 return false;
             } else if ($timeleft < 60) {
                 // One minute warning.
-                $this->add_message(get_string('studentoneminwarning', 'lesson'));
+                $this->add_message(get_string('studentoneminwarning', 'mod_lesson'));
             }
         }
         return true;
@@ -3155,31 +3155,31 @@ class lesson extends lesson_base {
                         $a = new stdClass;
                         $a->nquestions   = $gradeinfo->nquestions;
                         $a->minquestions = $this->properties->minquestions;
-                        $this->add_message(get_string('numberofpagesviewednotice', 'lesson', $a));
+                        $this->add_message(get_string('numberofpagesviewednotice', 'mod_lesson', $a));
                     }
 
                     if (!$reviewmode && $this->properties->ongoing) {
-                        $this->add_message(get_string("numberofcorrectanswers", "lesson", $gradeinfo->earned), 'notify');
+                        $this->add_message(get_string("numberofcorrectanswers", 'mod_lesson', $gradeinfo->earned), 'notify');
                         if ($this->properties->grade != GRADE_TYPE_NONE) {
                             $a = new stdClass;
                             $a->grade = format_float($gradeinfo->grade * $this->properties->grade / 100, 1);
                             $a->total = $this->properties->grade;
-                            $this->add_message(get_string('yourcurrentgradeisoutof', 'lesson', $a), 'notify');
+                            $this->add_message(get_string('yourcurrentgradeisoutof', 'mod_lesson', $a), 'notify');
                         }
                     }
                 }
             }
         } else {
             if ($this->properties->timelimit) {
-                $this->add_message(get_string('teachertimerwarning', 'lesson'));
+                $this->add_message(get_string('teachertimerwarning', 'mod_lesson'));
             }
             if (lesson_display_teacher_warning($this)) {
                 // This is the warning msg for teachers to inform them that cluster
                 // and unseen does not work while logged in as a teacher.
                 $warningvars = new stdClass();
-                $warningvars->cluster = get_string('clusterjump', 'lesson');
-                $warningvars->unseen = get_string('unseenpageinbranch', 'lesson');
-                $this->add_message(get_string('teacherjumpwarning', 'lesson', $warningvars));
+                $warningvars->cluster = get_string('clusterjump', 'mod_lesson');
+                $warningvars->unseen = get_string('unseenpageinbranch', 'mod_lesson');
+                $this->add_message(get_string('teacherjumpwarning', 'mod_lesson', $warningvars));
             }
         }
     }
@@ -3196,7 +3196,7 @@ class lesson extends lesson_base {
         $context = $this->get_context();
 
         if (has_capability('mod/lesson:manage', $context)) {
-            return get_string('teacherongoingwarning', 'lesson');
+            return get_string('teacherongoingwarning', 'mod_lesson');
         } else {
             $ntries = $DB->count_records("lesson_grades", array("lessonid" => $this->properties->id, "userid" => $USER->id));
             if (isset($USER->modattempts[$this->properties->id])) {
@@ -3207,11 +3207,11 @@ class lesson extends lesson_base {
             if ($this->properties->custom) {
                 $a->score = $gradeinfo->earned;
                 $a->currenthigh = $gradeinfo->total;
-                return get_string("ongoingcustom", "lesson", $a);
+                return get_string("ongoingcustom", 'mod_lesson', $a);
             } else {
                 $a->correct = $gradeinfo->earned;
                 $a->viewed = $gradeinfo->attempts;
-                return get_string("ongoingnormal", "lesson", $a);
+                return get_string("ongoingnormal", 'mod_lesson', $a);
             }
         }
     }
@@ -3312,7 +3312,7 @@ class lesson extends lesson_base {
             if (isset($USER->modattempts[$this->properties->id])) {
                 $retries = $this->count_user_retries($USER->id);
                 if (!$attempts = $this->get_attempts($retries - 1, false, $page->id)) {
-                    throw new moodle_exception('cannotfindpreattempt', 'lesson');
+                    throw new moodle_exception('cannotfindpreattempt', 'mod_lesson');
                 }
                 $attempt = end($attempts);
                 $USER->modattempts[$this->properties->id] = $attempt;
@@ -3465,18 +3465,18 @@ class lesson extends lesson_base {
             // This is the warning msg for teachers to inform them that cluster and unseen does not work while logged in as a teacher.
             if (lesson_display_teacher_warning($this)) {
                 $warningvars = new stdClass();
-                $warningvars->cluster = get_string("clusterjump", "lesson");
-                $warningvars->unseen = get_string("unseenpageinbranch", "lesson");
-                $this->add_message(get_string("teacherjumpwarning", "lesson", $warningvars));
+                $warningvars->cluster = get_string("clusterjump", 'mod_lesson');
+                $warningvars->unseen = get_string("unseenpageinbranch", 'mod_lesson');
+                $this->add_message(get_string("teacherjumpwarning", 'mod_lesson', $warningvars));
             }
             // Inform teacher that s/he will not see the timer.
             if ($this->properties->timelimit) {
-                $this->add_message(get_string("teachertimerwarning", "lesson"));
+                $this->add_message(get_string("teachertimerwarning", 'mod_lesson'));
             }
         }
         // Report attempts remaining.
         if ($result->attemptsremaining != 0 && $this->properties->review && !$reviewmode) {
-            $this->add_message(get_string('attemptsremaining', 'lesson', $result->attemptsremaining));
+            $this->add_message(get_string('attemptsremaining', 'mod_lesson', $result->attemptsremaining));
         }
     }
 
@@ -3535,7 +3535,7 @@ class lesson extends lesson_base {
                 $a = new stdClass;
                 $a->nquestions = $gradeinfo->nquestions;
                 $a->minquestions = $this->properties->minquestions;
-                $this->add_message(get_string('numberofpagesviewednotice', 'lesson', $a));
+                $this->add_message(get_string('numberofpagesviewednotice', 'mod_lesson', $a));
             }
         }
 
@@ -3604,7 +3604,7 @@ class lesson extends lesson_base {
                     if (isset($USER->modattempts[$this->properties->id])) { // If reviewing, make sure update old grade record.
                         if (!$grades = $DB->get_records("lesson_grades",
                             array("lessonid" => $this->properties->id, "userid" => $USER->id), "completed DESC", '*', 0, 1)) {
-                            throw new moodle_exception('cannotfindgrade', 'lesson');
+                            throw new moodle_exception('cannotfindgrade', 'mod_lesson');
                         }
                         $oldgrade = array_shift($grades);
                         $grade->id = $oldgrade->id;
@@ -3920,7 +3920,7 @@ abstract class lesson_page extends lesson_base {
         if ($properties->pageid) {
             $prevpage = $DB->get_record("lesson_pages", array("id" => $properties->pageid), 'id, nextpageid');
             if (!$prevpage) {
-                throw new \moodle_exception('cannotfindpages', 'lesson');
+                throw new \moodle_exception('cannotfindpages', 'mod_lesson');
             }
             $newpage->prevpageid = $prevpage->id;
             $newpage->nextpageid = $prevpage->nextpageid;
@@ -3964,7 +3964,7 @@ abstract class lesson_page extends lesson_base {
         $event->add_record_snapshot('lesson_pages', $snapshot);
         $event->trigger();
 
-        $lesson->add_message(get_string('insertedpage', 'lesson').': '.format_string($newpage->title, true), 'notifysuccess');
+        $lesson->add_message(get_string('insertedpage', 'mod_lesson').': '.format_string($newpage->title, true), 'notifysuccess');
 
         return $page;
     }
@@ -3987,7 +3987,7 @@ abstract class lesson_page extends lesson_base {
         } else {
             $page = $DB->get_record("lesson_pages", array("id" => $id));
             if (!$page) {
-                throw new \moodle_exception('cannotfindpages', 'lesson');
+                throw new \moodle_exception('cannotfindpages', 'mod_lesson');
             }
         }
         $manager = lesson_page_type_manager::get($lesson);
@@ -4167,7 +4167,7 @@ abstract class lesson_page extends lesson_base {
 
         if ($result->noanswer) {
             $result->newpageid = $this->properties->id; // display same page again
-            $result->feedback  = get_string('noanswer', 'lesson');
+            $result->feedback  = get_string('noanswer', 'mod_lesson');
         } else {
             if (!has_capability('mod/lesson:manage', $context)) {
                 $nretakes = $DB->count_records("lesson_grades", array("lessonid"=>$this->lesson->id, "userid"=>$USER->id));
@@ -4179,7 +4179,7 @@ abstract class lesson_page extends lesson_base {
                 // Check if they have reached (or exceeded) the maximum number of attempts allowed.
                 if (!empty($this->lesson->maxattempts) && $nattempts >= $this->lesson->maxattempts) {
                     $result->maxattemptsreached = true;
-                    $result->feedback = get_string('maximumnumberofattemptsreached', 'lesson');
+                    $result->feedback = get_string('maximumnumberofattemptsreached', 'mod_lesson');
                     $result->newpageid = $this->lesson->get_next_page($this->properties->nextpageid);
                     return $result;
                 }
@@ -4273,11 +4273,11 @@ abstract class lesson_page extends lesson_base {
 
                     $result->nodefaultresponse = true;  // This will cause a redirect below
                 } else if ($result->isessayquestion) {
-                    $result->response = get_string('defaultessayresponse', 'lesson');
+                    $result->response = get_string('defaultessayresponse', 'mod_lesson');
                 } else if ($result->correctanswer) {
-                    $result->response = get_string('thatsthecorrectanswer', 'lesson');
+                    $result->response = get_string('thatsthecorrectanswer', 'mod_lesson');
                 } else {
-                    $result->response = get_string('thatsthewronganswer', 'lesson');
+                    $result->response = get_string('thatsthewronganswer', 'mod_lesson');
                 }
             }
 
@@ -4286,12 +4286,12 @@ abstract class lesson_page extends lesson_base {
                     $nretakes = $DB->count_records("lesson_grades", array("lessonid"=>$this->lesson->id, "userid"=>$USER->id));
                     $qattempts = $DB->count_records("lesson_attempts", array("userid"=>$USER->id, "retry"=>$nretakes, "pageid"=>$this->properties->id));
                     if ($qattempts == 1) {
-                        $result->feedback = $OUTPUT->box(get_string("firstwrong", "lesson"), 'feedback');
+                        $result->feedback = $OUTPUT->box(get_string("firstwrong", 'mod_lesson'), 'feedback');
                     } else {
                         if (!$result->maxattemptsreached) {
-                            $result->feedback = $OUTPUT->box(get_string("secondpluswrong", "lesson"), 'feedback');
+                            $result->feedback = $OUTPUT->box(get_string("secondpluswrong", 'mod_lesson'), 'feedback');
                         } else {
-                            $result->feedback = $OUTPUT->box(get_string("finalwrong", "lesson"), 'feedback');
+                            $result->feedback = $OUTPUT->box(get_string("finalwrong", 'mod_lesson'), 'feedback');
                         }
                     }
                 } else {
@@ -4313,7 +4313,7 @@ abstract class lesson_page extends lesson_base {
                 $result->feedback .= $OUTPUT->box(format_text($this->get_contents(), $this->properties->contentsformat, $options),
                         'generalbox boxaligncenter py-3');
                 $result->feedback .= '<div class="correctanswer generalbox"><em>'
-                        . get_string("youranswer", "lesson").'</em> : <div class="studentanswer mt-2 mb-2">';
+                        . get_string("youranswer", 'mod_lesson').'</em> : <div class="studentanswer mt-2 mb-2">';
 
                 // Create a table containing the answers and responses.
                 $table = new html_table();
@@ -4331,7 +4331,7 @@ abstract class lesson_page extends lesson_base {
                         if (!empty(trim($response))) {
                             $studentresponse = isset($result->responseformat) ?
                                 $this->format_response($response, $context, $result->responseformat, $options) : $response;
-                            $studentresponsecontent = html_writer::div('<em>' . get_string("response", "lesson") .
+                            $studentresponsecontent = html_writer::div('<em>' . get_string("response", 'mod_lesson') .
                                 '</em>: <br/>' . $studentresponse, $class);
                             $table->data[] = array($studentresponsecontent);
                         } else {
@@ -4347,7 +4347,7 @@ abstract class lesson_page extends lesson_base {
                         $studentresponse = isset($result->responseformat) ?
                             $this->format_response($result->response, $context, $result->responseformat,
                                 $result->answerid, $options) : $result->response;
-                        $studentresponsecontent = html_writer::div('<em>' . get_string("response", "lesson") .
+                        $studentresponsecontent = html_writer::div('<em>' . get_string("response", 'mod_lesson') .
                             '</em>: <br/>' . $studentresponse, $class);
                         $table->data[] = array($studentresponsecontent);
                     } else {
@@ -4417,24 +4417,24 @@ abstract class lesson_page extends lesson_base {
 
         if (!array_key_exists($jumpto, $jumpnames)) {
             if ($jumpto == LESSON_THISPAGE) {
-                $jumptitle = get_string('thispage', 'lesson');
+                $jumptitle = get_string('thispage', 'mod_lesson');
             } elseif ($jumpto == LESSON_NEXTPAGE) {
-                $jumptitle = get_string('nextpage', 'lesson');
+                $jumptitle = get_string('nextpage', 'mod_lesson');
             } elseif ($jumpto == LESSON_EOL) {
-                $jumptitle = get_string('endoflesson', 'lesson');
+                $jumptitle = get_string('endoflesson', 'mod_lesson');
             } elseif ($jumpto == LESSON_UNSEENBRANCHPAGE) {
-                $jumptitle = get_string('unseenpageinbranch', 'lesson');
+                $jumptitle = get_string('unseenpageinbranch', 'mod_lesson');
             } elseif ($jumpto == LESSON_PREVIOUSPAGE) {
-                $jumptitle = get_string('previouspage', 'lesson');
+                $jumptitle = get_string('previouspage', 'mod_lesson');
             } elseif ($jumpto == LESSON_RANDOMPAGE) {
-                $jumptitle = get_string('randompageinbranch', 'lesson');
+                $jumptitle = get_string('randompageinbranch', 'mod_lesson');
             } elseif ($jumpto == LESSON_RANDOMBRANCH) {
-                $jumptitle = get_string('randombranch', 'lesson');
+                $jumptitle = get_string('randombranch', 'mod_lesson');
             } elseif ($jumpto == LESSON_CLUSTERJUMP) {
-                $jumptitle = get_string('clusterjump', 'lesson');
+                $jumptitle = get_string('clusterjump', 'mod_lesson');
             } else {
                 if (!$jumptitle = $DB->get_field('lesson_pages', 'title', array('id' => $jumpto))) {
-                    $jumptitle = '<strong>'.get_string('notdefined', 'lesson').'</strong>';
+                    $jumptitle = '<strong>'.get_string('notdefined', 'mod_lesson').'</strong>';
                 }
             }
             $jumpnames[$jumpto] = format_string($jumptitle,true);
@@ -4850,10 +4850,10 @@ abstract class lesson_page extends lesson_base {
     public static function get_jumptooptions($pageid, lesson $lesson) {
         global $DB;
         $jump = array();
-        $jump[0] = get_string("thispage", "lesson");
-        $jump[LESSON_NEXTPAGE] = get_string("nextpage", "lesson");
-        $jump[LESSON_PREVIOUSPAGE] = get_string("previouspage", "lesson");
-        $jump[LESSON_EOL] = get_string("endoflesson", "lesson");
+        $jump[0] = get_string("thispage", 'mod_lesson');
+        $jump[LESSON_NEXTPAGE] = get_string("nextpage", 'mod_lesson');
+        $jump[LESSON_PREVIOUSPAGE] = get_string("previouspage", 'mod_lesson');
+        $jump[LESSON_EOL] = get_string("endoflesson", 'mod_lesson');
 
         if ($pageid == 0) {
             return $jump;
@@ -4861,11 +4861,11 @@ abstract class lesson_page extends lesson_base {
 
         $pages = $lesson->load_all_pages();
         if ($pages[$pageid]->qtype == LESSON_PAGE_BRANCHTABLE || $lesson->is_sub_page_of_type($pageid, array(LESSON_PAGE_BRANCHTABLE), array(LESSON_PAGE_ENDOFBRANCH, LESSON_PAGE_CLUSTER))) {
-            $jump[LESSON_UNSEENBRANCHPAGE] = get_string("unseenpageinbranch", "lesson");
-            $jump[LESSON_RANDOMPAGE] = get_string("randompageinbranch", "lesson");
+            $jump[LESSON_UNSEENBRANCHPAGE] = get_string("unseenpageinbranch", 'mod_lesson');
+            $jump[LESSON_RANDOMPAGE] = get_string("randompageinbranch", 'mod_lesson');
         }
         if($pages[$pageid]->qtype == LESSON_PAGE_CLUSTER || $lesson->is_sub_page_of_type($pageid, array(LESSON_PAGE_CLUSTER), array(LESSON_PAGE_ENDOFCLUSTER))) {
-            $jump[LESSON_CLUSTERJUMP] = get_string("clusterjump", "lesson");
+            $jump[LESSON_CLUSTERJUMP] = get_string("clusterjump", 'mod_lesson');
         }
         if (!optional_param('firstpage', 0, PARAM_INT)) {
             $apageid = $DB->get_field("lesson_pages", "id", array("lessonid" => $lesson->id, "prevpageid" => 0));
@@ -4930,7 +4930,7 @@ abstract class lesson_page extends lesson_base {
         $i = 1;
         foreach ($answers as $answer) {
             $cells = array();
-            $cells[] = '<label>' . get_string('jump', 'lesson') . ' ' . $i . '</label>:';
+            $cells[] = '<label>' . get_string('jump', 'mod_lesson') . ' ' . $i . '</label>:';
             $cells[] = $this->get_jump_name($answer->jumpto);
             $table->data[] = new html_table_row($cells);
             if ($i === 1){
@@ -4976,7 +4976,7 @@ abstract class lesson_page extends lesson_base {
         $formattextdefoptions = new stdClass;
         $formattextdefoptions->para = false;  //I'll use it widely in this page
         foreach ($answers as $answer) {
-            $data = get_string('jumpsto', 'lesson', $this->get_jump_name($answer->jumpto));
+            $data = get_string('jumpsto', 'mod_lesson', $this->get_jump_name($answer->jumpto));
             $answerdata->answers[] = array($data, "");
             $answerpage->answerdata = $answerdata;
         }
@@ -5234,7 +5234,7 @@ class lesson_page_type_manager {
     public function load_page($pageid, lesson $lesson) {
         global $DB;
         if (!($page =$DB->get_record('lesson_pages', array('id'=>$pageid, 'lessonid'=>$lesson->id)))) {
-            throw new \moodle_exception('cannotfindpages', 'lesson');
+            throw new \moodle_exception('cannotfindpages', 'mod_lesson');
         }
         $pagetype = get_class($this->types[$page->qtype]);
         $page = new $pagetype($page, $lesson);

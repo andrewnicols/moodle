@@ -69,7 +69,7 @@ class course_competencies extends course_enrolments {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:coursecompetencies', 'course');
+        return new \lang_string('target:coursecompetencies', 'core_course');
     }
 
     /**
@@ -79,8 +79,8 @@ class course_competencies extends course_enrolments {
      */
     protected static function classes_description() {
         return array(
-            get_string('targetlabelstudentcompetenciesno', 'course'),
-            get_string('targetlabelstudentcompetenciesyes', 'course'),
+            get_string('targetlabelstudentcompetenciesno', 'core_course'),
+            get_string('targetlabelstudentcompetenciesyes', 'core_course'),
         );
     }
 

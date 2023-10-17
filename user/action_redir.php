@@ -85,7 +85,7 @@ if ($formaction == 'bulkchange.php') {
             if (isset($plugins[$dataformat])) {
                 if ($plugins[$dataformat]->is_enabled()) {
                     if (empty($userids)) {
-                        redirect($returnurl, get_string('noselectedusers', 'bulkusers'));
+                        redirect($returnurl, get_string('noselectedusers', 'mod_bulkusers'));
                     }
 
                     $columnnames = array(
@@ -182,14 +182,14 @@ if ($formaction == 'bulkchange.php') {
             }
         }
         if (!$instance) {
-            throw new \moodle_exception('errorwithbulkoperation', 'enrol');
+            throw new \moodle_exception('errorwithbulkoperation', 'core_enrol');
         }
 
         $manager = new course_enrolment_manager($PAGE, $course, $instance->id);
         $plugins = $manager->get_enrolment_plugins();
 
         if (!isset($plugins[$plugin])) {
-            throw new \moodle_exception('errorwithbulkoperation', 'enrol');
+            throw new \moodle_exception('errorwithbulkoperation', 'core_enrol');
         }
 
         $plugin = $plugins[$plugin];
@@ -197,12 +197,12 @@ if ($formaction == 'bulkchange.php') {
         $operations = $plugin->get_bulk_operations($manager);
 
         if (!isset($operations[$operationname])) {
-            throw new \moodle_exception('errorwithbulkoperation', 'enrol');
+            throw new \moodle_exception('errorwithbulkoperation', 'core_enrol');
         }
         $operation = $operations[$operationname];
 
         if (empty($userids)) {
-            redirect($returnurl, get_string('noselectedusers', 'bulkusers'));
+            redirect($returnurl, get_string('noselectedusers', 'mod_bulkusers'));
         }
 
         $users = $manager->get_users_enrolments($userids);
@@ -214,7 +214,7 @@ if ($formaction == 'bulkchange.php') {
             $removedusers = $removedmanager->get_users_enrolments($removed);
 
             foreach ($removedusers as $removeduser) {
-                $msg = get_string('userremovedfromselectiona', 'enrol', fullname($removeduser));
+                $msg = get_string('userremovedfromselectiona', 'core_enrol', fullname($removeduser));
                 \core\notification::warning($msg);
             }
         }
@@ -232,12 +232,12 @@ if ($formaction == 'bulkchange.php') {
 
         // If the bulk operation is deleting enrolments, we exclude in any case the current user as it was probably a mistake.
         if ($operationname === 'deleteselectedusers' && (!in_array($USER->id, $removed))) {
-            \core\notification::warning(get_string('userremovedfromselectiona', 'enrol', fullname($USER)));
+            \core\notification::warning(get_string('userremovedfromselectiona', 'core_enrol', fullname($USER)));
             unset($filteredusers[$USER->id]);
         }
 
         if (empty($filteredusers)) {
-            redirect($returnurl, get_string('noselectedusers', 'bulkusers'));
+            redirect($returnurl, get_string('noselectedusers', 'mod_bulkusers'));
         }
 
         $users = $filteredusers;
@@ -250,7 +250,7 @@ if ($formaction == 'bulkchange.php') {
             if ($operation->process($manager, $users, new stdClass)) {
                 redirect($returnurl);
             } else {
-                throw new \moodle_exception('errorwithbulkoperation', 'enrol');
+                throw new \moodle_exception('errorwithbulkoperation', 'core_enrol');
             }
         }
         // Check if the bulk operation has been cancelled.
@@ -263,7 +263,7 @@ if ($formaction == 'bulkchange.php') {
             }
         }
 
-        $pagetitle = get_string('bulkuseroperation', 'enrol');
+        $pagetitle = get_string('bulkuseroperation', 'core_enrol');
 
         $PAGE->set_title($pagetitle);
         $PAGE->set_heading($pagetitle);

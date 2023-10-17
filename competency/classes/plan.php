@@ -332,7 +332,7 @@ class plan extends persistent {
 
         // Checks that the template exists.
         if (!empty($value) && !template::record_exists($value)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;
@@ -353,7 +353,7 @@ class plan extends persistent {
             // Check that the user exists. We do not need to do that on update because
             // the userid of a plan should never change.
             if (!$DB->record_exists('user', array('id' => $value))) {
-                return new lang_string('invaliddata', 'error');
+                return new lang_string('invaliddata', 'mod_error');
             }
 
         }

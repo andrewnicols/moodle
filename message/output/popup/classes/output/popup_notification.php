@@ -58,7 +58,7 @@ class popup_notification implements templatable, renderable {
 
     public function export_for_template(\renderer_base $output) {
         $context = clone $this->notification;
-        $context->timecreatedpretty = get_string('ago', 'message', format_time(time() - $context->timecreated));
+        $context->timecreatedpretty = get_string('ago', 'core_message', format_time(time() - $context->timecreated));
         $context->text = message_format_message_text($context);
         $context->read = $context->timeread ? true : false;
 

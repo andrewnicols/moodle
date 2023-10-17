@@ -171,9 +171,9 @@ class insights_report implements \renderable, \templatable {
             $actiontypes[$action->get_action_name()] = $action->get_type();
         }
 
-        $actionlabels['grouped'][\core_analytics\action::TYPE_POSITIVE] = get_string('useful', 'analytics');
-        $actionlabels['grouped'][\core_analytics\action::TYPE_NEUTRAL] = get_string('neutral', 'analytics');
-        $actionlabels['grouped'][\core_analytics\action::TYPE_NEGATIVE] = get_string('notuseful', 'analytics');
+        $actionlabels['grouped'][\core_analytics\action::TYPE_POSITIVE] = get_string('useful', 'core_analytics');
+        $actionlabels['grouped'][\core_analytics\action::TYPE_NEUTRAL] = get_string('neutral', 'core_analytics');
+        $actionlabels['grouped'][\core_analytics\action::TYPE_NEGATIVE] = get_string('notuseful', 'core_analytics');
 
         $actionvalues['grouped'][\core_analytics\action::TYPE_POSITIVE] = 0;
         $actionvalues['grouped'][\core_analytics\action::TYPE_NEUTRAL] = 0;

@@ -126,7 +126,7 @@ class preview extends \html_table {
                 $select = $DB->sql_like('email', ':email', false, true, false, '|');
                 $params = array('email' => $DB->sql_like_escape($rowcols['email'], '|'));
                 if ($DB->record_exists_select('user', $select , $params)) {
-                    $rowcols['status'][] = get_string('useremailduplicate', 'error');
+                    $rowcols['status'][] = get_string('useremailduplicate', 'mod_error');
                 }
             }
 

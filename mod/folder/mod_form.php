@@ -35,7 +35,7 @@ class mod_folder_mod_form extends moodleform_mod {
         $config = get_config('folder');
 
         //-------------------------------------------------------
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
         $mform->addElement('text', 'name', get_string('name'), array('size'=>'48'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
@@ -47,7 +47,7 @@ class mod_folder_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         //-------------------------------------------------------
-        $mform->addElement('header', 'content', get_string('contentheader', 'folder'));
+        $mform->addElement('header', 'content', get_string('contentheader', 'mod_folder'));
         $mform->addElement('filemanager', 'files', get_string('files'), null, array('subdirs'=>1, 'accepted_types'=>'*'));
         $mform->addElement('select', 'display', get_string('display', 'mod_folder'),
                 array(FOLDER_DISPLAY_PAGE => get_string('displaypage', 'mod_folder'),
@@ -60,17 +60,17 @@ class mod_folder_mod_form extends moodleform_mod {
         $mform->setExpanded('content');
 
         // Adding option to show sub-folders expanded or collapsed by default.
-        $mform->addElement('advcheckbox', 'showexpanded', get_string('showexpanded', 'folder'));
+        $mform->addElement('advcheckbox', 'showexpanded', get_string('showexpanded', 'mod_folder'));
         $mform->addHelpButton('showexpanded', 'showexpanded', 'mod_folder');
         $mform->setDefault('showexpanded', $config->showexpanded);
 
         // Adding option to enable downloading archive of folder.
-        $mform->addElement('advcheckbox', 'showdownloadfolder', get_string('showdownloadfolder', 'folder'));
+        $mform->addElement('advcheckbox', 'showdownloadfolder', get_string('showdownloadfolder', 'mod_folder'));
         $mform->addHelpButton('showdownloadfolder', 'showdownloadfolder', 'mod_folder');
         $mform->setDefault('showdownloadfolder', true);
 
         // Adding option to enable viewing of individual files.
-        $mform->addElement('advcheckbox', 'forcedownload', get_string('forcedownload', 'folder'));
+        $mform->addElement('advcheckbox', 'forcedownload', get_string('forcedownload', 'mod_folder'));
         $mform->addHelpButton('forcedownload', 'forcedownload', 'mod_folder');
         $mform->setDefault('forcedownload', true);
 

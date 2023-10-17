@@ -587,7 +587,7 @@ class enrol_manual_plugin extends enrol_plugin {
         $mform->setDefault('status', $this->get_config('status'));
 
         $roles = $this->get_roleid_options($instance, $context);
-        $mform->addElement('select', 'roleid', get_string('defaultrole', 'role'), $roles);
+        $mform->addElement('select', 'roleid', get_string('defaultrole', 'core_role'), $roles);
         $mform->setDefault('roleid', $this->get_config('roleid'));
 
         $options = array('optional' => true, 'defaultunit' => 86400);

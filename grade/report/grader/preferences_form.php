@@ -62,27 +62,27 @@ class grader_report_preferences_form extends moodleform {
 
             $preferences['prefrows'] = array(
                         'rangesdisplaytype'      => array(GRADE_REPORT_PREFERENCE_DEFAULT => '*default*',
-                                                          GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'grades'),
-                                                          GRADE_DISPLAY_TYPE_REAL => get_string('real', 'grades'),
-                                                          GRADE_DISPLAY_TYPE_PERCENTAGE => get_string('percentage', 'grades'),
-                                                          GRADE_DISPLAY_TYPE_LETTER => get_string('letter', 'grades')),
+                                                          GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'core_grades'),
+                                                          GRADE_DISPLAY_TYPE_REAL => get_string('real', 'core_grades'),
+                                                          GRADE_DISPLAY_TYPE_PERCENTAGE => get_string('percentage', 'core_grades'),
+                                                          GRADE_DISPLAY_TYPE_LETTER => get_string('letter', 'core_grades')),
                         'rangesdecimalpoints'    => array(GRADE_REPORT_PREFERENCE_DEFAULT => '*default*',
-                                                          GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'grades'),
+                                                          GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'core_grades'),
                                                           0=>0, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5));
             $advanced = array_merge($advanced, array('rangesdisplaytype', 'rangesdecimalpoints'));
 
             if ($canviewhidden) {
                 $preferences['prefrows']['averagesdisplaytype'] = array(GRADE_REPORT_PREFERENCE_DEFAULT => '*default*',
-                                                                        GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'grades'),
-                                                                        GRADE_DISPLAY_TYPE_REAL => get_string('real', 'grades'),
-                                                                        GRADE_DISPLAY_TYPE_PERCENTAGE => get_string('percentage', 'grades'),
-                                                                        GRADE_DISPLAY_TYPE_LETTER => get_string('letter', 'grades'));
+                                                                        GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'core_grades'),
+                                                                        GRADE_DISPLAY_TYPE_REAL => get_string('real', 'core_grades'),
+                                                                        GRADE_DISPLAY_TYPE_PERCENTAGE => get_string('percentage', 'core_grades'),
+                                                                        GRADE_DISPLAY_TYPE_LETTER => get_string('letter', 'core_grades'));
                 $preferences['prefrows']['averagesdecimalpoints'] = array(GRADE_REPORT_PREFERENCE_DEFAULT => '*default*',
-                                                                          GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'grades'),
+                                                                          GRADE_REPORT_PREFERENCE_INHERIT => get_string('inherit', 'core_grades'),
                                                                           0=>0, 1=>1, 2=>2, 3=>3, 4=>4, 5=>5);
                 $preferences['prefrows']['meanselection']  = array(GRADE_REPORT_PREFERENCE_DEFAULT => '*default*',
-                                                                   GRADE_REPORT_MEAN_ALL => get_string('meanall', 'grades'),
-                                                                   GRADE_REPORT_MEAN_GRADED => get_string('meangraded', 'grades'));
+                                                                   GRADE_REPORT_MEAN_ALL => get_string('meanall', 'core_grades'),
+                                                                   GRADE_REPORT_MEAN_GRADED => get_string('meangraded', 'core_grades'));
 
                 $advanced = array_merge($advanced, array('averagesdisplaytype', 'averagesdecimalpoints'));
             }
@@ -99,8 +99,8 @@ class grader_report_preferences_form extends moodleform {
                 $preferences['prefgeneral']['showonlyactiveenrol'] = $checkbox_default;
             }
             $preferences['prefgeneral']['aggregationposition'] = array(GRADE_REPORT_PREFERENCE_DEFAULT => '*default*',
-                                                                       GRADE_REPORT_AGGREGATION_POSITION_FIRST => get_string('positionfirst', 'grades'),
-                                                                       GRADE_REPORT_AGGREGATION_POSITION_LAST => get_string('positionlast', 'grades'));
+                                                                       GRADE_REPORT_AGGREGATION_POSITION_FIRST => get_string('positionfirst', 'core_grades'),
+                                                                       GRADE_REPORT_AGGREGATION_POSITION_LAST => get_string('positionlast', 'core_grades'));
 
             $preferences['prefshow']['showuserimage'] = $checkbox_default;
             $preferences['prefshow']['showranges'] = $checkbox_default;
@@ -112,7 +112,7 @@ class grader_report_preferences_form extends moodleform {
 
 
         foreach ($preferences as $group => $prefs) {
-            $mform->addElement('header', $group, get_string($group, 'grades'));
+            $mform->addElement('header', $group, get_string($group, 'core_grades'));
             $mform->setExpanded($group);
 
             foreach ($prefs as $pref => $type) {
@@ -157,10 +157,10 @@ class grader_report_preferences_form extends moodleform {
 
                 // Replace the '*default*' value with the site default language string - 'default' might collide with custom language packs
                 if (!is_null($options) AND isset($options[GRADE_REPORT_PREFERENCE_DEFAULT]) && $options[GRADE_REPORT_PREFERENCE_DEFAULT] == '*default*') {
-                    $options[GRADE_REPORT_PREFERENCE_DEFAULT] = get_string('reportdefault', 'grades', $default);
+                    $options[GRADE_REPORT_PREFERENCE_DEFAULT] = get_string('reportdefault', 'core_grades', $default);
                 }
 
-                $label = get_string($lang_string, 'grades') . $number;
+                $label = get_string($lang_string, 'core_grades') . $number;
 
                 $mform->addElement($type, $full_pref, $label, $options);
                 if ($lang_string != 'showuserimage') {

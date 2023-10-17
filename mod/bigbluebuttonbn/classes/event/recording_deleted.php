@@ -42,7 +42,7 @@ class recording_deleted extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_recording_deleted', 'bigbluebuttonbn');
+        return get_string('event_recording_deleted', 'mod_bigbluebuttonbn');
     }
 
     /**

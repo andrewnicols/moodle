@@ -49,17 +49,17 @@ class search extends \moodleform {
         }
 
         $mform->disable_form_change_checker();
-        $mform->addElement('header', 'search', get_string('search', 'search'));
+        $mform->addElement('header', 'search', get_string('search', 'core_search'));
 
         // Help info depends on the selected search engine.
-        $mform->addElement('text', 'q', get_string('enteryoursearchquery', 'search'));
+        $mform->addElement('text', 'q', get_string('enteryoursearchquery', 'core_search'));
         $mform->addHelpButton('q', 'searchinfo', $this->_customdata['searchengine']);
         $mform->setType('q', PARAM_TEXT);
         $mform->addRule('q', get_string('required'), 'required', null, 'client');
 
         // Show the 'search within' option if the user came from a particular context.
         if (!empty($this->_customdata['searchwithin'])) {
-            $mform->addElement('select', 'searchwithin', get_string('searchwithin', 'search'),
+            $mform->addElement('select', 'searchwithin', get_string('searchwithin', 'core_search'),
                     $this->_customdata['searchwithin']);
             $mform->setDefault('searchwithin', '');
         }
@@ -68,15 +68,15 @@ class search extends \moodleform {
         if (!empty($this->_customdata['orderoptions']) &&
                 count($this->_customdata['orderoptions']) > 1) {
 
-            $mform->addElement('select', 'order', get_string('order', 'search'),
+            $mform->addElement('select', 'order', get_string('order', 'core_search'),
                     $this->_customdata['orderoptions']);
             $mform->setDefault('order', 'relevance');
         }
 
-        $mform->addElement('header', 'filtersection', get_string('filterheader', 'search'));
+        $mform->addElement('header', 'filtersection', get_string('filterheader', 'core_search'));
         $mform->setExpanded('filtersection', false);
 
-        $mform->addElement('text', 'title', get_string('title', 'search'));
+        $mform->addElement('text', 'title', get_string('title', 'core_search'));
         $mform->setType('title', PARAM_TEXT);
 
         $search = \core_search\manager::instance(true);
@@ -102,9 +102,9 @@ class search extends \moodleform {
 
         $options = array(
             'multiple' => true,
-            'noselectionstring' => get_string('allareas', 'search'),
+            'noselectionstring' => get_string('allareas', 'core_search'),
         );
-        $mform->addElement('autocomplete', 'areaids', get_string('searcharea', 'search'), $areanames, $options);
+        $mform->addElement('autocomplete', 'areaids', get_string('searcharea', 'core_search'), $areanames, $options);
 
         if (is_siteadmin()) {
             $limittoenrolled = false;
@@ -115,13 +115,13 @@ class search extends \moodleform {
         $options = array(
             'multiple' => true,
             'limittoenrolled' => $limittoenrolled,
-            'noselectionstring' => get_string('allcourses', 'search'),
+            'noselectionstring' => get_string('allcourses', 'core_search'),
         );
         $mform->addElement('course', 'courseids', get_string('courses', 'core'), $options);
         $mform->setType('courseids', PARAM_INT);
 
         if (manager::include_all_courses() || !empty(get_config('core', 'searchallavailablecourses'))) {
-            $mform->addElement('checkbox', 'mycoursesonly', get_string('mycoursesonly', 'search'));
+            $mform->addElement('checkbox', 'mycoursesonly', get_string('mycoursesonly', 'core_search'));
             $mform->setType('mycoursesonly', PARAM_INT);
         }
 
@@ -131,7 +131,7 @@ class search extends \moodleform {
             $options = [
                 'ajax' => 'core_search/form-search-user-selector',
                 'multiple' => true,
-                'noselectionstring' => get_string('allusers', 'search'),
+                'noselectionstring' => get_string('allusers', 'core_search'),
                 'valuehtmlcallback' => function($value) {
                     global $DB, $OUTPUT;
                     $user = $DB->get_record('user', ['id' => (int)$value], '*', IGNORE_MISSING);
@@ -188,16 +188,16 @@ class search extends \moodleform {
             }
         }
 
-        $mform->addElement('date_time_selector', 'timestart', get_string('fromtime', 'search'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'timestart', get_string('fromtime', 'core_search'), array('optional' => true));
         $mform->setDefault('timestart', 0);
 
-        $mform->addElement('date_time_selector', 'timeend', get_string('totime', 'search'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'timeend', get_string('totime', 'core_search'), array('optional' => true));
         $mform->setDefault('timeend', 0);
 
         // Source context i.e. the page they came from when they clicked search.
         $mform->addElement('hidden', 'context');
         $mform->setType('context', PARAM_INT);
 
-        $this->add_action_buttons(false, get_string('search', 'search'));
+        $this->add_action_buttons(false, get_string('search', 'core_search'));
     }
 }

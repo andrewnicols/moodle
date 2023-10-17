@@ -52,7 +52,7 @@ function get_label_name($label) {
 
     if (empty($name)) {
         // arbitrary name
-        $name = get_string('modulename','label');
+        $name = get_string('modulename','mod_label');
     }
 
     return $name;

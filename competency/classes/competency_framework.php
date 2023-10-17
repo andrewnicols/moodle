@@ -230,9 +230,9 @@ class competency_framework extends persistent {
 
         $context = context::instance_by_id($value, IGNORE_MISSING);
         if (!$context) {
-            return new lang_string('invalidcontext', 'error');
+            return new lang_string('invalidcontext', 'mod_error');
         } else if ($context->contextlevel != CONTEXT_SYSTEM && $context->contextlevel != CONTEXT_COURSECAT) {
-            return new lang_string('invalidcontext', 'error');
+            return new lang_string('invalidcontext', 'mod_error');
         }
 
         // During update.
@@ -241,7 +241,7 @@ class competency_framework extends persistent {
             // The context must never change.
             $oldcontextid = $DB->get_field(self::TABLE, 'contextid', array('id' => $this->get('id')), MUST_EXIST);
             if ($this->get('contextid') != $oldcontextid) {
-                return new lang_string('invalidcontext', 'error');
+                return new lang_string('invalidcontext', 'mod_error');
             }
         }
 
@@ -263,7 +263,7 @@ class competency_framework extends persistent {
         );
 
         if ($DB->record_exists_select(self::TABLE, 'idnumber = :idnumber AND id <> :id', $params)) {
-            return new lang_string('idnumbertaken', 'error');
+            return new lang_string('idnumbertaken', 'mod_error');
         }
 
         return true;
@@ -280,7 +280,7 @@ class competency_framework extends persistent {
 
         // Always validate that the scale exists.
         if (!$DB->record_exists_select('scale', 'id = :id', array('id' => $value))) {
-            return new lang_string('invalidscaleid', 'error');
+            return new lang_string('invalidscaleid', 'mod_error');
         }
 
         // During update.

@@ -679,7 +679,7 @@ class courselib_test extends advanced_testcase {
             $created = create_course($course);
             $this->fail('Exception expected');
         } catch (moodle_exception $e) {
-            $this->assertSame(get_string('shortnametaken', 'error', $course->shortname), $e->getMessage());
+            $this->assertSame(get_string('shortnametaken', 'mod_error', $course->shortname), $e->getMessage());
         }
 
         // Ensure that the idnumber isn't duplicated.
@@ -688,7 +688,7 @@ class courselib_test extends advanced_testcase {
             $created = create_course($course);
             $this->fail('Exception expected');
         } catch (moodle_exception $e) {
-            $this->assertSame(get_string('courseidnumbertaken', 'error', $course->idnumber), $e->getMessage());
+            $this->assertSame(get_string('courseidnumbertaken', 'mod_error', $course->idnumber), $e->getMessage());
         }
     }
 
@@ -761,7 +761,7 @@ class courselib_test extends advanced_testcase {
             update_course($created2);
             $this->fail('Expected exception when trying to update a course with duplicate idnumber');
         } catch (moodle_exception $e) {
-            $this->assertEquals(get_string('courseidnumbertaken', 'error', $created2->idnumber), $e->getMessage());
+            $this->assertEquals(get_string('courseidnumbertaken', 'mod_error', $created2->idnumber), $e->getMessage());
         }
 
         // Test duplicate shortname.
@@ -771,7 +771,7 @@ class courselib_test extends advanced_testcase {
             update_course($created2);
             $this->fail('Expected exception when trying to update a course with a duplicate shortname');
         } catch (moodle_exception $e) {
-            $this->assertEquals(get_string('shortnametaken', 'error', $created2->shortname), $e->getMessage());
+            $this->assertEquals(get_string('shortnametaken', 'mod_error', $created2->shortname), $e->getMessage());
         }
     }
 
@@ -3385,7 +3385,7 @@ class courselib_test extends advanced_testcase {
         // Test update information on front page course.
         $course->category = 99;
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('invalidcourse', 'error'));
+        $this->expectExceptionMessage(get_string('invalidcourse', 'mod_error'));
         update_course($course);
     }
 
@@ -4119,12 +4119,12 @@ class courselib_test extends advanced_testcase {
         foreach ($events as $event) {
             if ($event->eventtype == \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED) {
                 $this->assertEquals($newcompletionexpected, $event->timestart);
-                $this->assertEquals(get_string('completionexpectedfor', 'completion', (object)['instancename' => $newmodulename]),
+                $this->assertEquals(get_string('completionexpectedfor', 'core_completion', (object)['instancename' => $newmodulename]),
                         $event->name);
             }
             if ($event->eventtype == ASSIGN_EVENT_TYPE_DUE) {
                 $this->assertEquals($newduedate, $event->timestart);
-                $this->assertEquals(get_string('calendardue', 'assign', $newmodulename), $event->name);
+                $this->assertEquals(get_string('calendardue', 'mod_assign', $newmodulename), $event->name);
             }
         }
     }

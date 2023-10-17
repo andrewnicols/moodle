@@ -512,7 +512,7 @@ class qformat_xml extends qformat_default {
             $qo->name = $this->clean_question_name($this->import_text($question['#']['name'][0]['#']['text']));
         } else {
             $qo->name = $this->create_default_question_name($qo->questiontext['text'],
-                    get_string('questionname', 'question'));
+                    get_string('questionname', 'core_question'));
         }
         $qo->questiontextformat = $questiontext['format'];
         $qo->questiontext = $qo->questiontext['text'];

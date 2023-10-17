@@ -528,7 +528,7 @@ class tree extends tree_node {
                     $result = $child->get_description($staff, $innernot, $info);
                 }
                 if ($childhidden) {
-                    $result .= ' ' . get_string('hidden_marker', 'availability');
+                    $result .= ' ' . get_string('hidden_marker', 'core_availability');
                 }
                 return $result;
             }
@@ -547,7 +547,7 @@ class tree extends tree_node {
             } else {
                 $childdescription = $child->get_description($staff, $innernot, $info);
                 if ($childhidden) {
-                    $childdescription .= ' ' . get_string('hidden_marker', 'availability');
+                    $childdescription .= ' ' . get_string('hidden_marker', 'core_availability');
                 }
                 $items[] = $childdescription;
             }

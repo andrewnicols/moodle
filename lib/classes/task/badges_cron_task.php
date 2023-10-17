@@ -34,7 +34,7 @@ class badges_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskbadgescron', 'admin');
+        return get_string('taskbadgescron', 'core_admin');
     }
 
     /**

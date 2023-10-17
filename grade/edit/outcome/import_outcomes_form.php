@@ -42,12 +42,12 @@ class import_outcomes_form extends moodleform {
 
         $scope = array();
         if (($PAGE->course->id > 1) && has_capability('moodle/grade:manage', context_system::instance())) {
-            $mform->addElement('radio', 'scope', get_string('importcustom', 'grades'), null, 'custom');
-            $mform->addElement('radio', 'scope', get_string('importstandard', 'grades'), null, 'global');
+            $mform->addElement('radio', 'scope', get_string('importcustom', 'core_grades'), null, 'custom');
+            $mform->addElement('radio', 'scope', get_string('importstandard', 'core_grades'), null, 'global');
             $mform->setDefault('scope', 'custom');
         }
 
-        $mform->addElement('filepicker', 'userfile', get_string('importoutcomes', 'grades'));
+        $mform->addElement('filepicker', 'userfile', get_string('importoutcomes', 'core_grades'));
         $mform->addRule('userfile', get_string('required'), 'required', null, 'server');
         $mform->addHelpButton('userfile', 'importoutcomes', 'grades');
 

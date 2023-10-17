@@ -130,16 +130,16 @@ class mod_lti_mod_form extends moodleform_mod {
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('html', "<div data-attribute='dynamic-import' hidden aria-hidden='true' role='alert'></div>");
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
         // Adding the standard "name" field.
-        $mform->addElement('text', 'name', get_string('basicltiname', 'lti'), ['size' => '64']);
+        $mform->addElement('text', 'name', get_string('basicltiname', 'mod_lti'), ['size' => '64']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         // Adding the optional "intro" and "introformat" pair of fields.
-        $this->standard_intro_elements(get_string('basicltiintro', 'lti'));
+        $this->standard_intro_elements(get_string('basicltiintro', 'mod_lti'));
         $mform->setAdvanced('introeditor');
 
         // Display the label to the right of the checkbox so it looks better & matches rest of the form.
@@ -153,11 +153,11 @@ class mod_lti_mod_form extends moodleform_mod {
 
         $mform->setAdvanced('showdescription');
 
-        $mform->addElement('checkbox', 'showtitlelaunch', get_string('display_name', 'lti'));
+        $mform->addElement('checkbox', 'showtitlelaunch', get_string('display_name', 'mod_lti'));
         $mform->setAdvanced('showtitlelaunch');
         $mform->addHelpButton('showtitlelaunch', 'display_name', 'lti');
 
-        $mform->addElement('checkbox', 'showdescriptionlaunch', get_string('display_description', 'lti'));
+        $mform->addElement('checkbox', 'showdescriptionlaunch', get_string('display_description', 'mod_lti'));
         $mform->setAdvanced('showdescriptionlaunch');
         $mform->addHelpButton('showdescriptionlaunch', 'display_description', 'lti');
 
@@ -166,7 +166,7 @@ class mod_lti_mod_form extends moodleform_mod {
                 // Legacy, manually configured instances: only freeze the element (not hardFreeze) so that disabledIf() still works.
                 // The data in the select is restricted so that only the current value is deemed valid, preventing DOM-edit changes,
                 // which are possible with frozen elements.
-                $tooltypes = $mform->addElement('select', 'typeid', get_string('external_tool_type', 'lti'));
+                $tooltypes = $mform->addElement('select', 'typeid', get_string('external_tool_type', 'mod_lti'));
                 $mform->addHelpButton('typeid', 'external_tool_type', 'lti');
                 $manualinstanceoption = $instancetypes[0]; // The 'Automatic, based on tool URL' option.
                 $tooltypes->addOption($manualinstanceoption->name, 0, []);
@@ -179,7 +179,7 @@ class mod_lti_mod_form extends moodleform_mod {
                 $mform->setType('typeid', PARAM_INT);
 
                 $manualinstanceoption = $instancetypes[0]; // The 'Automatic, based on tool URL' option.
-                $mform->addElement('static', 'typeiddisplayonly', get_string('external_tool_type', 'lti'),
+                $mform->addElement('static', 'typeiddisplayonly', get_string('external_tool_type', 'mod_lti'),
                     $manualinstanceoption->name);
             }
         } else {
@@ -189,15 +189,15 @@ class mod_lti_mod_form extends moodleform_mod {
         }
 
         // Disable the content selection button unconditionally. Freeze/hardFreeze is unsuitable for buttons.
-        $mform->addElement('button', 'selectcontent', get_string('selectcontent', 'lti'), ['disabled' => 'disabled']);
+        $mform->addElement('button', 'selectcontent', get_string('selectcontent', 'mod_lti'), ['disabled' => 'disabled']);
         $mform->disabledIf('selectcontent', 'typeid', 'eq', $typeid);
 
         if ($canviewmanualconfig) {
-            $mform->addElement('text', 'toolurl', get_string('launch_url', 'lti'), ['size' => '64']);
+            $mform->addElement('text', 'toolurl', get_string('launch_url', 'mod_lti'), ['size' => '64']);
             $mform->setType('toolurl', PARAM_URL);
             $mform->addHelpButton('toolurl', 'launch_url', 'lti');
 
-            $mform->addElement('text', 'securetoolurl', get_string('secure_launch_url', 'lti'), ['size' => '64']);
+            $mform->addElement('text', 'securetoolurl', get_string('secure_launch_url', 'mod_lti'), ['size' => '64']);
             $mform->setType('securetoolurl', PARAM_URL);
             $mform->setAdvanced('securetoolurl');
             $mform->addHelpButton('securetoolurl', 'secure_launch_url', 'lti');
@@ -222,40 +222,40 @@ class mod_lti_mod_form extends moodleform_mod {
         $mform->setType('lineitemsubreviewparams', PARAM_TEXT);
 
         $launchoptions = [
-            LTI_LAUNCH_CONTAINER_DEFAULT => get_string('default', 'lti'),
-            LTI_LAUNCH_CONTAINER_EMBED => get_string('embed', 'lti'),
-            LTI_LAUNCH_CONTAINER_EMBED_NO_BLOCKS => get_string('embed_no_blocks', 'lti'),
-            LTI_LAUNCH_CONTAINER_REPLACE_MOODLE_WINDOW => get_string('existing_window', 'lti'),
-            LTI_LAUNCH_CONTAINER_WINDOW => get_string('new_window', 'lti')
+            LTI_LAUNCH_CONTAINER_DEFAULT => get_string('default', 'mod_lti'),
+            LTI_LAUNCH_CONTAINER_EMBED => get_string('embed', 'mod_lti'),
+            LTI_LAUNCH_CONTAINER_EMBED_NO_BLOCKS => get_string('embed_no_blocks', 'mod_lti'),
+            LTI_LAUNCH_CONTAINER_REPLACE_MOODLE_WINDOW => get_string('existing_window', 'mod_lti'),
+            LTI_LAUNCH_CONTAINER_WINDOW => get_string('new_window', 'mod_lti')
         ];
-        $mform->addElement('select', 'launchcontainer', get_string('launchinpopup', 'lti'), $launchoptions);
+        $mform->addElement('select', 'launchcontainer', get_string('launchinpopup', 'mod_lti'), $launchoptions);
         $mform->addHelpButton('launchcontainer', 'launchinpopup', 'lti');
         $mform->setAdvanced('launchcontainer');
 
         if ($canviewmanualconfig) {
-            $mform->addElement('text', 'resourcekey', get_string('resourcekey', 'lti'));
+            $mform->addElement('text', 'resourcekey', get_string('resourcekey', 'mod_lti'));
             $mform->setType('resourcekey', PARAM_TEXT);
             $mform->setAdvanced('resourcekey');
             $mform->addHelpButton('resourcekey', 'resourcekey', 'lti');
             $mform->setForceLtr('resourcekey');
 
-            $mform->addElement('passwordunmask', 'password', get_string('password', 'lti'));
+            $mform->addElement('passwordunmask', 'password', get_string('password', 'mod_lti'));
             $mform->setType('password', PARAM_TEXT);
             $mform->setAdvanced('password');
             $mform->addHelpButton('password', 'password', 'lti');
 
-            $mform->addElement('textarea', 'instructorcustomparameters', get_string('custom', 'lti'), ['rows' => 4, 'cols' => 60]);
+            $mform->addElement('textarea', 'instructorcustomparameters', get_string('custom', 'mod_lti'), ['rows' => 4, 'cols' => 60]);
             $mform->setType('instructorcustomparameters', PARAM_TEXT);
             $mform->setAdvanced('instructorcustomparameters');
             $mform->addHelpButton('instructorcustomparameters', 'custom', 'lti');
             $mform->setForceLtr('instructorcustomparameters');
 
-            $mform->addElement('text', 'icon', get_string('icon_url', 'lti'), ['size' => '64']);
+            $mform->addElement('text', 'icon', get_string('icon_url', 'mod_lti'), ['size' => '64']);
             $mform->setType('icon', PARAM_URL);
             $mform->setAdvanced('icon');
             $mform->addHelpButton('icon', 'icon_url', 'lti');
 
-            $mform->addElement('text', 'secureicon', get_string('secure_icon_url', 'lti'), ['size' => '64']);
+            $mform->addElement('text', 'secureicon', get_string('secure_icon_url', 'mod_lti'), ['size' => '64']);
             $mform->setType('secureicon', PARAM_URL);
             $mform->setAdvanced('secureicon');
             $mform->addHelpButton('secureicon', 'secure_icon_url', 'lti');
@@ -274,15 +274,15 @@ class mod_lti_mod_form extends moodleform_mod {
         }
 
         // Add privacy preferences fieldset where users choose whether to send their data.
-        $mform->addElement('header', 'privacy', get_string('privacy', 'lti'));
+        $mform->addElement('header', 'privacy', get_string('privacy', 'mod_lti'));
 
-        $mform->addElement('advcheckbox', 'instructorchoicesendname', get_string('share_name', 'lti'));
+        $mform->addElement('advcheckbox', 'instructorchoicesendname', get_string('share_name', 'mod_lti'));
         $mform->addHelpButton('instructorchoicesendname', 'share_name', 'lti');
 
-        $mform->addElement('advcheckbox', 'instructorchoicesendemailaddr', get_string('share_email', 'lti'));
+        $mform->addElement('advcheckbox', 'instructorchoicesendemailaddr', get_string('share_email', 'mod_lti'));
         $mform->addHelpButton('instructorchoicesendemailaddr', 'share_email', 'lti');
 
-        $mform->addElement('advcheckbox', 'instructorchoiceacceptgrades', get_string('accept_grades', 'lti'));
+        $mform->addElement('advcheckbox', 'instructorchoiceacceptgrades', get_string('accept_grades', 'mod_lti'));
         $mform->addHelpButton('instructorchoiceacceptgrades', 'accept_grades', 'lti');
 
         // Add standard course module grading elements.
@@ -353,7 +353,7 @@ class mod_lti_mod_form extends moodleform_mod {
 
         // Adding the "general" fieldset, where all the common settings are shown.
         $mform->addElement('html', "<div data-attribute='dynamic-import' hidden aria-hidden='true' role='alert'></div>");
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
         // For tools supporting content selection, add the 'Select content button'.
         $config = lti_get_type_config($tooltypeid);
@@ -388,14 +388,14 @@ class mod_lti_mod_form extends moodleform_mod {
         }
 
         // Adding the standard "name" field.
-        $mform->addElement('text', 'name', get_string('basicltiname', 'lti'), ['size' => '64']);
+        $mform->addElement('text', 'name', get_string('basicltiname', 'mod_lti'), ['size' => '64']);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'server');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'server');
 
         // Show activity name when launched only applies to embedded type launches.
         if (in_array($config['launchcontainer'], [LTI_LAUNCH_CONTAINER_EMBED, LTI_LAUNCH_CONTAINER_EMBED_NO_BLOCKS])) {
-            $mform->addElement('checkbox', 'showtitlelaunch', get_string('display_name', 'lti'));
+            $mform->addElement('checkbox', 'showtitlelaunch', get_string('display_name', 'mod_lti'));
             $mform->setDefault('showtitlelaunch', true);
             $mform->addHelpButton('showtitlelaunch', 'display_name', 'lti');
         } else {
@@ -405,7 +405,7 @@ class mod_lti_mod_form extends moodleform_mod {
         }
 
         // Adding the optional "intro" and "introformat" pair of fields.
-        $this->standard_intro_elements(get_string('basicltiintro', 'lti'));
+        $this->standard_intro_elements(get_string('basicltiintro', 'mod_lti'));
 
         // Display the label to the right of the checkbox so it looks better & matches rest of the form.
         if ($mform->elementExists('showdescription')) {
@@ -418,7 +418,7 @@ class mod_lti_mod_form extends moodleform_mod {
 
         // Show activity description when launched only applies to embedded type launches.
         if (in_array($config['launchcontainer'], [LTI_LAUNCH_CONTAINER_EMBED, LTI_LAUNCH_CONTAINER_EMBED_NO_BLOCKS])) {
-            $mform->addElement('checkbox', 'showdescriptionlaunch', get_string('display_description', 'lti'));
+            $mform->addElement('checkbox', 'showdescriptionlaunch', get_string('display_description', 'mod_lti'));
             $mform->addHelpButton('showdescriptionlaunch', 'display_description', 'lti');
         } else {
             // Include in the form anyway, so we retain the setting value in case the tool launch container is changed back.

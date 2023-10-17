@@ -58,7 +58,7 @@ class add_new_question implements \renderable, \templatable {
             $url = new \moodle_url('/question/bank/editquestion/addquestion.php', $this->params);
             $addquestiondisplay['buttonhtml'] = $output->single_button(
                 $url,
-                get_string('createnewquestion', 'question'),
+                get_string('createnewquestion', 'core_question'),
                 'get'
             );
             $addquestiondisplay['qtypeform'] = editquestion_helper::print_choose_qtype_to_add_form([]);

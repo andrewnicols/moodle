@@ -56,7 +56,7 @@ class webservice_service_created extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventwebserviceservicecreated', 'webservice');
+        return get_string('eventwebserviceservicecreated', 'core_webservice');
     }
 
     /**

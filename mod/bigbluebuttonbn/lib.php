@@ -286,12 +286,12 @@ function bigbluebuttonbn_get_extra_capabilities() {
  */
 function bigbluebuttonbn_reset_course_form_definition(&$mform) {
     $items = reset::reset_course_items();
-    $mform->addElement('header', 'bigbluebuttonbnheader', get_string('modulenameplural', 'bigbluebuttonbn'));
+    $mform->addElement('header', 'bigbluebuttonbnheader', get_string('modulenameplural', 'mod_bigbluebuttonbn'));
     foreach ($items as $item => $default) {
         $mform->addElement(
             'advcheckbox',
             "reset_bigbluebuttonbn_{$item}",
-            get_string("reset{$item}", 'bigbluebuttonbn')
+            get_string("reset{$item}", 'mod_bigbluebuttonbn')
         );
         if ($item == 'logs' || $item == 'recordings') {
             $mform->addHelpButton("reset_bigbluebuttonbn_{$item}", "reset{$item}", 'bigbluebuttonbn');
@@ -521,11 +521,11 @@ function mod_bigbluebuttonbn_core_calendar_provide_event_action(
     $actionable = ($roomavailable && $usercanjoin);
 
     // Action data.
-    $string = get_string('view_room', 'bigbluebuttonbn');
+    $string = get_string('view_room', 'mod_bigbluebuttonbn');
     $url = new moodle_url('/mod/bigbluebuttonbn/view.php', ['id' => $cm->id]);
     if (groups_get_activity_groupmode($cm) == NOGROUPS) {
         // No groups mode.
-        $string = get_string('view_conference_action_join', 'bigbluebuttonbn');
+        $string = get_string('view_conference_action_join', 'mod_bigbluebuttonbn');
         $url = new moodle_url('/mod/bigbluebuttonbn/bbb_view.php', [
                 'action' => 'join',
                 'id' => $cm->id,
@@ -570,7 +570,7 @@ function bigbluebuttonbn_extend_settings_navigation(settings_navigation $setting
         return;
     }
     $completionvalidate = '#action=completion_validate&bigbluebuttonbn=' . $settingsnav->get_page()->cm->instance;
-    $nodenav->add(get_string('completionvalidatestate', 'bigbluebuttonbn'),
+    $nodenav->add(get_string('completionvalidatestate', 'mod_bigbluebuttonbn'),
         $completionvalidate, navigation_node::TYPE_CONTAINER);
 }
 
@@ -702,7 +702,7 @@ function bigbluebuttonbn_print_recent_activity(object $course, bool $viewfullnam
             [logger::EVENT_JOIN, logger::EVENT_PLAYED],
             $timestart);
         if ($logs) {
-            echo $OUTPUT->heading(get_string('new_bigblubuttonbn_activities', 'bigbluebuttonbn') . ':', 6);
+            echo $OUTPUT->heading(get_string('new_bigblubuttonbn_activities', 'mod_bigbluebuttonbn') . ':', 6);
             foreach ($logs as $log) {
                 $activityurl = new moodle_url('/mod/bigbluebuttonbn/index.php', ['id' => $course->id]);
                 print_recent_activity_note($log->timecreated,

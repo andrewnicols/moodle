@@ -34,7 +34,7 @@ class cache_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcachecleanup', 'admin');
+        return get_string('taskcachecleanup', 'core_admin');
     }
 
     /**

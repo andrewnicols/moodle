@@ -36,8 +36,8 @@ $event->add_record_snapshot('course', $course);
 $event->trigger();
 
 // Get all required strings.
-$strchats = get_string('modulenameplural', 'chat');
-$strchat  = get_string('modulename', 'chat');
+$strchats = get_string('modulenameplural', 'mod_chat');
+$strchat  = get_string('modulename', 'mod_chat');
 
 // Print the header.
 $PAGE->navbar->add($strchats);

@@ -60,7 +60,7 @@ abstract class gateway {
     public static function validate_gateway_form(\core_payment\form\account_gateway $form,
                                                  \stdClass $data, array $files, array &$errors): void {
         if ($data->enabled) {
-            $errors['enabled'] = get_string('gatewaycannotbeenabled', 'payment');
+            $errors['enabled'] = get_string('gatewaycannotbeenabled', 'core_payment');
         }
     }
 }

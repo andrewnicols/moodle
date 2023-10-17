@@ -72,26 +72,26 @@ class site_registration_form extends \moodleform {
         // Fields that need to be highlighted.
         $highlightfields = registration::get_new_registration_fields();
 
-        $mform->addElement('header', 'moodle', get_string('registrationinfo', 'hub'));
+        $mform->addElement('header', 'moodle', get_string('registrationinfo', 'mod_hub'));
 
-        $mform->addElement('text', 'name', get_string('sitename', 'hub'),
+        $mform->addElement('text', 'name', get_string('sitename', 'mod_hub'),
             array('class' => 'registration_textfield', 'maxlength' => 255));
         $mform->setType('name', PARAM_TEXT);
         $mform->addHelpButton('name', 'sitename', 'hub');
 
-        $mform->addElement('select', 'privacy', get_string('siteprivacy', 'hub'), registration::site_privacy_options());
+        $mform->addElement('select', 'privacy', get_string('siteprivacy', 'mod_hub'), registration::site_privacy_options());
         $mform->setType('privacy', PARAM_ALPHA);
         $mform->addHelpButton('privacy', 'siteprivacy', 'hub');
         unset($options);
 
-        $mform->addElement('textarea', 'description', get_string('sitedesc', 'hub'),
+        $mform->addElement('textarea', 'description', get_string('sitedesc', 'mod_hub'),
             array('rows' => 3, 'cols' => 41));
         $mform->setType('description', PARAM_TEXT);
         $mform->addHelpButton('description', 'sitedesc', 'hub');
 
         $languages = get_string_manager()->get_list_of_languages();
         \core_collator::asort($languages);
-        $mform->addElement('select', 'language', get_string('sitelang', 'hub'), $languages);
+        $mform->addElement('select', 'language', get_string('sitelang', 'mod_hub'), $languages);
         $mform->setType('language', PARAM_ALPHANUMEXT);
         $mform->addHelpButton('language', 'sitelang', 'hub');
 
@@ -104,7 +104,7 @@ class site_registration_form extends \moodleform {
         $mform->setType('regioncode', PARAM_ALPHANUMEXT);
 
         $countries = ['' => ''] + get_string_manager()->get_list_of_countries();
-        $mform->addElement('select', 'countrycode', get_string('sitecountry', 'hub'), $countries);
+        $mform->addElement('select', 'countrycode', get_string('sitecountry', 'mod_hub'), $countries);
         $mform->setType('countrycode', PARAM_ALPHANUMEXT);
         $mform->addHelpButton('countrycode', 'sitecountry', 'hub');
         $mform->addRule('countrycode', $strrequired, 'required', null, 'client');
@@ -123,7 +123,7 @@ class site_registration_form extends \moodleform {
         $mform->setType('contactphone', PARAM_TEXT);
         $mform->addHelpButton('contactphone', 'sitephone', 'hub');
 
-        $mform->addElement('text', 'contactemail', get_string('siteemail', 'hub'),
+        $mform->addElement('text', 'contactemail', get_string('siteemail', 'mod_hub'),
             array('class' => 'registration_textfield'));
         $mform->addRule('contactemail', $strrequired, 'required', null, 'client');
         $mform->setType('contactemail', PARAM_EMAIL);
@@ -132,7 +132,7 @@ class site_registration_form extends \moodleform {
         $options = array();
         $options[0] = get_string("registrationcontactno");
         $options[1] = get_string("registrationcontactyes");
-        $mform->addElement('select', 'contactable', get_string('siteregistrationcontact', 'hub'), $options);
+        $mform->addElement('select', 'contactable', get_string('siteregistrationcontact', 'mod_hub'), $options);
         $mform->setType('contactable', PARAM_INT);
         $mform->addHelpButton('contactable', 'siteregistrationcontact', 'hub');
         $mform->hideIf('contactable', 'privacy', 'eq', registration::HUB_SITENOTPUBLISHED);
@@ -144,24 +144,24 @@ class site_registration_form extends \moodleform {
             'commnews',
             'sitecommnews',
             in_array('commnews', $highlightfields),
-            get_string('sitecommnewsyes', 'hub')
+            get_string('sitecommnewsyes', 'mod_hub')
         );
 
         // TODO site logo.
         $mform->addElement('hidden', 'imageurl', ''); // TODO: temporary.
         $mform->setType('imageurl', PARAM_URL);
 
-        $mform->addElement('checkbox', 'policyagreed', get_string('policyagreed', 'hub'),
-            get_string('policyagreeddesc', 'hub', HUB_MOODLEORGHUBURL . '/privacy'));
+        $mform->addElement('checkbox', 'policyagreed', get_string('policyagreed', 'mod_hub'),
+            get_string('policyagreeddesc', 'mod_hub', HUB_MOODLEORGHUBURL . '/privacy'));
         $mform->addRule('policyagreed', $strrequired, 'required', null, 'client');
 
-        $mform->addElement('header', 'sitestats', get_string('sendfollowinginfo', 'hub'));
+        $mform->addElement('header', 'sitestats', get_string('sendfollowinginfo', 'mod_hub'));
         $mform->setExpanded('sitestats', !empty($highlightfields));
-        $mform->addElement('static', 'urlstring', get_string('siteurl', 'hub'), $siteinfo['url']);
+        $mform->addElement('static', 'urlstring', get_string('siteurl', 'mod_hub'), $siteinfo['url']);
         $mform->addHelpButton('urlstring', 'siteurl', 'hub');
 
         // Display statistic that are going to be retrieve by the sites directory.
-        $mform->addElement('static', 'siteinfosummary', get_string('sendfollowinginfo', 'hub'), registration::get_stats_summary($siteinfo));
+        $mform->addElement('static', 'siteinfosummary', get_string('sendfollowinginfo', 'mod_hub'), registration::get_stats_summary($siteinfo));
 
         // Check if it's a first registration or update.
         if (registration::is_registered()) {
@@ -212,14 +212,14 @@ class site_registration_form extends \moodleform {
         }
 
         $group = [
-            $mform->createElement('select', $elementname, get_string($stridentifier, 'hub'), $options),
+            $mform->createElement('select', $elementname, get_string($stridentifier, 'mod_hub'), $options),
             $mform->createElement('static', $elementname . 'sep', '', '<br/>'),
-            $mform->createElement('advcheckbox', $elementname . 'newemail', '', get_string('usedifferentemail', 'hub'),
+            $mform->createElement('advcheckbox', $elementname . 'newemail', '', get_string('usedifferentemail', 'mod_hub'),
                 ['onchange' => "this.form.elements['{$elementname}email'].focus();"]),
             $mform->createElement('text', $elementname . 'email', get_string('email'))
         ];
 
-        $element = $mform->addElement('group', $elementname . 'group', get_string($stridentifier, 'hub'), $group, '', false);
+        $element = $mform->addElement('group', $elementname . 'group', get_string($stridentifier, 'mod_hub'), $group, '', false);
         if ($highlight) {
             $element->setAttributes(['class' => $element->getAttribute('class') . ' needsconfirmation mark']);
         }
@@ -246,12 +246,12 @@ class site_registration_form extends \moodleform {
         $group = [
             $mform->createElement('advcheckbox', $elementname, '', $checkboxtext, ['class' => 'pt-2']),
             $mform->createElement('static', $elementname . 'sep', '', '<br/>'),
-            $mform->createElement('advcheckbox', $elementname . 'newemail', '', get_string('usedifferentemail', 'hub'),
+            $mform->createElement('advcheckbox', $elementname . 'newemail', '', get_string('usedifferentemail', 'mod_hub'),
                 ['onchange' => "this.form.elements['{$elementname}email'].focus();"]),
             $mform->createElement('text', $elementname . 'email', get_string('email'))
         ];
 
-        $element = $mform->addElement('group', $elementname . 'group', get_string($stridentifier, 'hub'), $group, '', false);
+        $element = $mform->addElement('group', $elementname . 'group', get_string($stridentifier, 'mod_hub'), $group, '', false);
         if ($highlight) {
             $element->setAttributes(['class' => $element->getAttribute('class') . ' needsconfirmation mark']);
         }

@@ -65,7 +65,7 @@ $verbose = empty($options['quiet']);
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
     if ($verbose) {
-        cli_error(get_string('cliunknowoption', 'admin', $unrecognized), $exitunknownoption);
+        cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized), $exitunknownoption);
     }
     exit($exitunknownoption);
 }

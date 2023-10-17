@@ -46,7 +46,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
         foreach ($pages as $page) {
             $selectoptions[$page->id] = format_string($page->title, true, array('context' => $this->page->context));
         }
-        $label = get_string('pageindex', 'wiki') . ': ';
+        $label = get_string('pageindex', 'mod_wiki') . ': ';
         $select = new single_select(new moodle_url('/mod/wiki/view.php'), 'pageid', $selectoptions);
         $select->label = $label;
         return $this->output->container($this->output->render($select), 'wiki_index');
@@ -56,11 +56,11 @@ class mod_wiki_renderer extends plugin_renderer_base {
         global $CFG;
         $table = new html_table();
         $context = context_module::instance($this->page->cm->id);
-        $strsearchresults = get_string('searchresult', 'wiki');
+        $strsearchresults = get_string('searchresult', 'mod_wiki');
         $totalcount = count($records);
         $html = $this->output->heading("$strsearchresults $totalcount", 3);
         foreach ($records as $page) {
-            $table->head = array('title' => format_string($page->title) . ' (' . html_writer::link($CFG->wwwroot . '/mod/wiki/view.php?pageid=' . $page->id, get_string('view', 'wiki')) . ')');
+            $table->head = array('title' => format_string($page->title) . ' (' . html_writer::link($CFG->wwwroot . '/mod/wiki/view.php?pageid=' . $page->id, get_string('view', 'mod_wiki')) . ')');
             $table->align = array('title' => 'left');
             $table->width = '100%';
             $table->data = array(array(file_rewrite_pluginfile_urls(format_text($page->cachedcontent, FORMAT_HTML), 'pluginfile.php', $context->id, 'mod_wiki', 'attachments', $subwiki->id)));
@@ -88,10 +88,10 @@ class mod_wiki_renderer extends plugin_renderer_base {
         $userlink = new moodle_url('/user/view.php', array('id' => $olduser->id));
         // view version link
         $oldversionview = ' ';
-        $oldversionview .= html_writer::link($versionlink->out(false), get_string('view', 'wiki'), array('class' => 'wiki_diffview'));
+        $oldversionview .= html_writer::link($versionlink->out(false), get_string('view', 'mod_wiki'), array('class' => 'wiki_diffview'));
         $oldversionview .= ' ';
         // restore version link
-        $oldversionview .= html_writer::link($restorelink->out(false), get_string('restore', 'wiki'), array('class' => 'wiki_diffview'));
+        $oldversionview .= html_writer::link($restorelink->out(false), get_string('restore', 'mod_wiki'), array('class' => 'wiki_diffview'));
 
         // userinfo container
         $oldheading = $this->output->container_start('wiki_diffuserleft');
@@ -116,7 +116,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
         $userlink = new moodle_url('/user/view.php', array('id' => $newuser->id));
 
         $newversionview = ' ';
-        $newversionview .= html_writer::link($versionlink->out(false), get_string('view', 'wiki'), array('class' => 'wiki_diffview'));
+        $newversionview .= html_writer::link($versionlink->out(false), get_string('view', 'mod_wiki'), array('class' => 'wiki_diffview'));
         // new user info
         $newheading = $this->output->container_start('wiki_diffuserright');
         $newheading .= $this->output->user_picture($newuser, array('popup' => true));
@@ -172,7 +172,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
 
         if ($totalcount > 0) {
             $output .= '<div class="paging">';
-            $output .= get_string('version', 'wiki') . ':';
+            $output .= get_string('version', 'mod_wiki') . ':';
             if ($page - $minpage > 0) {
                 $pagenum = $page - 1;
                 if (!is_a($baseurl, 'moodle_url')) {
@@ -304,9 +304,9 @@ class mod_wiki_renderer extends plugin_renderer_base {
             }
             $link = new moodle_url('/mod/wiki/'. $tab. '.php', array('pageid' => $pageid));
             if ($linked == $tab) {
-                $tabs[] = new tabobject($tab, $link, get_string($tab, 'wiki'), '', true);
+                $tabs[] = new tabobject($tab, $link, get_string($tab, 'mod_wiki'), '', true);
             } else {
-                $tabs[] = new tabobject($tab, $link, get_string($tab, 'wiki'));
+                $tabs[] = new tabobject($tab, $link, get_string($tab, 'mod_wiki'));
             }
         }
 
@@ -317,7 +317,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
         $html = '';
         $link = new moodle_url('/mod/wiki/prettyview.php', array('pageid' => $page->id));
         $html .= $this->output->container_start('wiki_right');
-        $html .= $this->output->action_link($link, get_string('prettyprint', 'wiki'), new popup_action('click', $link), array('class' => 'printicon'));
+        $html .= $this->output->action_link($link, get_string('prettyprint', 'mod_wiki'), new popup_action('click', $link), array('class' => 'printicon'));
         $html .= $this->output->container_end();
         return $html;
     }
@@ -405,7 +405,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
                                 $options[$group->id][$group->name][$group->id . '-' . $user->id] = fullname($user);
                             }
                         } else {
-                            $name = get_string('notingroup', 'wiki');
+                            $name = get_string('notingroup', 'mod_wiki');
                             $options[0][$name]['0' . '-' . $user->id] = fullname($user);
                         }
                     }
@@ -452,7 +452,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
                             $options[$group->id][$group->name][$group->id . '-' . $user->id] = fullname($user);
                         }
                     } else {
-                        $name = get_string('notingroup', 'wiki');
+                        $name = get_string('notingroup', 'mod_wiki');
                         $options[0][$name]['0' . '-' . $user->id] = fullname($user);
                     }
                 }
@@ -486,14 +486,14 @@ class mod_wiki_renderer extends plugin_renderer_base {
         $options = array('contributions', 'links', 'orphaned', 'pageindex', 'pagelist', 'updatedpages');
         $items = array();
         foreach ($options as $opt) {
-            $items[] = get_string($opt, 'wiki');
+            $items[] = get_string($opt, 'mod_wiki');
         }
         $selectoptions = array();
         foreach ($items as $key => $item) {
             $selectoptions[$key + 1] = $item;
         }
         $select = new single_select(new moodle_url('/mod/wiki/map.php', array('pageid' => $pageid)), 'option', $selectoptions, $currentselect, null);
-        $select->label = get_string('mapmenu', 'wiki') . ': ';
+        $select->label = get_string('mapmenu', 'mod_wiki') . ': ';
         return $this->output->container($this->output->render($select), 'midpad');
     }
     public function wiki_files_tree($context, $subwiki) {
@@ -501,7 +501,7 @@ class mod_wiki_renderer extends plugin_renderer_base {
     }
     public function render_wiki_files_tree(wiki_files_tree $tree) {
         if (empty($tree->dir['subdirs']) && empty($tree->dir['files'])) {
-            $html = $this->output->box(get_string('nofilesavailable', 'repository'));
+            $html = $this->output->box(get_string('nofilesavailable', 'core_repository'));
         } else {
             $htmlid = 'wiki_files_tree_'.uniqid();
             $module = array('name'=>'mod_wiki', 'fullpath'=>'/mod/wiki/module.js');
@@ -517,14 +517,14 @@ class mod_wiki_renderer extends plugin_renderer_base {
         $options = array('removepages', 'deleteversions');
         $items = array();
         foreach ($options as $opt) {
-            $items[] = get_string($opt, 'wiki');
+            $items[] = get_string($opt, 'mod_wiki');
         }
         $selectoptions = array();
         foreach ($items as $key => $item) {
             $selectoptions[$key + 1] = $item;
         }
         $select = new single_select(new moodle_url('/mod/wiki/admin.php', array('pageid' => $pageid)), 'option', $selectoptions, $currentselect, null);
-        $select->label = get_string('adminmenu', 'wiki') . ': ';
+        $select->label = get_string('adminmenu', 'mod_wiki') . ': ';
         return $this->output->container($this->output->render($select), 'midpad');
     }
 

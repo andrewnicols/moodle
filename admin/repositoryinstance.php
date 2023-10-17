@@ -62,7 +62,7 @@ if (!empty($edit) || !empty($new)) {
     if (!empty($edit)) {
         $instance = repository::get_instance($edit);
         if (!$instance->can_be_edited_by_user()) {
-            throw new repository_exception('nopermissiontoaccess', 'repository');
+            throw new repository_exception('nopermissiontoaccess', 'core_repository');
         }
         $instancetype = repository::get_type_by_id($instance->options['typeid']);
         $classname = 'repository_' . $instancetype->get_typename();
@@ -104,7 +104,7 @@ if (!empty($edit) || !empty($new)) {
             core_plugin_manager::reset_caches();
             redirect($parenturl);
         } else {
-            throw new \moodle_exception('instancenotsaved', 'repository', $parenturl);
+            throw new \moodle_exception('instancenotsaved', 'core_repository', $parenturl);
         }
         exit;
     } else {
@@ -124,17 +124,17 @@ if (!empty($edit) || !empty($new)) {
     $instance = repository::get_instance($delete);
     if ($instance->readonly) {
         // If you try to delete an instance set as readonly, display an error message.
-        throw new repository_exception('readonlyinstance', 'repository');
+        throw new repository_exception('readonlyinstance', 'core_repository');
     } else if (!$instance->can_be_edited_by_user()) {
-        throw new repository_exception('nopermissiontoaccess', 'repository');
+        throw new repository_exception('nopermissiontoaccess', 'core_repository');
     }
     if ($sure) {
         if ($instance->delete($downloadcontents)) {
-            $deletedstr = get_string('instancedeleted', 'repository');
+            $deletedstr = get_string('instancedeleted', 'core_repository');
             core_plugin_manager::reset_caches();
             redirect($parenturl, $deletedstr, 3);
         } else {
-            throw new \moodle_exception('instancenotdeleted', 'repository', $parenturl);
+            throw new \moodle_exception('instancenotdeleted', 'core_repository', $parenturl);
         }
         exit;
     }
@@ -149,11 +149,11 @@ if (!empty($edit) || !empty($new)) {
     $continueanddownloadurl = new moodle_url($continueurl, array(
         'downloadcontents' => 1
     ));
-    $message = get_string('confirmdelete', 'repository', $instance->name);
+    $message = get_string('confirmdelete', 'core_repository', $instance->name);
     echo html_writer::tag('p', $message);
 
-    echo $OUTPUT->single_button($continueurl, get_string('continueuninstall', 'repository'));
-    echo $OUTPUT->single_button($continueanddownloadurl, get_string('continueuninstallanddownload', 'repository'));
+    echo $OUTPUT->single_button($continueurl, get_string('continueuninstall', 'core_repository'));
+    echo $OUTPUT->single_button($continueanddownloadurl, get_string('continueuninstallanddownload', 'core_repository'));
     echo $OUTPUT->single_button($parenturl, get_string('cancel'));
 
     echo $OUTPUT->box_end();

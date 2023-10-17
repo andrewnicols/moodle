@@ -37,7 +37,7 @@ $url = new moodle_url($urlpath);
 // Check that an absolute url/path was specified e.g. /course/view.php (it probably isn't a
 // security risk to allow a relative one, but isn't necessary here).
 if (!$url->get_host()) {
-    throw new moodle_exception('missingparam', 'error', '', 'url');
+    throw new moodle_exception('missingparam', 'mod_error', '', 'url');
 }
 
 // Get course.
@@ -47,7 +47,7 @@ $context = \context_module::instance($cm->id);
 // Set up page for display.
 $PAGE->set_url(new moodle_url('/course/modregrade.php', ['id' => $cmid, 'url' => $url]));
 $PAGE->set_context($context);
-$PAGE->set_title($course->shortname . ': ' . get_string('recalculatinggrades', 'grades'));
+$PAGE->set_title($course->shortname . ': ' . get_string('recalculatinggrades', 'core_grades'));
 
 // Security check: must be logged in with manage activities permission.
 require_login($course, false, $cm);

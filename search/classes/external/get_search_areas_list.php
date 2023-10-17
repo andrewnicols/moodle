@@ -65,7 +65,7 @@ class get_search_areas_list extends external_api {
         require_capability('moodle/search:query', $system);
 
         if (manager::is_global_search_enabled() === false) {
-            throw new moodle_exception('globalsearchdisabled', 'search');
+            throw new moodle_exception('globalsearchdisabled', 'core_search');
         }
 
         $areas = [];

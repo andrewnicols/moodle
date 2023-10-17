@@ -41,11 +41,11 @@ $msg        = optional_param('msg', '', PARAM_TEXT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 if (empty($CFG->badges_allowcoursebadges) && ($type == BADGE_TYPE_COURSE)) {
-    throw new \moodle_exception('coursebadgesdisabled', 'badges');
+    throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
 }
 
 $urlparams = ['type' => $type];
@@ -54,13 +54,13 @@ if ($course = $DB->get_record('course', ['id' => $courseid])) {
     $urlparams['id'] = $course->id;
 }
 
-$hdr = get_string('managebadges', 'badges');
+$hdr = get_string('managebadges', 'core_badges');
 $returnurl = new moodle_url('/badges/index.php', $urlparams);
 $PAGE->set_url($returnurl);
 $PAGE->add_body_class('limitedwidth');
 
 if ($type == BADGE_TYPE_SITE) {
-    $title = get_string('sitebadges', 'badges');
+    $title = get_string('sitebadges', 'core_badges');
     $PAGE->set_context(context_system::instance());
     $PAGE->set_pagelayout('admin');
     $PAGE->set_heading(get_string('administrationsite'));
@@ -68,7 +68,7 @@ if ($type == BADGE_TYPE_SITE) {
 } else {
     require_login($course);
     $coursecontext = context_course::instance($course->id);
-    $title = get_string('coursebadges', 'badges');
+    $title = get_string('coursebadges', 'core_badges');
     $PAGE->set_context($coursecontext);
     $PAGE->set_pagelayout('incourse');
     $PAGE->set_heading(format_string($course->fullname, true, array('context' => $coursecontext)));
@@ -97,18 +97,18 @@ if (($delete || $archive) && has_capability('moodle/badges:deletebadge', $PAGE->
     if (!$confirm) {
         echo $output->header();
         // Archive this badge?
-        echo $output->heading(get_string('archivebadge', 'badges', $badge->name));
+        echo $output->heading(get_string('archivebadge', 'core_badges', $badge->name));
         $archivebutton = $output->single_button(
                             new moodle_url($PAGE->url, array('archive' => $badge->id, 'confirm' => 1)),
-                            get_string('archiveconfirm', 'badges'));
-        echo $output->box(get_string('archivehelp', 'badges') . $archivebutton, 'generalbox');
+                            get_string('archiveconfirm', 'core_badges'));
+        echo $output->box(get_string('archivehelp', 'core_badges') . $archivebutton, 'generalbox');
 
         // Delete this badge?
-        echo $output->heading(get_string('delbadge', 'badges', $badge->name));
+        echo $output->heading(get_string('delbadge', 'core_badges', $badge->name));
         $deletebutton = $output->single_button(
                             new moodle_url($PAGE->url, array('delete' => $badge->id, 'confirm' => 1)),
-                            get_string('delconfirm', 'badges'));
-        echo $output->box(get_string('deletehelp', 'badges') . $deletebutton, 'generalbox');
+                            get_string('delconfirm', 'core_badges'));
+        echo $output->box(get_string('deletehelp', 'core_badges') . $deletebutton, 'generalbox');
 
         // Go back.
         echo $output->action_link($returnurl, get_string('cancel'));
@@ -150,15 +150,15 @@ if ($type == BADGE_TYPE_SITE) {
 echo $OUTPUT->box('', 'notifyproblem hide', 'check_connection');
 
 if ($course && $course->startdate > time()) {
-    echo $OUTPUT->box(get_string('error:notifycoursedate', 'badges'), 'generalbox notifyproblem');
+    echo $OUTPUT->box(get_string('error:notifycoursedate', 'core_badges'), 'generalbox notifyproblem');
 }
 
 if ($msg !== '') {
-    echo $OUTPUT->notification(get_string($msg, 'badges'), 'notifysuccess');
+    echo $OUTPUT->notification(get_string($msg, 'core_badges'), 'notifysuccess');
 }
 
 $report = system_report_factory::create(badges::class, $PAGE->context);
-$report->set_default_no_results_notice(new lang_string('nobadges', 'badges'));
+$report->set_default_no_results_notice(new lang_string('nobadges', 'core_badges'));
 
 echo $report->output();
 

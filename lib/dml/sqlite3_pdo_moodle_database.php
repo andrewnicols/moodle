@@ -42,7 +42,7 @@ class sqlite3_pdo_moodle_database extends pdo_moodle_database {
      */
     public function driver_installed() {
         if (!extension_loaded('pdo_sqlite') || !extension_loaded('pdo')){
-            return get_string('sqliteextensionisnotpresentinphp', 'install');
+            return get_string('sqliteextensionisnotpresentinphp', 'mod_install');
         }
         return true;
     }

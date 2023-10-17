@@ -77,26 +77,26 @@ class provider_test extends provider_testcase {
         provider::export_user_data($approvedlist);
 
         // Make sure that the password history only returns a count.
-        $history = $writer->get_data([get_string('privacy:passwordhistorypath', 'user')]);
+        $history = $writer->get_data([get_string('privacy:passwordhistorypath', 'core_user')]);
         $objectcount = new \ArrayObject($history);
         // This object should only have one property.
         $this->assertCount(1, $objectcount);
         $this->assertEquals(1, $history->password_history_count);
 
         // Password resets should have two fields - timerequested and timererequested.
-        $resetarray = (array) $writer->get_data([get_string('privacy:passwordresetpath', 'user')]);
+        $resetarray = (array) $writer->get_data([get_string('privacy:passwordresetpath', 'core_user')]);
         $detail = array_shift($resetarray);
         $this->assertTrue(array_key_exists('timerequested', $detail));
         $this->assertTrue(array_key_exists('timererequested', $detail));
 
         // Last access to course.
-        $lastcourseaccess = (array) $writer->get_data([get_string('privacy:lastaccesspath', 'user')]);
+        $lastcourseaccess = (array) $writer->get_data([get_string('privacy:lastaccesspath', 'core_user')]);
         $entry = array_shift($lastcourseaccess);
         $this->assertEquals($course->fullname, $entry['course_name']);
         $this->assertTrue(array_key_exists('timeaccess', $entry));
 
         // User devices.
-        $userdevices = (array) $writer->get_data([get_string('privacy:devicespath', 'user')]);
+        $userdevices = (array) $writer->get_data([get_string('privacy:devicespath', 'core_user')]);
         $entry = array_shift($userdevices);
         $this->assertEquals('com.moodle.moodlemobile', $entry['appid']);
         // Make sure these fields are not exported.
@@ -104,7 +104,7 @@ class provider_test extends provider_testcase {
         $this->assertFalse(array_key_exists('uuid', $entry));
 
         // Session data.
-        $sessiondata = (array) $writer->get_data([get_string('privacy:sessionpath', 'user')]);
+        $sessiondata = (array) $writer->get_data([get_string('privacy:sessionpath', 'core_user')]);
         $entry = array_shift($sessiondata);
         // Make sure that the sid is not exported.
         $this->assertFalse(array_key_exists('sid', $entry));
@@ -114,7 +114,7 @@ class provider_test extends provider_testcase {
         $this->assertTrue(array_key_exists('timecreated', $entry));
 
         // Course requests
-        $courserequestdata = (array) $writer->get_data([get_string('privacy:courserequestpath', 'user')]);
+        $courserequestdata = (array) $writer->get_data([get_string('privacy:courserequestpath', 'core_user')]);
         $entry = array_shift($courserequestdata);
         // Make sure that the password is not exported.
         $this->assertFalse(property_exists($entry, 'password'));

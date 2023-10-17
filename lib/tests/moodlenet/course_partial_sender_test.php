@@ -101,7 +101,7 @@ class course_partial_sender_test extends \advanced_testcase {
         $moodlenetclient = new moodlenet_client($httpclient, $this->mockoauthclient);
 
         $this->expectException(moodle_exception::class);
-        $this->expectExceptionMessage(get_string('invalidcoursemodule', 'error'));
+        $this->expectExceptionMessage(get_string('invalidcoursemodule', 'mod_error'));
 
         // Test with valid share format and invalid course module id.
         $package = $method->invoke(new course_partial_sender(

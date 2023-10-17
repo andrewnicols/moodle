@@ -27,7 +27,7 @@ if ($noteid) {
     // Existing note.
     $url->param('id', $noteid);
     if (!$note = note_load($noteid)) {
-        throw new \moodle_exception('invalidid', 'notes');
+        throw new \moodle_exception('invalidid', 'core_notes');
     }
 
 } else {
@@ -57,7 +57,7 @@ if (!$course = $DB->get_record('course', array('id' => $note->courseid))) {
 require_login($course);
 
 if (empty($CFG->enablenotes)) {
-    throw new \moodle_exception('notesdisabled', 'notes');
+    throw new \moodle_exception('notesdisabled', 'core_notes');
 }
 
 $context = context_course::instance($course->id);
@@ -89,9 +89,9 @@ if ($note = $noteform->get_data()) {
 }
 
 if ($noteid) {
-    $strnotes = get_string('editnote', 'notes');
+    $strnotes = get_string('editnote', 'core_notes');
 } else {
-    $strnotes = get_string('addnewnote', 'notes');
+    $strnotes = get_string('addnewnote', 'core_notes');
 }
 
 // Output HTML.
@@ -101,7 +101,7 @@ if (course_can_view_participants($context) || course_can_view_participants(conte
 }
 $PAGE->navbar->add(get_string('participants'), $link);
 $PAGE->navbar->add(fullname($user), new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $course->id)));
-$PAGE->navbar->add(get_string('notes', 'notes'),
+$PAGE->navbar->add(get_string('notes', 'core_notes'),
                    new moodle_url('/notes/index.php', array('user' => $user->id, 'course' => $course->id)));
 $PAGE->navbar->add($strnotes);
 $PAGE->set_title($course->shortname . ': ' . $strnotes);

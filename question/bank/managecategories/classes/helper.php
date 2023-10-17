@@ -115,9 +115,9 @@ class helper {
     public static function question_can_delete_cat(int $todelete): void {
         global $DB;
         if (self::question_is_top_category($todelete)) {
-            throw new moodle_exception('cannotdeletetopcat', 'question');
+            throw new moodle_exception('cannotdeletetopcat', 'core_question');
         } else if (self::question_is_only_child_of_top_category_in_context($todelete)) {
-            throw new moodle_exception('cannotdeletecate', 'question');
+            throw new moodle_exception('cannotdeletecate', 'core_question');
         } else {
             $contextid = $DB->get_field('question_categories', 'contextid', ['id' => $todelete]);
             require_capability('moodle/question:managecategory', context::instance_by_id($contextid));
@@ -333,11 +333,11 @@ class helper {
                             $a->questioncount = $category->questioncount;
                         }
                         if (isset($a->idnumber) && isset($a->questioncount)) {
-                            $formattedname = get_string('categorynamewithidnumberandcount', 'question', $a);
+                            $formattedname = get_string('categorynamewithidnumberandcount', 'core_question', $a);
                         } else if (isset($a->idnumber)) {
-                            $formattedname = get_string('categorynamewithidnumber', 'question', $a);
+                            $formattedname = get_string('categorynamewithidnumber', 'core_question', $a);
                         } else if (isset($a->questioncount)) {
-                            $formattedname = get_string('categorynamewithcount', 'question', $a);
+                            $formattedname = get_string('categorynamewithcount', 'core_question', $a);
                         } else {
                             $formattedname = $a->name;
                         }
@@ -391,7 +391,7 @@ class helper {
         foreach ($categories as $id => $category) {
             if ($category->parent == 0) {
                 $context = \context::instance_by_id($category->contextid);
-                $categories[$id]->name = get_string('topfor', 'question', $context->get_context_name(false, false, $escape));
+                $categories[$id]->name = get_string('topfor', 'core_question', $context->get_context_name(false, false, $escape));
             }
         }
 

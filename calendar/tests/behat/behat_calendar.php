@@ -59,7 +59,7 @@ class behat_calendar extends behat_base {
      */
     public function i_create_a_calendar_event_with_form_data($data) {
         // Go to current month page.
-        $this->execute("behat_general::click_link", get_string('fullcalendar', 'calendar'));
+        $this->execute("behat_general::click_link", get_string('fullcalendar', 'core_calendar'));
 
         // Create event.
         $this->i_create_a_calendar_event($data);
@@ -80,7 +80,7 @@ class behat_calendar extends behat_base {
 
         if ($this->running_javascript()) {
             // Click to create new event.
-            $this->execute("behat_general::i_click_on", array(get_string('newevent', 'calendar'), "button"));
+            $this->execute("behat_general::i_click_on", array(get_string('newevent', 'core_calendar'), "button"));
 
             // Set form fields.
             $this->execute("behat_forms::i_set_the_following_fields_to_these_values", $data);

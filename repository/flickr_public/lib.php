@@ -224,7 +224,7 @@ class repository_flickr_public extends repository {
             echo '</table>';
 
             echo '<input type="hidden" name="action" value="search" />';
-            echo '<input type="submit" value="'.get_string('search', 'repository').'" />';
+            echo '<input type="submit" value="'.get_string('search', 'core_repository').'" />';
         }
     }
 
@@ -459,7 +459,7 @@ class repository_flickr_public extends repository {
     private function build_photo_url($photoid) {
         $bestsize = $this->get_best_size($photoid);
         if (!isset($bestsize['source'])) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
         return $bestsize['source'];
     }
@@ -512,7 +512,7 @@ class repository_flickr_public extends repository {
         }
         // Make sure the source image exists.
         if (!@getimagesize($source)) {
-            throw new moodle_exception('cannotdownload', 'repository');
+            throw new moodle_exception('cannotdownload', 'core_repository');
         }
 
         if ($info['owner']['realname']) {
@@ -520,7 +520,7 @@ class repository_flickr_public extends repository {
         } else {
             $author = $info['owner']['username'];
         }
-        $copyright = get_string('author', 'repository') . ': ' . $author;
+        $copyright = get_string('author', 'core_repository') . ': ' . $author;
 
         $result = parent::get_file($source, $file);
         $path = $result['path'];

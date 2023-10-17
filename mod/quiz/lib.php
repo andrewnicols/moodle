@@ -509,7 +509,7 @@ function quiz_user_outline($course, $user, $mod, $quiz) {
     if (!$gitem->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
         $result->info = get_string('gradenoun') . ': ' . $grade->str_long_grade;
     } else {
-        $result->info = get_string('gradenoun') . ': ' . get_string('hidden', 'grades');
+        $result->info = get_string('gradenoun') . ': ' . get_string('hidden', 'core_grades');
     }
 
     $result->time = grade_get_date_for_user_grade($grade, $user);
@@ -543,9 +543,9 @@ function quiz_user_complete($course, $user, $mod, $quiz) {
                 echo $OUTPUT->container(get_string('feedback').': '.$grade->str_feedback);
             }
         } else {
-            echo $OUTPUT->container(get_string('gradenoun') . ': ' . get_string('hidden', 'grades'));
+            echo $OUTPUT->container(get_string('gradenoun') . ': ' . get_string('hidden', 'core_grades'));
             if ($grade->str_feedback) {
-                echo $OUTPUT->container(get_string('feedback').': '.get_string('hidden', 'grades'));
+                echo $OUTPUT->container(get_string('feedback').': '.get_string('hidden', 'core_grades'));
             }
         }
     }
@@ -553,7 +553,7 @@ function quiz_user_complete($course, $user, $mod, $quiz) {
     if ($attempts = $DB->get_records('quiz_attempts',
             ['userid' => $user->id, 'quiz' => $quiz->id], 'attempt')) {
         foreach ($attempts as $attempt) {
-            echo get_string('attempt', 'quiz', $attempt->attempt) . ': ';
+            echo get_string('attempt', 'mod_quiz', $attempt->attempt) . ': ';
             if ($attempt->state != quiz_attempt::FINISHED) {
                 echo quiz_attempt_state_name($attempt->state);
             } else {
@@ -568,7 +568,7 @@ function quiz_user_complete($course, $user, $mod, $quiz) {
                 if (!$gitem->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
                     echo quiz_format_grade($quiz, $attempt->sumgrades) . '/' . quiz_format_grade($quiz, $quiz->sumgrades);
                 } else {
-                    echo get_string('hidden', 'grades');
+                    echo get_string('hidden', 'core_grades');
                 }
                 echo ' - '.userdate($attempt->timefinish).'<br />';
             }
@@ -669,7 +669,7 @@ function quiz_get_user_grades($quiz, $userid = 0) {
  */
 function quiz_format_grade($quiz, $grade) {
     if (is_null($grade)) {
-        return get_string('notyetgraded', 'quiz');
+        return get_string('notyetgraded', 'mod_quiz');
     }
     return format_float($grade, $quiz->decimalpoints);
 }
@@ -817,14 +817,14 @@ function quiz_grade_item_update($quiz, $grades = null) {
             $confirm_regrade = optional_param('confirm_regrade', 0, PARAM_INT);
             if (!$confirm_regrade) {
                 if (!AJAX_SCRIPT) {
-                    $message = get_string('gradeitemislocked', 'grades');
+                    $message = get_string('gradeitemislocked', 'core_grades');
                     $back_link = $CFG->wwwroot . '/mod/quiz/report.php?q=' . $quiz->id .
                             '&amp;mode=overview';
                     $regrade_link = qualified_me() . '&amp;confirm_regrade=1';
                     echo $OUTPUT->box_start('generalbox', 'notice');
                     echo '<p>'. $message .'</p>';
                     echo $OUTPUT->container_start('buttons');
-                    echo $OUTPUT->single_button($regrade_link, get_string('regradeanyway', 'grades'));
+                    echo $OUTPUT->single_button($regrade_link, get_string('regradeanyway', 'core_grades'));
                     echo $OUTPUT->single_button($back_link,  get_string('cancel'));
                     echo $OUTPUT->container_end();
                     echo $OUTPUT->box_end();
@@ -1015,7 +1015,7 @@ function quiz_print_recent_mod_activity($activity, $courseid, $detail, $modnames
     }
 
     echo '<div class="grade">';
-    echo  get_string('attempt', 'quiz', $activity->content->attempt);
+    echo  get_string('attempt', 'mod_quiz', $activity->content->attempt);
     if (isset($activity->content->maxgrade)) {
         $grades = $activity->content->sumgrades . ' / ' . $activity->content->maxgrade;
         echo ': (<a href="' . $CFG->wwwroot . '/mod/quiz/review.php?attempt=' .
@@ -1078,15 +1078,15 @@ function quiz_process_options($quiz) {
                     if (is_numeric($boundary)) {
                         $boundary = $boundary * $quiz->grade / 100.0;
                     } else {
-                        return get_string('feedbackerrorboundaryformat', 'quiz', $i + 1);
+                        return get_string('feedbackerrorboundaryformat', 'mod_quiz', $i + 1);
                     }
                 }
             }
             if ($boundary <= 0 || $boundary >= $quiz->grade) {
-                return get_string('feedbackerrorboundaryoutofrange', 'quiz', $i + 1);
+                return get_string('feedbackerrorboundaryoutofrange', 'mod_quiz', $i + 1);
             }
             if ($i > 0 && $boundary >= $quiz->feedbackboundaries[$i - 1]) {
-                return get_string('feedbackerrororder', 'quiz', $i + 1);
+                return get_string('feedbackerrororder', 'mod_quiz', $i + 1);
             }
             $quiz->feedbackboundaries[$i] = $boundary;
             $i += 1;
@@ -1098,14 +1098,14 @@ function quiz_process_options($quiz) {
             for ($i = $numboundaries; $i < count($quiz->feedbackboundaries); $i += 1) {
                 if (!empty($quiz->feedbackboundaries[$i]) &&
                         trim($quiz->feedbackboundaries[$i]) != '') {
-                    return get_string('feedbackerrorjunkinboundary', 'quiz', $i + 1);
+                    return get_string('feedbackerrorjunkinboundary', 'mod_quiz', $i + 1);
                 }
             }
         }
         for ($i = $numboundaries + 1; $i < count($quiz->feedbacktext); $i += 1) {
             if (!empty($quiz->feedbacktext[$i]['text']) &&
                     trim($quiz->feedbacktext[$i]['text']) != '') {
-                return get_string('feedbackerrorjunkinfeedback', 'quiz', $i + 1);
+                return get_string('feedbackerrorjunkinfeedback', 'mod_quiz', $i + 1);
             }
         }
         // Needs to be bigger than $quiz->grade because of '<' test in quiz_feedback_for_grade().
@@ -1327,7 +1327,7 @@ function quiz_update_events($quiz, $override = null) {
                 // Group doesn't exist, just skip it.
                 continue;
             }
-            $eventname = get_string('overridegroupeventname', 'quiz', $params);
+            $eventname = get_string('overridegroupeventname', 'mod_quiz', $params);
             // Set group override priority.
             if ($grouppriorities !== null) {
                 $openpriorities = $grouppriorities['open'];
@@ -1339,7 +1339,7 @@ function quiz_update_events($quiz, $override = null) {
             // User override event.
             $params = new stdClass();
             $params->quiz = $quiz->name;
-            $eventname = get_string('overrideusereventname', 'quiz', $params);
+            $eventname = get_string('overrideusereventname', 'mod_quiz', $params);
             // Set user override priority.
             $event->priority = CALENDAR_EVENT_USER_OVERRIDE_PRIORITY;
         } else {
@@ -1356,7 +1356,7 @@ function quiz_update_events($quiz, $override = null) {
                 } else {
                     unset($event->id);
                 }
-                $event->name = get_string('quizeventopens', 'quiz', $eventname);
+                $event->name = get_string('quizeventopens', 'mod_quiz', $eventname);
                 // The method calendar_event::create will reuse a db record if the id field is set.
                 calendar_event::create($event, false);
             }
@@ -1367,7 +1367,7 @@ function quiz_update_events($quiz, $override = null) {
                     unset($event->id);
                 }
                 $event->type      = CALENDAR_EVENT_TYPE_ACTION;
-                $event->name      = get_string('quizeventcloses', 'quiz', $eventname);
+                $event->name      = get_string('quizeventcloses', 'mod_quiz', $eventname);
                 $event->timestart = $timeclose;
                 $event->timesort  = $timeclose;
                 $event->eventtype = QUIZ_EVENT_TYPE_CLOSE;
@@ -1489,13 +1489,13 @@ function quiz_questions_in_use($questionids) {
  * @param MoodleQuickForm $mform the course reset form that is being built.
  */
 function quiz_reset_course_form_definition($mform) {
-    $mform->addElement('header', 'quizheader', get_string('modulenameplural', 'quiz'));
+    $mform->addElement('header', 'quizheader', get_string('modulenameplural', 'mod_quiz'));
     $mform->addElement('advcheckbox', 'reset_quiz_attempts',
-            get_string('removeallquizattempts', 'quiz'));
+            get_string('removeallquizattempts', 'mod_quiz'));
     $mform->addElement('advcheckbox', 'reset_quiz_user_overrides',
-            get_string('removealluseroverrides', 'quiz'));
+            get_string('removealluseroverrides', 'mod_quiz'));
     $mform->addElement('advcheckbox', 'reset_quiz_group_overrides',
-            get_string('removeallgroupoverrides', 'quiz'));
+            get_string('removeallgroupoverrides', 'mod_quiz'));
 }
 
 /**
@@ -1543,7 +1543,7 @@ function quiz_reset_userdata($data) {
     global $CFG, $DB;
     require_once($CFG->libdir . '/questionlib.php');
 
-    $componentstr = get_string('modulenameplural', 'quiz');
+    $componentstr = get_string('modulenameplural', 'mod_quiz');
     $status = [];
 
     // Delete attempts.
@@ -1557,7 +1557,7 @@ function quiz_reset_userdata($data) {
                 'quiz IN (SELECT id FROM {quiz} WHERE course = ?)', [$data->courseid]);
         $status[] = [
             'component' => $componentstr,
-            'item' => get_string('attemptsdeleted', 'quiz'),
+            'item' => get_string('attemptsdeleted', 'mod_quiz'),
             'error' => false];
 
         // Remove all grades from gradebook.
@@ -1568,7 +1568,7 @@ function quiz_reset_userdata($data) {
         }
         $status[] = [
             'component' => $componentstr,
-            'item' => get_string('gradesdeleted', 'quiz'),
+            'item' => get_string('gradesdeleted', 'mod_quiz'),
             'error' => false];
     }
 
@@ -1580,7 +1580,7 @@ function quiz_reset_userdata($data) {
                 'quiz IN (SELECT id FROM {quiz} WHERE course = ?) AND userid IS NOT NULL', [$data->courseid]);
         $status[] = [
             'component' => $componentstr,
-            'item' => get_string('useroverridesdeleted', 'quiz'),
+            'item' => get_string('useroverridesdeleted', 'mod_quiz'),
             'error' => false];
         $purgeoverrides = true;
     }
@@ -1590,7 +1590,7 @@ function quiz_reset_userdata($data) {
                 'quiz IN (SELECT id FROM {quiz} WHERE course = ?) AND groupid IS NOT NULL', [$data->courseid]);
         $status[] = [
             'component' => $componentstr,
-            'item' => get_string('groupoverridesdeleted', 'quiz'),
+            'item' => get_string('groupoverridesdeleted', 'mod_quiz'),
             'error' => false];
         $purgeoverrides = true;
     }
@@ -1615,7 +1615,7 @@ function quiz_reset_userdata($data) {
 
         $status[] = [
             'component' => $componentstr,
-            'item' => get_string('openclosedatesupdated', 'quiz'),
+            'item' => get_string('openclosedatesupdated', 'mod_quiz'),
             'error' => false];
     }
 
@@ -1653,7 +1653,7 @@ function quiz_num_attempt_summary($quiz, $cm, $returnzero = false, $currentgroup
                         '{groups_members} gm ON qa.userid = gm.userid ' .
                         'WHERE quiz = ? AND preview = 0 AND groupid = ?',
                         [$quiz->id, $currentgroup]);
-                return get_string('attemptsnumthisgroup', 'quiz', $a);
+                return get_string('attemptsnumthisgroup', 'mod_quiz', $a);
             } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) {
                 list($usql, $params) = $DB->get_in_or_equal(array_keys($groups));
                 $a->group = $DB->count_records_sql('SELECT COUNT(DISTINCT qa.id) FROM ' .
@@ -1661,10 +1661,10 @@ function quiz_num_attempt_summary($quiz, $cm, $returnzero = false, $currentgroup
                         '{groups_members} gm ON qa.userid = gm.userid ' .
                         'WHERE quiz = ? AND preview = 0 AND ' .
                         "groupid $usql", array_merge([$quiz->id], $params));
-                return get_string('attemptsnumyourgroups', 'quiz', $a);
+                return get_string('attemptsnumyourgroups', 'mod_quiz', $a);
             }
         }
-        return get_string('attemptsnum', 'quiz', $numattempts);
+        return get_string('attemptsnum', 'mod_quiz', $numattempts);
     }
     return '';
 }
@@ -1754,13 +1754,13 @@ function quiz_extend_settings_navigation(settings_navigation $settings, navigati
 
     if (has_any_capability(['mod/quiz:manageoverrides', 'mod/quiz:viewoverrides'], $settings->get_page()->cm->context)) {
         $url = new moodle_url('/mod/quiz/overrides.php', ['cmid' => $settings->get_page()->cm->id, 'mode' => 'user']);
-        $node = navigation_node::create(get_string('overrides', 'quiz'),
+        $node = navigation_node::create(get_string('overrides', 'mod_quiz'),
                     $url, navigation_node::TYPE_SETTING, null, 'mod_quiz_useroverrides');
         $settingsoverride = $quiznode->add_node($node, $beforekey);
     }
 
     if (has_capability('mod/quiz:manage', $settings->get_page()->cm->context)) {
-        $node = navigation_node::create(get_string('questions', 'quiz'),
+        $node = navigation_node::create(get_string('questions', 'mod_quiz'),
             new moodle_url('/mod/quiz/edit.php', ['cmid' => $settings->get_page()->cm->id]),
             navigation_node::TYPE_SETTING, null, 'mod_quiz_edit', new pix_icon('t/edit', ''));
         $quiznode->add_node($node, $beforekey);
@@ -1769,7 +1769,7 @@ function quiz_extend_settings_navigation(settings_navigation $settings, navigati
     if (has_capability('mod/quiz:preview', $settings->get_page()->cm->context)) {
         $url = new moodle_url('/mod/quiz/startattempt.php',
                 ['cmid' => $settings->get_page()->cm->id, 'sesskey' => sesskey()]);
-        $node = navigation_node::create(get_string('preview', 'quiz'), $url,
+        $node = navigation_node::create(get_string('preview', 'mod_quiz'), $url,
                 navigation_node::TYPE_SETTING, null, 'mod_quiz_preview',
                 new pix_icon('i/preview', ''));
         $previewnode = $quiznode->add_node($node, $beforekey);
@@ -1784,7 +1784,7 @@ function quiz_extend_settings_navigation(settings_navigation $settings, navigati
 
         $url = new moodle_url('/mod/quiz/report.php',
                 ['id' => $settings->get_page()->cm->id, 'mode' => reset($reportlist)]);
-        $reportnode = $quiznode->add_node(navigation_node::create(get_string('results', 'quiz'), $url,
+        $reportnode = $quiznode->add_node(navigation_node::create(get_string('results', 'mod_quiz'), $url,
                 navigation_node::TYPE_SETTING,
                 null, 'quiz_report', new pix_icon('i/report', '')));
 
@@ -1905,13 +1905,13 @@ function quiz_question_pluginfile($course, $context, $component,
  */
 function quiz_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $modulepagetype = [
-        'mod-quiz-*'       => get_string('page-mod-quiz-x', 'quiz'),
-        'mod-quiz-view'    => get_string('page-mod-quiz-view', 'quiz'),
-        'mod-quiz-attempt' => get_string('page-mod-quiz-attempt', 'quiz'),
-        'mod-quiz-summary' => get_string('page-mod-quiz-summary', 'quiz'),
-        'mod-quiz-review'  => get_string('page-mod-quiz-review', 'quiz'),
-        'mod-quiz-edit'    => get_string('page-mod-quiz-edit', 'quiz'),
-        'mod-quiz-report'  => get_string('page-mod-quiz-report', 'quiz'),
+        'mod-quiz-*'       => get_string('page-mod-quiz-x', 'mod_quiz'),
+        'mod-quiz-view'    => get_string('page-mod-quiz-view', 'mod_quiz'),
+        'mod-quiz-attempt' => get_string('page-mod-quiz-attempt', 'mod_quiz'),
+        'mod-quiz-summary' => get_string('page-mod-quiz-summary', 'mod_quiz'),
+        'mod-quiz-review'  => get_string('page-mod-quiz-review', 'mod_quiz'),
+        'mod-quiz-edit'    => get_string('page-mod-quiz-edit', 'mod_quiz'),
+        'mod-quiz-report'  => get_string('page-mod-quiz-report', 'mod_quiz'),
     ];
     return $modulepagetype;
 }
@@ -1921,8 +1921,8 @@ function quiz_page_type_list($pagetype, $parentcontext, $currentcontext) {
  */
 function quiz_get_navigation_options() {
     return [
-        QUIZ_NAVMETHOD_FREE => get_string('navmethod_free', 'quiz'),
-        QUIZ_NAVMETHOD_SEQ  => get_string('navmethod_seq', 'quiz')
+        QUIZ_NAVMETHOD_FREE => get_string('navmethod_free', 'mod_quiz'),
+        QUIZ_NAVMETHOD_SEQ  => get_string('navmethod_seq', 'mod_quiz')
     ];
 }
 
@@ -2074,7 +2074,7 @@ function mod_quiz_core_calendar_provide_event_action(calendar_event $event,
         return null;
     }
 
-    $name = get_string('attemptquiznow', 'quiz');
+    $name = get_string('attemptquiznow', 'mod_quiz');
     $url = new \moodle_url('/mod/quiz/view.php', [
         'id' => $cm->id
     ]);
@@ -2222,17 +2222,17 @@ function mod_quiz_get_completion_active_rule_descriptions($cm) {
 
     if (!empty($rules['completionpassorattemptsexhausted'])) {
         if (!empty($rules['completionpassorattemptsexhausted']['completionattemptsexhausted'])) {
-            $descriptions[] = get_string('completionpassorattemptsexhausteddesc', 'quiz');
+            $descriptions[] = get_string('completionpassorattemptsexhausteddesc', 'mod_quiz');
         }
     } else {
         // Fallback.
         if (!empty($rules['completionattemptsexhausted'])) {
-            $descriptions[] = get_string('completionpassorattemptsexhausteddesc', 'quiz');
+            $descriptions[] = get_string('completionpassorattemptsexhausteddesc', 'mod_quiz');
         }
     }
 
     if (!empty($rules['completionminattempts'])) {
-        $descriptions[] = get_string('completionminattemptsdesc', 'quiz', $rules['completionminattempts']);
+        $descriptions[] = get_string('completionminattemptsdesc', 'mod_quiz', $rules['completionminattempts']);
     }
 
     return $descriptions;
@@ -2278,14 +2278,14 @@ function mod_quiz_core_calendar_get_valid_event_timestart_range(\calendar_event 
         if (!empty($quiz->timeclose)) {
             $maxdate = [
                 $quiz->timeclose,
-                get_string('openafterclose', 'quiz')
+                get_string('openafterclose', 'mod_quiz')
             ];
         }
     } else if ($event->eventtype == QUIZ_EVENT_TYPE_CLOSE) {
         if (!empty($quiz->timeopen)) {
             $mindate = [
                 $quiz->timeopen,
-                get_string('closebeforeopen', 'quiz')
+                get_string('closebeforeopen', 'mod_quiz')
             ];
         }
     }
@@ -2492,7 +2492,7 @@ function mod_quiz_output_fragment_add_random_question_form($args) {
  * @return lang_string The event type lang string.
  */
 function mod_quiz_core_calendar_get_event_action_string(string $eventtype): string {
-    $modulename = get_string('modulename', 'quiz');
+    $modulename = get_string('modulename', 'mod_quiz');
 
     switch ($eventtype) {
         case QUIZ_EVENT_TYPE_OPEN:
@@ -2502,10 +2502,10 @@ function mod_quiz_core_calendar_get_event_action_string(string $eventtype): stri
             $identifier = 'quizeventcloses';
             break;
         default:
-            return get_string('requiresaction', 'calendar', $modulename);
+            return get_string('requiresaction', 'core_calendar', $modulename);
     }
 
-    return get_string($identifier, 'quiz', $modulename);
+    return get_string($identifier, 'mod_quiz', $modulename);
 }
 
 /**

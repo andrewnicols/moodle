@@ -73,7 +73,7 @@ $PAGE->set_pagelayout('standard');
 
 /// Security: make sure we're allowed to do this operation
 if ($context->contextlevel == CONTEXT_COURSE) {
-    $pagename = get_string("repositorycourse",'repository');
+    $pagename = get_string("repositorycourse",'core_repository');
 
     if ( !$course = $DB->get_record('course', array('id'=>$context->instanceid))) {
         throw new \moodle_exception('invalidcourseid');
@@ -85,10 +85,10 @@ if ($context->contextlevel == CONTEXT_COURSE) {
 
 } else if ($context->contextlevel == CONTEXT_USER) {
     require_login();
-    $pagename = get_string('manageinstances', 'repository');
+    $pagename = get_string('manageinstances', 'core_repository');
     //is the user looking at its own repository instances
     if ($USER->id != $context->instanceid){
-        throw new \moodle_exception('notyourinstances', 'repository');
+        throw new \moodle_exception('notyourinstances', 'core_repository');
     }
     $user = $USER;
 } else {
@@ -108,13 +108,13 @@ if (!empty($new) && empty($edit)){
 
 if (isset($type)) {
     if (!$type->get_visible()) {
-        throw new \moodle_exception('typenotvisible', 'repository', $baseurl);
+        throw new \moodle_exception('typenotvisible', 'core_repository', $baseurl);
     }
     // Prevents the user from creating/editing an instance if the repository is not visible in
     // this context OR if the user does not have the capability to view this repository in this context.
     $canviewrepository = has_capability('repository/'.$type->get_typename().':view', $context);
     if (!$type->get_contextvisibility($context) || !$canviewrepository) {
-        throw new \moodle_exception('usercontextrepositorydisabled', 'repository', $baseurl);
+        throw new \moodle_exception('usercontextrepositorydisabled', 'core_repository', $baseurl);
     }
 }
 
@@ -127,10 +127,10 @@ if (!empty($instance)) {
     }
     if ($instance->readonly) {
         // Cannot edit, or delete a readonly instance.
-        throw new repository_exception('readonlyinstance', 'repository');
+        throw new repository_exception('readonlyinstance', 'core_repository');
     } else if (!$instance->can_be_edited_by_user()) {
         // The user has to have the right to edit the instance.
-        throw new repository_exception('nopermissiontoaccess', 'repository');
+        throw new repository_exception('nopermissiontoaccess', 'core_repository');
     }
 }
 
@@ -183,10 +183,10 @@ if (!empty($edit) || !empty($new)) {
             $data = data_submitted();
         }
         if ($success) {
-            $savedstr = get_string('configsaved', 'repository');
+            $savedstr = get_string('configsaved', 'core_repository');
             redirect($baseurl);
         } else {
-            throw new \moodle_exception('instancenotsaved', 'repository', $baseurl);
+            throw new \moodle_exception('instancenotsaved', 'core_repository', $baseurl);
         }
         exit;
     } else {     // Display the form
@@ -203,17 +203,17 @@ if (!empty($edit) || !empty($new)) {
             throw new \moodle_exception('confirmsesskeybad', '', $baseurl);
         }
         if ($instance->delete()) {
-            $deletedstr = get_string('instancedeleted', 'repository');
+            $deletedstr = get_string('instancedeleted', 'core_repository');
             redirect($baseurl, $deletedstr, 3);
         } else {
-            throw new \moodle_exception('instancenotdeleted', 'repository', $baseurl);
+            throw new \moodle_exception('instancenotdeleted', 'core_repository', $baseurl);
         }
         exit;
     }
     echo $OUTPUT->header();
     $formcontinue = new single_button(new moodle_url($baseurl, array('delete' => $delete, 'sure' => 'yes')), get_string('yes'));
     $formcancel = new single_button($baseurl, get_string('no'));
-    echo $OUTPUT->confirm(get_string('confirmdelete', 'repository', $instance->name), $formcontinue, $formcancel);
+    echo $OUTPUT->confirm(get_string('confirmdelete', 'core_repository', $instance->name), $formcontinue, $formcancel);
     $return = false;
 } else {
     echo $OUTPUT->header();

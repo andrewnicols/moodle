@@ -119,7 +119,7 @@ class analysis {
                     $a = new \stdClass();
                     $a->analysableid = $analysable->get_name();
                     $a->errors = implode(', ', $errors);
-                    $this->analyser->add_log(get_string('analysablenotused', 'analytics', $a));
+                    $this->analyser->add_log(get_string('analysablenotused', 'core_analytics', $a));
                 }
             }
 
@@ -183,7 +183,7 @@ class analysis {
             $a = new \stdClass();
             $a->analysableid = $analysable->get_name();
             $a->result = $isvalidresult;
-            $this->analyser->add_log(get_string('analysablenotvalidfortarget', 'analytics', $a));
+            $this->analyser->add_log(get_string('analysablenotvalidfortarget', 'core_analytics', $a));
             return array();
         }
 
@@ -223,7 +223,7 @@ class analysis {
         $timesplitting->set_modelid($this->analyser->get_modelid());
         if (!$timesplitting->is_valid_analysable($analysable)) {
             $result->status = \core_analytics\model::ANALYSABLE_REJECTED_TIME_SPLITTING_METHOD;
-            $result->message = get_string('invalidanalysablefortimesplitting', 'analytics',
+            $result->message = get_string('invalidanalysablefortimesplitting', 'core_analytics',
                 $timesplitting->get_name());
             return $result;
         }
@@ -240,7 +240,7 @@ class analysis {
 
         if (count($sampleids) === 0) {
             $result->status = \core_analytics\model::ANALYSABLE_REJECTED_TIME_SPLITTING_METHOD;
-            $result->message = get_string('nodata', 'analytics');
+            $result->message = get_string('nodata', 'core_analytics');
             return $result;
         }
 
@@ -257,7 +257,7 @@ class analysis {
 
             if (empty($ranges)) {
                 $result->status = \core_analytics\model::ANALYSABLE_REJECTED_TIME_SPLITTING_METHOD;
-                $result->message = get_string('noranges', 'analytics');
+                $result->message = get_string('noranges', 'core_analytics');
                 return $result;
             }
 
@@ -269,7 +269,7 @@ class analysis {
 
             if (count($sampleids) === 0) {
                 $result->status = \core_analytics\model::ANALYSABLE_REJECTED_TIME_SPLITTING_METHOD;
-                $result->message = get_string('nonewdata', 'analytics');
+                $result->message = get_string('nonewdata', 'core_analytics');
                 return $result;
             }
 
@@ -281,13 +281,13 @@ class analysis {
 
             if (count($sampleids) === 0) {
                 $result->status = \core_analytics\model::ANALYSABLE_REJECTED_TIME_SPLITTING_METHOD;
-                $result->message = get_string('nonewdata', 'analytics');
+                $result->message = get_string('nonewdata', 'core_analytics');
                 return $result;
             }
 
             if (count($ranges) === 0) {
                 $result->status = \core_analytics\model::ANALYSABLE_REJECTED_TIME_SPLITTING_METHOD;
-                $result->message = get_string('nonewranges', 'analytics');
+                $result->message = get_string('nonewranges', 'core_analytics');
                 return $result;
             }
         }
@@ -296,7 +296,7 @@ class analysis {
         if (!$this->init_analysable_analysis($timesplitting->get_id(), $analysable->get_id())) {
             // If this model + analysable + timesplitting combination is being analysed we skip this process.
             $result->status = \core_analytics\model::NO_DATASET;
-            $result->message = get_string('analysisinprogress', 'analytics');
+            $result->message = get_string('analysisinprogress', 'core_analytics');
             return $result;
         }
 
@@ -311,7 +311,7 @@ class analysis {
 
         if (!$sampleids) {
             $result->status = \core_analytics\model::NO_DATASET;
-            $result->message = get_string('novalidsamples', 'analytics');
+            $result->message = get_string('novalidsamples', 'core_analytics');
             $this->finish_analysable_analysis();
             return $result;
         }
@@ -335,7 +335,7 @@ class analysis {
 
         if (!$data) {
             $result->status = \core_analytics\model::ANALYSABLE_REJECTED_TIME_SPLITTING_METHOD;
-            $result->message = get_string('novaliddata', 'analytics');
+            $result->message = get_string('novaliddata', 'core_analytics');
             $this->finish_analysable_analysis();
             return $result;
         }
@@ -364,11 +364,11 @@ class analysis {
 
         if (!$formattedresult) {
             $this->finish_analysable_analysis();
-            throw new \moodle_exception('errorcannotwritedataset', 'analytics');
+            throw new \moodle_exception('errorcannotwritedataset', 'core_analytics');
         }
 
         $result->status = \core_analytics\model::OK;
-        $result->message = get_string('successfullyanalysed', 'analytics');
+        $result->message = get_string('successfullyanalysed', 'core_analytics');
         $result->result = $formattedresult;
 
         // Flag the model + analysable + timesplitting as analysed.

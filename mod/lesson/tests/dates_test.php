@@ -56,48 +56,48 @@ class dates_test extends advanced_testcase {
             ],
             'only with opening time' => [
                 $after, null, null, null, null, null, [
-                    ['label' => get_string('activitydate:opens', 'course'), 'timestamp' => $after, 'dataid' => 'available'],
+                    ['label' => get_string('activitydate:opens', 'core_course'), 'timestamp' => $after, 'dataid' => 'available'],
                 ]
             ],
             'only with closing time' => [
                 null, $after, null, null, null, null, [
-                    ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $after, 'dataid' => 'deadline'],
+                    ['label' => get_string('activitydate:closes', 'core_course'), 'timestamp' => $after, 'dataid' => 'deadline'],
                 ]
             ],
             'with both times' => [
                 $after, $later, null, null, null, null, [
-                    ['label' => get_string('activitydate:opens', 'course'), 'timestamp' => $after, 'dataid' => 'available'],
-                    ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'deadline'],
+                    ['label' => get_string('activitydate:opens', 'core_course'), 'timestamp' => $after, 'dataid' => 'available'],
+                    ['label' => get_string('activitydate:closes', 'core_course'), 'timestamp' => $later, 'dataid' => 'deadline'],
                 ]
             ],
             'between the dates' => [
                 $before, $after, null, null, null, null, [
-                    ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $before, 'dataid' => 'available'],
-                    ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $after, 'dataid' => 'deadline'],
+                    ['label' => get_string('activitydate:opened', 'core_course'), 'timestamp' => $before, 'dataid' => 'available'],
+                    ['label' => get_string('activitydate:closes', 'core_course'), 'timestamp' => $after, 'dataid' => 'deadline'],
                 ]
             ],
             'dates are past' => [
                 $earlier, $before, null, null, null, null, [
-                    ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'available'],
-                    ['label' => get_string('activitydate:closed', 'course'), 'timestamp' => $before, 'dataid' => 'deadline'],
+                    ['label' => get_string('activitydate:opened', 'core_course'), 'timestamp' => $earlier, 'dataid' => 'available'],
+                    ['label' => get_string('activitydate:closed', 'core_course'), 'timestamp' => $before, 'dataid' => 'deadline'],
                 ]
             ],
             'with user override' => [
                 $before, $after, $earlier, $later, null, null, [
-                    ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'available'],
-                    ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'deadline'],
+                    ['label' => get_string('activitydate:opened', 'core_course'), 'timestamp' => $earlier, 'dataid' => 'available'],
+                    ['label' => get_string('activitydate:closes', 'core_course'), 'timestamp' => $later, 'dataid' => 'deadline'],
                 ]
             ],
             'with group override' => [
                 $before, $after, null, null, $earlier, $later, [
-                    ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'available'],
-                    ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'deadline'],
+                    ['label' => get_string('activitydate:opened', 'core_course'), 'timestamp' => $earlier, 'dataid' => 'available'],
+                    ['label' => get_string('activitydate:closes', 'core_course'), 'timestamp' => $later, 'dataid' => 'deadline'],
                 ]
             ],
             'with both user and group overrides' => [
                 $before, $after, $earlier, $later, $earlier - DAYSECS, $later + DAYSECS, [
-                    ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'available'],
-                    ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'deadline'],
+                    ['label' => get_string('activitydate:opened', 'core_course'), 'timestamp' => $earlier, 'dataid' => 'available'],
+                    ['label' => get_string('activitydate:closes', 'core_course'), 'timestamp' => $later, 'dataid' => 'deadline'],
                 ]
             ],
         ];

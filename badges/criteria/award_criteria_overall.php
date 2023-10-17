@@ -69,9 +69,9 @@ class award_criteria_overall extends award_criteria {
                 $url = new moodle_url('criteria.php', array('id' => $data->id, 'sesskey' => sesskey()));
                 echo $OUTPUT->single_select($url, 'update', $agg, $data->get_aggregation_method($this->criteriatype),
                     null, null, array('aria-describedby' => 'overall'));
-                echo html_writer::span(get_string('overallcrit', 'badges'), '', array('id' => 'overall'));
+                echo html_writer::span(get_string('overallcrit', 'core_badges'), '', array('id' => 'overall'));
             } else {
-                echo $OUTPUT->box(get_string('criteria_descr_' . $this->criteriatype, 'badges',
+                echo $OUTPUT->box(get_string('criteria_descr_' . $this->criteriatype, 'core_badges',
                         core_text::strtoupper($agg[$data->get_aggregation_method()])), 'clearfix');
             }
             echo $OUTPUT->box_end();

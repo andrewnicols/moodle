@@ -51,7 +51,7 @@ function choice_set_events($choice) {
             array('modulename' => 'choice', 'instance' => $choice->id, 'eventtype' => $event->eventtype))) {
         if ((!empty($choice->timeopen)) && ($choice->timeopen > 0)) {
             // Calendar event exists so update it.
-            $event->name         = get_string('calendarstart', 'choice', $choice->name);
+            $event->name         = get_string('calendarstart', 'mod_choice', $choice->name);
             $event->description  = format_module_intro('choice', $choice, $choice->coursemodule, false);
             $event->format       = FORMAT_HTML;
             $event->timestart    = $choice->timeopen;
@@ -68,7 +68,7 @@ function choice_set_events($choice) {
     } else {
         // Event doesn't exist so create one.
         if ((!empty($choice->timeopen)) && ($choice->timeopen > 0)) {
-            $event->name         = get_string('calendarstart', 'choice', $choice->name);
+            $event->name         = get_string('calendarstart', 'mod_choice', $choice->name);
             $event->description  = format_module_intro('choice', $choice, $choice->coursemodule, false);
             $event->format       = FORMAT_HTML;
             $event->courseid     = $choice->course;
@@ -92,7 +92,7 @@ function choice_set_events($choice) {
             array('modulename' => 'choice', 'instance' => $choice->id, 'eventtype' => $event->eventtype))) {
         if ((!empty($choice->timeclose)) && ($choice->timeclose > 0)) {
             // Calendar event exists so update it.
-            $event->name         = get_string('calendarend', 'choice', $choice->name);
+            $event->name         = get_string('calendarend', 'mod_choice', $choice->name);
             $event->description  = format_module_intro('choice', $choice, $choice->coursemodule, false);
             $event->format       = FORMAT_HTML;
             $event->timestart    = $choice->timeclose;
@@ -109,7 +109,7 @@ function choice_set_events($choice) {
     } else {
         // Event doesn't exist so create one.
         if ((!empty($choice->timeclose)) && ($choice->timeclose > 0)) {
-            $event->name         = get_string('calendarend', 'choice', $choice->name);
+            $event->name         = get_string('calendarend', 'mod_choice', $choice->name);
             $event->description  = format_module_intro('choice', $choice, $choice->coursemodule, false);
             $event->format       = FORMAT_HTML;
             $event->courseid     = $choice->course;

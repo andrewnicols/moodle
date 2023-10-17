@@ -137,7 +137,7 @@ class block_course_list extends block_list {
             return;
         }
 
-        $icon = $OUTPUT->pix_icon('i/mnethost', get_string('host', 'mnet'));
+        $icon = $OUTPUT->pix_icon('i/mnethost', get_string('host', 'core_mnet'));
 
         // shortcut - the rest is only for logged in users!
         if (!isloggedin() || isguestuser()) {
@@ -145,7 +145,7 @@ class block_course_list extends block_list {
         }
 
         if ($courses = get_my_remotecourses()) {
-            $this->content->items[] = get_string('remotecourses','mnet');
+            $this->content->items[] = get_string('remotecourses','core_mnet');
             $this->content->icons[] = '';
             foreach ($courses as $course) {
                 $this->content->items[]="<a title=\"" . format_string($course->shortname, true) . "\" ".
@@ -157,10 +157,10 @@ class block_course_list extends block_list {
         }
 
         if ($hosts = get_my_remotehosts()) {
-            $this->content->items[] = get_string('remotehosts', 'mnet');
+            $this->content->items[] = get_string('remotehosts', 'core_mnet');
             $this->content->icons[] = '';
             foreach($USER->mnet_foreign_host_array as $somehost) {
-                $this->content->items[] = $somehost['count'].get_string('courseson','mnet').'<a title="'.$somehost['name'].'" href="'.$somehost['url'].'">'.$icon.$somehost['name'].'</a>';
+                $this->content->items[] = $somehost['count'].get_string('courseson','core_mnet').'<a title="'.$somehost['name'].'" href="'.$somehost['url'].'">'.$icon.$somehost['name'].'</a>';
             }
             // if we listed hosts, done
             return true;

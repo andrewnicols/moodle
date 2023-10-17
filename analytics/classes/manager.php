@@ -203,7 +203,7 @@ class manager {
             if ($checkisready) {
                 $isready = $instance->is_ready();
                 if ($isready !== true) {
-                    throw new \moodle_exception('errorprocessornotready', 'analytics', '', $isready);
+                    throw new \moodle_exception('errorprocessornotready', 'core_analytics', '', $isready);
                 }
             }
             self::$predictionprocessors[$checkisready][$predictionclass] = $instance;
@@ -572,12 +572,12 @@ class manager {
         global $DB;
 
         if (!$predictionobj = $DB->get_record('analytics_predictions', array('id' => $predictionid))) {
-            throw new \moodle_exception('errorpredictionnotfound', 'analytics');
+            throw new \moodle_exception('errorpredictionnotfound', 'core_analytics');
         }
 
         $context = \context::instance_by_id($predictionobj->contextid, IGNORE_MISSING);
         if (!$context) {
-            throw new \moodle_exception('errorpredictioncontextnotavailable', 'analytics');
+            throw new \moodle_exception('errorpredictioncontextnotavailable', 'core_analytics');
         }
 
         if ($requirelogin) {

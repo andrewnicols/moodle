@@ -47,7 +47,7 @@ $pageurl = new moodle_url('/' . $CFG->admin . '/tool/availabilityconditions/');
 if (($plugin = optional_param('plugin', '', PARAM_PLUGIN))) {
     require_sesskey();
     if (!array_key_exists($plugin, $plugins)) {
-        throw new \moodle_exception('invalidcomponent', 'error', $pageurl);
+        throw new \moodle_exception('invalidcomponent', 'mod_error', $pageurl);
     }
     $action = required_param('action', PARAM_ALPHA);
     switch ($action) {
@@ -66,7 +66,7 @@ if (($plugin = optional_param('plugin', '', PARAM_PLUGIN))) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('manageplugins', 'availability'));
+echo $OUTPUT->heading(get_string('manageplugins', 'core_availability'));
 
 // Show a table of installed availability conditions.
 $table = new flexible_table('availabilityconditions_administration_table');

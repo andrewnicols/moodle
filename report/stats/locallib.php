@@ -251,7 +251,7 @@ function report_stats_report($course, $report, $mode, $user, $roleid, $time) {
             switch ($param->table) {
                 case 'daily'  : $period = get_string('day'); break;
                 case 'weekly' : $period = get_string('week'); break;
-                case 'monthly': $period = get_string('month', 'form'); break;
+                case 'monthly': $period = get_string('month', 'core_form'); break;
                 default : $period = '';
             }
             $table->head = array(get_string('periodending','moodle',$period));

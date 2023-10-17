@@ -42,5 +42,5 @@ function qbank_exporttoxml_preview_display(question_definition $question, int $c
     }
 
     $exporturl = helper::question_get_export_single_question_url($question);
-    return html_writer::div(html_writer::link($exporturl, get_string('exportonequestion', 'question')));
+    return html_writer::div(html_writer::link($exporturl, get_string('exportonequestion', 'core_question')));
 }

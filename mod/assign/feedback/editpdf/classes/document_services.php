@@ -278,7 +278,7 @@ EOD;
 
         // Capability checks.
         if (!$assignment->can_view_submission($userid)) {
-            throw new \moodle_exception('nopermissiontoaccesspage', 'error');
+            throw new \moodle_exception('nopermissiontoaccesspage', 'mod_error');
         }
 
         $grade = $assignment->get_user_grade($userid, true, $attemptnumber);
@@ -631,7 +631,7 @@ EOD;
         $user = $DB->get_record('user', array('id'=>$userid), '*', MUST_EXIST);
 
         if ($assignment->is_blind_marking()) {
-            $prefix = $groupname . get_string('participant', 'assign');
+            $prefix = $groupname . get_string('participant', 'mod_assign');
             $prefix = str_replace('_', ' ', $prefix);
             $prefix = clean_filename($prefix . '_' . $assignment->get_uniqueid_for_user($userid) . '_');
         } else {

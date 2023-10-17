@@ -202,7 +202,7 @@ class provider implements
                 }
             }
             \core_privacy\local\request\writer::with_context($contextlist->current())->export_data(
-                    [get_string('privacy:path', 'portfolio')], (object) $instances);
+                    [get_string('privacy:path', 'core_portfolio')], (object) $instances);
         }
     }
 

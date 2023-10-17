@@ -38,12 +38,12 @@ list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
 
 // Get display strings.
 $txt = new stdClass();
-$txt->importerror = get_string('importerror', 'question');
-$txt->importquestions = get_string('importquestions', 'question');
+$txt->importerror = get_string('importerror', 'core_question');
+$txt->importquestions = get_string('importquestions', 'core_question');
 
 list($catid, $catcontext) = explode(',', $pagevars['cat']);
 if (!$category = $DB->get_record("question_categories", ['id' => $catid])) {
-    throw new moodle_exception('nocategory', 'question');
+    throw new moodle_exception('nocategory', 'core_question');
 }
 
 $categorycontext = context::instance_by_id($category->contextid);
@@ -99,7 +99,7 @@ if ($form = $importform->get_data()) {
 
     $formatfile = $CFG->dirroot . '/question/format/' . $form->format . '/format.php';
     if (!is_readable($formatfile)) {
-        throw new moodle_exception('formatnotfound', 'question', '', $form->format);
+        throw new moodle_exception('formatnotfound', 'core_question', '', $form->format);
     }
 
     require_once($formatfile);

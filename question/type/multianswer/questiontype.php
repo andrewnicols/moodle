@@ -507,7 +507,7 @@ function qtype_multianswer_extract_question($text) {
             $wrapped->shuffleanswers = 1;
             $wrapped->layout = qtype_multichoice_base::LAYOUT_HORIZONTAL;
         } else {
-            throw new \moodle_exception('unknownquestiontype', 'question', '', $answerregs[2]);
+            throw new \moodle_exception('unknownquestiontype', 'core_question', '', $answerregs[2]);
             return false;
         }
 
@@ -651,10 +651,10 @@ function qtype_multianswer_validate_question(stdClass $question) : array {
                 if ($subquestion->qtype == 'multichoice' && $answercount < 2) {
                     $errors[$prefix.'answer[0]'] = get_string('notenoughanswers', 'qtype_multichoice', 2);
                 } else if ($answercount == 0) {
-                    $errors[$prefix.'answer[0]'] = get_string('notenoughanswers', 'question', 1);
+                    $errors[$prefix.'answer[0]'] = get_string('notenoughanswers', 'core_question', 1);
                 }
                 if ($maxgrade == false) {
-                    $errors[$prefix.'fraction[0]'] = get_string('fractionsnomax', 'question');
+                    $errors[$prefix.'fraction[0]'] = get_string('fractionsnomax', 'core_question');
                 }
                 $sub++;
             }

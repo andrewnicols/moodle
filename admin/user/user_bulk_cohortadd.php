@@ -132,7 +132,7 @@ foreach ($users as $user) {
             '',
             '',
             '',
-            get_string('deleteduser', 'bulkusers')
+            get_string('deleteduser', 'mod_bulkusers')
         );
     } else {
         $table->data[] = array(

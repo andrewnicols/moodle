@@ -66,7 +66,7 @@ abstract class discrete extends base {
     public function get_display_value($value, $ignoredsubtype = false) {
 
         if (!self::is_a_class($value)) {
-            throw new \moodle_exception('errorpredictionformat', 'analytics');
+            throw new \moodle_exception('errorpredictionformat', 'core_analytics');
         }
 
         // To discard any possible weird keys devs used.
@@ -97,7 +97,7 @@ abstract class discrete extends base {
     public function get_calculation_outcome($value, $ignoredsubtype = false) {
 
         if (!self::is_a_class($value)) {
-            throw new \moodle_exception('errorpredictionformat', 'analytics');
+            throw new \moodle_exception('errorpredictionformat', 'core_analytics');
         }
 
         if (in_array($value, $this->ignored_predicted_classes(), false)) {

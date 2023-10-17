@@ -67,7 +67,7 @@ class setting_scheduled_task_status extends admin_setting_description {
      * page.
      */
     public function __construct(string $name, string $scheduledtaskclassname, string $extradescription = '') {
-        $visiblename = new lang_string('task_status', 'admin');
+        $visiblename = new lang_string('task_status', 'core_admin');
         $this->classname = $scheduledtaskclassname;
         $this->extradescription = $extradescription;
 
@@ -95,9 +95,9 @@ class setting_scheduled_task_status extends admin_setting_description {
     private function get_task_description(): string {
         $task = manager::get_scheduled_task($this->classname);
         if ($task->is_enabled()) {
-            $taskenabled = get_string('enabled', 'admin');
+            $taskenabled = get_string('enabled', 'core_admin');
         } else {
-            $taskenabled = get_string('disabled', 'admin');
+            $taskenabled = get_string('disabled', 'core_admin');
         }
         $taskenabled = strtolower($taskenabled);
         $gotourl = new moodle_url(
@@ -116,6 +116,6 @@ class setting_scheduled_task_status extends admin_setting_description {
         $taskdetail->gotourl = $gotourl->out(false);
         $taskdetail->extradescription = $this->extradescription;
 
-        return html_writer::tag('p', get_string('task_status_desc', 'admin', $taskdetail));
+        return html_writer::tag('p', get_string('task_status_desc', 'core_admin', $taskdetail));
     }
 }

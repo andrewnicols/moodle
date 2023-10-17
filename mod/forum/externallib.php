@@ -653,7 +653,7 @@ class mod_forum_external extends external_api {
 
         // Check they have the view forum capability.
         if (!$capabilitymanager->can_view_discussions($USER)) {
-            throw new moodle_exception('noviewdiscussionspermission', 'forum');
+            throw new moodle_exception('noviewdiscussionspermission', 'mod_forum');
         }
 
         $alldiscussions = mod_forum_get_discussion_summaries($forum, $USER, $groupid, $sortorder, $page, $perpage);
@@ -1044,11 +1044,11 @@ class mod_forum_external extends external_api {
         $warnings = array();
 
         if (!$parent = forum_get_post_full($params['postid'])) {
-            throw new moodle_exception('invalidparentpostid', 'forum');
+            throw new moodle_exception('invalidparentpostid', 'mod_forum');
         }
 
         if (!$discussion = $discussionvault->get_from_id($parent->discussion)) {
-            throw new moodle_exception('notpartofdiscussion', 'forum');
+            throw new moodle_exception('notpartofdiscussion', 'mod_forum');
         }
 
         // Request and permission validation.
@@ -1097,13 +1097,13 @@ class mod_forum_external extends external_api {
                     $value = clean_param($option['value'], PARAM_BOOL);
                     break;
                 default:
-                    throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                    throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
             }
             $options[$name] = $value;
         }
 
         if (!$capabilitymanager->can_post_in_discussion($USER, $discussion)) {
-            throw new moodle_exception('nopostforum', 'forum');
+            throw new moodle_exception('nopostforum', 'mod_forum');
         }
 
         $thresholdwarning = forum_check_throttling($forumrecord, $cm);
@@ -1165,7 +1165,7 @@ class mod_forum_external extends external_api {
                 forum_post_subscription($settings, $forumrecord, $discussionrecord);
             }
         } else {
-            throw new moodle_exception('couldnotadd', 'forum');
+            throw new moodle_exception('couldnotadd', 'mod_forum');
         }
 
         $builderfactory = \mod_forum\local\container::get_builder_factory();
@@ -1177,12 +1177,12 @@ class mod_forum_external extends external_api {
         $message = [];
         $message[] = [
             'type' => 'success',
-            'message' => get_string("postaddedsuccess", "forum")
+            'message' => get_string("postaddedsuccess", 'mod_forum')
         ];
 
         $message[] = [
             'type' => 'success',
-            'message' => get_string("postaddedtimeleft", "forum", format_time($CFG->maxeditingtime))
+            'message' => get_string("postaddedtimeleft", 'mod_forum', format_time($CFG->maxeditingtime))
         ];
 
         $result = array();
@@ -1247,7 +1247,7 @@ class mod_forum_external extends external_api {
 
         // Does the user have the ability to favourite the discussion?
         if (!$capabilitymanager->can_favourite_discussion($USER)) {
-            throw new moodle_exception('cannotfavourite', 'forum');
+            throw new moodle_exception('cannotfavourite', 'mod_forum');
         }
         $usercontext = context_user::instance($USER->id);
         $ufservice = \core_favourites\service_factory::get_service_for_user_context($usercontext);
@@ -1382,7 +1382,7 @@ class mod_forum_external extends external_api {
                     }
                     break;
                 default:
-                    throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                    throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
             }
             $options[$name] = $value;
         }
@@ -1403,7 +1403,7 @@ class mod_forum_external extends external_api {
         }
 
         if (!forum_user_can_post_discussion($forum, $groupid, -1, $cm, $context)) {
-            throw new moodle_exception('cannotcreatediscussion', 'forum');
+            throw new moodle_exception('cannotcreatediscussion', 'mod_forum');
         }
 
         $thresholdwarning = forum_check_throttling($forum, $cm);
@@ -1459,7 +1459,7 @@ class mod_forum_external extends external_api {
             $settings->discussionsubscribe = $options['discussionsubscribe'];
             forum_post_subscription($settings, $forum, $discussion);
         } else {
-            throw new moodle_exception('couldnotadd', 'forum');
+            throw new moodle_exception('couldnotadd', 'mod_forum');
         }
 
         $result = array();
@@ -1732,7 +1732,7 @@ class mod_forum_external extends external_api {
         $managerfactory = mod_forum\local\container::get_manager_factory();
         $capabilitymanager = $managerfactory->get_capability_manager($forum);
         if (!$capabilitymanager->can_manage_forum($USER)) {
-            throw new moodle_exception('errorcannotlock', 'forum');
+            throw new moodle_exception('errorcannotlock', 'mod_forum');
         }
 
         // If the targetstate(currentstate) is not 0 then it should be set to the current time.
@@ -1895,18 +1895,18 @@ class mod_forum_external extends external_api {
         $postentity = $postvault->get_from_id($params['postid']);
 
         if (empty($postentity)) {
-            throw new moodle_exception('invalidpostid', 'forum');
+            throw new moodle_exception('invalidpostid', 'mod_forum');
         }
 
         $discussionentity = $discussionvault->get_from_id($postentity->get_discussion_id());
 
         if (empty($discussionentity)) {
-            throw new moodle_exception('notpartofdiscussion', 'forum');
+            throw new moodle_exception('notpartofdiscussion', 'mod_forum');
         }
 
         $forumentity = $forumvault->get_from_id($discussionentity->get_forum_id());
         if (empty($forumentity)) {
-            throw new moodle_exception('invalidforumid', 'forum');
+            throw new moodle_exception('invalidforumid', 'mod_forum');
         }
 
         $context = $forumentity->get_context();
@@ -2157,15 +2157,15 @@ class mod_forum_external extends external_api {
 
         $postentity = $postvault->get_from_id($params['postid']);
         if (empty($postentity)) {
-            throw new moodle_exception('invalidpostid', 'forum');
+            throw new moodle_exception('invalidpostid', 'mod_forum');
         }
         $discussionentity = $discussionvault->get_from_id($postentity->get_discussion_id());
         if (empty($discussionentity)) {
-            throw new moodle_exception('notpartofdiscussion', 'forum');
+            throw new moodle_exception('notpartofdiscussion', 'mod_forum');
         }
         $forumentity = $forumvault->get_from_id($discussionentity->get_forum_id());
         if (empty($forumentity)) {
-            throw new moodle_exception('invalidforumid', 'forum');
+            throw new moodle_exception('invalidforumid', 'mod_forum');
         }
         self::validate_context($forumentity->get_context());
 
@@ -2173,7 +2173,7 @@ class mod_forum_external extends external_api {
         $capabilitymanager = $managerfactory->get_capability_manager($forumentity);
 
         if (!$capabilitymanager->can_view_post($USER, $discussionentity, $postentity)) {
-            throw new moodle_exception('noviewdiscussionspermission', 'forum');
+            throw new moodle_exception('noviewdiscussionspermission', 'mod_forum');
         }
 
         $builderfactory = mod_forum\local\container::get_builder_factory();
@@ -2266,15 +2266,15 @@ class mod_forum_external extends external_api {
 
         $postentity = $postvault->get_from_id($params['postid']);
         if (empty($postentity)) {
-            throw new moodle_exception('invalidpostid', 'forum');
+            throw new moodle_exception('invalidpostid', 'mod_forum');
         }
         $discussionentity = $discussionvault->get_from_id($postentity->get_discussion_id());
         if (empty($discussionentity)) {
-            throw new moodle_exception('notpartofdiscussion', 'forum');
+            throw new moodle_exception('notpartofdiscussion', 'mod_forum');
         }
         $forumentity = $forumvault->get_from_id($discussionentity->get_forum_id());
         if (empty($forumentity)) {
-            throw new moodle_exception('invalidforumid', 'forum');
+            throw new moodle_exception('invalidforumid', 'mod_forum');
         }
 
         $context = $forumentity->get_context();
@@ -2284,7 +2284,7 @@ class mod_forum_external extends external_api {
         $capabilitymanager = $managerfactory->get_capability_manager($forumentity);
 
         if (!$capabilitymanager->can_edit_post($USER, $discussionentity, $postentity)) {
-            throw new moodle_exception('noviewdiscussionspermission', 'forum');
+            throw new moodle_exception('noviewdiscussionspermission', 'mod_forum');
         }
 
         if ($params['area'] == 'attachment') {
@@ -2449,7 +2449,7 @@ class mod_forum_external extends external_api {
                     $value = clean_param($option['value'], PARAM_INT);
                     break;
                 default:
-                    throw new moodle_exception('errorinvalidparam', 'webservice', '', $name);
+                    throw new moodle_exception('errorinvalidparam', 'core_webservice', '', $name);
             }
             $options[$name] = $value;
         }
@@ -2466,15 +2466,15 @@ class mod_forum_external extends external_api {
 
         $postentity = $postvault->get_from_id($params['postid']);
         if (empty($postentity)) {
-            throw new moodle_exception('invalidpostid', 'forum');
+            throw new moodle_exception('invalidpostid', 'mod_forum');
         }
         $discussionentity = $discussionvault->get_from_id($postentity->get_discussion_id());
         if (empty($discussionentity)) {
-            throw new moodle_exception('notpartofdiscussion', 'forum');
+            throw new moodle_exception('notpartofdiscussion', 'mod_forum');
         }
         $forumentity = $forumvault->get_from_id($discussionentity->get_forum_id());
         if (empty($forumentity)) {
-            throw new moodle_exception('invalidforumid', 'forum');
+            throw new moodle_exception('invalidforumid', 'mod_forum');
         }
         $forum = $forumdatamapper->to_legacy_object($forumentity);
         $capabilitymanager = $managerfactory->get_capability_manager($forumentity);
@@ -2483,7 +2483,7 @@ class mod_forum_external extends external_api {
         self::validate_context($modcontext);
 
         if (!$capabilitymanager->can_edit_post($USER, $discussionentity, $postentity)) {
-            throw new moodle_exception('cannotupdatepost', 'forum');
+            throw new moodle_exception('cannotupdatepost', 'mod_forum');
         }
 
         // Get the original post.

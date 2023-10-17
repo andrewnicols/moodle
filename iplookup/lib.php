@@ -41,7 +41,7 @@ function iplookup_find_location($ip) {
         $record = $reader->city($ip);
 
         if (empty($record)) {
-            $info['error'] = get_string('iplookupfailed', 'error', $ip);
+            $info['error'] = get_string('iplookupfailed', 'mod_error', $ip);
             return $info;
         }
 
@@ -60,7 +60,7 @@ function iplookup_find_location($ip) {
 
         $info['longitude'] = $record->location->longitude;
         $info['latitude'] = $record->location->latitude;
-        $info['note'] = get_string('iplookupmaxmindnote', 'admin');
+        $info['note'] = get_string('iplookupmaxmindnote', 'core_admin');
 
         return $info;
 
@@ -69,7 +69,7 @@ function iplookup_find_location($ip) {
 
         if (strpos($ip, ':') !== false) {
             // IPv6 is not supported by geoplugin.net.
-            $info['error'] = get_string('invalidipformat', 'error');
+            $info['error'] = get_string('invalidipformat', 'mod_error');
             return $info;
         }
 
@@ -79,7 +79,7 @@ function iplookup_find_location($ip) {
             $ipdata = json_decode($ipdata, true);
         }
         if (!is_array($ipdata)) {
-            $info['error'] = get_string('cannotgeoplugin', 'error');
+            $info['error'] = get_string('cannotgeoplugin', 'mod_error');
             return $info;
         }
         $info['latitude'] = (float)$ipdata['geoplugin_latitude'];
@@ -96,7 +96,7 @@ function iplookup_find_location($ip) {
             $info['country'] = s($ipdata['geoplugin_countryName']);
         }
 
-        $info['note'] = get_string('iplookupgeoplugin', 'admin');
+        $info['note'] = get_string('iplookupgeoplugin', 'core_admin');
 
         $info['title'][] = $info['city'];
         $info['title'][] = $info['country'];

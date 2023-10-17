@@ -669,7 +669,7 @@ function print_arrow($direction='up', $strsort=null, $return=false) {
     // Prepare language string
     $strsort = '';
     if (empty($strsort) && !empty($sortdir)) {
-        $strsort  = get_string('sort' . $sortdir, 'grades');
+        $strsort  = get_string('sort' . $sortdir, 'core_grades');
     }
 
     $return = ' ' . $OUTPUT->pix_icon('t/' . $direction, $strsort) . ' ';
@@ -2840,11 +2840,11 @@ function calendar_process_subscription_row($subscriptionid, $pollinterval, $acti
             calendar_update_subscription($sub);
 
             // Update the events.
-            return "<p>" . get_string('subscriptionupdated', 'calendar', $sub->name) . "</p>" .
+            return "<p>" . get_string('subscriptionupdated', 'core_calendar', $sub->name) . "</p>" .
                 calendar_update_subscription_events($subscriptionid);
         case CALENDAR_SUBSCRIPTION_REMOVE:
             calendar_delete_subscription($subscriptionid);
-            return get_string('subscriptionremoved', 'calendar', $sub->name);
+            return get_string('subscriptionremoved', 'core_calendar', $sub->name);
             break;
         default:
             break;
@@ -2897,9 +2897,9 @@ function calendar_import_icalendar_events($ical, $unused = null, $subscriptionid
                 $skippedcount++;
                 break;
             case 0:
-                $return .= '<p>' . get_string('erroraddingevent', 'calendar') . ': ';
+                $return .= '<p>' . get_string('erroraddingevent', 'core_calendar') . ': ';
                 if (empty($event->properties['SUMMARY'])) {
-                    $return .= '(' . get_string('notitle', 'calendar') . ')';
+                    $return .= '(' . get_string('notitle', 'core_calendar') . ')';
                 } else {
                     $return .= $event->properties['SUMMARY'][0]->value;
                 }
@@ -2923,14 +2923,14 @@ function calendar_import_icalendar_events($ical, $unused = null, $subscriptionid
             }
             if (!empty($tobedeleted)) {
                 $DB->delete_records_list('event', 'id', $tobedeleted);
-                $return .= html_writer::tag('li', get_string('eventsdeleted', 'calendar', count($tobedeleted)));
+                $return .= html_writer::tag('li', get_string('eventsdeleted', 'core_calendar', count($tobedeleted)));
             }
         }
     }
 
-    $return .= html_writer::tag('li', get_string('eventsimported', 'calendar', $eventcount));
-    $return .= html_writer::tag('li', get_string('eventsskipped', 'calendar', $skippedcount));
-    $return .= html_writer::tag('li', get_string('eventsupdated', 'calendar', $updatecount));
+    $return .= html_writer::tag('li', get_string('eventsimported', 'core_calendar', $eventcount));
+    $return .= html_writer::tag('li', get_string('eventsskipped', 'core_calendar', $skippedcount));
+    $return .= html_writer::tag('li', get_string('eventsupdated', 'core_calendar', $updatecount));
     $return .= html_writer::end_tag('ul');
     return $return;
 }
@@ -3066,7 +3066,7 @@ function print_grade_plugin_selector($plugin_info, $active_type, $active_plugin,
     // finally print/return the popup form
     if ($count > 1) {
         $select = new url_select($menu, $active, null, 'choosepluginreport');
-        $select->set_label(get_string('gradereport', 'grades'), array('class' => 'accesshide'));
+        $select->set_label(get_string('gradereport', 'core_grades'), array('class' => 'accesshide'));
         if ($return) {
             return $OUTPUT->render($select);
         } else {

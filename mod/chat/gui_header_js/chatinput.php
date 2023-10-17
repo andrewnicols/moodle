@@ -23,10 +23,10 @@ $chatsid = required_param('chat_sid', PARAM_ALPHANUM);
 $chatid   = required_param('chat_id', PARAM_INT);
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new \moodle_exception('notlogged', 'chat');
+    throw new \moodle_exception('notlogged', 'mod_chat');
 }
 if (!$chat = $DB->get_record('chat', array('id' => $chatid))) {
-    throw new \moodle_exception('invalidid', 'chat');
+    throw new \moodle_exception('invalidid', 'mod_chat');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $chat->course))) {
@@ -62,14 +62,14 @@ echo html_writer::start_tag('form', array('action' => '../empty.php',
                                           'target' => 'empty',
                                           'id' => 'inputForm',
                                           'style' => 'margin:0'));
-echo html_writer::label(get_string('entermessage', 'chat'), 'input_chat_message', false, array('class' => 'accesshide'));
+echo html_writer::label(get_string('entermessage', 'mod_chat'), 'input_chat_message', false, array('class' => 'accesshide'));
 echo html_writer::empty_tag('input', array('type' => 'text',
                                            'id' => 'input_chat_message',
                                            'name' => 'chat_message',
                                            'size' => '50',
                                            'value' => ''));
 echo html_writer::empty_tag('input', array('type' => 'checkbox', 'id' => 'auto', 'checked' => 'checked', 'value' => ''));
-echo html_writer::tag('label', get_string('autoscroll', 'chat'), array('for' => 'auto'));
+echo html_writer::tag('label', get_string('autoscroll', 'mod_chat'), array('for' => 'auto'));
 echo html_writer::end_tag('form');
 
 echo html_writer::start_tag('form', array('action' => 'insert.php', 'method' => 'post', 'target' => 'empty', 'id' => 'sendForm'));

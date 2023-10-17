@@ -63,7 +63,7 @@ class all_files_downloaded extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventallfilesdownloaded', 'folder');
+        return get_string('eventallfilesdownloaded', 'mod_folder');
     }
 
     /**

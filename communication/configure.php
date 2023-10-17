@@ -43,7 +43,7 @@ $instanceinfo = [
 
 // Requires communication to be enabled.
 if (!core_communication\api::is_available()) {
-    throw new \moodle_exception('communicationdisabled', 'communication');
+    throw new \moodle_exception('communicationdisabled', 'core_communication');
 }
 
 // Attempt to load the communication instance with the provided params.
@@ -57,7 +57,7 @@ $communication = \core_communication\api::load_by_instance(
 
 // No communication, no way this form can be used.
 if (!$communication) {
-    throw new \moodle_exception('nocommunicationinstance', 'communication');
+    throw new \moodle_exception('nocommunicationinstance', 'core_communication');
 }
 
 // Set variables according to the component callback and use them on the page.
@@ -70,7 +70,7 @@ if (!$communication) {
 // Set up the page.
 $PAGE->set_context($context);
 $PAGE->set_url('/communication/configure.php', $instanceinfo);
-$PAGE->set_title(get_string('communication', 'communication'));
+$PAGE->set_title(get_string('communication', 'core_communication'));
 $PAGE->set_heading($heading);
 $PAGE->add_body_class('limitedwidth');
 
@@ -97,6 +97,6 @@ if ($form->is_cancelled()) {
 
 // Display the page contents.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('communication', 'communication'), 2);
+echo $OUTPUT->heading(get_string('communication', 'core_communication'), 2);
 $form->display();
 echo $OUTPUT->footer();

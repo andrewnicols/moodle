@@ -50,7 +50,7 @@ class access extends base {
      * @return lang_string
      */
     protected function get_default_entity_title(): lang_string {
-        return new lang_string('courseaccess', 'course');
+        return new lang_string('courseaccess', 'core_course');
     }
 
     /**

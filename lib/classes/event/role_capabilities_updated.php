@@ -57,7 +57,7 @@ class role_capabilities_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventrolecapabilitiesupdated', 'role');
+        return get_string('eventrolecapabilitiesupdated', 'core_role');
     }
 
     /**

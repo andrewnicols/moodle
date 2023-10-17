@@ -38,8 +38,8 @@ if ($hassiteconfig) {
         $default = is_https() ? 1 : 0;
         $optionalsubsystems = $ADMIN->locate('optionalsubsystems');
         $optionalsubsystems->add(new admin_setting_enablemobileservice('enablemobilewebservice',
-                new lang_string('enablemobilewebservice', 'admin'),
-                new lang_string('configenablemobilewebservice', 'admin', $enablemobiledoclink), $default));
+                new lang_string('enablemobilewebservice', 'core_admin'),
+                new lang_string('configenablemobilewebservice', 'core_admin', $enablemobiledoclink), $default));
     }
 
     $ismobilewsdisabled = empty($CFG->enablemobilewebservice);
@@ -180,8 +180,8 @@ if ($hassiteconfig) {
     // Reference to Branded Mobile App.
     if (empty($CFG->disableserviceads_branded)) {
         $temp->add(new admin_setting_description('moodlebrandedappreference',
-            new lang_string('moodlebrandedapp', 'admin'),
-            new lang_string('moodlebrandedappreference', 'admin')
+            new lang_string('moodlebrandedapp', 'core_admin'),
+            new lang_string('moodlebrandedappreference', 'core_admin')
         ));
     }
 

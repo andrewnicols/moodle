@@ -99,10 +99,10 @@ if (empty($collapsetocwinsize)) {
 
 require_login($course, false, $cm);
 
-$strscorms = get_string('modulenameplural', 'scorm');
-$strscorm  = get_string('modulename', 'scorm');
-$strpopup = get_string('popup', 'scorm');
-$strexit = get_string('exitactivity', 'scorm');
+$strscorms = get_string('modulenameplural', 'mod_scorm');
+$strscorm  = get_string('modulename', 'mod_scorm');
+$strpopup = get_string('popup', 'mod_scorm');
+$strexit = get_string('exitactivity', 'mod_scorm');
 
 $coursecontext = context_course::instance($course->id);
 
@@ -126,7 +126,7 @@ list($available, $warnings) = scorm_get_availability_status($scorm);
 if (!$available) {
     $reason = current(array_keys($warnings));
     echo $OUTPUT->header();
-    echo $OUTPUT->box(get_string($reason, "scorm", $warnings[$reason]), "generalbox boxaligncenter");
+    echo $OUTPUT->box(get_string($reason, 'mod_scorm', $warnings[$reason]), "generalbox boxaligncenter");
     echo $OUTPUT->footer();
     die;
 }
@@ -142,7 +142,7 @@ $result = scorm_get_toc($USER, $scorm, $cm->id, TOCJSLINK, $currentorg, $scoid, 
 $sco = $result->sco;
 if ($scorm->lastattemptlock == 1 && $result->attemptleft == 0) {
     echo $OUTPUT->header();
-    echo $OUTPUT->notification(get_string('exceededmaxattempts', 'scorm'));
+    echo $OUTPUT->notification(get_string('exceededmaxattempts', 'mod_scorm'));
     echo $OUTPUT->footer();
     exit;
 }
@@ -221,7 +221,7 @@ echo html_writer::div(html_writer::tag('script', '', array('id' => 'external-sco
 if ($scorm->hidetoc == SCORM_TOC_POPUP or $mode == 'browse' or $mode == 'review') {
     echo html_writer::start_div('mb-3', array('id' => 'scormtop'));
     if ($mode == 'browse' || $mode == 'review') {
-        echo html_writer::div(get_string("{$mode}mode", 'scorm'), 'scorm-left h3', ['id' => 'scormmode']);
+        echo html_writer::div(get_string("{$mode}mode", 'mod_scorm'), 'scorm-left h3', ['id' => 'scormmode']);
     }
     if ($scorm->hidetoc == SCORM_TOC_POPUP) {
         echo html_writer::div($result->tocmenu, 'scorm-right', array('id' => 'scormnav'));
@@ -237,12 +237,12 @@ if (empty($scorm->popup) || $displaymode == 'popup') {
     // Added incase javascript popups are blocked we don't provide a direct link
     // to the pop-up as JS communication can fail - the user must disable their pop-up blocker.
     $linkcourse = html_writer::link($CFG->wwwroot.'/course/view.php?id='.
-                    $scorm->course, get_string('finishscormlinkname', 'scorm'));
-    echo $OUTPUT->box(get_string('finishscorm', 'scorm', $linkcourse), 'generalbox', 'altfinishlink');
+                    $scorm->course, get_string('finishscormlinkname', 'mod_scorm'));
+    echo $OUTPUT->box(get_string('finishscorm', 'mod_scorm', $linkcourse), 'generalbox', 'altfinishlink');
 }
 echo html_writer::end_div(); // Toc tree ends.
 echo html_writer::end_div(); // Toc box ends.
-echo html_writer::tag('noscript', html_writer::div(get_string('noscriptnoscorm', 'scorm'), '', array('id' => 'noscript')));
+echo html_writer::tag('noscript', html_writer::div(get_string('noscriptnoscorm', 'mod_scorm'), '', array('id' => 'noscript')));
 
 if ($result->prerequisites) {
     if ($scorm->popup != 0 && $displaymode !== 'popup') {
@@ -262,7 +262,7 @@ if ($result->prerequisites) {
                                 'class' => 'scoframe', 'name' => 'main', 'src' => 'loadSCO.php?id='.$cm->id.$scoidstr.$modestr)));
     }
 } else {
-    echo $OUTPUT->box(get_string('noprerequisites', 'scorm'));
+    echo $OUTPUT->box(get_string('noprerequisites', 'mod_scorm'));
 }
 echo html_writer::end_div(); // Scorm page ends.
 
@@ -271,7 +271,7 @@ $adlnav = scorm_get_adlnav_json($scoes['scoes']);
 
 if (empty($scorm->popup) || $displaymode == 'popup') {
     if (!isset($result->toctitle)) {
-        $result->toctitle = get_string('toc', 'scorm');
+        $result->toctitle = get_string('toc', 'mod_scorm');
     }
     $jsmodule = array(
         'name' => 'mod_scorm',
@@ -283,7 +283,7 @@ if (empty($scorm->popup) || $displaymode == 'popup') {
                             $scorm->hidetoc, $collapsetocwinsize, $result->toctitle, $name, $sco->id, $adlnav), false, $jsmodule);
 }
 if (!empty($forcejs)) {
-    $message = $OUTPUT->box(get_string("forcejavascriptmessage", "scorm"), "generalbox boxaligncenter forcejavascriptmessage");
+    $message = $OUTPUT->box(get_string("forcejavascriptmessage", 'mod_scorm'), "generalbox boxaligncenter forcejavascriptmessage");
     echo html_writer::tag('noscript', $message);
 }
 

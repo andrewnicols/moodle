@@ -253,7 +253,7 @@ class provider implements
             FROM {tag} WHERE userid = ?";
         $rs = $DB->get_recordset_sql($sql, [$user->id]);
         foreach ($rs as $record) {
-            $subcontext = [get_string('tags', 'tag'), $record->id];
+            $subcontext = [get_string('tags', 'core_tag'), $record->id];
             $tag = (object)[
                 'id' => $record->id,
                 'userid' => transform::user($record->userid),

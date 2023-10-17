@@ -54,29 +54,29 @@ class cachestore_addinstance_form extends moodleform {
         $form->setType('editing', PARAM_BOOL);
 
         if (!$store) {
-            $form->addElement('text', 'name', get_string('storename', 'cache'));
+            $form->addElement('text', 'name', get_string('storename', 'core_cache'));
             $form->addHelpButton('name', 'storename', 'cache');
             $form->addRule('name', get_string('required'), 'required');
             $form->setType('name', PARAM_NOTAGS);
         } else {
             $form->addElement('hidden', 'name', $store);
-            $form->addElement('static', 'name-value', get_string('storename', 'cache'), $store);
+            $form->addElement('static', 'name-value', get_string('storename', 'core_cache'), $store);
             $form->setType('name', PARAM_NOTAGS);
         }
 
         if (is_array($locks)) {
-            $form->addElement('select', 'lock', get_string('locking', 'cache'), $locks);
+            $form->addElement('select', 'lock', get_string('locking', 'core_cache'), $locks);
             $form->addHelpButton('lock', 'locking', 'cache');
             $form->setType('lock', PARAM_ALPHANUMEXT);
         } else {
             $form->addElement('hidden', 'lock', '');
             $form->setType('lock', PARAM_ALPHANUMEXT);
-            $form->addElement('static', 'lock-value', get_string('locking', 'cache'),
-                    '<em>'.get_string('nativelocking', 'cache').'</em>');
+            $form->addElement('static', 'lock-value', get_string('locking', 'core_cache'),
+                    '<em>'.get_string('nativelocking', 'core_cache').'</em>');
         }
 
         if (method_exists($this, 'configuration_definition')) {
-            $form->addElement('header', 'storeconfiguration', get_string('storeconfiguration', 'cache'));
+            $form->addElement('header', 'storeconfiguration', get_string('storeconfiguration', 'core_cache'));
             $this->configuration_definition();
         }
 
@@ -95,11 +95,11 @@ class cachestore_addinstance_form extends moodleform {
 
         if (!array_key_exists('name', $errors)) {
             if (!preg_match('#^[a-zA-Z0-9\-_ ]+$#', $data['name'])) {
-                $errors['name'] = get_string('storenameinvalid', 'cache');
+                $errors['name'] = get_string('storenameinvalid', 'core_cache');
             } else if (empty($this->_customdata['store'])) {
                 $stores = core_cache\administration_helper::get_store_instance_summaries();
                 if (array_key_exists($data['name'], $stores)) {
-                    $errors['name'] = get_string('storenamealreadyused', 'cache');
+                    $errors['name'] = get_string('storenamealreadyused', 'core_cache');
                 }
             }
         }
@@ -144,9 +144,9 @@ class cache_definition_mappings_form extends moodleform {
         $storedata = core_cache\administration_helper::get_definition_summaries();
         if ($storedata[$definition]['mode'] != cache_store::MODE_REQUEST) {
             if (isset($storedata[$definition]['canuselocalstore']) && $storedata[$definition]['canuselocalstore']) {
-                $form->addElement('html', $OUTPUT->notification(get_string('localstorenotification', 'cache'), 'notifymessage'));
+                $form->addElement('html', $OUTPUT->notification(get_string('localstorenotification', 'core_cache'), 'notifymessage'));
             } else {
-                $form->addElement('html', $OUTPUT->notification(get_string('sharedstorenotification', 'cache'), 'notifymessage'));
+                $form->addElement('html', $OUTPUT->notification(get_string('sharedstorenotification', 'core_cache'), 'notifymessage'));
             }
         }
         $form->addElement('hidden', 'definition', $definition);
@@ -161,16 +161,16 @@ class cache_definition_mappings_form extends moodleform {
         foreach ($storeoptions as $option => $def) {
             $options[$option] = $option;
             if ($def['default']) {
-                $options[$option] .= ' '.get_string('mappingdefault', 'cache');
+                $options[$option] .= ' '.get_string('mappingdefault', 'core_cache');
             }
         }
 
         for ($i = 0; $i < $requiredoptions; $i++) {
             $title = '...';
             if ($i === 0) {
-                $title = get_string('mappingprimary', 'cache');
+                $title = get_string('mappingprimary', 'core_cache');
             } else if ($i === $requiredoptions-1) {
-                $title = get_string('mappingfinal', 'cache');
+                $title = get_string('mappingfinal', 'core_cache');
             }
             $form->addElement('select', 'mappings['.$i.']', $title, $options);
         }
@@ -181,7 +181,7 @@ class cache_definition_mappings_form extends moodleform {
         }
 
         if (!empty($defaults)) {
-            $form->addElement('static', 'defaults', get_string('defaultmappings', 'cache'),
+            $form->addElement('static', 'defaults', get_string('defaultmappings', 'core_cache'),
                     html_writer::tag('strong', join(', ', $defaults)));
             $form->addHelpButton('defaults', 'defaultmappings', 'cache');
         }
@@ -219,10 +219,10 @@ class cache_definition_sharing_form extends moodleform {
             $count++;
             $group[] = $form->createElement('checkbox', $value, null, $text);
         }
-        $form->addGroup($group, 'sharing', get_string('sharing', 'cache'), '<br />');
+        $form->addGroup($group, 'sharing', get_string('sharing', 'core_cache'), '<br />');
         $form->setType('sharing', PARAM_INT);
 
-        $form->addElement('text', 'userinputsharingkey', get_string('userinputsharingkey', 'cache'));
+        $form->addElement('text', 'userinputsharingkey', get_string('userinputsharingkey', 'core_cache'));
         $form->addHelpButton('userinputsharingkey', 'userinputsharingkey', 'cache');
         $form->disabledIf('userinputsharingkey', 'sharing['.cache_definition::SHARING_INPUT.']', 'notchecked');
         $form->setType('userinputsharingkey', PARAM_ALPHANUMEXT);
@@ -263,7 +263,7 @@ class cache_definition_sharing_form extends moodleform {
         $errors = parent::validation($data, $files);
         if (count($errors) === 0 && !isset($data['sharing'])) {
             // They must select at least one sharing option.
-            $errors['sharing'] = get_string('sharingrequired', 'cache');
+            $errors['sharing'] = get_string('sharingrequired', 'core_cache');
         }
         return $errors;
     }
@@ -296,7 +296,7 @@ class cache_mode_mappings_form extends moodleform {
                     if (empty($store['default'])) {
                         $options[$mode][$storename] = $store['name'];
                     } else {
-                        $options[$mode][$storename] = get_string('store_'.$store['name'], 'cache');
+                        $options[$mode][$storename] = get_string('store_'.$store['name'], 'core_cache');
                     }
                 }
             }
@@ -305,7 +305,7 @@ class cache_mode_mappings_form extends moodleform {
         $form->addElement('hidden', 'action', 'editmodemappings');
         $form->setType('action', PARAM_ALPHA);
         foreach ($options as $mode => $optionset) {
-            $form->addElement('select', 'mode_'.$mode, get_string('mode_'.$mode, 'cache'), $optionset);
+            $form->addElement('select', 'mode_'.$mode, get_string('mode_'.$mode, 'core_cache'), $optionset);
         }
 
         $this->add_action_buttons();
@@ -335,10 +335,10 @@ class cache_lock_form extends moodleform {
         $this->_form->setType('action', PARAM_ALPHANUMEXT);
         $this->_form->addElement('hidden', 'lock', $plugin);
         $this->_form->setType('lock', PARAM_COMPONENT);
-        $this->_form->addElement('text', 'name', get_string('lockname', 'cache'));
+        $this->_form->addElement('text', 'name', get_string('lockname', 'core_cache'));
         $this->_form->setType('name', PARAM_ALPHANUMEXT);
         $this->_form->addRule('name', get_string('required'), 'required');
-        $this->_form->addElement('static', 'namedesc', '', get_string('locknamedesc', 'cache'));
+        $this->_form->addElement('static', 'namedesc', '', get_string('locknamedesc', 'core_cache'));
 
         $this->plugin_definition();
 
@@ -357,7 +357,7 @@ class cache_lock_form extends moodleform {
         if (!isset($errors['name'])) {
             $config = cache_config::instance();
             if (in_array($data['name'], array_keys($config->get_locks()))) {
-                $errors['name'] = get_string('locknamenotunique', 'cache');
+                $errors['name'] = get_string('locknamenotunique', 'core_cache');
             }
         }
         $errors = $this->plugin_validation($data, $files, $errors);

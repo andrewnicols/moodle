@@ -74,9 +74,9 @@ class user_filter_select extends user_filter_type {
      * @return array of comparison operators
      */
     public function get_operators() {
-        return array(0 => get_string('isanyvalue', 'filters'),
-                     1 => get_string('isequalto', 'filters'),
-                     2 => get_string('isnotequalto', 'filters'));
+        return array(0 => get_string('isanyvalue', 'core_filters'),
+                     1 => get_string('isequalto', 'core_filters'),
+                     2 => get_string('isnotequalto', 'core_filters'));
     }
 
     /**
@@ -86,9 +86,9 @@ class user_filter_select extends user_filter_type {
     public function setupForm(&$mform) {
         $objs = array();
         $objs['limiter'] = $mform->createElement('select', $this->_name.'_op', null, $this->get_operators());
-        $objs['limiter']->setLabel(get_string('limiterfor', 'filters', $this->_label));
+        $objs['limiter']->setLabel(get_string('limiterfor', 'core_filters', $this->_label));
         $objs['country'] = $mform->createElement('select', $this->_name, null, $this->_options);
-        $objs['country']->setLabel(get_string('valuefor', 'filters', $this->_label));
+        $objs['country']->setLabel(get_string('valuefor', 'core_filters', $this->_label));
         $grp =& $mform->addElement('group', $this->_name.'_grp', $this->_label, $objs, '', false);
         $mform->disabledIf($this->_name, $this->_name.'_op', 'eq', 0);
         if (!is_null($this->_default)) {
@@ -165,7 +165,7 @@ class user_filter_select extends user_filter_type {
         $a->value    = '"'.s($this->_options[$value]).'"';
         $a->operator = $operators[$operator];
 
-        return get_string('selectlabel', 'filters', $a);
+        return get_string('selectlabel', 'core_filters', $a);
     }
 }
 

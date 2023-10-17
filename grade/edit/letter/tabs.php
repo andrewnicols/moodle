@@ -26,7 +26,7 @@
 
     $row[] = new tabobject('lettersview',
                            $CFG->wwwroot.'/grade/edit/letter/index.php?id='.$COURSE->id,
-                           get_string('letters', 'grades'));
+                           get_string('letters', 'core_grades'));
 
     if (has_capability('moodle/grade:manageletters', $context)) {
         $row[] = new tabobject('lettersedit',

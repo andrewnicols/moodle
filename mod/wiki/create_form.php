@@ -37,20 +37,20 @@ class mod_wiki_create_form extends moodleform {
         $defaultformat = $this->_customdata['defaultformat'];
         $forceformat = $this->_customdata['forceformat'];
 
-        $mform->addElement('header', 'general', get_string('newpagehdr', 'wiki'));
+        $mform->addElement('header', 'general', get_string('newpagehdr', 'mod_wiki'));
 
         $textoptions = array();
         if (!empty($this->_customdata['disable_pagetitle'])) {
             $textoptions = array('readonly'=>'readonly');
         }
-        $mform->addElement('text', 'pagetitle', get_string('newpagetitle', 'wiki'), $textoptions);
+        $mform->addElement('text', 'pagetitle', get_string('newpagetitle', 'mod_wiki'), $textoptions);
         $mform->setType('pagetitle', PARAM_TEXT);
         $mform->addRule('pagetitle', get_string('required'), 'required', null, 'client');
 
         if ($forceformat) {
             $mform->addElement('hidden', 'pageformat', $defaultformat);
         } else {
-            $mform->addElement('static', 'format', get_string('format', 'wiki'));
+            $mform->addElement('static', 'format', get_string('format', 'mod_wiki'));
             $mform->addHelpButton('format', 'format', 'wiki');
             foreach ($formats as $format) {
                 if ($format == $defaultformat) {
@@ -60,7 +60,7 @@ class mod_wiki_create_form extends moodleform {
                 } else {
                     $attr = array();
                 }
-                $mform->addElement('radio', 'pageformat', '', get_string('format'.$format, 'wiki'), $format, $attr);
+                $mform->addElement('radio', 'pageformat', '', get_string('format'.$format, 'mod_wiki'), $format, $attr);
             }
             $mform->addRule('pageformat', get_string('required'), 'required', null, 'client');
         }
@@ -87,6 +87,6 @@ class mod_wiki_create_form extends moodleform {
         $mform->addElement('hidden', 'action', 'create');
         $mform->setType('action', PARAM_ALPHA);
 
-        $this->add_action_buttons(false, get_string('createpage', 'wiki'));
+        $this->add_action_buttons(false, get_string('createpage', 'mod_wiki'));
     }
 }

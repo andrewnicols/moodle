@@ -34,7 +34,7 @@ class password_reset_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskpasswordresetcleanup', 'admin');
+        return get_string('taskpasswordresetcleanup', 'core_admin');
     }
 
     /**

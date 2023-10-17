@@ -44,7 +44,7 @@ $canconfig = has_capability('moodle/course:enrolconfig', $context);
 
 $PAGE->set_url('/enrol/instances.php', array('id'=>$course->id));
 $PAGE->set_pagelayout('admin');
-$PAGE->set_title(get_string('enrolmentinstances', 'enrol'));
+$PAGE->set_title(get_string('enrolmentinstances', 'core_enrol'));
 $PAGE->set_heading($course->fullname);
 
 $instances = enrol_get_instances($course->id, false);
@@ -110,7 +110,7 @@ if ($canconfig and $action and confirm_sesskey()) {
                                                            'sesskey' => sesskey()));
                             $displayname = $plugin->get_instance_name($instance);
                             $message = markdown_to_html(get_string('deleteinstanceconfirmself',
-                                                                   'enrol',
+                                                                   'core_enrol',
                                                                    array('name' => $displayname)));
                             echo $OUTPUT->header();
                             echo $OUTPUT->confirm($message, $yesurl, $PAGE->url);
@@ -136,11 +136,11 @@ if ($canconfig and $action and confirm_sesskey()) {
                 $displayname = $plugin->get_instance_name($instance);
                 $users = $DB->count_records('user_enrolments', array('enrolid' => $instance->id));
                 if ($users) {
-                    $message = markdown_to_html(get_string('deleteinstanceconfirm', 'enrol',
+                    $message = markdown_to_html(get_string('deleteinstanceconfirm', 'core_enrol',
                                                            array('name' => $displayname,
                                                                  'users' => $users)));
                 } else {
-                    $message = markdown_to_html(get_string('deleteinstancenousersconfirm', 'enrol',
+                    $message = markdown_to_html(get_string('deleteinstancenousersconfirm', 'core_enrol',
                                                            array('name' => $displayname)));
                 }
                 echo $OUTPUT->confirm($message, $yesurl, $PAGE->url);
@@ -164,7 +164,7 @@ if ($canconfig and $action and confirm_sesskey()) {
                                                            'sesskey' => sesskey()));
                             $displayname = $plugin->get_instance_name($instance);
                             $message = markdown_to_html(get_string('disableinstanceconfirmself',
-                                                        'enrol',
+                                                        'core_enrol',
                                                         array('name' => $displayname)));
                             echo $OUTPUT->header();
                             echo $OUTPUT->confirm($message, $yesurl, $PAGE->url);
@@ -211,7 +211,7 @@ $strdown    = get_string('down');
 $strdelete  = get_string('delete');
 $strenable  = get_string('enable');
 $strdisable = get_string('disable');
-$strmanage  = get_string('manageinstance', 'enrol');
+$strmanage  = get_string('manageinstance', 'core_enrol');
 
 $table = new html_table();
 $table->head  = array(get_string('name'), get_string('users'), $strup.'/'.$strdown, get_string('edit'));
@@ -307,7 +307,7 @@ foreach (enrol_get_plugins(true) as $name=>$plugin) {
 
 if ($candidates) {
     $select = new url_select($candidates);
-    $select->set_label(get_string('addinstance', 'enrol'));
+    $select->set_label(get_string('addinstance', 'core_enrol'));
     echo $OUTPUT->render($select);
 }
 

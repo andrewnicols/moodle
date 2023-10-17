@@ -290,7 +290,7 @@ function resource_cm_info_view(cm_info $cm) {
  */
 function resource_get_file_areas($course, $cm, $context) {
     $areas = array();
-    $areas['content'] = get_string('resourcecontent', 'resource');
+    $areas['content'] = get_string('resourcecontent', 'mod_resource');
     return $areas;
 }
 
@@ -425,7 +425,7 @@ function resource_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
  * @param stdClass $currentcontext Current context of block
  */
 function resource_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-resource-*'=>get_string('page-mod-resource-x', 'resource'));
+    $module_pagetype = array('mod-resource-*'=>get_string('page-mod-resource-x', 'mod_resource'));
     return $module_pagetype;
 }
 

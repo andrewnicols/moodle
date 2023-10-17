@@ -55,7 +55,7 @@ class riskbackup extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/roles/manage.php'),
-            get_string('manageroles', 'role'));
+            get_string('manageroles', 'core_role'));
     }
 
     /**

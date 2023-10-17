@@ -40,7 +40,7 @@ class systemrole extends base {
     public function get_config_form(MoodleQuickForm $mform): void {
         $roles = get_assignable_roles(context_system::instance(), ROLENAME_ALIAS);
 
-        $mform->addElement('autocomplete', 'roles', get_string('selectrole', 'role'), $roles, ['multiple' => true]);
+        $mform->addElement('autocomplete', 'roles', get_string('selectrole', 'core_role'), $roles, ['multiple' => true]);
         $mform->addRule('roles', null, 'required', null, 'client');
     }
 

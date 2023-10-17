@@ -41,15 +41,15 @@ $versionid = required_param('versionid', PARAM_INT);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    throw new \moodle_exception('incorrectpageid', 'mod_wiki');
 }
 
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
 }
 
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
 }
 
 if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
@@ -61,12 +61,12 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 require_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    throw new \moodle_exception('cannotviewpage', 'mod_wiki');
 }
 
 if ($confirm) {
     if (!confirm_sesskey()) {
-        throw new \moodle_exception(get_string('invalidsesskey', 'wiki'));
+        throw new \moodle_exception(get_string('invalidsesskey', 'mod_wiki'));
     }
     $wikipage = new page_wiki_confirmrestore($wiki, $subwiki, $cm);
     $wikipage->set_page($page);

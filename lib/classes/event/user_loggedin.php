@@ -57,7 +57,7 @@ class user_loggedin extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventuserloggedin', 'auth');
+        return get_string('eventuserloggedin', 'core_auth');
     }
 
     /**

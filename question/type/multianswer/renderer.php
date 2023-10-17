@@ -188,7 +188,7 @@ abstract class qtype_multianswer_subq_renderer_base extends qtype_renderer {
             $a = new stdClass();
             $a->mark = format_float($fraction * $subq->defaultmark, $options->markdp);
             $a->max = format_float($subq->defaultmark, $options->markdp);
-            $feedback[] = get_string('markoutofmax', 'question', $a);
+            $feedback[] = get_string('markoutofmax', 'core_question', $a);
         }
 
         if (!$feedback) {
@@ -491,7 +491,7 @@ class qtype_multianswer_multichoice_vertical_renderer extends qtype_multianswer_
             $a->mark = format_float($fraction * $subq->defaultmark, $options->markdp);
             $a->max = format_float($subq->defaultmark, $options->markdp);
 
-            $feedback[] = html_writer::tag('div', get_string('markoutofmax', 'question', $a));
+            $feedback[] = html_writer::tag('div', get_string('markoutofmax', 'core_question', $a));
         }
 
         if ($options->rightanswer) {
@@ -683,7 +683,7 @@ class qtype_multianswer_multiresponse_vertical_renderer extends qtype_multianswe
             $a->mark = format_float($fraction * $subq->defaultmark, $options->markdp);
             $a->max = format_float($subq->defaultmark, $options->markdp);
 
-            $feedback[] = html_writer::tag('div', get_string('markoutofmax', 'question', $a));
+            $feedback[] = html_writer::tag('div', get_string('markoutofmax', 'core_question', $a));
         }
 
         if ($options->rightanswer) {

@@ -180,7 +180,7 @@ function install_helpbutton($url, $title='') {
  */
 function install_db_validate($database, $dbhost, $dbuser, $dbpass, $dbname, $prefix, $dboptions) {
     if (!preg_match('/^[a-z_]*$/', $prefix)) {
-        return get_string('invaliddbprefix', 'install');
+        return get_string('invaliddbprefix', 'mod_install');
     }
     try {
         try {
@@ -298,7 +298,7 @@ function install_print_help_page($help) {
           <head>
           <link rel="shortcut icon" href="theme/clean/pix/favicon.ico" />
           <link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.'/install/css.php" />
-          <title>'.get_string('installation','install').'</title>
+          <title>'.get_string('installation','mod_install').'</title>
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           </head><body>';
     switch ($help) {
@@ -344,7 +344,7 @@ function install_print_header($config, $stagename, $heading, $stagetext, $stagec
           <link rel="shortcut icon" href="theme/clean/pix/favicon.ico" />';
 
     echo '<link rel="stylesheet" type="text/css" href="'.$CFG->wwwroot.'/install/css.php" />
-          <title>'.get_string('installation', 'install') . moodle_page::TITLE_SEPARATOR . 'Moodle '.$CFG->target_release.'</title>
+          <title>'.get_string('installation', 'mod_install') . moodle_page::TITLE_SEPARATOR . 'Moodle '.$CFG->target_release.'</title>
           <meta name="robots" content="noindex">
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           <meta http-equiv="pragma" content="no-cache" />
@@ -354,7 +354,7 @@ function install_print_header($config, $stagename, $heading, $stagetext, $stagec
             <div id="page" class="mt-0 container stage'.$config->stage.'">
                 <div id="page-header">
                     <div id="header" class=" clearfix">
-                        <h1 class="headermain">'.get_string('installation','install').'</h1>
+                        <h1 class="headermain">'.get_string('installation','mod_install').'</h1>
                         <div class="headermenu">&nbsp;</div>
                     </div>
                     <div class="bg-light p-3 mb-3"><h3 class="m-0">'.$stagename.'</h3></div>
@@ -449,7 +449,7 @@ function install_cli_database(array $options, $interactive) {
     require($CFG->dirroot.'/version.php');
 
     if ($DB->get_tables() ) {
-        cli_error(get_string('clitablesexist', 'install'));
+        cli_error(get_string('clitablesexist', 'mod_install'));
     }
 
     if (empty($options['adminpass'])) {
@@ -460,7 +460,7 @@ function install_cli_database(array $options, $interactive) {
     list($envstatus, $environment_results) = check_moodle_environment(normalize_version($release), ENV_SELECT_RELEASE);
     if (!$envstatus) {
         $errors = environment_get_errors($environment_results);
-        cli_heading(get_string('environment', 'admin'));
+        cli_heading(get_string('environment', 'core_admin'));
         foreach ($errors as $error) {
             list($info, $report) = $error;
             echo "!! $info !!\n$report\n\n";
@@ -471,7 +471,7 @@ function install_cli_database(array $options, $interactive) {
     if (!$DB->setup_is_unicodedb()) {
         if (!$DB->change_db_encoding()) {
             // If could not convert successfully, throw error, and prevent installation
-            cli_error(get_string('unicoderequired', 'admin'));
+            cli_error(get_string('unicoderequired', 'core_admin'));
         }
     }
 

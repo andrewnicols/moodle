@@ -198,7 +198,7 @@ class mod_wiki_external extends external_api {
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki($params['wikiid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
 
         // Permission validation.
@@ -209,7 +209,7 @@ class mod_wiki_external extends external_api {
         // Check if user can view this wiki.
         // We don't use wiki_user_can_view because it requires to have a valid subwiki for the user.
         if (!has_capability('mod/wiki:viewpage', $context)) {
-            throw new moodle_exception('cannotviewpage', 'wiki');
+            throw new moodle_exception('cannotviewpage', 'mod_wiki');
         }
 
         // Trigger course_module_viewed event and completion.
@@ -268,12 +268,12 @@ class mod_wiki_external extends external_api {
 
         // Get wiki page.
         if (!$page = wiki_get_page($params['pageid'])) {
-            throw new moodle_exception('incorrectpageid', 'wiki');
+            throw new moodle_exception('incorrectpageid', 'mod_wiki');
         }
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki_from_pageid($params['pageid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
 
         // Permission validation.
@@ -283,10 +283,10 @@ class mod_wiki_external extends external_api {
 
         // Check if user can view this wiki.
         if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-            throw new moodle_exception('incorrectsubwikiid', 'wiki');
+            throw new moodle_exception('incorrectsubwikiid', 'mod_wiki');
         }
         if (!wiki_user_can_view($subwiki, $wiki)) {
-            throw new moodle_exception('cannotviewpage', 'wiki');
+            throw new moodle_exception('cannotviewpage', 'mod_wiki');
         }
 
         // Trigger page_viewed event and completion.
@@ -343,7 +343,7 @@ class mod_wiki_external extends external_api {
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki($params['wikiid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
 
         // Validate context and capabilities.
@@ -441,7 +441,7 @@ class mod_wiki_external extends external_api {
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki($params['wikiid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
         list($course, $cm) = get_course_and_cm_from_instance($wiki, 'wiki');
         $context = context_module::instance($cm->id);
@@ -454,7 +454,7 @@ class mod_wiki_external extends external_api {
         $subwiki = wiki_get_subwiki_by_group_and_user_with_validation($wiki, $groupid, $userid);
 
         if ($subwiki === false) {
-            throw new moodle_exception('cannotviewpage', 'wiki');
+            throw new moodle_exception('cannotviewpage', 'mod_wiki');
         } else if ($subwiki->id != -1) {
 
             $options = $params['options'];
@@ -594,12 +594,12 @@ class mod_wiki_external extends external_api {
 
         // Get wiki page.
         if (!$page = wiki_get_page($params['pageid'])) {
-            throw new moodle_exception('incorrectpageid', 'wiki');
+            throw new moodle_exception('incorrectpageid', 'mod_wiki');
         }
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki_from_pageid($params['pageid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
 
         // Permission validation.
@@ -609,10 +609,10 @@ class mod_wiki_external extends external_api {
 
         // Check if user can view this wiki.
         if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-            throw new moodle_exception('incorrectsubwikiid', 'wiki');
+            throw new moodle_exception('incorrectsubwikiid', 'mod_wiki');
         }
         if (!wiki_user_can_view($subwiki, $wiki)) {
-            throw new moodle_exception('cannotviewpage', 'wiki');
+            throw new moodle_exception('cannotviewpage', 'mod_wiki');
         }
 
         $returnedpage = array();
@@ -727,7 +727,7 @@ class mod_wiki_external extends external_api {
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki($params['wikiid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
         list($course, $cm) = get_course_and_cm_from_instance($wiki, 'wiki');
         $context = context_module::instance($cm->id);
@@ -741,7 +741,7 @@ class mod_wiki_external extends external_api {
 
         // Get subwiki based on group and user.
         if ($subwiki === false) {
-            throw new moodle_exception('cannotviewfiles', 'wiki');
+            throw new moodle_exception('cannotviewfiles', 'mod_wiki');
         } else if ($subwiki->id != -1) {
             // The subwiki exists, let's get the files.
             $returnedfiles = util::get_area_files($context->id, 'mod_wiki', 'attachments', $subwiki->id);
@@ -843,17 +843,17 @@ class mod_wiki_external extends external_api {
 
         // Get wiki page.
         if (!$page = wiki_get_page($params['pageid'])) {
-            throw new moodle_exception('incorrectpageid', 'wiki');
+            throw new moodle_exception('incorrectpageid', 'mod_wiki');
         }
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki_from_pageid($params['pageid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
 
         // Get subwiki instance.
         if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-            throw new moodle_exception('incorrectsubwikiid', 'wiki');
+            throw new moodle_exception('incorrectsubwikiid', 'mod_wiki');
         }
 
         // Permission validation.
@@ -862,16 +862,16 @@ class mod_wiki_external extends external_api {
         self::validate_context($context);
 
         if (!wiki_user_can_edit($subwiki)) {
-            throw new moodle_exception('cannoteditpage', 'wiki');
+            throw new moodle_exception('cannoteditpage', 'mod_wiki');
         }
 
         if (!wiki_set_lock($params['pageid'], $USER->id, $params['section'], true)) {
-            throw new moodle_exception('pageislocked', 'wiki');
+            throw new moodle_exception('pageislocked', 'mod_wiki');
         }
 
         $version = wiki_get_current_version($page->id);
         if (empty($version)) {
-            throw new moodle_exception('versionerror', 'wiki');
+            throw new moodle_exception('versionerror', 'mod_wiki');
         }
 
         $pagesection = array();
@@ -977,11 +977,11 @@ class mod_wiki_external extends external_api {
         // Get wiki and subwiki instances.
         if (!empty($params['subwikiid'])) {
             if (!$subwiki = wiki_get_subwiki($params['subwikiid'])) {
-                throw new moodle_exception('incorrectsubwikiid', 'wiki');
+                throw new moodle_exception('incorrectsubwikiid', 'mod_wiki');
             }
 
             if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-                throw new moodle_exception('incorrectwikiid', 'wiki');
+                throw new moodle_exception('incorrectwikiid', 'mod_wiki');
             }
 
             // Permission validation.
@@ -991,7 +991,7 @@ class mod_wiki_external extends external_api {
 
         } else {
             if (!$wiki = wiki_get_wiki($params['wikiid'])) {
-                throw new moodle_exception('incorrectwikiid', 'wiki');
+                throw new moodle_exception('incorrectwikiid', 'mod_wiki');
             }
 
             // Permission validation.
@@ -1007,28 +1007,28 @@ class mod_wiki_external extends external_api {
 
             if ($subwiki === false) {
                 // User cannot view page.
-                throw new moodle_exception('cannoteditpage', 'wiki');
+                throw new moodle_exception('cannoteditpage', 'mod_wiki');
             } else if ($subwiki->id < 0) {
                 // Subwiki needed to check edit permissions.
                 if (!wiki_user_can_edit($subwiki)) {
-                    throw new moodle_exception('cannoteditpage', 'wiki');
+                    throw new moodle_exception('cannoteditpage', 'mod_wiki');
                 }
 
                 // Subwiki does not exists and it can be created.
                 $swid = wiki_add_subwiki($wiki->id, $groupid, $userid);
                 if (!$subwiki = wiki_get_subwiki($swid)) {
-                    throw new moodle_exception('incorrectsubwikiid', 'wiki');
+                    throw new moodle_exception('incorrectsubwikiid', 'mod_wiki');
                 }
             }
         }
 
         // Subwiki needed to check edit permissions.
         if (!wiki_user_can_edit($subwiki)) {
-            throw new moodle_exception('cannoteditpage', 'wiki');
+            throw new moodle_exception('cannoteditpage', 'mod_wiki');
         }
 
         if ($page = wiki_get_page_by_title($subwiki->id, $params['title'])) {
-            throw new moodle_exception('pageexists', 'wiki');
+            throw new moodle_exception('pageexists', 'mod_wiki');
         }
 
         // Ignore invalid formats and use default instead.
@@ -1044,14 +1044,14 @@ class mod_wiki_external extends external_api {
         $newpageid = wiki_create_page($subwiki->id, $params['title'], $params['contentformat'], $USER->id);
 
         if (!$page = wiki_get_page($newpageid)) {
-            throw new moodle_exception('incorrectpageid', 'wiki');
+            throw new moodle_exception('incorrectpageid', 'mod_wiki');
         }
 
         // Save content.
         $save = wiki_save_page($page, $params['content'], $USER->id);
 
         if (!$save) {
-            throw new moodle_exception('savingerror', 'wiki');
+            throw new moodle_exception('savingerror', 'mod_wiki');
         }
 
         $result = array();
@@ -1114,17 +1114,17 @@ class mod_wiki_external extends external_api {
 
         // Get wiki page.
         if (!$page = wiki_get_page($params['pageid'])) {
-            throw new moodle_exception('incorrectpageid', 'wiki');
+            throw new moodle_exception('incorrectpageid', 'mod_wiki');
         }
 
         // Get wiki instance.
         if (!$wiki = wiki_get_wiki_from_pageid($params['pageid'])) {
-            throw new moodle_exception('incorrectwikiid', 'wiki');
+            throw new moodle_exception('incorrectwikiid', 'mod_wiki');
         }
 
         // Get subwiki instance.
         if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-            throw new moodle_exception('incorrectsubwikiid', 'wiki');
+            throw new moodle_exception('incorrectsubwikiid', 'mod_wiki');
         }
 
         // Permission validation.
@@ -1133,11 +1133,11 @@ class mod_wiki_external extends external_api {
         self::validate_context($context);
 
         if (!wiki_user_can_edit($subwiki)) {
-            throw new moodle_exception('cannoteditpage', 'wiki');
+            throw new moodle_exception('cannoteditpage', 'mod_wiki');
         }
 
         if (wiki_is_page_section_locked($page->id, $USER->id, $params['section'])) {
-            throw new moodle_exception('pageislocked', 'wiki');
+            throw new moodle_exception('pageislocked', 'mod_wiki');
         }
 
         // Save content.
@@ -1145,7 +1145,7 @@ class mod_wiki_external extends external_api {
             $version = wiki_get_current_version($page->id);
             $content = wiki_parser_proxy::get_section($version->content, $version->contentformat, $params['section'], false);
             if (!$content) {
-                throw new moodle_exception('invalidsection', 'wiki');
+                throw new moodle_exception('invalidsection', 'mod_wiki');
             }
 
             $save = wiki_save_section($page, $params['section'], $params['content'], $USER->id);
@@ -1156,7 +1156,7 @@ class mod_wiki_external extends external_api {
         wiki_delete_locks($page->id, $USER->id, $params['section']);
 
         if (!$save) {
-            throw new moodle_exception('savingerror', 'wiki');
+            throw new moodle_exception('savingerror', 'mod_wiki');
         }
 
         $result = array();

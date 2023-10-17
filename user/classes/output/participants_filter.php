@@ -108,7 +108,7 @@ class participants_filter extends \core\output\datafilter {
      */
     protected function get_roles_filter(): ?stdClass {
         $roles = [];
-        $roles += [-1 => get_string('noroles', 'role')];
+        $roles += [-1 => get_string('noroles', 'core_role')];
         $roles += get_viewable_roles($this->context, null, ROLENAME_BOTH);
 
         if (has_capability('moodle/role:assign', $this->context)) {
@@ -182,7 +182,7 @@ class participants_filter extends \core\output\datafilter {
             $groups = [];
             $groups += [USERSWITHOUTGROUP => (object) [
                     'id' => USERSWITHOUTGROUP,
-                    'name' => get_string('nogroup', 'group'),
+                    'name' => get_string('nogroup', 'core_group'),
                 ]];
             $groups += groups_get_all_groups($this->course->id);
         } else {

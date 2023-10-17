@@ -362,8 +362,8 @@ class provider implements
             foreach ($eventrecord as $event) {
                 // Export the events using the structure Calendar/Events/{datetime}/{eventtype}-event.json.
                 $subcontexts = [
-                    get_string('calendar', 'calendar'),
-                    get_string('events', 'calendar'),
+                    get_string('calendar', 'core_calendar'),
+                    get_string('events', 'core_calendar'),
                     date('c', $event->timestart)
                 ];
                 $name = $event->eventtype . '-event';
@@ -420,8 +420,8 @@ class provider implements
             foreach ($subscriptionrecord as $subscription) {
                 // Export the events using the structure Calendar/Subscriptions/{eventtype}-subscription.json.
                 $subcontexts = [
-                    get_string('calendar', 'calendar'),
-                    get_string('subscriptions', 'calendar')
+                    get_string('calendar', 'core_calendar'),
+                    get_string('subscriptions', 'core_calendar')
                 ];
                 $name = $subscription->eventtype . '-subscription';
 

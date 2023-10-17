@@ -375,51 +375,51 @@ class user extends grade_report {
         // Setting up table headers.
 
         $this->tablecolumns = ['itemname'];
-        $this->tableheaders = [get_string('gradeitem', 'grades')];
+        $this->tableheaders = [get_string('gradeitem', 'core_grades')];
 
         if ($this->showweight) {
             $this->tablecolumns[] = 'weight';
-            $this->tableheaders[] = get_string('weightuc', 'grades');
+            $this->tableheaders[] = get_string('weightuc', 'core_grades');
         }
 
         if ($this->showgrade) {
             $this->tablecolumns[] = 'grade';
-            $this->tableheaders[] = get_string('grade', 'grades');
+            $this->tableheaders[] = get_string('grade', 'core_grades');
         }
 
         if ($this->showrange) {
             $this->tablecolumns[] = 'range';
-            $this->tableheaders[] = get_string('range', 'grades');
+            $this->tableheaders[] = get_string('range', 'core_grades');
         }
 
         if ($this->showpercentage) {
             $this->tablecolumns[] = 'percentage';
-            $this->tableheaders[] = get_string('percentage', 'grades');
+            $this->tableheaders[] = get_string('percentage', 'core_grades');
         }
 
         if ($this->showlettergrade) {
             $this->tablecolumns[] = 'lettergrade';
-            $this->tableheaders[] = get_string('lettergrade', 'grades');
+            $this->tableheaders[] = get_string('lettergrade', 'core_grades');
         }
 
         if ($this->showrank) {
             $this->tablecolumns[] = 'rank';
-            $this->tableheaders[] = get_string('rank', 'grades');
+            $this->tableheaders[] = get_string('rank', 'core_grades');
         }
 
         if ($this->showaverage) {
             $this->tablecolumns[] = 'average';
-            $this->tableheaders[] = get_string('average', 'grades');
+            $this->tableheaders[] = get_string('average', 'core_grades');
         }
 
         if ($this->showfeedback) {
             $this->tablecolumns[] = 'feedback';
-            $this->tableheaders[] = get_string('feedback', 'grades');
+            $this->tableheaders[] = get_string('feedback', 'core_grades');
         }
 
         if ($this->showcontributiontocoursetotal) {
             $this->tablecolumns[] = 'contributiontocoursetotal';
-            $this->tableheaders[] = get_string('contributiontocoursetotal', 'grades');
+            $this->tableheaders[] = get_string('contributiontocoursetotal', 'core_grades');
         }
     }
 
@@ -597,7 +597,7 @@ class user extends grade_report {
                         $gradeitemdata['weightformatted'] = $data['weight']['content'];
                     }
                     if ($hint['status'] != 'used' && $hint['status'] != 'unknown') {
-                        $data['weight']['content'] .= '<br>' . get_string('aggregationhint' . $hint['status'], 'grades');
+                        $data['weight']['content'] .= '<br>' . get_string('aggregationhint' . $hint['status'], 'core_grades');
                         $gradeitemdata['status'] = $hint['status'];
                     }
                 }
@@ -645,7 +645,7 @@ class user extends grade_report {
                         $data['grade']['class'] = $class;
                         $data['grade']['content'] = get_string(
                             'submittedon',
-                            'grades',
+                            'core_grades',
                             userdate(
                                 $gradegrade->get_datesubmitted(),
                                 get_string('strftimedatetimeshort')
@@ -671,14 +671,14 @@ class user extends grade_report {
                             if ($ispassinggrade) {
                                 $gradepassicon = $OUTPUT->pix_icon(
                                     'i/valid',
-                                    get_string('pass', 'grades'),
+                                    get_string('pass', 'core_grades'),
                                     null,
                                     ['class' => 'inline']
                                 );
                             } else {
                                 $gradepassicon = $OUTPUT->pix_icon(
                                     'i/invalid',
-                                    get_string('fail', 'grades'),
+                                    get_string('fail', 'core_grades'),
                                     null,
                                     ['class' => 'inline']
                                 );

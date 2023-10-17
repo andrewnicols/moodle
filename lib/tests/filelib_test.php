@@ -1172,11 +1172,11 @@ EOF;
         $this->resetAfterTest();
 
         // Test example type (.doc).
-        $this->assertEquals(get_string('application/msword', 'mimetypes'),
+        $this->assertEquals(get_string('application/msword', 'mod_mimetypes'),
                 get_mimetype_description(array('filename' => 'test.doc')));
 
         // Test an unknown file type.
-        $this->assertEquals(get_string('document/unknown', 'mimetypes'),
+        $this->assertEquals(get_string('document/unknown', 'mod_mimetypes'),
                 get_mimetype_description(array('filename' => 'test.frog')));
 
         // Test a custom filetype with no lang string specified.

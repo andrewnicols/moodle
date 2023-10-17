@@ -71,11 +71,11 @@ $info = array($ip);
 $note = array();
 
 if (cleanremoteaddr($ip) === false) {
-    throw new \moodle_exception('invalidipformat', 'error');
+    throw new \moodle_exception('invalidipformat', 'mod_error');
 }
 
 if (!ip_is_public($ip)) {
-    throw new \moodle_exception('iplookupprivate', 'error');
+    throw new \moodle_exception('iplookupprivate', 'mod_error');
 }
 
 $info = iplookup_find_location($ip);
@@ -100,7 +100,7 @@ foreach ($info['title'] as $component) {
         $title .= ' - ' . $component;
     }
 }
-$PAGE->set_title(get_string('iplookup', 'admin').': '.$title);
+$PAGE->set_title(get_string('iplookup', 'core_admin').': '.$title);
 $PAGE->set_heading($title);
 echo $OUTPUT->header();
 

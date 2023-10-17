@@ -62,12 +62,12 @@ class behat_mod_glossary extends behat_base {
     public function i_add_a_glossary_entries_category_named($categoryname) {
         $params = [
             get_string('categoryview', 'mod_glossary'),
-            get_string('explainalphabet', 'glossary')
+            get_string('explainalphabet', 'mod_glossary')
         ];
         $this->execute("behat_forms::i_select_from_the_singleselect", $params);
         $this->execute("behat_forms::press_button", get_string('editcategories', 'mod_glossary'));
 
-        $this->execute("behat_forms::press_button", get_string('addcategory', 'glossary'));
+        $this->execute("behat_forms::press_button", get_string('addcategory', 'mod_glossary'));
 
         $this->execute('behat_forms::i_set_the_field_to', array('name', $this->escape($categoryname)));
 

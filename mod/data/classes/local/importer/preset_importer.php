@@ -154,7 +154,7 @@ abstract class preset_importer {
             }
 
             if (empty($fileobj)) {
-                throw new \moodle_exception('invalidpreset', 'data', '', $this->directory);
+                throw new \moodle_exception('invalidpreset', 'mod_data', '', $this->directory);
             }
         }
 
@@ -280,7 +280,7 @@ abstract class preset_importer {
             unset($fieldclass);
         }
         if (!empty($missingfieldtypes)) {
-            echo $OUTPUT->notification(get_string('missingfieldtypeimport', 'data') . html_writer::alist($missingfieldtypes));
+            echo $OUTPUT->notification(get_string('missingfieldtypeimport', 'mod_data') . html_writer::alist($missingfieldtypes));
         }
 
         // Get rid of all old unused data.
@@ -351,7 +351,7 @@ abstract class preset_importer {
                 $preservedfieldid = optional_param("field_$newid", -1, PARAM_INT);
 
                 if (array_key_exists($preservedfieldid, $preservedfields)) {
-                    throw new \moodle_exception('notinjectivemap', 'data');
+                    throw new \moodle_exception('notinjectivemap', 'mod_data');
                 }
 
                 if ($preservedfieldid == -1) {

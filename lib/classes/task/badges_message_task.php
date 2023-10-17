@@ -34,7 +34,7 @@ class badges_message_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskbadgesmessagecron', 'admin');
+        return get_string('taskbadgesmessagecron', 'core_admin');
     }
 
     /**

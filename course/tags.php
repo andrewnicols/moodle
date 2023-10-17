@@ -38,13 +38,13 @@ if (!$course->visible and !has_capability('moodle/course:viewhiddencourses', $co
 }
 require_capability('moodle/course:tag', $context);
 if (!core_tag_tag::is_enabled('core', 'course')) {
-    throw new \moodle_exception('tagsaredisabled', 'tag');
+    throw new \moodle_exception('tagsaredisabled', 'core_tag');
 }
 
 $PAGE->set_course($course);
 $PAGE->set_pagelayout('incourse');
 $PAGE->set_url('/course/tags.php', array('id' => $course->id));
-$PAGE->set_title(get_string('coursetags', 'tag'));
+$PAGE->set_title(get_string('coursetags', 'core_tag'));
 $PAGE->set_heading($course->fullname);
 
 $form = new coursetags_form();
@@ -60,7 +60,7 @@ if ($form->is_cancelled()) {
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('coursetags', 'tag'));
+echo $OUTPUT->heading(get_string('coursetags', 'core_tag'));
 
 $form->display();
 

@@ -36,7 +36,7 @@ require_capability('moodle/grade:import', $context);
 require_capability('gradeimport/xml:view', $context);
 
 // print header
-$strgrades = get_string('grades', 'grades');
+$strgrades = get_string('grades', 'core_grades');
 $actionstr = get_string('pluginname', 'gradeimport_xml');
 
 if (!empty($CFG->gradepublishing)) {
@@ -54,7 +54,7 @@ if ($data = $mform->get_data()) {
 
     if ($text = $mform->get_file_content('userfile')) {
         print_grade_page_head($COURSE->id, 'import', 'xml',
-                              get_string('importxml', 'grades'), false, false, true, 'importxml', 'gradeimport_xml');
+                              get_string('importxml', 'core_grades'), false, false, true, 'importxml', 'gradeimport_xml');
 
         $error = '';
         $importcode = import_xml_grades($text, $course, $error);
@@ -78,11 +78,11 @@ if ($data = $mform->get_data()) {
         }
 
         print_grade_page_head($COURSE->id, 'import', 'xml',
-                              get_string('importxml', 'grades'), false, false, true, 'importxml', 'gradeimport_xml');
+                              get_string('importxml', 'core_grades'), false, false, true, 'importxml', 'gradeimport_xml');
 
         echo '<div class="gradeexportlink">';
         $link = $CFG->wwwroot.'/grade/import/xml/fetch.php?id='.$id.'&amp;feedback='.(int)($data->feedback).'&amp;url='.urlencode($data->url).'&amp;key='.$data->key;
-        echo get_string('import', 'grades').': <a href="'.$link.'">'.$link.'</a>';
+        echo get_string('import', 'core_grades').': <a href="'.$link.'">'.$link.'</a>';
         echo '</div>';
         echo $OUTPUT->footer();
         die;
@@ -90,7 +90,7 @@ if ($data = $mform->get_data()) {
 }
 
 $actionbar = new \core_grades\output\import_action_bar($context, null, 'xml');
-print_grade_page_head($COURSE->id, 'import', 'xml', get_string('importxml', 'grades'),
+print_grade_page_head($COURSE->id, 'import', 'xml', get_string('importxml', 'core_grades'),
     false, false, true, 'importxml', 'gradeimport_xml', null, $actionbar);
 
 $mform->display();

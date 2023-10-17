@@ -42,7 +42,7 @@ class user_add_filter_form extends moodleform {
         $fields      = $this->_customdata['fields'];
         $extraparams = $this->_customdata['extraparams'];
 
-        $mform->addElement('header', 'newfilter', get_string('newfilter', 'filters'));
+        $mform->addElement('header', 'newfilter', get_string('newfilter', 'core_filters'));
 
         foreach ($fields as $ft) {
             $ft->setupForm($mform);
@@ -57,8 +57,8 @@ class user_add_filter_form extends moodleform {
         }
 
         // Add buttons.
-        $replacefiltersbutton = $mform->createElement('submit', 'replacefilters', get_string('replacefilters', 'filters'));
-        $addfilterbutton = $mform->createElement('submit', 'addfilter', get_string('addfilter', 'filters'));
+        $replacefiltersbutton = $mform->createElement('submit', 'replacefilters', get_string('replacefilters', 'core_filters'));
+        $addfilterbutton = $mform->createElement('submit', 'addfilter', get_string('addfilter', 'core_filters'));
         $buttons = array_filter([
             empty($SESSION->user_filtering) ? null : $replacefiltersbutton,
             $addfilterbutton,
@@ -87,7 +87,7 @@ class user_active_filter_form extends moodleform {
 
         if (!empty($SESSION->user_filtering)) {
             // Add controls for each active filter in the active filters group.
-            $mform->addElement('header', 'actfilterhdr', get_string('actfilterhdr', 'filters'));
+            $mform->addElement('header', 'actfilterhdr', get_string('actfilterhdr', 'core_filters'));
 
             foreach ($SESSION->user_filtering as $fname => $datas) {
                 if (!array_key_exists($fname, $fields)) {
@@ -108,8 +108,8 @@ class user_active_filter_form extends moodleform {
             }
 
             $objs = array();
-            $objs[] = &$mform->createElement('submit', 'removeselected', get_string('removeselected', 'filters'));
-            $objs[] = &$mform->createElement('submit', 'removeall', get_string('removeall', 'filters'));
+            $objs[] = &$mform->createElement('submit', 'removeselected', get_string('removeselected', 'core_filters'));
+            $objs[] = &$mform->createElement('submit', 'removeall', get_string('removeall', 'core_filters'));
             $mform->addElement('group', 'actfiltergrp', '', $objs, ' ', false);
         }
     }

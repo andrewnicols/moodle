@@ -27,23 +27,23 @@
     $site = get_site();
 
     if (!has_capability('moodle/user:update', $sitecontext) and !has_capability('moodle/user:delete', $sitecontext)) {
-        throw new \moodle_exception('nopermissions', 'error', '', 'edit/delete users');
+        throw new \moodle_exception('nopermissions', 'mod_error', '', 'edit/delete users');
     }
 
     $stredit   = get_string('edit');
     $strdelete = get_string('delete');
     $strdeletecheck = get_string('deletecheck');
     $strshowallusers = get_string('showallusers');
-    $strsuspend = get_string('suspenduser', 'admin');
-    $strunsuspend = get_string('unsuspenduser', 'admin');
-    $strunlock = get_string('unlockaccount', 'admin');
+    $strsuspend = get_string('suspenduser', 'core_admin');
+    $strunsuspend = get_string('unsuspenduser', 'core_admin');
+    $strunlock = get_string('unlockaccount', 'core_admin');
     $strconfirm = get_string('confirm');
     $strresendemail = get_string('resendemail');
 
     $returnurl = new moodle_url('/admin/user.php', array('sort' => $sort, 'dir' => $dir, 'perpage' => $perpage, 'page'=>$page));
 
     $PAGE->set_primary_active_tab('siteadminnode');
-    $PAGE->navbar->add(get_string('userlist', 'admin'), $PAGE->url);
+    $PAGE->navbar->add(get_string('userlist', 'core_admin'), $PAGE->url);
 
     // The $user variable is also used outside of these if statements.
     $user = null;
@@ -88,16 +88,16 @@
         $user = $DB->get_record('user', array('id'=>$delete, 'mnethostid'=>$CFG->mnet_localhost_id), '*', MUST_EXIST);
 
         if ($user->deleted) {
-            throw new \moodle_exception('usernotdeleteddeleted', 'error');
+            throw new \moodle_exception('usernotdeleteddeleted', 'mod_error');
         }
         if (is_siteadmin($user->id)) {
-            throw new \moodle_exception('useradminodelete', 'error');
+            throw new \moodle_exception('useradminodelete', 'mod_error');
         }
 
         if ($confirm != md5($delete)) {
             echo $OUTPUT->header();
             $fullname = fullname($user, true);
-            echo $OUTPUT->heading(get_string('deleteuser', 'admin'));
+            echo $OUTPUT->heading(get_string('deleteuser', 'core_admin'));
 
             $optionsyes = array('delete'=>$delete, 'confirm'=>md5($delete), 'sesskey'=>sesskey());
             $deleteurl = new moodle_url($returnurl, $optionsyes);
@@ -118,17 +118,17 @@
         }
     } else if ($acl and confirm_sesskey()) {
         if (!has_capability('moodle/user:update', $sitecontext)) {
-            throw new \moodle_exception('nopermissions', 'error', '', 'modify the NMET access control list');
+            throw new \moodle_exception('nopermissions', 'mod_error', '', 'modify the NMET access control list');
         }
         if (!$user = $DB->get_record('user', array('id'=>$acl))) {
-            throw new \moodle_exception('nousers', 'error');
+            throw new \moodle_exception('nousers', 'mod_error');
         }
         if (!is_mnet_remote_user($user)) {
-            throw new \moodle_exception('usermustbemnet', 'error');
+            throw new \moodle_exception('usermustbemnet', 'mod_error');
         }
         $accessctrl = strtolower(required_param('accessctrl', PARAM_ALPHA));
         if ($accessctrl != 'allow' and $accessctrl != 'deny') {
-            throw new \moodle_exception('invalidaccessparameter', 'error');
+            throw new \moodle_exception('invalidaccessparameter', 'mod_error');
         }
         $aclrecord = $DB->get_record('mnet_sso_access_control', array('username'=>$user->username, 'mnet_host_id'=>$user->mnethostid));
         if (empty($aclrecord)) {
@@ -340,7 +340,7 @@
                         $accessctrl = $acl->accessctrl;
                     }
                     $changeaccessto = ($accessctrl == 'deny' ? 'allow' : 'deny');
-                    $buttons[] = " (<a href=\"?acl={$user->id}&amp;accessctrl=$changeaccessto&amp;sesskey=".sesskey()."\">".get_string($changeaccessto, 'mnet') . " access</a>)";
+                    $buttons[] = " (<a href=\"?acl={$user->id}&amp;accessctrl=$changeaccessto&amp;sesskey=".sesskey()."\">".get_string($changeaccessto, 'core_mnet') . " access</a>)";
 
                 } else {
                     if ($user->suspended) {
@@ -375,9 +375,9 @@
             if (is_mnet_remote_user($user)) {
                 // all mnet users are confirmed, let's print just the name of the host there
                 if (isset($mnethosts[$user->mnethostid])) {
-                    $lastcolumn = get_string($accessctrl, 'mnet').': '.$mnethosts[$user->mnethostid]->name;
+                    $lastcolumn = get_string($accessctrl, 'core_mnet').': '.$mnethosts[$user->mnethostid]->name;
                 } else {
-                    $lastcolumn = get_string($accessctrl, 'mnet');
+                    $lastcolumn = get_string($accessctrl, 'core_mnet');
                 }
 
             } else if ($user->confirmed == 0) {

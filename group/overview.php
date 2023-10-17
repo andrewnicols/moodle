@@ -59,16 +59,16 @@ require_capability('moodle/course:managegroups', $context);
 
 $strgroups           = get_string('groups');
 $strparticipants     = get_string('participants');
-$stroverview         = get_string('overview', 'group');
-$strgrouping         = get_string('grouping', 'group');
-$strgroup            = get_string('group', 'group');
-$strnotingrouping    = get_string('notingrouping', 'group');
-$strfiltergroups     = get_string('filtergroups', 'group');
-$strnogroups         = get_string('nogroups', 'group');
+$stroverview         = get_string('overview', 'core_group');
+$strgrouping         = get_string('grouping', 'core_group');
+$strgroup            = get_string('group', 'core_group');
+$strnotingrouping    = get_string('notingrouping', 'core_group');
+$strfiltergroups     = get_string('filtergroups', 'core_group');
+$strnogroups         = get_string('nogroups', 'core_group');
 $strdescription      = get_string('description');
-$strnotingroup       = get_string('notingrouplist', 'group');
-$strnogroup          = get_string('nogroup', 'group');
-$strnogrouping       = get_string('nogrouping', 'group');
+$strnotingroup       = get_string('notingrouplist', 'core_group');
+$strnogroup          = get_string('nogroup', 'core_group');
+$strnogrouping       = get_string('nogrouping', 'core_group');
 
 // This can show all users and all groups in a course.
 // This is lots of data so allow this script more resources.
@@ -267,7 +267,7 @@ if ($dataformat !== '') {
 
 // Main page content.
 navigation_node::override_active_url(new moodle_url('/group/index.php', array('id'=>$courseid)));
-$PAGE->navbar->add(get_string('overview', 'group'));
+$PAGE->navbar->add(get_string('overview', 'core_group'));
 
 /// Print header
 $PAGE->set_title($strgroups);
@@ -310,7 +310,7 @@ foreach ($members as $gpgid=>$groupdata) {
         }
     }
     $table = new html_table();
-    $table->head  = array(get_string('groupscount', 'group', count($groupdata)), get_string('groupmembers', 'group'), get_string('usercount', 'group'));
+    $table->head  = array(get_string('groupscount', 'core_group', count($groupdata)), get_string('groupmembers', 'core_group'), get_string('usercount', 'core_group'));
     $table->size  = array('20%', '70%', '10%');
     $table->align = array('left', 'left', 'center');
     $table->width = '90%';
@@ -367,7 +367,7 @@ foreach ($members as $gpgid=>$groupdata) {
 }
 
 // Add buttons for exporting groups/groupings.
-echo $OUTPUT->download_dataformat_selector(get_string('exportgroupsgroupings', 'group'), 'overview.php', 'dataformat', [
+echo $OUTPUT->download_dataformat_selector(get_string('exportgroupsgroupings', 'core_group'), 'overview.php', 'dataformat', [
     'id' => $courseid,
     'group' => $groupid,
     'grouping' => $groupingid,

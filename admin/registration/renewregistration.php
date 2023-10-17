@@ -48,20 +48,20 @@ if (parse_url($url, PHP_URL_HOST) !== parse_url(HUB_MOODLEORGHUBURL, PHP_URL_HOS
             $callback('renew');
         }
     }
-    throw new moodle_exception('errorotherhubsnotsupported', 'hub');
+    throw new moodle_exception('errorotherhubsnotsupported', 'mod_hub');
 }
 
 // Check that we are waiting a confirmation from this hub, and check that the token is correct.
 \core\hub\registration::reset_site_identifier($token);
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('renewregistration', 'hub'), 3, 'main');
+echo $OUTPUT->heading(get_string('renewregistration', 'mod_hub'), 3, 'main');
 $hublink = html_writer::tag('a', HUB_MOODLEORGHUBURL, array('href' => HUB_MOODLEORGHUBURL));
 
-$deletedregmsg = get_string('previousregistrationdeleted', 'hub', $hublink);
+$deletedregmsg = get_string('previousregistrationdeleted', 'mod_hub', $hublink);
 
 $button = new single_button(new moodle_url('/admin/registration/index.php'),
-                get_string('restartregistration', 'hub'));
+                get_string('restartregistration', 'mod_hub'));
 $button->class = 'restartregbutton';
 
 echo html_writer::tag('div', $deletedregmsg . $OUTPUT->render($button),

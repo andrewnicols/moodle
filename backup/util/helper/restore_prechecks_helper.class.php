@@ -92,7 +92,7 @@ abstract class restore_prechecks_helper {
             $message = new stdclass();
             $message->backup = $controller->get_info()->backup_version;
             $message->min    = $min20version;
-            $errors[] = get_string('errorminbackup20version', 'backup', $message);
+            $errors[] = get_string('errorminbackup20version', 'core_backup', $message);
         }
 
         // Compare Moodle's versions
@@ -115,24 +115,24 @@ abstract class restore_prechecks_helper {
         if ($controller->get_courseid() == SITEID &&
                 $originalcourseformat != 'site' &&
                 $controller->get_type() == backup::TYPE_1COURSE) {
-            $errors[] = get_string('errorrestorefrontpagebackup', 'backup');
+            $errors[] = get_string('errorrestorefrontpagebackup', 'core_backup');
         }
 
         // We can't restore front pages over other courses.
         if ($controller->get_courseid() != SITEID &&
                 $originalcourseformat == 'site' &&
                 $controller->get_type() == backup::TYPE_1COURSE) {
-            $errors[] = get_string('errorrestorefrontpagebackup', 'backup');
+            $errors[] = get_string('errorrestorefrontpagebackup', 'core_backup');
         }
 
         // If restoring to different site and restoring users and backup has mnet users warn/error
         if (!$samesite && $restoreusers && $hasmnetusers) {
             // User is admin (can create users at sysctx), warn
             if (has_capability('moodle/user:create', context_system::instance(), $controller->get_userid())) {
-                $warnings[] = get_string('mnetrestore_extusers_admin', 'admin');
+                $warnings[] = get_string('mnetrestore_extusers_admin', 'core_admin');
             // User not admin
             } else {
-                $errors[] = get_string('mnetrestore_extusers_noadmin', 'admin');
+                $errors[] = get_string('mnetrestore_extusers_noadmin', 'core_admin');
             }
         }
 

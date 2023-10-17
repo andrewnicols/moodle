@@ -55,7 +55,7 @@ $entry->id = null;
 
 if ($id) {
     if (!$entry = new blog_entry($id)) {
-        throw new \moodle_exception('wrongentryid', 'blog');
+        throw new \moodle_exception('wrongentryid', 'core_blog');
     }
     $userid = $entry->userid;
 } else {
@@ -75,7 +75,7 @@ if ($modid) {
 require_login($courseid);
 
 if (empty($CFG->enableblogs)) {
-    throw new \moodle_exception('blogdisable', 'blog');
+    throw new \moodle_exception('blogdisable', 'core_blog');
 }
 
 if (isguestuser()) {
@@ -104,13 +104,13 @@ if (!has_capability('moodle/blog:create', $sitecontext) && !has_capability('mood
 // Make sure that the person trying to edit has access right.
 if ($id) {
     if (!blog_user_can_edit_entry($entry)) {
-        throw new \moodle_exception('notallowedtoedit', 'blog');
+        throw new \moodle_exception('notallowedtoedit', 'core_blog');
     }
     $entry->subject      = clean_text($entry->subject);
     $entry->summary      = clean_text($entry->summary, $entry->format);
 } else {
     if (!has_capability('moodle/blog:create', $sitecontext)) {
-        throw new \moodle_exception('noentry', 'blog'); // The capability "manageentries" is not enough for adding.
+        throw new \moodle_exception('noentry', 'core_blog'); // The capability "manageentries" is not enough for adding.
     }
 }
 $returnurl->param('userid', $userid);
@@ -118,19 +118,19 @@ $returnurl->param('userid', $userid);
 // Blog renderer.
 $output = $PAGE->get_renderer('blog');
 
-$strblogs = get_string('blogs', 'blog');
+$strblogs = get_string('blogs', 'core_blog');
 
 if ($action === 'delete') {
     // Init comment JS strings.
     comment::init();
 
     if (empty($entry->id)) {
-        throw new \moodle_exception('wrongentryid', 'blog');
+        throw new \moodle_exception('wrongentryid', 'core_blog');
     }
     if (data_submitted() && $confirm && confirm_sesskey()) {
         // Make sure the current user is the author of the blog entry, or has some deleteanyentry capability.
         if (!blog_user_can_edit_entry($entry)) {
-            throw new \moodle_exception('nopermissionstodeleteentry', 'blog');
+            throw new \moodle_exception('nopermissionstodeleteentry', 'core_blog');
         } else {
             $entry->delete();
             blog_rss_delete_file($userid);
@@ -148,9 +148,9 @@ if ($action === 'delete') {
         echo $OUTPUT->header();
 
         // Output edit mode title.
-        echo $OUTPUT->heading($strblogs . ': ' . get_string('deleteentry', 'blog'), 2);
+        echo $OUTPUT->heading($strblogs . ': ' . get_string('deleteentry', 'core_blog'), 2);
 
-        echo $OUTPUT->confirm(get_string('blogdeleteconfirm', 'blog', format_string($entry->subject)),
+        echo $OUTPUT->confirm(get_string('blogdeleteconfirm', 'core_blog', format_string($entry->subject)),
                               new moodle_url('edit.php', $optionsyes),
                               new moodle_url('index.php', $optionsno));
 
@@ -163,11 +163,11 @@ if ($action === 'delete') {
         die;
     }
 } else if ($action == 'add') {
-    $editmodetitle = $strblogs . ': ' . get_string('addnewentry', 'blog');
+    $editmodetitle = $strblogs . ': ' . get_string('addnewentry', 'core_blog');
     $PAGE->set_title($editmodetitle);
     $PAGE->set_heading(fullname($USER));
 } else if ($action == 'edit') {
-    $editmodetitle = $strblogs . ': ' . get_string('editentry', 'blog');
+    $editmodetitle = $strblogs . ': ' . get_string('editentry', 'core_blog');
     $PAGE->set_title($editmodetitle);
     $PAGE->set_heading(fullname($USER));
 }
@@ -232,7 +232,7 @@ if ($blogeditform->is_cancelled()) {
 
         case 'edit':
             if (empty($entry->id)) {
-                throw new \moodle_exception('wrongentryid', 'blog');
+                throw new \moodle_exception('wrongentryid', 'core_blog');
             }
 
             $entry->edit($data, $blogeditform, $summaryoptions, $attachmentoptions);
@@ -251,7 +251,7 @@ switch ($action) {
     case 'add':
         // Prepare new empty form.
         $entry->publishstate = 'site';
-        $strformheading = get_string('addnewentry', 'blog');
+        $strformheading = get_string('addnewentry', 'core_blog');
         $entry->action       = $action;
 
         if ($CFG->useblogassociations) {
@@ -272,9 +272,9 @@ switch ($action) {
 
     case 'edit':
         if (empty($entry->id)) {
-            throw new \moodle_exception('wrongentryid', 'blog');
+            throw new \moodle_exception('wrongentryid', 'core_blog');
         }
-        $strformheading = get_string('updateentrywithid', 'blog');
+        $strformheading = get_string('updateentrywithid', 'core_blog');
 
         break;
 

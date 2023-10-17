@@ -34,7 +34,7 @@ class blog_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskblogcron', 'admin');
+        return get_string('taskblogcron', 'core_admin');
     }
 
     /**

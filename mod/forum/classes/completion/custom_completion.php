@@ -94,9 +94,9 @@ class custom_completion extends activity_custom_completion {
         $completionposts = $this->cm->customdata['customcompletionrules']['completionposts'] ?? 0;
 
         return [
-            'completiondiscussions' => get_string('completiondetail:discussions', 'forum', $completiondiscussions),
-            'completionreplies' => get_string('completiondetail:replies', 'forum', $completionreplies),
-            'completionposts' => get_string('completiondetail:posts', 'forum', $completionposts),
+            'completiondiscussions' => get_string('completiondetail:discussions', 'mod_forum', $completiondiscussions),
+            'completionreplies' => get_string('completiondetail:replies', 'mod_forum', $completionreplies),
+            'completionposts' => get_string('completiondetail:posts', 'mod_forum', $completionposts),
         ];
     }
 

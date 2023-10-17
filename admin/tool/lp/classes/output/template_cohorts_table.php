@@ -101,8 +101,8 @@ class template_cohorts_table extends table_sql {
     protected function define_table_columns() {
         // Define headers and columns.
         $cols = array(
-            'name' => get_string('name', 'cohort'),
-            'idnumber' => get_string('idnumber', 'cohort'),
+            'name' => get_string('name', 'core_cohort'),
+            'idnumber' => get_string('idnumber', 'core_cohort'),
         );
 
         if ($this->template->can_manage()) {

@@ -2413,7 +2413,7 @@ class externallib_test extends externallib_advanced_testcase {
         $course2  = self::getDataGenerator()->create_course();
 
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('invalidextparam', 'webservice', -1));
+        $this->expectExceptionMessage(get_string('invalidextparam', 'core_webservice', -1));
         // Import from course1 to course2, with invalid option
         core_course_external::import_course($course1->id, $course2->id, -1);;
     }

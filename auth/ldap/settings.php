@@ -155,23 +155,23 @@ if ($ADMIN->fulltree) {
 
         // Force Password change Header.
         $settings->add(new admin_setting_heading('auth_ldap/ldapforcepasswordchange',
-                new lang_string('forcechangepassword', 'auth'), ''));
+                new lang_string('forcechangepassword', 'core_auth'), ''));
 
         // Force Password change.
         $settings->add(new admin_setting_configselect('auth_ldap/forcechangepassword',
-                new lang_string('forcechangepassword', 'auth'),
-                new lang_string('forcechangepasswordfirst_help', 'auth'), 0 , $yesno));
+                new lang_string('forcechangepassword', 'core_auth'),
+                new lang_string('forcechangepasswordfirst_help', 'core_auth'), 0 , $yesno));
 
         // Standard Password Change.
         $settings->add(new admin_setting_configselect('auth_ldap/stdchangepassword',
-                new lang_string('stdchangepassword', 'auth'), new lang_string('stdchangepassword_expl', 'auth') .' '.
-                get_string('stdchangepassword_explldap', 'auth'), 0 , $yesno));
+                new lang_string('stdchangepassword', 'core_auth'), new lang_string('stdchangepassword_expl', 'core_auth') .' '.
+                get_string('stdchangepassword_explldap', 'core_auth'), 0 , $yesno));
 
         // Password Type.
         $passtype = array();
-        $passtype['plaintext'] = get_string('plaintext', 'auth');
-        $passtype['md5']       = get_string('md5', 'auth');
-        $passtype['sha1']      = get_string('sha1', 'auth');
+        $passtype['plaintext'] = get_string('plaintext', 'core_auth');
+        $passtype['md5']       = get_string('md5', 'core_auth');
+        $passtype['sha1']      = get_string('sha1', 'core_auth');
 
         $settings->add(new admin_setting_configselect('auth_ldap/passtype',
                 new lang_string('auth_ldap_passtype_key', 'auth_ldap'),
@@ -180,7 +180,7 @@ if ($ADMIN->fulltree) {
         // Password change URL.
         $settings->add(new admin_setting_configtext('auth_ldap/changepasswordurl',
                 get_string('auth_ldap_changepasswordurl_key', 'auth_ldap'),
-                get_string('changepasswordhelp', 'auth'), '', PARAM_URL));
+                get_string('changepasswordhelp', 'core_auth'), '', PARAM_URL));
 
         // Password Expiration Header.
         $settings->add(new admin_setting_heading('auth_ldap/passwordexpire',
@@ -228,12 +228,12 @@ if ($ADMIN->fulltree) {
 
         // User Creation.
         $settings->add(new admin_setting_heading('auth_ldap/usercreation',
-                new lang_string('auth_user_create', 'auth'), ''));
+                new lang_string('auth_user_create', 'core_auth'), ''));
 
         // Create users externally.
         $settings->add(new admin_setting_configselect('auth_ldap/auth_user_create',
                 new lang_string('auth_ldap_auth_user_create_key', 'auth_ldap'),
-                new lang_string('auth_user_creation', 'auth'), 0 , $yesno));
+                new lang_string('auth_user_creation', 'core_auth'), 0 , $yesno));
 
         // Context for new users.
         $settings->add(new admin_setting_configtext('auth_ldap/create_context',
@@ -272,22 +272,22 @@ if ($ADMIN->fulltree) {
 
         // User Account Sync.
         $settings->add(new admin_setting_heading('auth_ldap/syncusers',
-                new lang_string('auth_sync_script', 'auth'), ''));
+                new lang_string('auth_sync_script', 'core_auth'), ''));
 
         // Remove external user.
         $deleteopt = array();
-        $deleteopt[AUTH_REMOVEUSER_KEEP] = get_string('auth_remove_keep', 'auth');
-        $deleteopt[AUTH_REMOVEUSER_SUSPEND] = get_string('auth_remove_suspend', 'auth');
-        $deleteopt[AUTH_REMOVEUSER_FULLDELETE] = get_string('auth_remove_delete', 'auth');
+        $deleteopt[AUTH_REMOVEUSER_KEEP] = get_string('auth_remove_keep', 'core_auth');
+        $deleteopt[AUTH_REMOVEUSER_SUSPEND] = get_string('auth_remove_suspend', 'core_auth');
+        $deleteopt[AUTH_REMOVEUSER_FULLDELETE] = get_string('auth_remove_delete', 'core_auth');
 
         $settings->add(new admin_setting_configselect('auth_ldap/removeuser',
-                new lang_string('auth_remove_user_key', 'auth'),
-                new lang_string('auth_remove_user', 'auth'), AUTH_REMOVEUSER_KEEP, $deleteopt));
+                new lang_string('auth_remove_user_key', 'core_auth'),
+                new lang_string('auth_remove_user', 'core_auth'), AUTH_REMOVEUSER_KEEP, $deleteopt));
 
         // Sync Suspension.
         $settings->add(new admin_setting_configselect('auth_ldap/sync_suspended',
-                new lang_string('auth_sync_suspended_key', 'auth'),
-                new lang_string('auth_sync_suspended', 'auth'), 0 , $yesno));
+                new lang_string('auth_sync_suspended_key', 'core_auth'),
+                new lang_string('auth_sync_suspended', 'core_auth'), 0 , $yesno));
 
         // NTLM SSO Header.
         $settings->add(new admin_setting_heading('auth_ldap/ntlm',
@@ -332,11 +332,11 @@ if ($ADMIN->fulltree) {
     // Display locking / mapping of profile fields.
     $authplugin = get_auth_plugin('ldap');
     $help  = get_string('auth_ldapextrafields', 'auth_ldap');
-    $help .= get_string('auth_updatelocal_expl', 'auth');
-    $help .= get_string('auth_fieldlock_expl', 'auth');
-    $help .= get_string('auth_updateremote_expl', 'auth');
+    $help .= get_string('auth_updatelocal_expl', 'core_auth');
+    $help .= get_string('auth_fieldlock_expl', 'core_auth');
+    $help .= get_string('auth_updateremote_expl', 'core_auth');
     $help .= '<hr />';
-    $help .= get_string('auth_updateremote_ldap', 'auth');
+    $help .= get_string('auth_updateremote_ldap', 'core_auth');
     display_auth_lock_options($settings, $authplugin->authtype, $authplugin->userfields,
             $help, true, true, $authplugin->get_custom_user_profile_fields());
 }

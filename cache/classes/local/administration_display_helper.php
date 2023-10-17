@@ -67,21 +67,21 @@ class administration_display_helper extends \core_cache\administration_helper {
             $actions[] = $OUTPUT->action_link(
                 new \moodle_url('/cache/admin.php', array('action' => 'editdefinitionmapping',
                     'definition' => $definitionsummary['id'])),
-                get_string('editmappings', 'cache')
+                get_string('editmappings', 'core_cache')
             );
             // Edit sharing.
             if (count($definitionsummary['sharingoptions']) > 1) {
                 $actions[] = $OUTPUT->action_link(
                     new \moodle_url('/cache/admin.php', array('action' => 'editdefinitionsharing',
                         'definition' => $definitionsummary['id'])),
-                    get_string('editsharing', 'cache')
+                    get_string('editsharing', 'core_cache')
                 );
             }
             // Purge.
             $actions[] = $OUTPUT->action_link(
                 new \moodle_url('/cache/admin.php', array('action' => 'purgedefinition',
                     'definition' => $definitionsummary['id'], 'sesskey' => sesskey())),
-                get_string('purge', 'cache')
+                get_string('purge', 'core_cache')
             );
             return $actions;
         }
@@ -105,18 +105,18 @@ class administration_display_helper extends \core_cache\administration_helper {
                 // Edit store.
                 $actions[] = $OUTPUT->action_link(
                     new \moodle_url($baseurl, array('action' => 'editstore', 'plugin' => $storedetails['plugin'])),
-                    get_string('editstore', 'cache')
+                    get_string('editstore', 'core_cache')
                 );
                 // Delete store.
                 $actions[] = $OUTPUT->action_link(
                     new \moodle_url($baseurl, array('action' => 'deletestore')),
-                    get_string('deletestore', 'cache')
+                    get_string('deletestore', 'core_cache')
                 );
             }
             // Purge store.
             $actions[] = $OUTPUT->action_link(
                 new \moodle_url($baseurl, array('action' => 'purgestore', 'sesskey' => sesskey())),
-                get_string('purge', 'cache')
+                get_string('purge', 'core_cache')
             );
         }
         return $actions;
@@ -139,7 +139,7 @@ class administration_display_helper extends \core_cache\administration_helper {
                     array('action' => 'addstore', 'plugin' => $name));
                 $actions[] = $OUTPUT->action_link(
                     $url,
-                    get_string('addinstance', 'cache')
+                    get_string('addinstance', 'core_cache')
                 );
             }
         }
@@ -250,7 +250,7 @@ class administration_display_helper extends \core_cache\administration_helper {
             $locks = array();
             foreach ($config->get_locks() as $lock => $conf) {
                 if (!empty($conf['default'])) {
-                    $name = get_string($lock, 'cache');
+                    $name = get_string($lock, 'core_cache');
                 } else {
                     $name = $lock;
                 }
@@ -446,10 +446,10 @@ class administration_display_helper extends \core_cache\administration_helper {
 
         $plugin = required_param('plugin', PARAM_PLUGIN);
         if (!$storepluginsummaries[$plugin]['canaddinstance']) {
-            throw new \moodle_exception('ex_unmetstorerequirements', 'cache');
+            throw new \moodle_exception('ex_unmetstorerequirements', 'core_cache');
         }
         $mform = $this->get_add_store_form($plugin);
-        $title = get_string('addstore', 'cache', $storepluginsummaries[$plugin]['name']);
+        $title = get_string('addstore', 'core_cache', $storepluginsummaries[$plugin]['name']);
         if ($mform->is_cancelled()) {
             redirect($PAGE->url);
         } else if ($data = $mform->get_data()) {
@@ -462,10 +462,10 @@ class administration_display_helper extends \core_cache\administration_helper {
                 }
             }
             $writer->add_store_instance($data->name, $data->plugin, $config);
-            redirect($PAGE->url, get_string('addstoresuccess', 'cache', $storepluginsummaries[$plugin]['name']), 5);
+            redirect($PAGE->url, get_string('addstoresuccess', 'core_cache', $storepluginsummaries[$plugin]['name']), 5);
         }
 
-        $PAGE->navbar->add(get_string('addstore', 'cache', 'cache'), $PAGE->url);
+        $PAGE->navbar->add(get_string('addstore', 'core_cache', 'cache'), $PAGE->url);
         return array('form' => $mform, 'title' => $title);
     }
 
@@ -481,7 +481,7 @@ class administration_display_helper extends \core_cache\administration_helper {
         $plugin = required_param('plugin', PARAM_PLUGIN);
         $store = required_param('store', PARAM_TEXT);
         $mform = $this->get_edit_store_form($plugin, $store);
-        $title = get_string('addstore', 'cache', $storepluginsummaries[$plugin]['name']);
+        $title = get_string('addstore', 'core_cache', $storepluginsummaries[$plugin]['name']);
         if ($mform->is_cancelled()) {
             redirect($PAGE->url);
         } else if ($data = $mform->get_data()) {
@@ -495,7 +495,7 @@ class administration_display_helper extends \core_cache\administration_helper {
                 }
             }
             $writer->edit_store_instance($data->name, $data->plugin, $config);
-            redirect($PAGE->url, get_string('editstoresuccess', 'cache', $storepluginsummaries[$plugin]['name']), 5);
+            redirect($PAGE->url, get_string('editstoresuccess', 'core_cache', $storepluginsummaries[$plugin]['name']), 5);
         }
 
         return array('form' => $mform, 'title' => $title);
@@ -516,24 +516,24 @@ class administration_display_helper extends \core_cache\administration_helper {
 
         if (!array_key_exists($store, $storeinstancesummaries)) {
             $notifysuccess = false;
-            $notification = get_string('invalidstore', 'cache');
+            $notification = get_string('invalidstore', 'core_cache');
         } else if ($storeinstancesummaries[$store]['mappings'] > 0) {
             $notifysuccess = false;
-            $notification = get_string('deletestorehasmappings', 'cache');
+            $notification = get_string('deletestorehasmappings', 'core_cache');
         }
 
         if ($notifysuccess) {
             if (!$confirm) {
-                $title = get_string('confirmstoredeletion', 'cache');
+                $title = get_string('confirmstoredeletion', 'core_cache');
                 $params = array('store' => $store, 'confirm' => 1, 'action' => $action, 'sesskey' => sesskey());
                 $url = new \moodle_url($PAGE->url, $params);
-                $button = new \single_button($url, get_string('deletestore', 'cache'));
+                $button = new \single_button($url, get_string('deletestore', 'core_cache'));
 
                 $PAGE->set_title($title);
                 $PAGE->set_heading($SITE->fullname);
                 echo $OUTPUT->header();
                 echo $OUTPUT->heading($title);
-                $confirmation = get_string('deletestoreconfirmation', 'cache', $storeinstancesummaries[$store]['name']);
+                $confirmation = get_string('deletestoreconfirmation', 'core_cache', $storeinstancesummaries[$store]['name']);
                 echo $OUTPUT->confirm($confirmation, $button, $PAGE->url);
                 echo $OUTPUT->footer();
                 exit;
@@ -541,7 +541,7 @@ class administration_display_helper extends \core_cache\administration_helper {
                 require_sesskey();
                 $writer = \cache_config_writer::instance();
                 $writer->delete_store_instance($store);
-                redirect($PAGE->url, get_string('deletestoresuccess', 'cache'), 5);
+                redirect($PAGE->url, get_string('deletestoresuccess', 'core_cache'), 5);
             }
         } else {
             redirect($PAGE->url, $notification, null, notification::NOTIFY_ERROR);
@@ -562,7 +562,7 @@ class administration_display_helper extends \core_cache\administration_helper {
         if (!array_key_exists($definition, $definitionsummaries)) {
             throw new \cache_exception('Invalid cache definition requested');
         }
-        $title = get_string('editdefinitionmappings', 'cache', $definition);
+        $title = get_string('editdefinitionmappings', 'core_cache', $definition);
         $mform = new \cache_definition_mappings_form($PAGE->url, array('definition' => $definition));
         if ($mform->is_cancelled()) {
             redirect($PAGE->url);
@@ -578,7 +578,7 @@ class administration_display_helper extends \core_cache\administration_helper {
             redirect($PAGE->url);
         }
 
-        $PAGE->navbar->add(get_string('updatedefinitionmapping', 'cache'), $PAGE->url);
+        $PAGE->navbar->add(get_string('updatedefinitionmapping', 'core_cache'), $PAGE->url);
         return array('form' => $mform, 'title' => $title);
     }
 
@@ -595,7 +595,7 @@ class administration_display_helper extends \core_cache\administration_helper {
         if (!array_key_exists($definition, $definitionsummaries)) {
             throw new \cache_exception('Invalid cache definition requested');
         }
-        $title = get_string('editdefinitionsharing', 'cache', $definition);
+        $title = get_string('editdefinitionsharing', 'core_cache', $definition);
         $sharingoptions = $definitionsummaries[$definition]['sharingoptions'];
         $customdata = array('definition' => $definition, 'sharingoptions' => $sharingoptions);
         $mform = new \cache_definition_sharing_form($PAGE->url, $customdata);
@@ -617,7 +617,7 @@ class administration_display_helper extends \core_cache\administration_helper {
             redirect($PAGE->url);
         }
 
-        $PAGE->navbar->add(get_string('updatedefinitionsharing', 'cache'), $PAGE->url);
+        $PAGE->navbar->add(get_string('updatedefinitionsharing', 'core_cache'), $PAGE->url);
         return array('form' => $mform, 'title' => $title);
     }
 
@@ -674,14 +674,14 @@ class administration_display_helper extends \core_cache\administration_helper {
             cache_helper::purge_by_definition($component, $area);
         }
 
-        $message = get_string('purgexdefinitionsuccess', 'cache', [
+        $message = get_string('purgexdefinitionsuccess', 'core_cache', [
                     'name' => $definition->get_name(),
                     'component' => $component,
                     'area' => $area,
                 ]);
         $purgeagainlink = \html_writer::link(new \moodle_url('/cache/admin.php', [
                 'action' => 'purgedefinition', 'sesskey' => sesskey(), 'definition' => $id]),
-                get_string('purgeagain', 'cache'));
+                get_string('purgeagain', 'core_cache'));
         redirect($PAGE->url, $message . ' ' . $purgeagainlink, 5);
     }
 
@@ -696,10 +696,10 @@ class administration_display_helper extends \core_cache\administration_helper {
         require_sesskey();
         $store = required_param('store', PARAM_TEXT);
         cache_helper::purge_store($store);
-        $message = get_string('purgexstoresuccess', 'cache', ['store' => $store]);
+        $message = get_string('purgexstoresuccess', 'core_cache', ['store' => $store]);
         $purgeagainlink = \html_writer::link(new \moodle_url('/cache/admin.php', [
                 'action' => 'purgestore', 'sesskey' => sesskey(), 'store' => $store]),
-                get_string('purgeagain', 'cache'));
+                get_string('purgeagain', 'core_cache'));
         redirect($PAGE->url, $message . ' ' . $purgeagainlink, 5);
     }
 
@@ -722,7 +722,7 @@ class administration_display_helper extends \core_cache\administration_helper {
             $name = $data->name;
             $data = $this->get_lock_configuration_from_data($lock, $data);
             $config->add_lock_instance($name, $lock, $data);
-            redirect($PAGE->url, get_string('addlocksuccess', 'cache', $name), 5);
+            redirect($PAGE->url, get_string('addlocksuccess', 'core_cache', $name), 5);
         }
 
         return array('form' => $mform);
@@ -742,23 +742,23 @@ class administration_display_helper extends \core_cache\administration_helper {
         $confirm = optional_param('confirm', false, PARAM_BOOL);
         if (!array_key_exists($lock, $locks)) {
             $notifysuccess = false;
-            $notification = get_string('invalidlock', 'cache');
+            $notification = get_string('invalidlock', 'core_cache');
         } else if ($locks[$lock]['uses'] > 0) {
             $notifysuccess = false;
-            $notification = get_string('deletelockhasuses', 'cache');
+            $notification = get_string('deletelockhasuses', 'core_cache');
         }
         if ($notifysuccess) {
             if (!$confirm) {
-                $title = get_string('confirmlockdeletion', 'cache');
+                $title = get_string('confirmlockdeletion', 'core_cache');
                 $params = array('lock' => $lock, 'confirm' => 1, 'action' => $action, 'sesskey' => sesskey());
                 $url = new \moodle_url($PAGE->url, $params);
-                $button = new \single_button($url, get_string('deletelock', 'cache'));
+                $button = new \single_button($url, get_string('deletelock', 'core_cache'));
 
                 $PAGE->set_title($title);
                 $PAGE->set_heading($SITE->fullname);
                 echo $OUTPUT->header();
                 echo $OUTPUT->heading($title);
-                $confirmation = get_string('deletelockconfirmation', 'cache', $lock);
+                $confirmation = get_string('deletelockconfirmation', 'core_cache', $lock);
                 echo $OUTPUT->confirm($confirmation, $button, $PAGE->url);
                 echo $OUTPUT->footer();
                 exit;
@@ -766,7 +766,7 @@ class administration_display_helper extends \core_cache\administration_helper {
                 require_sesskey();
                 $writer = cache_config_writer::instance();
                 $writer->delete_lock_instance($lock);
-                redirect($PAGE->url, get_string('deletelocksuccess', 'cache'), 5);
+                redirect($PAGE->url, get_string('deletelocksuccess', 'core_cache'), 5);
             }
         } else {
             redirect($PAGE->url, $notification, null, notification::NOTIFY_ERROR);

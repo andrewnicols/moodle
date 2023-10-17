@@ -50,7 +50,7 @@ class grouping_created extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventgroupingcreated', 'group');
+        return get_string('eventgroupingcreated', 'core_group');
     }
 
     /**

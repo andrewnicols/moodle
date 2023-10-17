@@ -2943,7 +2943,7 @@ function redirect($url, $message='', $delay=null, $messagetype = \core\output\no
 
     if (CLI_SCRIPT or AJAX_SCRIPT) {
         // This is wrong - developers should not use redirect in these scripts but it should not be very likely.
-        throw new moodle_exception('redirecterrordetected', 'error');
+        throw new moodle_exception('redirecterrordetected', 'mod_error');
     }
 
     if ($delay === null) {
@@ -3211,7 +3211,7 @@ function print_maintenance_message() {
     $PAGE->set_pagelayout('maintenance');
     $PAGE->set_heading($SITE->fullname);
     echo $OUTPUT->header();
-    echo $OUTPUT->heading(get_string('sitemaintenance', 'admin'));
+    echo $OUTPUT->heading(get_string('sitemaintenance', 'core_admin'));
     if (isset($CFG->maintenance_message) and !html_is_blank($CFG->maintenance_message)) {
         echo $OUTPUT->box_start('maintenance_message generalbox boxwidthwide boxaligncenter');
         echo $CFG->maintenance_message;
@@ -3739,19 +3739,19 @@ function print_password_policy() {
     if (!empty($CFG->passwordpolicy)) {
         $messages = array();
         if (!empty($CFG->minpasswordlength)) {
-            $messages[] = get_string('informminpasswordlength', 'auth', $CFG->minpasswordlength);
+            $messages[] = get_string('informminpasswordlength', 'core_auth', $CFG->minpasswordlength);
         }
         if (!empty($CFG->minpassworddigits)) {
-            $messages[] = get_string('informminpassworddigits', 'auth', $CFG->minpassworddigits);
+            $messages[] = get_string('informminpassworddigits', 'core_auth', $CFG->minpassworddigits);
         }
         if (!empty($CFG->minpasswordlower)) {
-            $messages[] = get_string('informminpasswordlower', 'auth', $CFG->minpasswordlower);
+            $messages[] = get_string('informminpasswordlower', 'core_auth', $CFG->minpasswordlower);
         }
         if (!empty($CFG->minpasswordupper)) {
-            $messages[] = get_string('informminpasswordupper', 'auth', $CFG->minpasswordupper);
+            $messages[] = get_string('informminpasswordupper', 'core_auth', $CFG->minpasswordupper);
         }
         if (!empty($CFG->minpasswordnonalphanum)) {
-            $messages[] = get_string('informminpasswordnonalphanum', 'auth', $CFG->minpasswordnonalphanum);
+            $messages[] = get_string('informminpasswordnonalphanum', 'core_auth', $CFG->minpasswordnonalphanum);
         }
 
         // Fire any additional password policy functions from plugins.
@@ -3766,7 +3766,7 @@ function print_password_policy() {
         $messages = join(', ', $messages); // This is ugly but we do not have anything better yet...
         // Check if messages is empty before outputting any text.
         if ($messages != '') {
-            $message = get_string('informpasswordpolicy', 'auth', $messages);
+            $message = get_string('informpasswordpolicy', 'core_auth', $messages);
         }
     }
     return $message;

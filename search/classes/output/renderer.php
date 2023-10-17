@@ -137,7 +137,7 @@ class renderer extends \plugin_renderer_base {
      */
     public function render_search_disabled() {
         $content = $this->output->box_start();
-        $content .= $this->output->notification(get_string('globalsearchdisabled', 'search'), 'notifymessage');
+        $content .= $this->output->notification(get_string('globalsearchdisabled', 'core_search'), 'notifymessage');
         $content .= $this->output->box_end();
         return $content;
     }

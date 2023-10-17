@@ -79,24 +79,24 @@ class token_table extends \table_sql {
         $headers = [];
         $columns = [];
 
-        $headers[] = get_string('tokenname', 'webservice');
+        $headers[] = get_string('tokenname', 'core_webservice');
         $columns[] = 'name';
         $headers[] = get_string('user');
         $columns[] = 'fullname';
-        $headers[] = get_string('service', 'webservice');
+        $headers[] = get_string('service', 'core_webservice');
         $columns[] = 'servicename';
-        $headers[] = get_string('iprestriction', 'webservice');
+        $headers[] = get_string('iprestriction', 'core_webservice');
         $columns[] = 'iprestriction';
-        $headers[] = get_string('validuntil', 'webservice');
+        $headers[] = get_string('validuntil', 'core_webservice');
         $columns[] = 'validuntil';
         $headers[] = get_string('lastaccess');
         $columns[] = 'lastaccess';
         if ($this->showalltokens) {
             // Only need to show creator if you can see tokens created by other people.
-            $headers[] = get_string('tokencreator', 'webservice');
+            $headers[] = get_string('tokencreator', 'core_webservice');
             $columns[] = 'creatorlastname'; // So we can have semi-useful sorting. Table SQL doesn't two fullname collumns.
         }
-        $headers[] = get_string('operation', 'webservice');
+        $headers[] = get_string('operation', 'core_webservice');
         $columns[] = 'operation';
 
         $this->define_columns($columns);
@@ -134,7 +134,7 @@ class token_table extends \table_sql {
      */
     public function col_validuntil($data) {
         if (empty($data->validuntil)) {
-            return get_string('validuntil_empty', 'webservice');
+            return get_string('validuntil_empty', 'core_webservice');
         } else {
             return userdate($data->validuntil, get_string('strftimedatetime', 'core_langconfig'));
         }
@@ -189,7 +189,7 @@ class token_table extends \table_sql {
             $list = \html_writer::alist($links);
             $help = $OUTPUT->help_icon('missingcaps', 'webservice');
             $content .= print_collapsible_region(\html_writer::div($list . $help, 'missingcaps'), 'small mt-2',
-                \html_writer::random_id('usermissingcaps'), get_string('usermissingcaps', 'webservice', $count), '', true, true);
+                \html_writer::random_id('usermissingcaps'), get_string('usermissingcaps', 'core_webservice', $count), '', true, true);
         }
 
         return $content;

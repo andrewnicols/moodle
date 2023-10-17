@@ -36,7 +36,7 @@ $currentuser = $userid == $USER->id;
 // Check that the user is a valid user.
 $user = core_user::get_user($userid);
 if (!$user || !core_user::is_real_user($userid)) {
-    throw new moodle_exception('invaliduser', 'error');
+    throw new moodle_exception('invaliduser', 'mod_error');
 }
 
 $PAGE->set_context(context_user::instance($userid));
@@ -57,7 +57,7 @@ if (!$currentuser) {
     $navbar = $PAGE->navbar->add(get_string('preferences', 'moodle'), $url);
     // Show an error if there are no preferences that this user has access to.
     if (!$PAGE->settingsnav->can_view_user_preferences($userid)) {
-        throw new moodle_exception('cannotedituserpreferences', 'error');
+        throw new moodle_exception('cannotedituserpreferences', 'mod_error');
     }
 } else {
     // Shutdown the users node in the navigation menu.

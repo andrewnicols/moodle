@@ -87,11 +87,11 @@ if ($ok && ($loginhint !== $USER->id)) {
 
 // If we're unable to load up config; we cannot trust the redirect uri for POSTing to.
 if (empty($config)) {
-    throw new moodle_exception('invalidrequest', 'error');
+    throw new moodle_exception('invalidrequest', 'mod_error');
 } else {
     $uris = array_map("trim", explode("\n", $config->lti_redirectionuris));
     if (!in_array($redirecturi, $uris)) {
-        throw new moodle_exception('invalidrequest', 'error');
+        throw new moodle_exception('invalidrequest', 'mod_error');
     }
 }
 if ($ok) {

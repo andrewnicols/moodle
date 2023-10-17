@@ -62,7 +62,7 @@ if (empty($forum)) {
 
 $capabilitymanager = $managerfactory->get_capability_manager($forum);
 if (!$capabilitymanager->can_export_forum($USER)) {
-    throw new moodle_exception('cannotexportforum', 'forum');
+    throw new moodle_exception('cannotexportforum', 'mod_forum');
 }
 
 $course = $forum->get_course_record();

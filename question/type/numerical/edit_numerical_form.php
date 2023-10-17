@@ -312,7 +312,7 @@ class qtype_numerical_edit_form extends question_edit_form {
             $errors['answeroptions[0]'] = get_string('notenoughanswers', 'qtype_numerical');
         }
         if ($maxgrade == false) {
-            $errors['answeroptions[0]'] = get_string('fractionsnomax', 'question');
+            $errors['answeroptions[0]'] = get_string('fractionsnomax', 'core_question');
         }
 
         return $errors;

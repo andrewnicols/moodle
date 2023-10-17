@@ -127,7 +127,7 @@ class repository_dropbox extends repository {
             if (isset($ref->url)) {
                 $details = $detailsprefix. ': '. $ref->url;
             }
-            return get_string('lostsource', 'repository', $details);
+            return get_string('lostsource', 'core_repository', $details);
         }
     }
 
@@ -454,7 +454,7 @@ class repository_dropbox extends repository {
             $ret['login'] = array($btn);
             return $ret;
         } else {
-            echo html_writer::link($url, get_string('login', 'repository'), array('target' => '_blank'));
+            echo html_writer::link($url, get_string('login', 'core_repository'), array('target' => '_blank'));
         }
     }
 

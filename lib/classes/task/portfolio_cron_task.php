@@ -34,7 +34,7 @@ class portfolio_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskportfoliocron', 'admin');
+        return get_string('taskportfoliocron', 'core_admin');
     }
 
     /**

@@ -117,7 +117,7 @@ class login implements renderable, templatable {
             if (!empty($CFG->maintenance_message)) {
                 $this->maintenance = $CFG->maintenance_message;
             } else {
-                $this->maintenance = get_string('sitemaintenance', 'admin');
+                $this->maintenance = get_string('sitemaintenance', 'core_admin');
             }
         }
 

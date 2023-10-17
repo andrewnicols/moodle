@@ -35,7 +35,7 @@ $PAGE->set_context($context);
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('admin');
 
-$PAGE->set_title(get_string('activitychooserrecommendations', 'course'));
+$PAGE->set_title(get_string('activitychooserrecommendations', 'core_course'));
 $PAGE->set_heading($pageheading);
 
 require_login();
@@ -44,7 +44,7 @@ require_capability('moodle/course:recommendactivity', $context);
 $renderer = $PAGE->get_renderer('core_course', 'recommendations');
 
 echo $renderer->header();
-echo $renderer->heading(get_string('activitychooserrecommendations', 'course'));
+echo $renderer->heading(get_string('activitychooserrecommendations', 'core_course'));
 
 $manager = \core_course\local\factory\content_item_service_factory::get_content_item_service();
 if (!empty($search)) {

@@ -225,7 +225,7 @@ abstract class condition extends tree_node {
      *   this item
      */
     public function get_standalone_description($full, $not, info $info) {
-        return get_string('list_root_and', 'availability') . ' ' .
+        return get_string('list_root_and', 'core_availability') . ' ' .
                 $this->get_description($full, $not, $info);
     }
 

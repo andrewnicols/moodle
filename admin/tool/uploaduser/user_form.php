@@ -109,7 +109,7 @@ class admin_uploaduser_form2 extends moodleform {
                          UU_USER_UPDATE     => get_string('uuoptype_update', 'tool_uploaduser'));
         $mform->addElement('select', 'uutype', get_string('uuoptype', 'tool_uploaduser'), $choices);
 
-        $choices = array(0 => get_string('infilefield', 'auth'), 1 => get_string('createpasswordifneeded', 'auth'));
+        $choices = array(0 => get_string('infilefield', 'core_auth'), 1 => get_string('createpasswordifneeded', 'core_auth'));
         $mform->addElement('select', 'uupasswordnew', get_string('uupasswordnew', 'tool_uploaduser'), $choices);
         $mform->setDefault('uupasswordnew', 1);
         $mform->hideIf('uupasswordnew', 'uutype', 'eq', UU_USER_UPDATE);
@@ -246,7 +246,7 @@ class admin_uploaduser_form2 extends moodleform {
 
         // only enabled and known to work plugins
         $choices = uu_supported_auths();
-        $mform->addElement('select', 'auth', get_string('chooseauthmethod','auth'), $choices);
+        $mform->addElement('select', 'auth', get_string('chooseauthmethod','core_auth'), $choices);
         $mform->setDefault('auth', 'manual'); // manual is a sensible backwards compatible default
         $mform->addHelpButton('auth', 'chooseauthmethod', 'auth');
         $mform->setAdvanced('auth');
@@ -384,27 +384,27 @@ class admin_uploaduser_form2 extends moodleform {
             switch ($optype) {
                 case UU_USER_UPDATE:
                     if (!empty($data['uupasswordold'])) {
-                        $errors['uupasswordold'] = get_string('missingfield', 'error', 'password');
+                        $errors['uupasswordold'] = get_string('missingfield', 'mod_error', 'password');
                     }
                     break;
 
                 case UU_USER_ADD_UPDATE:
                     if (empty($data['uupasswordnew'])) {
-                        $errors['uupasswordnew'] = get_string('missingfield', 'error', 'password');
+                        $errors['uupasswordnew'] = get_string('missingfield', 'mod_error', 'password');
                     }
                     if  (!empty($data['uupasswordold'])) {
-                        $errors['uupasswordold'] = get_string('missingfield', 'error', 'password');
+                        $errors['uupasswordold'] = get_string('missingfield', 'mod_error', 'password');
                     }
                     break;
 
                 case UU_USER_ADDNEW:
                     if (empty($data['uupasswordnew'])) {
-                        $errors['uupasswordnew'] = get_string('missingfield', 'error', 'password');
+                        $errors['uupasswordnew'] = get_string('missingfield', 'mod_error', 'password');
                     }
                     break;
                 case UU_USER_ADDINC:
                     if (empty($data['uupasswordnew'])) {
-                        $errors['uupasswordnew'] = get_string('missingfield', 'error', 'password');
+                        $errors['uupasswordnew'] = get_string('missingfield', 'mod_error', 'password');
                     }
                     break;
              }
@@ -422,7 +422,7 @@ class admin_uploaduser_form2 extends moodleform {
             $missing = array();
             foreach ($requiredusernames as $requiredusername) {
                 if (!in_array($requiredusername, $columns)) {
-                    $missing[] = get_string('missingfield', 'error', $requiredusername);;
+                    $missing[] = get_string('missingfield', 'mod_error', $requiredusername);;
                 }
             }
             if ($missing) {

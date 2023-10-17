@@ -95,7 +95,7 @@ class bankcontent implements renderable, templatable {
             $contenttypeclass = $content->get_content_type().'\\contenttype';
             $contenttype = new $contenttypeclass($this->context);
             if ($content->get_visibility() == content::VISIBILITY_UNLISTED) {
-                $name = get_string('visibilitytitleunlisted', 'contentbank', $content->get_name());
+                $name = get_string('visibilitytitleunlisted', 'core_contentbank', $content->get_name());
             } else {
                 $name = $content->get_name();
             }

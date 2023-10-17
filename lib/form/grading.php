@@ -139,7 +139,7 @@ class MoodleQuickForm_grading extends HTML_QuickForm_input implements templatabl
         if ($event == 'createElement') {
             $attributes = $arg[2];
             if (!is_array($attributes) || !array_key_exists('gradinginstance', $attributes) || !($attributes['gradinginstance'] instanceof gradingform_instance)) {
-                throw new moodle_exception('exc_gradingformelement', 'grading');
+                throw new moodle_exception('exc_gradingformelement', 'core_grading');
             }
         }
 

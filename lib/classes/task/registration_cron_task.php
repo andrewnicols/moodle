@@ -34,7 +34,7 @@ class registration_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskregistrationcron', 'admin');
+        return get_string('taskregistrationcron', 'core_admin');
     }
 
     /**

@@ -202,7 +202,7 @@ class login_lib_test extends \advanced_testcase {
 
     public function test_core_login_process_password_reset_missing_parameters() {
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('cannotmailconfirm', 'error'));
+        $this->expectExceptionMessage(get_string('cannotmailconfirm', 'mod_error'));
         core_login_process_password_reset(null, null);
     }
 

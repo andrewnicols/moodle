@@ -96,7 +96,7 @@ class core_calendar_external extends external_api {
 
             // Let's check if the user is allowed to delete an event.
             if (!calendar_delete_event_allowed($eventobj)) {
-                throw new moodle_exception('nopermissions', 'error', '', get_string('deleteevent', 'calendar'));
+                throw new moodle_exception('nopermissions', 'mod_error', '', get_string('deleteevent', 'core_calendar'));
             }
             // Time to do the magic.
             $eventobj->delete($event['repeat']);
@@ -822,7 +822,7 @@ class core_calendar_external extends external_api {
         if ($event = $eventvault->get_event_by_id($params['eventid'])) {
             $mapper = event_container::get_event_mapper();
             if (!calendar_view_event_allowed($mapper->from_event_to_legacy_event($event))) {
-                throw new moodle_exception('nopermissiontoviewcalendar', 'error');
+                throw new moodle_exception('nopermissiontoviewcalendar', 'mod_error');
             }
         }
 
@@ -830,7 +830,7 @@ class core_calendar_external extends external_api {
             // We can't return a warning in this case because the event is not optional.
             // We don't know the context for the event and it's not worth loading it.
             $syscontext = context_system::instance();
-            throw new \required_capability_exception($syscontext, 'moodle/course:view', 'nopermissions', 'error');
+            throw new \required_capability_exception($syscontext, 'moodle/course:view', 'nopermissions', 'mod_error');
         }
 
         $cache = new events_related_objects_cache([$event]);

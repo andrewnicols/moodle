@@ -48,7 +48,7 @@ class accept_policy extends \moodleform {
         $mform = $this->_form;
 
         if (empty($this->_customdata['userids']) || !is_array($this->_customdata['userids'])) {
-            throw new \moodle_exception('missingparam', 'error', '', 'userids');
+            throw new \moodle_exception('missingparam', 'mod_error', '', 'userids');
         }
         if (empty($this->_customdata['versionids']) || !is_array($this->_customdata['versionids'])) {
             throw new \moodle_exception('missingparam', '', '', 'versionids');

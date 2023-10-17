@@ -34,8 +34,8 @@ defined('MOODLE_INTERNAL') || die();
  */
 function admin_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $array = array(
-        'admin-*' => get_string('page-admin-x', 'pagetype'),
-        $pagetype => get_string('page-admin-current', 'pagetype')
+        'admin-*' => get_string('page-admin-x', 'mod_pagetype'),
+        $pagetype => get_string('page-admin-current', 'mod_pagetype')
     );
     return $array;
 }

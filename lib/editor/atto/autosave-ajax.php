@@ -68,12 +68,12 @@ $PAGE->set_context($context);
 
 require_login();
 if (isguestuser()) {
-    throw new \moodle_exception('accessdenied', 'admin');
+    throw new \moodle_exception('accessdenied', 'core_admin');
 }
 require_sesskey();
 
 if (!in_array('atto', explode(',', get_config('core', 'texteditors')))) {
-    throw new \moodle_exception('accessdenied', 'admin');
+    throw new \moodle_exception('accessdenied', 'core_admin');
 }
 
 $responses = array();

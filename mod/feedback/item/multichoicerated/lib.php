@@ -215,14 +215,14 @@ class feedback_item_multichoicerated extends feedback_item_base {
             }
             $chart = new \core\chart_bar();
             $chart->set_horizontal(true);
-            $series = new \core\chart_series(format_string(get_string("responses", "feedback")), $data['series']);
+            $series = new \core\chart_series(format_string(get_string("responses", 'mod_feedback')), $data['series']);
             $series->set_labels($data['series_labels']);
             $chart->add_series($series);
             $chart->set_labels($data['labels']);
             echo '<tr><td>'. $OUTPUT->render($chart) . '</td></tr>';
             $avg = format_float($avg, 2);
             echo '<tr><td class="text-left"><b>';
-            echo get_string('average', 'feedback').': '.$avg.'</b>';
+            echo get_string('average', 'mod_feedback').': '.$avg.'</b>';
             echo '</td></tr>';
             echo '</table>';
         }
@@ -263,7 +263,7 @@ class feedback_item_multichoicerated extends feedback_item_base {
             //mittelwert anzeigen
             $worksheet->write_string($row_offset,
                                 count($data) + 2,
-                                get_string('average', 'feedback'),
+                                get_string('average', 'mod_feedback'),
                                 $xls_formats->value_bold);
 
             $worksheet->write_number($row_offset + 1,
@@ -289,10 +289,10 @@ class feedback_item_multichoicerated extends feedback_item_base {
             $a = new stdclass();
             $a->weight = $weight;
             $a->name = format_text($optiontext, FORMAT_HTML, array('noclean' => true, 'para' => false));
-            $options[$idx + 1] = get_string('multichoiceoption', 'feedback', $a);
+            $options[$idx + 1] = get_string('multichoiceoption', 'mod_feedback', $a);
         }
         if ($info->subtype === 'r' && !$this->hidenoselect($item)) {
-            $options = array(0 => get_string('not_selected', 'feedback')) + $options;
+            $options = array(0 => get_string('not_selected', 'mod_feedback')) + $options;
         }
 
         return $options;

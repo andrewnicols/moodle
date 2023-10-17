@@ -212,14 +212,14 @@ switch ($action) {
         // Return an error if the returned size of the content is NULL.
         // This means the utility class was unable to read the content of the archive.
         if (is_null($filecontentsize)) {
-            $return->error = get_string('cannotunzipcontentunreadable', 'repository');
+            $return->error = get_string('cannotunzipcontentunreadable', 'core_repository');
             die(json_encode($return));
         }
 
         // Check whether the maximum size allowed in this draft area will be exceeded with unzipping the file.
         // If the maximum size allowed is exceeded, return an error before attempting to unzip.
         if (file_is_draft_area_limit_reached($draftid, $areamaxbytes, $filecontentsize)) {
-            $return->error = get_string('cannotunzipquotaexceeded', 'repository');
+            $return->error = get_string('cannotunzipquotaexceeded', 'core_repository');
             die(json_encode($return));
         }
 
@@ -237,7 +237,7 @@ switch ($action) {
                 return $result !== true;
             });
             if (count($failed) > 0) {
-                $return->error = get_string('cannotunzipextractfileerror',  'repository');
+                $return->error = get_string('cannotunzipextractfileerror',  'core_repository');
                 die(json_encode($return));
             }
 
@@ -305,7 +305,7 @@ switch ($action) {
                     $refcontext = context::instance_by_id($reffile->get_contextid());
                     $fileinfo = $browser->get_file_info($refcontext, $reffile->get_component(), $reffile->get_filearea(), $reffile->get_itemid(), $reffile->get_filepath(), $reffile->get_filename());
                     if (empty($fileinfo)) {
-                        $return['references'][] = get_string('undisclosedreference', 'repository');
+                        $return['references'][] = get_string('undisclosedreference', 'core_repository');
                     } else {
                         $return['references'][] = $fileinfo->get_readable_fullname();
                     }

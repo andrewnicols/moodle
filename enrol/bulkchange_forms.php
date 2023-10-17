@@ -55,9 +55,9 @@ abstract class enrol_bulk_enrolment_change_form extends moodleform {
      * @return array
      */
     protected function get_status_options() {
-        return array(-1                   => get_string('nochange', 'enrol'),
-                     ENROL_USER_ACTIVE    => get_string('participationactive', 'enrol'),
-                     ENROL_USER_SUSPENDED => get_string('participationsuspended', 'enrol'));
+        return array(-1                   => get_string('nochange', 'core_enrol'),
+                     ENROL_USER_ACTIVE    => get_string('participationactive', 'core_enrol'),
+                     ENROL_USER_SUSPENDED => get_string('participationsuspended', 'core_enrol'));
     }
 
     /**
@@ -71,9 +71,9 @@ abstract class enrol_bulk_enrolment_change_form extends moodleform {
         $table = new html_table();
         $table->head = array(
             get_string('name'),
-            get_string('participationstatus', 'enrol'),
-            get_string('enroltimestart', 'enrol'),
-            get_string('enroltimeend', 'enrol'),
+            get_string('participationstatus', 'core_enrol'),
+            get_string('enroltimestart', 'core_enrol'),
+            get_string('enroltimeend', 'core_enrol'),
         );
         $table->data = array();
         foreach ($users as $user) {

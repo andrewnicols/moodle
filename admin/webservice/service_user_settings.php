@@ -39,9 +39,9 @@ $node = $PAGE->settingsnav->find('externalservices', navigation_node::TYPE_SETTI
 if ($node) {
     $node->make_active();
 }
-$PAGE->navbar->add(get_string('serviceusers', 'webservice'),
+$PAGE->navbar->add(get_string('serviceusers', 'core_webservice'),
         new moodle_url('/' . $CFG->admin . '/webservice/service_users.php', array('id' => $serviceid)));
-$PAGE->navbar->add(get_string('serviceusersettings', 'webservice'));
+$PAGE->navbar->add(get_string('serviceusersettings', 'core_webservice'));
 
 $formaction = new moodle_url('', array('id' => $serviceid, 'userid' => $userid));
 $returnurl = new moodle_url('/' . $CFG->admin . '/webservice/service_users.php', array('id' => $serviceid));
@@ -68,11 +68,11 @@ if ($usersettingsform->is_cancelled()) {
     //TODO: assign capability
 
     //display successful notification
-    $notification = $OUTPUT->notification(get_string('usersettingssaved', 'webservice'), 'notifysuccess');
+    $notification = $OUTPUT->notification(get_string('usersettingssaved', 'core_webservice'), 'notifysuccess');
 }
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('serviceusersettings', 'webservice'), 3, 'main');
+echo $OUTPUT->heading(get_string('serviceusersettings', 'core_webservice'), 3, 'main');
 if (!empty($notification)) {
     echo $notification;
 }

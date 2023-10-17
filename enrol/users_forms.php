@@ -45,7 +45,7 @@ class enrol_users_assign_form extends moodleform {
 
         $mform->addElement('header','general', fullname($user));
 
-        $mform->addElement('select', 'roleid', get_string('addrole', 'role'), $assignable);
+        $mform->addElement('select', 'roleid', get_string('addrole', 'core_role'), $assignable);
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -99,7 +99,7 @@ class enrol_users_addmember_form extends moodleform {
 
         $mform->addElement('header','general', fullname($user));
 
-        $mform->addElement('select', 'groupids', get_string('addgroup', 'group'), $options, array('multiple' => 'multiple'));
+        $mform->addElement('select', 'groupids', get_string('addgroup', 'core_group'), $options, array('multiple' => 'multiple'));
         $mform->addRule('groupids', null, 'required');
 
         $mform->addElement('hidden', 'id');
@@ -149,7 +149,7 @@ class enrol_users_filter_form extends moodleform {
         $mform->setType('search', PARAM_RAW);
 
         // Filter by enrolment plugin type.
-        $mform->addElement('select', 'ifilter', get_string('enrolmentinstances', 'enrol'),
+        $mform->addElement('select', 'ifilter', get_string('enrolmentinstances', 'core_enrol'),
                 array(0 => get_string('all')) + (array)$manager->get_enrolment_instance_names());
 
         // Role select dropdown includes all roles, but using course-specific
@@ -167,7 +167,7 @@ class enrol_users_filter_form extends moodleform {
         // Filter by group.
         $allgroups = $manager->get_all_groups();
         $groupsmenu[0] = get_string('allparticipants');
-        $groupsmenu[-1] = get_string('nogroup', 'enrol');
+        $groupsmenu[-1] = get_string('nogroup', 'core_enrol');
         foreach($allgroups as $gid => $unused) {
             $groupsmenu[$gid] = $allgroups[$gid]->name;
         }

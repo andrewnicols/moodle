@@ -117,7 +117,7 @@ class user_competency_course extends persistent {
         global $DB;
 
         if (!$DB->record_exists('user', array('id' => $value))) {
-            return new lang_string('invaliduserid', 'error');
+            return new lang_string('invaliduserid', 'mod_error');
         }
 
         return true;
@@ -162,11 +162,11 @@ class user_competency_course extends persistent {
 
         if ($grade !== null && $value === null) {
             // We must set a proficiency when we set a grade.
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
 
         } else if ($grade === null && $value !== null) {
             // We must not set a proficiency when we don't set a grade.
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;

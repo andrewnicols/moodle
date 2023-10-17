@@ -124,7 +124,7 @@ class completion_criteria_role extends completion_criteria {
         global $DB;
         $role = $DB->get_record('role', array('id' => $this->role));
         if (!$role) {
-            return '['.get_string('roleidnotfound', 'completion', $this->role).']';
+            return '['.get_string('roleidnotfound', 'core_completion', $this->role).']';
         }
         return role_get_name($role, context_course::instance($this->course));
     }
@@ -144,7 +144,7 @@ class completion_criteria_role extends completion_criteria {
      * @return string
      */
     public function get_type_title() {
-        return get_string('approval', 'completion');
+        return get_string('approval', 'core_completion');
     }
 
     /**
@@ -156,9 +156,9 @@ class completion_criteria_role extends completion_criteria {
      */
     public function get_details($completion) {
         $details = array();
-        $details['type'] = get_string('manualcompletionby', 'completion');
+        $details['type'] = get_string('manualcompletionby', 'core_completion');
         $details['criteria'] = $this->get_title();
-        $details['requirement'] = get_string('markedcompleteby', 'completion', $details['criteria']);
+        $details['requirement'] = get_string('markedcompleteby', 'core_completion', $details['criteria']);
         $details['status'] = '';
 
         return $details;

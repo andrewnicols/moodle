@@ -10,16 +10,16 @@ class webservice_test_client_form extends moodleform {
         $mform = $this->_form;
         list($functions, $protocols) = $this->_customdata;
 
-        $mform->addElement('header', 'wstestclienthdr', get_string('testclient', 'webservice'));
+        $mform->addElement('header', 'wstestclienthdr', get_string('testclient', 'core_webservice'));
 
         $authmethod = array('simple' => 'simple', 'token' => 'token');
-        $mform->addElement('select', 'authmethod', get_string('authmethod', 'webservice'), $authmethod);
+        $mform->addElement('select', 'authmethod', get_string('authmethod', 'core_webservice'), $authmethod);
         $mform->setType('simple', PARAM_ALPHA);
 
-        $mform->addElement('select', 'protocol', get_string('protocol', 'webservice'), $protocols);
+        $mform->addElement('select', 'protocol', get_string('protocol', 'core_webservice'), $protocols);
         $mform->setType('protocol', PARAM_ALPHA);
 
-        $mform->addElement('select', 'function', get_string('function', 'webservice'), $functions);
+        $mform->addElement('select', 'function', get_string('function', 'core_webservice'), $functions);
         $mform->setType('function', PARAM_PLUGIN);
 
         $this->add_action_buttons(false, get_string('select'));
@@ -48,7 +48,7 @@ abstract class webservice_test_client_base_form extends moodleform {
     public function definition() {
         $mform = $this->_form;
 
-        $mform->addElement('header', 'wstestclienthdr', get_string('testclient', 'webservice'));
+        $mform->addElement('header', 'wstestclienthdr', get_string('testclient', 'core_webservice'));
 
         // Note: these values are intentionally PARAM_RAW - we want users to test any rubbish as parameters.
         $data = $this->_customdata;
@@ -73,7 +73,7 @@ abstract class webservice_test_client_base_form extends moodleform {
 
         $this->test_client_definition();
 
-        $this->add_action_buttons(true, get_string('execute', 'webservice'));
+        $this->add_action_buttons(true, get_string('execute', 'core_webservice'));
     }
 
     /**

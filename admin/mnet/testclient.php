@@ -18,7 +18,7 @@ require_once($CFG->libdir.'/adminlib.php');
 include_once($CFG->dirroot.'/mnet/lib.php');
 
 if ($CFG->mnet_dispatcher_mode === 'off') {
-    throw new \moodle_exception('mnetdisabled', 'mnet');
+    throw new \moodle_exception('mnetdisabled', 'core_mnet');
 }
 
 admin_externalpage_setup('mnettestclient');
@@ -27,7 +27,7 @@ error_reporting(DEBUG_ALL);
 
 echo $OUTPUT->header();
 if (!extension_loaded('openssl')) {
-    throw new \moodle_exception('requiresopenssl', 'mnet', '', null, true);
+    throw new \moodle_exception('requiresopenssl', 'core_mnet', '', null, true);
 }
 
 // optional drilling down parameters
@@ -41,7 +41,7 @@ $moodleapplicationid = $DB->get_field('mnet_application', 'id', array('name' => 
 $url = new moodle_url('/admin/mnet/testclient.php');
 $PAGE->set_url($url);
 
-echo $OUTPUT->heading(get_string('hostlist', 'mnet'));
+echo $OUTPUT->heading(get_string('hostlist', 'core_mnet'));
 foreach ($hosts as $id => $host) {
     if (empty($host->wwwroot) || $host->wwwroot == $CFG->wwwroot) {
         continue;
@@ -53,7 +53,7 @@ foreach ($hosts as $id => $host) {
 if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
     $host = $hosts[$hostid];
     if ($host->applicationid != $moodleapplicationid) {
-        echo $OUTPUT->notification(get_string('notmoodleapplication', 'mnet'));
+        echo $OUTPUT->notification(get_string('notmoodleapplication', 'core_mnet'));
     }
     $mnet_peer = new mnet_peer();
     $mnet_peer->set_wwwroot($host->wwwroot);
@@ -67,7 +67,7 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
     $yesno = array('No', 'Yes');
     $servicenames = array();
 
-    echo $OUTPUT->heading(get_string('servicesavailableonhost', 'mnet', $host->wwwroot));
+    echo $OUTPUT->heading(get_string('servicesavailableonhost', 'core_mnet', $host->wwwroot));
 
     if (!empty($mnet_request->error)) {
         echo $OUTPUT->heading(get_string('error'), 3);
@@ -77,12 +77,12 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
 
     $table = new html_table();
     $table->head = array(
-        get_string('serviceid', 'mnet'),
-        get_string('service', 'mnet'),
-        get_string('version', 'mnet'),
-        get_string('theypublish', 'mnet'),
-        get_string('theysubscribe', 'mnet'),
-        get_string('options', 'mnet'),
+        get_string('serviceid', 'core_mnet'),
+        get_string('service', 'core_mnet'),
+        get_string('version', 'core_mnet'),
+        get_string('theypublish', 'core_mnet'),
+        get_string('theysubscribe', 'core_mnet'),
+        get_string('options', 'core_mnet'),
     );
     $table->data = array();
 
@@ -114,7 +114,7 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
             $service = $serviceinfo[$servicedata['name']];
             $servicedata['humanname'] = get_string($servicedata['name'].'_name', $service);
         } else {
-            $servicedata['humanname'] = get_string('unknown', 'mnet');
+            $servicedata['humanname'] = get_string('unknown', 'core_mnet');
         }
         $newurl = new moodle_url($url, array('hostid' => $host->id, 'servicename' => $servicedata['name']));
         $table->data[] = array(
@@ -123,7 +123,7 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
             $servicedata['apiversion'],
             $yesno[$servicedata['publish']],
             $yesno[$servicedata['subscribe']],
-            html_writer::link($newurl, get_string('listservices', 'mnet'))
+            html_writer::link($newurl, get_string('listservices', 'core_mnet'))
         );
 
     }
@@ -133,11 +133,11 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
     $mnet_request = new mnet_xmlrpc_client();
     $mnet_request->set_method('system/listMethods');
     if (isset($servicename) && array_key_exists($servicename, $serviceinfo)) {
-        echo $OUTPUT->heading(get_string('methodsavailableonhostinservice', 'mnet', (object)array('host' => $host->wwwroot, 'service' => $servicename)));
+        echo $OUTPUT->heading(get_string('methodsavailableonhostinservice', 'core_mnet', (object)array('host' => $host->wwwroot, 'service' => $servicename)));
         $service = $serviceinfo[$servicename];
         $mnet_request->add_param($servicename, 'string');
     } else {
-        echo $OUTPUT->heading(get_string('methodsavailableonhost', 'mnet', $host->wwwroot));
+        echo $OUTPUT->heading(get_string('methodsavailableonhost', 'core_mnet', $host->wwwroot));
     }
 
     $mnet_request->send($mnet_peer);
@@ -151,8 +151,8 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
 
     $table = new html_table();
     $table->head = array(
-        get_string('method', 'mnet'),
-        get_string('options', 'mnet'),
+        get_string('method', 'core_mnet'),
+        get_string('options', 'core_mnet'),
     );
     $table->data = array();
 
@@ -164,7 +164,7 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
         $newurl = new moodle_url($url, $params);
         $table->data[] = array(
             $method,
-            html_writer::link($newurl, get_string('inspect', 'mnet'))
+            html_writer::link($newurl, get_string('inspect', 'core_mnet'))
         );
     }
     echo html_writer::table($table);
@@ -178,7 +178,7 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
         $mnet_request->send($mnet_peer);
         $signature = $mnet_request->response;
 
-        echo $OUTPUT->heading(get_string('methodsignature', 'mnet', $method));
+        echo $OUTPUT->heading(get_string('methodsignature', 'core_mnet', $method));
 
         if (!empty($mnet_request->error)) {
             echo $OUTPUT->heading(get_string('error'), 3);
@@ -188,10 +188,10 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
 
         $table = new html_table();
         $table->head = array(
-            get_string('position', 'mnet'),
-            get_string('name', 'mnet'),
-            get_string('type', 'mnet'),
-            get_string('description', 'mnet'),
+            get_string('position', 'core_mnet'),
+            get_string('name', 'core_mnet'),
+            get_string('type', 'core_mnet'),
+            get_string('description', 'core_mnet'),
         );
         $table->data = array();
 
@@ -205,7 +205,7 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
             );
         }
         $table->data[] = array(
-            get_string('returnvalue', 'mnet'),
+            get_string('returnvalue', 'core_mnet'),
             '',
             $signature['return']['type'],
             $signature['return']['description']
@@ -218,7 +218,7 @@ if (!empty($hostid) && array_key_exists($hostid, $hosts)) {
         $mnet_request->send($mnet_peer);
         $help = $mnet_request->response;
 
-        echo $OUTPUT->heading(get_string('methodhelp', 'mnet', $method));
+        echo $OUTPUT->heading(get_string('methodhelp', 'core_mnet', $method));
         echo(str_replace('\n', '<br />',$help));
     }
 }

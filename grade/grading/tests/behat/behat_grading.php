@@ -54,7 +54,7 @@ class behat_grading extends behat_base {
         }
 
         $this->execute('behat_navigation::i_navigate_to_in_current_page_administration',
-            get_string('gradingmanagement', 'grading'));
+            get_string('gradingmanagement', 'core_grading'));
     }
 
     /**
@@ -66,8 +66,8 @@ class behat_grading extends behat_base {
     public function i_go_to_advanced_grading_definition_page($activityname) {
 
         // Transforming to literals, probably not necessary, just in case.
-        $newactionliteral = behat_context_helper::escape(get_string("manageactionnew", "grading"));
-        $editactionliteral = behat_context_helper::escape(get_string("manageactionedit", "grading"));
+        $newactionliteral = behat_context_helper::escape(get_string("manageactionnew", 'core_grading'));
+        $editactionliteral = behat_context_helper::escape(get_string("manageactionedit", 'core_grading'));
 
         // Working both when adding and editing.
         $definitionxpath = "//a[@class='action btn btn-lg']" .
@@ -112,7 +112,7 @@ class behat_grading extends behat_base {
 
         $this->execute('behat_grading::i_go_to_advanced_grading_page', $this->escape($activityname));
 
-        $this->execute("behat_general::i_click_on", array($this->escape(get_string("manageactionshare", "grading")), "link"));
+        $this->execute("behat_general::i_click_on", array($this->escape(get_string("manageactionshare", 'core_grading')), "link"));
 
         $this->execute('behat_forms::press_button', get_string('continue'));
     }
@@ -132,15 +132,15 @@ class behat_grading extends behat_base {
             "following-sibling::div[contains(concat(' ', normalize-space(@class), ' '), ' template-actions ')]";
 
         // Should work with both templates and own forms.
-        $literaltemplate = behat_context_helper::escape(get_string('templatepick', 'grading'));
-        $literalownform = behat_context_helper::escape(get_string('templatepickownform', 'grading'));
+        $literaltemplate = behat_context_helper::escape(get_string('templatepick', 'core_grading'));
+        $literalownform = behat_context_helper::escape(get_string('templatepickownform', 'core_grading'));
         $usetemplatexpath = "/a[./descendant::div[text()=$literaltemplate]]|" .
             "/a[./descendant::div[text()=$literalownform]]";
 
         $this->execute('behat_grading::i_go_to_advanced_grading_page', $this->escape($activityname));
 
-        $this->execute('behat_general::click_link', $this->escape(get_string('manageactionclone', 'grading')));
-        $this->execute('behat_forms::i_set_the_field_to', array(get_string('searchownforms', 'grading'), 1));
+        $this->execute('behat_general::click_link', $this->escape(get_string('manageactionclone', 'core_grading')));
+        $this->execute('behat_forms::i_set_the_field_to', array(get_string('searchownforms', 'core_grading'), 1));
         $this->execute('behat_general::i_click_on_in_the',
             array(get_string('search'), "button", "region-main", "region")
         );

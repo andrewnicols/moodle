@@ -42,7 +42,7 @@ class task_log_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('tasklogcleanup', 'admin');
+        return get_string('tasklogcleanup', 'core_admin');
     }
 
     /**

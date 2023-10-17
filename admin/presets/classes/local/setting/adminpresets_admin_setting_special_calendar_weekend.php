@@ -35,7 +35,7 @@ class adminpresets_admin_setting_special_calendar_weekend extends adminpresets_s
         $days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
         for ($i = 0; $i < 7; $i++) {
             if ($this->value & (1 << $i)) {
-                $settings[] = get_string($days[$i], 'calendar');
+                $settings[] = get_string($days[$i], 'core_calendar');
             }
         }
 

@@ -83,7 +83,7 @@ abstract class base_action_bar implements renderable, templatable {
                 $data['thirdpartynodes'] = ['link' => $link, 'text' => $text];
             } else {
                 // Return a url_select.
-                $selectobject = new \url_select($result, $this->page->url, get_string('othernavigation', 'badges'));
+                $selectobject = new \url_select($result, $this->page->url, get_string('othernavigation', 'core_badges'));
                 $data['thirdpartynodes'] = $selectobject->export_for_template($output);
                 $data['thirdpartybutton'] = false;
             }

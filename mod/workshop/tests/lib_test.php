@@ -52,7 +52,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_workshop_core_calendar_provide_event_action($event, $factory);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('viewworkshopsummary', 'workshop'), $actionevent->get_name());
+        $this->assertEquals(get_string('viewworkshopsummary', 'mod_workshop'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -108,7 +108,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_workshop_core_calendar_provide_event_action($event, $factory, $student->id);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('viewworkshopsummary', 'workshop'), $actionevent->get_name());
+        $this->assertEquals(get_string('viewworkshopsummary', 'mod_workshop'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -130,7 +130,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_workshop_core_calendar_provide_event_action($event, $factory);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('viewworkshopsummary', 'workshop'), $actionevent->get_name());
+        $this->assertEquals(get_string('viewworkshopsummary', 'mod_workshop'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -184,7 +184,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_workshop_core_calendar_provide_event_action($event, $factory, $student->id);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('viewworkshopsummary', 'workshop'), $actionevent->get_name());
+        $this->assertEquals(get_string('viewworkshopsummary', 'mod_workshop'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -206,7 +206,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_workshop_core_calendar_provide_event_action($event, $factory);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('viewworkshopsummary', 'workshop'), $actionevent->get_name());
+        $this->assertEquals(get_string('viewworkshopsummary', 'mod_workshop'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -260,7 +260,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_workshop_core_calendar_provide_event_action($event, $factory, $student->id);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('viewworkshopsummary', 'workshop'), $actionevent->get_name());
+        $this->assertEquals(get_string('viewworkshopsummary', 'mod_workshop'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -281,7 +281,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_workshop_core_calendar_provide_event_action($event, $factory);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('viewworkshopsummary', 'workshop'), $actionevent->get_name());
+        $this->assertEquals(get_string('viewworkshopsummary', 'mod_workshop'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());

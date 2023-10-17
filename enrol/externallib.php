@@ -133,7 +133,7 @@ class core_enrol_external extends external_api {
             $course = $DB->get_record('course', array('id'=>$courseid), '*', MUST_EXIST);
             $coursecontext = context_course::instance($courseid);
             if (!$coursecontext) {
-                throw new moodle_exception('cannotfindcourse', 'error', '', null,
+                throw new moodle_exception('cannotfindcourse', 'mod_error', '', null,
                         'The course id ' . $courseid . ' doesn\'t exist.');
             }
             if ($courseid == SITEID) {
@@ -147,7 +147,7 @@ class core_enrol_external extends external_api {
                 $exceptionparam = new stdClass();
                 $exceptionparam->message = $e->getMessage();
                 $exceptionparam->courseid = $params['courseid'];
-                throw new moodle_exception(get_string('errorcoursecontextnotvalid' , 'webservice', $exceptionparam));
+                throw new moodle_exception(get_string('errorcoursecontextnotvalid' , 'core_webservice', $exceptionparam));
             }
 
             course_require_view_participants($context);
@@ -554,7 +554,7 @@ class core_enrol_external extends external_api {
             $exceptionparam = new stdClass();
             $exceptionparam->message = $e->getMessage();
             $exceptionparam->courseid = $params['courseid'];
-            throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+            throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
         }
         require_capability('moodle/course:enrolreview', $context);
 
@@ -667,7 +667,7 @@ class core_enrol_external extends external_api {
             $exceptionparam = new stdClass();
             $exceptionparam->message = $e->getMessage();
             $exceptionparam->courseid = $params['courseid'];
-            throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+            throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
         }
         course_require_view_participants($context);
 
@@ -838,7 +838,7 @@ class core_enrol_external extends external_api {
             $exceptionparam = new stdClass();
             $exceptionparam->message = $e->getMessage();
             $exceptionparam->courseid = $params['courseid'];
-            throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+            throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
         }
 
         course_require_view_participants($context);
@@ -1148,7 +1148,7 @@ class core_enrol_external extends external_api {
             $context = context_course::instance($course->id);
             self::validate_context($context);
         } else {
-            $validationerrors['invalidrequest'] = get_string('invalidrequest', 'enrol');
+            $validationerrors['invalidrequest'] = get_string('invalidrequest', 'core_enrol');
         }
 
         // If the userenrolment exists, unenrol the user.

@@ -5,7 +5,7 @@ function glossary_show_entry_TEMPLATE($course, $cm, $glossary, $entry, $mode='',
 
 
     $user = $DB->get_record('user', array('id'=>$entry->userid));
-    $strby = get_string('writtenby', 'glossary');
+    $strby = get_string('writtenby', 'mod_glossary');
 
     if ($entry) {
 
@@ -26,7 +26,7 @@ function glossary_show_entry_TEMPLATE($course, $cm, $glossary, $entry, $mode='',
         $by = new stdClass();
         $by->name = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.$course->id.'">'.$fullname.'</a>';
         $by->date = userdate($entry->timemodified);
-        echo '<span class="author">'.get_string('bynameondate', 'forum', $by).'</span>' . '<br />';
+        echo '<span class="author">'.get_string('bynameondate', 'mod_forum', $by).'</span>' . '<br />';
 
         //Use this code to show modification date
         //Comments: Configuration not supported

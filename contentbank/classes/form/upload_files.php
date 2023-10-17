@@ -56,7 +56,7 @@ class upload_files extends \core_form\dynamic_form {
         $draftitemid = $data['file'];
         $options = $this->get_options();
         if (file_is_draft_area_limit_reached($draftitemid, $options['areamaxbytes'])) {
-            $errors['file'] = get_string('userquotalimit', 'error');
+            $errors['file'] = get_string('userquotalimit', 'mod_error');
         }
         return $errors;
     }
@@ -84,7 +84,7 @@ class upload_files extends \core_form\dynamic_form {
             $content = $cb->get_content_from_id($id);
             $contenttype = $content->get_content_type_instance();
             if (!$contenttype->can_manage($content) || !$contenttype->can_upload()) {
-                throw new \moodle_exception('nopermissions', 'error', '', null, get_string('replacecontent', 'contentbank'));
+                throw new \moodle_exception('nopermissions', 'mod_error', '', null, get_string('replacecontent', 'core_contentbank'));
             }
         }
     }

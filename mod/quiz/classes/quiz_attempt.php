@@ -263,7 +263,7 @@ class quiz_attempt {
                     }
                     $number += $length;
                 } else {
-                    $this->questionnumbers[$slot] = get_string('infoshort', 'quiz');
+                    $this->questionnumbers[$slot] = get_string('infoshort', 'mod_quiz');
                 }
                 $this->questionpages[$slot] = $page;
             }
@@ -1119,9 +1119,9 @@ class quiz_attempt {
             $a->name = $this->get_quiz_name();
             $a->currentpage = $page + 1;
             $a->totalpages = $this->get_num_pages();
-            $title = get_string('attempttitlepaged', 'quiz', $a);
+            $title = get_string('attempttitlepaged', 'mod_quiz', $a);
         } else {
-            $title = get_string('attempttitle', 'quiz', $this->get_quiz_name());
+            $title = get_string('attempttitle', 'mod_quiz', $this->get_quiz_name());
         }
 
         return $title;
@@ -1147,7 +1147,7 @@ class quiz_attempt {
      * @return string summary page title.
      */
     public function summary_page_title() : string {
-        return get_string('attemptsummarytitle', 'quiz', $this->get_quiz_name());
+        return get_string('attemptsummarytitle', 'mod_quiz', $this->get_quiz_name());
     }
 
     /**
@@ -1181,9 +1181,9 @@ class quiz_attempt {
             $a->name = $this->get_quiz_name();
             $a->currentpage = $page + 1;
             $a->totalpages = $this->get_num_pages();
-            $title = get_string('attemptreviewtitlepaged', 'quiz', $a);
+            $title = get_string('attemptreviewtitlepaged', 'mod_quiz', $a);
         } else {
-            $title = get_string('attemptreviewtitle', 'quiz', $this->get_quiz_name());
+            $title = get_string('attemptreviewtitle', 'mod_quiz', $this->get_quiz_name());
         }
 
         return $title;
@@ -1270,7 +1270,7 @@ class quiz_attempt {
         if ($this->is_preview() && $this->is_preview_user()) {
             return $OUTPUT->single_button(new moodle_url(
                     $this->start_attempt_url(), ['forcenew' => true]),
-                    get_string('startnewpreview', 'quiz'));
+                    get_string('startnewpreview', 'mod_quiz'));
         } else {
             return '';
         }
@@ -1334,7 +1334,7 @@ class quiz_attempt {
             $links = $this->links_to_other_redos($slot, $displayoptions->questionreviewlink);
             if ($links) {
                 $displayoptions->extrahistorycontent = html_writer::tag('p',
-                        get_string('redoesofthisquestion', 'quiz', $renderer->render($links)));
+                        get_string('redoesofthisquestion', 'mod_quiz', $renderer->render($links)));
             }
         }
 
@@ -1368,7 +1368,7 @@ class quiz_attempt {
         $question->parent = 0;
         $question->qtype = question_bank::get_qtype('description');
         $question->name = '';
-        $question->questiontext = get_string('questiondependsonprevious', 'quiz');
+        $question->questiontext = get_string('questiondependsonprevious', 'mod_quiz');
         $question->questiontextformat = FORMAT_HTML;
         $question->generalfeedback = '';
         $question->defaultmark = $this->quba->get_question_max_mark($slot);
@@ -1465,7 +1465,7 @@ class quiz_attempt {
         $bc = new block_contents();
         $bc->attributes['id'] = 'mod_quiz_navblock';
         $bc->attributes['role'] = 'navigation';
-        $bc->title = get_string('quiznavigation', 'quiz');
+        $bc->title = get_string('quiznavigation', 'mod_quiz');
         $bc->content = $output->navigation_panel($panel);
         return $bc;
     }
@@ -1536,7 +1536,7 @@ class quiz_attempt {
                 $links->links[$index] = new action_link($url, $index,
                         new popup_action('click', $url, 'reviewquestion',
                                 ['width' => 450, 'height' => 650]),
-                        ['title' => get_string('reviewresponse', 'question')]);
+                        ['title' => get_string('reviewresponse', 'core_question')]);
             }
             $index++;
         }
@@ -2041,7 +2041,7 @@ class quiz_attempt {
                     $this->process_submitted_actions($timenow, $becomingoverdue);
                     $this->fire_attempt_updated_event();
                 } catch (question_out_of_sequence_exception $e) {
-                    throw new moodle_exception('submissionoutofsequencefriendlymessage', 'question',
+                    throw new moodle_exception('submissionoutofsequencefriendlymessage', 'core_question',
                             $this->attempt_url(null, $thispage));
 
                 } catch (Exception $e) {
@@ -2051,7 +2051,7 @@ class quiz_attempt {
                     if (!empty($e->debuginfo)) {
                         $debuginfo = $e->debuginfo;
                     }
-                    throw new moodle_exception('errorprocessingresponses', 'question',
+                    throw new moodle_exception('errorprocessingresponses', 'core_question',
                             $this->attempt_url(null, $thispage), $e->getMessage(), $debuginfo);
                 }
 
@@ -2090,7 +2090,7 @@ class quiz_attempt {
             }
 
         } catch (question_out_of_sequence_exception $e) {
-            throw new moodle_exception('submissionoutofsequencefriendlymessage', 'question',
+            throw new moodle_exception('submissionoutofsequencefriendlymessage', 'core_question',
                     $this->attempt_url(null, $thispage));
 
         } catch (Exception $e) {
@@ -2100,7 +2100,7 @@ class quiz_attempt {
             if (!empty($e->debuginfo)) {
                 $debuginfo = $e->debuginfo;
             }
-            throw new moodle_exception('errorprocessingresponses', 'question',
+            throw new moodle_exception('errorprocessingresponses', 'core_question',
                     $this->attempt_url(null, $thispage), $e->getMessage(), $debuginfo);
         }
 

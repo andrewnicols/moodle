@@ -50,7 +50,7 @@ class webservice_service_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventwebserviceserviceupdated', 'webservice');
+        return get_string('eventwebserviceserviceupdated', 'core_webservice');
     }
 
     /**

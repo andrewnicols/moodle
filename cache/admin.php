@@ -49,7 +49,7 @@ $notifications = array();
 $forminfo = [];
 
 $PAGE->set_primary_active_tab('siteadminnode');
-$PAGE->navbar->add(get_string('cacheconfig', 'cache'), new moodle_url('/cache/admin.php'));
+$PAGE->navbar->add(get_string('cacheconfig', 'core_cache'), new moodle_url('/cache/admin.php'));
 
 // Handle page actions in admin helper class.
 if (!empty($action)) {
@@ -64,7 +64,7 @@ foreach (cache_helper::warnings(core_cache\administration_helper::get_store_inst
 
 // Decide on display mode based on returned forminfo.
 $mform = array_key_exists('form', $forminfo) ? $forminfo['form'] : null;
-$title = array_key_exists('title', $forminfo) ? $forminfo['title'] : new lang_string('cacheadmin', 'cache');
+$title = array_key_exists('title', $forminfo) ? $forminfo['title'] : new lang_string('cacheadmin', 'core_cache');
 
 $PAGE->set_title($title);
 $PAGE->set_heading($SITE->fullname);

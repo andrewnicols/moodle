@@ -31,7 +31,7 @@ $badgeid = required_param('id', PARAM_INT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 $badge = new badge($badgeid);
@@ -41,7 +41,7 @@ require_capability('moodle/badges:configuredetails', $context);
 
 if ($badge->type == BADGE_TYPE_COURSE) {
     if (empty($CFG->badges_allowcoursebadges)) {
-        throw new \moodle_exception('coursebadgesdisabled', 'badges');
+        throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
     }
     require_login($badge->courseid);
     $course = get_course($badge->courseid);
@@ -67,7 +67,7 @@ $msg = optional_param('msg', '', PARAM_TEXT);
 $emsg = optional_param('emsg', '', PARAM_TEXT);
 
 if ($msg !== '') {
-    $msg = get_string($msg, 'badges');
+    $msg = get_string($msg, 'core_badges');
 }
 
 echo $OUTPUT->header();
@@ -94,7 +94,7 @@ if ($form->is_cancelled()) {
     if ($badge->save_endorsement($endorsement)) {
         $msg = get_string('changessaved');
     } else {
-        $emsg = get_string('error:save', 'badges');
+        $emsg = get_string('error:save', 'core_badges');
     }
 }
 
@@ -104,6 +104,6 @@ if ($emsg !== '') {
 } else if ($msg !== '') {
     echo $OUTPUT->notification($msg, 'notifysuccess');
 }
-echo $output->notification(get_string('noteendorsement', 'badges'), 'info');
+echo $output->notification(get_string('noteendorsement', 'core_badges'), 'info');
 $form->display();
 echo $OUTPUT->footer();

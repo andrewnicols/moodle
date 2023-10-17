@@ -32,7 +32,7 @@ $overrideid = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', false, PARAM_BOOL);
 
 if (! $override = $DB->get_record('lesson_overrides', array('id' => $overrideid))) {
-    throw new \moodle_exception('invalidoverrideid', 'lesson');
+    throw new \moodle_exception('invalidoverrideid', 'mod_lesson');
 }
 
 $lesson = new lesson($DB->get_record('lesson', array('id' => $override->lessonid), '*', MUST_EXIST));
@@ -51,11 +51,11 @@ require_capability('mod/lesson:manageoverrides', $context);
 
 if ($override->groupid) {
     if (!groups_group_visible($override->groupid, $course, $cm)) {
-        throw new \moodle_exception('invalidoverrideid', 'lesson');
+        throw new \moodle_exception('invalidoverrideid', 'mod_lesson');
     }
 } else {
     if (!groups_user_groups_visible($course, $override->userid, $cm)) {
-        throw new \moodle_exception('invalidoverrideid', 'lesson');
+        throw new \moodle_exception('invalidoverrideid', 'mod_lesson');
     }
 }
 
@@ -77,7 +77,7 @@ if ($confirm) {
 }
 
 // Prepare the page to show the confirmation form.
-$stroverride = get_string('override', 'lesson');
+$stroverride = get_string('override', 'mod_lesson');
 $title = get_string('deletecheck', null, $stroverride);
 
 $PAGE->set_url($url);
@@ -92,13 +92,13 @@ echo $OUTPUT->heading(format_string($lesson->name, true, array('context' => $con
 
 if ($override->groupid) {
     $group = $DB->get_record('groups', array('id' => $override->groupid), 'id, name');
-    $confirmstr = get_string("overridedeletegroupsure", "lesson", format_string($group->name, true, ['context' => $context]));
+    $confirmstr = get_string("overridedeletegroupsure", 'mod_lesson', format_string($group->name, true, ['context' => $context]));
 } else {
     $userfieldsapi = \core_user\fields::for_name();
     $namefields = $userfieldsapi->get_sql('', false, '', '', false)->selects;
     $user = $DB->get_record('user', array('id' => $override->userid),
             'id, ' . $namefields);
-    $confirmstr = get_string("overridedeleteusersure", "lesson", fullname($user));
+    $confirmstr = get_string("overridedeleteusersure", 'mod_lesson', fullname($user));
 }
 
 echo $OUTPUT->confirm($confirmstr, $confirmurl, $cancelurl);

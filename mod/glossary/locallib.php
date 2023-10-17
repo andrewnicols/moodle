@@ -172,7 +172,7 @@ class glossary_full_portfolio_caller extends portfolio_module_caller_base {
                 $writer->add_entry($entry);
                 $ids[] = $entry->id;
             }
-            $selection = new portfolio_format_leap2a_entry('wholeglossary' . $this->glossary->id, get_string('modulename', 'glossary'), 'selection');
+            $selection = new portfolio_format_leap2a_entry('wholeglossary' . $this->glossary->id, get_string('modulename', 'mod_glossary'), 'selection');
             $writer->add_entry($selection);
             $writer->make_selection($selection, $ids, 'Grouping');
             $content = $writer->to_xml();
@@ -195,7 +195,7 @@ class glossary_full_portfolio_caller extends portfolio_module_caller_base {
      * @return string
      */
     public static function display_name() {
-        return get_string('modulename', 'glossary');
+        return get_string('modulename', 'mod_glossary');
     }
 
     /**
@@ -307,7 +307,7 @@ class glossary_entry_portfolio_caller extends portfolio_module_caller_base {
      * @return string
      */
     public static function display_name() {
-        return get_string('modulename', 'glossary');
+        return get_string('modulename', 'mod_glossary');
     }
 
     /**
@@ -427,7 +427,7 @@ class glossary_entry_portfolio_caller extends portfolio_module_caller_base {
         if (!empty($aliases)) {
             $output .= '<tr valign="top"><td class="entrylowersection">';
             $key = (count($aliases) == 1) ? 'alias' : 'aliases';
-            $output .= get_string($key, 'glossary') . ': ';
+            $output .= get_string($key, 'mod_glossary') . ': ';
             foreach ($aliases as $alias) {
                 $output .= s($alias->alias) . ',';
             }

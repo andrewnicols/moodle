@@ -36,11 +36,11 @@ $page       = optional_param('page', 0, PARAM_INT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 if (empty($CFG->badges_allowcoursebadges) && $courseid != 0) {
-    throw new \moodle_exception('coursebadgesdisabled', 'badges');
+    throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
 }
 
 if (!in_array($sortby, array('name', 'dateissued'))) {
@@ -67,12 +67,12 @@ if ($type == BADGE_TYPE_SITE) {
     $PAGE->set_context(context_system::instance());
     $PAGE->set_pagelayout('admin');
     $PAGE->set_heading(get_string('administrationsite'));
-    $title = get_string('sitebadges', 'badges');
+    $title = get_string('sitebadges', 'core_badges');
     $eventotherparams = array('badgetype' => BADGE_TYPE_SITE);
 } else {
     require_login($course);
     $coursename = format_string($course->fullname, true, array('context' => context_course::instance($course->id)));
-    $title = get_string('coursebadges', 'badges');
+    $title = get_string('coursebadges', 'core_badges');
     $PAGE->set_context(context_course::instance($course->id));
     $PAGE->set_pagelayout('incourse');
     $PAGE->set_heading($coursename);
@@ -114,7 +114,7 @@ $records = badges_get_badges($type, $courseid, $sortby, $sorthow, $page, BADGE_P
 
 if ($totalcount) {
     if ($course && $course->startdate > time()) {
-        echo $OUTPUT->box(get_string('error:notifycoursedate', 'badges'), 'generalbox notifyproblem');
+        echo $OUTPUT->box(get_string('error:notifycoursedate', 'core_badges'), 'generalbox notifyproblem');
     }
 
     $badges             = new \core_badges\output\badge_collection($records);
@@ -126,7 +126,7 @@ if ($totalcount) {
 
     echo $output->render($badges);
 } else {
-    echo $output->notification(get_string('nobadges', 'badges'), 'info');
+    echo $output->notification(get_string('nobadges', 'core_badges'), 'info');
 }
 // Trigger event, badge listing viewed.
 $eventparams = array('context' => $PAGE->context, 'other' => $eventotherparams);

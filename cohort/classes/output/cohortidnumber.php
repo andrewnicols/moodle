@@ -47,8 +47,8 @@ class cohortidnumber extends \core\output\inplace_editable {
         parent::__construct('core_cohort', 'cohortidnumber', $cohort->id, $editable,
             $displayvalue,
             $cohort->idnumber,
-            new lang_string('editcohortidnumber', 'cohort'),
-            new lang_string('newidnumberfor', 'cohort', $displayvalue));
+            new lang_string('editcohortidnumber', 'core_cohort'),
+            new lang_string('newidnumberfor', 'core_cohort', $displayvalue));
     }
 
     /**

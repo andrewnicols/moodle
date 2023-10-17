@@ -273,7 +273,7 @@ class externallib_test extends externallib_advanced_testcase {
         // Try to rate my own post.
         $this->setUser($this->student1);
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('ratepermissiondenied', 'rating'));
+        $this->expectExceptionMessage(get_string('ratepermissiondenied', 'core_rating'));
         $rating = core_rating_external::add_rating('module', $this->forum->cmid, 'mod_forum', 'post', $this->post->id, 100,
                                                         100, $this->student1->id, RATING_AGGREGATE_AVERAGE);
     }

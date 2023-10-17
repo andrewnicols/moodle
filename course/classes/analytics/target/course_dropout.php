@@ -48,7 +48,7 @@ class course_dropout extends course_enrolments {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:coursedropout', 'course');
+        return new \lang_string('target:coursedropout', 'core_course');
     }
 
     /**
@@ -58,8 +58,8 @@ class course_dropout extends course_enrolments {
      */
     protected static function classes_description() {
         return array(
-            get_string('targetlabelstudentdropoutno', 'course'),
-            get_string('targetlabelstudentdropoutyes', 'course')
+            get_string('targetlabelstudentdropoutno', 'core_course'),
+            get_string('targetlabelstudentdropoutyes', 'core_course')
         );
     }
 
@@ -96,7 +96,7 @@ class course_dropout extends course_enrolments {
             // At least a minimum of students activity.
             $nstudents = count($this->students);
             if ($nlogs / $nstudents < 10) {
-                return get_string('nocourseactivity', 'course');
+                return get_string('nocourseactivity', 'core_course');
             }
         }
 

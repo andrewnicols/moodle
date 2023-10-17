@@ -38,85 +38,85 @@ function grade_report_user_settings_definition(&$mform) {
     global $CFG;
 
     $options = [
-        -1 => get_string('default', 'grades'),
+        -1 => get_string('default', 'core_grades'),
         0 => get_string('hide'),
         1 => get_string('show')
     ];
 
     if (empty($CFG->grade_report_user_showrank)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showrank', get_string('showrank', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showrank', get_string('showrank', 'core_grades'), $options);
     $mform->addHelpButton('report_user_showrank', 'showrank', 'grades');
 
     if (empty($CFG->grade_report_user_showpercentage)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showpercentage', get_string('showpercentage', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showpercentage', get_string('showpercentage', 'core_grades'), $options);
     $mform->addHelpButton('report_user_showpercentage', 'showpercentage', 'grades');
 
     if (empty($CFG->grade_report_user_showgrade)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showgrade', get_string('showgrade', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showgrade', get_string('showgrade', 'core_grades'), $options);
 
     if (empty($CFG->grade_report_user_showfeedback)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showfeedback', get_string('showfeedback', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showfeedback', get_string('showfeedback', 'core_grades'), $options);
 
     if (empty($CFG->grade_report_user_showweight)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showweight', get_string('showweight', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showweight', get_string('showweight', 'core_grades'), $options);
 
     if (empty($CFG->grade_report_user_showaverage)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showaverage', get_string('showaverage', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showaverage', get_string('showaverage', 'core_grades'), $options);
     $mform->addHelpButton('report_user_showaverage', 'showaverage', 'grades');
 
     if (empty($CFG->grade_report_user_showlettergrade)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showlettergrade', get_string('showlettergrade', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showlettergrade', get_string('showlettergrade', 'core_grades'), $options);
     if (empty($CFG->grade_report_user_showcontributiontocoursetotal)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_user_showcontributiontocoursetotal]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[$CFG->grade_report_user_showcontributiontocoursetotal]);
     }
 
-    $mform->addElement('select', 'report_user_showcontributiontocoursetotal', get_string('showcontributiontocoursetotal', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showcontributiontocoursetotal', get_string('showcontributiontocoursetotal', 'core_grades'), $options);
     $mform->addHelpButton('report_user_showcontributiontocoursetotal', 'showcontributiontocoursetotal', 'grades');
 
     if (empty($CFG->grade_report_user_showrange)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_user_showrange', get_string('showrange', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showrange', get_string('showrange', 'core_grades'), $options);
 
     $options = [
         0 => 0,
@@ -130,38 +130,38 @@ function grade_report_user_settings_definition(&$mform) {
     if (!empty($CFG->grade_report_user_rangedecimals)) {
         $options[-1] = $options[$CFG->grade_report_user_rangedecimals];
     }
-    $mform->addElement('select', 'report_user_rangedecimals', get_string('rangedecimals', 'grades'), $options);
+    $mform->addElement('select', 'report_user_rangedecimals', get_string('rangedecimals', 'core_grades'), $options);
 
     $options = [
-        -1 => get_string('default', 'grades'),
-        0 => get_string('shownohidden', 'grades'),
-        1 => get_string('showhiddenuntilonly', 'grades'),
-        2 => get_string('showallhidden', 'grades')
+        -1 => get_string('default', 'core_grades'),
+        0 => get_string('shownohidden', 'core_grades'),
+        1 => get_string('showhiddenuntilonly', 'core_grades'),
+        2 => get_string('showallhidden', 'core_grades')
     ];
 
     if (empty($CFG->grade_report_user_showhiddenitems)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_user_showhiddenitems]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[$CFG->grade_report_user_showhiddenitems]);
     }
 
-    $mform->addElement('select', 'report_user_showhiddenitems', get_string('showhiddenitems', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showhiddenitems', get_string('showhiddenitems', 'core_grades'), $options);
     $mform->addHelpButton('report_user_showhiddenitems', 'showhiddenitems', 'grades');
 
     $options = [
-        -1 => get_string('default', 'grades'),
+        -1 => get_string('default', 'core_grades'),
         GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN => get_string('hide'),
-        GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'grades'),
-        GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'grades')
+        GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'core_grades'),
+        GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'core_grades')
     ];
 
     if (empty($CFG->grade_report_user_showtotalsifcontainhidden)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_user_showtotalsifcontainhidden]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[$CFG->grade_report_user_showtotalsifcontainhidden]);
     }
 
-    $mform->addElement('select', 'report_user_showtotalsifcontainhidden', get_string('hidetotalifhiddenitems', 'grades'), $options);
+    $mform->addElement('select', 'report_user_showtotalsifcontainhidden', get_string('hidetotalifhiddenitems', 'core_grades'), $options);
     $mform->addHelpButton('report_user_showtotalsifcontainhidden', 'hidetotalifhiddenitems', 'grades');
 
 }

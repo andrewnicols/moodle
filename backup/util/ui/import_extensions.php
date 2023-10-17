@@ -60,7 +60,7 @@ class import_ui extends backup_ui {
                 $classes[] = 'backup_stage_complete';
             }
             $item = array(
-                'text' => strlen(decbin($stage * 2)).'. '.get_string('importcurrentstage'.$stage, 'backup'),
+                'text' => strlen(decbin($stage * 2)).'. '.get_string('importcurrentstage'.$stage, 'core_backup'),
                 'class' => join(' ', $classes)
             );
             if ($stage < $currentstage && $currentstage < self::STAGE_COMPLETE && (!self::$skipcurrentstage || $stage * 2 != $currentstage)) {
@@ -80,7 +80,7 @@ class import_ui extends backup_ui {
             $classes[] = "backup_stage_current";
         }
         array_unshift($items, array(
-                'text' => '1. '.get_string('importcurrentstage0', 'backup'),
+                'text' => '1. '.get_string('importcurrentstage0', 'core_backup'),
                 'class' => join(' ', $classes),
                 'link' => $selectorlink));
         return $items;
@@ -228,13 +228,13 @@ class import_ui_stage_confirmation extends backup_ui_stage_confirmation {
         $form = $this->initialise_stage_form();
         $form->require_definition_after_data();
         if ($e = $form->get_element('submitbutton')) {
-            $e->setLabel(get_string('import'.$this->get_ui()->get_name().'stage'.$this->get_stage().'action', 'backup'));
+            $e->setLabel(get_string('import'.$this->get_ui()->get_name().'stage'.$this->get_stage().'action', 'core_backup'));
         } else {
             $elements = $form->get_element('buttonar')->getElements();
             foreach ($elements as &$element) {
                 if ($element->getName() == 'submitbutton') {
                     $element->setValue(
-                        get_string('import'.$this->get_ui()->get_name().'stage'.$this->get_stage().'action', 'backup')
+                        get_string('import'.$this->get_ui()->get_name().'stage'.$this->get_stage().'action', 'core_backup')
                     );
                 }
             }

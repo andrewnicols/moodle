@@ -432,15 +432,15 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assertTrue($writer->has_any_data());
 
         $u3prediction = $DB->get_record('analytics_predictions', ['contextid' => $system->id, 'sampleid' => $this->u3->id]);
-        $data = $writer->get_data([get_string('analytics', 'analytics'),
-            get_string('privacy:metadata:analytics:predictions', 'analytics'), $u3prediction->id]);
+        $data = $writer->get_data([get_string('analytics', 'core_analytics'),
+            get_string('privacy:metadata:analytics:predictions', 'core_analytics'), $u3prediction->id]);
         $this->assertEquals(get_string('adminhelplogs'), $data->target);
         $this->assertEquals(get_string('coresystem'), $data->context);
         $this->assertEquals('firstname first char is not A', $data->prediction);
 
         $u3calculation = $DB->get_record('analytics_indicator_calc', ['contextid' => $system->id, 'sampleid' => $this->u3->id]);
-        $data = $writer->get_data([get_string('analytics', 'analytics'),
-            get_string('privacy:metadata:analytics:indicatorcalc', 'analytics'), $u3calculation->id]);
+        $data = $writer->get_data([get_string('analytics', 'core_analytics'),
+            get_string('privacy:metadata:analytics:indicatorcalc', 'core_analytics'), $u3calculation->id]);
         $this->assertEquals('Allow stealth activities', $data->indicator);
         $this->assertEquals(get_string('coresystem'), $data->context);
         $this->assertEquals(get_string('yes'), $data->calculation);
@@ -450,8 +450,8 @@ class provider_test extends \core_privacy\tests\provider_testcase {
                  WHERE ap.contextid = :contextid AND apa.userid = :userid AND ap.modelid = :modelid";
         $params = ['contextid' => $system->id, 'userid' => $this->u3->id, 'modelid' => $this->model1->get_id()];
         $u3action = $DB->get_record_sql($sql, $params);
-        $data = $writer->get_data([get_string('analytics', 'analytics'),
-            get_string('privacy:metadata:analytics:predictionactions', 'analytics'), $u3action->id]);
+        $data = $writer->get_data([get_string('analytics', 'core_analytics'),
+            get_string('privacy:metadata:analytics:predictionactions', 'core_analytics'), $u3action->id]);
         $this->assertEquals(get_string('adminhelplogs'), $data->target);
         $this->assertEquals(get_string('coresystem'), $data->context);
         $this->assertEquals(\core_analytics\prediction::ACTION_INCORRECTLY_FLAGGED, $data->action);

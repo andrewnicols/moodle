@@ -143,7 +143,7 @@ class block_edit_form extends \core_form\dynamic_form {
         }
 
         // Then show the fields about where this block appears.
-        $mform->addElement('header', 'whereheader', get_string('wherethisblockappears', 'block'));
+        $mform->addElement('header', 'whereheader', get_string('wherethisblockappears', 'core_block'));
 
         // If the current weight of the block is out-of-range, add that option in.
         $blockweight = $this->block->instance->weight;
@@ -158,9 +158,9 @@ class block_edit_form extends \core_form\dynamic_form {
             $weightoptions[$blockweight] = $blockweight;
         }
         $first = reset($weightoptions);
-        $weightoptions[$first] = get_string('bracketfirst', 'block', $first);
+        $weightoptions[$first] = get_string('bracketfirst', 'core_block', $first);
         $last = end($weightoptions);
-        $weightoptions[$last] = get_string('bracketlast', 'block', $last);
+        $weightoptions[$last] = get_string('bracketlast', 'core_block', $last);
 
         $regionoptions = $this->page->theme->get_all_block_regions();
         foreach ($this->page->blocks->get_regions() as $region) {
@@ -171,7 +171,7 @@ class block_edit_form extends \core_form\dynamic_form {
         }
 
         $parentcontext = context::instance_by_id($this->block->instance->parentcontextid);
-        $mform->addElement('static', 'bui_homecontext', get_string('createdat', 'block'), $parentcontext->get_context_name());
+        $mform->addElement('static', 'bui_homecontext', get_string('createdat', 'core_block'), $parentcontext->get_context_name());
         $mform->addHelpButton('bui_homecontext', 'createdat', 'block');
 
         // For pre-calculated (fixed) pagetype lists
@@ -189,10 +189,10 @@ class block_edit_form extends \core_form\dynamic_form {
         // as unique option. Processign the form will do any change if needed.
         if ($this->is_editing_the_frontpage()) {
             $contextoptions = array();
-            $contextoptions[BUI_CONTEXTS_FRONTPAGE_ONLY] = get_string('showonfrontpageonly', 'block');
-            $contextoptions[BUI_CONTEXTS_FRONTPAGE_SUBS] = get_string('showonfrontpageandsubs', 'block');
-            $contextoptions[BUI_CONTEXTS_ENTIRE_SITE]    = get_string('showonentiresite', 'block');
-            $mform->addElement('select', 'bui_contexts', get_string('contexts', 'block'), $contextoptions);
+            $contextoptions[BUI_CONTEXTS_FRONTPAGE_ONLY] = get_string('showonfrontpageonly', 'core_block');
+            $contextoptions[BUI_CONTEXTS_FRONTPAGE_SUBS] = get_string('showonfrontpageandsubs', 'core_block');
+            $contextoptions[BUI_CONTEXTS_ENTIRE_SITE]    = get_string('showonentiresite', 'core_block');
+            $mform->addElement('select', 'bui_contexts', get_string('contexts', 'core_block'), $contextoptions);
             $mform->addHelpButton('bui_contexts', 'contexts', 'block');
             $pagetypelist['*'] = '*'; // This is not going to be shown ever, it's an unique option
 
@@ -208,9 +208,9 @@ class block_edit_form extends \core_form\dynamic_form {
             // module context doesn't have child contexts, so display in current context only
         } else {
             $parentcontextname = $parentcontext->get_context_name();
-            $contextoptions[BUI_CONTEXTS_CURRENT]      = get_string('showoncontextonly', 'block', $parentcontextname);
-            $contextoptions[BUI_CONTEXTS_CURRENT_SUBS] = get_string('showoncontextandsubs', 'block', $parentcontextname);
-            $mform->addElement('select', 'bui_contexts', get_string('contexts', 'block'), $contextoptions);
+            $contextoptions[BUI_CONTEXTS_CURRENT]      = get_string('showoncontextonly', 'core_block', $parentcontextname);
+            $contextoptions[BUI_CONTEXTS_CURRENT_SUBS] = get_string('showoncontextandsubs', 'core_block', $parentcontextname);
+            $mform->addElement('select', 'bui_contexts', get_string('contexts', 'core_block'), $contextoptions);
         }
         $mform->setType('bui_contexts', PARAM_INT);
 
@@ -222,7 +222,7 @@ class block_edit_form extends \core_form\dynamic_form {
                 // Pushing block's existing page type pattern
                 $pagetypestringname = 'page-'.str_replace('*', 'x', $this->block->instance->pagetypepattern);
                 if (get_string_manager()->string_exists($pagetypestringname, 'pagetype')) {
-                    $pagetypelist[$this->block->instance->pagetypepattern] = get_string($pagetypestringname, 'pagetype');
+                    $pagetypelist[$this->block->instance->pagetypepattern] = get_string($pagetypestringname, 'mod_pagetype');
                 } else {
                     //as a last resort we could put the page type pattern in the select box
                     //however this causes mod-data-view to be added if the only option available is mod-data-*
@@ -235,10 +235,10 @@ class block_edit_form extends \core_form\dynamic_form {
         // hide page type pattern select box if there is only one choice
         if (count($pagetypelist) > 1) {
             if ($displaypagetypewarning) {
-                $mform->addElement('static', 'pagetypewarning', '', get_string('pagetypewarning','block'));
+                $mform->addElement('static', 'pagetypewarning', '', get_string('pagetypewarning','core_block'));
             }
 
-            $mform->addElement('select', 'bui_pagetypepattern', get_string('restrictpagetypes', 'block'), $pagetypelist);
+            $mform->addElement('select', 'bui_pagetypepattern', get_string('restrictpagetypes', 'core_block'), $pagetypelist);
         } else {
             $values = array_keys($pagetypelist);
             $value = array_pop($values);
@@ -255,21 +255,21 @@ class block_edit_form extends \core_form\dynamic_form {
                 $strvalue = $value;
                 $strkey = 'page-'.str_replace('*', 'x', $strvalue);
                 if (get_string_manager()->string_exists($strkey, 'pagetype')) {
-                    $strvalue = get_string($strkey, 'pagetype');
+                    $strvalue = get_string($strkey, 'mod_pagetype');
                 }
                 // Show as static (hidden has been set already)
                 $mform->addElement('static', 'bui_staticpagetypepattern',
-                    get_string('restrictpagetypes','block'), $strvalue);
+                    get_string('restrictpagetypes','core_block'), $strvalue);
             }
         }
 
         if ($this->page->subpage) {
             if ($parentcontext->contextlevel != CONTEXT_USER) {
                 $subpageoptions = array(
-                    '%@NULL@%' => get_string('anypagematchingtheabove', 'block'),
-                    $this->page->subpage => get_string('thisspecificpage', 'block', $this->page->subpage),
+                    '%@NULL@%' => get_string('anypagematchingtheabove', 'core_block'),
+                    $this->page->subpage => get_string('thisspecificpage', 'core_block', $this->page->subpage),
                 );
-                $mform->addElement('select', 'bui_subpagepattern', get_string('subpages', 'block'), $subpageoptions);
+                $mform->addElement('select', 'bui_subpagepattern', get_string('subpages', 'core_block'), $subpageoptions);
             }
         }
 
@@ -278,24 +278,24 @@ class block_edit_form extends \core_form\dynamic_form {
         if (!array_key_exists($defaultregion, $defaultregionoptions)) {
             $defaultregionoptions[$defaultregion] = $defaultregion;
         }
-        $mform->addElement('select', 'bui_defaultregion', get_string('defaultregion', 'block'), $defaultregionoptions);
+        $mform->addElement('select', 'bui_defaultregion', get_string('defaultregion', 'core_block'), $defaultregionoptions);
         $mform->addHelpButton('bui_defaultregion', 'defaultregion', 'block');
 
-        $mform->addElement('select', 'bui_defaultweight', get_string('defaultweight', 'block'), $weightoptions);
+        $mform->addElement('select', 'bui_defaultweight', get_string('defaultweight', 'core_block'), $weightoptions);
         $mform->addHelpButton('bui_defaultweight', 'defaultweight', 'block');
 
         // Where this block is positioned on this page.
-        $mform->addElement('header', 'onthispage', get_string('onthispage', 'block'));
+        $mform->addElement('header', 'onthispage', get_string('onthispage', 'core_block'));
 
-        $mform->addElement('selectyesno', 'bui_visible', get_string('visible', 'block'));
+        $mform->addElement('selectyesno', 'bui_visible', get_string('visible', 'core_block'));
 
         $blockregion = $this->block->instance->region;
         if (!array_key_exists($blockregion, $regionoptions)) {
             $regionoptions[$blockregion] = $blockregion;
         }
-        $mform->addElement('select', 'bui_region', get_string('region', 'block'), $regionoptions);
+        $mform->addElement('select', 'bui_region', get_string('region', 'core_block'), $regionoptions);
 
-        $mform->addElement('select', 'bui_weight', get_string('weight', 'block'), $weightoptions);
+        $mform->addElement('select', 'bui_weight', get_string('weight', 'core_block'), $weightoptions);
 
         $pagefields = array('bui_visible', 'bui_region', 'bui_weight');
         if (!$this->block->user_can_edit()) {

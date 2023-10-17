@@ -135,7 +135,7 @@ class reply_handler extends \core\message\inbound\handler {
         }
 
         $subject = clean_param($messagedata->envelope->subject, PARAM_TEXT);
-        $restring = get_string('re', 'forum');
+        $restring = get_string('re', 'mod_forum');
         if (strpos($subject, $discussion->name)) {
             // The discussion name is mentioned in the e-mail subject. This is probably just the standard reply. Use the
             // standard reply subject instead.

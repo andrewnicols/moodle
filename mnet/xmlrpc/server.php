@@ -27,7 +27,7 @@ require_once $CFG->dirroot.'/mnet/xmlrpc/serverlib.php';
 
 
 if ($CFG->mnet_dispatcher_mode === 'off') {
-    throw new \moodle_exception('mnetdisabled', 'mnet');
+    throw new \moodle_exception('mnetdisabled', 'core_mnet');
 }
 
 // Content type for output is not html:
@@ -38,7 +38,7 @@ mnet_debug("RAW POST DATA", 2);
 mnet_debug($rawpostdata, 2);
 
 if (!isset($_SERVER)) {
-    exit(mnet_server_fault(712, get_string('phperror', 'mnet')));
+    exit(mnet_server_fault(712, get_string('phperror', 'core_mnet')));
 }
 
 
@@ -92,19 +92,19 @@ if ((($remoteclient->request_was_encrypted == true) && ($remoteclient->signature
 // so detect a few common cases and send appropriate errors
 if (($remoteclient->request_was_encrypted == false) && ($remoteclient->plaintext_is_ok() == false)) {
     mnet_debug('non encrypted request');
-    exit(mnet_server_fault(7021, get_string('forbidden-transport', 'mnet')));
+    exit(mnet_server_fault(7021, get_string('forbidden-transport', 'core_mnet')));
 }
 
 if ($remoteclient->request_was_signed == false) {
     // Request was not signed
     mnet_debug('non signed request');
-    exit(mnet_server_fault(711, get_string('verifysignature-error', 'mnet')));
+    exit(mnet_server_fault(711, get_string('verifysignature-error', 'core_mnet')));
 }
 
 if ($remoteclient->signatureok == false) {
     // We were unable to verify the signature
     mnet_debug('non verified signature');
-    exit(mnet_server_fault(710, get_string('verifysignature-invalid', 'mnet')));
+    exit(mnet_server_fault(710, get_string('verifysignature-invalid', 'core_mnet')));
 }
 mnet_debug('unknown error');
-exit(mnet_server_fault(7000, get_string('unknownerror', 'mnet')));
+exit(mnet_server_fault(7000, get_string('unknownerror', 'core_mnet')));

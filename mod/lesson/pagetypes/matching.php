@@ -40,7 +40,7 @@ class lesson_page_type_matching extends lesson_page {
     }
     public function get_typestring() {
         if ($this->string===null) {
-            $this->string = get_string($this->typeidstring, 'lesson');
+            $this->string = get_string($this->typeidstring, 'mod_lesson');
         }
         return $this->string;
     }
@@ -241,7 +241,7 @@ class lesson_page_type_matching extends lesson_page {
     }
 
     public function option_description_string() {
-        return get_string("firstanswershould", "lesson");
+        return get_string("firstanswershould", 'mod_lesson');
     }
 
     public function display_answers(html_table $table) {
@@ -258,9 +258,9 @@ class lesson_page_type_matching extends lesson_page {
                 if ($answer->answer != null) {
                     $cells = array();
                     if ($n == 0) {
-                        $cells[] = '<label>' . get_string('correctresponse', 'lesson') . '</label>';
+                        $cells[] = '<label>' . get_string('correctresponse', 'mod_lesson') . '</label>';
                     } else {
-                        $cells[] = '<label>' . get_string('wrongresponse', 'lesson') . '</label>';
+                        $cells[] = '<label>' . get_string('wrongresponse', 'mod_lesson') . '</label>';
                     }
                     $cells[] = format_text($answer->answer, $answer->answerformat, $options);
                     $table->data[] = new html_table_row($cells);
@@ -268,22 +268,22 @@ class lesson_page_type_matching extends lesson_page {
 
                 if ($n == 0) {
                     $cells = array();
-                    $cells[] = '<label>' . get_string('correctanswerscore', 'lesson') . '</label>: ';
+                    $cells[] = '<label>' . get_string('correctanswerscore', 'mod_lesson') . '</label>: ';
                     $cells[] = $answer->score;
                     $table->data[] = new html_table_row($cells);
 
                     $cells = array();
-                    $cells[] = '<label>' . get_string('correctanswerjump', 'lesson') . '</label>: ';
+                    $cells[] = '<label>' . get_string('correctanswerjump', 'mod_lesson') . '</label>: ';
                     $cells[] = $this->get_jump_name($answer->jumpto);
                     $table->data[] = new html_table_row($cells);
                 } elseif ($n == 1) {
                     $cells = array();
-                    $cells[] = '<label>' . get_string('wronganswerscore', 'lesson') . '</label>: ';
+                    $cells[] = '<label>' . get_string('wronganswerscore', 'mod_lesson') . '</label>: ';
                     $cells[] = $answer->score;
                     $table->data[] = new html_table_row($cells);
 
                     $cells = array();
-                    $cells[] = '<label>' . get_string('wronganswerjump', 'lesson') . '</label>: ';
+                    $cells[] = '<label>' . get_string('wronganswerjump', 'mod_lesson') . '</label>: ';
                     $cells[] = $this->get_jump_name($answer->jumpto);
                     $table->data[] = new html_table_row($cells);
                 }
@@ -297,19 +297,19 @@ class lesson_page_type_matching extends lesson_page {
                 $cells = array();
                 if ($this->lesson->custom && $answer->score > 0) {
                     // if the score is > 0, then it is correct
-                    $cells[] = '<label class="correct">' . get_string('answer', 'lesson') . " {$i}</label>: \n";
+                    $cells[] = '<label class="correct">' . get_string('answer', 'mod_lesson') . " {$i}</label>: \n";
                 } else if ($this->lesson->custom) {
-                    $cells[] = '<label>' . get_string('answer', 'lesson') . " {$i}</label>: \n";
+                    $cells[] = '<label>' . get_string('answer', 'mod_lesson') . " {$i}</label>: \n";
                 } else if ($this->lesson->jumpto_is_correct($this->properties->id, $answer->jumpto)) {
-                    $cells[] = '<label class="correct">' . get_string('answer', 'lesson') . " {$i}</label>: \n";
+                    $cells[] = '<label class="correct">' . get_string('answer', 'mod_lesson') . " {$i}</label>: \n";
                 } else {
-                    $cells[] = '<label>' . get_string('answer', 'lesson') . " {$i}</label>: \n";
+                    $cells[] = '<label>' . get_string('answer', 'mod_lesson') . " {$i}</label>: \n";
                 }
                 $cells[] = format_text($answer->answer, $answer->answerformat, $options);
                 $table->data[] = new html_table_row($cells);
 
                 $cells = array();
-                $cells[] = '<label>' . get_string('matchesanswer', 'lesson') . " {$i}</label>: \n";
+                $cells[] = '<label>' . get_string('matchesanswer', 'mod_lesson') . " {$i}</label>: \n";
                 $cells[] = format_text($answer->response, $answer->responseformat, $options);
                 $table->data[] = new html_table_row($cells);
             }
@@ -414,32 +414,32 @@ class lesson_page_type_matching extends lesson_page {
         foreach ($answers as $answer) {
             if ($n == 0 && $useranswer != null && $useranswer->correct) {
                 if ($answer->response == null && $useranswer != null) {
-                    $answerdata->response = get_string("thatsthecorrectanswer", "lesson");
+                    $answerdata->response = get_string("thatsthecorrectanswer", 'mod_lesson');
                 } else {
                     $answerdata->response = $answer->response;
                 }
                 if ($this->lesson->custom) {
-                    $answerdata->score = get_string("pointsearned", "lesson").": ".$answer->score;
+                    $answerdata->score = get_string("pointsearned", 'mod_lesson').": ".$answer->score;
                 } else {
-                    $answerdata->score = get_string("receivedcredit", "lesson");
+                    $answerdata->score = get_string("receivedcredit", 'mod_lesson');
                 }
             } elseif ($n == 1 && $useranswer != null && !$useranswer->correct) {
                 if ($answer->response == null && $useranswer != null) {
-                    $answerdata->response = get_string("thatsthewronganswer", "lesson");
+                    $answerdata->response = get_string("thatsthewronganswer", 'mod_lesson');
                 } else {
                     $answerdata->response = $answer->response;
                 }
                 if ($this->lesson->custom) {
-                    $answerdata->score = get_string("pointsearned", "lesson").": ".$answer->score;
+                    $answerdata->score = get_string("pointsearned", 'mod_lesson').": ".$answer->score;
                 } else {
-                    $answerdata->score = get_string("didnotreceivecredit", "lesson");
+                    $answerdata->score = get_string("didnotreceivecredit", 'mod_lesson');
                 }
             } elseif ($n > 1) {
-                $data = '<label class="accesshide" for="answer_' . $n . '">' . get_string('answer', 'lesson') . '</label>';
+                $data = '<label class="accesshide" for="answer_' . $n . '">' . get_string('answer', 'mod_lesson') . '</label>';
                 $data .= strip_tags(format_string($answer->answer)) . ' ';
                 if ($useranswer != null) {
                     $userresponse = explode(",", $useranswer->useranswer);
-                    $data .= '<label class="accesshide" for="stu_answer_response_' . $n . '">' . get_string('matchesanswer', 'lesson') . '</label>';
+                    $data .= '<label class="accesshide" for="stu_answer_response_' . $n . '">' . get_string('matchesanswer', 'mod_lesson') . '</label>';
                     $data .= "<select class=\"custom-select\" id=\"stu_answer_response_" . $n . "\" " .
                              "disabled=\"disabled\"><option selected=\"selected\">";
                     if (array_key_exists($i, $userresponse)) {
@@ -447,7 +447,7 @@ class lesson_page_type_matching extends lesson_page {
                     }
                     $data .= "</option></select>";
                 } else {
-                    $data .= '<label class="accesshide" for="answer_response_' . $n . '">' . get_string('matchesanswer', 'lesson') . '</label>';
+                    $data .= '<label class="accesshide" for="answer_response_' . $n . '">' . get_string('matchesanswer', 'mod_lesson') . '</label>';
                     $data .= "<select class=\"custom-select\" id=\"answer_response_" . $n . "\" " .
                              "disabled=\"disabled\"><option selected=\"selected\">".strip_tags(format_string($answer->response))."</option></select>";
                 }
@@ -459,9 +459,9 @@ class lesson_page_type_matching extends lesson_page {
                         }
                         $percent = $pagestats[$this->properties->id]["correct"] / $pagestats[$this->properties->id]["total"] * 100;
                         $percent = round($percent, 2);
-                        $percent .= "% ".get_string("answeredcorrectly", "lesson");
+                        $percent .= "% ".get_string("answeredcorrectly", 'mod_lesson');
                     } else {
-                        $percent = get_string("nooneansweredthisquestion", "lesson");
+                        $percent = get_string("nooneansweredthisquestion", 'mod_lesson');
                     }
                 } else {
                     $percent = '';
@@ -499,30 +499,30 @@ class lesson_add_page_form_matching extends lesson_add_page_form_base {
 
     public function custom_definition() {
 
-        $this->_form->addElement('header', 'correctresponse', get_string('correctresponse', 'lesson'));
-        $this->_form->addElement('editor', 'answer_editor[0]', get_string('correctresponse', 'lesson'),
+        $this->_form->addElement('header', 'correctresponse', get_string('correctresponse', 'mod_lesson'));
+        $this->_form->addElement('editor', 'answer_editor[0]', get_string('correctresponse', 'mod_lesson'),
                 array('rows' => '4', 'columns' => '80'),
                 array('noclean' => true, 'maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $this->_customdata['maxbytes']));
         $this->_form->setType('answer_editor[0]', PARAM_RAW);
         $this->_form->setDefault('answer_editor[0]', array('text' => '', 'format' => FORMAT_HTML));
-        $this->add_jumpto(0, get_string('correctanswerjump','lesson'), LESSON_NEXTPAGE);
-        $this->add_score(0, get_string("correctanswerscore", "lesson"), 1);
+        $this->add_jumpto(0, get_string('correctanswerjump','mod_lesson'), LESSON_NEXTPAGE);
+        $this->add_score(0, get_string("correctanswerscore", 'mod_lesson'), 1);
 
-        $this->_form->addElement('header', 'wrongresponse', get_string('wrongresponse', 'lesson'));
-        $this->_form->addElement('editor', 'answer_editor[1]', get_string('wrongresponse', 'lesson'),
+        $this->_form->addElement('header', 'wrongresponse', get_string('wrongresponse', 'mod_lesson'));
+        $this->_form->addElement('editor', 'answer_editor[1]', get_string('wrongresponse', 'mod_lesson'),
                 array('rows' => '4', 'columns' => '80'),
                 array('noclean' => true, 'maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $this->_customdata['maxbytes']));
         $this->_form->setType('answer_editor[1]', PARAM_RAW);
         $this->_form->setDefault('answer_editor[1]', array('text' => '', 'format' => FORMAT_HTML));
 
-        $this->add_jumpto(1, get_string('wronganswerjump','lesson'), LESSON_THISPAGE);
-        $this->add_score(1, get_string("wronganswerscore", "lesson"), 0);
+        $this->add_jumpto(1, get_string('wronganswerjump','mod_lesson'), LESSON_THISPAGE);
+        $this->add_score(1, get_string("wronganswerscore", 'mod_lesson'), 0);
 
         for ($i = 2; $i < $this->_customdata['lesson']->maxanswers+2; $i++) {
-            $this->_form->addElement('header', 'matchingpair'.($i-1), get_string('matchingpair', 'lesson', $i-1));
+            $this->_form->addElement('header', 'matchingpair'.($i-1), get_string('matchingpair', 'mod_lesson', $i-1));
             $this->add_answer($i, null, ($i < 4), LESSON_ANSWER_HTML);
             $required = ($i < 4);
-            $label = get_string('matchesanswer','lesson');
+            $label = get_string('matchesanswer','mod_lesson');
             $count = $i;
             $this->_form->addElement('text', 'response_editor['.$count.']', $label, array('size'=>'50'));
             $this->_form->setType('response_editor['.$count.']', PARAM_NOTAGS);
@@ -594,9 +594,9 @@ class lesson_display_answer_form_matching extends moodleform {
             $i++;
         }
         if ($hasattempt) {
-            $this->add_action_buttons(null, get_string("nextpage", "lesson"));
+            $this->add_action_buttons(null, get_string("nextpage", 'mod_lesson'));
         } else {
-            $this->add_action_buttons(null, get_string("submit", "lesson"));
+            $this->add_action_buttons(null, get_string("submit", 'mod_lesson'));
         }
     }
 

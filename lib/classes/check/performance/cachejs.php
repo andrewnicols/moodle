@@ -45,7 +45,7 @@ class cachejs extends check {
      * @return string
      */
     public function get_name(): string {
-        return get_string('cachejs', 'admin');
+        return get_string('cachejs', 'core_admin');
     }
 
     /**
@@ -56,7 +56,7 @@ class cachejs extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/search.php', ['query' => 'cachejs']),
-            get_string('cachejs', 'admin'));
+            get_string('cachejs', 'core_admin'));
     }
 
     /**

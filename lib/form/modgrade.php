@@ -146,7 +146,7 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group {
 
         // Grade scale select box.
         $scales = get_scales_menu($COURSE->id);
-        $langscale = get_string('modgradetypescale', 'grades');
+        $langscale = get_string('modgradetypescale', 'core_grades');
         $this->scaleformelement = $this->createFormElement('select', 'modgrade_scale', $langscale,
             $scales, $attributes);
         $this->scaleformelement->setHiddenLabel(true);
@@ -154,7 +154,7 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group {
         $this->scaleformelement->updateAttributes(array('id' => $scaleformelementid));
 
         // Maximum grade textbox.
-        $langmaxgrade = get_string('modgrademaxgrade', 'grades');
+        $langmaxgrade = get_string('modgrademaxgrade', 'core_grades');
         $this->maxgradeformelement = $this->createFormElement('text', 'modgrade_point', $langmaxgrade, array());
         $this->maxgradeformelement->setHiddenLabel(true);
         $maxgradeformelementid = $this->generate_modgrade_subelement_id('modgrade_point');
@@ -162,11 +162,11 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group {
 
         // Grade type select box.
         $gradetype = array(
-            'none' => get_string('modgradetypenone', 'grades'),
-            'scale' => get_string('modgradetypescale', 'grades'),
-            'point' => get_string('modgradetypepoint', 'grades'),
+            'none' => get_string('modgradetypenone', 'core_grades'),
+            'scale' => get_string('modgradetypescale', 'core_grades'),
+            'point' => get_string('modgradetypepoint', 'core_grades'),
         );
-        $langtype = get_string('modgradetype', 'grades');
+        $langtype = get_string('modgradetype', 'core_grades');
         $this->gradetypeformelement = $this->createFormElement('select', 'modgrade_type', $langtype, $gradetype,
             $attributes, true);
         $this->gradetypeformelement->setHiddenLabel(true);
@@ -179,7 +179,7 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group {
 
             // Check box for options for processing existing grades.
             if ($this->canrescale) {
-                $langrescalegrades = get_string('modgraderescalegrades', 'grades');
+                $langrescalegrades = get_string('modgraderescalegrades', 'core_grades');
                 $choices = array();
                 $choices[''] = get_string('choose');
                 $choices['no'] = get_string('no');
@@ -198,11 +198,11 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group {
         if ($this->isupdate && $this->hasgrades) {
             // Set a message so the user knows why they can not alter the grade type or scale.
             if ($this->currentgradetype == 'scale') {
-                $gradesexistmsg = get_string('modgradecantchangegradetyporscalemsg', 'grades');
+                $gradesexistmsg = get_string('modgradecantchangegradetyporscalemsg', 'core_grades');
             } else if ($this->canrescale) {
-                $gradesexistmsg = get_string('modgradecantchangegradetypemsg', 'grades');
+                $gradesexistmsg = get_string('modgradecantchangegradetypemsg', 'core_grades');
             } else {
-                $gradesexistmsg = get_string('modgradecantchangegradetype', 'grades');
+                $gradesexistmsg = get_string('modgradecantchangegradetype', 'core_grades');
             }
 
             $gradesexisthtml = '<div class=\'alert alert-warning\'>' . $gradesexistmsg . '</div>';
@@ -461,12 +461,12 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group {
                     return true;
                 };
 
-                $cantchangegradetype = get_string('modgradecantchangegradetype', 'grades');
-                $cantchangemaxgrade = get_string('modgradecantchangeratingmaxgrade', 'grades');
-                $maxgradeexceeded = get_string('modgradeerrorbadpoint', 'grades', get_config('core', 'gradepointmax'));
-                $invalidscale = get_string('modgradeerrorbadscale', 'grades');
-                $cantchangescale = get_string('modgradecantchangescale', 'grades');
-                $mustchooserescale = get_string('mustchooserescaleyesorno', 'grades');
+                $cantchangegradetype = get_string('modgradecantchangegradetype', 'core_grades');
+                $cantchangemaxgrade = get_string('modgradecantchangeratingmaxgrade', 'core_grades');
+                $maxgradeexceeded = get_string('modgradeerrorbadpoint', 'core_grades', get_config('core', 'gradepointmax'));
+                $invalidscale = get_string('modgradeerrorbadscale', 'core_grades');
+                $cantchangescale = get_string('modgradecantchangescale', 'core_grades');
+                $mustchooserescale = get_string('mustchooserescaleyesorno', 'core_grades');
                 // When creating the rules the sixth arg is $force, we set it to true because otherwise the form
                 // will attempt to validate the existence of the element, we don't want this because the element
                 // is being created right now and doesn't actually exist as a registered element yet.

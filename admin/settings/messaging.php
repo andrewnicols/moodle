@@ -25,19 +25,19 @@ defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
     $temp = new admin_settingpage('messages',
-        new lang_string('messagingssettings', 'admin'),
+        new lang_string('messagingssettings', 'core_admin'),
         'moodle/site:config',
         empty($CFG->messaging)
     );
 
     $temp->add(new admin_setting_configcheckbox('messagingallusers',
-            new lang_string('messagingallusers', 'admin'),
-            new lang_string('configmessagingallusers', 'admin'),
+            new lang_string('messagingallusers', 'core_admin'),
+            new lang_string('configmessagingallusers', 'core_admin'),
              0)
     );
     $temp->add(new admin_setting_configcheckbox('messagingdefaultpressenter',
-            new lang_string('messagingdefaultpressenter', 'admin'),
-            new lang_string('configmessagingdefaultpressenter', 'admin'),
+            new lang_string('messagingdefaultpressenter', 'core_admin'),
+            new lang_string('configmessagingdefaultpressenter', 'core_admin'),
             1)
     );
     $options = array(
@@ -50,21 +50,21 @@ if ($hassiteconfig) {
     );
     $temp->add(new admin_setting_configselect(
             'messagingdeletereadnotificationsdelay',
-            new lang_string('messagingdeletereadnotificationsdelay', 'admin'),
-            new lang_string('configmessagingdeletereadnotificationsdelay', 'admin'),
+            new lang_string('messagingdeletereadnotificationsdelay', 'core_admin'),
+            new lang_string('configmessagingdeletereadnotificationsdelay', 'core_admin'),
             604800,
             $options)
     );
     $temp->add(new admin_setting_configselect(
             'messagingdeleteallnotificationsdelay',
-            new lang_string('messagingdeleteallnotificationsdelay', 'admin'),
-            new lang_string('configmessagingdeleteallnotificationsdelay', 'admin'),
+            new lang_string('messagingdeleteallnotificationsdelay', 'core_admin'),
+            new lang_string('configmessagingdeleteallnotificationsdelay', 'core_admin'),
             2620800,
             $options)
     );
     $temp->add(new admin_setting_configcheckbox('messagingallowemailoverride',
-        new lang_string('messagingallowemailoverride', 'admin'),
-        new lang_string('configmessagingallowemailoverride', 'admin'),
+        new lang_string('messagingallowemailoverride', 'core_admin'),
+        new lang_string('configmessagingallowemailoverride', 'core_admin'),
         0));
     $ADMIN->add('messaging', $temp);
     $ADMIN->add('messaging', new admin_page_managemessageoutputs());

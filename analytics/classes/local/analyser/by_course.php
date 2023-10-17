@@ -52,7 +52,7 @@ abstract class by_course extends base {
         $recordset = $DB->get_recordset_sql($sql . $ordersql, $params);
 
         if (!$recordset->valid()) {
-            $this->add_log(get_string('nocourses', 'analytics'));
+            $this->add_log(get_string('nocourses', 'core_analytics'));
             return new \ArrayIterator([]);
         }
 

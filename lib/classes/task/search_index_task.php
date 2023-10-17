@@ -38,7 +38,7 @@ class search_index_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskglobalsearchindex', 'admin');
+        return get_string('taskglobalsearchindex', 'core_admin');
     }
 
     /**

@@ -104,7 +104,7 @@ class message_popup_external extends external_api {
 
         // Check if the current user is the sender/receiver or just a privileged user.
         if ($useridto != $USER->id and !$issuperuser) {
-            throw new moodle_exception('accessdenied', 'admin');
+            throw new moodle_exception('accessdenied', 'core_admin');
         }
 
         if (!empty($useridto)) {
@@ -227,7 +227,7 @@ class message_popup_external extends external_api {
 
         // Check if the current user is the sender/receiver or just a privileged user.
         if ($useridto != $USER->id and !has_capability('moodle/site:readallmessages', $context)) {
-            throw new moodle_exception('accessdenied', 'admin');
+            throw new moodle_exception('accessdenied', 'core_admin');
         }
 
         return \message_popup\api::count_unread_popup_notifications($useridto);

@@ -37,30 +37,30 @@ class workshop_feedbackreviewer_form extends moodleform {
         $editoropts = $this->_customdata['editoropts'];
         $options    = $this->_customdata['options'];
 
-        $mform->addElement('header', 'assessmentsettings', get_string('assessmentsettings', 'workshop'));
+        $mform->addElement('header', 'assessmentsettings', get_string('assessmentsettings', 'mod_workshop'));
 
         if (!empty($options['editableweight'])) {
             $mform->addElement('select', 'weight',
-                    get_string('assessmentweight', 'workshop'), workshop::available_assessment_weights_list());
+                    get_string('assessmentweight', 'mod_workshop'), workshop::available_assessment_weights_list());
             $mform->setDefault('weight', 1);
         }
 
-        $mform->addElement('static', 'gradinggrade', get_string('gradinggradecalculated', 'workshop'));
+        $mform->addElement('static', 'gradinggrade', get_string('gradinggradecalculated', 'mod_workshop'));
         if (!empty($options['overridablegradinggrade'])) {
-            $grades = array('' => get_string('notoverridden', 'workshop'));
+            $grades = array('' => get_string('notoverridden', 'mod_workshop'));
             for ($i = (int)$workshop->gradinggrade; $i >= 0; $i--) {
                 $grades[$i] = $i;
             }
-            $mform->addElement('select', 'gradinggradeover', get_string('gradinggradeover', 'workshop'), $grades);
+            $mform->addElement('select', 'gradinggradeover', get_string('gradinggradeover', 'mod_workshop'), $grades);
 
-            $mform->addElement('editor', 'feedbackreviewer_editor', get_string('feedbackreviewer', 'workshop'), null, $editoropts);
+            $mform->addElement('editor', 'feedbackreviewer_editor', get_string('feedbackreviewer', 'mod_workshop'), null, $editoropts);
             $mform->setType('feedbackreviewer_editor', PARAM_RAW);
         }
 
         $mform->addElement('hidden', 'asid');
         $mform->setType('asid', PARAM_INT);
 
-        $mform->addElement('submit', 'save', get_string('saveandclose', 'workshop'));
+        $mform->addElement('submit', 'save', get_string('saveandclose', 'mod_workshop'));
 
         $this->set_data($current);
     }

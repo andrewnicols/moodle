@@ -157,7 +157,7 @@ class enrol_self_plugin extends enrol_plugin {
 
         $this->enrol_user($instance, $USER->id, $instance->roleid, $timestart, $timeend);
 
-        \core\notification::success(get_string('youenrolledincourse', 'enrol'));
+        \core\notification::success(get_string('youenrolledincourse', 'core_enrol'));
 
         // Test whether the password is also used as a group key.
         if ($instance->password && $instance->customint1) {
@@ -236,7 +236,7 @@ class enrol_self_plugin extends enrol_plugin {
         if ($checkuserenrolment) {
             if (isguestuser()) {
                 // Can not enrol guest.
-                return get_string('noguestaccess', 'enrol') . $OUTPUT->continue_button(get_login_url());
+                return get_string('noguestaccess', 'core_enrol') . $OUTPUT->continue_button(get_login_url());
             }
             // Check if user is already enroled.
             if ($DB->get_record('user_enrolments', array('userid' => $USER->id, 'enrolid' => $instance->id))) {
@@ -749,7 +749,7 @@ class enrol_self_plugin extends enrol_plugin {
         unset($instance->notifyall);
 
         $nameattribs = array('size' => '20', 'maxlength' => '255');
-        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'), $nameattribs);
+        $mform->addElement('text', 'name', get_string('custominstancename', 'core_enrol'), $nameattribs);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'server');
 
@@ -830,7 +830,7 @@ class enrol_self_plugin extends enrol_plugin {
         }
         if ($instance->customint5 && !isset($allcohorts[$instance->customint5])) {
             // Somebody deleted a cohort, better keep the wrong value so that random ppl can not enrol.
-            $cohorts[$instance->customint5] = get_string('unknowncohort', 'cohort', $instance->customint5);
+            $cohorts[$instance->customint5] = get_string('unknowncohort', 'core_cohort', $instance->customint5);
         }
         if (count($cohorts) > 1) {
             $mform->addElement('select', 'customint5', get_string('cohortonly', 'enrol_self'), $cohorts);
@@ -931,12 +931,12 @@ class enrol_self_plugin extends enrol_plugin {
 
         // Now these ones are checked by quickforms, but we may be called by the upload enrolments tool, or a webservive.
         if (core_text::strlen($data['name']) > 255) {
-            $errors['name'] = get_string('err_maxlength', 'form', 255);
+            $errors['name'] = get_string('err_maxlength', 'core_form', 255);
         }
         $validstatus = array_keys($this->get_status_options());
         $validnewenrols = array_keys($this->get_newenrols_options());
         if (core_text::strlen($data['password']) > 50) {
-            $errors['name'] = get_string('err_maxlength', 'form', 50);
+            $errors['name'] = get_string('err_maxlength', 'core_form', 50);
         }
         $validgroupkey = array_keys($this->get_groupkey_options());
         $context = context_course::instance($instance->courseid);

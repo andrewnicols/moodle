@@ -61,7 +61,7 @@ class block_blog_menu extends block_base {
             $this->content = new stdClass();
             $this->content->text = '';
             if ($this->page->user_is_editing()) {
-                $this->content->text = get_string('blogdisable', 'blog');
+                $this->content->text = get_string('blogdisable', 'core_blog');
             }
             return $this->content;
 
@@ -102,7 +102,7 @@ class block_blog_menu extends block_base {
             $data = [
                 'action' => new moodle_url('/blog/index.php'),
                 'inputname' => 'search',
-                'searchstring' => get_string('search', 'admin'),
+                'searchstring' => get_string('search', 'core_admin'),
                 'extraclasses' => 'mt-3'
             ];
             $this->content->footer = $OUTPUT->render_from_template('core/search_input', $data);

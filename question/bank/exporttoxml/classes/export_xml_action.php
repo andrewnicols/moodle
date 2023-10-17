@@ -33,7 +33,7 @@ class export_xml_action extends question_action_base {
 
     public function init(): void {
         parent::init();
-        $this->strexportasxml = get_string('exportasxml', 'question');
+        $this->strexportasxml = get_string('exportasxml', 'core_question');
     }
 
     protected function get_url_icon_and_label(\stdClass $question): array {

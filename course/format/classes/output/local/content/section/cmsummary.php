@@ -81,7 +81,7 @@ class cmsummary implements named_templatable, renderable {
             'mods' => array_values($mods),
         ];
 
-        $data->modprogress = get_string('progresstotal', 'completion', $data);
+        $data->modprogress = get_string('progresstotal', 'core_completion', $data);
 
         return $data;
     }

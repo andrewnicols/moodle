@@ -32,10 +32,10 @@ if ($ADMIN->fulltree) {
     // Note: let's reuse the ext sync constants and strings here, internally it is very similar,
     //       it describes what should happend when users are not supposed to be enerolled any more.
     $options = array(
-        ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'enrol'),
-        ENROL_EXT_REMOVED_SUSPEND        => get_string('extremovedsuspend', 'enrol'),
-        ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'),
-        ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'enrol'),
+        ENROL_EXT_REMOVED_KEEP           => get_string('extremovedkeep', 'core_enrol'),
+        ENROL_EXT_REMOVED_SUSPEND        => get_string('extremovedsuspend', 'core_enrol'),
+        ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'core_enrol'),
+        ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'core_enrol'),
     );
     $settings->add(new admin_setting_configselect('enrol_manual/expiredaction', get_string('expiredaction', 'enrol_manual'), get_string('expiredaction_help', 'enrol_manual'), ENROL_EXT_REMOVED_KEEP, $options));
 
@@ -48,10 +48,10 @@ if ($ADMIN->fulltree) {
 
     //--- enrol instance defaults ----------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('enrol_manual_defaults',
-        get_string('enrolinstancedefaults', 'admin'), get_string('enrolinstancedefaults_desc', 'admin')));
+        get_string('enrolinstancedefaults', 'core_admin'), get_string('enrolinstancedefaults_desc', 'core_admin')));
 
     $settings->add(new admin_setting_configcheckbox('enrol_manual/defaultenrol',
-        get_string('defaultenrol', 'enrol'), get_string('defaultenrol_desc', 'enrol'), 1));
+        get_string('defaultenrol', 'core_enrol'), get_string('defaultenrol_desc', 'core_enrol'), 1));
 
     $options = array(ENROL_INSTANCE_ENABLED  => get_string('yes'),
                      ENROL_INSTANCE_DISABLED => get_string('no'));
@@ -63,7 +63,7 @@ if ($ADMIN->fulltree) {
         $student = get_archetype_roles('student');
         $student = reset($student);
         $settings->add(new admin_setting_configselect('enrol_manual/roleid',
-            get_string('defaultrole', 'role'), '', $student->id ?? null, $options));
+            get_string('defaultrole', 'core_role'), '', $student->id ?? null, $options));
     }
 
     $options = array(2 => get_string('coursestart'), 3 => get_string('today'), 4 => get_string('now', 'enrol_manual'));

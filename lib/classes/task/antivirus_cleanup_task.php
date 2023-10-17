@@ -43,7 +43,7 @@ class antivirus_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcleanup', 'antivirus');
+        return get_string('taskcleanup', 'core_antivirus');
     }
 
     /**

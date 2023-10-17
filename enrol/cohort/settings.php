@@ -36,12 +36,12 @@ if ($ADMIN->fulltree) {
         $student = get_archetype_roles('student');
         $student = reset($student);
         $settings->add(new admin_setting_configselect('enrol_cohort/roleid',
-            get_string('defaultrole', 'role'), '', $student->id ?? null, $options));
+            get_string('defaultrole', 'core_role'), '', $student->id ?? null, $options));
 
         $options = array(
-            ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'enrol'),
-            ENROL_EXT_REMOVED_SUSPEND        => get_string('extremovedsuspend', 'enrol'),
-            ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'enrol'));
-        $settings->add(new admin_setting_configselect('enrol_cohort/unenrolaction', get_string('extremovedaction', 'enrol'), get_string('extremovedaction_help', 'enrol'), ENROL_EXT_REMOVED_UNENROL, $options));
+            ENROL_EXT_REMOVED_UNENROL        => get_string('extremovedunenrol', 'core_enrol'),
+            ENROL_EXT_REMOVED_SUSPEND        => get_string('extremovedsuspend', 'core_enrol'),
+            ENROL_EXT_REMOVED_SUSPENDNOROLES => get_string('extremovedsuspendnoroles', 'core_enrol'));
+        $settings->add(new admin_setting_configselect('enrol_cohort/unenrolaction', get_string('extremovedaction', 'core_enrol'), get_string('extremovedaction_help', 'core_enrol'), ENROL_EXT_REMOVED_UNENROL, $options));
     }
 }

@@ -37,7 +37,7 @@ $PAGE->set_url($url);
 require_login();
 
 if (isguestuser()) {
-    throw new \moodle_exception('guestnoeditmessage', 'message');
+    throw new \moodle_exception('guestnoeditmessage', 'core_message');
 }
 
 if (!$user = $DB->get_record('user', ['id' => $userid])) {
@@ -50,7 +50,7 @@ $PAGE->set_context($personalcontext);
 $PAGE->set_pagelayout('admin');
 
 // Display page header.
-$title = get_string('notifications', 'message');
+$title = get_string('notifications', 'core_message');
 $PAGE->set_title($title);
 $PAGE->set_heading(fullname($user));
 
@@ -64,11 +64,11 @@ $context = [
 ];
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('notifications', 'message'));
+echo $OUTPUT->heading(get_string('notifications', 'core_message'));
 
 // Display a message if the notifications have not been migrated yet.
 if (!get_user_preferences('core_message_migrate_data', false, $userid)) {
-    $notify = new \core\output\notification(get_string('notificationdatahasnotbeenmigrated', 'message'),
+    $notify = new \core\output\notification(get_string('notificationdatahasnotbeenmigrated', 'core_message'),
         \core\output\notification::NOTIFY_WARNING);
     echo $OUTPUT->render($notify);
 }

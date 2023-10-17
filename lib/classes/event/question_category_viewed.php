@@ -50,7 +50,7 @@ class question_category_viewed extends question_category_base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventquestioncategoryviewed', 'question');
+        return get_string('eventquestioncategoryviewed', 'core_question');
     }
 
     /**

@@ -38,19 +38,19 @@ class blog_edit_form extends moodleform {
         $attachmentoptions = $this->_customdata['attachmentoptions'];
         $sitecontext = $this->_customdata['sitecontext'];
 
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
-        $mform->addElement('text', 'subject', get_string('entrytitle', 'blog'), array('size' => 60, 'maxlength' => 128));
-        $mform->addElement('editor', 'summary_editor', get_string('entrybody', 'blog'), null, $summaryoptions);
+        $mform->addElement('text', 'subject', get_string('entrytitle', 'core_blog'), array('size' => 60, 'maxlength' => 128));
+        $mform->addElement('editor', 'summary_editor', get_string('entrybody', 'core_blog'), null, $summaryoptions);
 
         $mform->setType('subject', PARAM_TEXT);
-        $mform->addRule('subject', get_string('emptytitle', 'blog'), 'required', null, 'client');
+        $mform->addRule('subject', get_string('emptytitle', 'core_blog'), 'required', null, 'client');
         $mform->addRule('subject', get_string('maximumchars', '', 128), 'maxlength', 128, 'client');
 
         $mform->setType('summary_editor', PARAM_RAW);
-        $mform->addRule('summary_editor', get_string('emptybody', 'blog'), 'required', null, 'client');
+        $mform->addRule('summary_editor', get_string('emptybody', 'core_blog'), 'required', null, 'client');
 
-        $mform->addElement('filemanager', 'attachment_filemanager', get_string('attachment', 'forum'), null, $attachmentoptions);
+        $mform->addElement('filemanager', 'attachment_filemanager', get_string('attachment', 'mod_forum'), null, $attachmentoptions);
 
         // Disable publishstate options that are not allowed.
         $publishstates = array();
@@ -61,12 +61,12 @@ class blog_edit_form extends moodleform {
             $i++;
         }
 
-        $mform->addElement('select', 'publishstate', get_string('publishto', 'blog'), $publishstates);
+        $mform->addElement('select', 'publishstate', get_string('publishto', 'core_blog'), $publishstates);
         $mform->addHelpButton('publishstate', 'publishto', 'blog');
         $mform->setDefault('publishstate', 'site');
 
         if (core_tag_tag::is_enabled('core', 'post')) {
-            $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
+            $mform->addElement('header', 'tagshdr', get_string('tags', 'core_tag'));
         }
         $mform->addElement('tags', 'tags', get_string('tags'),
                 array('itemtype' => 'post', 'component' => 'core'));
@@ -89,10 +89,10 @@ class blog_edit_form extends moodleform {
                     $contextid = $entry->courseassoc;
                 }
 
-                $mform->addElement('header', 'assochdr', get_string('associations', 'blog'));
+                $mform->addElement('header', 'assochdr', get_string('associations', 'core_blog'));
                 $mform->addElement('advcheckbox',
                                    'courseassoc',
-                                   get_string('associatewithcourse', 'blog', $a),
+                                   get_string('associatewithcourse', 'core_blog', $a),
                                    null,
                                    null,
                                    array(0, $contextid));
@@ -114,10 +114,10 @@ class blog_edit_form extends moodleform {
                     $modid = $context->instanceid;
                 }
 
-                $mform->addElement('header', 'assochdr', get_string('associations', 'blog'));
+                $mform->addElement('header', 'assochdr', get_string('associations', 'core_blog'));
                 $mform->addElement('advcheckbox',
                                    'modassoc',
-                                   get_string('associatewithmodule', 'blog', $a),
+                                   get_string('associatewithmodule', 'core_blog', $a),
                                    null,
                                    null,
                                    array(0, $context->id));
@@ -175,7 +175,7 @@ class blog_edit_form extends moodleform {
                 // Ensure only one course is associated.
                 if (!empty($data['courseassoc'])) {
                     if ($data['courseassoc'] != $coursecontext->id) {
-                        $errors['modassoc'] = get_string('onlyassociateonecourse', 'blog');
+                        $errors['modassoc'] = get_string('onlyassociateonecourse', 'core_blog');
                     }
                 } else {
                     $data['courseassoc'] = $coursecontext->id;

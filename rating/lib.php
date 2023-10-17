@@ -900,12 +900,12 @@ class rating_manager {
      * @return array aggregate types
      */
     public function get_aggregate_types() {
-        return array (RATING_AGGREGATE_NONE     => get_string('aggregatenone', 'rating'),
-                      RATING_AGGREGATE_AVERAGE  => get_string('aggregateavg', 'rating'),
-                      RATING_AGGREGATE_COUNT    => get_string('aggregatecount', 'rating'),
-                      RATING_AGGREGATE_MAXIMUM  => get_string('aggregatemax', 'rating'),
-                      RATING_AGGREGATE_MINIMUM  => get_string('aggregatemin', 'rating'),
-                      RATING_AGGREGATE_SUM      => get_string('aggregatesum', 'rating'));
+        return array (RATING_AGGREGATE_NONE     => get_string('aggregatenone', 'core_rating'),
+                      RATING_AGGREGATE_AVERAGE  => get_string('aggregateavg', 'core_rating'),
+                      RATING_AGGREGATE_COUNT    => get_string('aggregatecount', 'core_rating'),
+                      RATING_AGGREGATE_MAXIMUM  => get_string('aggregatemax', 'core_rating'),
+                      RATING_AGGREGATE_MINIMUM  => get_string('aggregatemin', 'core_rating'),
+                      RATING_AGGREGATE_SUM      => get_string('aggregatesum', 'core_rating'));
     }
 
     /**
@@ -1045,19 +1045,19 @@ class rating_manager {
         $aggregatelabel = '';
         switch ($aggregationmethod) {
             case RATING_AGGREGATE_AVERAGE :
-                $aggregatelabel .= get_string("aggregateavg", "rating");
+                $aggregatelabel .= get_string("aggregateavg", 'core_rating');
                 break;
             case RATING_AGGREGATE_COUNT :
-                $aggregatelabel .= get_string("aggregatecount", "rating");
+                $aggregatelabel .= get_string("aggregatecount", 'core_rating');
                 break;
             case RATING_AGGREGATE_MAXIMUM :
-                $aggregatelabel .= get_string("aggregatemax", "rating");
+                $aggregatelabel .= get_string("aggregatemax", 'core_rating');
                 break;
             case RATING_AGGREGATE_MINIMUM :
-                $aggregatelabel .= get_string("aggregatemin", "rating");
+                $aggregatelabel .= get_string("aggregatemin", 'core_rating');
                 break;
             case RATING_AGGREGATE_SUM :
-                $aggregatelabel .= get_string("aggregatesum", "rating");
+                $aggregatelabel .= get_string("aggregatesum", 'core_rating');
                 break;
         }
         $aggregatelabel .= get_string('labelsep', 'core_langconfig');
@@ -1244,6 +1244,6 @@ class rating_exception extends moodle_exception {
      */
     public function __construct($errorcode) {
         $this->errorcode = $errorcode;
-        $this->message = get_string($errorcode, 'error');
+        $this->message = get_string($errorcode, 'mod_error');
     }
 }

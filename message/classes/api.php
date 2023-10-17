@@ -211,7 +211,7 @@ class api {
 
         // Check if messaging is enabled.
         if (empty($CFG->messaging)) {
-            throw new \moodle_exception('disabled', 'message');
+            throw new \moodle_exception('disabled', 'core_message');
         }
 
         require_once($CFG->dirroot . '/user/lib.php');
@@ -1653,10 +1653,10 @@ class api {
         // Custom data for event.
         $customdata = [
             'actionbuttons' => [
-                'send' => get_string('send', 'message'),
+                'send' => get_string('send', 'core_message'),
             ],
             'placeholders' => [
-                'send' => get_string('writeamessage', 'message'),
+                'send' => get_string('writeamessage', 'core_message'),
             ],
         ];
 
@@ -1851,7 +1851,7 @@ class api {
                 }
                 $processor->available = 1;
             } else {
-                throw new \moodle_exception('errorcallingprocessor', 'message');
+                throw new \moodle_exception('errorcallingprocessor', 'core_message');
             }
         } else {
             $processor->available = 0;

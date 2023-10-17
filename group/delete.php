@@ -62,12 +62,12 @@ foreach($groupidarray as $groupid) {
 $returnurl='index.php?id='.$course->id;
 
 if(count($groupidarray)==0) {
-    throw new \moodle_exception('errorselectsome', 'group', $returnurl);
+    throw new \moodle_exception('errorselectsome', 'core_group', $returnurl);
 }
 
 if ($confirm && data_submitted()) {
     if (!confirm_sesskey() ) {
-        throw new \moodle_exception('confirmsesskeybad', 'error', $returnurl);
+        throw new \moodle_exception('confirmsesskeybad', 'mod_error', $returnurl);
     }
 
     foreach($groupidarray as $groupid) {
@@ -76,15 +76,15 @@ if ($confirm && data_submitted()) {
 
     redirect($returnurl);
 } else {
-    $PAGE->set_title(get_string('deleteselectedgroup', 'group'));
-    $PAGE->set_heading($course->fullname . ': '. get_string('deleteselectedgroup', 'group'));
+    $PAGE->set_title(get_string('deleteselectedgroup', 'core_group'));
+    $PAGE->set_heading($course->fullname . ': '. get_string('deleteselectedgroup', 'core_group'));
     echo $OUTPUT->header();
     $optionsyes = array('courseid'=>$courseid, 'groups'=>$groupids, 'sesskey'=>sesskey(), 'confirm'=>1);
     $optionsno = array('id'=>$courseid);
     if(count($groupnames)==1) {
-        $message=get_string('deletegroupconfirm', 'group', $groupnames[0]);
+        $message=get_string('deletegroupconfirm', 'core_group', $groupnames[0]);
     } else {
-        $message=get_string('deletegroupsconfirm', 'group').'<ul>';
+        $message=get_string('deletegroupsconfirm', 'core_group').'<ul>';
         foreach($groupnames as $groupname) {
             $message.='<li>'.$groupname.'</li>';
         }

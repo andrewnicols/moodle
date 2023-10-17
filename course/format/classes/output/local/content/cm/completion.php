@@ -101,10 +101,10 @@ class completion implements named_templatable, renderable {
         $completioninfo->hasconditions = $completioninfo->ismanual || count($completioninfo->completiondetails) > 0;
         $dialogcontent = $output->render_from_template('core_courseformat/local/content/cm/completion_dialog', $completioninfo);
 
-        $buttoncontent = get_string('completionmenuitem', 'completion');
+        $buttoncontent = get_string('completionmenuitem', 'core_completion');
         $buttonclass = '';
         if ($completioninfo->istrackeduser) {
-            $buttoncontent = get_string('todo', 'completion');
+            $buttoncontent = get_string('todo', 'core_completion');
             if ($completioninfo->overallcomplete) {
                 $buttoncontent = $output->pix_icon('i/checked', '') . " " . get_string('completion_manual:done', 'core_course');
                 $buttonclass = 'btn-success';

@@ -2862,7 +2862,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         } else if ($userauth->can_change_password()) {
             throw new moodle_exception('forcepasswordchangenotice');
         } else {
-            throw new moodle_exception('nopasswordchangeforced', 'auth');
+            throw new moodle_exception('nopasswordchangeforced', 'core_auth');
         }
     }
 
@@ -2934,7 +2934,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
         $manager = new \core_privacy\local\sitepolicy\manager();
         if ($policyurl = $manager->get_redirect_url(isguestuser())) {
             if ($preventredirect) {
-                throw new moodle_exception('sitepolicynotagreed', 'error', '', $policyurl->out());
+                throw new moodle_exception('sitepolicynotagreed', 'mod_error', '', $policyurl->out());
             }
             if ($setwantsurltome) {
                 $SESSION->wantsurl = qualified_me();
@@ -3113,7 +3113,7 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
             throw new moodle_exception('activityisscheduledfordeletion');
         }
         require_once($CFG->dirroot . '/course/lib.php');
-        redirect(course_get_url($course), get_string('activityisscheduledfordeletion', 'error'));
+        redirect(course_get_url($course), get_string('activityisscheduledfordeletion', 'mod_error'));
     }
 
     // Check visibility of activity to current user; includes visible flag, conditional availability, etc.
@@ -3760,7 +3760,7 @@ function get_auth_plugin($auth) {
 
     // Check the plugin exists first.
     if (! exists_auth_plugin($auth)) {
-        throw new \moodle_exception('authpluginnotfound', 'debug', '', $auth);
+        throw new \moodle_exception('authpluginnotfound', 'mod_debug', '', $auth);
     }
 
     // Return auth plugin instance.
@@ -3793,7 +3793,7 @@ function get_enabled_auth_plugins($fix=false) {
             // The manual and nologin plugin never need to be stored.
             unset($auths[$k]);
         } else if (!exists_auth_plugin($authname)) {
-            debugging(get_string('authpluginnotfound', 'debug', $authname));
+            debugging(get_string('authpluginnotfound', 'mod_debug', $authname));
             unset($auths[$k]);
         }
     }
@@ -4419,7 +4419,7 @@ function authenticate_user_login(
             $event->trigger();
 
             error_log('[client '.getremoteaddr()."]  $CFG->wwwroot  Login lockout:  $username  ".$_SERVER['HTTP_USER_AGENT']);
-            $SESSION->loginerrormsg = get_string('accountlocked', 'admin');
+            $SESSION->loginerrormsg = get_string('accountlocked', 'core_admin');
 
             return false;
         }
@@ -4657,7 +4657,7 @@ function complete_user_login($user, array $extrauserinfo = []) {
                 redirect($CFG->wwwroot.'/login/change_password.php');
             }
         } else {
-            throw new \moodle_exception('nopasswordchangeforced', 'auth');
+            throw new \moodle_exception('nopasswordchangeforced', 'core_auth');
         }
     }
     return $USER;
@@ -4801,7 +4801,7 @@ function validate_internal_user_password(stdClass $user, #[\SensitiveParameter] 
 function hash_internal_user_password(#[\SensitiveParameter] string $password, $fasthash = false, $pepperlength = 0): string {
     if (exceeds_password_length($password, $pepperlength)) {
         // Password cannot be more than MAX_PASSWORD_CHARACTERS.
-        throw new \moodle_exception(get_string("passwordexceeded", 'error', MAX_PASSWORD_CHARACTERS));
+        throw new \moodle_exception(get_string("passwordexceeded", 'mod_error', MAX_PASSWORD_CHARACTERS));
     }
 
     // Set the cost factor to 5000 for fast hashing, otherwise use default cost.
@@ -5049,22 +5049,22 @@ function check_password_policy($password, &$errmsg, $user = null) {
     if (!empty($CFG->passwordpolicy)) {
         $errmsg = '';
         if (core_text::strlen($password) < $CFG->minpasswordlength) {
-            $errmsg .= '<div>'. get_string('errorminpasswordlength', 'auth', $CFG->minpasswordlength) .'</div>';
+            $errmsg .= '<div>'. get_string('errorminpasswordlength', 'core_auth', $CFG->minpasswordlength) .'</div>';
         }
         if (preg_match_all('/[[:digit:]]/u', $password, $matches) < $CFG->minpassworddigits) {
-            $errmsg .= '<div>'. get_string('errorminpassworddigits', 'auth', $CFG->minpassworddigits) .'</div>';
+            $errmsg .= '<div>'. get_string('errorminpassworddigits', 'core_auth', $CFG->minpassworddigits) .'</div>';
         }
         if (preg_match_all('/[[:lower:]]/u', $password, $matches) < $CFG->minpasswordlower) {
-            $errmsg .= '<div>'. get_string('errorminpasswordlower', 'auth', $CFG->minpasswordlower) .'</div>';
+            $errmsg .= '<div>'. get_string('errorminpasswordlower', 'core_auth', $CFG->minpasswordlower) .'</div>';
         }
         if (preg_match_all('/[[:upper:]]/u', $password, $matches) < $CFG->minpasswordupper) {
-            $errmsg .= '<div>'. get_string('errorminpasswordupper', 'auth', $CFG->minpasswordupper) .'</div>';
+            $errmsg .= '<div>'. get_string('errorminpasswordupper', 'core_auth', $CFG->minpasswordupper) .'</div>';
         }
         if (preg_match_all('/[^[:upper:][:lower:][:digit:]]/u', $password, $matches) < $CFG->minpasswordnonalphanum) {
-            $errmsg .= '<div>'. get_string('errorminpasswordnonalphanum', 'auth', $CFG->minpasswordnonalphanum) .'</div>';
+            $errmsg .= '<div>'. get_string('errorminpasswordnonalphanum', 'core_auth', $CFG->minpasswordnonalphanum) .'</div>';
         }
         if (!check_consecutive_identical_characters($password, $CFG->maxconsecutiveidentchars)) {
-            $errmsg .= '<div>'. get_string('errormaxconsecutiveidentchars', 'auth', $CFG->maxconsecutiveidentchars) .'</div>';
+            $errmsg .= '<div>'. get_string('errormaxconsecutiveidentchars', 'core_auth', $CFG->maxconsecutiveidentchars) .'</div>';
         }
 
         // Fire any additional password policy functions from plugins.
@@ -5246,7 +5246,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     $cc = new completion_info($course);
     $cc->clear_criteria();
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('completion', 'completion'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.get_string('completion', 'core_completion'), 'notifysuccess');
     }
 
     // Remove all data from gradebook - this needs to be done before course modules
@@ -5264,7 +5264,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     unset($childcontexts);
     blocks_delete_all_for_context($coursecontext->id);
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('type_block_plural', 'plugin'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.get_string('type_block_plural', 'mod_plugin'), 'notifysuccess');
     }
 
     $DB->set_field('course_modules', 'deletioninprogress', '1', ['course' => $courseid]);
@@ -5360,20 +5360,20 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
     }
 
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('type_mod_plural', 'plugin'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.get_string('type_mod_plural', 'mod_plugin'), 'notifysuccess');
     }
 
     // Delete questions and question categories.
     question_delete_course($course);
     if ($showfeedback) {
-        echo $OUTPUT->notification($strdeleted.get_string('questions', 'question'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.get_string('questions', 'core_question'), 'notifysuccess');
     }
 
     // Delete content bank contents.
     $cb = new \core_contentbank\contentbank();
     $cbdeleted = $cb->delete_contents($coursecontext);
     if ($showfeedback && $cbdeleted) {
-        echo $OUTPUT->notification($strdeleted.get_string('contentbank', 'contentbank'), 'notifysuccess');
+        echo $OUTPUT->notification($strdeleted.get_string('contentbank', 'core_contentbank'), 'notifysuccess');
     }
 
     // Make sure there are no subcontexts left - all valid blocks and modules should be already gone.
@@ -5392,7 +5392,7 @@ function remove_course_contents($courseid, $showfeedback = true, array $options 
         enrol_course_delete($course, $userid);
         role_unassign_all(array('contextid' => $coursecontext->id, 'component' => ''), true);
         if ($showfeedback) {
-            echo $OUTPUT->notification($strdeleted.get_string('type_enrol_plural', 'plugin'), 'notifysuccess');
+            echo $OUTPUT->notification($strdeleted.get_string('type_enrol_plural', 'mod_plugin'), 'notifysuccess');
         }
     }
 
@@ -5615,19 +5615,19 @@ function reset_course_userdata($data) {
 
     if (!empty($data->reset_events)) {
         $DB->delete_records('event', array('courseid' => $data->courseid));
-        $status[] = array('component' => $componentstr, 'item' => get_string('deleteevents', 'calendar'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteevents', 'core_calendar'), 'error' => false);
     }
 
     if (!empty($data->reset_notes)) {
         require_once($CFG->dirroot.'/notes/lib.php');
         note_delete_all($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('deletenotes', 'notes'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deletenotes', 'core_notes'), 'error' => false);
     }
 
     if (!empty($data->delete_blog_associations)) {
         require_once($CFG->dirroot.'/blog/lib.php');
         blog_remove_associations_for_course($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('deleteblogassociations', 'blog'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteblogassociations', 'core_blog'), 'error' => false);
     }
 
     if (!empty($data->reset_completion)) {
@@ -5636,7 +5636,7 @@ function reset_course_userdata($data) {
         $cc = new completion_info($course);
         $cc->delete_all_completion_data();
         $status[] = array('component' => $componentstr,
-                'item' => get_string('deletecompletiondata', 'completion'), 'error' => false);
+                'item' => get_string('deletecompletiondata', 'core_completion'), 'error' => false);
     }
 
     if (!empty($data->reset_competency_ratings)) {
@@ -5653,7 +5653,7 @@ function reset_course_userdata($data) {
             $child->delete_capabilities();
         }
         $context->delete_capabilities();
-        $status[] = array('component' => $componentstr, 'item' => get_string('deletecourseoverrides', 'role'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deletecourseoverrides', 'core_role'), 'error' => false);
     }
 
     if (!empty($data->reset_roles_local)) {
@@ -5661,7 +5661,7 @@ function reset_course_userdata($data) {
         foreach ($children as $child) {
             role_unassign_all(array('contextid' => $child->id));
         }
-        $status[] = array('component' => $componentstr, 'item' => get_string('deletelocalroles', 'role'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deletelocalroles', 'core_role'), 'error' => false);
     }
 
     // First unenrol users - this cleans some of related user data too, such as forum subscriptions, tracking, etc.
@@ -5725,7 +5725,7 @@ function reset_course_userdata($data) {
     if (!empty($data->unenrolled)) {
         $status[] = array(
             'component' => $componentstr,
-            'item' => get_string('unenrol', 'enrol').' ('.count($data->unenrolled).')',
+            'item' => get_string('unenrol', 'core_enrol').' ('.count($data->unenrolled).')',
             'error' => false
         );
     }
@@ -5735,25 +5735,25 @@ function reset_course_userdata($data) {
     // Remove all group members.
     if (!empty($data->reset_groups_members)) {
         groups_delete_group_members($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('removegroupsmembers', 'group'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('removegroupsmembers', 'core_group'), 'error' => false);
     }
 
     // Remove all groups.
     if (!empty($data->reset_groups_remove)) {
         groups_delete_groups($data->courseid, false);
-        $status[] = array('component' => $componentstr, 'item' => get_string('deleteallgroups', 'group'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteallgroups', 'core_group'), 'error' => false);
     }
 
     // Remove all grouping members.
     if (!empty($data->reset_groupings_members)) {
         groups_delete_groupings_groups($data->courseid, false);
-        $status[] = array('component' => $componentstr, 'item' => get_string('removegroupingsmembers', 'group'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('removegroupingsmembers', 'core_group'), 'error' => false);
     }
 
     // Remove all groupings.
     if (!empty($data->reset_groupings_remove)) {
         groups_delete_groupings($data->courseid, false);
-        $status[] = array('component' => $componentstr, 'item' => get_string('deleteallgroupings', 'group'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('deleteallgroupings', 'core_group'), 'error' => false);
     }
 
     // Look in every instance of every module for data to delete.
@@ -5801,17 +5801,17 @@ function reset_course_userdata($data) {
         }
     }
 
-    $componentstr = get_string('gradebook', 'grades');
+    $componentstr = get_string('gradebook', 'core_grades');
     // Reset gradebook,.
     if (!empty($data->reset_gradebook_items)) {
         remove_course_grades($data->courseid, false);
         grade_grab_course_grades($data->courseid);
         grade_regrade_final_grades($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('removeallcourseitems', 'grades'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('removeallcourseitems', 'core_grades'), 'error' => false);
 
     } else if (!empty($data->reset_gradebook_grades)) {
         grade_course_reset($data->courseid);
-        $status[] = array('component' => $componentstr, 'item' => get_string('removeallcoursegrades', 'grades'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('removeallcoursegrades', 'core_grades'), 'error' => false);
     }
     // Reset comments.
     if (!empty($data->reset_comments)) {
@@ -9858,7 +9858,7 @@ function get_performance_info() {
 
         while ($storec++ < ($maxstores - 2)) {
             if ($storec == ($maxstores - 2)) {
-                $table->head[] = get_string('mappingfinal', 'cache');
+                $table->head[] = get_string('mappingfinal', 'core_cache');
             } else {
                 $table->head[] = "Store $storec";
             }
@@ -10581,7 +10581,7 @@ function get_mnet_environment() {
  */
 function get_mnet_remote_client() {
     if (!defined('MNET_SERVER')) {
-        debugging(get_string('notinxmlrpcserver', 'mnet'));
+        debugging(get_string('notinxmlrpcserver', 'core_mnet'));
         return false;
     }
     global $MNET_REMOTE_CLIENT;
@@ -10600,7 +10600,7 @@ function get_mnet_remote_client() {
  */
 function set_mnet_remote_client($client) {
     if (!defined('MNET_SERVER')) {
-        throw new moodle_exception('notinxmlrpcserver', 'mnet');
+        throw new moodle_exception('notinxmlrpcserver', 'core_mnet');
     }
     global $MNET_REMOTE_CLIENT;
     $MNET_REMOTE_CLIENT = $client;

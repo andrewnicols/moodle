@@ -109,7 +109,7 @@ class behat_completion extends behat_base {
 
         // Enable completion.
         $this->execute("behat_forms::i_set_the_field_to",
-            array(get_string('enablecompletion', 'completion'), $toggle));
+            array(get_string('enablecompletion', 'core_completion'), $toggle));
 
         // Save course settings.
         $this->execute("behat_forms::press_button", get_string('savechangesanddisplay'));

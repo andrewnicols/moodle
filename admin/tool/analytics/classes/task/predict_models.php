@@ -53,7 +53,7 @@ class predict_models extends \core\task\scheduled_task {
         global $OUTPUT, $PAGE;
 
         if (!\core_analytics\manager::is_analytics_enabled()) {
-            mtrace(get_string('analyticsdisabled', 'analytics'));
+            mtrace(get_string('analyticsdisabled', 'core_analytics'));
             return;
         }
 

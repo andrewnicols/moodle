@@ -173,7 +173,7 @@ class completion_criteria_activity extends completion_criteria {
      * @return string
      */
     public function get_title() {
-        return get_string('activitiescompleted', 'completion');
+        return get_string('activitiescompleted', 'core_completion');
     }
 
     /**
@@ -196,7 +196,7 @@ class completion_criteria_activity extends completion_criteria {
      * @return  string
      */
     public function get_type_title() {
-        return get_string('activities', 'completion');
+        return get_string('activities', 'core_completion');
     }
 
     /**
@@ -230,19 +230,19 @@ class completion_criteria_activity extends completion_criteria {
         $details['requirement'] = array();
 
         if ($cm->completion == COMPLETION_TRACKING_MANUAL) {
-            $details['requirement'][] = get_string('markingyourselfcomplete', 'completion');
+            $details['requirement'][] = get_string('markingyourselfcomplete', 'core_completion');
         } elseif ($cm->completion == COMPLETION_TRACKING_AUTOMATIC) {
             if ($cm->completionview) {
                 $modulename = core_text::strtolower(get_string('modulename', $this->module));
-                $details['requirement'][] = get_string('viewingactivity', 'completion', $modulename);
+                $details['requirement'][] = get_string('viewingactivity', 'core_completion', $modulename);
             }
 
             if (!is_null($cm->completiongradeitemnumber)) {
-                $details['requirement'][] = get_string('achievinggrade', 'completion');
+                $details['requirement'][] = get_string('achievinggrade', 'core_completion');
             }
 
             if ($cm->completionpassgrade) {
-                $details['requirement'][] = get_string('achievingpassinggrade', 'completion');
+                $details['requirement'][] = get_string('achievingpassinggrade', 'core_completion');
             }
         }
 

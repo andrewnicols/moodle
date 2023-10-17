@@ -108,11 +108,11 @@ case 'deletedraft':
 
 case 'renameform':
     echo $OUTPUT->header();
-    echo '<div><a href="' . $home_url->out() . '">'.get_string('back', 'repository')."</a></div>";
+    echo '<div><a href="' . $home_url->out() . '">'.get_string('back', 'core_repository')."</a></div>";
     $home_url->param('draftpath', $draftpath);
     $home_url->param('action', 'rename');
     echo ' <form method="post" action="'.$home_url->out().'">';
-    echo html_writer::label(get_string('enternewname', 'repository'), 'newfilename', array('class' => 'accesshide'));
+    echo html_writer::label(get_string('enternewname', 'core_repository'), 'newfilename', array('class' => 'accesshide'));
     echo '  <input id="newfilename" name="newfilename" type="text" value="'.s($filename).'" />';
     echo '  <input name="filename" type="hidden" value="'.s($filename).'" />';
     echo '  <input name="draftpath" type="hidden" value="'.s($draftpath).'" />';
@@ -144,7 +144,7 @@ case 'downloaddir':
         $fileurl = moodle_url::make_draftfile_url($newdraftitemid, '/', $filename)->out();
         header('Location: ' . $fileurl);
     } else {
-        throw new \moodle_exception('cannotdownloaddir', 'repository');
+        throw new \moodle_exception('cannotdownloaddir', 'core_repository');
     }
     break;
 
@@ -168,7 +168,7 @@ case 'zip':
 
     $home_url->param('action', 'browse');
     $home_url->param('draftpath', $parent_path);
-    redirect($home_url, get_string('ziped', 'repository'));
+    redirect($home_url, get_string('ziped', 'core_repository'));
     break;
 
 case 'unzip':
@@ -176,9 +176,9 @@ case 'unzip':
     $file = $fs->get_file($user_context->id, 'user', 'draft', $itemid, $draftpath, $filename);
 
     if ($newfile = $file->extract_to_storage($zipper, $user_context->id, 'user', 'draft', $itemid, $draftpath, $USER->id)) {
-        $str = get_string('unzipped', 'repository');
+        $str = get_string('unzipped', 'core_repository');
     } else {
-        $str = get_string('cannotunzip', 'error');
+        $str = get_string('cannotunzip', 'mod_error');
     }
     $home_url->param('action', 'browse');
     $home_url->param('draftpath', $draftpath);
@@ -195,7 +195,7 @@ case 'movefile':
     echo $OUTPUT->header();
 
     echo $OUTPUT->container_start();
-    echo html_writer::link($home_url, get_string('back', 'repository'));
+    echo html_writer::link($home_url, get_string('back', 'core_repository'));
     echo $OUTPUT->container_end();
 
     $data = new stdClass();
@@ -211,13 +211,13 @@ case 'mkdirform':
     echo $OUTPUT->header();
 
     echo $OUTPUT->container_start();
-    echo html_writer::link($home_url, get_string('back', 'repository'));
+    echo html_writer::link($home_url, get_string('back', 'core_repository'));
     echo $OUTPUT->container_end();
 
     $home_url->param('draftpath', $draftpath);
     $home_url->param('action', 'mkdir');
     echo ' <form method="post" action="'.$home_url->out().'">';
-    echo html_writer::label(get_string('entername', 'repository'), 'newdirname', array('class' => 'accesshide'));
+    echo html_writer::label(get_string('entername', 'core_repository'), 'newdirname', array('class' => 'accesshide'));
     echo '  <input name="newdirname" id="newdirname" type="text" />';
     echo '  <input name="draftpath" type="hidden" value="'.s($draftpath).'" />';
     echo '  <input type="submit" value="'.s(get_string('makeafolder', 'moodle')).'" />';
@@ -232,10 +232,10 @@ case 'mkdir':
     $home_url->param('action', 'browse');
     if (!empty($newdirname)) {
         $home_url->param('draftpath', $newfolderpath);
-        $str = get_string('createfoldersuccess', 'repository');
+        $str = get_string('createfoldersuccess', 'core_repository');
     } else {
         $home_url->param('draftpath', $draftpath);
-        $str = get_string('createfolderfail', 'repository');
+        $str = get_string('createfolderfail', 'core_repository');
     }
     redirect($home_url, $str);
     break;
@@ -276,7 +276,7 @@ default:
         $maxfiles = 1;
     }
     if ($filecount < $maxfiles || $maxfiles == -1) {
-        echo ' <a href="'.$filepicker_url->out().'">'.get_string('addfile', 'repository').'</a>';
+        echo ' <a href="'.$filepicker_url->out().'">'.get_string('addfile', 'core_repository').'</a>';
     }
     if ($env == 'filemanager') {
         if (!empty($subdirs)) {
@@ -285,7 +285,7 @@ default:
         }
         if (!empty($files->list)) {
             $home_url->param('action', 'downloaddir');
-            echo ' ' . html_writer::link($home_url, get_string('downloadfolder', 'repository'), array('target'=>'_blank'));
+            echo ' ' . html_writer::link($home_url, get_string('downloadfolder', 'core_repository'), array('target'=>'_blank'));
         }
     }
     echo '</div>';
@@ -342,7 +342,7 @@ default:
         }
         echo '</ul>';
     } else {
-        echo get_string('nofilesavailable', 'repository');
+        echo get_string('nofilesavailable', 'core_repository');
     }
     echo $OUTPUT->footer();
     break;

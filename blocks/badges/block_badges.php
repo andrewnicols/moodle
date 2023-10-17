@@ -83,7 +83,7 @@ class block_badges extends block_base {
         $this->content->text = '';
 
         if (empty($CFG->enablebadges)) {
-            $this->content->text .= get_string('badgesdisabled', 'badges');
+            $this->content->text .= get_string('badgesdisabled', 'core_badges');
             return $this->content;
         }
 

@@ -55,7 +55,7 @@ class block_blog_recent extends block_base {
             $this->content = new stdClass();
             $this->content->text = '';
             if ($this->page->user_is_editing()) {
-                $this->content->text = get_string('blogdisable', 'blog');
+                $this->content->text = get_string('blogdisable', 'core_blog');
             }
             return $this->content;
 
@@ -92,16 +92,16 @@ class block_blog_recent extends block_base {
             $filter['module'] = $context->instanceid;
             $a = new stdClass;
             $a->type = get_string('modulename', $this->page->cm->modname);
-            $strview = get_string('viewallmodentries', 'blog', $a);
+            $strview = get_string('viewallmodentries', 'core_blog', $a);
             $url->param('modid', $context->instanceid);
         } else if ($context->contextlevel == CONTEXT_COURSE) {
             $filter['course'] = $context->instanceid;
             $a = new stdClass;
             $a->type = get_string('course');
-            $strview = get_string('viewblogentries', 'blog', $a);
+            $strview = get_string('viewblogentries', 'core_blog', $a);
             $url->param('courseid', $context->instanceid);
         } else {
-            $strview = get_string('viewsiteentries', 'blog');
+            $strview = get_string('viewsiteentries', 'core_blog');
         }
         $filter['since'] = $this->config->recentbloginterval;
 

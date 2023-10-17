@@ -55,7 +55,7 @@ class question_import_form extends moodleform {
         $contexts = $this->_customdata['contexts'];
 
         // Choice of import format, with help icons.
-        $mform->addElement('header', 'fileformat', get_string('fileformat', 'question'));
+        $mform->addElement('header', 'fileformat', get_string('fileformat', 'core_question'));
 
         $fileformatnames = get_import_export_formats('import');
         $radioarray = [];
@@ -76,33 +76,33 @@ class question_import_form extends moodleform {
         $mform->addRule("formatchoices", null, 'required', null, 'client');
 
         // Import options.
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
-        $mform->addElement('questioncategory', 'category', get_string('importcategory', 'question'), compact('contexts'));
+        $mform->addElement('questioncategory', 'category', get_string('importcategory', 'core_question'), compact('contexts'));
         $mform->setDefault('category', $defaultcategory);
         $mform->addHelpButton('category', 'importcategory', 'question');
 
         $categorygroup = [];
-        $categorygroup[] = $mform->createElement('checkbox', 'catfromfile', '', get_string('getcategoryfromfile', 'question'));
-        $categorygroup[] = $mform->createElement('checkbox', 'contextfromfile', '', get_string('getcontextfromfile', 'question'));
+        $categorygroup[] = $mform->createElement('checkbox', 'catfromfile', '', get_string('getcategoryfromfile', 'core_question'));
+        $categorygroup[] = $mform->createElement('checkbox', 'contextfromfile', '', get_string('getcontextfromfile', 'core_question'));
         $mform->addGroup($categorygroup, 'categorygroup', '', '', false);
         $mform->disabledIf('categorygroup', 'catfromfile', 'notchecked');
         $mform->setDefault('catfromfile', 1);
         $mform->setDefault('contextfromfile', 1);
 
         $matchgrades = [];
-        $matchgrades['error'] = get_string('matchgradeserror', 'question');
-        $matchgrades['nearest'] = get_string('matchgradesnearest', 'question');
-        $mform->addElement('select', 'matchgrades', get_string('matchgrades', 'question'), $matchgrades);
+        $matchgrades['error'] = get_string('matchgradeserror', 'core_question');
+        $matchgrades['nearest'] = get_string('matchgradesnearest', 'core_question');
+        $mform->addElement('select', 'matchgrades', get_string('matchgrades', 'core_question'), $matchgrades);
         $mform->addHelpButton('matchgrades', 'matchgrades', 'question');
         $mform->setDefault('matchgrades', 'error');
 
-        $mform->addElement('selectyesno', 'stoponerror', get_string('stoponerror', 'question'));
+        $mform->addElement('selectyesno', 'stoponerror', get_string('stoponerror', 'core_question'));
         $mform->setDefault('stoponerror', 1);
         $mform->addHelpButton('stoponerror', 'stoponerror', 'question');
 
         // The file to import.
-        $mform->addElement('header', 'importfileupload', get_string('importquestions', 'question'));
+        $mform->addElement('header', 'importfileupload', get_string('importquestions', 'core_question'));
 
         $mform->addElement('filepicker', 'newfile', get_string('import'));
         $mform->addRule('newfile', null, 'required', null, 'client');
@@ -144,7 +144,7 @@ class question_import_form extends moodleform {
 
         $formatfile = $CFG->dirroot . '/question/format/' . $data['format'] . '/format.php';
         if (!is_readable($formatfile)) {
-            throw new moodle_exception('formatnotfound', 'question', '', $data['format']);
+            throw new moodle_exception('formatnotfound', 'core_question', '', $data['format']);
         }
 
         require_once($formatfile);
@@ -157,7 +157,7 @@ class question_import_form extends moodleform {
             $a = new stdClass();
             $a->actualtype = $file->get_mimetype();
             $a->expectedtype = $qformat->mime_type();
-            $errors['newfile'] = get_string('importwrongfiletype', 'question', $a);
+            $errors['newfile'] = get_string('importwrongfiletype', 'core_question', $a);
             return $errors;
         }
 

@@ -103,7 +103,7 @@ class curl_security_helper extends curl_security_helper_base {
      * @return string the string error.
      */
     public function get_blocked_url_string() {
-        return get_string('curlsecurityurlblocked', 'admin');
+        return get_string('curlsecurityurlblocked', 'core_admin');
     }
 
     /**

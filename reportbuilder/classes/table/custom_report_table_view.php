@@ -65,7 +65,7 @@ class custom_report_table_view extends custom_report_table {
 
         if (!$this->is_downloading()) {
             return $OUTPUT->download_dataformat_selector(
-                get_string('downloadas', 'table'),
+                get_string('downloadas', 'core_table'),
                 new moodle_url('/reportbuilder/download.php'),
                 'download',
                 ['id' => $this->persistent->get('id')]

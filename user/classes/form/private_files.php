@@ -79,7 +79,7 @@ class private_files extends \core_form\dynamic_form {
         $draftitemid = $data['files_filemanager'];
         $options = $this->get_options();
         if (file_is_draft_area_limit_reached($draftitemid, $options['areamaxbytes'])) {
-            $errors['files_filemanager'] = get_string('userquotalimit', 'error');
+            $errors['files_filemanager'] = get_string('userquotalimit', 'mod_error');
         }
 
         return $errors;

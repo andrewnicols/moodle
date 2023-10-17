@@ -35,7 +35,7 @@ $lang = current_language();
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 $badge = new badge($badgeid);
@@ -45,7 +45,7 @@ require_capability('moodle/badges:configuredetails', $context);
 
 if ($badge->type == BADGE_TYPE_COURSE) {
     if (empty($CFG->badges_allowcoursebadges)) {
-        throw new \moodle_exception('coursebadgesdisabled', 'badges');
+        throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
     }
     require_login($badge->courseid);
     $course = get_course($badge->courseid);
@@ -92,20 +92,20 @@ echo $output->print_badge_status_box($badge);
 if ($emsg !== '') {
     echo $OUTPUT->notification($emsg);
 } else if ($msg !== '') {
-    echo $OUTPUT->notification(get_string($msg, 'badges'), 'notifysuccess');
+    echo $OUTPUT->notification(get_string($msg, 'core_badges'), 'notifysuccess');
 }
 
-echo $output->notification(get_string('noterelated', 'badges'), 'info');
+echo $output->notification(get_string('noterelated', 'core_badges'), 'info');
 if (is_null($action)) {
     if (!$badge->is_active() && !$badge->is_locked()) {
-        echo $OUTPUT->box($OUTPUT->single_button($url, get_string('addrelated', 'badges')), 'clearfix mdl-align');
+        echo $OUTPUT->box($OUTPUT->single_button($url, get_string('addrelated', 'core_badges')), 'clearfix mdl-align');
     }
     if ($badge->has_related()) {
         $badgerelated = $badge->get_related_badges();
         $renderrelated = new \core_badges\output\badge_related($badgerelated, $badgeid);
         echo $output->render($renderrelated);
     } else {
-        echo $output->notification(get_string('norelated', 'badges'));
+        echo $output->notification(get_string('norelated', 'core_badges'));
     }
 } else if ($action == 'add') {
     $mform->display();

@@ -107,7 +107,7 @@ if ($activate) {
         redirect($returnurl);
     }
 
-    $strheading = get_string('reviewbadge', 'badges');
+    $strheading = get_string('reviewbadge', 'core_badges');
     $PAGE->navbar->add($strheading);
     $PAGE->set_title($strheading);
     $PAGE->set_heading($heading);
@@ -118,9 +118,9 @@ if ($activate) {
     $url = new moodle_url('/badges/action.php', $params);
 
     if (!$badge->has_criteria()) {
-        redirect($returnurl, get_string('error:cannotact', 'badges') . get_string('nocriteria', 'badges'), null, \core\output\notification::NOTIFY_ERROR);
+        redirect($returnurl, get_string('error:cannotact', 'core_badges') . get_string('nocriteria', 'core_badges'), null, \core\output\notification::NOTIFY_ERROR);
     } else {
-        $message = get_string('reviewconfirm', 'badges', $badge->name);
+        $message = get_string('reviewconfirm', 'core_badges', $badge->name);
         echo $OUTPUT->confirm($message, $url, $returnurl);
     }
     echo $OUTPUT->footer();

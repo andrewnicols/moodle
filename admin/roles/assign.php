@@ -86,7 +86,7 @@ if ($roleid) {
     $title = get_string('assignrolenameincontext', 'core_role', $a);
 } else {
     if ($isfrontpage) {
-        $title = get_string('frontpageroles', 'admin');
+        $title = get_string('frontpageroles', 'core_admin');
     } else {
         $title = get_string('assignrolesin', 'core_role', $contextname);
     }
@@ -169,7 +169,7 @@ switch ($context->contextlevel) {
         break;
     case CONTEXT_COURSE:
         if ($isfrontpage) {
-            $PAGE->set_heading(get_string('frontpage', 'admin'));
+            $PAGE->set_heading(get_string('frontpage', 'core_admin'));
         } else {
             $PAGE->set_heading($course->fullname);
         }

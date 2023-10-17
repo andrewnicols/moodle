@@ -240,7 +240,7 @@ class course_modinfo {
      */
     public function get_cm($cmid) {
         if (empty($this->cms[$cmid])) {
-            throw new moodle_exception('invalidcoursemoduleid', 'error', '', $cmid);
+            throw new moodle_exception('invalidcoursemoduleid', 'mod_error', '', $cmid);
         }
         return $this->cms[$cmid];
     }
@@ -2688,7 +2688,7 @@ function get_course_and_cm_from_cmid($cmorid, $modulename = '', $courseorid = 0,
     $modinfo = get_fast_modinfo($course, $userid);
     $cm = $modinfo->get_cm($cmid);
     if ($modulename && $cm->modname !== $modulename) {
-        throw new moodle_exception('invalidcoursemoduleid', 'error', '', $cmid);
+        throw new moodle_exception('invalidcoursemoduleid', 'mod_error', '', $cmid);
     }
     return array($course, $cm);
 }
@@ -2767,7 +2767,7 @@ function get_course_and_cm_from_instance($instanceorid, $modulename, $courseorid
     $modinfo = get_fast_modinfo($course, $userid);
     $instances = $modinfo->get_instances_of($modulename);
     if (!array_key_exists($instanceid, $instances)) {
-        throw new moodle_exception('invalidmoduleid', 'error', $instanceid);
+        throw new moodle_exception('invalidmoduleid', 'mod_error', $instanceid);
     }
     return array($course, $instances[$instanceid]);
 }

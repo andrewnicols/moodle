@@ -123,7 +123,7 @@ class completion_criteria_course extends completion_criteria {
      * @return string
      */
     public function get_title() {
-        return get_string('dependenciescompleted', 'completion');
+        return get_string('dependenciescompleted', 'core_completion');
     }
 
     /**
@@ -146,7 +146,7 @@ class completion_criteria_course extends completion_criteria {
      * @return string
      */
     public function get_type_title() {
-        return get_string('dependencies', 'completion');
+        return get_string('dependencies', 'core_completion');
     }
 
     /**
@@ -223,8 +223,8 @@ class completion_criteria_course extends completion_criteria {
         $details = array();
         $details['type'] = $this->get_title();
         $details['criteria'] = '<a href="'.$CFG->wwwroot.'/course/view.php?id='.$this->courseinstance.'">'.s($fullname).'</a>';
-        $details['requirement'] = get_string('coursecompleted', 'completion');
-        $details['status'] = '<a href="'.$CFG->wwwroot.'/blocks/completionstatus/details.php?course='.$this->courseinstance.'">'.get_string('seedetails', 'completion').'</a>';
+        $details['requirement'] = get_string('coursecompleted', 'core_completion');
+        $details['status'] = '<a href="'.$CFG->wwwroot.'/blocks/completionstatus/details.php?course='.$this->courseinstance.'">'.get_string('seedetails', 'core_completion').'</a>';
 
         return $details;
     }

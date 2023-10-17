@@ -196,9 +196,9 @@ class grade extends tablelike implements selectable_items, filterable_items {
         return [
             get_string('fullnameuser', 'core'),
             '', // For filter icon.
-            get_string('grade', 'grades'),
-            get_string('range', 'grades'),
-            get_string('feedback', 'grades'),
+            get_string('grade', 'core_grades'),
+            get_string('range', 'core_grades'),
+            get_string('feedback', 'core_grades'),
             get_string('override', 'gradereport_singleview'),
             get_string('exclude', 'gradereport_singleview'),
         ];

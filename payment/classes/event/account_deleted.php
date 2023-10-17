@@ -70,7 +70,7 @@ class account_deleted extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventaccountdeleted', 'payment');
+        return get_string('eventaccountdeleted', 'core_payment');
     }
 
     /**

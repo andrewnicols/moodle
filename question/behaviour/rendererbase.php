@@ -123,7 +123,7 @@ abstract class qbehaviour_renderer extends plugin_renderer_base {
         }
 
         $comment = html_writer::tag('div', html_writer::tag('div',
-                html_writer::tag('label', get_string('comment', 'question'),
+                html_writer::tag('label', get_string('comment', 'core_question'),
                 array('for' => $id)), array('class' => 'fitemtitle')) .
                 html_writer::tag('div', $commenteditor, array('class' => 'felement fhtmleditor', 'data-fieldtype' => "editor")),
                 array('class' => 'fitem'));
@@ -173,10 +173,10 @@ abstract class qbehaviour_renderer extends plugin_renderer_base {
             $a->max = $qa->format_max_mark($options->markdp);
             $a->mark = html_writer::empty_tag('input', $attributes);
             $mark = html_writer::tag('div', html_writer::tag('div',
-                        html_writer::tag('label', get_string('mark', 'question'),
+                        html_writer::tag('label', get_string('mark', 'core_question'),
                         array('for' => $markfield)),
                     array('class' => 'fitemtitle')) .
-                    html_writer::tag('div', $error . get_string('xoutofmax', 'question', $a) .
+                    html_writer::tag('div', $error . get_string('xoutofmax', 'core_question', $a) .
                         $markrange, array('class' => 'felement ftext' . $errorclass)
                     ), array('class' => 'fitem'));
         }
@@ -188,12 +188,12 @@ abstract class qbehaviour_renderer extends plugin_renderer_base {
     public function manual_comment_view(question_attempt $qa, question_display_options $options) {
         $output = '';
         if ($qa->has_manual_comment()) {
-            $output .= get_string('commentx', 'question',
+            $output .= get_string('commentx', 'core_question',
                     $qa->get_behaviour(false)->format_comment(null, null, $options->context));
         }
         if ($options->manualcommentlink) {
             $url = new moodle_url($options->manualcommentlink, array('slot' => $qa->get_slot()));
-            $link = $this->output->action_link($url, get_string('commentormark', 'question'),
+            $link = $this->output->action_link($url, get_string('commentormark', 'core_question'),
                     new popup_action('click', $url, 'commentquestion',
                     array('width' => 600, 'height' => 800)));
             $output .= html_writer::tag('div', $link, array('class' => 'commentlink'));
@@ -242,7 +242,7 @@ abstract class qbehaviour_renderer extends plugin_renderer_base {
             $attributes['disabled'] = 'disabled';
         }
         $output = html_writer::tag('button',
-            $options->add_question_identifier_to_label(get_string('check', 'question'), true), $attributes);
+            $options->add_question_identifier_to_label(get_string('check', 'core_question'), true), $attributes);
         if (!$options->readonly) {
             $this->page->requires->js_call_amd('core_question/question_engine', 'initSubmitButton', [$attributes['id']]);
         }

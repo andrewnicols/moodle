@@ -58,7 +58,7 @@ class user_filter_globalrole extends user_filter_type {
      */
     public function get_roles() {
         $context = context_system::instance();
-        $roles = array(0 => get_string('anyrole', 'filters')) + get_assignable_roles($context);
+        $roles = array(0 => get_string('anyrole', 'core_filters')) + get_assignable_roles($context);
         return $roles;
     }
 
@@ -119,6 +119,6 @@ class user_filter_globalrole extends user_filter_type {
         $a->label = $this->_label;
         $a->value = '"'.role_get_name($role).'"';
 
-        return get_string('globalrolelabel', 'filters', $a);
+        return get_string('globalrolelabel', 'core_filters', $a);
     }
 }

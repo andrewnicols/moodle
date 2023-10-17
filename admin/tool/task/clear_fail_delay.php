@@ -34,7 +34,7 @@ $context = context_system::instance();
 $taskname = required_param('task', PARAM_RAW_TRIMMED);
 $task = \core\task\manager::get_scheduled_task($taskname);
 if (!$task) {
-    throw new \moodle_exception('cannotfindinfo', 'error', $taskname);
+    throw new \moodle_exception('cannotfindinfo', 'mod_error', $taskname);
 }
 
 $returnurl = new moodle_url('/admin/tool/task/scheduledtasks.php',

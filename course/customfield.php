@@ -32,6 +32,6 @@ $handler = core_course\customfield\course_handler::create();
 $outputpage = new \core_customfield\output\management($handler);
 
 echo $output->header(),
-     $output->heading(new lang_string('course_customfield', 'admin')),
+     $output->heading(new lang_string('course_customfield', 'core_admin')),
      $output->render($outputpage),
      $output->footer();

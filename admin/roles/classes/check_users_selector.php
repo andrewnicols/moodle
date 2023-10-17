@@ -111,10 +111,10 @@ class core_role_check_users_selector extends user_selector_base {
         $result = array();
 
         if ($search) {
-            $groupname1 = get_string('enrolledusersmatching', 'enrol', $search);
+            $groupname1 = get_string('enrolledusersmatching', 'core_enrol', $search);
             $groupname2 = get_string('potusersmatching', 'core_role', $search);
         } else {
-            $groupname1 = get_string('enrolledusers', 'enrol');
+            $groupname1 = get_string('enrolledusers', 'core_enrol');
             $groupname2 = get_string('potusers', 'core_role');
         }
 

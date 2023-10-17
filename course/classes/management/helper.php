@@ -100,7 +100,7 @@ class helper {
             $groups = \groups_get_course_data($course->id);
             $details += array(
                 'groupings' => array(
-                    'key' => \get_string('groupings', 'group'),
+                    'key' => \get_string('groupings', 'core_group'),
                     'value' => count($groups->groupings)
                 ),
                 'groups' => array(
@@ -266,8 +266,8 @@ class helper {
         if ($category->can_review_permissions()) {
             $actions['permissions'] = array(
                 'url' => new \moodle_url('/admin/roles/permissions.php', ['contextid' => $category->get_context()->id]),
-                'icon' => new \pix_icon('i/permissions', new \lang_string('permissions', 'role')),
-                'string' => new \lang_string('permissions', 'role')
+                'icon' => new \pix_icon('i/permissions', new \lang_string('permissions', 'core_role')),
+                'string' => new \lang_string('permissions', 'core_role')
             );
         }
 
@@ -277,10 +277,10 @@ class helper {
             if (empty($parentcontext) || !$parentcontext->locked) {
                 if ($category->get_context()->locked) {
                     $lockicon = 'i/unlock';
-                    $lockstring = get_string('managecontextunlock', 'admin');
+                    $lockstring = get_string('managecontextunlock', 'core_admin');
                 } else {
                     $lockicon = 'i/lock';
-                    $lockstring = get_string('managecontextlock', 'admin');
+                    $lockstring = get_string('managecontextlock', 'core_admin');
                 }
                 $actions['managecontextlock'] = [
                     'url' => new \moodle_url('/admin/lock.php', [
@@ -297,8 +297,8 @@ class helper {
         if ($category->can_review_cohorts()) {
             $actions['cohorts'] = array(
                 'url' => new \moodle_url('/cohort/index.php', array('contextid' => $category->get_context()->id)),
-                'icon' => new \pix_icon('t/cohort', new \lang_string('cohorts', 'cohort')),
-                'string' => new \lang_string('cohorts', 'cohort')
+                'icon' => new \pix_icon('t/cohort', new \lang_string('cohorts', 'core_cohort')),
+                'string' => new \lang_string('cohorts', 'core_cohort')
             );
         }
 
@@ -307,16 +307,16 @@ class helper {
             $actions['filters'] = array(
                 'url' => new \moodle_url('/filter/manage.php', array('contextid' => $category->get_context()->id,
                     'return' => 'management')),
-                'icon' => new \pix_icon('i/filter', new \lang_string('filters', 'admin')),
-                'string' => new \lang_string('filters', 'admin')
+                'icon' => new \pix_icon('i/filter', new \lang_string('filters', 'core_admin')),
+                'string' => new \lang_string('filters', 'core_admin')
             );
         }
 
         if ($category->can_restore_courses_into()) {
             $actions['restore'] = array(
                 'url' => new \moodle_url('/backup/restorefile.php', array('contextid' => $category->get_context()->id)),
-                'icon' => new \pix_icon('i/restore', new \lang_string('restorecourse', 'admin')),
-                'string' => new \lang_string('restorecourse', 'admin')
+                'icon' => new \pix_icon('i/restore', new \lang_string('restorecourse', 'core_admin')),
+                'string' => new \lang_string('restorecourse', 'core_admin')
             );
         }
         // Recyclebyn.
@@ -445,7 +445,7 @@ class helper {
         if ($course->can_review_enrolments()) {
             $actions['enrolledusers'] = array(
                 'url' => new \moodle_url('/user/index.php', array('id' => $course->id)),
-                'string' => \get_string('enrolledusers', 'enrol')
+                'string' => \get_string('enrolledusers', 'core_enrol')
             );
         }
         // Delete.
@@ -497,7 +497,7 @@ class helper {
     public static function action_course_change_sortorder_up_one(\core_course_list_element $course,
                                                                  \core_course_category $category) {
         if (!$category->can_resort_courses()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_resort');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_resort');
         }
         return \course_change_sortorder_by_one($course, true);
     }
@@ -513,7 +513,7 @@ class helper {
     public static function action_course_change_sortorder_down_one(\core_course_list_element $course,
                                                                    \core_course_category $category) {
         if (!$category->can_resort_courses()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_resort');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_resort');
         }
         return \course_change_sortorder_by_one($course, false);
     }
@@ -563,7 +563,7 @@ class helper {
         $category = \core_course_category::get($course->category);
         if (!$category->can_resort_courses()) {
             $url = '/course/management.php?categoryid='.$course->category;
-            throw new \moodle_exception('nopermissions', 'error', $url, \get_string('resortcourses', 'moodle'));
+            throw new \moodle_exception('nopermissions', 'mod_error', $url, \get_string('resortcourses', 'moodle'));
         }
         return \course_change_sortorder_after_course($course, $moveaftercourseid);
     }
@@ -577,7 +577,7 @@ class helper {
      */
     public static function action_course_show(\core_course_list_element $course) {
         if (!$course->can_change_visibility()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null,
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null,
                 'core_course_list_element::can_change_visbility');
         }
         return course_change_visibility($course->id, true);
@@ -592,7 +592,7 @@ class helper {
      */
     public static function action_course_hide(\core_course_list_element $course) {
         if (!$course->can_change_visibility()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null,
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null,
                 'core_course_list_element::can_change_visbility');
         }
         return course_change_visibility($course->id, false);
@@ -637,7 +637,7 @@ class helper {
      */
     public static function action_category_change_sortorder_up_one(\core_course_category $category) {
         if (!$category->can_change_sortorder()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_change_sortorder');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_change_sortorder');
         }
         return $category->change_sortorder_by_one(true);
     }
@@ -651,7 +651,7 @@ class helper {
      */
     public static function action_category_change_sortorder_down_one(\core_course_category $category) {
         if (!$category->can_change_sortorder()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_change_sortorder');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_change_sortorder');
         }
         return $category->change_sortorder_by_one(false);
     }
@@ -687,7 +687,7 @@ class helper {
      */
     public static function action_category_hide(\core_course_category $category) {
         if (!$category->can_change_visibility()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_change_visbility');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_change_visbility');
         }
         $category->hide();
         return true;
@@ -702,7 +702,7 @@ class helper {
      */
     public static function action_category_show(\core_course_category $category) {
         if (!$category->can_change_visibility()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_change_visbility');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_change_visbility');
         }
         $category->show();
         return true;
@@ -739,7 +739,7 @@ class helper {
      */
     public static function action_category_resort_subcategories(\core_course_category $category, $sort, $cleanup = true) {
         if (!$category->can_resort_subcategories()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_resort');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_resort');
         }
         return $category->resort_subcategories($sort, $cleanup);
     }
@@ -755,7 +755,7 @@ class helper {
      */
     public static function action_category_resort_courses(\core_course_category $category, $sort, $cleanup = true) {
         if (!$category->can_resort_courses()) {
-            throw new \moodle_exception('permissiondenied', 'error', '', null, 'core_course_category::can_resort');
+            throw new \moodle_exception('permissiondenied', 'mod_error', '', null, 'core_course_category::can_resort');
         }
         return $category->resort_courses($sort, $cleanup);
     }

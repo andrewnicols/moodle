@@ -1085,7 +1085,7 @@ class flexible_table {
         global $OUTPUT;
 
         if ($this->is_downloadable() && !$this->is_downloading()) {
-            return $OUTPUT->download_dataformat_selector(get_string('downloadas', 'table'),
+            return $OUTPUT->download_dataformat_selector(get_string('downloadas', 'core_table'),
                     $this->baseurl->out_omit_querystring(), 'download', $this->baseurl->params());
         } else {
             return '';

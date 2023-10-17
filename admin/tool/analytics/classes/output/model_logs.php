@@ -69,7 +69,7 @@ class model_logs extends \table_sql {
             get_string('version'),
             get_string('evaluationmode', 'tool_analytics'),
             get_string('indicators', 'tool_analytics'),
-            get_string('timesplittingmethod', 'analytics'),
+            get_string('timesplittingmethod', 'core_analytics'),
             get_string('accuracy', 'tool_analytics'),
             get_string('info', 'tool_analytics'),
             get_string('fullnameuser'),

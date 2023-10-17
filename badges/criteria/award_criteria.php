@@ -176,7 +176,7 @@ abstract class award_criteria {
         $types = badges_list_criteria(false);
 
         if (!isset($params['criteriatype']) || !isset($types[$params['criteriatype']])) {
-            throw new \moodle_exception('error:invalidcriteriatype', 'badges');
+            throw new \moodle_exception('error:invalidcriteriatype', 'core_badges');
         }
 
         $class = 'award_criteria_' . $types[$params['criteriatype']];
@@ -191,7 +191,7 @@ abstract class award_criteria {
      * @return string
      */
     public function get_title() {
-        return get_string('criteria_' . $this->criteriatype, 'badges');
+        return get_string('criteria_' . $this->criteriatype, 'core_badges');
     }
 
     /**
@@ -226,13 +226,13 @@ abstract class award_criteria {
                 '<div class="ml-3 mt-1 w-100 align-items-center">');
 
             if (in_array('grade', $this->optional_params)) {
-                $parameter[] =& $mform->createElement('static', 'mgrade_' . $param['id'], null, get_string('mingrade', 'badges'));
+                $parameter[] =& $mform->createElement('static', 'mgrade_' . $param['id'], null, get_string('mingrade', 'core_badges'));
                 $parameter[] =& $mform->createElement('text', 'grade_' . $param['id'], '', array('size' => '5'));
                 $mform->setType('grade_' . $param['id'], PARAM_INT);
             }
 
             if (in_array('bydate', $this->optional_params)) {
-                $parameter[] =& $mform->createElement('static', 'complby_' . $param['id'], null, get_string('bydate', 'badges'));
+                $parameter[] =& $mform->createElement('static', 'complby_' . $param['id'], null, get_string('bydate', 'core_badges'));
                 $parameter[] =& $mform->createElement('date_selector', 'bydate_' . $param['id'], "", array('optional' => true));
             }
 
@@ -240,7 +240,7 @@ abstract class award_criteria {
             $mform->addGroup($parameter, 'param_' . $prefix . $param['id'], '', array(' '), false);
             if (in_array('grade', $this->optional_params)) {
                 $mform->addGroupRule('param_' . $prefix . $param['id'], array(
-                    'grade_' . $param['id'] => array(array(get_string('err_numeric', 'form'), 'numeric', '', 'client'))));
+                    'grade_' . $param['id'] => array(array(get_string('err_numeric', 'core_form'), 'numeric', '', 'client'))));
             }
             $mform->disabledIf('bydate_' . $param['id'] . '[day]', 'bydate_' . $param['id'] . '[enabled]', 'notchecked');
             $mform->disabledIf('bydate_' . $param['id'] . '[month]', 'bydate_' . $param['id'] . '[enabled]', 'notchecked');
@@ -290,10 +290,10 @@ abstract class award_criteria {
 
         if (!empty($this->params)) {
             if (count($this->params) > 1) {
-                echo $OUTPUT->box(get_string('criteria_descr_' . $this->criteriatype, 'badges',
+                echo $OUTPUT->box(get_string('criteria_descr_' . $this->criteriatype, 'core_badges',
                         core_text::strtoupper($agg[$data->get_aggregation_method($this->criteriatype)])), array('clearfix'));
             } else {
-                echo $OUTPUT->box(get_string('criteria_descr_single_' . $this->criteriatype , 'badges'), array('clearfix'));
+                echo $OUTPUT->box(get_string('criteria_descr_single_' . $this->criteriatype , 'core_badges'), array('clearfix'));
             }
             echo $OUTPUT->box($this->get_details(), array('clearfix'));
         }

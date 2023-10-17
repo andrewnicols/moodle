@@ -45,7 +45,7 @@ class upgradecheck extends check {
      * @return string
      */
     public function get_name(): string {
-        return get_string('checkupgradepending', 'admin');
+        return get_string('checkupgradepending', 'core_admin');
     }
 
     /**
@@ -56,7 +56,7 @@ class upgradecheck extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/index.php?cache=1'),
-            get_string('notifications', 'admin'));
+            get_string('notifications', 'core_admin'));
     }
 
     /**
@@ -71,10 +71,10 @@ class upgradecheck extends check {
 
         if ($version < $CFG->version) {
             $status = result::ERROR;
-            $summary = get_string('downgradedcore', 'error');
+            $summary = get_string('downgradedcore', 'mod_error');
         } else if (moodle_needs_upgrading()) {
             $status = result::ERROR;
-            $summary = get_string('cliupgradepending', 'admin');
+            $summary = get_string('cliupgradepending', 'core_admin');
         } else {
             $status = result::OK;
             $summary = get_string('cliupgradenoneed', 'core_admin', $newversion);

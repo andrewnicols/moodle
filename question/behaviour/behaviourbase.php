@@ -564,19 +564,19 @@ abstract class question_behaviour {
 
         $mark = question_utils::clean_param_mark($step->get_behaviour_var('mark'));
         if (is_null($mark) || $mark === '') {
-            return get_string('commented', 'question', $a->comment);
+            return get_string('commented', 'core_question', $a->comment);
         } else {
             $a->mark = $mark / $step->get_behaviour_var('maxmark') * $this->qa->get_max_mark();
-            return get_string('manuallygraded', 'question', $a);
+            return get_string('manuallygraded', 'core_question', $a);
         }
     }
 
     public function summarise_start($step) {
-        return get_string('started', 'question');
+        return get_string('started', 'core_question');
     }
 
     public function summarise_finish($step) {
-        return get_string('attemptfinished', 'question');
+        return get_string('attemptfinished', 'core_question');
     }
 
     /**
@@ -689,7 +689,7 @@ abstract class question_behaviour_with_save extends question_behaviour {
     }
 
     public function summarise_submit(question_attempt_step $step) {
-        return get_string('submitted', 'question',
+        return get_string('submitted', 'core_question',
                 $this->question->summarise_response($step->get_qt_data()));
     }
 
@@ -698,7 +698,7 @@ abstract class question_behaviour_with_save extends question_behaviour {
         if (empty($data)) {
             return $this->summarise_start($step);
         }
-        return get_string('saved', 'question',
+        return get_string('saved', 'core_question',
                 $this->question->summarise_response($step->get_qt_data()));
     }
 
@@ -706,10 +706,10 @@ abstract class question_behaviour_with_save extends question_behaviour {
     public function summarise_finish($step) {
         $data = $step->get_qt_data();
         if ($data) {
-            return get_string('attemptfinishedsubmitting', 'question',
+            return get_string('attemptfinishedsubmitting', 'core_question',
                     $this->question->summarise_response($data));
         }
-        return get_string('attemptfinished', 'question');
+        return get_string('attemptfinished', 'core_question');
     }
 }
 

@@ -143,7 +143,7 @@ class general_action_bar extends action_bar {
                         if ($key !== 'course') {
                             continue 2;
                         }
-                        $moregroup[$plugin->link->out(false)] = get_string('outcomes', 'grades');
+                        $moregroup[$plugin->link->out(false)] = get_string('outcomes', 'core_grades');
                         break;
                     case 'letter':
                         // We only need the link to the 'view grade letters' page, otherwise skip and continue to the
@@ -151,7 +151,7 @@ class general_action_bar extends action_bar {
                         if ($key !== 'view') {
                             continue 2;
                         }
-                        $moregroup[$plugin->link->out(false)] = get_string('gradeletters', 'grades');
+                        $moregroup[$plugin->link->out(false)] = get_string('gradeletters', 'core_grades');
                         break;
                     case 'import':
                         $link = new moodle_url('/grade/import/index.php', ['id' => $courseid]);
@@ -160,7 +160,7 @@ class general_action_bar extends action_bar {
                         if (array_key_exists($link->out(false), $moregroup)) {
                             continue 2;
                         }
-                        $moregroup[$link->out(false)] = get_string('import', 'grades');
+                        $moregroup[$link->out(false)] = get_string('import', 'core_grades');
                         break;
                     case 'export':
                         $link = new moodle_url('/grade/export/index.php', ['id' => $courseid]);
@@ -169,7 +169,7 @@ class general_action_bar extends action_bar {
                         if (array_key_exists($link->out(false), $moregroup)) {
                             continue 2;
                         }
-                        $moregroup[$link->out(false)] = get_string('export', 'grades');
+                        $moregroup[$link->out(false)] = get_string('export', 'core_grades');
                         break;
                 }
             }
@@ -180,7 +180,7 @@ class general_action_bar extends action_bar {
         }
 
         if (!empty($setupgroup)) {
-            $menu[][get_string('setup', 'grades')] = $setupgroup;
+            $menu[][get_string('setup', 'core_grades')] = $setupgroup;
         }
 
         if (!empty($moregroup)) {
@@ -188,7 +188,7 @@ class general_action_bar extends action_bar {
         }
 
         $selectmenu = new select_menu('gradesactionselect', $menu, $this->activeurl->out(false));
-        $selectmenu->set_label(get_string('gradebooknavigationmenu', 'grades'), ['class' => 'sr-only']);
+        $selectmenu->set_label(get_string('gradebooknavigationmenu', 'core_grades'), ['class' => 'sr-only']);
 
         return $selectmenu;
     }

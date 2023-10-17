@@ -80,7 +80,7 @@ class delete extends external_api {
             $warnings = [
                 'item' => $subscriptionid,
                 'warningcode' => 'errordeletingsubscription',
-                'message' => get_string('nopermissions', 'error')
+                'message' => get_string('nopermissions', 'mod_error')
             ];
         }
         return [

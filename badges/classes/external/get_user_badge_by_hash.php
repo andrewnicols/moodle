@@ -74,7 +74,7 @@ class get_user_badge_by_hash extends external_api {
         ]);
 
         if (empty($CFG->enablebadges)) {
-            throw new moodle_exception('badgesdisabled', 'badges');
+            throw new moodle_exception('badgesdisabled', 'core_badges');
         }
 
         // Get the badge by hash.
@@ -88,7 +88,7 @@ class get_user_badge_by_hash extends external_api {
             $warnings[] = [
                 'item'        => $hash,
                 'warningcode' => 'badgeawardnotfound',
-                'message'     => get_string('error:badgeawardnotfound', 'badges')
+                'message'     => get_string('error:badgeawardnotfound', 'core_badges')
             ];
         }
 

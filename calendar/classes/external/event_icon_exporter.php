@@ -74,7 +74,7 @@ class event_icon_exporter extends exporter {
             if (get_string_manager()->string_exists($event->get_type(), $component)) {
                 $alttext = get_string($event->get_type(), $component);
             } else {
-                $alttext = get_string('activityevent', 'calendar');
+                $alttext = get_string('activityevent', 'core_calendar');
             }
         } else if ($event->get_component()) {
             // Guess the icon and the title for the component event. By default display calendar icon and the
@@ -95,28 +95,28 @@ class event_icon_exporter extends exporter {
         } else if ($issiteevent) {
             $key = 'i/siteevent';
             $component = 'core';
-            $alttext = get_string('typesite', 'calendar');
+            $alttext = get_string('typesite', 'core_calendar');
         } else if ($iscategoryevent) {
             $key = 'i/categoryevent';
             $component = 'core';
-            $alttext = get_string('typecategory', 'calendar');
+            $alttext = get_string('typecategory', 'core_calendar');
         } else if ($iscourseevent) {
             $key = 'i/courseevent';
             $component = 'core';
-            $alttext = get_string('typecourse', 'calendar');
+            $alttext = get_string('typecourse', 'core_calendar');
         } else if ($isgroupevent) {
             $key = 'i/groupevent';
             $component = 'core';
-            $alttext = get_string('typegroup', 'calendar');
+            $alttext = get_string('typegroup', 'core_calendar');
         } else if ($isuserevent) {
             $key = 'i/userevent';
             $component = 'core';
-            $alttext = get_string('typeuser', 'calendar');
+            $alttext = get_string('typeuser', 'core_calendar');
         } else {
             // Default to site event icon?
             $key = 'i/siteevent';
             $component = 'core';
-            $alttext = get_string('typesite', 'calendar');
+            $alttext = get_string('typesite', 'core_calendar');
         }
 
         $data = new \stdClass();

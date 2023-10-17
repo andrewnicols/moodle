@@ -86,7 +86,7 @@ class lesson_override_form extends moodleform {
         $cm = $this->cm;
         $mform = $this->_form;
 
-        $mform->addElement('header', 'override', get_string('override', 'lesson'));
+        $mform->addElement('header', 'override', get_string('override', 'mod_lesson'));
 
         $lessongroupmode = groups_get_activity_groupmode($cm);
         $accessallgroups = ($lessongroupmode == NOGROUPS) || has_capability('moodle/site:accessallgroups', $this->context);
@@ -99,7 +99,7 @@ class lesson_override_form extends moodleform {
                     $this->groupid => format_string(groups_get_group_name($this->groupid), true, $this->context),
                 ];
                 $mform->addElement('select', 'groupid',
-                        get_string('overridegroup', 'lesson'), $groupchoices);
+                        get_string('overridegroup', 'mod_lesson'), $groupchoices);
                 $mform->freeze('groupid');
             } else {
                 // Prepare the list of groups.
@@ -108,7 +108,7 @@ class lesson_override_form extends moodleform {
                 if (empty($groups)) {
                     // Generate an error.
                     $link = new moodle_url('/mod/lesson/overrides.php', array('cmid' => $cm->id));
-                    throw new \moodle_exception('groupsnone', 'lesson', $link);
+                    throw new \moodle_exception('groupsnone', 'mod_lesson', $link);
                 }
 
                 $groupchoices = array();
@@ -124,7 +124,7 @@ class lesson_override_form extends moodleform {
                 }
 
                 $mform->addElement('select', 'groupid',
-                        get_string('overridegroup', 'lesson'), $groupchoices);
+                        get_string('overridegroup', 'mod_lesson'), $groupchoices);
                 $mform->addRule('groupid', get_string('required'), 'required', null, 'client');
             }
         } else {
@@ -135,7 +135,7 @@ class lesson_override_form extends moodleform {
                 $userchoices = array();
                 $userchoices[$this->userid] = fullname($user);
                 $mform->addElement('select', 'userid',
-                        get_string('overrideuser', 'lesson'), $userchoices);
+                        get_string('overrideuser', 'mod_lesson'), $userchoices);
                 $mform->freeze('userid');
             } else {
                 // Prepare the list of users.
@@ -160,7 +160,7 @@ class lesson_override_form extends moodleform {
                 if (empty($users)) {
                     // Generate an error.
                     $link = new moodle_url('/mod/lesson/overrides.php', array('cmid' => $cm->id));
-                    throw new \moodle_exception('usersnone', 'lesson', $link);
+                    throw new \moodle_exception('usersnone', 'mod_lesson', $link);
                 }
 
                 $userchoices = array();
@@ -182,7 +182,7 @@ class lesson_override_form extends moodleform {
                     $userchoices[0] = get_string('none');
                 }
                 $mform->addElement('searchableselector', 'userid',
-                        get_string('overrideuser', 'lesson'), $userchoices);
+                        get_string('overrideuser', 'mod_lesson'), $userchoices);
                 $mform->addRule('userid', get_string('required'), 'required', null, 'client');
             }
         }
@@ -190,21 +190,21 @@ class lesson_override_form extends moodleform {
         // Password.
         // This field has to be above the date and timelimit fields,
         // otherwise browsers will clear it when those fields are changed.
-        $mform->addElement('passwordunmask', 'password', get_string('usepassword', 'lesson'));
+        $mform->addElement('passwordunmask', 'password', get_string('usepassword', 'mod_lesson'));
         $mform->setType('password', PARAM_TEXT);
         $mform->addHelpButton('password', 'usepassword', 'lesson');
         $mform->setDefault('password', $this->lesson->password);;
 
         // Open and close dates.
-        $mform->addElement('date_time_selector', 'available', get_string('available', 'lesson'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'available', get_string('available', 'mod_lesson'), array('optional' => true));
         $mform->setDefault('available', $this->lesson->available);
 
-        $mform->addElement('date_time_selector', 'deadline', get_string('deadline', 'lesson'), array('optional' => true));
+        $mform->addElement('date_time_selector', 'deadline', get_string('deadline', 'mod_lesson'), array('optional' => true));
         $mform->setDefault('deadline', $this->lesson->deadline);
 
         // Lesson time limit.
         $mform->addElement('duration', 'timelimit',
-                get_string('timelimit', 'lesson'), array('optional' => true));
+                get_string('timelimit', 'mod_lesson'), array('optional' => true));
         if ($this->lesson->timelimit != 0) {
             $mform->setDefault('timelimit', 0);
         } else {
@@ -212,7 +212,7 @@ class lesson_override_form extends moodleform {
         }
 
         // Try a question again.
-        $mform->addElement('selectyesno', 'review', get_string('displayreview', 'lesson'));
+        $mform->addElement('selectyesno', 'review', get_string('displayreview', 'mod_lesson'));
         $mform->addHelpButton('review', 'displayreview', 'lesson');
         $mform->setDefault('review', $this->lesson->review);
 
@@ -221,24 +221,24 @@ class lesson_override_form extends moodleform {
         for ($i = 10; $i > 0; $i--) {
             $numbers[$i] = $i;
         }
-        $mform->addElement('select', 'maxattempts', get_string('maximumnumberofattempts', 'lesson'), $numbers);
+        $mform->addElement('select', 'maxattempts', get_string('maximumnumberofattempts', 'mod_lesson'), $numbers);
         $mform->addHelpButton('maxattempts', 'maximumnumberofattempts', 'lesson');
         $mform->setDefault('maxattempts', $this->lesson->maxattempts);
 
         // Retake allowed.
-        $mform->addElement('selectyesno', 'retake', get_string('retakesallowed', 'lesson'));
+        $mform->addElement('selectyesno', 'retake', get_string('retakesallowed', 'mod_lesson'));
         $mform->addHelpButton('retake', 'retakesallowed', 'lesson');
         $mform->setDefault('retake', $this->lesson->retake);
 
         // Submit buttons.
         $mform->addElement('submit', 'resetbutton',
-                get_string('reverttodefaults', 'lesson'));
+                get_string('reverttodefaults', 'mod_lesson'));
 
         $buttonarray = array();
         $buttonarray[] = $mform->createElement('submit', 'submitbutton',
-                get_string('save', 'lesson'));
+                get_string('save', 'mod_lesson'));
         $buttonarray[] = $mform->createElement('submit', 'againbutton',
-                get_string('saveoverrideandstay', 'lesson'));
+                get_string('saveoverrideandstay', 'mod_lesson'));
         $buttonarray[] = $mform->createElement('cancel');
 
         $mform->addGroup($buttonarray, 'buttonbar', '', array(' '), false);
@@ -274,7 +274,7 @@ class lesson_override_form extends moodleform {
         // Ensure that the dates make sense.
         if (!empty($data['available']) && !empty($data['deadline'])) {
             if ($data['deadline'] < $data['available'] ) {
-                $errors['deadline'] = get_string('closebeforeopen', 'lesson');
+                $errors['deadline'] = get_string('closebeforeopen', 'mod_lesson');
             }
         }
 
@@ -289,7 +289,7 @@ class lesson_override_form extends moodleform {
         }
 
         if (!$changed) {
-            $errors['available'] = get_string('nooverridedata', 'lesson');
+            $errors['available'] = get_string('nooverridedata', 'mod_lesson');
         }
 
         return $errors;

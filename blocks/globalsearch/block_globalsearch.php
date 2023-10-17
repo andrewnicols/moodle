@@ -60,7 +60,7 @@ class block_globalsearch extends block_base {
         $this->content->footer = '';
 
         if (\core_search\manager::is_global_search_enabled() === false) {
-            $this->content->text = get_string('globalsearchdisabled', 'search');
+            $this->content->text = get_string('globalsearchdisabled', 'core_search');
             return $this->content;
         }
 

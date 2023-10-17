@@ -35,22 +35,22 @@ $PAGE->set_url($pageurl);
 
 admin_externalpage_setup('ltitoolproxies');
 
-$PAGE->set_title(get_string('toolregistration', 'lti'));
+$PAGE->set_title(get_string('toolregistration', 'mod_lti'));
 
 $configuredtoolproxieshtml = '';
 $pendingtoolproxieshtml = '';
 $acceptedtoolproxieshtml = '';
 $rejectedtoolproxieshtml = '';
 
-$configured = get_string('configured', 'lti');
-$pending = get_string('pending', 'lti');
-$accepted = get_string('accepted', 'lti');
-$rejected = get_string('rejected', 'lti');
+$configured = get_string('configured', 'mod_lti');
+$pending = get_string('pending', 'mod_lti');
+$accepted = get_string('accepted', 'mod_lti');
+$rejected = get_string('rejected', 'mod_lti');
 
-$name = get_string('name', 'lti');
-$url = get_string('registrationurl', 'lti');
-$action = get_string('action', 'lti');
-$createdon = get_string('createdon', 'lti');
+$name = get_string('name', 'mod_lti');
+$url = get_string('registrationurl', 'mod_lti');
+$action = get_string('action', 'mod_lti');
+$createdon = get_string('createdon', 'mod_lti');
 
 $toolproxies = $DB->get_records('lti_tool_proxies');
 
@@ -85,8 +85,8 @@ switch ($tab) {
         $configuredselected = 'class="selected"';
         break;
 }
-$registertype = get_string('registertype', 'lti');
-$config = get_string('manage_tools', 'lti');
+$registertype = get_string('registertype', 'mod_lti');
+$config = get_string('manage_tools', 'mod_lti');
 
 $registertypeurl = "{$CFG->wwwroot}/mod/lti/registersettings.php?action=add&amp;sesskey={$USER->sesskey}&amp;tab=tool_proxy";
 
@@ -181,8 +181,8 @@ $template = <<< EOD
 EOD;
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('manage_tool_proxies', 'lti'), 2);
-echo $OUTPUT->heading(new lang_string('toolproxy', 'lti') .
+echo $OUTPUT->heading(get_string('manage_tool_proxies', 'mod_lti'), 2);
+echo $OUTPUT->heading(new lang_string('toolproxy', 'mod_lti') .
         $OUTPUT->help_icon('toolproxy', 'lti'), 3);
 
 echo $OUTPUT->box_start('generalbox');

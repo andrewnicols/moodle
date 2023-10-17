@@ -128,11 +128,11 @@ class core_grades_renderer extends plugin_renderer_base {
 
         $currentfilter = '';
         if ($firstinitial !== '' && $lastinitial !== '') {
-            $currentfilter = get_string('filterbothactive', 'grades', ['first' => $firstinitial, 'last' => $lastinitial]);
+            $currentfilter = get_string('filterbothactive', 'core_grades', ['first' => $firstinitial, 'last' => $lastinitial]);
         } else if ($firstinitial !== '') {
-            $currentfilter = get_string('filterfirstactive', 'grades', ['first' => $firstinitial]);
+            $currentfilter = get_string('filterfirstactive', 'core_grades', ['first' => $firstinitial]);
         } else if ($lastinitial !== '') {
-            $currentfilter = get_string('filterlastactive', 'grades', ['last' => $lastinitial]);
+            $currentfilter = get_string('filterlastactive', 'core_grades', ['last' => $lastinitial]);
         }
 
         $this->page->requires->js_call_amd('core_grades/searchwidget/initials', 'init', [$slug, $userid, $searchvalue]);
@@ -175,7 +175,7 @@ class core_grades_renderer extends plugin_renderer_base {
             $messagelinkattributes[] = ['name' => 'class', 'value' => 'btn px-0'];
 
             $headingdata['buttons'][] = [
-                'title' => get_string('message', 'message'),
+                'title' => get_string('message', 'core_message'),
                 'url' => (new moodle_url('/message/index.php', ['id' => $user->id]))->out(false),
                 'icon' => ['name' => 't/message', 'component' => 'core'],
                 'linkattributes' => $messagelinkattributes
@@ -199,7 +199,7 @@ class core_grades_renderer extends plugin_renderer_base {
                 }, array_keys($togglelinkparams), $togglelinkparams);
 
                 $headingdata['buttons'][] = [
-                    'title' => get_string($contacttitle, 'message'),
+                    'title' => get_string($contacttitle, 'core_message'),
                     'url' => (new moodle_url('/message/index.php', ['user1' => $USER->id, 'user2' => $user->id,
                         $contacturlaction => $user->id, 'sesskey' => sesskey()]))->out(false),
                     'icon' => ['name' => $contacticon, 'component' => 'core'],

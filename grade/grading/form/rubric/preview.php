@@ -39,7 +39,7 @@ $controller = $manager->get_controller('rubric');
 $options = $controller->get_options();
 
 if (!$controller->is_form_defined() || empty($options['alwaysshowdefinition'])) {
-    throw new moodle_exception('nopermissions', 'error', '', get_string('previewrubric', 'gradingform_rubric'));
+    throw new moodle_exception('nopermissions', 'mod_error', '', get_string('previewrubric', 'gradingform_rubric'));
 }
 
 $title = get_string('gradingof', 'gradingform_rubric', $manager->get_area_title());

@@ -56,7 +56,7 @@ class badge_listing_viewed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventbadgelistingviewed', 'badges');
+        return get_string('eventbadgelistingviewed', 'core_badges');
     }
 
     /**

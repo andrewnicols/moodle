@@ -174,17 +174,17 @@ $documentationlink = '<a href="http://docs.moodle.org/en/Installation">Installat
 // Check some PHP server settings
 
 if (ini_get_bool('session.auto_start')) {
-    throw new \moodle_exception('phpvaroff', 'debug', '',
+    throw new \moodle_exception('phpvaroff', 'mod_debug', '',
         (object)array('name' => 'session.auto_start', 'link' => $documentationlink));
 }
 
 if (!ini_get_bool('file_uploads')) {
-    throw new \moodle_exception('phpvaron', 'debug', '',
+    throw new \moodle_exception('phpvaron', 'mod_debug', '',
         (object)array('name' => 'file_uploads', 'link' => $documentationlink));
 }
 
 if (is_float_problem()) {
-    throw new \moodle_exception('phpfloatproblem', 'admin', '', $documentationlink);
+    throw new \moodle_exception('phpfloatproblem', 'core_admin', '', $documentationlink);
 }
 
 // Set some necessary variables during set-up to avoid PHP warnings later on this page
@@ -205,7 +205,7 @@ require("$CFG->dirroot/version.php");       // defines $version, $release, $bran
 $CFG->target_release = $release;            // used during installation and upgrades
 
 if (!$version or !$release) {
-    throw new \moodle_exception('withoutversion', 'debug'); // Without version, stop.
+    throw new \moodle_exception('withoutversion', 'mod_debug'); // Without version, stop.
 }
 
 if (!core_tables_exist()) {
@@ -215,7 +215,7 @@ if (!core_tables_exist()) {
     // fake some settings
     $CFG->docroot = 'http://docs.moodle.org';
 
-    $strinstallation = get_string('installation', 'install');
+    $strinstallation = get_string('installation', 'mod_install');
 
     // remove current session content completely
     \core\session\manager::terminate_current();
@@ -250,7 +250,7 @@ if (!core_tables_exist()) {
     // check plugin dependencies
     $failed = array();
     if (!core_plugin_manager::instance()->all_plugins_ok($version, $failed, $CFG->branch)) {
-        $PAGE->navbar->add(get_string('pluginscheck', 'admin'));
+        $PAGE->navbar->add(get_string('pluginscheck', 'core_admin'));
         $PAGE->set_title($strinstallation);
         $PAGE->set_heading($strinstallation . ' - Moodle ' . $CFG->target_release);
 
@@ -277,7 +277,7 @@ if (!core_tables_exist()) {
     if (!$DB->setup_is_unicodedb()) {
         if (!$DB->change_db_encoding()) {
             // If could not convert successfully, throw error, and prevent installation
-            throw new \moodle_exception('unicoderequired', 'admin');
+            throw new \moodle_exception('unicoderequired', 'core_admin');
         }
     }
 
@@ -299,7 +299,7 @@ $stradministration = get_string('administration');
 $PAGE->set_context(context_system::instance());
 
 if (empty($CFG->version)) {
-    throw new \moodle_exception('missingconfigversion', 'debug');
+    throw new \moodle_exception('missingconfigversion', 'mod_debug');
 }
 
 // If an upgrade is running, an admin page starting a frontend upgrade could corrupt the
@@ -533,7 +533,7 @@ if (!$outagelessupgrade) {
         }
     } else if ($version < $CFG->version) {
         // Better stop here, we can not continue with plugin upgrades or anything else.
-        throw new moodle_exception('downgradedcore', 'error', new moodle_url('/admin/'));
+        throw new moodle_exception('downgradedcore', 'mod_error', new moodle_url('/admin/'));
     }
 
     // Updated human-readable release version if necessary.
@@ -755,7 +755,7 @@ if (!$outagelessupgrade) {
                 redirect("index.php?sessionstarted=1&sessionverify=1&lang=$CFG->lang");
             } else {
                 if (empty($SESSION->sessionverify)) {
-                    throw new \moodle_exception('installsessionerror', 'admin', "index.php?sessionstarted=1&lang=$CFG->lang");
+                    throw new \moodle_exception('installsessionerror', 'core_admin', "index.php?sessionstarted=1&lang=$CFG->lang");
                 }
                 unset($SESSION->sessionverify);
             }
@@ -773,7 +773,7 @@ if (!$outagelessupgrade) {
         if ($adminuser->password === 'adminsetuppending') {
             // Prevent installation hijacking.
             if ($adminuser->lastip !== getremoteaddr()) {
-                throw new \moodle_exception('installhijacked', 'admin');
+                throw new \moodle_exception('installhijacked', 'core_admin');
             }
             // Login user and let him set password and admin details.
             $adminuser->newadminuser = 1;
@@ -936,7 +936,7 @@ $servicesandsupportcontent = !isset($CFG->showservicesandsupportcontent) || $CFG
 require_once($CFG->libdir . '/environmentlib.php');
 $result = new environment_results('custom_checks');
 $result = check_xmlrpc_usage($result);
-$xmlrpcwarning = !is_null($result) ? get_string($result->getFeedbackStr(), 'admin') : '';
+$xmlrpcwarning = !is_null($result) ? get_string($result->getFeedbackStr(), 'core_admin') : '';
 
 admin_externalpage_setup('adminnotifications');
 

@@ -72,7 +72,7 @@ class qtype_shortanswer extends question_type {
         }
 
         if ($maxfraction != 1) {
-            $result->error = get_string('fractionsnomax', 'question', $maxfraction * 100);
+            $result->error = get_string('fractionsnomax', 'core_question', $maxfraction * 100);
             return $result;
         }
 
@@ -117,7 +117,7 @@ class qtype_shortanswer extends question_type {
 
         if (!$starfound) {
             $responses[0] = new question_possible_response(
-                    get_string('didnotmatchanyanswer', 'question'), 0);
+                    get_string('didnotmatchanyanswer', 'core_question'), 0);
         }
 
         $responses[null] = question_possible_response::no_response();

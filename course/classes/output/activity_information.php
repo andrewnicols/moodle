@@ -160,7 +160,7 @@ class activity_information implements renderable, templatable {
                 'setby' => $data->overrideby,
             ];
             $setbylangkey = $data->overallcomplete ? 'completion_setby:manual:done' : 'completion_setby:manual:markdone';
-            $data->accessibledescription = get_string($setbylangkey, 'course', $setbydata);
+            $data->accessibledescription = get_string($setbylangkey, 'core_course', $setbydata);
         }
 
         // Whether the completion of this activity controls the availability of other activities/sections in the course.
@@ -194,7 +194,7 @@ class activity_information implements renderable, templatable {
                     'setby' => $data->overrideby,
                 ];
                 $overridestatus = $detail->statuscomplete ? 'done' : 'todo';
-                $detail->accessibledescription = get_string('completion_setby:auto:' . $overridestatus, 'course', $setbydata);
+                $detail->accessibledescription = get_string('completion_setby:auto:' . $overridestatus, 'core_course', $setbydata);
             }
 
             // We don't need the status in the template.

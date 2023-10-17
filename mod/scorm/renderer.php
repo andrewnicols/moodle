@@ -58,7 +58,7 @@ class mod_scorm_renderer extends plugin_renderer_base {
         $attemptbar->prepare($this, $this->page, $this->target);
 
         if (count($attemptbar->attemptids) > 1) {
-            $output .= get_string('attempt', 'scorm') . ':';
+            $output .= get_string('attempt', 'mod_scorm') . ':';
 
             if (!empty($attemptbar->previouslink)) {
                 $output .= '&#160;(' . $attemptbar->previouslink . ')&#160;';

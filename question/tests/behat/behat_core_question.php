@@ -132,7 +132,7 @@ class behat_core_question extends behat_question_base {
      */
     public function i_add_a_question_filling_the_form_with($questiontypename, TableNode $questiondata) {
         // Click on create question.
-        $this->execute('behat_forms::press_button', get_string('createnewquestion', 'question'));
+        $this->execute('behat_forms::press_button', get_string('createnewquestion', 'core_question'));
 
         // Add question.
         $this->finish_adding_question($questiontypename, $questiondata);

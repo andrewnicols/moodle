@@ -58,7 +58,7 @@ class tag_deleted extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventtagdeleted', 'tag');
+        return get_string('eventtagdeleted', 'core_tag');
     }
 
     /**

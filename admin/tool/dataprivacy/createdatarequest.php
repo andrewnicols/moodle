@@ -88,17 +88,17 @@ if ($data = $mform->get_data()) {
     if ($data->type == \tool_dataprivacy\api::DATAREQUEST_TYPE_DELETE) {
         if ($data->userid == $USER->id) {
             if (!\tool_dataprivacy\api::can_create_data_deletion_request_for_self()) {
-                throw new moodle_exception('nopermissions', 'error', '',
+                throw new moodle_exception('nopermissions', 'mod_error', '',
                     get_string('errorcannotrequestdeleteforself', 'tool_dataprivacy'));
             }
         } else if (!\tool_dataprivacy\api::can_create_data_deletion_request_for_other()
             && !\tool_dataprivacy\api::can_create_data_deletion_request_for_children($data->userid)) {
-            throw new moodle_exception('nopermissions', 'error', '',
+            throw new moodle_exception('nopermissions', 'mod_error', '',
                 get_string('errorcannotrequestdeleteforother', 'tool_dataprivacy'));
         }
     } else if ($data->type == \tool_dataprivacy\api::DATAREQUEST_TYPE_EXPORT) {
         if ($data->userid == $USER->id && !\tool_dataprivacy\api::can_create_data_download_request_for_self()) {
-            throw new moodle_exception('nopermissions', 'error', '',
+            throw new moodle_exception('nopermissions', 'mod_error', '',
                 get_string('errorcannotrequestexportforself', 'tool_dataprivacy'));
         }
     }

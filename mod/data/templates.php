@@ -100,11 +100,11 @@ if (($formdata = data_submitted()) && confirm_sesskey()) {
             $notificationstr = get_string('templateresetall', 'mod_data');
         } else {
             $manager->reset_template($mode);
-            $notificationstr = get_string('templatereset', 'data');
+            $notificationstr = get_string('templatereset', 'mod_data');
         }
     } else {
         $manager->update_templates($formdata);
-        $notificationstr = get_string('templatesaved', 'data');
+        $notificationstr = get_string('templatesaved', 'mod_data');
     }
 }
 

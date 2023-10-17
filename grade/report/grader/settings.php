@@ -26,50 +26,50 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
 
-    $strinherit             = get_string('inherit', 'grades');
-    $strpercentage          = get_string('percentage', 'grades');
-    $strreal                = get_string('real', 'grades');
-    $strletter              = get_string('letter', 'grades');
+    $strinherit             = get_string('inherit', 'core_grades');
+    $strpercentage          = get_string('percentage', 'core_grades');
+    $strreal                = get_string('real', 'core_grades');
+    $strletter              = get_string('letter', 'core_grades');
 
-    $settings->add(new admin_setting_configcheckbox('grade_report_showonlyactiveenrol', get_string('showonlyactiveenrol', 'grades'),
-                                                get_string('showonlyactiveenrol_help', 'grades'), 1));
+    $settings->add(new admin_setting_configcheckbox('grade_report_showonlyactiveenrol', get_string('showonlyactiveenrol', 'core_grades'),
+                                                get_string('showonlyactiveenrol_help', 'core_grades'), 1));
 
-    $settings->add(new admin_setting_configcheckbox('grade_report_quickgrading', get_string('quickgrading', 'grades'),
-                                                get_string('quickgrading_help', 'grades'), 1));
+    $settings->add(new admin_setting_configcheckbox('grade_report_quickgrading', get_string('quickgrading', 'core_grades'),
+                                                get_string('quickgrading_help', 'core_grades'), 1));
 
-    $settings->add(new admin_setting_configselect('grade_report_meanselection', get_string('meanselection', 'grades'),
-                                              get_string('meanselection_help', 'grades'), GRADE_REPORT_MEAN_GRADED,
-                                              array(GRADE_REPORT_MEAN_ALL => get_string('meanall', 'grades'),
-                                                    GRADE_REPORT_MEAN_GRADED => get_string('meangraded', 'grades'))));
+    $settings->add(new admin_setting_configselect('grade_report_meanselection', get_string('meanselection', 'core_grades'),
+                                              get_string('meanselection_help', 'core_grades'), GRADE_REPORT_MEAN_GRADED,
+                                              array(GRADE_REPORT_MEAN_ALL => get_string('meanall', 'core_grades'),
+                                                    GRADE_REPORT_MEAN_GRADED => get_string('meangraded', 'core_grades'))));
 
-    $settings->add(new admin_setting_configcheckbox('grade_report_showaverages', get_string('showaverages', 'grades'),
-                                                get_string('showaverages_help', 'grades'), 1));
+    $settings->add(new admin_setting_configcheckbox('grade_report_showaverages', get_string('showaverages', 'core_grades'),
+                                                get_string('showaverages_help', 'core_grades'), 1));
 
-    $settings->add(new admin_setting_configcheckbox('grade_report_showranges', get_string('showranges', 'grades'),
-                                                get_string('showranges_help', 'grades'), 0));
+    $settings->add(new admin_setting_configcheckbox('grade_report_showranges', get_string('showranges', 'core_grades'),
+                                                get_string('showranges_help', 'core_grades'), 0));
 
-    $settings->add(new admin_setting_configcheckbox('grade_report_showuserimage', get_string('showuserimage', 'grades'),
-                                                get_string('showuserimage_help', 'grades'), 1));
+    $settings->add(new admin_setting_configcheckbox('grade_report_showuserimage', get_string('showuserimage', 'core_grades'),
+                                                get_string('showuserimage_help', 'core_grades'), 1));
 
-    $settings->add(new admin_setting_configcheckbox('grade_report_shownumberofgrades', get_string('shownumberofgrades', 'grades'),
-                                                get_string('shownumberofgrades_help', 'grades'), 0));
+    $settings->add(new admin_setting_configcheckbox('grade_report_shownumberofgrades', get_string('shownumberofgrades', 'core_grades'),
+                                                get_string('shownumberofgrades_help', 'core_grades'), 0));
 
-    $settings->add(new admin_setting_configselect('grade_report_averagesdisplaytype', get_string('averagesdisplaytype', 'grades'),
-                                              get_string('averagesdisplaytype_help', 'grades'), GRADE_REPORT_PREFERENCE_INHERIT,
+    $settings->add(new admin_setting_configselect('grade_report_averagesdisplaytype', get_string('averagesdisplaytype', 'core_grades'),
+                                              get_string('averagesdisplaytype_help', 'core_grades'), GRADE_REPORT_PREFERENCE_INHERIT,
                                               array(GRADE_REPORT_PREFERENCE_INHERIT => $strinherit,
                                                     GRADE_DISPLAY_TYPE_REAL => $strreal,
                                                     GRADE_DISPLAY_TYPE_PERCENTAGE => $strpercentage,
                                                     GRADE_DISPLAY_TYPE_LETTER => $strletter)));
 
-    $settings->add(new admin_setting_configselect('grade_report_rangesdisplaytype', get_string('rangesdisplaytype', 'grades'),
-                                              get_string('rangesdisplaytype_help', 'grades'), GRADE_REPORT_PREFERENCE_INHERIT,
+    $settings->add(new admin_setting_configselect('grade_report_rangesdisplaytype', get_string('rangesdisplaytype', 'core_grades'),
+                                              get_string('rangesdisplaytype_help', 'core_grades'), GRADE_REPORT_PREFERENCE_INHERIT,
                                               array(GRADE_REPORT_PREFERENCE_INHERIT => $strinherit,
                                                     GRADE_DISPLAY_TYPE_REAL => $strreal,
                                                     GRADE_DISPLAY_TYPE_PERCENTAGE => $strpercentage,
                                                     GRADE_DISPLAY_TYPE_LETTER => $strletter)));
 
-    $settings->add(new admin_setting_configselect('grade_report_averagesdecimalpoints', get_string('averagesdecimalpoints', 'grades'),
-                                              get_string('averagesdecimalpoints_help', 'grades'), GRADE_REPORT_PREFERENCE_INHERIT,
+    $settings->add(new admin_setting_configselect('grade_report_averagesdecimalpoints', get_string('averagesdecimalpoints', 'core_grades'),
+                                              get_string('averagesdecimalpoints_help', 'core_grades'), GRADE_REPORT_PREFERENCE_INHERIT,
                                               array(GRADE_REPORT_PREFERENCE_INHERIT => $strinherit,
                                                      '0' => '0',
                                                      '1' => '1',
@@ -77,8 +77,8 @@ if ($ADMIN->fulltree) {
                                                      '3' => '3',
                                                      '4' => '4',
                                                      '5' => '5')));
-    $settings->add(new admin_setting_configselect('grade_report_rangesdecimalpoints', get_string('rangesdecimalpoints', 'grades'),
-                                              get_string('rangesdecimalpoints_help', 'grades'), GRADE_REPORT_PREFERENCE_INHERIT,
+    $settings->add(new admin_setting_configselect('grade_report_rangesdecimalpoints', get_string('rangesdecimalpoints', 'core_grades'),
+                                              get_string('rangesdecimalpoints_help', 'core_grades'), GRADE_REPORT_PREFERENCE_INHERIT,
                                               array(GRADE_REPORT_PREFERENCE_INHERIT => $strinherit,
                                                      '0' => '0',
                                                      '1' => '1',

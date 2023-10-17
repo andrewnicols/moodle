@@ -199,8 +199,8 @@ class provider implements
             $context = \context::instance_by_id($contextid);
             array_walk($attemptsdata, function($data, $attempt) use ($context) {
                 $subcontext = [
-                    get_string('myattempts', 'scorm'),
-                    get_string('attempt', 'scorm'). " $attempt"
+                    get_string('myattempts', 'mod_scorm'),
+                    get_string('attempt', 'mod_scorm'). " $attempt"
                 ];
                 writer::with_context($context)->export_data(
                     $subcontext,
@@ -248,7 +248,7 @@ class provider implements
         array_walk($alldata, function($data, $contextid) {
             $context = \context::instance_by_id($contextid);
             $subcontext = [
-                get_string('myaiccsessions', 'scorm')
+                get_string('myaiccsessions', 'mod_scorm')
             ];
             writer::with_context($context)->export_data(
                 $subcontext,

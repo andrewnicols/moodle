@@ -76,8 +76,8 @@ if (!empty($key->userid) and $USER->id != $key->userid) {
 
 $returnurl = $CFG->wwwroot.'/grade/export/keymanager.php?id='.$course->id;
 
-$strkeys   = get_string('keymanager', 'userkey');
-$strexportgrades = get_string('export', 'grades');
+$strkeys   = get_string('keymanager', 'core_userkey');
+$strexportgrades = get_string('export', 'core_grades');
 $PAGE->navbar->add($strexportgrades, new moodle_url('/grade/export/index.php', ['id' => $courseid]));
 $PAGE->navbar->add($strkeys, new moodle_url('/grade/export/keymanager.php', ['id' => $courseid]));
 
@@ -86,14 +86,14 @@ if ($id and $delete) {
         $PAGE->set_title(get_string('deleteselectedkey'));
         $PAGE->set_heading($course->fullname);
         $PAGE->set_secondary_active_tab('grades');
-        $PAGE->navbar->add(get_string('deleteuserkey', 'userkey'));
+        $PAGE->navbar->add(get_string('deleteuserkey', 'core_userkey'));
 
         echo $OUTPUT->header();
         $optionsyes = array('id'=>$id, 'delete'=>1, 'courseid'=>$courseid, 'sesskey'=>sesskey(), 'confirm'=>1);
         $optionsno  = array('id'=>$courseid);
         $formcontinue = new single_button(new moodle_url('key.php', $optionsyes), get_string('yes'), 'get');
         $formcancel = new single_button(new moodle_url('keymanager.php', $optionsno), get_string('no'), 'get');
-        echo $OUTPUT->confirm(get_string('deletekeyconfirm', 'userkey', $key->value), $formcontinue, $formcancel);
+        echo $OUTPUT->confirm(get_string('deletekeyconfirm', 'core_userkey', $key->value), $formcontinue, $formcancel);
         echo $OUTPUT->footer();
         die;
 
@@ -126,9 +126,9 @@ if ($editform->is_cancelled()) {
 }
 
 if ($id) {
-    $strheading = get_string('edituserkey', 'userkey');
+    $strheading = get_string('edituserkey', 'core_userkey');
 } else {
-    $strheading = get_string('createuserkey', 'userkey');
+    $strheading = get_string('createuserkey', 'core_userkey');
 }
 
 $PAGE->navbar->add($strheading);

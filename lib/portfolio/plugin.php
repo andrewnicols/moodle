@@ -220,7 +220,7 @@ abstract class portfolio_plugin_base {
         foreach ($config as $key => $value) {
             if (!in_array($key, $allowed)) {
                 $a = (object)array('property' => $key, 'class' => get_class($this));
-                throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'portfolio', null, $a);
+                throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'core_portfolio', null, $a);
             }
             $this->exportconfig[$key] = $value;
         }
@@ -240,7 +240,7 @@ abstract class portfolio_plugin_base {
         );
         if (!in_array($key, $allowed)) {
             $a = (object)array('property' => $key, 'class' => get_class($this));
-            throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'portfolio', null, $a);
+            throw new portfolio_export_exception($this->get('exporter'), 'invalidexportproperty', 'core_portfolio', null, $a);
         }
         if (!array_key_exists($key, $this->exportconfig)) {
             return null;
@@ -429,7 +429,7 @@ abstract class portfolio_plugin_base {
         if (!portfolio_static_function($plugin, 'allows_multiple_instances')) {
             // check we don't have one already
             if ($DB->record_exists('portfolio_instance', array('plugin' => $plugin))) {
-                throw new portfolio_exception('multipleinstancesdisallowed', 'portfolio', '', $plugin);
+                throw new portfolio_exception('multipleinstancesdisallowed', 'core_portfolio', '', $plugin);
             }
         }
         $newid = $DB->insert_record('portfolio_instance', $new);
@@ -454,7 +454,7 @@ abstract class portfolio_plugin_base {
         global $DB;
         if (!$record) {
             if (!$record = $DB->get_record('portfolio_instance', array('id' => $instanceid))) {
-                throw new portfolio_exception('invalidinstance', 'portfolio');
+                throw new portfolio_exception('invalidinstance', 'core_portfolio');
             }
         }
         foreach ((array)$record as $key =>$value) {
@@ -527,7 +527,7 @@ abstract class portfolio_plugin_base {
             } catch (portfolio_exception $e) { }
             if (!in_array($key, $this->get_allowed_config())) {
                 $a = (object)array('property' => $key, 'class' => get_class($this));
-                throw new portfolio_export_exception($this->get('exporter'), 'invalidconfigproperty', 'portfolio', null, $a);
+                throw new portfolio_export_exception($this->get('exporter'), 'invalidconfigproperty', 'core_portfolio', null, $a);
             }
             if (!isset($this->config->{$key})) {
                 $DB->insert_record('portfolio_instance_config', (object)array(
@@ -551,7 +551,7 @@ abstract class portfolio_plugin_base {
     public final function get_config($key) {
         if (!in_array($key, $this->get_allowed_config())) {
             $a = (object)array('property' => $key, 'class' => get_class($this));
-            throw new portfolio_export_exception($this->get('exporter'), 'invalidconfigproperty', 'portfolio', null, $a);
+            throw new portfolio_export_exception($this->get('exporter'), 'invalidconfigproperty', 'core_portfolio', null, $a);
         }
         if (isset($this->config->{$key})) {
             return $this->config->{$key};
@@ -577,7 +577,7 @@ abstract class portfolio_plugin_base {
         if ($key != 'visible') { // handled by the parent class
             if (!in_array($key, $this->get_allowed_user_config())) {
                 $a = (object)array('property' => $key, 'class' => get_class($this));
-                throw new portfolio_export_exception($this->get('exporter'), 'invaliduserproperty', 'portfolio', null, $a);
+                throw new portfolio_export_exception($this->get('exporter'), 'invaliduserproperty', 'core_portfolio', null, $a);
             }
         }
         if (!array_key_exists($userid, $this->userconfig)) {
@@ -610,7 +610,7 @@ abstract class portfolio_plugin_base {
         foreach ($config as $key => $value) {
             if ($key != 'visible' && !in_array($key, $this->get_allowed_user_config())) {
                 $a = (object)array('property' => $key, 'class' => get_class($this));
-                throw new portfolio_export_exception($this->get('exporter'), 'invaliduserproperty', 'portfolio', null, $a);
+                throw new portfolio_export_exception($this->get('exporter'), 'invaliduserproperty', 'core_portfolio', null, $a);
             }
             if (!$existing = $DB->get_record('portfolio_instance_user', array('instance'=> $this->id, 'userid' => $userid, 'name' => $key))) {
                 $DB->insert_record('portfolio_instance_user', (object)array(
@@ -645,7 +645,7 @@ abstract class portfolio_plugin_base {
             return $this->{$field};
         }
         $a = (object)array('property' => $field, 'class' => get_class($this));
-        throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'portfolio', null, $a);
+        throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'core_portfolio', null, $a);
     }
 
     /**
@@ -671,9 +671,9 @@ abstract class portfolio_plugin_base {
         }
         $a = (object)array('property' => $field, 'class' => get_class($this));
         if ($this->get('exporter')) {
-            throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'portfolio', null, $a);
+            throw new portfolio_export_exception($this->get('exporter'), 'invalidproperty', 'core_portfolio', null, $a);
         }
-        throw new portfolio_exception('invalidproperty', 'portfolio', null, $a); // this happens outside export (eg admin settings)
+        throw new portfolio_exception('invalidproperty', 'core_portfolio', null, $a); // this happens outside export (eg admin settings)
 
     }
 
@@ -746,7 +746,7 @@ abstract class portfolio_plugin_base {
      * @return string
      */
     public function heading_summary() {
-        return get_string('exportingcontentto', 'portfolio', $this->name);
+        return get_string('exportingcontentto', 'core_portfolio', $this->name);
     }
 }
 
@@ -830,7 +830,7 @@ abstract class portfolio_plugin_pull_base extends portfolio_plugin_base {
     public function send_file() {
         $file = $this->get('file');
         if (!($file instanceof stored_file)) {
-            throw new portfolio_export_exception($this->get('exporter'), 'filenotfound', 'portfolio');
+            throw new portfolio_export_exception($this->get('exporter'), 'filenotfound', 'core_portfolio');
         }
         // don't die(); afterwards, so we can clean up.
         send_stored_file($file, 0, 0, true, array('dontdie' => true));

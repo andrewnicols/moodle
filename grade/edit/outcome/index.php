@@ -45,7 +45,7 @@ if ($courseid) {
     }
     // This page doesn't exist on the navigation so map it to another
     navigation_node::override_active_url(new moodle_url('/grade/edit/outcome/course.php', array('id'=>$courseid)));
-    $PAGE->navbar->add(get_string('manageoutcomes', 'grades'), $url);
+    $PAGE->navbar->add(get_string('manageoutcomes', 'core_grades'), $url);
 } else {
     if (empty($CFG->enableoutcomes)) {
         redirect('../../../');
@@ -59,13 +59,13 @@ if ($courseid) {
 /// return tracking object
 $gpr = new grade_plugin_return(array('type'=>'edit', 'plugin'=>'outcome', 'courseid'=>$courseid));
 
-$strshortname        = get_string('outcomeshortname', 'grades');
-$strfullname         = get_string('outcomefullname', 'grades');
+$strshortname        = get_string('outcomeshortname', 'core_grades');
+$strfullname         = get_string('outcomefullname', 'core_grades');
 $strscale            = get_string('scale');
-$strstandardoutcome  = get_string('outcomesstandard', 'grades');
-$strcustomoutcomes   = get_string('outcomescustom', 'grades');
-$strcreatenewoutcome = get_string('outcomecreate', 'grades');
-$stritems            = get_string('items', 'grades');
+$strstandardoutcome  = get_string('outcomesstandard', 'core_grades');
+$strcustomoutcomes   = get_string('outcomescustom', 'core_grades');
+$strcreatenewoutcome = get_string('outcomecreate', 'core_grades');
+$stritems            = get_string('items', 'core_grades');
 $strcourses          = get_string('courses');
 $stredit             = get_string('edit');
 
@@ -92,8 +92,8 @@ switch ($action) {
         $deleteconfirmed = optional_param('deleteconfirmed', 0, PARAM_BOOL);
 
         if(!$deleteconfirmed){
-            $PAGE->set_title(get_string('outcomedelete', 'grades'));
-            $PAGE->navbar->add(get_string('outcomedelete', 'grades'));
+            $PAGE->set_title(get_string('outcomedelete', 'core_grades'));
+            $PAGE->navbar->add(get_string('outcomedelete', 'core_grades'));
             echo $OUTPUT->header();
             $confirmurl = new moodle_url('index.php', array(
                     'id' => $courseid, 'outcomeid' => $outcome->id,
@@ -101,7 +101,7 @@ switch ($action) {
                     'sesskey' =>  sesskey(),
                     'deleteconfirmed'=> 1));
 
-            echo $OUTPUT->confirm(get_string('outcomeconfirmdelete', 'grades', $outcome->fullname), $confirmurl, "index.php?id={$courseid}");
+            echo $OUTPUT->confirm(get_string('outcomeconfirmdelete', 'core_grades', $outcome->fullname), $confirmurl, "index.php?id={$courseid}");
             echo $OUTPUT->footer();
             die;
         }else{
@@ -123,7 +123,7 @@ if ($courseid) {
 
 
 $outcomes_tables = array();
-$heading = get_string('outcomes', 'grades');
+$heading = get_string('outcomes', 'core_grades');
 
 if ($courseid and $outcomes = grade_outcome::fetch_all_local($courseid)) {
     $return = $OUTPUT->heading($strcustomoutcomes, 3, 'main mt-3');
@@ -237,7 +237,7 @@ if (!empty($outcomes_tables)) {
         echo $table;
     }
 } else {
-    echo $OUTPUT->notification(get_string('noexistingoutcomes', 'grades'), 'info', false);
+    echo $OUTPUT->notification(get_string('noexistingoutcomes', 'core_grades'), 'info', false);
 }
 
 echo $OUTPUT->footer();

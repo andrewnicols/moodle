@@ -24,13 +24,13 @@ class mod_glossary_entry_form extends moodleform {
             'context' => $context);
 
 //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
-        $mform->addElement('text', 'concept', get_string('concept', 'glossary'));
+        $mform->addElement('text', 'concept', get_string('concept', 'mod_glossary'));
         $mform->setType('concept', PARAM_TEXT);
         $mform->addRule('concept', null, 'required', null, 'client');
 
-        $mform->addElement('editor', 'definition_editor', get_string('definition', 'glossary'), null, $definitionoptions);
+        $mform->addElement('editor', 'definition_editor', get_string('definition', 'mod_glossary'), null, $definitionoptions);
         $mform->setType('definition_editor', PARAM_RAW);
         $mform->addRule('definition_editor', get_string('required'), 'required', null, 'client');
 
@@ -38,17 +38,17 @@ class mod_glossary_entry_form extends moodleform {
             foreach ($categories as $id => $name) {
                 $categories[$id] = format_string($name, true, $fmtoptions);
             }
-            $categories = array(0 => get_string('notcategorised', 'glossary')) + $categories;
-            $categoriesEl = $mform->addElement('select', 'categories', get_string('categories', 'glossary'), $categories);
+            $categories = array(0 => get_string('notcategorised', 'mod_glossary')) + $categories;
+            $categoriesEl = $mform->addElement('select', 'categories', get_string('categories', 'mod_glossary'), $categories);
             $categoriesEl->setMultiple(true);
             $categoriesEl->setSize(5);
         }
 
-        $mform->addElement('textarea', 'aliases', get_string('aliases', 'glossary'), 'rows="2" cols="40"');
+        $mform->addElement('textarea', 'aliases', get_string('aliases', 'mod_glossary'), 'rows="2" cols="40"');
         $mform->setType('aliases', PARAM_TEXT);
         $mform->addHelpButton('aliases', 'aliases', 'glossary');
 
-        $mform->addElement('filemanager', 'attachment_filemanager', get_string('attachment', 'glossary'), null, $attachmentoptions);
+        $mform->addElement('filemanager', 'attachment_filemanager', get_string('attachment', 'mod_glossary'), null, $attachmentoptions);
         $mform->addHelpButton('attachment_filemanager', 'attachment', 'glossary');
 
         if (!$glossary->usedynalink) {
@@ -61,25 +61,25 @@ class mod_glossary_entry_form extends moodleform {
 
         } else {
 //-------------------------------------------------------------------------------
-            $mform->addElement('header', 'linkinghdr', get_string('linking', 'glossary'));
+            $mform->addElement('header', 'linkinghdr', get_string('linking', 'mod_glossary'));
 
-            $mform->addElement('checkbox', 'usedynalink', get_string('entryusedynalink', 'glossary'));
+            $mform->addElement('checkbox', 'usedynalink', get_string('entryusedynalink', 'mod_glossary'));
             $mform->addHelpButton('usedynalink', 'entryusedynalink', 'glossary');
             $mform->setDefault('usedynalink', $CFG->glossary_linkentries);
 
-            $mform->addElement('checkbox', 'casesensitive', get_string('casesensitive', 'glossary'));
+            $mform->addElement('checkbox', 'casesensitive', get_string('casesensitive', 'mod_glossary'));
             $mform->addHelpButton('casesensitive', 'casesensitive', 'glossary');
             $mform->hideIf('casesensitive', 'usedynalink');
             $mform->setDefault('casesensitive', $CFG->glossary_casesensitive);
 
-            $mform->addElement('checkbox', 'fullmatch', get_string('fullmatch', 'glossary'));
+            $mform->addElement('checkbox', 'fullmatch', get_string('fullmatch', 'mod_glossary'));
             $mform->addHelpButton('fullmatch', 'fullmatch', 'glossary');
             $mform->hideIf('fullmatch', 'usedynalink');
             $mform->setDefault('fullmatch', $CFG->glossary_fullmatch);
         }
 
         if (core_tag_tag::is_enabled('mod_glossary', 'glossary_entries')) {
-            $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
+            $mform->addElement('header', 'tagshdr', get_string('tags', 'core_tag'));
 
             $mform->addElement('tags', 'tags', get_string('tags'),
                 array('itemtype' => 'glossary_entries', 'component' => 'mod_glossary'));
@@ -111,7 +111,7 @@ class mod_glossary_entry_form extends moodleform {
         foreach ($aliases as $alias) {
             // Check if the alias is just a single character and that it doesn't match reserved symbols.
             if (strlen(trim($alias)) == 1 && preg_match('/[$-\/:-?{-~!"^_`\[\]]/', trim($alias))) {
-                $errors['aliases'] = get_string('errreservedkeywords', 'glossary');
+                $errors['aliases'] = get_string('errreservedkeywords', 'mod_glossary');
             }
         }
 
@@ -123,9 +123,9 @@ class mod_glossary_entry_form extends moodleform {
             $ineditperiod = ((time() - $old->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
             if ((!$ineditperiod || $USER->id != $old->userid) and !has_capability('mod/glossary:manageentries', $context)) {
                 if ($USER->id != $old->userid) {
-                    $errors['concept'] = get_string('errcannoteditothers', 'glossary');
+                    $errors['concept'] = get_string('errcannoteditothers', 'mod_glossary');
                 } elseif (!$ineditperiod) {
-                    $errors['concept'] = get_string('erredittimeexpired', 'glossary');
+                    $errors['concept'] = get_string('erredittimeexpired', 'mod_glossary');
                 }
             }
             if (!$glossary->allowduplicatedentries) {
@@ -134,14 +134,14 @@ class mod_glossary_entry_form extends moodleform {
                             'glossaryid' => $glossary->id,
                             'concept'    => core_text::strtolower($data['concept']),
                             'id'         => $id))) {
-                    $errors['concept'] = get_string('errconceptalreadyexists', 'glossary');
+                    $errors['concept'] = get_string('errconceptalreadyexists', 'mod_glossary');
                 }
             }
 
         } else {
             if (!$glossary->allowduplicatedentries) {
                 if (glossary_concept_exists($glossary, $data['concept'])) {
-                    $errors['concept'] = get_string('errconceptalreadyexists', 'glossary');
+                    $errors['concept'] = get_string('errconceptalreadyexists', 'mod_glossary');
                 }
             }
         }

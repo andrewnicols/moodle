@@ -46,11 +46,11 @@ require_capability('mod/quiz:manageoverrides', $context);
 
 if ($override->groupid) {
     if (!groups_group_visible($override->groupid, $course, $cm)) {
-        throw new \moodle_exception('invalidoverrideid', 'quiz');
+        throw new \moodle_exception('invalidoverrideid', 'mod_quiz');
     }
 } else {
     if (!groups_user_groups_visible($course, $override->userid, $cm)) {
-        throw new \moodle_exception('invalidoverrideid', 'quiz');
+        throw new \moodle_exception('invalidoverrideid', 'mod_quiz');
     }
 }
 
@@ -74,7 +74,7 @@ if ($confirm) {
 }
 
 // Prepare the page to show the confirmation form.
-$stroverride = get_string('override', 'quiz');
+$stroverride = get_string('override', 'mod_quiz');
 $title = get_string('deletecheck', null, $stroverride);
 
 $PAGE->set_url($url);
@@ -92,12 +92,12 @@ echo $OUTPUT->header();
 
 if ($override->groupid) {
     $group = $DB->get_record('groups', ['id' => $override->groupid], 'id, name');
-    $confirmstr = get_string("overridedeletegroupsure", "quiz", format_string($group->name, true, ['context' => $context]));
+    $confirmstr = get_string("overridedeletegroupsure", 'mod_quiz', format_string($group->name, true, ['context' => $context]));
 } else {
     $user = $DB->get_record('user', ['id' => $override->userid]);
     profile_load_custom_fields($user);
 
-    $confirmstr = get_string('overridedeleteusersure', 'quiz',
+    $confirmstr = get_string('overridedeleteusersure', 'mod_quiz',
             edit_override_form::display_user_name($user,
                     \core_user\fields::get_identity_fields($context)));
 }

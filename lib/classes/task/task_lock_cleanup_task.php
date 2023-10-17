@@ -41,7 +41,7 @@ class task_lock_cleanup_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('tasklockcleanuptask', 'admin');
+        return get_string('tasklockcleanuptask', 'core_admin');
     }
 
     /**

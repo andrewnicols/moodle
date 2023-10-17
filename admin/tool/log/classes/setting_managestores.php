@@ -236,7 +236,7 @@ class tool_log_setting_managestores extends admin_setting {
         }
 
         $return .= html_writer::table($table);
-        $return .= get_string('configlogplugins', 'tool_log') . '<br />' . get_string('tablenosave', 'admin');
+        $return .= get_string('configlogplugins', 'tool_log') . '<br />' . get_string('tablenosave', 'core_admin');
         $return .= $OUTPUT->box_end();
         return highlight($query, $return);
     }

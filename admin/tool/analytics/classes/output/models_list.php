@@ -167,7 +167,7 @@ class models_list implements \renderable, \templatable {
 
             // Model predictions list.
             if (!$model->is_enabled()) {
-                $modeldata->noinsights = get_string('disabledmodel', 'analytics');
+                $modeldata->noinsights = get_string('disabledmodel', 'core_analytics');
             } else if ($model->uses_insights()) {
                 if ($predictioncontexts) {
                     $url = new \moodle_url('/report/insights/insights.php', array('modelid' => $model->get_id()));
@@ -177,14 +177,14 @@ class models_list implements \renderable, \templatable {
 
                 if (empty($modeldata->insights)) {
                     if ($anypredictionobtained) {
-                        $modeldata->noinsights = get_string('noinsights', 'analytics');
+                        $modeldata->noinsights = get_string('noinsights', 'core_analytics');
                     } else {
-                        $modeldata->noinsights = get_string('nopredictionsyet', 'analytics');
+                        $modeldata->noinsights = get_string('nopredictionsyet', 'core_analytics');
                     }
                 }
 
             } else {
-                $modeldata->noinsights = get_string('noinsightsmodel', 'analytics');
+                $modeldata->noinsights = get_string('noinsightsmodel', 'core_analytics');
             }
 
             // Actions.

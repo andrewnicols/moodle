@@ -343,7 +343,7 @@ class externallib_test extends externallib_advanced_testcase {
 
         $this->setAdminUser();
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('enablewsdescription', 'webservice'));
+        $this->expectExceptionMessage(get_string('enablewsdescription', 'core_webservice'));
         $result = external::get_autologin_key('');
     }
 
@@ -679,7 +679,7 @@ class externallib_test extends externallib_advanced_testcase {
 
         // Now, try with an invalid key.
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('invalidkey', 'error'));
+        $this->expectExceptionMessage(get_string('invalidkey', 'mod_error'));
         $result = external::get_tokens_for_qr_login(random_string('64'), $user->id);
     }
 
@@ -718,7 +718,7 @@ class externallib_test extends externallib_advanced_testcase {
 
         // Now, try with an invalid key.
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('invalidkey', 'error'));
+        $this->expectExceptionMessage(get_string('invalidkey', 'mod_error'));
         $result = external::get_tokens_for_qr_login(random_string('64'), $user->id);
     }
 
@@ -749,7 +749,7 @@ class externallib_test extends externallib_advanced_testcase {
                 'AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/71.0.3578.99 Mobile Safari/537.36 MoodleMobile');
 
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('ipmismatch', 'error'));
+        $this->expectExceptionMessage(get_string('ipmismatch', 'mod_error'));
         $result = external::get_tokens_for_qr_login($qrloginkey, $USER->id);
     }
 
@@ -787,7 +787,7 @@ class externallib_test extends externallib_advanced_testcase {
 
         $this->setAdminUser();
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('enablewsdescription', 'webservice'));
+        $this->expectExceptionMessage(get_string('enablewsdescription', 'core_webservice'));
         $result = external::get_tokens_for_qr_login('', $user->id);
     }
 

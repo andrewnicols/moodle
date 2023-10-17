@@ -50,8 +50,8 @@ $event->add_record_snapshot('course', $course);
 $event->trigger();
 
 /// Get all required stringswiki
-$strwikis = get_string("modulenameplural", "wiki");
-$strwiki = get_string("modulename", "wiki");
+$strwikis = get_string("modulenameplural", 'mod_wiki');
+$strwiki = get_string("modulename", 'mod_wiki');
 
 /// Print the header
 $PAGE->navbar->add($strwikis, "index.php?id=$course->id");

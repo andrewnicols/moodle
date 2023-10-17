@@ -57,7 +57,7 @@ class frontpagerole extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/settings.php?section=frontpagesettings#admin-defaultfrontpageroleid'),
-            get_string('frontpagesettings', 'admin'));
+            get_string('frontpagesettings', 'core_admin'));
     }
 
     /**

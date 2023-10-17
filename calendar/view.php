@@ -97,7 +97,7 @@ $course = get_course($courseid);
 if ($iscoursecalendar && !empty($courseid)) {
     navigation_node::override_active_url(new moodle_url('/course/view.php', array('id' => $course->id)));
     $PAGE->navbar->add(
-        get_string('calendar', 'calendar'),
+        get_string('calendar', 'core_calendar'),
         new moodle_url('/calendar/view.php', ['view' => 'month', 'course' => $course->id])
     );
     $PAGE->set_secondary_navigation(false);
@@ -106,7 +106,7 @@ if ($iscoursecalendar && !empty($courseid)) {
     $PAGE->set_category_by_id($categoryid);
     navigation_node::override_active_url(new moodle_url('/course/index.php', array('categoryid' => $categoryid)));
     $PAGE->navbar->add(
-        get_string('calendar', 'calendar'),
+        get_string('calendar', 'core_calendar'),
         new moodle_url('/calendar/view.php', ['view' => 'month', 'category' => $categoryid])
     );
     $PAGE->set_secondary_navigation(false);
@@ -122,19 +122,19 @@ $calendar = calendar_information::create($time, $courseid, $categoryid);
 
 $pagetitle = '';
 
-$strcalendar = get_string('calendar', 'calendar');
+$strcalendar = get_string('calendar', 'core_calendar');
 
 switch($view) {
     case 'day':
         $PAGE->navbar->add(userdate($time, get_string('strftimedate')));
-        $pagetitle = get_string('dayviewtitle', 'calendar', userdate($time, get_string('strftimedaydate')));
+        $pagetitle = get_string('dayviewtitle', 'core_calendar', userdate($time, get_string('strftimedaydate')));
     break;
     case 'month':
         $PAGE->navbar->add(userdate($time, get_string('strftimemonthyear')));
-        $pagetitle = get_string('detailedmonthviewtitle', 'calendar', userdate($time, get_string('strftimemonthyear')));
+        $pagetitle = get_string('detailedmonthviewtitle', 'core_calendar', userdate($time, get_string('strftimemonthyear')));
     break;
     case 'upcoming':
-        $pagetitle = get_string('upcomingevents', 'calendar');
+        $pagetitle = get_string('upcomingevents', 'core_calendar');
     break;
 }
 

@@ -151,7 +151,7 @@ class core_role_permissions_table extends core_role_capability_table_base {
         foreach ($allrisks as $type => $risk) {
             if ($risk & (int)$capability->riskbitmask) {
                 if (!isset($this->icons[$type])) {
-                    $pixicon = new pix_icon('/i/' . str_replace('risk', 'risk_', $type), get_string($type . 'short', 'admin'));
+                    $pixicon = new pix_icon('/i/' . str_replace('risk', 'risk_', $type), get_string($type . 'short', 'core_admin'));
                     $this->icons[$type] = $OUTPUT->action_icon($risksurl, $pixicon, new popup_action('click', $risksurl));
                 }
                 $return .= $this->icons[$type];

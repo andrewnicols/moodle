@@ -119,7 +119,7 @@ class repository extends base {
             if ($enabled == self::REPOSITORY_ON || $enabled == self::REPOSITORY_OFF) {
                 $type = new \repository_type($pluginname, [], $enabled);
                 if (!$haschanged = $type->create()) {
-                    throw new \moodle_exception('invalidplugin', 'repository', '', $pluginname);
+                    throw new \moodle_exception('invalidplugin', 'core_repository', '', $pluginname);
                 }
             }
         }

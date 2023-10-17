@@ -60,19 +60,19 @@ class message extends moodleform {
         $mform->addElement('hidden', 'action', $action);
         $mform->setType('action', PARAM_TEXT);
 
-        $mform->addElement('header', 'badgemessage', get_string('configuremessage', 'badges'));
+        $mform->addElement('header', 'badgemessage', get_string('configuremessage', 'core_badges'));
         $mform->addHelpButton('badgemessage', 'variablesubstitution', 'badges');
 
-        $mform->addElement('text', 'messagesubject', get_string('subject', 'badges'), array('size' => '70'));
+        $mform->addElement('text', 'messagesubject', get_string('subject', 'core_badges'), array('size' => '70'));
         $mform->setType('messagesubject', PARAM_TEXT);
         $mform->addRule('messagesubject', null, 'required');
         $mform->addRule('messagesubject', get_string('maximumchars', '', 255), 'maxlength', 255);
 
-        $mform->addElement('editor', 'message_editor', get_string('message', 'badges'), null, $editoroptions);
+        $mform->addElement('editor', 'message_editor', get_string('message', 'core_badges'), null, $editoroptions);
         $mform->setType('message_editor', PARAM_RAW);
         $mform->addRule('message_editor', null, 'required');
 
-        $mform->addElement('advcheckbox', 'attachment', get_string('attachment', 'badges'), '', null, array(0, 1));
+        $mform->addElement('advcheckbox', 'attachment', get_string('attachment', 'core_badges'), '', null, array(0, 1));
         $mform->addHelpButton('attachment', 'attachment', 'badges');
         if (empty($CFG->allowattachments)) {
             $mform->freeze('attachment');
@@ -80,12 +80,12 @@ class message extends moodleform {
 
         $options = array(
                 BADGE_MESSAGE_NEVER   => get_string('never'),
-                BADGE_MESSAGE_ALWAYS  => get_string('notifyevery', 'badges'),
-                BADGE_MESSAGE_DAILY   => get_string('notifydaily', 'badges'),
-                BADGE_MESSAGE_WEEKLY  => get_string('notifyweekly', 'badges'),
-                BADGE_MESSAGE_MONTHLY => get_string('notifymonthly', 'badges'),
+                BADGE_MESSAGE_ALWAYS  => get_string('notifyevery', 'core_badges'),
+                BADGE_MESSAGE_DAILY   => get_string('notifydaily', 'core_badges'),
+                BADGE_MESSAGE_WEEKLY  => get_string('notifyweekly', 'core_badges'),
+                BADGE_MESSAGE_MONTHLY => get_string('notifymonthly', 'core_badges'),
                 );
-        $mform->addElement('select', 'notification', get_string('notification', 'badges'), $options);
+        $mform->addElement('select', 'notification', get_string('notification', 'core_badges'), $options);
         $mform->addHelpButton('notification', 'notification', 'badges');
 
         $this->add_action_buttons();

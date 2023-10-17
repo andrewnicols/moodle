@@ -95,22 +95,22 @@ class mod_feedback_complete_form extends moodleform {
                     $this->mode != self::MODE_VIEW_RESPONSE) {
             // Output information about the current mode (anonymous or not) in some modes.
             if ($this->structure->is_anonymous()) {
-                $anonymousmodeinfo = get_string('anonymous', 'feedback');
+                $anonymousmodeinfo = get_string('anonymous', 'mod_feedback');
             } else {
-                $anonymousmodeinfo = get_string('non_anonymous', 'feedback');
+                $anonymousmodeinfo = get_string('non_anonymous', 'mod_feedback');
             }
             $element = $mform->addElement('static', 'anonymousmode', '',
-                    get_string('mode', 'feedback') . ': ' . $anonymousmodeinfo);
+                    get_string('mode', 'mod_feedback') . ': ' . $anonymousmodeinfo);
             $element->setAttributes($element->getAttributes() + ['class' => 'feedback_mode']);
         }
 
         // Add buttons to go to previous/next pages and submit the feedback.
         if ($this->mode == self::MODE_COMPLETE) {
             $buttonarray = array();
-            $buttonarray[] = &$mform->createElement('submit', 'gopreviouspage', get_string('previous_page', 'feedback'));
-            $buttonarray[] = &$mform->createElement('submit', 'gonextpage', get_string('next_page', 'feedback'),
+            $buttonarray[] = &$mform->createElement('submit', 'gopreviouspage', get_string('previous_page', 'mod_feedback'));
+            $buttonarray[] = &$mform->createElement('submit', 'gonextpage', get_string('next_page', 'mod_feedback'),
                     array('class' => 'form-submit'));
-            $buttonarray[] = &$mform->createElement('submit', 'savevalues', get_string('save_entries', 'feedback'),
+            $buttonarray[] = &$mform->createElement('submit', 'savevalues', get_string('save_entries', 'mod_feedback'),
                     array('class' => 'form-submit'));
             $buttonarray[] = &$mform->createElement('cancel');
             $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
@@ -333,7 +333,7 @@ class mod_feedback_complete_form extends moodleform {
 
         // Add red asterisks on required fields.
         if ($item->required) {
-            $required = $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $required = $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
             $element->setLabel($element->getLabel() . $required);
             $this->hasrequired = true;
         }
@@ -553,8 +553,8 @@ class mod_feedback_complete_form extends moodleform {
         if (($mform->_required || $this->hasrequired) &&
                ($this->mode == self::MODE_COMPLETE || $this->mode == self::MODE_PRINT || $this->mode == self::MODE_VIEW_TEMPLATE)) {
             $element = $mform->addElement('static', 'requiredfields', '',
-                    get_string('somefieldsrequired', 'form',
-                            $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'))));
+                    get_string('somefieldsrequired', 'core_form',
+                            $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'))));
             $element->setAttributes($element->getAttributes() + ['class' => 'requirednote']);
         }
 

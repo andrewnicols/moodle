@@ -48,7 +48,7 @@ raise_memory_limit(MEMORY_EXTRA);
 
 $text = download_file_content($gradesurl);
 if ($text === false) {
-    throw new \moodle_exception('cannotreadfile', 'error',
+    throw new \moodle_exception('cannotreadfile', 'mod_error',
             $CFG->wwwroot . '/grade/import/xml/index.php?id=' . $id, $gradesurl);
 }
 
@@ -67,7 +67,7 @@ if ($importcode !== false) {
         }
 
     } else {
-        print_grade_page_head($course->id, 'import', 'xml', get_string('importxml', 'grades'));
+        print_grade_page_head($course->id, 'import', 'xml', get_string('importxml', 'core_grades'));
 
         grade_import_commit($id, $importcode, $feedback, true);
 

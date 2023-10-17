@@ -50,7 +50,7 @@ class backpack extends external_backpack {
         $this->_customdata['userbackpack'] = 1;
 
         $mform->addElement('html', html_writer::tag('span', '', array('class' => 'notconnected', 'id' => 'connection-error')));
-        $mform->addElement('header', 'backpackheader', get_string('backpackconnection', 'badges'));
+        $mform->addElement('header', 'backpackheader', get_string('backpackconnection', 'core_badges'));
         $mform->addHelpButton('backpackheader', 'backpackconnection', 'badges');
         $mform->addElement('hidden', 'userid', $USER->id);
         $mform->setType('userid', PARAM_INT);
@@ -65,7 +65,7 @@ class backpack extends external_backpack {
             $mform->setType('password', PARAM_RAW);
             $mform->addElement('hidden', 'externalbackpackid', $this->_customdata['backpackid']);
             $mform->setType('externalbackpackid', PARAM_INT);
-            $status = html_writer::tag('span', get_string('backpackemailverificationpending', 'badges'),
+            $status = html_writer::tag('span', get_string('backpackemailverificationpending', 'core_badges'),
                 array('class' => 'notconnected', 'id' => 'connection-status'));
         } else {
             $sitebackpacks = badges_get_site_backpacks();
@@ -79,7 +79,7 @@ class backpack extends external_backpack {
                     $restrictedoptions[] = $backpack->id;
                 }
             }
-            $mform->addElement('select', 'externalbackpackid', get_string('backpackprovider', 'badges'), $choices);
+            $mform->addElement('select', 'externalbackpackid', get_string('backpackprovider', 'core_badges'), $choices);
             $mform->setType('externalbackpackid', PARAM_INT);
             $mform->addRule('externalbackpackid', get_string('required'), 'required');
             $mform->hideIf('password', 'externalbackpackid', 'in', $restrictedoptions);
@@ -87,7 +87,7 @@ class backpack extends external_backpack {
 
             // Static form element can't be used because they don't support hideIf. This is a workaround until MDL-66251 is fixed.
             $group = [];
-            $group[] = $mform->createElement('static', 'loginbackpackgroup', '', get_string('loginbackpacktitle', 'badges'));
+            $group[] = $mform->createElement('static', 'loginbackpackgroup', '', get_string('loginbackpacktitle', 'core_badges'));
             $mform->addGroup($group, 'loginbackpackgroup', '', '', false);
             $mform->hideIf('loginbackpackgroup', 'externalbackpackid', 'in', $restrictedoptions);
         }
@@ -122,14 +122,14 @@ class backpack extends external_backpack {
         if (isset($this->_customdata['email'])) {
             $buttonarray = [];
             $buttonarray[] = &$mform->createElement('submit', 'submitbutton',
-                                                    get_string('backpackconnectionresendemail', 'badges'));
+                                                    get_string('backpackconnectionresendemail', 'core_badges'));
             $buttonarray[] = &$mform->createElement('submit', 'revertbutton',
-                                                    get_string('backpackconnectioncancelattempt', 'badges'));
+                                                    get_string('backpackconnectioncancelattempt', 'core_badges'));
             $mform->addGroup($buttonarray, 'buttonar', '', [''], false);
             $mform->closeHeaderBefore('buttonar');
         } else {
             // Email isn't present, so provide an input element to get it and a button to start the verification process.
-            parent::add_action_buttons(false, get_string('backpackconnectionconnect', 'badges'));
+            parent::add_action_buttons(false, get_string('backpackconnectionconnect', 'core_badges'));
         }
     }
 
@@ -139,7 +139,7 @@ class backpack extends external_backpack {
     public function validation($data, $files) {
         // Verify that the user has selected a backpack.
         if (empty($data['externalbackpackid'])) {
-            $errors['externalbackpackid'] = get_string('externalbackpack_required', 'badges');
+            $errors['externalbackpackid'] = get_string('externalbackpack_required', 'core_badges');
             return $errors;
         }
 
@@ -156,10 +156,10 @@ class backpack extends external_backpack {
         $errors = [];
         // Email and password can't be blank.
         if (empty($data['backpackemail'])) {
-            $errors['backpackemail'] = get_string('backpackemail_required', 'badges');
+            $errors['backpackemail'] = get_string('backpackemail_required', 'core_badges');
         }
         if (empty($data['password'])) {
-            $errors['password'] = get_string('password_required', 'badges');
+            $errors['password'] = get_string('password_required', 'core_badges');
         }
         if (!empty($errors)) {
             return $errors;
@@ -175,7 +175,7 @@ class backpack extends external_backpack {
         $result = $bp->authenticate();
         if ($result === false || !empty($result->error)) {
             $msg = $bp->get_authentication_error();
-            $errors['backpackemail'] = get_string('backpackconnectionunexpectedresult', 'badges', $msg);
+            $errors['backpackemail'] = get_string('backpackconnectionunexpectedresult', 'core_badges', $msg);
         }
         return $errors;
     }

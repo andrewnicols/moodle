@@ -69,7 +69,7 @@ class core_webservice_renderer extends plugin_renderer_base {
 
 
         //create the three cells
-        $label = html_writer::tag('label', get_string('serviceusers', 'webservice'),
+        $label = html_writer::tag('label', get_string('serviceusers', 'core_webservice'),
                         array('for' => 'removeselect'));
         $label = html_writer::tag('p', $label);
         $authoriseduserscell = new html_table_cell($label .
@@ -77,7 +77,7 @@ class core_webservice_renderer extends plugin_renderer_base {
         $authoriseduserscell->id = 'existingcell';
         $buttonscell = new html_table_cell($addbutton . html_writer::empty_tag('br') . $removebutton);
         $buttonscell->id = 'buttonscell';
-        $label = html_writer::tag('label', get_string('potusers', 'webservice'),
+        $label = html_writer::tag('label', get_string('potusers', 'core_webservice'),
                         array('for' => 'addselect'));
         $label = html_writer::tag('p', $label);
         $otheruserscell = new html_table_cell($label .
@@ -133,7 +133,7 @@ class core_webservice_renderer extends plugin_renderer_base {
                 $list = html_writer::alist($links);
                 $help = $this->output->help_icon('missingcaps', 'webservice');
                 $missingcaps = print_collapsible_region(html_writer::div($list . $help, 'missingcaps'), 'small',
-                    html_writer::random_id('usermissingcaps'), get_string('usermissingcaps', 'webservice', $count), '', true, true);
+                    html_writer::random_id('usermissingcaps'), get_string('usermissingcaps', 'core_webservice', $count), '', true, true);
 
             } else {
                 $missingcaps = '';
@@ -162,7 +162,7 @@ class core_webservice_renderer extends plugin_renderer_base {
                                 $optionsyes), get_string('remove'));
         $formcancel = new single_button(new moodle_url('service_functions.php',
                                 $optionsno), get_string('cancel'), 'get');
-        return $this->output->confirm(get_string('removefunctionconfirm', 'webservice',
+        return $this->output->confirm(get_string('removefunctionconfirm', 'core_webservice',
                         (object) array('service' => $service->name, 'function' => $function->name)),
                 $formcontinue, $formcancel);
     }
@@ -183,7 +183,7 @@ class core_webservice_renderer extends plugin_renderer_base {
         $formcancel = new single_button(
                         new moodle_url($CFG->wwwroot . "/" . $CFG->admin . "/settings.php", $optionsno),
                         get_string('cancel'), 'get');
-        return $this->output->confirm(get_string('deleteserviceconfirm', 'webservice', $service->name),
+        return $this->output->confirm(get_string('deleteserviceconfirm', 'core_webservice', $service->name),
                 $formcontinue, $formcancel);
     }
 
@@ -199,8 +199,8 @@ class core_webservice_renderer extends plugin_renderer_base {
         global $CFG;
         if (!empty($functions)) {
             $table = new html_table();
-            $table->head = array(get_string('function', 'webservice'),
-                get_string('description'), get_string('requiredcaps', 'webservice'));
+            $table->head = array(get_string('function', 'core_webservice'),
+                get_string('description'), get_string('requiredcaps', 'core_webservice'));
             $table->align = array('left', 'left', 'left');
             $table->size = array('15%', '40%', '40%');
             $table->width = '100%';
@@ -232,7 +232,7 @@ class core_webservice_renderer extends plugin_renderer_base {
                                         'id' => $service->id,
                                         'action' => 'delete'));
                     $removelink = html_writer::tag('a',
-                                    get_string('removefunction', 'webservice'),
+                                    get_string('removefunction', 'core_webservice'),
                                     array('href' => $removeurl));
                     $table->data[] = array($function->name, $description, $requiredcaps, $removelink);
                 } else {
@@ -242,7 +242,7 @@ class core_webservice_renderer extends plugin_renderer_base {
 
             $html = html_writer::table($table);
         } else {
-            $html = get_string('nofunctions', 'webservice') . html_writer::empty_tag('br');
+            $html = get_string('nofunctions', 'core_webservice') . html_writer::empty_tag('br');
         }
 
         //display add function operation (except for build-in service)
@@ -253,7 +253,7 @@ class core_webservice_renderer extends plugin_renderer_base {
             }
             $addurl = new moodle_url('/' . $CFG->admin . '/webservice/service_functions.php',
                             array('sesskey' => sesskey(), 'id' => $service->id, 'action' => 'add'));
-            $html .= html_writer::tag('a', get_string('addfunctions', 'webservice'), array('href' => $addurl));
+            $html .= html_writer::tag('a', get_string('addfunctions', 'core_webservice'), array('href' => $addurl));
         }
 
         return $html;
@@ -270,7 +270,7 @@ class core_webservice_renderer extends plugin_renderer_base {
         $optionsyes = ['tokenid' => $token->id, 'action' => 'resetwstoken', 'confirm' => 1];
         $formcontinue = new single_button(new moodle_url($managetokenurl, $optionsyes), get_string('reset'));
         $formcancel = new single_button(new moodle_url($managetokenurl), get_string('cancel'), 'get');
-        $html = $this->output->confirm(get_string('resettokenconfirm', 'webservice',
+        $html = $this->output->confirm(get_string('resettokenconfirm', 'core_webservice',
                                 (object) array('user' => $token->firstname . " " .
                                     $token->lastname, 'service' => $token->name)),
                         $formcontinue, $formcancel);
@@ -289,17 +289,17 @@ class core_webservice_renderer extends plugin_renderer_base {
         global $CFG, $DB;
 
         // display strings
-        $stroperation = get_string('operation', 'webservice');
-        $strtoken = get_string('tokenname', 'webservice');
-        $strservice = get_string('service', 'webservice');
-        $strcreator = get_string('tokencreator', 'webservice');
-        $strvaliduntil = get_string('validuntil', 'webservice');
+        $stroperation = get_string('operation', 'core_webservice');
+        $strtoken = get_string('tokenname', 'core_webservice');
+        $strservice = get_string('service', 'core_webservice');
+        $strcreator = get_string('tokencreator', 'core_webservice');
+        $strvaliduntil = get_string('validuntil', 'core_webservice');
         $strlastaccess = get_string('lastaccess');
 
-        $return = $this->output->heading(get_string('securitykeys', 'webservice'), 3, 'main', true);
+        $return = $this->output->heading(get_string('securitykeys', 'core_webservice'), 3, 'main', true);
         $return .= $this->output->box_start('generalbox webservicestokenui');
 
-        $return .= get_string('keyshelp', 'webservice');
+        $return .= get_string('keyshelp', 'core_webservice');
 
         $table = new html_table();
         $table->head = array($strtoken, $strservice, $strvaliduntil, $strlastaccess, $strcreator, $stroperation);
@@ -308,7 +308,7 @@ class core_webservice_renderer extends plugin_renderer_base {
         $table->data = array();
 
         if ($documentation) {
-            $table->head[] = get_string('doc', 'webservice');
+            $table->head[] = get_string('doc', 'core_webservice');
             $table->align[] = 'center';
         }
 
@@ -352,7 +352,7 @@ class core_webservice_renderer extends plugin_renderer_base {
                 if ($documentation) {
                     $doclink = new moodle_url('/webservice/wsdoc.php',
                             array('id' => $token->id));
-                    $row[] = html_writer::tag('a', get_string('doc', 'webservice'),
+                    $row[] = html_writer::tag('a', get_string('doc', 'core_webservice'),
                             array('href' => $doclink));
                 }
 
@@ -360,7 +360,7 @@ class core_webservice_renderer extends plugin_renderer_base {
             }
             $return .= html_writer::table($table);
         } else {
-            $return .= get_string('notoken', 'webservice');
+            $return .= get_string('notoken', 'core_webservice');
         }
 
         $return .= $this->output->box_end();
@@ -398,12 +398,12 @@ class core_webservice_renderer extends plugin_renderer_base {
                     $params->default = "null";
                 }
                 $required = html_writer::start_tag('b', array()) .
-                        get_string('default', 'webservice', print_r($params->default, true))
+                        get_string('default', 'core_webservice', print_r($params->default, true))
                         . html_writer::end_tag('b');
             }
             if ($params->required == VALUE_OPTIONAL) {
                 $required = html_writer::start_tag('b', array()) .
-                        get_string('optional', 'webservice') . html_writer::end_tag('b');
+                        get_string('optional', 'core_webservice') . html_writer::end_tag('b');
             }
             $paramdesc .= " " . $required . " ";
             $paramdesc .= html_writer::start_tag('i', array());
@@ -645,7 +645,7 @@ EOF;
     public function documentation_html($functions, $printableformat, $activatedprotocol,
             $authparams, $parenturl = '/webservice/wsdoc.php') {
 
-        $documentationhtml = $this->output->heading(get_string('wsdocapi', 'webservice'));
+        $documentationhtml = $this->output->heading(get_string('wsdocapi', 'core_webservice'));
 
         $br = html_writer::empty_tag('br', array());
         $brakeline = <<<EOF
@@ -656,15 +656,15 @@ EOF;
         $docinfo = new stdClass();
         $docurl = new moodle_url('http://docs.moodle.org/dev/Creating_a_web_service_client');
         $docinfo->doclink = html_writer::tag('a',
-                        get_string('wsclientdoc', 'webservice'), array('href' => $docurl));
-        $documentationhtml .= get_string('wsdocumentationintro', 'webservice', $docinfo);
+                        get_string('wsclientdoc', 'core_webservice'), array('href' => $docurl));
+        $documentationhtml .= get_string('wsdocumentationintro', 'core_webservice', $docinfo);
         $documentationhtml .= $br . $br;
 
 
         // Print button
         $authparams['print'] = true;
         $url = new moodle_url($parenturl, $authparams); // Required
-        $documentationhtml .= $this->output->single_button($url, get_string('print', 'webservice'));
+        $documentationhtml .= $this->output->single_button($url, get_string('print', 'core_webservice'));
         $documentationhtml .= $br;
 
 
@@ -701,7 +701,7 @@ EOF;
 
             // function arguments documentation
             $documentationhtml .= html_writer::start_tag('span', array('style' => 'color:#EA33A6'));
-            $documentationhtml .= get_string('arguments', 'webservice');
+            $documentationhtml .= get_string('arguments', 'core_webservice');
             $documentationhtml .= html_writer::end_tag('span');
             $documentationhtml .= $br;
             foreach ($description->parameters_desc->keys as $paramname => $paramdesc) {
@@ -709,7 +709,7 @@ EOF;
                 $documentationhtml .= html_writer::start_tag('span', array('style' => 'font-size:80%'));
 
                 if ($paramdesc->required == VALUE_REQUIRED) {
-                    $required = get_string('required', 'webservice');
+                    $required = get_string('required', 'core_webservice');
                 }
                 if ($paramdesc->required == VALUE_DEFAULT) {
                     if ($paramdesc->default === null) {
@@ -717,10 +717,10 @@ EOF;
                     } else {
                         $default = print_r($paramdesc->default, true);
                     }
-                    $required = get_string('default', 'webservice', $default);
+                    $required = get_string('default', 'core_webservice', $default);
                 }
                 if ($paramdesc->required == VALUE_OPTIONAL) {
-                    $required = get_string('optional', 'webservice');
+                    $required = get_string('optional', 'core_webservice');
                 }
 
                 $documentationhtml .= html_writer::start_tag('b', array());
@@ -733,13 +733,13 @@ EOF;
                 $documentationhtml .= $br . $br;
                 // general structure of the argument
                 $documentationhtml .= $this->colored_box_with_pre_tag(
-                                get_string('generalstructure', 'webservice'),
+                                get_string('generalstructure', 'core_webservice'),
                                 $this->detailed_description_html($paramdesc),
                                 'FFF1BC');
                 // xml-rpc structure of the argument in PHP format
                 if (!empty($activatedprotocol['xmlrpc'])) {
                     $documentationhtml .= $this->colored_box_with_pre_tag(
-                                    get_string('phpparam', 'webservice'),
+                                    get_string('phpparam', 'core_webservice'),
                                     htmlentities('[' . $paramname . '] =>'
                                             . $this->xmlrpc_param_description_html($paramdesc), ENT_COMPAT),
                                     'DFEEE7');
@@ -747,7 +747,7 @@ EOF;
                 // POST format for the REST protocol for the argument
                 if (!empty($activatedprotocol['rest'])) {
                     $documentationhtml .= $this->colored_box_with_pre_tag(
-                                    get_string('restparam', 'webservice'),
+                                    get_string('restparam', 'core_webservice'),
                                     htmlentities($this->rest_param_description_html(
                                                     $paramdesc, $paramname), ENT_COMPAT),
                                     'FEEBE5');
@@ -759,7 +759,7 @@ EOF;
 
             // function response documentation
             $documentationhtml .= html_writer::start_tag('span', array('style' => 'color:#EA33A6'));
-            $documentationhtml .= get_string('response', 'webservice');
+            $documentationhtml .= get_string('response', 'core_webservice');
             $documentationhtml .= html_writer::end_tag('span');
             $documentationhtml .= $br;
             // function response description
@@ -771,13 +771,13 @@ EOF;
             if (!empty($description->returns_desc)) {
                 // general structure of the response
                 $documentationhtml .= $this->colored_box_with_pre_tag(
-                                get_string('generalstructure', 'webservice'),
+                                get_string('generalstructure', 'core_webservice'),
                                 $this->detailed_description_html($description->returns_desc),
                                 'FFF1BC');
                 // xml-rpc structure of the response in PHP format
                 if (!empty($activatedprotocol['xmlrpc'])) {
                     $documentationhtml .= $this->colored_box_with_pre_tag(
-                                    get_string('phpresponse', 'webservice'),
+                                    get_string('phpresponse', 'core_webservice'),
                                     htmlentities($this->xmlrpc_param_description_html(
                                                     $description->returns_desc), ENT_COMPAT),
                                     'DFEEE7');
@@ -790,7 +790,7 @@ EOF;
                                     $description->returns_desc);
                     $restresponse .="</RESPONSE>" . $brakeline;
                     $documentationhtml .= $this->colored_box_with_pre_tag(
-                                    get_string('restcode', 'webservice'),
+                                    get_string('restcode', 'core_webservice'),
                                     htmlentities($restresponse, ENT_COMPAT),
                                     'FEEBE5');
                 }
@@ -801,11 +801,11 @@ EOF;
             // function errors documentation for REST protocol
             if (!empty($activatedprotocol['rest'])) {
                 $documentationhtml .= html_writer::start_tag('span', array('style' => 'color:#EA33A6'));
-                $documentationhtml .= get_string('errorcodes', 'webservice');
+                $documentationhtml .= get_string('errorcodes', 'core_webservice');
                 $documentationhtml .= html_writer::end_tag('span');
                 $documentationhtml .= $br . $br;
                 $documentationhtml .= html_writer::start_tag('span', array('style' => 'font-size:80%'));
-                $errormessage = get_string('invalidparameter', 'debug');
+                $errormessage = get_string('invalidparameter', 'mod_debug');
                 $restexceptiontext = <<<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <EXCEPTION class="invalid_parameter_exception">
@@ -814,7 +814,7 @@ EOF;
 </EXCEPTION>
 EOF;
                 $documentationhtml .= $this->colored_box_with_pre_tag(
-                                get_string('restexception', 'webservice'),
+                                get_string('restexception', 'core_webservice'),
                                 htmlentities($restexceptiontext, ENT_COMPAT),
                                 'FEEBE5');
 
@@ -824,14 +824,14 @@ EOF;
 
             // Login required info.
             $documentationhtml .= html_writer::start_tag('span', array('style' => 'color:#EA33A6'));
-            $documentationhtml .= get_string('loginrequired', 'webservice') . $br;
+            $documentationhtml .= get_string('loginrequired', 'core_webservice') . $br;
             $documentationhtml .= html_writer::end_tag('span');
             $documentationhtml .= $description->loginrequired ? get_string('yes') : get_string('no');
             $documentationhtml .= $br . $br;
 
             // Ajax info.
             $documentationhtml .= html_writer::start_tag('span', array('style' => 'color:#EA33A6'));
-            $documentationhtml .= get_string('callablefromajax', 'webservice') . $br;
+            $documentationhtml .= get_string('callablefromajax', 'core_webservice') . $br;
             $documentationhtml .= html_writer::end_tag('span');
             $documentationhtml .= $description->allowed_from_ajax ? get_string('yes') : get_string('no');
             $documentationhtml .= $br . $br;

@@ -1478,12 +1478,12 @@ class core_tag_tag {
             if (static::is_item_tagged_with('core', 'user', $USER->id, $this->name)) {
                 $url = new moodle_url('/tag/user.php', array('action' => 'removeinterest',
                     'sesskey' => sesskey(), 'tag' => $this->rawname));
-                $links[] = html_writer::link($url, get_string('removetagfrommyinterests', 'tag', $tagname),
+                $links[] = html_writer::link($url, get_string('removetagfrommyinterests', 'core_tag', $tagname),
                         array('class' => 'removefrommyinterests'));
             } else {
                 $url = new moodle_url('/tag/user.php', array('action' => 'addinterest',
                     'sesskey' => sesskey(), 'tag' => $this->rawname));
-                $links[] = html_writer::link($url, get_string('addtagtomyinterests', 'tag', $tagname),
+                $links[] = html_writer::link($url, get_string('addtagtomyinterests', 'core_tag', $tagname),
                         array('class' => 'addtomyinterests'));
             }
         }
@@ -1492,7 +1492,7 @@ class core_tag_tag {
         if (has_capability('moodle/tag:flag', $systemcontext)) {
             $url = new moodle_url('/tag/user.php', array('action' => 'flaginappropriate',
                 'sesskey' => sesskey(), 'id' => $this->id));
-            $links[] = html_writer::link($url, get_string('flagasinappropriate', 'tag', $tagname),
+            $links[] = html_writer::link($url, get_string('flagasinappropriate', 'core_tag', $tagname),
                         array('class' => 'flagasinappropriate'));
         }
 
@@ -1500,7 +1500,7 @@ class core_tag_tag {
         if (has_capability('moodle/tag:edit', $systemcontext) ||
                 has_capability('moodle/tag:manage', $systemcontext)) {
             $url = new moodle_url('/tag/edit.php', array('id' => $this->id));
-            $links[] = html_writer::link($url, get_string('edittag', 'tag'),
+            $links[] = html_writer::link($url, get_string('edittag', 'core_tag'),
                         array('class' => 'edittag'));
         }
 

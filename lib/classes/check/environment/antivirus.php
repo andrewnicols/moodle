@@ -49,7 +49,7 @@ class antivirus extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/settings.php', ['section' => 'manageantiviruses']),
-            get_string('antivirussettings', 'antivirus'));
+            get_string('antivirussettings', 'core_antivirus'));
     }
 
     /**

@@ -53,7 +53,7 @@ class external_externallib_test extends externallib_advanced_testcase {
         // We need to execute the return values cleaning process to simulate the web service server.
         $returnedstring = external_api::clean_returnvalue(\core_external::get_string_returns(), $returnedstring);
 
-        $corestring = get_string('addservice', 'webservice', $service);
+        $corestring = get_string('addservice', 'core_webservice', $service);
         $this->assertSame($corestring, $returnedstring);
 
         // String with one parameter.
@@ -64,7 +64,7 @@ class external_externallib_test extends externallib_advanced_testcase {
         // We need to execute the return values cleaning process to simulate the web service server.
         $returnedstring = external_api::clean_returnvalue(\core_external::get_string_returns(), $returnedstring);
 
-        $corestring = get_string('missingrequiredcapability', 'webservice', $acapname);
+        $corestring = get_string('missingrequiredcapability', 'core_webservice', $acapname);
         $this->assertSame($corestring, $returnedstring);
 
         // String without parameters.
@@ -73,7 +73,7 @@ class external_externallib_test extends externallib_advanced_testcase {
         // We need to execute the return values cleaning process to simulate the web service server.
         $returnedstring = external_api::clean_returnvalue(\core_external::get_string_returns(), $returnedstring);
 
-        $corestring = get_string('missingpassword', 'webservice');
+        $corestring = get_string('missingpassword', 'core_webservice');
         $this->assertSame($corestring, $returnedstring);
 
         // String with two parameter but one is invalid (not named).

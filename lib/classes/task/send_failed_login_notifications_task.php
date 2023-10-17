@@ -37,7 +37,7 @@ class send_failed_login_notifications_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('tasksendfailedloginnotifications', 'admin');
+        return get_string('tasksendfailedloginnotifications', 'core_admin');
     }
 
     /**

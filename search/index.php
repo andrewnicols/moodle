@@ -38,7 +38,7 @@ if (\core_search\manager::is_search_area_categories_enabled()) {
 // Moving areaids, courseids, timestart, and timeend further down as they might come as an array if they come from the form.
 
 $context = context_system::instance();
-$pagetitle = get_string('globalsearch', 'search');
+$pagetitle = get_string('globalsearch', 'core_search');
 $PAGE->set_context($context);
 $PAGE->set_pagelayout('standard');
 $PAGE->set_title($pagetitle);
@@ -70,7 +70,7 @@ if ($contextid) {
     $coursecontext = $context->get_course_context(false);
     if ($coursecontext) {
         $searchwithin = [];
-        $searchwithin[''] = get_string('everywhere', 'search');
+        $searchwithin[''] = get_string('everywhere', 'core_search');
         $searchwithin['course'] = $coursecontext->get_context_name();
         if ($context->contextlevel != CONTEXT_COURSE) {
             $searchwithin['context'] = $context->get_context_name();
@@ -180,9 +180,9 @@ if ($CFG->searchbannerenable && $CFG->searchbanner) {
 }
 
 if ($errorstr = $search->get_engine()->get_query_error()) {
-    echo $OUTPUT->notification(get_string('queryerror', 'search', $errorstr), 'notifyproblem');
+    echo $OUTPUT->notification(get_string('queryerror', 'core_search', $errorstr), 'notifyproblem');
 } else if (empty($results->totalcount) && !empty($data)) {
-    echo $OUTPUT->notification(get_string('noresults', 'search'), 'notifymessage');
+    echo $OUTPUT->notification(get_string('noresults', 'core_search'), 'notifymessage');
 }
 
 $mform->display();

@@ -48,14 +48,14 @@ class behat_enrol_deprecated extends behat_deprecated_base {
         $this->deprecated_message(['behat_enrol::i_add_enrolment_method_for_with']);
 
         // Navigate to enrolment method page.
-        $parentnodes = get_string('users', 'admin');
+        $parentnodes = get_string('users', 'core_admin');
         $this->execute("behat_navigation::i_navigate_to_in_current_page_administration",
-            array($parentnodes .' > '. get_string('type_enrol_plural', 'plugin'))
+            array($parentnodes .' > '. get_string('type_enrol_plural', 'mod_plugin'))
         );
 
         // Select enrolment method.
         $this->execute('behat_forms::i_select_from_the_singleselect',
-            array($this->escape($enrolmethod), get_string('addinstance', 'enrol'))
+            array($this->escape($enrolmethod), get_string('addinstance', 'core_enrol'))
         );
 
         // Wait again, for page to reloaded.
@@ -70,6 +70,6 @@ class behat_enrol_deprecated extends behat_deprecated_base {
         }
 
         // Save changes.
-        $this->execute("behat_forms::press_button", get_string('addinstance', 'enrol'));
+        $this->execute("behat_forms::press_button", get_string('addinstance', 'core_enrol'));
     }
 }

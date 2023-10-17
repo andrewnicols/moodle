@@ -164,7 +164,7 @@ class core_completion_bulkedit_form extends core_completion_edit_base_form {
                 }
             }
             if ($moduleswithoutgradeitem) {
-                $errors['completionusegrade'] = get_string('nogradeitem', 'completion', join(', ', $moduleswithoutgradeitem));
+                $errors['completionusegrade'] = get_string('nogradeitem', 'core_completion', join(', ', $moduleswithoutgradeitem));
             }
         }
 

@@ -137,7 +137,7 @@ class core_grades_external extends external_api {
             $exceptionparam = new stdClass();
             $exceptionparam->message = $e->getMessage();
             $exceptionparam->courseid = $params['courseid'];
-            throw new moodle_exception('errorcoursecontextnotvalid' , 'webservice', '', $exceptionparam);
+            throw new moodle_exception('errorcoursecontextnotvalid' , 'core_webservice', '', $exceptionparam);
         }
 
         $hidinggrades = false;
@@ -158,16 +158,16 @@ class core_grades_external extends external_api {
         }
 
         if ($editinggradeitem && !has_capability('moodle/grade:manage', $coursecontext)) {
-            throw new moodle_exception('nopermissiontoviewgrades', 'error', '', null,
+            throw new moodle_exception('nopermissiontoviewgrades', 'mod_error', '', null,
                 'moodle/grade:manage required to edit grade information');
         }
         if ($hidinggrades && !has_capability('moodle/grade:hide', $coursecontext) &&
             !has_capability('moodle/grade:hide', $coursecontext)) {
-            throw new moodle_exception('nopermissiontoviewgrades', 'error', '', null,
+            throw new moodle_exception('nopermissiontoviewgrades', 'mod_error', '', null,
                 'moodle/grade:hide required to hide grade items');
         }
         if ($editinggrades && !has_capability('moodle/grade:edit', $coursecontext)) {
-            throw new moodle_exception('nopermissiontoviewgrades', 'error', '', null,
+            throw new moodle_exception('nopermissiontoviewgrades', 'mod_error', '', null,
                 'moodle/grade:edit required to edit grades');
         }
 

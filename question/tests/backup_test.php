@@ -183,8 +183,8 @@ class backup_test extends \advanced_testcase {
         $category2 = $this->getDataGenerator()->create_category();
 
         $expectedwarnings = [
-                get_string('qcategory2coursefallback', 'backup', (object) ['name' => 'top']),
-                get_string('qcategory2coursefallback', 'backup', (object) ['name' => $qcat->name])
+                get_string('qcategory2coursefallback', 'core_backup', (object) ['name' => 'top']),
+                get_string('qcategory2coursefallback', 'core_backup', (object) ['name' => $qcat->name])
         ];
 
         // Restore to a new course in the new course category.

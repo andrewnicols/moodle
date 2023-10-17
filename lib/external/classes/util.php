@@ -326,7 +326,7 @@ class util {
 
         // Check if there is any required system capability.
         if ($service->requiredcapability && !has_capability($service->requiredcapability, context_system::instance())) {
-            throw new moodle_exception('missingrequiredcapability', 'webservice', '', $service->requiredcapability);
+            throw new moodle_exception('missingrequiredcapability', 'core_webservice', '', $service->requiredcapability);
         }
 
         // Specific checks related to user restricted service.
@@ -337,15 +337,15 @@ class util {
             ]);
 
             if (empty($authoriseduser)) {
-                throw new moodle_exception('usernotallowed', 'webservice', '', $service->shortname);
+                throw new moodle_exception('usernotallowed', 'core_webservice', '', $service->shortname);
             }
 
             if (!empty($authoriseduser->validuntil) && $authoriseduser->validuntil < time()) {
-                throw new moodle_exception('invalidtimedtoken', 'webservice');
+                throw new moodle_exception('invalidtimedtoken', 'core_webservice');
             }
 
             if (!empty($authoriseduser->iprestriction) && !address_in_subnet(getremoteaddr(), $authoriseduser->iprestriction)) {
-                throw new moodle_exception('invalidiptoken', 'webservice');
+                throw new moodle_exception('invalidiptoken', 'core_webservice');
             }
         }
 
@@ -429,7 +429,7 @@ class util {
                 $event->add_record_snapshot('external_tokens', $eventtoken);
                 $event->trigger();
             } else {
-                throw new moodle_exception('cannotcreatetoken', 'webservice', '', $service->shortname);
+                throw new moodle_exception('cannotcreatetoken', 'core_webservice', '', $service->shortname);
             }
         }
         return $token;
@@ -595,7 +595,7 @@ class util {
         if (!in_array($format, $allowedformats)) {
             throw new moodle_exception(
                 'formatnotsupported',
-                'webservice',
+                'core_webservice',
                 '',
                 null,
                 "The format with value={$format} is not supported by this Moodle site"
@@ -641,7 +641,7 @@ class util {
     public static function generate_token_name(): string {
         return get_string(
             'tokennameprefix',
-            'webservice',
+            'core_webservice',
             random_string(5)
         );
     }

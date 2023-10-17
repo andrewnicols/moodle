@@ -29,8 +29,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'grade_report_user_showrank',
-            get_string('showrank', 'grades'),
-            get_string('showrank_help', 'grades'),
+            get_string('showrank', 'core_grades'),
+            get_string('showrank_help', 'core_grades'),
             0
         )
     );
@@ -38,8 +38,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'grade_report_user_showpercentage',
-            get_string('showpercentage', 'grades'),
-            get_string('showpercentage_help', 'grades'),
+            get_string('showpercentage', 'core_grades'),
+            get_string('showpercentage_help', 'core_grades'),
             1
         )
     );
@@ -47,8 +47,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'grade_report_user_showgrade',
-            get_string('showgrade', 'grades'),
-            get_string('showgrade_help', 'grades'),
+            get_string('showgrade', 'core_grades'),
+            get_string('showgrade_help', 'core_grades'),
             1
         )
     );
@@ -56,8 +56,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'grade_report_user_showfeedback',
-            get_string('showfeedback', 'grades'),
-            get_string('showfeedback_help', 'grades'),
+            get_string('showfeedback', 'core_grades'),
+            get_string('showfeedback_help', 'core_grades'),
             1
         )
     );
@@ -65,8 +65,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'grade_report_user_showrange',
-            get_string('showrange', 'grades'),
-            get_string('showrange_help', 'grades'),
+            get_string('showrange', 'core_grades'),
+            get_string('showrange_help', 'core_grades'),
             1
         )
     );
@@ -74,8 +74,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
         'grade_report_user_showweight',
-        get_string('showweight', 'grades'),
-        get_string('showweight_help', 'grades'),
+        get_string('showweight', 'core_grades'),
+        get_string('showweight_help', 'core_grades'),
         1
         )
     );
@@ -83,8 +83,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'grade_report_user_showaverage',
-            get_string('showaverage', 'grades'),
-            get_string('showaverage_help', 'grades'),
+            get_string('showaverage', 'core_grades'),
+            get_string('showaverage_help', 'core_grades'),
             0
         )
     );
@@ -92,8 +92,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configcheckbox(
             'grade_report_user_showlettergrade',
-            get_string('showlettergrade', 'grades'),
-            get_string('showlettergrade_help', 'grades'),
+            get_string('showlettergrade', 'core_grades'),
+            get_string('showlettergrade_help', 'core_grades'),
             0
         )
     );
@@ -101,8 +101,8 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configselect(
             'grade_report_user_rangedecimals',
-            get_string('rangedecimals', 'grades'),
-            get_string('rangedecimals_help', 'grades'),
+            get_string('rangedecimals', 'core_grades'),
+            get_string('rangedecimals_help', 'core_grades'),
             0,
             [
                 0 => 0,
@@ -116,15 +116,15 @@ if ($ADMIN->fulltree) {
     );
 
     $options = [
-        0 => get_string('shownohidden', 'grades'),
-        1 => get_string('showhiddenuntilonly', 'grades'),
-        2 => get_string('showallhidden', 'grades')
+        0 => get_string('shownohidden', 'core_grades'),
+        1 => get_string('showhiddenuntilonly', 'core_grades'),
+        2 => get_string('showallhidden', 'core_grades')
     ];
     $settings->add(
         new admin_setting_configselect(
             'grade_report_user_showhiddenitems',
-            get_string('showhiddenitems', 'grades'),
-            get_string('showhiddenitems_help', 'grades'),
+            get_string('showhiddenitems', 'core_grades'),
+            get_string('showhiddenitems_help', 'core_grades'),
             1,
             $options
         )
@@ -133,21 +133,21 @@ if ($ADMIN->fulltree) {
     $settings->add(
         new admin_setting_configselect(
             'grade_report_user_showtotalsifcontainhidden',
-            get_string('hidetotalifhiddenitems', 'grades'),
-            get_string('hidetotalifhiddenitems_help', 'grades'),
+            get_string('hidetotalifhiddenitems', 'core_grades'),
+            get_string('hidetotalifhiddenitems_help', 'core_grades'),
             GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN,
             [
                 GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN => get_string('hide'),
-                GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'grades'),
-                GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'grades')
+                GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'core_grades'),
+                GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'core_grades')
             ]
         )
     );
 
     $settings->add(
         new admin_setting_configcheckbox(
-            'grade_report_user_showcontributiontocoursetotal', get_string('showcontributiontocoursetotal', 'grades'),
-            get_string('showcontributiontocoursetotal_help', 'grades'),
+            'grade_report_user_showcontributiontocoursetotal', get_string('showcontributiontocoursetotal', 'core_grades'),
+            get_string('showcontributiontocoursetotal_help', 'core_grades'),
             1
         )
     );

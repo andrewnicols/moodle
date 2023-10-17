@@ -142,11 +142,11 @@ abstract class backup_plan_builder {
                     $a = stdClass();
                     $a->mid = $id;
                     $a->bid = $blockid;
-                    $controller->log(get_string('error_block_for_module_not_found', 'backup', $a), backup::LOG_WARNING);
+                    $controller->log(get_string('error_block_for_module_not_found', 'core_backup', $a), backup::LOG_WARNING);
                 }
             }
         } catch (backup_task_exception $e) {
-            $controller->log(get_string('error_course_module_not_found', 'backup', $id), backup::LOG_WARNING);
+            $controller->log(get_string('error_course_module_not_found', 'core_backup', $id), backup::LOG_WARNING);
         }
     }
 

@@ -67,7 +67,7 @@ class behat_repository_upload extends behat_base {
      */
     public function i_upload_and_overwrite_file_to_filemanager($filepath, $filemanagerelement) {
         $this->upload_file_to_filemanager($filepath, $filemanagerelement, new TableNode(array()),
-                get_string('overwrite', 'repository'));
+                get_string('overwrite', 'core_repository'));
     }
 
     /**
@@ -96,7 +96,7 @@ class behat_repository_upload extends behat_base {
      */
     public function i_upload_and_overwrite_file_to_filemanager_as($filepath, $filemanagerelement, TableNode $data) {
         $this->upload_file_to_filemanager($filepath, $filemanagerelement, $data,
-                get_string('overwrite', 'repository'));
+                get_string('overwrite', 'core_repository'));
     }
 
     /**
@@ -167,7 +167,7 @@ class behat_repository_upload extends behat_base {
         }
 
         // Submit the file.
-        $submit = $this->find_button(get_string('upload', 'repository'));
+        $submit = $this->find_button(get_string('upload', 'core_repository'));
         $submit->press();
 
         // We wait for all the JS to finish as it is performing an action.

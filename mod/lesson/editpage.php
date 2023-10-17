@@ -147,7 +147,7 @@ if ($edit) {
 
     $mform->set_data($data);
     $PAGE->navbar->add(get_string('edit'), new moodle_url('/mod/lesson/edit.php', array('id'=>$id)));
-    $PAGE->navbar->add(get_string('editingquestionpage', 'lesson', get_string($mform->qtypestring, 'lesson')));
+    $PAGE->navbar->add(get_string('editingquestionpage', 'mod_lesson', get_string($mform->qtypestring, 'mod_lesson')));
 } else {
     // Give the page type being created a chance to override the creation process
     // this is used by endofbranch, cluster, and endofcluster to skip the creation form.
@@ -163,9 +163,9 @@ if ($edit) {
     }
     $data = file_prepare_standard_editor($data, 'contents', $editoroptions, null);
     $mform->set_data($data);
-    $PAGE->navbar->add(get_string('addanewpage', 'lesson'), $PAGE->url);
+    $PAGE->navbar->add(get_string('addanewpage', 'mod_lesson'), $PAGE->url);
     if ($qtype !== 'unknown') {
-        $PAGE->navbar->add(get_string($mform->qtypestring, 'lesson'));
+        $PAGE->navbar->add(get_string($mform->qtypestring, 'mod_lesson'));
     }
 }
 
@@ -184,6 +184,6 @@ if ($data = $mform->get_data()) {
 }
 
 $lessonoutput = $PAGE->get_renderer('mod_lesson');
-echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('edit', 'lesson'));
+echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('edit', 'mod_lesson'));
 $mform->display();
 echo $lessonoutput->footer();

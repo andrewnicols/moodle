@@ -216,7 +216,7 @@ class repository_type implements cacheable_object {
         //check that $type has been set
         $timmedtype = trim($this->_typename);
         if (empty($timmedtype)) {
-            throw new repository_exception('emptytype', 'repository');
+            throw new repository_exception('emptytype', 'core_repository');
         }
 
         //set sortorder as the last position in the list
@@ -259,7 +259,7 @@ class repository_type implements cacheable_object {
             if (!repository::static_function($this->_typename, 'plugin_init')) {
                 $this->update_visibility(false);
                 if (!$silent) {
-                    throw new repository_exception('cannotinitplugin', 'repository');
+                    throw new repository_exception('cannotinitplugin', 'core_repository');
                 }
             }
 
@@ -273,7 +273,7 @@ class repository_type implements cacheable_object {
 
         } else {
             if (!$silent) {
-                throw new repository_exception('existingrepository', 'repository');
+                throw new repository_exception('existingrepository', 'core_repository');
             }
             // If plugin existed, return false, tell caller no new plugins were created.
             return false;
@@ -331,7 +331,7 @@ class repository_type implements cacheable_object {
             $this->_visible = $visible;
         }
         else if (!isset($this->_visible)) {
-            throw new repository_exception('updateemptyvisible', 'repository');
+            throw new repository_exception('updateemptyvisible', 'core_repository');
         }
 
         cache::make('core', 'repositories')->purge();
@@ -396,7 +396,7 @@ class repository_type implements cacheable_object {
                 $adjacentindice = $indice + 1;
             break;
             default:
-            throw new repository_exception('movenotdefined', 'repository');
+            throw new repository_exception('movenotdefined', 'core_repository');
         }
 
         //switch sortorder of this type and the adjacent type
@@ -605,7 +605,7 @@ abstract class repository implements cacheable_object {
                       JOIN {repository} r ON r.id = i.typeid
                      WHERE i.id = ?";
             if (!$record = $DB->get_record_sql($sql, array($repositoryid))) {
-                throw new repository_exception('invalidrepositoryid', 'repository');
+                throw new repository_exception('invalidrepositoryid', 'core_repository');
             }
             $cache->set('i:'. $record->id, $record);
         }
@@ -628,7 +628,7 @@ abstract class repository implements cacheable_object {
             $cache->set($cachekey, $repository);
             return $repository;
         } else {
-            throw new repository_exception('invalidplugin', 'repository');
+            throw new repository_exception('invalidplugin', 'core_repository');
         }
     }
 
@@ -796,7 +796,7 @@ abstract class repository implements cacheable_object {
             return true;
         }
 
-        throw new repository_exception('nopermissiontoaccess', 'repository');
+        throw new repository_exception('nopermissiontoaccess', 'core_repository');
     }
 
     /**
@@ -1267,13 +1267,13 @@ abstract class repository implements cacheable_object {
             if (empty($fileinfo)) {
                 if ($filestatus == 666) {
                     if (is_siteadmin() || ($context && has_capability('moodle/course:managefiles', $context))) {
-                        return get_string('lostsource', 'repository',
+                        return get_string('lostsource', 'core_repository',
                                 $params['contextid']. '/'. $params['component']. '/'. $params['filearea']. '/'. $params['itemid']. $params['filepath']. $params['filename']);
                     } else {
-                        return get_string('lostsource', 'repository', '');
+                        return get_string('lostsource', 'core_repository', '');
                     }
                 }
-                return get_string('undisclosedsource', 'repository');
+                return get_string('undisclosedsource', 'core_repository');
             } else {
                 return $fileinfo->get_readable_fullname();
             }
@@ -1498,13 +1498,13 @@ abstract class repository implements cacheable_object {
         $admin = ($context->id == SYSCONTEXTID) ? true : false;
         if ($admin) {
             $baseurl = new moodle_url('/'.$CFG->admin.'/repositoryinstance.php', array('sesskey'=>sesskey()));
-            $output .= $OUTPUT->heading(get_string('siteinstances', 'repository'));
+            $output .= $OUTPUT->heading(get_string('siteinstances', 'core_repository'));
         } else {
             $baseurl = new moodle_url('/repository/manage_instances.php', array('contextid'=>$context->id, 'sesskey'=>sesskey()));
         }
 
         $namestr = get_string('name');
-        $pluginstr = get_string('plugin', 'repository');
+        $pluginstr = get_string('plugin', 'core_repository');
         $settingsstr = get_string('settings');
         $deletestr = get_string('delete');
         // Retrieve list of instances. In administration context we want to display all
@@ -1570,7 +1570,7 @@ abstract class repository implements cacheable_object {
         //if no type is set, we can create all type of instance
         if (!$typename) {
             $instancehtml .= '<h3>';
-            $instancehtml .= get_string('createrepository', 'repository');
+            $instancehtml .= get_string('createrepository', 'core_repository');
             $instancehtml .= '</h3><ul>';
             $types = repository::get_editable_types($context);
             foreach ($types as $type) {
@@ -1584,7 +1584,7 @@ abstract class repository implements cacheable_object {
                     $instanceoptionnames = repository::static_function($type->get_typename(), 'get_instance_option_names');
                     if (!empty($instanceoptionnames)) {
                         $baseurl->param('new', $type->get_typename());
-                        $instancehtml .= '<li><a href="'.$baseurl->out().'">'.get_string('createxxinstance', 'repository', get_string('pluginname', 'repository_'.$type->get_typename())).  '</a></li>';
+                        $instancehtml .= '<li><a href="'.$baseurl->out().'">'.get_string('createxxinstance', 'core_repository', get_string('pluginname', 'repository_'.$type->get_typename())).  '</a></li>';
                         $baseurl->remove_params('new');
                         $addable++;
                     }
@@ -1597,7 +1597,7 @@ abstract class repository implements cacheable_object {
             if (!empty($instanceoptionnames)) {   //create a unique type of instance
                 $addable = 1;
                 $baseurl->param('new', $typename);
-                $output .= $OUTPUT->single_button($baseurl, get_string('createinstance', 'repository'), 'get');
+                $output .= $OUTPUT->single_button($baseurl, get_string('createinstance', 'core_repository'), 'get');
                 $baseurl->remove_params('new');
             }
         }
@@ -1623,7 +1623,7 @@ abstract class repository implements cacheable_object {
         if ($source && $this->has_moodle_files()) {
             $params = @json_decode(base64_decode($source), true);
             if (!is_array($params) || empty($params['contextid'])) {
-                throw new repository_exception('invalidparams', 'repository');
+                throw new repository_exception('invalidparams', 'core_repository');
             }
             $params = array(
                 'component' => empty($params['component']) ? ''   : clean_param($params['component'], PARAM_COMPONENT),
@@ -1635,7 +1635,7 @@ abstract class repository implements cacheable_object {
             );
             // Check if context exists.
             if (!context::instance_by_id($params['contextid'], IGNORE_MISSING)) {
-                throw new repository_exception('invalidparams', 'repository');
+                throw new repository_exception('invalidparams', 'core_repository');
             }
             return file_storage::pack_reference($params);
         }
@@ -1709,7 +1709,7 @@ abstract class repository implements cacheable_object {
 
         $result = $c->download_one($url, null, array('filepath' => $path, 'timeout' => $CFG->repositorygetfiletimeout));
         if ($result !== true) {
-            throw new moodle_exception('errorwhiledownload', 'repository', '', $result);
+            throw new moodle_exception('errorwhiledownload', 'core_repository', '', $result);
         }
         return array('path'=>$path, 'url'=>$url);
     }
@@ -1770,7 +1770,7 @@ abstract class repository implements cacheable_object {
                     if (isset($fileinfo['path'])) {
                         $file->set_synchronised_content_from_file($fileinfo['path']);
                     } else {
-                        throw new moodle_exception('errorwhiledownload', 'repository', '', '');
+                        throw new moodle_exception('errorwhiledownload', 'core_repository', '', '');
                     }
                 } catch (Exception $e) {
                     if ($contentexists) {
@@ -2252,11 +2252,11 @@ abstract class repository implements cacheable_object {
                 $file['size_f'] = display_size($file['size']);
             }
             if (isset($file['license']) && get_string_manager()->string_exists($file['license'], 'license')) {
-                $file['license_f'] = get_string($file['license'], 'license');
+                $file['license_f'] = get_string($file['license'], 'mod_license');
             }
             if (isset($file['image_width']) && isset($file['image_height'])) {
                 $a = array('width' => $file['image_width'], 'height' => $file['image_height']);
-                $file['dimensions'] = get_string('imagesize', 'repository', (object)$a);
+                $file['dimensions'] = get_string('imagesize', 'core_repository', (object)$a);
             }
             foreach (array('date', 'datemodified', 'datecreated') as $key) {
                 if (!isset($file[$key]) && isset($file['date'])) {
@@ -2437,8 +2437,8 @@ abstract class repository implements cacheable_object {
             // this plugin has only one instance
             // so we need to give it a name
             // it can be empty, then moodle will look for instance name from language string
-            $mform->addElement('text', 'pluginname', get_string('pluginname', 'repository'), array('size' => '40'));
-            $mform->addElement('static', 'pluginnamehelp', '', get_string('pluginnamehelp', 'repository'));
+            $mform->addElement('text', 'pluginname', get_string('pluginname', 'core_repository'), array('size' => '40'));
+            $mform->addElement('static', 'pluginnamehelp', '', get_string('pluginnamehelp', 'core_repository'));
             $mform->setType('pluginname', PARAM_TEXT);
         }
     }
@@ -2535,7 +2535,7 @@ abstract class repository implements cacheable_object {
                 if ($tempfile->is_external_file()) {
                     // New file is a reference. Check that existing file does not have any other files referencing to it
                     if (isset($source->original) && $fs->search_references_count($source->original)) {
-                        return (object)array('error' => get_string('errordoublereference', 'repository'));
+                        return (object)array('error' => get_string('errordoublereference', 'core_repository'));
                     }
                 }
                 // delete existing file to release filename
@@ -2583,9 +2583,9 @@ abstract class repository implements cacheable_object {
         $filemodified = false;
         if (!$file = $fs->get_file($usercontext->id, 'user', 'draft', $draftid, $filepath, $filename)) {
             if ($filename === '.') {
-                throw new moodle_exception('foldernotfound', 'repository');
+                throw new moodle_exception('foldernotfound', 'core_repository');
             } else {
-                throw new moodle_exception('filenotfound', 'error');
+                throw new moodle_exception('filenotfound', 'mod_error');
             }
         }
         if (!$file->is_directory()) {
@@ -2593,7 +2593,7 @@ abstract class repository implements cacheable_object {
             if ($updatedata['filepath'] !== $filepath || $updatedata['filename'] !== $filename) {
                 // Rename/move file: check that target file name does not exist.
                 if ($fs->file_exists($usercontext->id, 'user', 'draft', $draftid, $updatedata['filepath'], $updatedata['filename'])) {
-                    throw new moodle_exception('fileexists', 'repository');
+                    throw new moodle_exception('fileexists', 'core_repository');
                 }
                 if (($filesource = @unserialize($file->get_source())) && isset($filesource->original)) {
                     unset($filesource->original);
@@ -2625,12 +2625,12 @@ abstract class repository implements cacheable_object {
             }
             if ($fs->file_exists($usercontext->id, 'user', 'draft', $draftid, $updatedata['filepath'], '.')) {
                 // bad luck, we can not rename if something already exists there
-                throw new moodle_exception('folderexists', 'repository');
+                throw new moodle_exception('folderexists', 'core_repository');
             }
             $xfilepath = preg_quote($filepath, '|');
             if (preg_match("|^$xfilepath|", $updatedata['filepath'])) {
                 // we can not move folder to it's own subfolder
-                throw new moodle_exception('folderrecurse', 'repository');
+                throw new moodle_exception('folderrecurse', 'core_repository');
             }
 
             // If directory changed the name, update timemodified.
@@ -2963,7 +2963,7 @@ final class repository_instance_form extends moodleform {
         if ($result === false) {
             $mform->addElement('cancel');
         } else {
-            $this->add_action_buttons(true, get_string('save','repository'));
+            $this->add_action_buttons(true, get_string('save','core_repository'));
         }
     }
 
@@ -2997,7 +2997,7 @@ final class repository_instance_form extends moodleform {
             $params['instanceid'] = $instance->id;
         }
         if ($DB->count_records_sql($sql, $params) > 0) {
-            $errors['name'] = get_string('erroruniquename', 'repository');
+            $errors['name'] = get_string('erroruniquename', 'core_repository');
         }
 
         return $errors;
@@ -3092,7 +3092,7 @@ final class repository_type_form extends moodleform {
             $this->set_data($data);
         }
 
-        $this->add_action_buttons(true, get_string('save','repository'));
+        $this->add_action_buttons(true, get_string('save','core_repository'));
     }
 
     /**

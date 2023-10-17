@@ -113,8 +113,8 @@ if ($userid || $showcompleted) {
         $usr = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
         $responsetitle = userdate($completedrecord->timemodified) . ' (' . fullname($usr) . ')';
     } else {
-        $responsetitle = get_string('response_nr', 'feedback') . ': ' .
-                $completedrecord->random_response . ' (' . get_string('anonymous', 'feedback') . ')';
+        $responsetitle = get_string('response_nr', 'mod_feedback') . ': ' .
+                $completedrecord->random_response . ' (' . get_string('anonymous', 'mod_feedback') . ')';
     }
 
     echo $OUTPUT->heading($responsetitle, 4);
@@ -153,7 +153,7 @@ if ($userid || $showcompleted) {
     // Show non-anonymous responses (always retrieve them even if current feedback is anonymous).
     $totalrows = $responsestable->get_total_responses_count();
     if (!$feedbackstructure->is_anonymous() || $totalrows) {
-        echo $OUTPUT->heading(get_string('non_anonymous_entries', 'feedback', $totalrows), 4);
+        echo $OUTPUT->heading(get_string('non_anonymous_entries', 'mod_feedback', $totalrows), 4);
         $responsestable->display();
     }
 
@@ -161,7 +161,7 @@ if ($userid || $showcompleted) {
     $feedbackstructure->shuffle_anonym_responses();
     $totalrows = $anonresponsestable->get_total_responses_count();
     if ($feedbackstructure->is_anonymous() || $totalrows) {
-        echo $OUTPUT->heading(get_string('anonymous_entries', 'feedback', $totalrows), 4);
+        echo $OUTPUT->heading(get_string('anonymous_entries', 'mod_feedback', $totalrows), 4);
         $anonresponsestable->display();
     }
 

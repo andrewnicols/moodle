@@ -58,7 +58,7 @@ if ($options['help']) {
 }
 
 if (!\core_analytics\manager::is_analytics_enabled()) {
-    echo get_string('analyticsdisabled', 'analytics') . PHP_EOL;
+    echo get_string('analyticsdisabled', 'core_analytics') . PHP_EOL;
     exit(0);
 }
 

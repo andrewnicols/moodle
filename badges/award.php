@@ -36,7 +36,7 @@ $revoke = optional_param('revoke', false, PARAM_BOOL);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 $badge = new badge($badgeid);
@@ -47,7 +47,7 @@ $navurl = new moodle_url('/badges/index.php', array('type' => $badge->type));
 
 if ($badge->type == BADGE_TYPE_COURSE) {
     if (empty($CFG->badges_allowcoursebadges)) {
-        throw new \moodle_exception('coursebadgesdisabled', 'badges');
+        throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
     }
     require_login($badge->courseid);
     $course = get_course($badge->courseid);
@@ -68,16 +68,16 @@ $PAGE->set_url($url);
 $PAGE->set_context($context);
 
 // Set up navigation and breadcrumbs.
-$strrecipients = get_string('recipients', 'badges');
+$strrecipients = get_string('recipients', 'core_badges');
 $PAGE->navbar->add($badge->name, new moodle_url('overview.php', array('id' => $badge->id)))
     ->add($strrecipients, new moodle_url('recipients.php', array('id' => $badge->id)))
-    ->add(get_string('award', 'badges'));
+    ->add(get_string('award', 'core_badges'));
 $PAGE->set_title($strrecipients);
 $PAGE->set_heading($heading);
 
 if (!$badge->is_active()) {
     echo $OUTPUT->header();
-    echo $OUTPUT->notification(get_string('donotaward', 'badges'));
+    echo $OUTPUT->notification(get_string('donotaward', 'core_badges'));
     echo $OUTPUT->footer();
     die();
 }
@@ -93,7 +93,7 @@ $acceptedroles = array_keys($badge->criteria[BADGE_CRITERIA_TYPE_MANUAL]->params
 
 if (empty($acceptedroles)) {
     echo $OUTPUT->header();
-    echo $OUTPUT->notification(get_string('notacceptedrole', 'badges', $returnlink));
+    echo $OUTPUT->notification(get_string('notacceptedrole', 'core_badges', $returnlink));
     echo $OUTPUT->footer();
     die();
 }
@@ -136,7 +136,7 @@ if (count($acceptedroles) > 1) {
             echo $OUTPUT->header();
             echo $tertiarynav;
             echo $OUTPUT->box($OUTPUT->single_select(new moodle_url($pageurl), 'role', $select, '', array('' => 'choosedots'),
-                null, array('label' => get_string('selectaward', 'badges'))));
+                null, array('label' => get_string('selectaward', 'core_badges'))));
             echo $OUTPUT->footer();
             die();
         } else {
@@ -144,11 +144,11 @@ if (count($acceptedroles) > 1) {
             $issuerrole = new stdClass();
             $issuerrole->roleid = $role;
             $roleselect = $OUTPUT->single_select(new moodle_url($pageurl), 'role', $select, $role, null, null,
-                array('label' => get_string('selectaward', 'badges')));
+                array('label' => get_string('selectaward', 'core_badges')));
         }
     } else {
         echo $OUTPUT->header();
-        echo $OUTPUT->notification(get_string('notacceptedrole', 'badges', $returnlink));
+        echo $OUTPUT->notification(get_string('notacceptedrole', 'core_badges', $returnlink));
         echo $OUTPUT->footer();
         die();
     }
@@ -158,7 +158,7 @@ if (count($acceptedroles) > 1) {
     $usersids = array_keys($users);
     if (!$isadmin && !in_array($USER->id, $usersids)) {
         echo $OUTPUT->header();
-        echo $OUTPUT->notification(get_string('notacceptedrole', 'badges', $returnlink));
+        echo $OUTPUT->notification(get_string('notacceptedrole', 'core_badges', $returnlink));
         echo $OUTPUT->footer();
         die();
     } else {
@@ -190,7 +190,7 @@ if ($award && data_submitted() && has_capability('moodle/badges:awardbadge', $co
             $data->userid = $user->id;
             badges_award_handle_manual_criteria_review($data);
         } else {
-            echo $OUTPUT->error_text(get_string('error:cannotawardbadge', 'badges'));
+            echo $OUTPUT->error_text(get_string('error:cannotawardbadge', 'core_badges'));
         }
     }
 
@@ -203,7 +203,7 @@ if ($award && data_submitted() && has_capability('moodle/badges:awardbadge', $co
 
     foreach ($users as $user) {
         if (!process_manual_revoke($user->id, $USER->id, $issuerrole->roleid, $badgeid)) {
-            echo $OUTPUT->error_text(get_string('error:cannotrevokebadge', 'badges'));
+            echo $OUTPUT->error_text(get_string('error:cannotrevokebadge', 'core_badges'));
         }
     }
 

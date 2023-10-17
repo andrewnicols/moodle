@@ -19,8 +19,8 @@
     $event->add_record_snapshot('course', $course);
     $event->trigger();
 
-    $strchoice = get_string("modulename", "choice");
-    $strchoices = get_string("modulenameplural", "choice");
+    $strchoice = get_string("modulename", 'mod_choice');
+    $strchoices = get_string("modulenameplural", 'mod_choice');
     $PAGE->set_title($strchoices);
     $PAGE->set_heading($course->fullname);
     $PAGE->navbar->add($strchoices);

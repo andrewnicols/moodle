@@ -34,7 +34,7 @@ list($options, $unrecognized) = cli_get_params(array('help'=>false, 'ie9fix'=>fa
 
 if ($unrecognized) {
     $unrecognized = implode("\n  ", $unrecognized);
-    cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
+    cli_error(get_string('cliunknowoption', 'core_admin', $unrecognized));
 }
 
 // If necessary add files that should be ignored - such as in 3rd party plugins.

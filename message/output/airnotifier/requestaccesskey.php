@@ -33,8 +33,8 @@ require_capability('moodle/site:config', context_system::instance());
 
 $strheading = get_string('requestaccesskey', 'message_airnotifier');
 $PAGE->navbar->add(get_string('administrationsite'));
-$PAGE->navbar->add(get_string('plugins', 'admin'));
-$PAGE->navbar->add(get_string('messageoutputs', 'message'));
+$PAGE->navbar->add(get_string('plugins', 'core_admin'));
+$PAGE->navbar->add(get_string('messageoutputs', 'core_message'));
 $returl = new moodle_url('/admin/settings.php', array('section' => 'messagesettingairnotifier'));
 $PAGE->navbar->add(get_string('pluginname', 'message_airnotifier'), $returl);
 $PAGE->navbar->add($strheading);
@@ -89,8 +89,8 @@ if ($key = $manager->request_accesskey()) {
     if (empty($CFG->enablemobilewebservice)) {
         // Mobile web services not enabled. Warn the user.
         $warnings[] = [
-            'msg' => get_string('mobilenotconfiguredwarning', 'admin'),
-            'linkmsg' => get_string('enablemobilewebservice', 'admin'),
+            'msg' => get_string('mobilenotconfiguredwarning', 'core_admin'),
+            'linkmsg' => get_string('enablemobilewebservice', 'core_admin'),
             'linkurl' => new moodle_url('/admin/settings.php', ['section' => 'mobilesettings']),
         ];
     }

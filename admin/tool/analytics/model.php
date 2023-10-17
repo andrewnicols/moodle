@@ -83,7 +83,7 @@ switch ($action) {
         $title = get_string('invalidanalysables', 'tool_analytics');
         break;
     default:
-        throw new moodle_exception('errorunknownaction', 'analytics');
+        throw new moodle_exception('errorunknownaction', 'core_analytics');
 }
 
 \tool_analytics\output\helper::set_navbar($title, $url);

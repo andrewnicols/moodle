@@ -83,7 +83,7 @@ class MoodleQuickForm_autocomplete extends MoodleQuickForm_select {
             $this->placeholder = $attributes['placeholder'];
             unset($attributes['placeholder']);
         }
-        $this->noselectionstring = get_string('noselection', 'form');
+        $this->noselectionstring = get_string('noselection', 'core_form');
         if (isset($attributes['noselectionstring'])) {
             $this->noselectionstring = $attributes['noselectionstring'];
             unset($attributes['noselectionstring']);

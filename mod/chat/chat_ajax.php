@@ -28,24 +28,24 @@ $chatlasttime = optional_param('chat_lasttime', 0, PARAM_INT);
 $chatlastrow  = optional_param('chat_lastrow', 1, PARAM_INT);
 
 if (!confirm_sesskey()) {
-    throw new moodle_exception('invalidsesskey', 'error');
+    throw new moodle_exception('invalidsesskey', 'mod_error');
 }
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new moodle_exception('notlogged', 'chat');
+    throw new moodle_exception('notlogged', 'mod_chat');
 }
 if (!$chat = $DB->get_record('chat', array('id' => $chatuser->chatid))) {
-    throw new moodle_exception('invaliduserid', 'error');
+    throw new moodle_exception('invaliduserid', 'mod_error');
 }
 if (!$course = $DB->get_record('course', array('id' => $chat->course))) {
-    throw new moodle_exception('invalidcourseid', 'error');
+    throw new moodle_exception('invalidcourseid', 'mod_error');
 }
 if (!$cm = get_coursemodule_from_instance('chat', $chat->id, $course->id)) {
-    throw new moodle_exception('invalidcoursemodule', 'error');
+    throw new moodle_exception('invalidcoursemodule', 'mod_error');
 }
 
 if (!isloggedin()) {
-    throw new moodle_exception('notlogged', 'chat');
+    throw new moodle_exception('notlogged', 'mod_chat');
 }
 
 // Set up $PAGE so that format_text will work properly.

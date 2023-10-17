@@ -44,7 +44,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $prefix = provider::SECTION_PREFERENCES_PREFIX;
         $preference = "{$prefix}_{$course->id}";
         $value = "Something";
-        $preferencestring = get_string("preference:$prefix", 'courseformat', $course->fullname);
+        $preferencestring = get_string("preference:$prefix", 'core_courseformat', $course->fullname);
 
         // Add a user home page preference for the User.
         set_user_preference($preference , $value, $user);

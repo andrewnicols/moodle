@@ -71,10 +71,10 @@ class csv_entries_importer extends entries_importer {
 
         $readcount = $cir->load_csv_content($this->get_data_file_content(), $encoding, $fielddelimiter);
         if (empty($readcount)) {
-            throw new \moodle_exception('csvfailed', 'data', "{$CFG->wwwroot}/mod/data/edit.php?d={$data->id}");
+            throw new \moodle_exception('csvfailed', 'mod_data', "{$CFG->wwwroot}/mod/data/edit.php?d={$data->id}");
         } else {
             if (!$fieldnames = $cir->get_columns()) {
-                throw new \moodle_exception('cannotreadtmpfile', 'error');
+                throw new \moodle_exception('cannotreadtmpfile', 'mod_error');
             }
 
             // Check the fieldnames are valid.
@@ -83,8 +83,8 @@ class csv_entries_importer extends entries_importer {
             $errorfield = '';
             $usernamestring = get_string('username');
             $safetoskipfields = [get_string('user'), get_string('email'),
-                get_string('timeadded', 'data'), get_string('timemodified', 'data'),
-                get_string('approved', 'data'), get_string('tags', 'data')];
+                get_string('timeadded', 'mod_data'), get_string('timemodified', 'mod_data'),
+                get_string('approved', 'mod_data'), get_string('tags', 'mod_data')];
             $userfieldid = null;
             foreach ($fieldnames as $id => $name) {
                 if (!isset($rawfields[$name])) {
@@ -116,7 +116,7 @@ class csv_entries_importer extends entries_importer {
             }
 
             if (!empty($errorfield)) {
-                throw new \moodle_exception('fieldnotmatched', 'data',
+                throw new \moodle_exception('fieldnotmatched', 'mod_data',
                     "{$CFG->wwwroot}/mod/data/edit.php?d={$data->id}", $errorfield);
             }
 
@@ -163,8 +163,8 @@ class csv_entries_importer extends entries_importer {
                     }
 
                     if (core_tag_tag::is_enabled('mod_data', 'data_records') &&
-                        isset($fieldnames[get_string('tags', 'data')])) {
-                        $columnindex = $fieldnames[get_string('tags', 'data')];
+                        isset($fieldnames[get_string('tags', 'mod_data')])) {
+                        $columnindex = $fieldnames[get_string('tags', 'mod_data')];
                         $rawtags = $record[$columnindex];
                         $tags = explode(',', $rawtags);
                         foreach ($tags as $tag) {
@@ -178,7 +178,7 @@ class csv_entries_importer extends entries_importer {
 
                     $this->addedrecordsmessages[] = get_string('added', 'moodle',
                             count($this->addedrecordsmessages) + 1)
-                        . ". " . get_string('entry', 'data')
+                        . ". " . get_string('entry', 'mod_data')
                         . " (ID $recordid)\n";
                 }
             }

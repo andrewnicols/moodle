@@ -121,13 +121,13 @@ class provider implements
         foreach ($courses as $course) {
             $coursecompletion = \core_completion\privacy\provider::get_course_completion_info($contextlist->get_user(), $course);
             writer::with_context(\context_course::instance($course->id))->export_data(
-                    [get_string('privacy:completionpath', 'course')], (object) $coursecompletion);
+                    [get_string('privacy:completionpath', 'core_course')], (object) $coursecompletion);
             // Get user's favourites information for the particular course.
             $coursefavourite = \core_favourites\privacy\provider::get_favourites_info_for_user($contextlist->get_user()->id,
                     \context_course::instance($course->id), 'core_course', 'courses', $course->id);
             if ($coursefavourite) { // If the course has been favourited by the user, include it in the export.
                 writer::with_context(\context_course::instance($course->id))->export_data(
-                        [get_string('privacy:favouritespath', 'course')], (object) $coursefavourite);
+                        [get_string('privacy:favouritespath', 'core_course')], (object) $coursefavourite);
             }
         }
         $courses->close();
@@ -225,7 +225,7 @@ class provider implements
             writer::export_user_preference('core_course',
                 'coursecat_management_perpage',
                 $perpage,
-                get_string('privacy:perpage', 'course')
+                get_string('privacy:perpage', 'core_course')
             );
         }
     }

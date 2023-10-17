@@ -169,7 +169,7 @@ class gradeimport_csv_load_data {
         if (!isset($record->finalgrade) || $record->finalgrade <= $gradepointmaximum) {
             return $DB->insert_record('grade_import_values', $record);
         } else {
-            $this->cleanup_import(get_string('gradevaluetoobig', 'grades', $gradepointmaximum));
+            $this->cleanup_import(get_string('gradevaluetoobig', 'core_grades', $gradepointmaximum));
             return null;
         }
     }
@@ -256,7 +256,7 @@ class gradeimport_csv_load_data {
             $usermappingerrorobj = new stdClass();
             $usermappingerrorobj->field = $userfields['label'];
             $usermappingerrorobj->value = $value;
-            $this->cleanup_import(get_string($errorkey, 'grades', $usermappingerrorobj));
+            $this->cleanup_import(get_string($errorkey, 'core_grades', $usermappingerrorobj));
             unset($usermappingerrorobj);
             return null;
         }
@@ -277,7 +277,7 @@ class gradeimport_csv_load_data {
         if (!new grade_item(array('id' => $itemid, 'courseid' => $courseid))) {
             // Supplied bad mapping, should not be possible since user
             // had to pick mapping.
-            $this->cleanup_import(get_string('importfailed', 'grades'));
+            $this->cleanup_import(get_string('importfailed', 'core_grades'));
             return null;
         }
 
@@ -304,13 +304,13 @@ class gradeimport_csv_load_data {
         if (!$gradeitem = new grade_item(array('id' => $map[$key], 'courseid' => $courseid))) {
             // Supplied bad mapping, should not be possible since user
             // had to pick mapping.
-            $this->cleanup_import(get_string('importfailed', 'grades'));
+            $this->cleanup_import(get_string('importfailed', 'core_grades'));
             return null;
         }
 
         // Check if grade item is locked if so, abort.
         if ($gradeitem->is_locked()) {
-            $this->cleanup_import(get_string('gradeitemlocked', 'grades'));
+            $this->cleanup_import(get_string('gradeitemlocked', 'core_grades'));
             return null;
         }
 
@@ -326,7 +326,7 @@ class gradeimport_csv_load_data {
                 array_unshift($scales, '-'); // Scales start at key 1.
                 $key = array_search($value, $scales);
                 if ($key === false) {
-                    $this->cleanup_import(get_string('badgrade', 'grades'));
+                    $this->cleanup_import(get_string('badgrade', 'core_grades'));
                     return null;
                 }
                 $value = $key;
@@ -342,7 +342,7 @@ class gradeimport_csv_load_data {
                     $value = $validvalue;
                 } else {
                     // Non numeric grade value supplied, possibly mapped wrong column.
-                    $this->cleanup_import(get_string('badgrade', 'grades'));
+                    $this->cleanup_import(get_string('badgrade', 'core_grades'));
                     return null;
                 }
             }
@@ -533,13 +533,13 @@ class gradeimport_csv_load_data {
             // No user mapping supplied at all, or user mapping failed.
             if (empty($this->studentid) || !is_numeric($this->studentid)) {
                 // User not found, abort whole import.
-                $this->cleanup_import(get_string('usermappingerrorusernotfound', 'grades'));
+                $this->cleanup_import(get_string('usermappingerrorusernotfound', 'core_grades'));
                 break;
             }
 
             if ($separatemode and !groups_is_member($currentgroup, $this->studentid)) {
                 // Not allowed to import into this group, abort.
-                $this->cleanup_import(get_string('usermappingerrorcurrentgroup', 'grades'));
+                $this->cleanup_import(get_string('usermappingerrorcurrentgroup', 'core_grades'));
                 break;
             }
 
@@ -553,7 +553,7 @@ class gradeimport_csv_load_data {
                             'userid' => $this->studentid))) {
                         if ($gradegrade->is_locked()) {
                             // Individual grade locked.
-                            $this->cleanup_import(get_string('gradelocked', 'grades'));
+                            $this->cleanup_import(get_string('gradelocked', 'core_grades'));
                             return $this->status;
                         }
                         // Check if the force import option is disabled and the last exported date column is present.
@@ -562,7 +562,7 @@ class gradeimport_csv_load_data {
                             if (clean_param($exportedtime, PARAM_INT) != $exportedtime || $exportedtime > time() ||
                                     $exportedtime < strtotime("-1 year", time())) {
                                 // The date is invalid, or in the future, or more than a year old.
-                                $this->cleanup_import(get_string('invalidgradeexporteddate', 'grades'));
+                                $this->cleanup_import(get_string('invalidgradeexporteddate', 'core_grades'));
                                 return $this->status;
 
                             }
@@ -570,7 +570,7 @@ class gradeimport_csv_load_data {
                             if (!empty($timemodified) && ($exportedtime < $timemodified)) {
                                 // The item was graded after we exported it, we return here not to override it.
                                 $user = core_user::get_user($this->studentid);
-                                $this->cleanup_import(get_string('gradealreadyupdated', 'grades', fullname($user)));
+                                $this->cleanup_import(get_string('gradealreadyupdated', 'core_grades', fullname($user)));
                                 return $this->status;
                             }
                         }

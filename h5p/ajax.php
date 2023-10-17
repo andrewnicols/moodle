@@ -35,7 +35,7 @@ require_once($CFG->libdir . '/filelib.php');
 
 if (!confirm_sesskey()) {
     autoloader::register();
-    H5PCore::ajaxError(get_string('invalidsesskey', 'error'));
+    H5PCore::ajaxError(get_string('invalidsesskey', 'mod_error'));
     header('HTTP/1.1 403 Forbidden');
     return;
 }
@@ -87,7 +87,7 @@ switch ($action) {
         foreach ($_FILES as $uploadedfile) {
             $filename = clean_param($uploadedfile['name'], PARAM_FILE);
             if ($uploadedfile['size'] > $maxsize) {
-                H5PCore::ajaxError(get_string('maxbytesfile', 'error', ['file' => $filename, 'size' => display_size($maxsize, 0)]));
+                H5PCore::ajaxError(get_string('maxbytesfile', 'mod_error', ['file' => $filename, 'size' => display_size($maxsize, 0)]));
                 return;
             }
             \core\antivirus\manager::scan_file($uploadedfile['tmp_name'], $filename, true);

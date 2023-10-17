@@ -747,7 +747,7 @@ if (function_exists('gc_enable')) {
 
 // detect unsupported upgrade jump as soon as possible - do not change anything, do not use system functions
 if (!empty($CFG->version) and $CFG->version < 2007101509) {
-    throw new \moodle_exception('upgraderequires19', 'error');
+    throw new \moodle_exception('upgraderequires19', 'mod_error');
     die;
 }
 
@@ -1052,7 +1052,7 @@ if (PHPUNIT_TEST) {
     // This ip will be banned finally
     if (!empty($CFG->allowedip)) {
         if (!remoteip_in_list($CFG->allowedip)) {
-            die(get_string('ipblocked', 'admin'));
+            die(get_string('ipblocked', 'core_admin'));
         }
     }
     // need further check, client ip may a part of
@@ -1060,7 +1060,7 @@ if (PHPUNIT_TEST) {
     // in blocked list.
     if (!empty($CFG->blockedip)) {
         if (remoteip_in_list($CFG->blockedip)) {
-            die(get_string('ipblocked', 'admin'));
+            die(get_string('ipblocked', 'core_admin'));
         }
     }
 
@@ -1077,10 +1077,10 @@ if (PHPUNIT_TEST) {
             // blocked too
             if (!empty($CFG->allowedip)) {
                 if (!remoteip_in_list($CFG->allowedip)) {
-                    die(get_string('ipblocked', 'admin'));
+                    die(get_string('ipblocked', 'core_admin'));
                 }
             } else {
-                die(get_string('ipblocked', 'admin'));
+                die(get_string('ipblocked', 'core_admin'));
             }
         }
     }
@@ -1088,7 +1088,7 @@ if (PHPUNIT_TEST) {
     // allowed list should be tested
     if(!empty($CFG->allowedip)) {
         if (!remoteip_in_list($CFG->allowedip)) {
-            die(get_string('ipblocked', 'admin'));
+            die(get_string('ipblocked', 'core_admin'));
         }
     }
 

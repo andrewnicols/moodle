@@ -55,7 +55,7 @@ class insights_viewed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventinsightsviewed', 'analytics');
+        return get_string('eventinsightsviewed', 'core_analytics');
     }
 
     /**

@@ -158,7 +158,7 @@ class quiz_responses_report extends attempts_report {
             foreach ($questions as $id => $question) {
                 if ($options->showqtext) {
                     $columns[] = 'question' . $id;
-                    $headers[] = get_string('questionx', 'question', $question->number);
+                    $headers[] = get_string('questionx', 'core_question', $question->number);
                 }
                 if ($options->showresponses) {
                     $columns[] = 'response' . $id;

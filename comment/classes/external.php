@@ -119,7 +119,7 @@ class core_comment_external extends external_api {
 
         // False means no permissions to see comments.
         if ($comments === false) {
-            throw new moodle_exception('nopermissions', 'error', '', 'view comments');
+            throw new moodle_exception('nopermissions', 'mod_error', '', 'view comments');
         }
         $options = array('blanktarget' => true);
 

@@ -50,7 +50,7 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
         // The non-breaking space '&nbsp;' is used in html to fix MDL-75051 (browser issues caused by chrome and Edge).
         if ($question->idnumber !== null && $question->idnumber !== '') {
             echo ' ' . \html_writer::span(
-                            \html_writer::span(get_string('idnumber', 'question') . '&nbsp;', 'accesshide')
+                            \html_writer::span(get_string('idnumber', 'core_question') . '&nbsp;', 'accesshide')
                             . \html_writer::span(s($question->idnumber), 'badge badge-primary'), 'ml-1');
         }
 
@@ -71,8 +71,8 @@ class question_name_idnumber_tags_column extends viewquestionname_column_helper 
 
     public function is_sortable(): array {
         return [
-                'name' => ['field' => 'q.name', 'title' => get_string('questionname', 'question')],
-                'idnumber' => ['field' => 'qbe.idnumber', 'title' => get_string('idnumber', 'question')],
+                'name' => ['field' => 'q.name', 'title' => get_string('questionname', 'core_question')],
+                'idnumber' => ['field' => 'qbe.idnumber', 'title' => get_string('idnumber', 'core_question')],
         ];
     }
 

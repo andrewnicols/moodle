@@ -68,7 +68,7 @@ class moodlenet_get_shared_course_info extends external_api {
         $coursecontext = context_course::instance($course->id);
         if (!utilities::can_user_share($coursecontext, $USER->id, 'course')) {
             return self::return_errors($courseid, 'errorpermission',
-                get_string('nopermissions', 'error', get_string('moodlenet:sharetomoodlenet', 'moodle')));
+                get_string('nopermissions', 'mod_error', get_string('moodlenet:sharetomoodlenet', 'moodle')));
         }
 
         $warnings = [];

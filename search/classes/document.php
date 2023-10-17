@@ -309,7 +309,7 @@ class document implements \renderable, \templatable {
                 } else {
                     $docid = '(unknown)';
                 }
-                throw new \moodle_exception('error_indexing', 'search', '', null, '"' . $fieldname .
+                throw new \moodle_exception('error_indexing', 'core_search', '', null, '"' . $fieldname .
                         '" value causes preg_replace error (may be caused by unusual characters) ' .
                         'in document with id "' . $docid . '"');
             }
@@ -645,7 +645,7 @@ class document implements \renderable, \templatable {
             'coursefullname' => format_string($this->get('coursefullname'), true, ['context' => $context->id]),
             'modified' => userdate($this->get('modified')),
             'timemodified' => $this->get('modified'),
-            'title' => ($title !== '') ? $title : get_string('notitle', 'search'),
+            'title' => ($title !== '') ? $title : get_string('notitle', 'core_search'),
             'docurl' => ($this->get_doc_url())->out(false),
             'content' => $this->is_set('content') ? $this->format_text($this->get('content')) : null,
             'contextid' => $this->get('contextid'),

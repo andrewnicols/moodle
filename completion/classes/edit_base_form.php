@@ -248,7 +248,7 @@ abstract class core_completion_edit_base_form extends moodleform {
         );
 
         if ($conflicts = $this->get_modules_with_hidden_rules()) {
-            $mform->addElement('static', 'qwerty', '', get_string('hiddenrules', 'completion', join(', ', $conflicts)));
+            $mform->addElement('static', 'qwerty', '', get_string('hiddenrules', 'core_completion', join(', ', $conflicts)));
         }
 
         // Whether to show the cancel button or not in the form.

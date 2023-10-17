@@ -137,7 +137,7 @@ abstract class database_exporter {
         if ($this->check_schema and $errors = $this->manager->check_database_schema($this->schema, $options)) {
             $details = '';
             foreach ($errors as $table=>$items) {
-                $details .= '<div>'.get_string('tablex', 'dbtransfer', $table);
+                $details .= '<div>'.get_string('tablex', 'mod_dbtransfer', $table);
                 $details .= '<ul>';
                 foreach ($items as $item) {
                     $details .= '<li>'.$item.'</li>';

@@ -185,13 +185,13 @@ class insights_list implements \renderable, \templatable {
 
             if (empty($insights) && $this->page == 0) {
                 if ($this->model->any_prediction_obtained()) {
-                    $data->noinsights = get_string('noinsights', 'analytics');
+                    $data->noinsights = get_string('noinsights', 'core_analytics');
                 } else {
-                    $data->noinsights = get_string('nopredictionsyet', 'analytics');
+                    $data->noinsights = get_string('nopredictionsyet', 'core_analytics');
                 }
             }
         } else {
-            $data->noinsights = get_string('noinsights', 'analytics');
+            $data->noinsights = get_string('noinsights', 'core_analytics');
         }
 
         if (!empty($data->noinsights)) {

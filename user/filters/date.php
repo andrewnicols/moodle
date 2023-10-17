@@ -69,13 +69,13 @@ class user_filter_date extends user_filter_type {
         $objs[] = $mform->createElement('static', $this->_name.'_s1', null,
             html_writer::start_tag('div', array('class' => 'w-100 d-flex align-items-center')));
         $objs[] = $mform->createElement('static', $this->_name.'_s2', null,
-            html_writer::tag('div', get_string('isafter', 'filters'), array('class' => 'mr-2')));
+            html_writer::tag('div', get_string('isafter', 'core_filters'), array('class' => 'mr-2')));
         $objs[] = $mform->createElement('date_selector', $this->_name.'_sdt', null, array('optional' => true));
         $objs[] = $mform->createElement('static', $this->_name.'_s3', null, html_writer::end_tag('div'));
         $objs[] = $mform->createElement('static', $this->_name.'_s4', null,
             html_writer::start_tag('div', array('class' => 'w-100 d-flex align-items-center')));
         $objs[] = $mform->createElement('static', $this->_name.'_s5', null,
-            html_writer::tag('div', get_string('isbefore', 'filters'), array('class' => 'mr-2')));
+            html_writer::tag('div', get_string('isbefore', 'core_filters'), array('class' => 'mr-2')));
         $objs[] = $mform->createElement('date_selector', $this->_name.'_edt', null, array('optional' => true));
         $objs[] = $mform->createElement('static', $this->_name.'_s6', null, html_writer::end_tag('div'));
 
@@ -149,11 +149,11 @@ class user_filter_date extends user_filter_type {
         $a->before = userdate($before);
 
         if ($after and $before) {
-            return get_string('datelabelisbetween', 'filters', $a);
+            return get_string('datelabelisbetween', 'core_filters', $a);
         } else if ($after) {
-            return get_string('datelabelisafter', 'filters', $a);
+            return get_string('datelabelisafter', 'core_filters', $a);
         } else if ($before) {
-            return get_string('datelabelisbefore', 'filters', $a);
+            return get_string('datelabelisbefore', 'core_filters', $a);
         }
         return '';
     }

@@ -67,7 +67,7 @@ class template_cohort extends persistent {
     protected function validate_cohortid($value) {
         global $DB;
         if (!$DB->record_exists('cohort', array('id' => $value))) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }
@@ -80,7 +80,7 @@ class template_cohort extends persistent {
      */
     protected function validate_templateid($value) {
         if (!template::record_exists($value)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return true;
     }

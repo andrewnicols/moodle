@@ -41,11 +41,11 @@ $PAGE->set_url($url);
 $PAGE->set_pagelayout('admin');
 
 $systemcontext = context_system::instance();
-$heading = get_string('addoutcome', 'grades');
+$heading = get_string('addoutcome', 'core_grades');
 
 // a bit complex access control :-O
 if ($id) {
-    $heading = get_string('editoutcome', 'grades');
+    $heading = get_string('editoutcome', 'core_grades');
 
     /// editing existing outcome
     if (!$outcome_rec = $DB->get_record('grade_outcomes', array('id' => $id))) {
@@ -101,7 +101,7 @@ if (!$courseid) {
     $PAGE->set_primary_active_tab('siteadminnode');
 } else {
     navigation_node::override_active_url(new moodle_url('/grade/edit/outcome/course.php', ['id' => $courseid]));
-    $PAGE->navbar->add(get_string('manageoutcomes', 'grades'),
+    $PAGE->navbar->add(get_string('manageoutcomes', 'core_grades'),
         new moodle_url('/grade/edit/outcome/index.php', ['id' => $courseid]));
 }
 
@@ -168,7 +168,7 @@ $PAGE->navbar->add($heading, $url);
 print_grade_page_head($courseid ?: SITEID, 'outcome', 'edit', $heading, false, false, false);
 
 if (!grade_scale::fetch_all_local($courseid) && !grade_scale::fetch_all_global()) {
-    echo $OUTPUT->confirm(get_string('noscales', 'grades'), $CFG->wwwroot.'/grade/edit/scale/edit.php?courseid='.$courseid, $returnurl);
+    echo $OUTPUT->confirm(get_string('noscales', 'core_grades'), $CFG->wwwroot.'/grade/edit/scale/edit.php?courseid='.$courseid, $returnurl);
     echo $OUTPUT->footer();
     die();
 }

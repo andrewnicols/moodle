@@ -131,7 +131,7 @@ class persistent_test extends advanced_testcase {
             ),
             'sortorder' => array(
                 'type' => PARAM_INT,
-                'message' => new lang_string('invalidrequest', 'error'),
+                'message' => new lang_string('invalidrequest', 'mod_error'),
                 'null' => NULL_NOT_ALLOWED
             ),
             'scaleid' => array(
@@ -281,7 +281,7 @@ class persistent_test extends advanced_testcase {
         $p->set('descriptionformat', -100);
 
         $expected = array(
-            'descriptionformat' => new lang_string('invaliddata', 'error'),
+            'descriptionformat' => new lang_string('invaliddata', 'mod_error'),
         );
         $this->assertEquals($expected, $p->validate());
         $this->assertFalse($p->is_valid());
@@ -294,7 +294,7 @@ class persistent_test extends advanced_testcase {
         );
         $p = new core_testable_persistent(0, $data);
         $expected = array(
-            'sortorder' => new lang_string('requiredelement', 'form'),
+            'sortorder' => new lang_string('requiredelement', 'core_form'),
         );
         $this->assertFalse($p->is_valid());
         $this->assertEquals($expected, $p->get_errors());
@@ -307,7 +307,7 @@ class persistent_test extends advanced_testcase {
         );
         $p = new core_testable_persistent(0, $data);
         $expected = array(
-            'sortorder' => new lang_string('invalidkey', 'error'),
+            'sortorder' => new lang_string('invalidkey', 'mod_error'),
         );
         $this->assertFalse($p->is_valid());
         $this->assertEquals($expected, $p->get_errors());
@@ -320,7 +320,7 @@ class persistent_test extends advanced_testcase {
         );
         $p = new core_testable_persistent(0, $data);
         $expected = array(
-            'sortorder' => new lang_string('invalidrequest', 'error'),
+            'sortorder' => new lang_string('invalidrequest', 'mod_error'),
         );
         $this->assertFalse($p->is_valid());
         $this->assertEquals($expected, $p->get_errors());
@@ -334,7 +334,7 @@ class persistent_test extends advanced_testcase {
         );
         $p = new core_testable_persistent(0, $data);
         $expected = array(
-            'descriptionformat' => new lang_string('invaliddata', 'error'),
+            'descriptionformat' => new lang_string('invaliddata', 'mod_error'),
         );
         $this->assertFalse($p->is_valid());
         $this->assertEquals($expected, $p->get_errors());
@@ -749,7 +749,7 @@ class core_testable_persistent extends persistent {
             ),
             'sortorder' => array(
                 'type' => PARAM_INT,
-                'message' => new lang_string('invalidrequest', 'error')
+                'message' => new lang_string('invalidrequest', 'mod_error')
             ),
             'scaleid' => array(
                 'type' => PARAM_INT,
@@ -804,7 +804,7 @@ class core_testable_persistent extends persistent {
 
     protected function validate_sortorder($value) {
         if ($value == 10) {
-            return new lang_string('invalidkey', 'error');
+            return new lang_string('invalidkey', 'mod_error');
         }
         return true;
     }

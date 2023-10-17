@@ -92,8 +92,8 @@ class user_roles_editable extends \core\output\inplace_editable {
                 }
             }
         }
-        $this->edithint = get_string('xroleassignments', 'role', fullname($user));
-        $this->editlabel = get_string('xroleassignments', 'role', fullname($user));
+        $this->edithint = get_string('xroleassignments', 'core_role', fullname($user));
+        $this->editlabel = get_string('xroleassignments', 'core_role', fullname($user));
 
         $attributes = ['multiple' => true];
         $this->set_type_autocomplete($options, $attributes);
@@ -120,9 +120,9 @@ class user_roles_editable extends \core\output\inplace_editable {
         if (!empty($listofroles)) {
             $this->displayvalue = implode(', ', $listofroles);
         } else if (!empty($roleids) && empty($viewableroleids)) {
-            $this->displayvalue = get_string('novisibleroles', 'role');
+            $this->displayvalue = get_string('novisibleroles', 'core_role');
         } else {
-            $this->displayvalue = get_string('noroles', 'role');
+            $this->displayvalue = get_string('noroles', 'core_role');
         }
         return parent::export_for_template($output);
     }

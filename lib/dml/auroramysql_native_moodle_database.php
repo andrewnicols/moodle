@@ -48,7 +48,7 @@ class auroramysql_native_moodle_database extends mysqli_native_moodle_database {
      * @return string
      */
     public function get_name(): ?string {
-        return get_string('nativeauroramysql', 'install');
+        return get_string('nativeauroramysql', 'mod_install');
     }
 
     /**
@@ -58,7 +58,7 @@ class auroramysql_native_moodle_database extends mysqli_native_moodle_database {
      * @return string
      */
     public function get_configuration_help(): ?string {
-        return get_string('nativeauroramysql', 'install');
+        return get_string('nativeauroramysql', 'mod_install');
     }
 
     /**

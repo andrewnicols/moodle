@@ -27,22 +27,22 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
 
     $userfeedback->add(new admin_setting_configcheckbox('enableuserfeedback',
-            new lang_string('enableuserfeedback', 'admin'),
-            new lang_string('enableuserfeedback_desc', 'admin'), 0, 1, 0));
+            new lang_string('enableuserfeedback', 'core_admin'),
+            new lang_string('enableuserfeedback_desc', 'core_admin'), 0, 1, 0));
 
     $options = [
-        core_userfeedback::REMIND_AFTER_UPGRADE => new lang_string('userfeedbackafterupgrade', 'admin'),
-        core_userfeedback::REMIND_PERIODICALLY => new lang_string('userfeedbackperiodically', 'admin'),
+        core_userfeedback::REMIND_AFTER_UPGRADE => new lang_string('userfeedbackafterupgrade', 'core_admin'),
+        core_userfeedback::REMIND_PERIODICALLY => new lang_string('userfeedbackperiodically', 'core_admin'),
         core_userfeedback::REMIND_NEVER => new lang_string('never'),
     ];
     $userfeedback->add(new admin_setting_configselect('userfeedback_nextreminder',
-            new lang_string('userfeedbacknextreminder', 'admin'),
-            new lang_string('userfeedbacknextreminder_desc', 'admin'), 1, $options));
+            new lang_string('userfeedbacknextreminder', 'core_admin'),
+            new lang_string('userfeedbacknextreminder_desc', 'core_admin'), 1, $options));
     $userfeedback->hide_if('userfeedback_nextreminder', 'enableuserfeedback');
 
     $userfeedback->add(new admin_setting_configtext('userfeedback_remindafter',
-            new lang_string('userfeedbackremindafter', 'admin'),
-            new lang_string('userfeedbackremindafter_desc', 'admin'), 90, PARAM_INT));
+            new lang_string('userfeedbackremindafter', 'core_admin'),
+            new lang_string('userfeedbackremindafter_desc', 'core_admin'), 90, PARAM_INT));
     $userfeedback->hide_if('userfeedback_remindafter', 'enableuserfeedback');
     $userfeedback->hide_if('userfeedback_remindafter', 'userfeedback_nextreminder', 'eq', 3);
 

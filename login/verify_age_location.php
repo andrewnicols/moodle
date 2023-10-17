@@ -30,7 +30,7 @@ $authplugin = signup_is_enabled();
 
 if (!$authplugin || !\core_auth\digital_consent::is_age_digital_consent_verification_enabled()) {
     // Redirect user if signup or digital age of consent verification is disabled.
-    redirect(new moodle_url('/'), get_string('verifyagedigitalconsentnotpossible', 'error'));
+    redirect(new moodle_url('/'), get_string('verifyagedigitalconsentnotpossible', 'mod_error'));
 }
 
 $PAGE->set_context(context_system::instance());
@@ -38,7 +38,7 @@ $PAGE->set_url(new moodle_url('/login/verify_age_location.php'));
 
 if (isloggedin() and !isguestuser()) {
     // Prevent signing up when already logged in.
-    redirect(new moodle_url('/'), get_string('cannotsignup', 'error', fullname($USER)));
+    redirect(new moodle_url('/'), get_string('cannotsignup', 'mod_error', fullname($USER)));
 }
 
 $cache = cache::make('core', 'presignup');
@@ -75,7 +75,7 @@ if ($mform->is_cancelled()) {
         }
     } catch (moodle_exception $e) {
         // Display a user-friendly error message.
-        $errormessage = get_string('couldnotverifyagedigitalconsent', 'error');
+        $errormessage = get_string('couldnotverifyagedigitalconsent', 'mod_error');
         $page = new \core_auth\output\verify_age_location_page($mform, $errormessage);
         echo $OUTPUT->header();
         echo $OUTPUT->render($page);

@@ -98,7 +98,7 @@ report_stats_report($course, $report, $mode, $user, $roleid, $time);
 
 if (empty($CFG->enablestats)) {
     if (has_capability('moodle/site:config', context_system::instance())) {
-        redirect("$CFG->wwwroot/$CFG->admin/settings.php?section=stats", get_string('mustenablestats', 'admin'), 3);
+        redirect("$CFG->wwwroot/$CFG->admin/settings.php?section=stats", get_string('mustenablestats', 'core_admin'), 3);
     } else {
         throw new \moodle_exception('statsdisable');
     }

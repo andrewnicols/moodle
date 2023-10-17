@@ -45,7 +45,7 @@ class designermode extends check {
      * @return string
      */
     public function get_name(): string {
-        return get_string('themedesignermode', 'admin');
+        return get_string('themedesignermode', 'core_admin');
     }
 
     /**
@@ -56,7 +56,7 @@ class designermode extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/search.php', ['query' => 'themedesignermode']),
-            get_string('themedesignermode', 'admin'));
+            get_string('themedesignermode', 'core_admin'));
     }
 
     /**

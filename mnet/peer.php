@@ -85,7 +85,7 @@ class mnet_peer {
 
         // Couldn't find the IP address?
         if ($ip_address === $hostname && !preg_match('/^\d+\.\d+\.\d+.\d+$/',$hostname)) {
-            throw new moodle_exception('noaddressforhost', 'mnet', '', $hostname);
+            throw new moodle_exception('noaddressforhost', 'core_mnet', '', $hostname);
         }
 
         $this->name = $wwwroot;
@@ -181,17 +181,17 @@ class mnet_peer {
     function check_credentials($key) {
         $credentials = openssl_x509_parse($key);
         if ($credentials == false) {
-            $this->error[] = array('code' => 3, 'text' => get_string("nonmatchingcert", 'mnet', array('subject' => '','host' => '')));
+            $this->error[] = array('code' => 3, 'text' => get_string("nonmatchingcert", 'core_mnet', array('subject' => '','host' => '')));
             return false;
         } elseif (array_key_exists('subjectAltName', $credentials['subject']) && $credentials['subject']['subjectAltName'] != $this->wwwroot) {
             $a['subject'] = $credentials['subject']['subjectAltName'];
             $a['host'] = $this->wwwroot;
-            $this->error[] = array('code' => 5, 'text' => get_string("nonmatchingcert", 'mnet', $a));
+            $this->error[] = array('code' => 5, 'text' => get_string("nonmatchingcert", 'core_mnet', $a));
             return false;
         } else if ($credentials['subject']['CN'] !== substr($this->wwwroot, 0, 64)) {
             $a['subject'] = $credentials['subject']['CN'];
             $a['host'] = $this->wwwroot;
-            $this->error[] = array('code' => 4, 'text' => get_string("nonmatchingcert", 'mnet', $a));
+            $this->error[] = array('code' => 4, 'text' => get_string("nonmatchingcert", 'core_mnet', $a));
             return false;
         } else {
             if (array_key_exists('subjectAltName', $credentials['subject'])) {

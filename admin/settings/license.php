@@ -28,18 +28,18 @@ require_once($CFG->libdir . '/licenselib.php');
 
 if ($hassiteconfig) {
 
-    $temp = new admin_settingpage('licensesettings', new lang_string('licensesettings', 'admin'));
+    $temp = new admin_settingpage('licensesettings', new lang_string('licensesettings', 'core_admin'));
 
     $licenses = license_manager::get_active_licenses_as_array();
 
     $temp->add(new admin_setting_configselect('sitedefaultlicense',
-        new lang_string('configsitedefaultlicense', 'admin'),
-        new lang_string('configsitedefaultlicensehelp', 'admin'),
+        new lang_string('configsitedefaultlicense', 'core_admin'),
+        new lang_string('configsitedefaultlicensehelp', 'core_admin'),
         'unknown',
         $licenses));
     $temp->add(new admin_setting_configcheckbox('rememberuserlicensepref',
-        new lang_string('rememberuserlicensepref', 'admin'),
-        new lang_string('rememberuserlicensepref_help', 'admin'),
+        new lang_string('rememberuserlicensepref', 'core_admin'),
+        new lang_string('rememberuserlicensepref_help', 'core_admin'),
         1));
     $ADMIN->add('license', $temp);
 }

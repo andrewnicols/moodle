@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../config.php');
 
 if (empty($CFG->enableportfolios)) {
-    throw new \moodle_exception('disabled', 'portfolio');
+    throw new \moodle_exception('disabled', 'core_portfolio');
 }
 
 require_once($CFG->libdir . '/portfoliolib.php');
@@ -56,11 +56,11 @@ if ($postcontrol && $type && !$dataid) {
     // we're returning from an external system that can't construct dynamic return urls
     // this is a special "one export of this type only per session" case
     if (portfolio_static_function($type, 'allows_multiple_exports')) {
-        throw new portfolio_exception('multiplesingleresume', 'portfolio');
+        throw new portfolio_exception('multiplesingleresume', 'core_portfolio');
     }
 
     if (!$dataid = portfolio_export_type_to_id($type, $USER->id)) {
-        throw new portfolio_exception('invalidtempid', 'portfolio');
+        throw new portfolio_exception('invalidtempid', 'core_portfolio');
     }
 } else {
     // we can't do this in the above case, because we're redirecting straight back from an external system
@@ -92,7 +92,7 @@ if (!empty($dataid)) {
             $exporter->cancel_request($logreturn);
         } else {
             portfolio_export_pagesetup($PAGE, $exporter->get('caller'));
-            $exporter->print_header(get_string('confirmcancel', 'portfolio'));
+            $exporter->print_header(get_string('confirmcancel', 'core_portfolio'));
             echo $OUTPUT->box_start();
             $yesbutton = new single_button(new moodle_url('/portfolio/add.php', array('id' => $dataid, 'cancel' => 1, 'cancelsure' => 1, 'logreturn' => $logreturn)), get_string('yes'));
             if ($logreturn) {
@@ -100,7 +100,7 @@ if (!empty($dataid)) {
             } else {
                 $nobutton  = new single_button(new moodle_url('/portfolio/add.php', array('id' => $dataid)), get_string('no'));
             }
-            echo $OUTPUT->confirm(get_string('confirmcancel', 'portfolio'), $yesbutton, $nobutton);
+            echo $OUTPUT->confirm(get_string('confirmcancel', 'core_portfolio'), $yesbutton, $nobutton);
             echo $OUTPUT->box_end();
             echo $OUTPUT->footer();
             exit;
@@ -215,7 +215,7 @@ if (!$exporter->get('instance')) {
         true
     );
     if (empty($options)) {
-        throw new portfolio_export_exception($exporter, 'noavailableplugins', 'portfolio');
+        throw new portfolio_export_exception($exporter, 'noavailableplugins', 'core_portfolio');
     } else if (count($options) == 1) {
         // no point displaying a form, just redirect.
         $optionskeys = array_keys($options);
@@ -232,7 +232,7 @@ if (!$exporter->get('instance')) {
         exit;
     }
     else {
-        $exporter->print_header(get_string('selectplugin', 'portfolio'));
+        $exporter->print_header(get_string('selectplugin', 'core_portfolio'));
         echo $OUTPUT->box_start();
         $mform->display();
         echo $OUTPUT->box_end();

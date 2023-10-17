@@ -172,7 +172,7 @@ class profile_field_form extends dynamic_form {
                 $this->fieldrecord->categoryid = $this->optional_param('categoryid', 0, PARAM_INT);
             }
             if (!\core_component::get_component_directory('profilefield_'.$this->fieldrecord->datatype)) {
-                throw new \moodle_exception('fieldnotfound', 'customfield');
+                throw new \moodle_exception('fieldnotfound', 'core_customfield');
             }
         }
 

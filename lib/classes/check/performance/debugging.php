@@ -44,7 +44,7 @@ class debugging extends check {
      * @return string
      */
     public function get_name(): string {
-        return get_string('debug', 'admin');
+        return get_string('debug', 'core_admin');
     }
 
     /**
@@ -55,7 +55,7 @@ class debugging extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/settings.php', ['section' => 'debugging']),
-            get_string('debug', 'admin'));
+            get_string('debug', 'core_admin'));
     }
 
     /**

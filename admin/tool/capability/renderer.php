@@ -39,10 +39,10 @@ class tool_capability_renderer extends plugin_renderer_base {
         static $strpermissions;
         if (!$strpermissions) {
             $strpermissions = array(
-                CAP_INHERIT => new lang_string('inherit', 'role'),
-                CAP_ALLOW => new lang_string('allow', 'role'),
-                CAP_PREVENT => new lang_string('prevent', 'role'),
-                CAP_PROHIBIT => new lang_string('prohibit', 'role')
+                CAP_INHERIT => new lang_string('inherit', 'core_role'),
+                CAP_ALLOW => new lang_string('allow', 'core_role'),
+                CAP_PREVENT => new lang_string('prevent', 'core_role'),
+                CAP_PROHIBIT => new lang_string('prohibit', 'core_role')
             );
         }
         return $strpermissions;
@@ -82,7 +82,7 @@ class tool_capability_renderer extends plugin_renderer_base {
         $permissionclasses = $this->get_permission_classes();
 
         if ($contextid === context_system::instance()->id) {
-            $strpermissions[CAP_INHERIT] = new lang_string('notset', 'role');
+            $strpermissions[CAP_INHERIT] = new lang_string('notset', 'core_role');
         }
 
         $table = new html_table();

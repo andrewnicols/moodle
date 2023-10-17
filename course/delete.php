@@ -100,8 +100,8 @@ if (!async_helper::is_async_pending($id, 'course', 'backup')) {
     echo $OUTPUT->confirm($message, $continuebutton, $categoryurl);
 } else {
     // Async backup is pending, don't let user delete course.
-    echo $OUTPUT->notification(get_string('pendingasyncerror', 'backup'), 'error');
-    echo $OUTPUT->container(get_string('pendingasyncdeletedetail', 'backup'));
+    echo $OUTPUT->notification(get_string('pendingasyncerror', 'core_backup'), 'error');
+    echo $OUTPUT->container(get_string('pendingasyncdeletedetail', 'core_backup'));
     echo $OUTPUT->continue_button($categoryurl);
 }
 

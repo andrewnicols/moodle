@@ -114,7 +114,7 @@ class course_gradetopass extends course_enrolments {
      * @return \lang_string
      */
     public static function get_name() : \lang_string {
-        return new \lang_string('target:coursegradetopass', 'course');
+        return new \lang_string('target:coursegradetopass', 'core_course');
     }
 
     /**
@@ -124,8 +124,8 @@ class course_gradetopass extends course_enrolments {
      */
     protected static function classes_description() {
         return array(
-            get_string('targetlabelstudentgradetopassno', 'course'),
-            get_string('targetlabelstudentgradetopassyes', 'course')
+            get_string('targetlabelstudentgradetopassno', 'core_course'),
+            get_string('targetlabelstudentgradetopassyes', 'core_course')
         );
     }
 
@@ -147,7 +147,7 @@ class course_gradetopass extends course_enrolments {
 
         $courseitem = $this->get_course_gradetopass ($course->get_id());
         if (is_null($courseitem['gradetopass'])) {
-            return get_string('gradetopassnotset', 'course');
+            return get_string('gradetopassnotset', 'core_course');
         }
 
         return true;

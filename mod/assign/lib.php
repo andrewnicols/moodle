@@ -203,13 +203,13 @@ function assign_reset_gradebook($courseid, $type='') {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function assign_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'assignheader', get_string('modulenameplural', 'assign'));
-    $name = get_string('deleteallsubmissions', 'assign');
+    $mform->addElement('header', 'assignheader', get_string('modulenameplural', 'mod_assign'));
+    $name = get_string('deleteallsubmissions', 'mod_assign');
     $mform->addElement('advcheckbox', 'reset_assign_submissions', $name);
     $mform->addElement('advcheckbox', 'reset_assign_user_overrides',
-        get_string('removealluseroverrides', 'assign'));
+        get_string('removealluseroverrides', 'mod_assign'));
     $mform->addElement('advcheckbox', 'reset_assign_group_overrides',
-        get_string('removeallgroupoverrides', 'assign'));
+        get_string('removeallgroupoverrides', 'mod_assign'));
 }
 
 /**
@@ -325,7 +325,7 @@ function assign_update_events($assign, $override = null) {
                 // Group doesn't exist, just skip it.
                 continue;
             }
-            $eventname = get_string('overridegroupeventname', 'assign', $params);
+            $eventname = get_string('overridegroupeventname', 'mod_assign', $params);
             // Set group override priority.
             if (isset($current->sortorder)) {
                 $event->priority = $current->sortorder;
@@ -334,7 +334,7 @@ function assign_update_events($assign, $override = null) {
             // User override event.
             $params = new stdClass();
             $params->assign = $assigninstance->name;
-            $eventname = get_string('overrideusereventname', 'assign', $params);
+            $eventname = get_string('overrideusereventname', 'mod_assign', $params);
             // Set user override priority.
             $event->priority = CALENDAR_EVENT_USER_OVERRIDE_PRIORITY;
         } else {
@@ -348,7 +348,7 @@ function assign_update_events($assign, $override = null) {
             } else {
                 unset($event->id);
             }
-            $event->name      = $eventname.' ('.get_string('duedate', 'assign').')';
+            $event->name      = $eventname.' ('.get_string('duedate', 'mod_assign').')';
             calendar_event::create($event, false);
         }
     }
@@ -436,7 +436,7 @@ function assign_extend_settings_navigation(settings_navigation $settings, naviga
     if (has_capability('mod/assign:manageoverrides', $settings->get_page()->cm->context)) {
         $url = new moodle_url('/mod/assign/overrides.php', ['cmid' => $settings->get_page()->cm->id, 'mode' => 'user']);
 
-        $node = navigation_node::create(get_string('overrides', 'assign'),
+        $node = navigation_node::create(get_string('overrides', 'mod_assign'),
             $url,
             navigation_node::TYPE_SETTING, null, 'mod_assign_useroverrides');
         $navref->add_node($node, $beforekey);
@@ -449,7 +449,7 @@ function assign_extend_settings_navigation(settings_navigation $settings, naviga
         if ($assignment && $assignment->blindmarking && !$assignment->revealidentities) {
             $urlparams = array('id' => $cm->id, 'action'=>'revealidentities');
             $url = new moodle_url('/mod/assign/view.php', $urlparams);
-            $linkname = get_string('revealidentities', 'assign');
+            $linkname = get_string('revealidentities', 'mod_assign');
             $node = $navref->add($linkname, $url, navigation_node::TYPE_SETTING);
         }
     }
@@ -594,7 +594,7 @@ function mod_assign_get_completion_active_rule_descriptions($cm) {
         switch ($key) {
             case 'completionsubmit':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionsubmit', 'assign');
+                    $descriptions[] = get_string('completionsubmit', 'mod_assign');
                 }
                 break;
             default:
@@ -612,8 +612,8 @@ function mod_assign_get_completion_active_rule_descriptions($cm) {
  */
 function assign_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $modulepagetype = array(
-        'mod-assign-*' => get_string('page-mod-assign-x', 'assign'),
-        'mod-assign-view' => get_string('page-mod-assign-view', 'assign'),
+        'mod-assign-*' => get_string('page-mod-assign-x', 'mod_assign'),
+        'mod-assign-view' => get_string('page-mod-assign-view', 'mod_assign'),
     );
     return $modulepagetype;
 }
@@ -713,7 +713,7 @@ function assign_print_recent_activity($course, $viewfullnames, $timestart) {
         return false;
     }
 
-    echo $OUTPUT->heading(get_string('newsubmissions', 'assign') . ':', 6);
+    echo $OUTPUT->heading(get_string('newsubmissions', 'mod_assign') . ':', 6);
 
     foreach ($show as $submission) {
         $cm = $modinfo->get_cm($submission->cmid);
@@ -1326,9 +1326,9 @@ function assign_user_outline($course, $user, $coursemodule, $assignment) {
     }
     $result = new stdClass();
     if (!$gradingitem->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
-        $result->info = get_string('outlinegrade', 'assign', $gradebookgrade->str_long_grade);
+        $result->info = get_string('outlinegrade', 'mod_assign', $gradebookgrade->str_long_grade);
     } else {
-        $result->info = get_string('gradenoun') . ': ' . get_string('hidden', 'grades');
+        $result->info = get_string('gradenoun') . ': ' . get_string('hidden', 'core_grades');
     }
     $result->time = $gradebookgrade->dategraded;
 
@@ -1593,7 +1593,7 @@ function mod_assign_core_calendar_provide_event_action(calendar_event $event,
         }
 
         // The user has not yet submitted anything. Show the addsubmission link.
-        $name = get_string('addsubmission', 'assign');
+        $name = get_string('addsubmission', 'mod_assign');
         $url = new \moodle_url('/mod/assign/view.php', [
             'id' => $cm->id,
             'action' => 'editsubmission'
@@ -1798,7 +1798,7 @@ function mod_assign_get_path_from_pluginfile(string $filearea, array $args) : ar
  * @return lang_string The event type lang string.
  */
 function mod_assign_core_calendar_get_event_action_string(string $eventtype): string {
-    $modulename = get_string('modulename', 'assign');
+    $modulename = get_string('modulename', 'mod_assign');
 
     switch ($eventtype) {
         case ASSIGN_EVENT_TYPE_DUE:
@@ -1808,8 +1808,8 @@ function mod_assign_core_calendar_get_event_action_string(string $eventtype): st
             $identifier = 'calendargradingdue';
             break;
         default:
-            return get_string('requiresaction', 'calendar', $modulename);
+            return get_string('requiresaction', 'core_calendar', $modulename);
     }
 
-    return get_string($identifier, 'assign', $modulename);
+    return get_string($identifier, 'mod_assign', $modulename);
 }

@@ -57,7 +57,7 @@ if (!$manager) {
     require_capability('moodle/cohort:view', $context);
 }
 
-$strcohorts = get_string('cohorts', 'cohort');
+$strcohorts = get_string('cohorts', 'core_cohort');
 
 if ($category) {
     $PAGE->set_pagelayout('admin');
@@ -76,11 +76,11 @@ if ($category) {
     admin_externalpage_setup('cohorts', '', null, '', array('pagelayout'=>'report'));
     navigation_node::override_active_url(new moodle_url('/cohort/index.php'));
     if ($showall) {
-        $strallcohorts = get_string('allcohorts', 'cohort');
+        $strallcohorts = get_string('allcohorts', 'core_cohort');
         $PAGE->set_title($strallcohorts);
         $PAGE->navbar->add($strallcohorts, $PAGE->url);
     } else {
-        $strsystemcohorts = get_string('systemcohorts', 'cohort');
+        $strsystemcohorts = get_string('systemcohorts', 'core_cohort');
         $PAGE->set_title($strsystemcohorts);
     }
 }

@@ -62,12 +62,12 @@ $PAGE->set_title($badge->name);
 
 if ($delete && has_capability('moodle/badges:configurecriteria', $context)) {
     if ($type == BADGE_CRITERIA_TYPE_OVERALL) {
-        redirect($return, get_string('error:cannotdeletecriterion', 'badges'));
+        redirect($return, get_string('error:cannotdeletecriterion', 'core_badges'));
     }
     if (!$confirm) {
         $optionsyes = array('confirm' => 1, 'sesskey' => sesskey(), 'badgeid' => $badgeid, 'delete' => true, 'type' => $type);
 
-        $strdeletecheckfull = get_string('delcritconfirm', 'badges');
+        $strdeletecheckfull = get_string('delcritconfirm', 'core_badges');
 
         echo $OUTPUT->header();
         $formcontinue = new single_button(new moodle_url('/badges/criteria_action.php', $optionsyes), get_string('yes'));

@@ -158,7 +158,7 @@ class externallib_test extends externallib_advanced_testcase {
             $this->fail('Exception expected due to already existing idnumber.');
         } catch (\moodle_exception $e) {
             $this->assertInstanceOf('moodle_exception', $e);
-            $this->assertEquals(get_string('idnumbertaken', 'error'), $e->getMessage());
+            $this->assertEquals(get_string('idnumbertaken', 'mod_error'), $e->getMessage());
         }
 
         // Call without required capability
@@ -303,7 +303,7 @@ class externallib_test extends externallib_advanced_testcase {
             $this->fail('Exception expected due to already existing idnumber.');
         } catch (\moodle_exception $e) {
             $this->assertInstanceOf('moodle_exception', $e);
-            $this->assertEquals(get_string('idnumbertaken', 'error'), $e->getMessage());
+            $this->assertEquals(get_string('idnumbertaken', 'mod_error'), $e->getMessage());
         }
 
         // Call without required capability.
@@ -619,7 +619,7 @@ class externallib_test extends externallib_advanced_testcase {
             $this->fail('Exception expected due to already existing idnumber.');
         } catch (\moodle_exception $e) {
             $this->assertInstanceOf('moodle_exception', $e);
-            $this->assertEquals(get_string('idnumbertaken', 'error'), $e->getMessage());
+            $this->assertEquals(get_string('idnumbertaken', 'mod_error'), $e->getMessage());
         }
 
         // No exception should be triggered.
@@ -645,7 +645,7 @@ class externallib_test extends externallib_advanced_testcase {
             $this->fail('Exception expected due to already existing idnumber.');
         } catch (\moodle_exception $e) {
             $this->assertInstanceOf('moodle_exception', $e);
-            $this->assertEquals(get_string('idnumbertaken', 'error'), $e->getMessage());
+            $this->assertEquals(get_string('idnumbertaken', 'mod_error'), $e->getMessage());
         }
     }
 

@@ -1054,16 +1054,16 @@ abstract class qbehaviour_walkthrough_test_base extends question_testcase {
     }
 
     protected function get_contains_correct_expectation() {
-        return new question_pattern_expectation('/' . preg_quote(get_string('correct', 'question'), '/') . '/');
+        return new question_pattern_expectation('/' . preg_quote(get_string('correct', 'core_question'), '/') . '/');
     }
 
     protected function get_contains_partcorrect_expectation() {
         return new question_pattern_expectation('/' .
-            preg_quote(get_string('partiallycorrect', 'question'), '/') . '/');
+            preg_quote(get_string('partiallycorrect', 'core_question'), '/') . '/');
     }
 
     protected function get_contains_incorrect_expectation() {
-        return new question_pattern_expectation('/' . preg_quote(get_string('incorrect', 'question'), '/') . '/');
+        return new question_pattern_expectation('/' . preg_quote(get_string('incorrect', 'core_question'), '/') . '/');
     }
 
     protected function get_contains_standard_correct_combined_feedback_expectation() {
@@ -1093,7 +1093,7 @@ abstract class qbehaviour_walkthrough_test_base extends question_testcase {
         $a = new stdClass();
         $a->num = $num;
         return new question_pattern_expectation('/<div class="numpartscorrect">' .
-            preg_quote(get_string('yougotnright', 'question', $a), '/') . '/');
+            preg_quote(get_string('yougotnright', 'core_question', $a), '/') . '/');
     }
 
     protected function get_does_not_contain_specific_feedback_expectation() {
@@ -1114,14 +1114,14 @@ abstract class qbehaviour_walkthrough_test_base extends question_testcase {
         $a->max = format_float($this->quba->get_question_max_mark($this->slot),
             $this->displayoptions->markdp);
         return new question_pattern_expectation('/' .
-            preg_quote(get_string('markoutofmax', 'question', $a), '/') . '/');
+            preg_quote(get_string('markoutofmax', 'core_question', $a), '/') . '/');
     }
 
     protected function get_contains_marked_out_of_summary() {
         $max = format_float($this->quba->get_question_max_mark($this->slot),
             $this->displayoptions->markdp);
         return new question_pattern_expectation('/' .
-            preg_quote(get_string('markedoutofmax', 'question', $max), '/') . '/');
+            preg_quote(get_string('markedoutofmax', 'core_question', $max), '/') . '/');
     }
 
     protected function get_does_not_contain_mark_summary() {
@@ -1260,7 +1260,7 @@ abstract class qbehaviour_walkthrough_test_base extends question_testcase {
 
     protected function get_invalid_answer_expectation() {
         return new question_pattern_expectation('/' .
-            preg_quote(get_string('invalidanswer', 'question'), '/') . '/');
+            preg_quote(get_string('invalidanswer', 'core_question'), '/') . '/');
     }
 
     protected function get_contains_try_again_button_expectation($enabled = null) {

@@ -44,7 +44,7 @@ if (empty($importid)) {
         if ($readcount === false) {
             throw new \moodle_exception('csvfileerror', 'tool_uploadcourse', $returnurl, $cir->get_error());
         } else if ($readcount == 0) {
-            throw new \moodle_exception('csvemptyfile', 'error', $returnurl, $cir->get_error());
+            throw new \moodle_exception('csvemptyfile', 'mod_error', $returnurl, $cir->get_error());
         }
     } else {
         echo $OUTPUT->header();

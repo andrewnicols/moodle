@@ -73,7 +73,7 @@ class validatepackage_test extends \advanced_testcase {
         $errors = scorm_validate_package($file);
         $this->assertArrayHasKey('packagefile', $errors);
         if (isset($errors['packagefile'])) {
-            $this->assertEquals(get_string('nomanifest', 'scorm'), $errors['packagefile']);
+            $this->assertEquals(get_string('nomanifest', 'mod_scorm'), $errors['packagefile']);
         }
 
         $filename = "badscorm.zip";
@@ -81,7 +81,7 @@ class validatepackage_test extends \advanced_testcase {
         $errors = scorm_validate_package($file);
         $this->assertArrayHasKey('packagefile', $errors);
         if (isset($errors['packagefile'])) {
-            $this->assertEquals(get_string('badimsmanifestlocation', 'scorm'), $errors['packagefile']);
+            $this->assertEquals(get_string('badimsmanifestlocation', 'mod_scorm'), $errors['packagefile']);
         }
     }
 }

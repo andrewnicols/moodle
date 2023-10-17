@@ -31,7 +31,7 @@ class show_started_courses_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('showstartedcoursestask', 'course');
+        return get_string('showstartedcoursestask', 'core_course');
     }
 
     /**

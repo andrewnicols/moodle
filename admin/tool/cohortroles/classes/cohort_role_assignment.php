@@ -66,7 +66,7 @@ class cohort_role_assignment extends persistent {
         global $DB;
 
         if (!$DB->record_exists('user', array('id' => $value))) {
-            return new lang_string('invaliduserid', 'error');
+            return new lang_string('invaliduserid', 'mod_error');
         }
 
         return true;
@@ -82,7 +82,7 @@ class cohort_role_assignment extends persistent {
         global $DB;
 
         if (!$DB->record_exists('role', array('id' => $value))) {
-            return new lang_string('invalidroleid', 'error');
+            return new lang_string('invalidroleid', 'mod_error');
         }
 
         return true;
@@ -98,7 +98,7 @@ class cohort_role_assignment extends persistent {
         global $DB;
 
         if (!$DB->record_exists('cohort', array('id' => $value))) {
-            return new lang_string('invalidcohortid', 'error');
+            return new lang_string('invalidcohortid', 'mod_error');
         }
 
         return true;

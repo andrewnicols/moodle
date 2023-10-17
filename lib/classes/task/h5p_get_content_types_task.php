@@ -41,7 +41,7 @@ class h5p_get_content_types_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('h5pgetcontenttypestask', 'admin');
+        return get_string('h5pgetcontenttypestask', 'core_admin');
     }
 
     /**

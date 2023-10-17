@@ -90,7 +90,7 @@ class qformat_blackboard_six_qti extends qformat_blackboard_six_base {
                     $this->process_essay($question, $questions);
                     break;
                 default:
-                    $this->error(get_string('unknownorunhandledtype', 'question', $question->qtype));
+                    $this->error(get_string('unknownorunhandledtype', 'core_question', $question->qtype));
                     break;
             }
         }
@@ -680,7 +680,7 @@ class qformat_blackboard_six_qti extends qformat_blackboard_six_base {
                 } else if (!empty($feedback[$i])) {
                     $question->feedback[$i] = $this->cleaned_text_field($feedback[$i]);
                 } else {
-                    $question->feedback[$i] = $this->cleaned_text_field(get_string('correct', 'question'));
+                    $question->feedback[$i] = $this->cleaned_text_field(get_string('correct', 'core_question'));
                 }
             } else {
                 $question->fraction[$i] = 0;
@@ -691,7 +691,7 @@ class qformat_blackboard_six_qti extends qformat_blackboard_six_base {
                 } else if (!empty($feedback[$i])) {
                     $question->feedback[$i] = $this->cleaned_text_field($feedback[$i]);
                 } else {
-                    $question->feedback[$i] = $this->cleaned_text_field(get_string('incorrect', 'question'));
+                    $question->feedback[$i] = $this->cleaned_text_field(get_string('incorrect', 'core_question'));
                 }
             }
             $i++;

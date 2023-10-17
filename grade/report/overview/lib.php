@@ -151,12 +151,12 @@ class grade_report_overview extends grade_report {
         // setting up table headers
         if ($this->showrank['any']) {
             $tablecolumns = array('coursename', 'grade', 'rank');
-            $tableheaders = array(get_string('coursename', 'grades'),
+            $tableheaders = array(get_string('coursename', 'core_grades'),
                 get_string('gradenoun'),
-                get_string('rank', 'grades'));
+                get_string('rank', 'core_grades'));
         } else {
             $tablecolumns = array('coursename', 'grade');
-            $tableheaders = array(get_string('coursename', 'grades'),
+            $tableheaders = array(get_string('coursename', 'core_grades'),
                 get_string('gradenoun'));
         }
         $this->table = new flexible_table('grade-report-overview-'.$this->user->id);
@@ -331,7 +331,7 @@ class grade_report_overview extends grade_report {
 
             return true;
         } else {
-            echo $OUTPUT->notification(get_string('notenrolled', 'grades'), 'notifymessage');
+            echo $OUTPUT->notification(get_string('notenrolled', 'core_grades'), 'notifymessage');
             return false;
         }
     }
@@ -357,7 +357,7 @@ class grade_report_overview extends grade_report {
      */
     public function print_teacher_table() {
         $table = new html_table();
-        $table->head = array(get_string('coursename', 'grades'));
+        $table->head = array(get_string('coursename', 'core_grades'));
         $table->data = null;
         foreach ($this->teachercourses as $courseid => $course) {
             $coursecontext = context_course::instance($course->id);
@@ -447,32 +447,32 @@ function grade_report_overview_settings_definition(&$mform) {
     global $CFG;
 
     //show rank
-    $options = array(-1 => get_string('default', 'grades'),
+    $options = array(-1 => get_string('default', 'core_grades'),
                       0 => get_string('hide'),
                       1 => get_string('show'));
 
     if (empty($CFG->grade_report_overview_showrank)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[1]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[1]);
     }
 
-    $mform->addElement('select', 'report_overview_showrank', get_string('showrank', 'grades'), $options);
+    $mform->addElement('select', 'report_overview_showrank', get_string('showrank', 'core_grades'), $options);
     $mform->addHelpButton('report_overview_showrank', 'showrank', 'grades');
 
     //showtotalsifcontainhidden
-    $options = array(-1 => get_string('default', 'grades'),
+    $options = array(-1 => get_string('default', 'core_grades'),
                       GRADE_REPORT_HIDE_TOTAL_IF_CONTAINS_HIDDEN => get_string('hide'),
-                      GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'grades'),
-                      GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'grades') );
+                      GRADE_REPORT_SHOW_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowexhiddenitems', 'core_grades'),
+                      GRADE_REPORT_SHOW_REAL_TOTAL_IF_CONTAINS_HIDDEN => get_string('hidetotalshowinchiddenitems', 'core_grades') );
 
     if (!array_key_exists($CFG->grade_report_overview_showtotalsifcontainhidden, $options)) {
-        $options[-1] = get_string('defaultprev', 'grades', $options[0]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[0]);
     } else {
-        $options[-1] = get_string('defaultprev', 'grades', $options[$CFG->grade_report_overview_showtotalsifcontainhidden]);
+        $options[-1] = get_string('defaultprev', 'core_grades', $options[$CFG->grade_report_overview_showtotalsifcontainhidden]);
     }
 
-    $mform->addElement('select', 'report_overview_showtotalsifcontainhidden', get_string('hidetotalifhiddenitems', 'grades'), $options);
+    $mform->addElement('select', 'report_overview_showtotalsifcontainhidden', get_string('hidetotalifhiddenitems', 'core_grades'), $options);
     $mform->addHelpButton('report_overview_showtotalsifcontainhidden', 'hidetotalifhiddenitems', 'grades');
 }
 

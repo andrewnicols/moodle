@@ -49,7 +49,7 @@ if ($returnto !== null) {
 
 // This is a policy decision, rather than something that would be impossible to implement.
 if (!in_array($context->contextlevel, array(CONTEXT_COURSECAT, CONTEXT_COURSE, CONTEXT_MODULE))) {
-    throw new \moodle_exception('cannotcustomisefiltersblockuser', 'error');
+    throw new \moodle_exception('cannotcustomisefiltersblockuser', 'mod_error');
 }
 
 $isfrontpage = ($context->contextlevel == CONTEXT_COURSE && $context->instanceid == SITEID);
@@ -74,13 +74,13 @@ $PAGE->set_context($context);
 /// Get the list of available filters.
 $availablefilters = filter_get_available_in_context($context);
 if (!$isfrontpage && empty($availablefilters)) {
-    throw new \moodle_exception('nofiltersenabled', 'error');
+    throw new \moodle_exception('nofiltersenabled', 'mod_error');
 }
 
 // If we are handling local settings for a particular filter, start processing.
 if ($forfilter) {
     if (!filter_has_local_settings($forfilter)) {
-        throw new \moodle_exception('filterdoesnothavelocalconfig', 'error', $forfilter);
+        throw new \moodle_exception('filterdoesnothavelocalconfig', 'mod_error', $forfilter);
     }
     require_once($CFG->dirroot . '/filter/local_settings_form.php');
     require_once($CFG->dirroot . '/filter/' . $forfilter . '/filterlocalsettings.php');
@@ -110,11 +110,11 @@ if ($forfilter) {
     $a = new stdClass;
     $a->filter = filter_get_name($forfilter);
     $a->context = $contextname;
-    $title = get_string('filtersettingsforin', 'filters', $a);
+    $title = get_string('filtersettingsforin', 'core_filters', $a);
 } else {
-    $title = get_string('filtersettingsin', 'filters', $contextname);
+    $title = get_string('filtersettingsin', 'core_filters', $contextname);
 }
-$straction = get_string('filters', 'admin'); // Used by tabs.php
+$straction = get_string('filters', 'core_admin'); // Used by tabs.php
 
 // Print the header and tabs.
 $PAGE->set_cacheable(false);
@@ -127,7 +127,7 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading_with_help($title, 'filtersettings', 'filters');
 
 if (empty($availablefilters)) {
-    echo '<p class="centerpara">' . get_string('nofiltersenabled', 'filters') . "</p>\n";
+    echo '<p class="centerpara">' . get_string('nofiltersenabled', 'core_filters') . "</p>\n";
 } else if ($forfilter) {
     $current = filter_get_local_config($forfilter, $contextid);
     $settingsform->set_data((object) $current);
@@ -141,10 +141,10 @@ if (empty($availablefilters)) {
     }
 
     $strsettings = get_string('settings');
-    $stroff = get_string('off', 'filters');
-    $stron = get_string('on', 'filters');
-    $strdefaultoff = get_string('defaultx', 'filters', $stroff);
-    $strdefaulton = get_string('defaultx', 'filters', $stron);
+    $stroff = get_string('off', 'core_filters');
+    $stron = get_string('on', 'core_filters');
+    $strdefaultoff = get_string('defaultx', 'core_filters', $stroff);
+    $strdefaulton = get_string('defaultx', 'core_filters', $stron);
     $activechoices = array(
         TEXTFILTER_INHERIT => '',
         TEXTFILTER_OFF => $stroff,
@@ -159,7 +159,7 @@ if (empty($availablefilters)) {
     }
 
     $table = new html_table();
-    $table->head  = array(get_string('filter'), get_string('isactive', 'filters'));
+    $table->head  = array(get_string('filter'), get_string('isactive', 'core_filters'));
     $table->colclasses = array('leftalign', 'leftalign');
     if ($settingscol) {
         $table->head[] = $strsettings;

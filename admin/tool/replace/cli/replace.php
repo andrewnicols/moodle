@@ -81,9 +81,9 @@ try {
 if (!$options['non-interactive']) {
     echo get_string('excludedtables', 'tool_replace') . "\n\n";
     echo get_string('notsupported', 'tool_replace') . "\n\n";
-    $prompt = get_string('cliyesnoprompt', 'admin');
-    $input = cli_input($prompt, '', array(get_string('clianswerno', 'admin'), get_string('cliansweryes', 'admin')));
-    if ($input == get_string('clianswerno', 'admin')) {
+    $prompt = get_string('cliyesnoprompt', 'core_admin');
+    $input = cli_input($prompt, '', array(get_string('clianswerno', 'core_admin'), get_string('cliansweryes', 'core_admin')));
+    if ($input == get_string('clianswerno', 'core_admin')) {
         exit(1);
     }
 }

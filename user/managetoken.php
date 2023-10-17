@@ -31,7 +31,7 @@ $usercontext = context_user::instance($USER->id);
 
 $PAGE->set_context($usercontext);
 $PAGE->set_url('/user/managetoken.php');
-$PAGE->set_title(get_string('securitykeys', 'webservice'));
+$PAGE->set_title(get_string('securitykeys', 'core_webservice'));
 $PAGE->set_pagelayout('admin');
 
 $rsstokenboxhtml = $webservicetokenboxhtml = '';

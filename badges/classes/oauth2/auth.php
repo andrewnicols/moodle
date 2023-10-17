@@ -71,7 +71,7 @@ class auth extends \auth_oauth2\auth {
             $DB->update_record('badge_backpack', $badgebackpack);
         }
 
-        redirect($redirecturl, get_string('backpackconnected', 'badges'), null,
+        redirect($redirecturl, get_string('backpackconnected', 'core_badges'), null,
             \core\output\notification::NOTIFY_SUCCESS);
     }
 

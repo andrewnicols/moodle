@@ -85,7 +85,7 @@ class message_sent extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventmessagesent', 'message');
+        return get_string('eventmessagesent', 'core_message');
     }
 
     /**

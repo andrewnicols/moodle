@@ -35,9 +35,9 @@ require_capability('moodle/blog:manageexternal', $context);
 
 $delete = optional_param('delete', null, PARAM_INT);
 
-$strexternalblogs = get_string('externalblogs', 'blog');
-$straddnewexternalblog = get_string('addnewexternalblog', 'blog');
-$strblogs = get_string('blogs', 'blog');
+$strexternalblogs = get_string('externalblogs', 'core_blog');
+$straddnewexternalblog = get_string('addnewexternalblog', 'core_blog');
+$strblogs = get_string('blogs', 'core_blog');
 $message = null;
 
 if ($delete && confirm_sesskey()) {
@@ -60,7 +60,7 @@ if ($delete && confirm_sesskey()) {
         $event = \core\event\blog_external_removed::create($eventparms);
         $event->add_record_snapshot('blog_external', $externalblog);
         $event->trigger();
-        $message = get_string('externalblogdeleted', 'blog');
+        $message = get_string('externalblogdeleted', 'core_blog');
     }
 }
 
@@ -84,24 +84,24 @@ if (!empty($blogs)) {
     $table->cellpadding = 4;
     $table->attributes['class'] = 'generaltable boxaligncenter';
     $table->head = array(get_string('name'),
-                         get_string('url', 'blog'),
-                         get_string('timefetched', 'blog'),
-                         get_string('valid', 'blog'),
+                         get_string('url', 'core_blog'),
+                         get_string('timefetched', 'core_blog'),
+                         get_string('valid', 'core_blog'),
                          get_string('actions'));
 
     foreach ($blogs as $blog) {
         if ($blog->failedlastsync) {
-            $validicon = $OUTPUT->pix_icon('i/invalid', get_string('feedisinvalid', 'blog'));
+            $validicon = $OUTPUT->pix_icon('i/invalid', get_string('feedisinvalid', 'core_blog'));
         } else {
-            $validicon = $OUTPUT->pix_icon('i/valid', get_string('feedisvalid', 'blog'));
+            $validicon = $OUTPUT->pix_icon('i/valid', get_string('feedisvalid', 'core_blog'));
         }
 
         $editurl = new moodle_url('/blog/external_blog_edit.php', array('id' => $blog->id));
-        $editicon = $OUTPUT->action_icon($editurl, new pix_icon('t/edit', get_string('editexternalblog', 'blog')));
+        $editicon = $OUTPUT->action_icon($editurl, new pix_icon('t/edit', get_string('editexternalblog', 'core_blog')));
 
         $deletelink = new moodle_url('/blog/external_blogs.php', array('delete' => $blog->id, 'sesskey' => sesskey()));
-        $action = new confirm_action(get_string('externalblogdeleteconfirm', 'blog'));
-        $deleteicon = $OUTPUT->action_icon($deletelink, new pix_icon('t/delete', get_string('deleteexternalblog', 'blog')),
+        $action = new confirm_action(get_string('externalblogdeleteconfirm', 'core_blog'));
+        $deleteicon = $OUTPUT->action_icon($deletelink, new pix_icon('t/delete', get_string('deleteexternalblog', 'core_blog')),
                                            $action);
 
         $table->data[] = new html_table_row(array($blog->name,

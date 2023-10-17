@@ -67,7 +67,7 @@ class backup_root_task extends backup_task {
         require_once($CFG->dirroot . '/backup/util/helper/convert_helper.class.php');
         // Define filename setting
         $filename = new backup_filename_setting('filename', base_setting::IS_FILENAME, 'backup.mbz');
-        $filename->set_ui_filename(get_string('filename', 'backup'), 'backup.mbz', array('size'=>50));
+        $filename->set_ui_filename(get_string('filename', 'core_backup'), 'backup.mbz', array('size'=>50));
         $this->add_setting($filename);
 
         // Present converter settings only in type course and mode general backup operations.
@@ -76,92 +76,92 @@ class backup_root_task extends backup_task {
             $converters = convert_helper::available_converters(false);
             foreach ($converters as $cnv) {
                 $formatcnv = new backup_users_setting($cnv, base_setting::IS_BOOLEAN, false);
-                $formatcnv->set_ui(new backup_setting_ui_checkbox($formatcnv, get_string('backupformat'.$cnv, 'backup')));
+                $formatcnv->set_ui(new backup_setting_ui_checkbox($formatcnv, get_string('backupformat'.$cnv, 'core_backup')));
                 $this->add_setting($formatcnv);
             }
         }
 
         // Define users setting (keeping it on hand to define dependencies)
         $users = new backup_users_setting('users', base_setting::IS_BOOLEAN, true);
-        $users->set_ui(new backup_setting_ui_checkbox($users, get_string('rootsettingusers', 'backup')));
+        $users->set_ui(new backup_setting_ui_checkbox($users, get_string('rootsettingusers', 'core_backup')));
         $this->add_setting($users);
         $this->converter_deps($users, $converters);
 
         // Define anonymize (dependent of users)
         $anonymize = new backup_anonymize_setting('anonymize', base_setting::IS_BOOLEAN, false);
-        $anonymize->set_ui(new backup_setting_ui_checkbox($anonymize, get_string('rootsettinganonymize', 'backup')));
+        $anonymize->set_ui(new backup_setting_ui_checkbox($anonymize, get_string('rootsettinganonymize', 'core_backup')));
         $this->add_setting($anonymize);
         $users->add_dependency($anonymize);
 
         // Define role_assignments (dependent of users)
         $roleassignments = new backup_role_assignments_setting('role_assignments', base_setting::IS_BOOLEAN, true);
-        $roleassignments->set_ui(new backup_setting_ui_checkbox($roleassignments, get_string('rootsettingroleassignments', 'backup')));
+        $roleassignments->set_ui(new backup_setting_ui_checkbox($roleassignments, get_string('rootsettingroleassignments', 'core_backup')));
         $this->add_setting($roleassignments);
         $users->add_dependency($roleassignments);
 
         // Define permission.
         if ($this->plan->get_mode() == backup::MODE_IMPORT) {
             $permissions = new backup_permissions_setting('permissions', base_setting::IS_BOOLEAN, false);
-            $permissions->set_ui(new backup_setting_ui_checkbox($permissions, get_string('rootsettingpermissions', 'backup')));
+            $permissions->set_ui(new backup_setting_ui_checkbox($permissions, get_string('rootsettingpermissions', 'core_backup')));
             $this->add_setting($permissions);
         }
 
         // Define activities
         $activities = new backup_activities_setting('activities', base_setting::IS_BOOLEAN, true);
-        $activities->set_ui(new backup_setting_ui_checkbox($activities, get_string('rootsettingactivities', 'backup')));
+        $activities->set_ui(new backup_setting_ui_checkbox($activities, get_string('rootsettingactivities', 'core_backup')));
         $this->add_setting($activities);
 
         // Define blocks
         $blocks = new backup_generic_setting('blocks', base_setting::IS_BOOLEAN, true);
-        $blocks->set_ui(new backup_setting_ui_checkbox($blocks, get_string('rootsettingblocks', 'backup')));
+        $blocks->set_ui(new backup_setting_ui_checkbox($blocks, get_string('rootsettingblocks', 'core_backup')));
         $this->add_setting($blocks);
         $this->converter_deps($blocks, $converters);
 
         // Define files.
         $files = new backup_generic_setting('files', base_setting::IS_BOOLEAN, true);
-        $files->set_ui(new backup_setting_ui_checkbox($files, get_string('rootsettingfiles', 'backup')));
+        $files->set_ui(new backup_setting_ui_checkbox($files, get_string('rootsettingfiles', 'core_backup')));
         $this->add_setting($files);
         $this->converter_deps($files, $converters);
 
         // Define filters
         $filters = new backup_generic_setting('filters', base_setting::IS_BOOLEAN, true);
-        $filters->set_ui(new backup_setting_ui_checkbox($filters, get_string('rootsettingfilters', 'backup')));
+        $filters->set_ui(new backup_setting_ui_checkbox($filters, get_string('rootsettingfilters', 'core_backup')));
         $this->add_setting($filters);
         $this->converter_deps($filters, $converters);
 
         // Define comments (dependent of users)
         $comments = new backup_comments_setting('comments', base_setting::IS_BOOLEAN, true);
-        $comments->set_ui(new backup_setting_ui_checkbox($comments, get_string('rootsettingcomments', 'backup')));
+        $comments->set_ui(new backup_setting_ui_checkbox($comments, get_string('rootsettingcomments', 'core_backup')));
         $this->add_setting($comments);
         $users->add_dependency($comments);
 
         // Define badges (dependent of activities).
         $badges = new backup_badges_setting('badges', base_setting::IS_BOOLEAN, true);
-        $badges->set_ui(new backup_setting_ui_checkbox($badges, get_string('rootsettingbadges', 'backup')));
+        $badges->set_ui(new backup_setting_ui_checkbox($badges, get_string('rootsettingbadges', 'core_backup')));
         $this->add_setting($badges);
         $activities->add_dependency($badges);
         $users->add_dependency($badges);
 
         // Define calendar events.
         $events = new backup_calendarevents_setting('calendarevents', base_setting::IS_BOOLEAN, true);
-        $events->set_ui(new backup_setting_ui_checkbox($events, get_string('rootsettingcalendarevents', 'backup')));
+        $events->set_ui(new backup_setting_ui_checkbox($events, get_string('rootsettingcalendarevents', 'core_backup')));
         $this->add_setting($events);
 
         // Define completion (dependent of users)
         $completion = new backup_userscompletion_setting('userscompletion', base_setting::IS_BOOLEAN, true);
-        $completion->set_ui(new backup_setting_ui_checkbox($completion, get_string('rootsettinguserscompletion', 'backup')));
+        $completion->set_ui(new backup_setting_ui_checkbox($completion, get_string('rootsettinguserscompletion', 'core_backup')));
         $this->add_setting($completion);
         $users->add_dependency($completion);
 
         // Define logs (dependent of users)
         $logs = new backup_logs_setting('logs', base_setting::IS_BOOLEAN, true);
-        $logs->set_ui(new backup_setting_ui_checkbox($logs, get_string('rootsettinglogs', 'backup')));
+        $logs->set_ui(new backup_setting_ui_checkbox($logs, get_string('rootsettinglogs', 'core_backup')));
         $this->add_setting($logs);
         $users->add_dependency($logs);
 
         // Define grade_histories (dependent of users)
         $gradehistories = new backup_generic_setting('grade_histories', base_setting::IS_BOOLEAN, true);
-        $gradehistories->set_ui(new backup_setting_ui_checkbox($gradehistories, get_string('rootsettinggradehistories', 'backup')));
+        $gradehistories->set_ui(new backup_setting_ui_checkbox($gradehistories, get_string('rootsettinggradehistories', 'core_backup')));
         $this->add_setting($gradehistories);
         $users->add_dependency($gradehistories);
         // The restore does not process the grade histories when some activities are ignored.
@@ -170,37 +170,37 @@ class backup_root_task extends backup_task {
 
         // Define question bank inclusion setting.
         $questionbank = new backup_generic_setting('questionbank', base_setting::IS_BOOLEAN, true);
-        $questionbank->set_ui(new backup_setting_ui_checkbox($questionbank, get_string('rootsettingquestionbank', 'backup')));
+        $questionbank->set_ui(new backup_setting_ui_checkbox($questionbank, get_string('rootsettingquestionbank', 'core_backup')));
         $this->add_setting($questionbank);
 
         $groups = new backup_groups_setting('groups', base_setting::IS_BOOLEAN, true);
-        $groups->set_ui(new backup_setting_ui_checkbox($groups, get_string('rootsettinggroups', 'backup')));
+        $groups->set_ui(new backup_setting_ui_checkbox($groups, get_string('rootsettinggroups', 'core_backup')));
         $this->add_setting($groups);
 
         // Define competencies inclusion setting if competencies are enabled.
         $competencies = new backup_competencies_setting();
-        $competencies->set_ui(new backup_setting_ui_checkbox($competencies, get_string('rootsettingcompetencies', 'backup')));
+        $competencies->set_ui(new backup_setting_ui_checkbox($competencies, get_string('rootsettingcompetencies', 'core_backup')));
         $this->add_setting($competencies);
 
         // Define custom fields inclusion setting if custom fields are used.
         $customfields = new backup_customfield_setting('customfield', base_setting::IS_BOOLEAN, true);
-        $customfields->set_ui(new backup_setting_ui_checkbox($customfields, get_string('rootsettingcustomfield', 'backup')));
+        $customfields->set_ui(new backup_setting_ui_checkbox($customfields, get_string('rootsettingcustomfield', 'core_backup')));
         $this->add_setting($customfields);
 
         // Define content bank content inclusion setting.
         $contentbank = new backup_contentbankcontent_setting('contentbankcontent', base_setting::IS_BOOLEAN, true);
-        $contentbank->set_ui(new backup_setting_ui_checkbox($contentbank, get_string('rootsettingcontentbankcontent', 'backup')));
+        $contentbank->set_ui(new backup_setting_ui_checkbox($contentbank, get_string('rootsettingcontentbankcontent', 'core_backup')));
         $this->add_setting($contentbank);
 
         // Define xAPI state inclusion setting.
         $xapistate = new backup_xapistate_setting('xapistate', base_setting::IS_BOOLEAN, true);
-        $xapistate->set_ui(new backup_setting_ui_checkbox($xapistate, get_string('rootsettingxapistate', 'backup')));
+        $xapistate->set_ui(new backup_setting_ui_checkbox($xapistate, get_string('rootsettingxapistate', 'core_backup')));
         $this->add_setting($xapistate);
         $users->add_dependency($xapistate);
 
         // Define legacy file inclusion setting.
         $legacyfiles = new backup_generic_setting('legacyfiles', base_setting::IS_BOOLEAN, true);
-        $legacyfiles->set_ui(new backup_setting_ui_checkbox($legacyfiles, get_string('rootsettinglegacyfiles', 'backup')));
+        $legacyfiles->set_ui(new backup_setting_ui_checkbox($legacyfiles, get_string('rootsettinglegacyfiles', 'core_backup')));
         $this->add_setting($legacyfiles);
     }
 }

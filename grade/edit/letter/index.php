@@ -44,7 +44,7 @@ if (!$edit) {
     require_capability('moodle/grade:manageletters', $context);
     navigation_node::override_active_url($url);
     $url->param('edit', 1);
-    $PAGE->navbar->add(get_string('editgradeletters', 'grades'), $url);
+    $PAGE->navbar->add(get_string('editgradeletters', 'core_grades'), $url);
 }
 $PAGE->set_url($url);
 
@@ -75,7 +75,7 @@ if ($context->contextlevel == CONTEXT_SYSTEM or $context->contextlevel == CONTEX
 }
 
 $strgrades = get_string('grades');
-$pagename  = get_string('letters', 'grades');
+$pagename  = get_string('letters', 'core_grades');
 
 $letters = grade_get_letters($context);
 
@@ -83,7 +83,7 @@ $override = $DB->record_exists('grade_letters', array('contextid' => $context->i
 
 //if were viewing the letters
 if (!$edit) {
-    $heading = get_string('gradeletters', 'grades');
+    $heading = get_string('gradeletters', 'core_grades');
     $actionbar = new \core_grades\output\grade_letters_action_bar($context);
 
     if ($admin) {
@@ -109,12 +109,12 @@ if (!$edit) {
     }
 
     if (!empty($override)) {
-        echo $OUTPUT->notification(get_string('gradeletteroverridden', 'grades'), 'notifymessage');
+        echo $OUTPUT->notification(get_string('gradeletteroverridden', 'core_grades'), 'notifymessage');
     }
 
     $table = new html_table();
     $table->id = 'grade-letters-view';
-    $table->head  = array(get_string('max', 'grades'), get_string('min', 'grades'), get_string('letter', 'grades'));
+    $table->head  = array(get_string('max', 'core_grades'), get_string('min', 'core_grades'), get_string('letter', 'core_grades'));
     $table->size  = array('30%', '30%', '40%');
     $table->align = array('left', 'left', 'left');
     $table->width = '30%';
@@ -256,7 +256,7 @@ if (!$edit) {
         redirect($returnurl);
     }
 
-    print_grade_page_head($COURSE->id, 'letter', 'edit', get_string('editgradeletters', 'grades'),
+    print_grade_page_head($COURSE->id, 'letter', 'edit', get_string('editgradeletters', 'core_grades'),
         false, false, false);
 
     $mform->display();

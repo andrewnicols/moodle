@@ -79,7 +79,7 @@ class portfolio_format_leap2a_writer {
         $this->dom->appendChild($this->feed);
 
         $this->feed->appendChild($this->dom->createElement('id', $id));
-        $this->feed->appendChild($this->dom->createElement('title', get_string('leap2a_feedtitle', 'portfolio', fullname($this->user))));
+        $this->feed->appendChild($this->dom->createElement('title', get_string('leap2a_feedtitle', 'core_portfolio', fullname($this->user))));
         $this->feed->appendChild($this->dom->createElement('leap2:version', 'http://www.leapspecs.org/2010-07/2A/'));
 
 
@@ -140,7 +140,7 @@ class portfolio_format_leap2a_writer {
         }
         $this->entries[$selectionid]->add_category($selectiontype, 'selection_type');
         if ($this->entries[$selectionid]->type != 'selection') {
-            debugging(get_string('leap2a_overwritingselection', 'portfolio', $this->entries[$selectionid]->type));
+            debugging(get_string('leap2a_overwritingselection', 'core_portfolio', $this->entries[$selectionid]->type));
             $this->entries[$selectionid]->type = 'selection';
         }
     }

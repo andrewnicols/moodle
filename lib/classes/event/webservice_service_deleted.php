@@ -50,7 +50,7 @@ class webservice_service_deleted extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventwebserviceservicedeleted', 'webservice');
+        return get_string('eventwebserviceservicedeleted', 'core_webservice');
     }
 
     /**

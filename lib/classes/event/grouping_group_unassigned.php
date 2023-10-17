@@ -51,7 +51,7 @@ class grouping_group_unassigned extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventgroupinggroupunassigned', 'group');
+        return get_string('eventgroupinggroupunassigned', 'core_group');
     }
 
     /**

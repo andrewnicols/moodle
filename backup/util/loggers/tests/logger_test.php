@@ -258,7 +258,7 @@ class logger_test extends \basic_testcase {
         @remove_dir(dirname($file));
         // Recreate test dir
         if (!check_dir_exists(dirname($file), true, true)) {
-            throw new \moodle_exception('error_creating_temp_dir', 'error', dirname($file));
+            throw new \moodle_exception('error_creating_temp_dir', 'mod_error', dirname($file));
         }
 
         // Instantiate with date and level output, and also use the depth option

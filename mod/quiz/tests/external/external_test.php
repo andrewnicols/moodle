@@ -1085,7 +1085,7 @@ class external_test extends externallib_advanced_testcase {
         $this->assertEquals('1.a', $result['questions'][0]['questionnumber']);
         $this->assertEquals('numerical', $result['questions'][0]['type']);
         $this->assertArrayNotHasKey('state', $result['questions'][0]);  // We don't receive the state yet.
-        $this->assertEquals(get_string('notyetanswered', 'question'), $result['questions'][0]['status']);
+        $this->assertEquals(get_string('notyetanswered', 'core_question'), $result['questions'][0]['status']);
         $this->assertFalse($result['questions'][0]['flagged']);
         $this->assertEquals(0, $result['questions'][0]['page']);
         $this->assertEmpty($result['questions'][0]['mark']);
@@ -1107,7 +1107,7 @@ class external_test extends externallib_advanced_testcase {
         $this->assertEquals(2, $result['questions'][0]['number']);
         $this->assertEquals('numerical', $result['questions'][0]['type']);
         $this->assertArrayNotHasKey('state', $result['questions'][0]);  // We don't receive the state yet.
-        $this->assertEquals(get_string('notyetanswered', 'question'), $result['questions'][0]['status']);
+        $this->assertEquals(get_string('notyetanswered', 'core_question'), $result['questions'][0]['status']);
         $this->assertFalse($result['questions'][0]['flagged']);
         $this->assertEquals(1, $result['questions'][0]['page']);
         $this->assertEquals(1, $result['questions'][0]['sequencecheck']);
@@ -1955,7 +1955,7 @@ class external_test extends externallib_advanced_testcase {
         // Now new attemps allowed.
         $this->assertCount(1, $result['preventnewattemptreasons']);
         $this->assertFalse($result['ispreflightcheckrequired']);
-        $this->assertEquals(get_string('nomoreattempts', 'quiz'), $result['preventnewattemptreasons'][0]);
+        $this->assertEquals(get_string('nomoreattempts', 'mod_quiz'), $result['preventnewattemptreasons'][0]);
 
     }
 

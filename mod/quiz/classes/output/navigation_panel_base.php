@@ -97,7 +97,7 @@ abstract class navigation_panel_base {
             if ($this->attemptobj->is_blocked_by_previous_question($slot)) {
                 $button->url = null;
                 $button->stateclass = 'blocked';
-                $button->statestring = get_string('questiondependsonprevious', 'quiz');
+                $button->statestring = get_string('questiondependsonprevious', 'mod_quiz');
             }
             $buttons[] = $button;
         }
@@ -119,9 +119,9 @@ abstract class navigation_panel_base {
 
         // Special case handling for 'information' items.
         if ($qa->get_state() == question_state::$todo) {
-            return get_string('notyetviewed', 'quiz');
+            return get_string('notyetviewed', 'mod_quiz');
         } else {
-            return get_string('viewed', 'quiz');
+            return get_string('viewed', 'mod_quiz');
         }
     }
 

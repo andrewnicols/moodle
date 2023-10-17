@@ -50,7 +50,7 @@ class question_category_created extends question_category_base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventquestioncategorycreated', 'question');
+        return get_string('eventquestioncategorycreated', 'core_question');
     }
 
     /**

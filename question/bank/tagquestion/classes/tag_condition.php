@@ -142,7 +142,7 @@ class tag_condition extends condition {
 
 
     public function get_title() {
-        return get_string('tag', 'tag');
+        return get_string('tag', 'core_tag');
     }
 
     public function get_filter_class() {

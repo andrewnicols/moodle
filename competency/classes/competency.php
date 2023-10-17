@@ -458,7 +458,7 @@ class competency extends persistent {
 
             // Ensure that we are not trying to move the competency across frameworks.
             if ($this->beforeupdate->get('competencyframeworkid') != $value) {
-                return new lang_string('invaliddata', 'error');
+                return new lang_string('invaliddata', 'mod_error');
             }
 
         } else {
@@ -466,7 +466,7 @@ class competency extends persistent {
 
             // Check that the framework exists.
             if (!competency_framework::record_exists($value)) {
-                return new lang_string('invaliddata', 'error');
+                return new lang_string('invaliddata', 'mod_error');
             }
         }
 
@@ -488,7 +488,7 @@ class competency extends persistent {
             'competencyframeworkid' => $this->get('competencyframeworkid')
         );
         if ($DB->record_exists_select(self::TABLE, $sql, $params)) {
-            return new lang_string('idnumbertaken', 'error');
+            return new lang_string('idnumbertaken', 'mod_error');
         }
         return true;
     }
@@ -504,11 +504,11 @@ class competency extends persistent {
         // The last item should be the parent ID.
         $id = $this->get('parentid');
         if (substr($value, -(strlen($id) + 2)) != '/' . $id . '/') {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
 
         } else if (!preg_match('@/([0-9]+/)+@', $value)) {
             // The format of the path is not correct.
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;
@@ -524,7 +524,7 @@ class competency extends persistent {
 
         // Check that the parent exists. But only if we don't have it already, and we actually have a parent.
         if (!empty($value) && !$this->newparent && !self::record_exists($value)) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         // During update.
@@ -535,7 +535,7 @@ class competency extends persistent {
 
                 // Check that the new parent belongs to the same framework.
                 if ($this->newparent->get('competencyframeworkid') != $this->get('competencyframeworkid')) {
-                    return new lang_string('invaliddata', 'error');
+                    return new lang_string('invaliddata', 'mod_error');
                 }
             }
         }
@@ -555,7 +555,7 @@ class competency extends persistent {
         }
 
         if (!class_exists($value) || !is_subclass_of($value, 'core_competency\\competency_rule')) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;
@@ -577,13 +577,13 @@ class competency extends persistent {
                 return true;
             }
             // Config but no rules, whoops!
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         $valid = $rule->validate_config($value);
         if ($valid !== true) {
             // Whoops!
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
 
         return true;
@@ -607,7 +607,7 @@ class competency extends persistent {
 
         // Always validate that the scale exists.
         if (!$DB->record_exists_select('scale', 'id = :id', array('id' => $value))) {
-            return new lang_string('invalidscaleid', 'error');
+            return new lang_string('invalidscaleid', 'mod_error');
         }
 
         // During update.

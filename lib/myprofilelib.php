@@ -141,8 +141,8 @@ function core_myprofile_navigation(core_user\output\myprofile\tree $tree, $user,
         $hostinfo->remotename = $remotehost->name;
         $hostinfo->remoteurl  = $remotehost->wwwroot;
 
-        $node = new core_user\output\myprofile\node('contact', 'mnet', get_string('remoteuser', 'mnet', $remoteuser), null, null,
-            get_string('remoteuserinfo', 'mnet', $hostinfo), null, 'remoteuserinfo');
+        $node = new core_user\output\myprofile\node('contact', 'mnet', get_string('remoteuser', 'core_mnet', $remoteuser), null, null,
+            get_string('remoteuserinfo', 'core_mnet', $hostinfo), null, 'remoteuserinfo');
         $tree->add_node($node);
     }
 
@@ -170,14 +170,14 @@ function core_myprofile_navigation(core_user\output\myprofile\tree $tree, $user,
     }
 
     if (!isset($hiddenfields['moodlenetprofile']) && $user->moodlenetprofile) {
-        $node = new core_user\output\myprofile\node('contact', 'moodlenetprofile', get_string('moodlenetprofile', 'user'), null,
+        $node = new core_user\output\myprofile\node('contact', 'moodlenetprofile', get_string('moodlenetprofile', 'core_user'), null,
                 null, $user->moodlenetprofile);
         $tree->add_node($node);
     }
 
     if (!isset($hiddenfields['country']) && $user->country) {
         $node = new core_user\output\myprofile\node('contact', 'country', get_string('country'), null, null,
-                get_string($user->country, 'countries'));
+                get_string($user->country, 'mod_countries'));
         $tree->add_node($node);
     }
 
@@ -324,7 +324,7 @@ function core_myprofile_navigation(core_user\output\myprofile\tree $tree, $user,
         if (!isset($hiddenfields['suspended'])) {
             if ($user->suspended) {
                 $node = new core_user\output\myprofile\node('coursedetails', 'suspended',
-                        null, null, null, get_string('suspended', 'auth'));
+                        null, null, null, get_string('suspended', 'core_auth'));
                 $tree->add_node($node);
             }
         }

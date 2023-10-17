@@ -601,7 +601,7 @@ function get_site() {
     } else {
         // course table exists, but the site is not there,
         // unfortunately there is no automatic way to recover
-        throw new moodle_exception('nosite', 'error');
+        throw new moodle_exception('nosite', 'mod_error');
     }
 }
 

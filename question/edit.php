@@ -47,7 +47,7 @@ $thispageurl->param('deleteall', 1);
 $questionbank = new view($contexts, $thispageurl, $COURSE, $cm, $pagevars);
 
 $context = $contexts->lowest();
-$streditingquestions = get_string('editquestions', 'question');
+$streditingquestions = get_string('editquestions', 'core_question');
 $PAGE->set_title($streditingquestions);
 $PAGE->set_heading($COURSE->fullname);
 $PAGE->activityheader->disable();

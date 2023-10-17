@@ -58,7 +58,7 @@ class question_dataset_dependent_definitions_form extends question_wizard_form {
     public function __construct($submiturl, $question) {
         // Validate the question category.
         if (!isset($question->categoryobject)) {
-            throw new moodle_exception('categorydoesnotexist', 'question');
+            throw new moodle_exception('categorydoesnotexist', 'core_question');
         }
         $question->category = $question->categoryobject->id;
         $this->question = $question;

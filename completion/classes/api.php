@@ -86,7 +86,7 @@ class api {
                 'instance' => $instance->id, 'eventtype' => $event->eventtype))) {
             if ($completionexpectedtime !== null) {
                 // Calendar event exists so update it.
-                $event->name = get_string('completionexpectedfor', 'completion', $lang);
+                $event->name = get_string('completionexpectedfor', 'core_completion', $lang);
                 $event->description = format_module_intro($modulename, $instance, $cmid, false);
                 $event->format = FORMAT_HTML;
                 $event->timestart = $completionexpectedtime;
@@ -104,7 +104,7 @@ class api {
         } else {
             // Event doesn't exist so create one.
             if ($completionexpectedtime !== null) {
-                $event->name = get_string('completionexpectedfor', 'completion', $lang);
+                $event->name = get_string('completionexpectedfor', 'core_completion', $lang);
                 $event->description = format_module_intro($modulename, $instance, $cmid, false);
                 $event->format = FORMAT_HTML;
                 $event->courseid = $instance->course;

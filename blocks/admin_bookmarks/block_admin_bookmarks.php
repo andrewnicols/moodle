@@ -119,10 +119,10 @@ class block_admin_bookmarks extends block_base {
             $this->content->footer = '';
         } else if (in_array($section, $bookmarks)) {
             $deleteurl = new moodle_url('/blocks/admin_bookmarks/delete.php', array('section'=>$section, 'sesskey'=>sesskey()));
-            $this->content->footer =  html_writer::link($deleteurl, get_string('unbookmarkthispage','admin'));
+            $this->content->footer =  html_writer::link($deleteurl, get_string('unbookmarkthispage','core_admin'));
         } else {
             $createurl = new moodle_url('/blocks/admin_bookmarks/create.php', array('section'=>$section, 'sesskey'=>sesskey()));
-            $this->content->footer = html_writer::link($createurl, get_string('bookmarkthispage','admin'));
+            $this->content->footer = html_writer::link($createurl, get_string('bookmarkthispage','core_admin'));
         }
 
         return $this->content;

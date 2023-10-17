@@ -95,10 +95,10 @@ if (is_enrolled($context, $USER, '', true)) {
 
 $PAGE->set_title($course->shortname);
 $PAGE->set_heading($course->fullname);
-$PAGE->navbar->add(get_string('enrolmentoptions','enrol'));
+$PAGE->navbar->add(get_string('enrolmentoptions','core_enrol'));
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('enrolmentoptions','enrol'));
+echo $OUTPUT->heading(get_string('enrolmentoptions','core_enrol'));
 
 $courserenderer = $PAGE->get_renderer('core', 'course');
 echo $courserenderer->course_info_box($course);
@@ -111,15 +111,15 @@ foreach ($forms as $form) {
 
 if (!$forms) {
     if (isguestuser()) {
-        notice(get_string('noguestaccess', 'enrol'), get_login_url());
+        notice(get_string('noguestaccess', 'core_enrol'), get_login_url());
     } else if ($returnurl) {
-        notice(get_string('notenrollable', 'enrol'), $returnurl);
+        notice(get_string('notenrollable', 'core_enrol'), $returnurl);
     } else {
         $url = get_local_referer(false);
         if (empty($url)) {
             $url = new moodle_url('/index.php');
         }
-        notice(get_string('notenrollable', 'enrol'), $url);
+        notice(get_string('notenrollable', 'core_enrol'), $url);
     }
 }
 

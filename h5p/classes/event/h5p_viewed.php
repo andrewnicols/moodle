@@ -51,7 +51,7 @@ class h5p_viewed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventh5pviewed', 'h5p');
+        return get_string('eventh5pviewed', 'core_h5p');
     }
 
     /**

@@ -91,11 +91,11 @@ class content_notification_task extends adhoc_task {
             ];
 
             if ($isupdate) {
-                $messagesubject = get_string('coursecontentnotifupdate', 'course', $a);
-                $messagebody = get_string('coursecontentnotifupdatebody', 'course', $a);
+                $messagesubject = get_string('coursecontentnotifupdate', 'core_course', $a);
+                $messagebody = get_string('coursecontentnotifupdatebody', 'core_course', $a);
             } else {
-                $messagesubject = get_string('coursecontentnotifnew', 'course', $a);
-                $messagebody = get_string('coursecontentnotifnewbody', 'course', $a);
+                $messagesubject = get_string('coursecontentnotifnew', 'core_course', $a);
+                $messagebody = get_string('coursecontentnotifnewbody', 'core_course', $a);
             }
 
             // Send notification.

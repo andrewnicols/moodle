@@ -86,7 +86,7 @@ switch ($action) {
                 $PAGE->navbar->add(get_string('scales'), new moodle_url('/grade/edit/scale/index.php',
                     ['id' => $courseid]));
             }
-            $strdeletescale = get_string('deletescale', 'grades');
+            $strdeletescale = get_string('deletescale', 'core_grades');
             $PAGE->navbar->add($strdeletescale);
             $PAGE->set_title($strdeletescale);
             $PAGE->set_heading($COURSE->fullname);
@@ -97,7 +97,7 @@ switch ($action) {
                     'sesskey' =>  sesskey(),
                     'deleteconfirmed'=> 1));
 
-            echo $OUTPUT->confirm(get_string('scaleconfirmdelete', 'grades', $scale->get_name()), $confirmurl,
+            echo $OUTPUT->confirm(get_string('scaleconfirmdelete', 'core_grades', $scale->get_name()), $confirmurl,
                 "index.php?id={$courseid}");
             echo $OUTPUT->footer();
             die;
@@ -195,6 +195,6 @@ if ($hasstandardscales) {
 }
 // If the are no available scales, display a notification.
 if (!$hascustomscales && !$hasstandardscales) {
-    echo $OUTPUT->notification(get_string('noexistingscales', 'grades'), 'info', false);
+    echo $OUTPUT->notification(get_string('noexistingscales', 'core_grades'), 'info', false);
 }
 echo $OUTPUT->footer();

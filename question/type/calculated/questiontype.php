@@ -396,7 +396,7 @@ class qtype_calculated extends question_type {
                 require("{$CFG->dirroot}/question/type/calculated/datasetitems.php");
                 break;
             default:
-                throw new \moodle_exception('invalidwizardpage', 'question');
+                throw new \moodle_exception('invalidwizardpage', 'core_question');
                 break;
         }
     }
@@ -428,7 +428,7 @@ class qtype_calculated extends question_type {
                         "{$submiturl}?wizardnow=datasetitems", $question, $regenerate);
                 break;
             default:
-                throw new \moodle_exception('invalidwizardpage', 'question');
+                throw new \moodle_exception('invalidwizardpage', 'core_question');
                 break;
         }
 
@@ -691,7 +691,7 @@ class qtype_calculated extends question_type {
                 $this->save_question_calculated($question, $form);
                 break;
             default:
-                throw new \moodle_exception('invalidwizardpage', 'question');
+                throw new \moodle_exception('invalidwizardpage', 'core_question');
                 break;
         }
         return $question;
@@ -1048,7 +1048,7 @@ class qtype_calculated extends question_type {
             return sprintf("%.".$regs[4].'f', $nbr);
 
         } else {
-            throw new \moodle_exception('disterror', 'question', '', $regs[1]);
+            throw new \moodle_exception('disterror', 'core_question', '', $regs[1]);
         }
         return '';
     }
@@ -1482,7 +1482,7 @@ class qtype_calculated extends question_type {
             $a = new stdClass();
             $a->id = $question->id;
             $a->item = $datasetitem;
-            throw new \moodle_exception('cannotgetdsfordependent', 'question', '', $a);
+            throw new \moodle_exception('cannotgetdsfordependent', 'core_question', '', $a);
         }
         $dataset = Array();
         foreach ($dataitems as $id => $dataitem) {
@@ -1705,7 +1705,7 @@ class qtype_calculated extends question_type {
         global $CFG, $DB;
         $datasetdefs = array();
         $lnamemax = 22;
-        $namestr          = get_string('name', 'quiz');
+        $namestr          = get_string('name', 'mod_quiz');
         $rangeofvaluestr  = get_string('minmax', 'qtype_calculated');
         $questionusingstr = get_string('usedinquestion', 'qtype_calculated');
         $itemscountstr    = get_string('itemscount', 'qtype_calculated');
@@ -1820,7 +1820,7 @@ class qtype_calculated extends question_type {
 
         if (!$starfound) {
             $responses[0] = new question_possible_response(
-            get_string('didnotmatchanyanswer', 'question'), 0);
+            get_string('didnotmatchanyanswer', 'core_question'), 0);
         }
 
         $responses[null] = question_possible_response::no_response();

@@ -45,9 +45,9 @@ class qtype_random_edit_form extends question_edit_form {
         $mform = $this->_form;
 
         // Standard fields at the start of the form.
-        $mform->addElement('header', 'generalheader', get_string("general", 'form'));
+        $mform->addElement('header', 'generalheader', get_string("general", 'core_form'));
 
-        $mform->addElement('questioncategory', 'category', get_string('category', 'question'),
+        $mform->addElement('questioncategory', 'category', get_string('category', 'core_question'),
                 array('contexts' => $this->contexts->having_cap('moodle/question:useall'), 'top' => true));
 
         $mform->addElement('advcheckbox', 'questiontext[text]',

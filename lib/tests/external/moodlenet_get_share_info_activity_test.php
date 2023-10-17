@@ -135,6 +135,6 @@ class moodlenet_get_share_info_activity_test extends externallib_advanced_testca
         $this->assertNotEmpty($result['warnings']);
         $this->assertEquals($randomcmid, $result['warnings'][0]['item']);
         $this->assertEquals('errorgettingactivityinformation', $result['warnings'][0]['warningcode']);
-        $this->assertEquals(get_string('invalidcoursemodule', 'error'), $result['warnings'][0]['message']);
+        $this->assertEquals(get_string('invalidcoursemodule', 'mod_error'), $result['warnings'][0]['message']);
     }
 }

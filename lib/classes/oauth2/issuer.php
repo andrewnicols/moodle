@@ -255,7 +255,7 @@ class issuer extends persistent {
         global $CFG;
         include_once($CFG->dirroot . '/lib/validateurlsyntax.php');
         if (!empty($value) && !validateUrlSyntax($value, 'S+')) {
-            return new lang_string('sslonlyaccess', 'error');
+            return new lang_string('sslonlyaccess', 'mod_error');
         }
         return true;
     }

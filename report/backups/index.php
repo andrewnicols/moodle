@@ -117,7 +117,7 @@ if ($courseid) {
 $table = new html_table;
 $table->head = array(
     get_string("course"),
-    get_string("timetaken", "backup"),
+    get_string("timetaken", 'core_backup'),
     get_string("status"),
     get_string("backupnext")
 );
@@ -196,7 +196,7 @@ if (empty($automatedbackupsenabled)) {
     // Automated backups aren't active, display a notification.
     // Not we don't stop because of this as perhaps scheduled backups are being run
     // automatically, or were enabled in the page.
-    echo $OUTPUT->notification(get_string('automatedbackupsinactive', 'backup'));
+    echo $OUTPUT->notification(get_string('automatedbackupsinactive', 'core_backup'));
 }
 echo html_writer::table($table);
 echo $OUTPUT->box_end();

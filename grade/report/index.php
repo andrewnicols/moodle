@@ -45,7 +45,7 @@ foreach ($reports as $plugin => $plugindir) {                      // Remove one
 }
 
 if (empty($reports)) {
-    throw new \moodle_exception('noreports', 'debug', $CFG->wwwroot.'/course/view.php?id='.$course->id);
+    throw new \moodle_exception('noreports', 'mod_debug', $CFG->wwwroot.'/course/view.php?id='.$course->id);
 }
 
 if (!isset($USER->grade_last_report)) {

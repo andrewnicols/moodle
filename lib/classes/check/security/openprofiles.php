@@ -57,7 +57,7 @@ class openprofiles extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/settings.php?section=sitepolicies#admin-forcelogin'),
-            get_string('sitepolicies', 'admin'));
+            get_string('sitepolicies', 'core_admin'));
     }
 
     /**

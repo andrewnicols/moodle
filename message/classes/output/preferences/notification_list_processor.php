@@ -142,7 +142,7 @@ class notification_list_processor implements templatable, renderable {
                 'checked' => false,
             ],
             'enabled' => false,
-            'enabledlabel' => get_string('sendingviaenabled', 'message', $labelparams),
+            'enabledlabel' => get_string('sendingviaenabled', 'core_message', $labelparams),
         ];
 
         // Determine the default setting.
@@ -157,11 +157,11 @@ class notification_list_processor implements templatable, renderable {
         // If settings are disallowed or forced, just display the corresponding message, if not use user settings.
         if ($context['locked']) {
             if ($context['enabled']) {
-                $context['lockedmessage'] = get_string('forcedmessage', 'message');
-                $context['lockedlabel'] = get_string('providerprocesorislocked', 'message', $labelparams);
+                $context['lockedmessage'] = get_string('forcedmessage', 'core_message');
+                $context['lockedlabel'] = get_string('providerprocesorislocked', 'core_message', $labelparams);
             } else {
-                $context['lockedmessage'] = get_string('disallowed', 'message');
-                $context['lockedlabel'] = get_string('providerprocesorisdisallowed', 'message', $labelparams);
+                $context['lockedmessage'] = get_string('disallowed', 'core_message');
+                $context['lockedlabel'] = get_string('providerprocesorisdisallowed', 'core_message', $labelparams);
             }
         }
 

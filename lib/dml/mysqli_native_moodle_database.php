@@ -127,7 +127,7 @@ class mysqli_native_moodle_database extends moodle_database {
      */
     public function driver_installed() {
         if (!extension_loaded('mysqli')) {
-            return get_string('mysqliextensionisnotpresentinphp', 'install');
+            return get_string('mysqliextensionisnotpresentinphp', 'mod_install');
         }
         return true;
     }
@@ -488,7 +488,7 @@ class mysqli_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_name() {
-        return get_string('nativemysqli', 'install');
+        return get_string('nativemysqli', 'mod_install');
     }
 
     /**
@@ -497,7 +497,7 @@ class mysqli_native_moodle_database extends moodle_database {
      * @return string
      */
     public function get_configuration_help() {
-        return get_string('nativemysqlihelp', 'install');
+        return get_string('nativemysqlihelp', 'mod_install');
     }
 
     /**
@@ -528,7 +528,7 @@ class mysqli_native_moodle_database extends moodle_database {
         }
 
         if ($sloppymyisamfound) {
-            return get_string('myisamproblem', 'error');
+            return get_string('myisamproblem', 'mod_error');
         } else {
             return null;
         }

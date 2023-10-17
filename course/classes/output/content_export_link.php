@@ -43,16 +43,16 @@ class content_export_link {
         global $CFG;
         $downloadattr = new \stdClass();
         $downloadattr->url = new \moodle_url('/course/downloadcontent.php', ['contextid' => $context->id]);
-        $downloadattr->displaystring = get_string('downloadcoursecontent', 'course');
+        $downloadattr->displaystring = get_string('downloadcoursecontent', 'core_course');
         $maxfilesize = display_size($CFG->maxsizeperdownloadcoursefile);
         $downloadlink = new \moodle_url('/course/downloadcontent.php', ['contextid' => $context->id, 'download' => 1]);
 
         $downloadattr->elementattributes = [
             'data-downloadcourse' => 1,
-            'data-download-body' => get_string('downloadcourseconfirmation', 'course', $maxfilesize),
+            'data-download-body' => get_string('downloadcourseconfirmation', 'core_course', $maxfilesize),
             'data-download-button-text' => get_string('download'),
             'data-download-link' => $downloadlink->out(false),
-            'data-download-title' => get_string('downloadcoursecontent', 'course'),
+            'data-download-title' => get_string('downloadcoursecontent', 'core_course'),
             'data-overrides-tree-activation-key-handler' => 1,
         ];
 

@@ -140,7 +140,7 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
         $csvpreview = new \phpunit_gradeimport_csv_load_data();
         $csvpreview->load_csv_content($this->badtext, $encoding, $separator, $previewrows);
         // Columns shouldn't match.
-        $this->assertEquals($csvpreview->get_error(), get_string('csvweirdcolumns', 'error'));
+        $this->assertEquals($csvpreview->get_error(), get_string('csvweirdcolumns', 'mod_error'));
     }
 
     /**
@@ -345,9 +345,9 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
                 'value' => $value,
             ];
             if ($allowaccountssameemail) {
-                $expectederrormessage = get_string('usermappingerrormultipleusersfound', 'grades', $mappingobject);
+                $expectederrormessage = get_string('usermappingerrormultipleusersfound', 'core_grades', $mappingobject);
             } else {
-                $expectederrormessage = get_string('usermappingerror', 'grades', $mappingobject);
+                $expectederrormessage = get_string('usermappingerror', 'core_grades', $mappingobject);
             }
 
             $this->assertEquals($expectederrormessage, $gradebookerrors[0]);
@@ -397,7 +397,7 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
         $newgrades = $testobject->test_update_grade_item($this->courseid, $map, $key, $verbosescales, 'A');
         // The $newgrades variable should be null.
         $this->assertNull($newgrades);
-        $expectederrormessage = get_string('badgrade', 'grades');
+        $expectederrormessage = get_string('badgrade', 'core_grades');
         // Check that the error message is what we expect.
         $gradebookerrors = $testobject->get_gradebookerrors();
         $this->assertEquals($expectederrormessage, $gradebookerrors[0]);
@@ -582,7 +582,7 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
                 $this->courseid, '', '', $verbosescales);
         $this->assertFalse($dataloaded);
         $errors = $testobject->get_gradebookerrors();
-        $this->assertEquals($errors[0], get_string('gradealreadyupdated', 'grades', fullname($user1)));
+        $this->assertEquals($errors[0], get_string('gradealreadyupdated', 'core_grades', fullname($user1)));
 
         // Test using force import enabled and a date in the past.
         $formdata->forceimport = true;
@@ -601,7 +601,7 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
                 $this->courseid, '', '', $verbosescales);
         $this->assertFalse($dataloaded);
         $errors = $testobject->get_gradebookerrors();
-        $this->assertEquals($errors[0], get_string('invalidgradeexporteddate', 'grades'));
+        $this->assertEquals($errors[0], get_string('invalidgradeexporteddate', 'core_grades'));
 
         // Test importing using invalid exported date.
         $baddate = '0123A56B89';
@@ -613,7 +613,7 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
                 $this->courseid, '', '', $verbosescales);
         $this->assertFalse($dataloaded);
         $errors = $testobject->get_gradebookerrors();
-        $this->assertEquals($errors[0], get_string('invalidgradeexporteddate', 'grades'));
+        $this->assertEquals($errors[0], get_string('invalidgradeexporteddate', 'core_grades'));
 
         // Test importing using date in the future.
         $oneyearahead = strtotime('+1 year', time());
@@ -625,6 +625,6 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
             $this->courseid, '', '', $verbosescales);
         $this->assertFalse($dataloaded);
         $errors = $testobject->get_gradebookerrors();
-        $this->assertEquals($errors[0], get_string('invalidgradeexporteddate', 'grades'));
+        $this->assertEquals($errors[0], get_string('invalidgradeexporteddate', 'core_grades'));
     }
 }

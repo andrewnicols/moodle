@@ -134,7 +134,7 @@ class sync_members_test extends \advanced_testcase {
         ob_start();
         $this->task->execute();
         $output = ob_get_clean();
-        $message = 'Skipping task - ' . get_string('pluginnotenabled', 'auth', get_string('pluginname', 'auth_lti'));
+        $message = 'Skipping task - ' . get_string('pluginnotenabled', 'core_auth', get_string('pluginname', 'auth_lti'));
         $this->assertStringContainsString($message, $output);
     }
 

@@ -62,7 +62,7 @@ class completion_criteria_grade extends completion_criteria {
      */
     public function config_form_display(&$mform, $data = null) {
         $mform->addElement('checkbox', 'criteria_grade', get_string('enable'));
-        $mform->addElement('text', 'criteria_grade_value', get_string('graderequired', 'completion'));
+        $mform->addElement('text', 'criteria_grade_value', get_string('graderequired', 'core_completion'));
         $mform->disabledIf('criteria_grade_value', 'criteria_grade');
         $mform->setType('criteria_grade_value', PARAM_RAW); // Uses unformat_float.
         // Grades are stored in Moodle with 5 decimal points, make sure we do not accidentally round them
@@ -134,7 +134,7 @@ class completion_criteria_grade extends completion_criteria {
      * @return  string
      */
     public function get_title() {
-        return get_string('coursegrade', 'completion');
+        return get_string('coursegrade', 'core_completion');
     }
 
     /**
@@ -147,7 +147,7 @@ class completion_criteria_grade extends completion_criteria {
         require_once($CFG->libdir . '/gradelib.php');
         $decimalpoints = grade_get_setting($this->course, 'decimalpoints', $CFG->grade_decimalpoints);
         $graderequired = format_float($this->gradepass, $decimalpoints);
-        return get_string('gradexrequired', 'completion', $graderequired);
+        return get_string('gradexrequired', 'core_completion', $graderequired);
     }
 
     /**
@@ -249,8 +249,8 @@ class completion_criteria_grade extends completion_criteria {
         $decimalpoints = grade_get_setting($this->course, 'decimalpoints', $CFG->grade_decimalpoints);
 
         $details = array();
-        $details['type'] = get_string('coursegrade', 'completion');
-        $details['criteria'] = get_string('graderequired', 'completion');
+        $details['type'] = get_string('coursegrade', 'core_completion');
+        $details['criteria'] = get_string('graderequired', 'core_completion');
         $details['requirement'] = format_float($this->gradepass, $decimalpoints);
         $details['status'] = '';
 

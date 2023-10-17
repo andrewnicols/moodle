@@ -215,7 +215,7 @@ class badge_potential_users_selector extends badge_award_selector_base {
             return array();
         }
 
-        return array(get_string('potentialrecipients', 'badges') => $availableusers);
+        return array(get_string('potentialrecipients', 'core_badges') => $availableusers);
     }
 
     /**
@@ -260,7 +260,7 @@ class badge_existing_users_selector extends badge_award_selector_base {
                 $groupwheresql
                 ORDER BY $sort", $params);
 
-        return array(get_string('existingrecipients', 'badges') => $recipients);
+        return array(get_string('existingrecipients', 'core_badges') => $recipients);
     }
 }
 
@@ -324,7 +324,7 @@ function process_manual_revoke($recipientid, $issuerid, $issuerrole, $badgeid) {
             return true;
         }
     } else {
-        throw new moodle_exception('error:badgenotfound', 'badges');
+        throw new moodle_exception('error:badgenotfound', 'core_badges');
     }
     return false;
 }

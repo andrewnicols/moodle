@@ -85,7 +85,7 @@ class notification_viewed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventnotificationviewed', 'message');
+        return get_string('eventnotificationviewed', 'core_message');
     }
 
     /**

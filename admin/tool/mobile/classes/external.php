@@ -667,7 +667,7 @@ class external extends external_api {
         $service = $DB->get_record('external_services', ['shortname' => MOODLE_OFFICIAL_MOBILE_SERVICE, 'enabled' => 1]);
         if (empty($service)) {
             // will throw exception if no token found
-            throw new moodle_exception('servicenotavailable', 'webservice');
+            throw new moodle_exception('servicenotavailable', 'core_webservice');
         }
 
         // Get an existing token or create a new one.

@@ -42,14 +42,14 @@ class edit_relatedbadge_form extends moodleform {
         $mform = $this->_form;
         $badge = $this->_customdata['badge'];
         $badgesarray = $this->get_badges_option($badge);
-        $mform->addElement('header', 'alignment', get_string('relatedbages', 'badges'));
+        $mform->addElement('header', 'alignment', get_string('relatedbages', 'core_badges'));
         if (!$badgesarray) {
             $badgesarray = array(get_string('none'));
             $attributes = array('size' => '3', 'disabled' => true, 'style' => 'min-width: 200px');
         } else {
             $attributes = array('size' => '10');
         }
-        $mform->addElement('select', 'relatedbadgeids', get_string('relatedbages', 'badges'), $badgesarray, $attributes);
+        $mform->addElement('select', 'relatedbadgeids', get_string('relatedbages', 'core_badges'), $badgesarray, $attributes);
         $mform->getElement('relatedbadgeids')->setMultiple(true);
         $this->add_action_buttons();
 
@@ -101,7 +101,7 @@ class edit_relatedbadge_form extends moodleform {
             $language = isset($languages[$record->language]) ? $languages[$record->language] : '';
             $options[$record->id] = $record->name .
                 ' (version: ' . $record->version . ', language: ' . $language . ', ' .
-                ($record->type == BADGE_TYPE_COURSE ? get_string('badgesview', 'badges') : get_string('sitebadges', 'badges')) .
+                ($record->type == BADGE_TYPE_COURSE ? get_string('badgesview', 'core_badges') : get_string('sitebadges', 'core_badges')) .
                 ')';
         }
         return $options;

@@ -73,7 +73,7 @@ if (!has_capability('mod/survey:readresponses', $context)) {
 }
 
 if (!$survey = $DB->get_record("survey", array("id" => $cm->instance))) {
-    throw new \moodle_exception('invalidsurveyid', 'survey');
+    throw new \moodle_exception('invalidsurveyid', 'mod_survey');
 }
 
 // Check to see if groups are being used in this survey.
@@ -88,15 +88,15 @@ if ($group) {
     $group = false;
 }
 
-$stractual = get_string("actual", "survey");
-$stractualclass = get_string("actualclass", "survey");
+$stractual = get_string("actual", 'mod_survey');
+$stractualclass = get_string("actualclass", 'mod_survey');
 
-$strpreferred = get_string("preferred", "survey");
-$strpreferredclass = get_string("preferredclass", "survey");
+$strpreferred = get_string("preferred", 'mod_survey');
+$strpreferredclass = get_string("preferredclass", 'mod_survey');
 
 if ($sid || isset($user)) {
-    $stractualstudent = get_string("actualstudent", "survey", fullname($user));
-    $strpreferredstudent = get_string("preferredstudent", "survey", fullname($user));
+    $stractualstudent = get_string("actualstudent", 'mod_survey', fullname($user));
+    $strpreferredstudent = get_string("preferredstudent", 'mod_survey', fullname($user));
 }
 
 $virtualscales = false; // Set default value for case clauses.
@@ -106,8 +106,8 @@ switch ($type) {
     case "question.png":
 
         $question = $DB->get_record("survey_questions", array("id" => $qid));
-        $question->text = wordwrap(get_string($question->text, "survey"), SURVEY_QLENGTH_WRAP);
-        $question->options = get_string($question->options, "survey");
+        $question->text = wordwrap(get_string($question->text, 'mod_survey'), SURVEY_QLENGTH_WRAP);
+        $question->options = get_string($question->options, 'mod_survey');
 
         $options = explode(",", $question->options);
 
@@ -171,8 +171,8 @@ switch ($type) {
     case "multiquestion.png":
 
         $question = $DB->get_record("survey_questions", array("id" => $qid));
-        $question->text = get_string($question->text, "survey");
-        $question->options = get_string($question->options, "survey");
+        $question->text = get_string($question->text, 'mod_survey');
+        $question->options = get_string($question->options, 'mod_survey');
 
         $options = explode(",", $question->options);
         $questionorder = explode(",", $question->multi);
@@ -180,7 +180,7 @@ switch ($type) {
         $qqq = $DB->get_records_list("survey_questions", "id", explode(',', $question->multi));
 
         foreach ($questionorder as $i => $val) {
-            $names[$i] = get_string($qqq["$val"]->shorttext, "survey");
+            $names[$i] = get_string($qqq["$val"]->shorttext, 'mod_survey');
             $buckets1[$i] = 0;
             $buckets2[$i] = 0;
             $count1[$i] = 0;
@@ -299,8 +299,8 @@ switch ($type) {
 
         foreach ($qqq as $key => $qq) {
             if ($qq->multi) {
-                $qqq[$key]->text = get_string($qq->text, "survey");
-                $qqq[$key]->options = get_string($qq->options, "survey");
+                $qqq[$key]->text = get_string($qq->text, 'mod_survey');
+                $qqq[$key]->options = get_string($qq->options, 'mod_survey');
                 if ($qq->type < 0) {
                     $virtualscales = true;
                 }
@@ -437,8 +437,8 @@ switch ($type) {
 
         foreach ($qqq as $key => $qq) {
             if ($qq->multi) {
-                $qqq[$key]->text = get_string($qq->text, "survey");
-                $qqq[$key]->options = get_string($qq->options, "survey");
+                $qqq[$key]->text = get_string($qq->text, 'mod_survey');
+                $qqq[$key]->options = get_string($qq->options, 'mod_survey');
                 if ($qq->type < 0) {
                     $virtualscales = true;
                 }
@@ -598,8 +598,8 @@ switch ($type) {
     case "studentmultiquestion.png":
 
         $question = $DB->get_record("survey_questions", array("id" => $qid));
-        $question->text = get_string($question->text, "survey");
-        $question->options = get_string($question->options, "survey");
+        $question->text = get_string($question->text, 'mod_survey');
+        $question->options = get_string($question->options, 'mod_survey');
 
         $options = explode(",", $question->options);
         $questionorder = explode(",", $question->multi);
@@ -607,7 +607,7 @@ switch ($type) {
         $qqq = $DB->get_records_list("survey_questions", "id", explode(',', $question->multi));
 
         foreach ($questionorder as $i => $val) {
-            $names[$i] = get_string($qqq[$val]->shorttext, "survey");
+            $names[$i] = get_string($qqq[$val]->shorttext, 'mod_survey');
             $buckets1[$i] = 0;
             $buckets2[$i] = 0;
             $count1[$i] = 0;

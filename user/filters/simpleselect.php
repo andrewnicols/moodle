@@ -71,7 +71,7 @@ class user_filter_simpleselect extends user_filter_type {
      * @param moodleform $mform a MoodleForm object to setup
      */
     public function setupForm(&$mform) {
-        $choices = array('' => get_string('anyvalue', 'filters')) + $this->_options;
+        $choices = array('' => get_string('anyvalue', 'core_filters')) + $this->_options;
         $mform->addElement('select', $this->_name, $this->_label, $choices);
         if ($this->_advanced) {
             $mform->setAdvanced($this->_name);
@@ -122,9 +122,9 @@ class user_filter_simpleselect extends user_filter_type {
         $a = new stdClass();
         $a->label    = $this->_label;
         $a->value    = '"'.s($this->_options[$value]).'"';
-        $a->operator = get_string('isequalto', 'filters');
+        $a->operator = get_string('isequalto', 'core_filters');
 
-        return get_string('selectlabel', 'filters', $a);
+        return get_string('selectlabel', 'core_filters', $a);
     }
 }
 

@@ -44,7 +44,7 @@ class refresh_system_tokens_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskrefreshsystemtokens', 'admin');
+        return get_string('taskrefreshsystemtokens', 'core_admin');
     }
 
     /**

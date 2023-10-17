@@ -65,6 +65,6 @@ if (isset($params['sesskey']) and confirm_sesskey($params['sesskey'])) {
     $redirecturl->param('oauth2code', $code);
     redirect($redirecturl);
 } else {
-    $SESSION->loginerrormsg = get_string('invalidsesskey', 'error');
+    $SESSION->loginerrormsg = get_string('invalidsesskey', 'mod_error');
     redirect(new moodle_url(get_login_url()));
 }

@@ -267,8 +267,8 @@ class core_auth_external extends external_api {
 
         // Check if verification of age and location (minor check) is enabled.
         if (!\core_auth\digital_consent::is_age_digital_consent_verification_enabled()) {
-            throw new moodle_exception('nopermissions', 'error', '',
-                get_string('agelocationverificationdisabled', 'error'));
+            throw new moodle_exception('nopermissions', 'mod_error', '',
+                get_string('agelocationverificationdisabled', 'mod_error'));
         }
 
         $status = \core_auth\digital_consent::is_minor($params['age'], $params['country']);
@@ -388,7 +388,7 @@ class core_auth_external extends external_api {
         $password = $params['password'];
 
         if (is_restored_user($username)) {
-            throw new moodle_exception('restoredaccountresetpassword', 'webservice');
+            throw new moodle_exception('restoredaccountresetpassword', 'core_webservice');
         }
 
         $user = authenticate_user_login($username, $password);

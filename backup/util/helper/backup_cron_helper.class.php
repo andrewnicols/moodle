@@ -235,7 +235,7 @@ abstract class backup_cron_automated_helper {
         if ($haserrors) {
             $prefix .= "[".strtoupper(get_string('error'))."] ";
         }
-        $subject = $prefix.get_string('automatedbackupstatus', 'backup');
+        $subject = $prefix.get_string('automatedbackupstatus', 'core_backup');
 
         // Send the message.
         $eventdata = new \core\message\message();

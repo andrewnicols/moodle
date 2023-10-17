@@ -109,11 +109,11 @@ class core_question_renderer extends plugin_renderer_base {
                     $this->formulation($qa, $behaviouroutput, $qtoutput, $options)),
                 array('class' => 'formulation clearfix'));
         $output .= html_writer::nonempty_tag('div',
-                $this->add_part_heading(get_string('feedback', 'question'),
+                $this->add_part_heading(get_string('feedback', 'core_question'),
                     $this->outcome($qa, $behaviouroutput, $qtoutput, $options)),
                 array('class' => 'outcome clearfix'));
         $output .= html_writer::nonempty_tag('div',
-                $this->add_part_heading(get_string('comments', 'question'),
+                $this->add_part_heading(get_string('comments', 'core_question'),
                     $this->manual_comment($qa, $behaviouroutput, $qtoutput, $options)),
                 array('class' => 'comment clearfix'));
         $output .= html_writer::nonempty_tag('div',
@@ -163,9 +163,9 @@ class core_question_renderer extends plugin_renderer_base {
             return '';
         }
         if (trim($number) === 'i') {
-            $numbertext = get_string('information', 'question');
+            $numbertext = get_string('information', 'core_question');
         } else {
-            $numbertext = get_string('questionx', 'question',
+            $numbertext = get_string('questionx', 'core_question',
                     html_writer::tag('span', s($number), array('class' => 'qno')));
         }
         return html_writer::tag('h3', $numbertext, array('class' => 'no'));
@@ -185,9 +185,9 @@ class core_question_renderer extends plugin_renderer_base {
             return '';
         }
         if (trim($number) === 'i') {
-            return get_string('information', 'question');
+            return get_string('information', 'core_question');
         } else {
-            return get_string('questionx', 'question', s($number));
+            return get_string('questionx', 'core_question', s($number));
         }
     }
 
@@ -244,7 +244,7 @@ class core_question_renderer extends plugin_renderer_base {
             return '';
 
         } else if ($qa->get_max_mark() == 0) {
-            return get_string('notgraded', 'question');
+            return get_string('notgraded', 'core_question');
 
         } else if ($options->marks == question_display_options::MAX_ONLY ||
                 is_null($qa->get_fraction())) {
@@ -262,7 +262,7 @@ class core_question_renderer extends plugin_renderer_base {
      * @return HTML fragment.
      */
     public function standard_marked_out_of_max(question_attempt $qa, question_display_options $options) {
-        return get_string('markedoutofmax', 'question', $qa->format_max_mark($options->markdp));
+        return get_string('markedoutofmax', 'core_question', $qa->format_max_mark($options->markdp));
     }
 
     /**
@@ -275,7 +275,7 @@ class core_question_renderer extends plugin_renderer_base {
         $a = new stdClass();
         $a->mark = $qa->format_mark($options->markdp);
         $a->max = $qa->format_max_mark($options->markdp);
-        return get_string('markoutofmax', 'question', $a);
+        return get_string('markoutofmax', 'core_question', $a);
     }
 
     /**
@@ -339,10 +339,10 @@ class core_question_renderer extends plugin_renderer_base {
     protected function get_flag_html($flagged, $id = '') {
         if ($flagged) {
             $icon = 'i/flagged';
-            $label = get_string('clickunflag', 'question');
+            $label = get_string('clickunflag', 'core_question');
         } else {
             $icon = 'i/unflagged';
-            $label = get_string('clickflag', 'question');
+            $label = get_string('clickflag', 'core_question');
         }
         $attributes = [
             'src' => $this->image_url($icon),
@@ -379,7 +379,7 @@ class core_question_renderer extends plugin_renderer_base {
 
         return html_writer::tag('div', html_writer::link(
                 $editurl, $this->pix_icon('t/edit', get_string('edit'), '', array('class' => 'iconsmall')) .
-                get_string('editquestion', 'question')),
+                get_string('editquestion', 'core_question')),
                 array('class' => 'editquestion'));
     }
 
@@ -464,13 +464,13 @@ class core_question_renderer extends plugin_renderer_base {
 
         $table = new html_table();
         $table->head  = array (
-            get_string('step', 'question'),
+            get_string('step', 'core_question'),
             get_string('time'),
-            get_string('action', 'question'),
-            get_string('state', 'question'),
+            get_string('action', 'core_question'),
+            get_string('state', 'core_question'),
         );
         if ($options->marks >= question_display_options::MARK_AND_MAX) {
-            $table->head[] = get_string('marks', 'question');
+            $table->head[] = get_string('marks', 'core_question');
         }
 
         foreach ($qa->get_full_step_iterator() as $i => $step) {
@@ -485,7 +485,7 @@ class core_question_renderer extends plugin_renderer_base {
                 $stepno = $this->output->action_link($url, $stepno,
                         new popup_action('click', $url, 'reviewquestion',
                                 array('width' => 450, 'height' => 650)),
-                        array('title' => get_string('reviewresponse', 'question')));
+                        array('title' => get_string('reviewresponse', 'core_question')));
             }
 
             $restrictedqa = new question_attempt_with_restricted_history($qa, $i, null);
@@ -503,7 +503,7 @@ class core_question_renderer extends plugin_renderer_base {
             $table->data[] = $row;
         }
 
-        return html_writer::tag('h4', get_string('responsehistory', 'question'),
+        return html_writer::tag('h4', get_string('responsehistory', 'core_question'),
                         array('class' => 'responsehistoryheader')) .
                 $options->extrahistorycontent .
                 html_writer::tag('div', html_writer::table($table, true),

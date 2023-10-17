@@ -115,7 +115,7 @@ class update_entry_testcase extends externallib_advanced_testcase {
         // Updates the entry using an existing entry name when duplicateds are NOT allowed.
         $DB->set_field('glossary', 'allowduplicatedentries', 0, ['id' => $glossary->id]);
         $concept = 'B concept';
-        $this->expectExceptionMessage(get_string('errconceptalreadyexists', 'glossary'));
+        $this->expectExceptionMessage(get_string('errconceptalreadyexists', 'mod_glossary'));
         update_entry::execute($entryid, $concept, $definition, FORMAT_HTML);
     }
 

@@ -621,7 +621,7 @@ class self_test extends \advanced_testcase {
         $selfplugin->enrol_user($instance1, $user2->id, $editingteacherrole->id);
 
         $this->setUser($guest);
-        $this->assertStringContainsString(get_string('noguestaccess', 'enrol'),
+        $this->assertStringContainsString(get_string('noguestaccess', 'core_enrol'),
                 $selfplugin->can_self_enrol($instance1, true));
 
         $this->setUser($user1);

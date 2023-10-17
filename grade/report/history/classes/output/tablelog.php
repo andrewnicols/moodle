@@ -197,13 +197,13 @@ class tablelog extends \table_sql implements \renderable {
 
         // Add remaining headers.
         $cols = array_merge($cols, array(
-            'itemname' => get_string('gradeitem', 'grades'),
+            'itemname' => get_string('gradeitem', 'core_grades'),
             'prevgrade' => get_string('gradeold', 'gradereport_history'),
             'finalgrade' => get_string('gradenew', 'gradereport_history'),
             'grader' => get_string('grader', 'gradereport_history'),
             'source' => get_string('source', 'gradereport_history'),
-            'overridden' => get_string('overridden', 'grades'),
-            'locked' => get_string('locked', 'grades'),
+            'overridden' => get_string('overridden', 'core_grades'),
+            'locked' => get_string('locked', 'core_grades'),
             'excluded' => get_string('excluded', 'gradereport_history'),
             'feedback' => get_string('feedbacktext', 'gradereport_history')
             )

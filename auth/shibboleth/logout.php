@@ -19,7 +19,7 @@ if (is_https()) {
 
 // If the shibboleth plugin is not enable, throw an exception.
 if (!is_enabled_auth('shibboleth')) {
-    throw new moodle_exception(get_string('pluginnotenabled', 'auth', 'shibboleth'));
+    throw new moodle_exception(get_string('pluginnotenabled', 'core_auth', 'shibboleth'));
 }
 
 // Front channel logout.

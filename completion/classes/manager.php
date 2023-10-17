@@ -150,13 +150,13 @@ class manager {
                 break;
 
             case COMPLETION_TRACKING_MANUAL:
-                $strings['string'] = get_string('manual', 'completion');
-                $strings['icon'] = $OUTPUT->pix_icon('i/completion-manual-y', get_string('completion_manual', 'completion'));
+                $strings['string'] = get_string('manual', 'core_completion');
+                $strings['icon'] = $OUTPUT->pix_icon('i/completion-manual-y', get_string('completion_manual', 'core_completion'));
                 break;
 
             case COMPLETION_TRACKING_AUTOMATIC:
-                $strings['string'] = get_string('withconditions', 'completion');
-                $strings['icon'] = $OUTPUT->pix_icon('i/completion-auto-y', get_string('completion_automatic', 'completion'));
+                $strings['string'] = get_string('withconditions', 'core_completion');
+                $strings['icon'] = $OUTPUT->pix_icon('i/completion-auto-y', get_string('completion_automatic', 'core_completion'));
                 break;
 
             default:
@@ -187,7 +187,7 @@ class manager {
         if ($moduledata->completion == COMPLETION_TRACKING_AUTOMATIC) {
             // Generate the description strings for the core conditional completion rules (if set).
             if (!empty($moduledata->completionview)) {
-                $activeruledescriptions[] = get_string('completionview_desc', 'completion');
+                $activeruledescriptions[] = get_string('completionview_desc', 'core_completion');
             }
             if ($moduledata instanceof cm_info && !is_null($moduledata->completiongradeitemnumber) ||
                 ($moduledata instanceof stdClass && !empty($moduledata->completionusegrade))) {
@@ -197,7 +197,7 @@ class manager {
                     $description = 'completionpassgrade_desc';
                 }
 
-                $activeruledescriptions[] = get_string($description, 'completion');
+                $activeruledescriptions[] = get_string($description, 'core_completion');
             }
 
             // Now, ask the module to provide descriptions for its custom conditional completion rules.
@@ -209,7 +209,7 @@ class manager {
 
         if ($moduledata->completion != COMPLETION_TRACKING_NONE) {
             if (!empty($moduledata->completionexpected)) {
-                $activeruledescriptions[] = get_string('completionexpecteddesc', 'completion',
+                $activeruledescriptions[] = get_string('completionexpecteddesc', 'core_completion',
                     userdate($moduledata->completionexpected));
             }
         }
@@ -303,7 +303,7 @@ class manager {
             $tabs[] = new tabobject(
                 'completion',
                 new moodle_url('/course/completion.php', ['id' => $courseid]),
-                new lang_string('coursecompletion', 'completion')
+                new lang_string('coursecompletion', 'core_completion')
             );
         }
 
@@ -311,7 +311,7 @@ class manager {
             $tabs[] = new tabobject(
                 'defaultcompletion',
                 new moodle_url('/course/defaultcompletion.php', ['id' => $courseid]),
-                new lang_string('defaultcompletion', 'completion')
+                new lang_string('defaultcompletion', 'core_completion')
             );
         }
 
@@ -319,7 +319,7 @@ class manager {
             $tabs[] = new tabobject(
                 'bulkcompletion',
                 new moodle_url('/course/bulkcompletion.php', ['id' => $courseid]),
-                new lang_string('bulkactivitycompletion', 'completion')
+                new lang_string('bulkactivitycompletion', 'core_completion')
             );
         }
 
@@ -560,7 +560,7 @@ class manager {
         }
 
         // Add notification.
-        \core\notification::add(get_string('defaultcompletionupdated', 'completion'), \core\notification::SUCCESS);
+        \core\notification::add(get_string('defaultcompletionupdated', 'core_completion'), \core\notification::SUCCESS);
     }
 
     /**

@@ -85,7 +85,7 @@ class data_field_textarea extends data_field_base {
         $str .= '<label for="field_' . $this->field->id . '">';
         $str .= html_writer::span($this->field->name, 'accesshide');
         if ($this->field->required) {
-            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
             $str .= html_writer::div($image, 'inline-req');
         }
         $str .= '</label>';

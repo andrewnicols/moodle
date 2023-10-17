@@ -125,7 +125,7 @@ class activity_completion implements renderable, templatable {
                     'setby' => $overrideby,
                 ];
                 $overridestatus = $detail->statuscomplete ? 'done' : 'todo';
-                $detail->accessibledescription = get_string('completion_setby:auto:' . $overridestatus, 'course', $setbydata);
+                $detail->accessibledescription = get_string('completion_setby:auto:' . $overridestatus, 'core_course', $setbydata);
             }
 
             unset($detail->status);
@@ -149,7 +149,7 @@ class activity_completion implements renderable, templatable {
             ];
             $isoverallcompleted = $overallcompletion == COMPLETION_COMPLETE;
             $setbylangkey = $isoverallcompleted ? 'completion_setby:manual:done' : 'completion_setby:manual:markdone';
-            return get_string($setbylangkey, 'course', $setbydata);
+            return get_string($setbylangkey, 'core_course', $setbydata);
         }
         return '';
     }

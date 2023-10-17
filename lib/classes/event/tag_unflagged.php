@@ -58,7 +58,7 @@ class tag_unflagged extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventtagunflagged', 'tag');
+        return get_string('eventtagunflagged', 'core_tag');
     }
 
     /**

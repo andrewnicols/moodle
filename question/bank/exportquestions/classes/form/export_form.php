@@ -53,7 +53,7 @@ class export_form extends moodleform {
         $contexts = $this->_customdata['contexts'];
 
         // Choice of format, with help.
-        $mform->addElement('header', 'fileformat', get_string('fileformat', 'question'));
+        $mform->addElement('header', 'fileformat', get_string('fileformat', 'core_question'));
 
         $fileformatnames = get_import_export_formats('export');
         $radioarray = [];
@@ -74,16 +74,16 @@ class export_form extends moodleform {
         $mform->addRule("formatchoices", null, 'required', null, 'client');
 
         // Export options.
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
-        $mform->addElement('questioncategory', 'category', get_string('exportcategory', 'question'),
+        $mform->addElement('questioncategory', 'category', get_string('exportcategory', 'core_question'),
                 ['contexts' => $contexts, 'top' => true]);
         $mform->setDefault('category', $defaultcategory);
         $mform->addHelpButton('category', 'exportcategory', 'question');
 
         $categorygroup = [];
-        $categorygroup[] = $mform->createElement('checkbox', 'cattofile', '', get_string('tofilecategory', 'question'));
-        $categorygroup[] = $mform->createElement('checkbox', 'contexttofile', '', get_string('tofilecontext', 'question'));
+        $categorygroup[] = $mform->createElement('checkbox', 'cattofile', '', get_string('tofilecategory', 'core_question'));
+        $categorygroup[] = $mform->createElement('checkbox', 'contexttofile', '', get_string('tofilecontext', 'core_question'));
         $mform->addGroup($categorygroup, 'categorygroup', '', '', false);
         $mform->disabledIf('categorygroup', 'cattofile', 'notchecked');
         $mform->setDefault('cattofile', 1);
@@ -95,6 +95,6 @@ class export_form extends moodleform {
         $renderer->setGroupElementTemplate($template, 'format');
 
         // Submit buttons.
-        $this->add_action_buttons(false, get_string('exportquestions', 'question'));
+        $this->add_action_buttons(false, get_string('exportquestions', 'core_question'));
     }
 }

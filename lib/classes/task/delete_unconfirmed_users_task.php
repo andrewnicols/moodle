@@ -34,7 +34,7 @@ class delete_unconfirmed_users_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskdeleteunconfirmedusers', 'admin');
+        return get_string('taskdeleteunconfirmedusers', 'core_admin');
     }
 
     /**

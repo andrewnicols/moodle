@@ -64,7 +64,7 @@ class gradeimport_csv_renderer extends plugin_renderer_base {
      */
     public function import_preview_page($header, $data) {
 
-        $html = $this->output->heading(get_string('importpreview', 'grades'));
+        $html = $this->output->heading(get_string('importpreview', 'core_grades'));
 
         $table = new html_table();
         $table->head = array_map('s', $header);

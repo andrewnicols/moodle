@@ -247,7 +247,7 @@ class template_competency extends persistent {
      */
     protected function validate_competencyid($value) {
         if (!competency::record_exists($value)) {
-            return new \lang_string('invaliddata', 'error');
+            return new \lang_string('invaliddata', 'mod_error');
         }
         return true;
     }
@@ -260,7 +260,7 @@ class template_competency extends persistent {
      */
     protected function validate_templateid($value) {
         if (!template::record_exists($value)) {
-            return new \lang_string('invaliddata', 'error');
+            return new \lang_string('invaliddata', 'mod_error');
         }
         return true;
     }

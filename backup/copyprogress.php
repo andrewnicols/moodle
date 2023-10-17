@@ -41,7 +41,7 @@ $copycaps = \core_course\management\helper::get_course_copy_capabilities();
 require_all_capabilities($copycaps, $coursecontext);
 
 // Setup the page.
-$title = get_string('copyprogresstitle', 'backup');
+$title = get_string('copyprogresstitle', 'core_backup');
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title($title);
@@ -52,7 +52,7 @@ $PAGE->secondarynav->set_overflow_selected_node('copy');
 
 // Build the page output.
 echo $OUTPUT->header();
-echo $OUTPUT->heading_with_help(get_string('copyprogressheading', 'backup'), 'copyprogressheading', 'backup');
+echo $OUTPUT->heading_with_help(get_string('copyprogressheading', 'core_backup'), 'copyprogressheading', 'backup');
 echo $OUTPUT->container_start();
 $renderer = $PAGE->get_renderer('core', 'backup');
 echo $renderer->copy_progress_viewer($USER->id, $courseid);

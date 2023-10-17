@@ -41,7 +41,7 @@ class lesson_page_type_branchtable extends lesson_page {
     }
     public function get_typestring() {
         if ($this->string===null) {
-            $this->string = get_string($this->typeidstring, 'lesson');
+            $this->string = get_string($this->typeidstring, 'mod_lesson');
         }
         return $this->string;
     }
@@ -74,17 +74,17 @@ class lesson_page_type_branchtable extends lesson_page {
     public static function get_jumptooptions($firstpage, lesson $lesson) {
         global $DB, $PAGE;
         $jump = array();
-        $jump[0] = get_string("thispage", "lesson");
-        $jump[LESSON_NEXTPAGE] = get_string("nextpage", "lesson");
-        $jump[LESSON_PREVIOUSPAGE] = get_string("previouspage", "lesson");
-        $jump[LESSON_EOL] = get_string("endoflesson", "lesson");
-        $jump[LESSON_UNSEENBRANCHPAGE] = get_string("unseenpageinbranch", "lesson");
-        $jump[LESSON_RANDOMPAGE] = get_string("randompageinbranch", "lesson");
-        $jump[LESSON_RANDOMBRANCH] = get_string("randombranch", "lesson");
+        $jump[0] = get_string("thispage", 'mod_lesson');
+        $jump[LESSON_NEXTPAGE] = get_string("nextpage", 'mod_lesson');
+        $jump[LESSON_PREVIOUSPAGE] = get_string("previouspage", 'mod_lesson');
+        $jump[LESSON_EOL] = get_string("endoflesson", 'mod_lesson');
+        $jump[LESSON_UNSEENBRANCHPAGE] = get_string("unseenpageinbranch", 'mod_lesson');
+        $jump[LESSON_RANDOMPAGE] = get_string("randompageinbranch", 'mod_lesson');
+        $jump[LESSON_RANDOMBRANCH] = get_string("randombranch", 'mod_lesson');
 
         if (!$firstpage) {
             if (!$apageid = $DB->get_field("lesson_pages", "id", array("lessonid" => $lesson->id, "prevpageid" => 0))) {
-                throw new \moodle_exception('cannotfindfirstpage', 'lesson');
+                throw new \moodle_exception('cannotfindfirstpage', 'mod_lesson');
             }
             while (true) {
                 if ($apageid) {
@@ -236,12 +236,12 @@ class lesson_page_type_branchtable extends lesson_page {
                 continue;
             }
             $cells = array();
-            $cells[] = '<label>' . get_string('branch', 'lesson') . ' ' . $i . '</label>: ';
+            $cells[] = '<label>' . get_string('branch', 'mod_lesson') . ' ' . $i . '</label>: ';
             $cells[] = format_text($answer->answer, $answer->answerformat, $options);
             $table->data[] = new html_table_row($cells);
 
             $cells = array();
-            $cells[] = '<label>' . get_string('jump', 'lesson') . ' ' . $i . '</label>: ';
+            $cells[] = '<label>' . get_string('jump', 'mod_lesson') . ' ' . $i . '</label>: ';
             $cells[] = $this->get_jump_name($answer->jumpto);
             $table->data[] = new html_table_row($cells);
 
@@ -265,7 +265,7 @@ class lesson_page_type_branchtable extends lesson_page {
             $data = "<input type=\"button\" class=\"btn btn-secondary\" name=\"$answer->id\" " .
                     "value=\"".s(strip_tags(format_text($answer->answer, FORMAT_MOODLE, $formattextdefoptions)))."\" " .
                     "disabled=\"disabled\"> ";
-            $data .= get_string('jumpsto', 'lesson', $this->get_jump_name($answer->jumpto));
+            $data .= get_string('jumpsto', 'mod_lesson', $this->get_jump_name($answer->jumpto));
             $answerdata->answers[] = array($data, "");
             $answerpage->answerdata = $answerdata;
         }
@@ -284,7 +284,7 @@ class lesson_page_type_branchtable extends lesson_page {
     public function add_page_link($previd) {
         global $PAGE, $CFG;
         $addurl = new moodle_url('/mod/lesson/editpage.php', array('id'=>$PAGE->cm->id, 'pageid'=>$previd, 'qtype'=>LESSON_PAGE_BRANCHTABLE));
-        return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_BRANCHTABLE, 'name'=>get_string('addabranchtable', 'lesson'));
+        return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_BRANCHTABLE, 'name'=>get_string('addabranchtable', 'mod_lesson'));
     }
     protected function get_displayinmenublock() {
         return true;
@@ -327,9 +327,9 @@ class lesson_add_page_form_branchtable extends lesson_add_page_form_base {
         $jumptooptions = lesson_page_type_branchtable::get_jumptooptions($firstpage, $lesson);
 
         if ($this->_customdata['edit']) {
-            $mform->setDefault('qtypeheading', get_string('editbranchtable', 'lesson'));
+            $mform->setDefault('qtypeheading', get_string('editbranchtable', 'mod_lesson'));
         } else {
-            $mform->setDefault('qtypeheading', get_string('addabranchtable', 'lesson'));
+            $mform->setDefault('qtypeheading', get_string('addabranchtable', 'mod_lesson'));
         }
 
         $mform->addElement('hidden', 'firstpage');
@@ -339,7 +339,7 @@ class lesson_add_page_form_branchtable extends lesson_add_page_form_base {
         $mform->addElement('hidden', 'qtype');
         $mform->setType('qtype', PARAM_INT);
 
-        $mform->addElement('text', 'title', get_string("pagetitle", "lesson"), array('size'=>70));
+        $mform->addElement('text', 'title', get_string("pagetitle", 'mod_lesson'), array('size'=>70));
         $mform->addRule('title', null, 'required', null, 'server');
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('title', PARAM_TEXT);
@@ -348,20 +348,20 @@ class lesson_add_page_form_branchtable extends lesson_add_page_form_base {
         }
 
         $this->editoroptions = array('noclean'=>true, 'maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$PAGE->course->maxbytes);
-        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", "lesson"), null, $this->editoroptions);
+        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", 'mod_lesson'), null, $this->editoroptions);
         $mform->setType('contents_editor', PARAM_RAW);
 
-        $mform->addElement('checkbox', 'layout', null, get_string("arrangebuttonshorizontally", "lesson"));
+        $mform->addElement('checkbox', 'layout', null, get_string("arrangebuttonshorizontally", 'mod_lesson'));
         $mform->setDefault('layout', true);
 
-        $mform->addElement('checkbox', 'display', null, get_string("displayinleftmenu", "lesson"));
+        $mform->addElement('checkbox', 'display', null, get_string("displayinleftmenu", 'mod_lesson'));
         $mform->setDefault('display', true);
 
         for ($i = 0; $i < $lesson->maxanswers; $i++) {
-            $mform->addElement('header', 'headeranswer'.$i, get_string('branch', 'lesson').' '.($i+1));
-            $this->add_answer($i, get_string("description", "lesson"), $i == 0);
+            $mform->addElement('header', 'headeranswer'.$i, get_string('branch', 'mod_lesson').' '.($i+1));
+            $this->add_answer($i, get_string("description", 'mod_lesson'), $i == 0);
 
-            $mform->addElement('select', 'jumpto['.$i.']', get_string("jump", "lesson"), $jumptooptions);
+            $mform->addElement('select', 'jumpto['.$i.']', get_string("jump", 'mod_lesson'), $jumptooptions);
             if ($i === 0) {
                 $mform->setDefault('jumpto['.$i.']', 0);
             } else {

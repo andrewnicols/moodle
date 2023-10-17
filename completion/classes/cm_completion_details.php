@@ -116,7 +116,7 @@ class cm_completion_details {
 
             $details['completionview'] = (object)[
                 'status' => $status,
-                'description' => get_string('detail_desc:view', 'completion'),
+                'description' => get_string('detail_desc:view', 'core_completion'),
             ];
         }
 
@@ -130,13 +130,13 @@ class cm_completion_details {
 
             $details['completionusegrade'] = (object)[
                 'status' => $status,
-                'description' => get_string('detail_desc:receivegrade', 'completion'),
+                'description' => get_string('detail_desc:receivegrade', 'core_completion'),
             ];
 
             if (!is_null($this->cminfo->completionpassgrade) && $this->cminfo->completionpassgrade) {
                 $details['completionpassgrade'] = (object)[
                     'status' => $completiondata->passgrade ?? COMPLETION_INCOMPLETE,
-                    'description' => get_string('detail_desc:receivepassgrade', 'completion'),
+                    'description' => get_string('detail_desc:receivepassgrade', 'core_completion'),
                 ];
             }
         }

@@ -79,7 +79,7 @@ class question_dataset_dependent_items_form extends question_wizard_form {
 
         // Validate the question category.
         if (!isset($question->categoryobject)) {
-            throw new moodle_exception('categorydoesnotexist', 'question');
+            throw new moodle_exception('categorydoesnotexist', 'core_question');
         }
         $question->category = $question->categoryobject->id;
         $this->category = $question->categoryobject;
@@ -501,7 +501,7 @@ class question_dataset_dependent_items_form extends question_wizard_form {
     public function validation($data, $files) {
         $errors = array();
         if (isset($data['savechanges']) && ($this->noofitems==0) ) {
-            $errors['warning'] = get_string('warning', 'mnet');
+            $errors['warning'] = get_string('warning', 'core_mnet');
         }
         if ($this->outsidelimit) {
             $errors['outsidelimits'] =

@@ -914,7 +914,7 @@ class mail_test extends \advanced_testcase {
         // Post a discussion to the forum.
         $subject = 'This is the very long forum post subject that somebody was very kind of leaving, it is intended to check if long subject comes in mail correctly. Thank you.';
         $a = (object)array('courseshortname' => $course->shortname, 'forumname' => $forum->name, 'subject' => $subject);
-        $expectedsubject = get_string('postmailsubject', 'forum', $a);
+        $expectedsubject = get_string('postmailsubject', 'mod_forum', $a);
         list($discussion, $post) = $this->helper_post_to_forum($forum, $author, array('name' => $subject));
 
         // Run cron and check that the expected number of users received the notification.
@@ -947,7 +947,7 @@ class mail_test extends \advanced_testcase {
         list($author) = $this->helper_create_users($course, 1);
         list($commenter) = $this->helper_create_users($course, 1);
 
-        $strre = get_string('re', 'forum');
+        $strre = get_string('re', 'mod_forum');
 
         // New posts should not have Re: in the subject.
         list($discussion, $post) = $this->helper_post_to_forum($forum, $author);
@@ -1582,7 +1582,7 @@ class mail_test extends \advanced_testcase {
         list($author) = $this->helper_create_users($course, 1);
         list($commenter) = $this->helper_create_users($course, 1);
 
-        $strre = get_string('re', 'forum');
+        $strre = get_string('re', 'mod_forum');
 
         // New posts should not have Re: in the subject.
         list($discussion, $post) = $this->helper_post_to_forum($forum, $author);

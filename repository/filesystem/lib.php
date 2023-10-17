@@ -489,7 +489,7 @@ class repository_filesystem extends repository {
             $mform->setType('relativefiles', PARAM_INT);
 
         } else {
-            $mform->addElement('static', null, '',  get_string('nopermissions', 'error', get_string('configplugin',
+            $mform->addElement('static', null, '',  get_string('nopermissions', 'mod_error', get_string('configplugin',
                 'repository_filesystem')));
             return false;
         }
@@ -526,7 +526,7 @@ class repository_filesystem extends repository {
     public static function instance_form_validation($mform, $data, $errors) {
         $fspath = clean_param(trim($data['fs_path'], '/'), PARAM_PATH);
         if (empty($fspath) && !is_numeric($fspath)) {
-            $errors['fs_path'] = get_string('invalidadminsettingname', 'error', 'fs_path');
+            $errors['fs_path'] = get_string('invalidadminsettingname', 'mod_error', 'fs_path');
         }
         return $errors;
     }
@@ -550,7 +550,7 @@ class repository_filesystem extends repository {
     public function get_reference_details($reference, $filestatus = 0) {
         $details = $this->get_name().': '.$reference;
         if ($filestatus) {
-            return get_string('lostsource', 'repository', $details);
+            return get_string('lostsource', 'core_repository', $details);
         } else {
             return $details;
         }

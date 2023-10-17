@@ -158,7 +158,7 @@ foreach ($courses as $type => $infos) {
         echo '<table class="generaltable boxaligncenter">';
         echo '<tr class="ccheader">';
         echo '<th class="c0 header" scope="col">'.get_string('course').'</th>';
-        echo '<th class="c1 header" scope="col">'.get_string('requiredcriteria', 'completion').'</th>';
+        echo '<th class="c1 header" scope="col">'.get_string('requiredcriteria', 'core_completion').'</th>';
         echo '<th class="c2 header" scope="col">'.get_string('status').'</th>';
         echo '<th class="c3 header" scope="col" width="15%">'.get_string('info').'</th>';
 
@@ -236,7 +236,7 @@ foreach ($courses as $type => $infos) {
             if (!empty($prerequisites)) {
 
                 $row = array();
-                $row['title'] = get_string('prerequisitescompleted', 'completion');
+                $row['title'] = get_string('prerequisitescompleted', 'core_completion');
                 $row['status'] = $prerequisites_complete.' of '.count($prerequisites);
                 array_splice($rows, 0, 0, array($row));
             }

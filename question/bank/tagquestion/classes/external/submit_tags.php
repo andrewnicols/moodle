@@ -83,7 +83,7 @@ class submit_tags extends external_api {
                   JOIN {question_bank_entries} qbe ON qbe.id = qv.questionbankentryid
                   JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid
                  WHERE q.id = ?', [$questionid])) {
-            throw new \moodle_exception('questiondoesnotexist', 'question');
+            throw new \moodle_exception('questiondoesnotexist', 'core_question');
         }
 
         $cantag = question_has_capability_on($question, 'tag');

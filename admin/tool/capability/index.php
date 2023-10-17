@@ -118,10 +118,10 @@ function print_report_tree($contextid, $contexts, $allroles) {
     static $strpermissions = null;
     if (is_null($strpermissions)) {
         $strpermissions = array(
-            CAP_INHERIT => get_string('notset','role'),
-            CAP_ALLOW => get_string('allow','role'),
-            CAP_PREVENT => get_string('prevent','role'),
-            CAP_PROHIBIT => get_string('prohibit','role')
+            CAP_INHERIT => get_string('notset','core_role'),
+            CAP_ALLOW => get_string('allow','core_role'),
+            CAP_PREVENT => get_string('prevent','core_role'),
+            CAP_PROHIBIT => get_string('prohibit','core_role')
         );
     }
 
@@ -154,7 +154,7 @@ function print_report_tree($contextid, $contexts, $allroles) {
 
     // After we have done the site context, change the string for CAP_INHERIT
     // from 'notset' to 'inherit'.
-    $strpermissions[CAP_INHERIT] = get_string('inherit','role');
+    $strpermissions[CAP_INHERIT] = get_string('inherit','core_role');
 
     // If there are any child contexts, print them recursively.
     if (!empty($contexts[$contextid]->children)) {

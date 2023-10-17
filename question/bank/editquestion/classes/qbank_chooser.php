@@ -52,7 +52,7 @@ class qbank_chooser extends \core\output\chooser {
      */
     public function __construct($real, $fake, $course, $hiddenparams, $context) {
         $sections = [];
-        $sections[] = new chooser_section('questions', new lang_string('questions', 'question'),
+        $sections[] = new chooser_section('questions', new lang_string('questions', 'core_question'),
                 array_map(function($qtype) use ($context) {
                     return new qbank_chooser_item($qtype, $context);
                 }, $real));
@@ -65,9 +65,9 @@ class qbank_chooser extends \core\output\chooser {
         }
 
         parent::__construct(new moodle_url('/question/bank/editquestion/question.php'),
-                new lang_string('chooseqtypetoadd', 'question'), $sections, 'qtype');
+                new lang_string('chooseqtypetoadd', 'core_question'), $sections, 'qtype');
 
-        $this->set_instructions(new lang_string('selectaqtypefordescription', 'question'));
+        $this->set_instructions(new lang_string('selectaqtypefordescription', 'core_question'));
 
         $this->set_method('get');
         $this->add_param('courseid', $course->id);

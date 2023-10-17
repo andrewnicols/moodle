@@ -245,7 +245,7 @@ class provider implements
         ]);
 
         $basecontext = [
-            get_string('privacyandpolicies', 'admin'),
+            get_string('privacyandpolicies', 'core_admin'),
             get_string('useracceptances', 'tool_policy'),
         ];
 

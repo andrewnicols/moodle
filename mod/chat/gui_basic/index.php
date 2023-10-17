@@ -43,7 +43,7 @@ if ($newonly !== 0) {
 $PAGE->set_url($url);
 
 if (!$chat = $DB->get_record('chat', array('id' => $id))) {
-    throw new \moodle_exception('invalidid', 'chat');
+    throw new \moodle_exception('invalidid', 'mod_chat');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $chat->course))) {
@@ -75,15 +75,15 @@ if ($groupmode = groups_get_activity_groupmode($cm)) { // Groups are being used.
     $groupname = '';
 }
 
-$strchat  = get_string('modulename', 'chat'); // Must be before current_language() in chat_login_user() to force course language!
-$strchats = get_string('modulenameplural', 'chat');
-$stridle  = get_string('idle', 'chat');
+$strchat  = get_string('modulename', 'mod_chat'); // Must be before current_language() in chat_login_user() to force course language!
+$strchats = get_string('modulenameplural', 'mod_chat');
+$stridle  = get_string('idle', 'mod_chat');
 if (!$chatsid = chat_login_user($chat->id, 'basic', $groupid, $course)) {
-    throw new \moodle_exception('cantlogin', 'chat');
+    throw new \moodle_exception('cantlogin', 'mod_chat');
 }
 
 if (!$chatusers = chat_get_users($chat->id, $groupid, $cm->groupingid)) {
-    throw new \moodle_exception('errornousers', 'chat');
+    throw new \moodle_exception('errornousers', 'mod_chat');
 }
 
 $DB->set_field('chat_users', 'lastping', time(), array('sid' => $chatsid));
@@ -149,7 +149,7 @@ echo $OUTPUT->box_end();
 echo '<div id="send">';
 echo '<form id="editing" method="post" action="index.php">';
 
-echo '<h2><label for="message">' . get_string('sendmessage', 'message');
+echo '<h2><label for="message">' . get_string('sendmessage', 'core_message');
 echo $OUTPUT->help_icon('usingchat', 'chat');
 echo '</label></h2>';
 echo '<div class="mb-1">';
@@ -162,13 +162,13 @@ echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
 echo '<input type="submit" class="btn btn-primary" value="'.get_string('submit').'" />&nbsp;';
 echo '<input type="submit" class="btn btn-secondary" name="refresh" value="'.get_string('refresh').'" />';
 echo '<input type="checkbox" class="mx-1" name="newonly" id="newonly" '.($newonly ? 'checked="checked" ' : '').'/>';
-echo '<label for="newonly">'.get_string('newonlymsg', 'message').'</label>';
+echo '<label for="newonly">'.get_string('newonlymsg', 'core_message').'</label>';
 echo '</div>';
 echo '</form>';
 echo '</div>';
 
 echo '<div id="messages">';
-echo $OUTPUT->heading(get_string('messages', 'chat'), 3);
+echo $OUTPUT->heading(get_string('messages', 'mod_chat'), 3);
 
 $allmessages = array();
 $options = new stdClass();
@@ -197,11 +197,11 @@ if ($messages) {
 echo '<table class="generaltable"><tbody>';
 echo '<tr>
         <th scope="col" class="cell">' . get_string('from') . '</th>
-        <th scope="col" class="cell">' . get_string('message', 'message') . '</th>
+        <th scope="col" class="cell">' . get_string('message', 'core_message') . '</th>
         <th scope="col" class="cell">' . get_string('time') . '</th>
       </tr>';
 if (empty($allmessages)) {
-    echo get_string('nomessagesfound', 'message');
+    echo get_string('nomessagesfound', 'core_message');
 } else {
     foreach ($allmessages as $message) {
         echo $message->basic;

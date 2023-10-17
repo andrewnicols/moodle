@@ -35,7 +35,7 @@ if ($ADMIN->fulltree) {
         $student = get_archetype_roles('student');
         $student = reset($student);
         $settings->add(new admin_setting_configselect_with_advanced('enrol_mnet/roleid',
-            get_string('defaultrole', 'role'), '',
+            get_string('defaultrole', 'core_role'), '',
             array('value' => $student->id ?? null, 'adv' => true), $options));
     }
 }

@@ -111,12 +111,12 @@ class mod_forum_post_form extends moodleform {
             }
         }
 
-        $mform->addElement('text', 'subject', get_string('subject', 'forum'), 'size="48"');
+        $mform->addElement('text', 'subject', get_string('subject', 'mod_forum'), 'size="48"');
         $mform->setType('subject', PARAM_TEXT);
         $mform->addRule('subject', get_string('required'), 'required', null, 'client');
         $mform->addRule('subject', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $mform->addElement('editor', 'message', get_string('message', 'forum'), null, self::editor_options($modcontext, (empty($post->id) ? null : $post->id)));
+        $mform->addElement('editor', 'message', get_string('message', 'mod_forum'), null, self::editor_options($modcontext, (empty($post->id) ? null : $post->id)));
         $mform->setType('message', PARAM_RAW);
         $mform->addRule('message', get_string('required'), 'required', null, 'client');
 
@@ -124,43 +124,43 @@ class mod_forum_post_form extends moodleform {
             $manageactivities = has_capability('moodle/course:manageactivities', $coursecontext);
 
             if (\mod_forum\subscriptions::is_forcesubscribed($forum)) {
-                $mform->addElement('checkbox', 'discussionsubscribe', get_string('discussionsubscription', 'forum'));
+                $mform->addElement('checkbox', 'discussionsubscribe', get_string('discussionsubscription', 'mod_forum'));
                 $mform->freeze('discussionsubscribe');
                 $mform->setDefaults('discussionsubscribe', 0);
                 $mform->addHelpButton('discussionsubscribe', 'forcesubscribed', 'forum');
 
             } else if (\mod_forum\subscriptions::subscription_disabled($forum) && !$manageactivities) {
-                $mform->addElement('checkbox', 'discussionsubscribe', get_string('discussionsubscription', 'forum'));
+                $mform->addElement('checkbox', 'discussionsubscribe', get_string('discussionsubscription', 'mod_forum'));
                 $mform->freeze('discussionsubscribe');
                 $mform->setDefaults('discussionsubscribe', 0);
                 $mform->addHelpButton('discussionsubscribe', 'disallowsubscription', 'forum');
 
             } else {
-                $mform->addElement('checkbox', 'discussionsubscribe', get_string('discussionsubscription', 'forum'));
+                $mform->addElement('checkbox', 'discussionsubscribe', get_string('discussionsubscription', 'mod_forum'));
                 $mform->addHelpButton('discussionsubscribe', 'discussionsubscription', 'forum');
             }
 
             if (forum_can_create_attachment($forum, $modcontext)) {
-                $mform->addElement('filemanager', 'attachments', get_string('attachment', 'forum'), null,
+                $mform->addElement('filemanager', 'attachments', get_string('attachment', 'mod_forum'), null,
                     self::attachment_options($forum));
                 $mform->addHelpButton('attachments', 'attachment', 'forum');
             }
 
             if (!$post->parent && has_capability('mod/forum:pindiscussions', $modcontext)) {
-                $mform->addElement('checkbox', 'pinned', get_string('discussionpinned', 'forum'));
+                $mform->addElement('checkbox', 'pinned', get_string('discussionpinned', 'mod_forum'));
                 $mform->addHelpButton('pinned', 'discussionpinned', 'forum');
             }
 
             if (empty($post->id) && ($manageactivities ||
                     ($forum->type == 'qanda' && has_capability('mod/forum:canmailnow', $modcontext)))
             ) {
-                $mform->addElement('checkbox', 'mailnow', get_string('mailnow', 'forum'));
+                $mform->addElement('checkbox', 'mailnow', get_string('mailnow', 'mod_forum'));
             }
 
             if ((empty($post->id) && $canreplyprivately) || (!empty($post) && !empty($post->privatereplyto))) {
                 // Only show the option to change private reply settings if this is a new post and the user can reply
                 // privately, or if this is already private reply, in which case the state is shown but is not editable.
-                $mform->addElement('checkbox', 'isprivatereply', get_string('privatereply', 'forum'));
+                $mform->addElement('checkbox', 'isprivatereply', get_string('privatereply', 'mod_forum'));
                 $mform->addHelpButton('isprivatereply', 'privatereply', 'forum');
                 if (!empty($post->privatereplyto)) {
                     $mform->setDefault('isprivatereply', 1);
@@ -199,7 +199,7 @@ class mod_forum_post_form extends moodleform {
                     // This user is in multiple groups, and can post to all of their own groups.
                     // Note: This is not the same as accessallgroups. This option will copy a post to all groups that a
                     // user is a member of.
-                    $mform->addElement('checkbox', 'posttomygroups', get_string('posttomygroups', 'forum'));
+                    $mform->addElement('checkbox', 'posttomygroups', get_string('posttomygroups', 'mod_forum'));
                     $mform->addHelpButton('posttomygroups', 'posttomygroups', 'forum');
                     $mform->disabledIf('groupinfo', 'posttomygroups', 'checked');
                 }
@@ -244,13 +244,13 @@ class mod_forum_post_form extends moodleform {
 
             if (!empty($CFG->forum_enabletimedposts) && !$post->parent &&
                 has_capability('mod/forum:viewhiddentimedposts', $coursecontext)) {
-                $mform->addElement('header', 'displayperiod', get_string('displayperiod', 'forum'));
+                $mform->addElement('header', 'displayperiod', get_string('displayperiod', 'mod_forum'));
 
-                $mform->addElement('date_time_selector', 'timestart', get_string('displaystart', 'forum'),
+                $mform->addElement('date_time_selector', 'timestart', get_string('displaystart', 'mod_forum'),
                     array('optional' => true));
                 $mform->addHelpButton('timestart', 'displaystart', 'forum');
 
-                $mform->addElement('date_time_selector', 'timeend', get_string('displayend', 'forum'),
+                $mform->addElement('date_time_selector', 'timeend', get_string('displayend', 'mod_forum'),
                     array('optional' => true));
                 $mform->addHelpButton('timeend', 'displayend', 'forum');
 
@@ -263,7 +263,7 @@ class mod_forum_post_form extends moodleform {
             }
 
             if (core_tag_tag::is_enabled('mod_forum', 'forum_posts')) {
-                $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
+                $mform->addElement('header', 'tagshdr', get_string('tags', 'core_tag'));
 
                 $mform->addElement('tags', 'tags', get_string('tags'),
                     array('itemtype' => 'forum_posts', 'component' => 'mod_forum'));
@@ -275,7 +275,7 @@ class mod_forum_post_form extends moodleform {
         if (isset($post->edit)) { // hack alert
             $submitstring = get_string('savechanges');
         } else {
-            $submitstring = get_string('posttoforum', 'forum');
+            $submitstring = get_string('posttoforum', 'mod_forum');
         }
 
         // Always register a no submit button so it can be picked up if redirecting to the original post form.
@@ -333,13 +333,13 @@ class mod_forum_post_form extends moodleform {
     function validation($data, $files) {
         $errors = parent::validation($data, $files);
         if (($data['timeend']!=0) && ($data['timestart']!=0) && $data['timeend'] <= $data['timestart']) {
-            $errors['timeend'] = get_string('timestartenderror', 'forum');
+            $errors['timeend'] = get_string('timestartenderror', 'mod_forum');
         }
         if (empty($data['message']['text'])) {
-            $errors['message'] = get_string('erroremptymessage', 'forum');
+            $errors['message'] = get_string('erroremptymessage', 'mod_forum');
         }
         if (empty($data['subject'])) {
-            $errors['subject'] = get_string('erroremptysubject', 'forum');
+            $errors['subject'] = get_string('erroremptysubject', 'mod_forum');
         }
         return $errors;
     }

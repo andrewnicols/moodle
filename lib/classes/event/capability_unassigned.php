@@ -51,7 +51,7 @@ class capability_unassigned extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventcapabilityunassigned', 'role');
+        return get_string('eventcapabilityunassigned', 'core_role');
     }
 
     /**

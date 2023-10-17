@@ -37,9 +37,9 @@ class grade_import_form extends moodleform {
         $mform->addElement('hidden', 'id', optional_param('id', 0, PARAM_INT));
         $mform->setType('id', PARAM_INT);
 
-        $mform->addElement('header', 'general', get_string('importfile', 'grades'));
+        $mform->addElement('header', 'general', get_string('importfile', 'core_grades'));
 
-        $mform->addElement('advcheckbox', 'feedback', get_string('importfeedback', 'grades'));
+        $mform->addElement('advcheckbox', 'feedback', get_string('importfeedback', 'core_grades'));
         $mform->setDefault('feedback', 0);
 
         // Restrict the possible upload file types.
@@ -59,8 +59,8 @@ class grade_import_form extends moodleform {
         $mform->addHelpButton('url', 'fileurl', 'gradeimport_xml');
 
         if (!empty($CFG->gradepublishing)) {
-            $mform->addElement('header', 'publishing', get_string('publishing', 'grades'));
-            $options = array(get_string('nopublish', 'grades'), get_string('createnewkey', 'userkey'));
+            $mform->addElement('header', 'publishing', get_string('publishing', 'core_grades'));
+            $options = array(get_string('nopublish', 'core_grades'), get_string('createnewkey', 'core_userkey'));
             $keys = $DB->get_records_select('user_private_key',
                             "script='grade/import' AND instance=? AND userid=?",
                             array($COURSE->id, $USER->id));
@@ -69,16 +69,16 @@ class grade_import_form extends moodleform {
                     $options[$key->value] = $key->value; // TODO: add more details - ip restriction, valid until ??
                 }
             }
-            $mform->addElement('select', 'key', get_string('userkey', 'userkey'), $options);
+            $mform->addElement('select', 'key', get_string('userkey', 'core_userkey'), $options);
             $mform->addHelpButton('key', 'userkey', 'userkey');
-            $mform->addElement('static', 'keymanagerlink', get_string('keymanager', 'userkey'),
-                    '<a href="'.$CFG->wwwroot.'/grade/import/keymanager.php?id='.$COURSE->id.'">'.get_string('keymanager', 'userkey').'</a>');
+            $mform->addElement('static', 'keymanagerlink', get_string('keymanager', 'core_userkey'),
+                    '<a href="'.$CFG->wwwroot.'/grade/import/keymanager.php?id='.$COURSE->id.'">'.get_string('keymanager', 'core_userkey').'</a>');
 
-            $mform->addElement('text', 'iprestriction', get_string('keyiprestriction', 'userkey'), array('size'=>80));
+            $mform->addElement('text', 'iprestriction', get_string('keyiprestriction', 'core_userkey'), array('size'=>80));
             $mform->addHelpButton('iprestriction', 'keyiprestriction', 'userkey');
             $mform->setDefault('iprestriction', getremoteaddr()); // own IP - just in case somebody does not know what user key is
 
-            $mform->addElement('date_time_selector', 'validuntil', get_string('keyvaliduntil', 'userkey'), array('optional'=>true));
+            $mform->addElement('date_time_selector', 'validuntil', get_string('keyvaliduntil', 'core_userkey'), array('optional'=>true));
             $mform->addHelpButton('validuntil', 'keyvaliduntil', 'userkey');
             $mform->setDefault('validuntil', time()+3600*24*7); // only 1 week default duration - just in case somebody does not know what user key is
 
@@ -90,7 +90,7 @@ class grade_import_form extends moodleform {
             $mform->disabledIf('key', 'url', 'eq', '');
         }
 
-        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'grades'));
+        $this->add_sticky_action_buttons(false, get_string('uploadgrades', 'core_grades'));
     }
 
     function validation($data, $files) {

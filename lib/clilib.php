@@ -67,7 +67,7 @@ function cli_input($prompt, $default='', array $options=null, $casesensitiveopti
             $input = strtolower($input);
         }
         if (!in_array($input, $options)) {
-            cli_writeln(get_string('cliincorrectvalueretry', 'admin'));
+            cli_writeln(get_string('cliincorrectvalueretry', 'core_admin'));
             return cli_input($prompt, $default, $options, $casesensitiveoptions);
         }
     }

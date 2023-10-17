@@ -30,7 +30,7 @@ require_once($CFG->libdir . '/authlib.php');
 require_once('lib.php');
 
 if (!$authplugin = signup_is_enabled()) {
-    throw new \moodle_exception('notlocalisederrormessage', 'error', '', 'Sorry, you may not use this page.');
+    throw new \moodle_exception('notlocalisederrormessage', 'mod_error', '', 'Sorry, you may not use this page.');
 }
 
 $PAGE->set_url('/login/signup.php');
@@ -54,7 +54,7 @@ if (isloggedin() and !isguestuser()) {
     $logout = new single_button(new moodle_url('/login/logout.php',
         array('sesskey' => sesskey(), 'loginpage' => 1)), get_string('logout'), 'post');
     $continue = new single_button(new moodle_url('/'), get_string('cancel'), 'get');
-    echo $OUTPUT->confirm(get_string('cannotsignup', 'error', fullname($USER)), $logout, $continue);
+    echo $OUTPUT->confirm(get_string('cannotsignup', 'mod_error', fullname($USER)), $logout, $continue);
     echo $OUTPUT->box_end();
     echo $OUTPUT->footer();
     exit;

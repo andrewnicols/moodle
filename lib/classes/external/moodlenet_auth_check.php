@@ -73,14 +73,14 @@ class moodlenet_auth_check extends external_api {
         $usercansharecourse = utilities::can_user_share($coursecontext, $USER->id, 'course');
         if (!$usercanshareactivity && !$usercansharecourse) {
             return self::return_errors($courseid, 'errorpermission',
-                get_string('nopermissions', 'error', get_string('moodlenet:sharetomoodlenet', 'moodle')));
+                get_string('nopermissions', 'mod_error', get_string('moodlenet:sharetomoodlenet', 'moodle')));
         }
 
         // Get the issuer.
         $issuer = api::get_issuer($issuerid);
         // Validate the issuer and check if it is enabled or not.
         if (!utilities::is_valid_instance($issuer)) {
-            return self::return_errors($issuerid, 'errorissuernotenabled', get_string('invalidparameter', 'debug'));
+            return self::return_errors($issuerid, 'errorissuernotenabled', get_string('invalidparameter', 'mod_debug'));
         }
 
         $returnurl = new moodle_url('/admin/moodlenet_oauth2_callback.php');
@@ -90,7 +90,7 @@ class moodlenet_auth_check extends external_api {
 
         // Get the OAuth Client.
         if (!$oauthclient = api::get_user_oauth_client($issuer, $returnurl, moodlenet_client::API_SCOPE_CREATE_RESOURCE, true)) {
-            return self::return_errors($issuerid, 'erroroauthclient', get_string('invalidparameter', 'debug'));
+            return self::return_errors($issuerid, 'erroroauthclient', get_string('invalidparameter', 'mod_debug'));
         }
 
         $status = false;

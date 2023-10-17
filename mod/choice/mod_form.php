@@ -13,9 +13,9 @@ class mod_choice_mod_form extends moodleform_mod {
         $mform    =& $this->_form;
 
 //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'general', get_string('general', 'form'));
+        $mform->addElement('header', 'general', get_string('general', 'core_form'));
 
-        $mform->addElement('text', 'name', get_string('choicename', 'choice'), array('size'=>'64'));
+        $mform->addElement('text', 'name', get_string('choicename', 'mod_choice'), array('size'=>'64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -24,16 +24,16 @@ class mod_choice_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->standard_intro_elements(get_string('description', 'choice'));
+        $this->standard_intro_elements(get_string('description', 'mod_choice'));
 
-        $mform->addElement('select', 'display', get_string("displaymode","choice"), $CHOICE_DISPLAY);
+        $mform->addElement('select', 'display', get_string("displaymode",'mod_choice'), $CHOICE_DISPLAY);
 
         //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'optionhdr', get_string('options', 'choice'));
+        $mform->addElement('header', 'optionhdr', get_string('options', 'mod_choice'));
 
-        $mform->addElement('selectyesno', 'allowupdate', get_string("allowupdate", "choice"));
+        $mform->addElement('selectyesno', 'allowupdate', get_string("allowupdate", 'mod_choice'));
 
-        $mform->addElement('selectyesno', 'allowmultiple', get_string('allowmultiple', 'choice'));
+        $mform->addElement('selectyesno', 'allowmultiple', get_string('allowmultiple', 'mod_choice'));
         if ($this->_instance) {
             if ($DB->count_records('choice_answers', array('choiceid' => $this->_instance)) > 0) {
                 // Prevent user from toggeling the number of allowed answers once there are submissions.
@@ -41,16 +41,16 @@ class mod_choice_mod_form extends moodleform_mod {
             }
         }
 
-        $mform->addElement('selectyesno', 'limitanswers', get_string('limitanswers', 'choice'));
+        $mform->addElement('selectyesno', 'limitanswers', get_string('limitanswers', 'mod_choice'));
         $mform->addHelpButton('limitanswers', 'limitanswers', 'choice');
 
-        $mform->addElement('selectyesno', 'showavailable', get_string('showavailable', 'choice'));
+        $mform->addElement('selectyesno', 'showavailable', get_string('showavailable', 'mod_choice'));
         $mform->addHelpButton('showavailable', 'showavailable', 'choice');
         $mform->hideIf('showavailable', 'limitanswers', 'eq', 0);
 
         $repeatarray = array();
-        $repeatarray[] = $mform->createElement('text', 'option', get_string('optionno', 'choice'));
-        $repeatarray[] = $mform->createElement('text', 'limit', get_string('limitno', 'choice'));
+        $repeatarray[] = $mform->createElement('text', 'option', get_string('optionno', 'mod_choice'));
+        $repeatarray[] = $mform->createElement('text', 'limit', get_string('limitno', 'mod_choice'));
         $repeatarray[] = $mform->createElement('hidden', 'optionid', 0);
 
         if ($this->_instance){
@@ -76,32 +76,32 @@ class mod_choice_mod_form extends moodleform_mod {
 
         // Make the first option required
         if ($mform->elementExists('option[0]')) {
-            $mform->addRule('option[0]', get_string('atleastoneoption', 'choice'), 'required', null, 'client');
+            $mform->addRule('option[0]', get_string('atleastoneoption', 'mod_choice'), 'required', null, 'client');
         }
 
 //-------------------------------------------------------------------------------
         $mform->addElement('header', 'availabilityhdr', get_string('availability'));
-        $mform->addElement('date_time_selector', 'timeopen', get_string("choiceopen", "choice"),
+        $mform->addElement('date_time_selector', 'timeopen', get_string("choiceopen", 'mod_choice'),
             array('optional' => true));
 
-        $mform->addElement('date_time_selector', 'timeclose', get_string("choiceclose", "choice"),
+        $mform->addElement('date_time_selector', 'timeclose', get_string("choiceclose", 'mod_choice'),
             array('optional' => true));
 
-        $mform->addElement('advcheckbox', 'showpreview', get_string('showpreview', 'choice'));
+        $mform->addElement('advcheckbox', 'showpreview', get_string('showpreview', 'mod_choice'));
         $mform->addHelpButton('showpreview', 'showpreview', 'choice');
         $mform->disabledIf('showpreview', 'timeopen[enabled]');
 
 //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'resultshdr', get_string('results', 'choice'));
+        $mform->addElement('header', 'resultshdr', get_string('results', 'mod_choice'));
 
-        $mform->addElement('select', 'showresults', get_string("publish", "choice"), $CHOICE_SHOWRESULTS);
+        $mform->addElement('select', 'showresults', get_string("publish", 'mod_choice'), $CHOICE_SHOWRESULTS);
 
-        $mform->addElement('select', 'publish', get_string("privacy", "choice"), $CHOICE_PUBLISH);
+        $mform->addElement('select', 'publish', get_string("privacy", 'mod_choice'), $CHOICE_PUBLISH);
         $mform->hideIf('publish', 'showresults', 'eq', 0);
 
-        $mform->addElement('selectyesno', 'showunanswered', get_string("showunanswered", "choice"));
+        $mform->addElement('selectyesno', 'showunanswered', get_string("showunanswered", 'mod_choice'));
 
-        $mform->addElement('selectyesno', 'includeinactive', get_string('includeinactive', 'choice'));
+        $mform->addElement('selectyesno', 'includeinactive', get_string('includeinactive', 'mod_choice'));
         $mform->setDefault('includeinactive', 0);
 
 //-------------------------------------------------------------------------------
@@ -160,7 +160,7 @@ class mod_choice_mod_form extends moodleform_mod {
         // Check open and close times are consistent.
         if ($data['timeopen'] && $data['timeclose'] &&
                 $data['timeclose'] < $data['timeopen']) {
-            $errors['timeclose'] = get_string('closebeforeopen', 'choice');
+            $errors['timeclose'] = get_string('closebeforeopen', 'mod_choice');
         }
 
         return $errors;
@@ -171,7 +171,7 @@ class mod_choice_mod_form extends moodleform_mod {
 
         $suffix = $this->get_suffix();
         $completionsubmitel = 'completionsubmit' . $suffix;
-        $mform->addElement('checkbox', $completionsubmitel, '', get_string('completionsubmit', 'choice'));
+        $mform->addElement('checkbox', $completionsubmitel, '', get_string('completionsubmit', 'mod_choice'));
         // Enable this completion rule by default.
         $mform->setDefault($completionsubmitel, 1);
         return [$completionsubmitel];

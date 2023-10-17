@@ -1813,10 +1813,10 @@ class moodle_page {
         // If maintenance mode is on, change the page header.
         if (!empty($CFG->maintenance_enabled)) {
             $this->set_button('<a href="' . $CFG->wwwroot . '/' . $CFG->admin .
-                    '/settings.php?section=maintenancemode">' . get_string('maintenancemode', 'admin') .
+                    '/settings.php?section=maintenancemode">' . get_string('maintenancemode', 'core_admin') .
                     '</a> ' . $this->button);
 
-            $this->set_title(get_string('maintenancemode', 'admin'));
+            $this->set_title(get_string('maintenancemode', 'core_admin'));
         }
 
         $this->initialise_standard_body_classes();

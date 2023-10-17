@@ -139,7 +139,7 @@ function resource_display_frame($resource, $cm, $course, $file) {
         $title = strip_tags(format_string($course->shortname.': '.$resource->name));
         $framesize = $config->framesize;
         $contentframetitle = s(format_string($resource->name));
-        $modulename = s(get_string('modulename','resource'));
+        $modulename = s(get_string('modulename','mod_resource'));
         $dir = get_string('thisdirection', 'core_langconfig');
 
         $file = <<<EOF
@@ -172,7 +172,7 @@ function resource_get_clicktoopen($file, $revision, $extra='') {
     $path = '/'.$file->get_contextid().'/mod_resource/content/'.$revision.$file->get_filepath().$file->get_filename();
     $fullurl = file_encode_url($CFG->wwwroot.'/pluginfile.php', $path, false);
 
-    $string = get_string('clicktoopen2', 'resource', "<a href=\"$fullurl\" $extra>$filename</a>");
+    $string = get_string('clicktoopen2', 'mod_resource', "<a href=\"$fullurl\" $extra>$filename</a>");
 
     return $string;
 }
@@ -187,7 +187,7 @@ function resource_get_clicktodownload($file, $revision) {
     $path = '/'.$file->get_contextid().'/mod_resource/content/'.$revision.$file->get_filepath().$file->get_filename();
     $fullurl = file_encode_url($CFG->wwwroot.'/pluginfile.php', $path, true);
 
-    $string = get_string('clicktodownload', 'resource', "<a href=\"$fullurl\">$filename</a>");
+    $string = get_string('clicktodownload', 'mod_resource', "<a href=\"$fullurl\">$filename</a>");
 
     return $string;
 }
@@ -376,7 +376,7 @@ function resource_get_optional_details($resource, $cm, bool $showtype = true) {
         }
 
         if ($infodisplayed > 1) {
-            $details = get_string("resourcedetails_{$langstring}", 'resource',
+            $details = get_string("resourcedetails_{$langstring}", 'mod_resource',
                     (object)array('size' => $size, 'type' => $type, 'date' => $date));
         } else {
             // Only one of size, type and date is set, so just append.
@@ -458,7 +458,7 @@ function resource_print_tobemigrated($resource, $cm, $course) {
     $PAGE->activityheader->set_description(resource_get_intro($resource, $cm));
     $resource_old = $DB->get_record('resource_old', array('oldid'=>$resource->id));
     resource_print_header($resource, $cm, $course);
-    echo $OUTPUT->notification(get_string('notmigrated', 'resource', $resource_old->type));
+    echo $OUTPUT->notification(get_string('notmigrated', 'mod_resource', $resource_old->type));
     echo $OUTPUT->footer();
     die;
 }
@@ -477,9 +477,9 @@ function resource_print_filenotfound($resource, $cm, $course) {
     $PAGE->activityheader->set_description(resource_get_intro($resource, $cm));
     resource_print_header($resource, $cm, $course);
     if ($resource_old) {
-        echo $OUTPUT->notification(get_string('notmigrated', 'resource', $resource_old->type));
+        echo $OUTPUT->notification(get_string('notmigrated', 'mod_resource', $resource_old->type));
     } else {
-        echo $OUTPUT->notification(get_string('filenotfound', 'resource'));
+        echo $OUTPUT->notification(get_string('filenotfound', 'mod_resource'));
     }
     echo $OUTPUT->footer();
     die;

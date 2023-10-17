@@ -171,7 +171,7 @@ class qtype_essay_edit_form extends question_edit_form {
         if ($fromform['responserequired']) {
             if (isset($fromform['minwordenabled'])) {
                 if (!is_numeric($fromform['minwordlimit'])) {
-                    $errors['mingroup'] = get_string('err_numeric', 'form');
+                    $errors['mingroup'] = get_string('err_numeric', 'core_form');
                 }
                 if ($fromform['minwordlimit'] < 0) {
                     $errors['mingroup'] = get_string('err_minwordlimitnegative', 'qtype_essay');
@@ -182,7 +182,7 @@ class qtype_essay_edit_form extends question_edit_form {
             }
             if (isset($fromform['maxwordenabled'])) {
                 if (!is_numeric($fromform['maxwordlimit'])) {
-                    $errors['maxgroup'] = get_string('err_numeric', 'form');
+                    $errors['maxgroup'] = get_string('err_numeric', 'core_form');
                 }
                 if ($fromform['maxwordlimit'] < 0) {
                     $errors['maxgroup'] = get_string('err_maxwordlimitnegative', 'qtype_essay');

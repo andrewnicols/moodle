@@ -289,7 +289,7 @@ class grade_report_grader extends grade_report {
                             $gradestr = new stdClass();
                             $gradestr->username = fullname($user, $viewfullnames);
                             $gradestr->itemname = $gradeitem->get_name();
-                            $warnings[] = get_string($errorstr, 'grades', $gradestr);
+                            $warnings[] = get_string($errorstr, 'core_grades', $gradestr);
                             if ($skip) {
                                 // Skipping the update of this grade it failed the tests above.
                                 continue;
@@ -310,7 +310,7 @@ class grade_report_grader extends grade_report {
                         }
                         if (!$sharinggroup) {
                             // either group membership changed or somebody is hacking grades of other group
-                            $warnings[] = get_string('errorsavegrade', 'grades');
+                            $warnings[] = get_string('errorsavegrade', 'core_grades');
                             continue;
                         }
                     }
@@ -723,7 +723,7 @@ class grade_report_grader extends grade_report {
 
                 //may be lots of suspended users so only get the string once
                 if (empty($suspendedstring)) {
-                    $suspendedstring = get_string('userenrolmentsuspended', 'grades');
+                    $suspendedstring = get_string('userenrolmentsuspended', 'core_grades');
                 }
                 $icon = $OUTPUT->pix_icon('i/enrolmentsuspended', $suspendedstring);
                 $usercell->text .= html_writer::tag('span', $icon, array('class'=>'usersuspendedicon'));
@@ -782,9 +782,9 @@ class grade_report_grader extends grade_report {
         // Get strings which are re-used inside the loop.
         $strftimedatetimeshort = get_string('strftimedatetimeshort');
         $strerror = get_string('error');
-        $stroverridengrade = get_string('overridden', 'grades');
-        $strfail = get_string('fail', 'grades');
-        $strpass = get_string('pass', 'grades');
+        $stroverridengrade = get_string('overridden', 'core_grades');
+        $strfail = get_string('fail', 'core_grades');
+        $strpass = get_string('pass', 'core_grades');
         $viewfullnames = has_capability('moodle/site:viewfullnames', $this->context);
 
         // Preload scale objects for items with a scaleid and initialize tab indices.
@@ -1058,7 +1058,7 @@ class grade_report_grader extends grade_report {
                             if (empty($item->outcomeid)) {
                                 $nogradestr = get_string('nograde');
                             } else {
-                                $nogradestr = get_string('nooutcome', 'grades');
+                                $nogradestr = get_string('nooutcome', 'core_grades');
                             }
                             $attributes = [
                                 'tabindex' => $tabindices[$item->id]['grade'],
@@ -1242,7 +1242,7 @@ class grade_report_grader extends grade_report {
             $controlscell->attributes['class'] = 'header controls';
             $controlscell->header = true;
             $controlscell->colspan = $colspan;
-            $controlscell->text = get_string('controls', 'grades');
+            $controlscell->text = get_string('controls', 'core_grades');
             $controlsrow->cells[] = $controlscell;
 
             $rows[] = $controlsrow;
@@ -1267,7 +1267,7 @@ class grade_report_grader extends grade_report {
             $rangecell->colspan = $colspan;
             $rangecell->header = true;
             $rangecell->scope = 'row';
-            $rangecell->text = get_string('range', 'grades');
+            $rangecell->text = get_string('range', 'core_grades');
             $rangerow->cells[] = $rangecell;
             $rows[] = $rangerow;
         }
@@ -1291,7 +1291,7 @@ class grade_report_grader extends grade_report {
 
         $showaverages = $this->get_pref('showaverages');
         $showaveragesgroup = $this->currentgroup && $showaverages;
-        $straveragegroup = get_string('groupavg', 'grades');
+        $straveragegroup = get_string('groupavg', 'core_grades');
 
         if ($groupavg) {
             if ($showaveragesgroup) {
@@ -1307,7 +1307,7 @@ class grade_report_grader extends grade_report {
                 $rows[] = $groupavgrow;
             }
         } else {
-            $straverage = get_string('overallaverage', 'grades');
+            $straverage = get_string('overallaverage', 'core_grades');
 
             if ($showaverages) {
                 $avgrow = new html_table_row();
@@ -1576,11 +1576,11 @@ class grade_report_grader extends grade_report {
      */
     protected function get_course_header($element) {
         if (in_array($element['object']->id, $this->collapsed['aggregatesonly'])) {
-            $showing = get_string('showingaggregatesonly', 'grades');
+            $showing = get_string('showingaggregatesonly', 'core_grades');
         } else if (in_array($element['object']->id, $this->collapsed['gradesonly'])) {
-            $showing = get_string('showinggradesonly', 'grades');
+            $showing = get_string('showinggradesonly', 'core_grades');
         } else {
-            $showing = get_string('showingfullmode', 'grades');
+            $showing = get_string('showingfullmode', 'core_grades');
         }
 
         $name = $element['object']->get_name();
@@ -2072,9 +2072,9 @@ function gradereport_grader_get_report_link(context_course $context, int $course
         $categoryid = $element['object']->id;
 
         // Load language strings.
-        $strswitchminus = get_string('aggregatesonly', 'grades');
-        $strswitchplus = get_string('gradesonly', 'grades');
-        $strswitchwhole = get_string('fullmode', 'grades');
+        $strswitchminus = get_string('aggregatesonly', 'core_grades');
+        $strswitchplus = get_string('gradesonly', 'core_grades');
+        $strswitchwhole = get_string('fullmode', 'core_grades');
 
         $url = new moodle_url($gpr->get_return_url(null, ['target' => $element['eid'], 'sesskey' => sesskey()]));
 

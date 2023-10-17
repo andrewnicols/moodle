@@ -51,29 +51,29 @@ class database_transfer_form extends moodleform {
         $drivers[''] = get_string('choosedots');
         $drivers = array_reverse($drivers, true);
 
-        $mform->addElement('select', 'driver', get_string('dbtype', 'install'), $drivers);
+        $mform->addElement('select', 'driver', get_string('dbtype', 'mod_install'), $drivers);
         $mform->setType('driver', PARAM_RAW);
 
-        $mform->addElement('text', 'dbhost', get_string('databasehost', 'install'));
+        $mform->addElement('text', 'dbhost', get_string('databasehost', 'mod_install'));
         $mform->setType('dbhost', PARAM_HOST);
 
-        $mform->addElement('text', 'dbname', get_string('databasename', 'install'));
+        $mform->addElement('text', 'dbname', get_string('databasename', 'mod_install'));
         $mform->setType('dbname', PARAM_ALPHANUMEXT);
 
-        $mform->addElement('text', 'dbuser', get_string('databaseuser', 'install'));
+        $mform->addElement('text', 'dbuser', get_string('databaseuser', 'mod_install'));
         $mform->setType('dbuser', PARAM_ALPHANUMEXT);
 
-        $mform->addElement('passwordunmask', 'dbpass', get_string('databasepass', 'install'));
+        $mform->addElement('passwordunmask', 'dbpass', get_string('databasepass', 'mod_install'));
         $mform->setType('dbpass', PARAM_RAW);
 
-        $mform->addElement('text', 'prefix', get_string('dbprefix', 'install'));
+        $mform->addElement('text', 'prefix', get_string('dbprefix', 'mod_install'));
         $mform->setType('prefix', PARAM_ALPHANUMEXT);
 
-        $mform->addElement('text', 'dbport', get_string('dbport', 'install'));
+        $mform->addElement('text', 'dbport', get_string('dbport', 'mod_install'));
         $mform->setType('dbport', PARAM_INT);
 
         if ($CFG->ostype !== 'WINDOWS') {
-            $mform->addElement('text', 'dbsocket', get_string('databasesocket', 'install'));
+            $mform->addElement('text', 'dbsocket', get_string('databasesocket', 'mod_install'));
         } else {
             $mform->addElement('hidden', 'dbsocket');
         }

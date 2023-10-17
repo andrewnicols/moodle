@@ -79,7 +79,7 @@ class tagareacollection extends \core\output\inplace_editable {
         $newvalue = clean_param($newvalue, PARAM_INT);
         $tagcollections = \core_tag_collection::get_collections_menu(true);
         if (!array_key_exists($newvalue, $tagcollections)) {
-            throw new \moodle_exception('invalidparameter', 'debug');
+            throw new \moodle_exception('invalidparameter', 'mod_debug');
         }
         $data = array('tagcollid' => $newvalue);
         core_tag_area::update($tagarea, $data);

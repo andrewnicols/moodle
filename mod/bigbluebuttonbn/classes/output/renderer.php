@@ -61,19 +61,19 @@ class renderer extends plugin_renderer_base {
         $groups = groups_get_activity_allowed_groups($instance->get_cm());
         if (empty($groups)) {
             // No groups in this course.
-            notification::add(get_string('view_groups_nogroups_warning', 'bigbluebuttonbn'), notification::INFO);
+            notification::add(get_string('view_groups_nogroups_warning', 'mod_bigbluebuttonbn'), notification::INFO);
             return '';
         }
 
         // Assign group default values.
         if (count($groups) == 0) {
             // Only the All participants group exists.
-            notification::add(get_string('view_groups_notenrolled_warning', 'bigbluebuttonbn'), notification::INFO);
+            notification::add(get_string('view_groups_notenrolled_warning', 'mod_bigbluebuttonbn'), notification::INFO);
             return '';
         }
 
         if (count($groups) > 1) {
-            notification::add(get_string('view_groups_selection_warning', 'bigbluebuttonbn'), notification::INFO);
+            notification::add(get_string('view_groups_selection_warning', 'mod_bigbluebuttonbn'), notification::INFO);
         }
 
         $groupsmenu = groups_print_activity_menu(

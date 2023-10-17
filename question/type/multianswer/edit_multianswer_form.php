@@ -161,7 +161,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
                                     $this->savedquestiondisplay->options->questions[$sub]->qtype)),
                             array('class' => 'error'));
                 }
-                            $mform->addElement('header', 'subhdr'.$sub, get_string('questionno', 'question',
+                            $mform->addElement('header', 'subhdr'.$sub, get_string('questionno', 'core_question',
                        '{#'.$sub.'}').'&nbsp;'.question_bank::get_qtype_name(
                         $this->questiondisplay->options->questions[$sub]->qtype).$storemess);
 
@@ -174,7 +174,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
                 }
 
                 $mform->addElement('static', 'sub_'.$sub.'_defaultmark',
-                        get_string('defaultmark', 'question'));
+                        get_string('defaultmark', 'core_question'));
                 $mform->setDefault('sub_'.$sub.'_defaultmark',
                         $this->questiondisplay->options->questions[$sub]->defaultmark);
 
@@ -192,7 +192,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
 
                 foreach ($this->questiondisplay->options->questions[$sub]->answer as $key => $ans) {
                     $mform->addElement('static', 'sub_'.$sub.'_answer['.$key.']',
-                            get_string('answer', 'question'));
+                            get_string('answer', 'core_question'));
 
                     if ($this->questiondisplay->options->questions[$sub]->qtype == 'numerical' &&
                             $key == 0) {
@@ -204,7 +204,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
                             get_string('gradenoun'));
 
                     $mform->addElement('static', 'sub_'.$sub.'_feedback['.$key.']',
-                            get_string('feedback', 'question'));
+                            get_string('feedback', 'core_question'));
                 }
             }
 
@@ -283,7 +283,7 @@ class qtype_multianswer_edit_form extends question_edit_form {
                             case 'subquestion_replacement':
                                 continue 2;
                             default:
-                                throw new \moodle_exception('unknownquestiontype', 'question', '',
+                                throw new \moodle_exception('unknownquestiontype', 'core_question', '',
                                         $wrapped->qtype);
                         }
                         $separator = '';
@@ -426,12 +426,12 @@ class qtype_multianswer_edit_form extends question_edit_form {
                                         get_string('notenoughanswers', 'qtype_multichoice', 2));
                             } else {
                                 $this->_form->setElementError($prefix.'answer[0]',
-                                        get_string('notenoughanswers', 'question', 1));
+                                        get_string('notenoughanswers', 'core_question', 1));
                             }
                         }
                         if ($maxgrade == false) {
                             $this->_form->setElementError($prefix.'fraction[0]',
-                                    get_string('fractionsnomax', 'question'));
+                                    get_string('fractionsnomax', 'core_question'));
                         }
                         foreach ($subquestion->feedback as $key => $answer) {
 

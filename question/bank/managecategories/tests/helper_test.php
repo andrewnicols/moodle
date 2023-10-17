@@ -159,7 +159,7 @@ class helper_test extends \advanced_testcase {
         // Try to delete a top category.
         $categorytop = question_get_top_category($qcategory1->id, true)->id;
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('cannotdeletetopcat', 'question'));
+        $this->expectExceptionMessage(get_string('cannotdeletetopcat', 'core_question'));
         helper::question_can_delete_cat($categorytop);
     }
 
@@ -175,7 +175,7 @@ class helper_test extends \advanced_testcase {
 
         // Try to delete an only child of top category having also at least one child.
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string('cannotdeletecate', 'question'));
+        $this->expectExceptionMessage(get_string('cannotdeletecate', 'core_question'));
         helper::question_can_delete_cat($qcategory1->id);
     }
 
@@ -197,7 +197,7 @@ class helper_test extends \advanced_testcase {
         $this->setUser($user);
 
         $this->expectException(\required_capability_exception::class);
-        $this->expectExceptionMessage(get_string('nopermissions', 'error', get_string('question:managecategory', 'role')));
+        $this->expectExceptionMessage(get_string('nopermissions', 'mod_error', get_string('question:managecategory', 'core_role')));
         helper::question_can_delete_cat($qcategory2->id);
     }
 

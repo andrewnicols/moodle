@@ -38,16 +38,16 @@ class mnet_simple_host_form extends moodleform {
 
         $mform = $this->_form;
 
-        $mform->addElement('text', 'wwwroot', get_string('hostname', 'mnet'), array('maxlength' => 255, 'size' => 50));
+        $mform->addElement('text', 'wwwroot', get_string('hostname', 'core_mnet'), array('maxlength' => 255, 'size' => 50));
         $mform->setType('wwwroot', PARAM_URL);
         $mform->addRule('wwwroot', null, 'required', null, 'client');
         $mform->addRule('wwwroot', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $mform->addElement('select', 'applicationid', get_string('applicationtype', 'mnet'),
+        $mform->addElement('select', 'applicationid', get_string('applicationtype', 'core_mnet'),
                            $DB->get_records_menu('mnet_application', array(), 'id,display_name'));
         $mform->addRule('applicationid', null, 'required', null, 'client');
 
-        $this->add_action_buttons(false, get_string('addhost', 'mnet'));
+        $this->add_action_buttons(false, get_string('addhost', 'core_mnet'));
     }
 
     function validation($data, $files) {
@@ -59,7 +59,7 @@ class mnet_simple_host_form extends moodleform {
             $wwwroot = 'http://'.$wwwroot;
         }
         if ($host = $DB->get_record('mnet_host', array('wwwroot' => $wwwroot))) {
-            $str = get_string('hostexists', 'mnet', (new moodle_url('/admin/mnet/peers.php', ['hostid' => $host->id]))->out());
+            $str = get_string('hostexists', 'core_mnet', (new moodle_url('/admin/mnet/peers.php', ['hostid' => $host->id]))->out());
             return array('wwwroot' => $str);
         }
         return array();
@@ -90,7 +90,7 @@ class mnet_review_host_form extends moodleform {
         $mform->setType('name', PARAM_NOTAGS);
         $mform->addRule('name', get_string('maximumchars', '', 80), 'maxlength', 80, 'client');
 
-        $mform->addElement('text', 'wwwroot', get_string('hostname', 'mnet'), array('maxlength' => 255, 'size' => 50));
+        $mform->addElement('text', 'wwwroot', get_string('hostname', 'core_mnet'), array('maxlength' => 255, 'size' => 50));
         $mform->setType('wwwroot', PARAM_URL);
         $mform->addRule('wwwroot', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
@@ -109,7 +109,7 @@ class mnet_review_host_form extends moodleform {
         }
         $mform->addElement('select', 'theme', get_string('forcetheme'), $themes);
 
-        $mform->addElement('textarea', 'public_key', get_string('publickey', 'mnet'), array('rows' => 17, 'cols' => 100, 'class' => 'smalltext'));
+        $mform->addElement('textarea', 'public_key', get_string('publickey', 'core_mnet'), array('rows' => 17, 'cols' => 100, 'class' => 'smalltext'));
         $mform->setType('public_key', PARAM_PEM);
         $mform->addRule('public_key', get_string('required'), 'required');
 
@@ -117,24 +117,24 @@ class mnet_review_host_form extends moodleform {
         if ($mnet_peer && !empty($mnet_peer->bootstrapped)) {
             $expires = '';
             if ($mnet_peer->public_key_expires < time()) {
-                $expires = get_string('expired', 'mnet')  . ' ';
+                $expires = get_string('expired', 'core_mnet')  . ' ';
             }
             $expires .= userdate($mnet_peer->public_key_expires);
-            $mform->addElement('static', 'validuntil', get_string('expires', 'mnet'), $expires);
+            $mform->addElement('static', 'validuntil', get_string('expires', 'core_mnet'), $expires);
 
             $lastconnect = '';
             if ($mnet_peer->last_connect_time == 0) {
-                $lastconnect = get_string('never', 'mnet');
+                $lastconnect = get_string('never', 'core_mnet');
             } else {
                 $lastconnect = date('H:i:s d/m/Y',$mnet_peer->last_connect_time);
             }
 
-            $mform->addElement('static', 'lastconnect', get_string('last_connect_time', 'mnet'), $lastconnect);
-            $mform->addElement('static', 'ipaddress', get_string('ipaddress', 'mnet'), $mnet_peer->ip_address);
+            $mform->addElement('static', 'lastconnect', get_string('last_connect_time', 'core_mnet'), $lastconnect);
+            $mform->addElement('static', 'ipaddress', get_string('ipaddress', 'core_mnet'), $mnet_peer->ip_address);
 
             if (isset($mnet_peer->currentkey)) { // key being published is not the same as our records
-                $currentkeystr = '<b>' . get_string('keymismatch', 'mnet') . '</b><br /><br /> ' . $OUTPUT->box('<pre>' . $mnet_peer->currentkey . '</pre>');
-                $mform->addElement('static', 'keymismatch', get_string('currentkey', 'mnet'), $currentkeystr);
+                $currentkeystr = '<b>' . get_string('keymismatch', 'core_mnet') . '</b><br /><br /> ' . $OUTPUT->box('<pre>' . $mnet_peer->currentkey . '</pre>');
+                $mform->addElement('static', 'keymismatch', get_string('currentkey', 'core_mnet'), $currentkeystr);
             }
 
             $credstr = '';
@@ -148,14 +148,14 @@ class mnet_review_host_form extends moodleform {
                 }
             }
 
-            $mform->addElement('static', 'certdetails', get_string('certdetails', 'mnet'),
+            $mform->addElement('static', 'certdetails', get_string('certdetails', 'core_mnet'),
                 $OUTPUT->box('<pre>' . $credstr . '</pre>', 'generalbox certdetails'));
         }
 
         if ($mnet_peer && !empty($mnet_peer->deleted)) {
             $radioarray = array();
             $radioarray[] = $mform->createElement('static', 'deletedinfo', '',
-                $OUTPUT->container(get_string('deletedhostinfo', 'mnet'), 'alert alert-warning'));
+                $OUTPUT->container(get_string('deletedhostinfo', 'core_mnet'), 'alert alert-warning'));
             $radioarray[] = $mform->createElement('radio', 'deleted', '', get_string('yes'), 1);
             $radioarray[] = $mform->createElement('radio', 'deleted', '', get_string('no'), 0);
             $mform->addGroup($radioarray, 'radioar', get_string('deleted'), array(' ', ' '), false);
@@ -176,13 +176,13 @@ class mnet_review_host_form extends moodleform {
         $mnet_peer = new mnet_peer(); // idiotic api
         $mnet_peer->wwwroot = $data['wwwroot']; // just hard-set this rather than bootstrap the object
         if (empty($data['public_key'])) {
-            $errors['public_key'] = get_string('publickeyrequired', 'mnet');
+            $errors['public_key'] = get_string('publickeyrequired', 'core_mnet');
         } else if (!$credentials = $mnet_peer->check_credentials($data['public_key'])) {
             $errmsg = '';
             foreach ($mnet_peer->error as $err) {
                 $errmsg .= $err['code'] . ': ' . $err['text'].'<br />';
             }
-            $errors['public_key'] = get_string('invalidpubkey', 'mnet', $errmsg);
+            $errors['public_key'] = get_string('invalidpubkey', 'core_mnet', $errmsg);
         }
         unset($mnet_peer);
         return $errors;

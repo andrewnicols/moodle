@@ -36,7 +36,7 @@ class profile_define_checkbox extends profile_define_base {
      */
     public function define_form_specific($form) {
         // Select whether or not this should be checked by default.
-        $form->addElement('selectyesno', 'defaultdata', get_string('profiledefaultchecked', 'admin'));
+        $form->addElement('selectyesno', 'defaultdata', get_string('profiledefaultchecked', 'core_admin'));
         $form->setDefault('defaultdata', 0); // Defaults to 'no'.
         $form->setType('defaultdata', PARAM_BOOL);
     }

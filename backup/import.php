@@ -215,7 +215,7 @@ if ($backup->get_stage() == backup_ui::STAGE_FINAL) {
         echo $OUTPUT->box_end();
     }
     echo $progressbar;
-    echo $OUTPUT->notification(get_string('importsuccess', 'backup'), 'notifysuccess');
+    echo $OUTPUT->notification(get_string('importsuccess', 'core_backup'), 'notifysuccess');
     echo $OUTPUT->continue_button(new moodle_url('/course/view.php', array('id'=>$course->id)));
 
     // Get and display log data if there was any.

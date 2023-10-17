@@ -25,7 +25,7 @@
 require_once(__DIR__ . '/../config.php');
 
 if (empty($CFG->enableportfolios)) {
-    throw new \moodle_exception('disabled', 'portfolio');
+    throw new \moodle_exception('disabled', 'core_portfolio');
 }
 
 require_once($CFG->libdir . '/portfoliolib.php');
@@ -43,7 +43,7 @@ require_login($course, false);
 
 $user = $USER;
 $fullname = fullname($user);
-$strportfolios = get_string('portfolios', 'portfolio');
+$strportfolios = get_string('portfolios', 'core_portfolio');
 
 $url = new moodle_url('/user/portfoliologs.php', array('courseid' => $courseid));
 
@@ -57,7 +57,7 @@ if ($perpage !== 0) {
 }
 
 $PAGE->set_url($url);
-$PAGE->set_title(get_string('logs', 'portfolio'));
+$PAGE->set_title(get_string('logs', 'core_portfolio'));
 $PAGE->set_heading($fullname);
 $PAGE->set_context(context_user::instance($user->id));
 $PAGE->set_pagelayout('report');
@@ -73,10 +73,10 @@ $queued = $DB->get_records('portfolio_tempdata', array('userid' => $USER->id), '
 if (count($queued) > 0) {
     $table = new html_table();
     $table->head = array(
-        get_string('displayarea', 'portfolio'),
-        get_string('plugin', 'portfolio'),
-        get_string('displayinfo', 'portfolio'),
-        get_string('displayexpiry', 'portfolio'),
+        get_string('displayarea', 'core_portfolio'),
+        get_string('plugin', 'core_portfolio'),
+        get_string('displayinfo', 'core_portfolio'),
+        get_string('displayexpiry', 'core_portfolio'),
         '',
     );
     $table->data = array();
@@ -94,14 +94,14 @@ if (count($queued) > 0) {
         }
         $table->data[] = array(
             $e->get('caller')->display_name(),
-            (($e->get('instance')) ? $e->get('instance')->get('name') : get_string('noinstanceyet', 'portfolio')),
+            (($e->get('instance')) ? $e->get('instance')->get('name') : get_string('noinstanceyet', 'core_portfolio')),
             $e->get('caller')->heading_summary(),
             userdate($q->expirytime),
             $iconstr,
         );
         unset($e); // This could potentially be quite big, so free it.
     }
-    echo $OUTPUT->heading(get_string('queuesummary', 'portfolio'));
+    echo $OUTPUT->heading(get_string('queuesummary', 'core_portfolio'));
     echo html_writer::table($table);
     $somethingprinted = true;
 }
@@ -110,9 +110,9 @@ $logcount = $DB->count_records('portfolio_log', array('userid' => $USER->id));
 if ($logcount > 0) {
     $table = new html_table();
     $table->head = array(
-        get_string('plugin', 'portfolio'),
-        get_string('displayarea', 'portfolio'),
-        get_string('transfertime', 'portfolio'),
+        get_string('plugin', 'core_portfolio'),
+        get_string('displayarea', 'core_portfolio'),
+        get_string('transfertime', 'core_portfolio'),
     );
     $logs = $DB->get_records('portfolio_log', array('userid' => $USER->id), 'time DESC', '*', ($page * $perpage), $perpage);
     foreach ($logs as $log) {
@@ -134,7 +134,7 @@ if ($logcount > 0) {
                 $pluginname = $plugin->get('name');
             }
         } catch (portfolio_exception $e) { // May have been deleted.
-            $pluginname = get_string('unknownplugin', 'portfolio');
+            $pluginname = get_string('unknownplugin', 'core_portfolio');
         }
 
         $table->data[] = array(
@@ -143,7 +143,7 @@ if ($logcount > 0) {
             userdate($log->time),
         );
     }
-    echo $OUTPUT->heading(get_string('logsummary', 'portfolio'));
+    echo $OUTPUT->heading(get_string('logsummary', 'core_portfolio'));
     $pagingbar = new paging_bar($logcount, $page, $perpage, $CFG->wwwroot . '/user/portfoliologs.php?');
     echo $OUTPUT->render($pagingbar);
     echo html_writer::table($table);
@@ -152,7 +152,7 @@ if ($logcount > 0) {
 }
 if (!$somethingprinted) {
     echo $OUTPUT->heading($strportfolios);
-    echo get_string('nologs', 'portfolio');
+    echo get_string('nologs', 'core_portfolio');
 }
 echo $OUTPUT->box_end();
 echo $OUTPUT->footer();

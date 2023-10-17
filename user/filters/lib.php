@@ -165,19 +165,19 @@ class user_filtering {
             case 'email':       return new user_filter_text('email', get_string('email'), $advanced, 'email');
             case 'city':        return new user_filter_text('city', get_string('city'), $advanced, 'city');
             case 'country':     return new user_filter_select('country', get_string('country'), $advanced, 'country', get_string_manager()->get_list_of_countries(), $USER->country);
-            case 'confirmed':   return new user_filter_yesno('confirmed', get_string('confirmed', 'admin'), $advanced, 'confirmed');
-            case 'suspended':   return new user_filter_yesno('suspended', get_string('suspended', 'auth'), $advanced, 'suspended');
-            case 'profile':     return new user_filter_profilefield('profile', get_string('profilefields', 'admin'), $advanced);
-            case 'courserole':  return new user_filter_courserole('courserole', get_string('courserole', 'filters'), $advanced);
+            case 'confirmed':   return new user_filter_yesno('confirmed', get_string('confirmed', 'core_admin'), $advanced, 'confirmed');
+            case 'suspended':   return new user_filter_yesno('suspended', get_string('suspended', 'core_auth'), $advanced, 'suspended');
+            case 'profile':     return new user_filter_profilefield('profile', get_string('profilefields', 'core_admin'), $advanced);
+            case 'courserole':  return new user_filter_courserole('courserole', get_string('courserole', 'core_filters'), $advanced);
             case 'anycourses':
-                return new user_filter_anycourses('anycourses', get_string('anycourses', 'filters'), $advanced, 'user_enrolments');
-            case 'systemrole':  return new user_filter_globalrole('systemrole', get_string('globalrole', 'role'), $advanced);
-            case 'firstaccess': return new user_filter_date('firstaccess', get_string('firstaccess', 'filters'), $advanced, 'firstaccess');
+                return new user_filter_anycourses('anycourses', get_string('anycourses', 'core_filters'), $advanced, 'user_enrolments');
+            case 'systemrole':  return new user_filter_globalrole('systemrole', get_string('globalrole', 'core_role'), $advanced);
+            case 'firstaccess': return new user_filter_date('firstaccess', get_string('firstaccess', 'core_filters'), $advanced, 'firstaccess');
             case 'lastaccess':  return new user_filter_date('lastaccess', get_string('lastaccess'), $advanced, 'lastaccess');
-            case 'neveraccessed': return new user_filter_checkbox('neveraccessed', get_string('neveraccessed', 'filters'), $advanced, 'firstaccess', array('lastaccess_sck', 'lastaccess_eck', 'firstaccess_eck', 'firstaccess_sck'));
+            case 'neveraccessed': return new user_filter_checkbox('neveraccessed', get_string('neveraccessed', 'core_filters'), $advanced, 'firstaccess', array('lastaccess_sck', 'lastaccess_eck', 'firstaccess_eck', 'firstaccess_sck'));
             case 'timecreated': return new user_filter_date('timecreated', get_string('timecreated'), $advanced, 'timecreated');
             case 'timemodified': return new user_filter_date('timemodified', get_string('lastmodified'), $advanced, 'timemodified');
-            case 'nevermodified': return new user_filter_checkbox('nevermodified', get_string('nevermodified', 'filters'), $advanced, array('timemodified', 'timecreated'), array('timemodified_sck', 'timemodified_eck'));
+            case 'nevermodified': return new user_filter_checkbox('nevermodified', get_string('nevermodified', 'core_filters'), $advanced, array('timemodified', 'timecreated'), array('timemodified_sck', 'timemodified_eck'));
             case 'cohort':      return new user_filter_cohort($advanced);
             case 'idnumber':    return new user_filter_text('idnumber', get_string('idnumber'), $advanced, 'idnumber');
             case 'institution': return new user_filter_text('institution', get_string('institution'), $advanced, 'institution');
@@ -217,7 +217,7 @@ class user_filtering {
                 if (count($choices) < 2) {
                     return null; // Filter not needed.
                 }
-                return new user_filter_simpleselect('mnethostid', get_string('mnetidprovider', 'mnet'), $advanced, 'mnethostid', $choices);
+                return new user_filter_simpleselect('mnethostid', get_string('mnetidprovider', 'core_mnet'), $advanced, 'mnethostid', $choices);
 
             default:
                 return null;
@@ -330,7 +330,7 @@ class user_filter_type {
      * @return string the filtering condition or null if the filter is disabled
      */
     public function get_sql_filter($data) {
-        throw new \moodle_exception('mustbeoveride', 'debug', '', 'get_sql_filter');
+        throw new \moodle_exception('mustbeoveride', 'mod_debug', '', 'get_sql_filter');
     }
 
     /**
@@ -339,7 +339,7 @@ class user_filter_type {
      * @return mixed array filter data or false when filter not set
      */
     public function check_data($formdata) {
-        throw new \moodle_exception('mustbeoveride', 'debug', '', 'check_data');
+        throw new \moodle_exception('mustbeoveride', 'mod_debug', '', 'check_data');
     }
 
     /**
@@ -347,7 +347,7 @@ class user_filter_type {
      * @param moodleform $mform a MoodleForm object to setup
      */
     public function setupForm(&$mform) {
-        throw new \moodle_exception('mustbeoveride', 'debug', '', 'setupForm');
+        throw new \moodle_exception('mustbeoveride', 'mod_debug', '', 'setupForm');
     }
 
     /**
@@ -356,6 +356,6 @@ class user_filter_type {
      * @return string active filter label
      */
     public function get_label($data) {
-        throw new \moodle_exception('mustbeoveride', 'debug', '', 'get_label');
+        throw new \moodle_exception('mustbeoveride', 'mod_debug', '', 'get_label');
     }
 }

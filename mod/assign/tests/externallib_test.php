@@ -1254,7 +1254,7 @@ class externallib_test extends \mod_assign\externallib_advanced_testcase {
         $result = external_api::clean_returnvalue(mod_assign_external::save_submission_returns(), $result);
 
         $this->assertCount(1, $result);
-        $this->assertEquals(get_string('duedatereached', 'assign'), $result[0]['item']);
+        $this->assertEquals(get_string('duedatereached', 'mod_assign'), $result[0]['item']);
     }
 
     /**

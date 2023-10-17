@@ -43,7 +43,7 @@ function core_badges_myprofile_navigation(\core_user\output\myprofile\tree $tree
     }
 
     // Add category. This node should appear after 'contact' so that administration block appears towards the end. Refer MDL-49928.
-    $category = new core_user\output\myprofile\category('badges', get_string('badges', 'badges'), 'contact');
+    $category = new core_user\output\myprofile\category('badges', get_string('badges', 'core_badges'), 'contact');
     $tree->add_category($category);
     $context = context_user::instance($user->id);
     $courseid = empty($course) ? 0 : $course->id;
@@ -54,7 +54,7 @@ function core_badges_myprofile_navigation(\core_user\output\myprofile\tree $tree
 
         // Local badges.
         if ($records) {
-            $title = get_string('localbadgesp', 'badges', format_string($SITE->fullname));
+            $title = get_string('localbadgesp', 'core_badges', format_string($SITE->fullname));
             $content = $renderer->print_badges_list($records, $user->id, true);
             $localnode = $mybadges = new core_user\output\myprofile\node('badges', 'localbadges', $title, null, null, $content);
             $tree->add_node($localnode);
@@ -64,7 +64,7 @@ function core_badges_myprofile_navigation(\core_user\output\myprofile\tree $tree
         if ($courseid == 0 && !empty($CFG->badges_allowexternalbackpack)) {
             $backpack = get_backpack_settings($user->id);
             if (isset($backpack->totalbadges) && $backpack->totalbadges !== 0) {
-                $title = get_string('externalbadgesp', 'badges');
+                $title = get_string('externalbadgesp', 'core_badges');
                 $content = $renderer->print_badges_list($backpack->badges, $user->id, true, true);
                 $externalnode = $mybadges = new core_user\output\myprofile\node('badges', 'externalbadges', $title, null, null,
                     $content);

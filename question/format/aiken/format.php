@@ -128,7 +128,7 @@ class qformat_aiken extends qformat_default {
 
                     $question = $this->defaultquestion();
                     $question->qtype = 'multichoice';
-                    $question->name = $this->create_default_question_name($nowline, get_string('questionname', 'question'));
+                    $question->name = $this->create_default_question_name($nowline, get_string('questionname', 'core_question'));
                     $question->questiontext = htmlspecialchars(trim($nowline), ENT_NOQUOTES);
                     $question->questiontextformat = FORMAT_HTML;
                     $question->generalfeedback = '';

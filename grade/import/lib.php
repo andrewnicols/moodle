@@ -125,7 +125,7 @@ function grade_import_commit($courseid, $importcode, $importfeedback=true, $verb
                         $errordata = new stdClass();
                         $errordata->itemname = $gradeitem->itemname;
                         $errordata->userid = $grade->userid;
-                        $executionerrors[] = get_string('errorsettinggrade', 'grades', $errordata);
+                        $executionerrors[] = get_string('errorsettinggrade', 'core_grades', $errordata);
                         $failed = true;
                         break 2;
                     }
@@ -138,7 +138,7 @@ function grade_import_commit($courseid, $importcode, $importfeedback=true, $verb
 
         if ($failed) {
             if ($executionerrors && $verbose) {
-                echo $OUTPUT->notification(get_string('gradeimportfailed', 'grades'));
+                echo $OUTPUT->notification(get_string('gradeimportfailed', 'core_grades'));
                 foreach ($executionerrors as $errorstr) {
                     echo $OUTPUT->notification($errorstr);
                 }
@@ -149,15 +149,15 @@ function grade_import_commit($courseid, $importcode, $importfeedback=true, $verb
     }
 
     if ($verbose) {
-        echo $OUTPUT->notification(get_string('importsuccess', 'grades'), 'notifysuccess');
+        echo $OUTPUT->notification(get_string('importsuccess', 'core_grades'), 'notifysuccess');
         $unenrolledusers = get_unenrolled_users_in_import($importcode, $courseid);
         if ($unenrolledusers) {
             $list = array();
             foreach ($unenrolledusers as $u) {
                 $u->fullname = fullname($u);
-                $list[] = get_string('usergrade', 'grades', $u);
+                $list[] = get_string('usergrade', 'core_grades', $u);
             }
-            echo $OUTPUT->notification(get_string('unenrolledusersinimport', 'grades', html_writer::alist($list)), 'notifysuccess');
+            echo $OUTPUT->notification(get_string('unenrolledusersinimport', 'core_grades', html_writer::alist($list)), 'notifysuccess');
         }
         echo $OUTPUT->continue_button($CFG->wwwroot.'/grade/index.php?id='.$courseid);
     }

@@ -36,13 +36,13 @@ $reset = optional_param('reset', false, PARAM_BOOL);
 $userid = optional_param('userid', null, PARAM_INT);
 $userchange = optional_param('userchange', false, PARAM_BOOL);
 
-$pagetitle = get_string('editoverride', 'assign');
+$pagetitle = get_string('editoverride', 'mod_assign');
 
 $override = null;
 if ($overrideid) {
 
     if (! $override = $DB->get_record('assign_overrides', array('id' => $overrideid))) {
-        throw new \moodle_exception('invalidoverrideid', 'assign');
+        throw new \moodle_exception('invalidoverrideid', 'mod_assign');
     }
 
     list($course, $cm) = get_course_and_cm_from_instance($override->assignid, 'assign');
@@ -83,11 +83,11 @@ if ($overrideid) {
 
     if ($override->groupid) {
         if (!groups_group_visible($override->groupid, $course, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'assign');
+            throw new \moodle_exception('invalidoverrideid', 'mod_assign');
         }
     } else {
         if (!groups_user_groups_visible($course, $override->userid, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'assign');
+            throw new \moodle_exception('invalidoverrideid', 'mod_assign');
         }
     }
 } else {
@@ -112,7 +112,7 @@ if ($action === 'duplicate') {
     $override->id = $data->id = null;
     $override->userid = $data->userid = null;
     $override->groupid = $data->groupid = null;
-    $pagetitle = get_string('duplicateoverride', 'assign');
+    $pagetitle = get_string('duplicateoverride', 'mod_assign');
 }
 
 if ($shouldadduserid) {

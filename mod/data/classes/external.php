@@ -532,7 +532,7 @@ class mod_data_external extends external_api {
 
         // Check correct record entry. Group check was done before.
         if (!data_can_view_record($database, $record, $record->groupid, $canmanageentries)) {
-            throw new moodle_exception('notapprovederror', 'data');
+            throw new moodle_exception('notapprovederror', 'mod_data');
         }
 
         $related = array('context' => $context, 'database' => $database, 'user' => null);
@@ -918,7 +918,7 @@ class mod_data_external extends external_api {
         if (data_user_can_manage_entry($record, $database, $context)) {
             data_delete_record($record->id, $database, $course->id, $cm->id);
         } else {
-            throw new moodle_exception('noaccess', 'data');
+            throw new moodle_exception('noaccess', 'mod_data');
         }
 
         $result = array(
@@ -990,7 +990,7 @@ class mod_data_external extends external_api {
 
         $fields = $DB->get_records('data_fields', ['dataid' => $database->id]);
         if (empty($fields)) {
-            throw new moodle_exception('nofieldindatabase', 'data');
+            throw new moodle_exception('nofieldindatabase', 'mod_data');
         }
 
         // Check database is open in time.
@@ -1009,7 +1009,7 @@ class mod_data_external extends external_api {
 
         // Group is validated inside the function.
         if (!data_user_can_add_entry($database, $groupid, $groupmode, $context)) {
-            throw new moodle_exception('noaccess', 'data');
+            throw new moodle_exception('noaccess', 'mod_data');
         }
 
         // Prepare the data as is expected by the API.
@@ -1123,7 +1123,7 @@ class mod_data_external extends external_api {
         data_require_time_available($database, null, $context);
 
         if (!data_user_can_manage_entry($record, $database, $context)) {
-            throw new moodle_exception('noaccess', 'data');
+            throw new moodle_exception('noaccess', 'mod_data');
         }
 
         // Prepare the data as is expected by the API.

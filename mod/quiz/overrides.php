@@ -63,7 +63,7 @@ $groupmode = ($mode == "group");
 
 $url = new moodle_url('/mod/quiz/overrides.php', ['cmid' => $cm->id, 'mode' => $mode]);
 
-$title = get_string('overridesforquiz', 'quiz',
+$title = get_string('overridesforquiz', 'mod_quiz',
         format_string($quiz->name, true, ['context' => $context]));
 $PAGE->set_url($url);
 $PAGE->set_pagelayout('admin');
@@ -159,7 +159,7 @@ $table->head = $headers;
 $table->colclasses = $colclasses;
 $table->headspan = array_fill(0, count($headers), 1);
 
-$table->head[] = get_string('overrides', 'quiz');
+$table->head[] = get_string('overrides', 'mod_quiz');
 $table->colclasses[] = 'colsetting';
 $table->colclasses[] = 'colvalue';
 $table->headspan[] = 2;
@@ -200,33 +200,33 @@ foreach ($overrides as $override) {
 
     // Format timeopen.
     if (isset($override->timeopen)) {
-        $fields[] = get_string('quizopens', 'quiz');
+        $fields[] = get_string('quizopens', 'mod_quiz');
         $values[] = $override->timeopen > 0 ?
-                userdate($override->timeopen) : get_string('noopen', 'quiz');
+                userdate($override->timeopen) : get_string('noopen', 'mod_quiz');
     }
     // Format timeclose.
     if (isset($override->timeclose)) {
-        $fields[] = get_string('quizcloses', 'quiz');
+        $fields[] = get_string('quizcloses', 'mod_quiz');
         $values[] = $override->timeclose > 0 ?
-                userdate($override->timeclose) : get_string('noclose', 'quiz');
+                userdate($override->timeclose) : get_string('noclose', 'mod_quiz');
     }
     // Format timelimit.
     if (isset($override->timelimit)) {
-        $fields[] = get_string('timelimit', 'quiz');
+        $fields[] = get_string('timelimit', 'mod_quiz');
         $values[] = $override->timelimit > 0 ?
-                format_time($override->timelimit) : get_string('none', 'quiz');
+                format_time($override->timelimit) : get_string('none', 'mod_quiz');
     }
     // Format number of attempts.
     if (isset($override->attempts)) {
-        $fields[] = get_string('attempts', 'quiz');
+        $fields[] = get_string('attempts', 'mod_quiz');
         $values[] = $override->attempts > 0 ?
                 $override->attempts : get_string('unlimited');
     }
     // Format password.
     if (isset($override->password)) {
-        $fields[] = get_string('requirepassword', 'quiz');
+        $fields[] = get_string('requirepassword', 'mod_quiz');
         $values[] = $override->password !== '' ?
-                get_string('enabled', 'quiz') : get_string('none', 'quiz');
+                get_string('enabled', 'mod_quiz') : get_string('none', 'mod_quiz');
     }
 
     // Prepare the information about who this override applies to.
@@ -311,20 +311,20 @@ if ($canedit) {
     if ($groupmode) {
         if (empty($groups)) {
             // There are no groups.
-            $warningmessage = get_string('groupsnone', 'quiz');
+            $warningmessage = get_string('groupsnone', 'mod_quiz');
             $addenabled = false;
         }
     } else {
         // See if there are any students in the quiz.
         if ($showallgroups) {
             $users = get_users_by_capability($context, 'mod/quiz:attempt', 'u.id');
-            $nousermessage = get_string('usersnone', 'quiz');
+            $nousermessage = get_string('usersnone', 'mod_quiz');
         } else if ($groups) {
             $users = get_users_by_capability($context, 'mod/quiz:attempt', 'u.id', '', '', '', array_keys($groups));
-            $nousermessage = get_string('usersnone', 'quiz');
+            $nousermessage = get_string('usersnone', 'mod_quiz');
         } else {
             $users = [];
-            $nousermessage = get_string('groupsnone', 'quiz');
+            $nousermessage = get_string('groupsnone', 'mod_quiz');
         }
         $info = new \core_availability\info_module($cm);
         $users = $info->filter_user_list($users);
@@ -344,9 +344,9 @@ $tertiarynav = new \mod_quiz\output\overrides_actions($cmid, $mode, $canedit, $a
 echo $renderer->render($tertiarynav);
 
 if ($mode === 'user') {
-    echo $OUTPUT->heading(get_string('useroverrides', 'quiz'));
+    echo $OUTPUT->heading(get_string('useroverrides', 'mod_quiz'));
 } else {
-    echo $OUTPUT->heading(get_string('groupoverrides', 'quiz'));
+    echo $OUTPUT->heading(get_string('groupoverrides', 'mod_quiz'));
 }
 
 // Output the table and button.
@@ -355,13 +355,13 @@ if (count($table->data)) {
     echo html_writer::table($table);
 } else {
     if ($groupmode) {
-        echo $OUTPUT->notification(get_string('overridesnoneforgroups', 'quiz'), 'info', false);
+        echo $OUTPUT->notification(get_string('overridesnoneforgroups', 'mod_quiz'), 'info', false);
     } else {
-        echo $OUTPUT->notification(get_string('overridesnoneforusers', 'quiz'), 'info', false);
+        echo $OUTPUT->notification(get_string('overridesnoneforusers', 'mod_quiz'), 'info', false);
     }
 }
 if ($hasinactive) {
-    echo $OUTPUT->notification(get_string('inactiveoverridehelp', 'quiz'), 'info', false);
+    echo $OUTPUT->notification(get_string('inactiveoverridehelp', 'mod_quiz'), 'info', false);
 }
 
 if ($warningmessage) {

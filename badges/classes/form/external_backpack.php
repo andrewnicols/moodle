@@ -116,13 +116,13 @@ class external_backpack extends \moodleform {
         $isobv21 = isset($data['apiversion']) && $data['apiversion'] == OPEN_BADGES_V2P1;
         if (!$isobv21) {
             if (empty($data['backpackapiurl'])) {
-                $errors['backpackapiurl'] = get_string('err_required', 'form');
+                $errors['backpackapiurl'] = get_string('err_required', 'core_form');
             } else if (!preg_match('@^https?://.+@', $data['backpackapiurl'])) {
-                $errors['backpackapiurl'] = get_string('invalidurl', 'badges');
+                $errors['backpackapiurl'] = get_string('invalidurl', 'core_badges');
             }
         }
         if (!empty($data['backpackweburl']) && !preg_match('@^https?://.+@', $data['backpackweburl'])) {
-            $errors['backpackweburl'] = get_string('invalidurl', 'badges');
+            $errors['backpackweburl'] = get_string('invalidurl', 'core_badges');
         }
 
         return $errors;

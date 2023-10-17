@@ -41,7 +41,7 @@ class search_optimize_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskglobalsearchoptimize', 'admin');
+        return get_string('taskglobalsearchoptimize', 'core_admin');
     }
 
     /**

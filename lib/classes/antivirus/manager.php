@@ -108,7 +108,7 @@ class manager {
                 $zipfile = \core\antivirus\quarantine::quarantine_file($file, $filename, $incidentdetails, $notice);
                 // If file not stored due to disabled quarantine, store a message.
                 if (empty($zipfile)) {
-                    $zipfile = get_string('quarantinedisabled', 'antivirus');
+                    $zipfile = get_string('quarantinedisabled', 'core_antivirus');
                 }
 
                 // Log file infected event.
@@ -187,14 +187,14 @@ class manager {
                 // If there was a scanner exception (such as ClamAV denying upload), send messages and rethrow.
                 if ($notifylevel === $antivirus::SCAN_RESULT_ERROR) {
                     $notice = $antivirus->get_scanning_notice();
-                    $filename = get_string('datastream', 'antivirus');
+                    $filename = get_string('datastream', 'core_antivirus');
                     self::send_antivirus_messages($antivirus, $incidentdetails);
                 }
 
                 throw $e;
             }
 
-            $filename = get_string('datastream', 'antivirus');
+            $filename = get_string('datastream', 'core_antivirus');
             $notice = $antivirus->get_scanning_notice();
 
             if ($result === $antivirus::SCAN_RESULT_FOUND) {
@@ -206,7 +206,7 @@ class manager {
                 $zipfile = \core\antivirus\quarantine::quarantine_data($data, $filename, $incidentdetails, $notice);
                 // If file not stored due to disabled quarantine, store a message.
                 if (empty($zipfile)) {
-                    $zipfile = get_string('quarantinedisabled', 'antivirus');
+                    $zipfile = get_string('quarantinedisabled', 'core_antivirus');
                 }
 
                 // Log file infected event.
@@ -220,7 +220,7 @@ class manager {
 
                 // Get custom message to display to user from antivirus engine.
                 $displaymessage = $antivirus->get_virus_found_message();
-                $placeholders = array_merge(['item' => get_string('datastream', 'antivirus')], $displaymessage['placeholders']);
+                $placeholders = array_merge(['item' => get_string('datastream', 'core_antivirus')], $displaymessage['placeholders']);
 
                 throw new \core\antivirus\scanner_exception(
                     $displaymessage['string'],

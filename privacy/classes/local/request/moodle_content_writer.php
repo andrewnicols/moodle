@@ -388,7 +388,7 @@ class moodle_content_writer implements content_writer {
         $targetpath = $this->path . DIRECTORY_SEPARATOR . $path;
         check_dir_exists(dirname($targetpath), true, true);
         if (file_put_contents($targetpath, $data) === false) {
-            throw new \moodle_exception('cannotsavefile', 'error', '', $targetpath);
+            throw new \moodle_exception('cannotsavefile', 'mod_error', '', $targetpath);
         }
         $this->files[$path] = $targetpath;
     }
@@ -720,7 +720,7 @@ class moodle_content_writer implements content_writer {
     protected function get_file_content(string $filepath) : String {
         $content = file_get_contents($filepath);
         if ($content === false) {
-            throw new \moodle_exception('cannotopenfile', 'error', '', $filepath);
+            throw new \moodle_exception('cannotopenfile', 'mod_error', '', $filepath);
         }
         return $content;
     }

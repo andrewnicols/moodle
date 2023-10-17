@@ -61,13 +61,13 @@ class qtype_truefalse_edit_form extends question_edit_form {
         $mform->setType('feedbackfalse', PARAM_RAW);
 
         $mform->addElement('header', 'multitriesheader',
-                get_string('settingsformultipletries', 'question'));
+                get_string('settingsformultipletries', 'core_question'));
 
         $mform->addElement('hidden', 'penalty', 1);
         $mform->setType('penalty', PARAM_FLOAT);
 
         $mform->addElement('static', 'penaltymessage',
-                get_string('penaltyforeachincorrecttry', 'question'), 1);
+                get_string('penaltyforeachincorrecttry', 'core_question'), 1);
         $mform->addHelpButton('penaltymessage', 'penaltyforeachincorrecttry', 'question');
     }
 

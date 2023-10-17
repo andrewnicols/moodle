@@ -12,7 +12,7 @@ $PAGE->set_context(context_system::instance());
 
 $authsequence = get_enabled_auth_plugins(); // Auths, in sequence.
 if (!in_array('ldap', $authsequence, true)) {
-    throw new \moodle_exception('ldap_isdisabled', 'auth');
+    throw new \moodle_exception('ldap_isdisabled', 'core_auth');
 }
 
 $authplugin = get_auth_plugin('ldap');

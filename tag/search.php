@@ -26,7 +26,7 @@ require_once('../config.php');
 require_login();
 
 if (empty($CFG->usetags)) {
-    throw new \moodle_exception('tagsaredisabled', 'tag');
+    throw new \moodle_exception('tagsaredisabled', 'core_tag');
 }
 
 $query     = optional_param('query', '', PARAM_RAW);
@@ -45,13 +45,13 @@ $PAGE->set_url(new moodle_url('/tag/search.php', $params));
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('standard');
 
-$PAGE->set_title(get_string('tags', 'tag'));
+$PAGE->set_title(get_string('tags', 'core_tag'));
 $PAGE->set_heading($SITE->fullname);
 
 $buttons = '';
 if (has_capability('moodle/tag:manage', context_system::instance())) {
     $buttons .= $OUTPUT->single_button(new moodle_url('/tag/manage.php'),
-            get_string('managetags', 'tag'), 'GET');
+            get_string('managetags', 'core_tag'), 'GET');
 }
 if ($PAGE->user_allowed_editing()) {
     if ($edit != -1) {

@@ -123,7 +123,7 @@ class repository_onedrive extends repository {
             $popup->url = $url->out(false);
             return array('login' => array($popup));
         } else {
-            echo '<a target="_blank" href="'.$url->out(false).'">'.get_string('login', 'repository').'</a>';
+            echo '<a target="_blank" href="'.$url->out(false).'">'.get_string('login', 'core_repository').'</a>';
         }
     }
 
@@ -147,7 +147,7 @@ class repository_onedrive extends repository {
 
         $button = new single_button(
             $url,
-            get_string('logintoaccount', 'repository', $repositoryname),
+            get_string('logintoaccount', 'core_repository', $repositoryname),
             'post',
             single_button::BUTTON_PRIMARY
         );
@@ -440,7 +440,7 @@ class repository_onedrive extends repository {
         global $CFG;
 
         if ($this->disabled) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
         $sourceinfo = json_decode($reference);
 
@@ -468,7 +468,7 @@ class repository_onedrive extends repository {
                 'url' => $reference
             );
         }
-        throw new repository_exception('cannotdownload', 'repository');
+        throw new repository_exception('cannotdownload', 'core_repository');
     }
 
     /**
@@ -563,7 +563,7 @@ class repository_onedrive extends repository {
      */
     public function send_file($storedfile, $lifetime=null , $filter=0, $forcedownload=false, array $options = null) {
         if ($this->disabled) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
 
         $source = json_decode($storedfile->get_reference());
@@ -583,7 +583,7 @@ class repository_onedrive extends repository {
 
             if ($systemauth === false) {
                 $details = 'Cannot connect as system user';
-                throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+                throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
             }
             $systemservice = new repository_onedrive\rest($systemauth);
 
@@ -610,7 +610,7 @@ class repository_onedrive extends repository {
             }
             if ($userauth === false) {
                 $details = 'Cannot connect as current user';
-                throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+                throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
             }
             $userinfo = $userauth->get_userinfo();
             $useremail = $userinfo['email'];
@@ -627,7 +627,7 @@ class repository_onedrive extends repository {
             header('Location: ' . $source->link);
         } else {
             $details = 'File is missing source link';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
     }
 
@@ -679,7 +679,7 @@ class repository_onedrive extends repository {
         $created = $client->call('create_folder', $params, json_encode($folder));
         if (empty($created->id)) {
             $details = 'Cannot create folder:' . $foldername;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return $created->id;
     }
@@ -721,7 +721,7 @@ class repository_onedrive extends repository {
         $response = $client->call('create_permission', $params, json_encode($updateeditor));
         if (empty($response->value[0]->id)) {
             $details = 'Cannot add user ' . $email . ' as a writer for document: ' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         // Store the permission id in the DB. Scheduled task will remove this permission after 7 days.
         if ($access = repository_onedrive\access::get_record(['permissionid' => $response->value[0]->id, 'itemid' => $fileid ])) {
@@ -753,7 +753,7 @@ class repository_onedrive extends repository {
         $response = $client->call('create_link', $params, json_encode($updateread));
         if (empty($response->link)) {
             $details = 'Cannot update link sharing for the document: ' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return $response->link->webUrl;
     }
@@ -802,7 +802,7 @@ class repository_onedrive extends repository {
         $created = $service->call('create_upload', $params, json_encode($behaviour));
         if (empty($created->uploadUrl)) {
             $details = 'Cannot begin upload session:' . $parentid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
 
         $options = ['file' => $filepath];
@@ -828,7 +828,7 @@ class repository_onedrive extends repository {
 
         if (empty($response->id)) {
             $details = 'File not created';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
 
         return $response->id;
@@ -870,13 +870,13 @@ class repository_onedrive extends repository {
 
         if ($systemauth === false) {
             $details = 'Cannot connect as system user';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
 
         $userauth = $this->get_user_oauth_client();
         if ($userauth === false) {
             $details = 'Cannot connect as current user';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
 
         $systemservice = new repository_onedrive\rest($systemauth);
@@ -893,7 +893,7 @@ class repository_onedrive extends repository {
         $result = $userauth->download_one($sourceurl, null, $options);
 
         if (!$result) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
 
         // Now copy it to a sensible folder.
@@ -984,7 +984,7 @@ class repository_onedrive extends repository {
      */
     public function get_reference_details($reference, $filestatus = 0) {
         if (empty($reference)) {
-            return get_string('unknownsource', 'repository');
+            return get_string('unknownsource', 'core_repository');
         }
         $source = json_decode($reference);
         if (empty($source->usesystem)) {

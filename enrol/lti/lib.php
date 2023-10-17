@@ -240,7 +240,7 @@ class enrol_lti_plugin extends enrol_plugin {
         }
 
         $nameattribs = array('size' => '20', 'maxlength' => '255');
-        $mform->addElement('text', 'name', get_string('custominstancename', 'enrol'), $nameattribs);
+        $mform->addElement('text', 'name', get_string('custominstancename', 'core_enrol'), $nameattribs);
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'server');
 

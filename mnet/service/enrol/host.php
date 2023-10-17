@@ -40,7 +40,7 @@ admin_externalpage_setup('mnetenrol', '', array('id'=>$hostid, 'usecache'=>1),
 $service = mnetservice_enrol::get_instance();
 
 if (!$service->is_available()) {
-    echo $OUTPUT->box(get_string('mnetdisabled','mnet'), 'noticebox');
+    echo $OUTPUT->box(get_string('mnetdisabled','core_mnet'), 'noticebox');
     echo $OUTPUT->footer();
     die();
 }

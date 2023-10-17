@@ -38,7 +38,7 @@ function user_profile_social_create_info_category(): int {
     // Check that we have at least one category defined.
     if (empty($categories)) {
         $defaultcategory = (object) [
-            'name' => get_string('profiledefaultcategory', 'admin'),
+            'name' => get_string('profiledefaultcategory', 'core_admin'),
             'sortorder' => 1
         ];
         return $DB->insert_record('user_info_category', $defaultcategory);
@@ -138,7 +138,7 @@ function user_profile_social_create_profilefield($social) {
             ['datatype' => 'social', 'social' => $social]);
     }
     if (!$profilefield) {
-        throw new moodle_exception('upgradeerror', 'admin', 'could not create new social profile field');
+        throw new moodle_exception('upgradeerror', 'core_admin', 'could not create new social profile field');
     }
     return $profilefield;
 }

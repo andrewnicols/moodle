@@ -67,7 +67,7 @@ print_grade_page_head($courseid, 'settings', 'grader');
 // If USER has admin capability, print a link to the site config page for this report
 if (has_capability('moodle/site:config', $systemcontext)) {
     echo '<div id="siteconfiglink"><a href="'.$CFG->wwwroot.'/'.$CFG->admin.'/settings.php?section=gradereportgrader">';
-    echo get_string('changereportdefaults', 'grades');
+    echo get_string('changereportdefaults', 'core_grades');
     echo "</a></div>\n";
 }
 

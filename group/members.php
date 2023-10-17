@@ -55,7 +55,7 @@ if (optional_param('add', false, PARAM_BOOL) && confirm_sesskey()) {
     if (!empty($userstoadd)) {
         foreach ($userstoadd as $user) {
             if (!groups_add_member($groupid, $user->id)) {
-                throw new \moodle_exception('erroraddremoveuser', 'group', $returnurl);
+                throw new \moodle_exception('erroraddremoveuser', 'core_group', $returnurl);
             }
             $groupmembersselector->invalidate_selected_users();
             $potentialmembersselector->invalidate_selected_users();
@@ -68,11 +68,11 @@ if (optional_param('remove', false, PARAM_BOOL) && confirm_sesskey()) {
     if (!empty($userstoremove)) {
         foreach ($userstoremove as $user) {
             if (!groups_remove_member_allowed($groupid, $user->id)) {
-                throw new \moodle_exception('errorremovenotpermitted', 'group', $returnurl,
+                throw new \moodle_exception('errorremovenotpermitted', 'core_group', $returnurl,
                         $user->fullname);
             }
             if (!groups_remove_member($groupid, $user->id)) {
-                throw new \moodle_exception('erroraddremoveuser', 'group', $returnurl);
+                throw new \moodle_exception('erroraddremoveuser', 'core_group', $returnurl);
             }
             $groupmembersselector->invalidate_selected_users();
             $potentialmembersselector->invalidate_selected_users();
@@ -83,8 +83,8 @@ if (optional_param('remove', false, PARAM_BOOL) && confirm_sesskey()) {
 // Print the page and form
 $strgroups = get_string('groups');
 $strparticipants = get_string('participants');
-$stradduserstogroup = get_string('adduserstogroup', 'group');
-$strusergroupmembership = get_string('usergroupmembership', 'group');
+$stradduserstogroup = get_string('adduserstogroup', 'core_group');
+$strusergroupmembership = get_string('usergroupmembership', 'core_group');
 
 $groupname = format_string($group->name);
 
@@ -97,7 +97,7 @@ $PAGE->navbar->add($stradduserstogroup);
 $PAGE->set_title("$course->shortname: $strgroups");
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('adduserstogroup', 'group').": $groupname", 3);
+echo $OUTPUT->heading(get_string('adduserstogroup', 'core_group').": $groupname", 3);
 
 // Store the rows we want to display in the group info.
 $groupinforow = array();

@@ -40,8 +40,8 @@ if (!empty($CFG->supportpage)) {
 
 $PAGE->set_context(context_system::instance());
 $PAGE->set_url('/user/contactsitesupport.php');
-$PAGE->set_title(get_string('contactsitesupport', 'admin'));
-$PAGE->set_heading(get_string('contactsitesupport', 'admin'));
+$PAGE->set_title(get_string('contactsitesupport', 'core_admin'));
+$PAGE->set_heading(get_string('contactsitesupport', 'core_admin'));
 $PAGE->set_pagelayout('standard');
 
 $renderer = $PAGE->get_renderer('user');
@@ -53,7 +53,7 @@ if ($form->is_cancelled()) {
     $data = $form->get_data();
 
     $from = $user ?? core_user::get_noreply_user();
-    $subject = get_string('supportemailsubject', 'admin', format_string($SITE->fullname));
+    $subject = get_string('supportemailsubject', 'core_admin', format_string($SITE->fullname));
     $data->notloggedinuser = (!$user);
     $message = $renderer->render_from_template('user/contact_site_support_email_body', $data);
 
@@ -68,7 +68,7 @@ if ($form->is_cancelled()) {
         $output = $renderer->render_from_template('user/contact_site_support_not_available', $templatectx);
     } else {
         $level = \core\output\notification::NOTIFY_SUCCESS;
-        redirect($CFG->wwwroot, get_string('supportmessagesent', 'user'), 3, $level);
+        redirect($CFG->wwwroot, get_string('supportmessagesent', 'core_user'), 3, $level);
     }
 } else {
     $output = $form->render();

@@ -49,38 +49,38 @@ class autogroup_form extends moodleform {
 
         $mform->addElement('header', 'autogroup', get_string('general'));
 
-        $mform->addElement('text', 'namingscheme', get_string('namingscheme', 'group'));
+        $mform->addElement('text', 'namingscheme', get_string('namingscheme', 'core_group'));
         $mform->addHelpButton('namingscheme', 'namingscheme', 'group');
         $mform->addRule('namingscheme', get_string('required'), 'required', null, 'client');
         $mform->setType('namingscheme', PARAM_TEXT);
         // There must not be duplicate group names in course.
-        $template = get_string('grouptemplate', 'group');
+        $template = get_string('grouptemplate', 'core_group');
         $gname = groups_parse_name($template, 0);
         if (!groups_get_group_by_name($COURSE->id, $gname)) {
             $mform->setDefault('namingscheme', $template);
         }
 
-        $options = array('groups' => get_string('numgroups', 'group'),
-                         'members' => get_string('nummembers', 'group'));
-        $mform->addElement('select', 'groupby', get_string('groupby', 'group'), $options);
+        $options = array('groups' => get_string('numgroups', 'core_group'),
+                         'members' => get_string('nummembers', 'core_group'));
+        $mform->addElement('select', 'groupby', get_string('groupby', 'core_group'), $options);
 
-        $mform->addElement('text', 'number', get_string('number', 'group'),'maxlength="4" size="4"');
+        $mform->addElement('text', 'number', get_string('number', 'core_group'),'maxlength="4" size="4"');
         $mform->setType('number', PARAM_INT);
         $mform->addRule('number', null, 'numeric', null, 'client');
         $mform->addRule('number', get_string('required'), 'required', null, 'client');
 
         // Enable group messaging for the groups to be auto-created.
         if (\core_message\api::can_create_group_conversation($USER->id, $coursecontext)) {
-            $mform->addElement('selectyesno', 'enablemessaging', get_string('enablemessaging', 'group'));
+            $mform->addElement('selectyesno', 'enablemessaging', get_string('enablemessaging', 'core_group'));
             $mform->addHelpButton('enablemessaging', 'enablemessaging', 'group');
         }
 
-        $mform->addElement('header', 'groupmembershdr', get_string('groupmembers', 'group'));
+        $mform->addElement('header', 'groupmembershdr', get_string('groupmembers', 'core_group'));
         $mform->setExpanded('groupmembershdr', true);
 
         $options = array(0=>get_string('all'));
         $options += $this->_customdata['roles'];
-        $mform->addElement('select', 'roleid', get_string('selectfromrole', 'group'), $options);
+        $mform->addElement('select', 'roleid', get_string('selectfromrole', 'core_group'), $options);
 
         $student = get_archetype_roles('student');
         $student = reset($student);
@@ -91,11 +91,11 @@ class autogroup_form extends moodleform {
 
         $coursecontext = context_course::instance($COURSE->id);
         if ($cohorts = cohort_get_available_cohorts($coursecontext, COHORT_WITH_ENROLLED_MEMBERS_ONLY, 0, 0)) {
-            $options = array(0 => get_string('anycohort', 'cohort'));
+            $options = array(0 => get_string('anycohort', 'core_cohort'));
             foreach ($cohorts as $c) {
                 $options[$c->id] = format_string($c->name, true, context::instance_by_id($c->contextid));
             }
-            $mform->addElement('select', 'cohortid', get_string('selectfromcohort', 'cohort'), $options);
+            $mform->addElement('select', 'cohortid', get_string('selectfromcohort', 'core_cohort'), $options);
             $mform->setDefault('cohortid', '0');
         } else {
             $mform->addElement('hidden','cohortid');
@@ -109,7 +109,7 @@ class autogroup_form extends moodleform {
             foreach ($groupings as $grouping) {
                 $options[$grouping->id] = format_string($grouping->name);
             }
-            $mform->addElement('select', 'groupingid', get_string('selectfromgrouping', 'group'), $options);
+            $mform->addElement('select', 'groupingid', get_string('selectfromgrouping', 'core_group'), $options);
             $mform->setDefault('groupingid', 0);
             $mform->disabledIf('groupingid', 'notingroup', 'checked');
         } else {
@@ -124,7 +124,7 @@ class autogroup_form extends moodleform {
             foreach ($groups as $group) {
                 $options[$group->id] = format_string($group->name);
             }
-            $mform->addElement('select', 'groupid', get_string('selectfromgroup', 'group'), $options);
+            $mform->addElement('select', 'groupid', get_string('selectfromgroup', 'core_group'), $options);
             $mform->setDefault('groupid', 0);
             $mform->disabledIf('groupid', 'notingroup', 'checked');
         } else {
@@ -133,42 +133,42 @@ class autogroup_form extends moodleform {
             $mform->setConstant('groupid', 0);
         }
 
-        $options = array('no'        => get_string('noallocation', 'group'),
-                         'random'    => get_string('random', 'group'),
-                         'firstname' => get_string('byfirstname', 'group'),
-                         'lastname'  => get_string('bylastname', 'group'),
-                         'idnumber'  => get_string('byidnumber', 'group'));
-        $mform->addElement('select', 'allocateby', get_string('allocateby', 'group'), $options);
+        $options = array('no'        => get_string('noallocation', 'core_group'),
+                         'random'    => get_string('random', 'core_group'),
+                         'firstname' => get_string('byfirstname', 'core_group'),
+                         'lastname'  => get_string('bylastname', 'core_group'),
+                         'idnumber'  => get_string('byidnumber', 'core_group'));
+        $mform->addElement('select', 'allocateby', get_string('allocateby', 'core_group'), $options);
         $mform->setDefault('allocateby', 'random');
 
-        $mform->addElement('checkbox', 'nosmallgroups', get_string('nosmallgroups', 'group'));
+        $mform->addElement('checkbox', 'nosmallgroups', get_string('nosmallgroups', 'core_group'));
         $mform->disabledIf('nosmallgroups', 'groupby', 'noteq', 'members');
 
-        $mform->addElement('checkbox', 'notingroup', get_string('notingroup', 'group'));
+        $mform->addElement('checkbox', 'notingroup', get_string('notingroup', 'core_group'));
         $mform->disabledIf('notingroup', 'groupingid', 'neq', 0);
         $mform->disabledIf('notingroup', 'groupid', 'neq', 0);
 
         if (has_capability('moodle/course:viewsuspendedusers', $coursecontext)) {
-            $mform->addElement('checkbox', 'includeonlyactiveenrol', get_string('includeonlyactiveenrol', 'group'), '');
+            $mform->addElement('checkbox', 'includeonlyactiveenrol', get_string('includeonlyactiveenrol', 'core_group'), '');
             $mform->addHelpButton('includeonlyactiveenrol', 'includeonlyactiveenrol', 'group');
             $mform->setDefault('includeonlyactiveenrol', true);
         }
 
-        $mform->addElement('header', 'groupinghdr', get_string('grouping', 'group'));
+        $mform->addElement('header', 'groupinghdr', get_string('grouping', 'core_group'));
 
-        $options = array('0' => get_string('nogrouping', 'group'),
-                         '-1'=> get_string('newgrouping', 'group'));
+        $options = array('0' => get_string('nogrouping', 'core_group'),
+                         '-1'=> get_string('newgrouping', 'core_group'));
         if ($groupings = groups_get_all_groupings($COURSE->id)) {
             foreach ($groupings as $grouping) {
                 $options[$grouping->id] = strip_tags(format_string($grouping->name));
             }
         }
-        $mform->addElement('select', 'grouping', get_string('createingrouping', 'group'), $options);
+        $mform->addElement('select', 'grouping', get_string('createingrouping', 'core_group'), $options);
         if ($groupings) {
             $mform->setDefault('grouping', '-1');
         }
 
-        $mform->addElement('text', 'groupingname', get_string('groupingname', 'group'), $options);
+        $mform->addElement('text', 'groupingname', get_string('groupingname', 'core_group'), $options);
         $mform->setType('groupingname', PARAM_TEXT);
         $mform->disabledIf('groupingname', 'grouping', 'noteq', '-1');
 
@@ -209,7 +209,7 @@ class autogroup_form extends moodleform {
                 $source['groupid'] = $data['groupid'];
             }
             if (!$users = groups_get_potential_members($data['courseid'], $data['roleid'], $source)) {
-                $errors['roleid'] = get_string('nousersinrole', 'group');
+                $errors['roleid'] = get_string('nousersinrole', 'core_group');
             }
 
            /// Check the number entered is sane
@@ -217,7 +217,7 @@ class autogroup_form extends moodleform {
                 $usercnt = count($users);
 
                 if ($data['number'] > $usercnt || $data['number'] < 1) {
-                    $errors['number'] = get_string('toomanygroups', 'group', $usercnt);
+                    $errors['number'] = get_string('toomanygroups', 'core_group', $usercnt);
                 }
             }
         }
@@ -225,7 +225,7 @@ class autogroup_form extends moodleform {
         //try to detect group name duplicates
         $name = groups_parse_name(trim($data['namingscheme']), 0);
         if (groups_get_group_by_name($COURSE->id, $name)) {
-            $errors['namingscheme'] = get_string('groupnameexists', 'group', $name);
+            $errors['namingscheme'] = get_string('groupnameexists', 'core_group', $name);
         }
 
         // check grouping name duplicates
@@ -234,7 +234,7 @@ class autogroup_form extends moodleform {
             if (empty($name)) {
                 $errors['groupingname'] = get_string('required');
             } else if (groups_get_grouping_by_name($COURSE->id, $name)) {
-                $errors['groupingname'] = get_string('groupingnameexists', 'group', $name);
+                $errors['groupingname'] = get_string('groupingnameexists', 'core_group', $name);
             }
         }
 
@@ -244,7 +244,7 @@ class autogroup_form extends moodleform {
         } else {
             $matchcnt = preg_match_all('/[#@]{1,1}/', $data['namingscheme'], $matches);
             if ($matchcnt != 1) {
-                $errors['namingscheme'] = get_string('badnamingscheme', 'group');
+                $errors['namingscheme'] = get_string('badnamingscheme', 'core_group');
             }
         }
 

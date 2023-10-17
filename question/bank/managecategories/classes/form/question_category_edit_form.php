@@ -47,9 +47,9 @@ class question_category_edit_form extends moodleform {
         $contexts = $this->_customdata['contexts'];
         $currentcat = $this->_customdata['currentcat'];
 
-        $mform->addElement('header', 'categoryheader', get_string('addcategory', 'question'));
+        $mform->addElement('header', 'categoryheader', get_string('addcategory', 'core_question'));
 
-        $mform->addElement('questioncategory', 'parent', get_string('parentcategory', 'question'),
+        $mform->addElement('questioncategory', 'parent', get_string('parentcategory', 'core_question'),
                 ['contexts' => $contexts, 'top' => true, 'currentcat' => $currentcat, 'nochildrenof' => $currentcat]);
         $mform->setType('parent', PARAM_SEQUENCE);
         if (helper::question_is_only_child_of_top_category_in_context($currentcat)) {
@@ -59,19 +59,19 @@ class question_category_edit_form extends moodleform {
 
         $mform->addElement('text', 'name', get_string('name'), 'maxlength="254" size="50"');
         $mform->setDefault('name', '');
-        $mform->addRule('name', get_string('categorynamecantbeblank', 'question'), 'required', null, 'client');
+        $mform->addRule('name', get_string('categorynamecantbeblank', 'core_question'), 'required', null, 'client');
         $mform->setType('name', PARAM_TEXT);
 
-        $mform->addElement('editor', 'info', get_string('categoryinfo', 'question'),
+        $mform->addElement('editor', 'info', get_string('categoryinfo', 'core_question'),
                 ['rows' => 10], ['noclean' => 1]);
         $mform->setDefault('info', '');
         $mform->setType('info', PARAM_RAW);
 
-        $mform->addElement('text', 'idnumber', get_string('idnumber', 'question'), 'maxlength="100"  size="10"');
+        $mform->addElement('text', 'idnumber', get_string('idnumber', 'core_question'), 'maxlength="100"  size="10"');
         $mform->addHelpButton('idnumber', 'idnumber', 'question');
         $mform->setType('idnumber', PARAM_RAW);
 
-        $this->add_action_buttons(true, get_string('addcategory', 'question'));
+        $this->add_action_buttons(true, get_string('addcategory', 'core_question'));
 
         $mform->addElement('hidden', 'id', 0);
         $mform->setType('id', PARAM_INT);
@@ -118,7 +118,7 @@ class question_category_edit_form extends moodleform {
                 $params[] = $data['id'];
             }
             if ($DB->record_exists_select('question_categories', $conditions, $params)) {
-                $errors['idnumber'] = get_string('idnumbertaken', 'error');
+                $errors['idnumber'] = get_string('idnumbertaken', 'mod_error');
             }
         }
 

@@ -63,7 +63,7 @@ class crawlers extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/settings.php?section=sitepolicies#admin-opentowebcrawlers'),
-            get_string('sitepolicies', 'admin'));
+            get_string('sitepolicies', 'core_admin'));
     }
 
     /**

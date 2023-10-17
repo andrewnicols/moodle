@@ -54,15 +54,15 @@ $returnurl = new moodle_url('/course/view.php', array('id' => $id));
 
 // Don't display if completion isn't enabled.
 if (!$info->is_enabled()) {
-    throw new \moodle_exception('completionnotenabled', 'completion', $returnurl);
+    throw new \moodle_exception('completionnotenabled', 'core_completion', $returnurl);
 }
 
 // Check this user is enroled.
 if (!$info->is_tracked_user($user->id)) {
     if ($USER->id == $user->id) {
-        throw new \moodle_exception('notenroled', 'completion', $returnurl);
+        throw new \moodle_exception('notenroled', 'core_completion', $returnurl);
     } else {
-        throw new \moodle_exception('usernotenroled', 'completion', $returnurl);
+        throw new \moodle_exception('usernotenroled', 'core_completion', $returnurl);
     }
 }
 
@@ -86,7 +86,7 @@ echo html_writer::start_tag('tbody');
 if ($USER->id != $user->id) {
     echo html_writer::start_tag('tr');
     echo html_writer::start_tag('td', array('colspan' => '2'));
-    echo html_writer::tag('b', get_string('showinguser', 'completion') . ' ');
+    echo html_writer::tag('b', get_string('showinguser', 'core_completion') . ' ');
     $url = new moodle_url('/user/view.php', array('id' => $user->id, 'course' => $course->id));
     echo html_writer::link($url, fullname($user));
     echo html_writer::end_tag('td');
@@ -138,13 +138,13 @@ foreach ($completions as $completion) {
 }
 
 if ($pendingupdate) {
-    echo html_writer::tag('i', get_string('pending', 'completion'));
+    echo html_writer::tag('i', get_string('pending', 'core_completion'));
 } else if ($coursecomplete) {
     echo get_string('complete');
 } else if (!$criteriacomplete && !$ccompletion->timestarted) {
-    echo html_writer::tag('i', get_string('notyetstarted', 'completion'));
+    echo html_writer::tag('i', get_string('notyetstarted', 'core_completion'));
 } else {
-    echo html_writer::tag('i', get_string('inprogress', 'completion'));
+    echo html_writer::tag('i', get_string('inprogress', 'core_completion'));
 }
 
 echo html_writer::end_tag('td');
@@ -155,7 +155,7 @@ if (empty($completions)) {
     echo html_writer::start_tag('tr');
     echo html_writer::start_tag('td', array('colspan' => '2'));
     echo html_writer::start_tag('br');
-    echo $OUTPUT->box(get_string('nocriteriaset', 'completion'), 'noticebox');
+    echo $OUTPUT->box(get_string('nocriteriaset', 'core_completion'), 'noticebox');
     echo html_writer::end_tag('td');
     echo html_writer::end_tag('tr');
     echo html_writer::end_tag('tbody');
@@ -169,9 +169,9 @@ if (empty($completions)) {
     $overall = $info->get_aggregation_method();
 
     if ($overall == COMPLETION_AGGREGATION_ALL) {
-        echo get_string('criteriarequiredall', 'completion');
+        echo get_string('criteriarequiredall', 'core_completion');
     } else {
-        echo get_string('criteriarequiredany', 'completion');
+        echo get_string('criteriarequiredany', 'core_completion');
     }
 
     echo html_writer::end_tag('td');
@@ -185,7 +185,7 @@ if (empty($completions)) {
     echo html_writer::start_tag('tbody');
     echo html_writer::start_tag('tr', array('class' => 'ccheader'));
     echo html_writer::tag('th', get_string('criteriagroup', 'block_completionstatus'), array('class' => 'c0 header', 'scope' => 'col'));
-    echo html_writer::tag('th', get_string('criteria', 'completion'), array('class' => 'c1 header', 'scope' => 'col'));
+    echo html_writer::tag('th', get_string('criteria', 'core_completion'), array('class' => 'c1 header', 'scope' => 'col'));
     echo html_writer::tag('th', get_string('requirement', 'block_completionstatus'), array('class' => 'c2 header', 'scope' => 'col'));
     echo html_writer::tag('th', get_string('status'), array('class' => 'c3 header', 'scope' => 'col'));
     echo html_writer::tag('th', get_string('complete'), array('class' => 'c4 header', 'scope' => 'col'));
@@ -214,9 +214,9 @@ if (empty($completions)) {
                 $agg = $info->get_aggregation_method($row['type']);
                 echo '('. html_writer::start_tag('i');
                 if ($agg == COMPLETION_AGGREGATION_ALL) {
-                    echo core_text::strtolower(get_string('all', 'completion'));
+                    echo core_text::strtolower(get_string('all', 'core_completion'));
                 } else {
-                    echo core_text::strtolower(get_string('any', 'completion'));
+                    echo core_text::strtolower(get_string('any', 'core_completion'));
                 }
 
                 echo ' ' . html_writer::end_tag('i') .core_text::strtolower(get_string('required')).')';

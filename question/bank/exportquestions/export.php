@@ -37,7 +37,7 @@ list($thispageurl, $contexts, $cmid, $cm, $module, $pagevars) =
         question_edit_setup('export', '/question/bank/exportquestions/export.php');
 
 // Get display strings.
-$strexportquestions = get_string('exportquestions', 'question');
+$strexportquestions = get_string('exportquestions', 'core_question');
 
 list($catid, $catcontext) = explode(',', $pagevars['cat']);
 $category = $DB->get_record('question_categories', ["id" => $catid, 'contextid' => $catcontext], '*', MUST_EXIST);
@@ -81,7 +81,7 @@ if ($fromform = $exportform->get_data()) {
             $fromform->format, $withcategories, $withcontexts, $filename);
 
     echo $OUTPUT->box_start();
-    echo get_string('yourfileshoulddownload', 'question', $exporturl->out());
+    echo get_string('yourfileshoulddownload', 'core_question', $exporturl->out());
     echo $OUTPUT->box_end();
 
     // Log the export of these questions.

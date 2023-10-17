@@ -753,7 +753,7 @@ function setup_validate_php_configuration() {
    // this must be very fast - no slow checks here!!!
 
    if (ini_get_bool('session.auto_start')) {
-        throw new \moodle_exception('sessionautostartwarning', 'admin');
+        throw new \moodle_exception('sessionautostartwarning', 'core_admin');
    }
 }
 
@@ -839,7 +839,7 @@ function initialise_fullme() {
 
     // Detect common config error.
     if (substr($CFG->wwwroot, -1) == '/') {
-        throw new \moodle_exception('wwwrootslash', 'error');
+        throw new \moodle_exception('wwwrootslash', 'mod_error');
     }
 
     if (CLI_SCRIPT) {
@@ -885,10 +885,10 @@ function initialise_fullme() {
                 if (!empty($wwwrootport)) {
                     $correcturl .=  ':'. $wwwrootport;
                 }
-                throw new moodle_exception('requirecorrectaccess', 'error', '', null,
+                throw new moodle_exception('requirecorrectaccess', 'mod_error', '', null,
                     'You called ' . $calledurl .', you should have called ' . $correcturl);
             }
-            redirect($CFG->wwwroot, get_string('wwwrootmismatch', 'error', $CFG->wwwroot), 3);
+            redirect($CFG->wwwroot, get_string('wwwrootmismatch', 'mod_error', $CFG->wwwroot), 3);
         }
     }
 
@@ -906,9 +906,9 @@ function initialise_fullme() {
     if (empty($CFG->sslproxy)) {
         if ($rurl['scheme'] === 'http' and $wwwroot['scheme'] === 'https') {
             if (defined('REQUIRE_CORRECT_ACCESS') && REQUIRE_CORRECT_ACCESS) {
-                throw new \moodle_exception('sslonlyaccess', 'error');
+                throw new \moodle_exception('sslonlyaccess', 'mod_error');
             } else {
-                redirect($CFG->wwwroot, get_string('wwwrootmismatch', 'error', $CFG->wwwroot), 3);
+                redirect($CFG->wwwroot, get_string('wwwrootmismatch', 'mod_error', $CFG->wwwroot), 3);
             }
         }
     } else {
@@ -931,7 +931,7 @@ function initialise_fullme() {
     //   must leave the Host header pointing to the internal name of the server.
     // Port forwarding is allowed, though.
     if (!empty($CFG->reverseproxy) && $rurl['host'] === $wwwroot['host'] && (empty($wwwroot['port']) || $rurl['port'] === $wwwroot['port'])) {
-        throw new \moodle_exception('reverseproxyabused', 'error');
+        throw new \moodle_exception('reverseproxyabused', 'mod_error');
     }
 
     $hostandport = $rurl['scheme'] . '://' . $wwwroot['host'];
@@ -1067,7 +1067,7 @@ function setup_get_remote_url() {
         $rurl['fullpath'] = $_SERVER['REQUEST_URI'];
 
     } else {
-        throw new moodle_exception('unsupportedwebserver', 'error', '', $_SERVER['SERVER_SOFTWARE']);
+        throw new moodle_exception('unsupportedwebserver', 'mod_error', '', $_SERVER['SERVER_SOFTWARE']);
     }
 
     // sanitize the url a bit more, the encoding style may be different in vars above
@@ -1469,7 +1469,7 @@ function upgrade_ensure_not_running($warningonly = false) {
         if (!$warningonly) {
             throw new moodle_exception('cannotexecduringupgrade');
         } else {
-            debugging(get_string('cannotexecduringupgrade', 'error'), DEBUG_DEVELOPER);
+            debugging(get_string('cannotexecduringupgrade', 'mod_error'), DEBUG_DEVELOPER);
             return false;
         }
     }

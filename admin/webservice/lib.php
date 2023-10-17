@@ -97,13 +97,13 @@ class service_user_selector extends user_selector_base {
 
         if ($search) {
             $groupname = ($this->displayallowedusers) ?
-                get_string('serviceusersmatching', 'webservice', $search)
-                : get_string('potusersmatching', 'webservice', $search);
+                get_string('serviceusersmatching', 'core_webservice', $search)
+                : get_string('potusersmatching', 'core_webservice', $search);
         }
         else {
             $groupname = ($this->displayallowedusers) ?
-                get_string('serviceusers', 'webservice')
-                : get_string('potusers', 'webservice');
+                get_string('serviceusers', 'core_webservice')
+                : get_string('potusers', 'core_webservice');
         }
 
         return array($groupname => $availableusers);

@@ -62,7 +62,7 @@ class mod_assign_extension_form extends moodleform {
         $extrauserfields = \core_user\fields::get_identity_fields($assign->get_context(), false);
         foreach ($userlist as $userid) {
             if ($usercount >= 5) {
-                $usershtml .= get_string('moreusers', 'assign', count($userlist) - 5);
+                $usershtml .= get_string('moreusers', 'mod_assign', count($userlist) - 5);
                 break;
             }
             $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
@@ -80,26 +80,26 @@ class mod_assign_extension_form extends moodleform {
 
         $userscount = count($userlist);
 
-        $listusersmessage = get_string('grantextensionforusers', 'assign', $userscount);
+        $listusersmessage = get_string('grantextensionforusers', 'mod_assign', $userscount);
         $mform->addElement('header', 'general', $listusersmessage);
-        $mform->addElement('static', 'userslist', get_string('selectedusers', 'assign'), $usershtml);
+        $mform->addElement('static', 'userslist', get_string('selectedusers', 'mod_assign'), $usershtml);
 
         if ($instance->allowsubmissionsfromdate) {
-            $mform->addElement('static', 'allowsubmissionsfromdate', get_string('allowsubmissionsfromdate', 'assign'),
+            $mform->addElement('static', 'allowsubmissionsfromdate', get_string('allowsubmissionsfromdate', 'mod_assign'),
                                userdate($instance->allowsubmissionsfromdate));
         }
 
         $finaldate = 0;
         if ($instance->duedate) {
-            $mform->addElement('static', 'duedate', get_string('duedate', 'assign'), userdate($instance->duedate));
+            $mform->addElement('static', 'duedate', get_string('duedate', 'mod_assign'), userdate($instance->duedate));
             $finaldate = $instance->duedate;
         }
         if ($instance->cutoffdate) {
-            $mform->addElement('static', 'cutoffdate', get_string('cutoffdate', 'assign'), userdate($instance->cutoffdate));
+            $mform->addElement('static', 'cutoffdate', get_string('cutoffdate', 'mod_assign'), userdate($instance->cutoffdate));
             $finaldate = $instance->cutoffdate;
         }
         $mform->addElement('date_time_selector', 'extensionduedate',
-                           get_string('extensionduedate', 'assign'), array('optional'=>true));
+                           get_string('extensionduedate', 'mod_assign'), array('optional'=>true));
         $mform->setDefault('extensionduedate', $finaldate);
 
         $mform->addElement('hidden', 'id');
@@ -111,7 +111,7 @@ class mod_assign_extension_form extends moodleform {
         $mform->addElement('hidden', 'action', 'saveextension');
         $mform->setType('action', PARAM_ALPHA);
 
-        $this->add_action_buttons(true, get_string('savechanges', 'assign'));
+        $this->add_action_buttons(true, get_string('savechanges', 'mod_assign'));
     }
 
     /**
@@ -123,12 +123,12 @@ class mod_assign_extension_form extends moodleform {
         $errors = parent::validation($data, $files);
         if ($this->instance->duedate && $data['extensionduedate']) {
             if ($this->instance->duedate > $data['extensionduedate']) {
-                $errors['extensionduedate'] = get_string('extensionnotafterduedate', 'assign');
+                $errors['extensionduedate'] = get_string('extensionnotafterduedate', 'mod_assign');
             }
         }
         if ($this->instance->allowsubmissionsfromdate && $data['extensionduedate']) {
             if ($this->instance->allowsubmissionsfromdate > $data['extensionduedate']) {
-                $errors['extensionduedate'] = get_string('extensionnotafterfromdate', 'assign');
+                $errors['extensionduedate'] = get_string('extensionnotafterfromdate', 'mod_assign');
             }
         }
 

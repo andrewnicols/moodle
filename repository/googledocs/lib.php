@@ -142,7 +142,7 @@ class repository_googledocs extends repository {
             $popup->url = $url->out(false);
             return array('login' => array($popup));
         } else {
-            echo '<a target="_blank" href="'.$url->out(false).'">'.get_string('login', 'repository').'</a>';
+            echo '<a target="_blank" href="'.$url->out(false).'">'.get_string('login', 'core_repository').'</a>';
         }
     }
 
@@ -166,7 +166,7 @@ class repository_googledocs extends repository {
 
         $button = new single_button(
             $url,
-            get_string('logintoaccount', 'repository', $repositoryname),
+            get_string('logintoaccount', 'core_repository', $repositoryname),
             'post',
             single_button::BUTTON_PRIMARY
         );
@@ -506,7 +506,7 @@ class repository_googledocs extends repository {
         global $CFG;
 
         if (!$this->issuer->get('enabled')) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
 
         $source = json_decode($reference);
@@ -577,7 +577,7 @@ class repository_googledocs extends repository {
             }
             return $result;
         }
-        throw new repository_exception('cannotdownload', 'repository');
+        throw new repository_exception('cannotdownload', 'core_repository');
     }
 
     /**
@@ -675,7 +675,7 @@ class repository_googledocs extends repository {
      */
     public function send_file($storedfile, $lifetime=null , $filter=0, $forcedownload=false, array $options = null) {
         if (!$this->issuer->get('enabled')) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
 
         $source = json_decode($storedfile->get_reference());
@@ -695,7 +695,7 @@ class repository_googledocs extends repository {
 
             if ($systemauth === false) {
                 $details = 'Cannot connect as system user';
-                throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+                throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
             }
             $systemservice = new repository_googledocs\rest($systemauth);
 
@@ -721,7 +721,7 @@ class repository_googledocs extends repository {
             }
             if ($userauth === false) {
                 $details = 'Cannot connect as current user';
-                throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+                throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
             }
             $userinfo = $userauth->get_userinfo();
             $useremail = $userinfo['email'];
@@ -742,7 +742,7 @@ class repository_googledocs extends repository {
             header('Location: ' . $source->link);
         } else {
             $details = 'File is missing source link';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
     }
 
@@ -784,7 +784,7 @@ class repository_googledocs extends repository {
         $created = $client->call('create', $params, json_encode($folder));
         if (empty($created->id)) {
             $details = 'Cannot create folder:' . $foldername;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return $created->id;
     }
@@ -830,7 +830,7 @@ class repository_googledocs extends repository {
         $fileinfo = $client->call('copy', $params, json_encode($copyinfo));
         if (empty($fileinfo->id)) {
             $details = 'Cannot copy file:' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return $fileinfo;
     }
@@ -858,7 +858,7 @@ class repository_googledocs extends repository {
         $response = $client->call('create_permission', $params, json_encode($updateeditor));
         if (empty($response->id)) {
             $details = 'Cannot add user ' . $email . ' as a writer for document: ' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return true;
     }
@@ -882,7 +882,7 @@ class repository_googledocs extends repository {
         $response = $client->call('create_permission', $params, json_encode($updateeditor));
         if (empty($response->id)) {
             $details = 'Cannot add user ' . $email . ' as a writer for document: ' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return true;
     }
@@ -903,7 +903,7 @@ class repository_googledocs extends repository {
         $response = $client->call('update', $params, ' ');
         if (empty($response->id)) {
             $details = 'Cannot move the file to a folder: ' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return true;
     }
@@ -926,7 +926,7 @@ class repository_googledocs extends repository {
         $response = $client->call('update', $params, json_encode($update));
         if (empty($response->id)) {
             $details = 'Cannot prevent writers from sharing document: ' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return true;
     }
@@ -948,7 +948,7 @@ class repository_googledocs extends repository {
         $response = $client->call('create_permission', $params, json_encode($updateread));
         if (empty($response->id) || $response->id != 'anyoneWithLink') {
             $details = 'Cannot update link sharing for the document: ' . $fileid;
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         return true;
     }
@@ -985,7 +985,7 @@ class repository_googledocs extends repository {
 
         // Check this issuer is enabled.
         if ($this->disabled) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
 
         // Get a system oauth client and a user oauth client.
@@ -993,7 +993,7 @@ class repository_googledocs extends repository {
 
         if ($systemauth === false) {
             $details = 'Cannot connect as system user';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
         // Get the system user email so we can share the file with this user.
         $systemuserinfo = $systemauth->get_userinfo();
@@ -1002,7 +1002,7 @@ class repository_googledocs extends repository {
         $userauth = $this->get_user_oauth_client();
         if ($userauth === false) {
             $details = 'Cannot connect as current user';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            throw new repository_exception('errorwhilecommunicatingwith', 'core_repository', '', $details);
         }
 
         $userservice = new repository_googledocs\rest($userauth);
@@ -1092,10 +1092,10 @@ class repository_googledocs extends repository {
      */
     public function get_reference_details($reference, $filestatus = 0) {
         if ($this->disabled) {
-            throw new repository_exception('cannotdownload', 'repository');
+            throw new repository_exception('cannotdownload', 'core_repository');
         }
         if (empty($reference)) {
-            return get_string('unknownsource', 'repository');
+            return get_string('unknownsource', 'core_repository');
         }
         $source = json_decode($reference);
         if (empty($source->usesystem)) {

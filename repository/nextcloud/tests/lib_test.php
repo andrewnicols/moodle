@@ -583,7 +583,7 @@ JSON;
         // Test without ajax.
         $this->repo->options['ajax'] = false;
 
-        $output = \html_writer::link($url, get_string('login', 'repository'),
+        $output = \html_writer::link($url, get_string('login', 'core_repository'),
             array('target' => '_blank',  'rel' => 'noopener noreferrer'));
         $this->expectOutputString($output);
         $this->repo->print_login();

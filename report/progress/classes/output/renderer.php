@@ -126,9 +126,9 @@ class renderer extends plugin_renderer_base {
         $downloadurl->remove_params(['page']);
         $downloadurl->param('format', 'csv');
         $downloadhtml = html_writer::start_tag('ul', ['class' => 'progress-actions']);
-        $downloadhtml .= html_writer::tag('li', html_writer::link($downloadurl, get_string('csvdownload', 'completion')));
+        $downloadhtml .= html_writer::tag('li', html_writer::link($downloadurl, get_string('csvdownload', 'core_completion')));
         $downloadurl->param('format', 'excelcsv');
-        $downloadhtml .= html_writer::tag('li', html_writer::link($downloadurl, get_string('excelcsvdownload', 'completion')));
+        $downloadhtml .= html_writer::tag('li', html_writer::link($downloadurl, get_string('excelcsvdownload', 'core_completion')));
         $downloadhtml .= html_writer::end_tag('ul');
 
         return $downloadhtml;

@@ -39,8 +39,8 @@ class preview_options_form extends moodleform {
         $mform = $this->_form;
 
         $hiddenorvisible = [
-                question_display_options::HIDDEN => get_string('notshown', 'question'),
-                question_display_options::VISIBLE => get_string('shown', 'question'),
+                question_display_options::HIDDEN => get_string('notshown', 'core_question'),
+                question_display_options::VISIBLE => get_string('shown', 'core_question'),
         ];
 
         $mform->addElement('header', 'attemptoptionsheader', get_string('previewoptions', 'qbank_previewquestion'));
@@ -56,51 +56,51 @@ class preview_options_form extends moodleform {
         $behaviours = question_engine::get_behaviour_options(
                 $this->_customdata['quba']->get_preferred_behaviour());
         $mform->addElement('select', 'behaviour',
-                get_string('howquestionsbehave', 'question'), $behaviours);
+                get_string('howquestionsbehave', 'core_question'), $behaviours);
         $mform->addHelpButton('behaviour', 'howquestionsbehave', 'question');
 
-        $mform->addElement('float', 'maxmark', get_string('markedoutof', 'question'), ['size' => '5']);
+        $mform->addElement('float', 'maxmark', get_string('markedoutof', 'core_question'), ['size' => '5']);
 
         if ($this->_customdata['maxvariant'] > 1) {
             $variants = range(1, $this->_customdata['maxvariant']);
-            $mform->addElement('select', 'variant', get_string('questionvariant', 'question'),
+            $mform->addElement('select', 'variant', get_string('questionvariant', 'core_question'),
                     array_combine($variants, $variants));
         }
         $mform->setType('variant', PARAM_INT);
 
         $mform->addElement('submit', 'saverestart',
-                get_string('restartwiththeseoptions', 'question'));
+                get_string('restartwiththeseoptions', 'core_question'));
 
-        $mform->addElement('header', 'displayoptionsheader', get_string('displayoptions', 'question'));
+        $mform->addElement('header', 'displayoptionsheader', get_string('displayoptions', 'core_question'));
         $mform->setExpanded('displayoptionsheader', false);
 
-        $mform->addElement('select', 'correctness', get_string('whethercorrect', 'question'),
+        $mform->addElement('select', 'correctness', get_string('whethercorrect', 'core_question'),
                 $hiddenorvisible);
 
         $marksoptions = [
-                question_display_options::HIDDEN => get_string('notshown', 'question'),
-                question_display_options::MAX_ONLY => get_string('showmaxmarkonly', 'question'),
-                question_display_options::MARK_AND_MAX => get_string('showmarkandmax', 'question'),
+                question_display_options::HIDDEN => get_string('notshown', 'core_question'),
+                question_display_options::MAX_ONLY => get_string('showmaxmarkonly', 'core_question'),
+                question_display_options::MARK_AND_MAX => get_string('showmarkandmax', 'core_question'),
         ];
-        $mform->addElement('select', 'marks', get_string('marks', 'question'), $marksoptions);
+        $mform->addElement('select', 'marks', get_string('marks', 'core_question'), $marksoptions);
 
-        $mform->addElement('select', 'markdp', get_string('decimalplacesingrades', 'question'),
+        $mform->addElement('select', 'markdp', get_string('decimalplacesingrades', 'core_question'),
                 question_engine::get_dp_options());
 
         $mform->addElement('select', 'feedback',
-                get_string('specificfeedback', 'question'), $hiddenorvisible);
+                get_string('specificfeedback', 'core_question'), $hiddenorvisible);
 
         $mform->addElement('select', 'generalfeedback',
-                get_string('generalfeedback', 'question'), $hiddenorvisible);
+                get_string('generalfeedback', 'core_question'), $hiddenorvisible);
 
         $mform->addElement('select', 'rightanswer',
-                get_string('rightanswer', 'question'), $hiddenorvisible);
+                get_string('rightanswer', 'core_question'), $hiddenorvisible);
 
         $mform->addElement('select', 'history',
-                get_string('responsehistory', 'question'), $hiddenorvisible);
+                get_string('responsehistory', 'core_question'), $hiddenorvisible);
 
         $mform->addElement('submit', 'saveupdate',
-                get_string('updatedisplayoptions', 'question'));
+                get_string('updatedisplayoptions', 'core_question'));
     }
 
 }

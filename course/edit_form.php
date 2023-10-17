@@ -45,7 +45,7 @@ class course_edit_form extends moodleform {
         $this->context = $context;
 
         // Form definition with new course defaults.
-        $mform->addElement('header','general', get_string('general', 'form'));
+        $mform->addElement('header','general', get_string('general', 'core_form'));
 
         $mform->addElement('hidden', 'returnto', null);
         $mform->setType('returnto', PARAM_ALPHANUM);
@@ -133,7 +133,7 @@ class course_edit_form extends moodleform {
             $downloadchoices[DOWNLOAD_COURSE_CONTENT_SITE_DEFAULT] = get_string('sitedefaultspecified', '', $sitedefaultstring);
             $downloadselectdefault = $courseconfig->downloadcontent ?? DOWNLOAD_COURSE_CONTENT_SITE_DEFAULT;
 
-            $mform->addElement('select', 'downloadcontent', get_string('enabledownloadcoursecontent', 'course'), $downloadchoices);
+            $mform->addElement('select', 'downloadcontent', get_string('enabledownloadcoursecontent', 'core_course'), $downloadchoices);
             $mform->addHelpButton('downloadcontent', 'downloadcoursecontent', 'course');
             $mform->setDefault('downloadcontent', $downloadselectdefault);
 
@@ -218,7 +218,7 @@ class course_edit_form extends moodleform {
         }
 
         // Course format.
-        $mform->addElement('header', 'courseformathdr', get_string('type_format', 'plugin'));
+        $mform->addElement('header', 'courseformathdr', get_string('type_format', 'mod_plugin'));
 
         $courseformats = get_sorted_course_formats(true);
         $formcourseformats = array();
@@ -283,7 +283,7 @@ class course_edit_form extends moodleform {
             $calendars = array();
             $calendars[''] = get_string('forceno');
             $calendars += $calendartypes;
-            $mform->addElement('select', 'calendartype', get_string('forcecalendartype', 'calendar'), $calendars);
+            $mform->addElement('select', 'calendartype', get_string('forcecalendartype', 'core_calendar'), $calendars);
         }
 
         $options = range(0, 10);
@@ -343,7 +343,7 @@ class course_edit_form extends moodleform {
                 if (empty($fontlist[$defaultfont])) {
                     $defaultfont = current($fontlist);
                 }
-                $mform->addElement('select', 'pdfexportfont', get_string('pdfexportfont', 'course'), $fontlist);
+                $mform->addElement('select', 'pdfexportfont', get_string('pdfexportfont', 'core_course'), $fontlist);
                 $mform->addHelpButton('pdfexportfont', 'pdfexportfont', 'course');
                 $mform->setDefault('pdfexportfont', $defaultfont);
             }
@@ -351,13 +351,13 @@ class course_edit_form extends moodleform {
 
         // Completion tracking.
         if (completion_info::is_enabled_for_site()) {
-            $mform->addElement('header', 'completionhdr', get_string('completion', 'completion'));
-            $mform->addElement('selectyesno', 'enablecompletion', get_string('enablecompletion', 'completion'));
+            $mform->addElement('header', 'completionhdr', get_string('completion', 'core_completion'));
+            $mform->addElement('selectyesno', 'enablecompletion', get_string('enablecompletion', 'core_completion'));
             $mform->setDefault('enablecompletion', $courseconfig->enablecompletion);
             $mform->addHelpButton('enablecompletion', 'enablecompletion', 'completion');
 
             $showcompletionconditions = $courseconfig->showcompletionconditions ?? COMPLETION_SHOW_CONDITIONS;
-            $mform->addElement('selectyesno', 'showcompletionconditions', get_string('showcompletionconditions', 'completion'));
+            $mform->addElement('selectyesno', 'showcompletionconditions', get_string('showcompletionconditions', 'core_completion'));
             $mform->addHelpButton('showcompletionconditions', 'showcompletionconditions', 'completion');
             $mform->setDefault('showcompletionconditions', $showcompletionconditions);
             $mform->hideIf('showcompletionconditions', 'enablecompletion', 'eq', COMPLETION_DISABLED);
@@ -369,29 +369,29 @@ class course_edit_form extends moodleform {
 
         enrol_course_edit_form($mform, $course, $context);
 
-        $mform->addElement('header','groups', get_string('groupsettingsheader', 'group'));
+        $mform->addElement('header','groups', get_string('groupsettingsheader', 'core_group'));
 
         $choices = array();
-        $choices[NOGROUPS] = get_string('groupsnone', 'group');
-        $choices[SEPARATEGROUPS] = get_string('groupsseparate', 'group');
-        $choices[VISIBLEGROUPS] = get_string('groupsvisible', 'group');
-        $mform->addElement('select', 'groupmode', get_string('groupmode', 'group'), $choices);
+        $choices[NOGROUPS] = get_string('groupsnone', 'core_group');
+        $choices[SEPARATEGROUPS] = get_string('groupsseparate', 'core_group');
+        $choices[VISIBLEGROUPS] = get_string('groupsvisible', 'core_group');
+        $mform->addElement('select', 'groupmode', get_string('groupmode', 'core_group'), $choices);
         $mform->addHelpButton('groupmode', 'groupmode', 'group');
         $mform->setDefault('groupmode', $courseconfig->groupmode);
 
-        $mform->addElement('selectyesno', 'groupmodeforce', get_string('groupmodeforce', 'group'));
+        $mform->addElement('selectyesno', 'groupmodeforce', get_string('groupmodeforce', 'core_group'));
         $mform->addHelpButton('groupmodeforce', 'groupmodeforce', 'group');
         $mform->setDefault('groupmodeforce', $courseconfig->groupmodeforce);
 
         //default groupings selector
         $options = array();
         $options[0] = get_string('none');
-        $mform->addElement('select', 'defaultgroupingid', get_string('defaultgrouping', 'group'), $options);
+        $mform->addElement('select', 'defaultgroupingid', get_string('defaultgrouping', 'core_group'), $options);
 
         if (core_tag_tag::is_enabled('core', 'course') &&
                 ((empty($course->id) && guess_if_creator_will_have_course_capability('moodle/course:tag', $categorycontext))
                 || (!empty($course->id) && has_capability('moodle/course:tag', $coursecontext)))) {
-            $mform->addElement('header', 'tagshdr', get_string('tags', 'tag'));
+            $mform->addElement('header', 'tagshdr', get_string('tags', 'core_tag'));
             $mform->addElement('tags', 'tags', get_string('tags'),
                     array('itemtype' => 'course', 'component' => 'core'));
         }
@@ -497,13 +497,13 @@ class course_edit_form extends moodleform {
         if (!empty($data['idnumber']) && (empty($data['id']) || $this->course->idnumber != $data['idnumber'])) {
             if ($course = $DB->get_record('course', array('idnumber' => $data['idnumber']), '*', IGNORE_MULTIPLE)) {
                 if (empty($data['id']) || $course->id != $data['id']) {
-                    $errors['idnumber'] = get_string('courseidnumbertaken', 'error', $course->fullname);
+                    $errors['idnumber'] = get_string('courseidnumbertaken', 'mod_error', $course->fullname);
                 }
             }
         }
 
         if ($errorcode = course_validate_dates($data)) {
-            $errors['enddate'] = get_string($errorcode, 'error');
+            $errors['enddate'] = get_string($errorcode, 'mod_error');
         }
 
         $errors = array_merge($errors, enrol_course_edit_validation($data, $this->context));

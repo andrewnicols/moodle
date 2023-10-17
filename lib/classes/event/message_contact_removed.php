@@ -51,7 +51,7 @@ class message_contact_removed extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventmessagecontactremoved', 'message');
+        return get_string('eventmessagecontactremoved', 'core_message');
     }
 
     /**

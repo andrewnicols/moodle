@@ -154,9 +154,9 @@ class template extends persistent {
     protected function validate_contextid($value) {
         $context = context::instance_by_id($value, IGNORE_MISSING);
         if (!$context) {
-            return new lang_string('invalidcontext', 'error');
+            return new lang_string('invalidcontext', 'mod_error');
         } else if ($context->contextlevel != CONTEXT_SYSTEM && $context->contextlevel != CONTEXT_COURSECAT) {
-            return new lang_string('invalidcontext', 'error');
+            return new lang_string('invalidcontext', 'mod_error');
         }
         return true;
     }

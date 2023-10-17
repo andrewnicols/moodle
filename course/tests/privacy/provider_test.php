@@ -148,7 +148,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
                 [$this->coursecontext->id]);
         $writer = \core_privacy\local\request\writer::with_context($this->coursecontext);
         \core_course\privacy\provider::export_user_data($approvedlist);
-        $completiondata = $writer->get_data([get_string('privacy:completionpath', 'course')]);
+        $completiondata = $writer->get_data([get_string('privacy:completionpath', 'core_course')]);
         $this->assertEquals('Complete', $completiondata->status);
         $this->assertCount(2, $completiondata->criteria);
 
@@ -161,7 +161,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         // Ensure that user's favourites data in the course context is being exported.
         $writer = \core_privacy\local\request\writer::with_context($this->coursecontext);
         \core_course\privacy\provider::export_user_data($approvedlist);
-        $favouritedata = $writer->get_data([get_string('privacy:favouritespath', 'course')]);
+        $favouritedata = $writer->get_data([get_string('privacy:favouritespath', 'core_course')]);
 
         $this->assertEquals(transform::yesno(true), $favouritedata->starred);
         $this->assertEquals('', $favouritedata->ordering);

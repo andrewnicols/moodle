@@ -33,7 +33,7 @@ admin_externalpage_setup('themeselector');
 unset($SESSION->theme);
 
 $PAGE->set_primary_active_tab('siteadminnode');
-$PAGE->navbar->add(get_string('themeselector', 'admin'), $PAGE->url);
+$PAGE->navbar->add(get_string('themeselector', 'core_admin'), $PAGE->url);
 
 // Clear theme cache.
 if ($reset and confirm_sesskey()) {
@@ -117,11 +117,11 @@ foreach ($themes as $themename => $themedir) {
 
 // Show heading.
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('themeselector', 'admin'));
+echo $OUTPUT->heading(get_string('themeselector', 'core_admin'));
 
 // Reset theme caches button.
 $reseturl = new moodle_url('index.php', ['sesskey' => sesskey(), 'reset' => 1]);
-echo $OUTPUT->single_button($reseturl, get_string('themeresetcaches', 'admin'), 'post');
+echo $OUTPUT->single_button($reseturl, get_string('themeresetcaches', 'core_admin'), 'post');
 
 // Render main table.
 echo html_writer::table($table);

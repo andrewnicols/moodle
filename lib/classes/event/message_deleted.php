@@ -82,7 +82,7 @@ class message_deleted extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventmessagedeleted', 'message');
+        return get_string('eventmessagedeleted', 'core_message');
     }
 
     /**

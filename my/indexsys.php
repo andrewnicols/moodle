@@ -44,7 +44,7 @@ redirect_if_major_upgrade_required();
 
 $resetall = optional_param('resetall', false, PARAM_BOOL);
 
-$pagetitle = get_string('mypage', 'admin');
+$pagetitle = get_string('mypage', 'core_admin');
 
 $PAGE->set_secondary_active_tab('appearance');
 $PAGE->set_blocks_editing_capability('moodle/my:configsyspages');
@@ -61,14 +61,14 @@ $PAGE->set_primary_active_tab('myhome');
 // If we are resetting all, just output a progress bar.
 if ($resetall && confirm_sesskey()) {
     echo $OUTPUT->header($pagetitle);
-    echo $OUTPUT->heading(get_string('resettingdashboards', 'my'), 3);
+    echo $OUTPUT->heading(get_string('resettingdashboards', 'core_my'), 3);
 
     $progressbar = new progress_bar();
     $progressbar->create();
 
     \core\session\manager::write_close();
     my_reset_page_for_all_users(MY_PAGE_PRIVATE, 'my-index', $progressbar);
-    core\notification::success(get_string('alldashboardswerereset', 'my'));
+    core\notification::success(get_string('alldashboardswerereset', 'core_my'));
     echo $OUTPUT->continue_button($PAGE->url);
     echo $OUTPUT->footer();
     die();
@@ -83,7 +83,7 @@ $PAGE->set_subpage($currentpage->id);
 // Display a button to reset everyone's dashboard.
 $url = $PAGE->url;
 $url->params(['resetall' => true, 'sesskey' => sesskey()]);
-$button = $OUTPUT->single_button($url, get_string('reseteveryonesdashboard', 'my'));
+$button = $OUTPUT->single_button($url, get_string('reseteveryonesdashboard', 'core_my'));
 $PAGE->set_button($button . $PAGE->button);
 
 echo $OUTPUT->header();

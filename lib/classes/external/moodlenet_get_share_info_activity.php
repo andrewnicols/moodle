@@ -65,7 +65,7 @@ class moodlenet_get_share_info_activity extends external_api {
         // Get course module.
         $coursemodule = get_coursemodule_from_id(false, $cmid);
         if (!$coursemodule) {
-            return self::return_errors($cmid, 'errorgettingactivityinformation', get_string('invalidcoursemodule', 'error'));
+            return self::return_errors($cmid, 'errorgettingactivityinformation', get_string('invalidcoursemodule', 'mod_error'));
         }
 
         // Get course.
@@ -76,7 +76,7 @@ class moodlenet_get_share_info_activity extends external_api {
         $usercanshare = utilities::can_user_share($coursecontext, $USER->id);
         if (!$usercanshare) {
             return self::return_errors($cmid, 'errorpermission',
-                get_string('nopermissions', 'error', get_string('moodlenet:sharetomoodlenet', 'moodle')));
+                get_string('nopermissions', 'mod_error', get_string('moodlenet:sharetomoodlenet', 'moodle')));
         }
 
         $warnings = [];

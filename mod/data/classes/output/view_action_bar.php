@@ -132,7 +132,7 @@ class view_action_bar implements templatable, renderable {
                     $actionsselect->add(new \action_menu_link(
                         $exporturl,
                         null,
-                        get_string('addtoportfolio', 'portfolio'),
+                        get_string('addtoportfolio', 'core_portfolio'),
                         false
                     ));
                 }

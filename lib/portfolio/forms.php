@@ -59,9 +59,9 @@ final class portfolio_export_form extends moodleform {
             if (count($this->_customdata['formats']) > 1) {
                 $options = array();
                 foreach ($this->_customdata['formats'] as $key) {
-                    $options[$key] = get_string('format_' . $key, 'portfolio');
+                    $options[$key] = get_string('format_' . $key, 'core_portfolio');
                 }
-                $mform->addElement('select', 'format', get_string('availableformats', 'portfolio'), $options);
+                $mform->addElement('select', 'format', get_string('availableformats', 'core_portfolio'), $options);
             } else {
                 $f = array_shift($this->_customdata['formats']);
                 $mform->addElement('hidden', 'format', $f);
@@ -74,9 +74,9 @@ final class portfolio_export_form extends moodleform {
             && $this->_customdata['expectedtime'] != PORTFOLIO_TIME_LOW
             && $this->_customdata['expectedtime'] != PORTFOLIO_TIME_FORCEQUEUE) {
             $radioarray = array();
-            $radioarray[] = $mform->createElement('radio', 'wait', '', get_string('wait', 'portfolio'), 1);
-            $radioarray[] = $mform->createElement('radio', 'wait', '', get_string('dontwait', 'portfolio'),  0);
-            $mform->addGroup($radioarray, 'radioar', get_string('wanttowait_' . $this->_customdata['expectedtime'], 'portfolio') , array(' '), false);
+            $radioarray[] = $mform->createElement('radio', 'wait', '', get_string('wait', 'core_portfolio'), 1);
+            $radioarray[] = $mform->createElement('radio', 'wait', '', get_string('dontwait', 'core_portfolio'),  0);
+            $mform->addGroup($radioarray, 'radioar', get_string('wanttowait_' . $this->_customdata['expectedtime'], 'core_portfolio') , array(' '), false);
             $mform->setDefault('wait', 0);
         } else {
             if ($this->_customdata['expectedtime'] == PORTFOLIO_TIME_LOW) {
@@ -213,7 +213,7 @@ final class portfolio_admin_form extends moodleform {
             $this->set_data(array('name' => portfolio_static_function($this->plugin, 'get_name')));
         }
 
-        $this->add_action_buttons(true, get_string('save', 'portfolio'));
+        $this->add_action_buttons(true, get_string('save', 'core_portfolio'));
     }
 
     /**
@@ -227,7 +227,7 @@ final class portfolio_admin_form extends moodleform {
 
         $errors = array();
         if ($DB->count_records('portfolio_instance', array('name' => $data['name'], 'plugin' => $data['plugin'])) > 1) {
-            $errors = array('name' => get_string('err_uniquename', 'portfolio'));
+            $errors = array('name' => get_string('err_uniquename', 'core_portfolio'));
         }
 
         $pluginerrors = array();
@@ -275,7 +275,7 @@ final class portfolio_user_form extends moodleform {
             $data[$config] = $this->instance->get_user_config($config, $this->userid);
         }
         $this->set_data($data);
-        $this->add_action_buttons(true, get_string('save', 'portfolio'));
+        $this->add_action_buttons(true, get_string('save', 'core_portfolio'));
     }
 
     /**
@@ -314,7 +314,7 @@ class portfolio_instance_select extends moodleform {
         $this->caller = $this->_customdata['caller'];
         $options = $this->_customdata['options'];
         $mform =& $this->_form;
-        $mform->addElement('select', 'instance', get_string('selectplugin', 'portfolio'), $options);
+        $mform->addElement('select', 'instance', get_string('selectplugin', 'core_portfolio'), $options);
         $mform->addElement('hidden', 'id', $this->_customdata['id']);
         $mform->setType('id', PARAM_INT);
         $this->add_action_buttons(true, get_string('next'));

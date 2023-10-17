@@ -31,7 +31,7 @@ class hide_ended_courses_task extends show_started_courses_task {
      * @return string
      */
     public function get_name() {
-        return get_string('hideendedcoursestask', 'course');
+        return get_string('hideendedcoursestask', 'core_course');
     }
 
     protected function get_field_date(): string {

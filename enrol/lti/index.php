@@ -71,11 +71,11 @@ if ($action) {
             $displayname = $ltiplugin->get_instance_name($instance);
             $users = $DB->count_records('user_enrolments', array('enrolid' => $instance->id));
             if ($users) {
-                $message = markdown_to_html(get_string('deleteinstanceconfirm', 'enrol',
+                $message = markdown_to_html(get_string('deleteinstanceconfirm', 'core_enrol',
                     array('name' => $displayname,
                           'users' => $users)));
             } else {
-                $message = markdown_to_html(get_string('deleteinstancenousersconfirm', 'enrol',
+                $message = markdown_to_html(get_string('deleteinstancenousersconfirm', 'core_enrol',
                     array('name' => $displayname)));
             }
             echo $OUTPUT->header();

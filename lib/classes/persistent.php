@@ -384,7 +384,7 @@ abstract class persistent {
     final protected static function get_property_error_message($property) {
         $properties = static::properties_definition();
         if (!isset($properties[$property]['message'])) {
-            return new lang_string('invaliddata', 'error');
+            return new lang_string('invaliddata', 'mod_error');
         }
         return $properties[$property]['message'];
     }
@@ -718,7 +718,7 @@ abstract class persistent {
 
                 // Check if the property is required.
                 if ($value === null && static::is_property_required($property)) {
-                    $errors[$property] = new lang_string('requiredelement', 'form');
+                    $errors[$property] = new lang_string('requiredelement', 'core_form');
                     continue;
                 }
 

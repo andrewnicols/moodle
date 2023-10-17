@@ -203,7 +203,7 @@ class provider implements
 
             // The exported notes will be organized in {Course Context}/Notes/{publishstate}/usernote-{userid}.json.
             $subcontext = [
-                get_string('notes', 'notes'),
+                get_string('notes', 'core_notes'),
                 $note->publishstate
             ];
 

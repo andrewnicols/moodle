@@ -295,7 +295,7 @@ function upgrade_set_timeout($max_execution_time=300) {
             $upgraderunning = 0;
         } else {
             // web upgrade not running or aborted
-            throw new \moodle_exception('upgradetimedout', 'admin', "$CFG->wwwroot/$CFG->admin/");
+            throw new \moodle_exception('upgradetimedout', 'core_admin', "$CFG->wwwroot/$CFG->admin/");
         }
     }
 
@@ -390,7 +390,7 @@ function upgrade_mod_savepoint($result, $version, $modname, $allowabort=true) {
     $dbversion = $DB->get_field('config_plugins', 'value', array('plugin'=>$component, 'name'=>'version'));
 
     if (!$module = $DB->get_record('modules', array('name'=>$modname))) {
-        throw new \moodle_exception('modulenotexist', 'debug', '', $modname);
+        throw new \moodle_exception('modulenotexist', 'mod_debug', '', $modname);
     }
 
     if ($dbversion >= $version) {
@@ -436,7 +436,7 @@ function upgrade_block_savepoint($result, $version, $blockname, $allowabort=true
     $dbversion = $DB->get_field('config_plugins', 'value', array('plugin'=>$component, 'name'=>'version'));
 
     if (!$block = $DB->get_record('block', array('name'=>$blockname))) {
-        throw new \moodle_exception('blocknotexist', 'debug', '', $blockname);
+        throw new \moodle_exception('blocknotexist', 'mod_debug', '', $blockname);
     }
 
     if ($dbversion >= $version) {
@@ -1094,7 +1094,7 @@ function upgrade_plugins_blocks($startcallback, $endcallback, $verbose) {
             if ($conflictblock !== false) {
                 // Duplicate block titles are not allowed, they confuse people
                 // AND PHP's associative arrays ;)
-                throw new plugin_defective_exception($component, get_string('blocknameconflict', 'error', (object)array('name'=>$block->name, 'conflict'=>$conflictblock)));
+                throw new plugin_defective_exception($component, get_string('blocknameconflict', 'mod_error', (object)array('name'=>$block->name, 'conflict'=>$conflictblock)));
             }
             $startcallback($component, true, $verbose);
 
@@ -1371,7 +1371,7 @@ function external_update_descriptions($component) {
         //if shortname is not a PARAM_ALPHANUMEXT, fail (tested here for service update and creation)
         if (isset($service['shortname']) and
                 (clean_param($service['shortname'], PARAM_ALPHANUMEXT) != $service['shortname'])) {
-            throw new moodle_exception('installserviceshortnameerror', 'webservice', '', $service['shortname']);
+            throw new moodle_exception('installserviceshortnameerror', 'core_webservice', '', $service['shortname']);
         }
         if ($dbservice->shortname != $service['shortname']) {
             //check that shortname is unique
@@ -1379,7 +1379,7 @@ function external_update_descriptions($component) {
                 $existingservice = $DB->get_record('external_services',
                         array('shortname' => $service['shortname']));
                 if (!empty($existingservice)) {
-                    throw new moodle_exception('installexistingserviceshortnameerror', 'webservice', '', $service['shortname']);
+                    throw new moodle_exception('installexistingserviceshortnameerror', 'core_webservice', '', $service['shortname']);
                 }
             }
             $dbservice->shortname = $service['shortname'];
@@ -1412,7 +1412,7 @@ function external_update_descriptions($component) {
             $existingservice = $DB->get_record('external_services',
                     array('shortname' => $service['shortname']));
             if (!empty($existingservice)) {
-                throw new moodle_exception('installserviceshortnameerror', 'webservice');
+                throw new moodle_exception('installserviceshortnameerror', 'core_webservice');
             }
         }
 
@@ -1590,7 +1590,7 @@ function upgrade_started($preinstall=false) {
 
     } else {
         if (!CLI_SCRIPT and !$PAGE->headerprinted) {
-            $strupgrade  = get_string('upgradingversion', 'admin');
+            $strupgrade  = get_string('upgradingversion', 'core_admin');
             $PAGE->set_pagelayout('maintenance');
             upgrade_init_javascript();
             $PAGE->set_title($strupgrade . moodle_page::TITLE_SEPARATOR . 'Moodle ' . $CFG->target_release);
@@ -2121,30 +2121,30 @@ function upgrade_plugin_mnet_functions($component) {
             $functionreflect = null; // slightly different ways to get this depending on whether it's a class method or a function
             if (!empty($dataobject->classname)) {
                 if (!class_exists($dataobject->classname)) {
-                    throw new moodle_exception('installnosuchmethod', 'mnet', '', (object)array('method' => $dataobject->functionname, 'class' => $dataobject->classname));
+                    throw new moodle_exception('installnosuchmethod', 'core_mnet', '', (object)array('method' => $dataobject->functionname, 'class' => $dataobject->classname));
                 }
                 $key = $dataobject->filename . '|' . $dataobject->classname;
                 if (!array_key_exists($key, $cachedclasses)) { // look to see if we've already got a reflection object
                     try {
                         $cachedclasses[$key] = new ReflectionClass($dataobject->classname);
                     } catch (ReflectionException $e) { // catch these and rethrow them to something more helpful
-                        throw new moodle_exception('installreflectionclasserror', 'mnet', '', (object)array('method' => $dataobject->functionname, 'class' => $dataobject->classname, 'error' => $e->getMessage()));
+                        throw new moodle_exception('installreflectionclasserror', 'core_mnet', '', (object)array('method' => $dataobject->functionname, 'class' => $dataobject->classname, 'error' => $e->getMessage()));
                     }
                 }
                 $r =& $cachedclasses[$key];
                 if (!$r->hasMethod($dataobject->functionname)) {
-                    throw new moodle_exception('installnosuchmethod', 'mnet', '', (object)array('method' => $dataobject->functionname, 'class' => $dataobject->classname));
+                    throw new moodle_exception('installnosuchmethod', 'core_mnet', '', (object)array('method' => $dataobject->functionname, 'class' => $dataobject->classname));
                 }
                 $functionreflect = $r->getMethod($dataobject->functionname);
                 $dataobject->static = (int)$functionreflect->isStatic();
             } else {
                 if (!function_exists($dataobject->functionname)) {
-                    throw new moodle_exception('installnosuchfunction', 'mnet', '', (object)array('method' => $dataobject->functionname, 'file' => $dataobject->filename));
+                    throw new moodle_exception('installnosuchfunction', 'core_mnet', '', (object)array('method' => $dataobject->functionname, 'file' => $dataobject->filename));
                 }
                 try {
                     $functionreflect = new ReflectionFunction($dataobject->functionname);
                 } catch (ReflectionException $e) { // catch these and rethrow them to something more helpful
-                    throw new moodle_exception('installreflectionfunctionerror', 'mnet', '', (object)array('method' => $dataobject->functionname, '' => $dataobject->filename, 'error' => $e->getMessage()));
+                    throw new moodle_exception('installreflectionfunctionerror', 'core_mnet', '', (object)array('method' => $dataobject->functionname, '' => $dataobject->filename, 'error' => $e->getMessage()));
                 }
             }
             $dataobject->profile =  serialize(admin_mnet_method_profile($functionreflect));
@@ -2596,7 +2596,7 @@ function check_upgrade_key($upgradekeyhash) {
     if (isset($CFG->config_php_settings['upgradekey'])) {
         if ($upgradekeyhash === null or $upgradekeyhash !== sha1($CFG->config_php_settings['upgradekey'])) {
             if (!$PAGE->headerprinted) {
-                $PAGE->set_title(get_string('upgradekeyreq', 'admin'));
+                $PAGE->set_title(get_string('upgradekeyreq', 'core_admin'));
                 $output = $PAGE->get_renderer('core', 'admin');
                 echo $output->upgradekey_form_page(new moodle_url('/admin/index.php', array('cache' => 0)));
                 die();

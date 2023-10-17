@@ -182,12 +182,12 @@ class MoodleQuickForm_duration extends MoodleQuickForm_group {
         $this->_elements = [];
         // E_STRICT creating elements without forms is nasty because it internally uses $this
         $number = $this->createFormElement('text', 'number',
-                get_string('time', 'form'), $attributes, true);
+                get_string('time', 'core_form'), $attributes, true);
         $number->set_force_ltr(true);
         $this->_elements[] = $number;
         unset($attributes['size']);
         $this->_elements[] = $this->createFormElement('select', 'timeunit',
-                get_string('timeunit', 'form'), $this->get_units_used(), $attributes, true);
+                get_string('timeunit', 'core_form'), $this->get_units_used(), $attributes, true);
         // If optional we add a checkbox which the user can use to turn if on
         if($this->_options['optional']) {
             $this->_elements[] = $this->createFormElement('checkbox', 'enabled', null,

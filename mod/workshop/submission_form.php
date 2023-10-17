@@ -37,15 +37,15 @@ class workshop_submission_form extends moodleform {
         $contentopts    = $this->_customdata['contentopts'];
         $attachmentopts = $this->_customdata['attachmentopts'];
 
-        $mform->addElement('header', 'general', get_string('submission', 'workshop'));
+        $mform->addElement('header', 'general', get_string('submission', 'mod_workshop'));
 
-        $mform->addElement('text', 'title', get_string('submissiontitle', 'workshop'));
+        $mform->addElement('text', 'title', get_string('submissiontitle', 'mod_workshop'));
         $mform->setType('title', PARAM_TEXT);
         $mform->addRule('title', null, 'required', null, 'client');
         $mform->addRule('title', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
         if ($workshop->submissiontypetext != WORKSHOP_SUBMISSION_TYPE_DISABLED) {
-            $mform->addElement('editor', 'content_editor', get_string('submissioncontent', 'workshop'), null, $contentopts);
+            $mform->addElement('editor', 'content_editor', get_string('submissioncontent', 'mod_workshop'), null, $contentopts);
             $mform->setType('content_editor', PARAM_RAW);
             if ($workshop->submissiontypetext == WORKSHOP_SUBMISSION_TYPE_REQUIRED) {
                 $mform->addRule('content_editor', null, 'required', null, 'client');
@@ -53,8 +53,8 @@ class workshop_submission_form extends moodleform {
         }
 
         if ($workshop->submissiontypefile != WORKSHOP_SUBMISSION_TYPE_DISABLED) {
-            $mform->addElement('static', 'filemanagerinfo', get_string('nattachments', 'workshop'), $workshop->nattachments);
-            $mform->addElement('filemanager', 'attachment_filemanager', get_string('submissionattachment', 'workshop'),
+            $mform->addElement('static', 'filemanagerinfo', get_string('nattachments', 'mod_workshop'), $workshop->nattachments);
+            $mform->addElement('filemanager', 'attachment_filemanager', get_string('submissionattachment', 'mod_workshop'),
                                 null, $attachmentopts);
             if ($workshop->submissiontypefile == WORKSHOP_SUBMISSION_TYPE_REQUIRED) {
                 $mform->addRule('attachment_filemanager', null, 'required', null, 'client');

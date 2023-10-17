@@ -50,7 +50,7 @@ class question_text_row extends row_base {
     }
 
     public function get_title(): string {
-        return get_string('questiontext', 'question');
+        return get_string('questiontext', 'core_question');
     }
 
     protected function display_content($question, $rowclasses): void {

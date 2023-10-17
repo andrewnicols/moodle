@@ -283,15 +283,15 @@ class helper {
         );
 
         $statuschoices = array(
-            TEXTFILTER_DISABLED => get_string('disabled', 'admin'),
+            TEXTFILTER_DISABLED => get_string('disabled', 'core_admin'),
             TEXTFILTER_OFF => get_string('offbutavailable', 'core_filters'),
-            0 => get_string('disabled', 'admin'),
-            1 => get_string('enabled', 'admin'),
+            0 => get_string('disabled', 'core_admin'),
+            1 => get_string('enabled', 'core_admin'),
         );
 
         return [
-            'tool' => get_string($tool, 'h5p'),
-            'tool_description' => get_string($tool . '_description', 'h5p'),
+            'tool' => get_string($tool, 'core_h5p'),
+            'tool_description' => get_string($tool . '_description', 'core_h5p'),
             'link' => $link,
             'status' => $statuschoices[$status],
             'status_class' => $statusclasses[$status],

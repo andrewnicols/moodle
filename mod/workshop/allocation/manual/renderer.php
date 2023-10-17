@@ -66,9 +66,9 @@ class workshopallocation_manual_renderer extends mod_workshop_renderer  {
 
         $table              = new html_table();
         $table->attributes['class'] = 'allocations';
-        $table->head        = array(get_string('participantreviewedby', 'workshop'),
-                                    get_string('participant', 'workshop'),
-                                    get_string('participantrevierof', 'workshop'));
+        $table->head        = array(get_string('participantreviewedby', 'mod_workshop'),
+                                    get_string('participant', 'mod_workshop'),
+                                    get_string('participantrevierof', 'mod_workshop'));
         $table->rowclasses  = array();
         $table->colclasses  = array('reviewedby', 'peer', 'reviewerof');
         $table->data        = array();
@@ -105,14 +105,14 @@ class workshopallocation_manual_renderer extends mod_workshop_renderer  {
         $o .= fullname($userinfo[$allocation->userid]);
         $o .= $this->output->container_start(array('submission'));
         if (is_null($allocation->submissionid)) {
-            $o .= $this->output->container(get_string('nosubmissionfound', 'workshop'), 'info');
+            $o .= $this->output->container(get_string('nosubmissionfound', 'mod_workshop'), 'info');
         } else {
             $link = $this->workshop->submission_url($allocation->submissionid);
             $o .= $this->output->container(html_writer::link($link, format_string($allocation->submissiontitle)), 'title');
             if (is_null($allocation->submissiongrade)) {
-                $o .= $this->output->container(get_string('nogradeyet', 'workshop'), array('grade', 'missing'));
+                $o .= $this->output->container(get_string('nogradeyet', 'mod_workshop'), array('grade', 'missing'));
             } else {
-                $o .= $this->output->container(get_string('alreadygraded', 'workshop'), array('grade', 'missing'));
+                $o .= $this->output->container(get_string('alreadygraded', 'mod_workshop'), array('grade', 'missing'));
             }
         }
         $o .= $this->output->container_end();
@@ -127,7 +127,7 @@ class workshopallocation_manual_renderer extends mod_workshop_renderer  {
     protected function helper_reviewers_of_participant(stdclass $allocation, array $userinfo, array $reviewers, $selfassessment) {
         $o = '';
         if (is_null($allocation->submissionid)) {
-            $o .= $this->output->container(get_string('nothingtoreview', 'workshop'), 'info');
+            $o .= $this->output->container(get_string('nothingtoreview', 'mod_workshop'), 'info');
         } else {
             $exclude = array();
             if (! $selfassessment) {
@@ -137,7 +137,7 @@ class workshopallocation_manual_renderer extends mod_workshop_renderer  {
             $options = array_diff_key($reviewers, $exclude);
             if ($options) {
                 $handler = new moodle_url($this->page->url, array('mode' => 'new', 'of' => $allocation->userid, 'sesskey' => sesskey()));
-                $select = new single_select($handler, 'by', $options, '', array(''=>get_string('chooseuser', 'workshop')), 'addreviewof' . $allocation->userid);
+                $select = new single_select($handler, 'by', $options, '', array(''=>get_string('chooseuser', 'mod_workshop')), 'addreviewof' . $allocation->userid);
                 $select->set_label(get_string('addreviewer', 'workshopallocation_manual'));
                 $o .= $this->output->render($select);
             }
@@ -166,22 +166,22 @@ class workshopallocation_manual_renderer extends mod_workshop_renderer  {
     protected function helper_reviewees_of_participant(stdclass $allocation, array $userinfo, array $authors, $selfassessment) {
         $o = '';
         if (is_null($allocation->submissionid)) {
-            $o .= $this->output->container(get_string('withoutsubmission', 'workshop'), 'info');
+            $o .= $this->output->container(get_string('withoutsubmission', 'mod_workshop'), 'info');
         }
         $exclude = array();
         if (! $selfassessment) {
             $exclude[$allocation->userid] = true;
-            $o .= $this->output->container(get_string('selfassessmentdisabled', 'workshop'), 'info');
+            $o .= $this->output->container(get_string('selfassessmentdisabled', 'mod_workshop'), 'info');
         }
         // todo add an option to exclude users without own submission
         $options = array_diff_key($authors, $exclude);
         if ($options) {
             $handler = new moodle_url($this->page->url, array('mode' => 'new', 'by' => $allocation->userid, 'sesskey' => sesskey()));
-            $select = new single_select($handler, 'of', $options, '', array(''=>get_string('chooseuser', 'workshop')), 'addreviewby' . $allocation->userid);
+            $select = new single_select($handler, 'of', $options, '', array(''=>get_string('chooseuser', 'mod_workshop')), 'addreviewby' . $allocation->userid);
             $select->set_label(get_string('addreviewee', 'workshopallocation_manual'));
             $o .= $this->output->render($select);
         } else {
-            $o .= $this->output->container(get_string('nothingtoreview', 'workshop'), 'info');
+            $o .= $this->output->container(get_string('nothingtoreview', 'mod_workshop'), 'info');
         }
         $o .= html_writer::start_tag('ul', array());
         foreach ($allocation->reviewerof as $authorid => $assessmentid) {

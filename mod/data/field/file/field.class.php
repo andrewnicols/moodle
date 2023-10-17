@@ -73,8 +73,8 @@ class data_field_file extends data_field_base {
         $html .= '<fieldset><legend><span class="accesshide">'.$this->field->name;
 
         if ($this->field->required) {
-            $html .= '&nbsp;' . get_string('requiredelement', 'form') . '</span></legend>';
-            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+            $html .= '&nbsp;' . get_string('requiredelement', 'core_form') . '</span></legend>';
+            $image = $OUTPUT->pix_icon('req', get_string('requiredelement', 'core_form'));
             $html .= html_writer::div($image, 'inline-req');
         } else {
             $html .= '</span></legend>';

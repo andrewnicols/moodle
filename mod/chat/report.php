@@ -57,7 +57,7 @@ $PAGE->set_context($context);
 $PAGE->set_heading($course->fullname);
 
 if (empty($chat->studentlogs) && !has_capability('mod/chat:readlog', $context)) {
-    notice(get_string('nopermissiontoseethechatlog', 'chat'));
+    notice(get_string('nopermissiontoseethechatlog', 'mod_chat'));
 }
 
 $params = array(
@@ -72,11 +72,11 @@ $event = \mod_chat\event\sessions_viewed::create($params);
 $event->add_record_snapshot('chat', $chat);
 $event->trigger();
 
-$strchats         = get_string('modulenameplural', 'chat');
-$strchat          = get_string('modulename', 'chat');
-$strchatreport    = get_string('chatreport', 'chat');
-$strseesession    = get_string('seesession', 'chat');
-$strdeletesession = get_string('deletesession', 'chat');
+$strchats         = get_string('modulenameplural', 'mod_chat');
+$strchat          = get_string('modulename', 'mod_chat');
+$strchatreport    = get_string('chatreport', 'mod_chat');
+$strseesession    = get_string('seesession', 'mod_chat');
+$strdeletesession = get_string('deletesession', 'mod_chat');
 
 $navlinks = array();
 
@@ -101,13 +101,13 @@ if ($start and $end and !$confirmdelete) {   // Show a full transcript.
     groups_print_activity_menu($cm, $CFG->wwwroot . "/mod/chat/report.php?id=$cm->id");
 
     if ($deletesession and has_capability('mod/chat:deletelog', $context)) {
-        echo $OUTPUT->confirm(get_string('deletesessionsure', 'chat'),
+        echo $OUTPUT->confirm(get_string('deletesessionsure', 'mod_chat'),
                      "report.php?id=$cm->id&deletesession=1&confirmdelete=1&start=$start&end=$end",
                      "report.php?id=$cm->id");
     }
 
     if (!$messages = chat_get_session_messages($chat->id, $currentgroup, $start, $end, 'timestamp ASC')) {
-        echo $OUTPUT->heading(get_string('nomessages', 'chat'));
+        echo $OUTPUT->heading(get_string('nomessages', 'mod_chat'));
     } else {
         echo '<p class="boxaligncenter">'.userdate($start).' --> '. userdate($end).'</p>';
 
@@ -153,7 +153,7 @@ $PAGE->navbar->add($strchatreport);
 $PAGE->set_title($strchatreport);
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('sessions', 'chat'), 2);
+echo $OUTPUT->heading(get_string('sessions', 'mod_chat'), 2);
 
 // Check to see if groups are being used here
 if ($groupmode = groups_get_activity_groupmode($cm)) {   // Groups are being used.
@@ -188,15 +188,15 @@ if ($deletesession and has_capability('mod/chat:deletelog', $context)
 // Get the messages.
 if (empty($messages)) {   // May have already got them above.
     if (!$messages = chat_get_session_messages($chat->id, $currentgroup, 0, 0, 'timestamp DESC')) {
-        echo $OUTPUT->heading(get_string('nomessages', 'chat'), 3);
+        echo $OUTPUT->heading(get_string('nomessages', 'mod_chat'), 3);
         echo $OUTPUT->footer();
         exit;
     }
 }
 
 if ($showall) {
-    $headingstr = get_string('listing_all_sessions', 'chat') . '&nbsp;';
-    $headingstr .= html_writer::link("report.php?id={$cm->id}&show_all=0", get_string('list_complete_sessions', 'chat'));
+    $headingstr = get_string('listing_all_sessions', 'mod_chat') . '&nbsp;';
+    $headingstr .= html_writer::link("report.php?id={$cm->id}&show_all=0", get_string('list_complete_sessions', 'mod_chat'));
     echo  $OUTPUT->heading($headingstr, 3);
 }
 
@@ -259,14 +259,14 @@ if (!empty($CFG->enableportfolios) && $canexportsess) {
     require_once($CFG->libdir . '/portfoliolib.php');
     $button = new portfolio_add_button();
     $button->set_callback_options('chat_portfolio_caller', array('id' => $cm->id), 'mod_chat');
-    $button->render(null, get_string('addalltoportfolio', 'portfolio'));
+    $button->render(null, get_string('addalltoportfolio', 'core_portfolio'));
 }
 
 
 if (!$showall and $completesessions == 0) {
     echo html_writer::start_tag('p');
-    echo get_string('no_complete_sessions_found', 'chat') . '&nbsp;';
-    echo html_writer::link('report.php?id='.$cm->id.'&show_all=1', get_string('list_all_sessions', 'chat'));
+    echo get_string('no_complete_sessions_found', 'mod_chat') . '&nbsp;';
+    echo html_writer::link('report.php?id='.$cm->id.'&show_all=1', get_string('list_all_sessions', 'mod_chat'));
     echo html_writer::end_tag('p');
 }
 

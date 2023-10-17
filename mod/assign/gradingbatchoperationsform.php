@@ -45,25 +45,25 @@ class mod_assign_grading_batch_operations_form extends moodleform {
 
         // Visible elements.
         $options = array();
-        $options['lock'] = get_string('locksubmissions', 'assign');
-        $options['unlock'] = get_string('unlocksubmissions', 'assign');
+        $options['lock'] = get_string('locksubmissions', 'mod_assign');
+        $options['unlock'] = get_string('unlocksubmissions', 'mod_assign');
         if (!empty($CFG->messaging) &&
             has_all_capabilities(['moodle/site:sendmessage', 'moodle/course:bulkmessaging'], $instance['context'])
         ) {
             $options['message'] = get_string('messageselectadd');
         }
-        $options['downloadselected'] = get_string('downloadselectedsubmissions', 'assign');
+        $options['downloadselected'] = get_string('downloadselectedsubmissions', 'mod_assign');
         if ($instance['submissiondrafts']) {
-            $options['reverttodraft'] = get_string('reverttodraft', 'assign');
+            $options['reverttodraft'] = get_string('reverttodraft', 'mod_assign');
         }
         if (has_capability('mod/assign:editothersubmission', $instance['context'])) {
-            $options['removesubmission'] = get_string('removesubmission', 'assign');
+            $options['removesubmission'] = get_string('removesubmission', 'mod_assign');
         }
         if ($instance['duedate'] && has_capability('mod/assign:grantextension', $instance['context'])) {
-            $options['grantextension'] = get_string('grantextension', 'assign');
+            $options['grantextension'] = get_string('grantextension', 'mod_assign');
         }
         if ($instance['attemptreopenmethod'] == ASSIGN_ATTEMPT_REOPEN_METHOD_MANUAL) {
-            $options['addattempt'] = get_string('addattempt', 'assign');
+            $options['addattempt'] = get_string('addattempt', 'mod_assign');
         }
 
         foreach ($instance['feedbackplugins'] as $plugin) {
@@ -75,10 +75,10 @@ class mod_assign_grading_batch_operations_form extends moodleform {
             }
         }
         if ($instance['markingworkflow']) {
-            $options['setmarkingworkflowstate'] = get_string('setmarkingworkflowstate', 'assign');
+            $options['setmarkingworkflowstate'] = get_string('setmarkingworkflowstate', 'mod_assign');
         }
         if ($instance['markingallocation']) {
-            $options['setmarkingallocation'] = get_string('setmarkingallocation', 'assign');
+            $options['setmarkingallocation'] = get_string('setmarkingallocation', 'mod_assign');
         }
 
         $mform->addElement('hidden', 'action', 'gradingbatchoperation');
@@ -91,9 +91,9 @@ class mod_assign_grading_batch_operations_form extends moodleform {
         $mform->setType('returnaction', PARAM_ALPHA);
 
         $objs = array();
-        $objs[] =& $mform->createElement('select', 'operation', get_string('chooseoperation', 'assign'), $options);
+        $objs[] =& $mform->createElement('select', 'operation', get_string('chooseoperation', 'mod_assign'), $options);
         $objs[] =& $mform->createElement('submit', 'submit', get_string('go'));
-        $batchdescription = get_string('batchoperationsdescription', 'assign');
+        $batchdescription = get_string('batchoperationsdescription', 'mod_assign');
         $mform->addElement('group', 'actionsgrp', $batchdescription, $objs, ' ', false);
     }
 }

@@ -49,9 +49,9 @@ class rule_test extends \basic_testcase {
         $this->assertFalse($rule->prevent_new_attempt(0, $attempt));
         $this->assertFalse($rule->prevent_new_attempt(2, $attempt));
         $this->assertEquals($rule->prevent_new_attempt(3, $attempt),
-            get_string('nomoreattempts', 'quiz'));
+            get_string('nomoreattempts', 'mod_quiz'));
         $this->assertEquals($rule->prevent_new_attempt(666, $attempt),
-            get_string('nomoreattempts', 'quiz'));
+            get_string('nomoreattempts', 'mod_quiz'));
 
         $this->assertFalse($rule->is_finished(0, $attempt));
         $this->assertFalse($rule->is_finished(2, $attempt));

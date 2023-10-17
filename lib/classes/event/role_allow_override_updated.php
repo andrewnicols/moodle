@@ -51,7 +51,7 @@ class role_allow_override_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventroleallowoverrideupdated', 'role');
+        return get_string('eventroleallowoverrideupdated', 'core_role');
     }
 
     /**

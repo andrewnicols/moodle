@@ -43,7 +43,7 @@ class draft_file_deleted extends base {
     }
 
     public static function get_name() {
-        return get_string('eventfiledeletedfromdraftarea', 'files');
+        return get_string('eventfiledeletedfromdraftarea', 'core_files');
     }
 
     public function get_description() {

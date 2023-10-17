@@ -101,7 +101,7 @@ if (!empty($action)) {
                 $recyclebin->restore_item($item);
                 redirect($PAGE->url, get_string('alertrestored', 'tool_recyclebin', $item), 2);
             } else {
-                throw new \moodle_exception('nopermissions', 'error');
+                throw new \moodle_exception('nopermissions', 'mod_error');
             }
         break;
 
@@ -111,7 +111,7 @@ if (!empty($action)) {
                 $recyclebin->delete_item($item);
                 redirect($PAGE->url, get_string('alertdeleted', 'tool_recyclebin', $item), 2);
             } else {
-                throw new \moodle_exception('nopermissions', 'error');
+                throw new \moodle_exception('nopermissions', 'mod_error');
             }
         break;
 
@@ -207,7 +207,7 @@ foreach ($items as $item) {
         )));
     } else {
         // Show padlock.
-        $row[] = $OUTPUT->pix_icon('t/locked', get_string('locked', 'admin'), '', array('class' => 'iconsmall'));
+        $row[] = $OUTPUT->pix_icon('t/locked', get_string('locked', 'core_admin'), '', array('class' => 'iconsmall'));
     }
 
     // Build delete link.
@@ -225,7 +225,7 @@ foreach ($items as $item) {
         $row[] = $delete;
     } else {
         // Show padlock.
-        $row[] = $OUTPUT->pix_icon('t/locked', get_string('locked', 'admin'), '', array('class' => 'iconsmall'));
+        $row[] = $OUTPUT->pix_icon('t/locked', get_string('locked', 'core_admin'), '', array('class' => 'iconsmall'));
     }
 
     $table->add_data($row);

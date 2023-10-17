@@ -55,7 +55,7 @@ $gpr = new grade_plugin_return();
 $returnurl = $gpr->get_return_url('index.php?id='.$course->id);
 
 
-$heading = get_string('categoryedit', 'grades');
+$heading = get_string('categoryedit', 'core_grades');
 
 if ($id) {
     if (!$grade_category = grade_category::fetch(array('id'=>$id, 'courseid'=>$course->id))) {
@@ -117,7 +117,7 @@ if ($id) {
     }
 
 } else {
-    $heading = get_string('newcategory', 'grades');
+    $heading = get_string('newcategory', 'core_grades');
     $grade_category = new grade_category(array('courseid'=>$courseid), false);
     $grade_category->apply_default_settings();
     $grade_category->apply_forced_settings();

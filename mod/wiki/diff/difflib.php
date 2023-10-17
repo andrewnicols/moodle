@@ -755,11 +755,11 @@ function ouwiki_diff_html($html1,$html2) {
     $lines2=ouwiki_diff_html_to_lines($html2);
     list($deleted,$added)=ouwiki_diff_words($lines1,$lines2);
     $result1=ouwiki_diff_add_markers($html1,$deleted,'ouw_deleted',
-        '<strong class="accesshide">'.get_string('deletedbegins','wiki').'</strong>',
-        '<strong class="accesshide">'.get_string('deletedends','wiki').'</strong>');
+        '<strong class="accesshide">'.get_string('deletedbegins','mod_wiki').'</strong>',
+        '<strong class="accesshide">'.get_string('deletedends','mod_wiki').'</strong>');
     $result2=ouwiki_diff_add_markers($html2,$added,'ouw_added',
-        '<strong class="accesshide">'.get_string('addedbegins','wiki').'</strong>',
-        '<strong class="accesshide">'.get_string('addedends','wiki').'</strong>');
+        '<strong class="accesshide">'.get_string('addedbegins','mod_wiki').'</strong>',
+        '<strong class="accesshide">'.get_string('addedends','mod_wiki').'</strong>');
     return array($result1,$result2);
 }
 

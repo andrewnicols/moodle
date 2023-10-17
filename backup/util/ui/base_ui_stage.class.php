@@ -112,7 +112,7 @@ abstract class base_ui_stage {
      * @return string
      */
     public function get_name() {
-        return get_string('currentstage' . $this->stage, 'backup');
+        return get_string('currentstage' . $this->stage, 'core_backup');
     }
 
     /**

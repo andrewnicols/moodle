@@ -287,7 +287,7 @@ class system_report_table extends base_report_table {
 
         if ($this->report->can_be_downloaded() && !$this->is_downloading()) {
             return $OUTPUT->download_dataformat_selector(
-                get_string('downloadas', 'table'),
+                get_string('downloadas', 'core_table'),
                 new \moodle_url('/reportbuilder/download.php'),
                 'download',
                 [

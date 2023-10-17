@@ -38,10 +38,10 @@ class behat_theme_classic_behat_core_question extends behat_core_question {
     public function i_add_a_question_filling_the_form_with($questiontypename, TableNode $questiondata) {
 
         // Go to question bank.
-        $this->execute("behat_general::click_link", get_string('questionbank', 'question'));
+        $this->execute("behat_general::click_link", get_string('questionbank', 'core_question'));
 
         // Click on create question.
-        $this->execute('behat_forms::press_button', get_string('createnewquestion', 'question'));
+        $this->execute('behat_forms::press_button', get_string('createnewquestion', 'core_question'));
 
         // Add question.
         $this->finish_adding_question($questiontypename, $questiondata);

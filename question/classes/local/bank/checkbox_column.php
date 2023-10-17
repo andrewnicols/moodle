@@ -54,7 +54,7 @@ class checkbox_column extends column_base {
     }
 
     public function get_title_tip() {
-        return get_string('selectquestionsforbulk', 'question');
+        return get_string('selectquestionsforbulk', 'core_question');
     }
 
     public function display_header(array $columnactions = [], string $width = ''): void {

@@ -51,7 +51,7 @@ class completion_defaults_updated extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventdefaultcompletionupdated', 'completion');
+        return get_string('eventdefaultcompletionupdated', 'core_completion');
     }
 
     /**

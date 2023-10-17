@@ -146,7 +146,7 @@ function environment_get_errors($environment_results) {
         $a = new stdClass();
         if ($error_code) {
             $a->error_code = $error_code;
-            $errors[] = array($info, get_string('environmentxmlerror', 'admin', $a));
+            $errors[] = array($info, get_string('environmentxmlerror', 'core_admin', $a));
             return $errors;
         }
 
@@ -201,7 +201,7 @@ function environment_get_errors($environment_results) {
                 $stringtouse = 'environmentrecommendinstall';
             }
         }
-        $report = get_string($stringtouse, 'admin', $rec);
+        $report = get_string($stringtouse, 'core_admin', $rec);
 
         // Here we'll store all the feedback found
         $feedbacktext = '';
@@ -1511,7 +1511,7 @@ class environment_results {
             if (is_array($string)){
                 $str = call_user_func_array('get_string', $string);
             } else {
-                $str = get_string($string, 'admin');
+                $str = get_string($string, 'core_admin');
             }
             return '<p class="'.$class.'">'.$str.'</p>';
         } else {

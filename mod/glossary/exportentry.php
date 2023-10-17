@@ -34,7 +34,7 @@ if (!$cm = get_coursemodule_from_instance('glossary', $entry->glossaryid)) {
 }
 
 if (!$glossary = $DB->get_record('glossary', array('id'=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    throw new \moodle_exception('invalidid', 'mod_glossary');
 }
 
 if (!$course = $DB->get_record('course', array('id'=>$cm->course))) {
@@ -64,9 +64,9 @@ if (!$course = $DB->get_record('course', array('id'=>$cm->course))) {
 }
 
 
-$strglossaries     = get_string('modulenameplural', 'glossary');
-$entryalreadyexist = get_string('entryalreadyexist','glossary');
-$entryexported     = get_string('entryexported','glossary');
+$strglossaries     = get_string('modulenameplural', 'mod_glossary');
+$entryalreadyexist = get_string('entryalreadyexist','mod_glossary');
+$entryexported     = get_string('entryexported','mod_glossary');
 
 if (!$mainglossary->allowduplicatedentries) {
     if ($DB->record_exists_select('glossary_entries',
@@ -76,7 +76,7 @@ if (!$mainglossary->allowduplicatedentries) {
         $PAGE->set_title($glossary->name);
         $PAGE->set_heading($course->fullname);
         echo $OUTPUT->header();
-        echo $OUTPUT->notification(get_string('errconceptalreadyexists', 'glossary'));
+        echo $OUTPUT->notification(get_string('errconceptalreadyexists', 'mod_glossary'));
         echo $OUTPUT->continue_button($returnurl);
         echo $OUTPUT->box_end();
         echo $OUTPUT->footer();
@@ -89,7 +89,7 @@ if (!data_submitted() or !$confirm or !confirm_sesskey()) {
     $PAGE->set_heading($course->fullname);
     echo $OUTPUT->header();
     echo '<div class="boxaligncenter">';
-    $areyousure = '<h2>'.format_string($entry->concept).'</h2><p align="center">'.get_string('areyousureexport','glossary').'<br /><b>'.format_string($mainglossary->name).'</b>?';
+    $areyousure = '<h2>'.format_string($entry->concept).'</h2><p align="center">'.get_string('areyousureexport','mod_glossary').'<br /><b>'.format_string($mainglossary->name).'</b>?';
     $linkyes    = 'exportentry.php';
     $linkno     = 'view.php';
     $optionsyes = array('id'=>$entry->id, 'confirm'=>1, 'sesskey'=>sesskey(), 'prevmode'=>$prevmode, 'hook'=>$hook);

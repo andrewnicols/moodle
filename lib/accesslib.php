@@ -2464,7 +2464,7 @@ function capabilities_cleanup($component, $newcapdef = null) {
                 if ($roles = get_roles_with_capability($cachedcap->name)) {
                     foreach ($roles as $role) {
                         if (!unassign_capability($cachedcap->name, $role->id)) {
-                            throw new \moodle_exception('cannotunassigncap', 'error', '',
+                            throw new \moodle_exception('cannotunassigncap', 'mod_error', '',
                                 (object)array('cap' => $cachedcap->name, 'role' => $role->name));
                         }
                     }
@@ -2755,22 +2755,22 @@ function get_component_string($component, $contextlevel) {
     // Some plugin types need an extra prefix to make the name easy to understand.
     switch ($type) {
         case 'quiz':
-            $prefix = get_string('quizreport', 'quiz') . ': ';
+            $prefix = get_string('quizreport', 'mod_quiz') . ': ';
             break;
         case 'repository':
-            $prefix = get_string('repository', 'repository') . ': ';
+            $prefix = get_string('repository', 'core_repository') . ': ';
             break;
         case 'gradeimport':
-            $prefix = get_string('gradeimport', 'grades') . ': ';
+            $prefix = get_string('gradeimport', 'core_grades') . ': ';
             break;
         case 'gradeexport':
-            $prefix = get_string('gradeexport', 'grades') . ': ';
+            $prefix = get_string('gradeexport', 'core_grades') . ': ';
             break;
         case 'gradereport':
-            $prefix = get_string('gradereport', 'grades') . ': ';
+            $prefix = get_string('gradereport', 'core_grades') . ': ';
             break;
         case 'webservice':
-            $prefix = get_string('webservice', 'webservice') . ': ';
+            $prefix = get_string('webservice', 'core_webservice') . ': ';
             break;
         case 'block':
             $prefix = get_string('block') . ': ';
@@ -4620,14 +4620,14 @@ function role_get_description(stdClass $role) {
     }
 
     switch ($role->shortname) {
-        case 'manager':         return get_string('managerdescription', 'role');
+        case 'manager':         return get_string('managerdescription', 'core_role');
         case 'coursecreator':   return get_string('coursecreatorsdescription');
         case 'editingteacher':  return get_string('defaultcourseteacherdescription');
         case 'teacher':         return get_string('noneditingteacherdescription');
         case 'student':         return get_string('defaultcoursestudentdescription');
         case 'guest':           return get_string('guestdescription');
         case 'user':            return get_string('authenticateduserdescription');
-        case 'frontpage':       return get_string('frontpageuserdescription', 'role');
+        case 'frontpage':       return get_string('frontpageuserdescription', 'core_role');
         default:                return '';
     }
 }

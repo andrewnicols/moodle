@@ -61,7 +61,7 @@ class task_logs extends system_report {
         $this->add_actions();
 
         // Set if report can be downloaded.
-        $this->set_downloadable(true, get_string('tasklogs', 'admin'));
+        $this->set_downloadable(true, get_string('tasklogs', 'core_admin'));
     }
 
     /**
@@ -79,7 +79,7 @@ class task_logs extends system_report {
      * @return string
      */
     public static function get_name(): string {
-        return get_string('entitytasklog', 'admin');
+        return get_string('entitytasklog', 'core_admin');
     }
 
     /**
@@ -105,7 +105,7 @@ class task_logs extends system_report {
 
         // It's possible to override the display name of a column, if you don't want to use the value provided by the entity.
         if ($column = $this->get_column('user:fullname')) {
-            $column->set_title(new lang_string('user', 'admin'));
+            $column->set_title(new lang_string('user', 'core_admin'));
         }
 
         // It's possible to set a default initial sort direction for one column.

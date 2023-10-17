@@ -48,7 +48,7 @@ if ($course) {
 // Security first.
 require_login($course, false, $cm);
 if (!has_any_capability(array('moodle/role:assign', 'moodle/role:safeoverride', 'moodle/role:override', 'moodle/role:manage'), $context)) {
-    throw new \moodle_exception('nopermissions', 'error', '', get_string('checkpermissions', 'core_role'));
+    throw new \moodle_exception('nopermissions', 'mod_error', '', get_string('checkpermissions', 'core_role'));
 }
 
 navigation_node::override_active_url($url);
@@ -104,7 +104,7 @@ switch ($context->contextlevel) {
         break;
     case CONTEXT_COURSE:
         if ($isfrontpage) {
-            $PAGE->set_heading(get_string('frontpage', 'admin'));
+            $PAGE->set_heading(get_string('frontpage', 'core_admin'));
         } else {
             $PAGE->set_heading($course->fullname);
         }

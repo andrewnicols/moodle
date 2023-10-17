@@ -46,10 +46,10 @@ class core_tag_areas_table extends html_table {
 
         $this->head = array(
             get_string('tagareaname', 'core_tag'),
-            get_string('component', 'tag'),
+            get_string('component', 'core_tag'),
             get_string('tagareaenabled', 'core_tag'),
-            get_string('tagcollection', 'tag'),
-            get_string('showstandard', 'tag') .
+            get_string('tagcollection', 'core_tag'),
+            get_string('showstandard', 'core_tag') .
                 $OUTPUT->help_icon('showstandard', 'tag')
         );
 
@@ -61,9 +61,9 @@ class core_tag_areas_table extends html_table {
         $tagcollectionsall = core_tag_collection::get_collections_menu();
 
         $standardchoices = array(
-            core_tag_tag::BOTH_STANDARD_AND_NOT => get_string('standardsuggest', 'tag'),
-            core_tag_tag::STANDARD_ONLY => get_string('standardforce', 'tag'),
-            core_tag_tag::HIDE_STANDARD => get_string('standardhide', 'tag')
+            core_tag_tag::BOTH_STANDARD_AND_NOT => get_string('standardsuggest', 'core_tag'),
+            core_tag_tag::STANDARD_ONLY => get_string('standardforce', 'core_tag'),
+            core_tag_tag::HIDE_STANDARD => get_string('standardhide', 'core_tag')
         );
 
         foreach ($tagareas as $itemtype => $it) {

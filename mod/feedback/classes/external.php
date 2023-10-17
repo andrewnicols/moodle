@@ -189,15 +189,15 @@ class mod_feedback_external extends external_api {
         }
 
         if (!$feedbackcompletion->is_open()) {
-            throw new moodle_exception('feedback_is_not_open', 'feedback');
+            throw new moodle_exception('feedback_is_not_open', 'mod_feedback');
         }
 
         if ($feedbackcompletion->is_empty()) {
-            throw new moodle_exception('no_items_available_yet', 'feedback');
+            throw new moodle_exception('no_items_available_yet', 'mod_feedback');
         }
 
         if ($checksubmit && !$feedbackcompletion->can_submit()) {
-            throw new moodle_exception('this_feedback_is_already_submitted', 'feedback');
+            throw new moodle_exception('this_feedback_is_already_submitted', 'mod_feedback');
         }
         return $feedbackcompletion;
     }
@@ -326,7 +326,7 @@ class mod_feedback_external extends external_api {
         $feedbackcompletion->trigger_module_viewed();
         if ($params['moduleviewed']) {
             if (!$feedbackcompletion->is_open()) {
-                throw new moodle_exception('feedback_is_not_open', 'feedback');
+                throw new moodle_exception('feedback_is_not_open', 'mod_feedback');
             }
             // Mark activity viewed for completion-tracking.
             $feedbackcompletion->set_module_viewed();
@@ -397,7 +397,7 @@ class mod_feedback_external extends external_api {
                 'warnings' => $warnings,
             );
         }
-        throw new moodle_exception('not_started', 'feedback');
+        throw new moodle_exception('not_started', 'mod_feedback');
     }
 
     /**
@@ -907,7 +907,7 @@ class mod_feedback_external extends external_api {
                 'item' => 'feedback',
                 'itemid' => $feedback->id,
                 'warningcode' => 'insufficientresponsesforthisgroup',
-                'message' => s(get_string('insufficient_responses_for_this_group', 'feedback'))
+                'message' => s(get_string('insufficient_responses_for_this_group', 'mod_feedback'))
             );
         }
 
@@ -1131,7 +1131,7 @@ class mod_feedback_external extends external_api {
         $completioncourseid = $feedbackcompletion->get_courseid();
 
         if ($feedback->anonymous != FEEDBACK_ANONYMOUS_NO || $feedback->course == SITEID) {
-            throw new moodle_exception('anonymous', 'feedback');
+            throw new moodle_exception('anonymous', 'mod_feedback');
         }
 
         // Check permissions.
@@ -1376,7 +1376,7 @@ class mod_feedback_external extends external_api {
         $feedbackcompletion = new mod_feedback_completion($feedback, $cm, $completioncourse->id);
 
         if ($feedbackcompletion->is_anonymous()) {
-             throw new moodle_exception('anonymous', 'feedback');
+             throw new moodle_exception('anonymous', 'mod_feedback');
         }
         if ($completed = $feedbackcompletion->find_last_completed()) {
             $exporter = new feedback_completed_exporter($completed);
@@ -1385,7 +1385,7 @@ class mod_feedback_external extends external_api {
                 'warnings' => $warnings,
             );
         }
-        throw new moodle_exception('not_completed_yet', 'feedback');
+        throw new moodle_exception('not_completed_yet', 'mod_feedback');
     }
 
     /**

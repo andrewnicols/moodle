@@ -42,7 +42,7 @@ $workshop = new workshop($workshop, $cm, $course);
 $PAGE->set_url($workshop->exassess_url($assessment->id));
 $PAGE->set_title($workshop->name);
 $PAGE->set_heading($course->fullname);
-$PAGE->navbar->add(get_string('assessingexample', 'workshop'));
+$PAGE->navbar->add(get_string('assessingexample', 'mod_workshop'));
 $PAGE->set_secondary_active_tab('modulepage');
 $currenttab = 'assessment';
 
@@ -52,7 +52,7 @@ $isreviewer = ($USER->id == $assessment->reviewerid);
 if ($isreviewer or $canmanage) {
     // such a user can continue
 } else {
-    throw new \moodle_exception('nopermissions', 'error', $workshop->view_url(), 'assess example submission');
+    throw new \moodle_exception('nopermissions', 'mod_error', $workshop->view_url(), 'assess example submission');
 }
 
 // only the reviewer is allowed to modify the assessment
@@ -137,7 +137,7 @@ echo $output->header();
 if (!$PAGE->has_secondary_navigation()) {
     echo $output->heading(format_string($workshop->name));
 }
-echo $output->heading(get_string('assessedexample', 'workshop'), 3);
+echo $output->heading(get_string('assessedexample', 'mod_workshop'), 3);
 
 $example = $workshop->get_example_by_id($example->id);     // reload so can be passed to the renderer
 echo $output->render($workshop->prepare_example_submission(($example)));
@@ -147,7 +147,7 @@ echo $output->render($workshop->prepare_example_submission(($example)));
 if (trim($workshop->instructreviewers)) {
     $instructions = file_rewrite_pluginfile_urls($workshop->instructreviewers, 'pluginfile.php', $PAGE->context->id,
         'mod_workshop', 'instructreviewers', null, workshop::instruction_editors_options($PAGE->context));
-    print_collapsible_region_start('', 'workshop-viewlet-instructreviewers', get_string('instructreviewers', 'workshop'),
+    print_collapsible_region_start('', 'workshop-viewlet-instructreviewers', get_string('instructreviewers', 'mod_workshop'),
             'workshop-viewlet-instructreviewers-collapsed');
     echo $output->box(format_text($instructions, $workshop->instructreviewersformat, array('overflowdiv'=>true)), array('generalbox', 'instructions'));
     print_collapsible_region_end();
@@ -163,7 +163,7 @@ if ($canmanage and $assessment->weight == 1) {
         'showform'      => true,
     );
     $assessment = $workshop->prepare_example_reference_assessment($assessment, $mform, $options);
-    $assessment->title = get_string('assessmentreference', 'workshop');
+    $assessment->title = get_string('assessmentreference', 'mod_workshop');
     echo $output->render($assessment);
 
 } else if ($isreviewer) {
@@ -173,7 +173,7 @@ if ($canmanage and $assessment->weight == 1) {
         'showform'      => true,
     );
     $assessment = $workshop->prepare_example_assessment($assessment, $mform, $options);
-    $assessment->title = get_string('assessmentbyyourself', 'workshop');
+    $assessment->title = get_string('assessmentbyyourself', 'mod_workshop');
     echo $output->render($assessment);
 
 } else if ($canmanage) {

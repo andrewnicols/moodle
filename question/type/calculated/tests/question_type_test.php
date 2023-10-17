@@ -176,7 +176,7 @@ class question_type_test extends \advanced_testcase {
                 14 => new question_possible_response(
                         $this->get_possible_response('{a} - {b}', 0.001, 'nominal'), 0),
                 0  => new question_possible_response(
-                        get_string('didnotmatchanyanswer', 'question'), 0),
+                        get_string('didnotmatchanyanswer', 'core_question'), 0),
                 null => question_possible_response::no_response()
             ),
         ), $this->qtype->get_possible_responses($q));

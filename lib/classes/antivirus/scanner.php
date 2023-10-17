@@ -129,7 +129,7 @@ abstract class scanner {
         file_put_contents($tempfile, $data);
 
         // Perform a virus scan now.
-        return $this->scan_file($tempfile, get_string('datastream', 'antivirus'));
+        return $this->scan_file($tempfile, get_string('datastream', 'core_antivirus'));
     }
 
     /**
@@ -146,7 +146,7 @@ abstract class scanner {
         $noticehtml = $format !== FORMAT_PLAIN ? format_text($notice, $format) : '';
         $site = get_site();
 
-        $subject = get_string('emailsubject', 'antivirus', format_string($site->fullname));
+        $subject = get_string('emailsubject', 'core_antivirus', format_string($site->fullname));
         $notifyemail = get_config('antivirus', 'notifyemail');
         // If one email address is specified, construct a message to fake account.
         if (!empty($notifyemail)) {
@@ -197,8 +197,8 @@ abstract class scanner {
         $component = explode('\\', $classname)[0];
 
         $content = new \stdClass();
-        $unknown = get_string('unknown', 'antivirus');
-        $content->header = get_string('emailinfectedfiledetected', 'antivirus');
+        $unknown = get_string('unknown', 'core_antivirus');
+        $content->header = get_string('emailinfectedfiledetected', 'core_antivirus');
         $content->filename = !empty($filename) ? $filename : $unknown;
         $content->scanner = $component;
         // Check for empty file, or file not uploaded.
@@ -224,7 +224,7 @@ abstract class scanner {
 
         // If this is not due to a virus, we need to change the header line.
         if (!$virus) {
-            $content->header = get_string('emailscannererrordetected', 'antivirus');
+            $content->header = get_string('emailscannererrordetected', 'core_antivirus');
         }
 
         return $OUTPUT->render_from_template('core/infected_file_email', $content);

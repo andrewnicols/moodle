@@ -48,8 +48,8 @@ $event->trigger();
 
 /// Get all required strings
 
-$strlessons = get_string("modulenameplural", "lesson");
-$strlesson  = get_string("modulename", "lesson");
+$strlessons = get_string("modulenameplural", 'mod_lesson');
+$strlesson  = get_string("modulename", 'mod_lesson');
 
 
 /// Print the header
@@ -73,8 +73,8 @@ $usesections = course_format_uses_sections($course->format);
 $timenow = time();
 $strname  = get_string("name");
 $strgrade  = get_string("gradenoun");
-$strdeadline  = get_string("deadline", "lesson");
-$strnodeadline = get_string("nodeadline", "lesson");
+$strdeadline  = get_string("deadline", 'mod_lesson');
+$strnodeadline = get_string("nodeadline", 'mod_lesson');
 $table = new html_table();
 
 if ($usesections) {

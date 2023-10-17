@@ -60,8 +60,8 @@ function report_progress_extend_navigation_course($navigation, $course, $context
  */
 function report_progress_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $array = array(
-        '*'                     => get_string('page-x', 'pagetype'),
-        'report-*'              => get_string('page-report-x', 'pagetype'),
+        '*'                     => get_string('page-x', 'mod_pagetype'),
+        'report-*'              => get_string('page-report-x', 'mod_pagetype'),
         'report-progress-*'     => get_string('page-report-progress-x',  'report_progress'),
         'report-progress-index' => get_string('page-report-progress-index',  'report_progress'),
     );

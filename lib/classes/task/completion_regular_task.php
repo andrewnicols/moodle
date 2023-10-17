@@ -36,7 +36,7 @@ class completion_regular_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcompletionregular', 'admin');
+        return get_string('taskcompletionregular', 'core_admin');
     }
 
     /**

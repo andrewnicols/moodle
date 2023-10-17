@@ -37,7 +37,7 @@ $node = $PAGE->settingsnav->find('externalservices', navigation_node::TYPE_SETTI
 if ($node) {
     $node->make_active();
 }
-$PAGE->navbar->add(get_string('serviceusers', 'webservice'),
+$PAGE->navbar->add(get_string('serviceusers', 'core_webservice'),
         new moodle_url('/' . $CFG->admin . '/webservice/service_users.php', array('id' => $id)));
 
 $webservicemanager = new webservice();
@@ -94,7 +94,7 @@ $renderer = $PAGE->get_renderer('core', 'webservice');
 
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('selectauthorisedusers', 'webservice'), 3, 'main');
+echo $OUTPUT->heading(get_string('selectauthorisedusers', 'core_webservice'), 3, 'main');
 $selectoroptions = new stdClass();
 $selectoroptions->serviceid = $id;
 $selectoroptions->alloweduserselector = $alloweduserselector;
@@ -116,7 +116,7 @@ foreach ($allowedusers as &$alloweduser) {
 //check that the user has the service required capability (if needed)
 if (!empty($allowedusers)) {
     $renderer = $PAGE->get_renderer('core', 'webservice');
-    echo $OUTPUT->heading(get_string('serviceuserssettings', 'webservice'), 3, 'main');
+    echo $OUTPUT->heading(get_string('serviceuserssettings', 'core_webservice'), 3, 'main');
     echo $renderer->admin_authorised_user_list($allowedusers, $id);
 }
 

@@ -224,7 +224,7 @@ class question_type_test extends \advanced_testcase {
         $this->assertEquals($question->id, $options->questionid);
         $this->assertCount(4, $options->answers);
 
-        $this->assertEquals(get_string('correctfeedbackdefault', 'question'), $options->correctfeedback);
+        $this->assertEquals(get_string('correctfeedbackdefault', 'core_question'), $options->correctfeedback);
         $this->assertEquals(FORMAT_HTML, $options->correctfeedbackformat);
 
         // We no longer know how many answers, so it just has to guess with the default value.

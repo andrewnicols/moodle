@@ -38,7 +38,7 @@ class calendar_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskcalendarcron', 'admin');
+        return get_string('taskcalendarcron', 'core_admin');
     }
 
     /**

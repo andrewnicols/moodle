@@ -35,7 +35,7 @@ $systemcontext = context_system::instance();
 
 if (empty($CFG->enablestats)) {
     if (has_capability('moodle/site:config', $systemcontext)) {
-        redirect("$CFG->wwwroot/$CFG->admin/search.php?query=enablestats", get_string('mustenablestats', 'admin'), 3);
+        redirect("$CFG->wwwroot/$CFG->admin/search.php?query=enablestats", get_string('mustenablestats', 'core_admin'), 3);
     } else {
         throw new \moodle_exception('statsdisable');
     }
@@ -67,7 +67,7 @@ $lastmonthend = stats_get_base_monthly();
 $timeoptions = stats_get_time_options($now,$lastweekend,$lastmonthend,$earliestday,$earliestweek,$earliestmonth);
 
 if (empty($timeoptions)) {
-    throw new \moodle_exception('nostatstodisplay', 'error', $CFG->wwwroot.'/course/view.php?id='.$course->id);
+    throw new \moodle_exception('nostatstodisplay', 'mod_error', $CFG->wwwroot.'/course/view.php?id='.$course->id);
 }
 
 echo html_writer::start_tag('form', array('action' => 'index.php', 'method' => 'post', 'class' => 'form-inline'));

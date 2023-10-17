@@ -38,7 +38,7 @@ if ($id) {
 
 if ($id == SITEID) {
     $context = context_system::instance();
-    $title = get_string('defaultcompletion', 'completion');
+    $title = get_string('defaultcompletion', 'core_completion');
     $heading = format_string($SITE->fullname, true, ['context' => $context]);
 } else {
     $context = context_course::instance($id);

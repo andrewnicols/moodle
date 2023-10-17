@@ -51,7 +51,7 @@ class capability_assigned extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventcapabilityassigned', 'role');
+        return get_string('eventcapabilityassigned', 'core_role');
     }
 
     /**
@@ -62,10 +62,10 @@ class capability_assigned extends base {
     public function get_description() {
 
         $strpermissions = [
-            CAP_INHERIT => get_string('notset', 'role'),
-            CAP_ALLOW => get_string('allow', 'role'),
-            CAP_PREVENT => get_string('prevent', 'role'),
-            CAP_PROHIBIT => get_string('prohibit', 'role')
+            CAP_INHERIT => get_string('notset', 'core_role'),
+            CAP_ALLOW => get_string('allow', 'core_role'),
+            CAP_PREVENT => get_string('prevent', 'core_role'),
+            CAP_PROHIBIT => get_string('prohibit', 'core_role')
         ];
 
         $capability = $this->other['capability'];

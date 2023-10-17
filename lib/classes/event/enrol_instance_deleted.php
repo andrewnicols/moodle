@@ -73,7 +73,7 @@ class enrol_instance_deleted extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventenrolinstancedeleted', 'enrol');
+        return get_string('eventenrolinstancedeleted', 'core_enrol');
     }
 
     /**

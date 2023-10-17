@@ -37,11 +37,11 @@ $event = \mod_scorm\event\course_module_instance_list_viewed::create(array('cont
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strscorm = get_string("modulename", "scorm");
-$strscorms = get_string("modulenameplural", "scorm");
+$strscorm = get_string("modulename", 'mod_scorm');
+$strscorms = get_string("modulenameplural", 'mod_scorm');
 $strname = get_string("name");
 $strsummary = get_string("summary");
-$strreport = get_string("report", 'scorm');
+$strreport = get_string("report", 'mod_scorm');
 $strlastmodified = get_string("lastmodified");
 
 $PAGE->set_title($strscorms);
@@ -89,14 +89,14 @@ foreach ($scorms as $scorm) {
         $trackedusers = scorm_get_count_users($scorm->id, $scorm->groupingid);
         if ($trackedusers > 0) {
             $reportshow = html_writer::link('report.php?id='.$scorm->coursemodule,
-                                                get_string('viewallreports', 'scorm', $trackedusers));
+                                                get_string('viewallreports', 'mod_scorm', $trackedusers));
         } else {
-            $reportshow = get_string('noreports', 'scorm');
+            $reportshow = get_string('noreports', 'mod_scorm');
         }
     } else if (has_capability('mod/scorm:viewscores', $context)) {
         require_once('locallib.php');
         $report = scorm_grade_user($scorm, $USER->id);
-        $reportshow = get_string('score', 'scorm').": ".$report;
+        $reportshow = get_string('score', 'mod_scorm').": ".$report;
     }
     $options = (object)array('noclean' => true);
     if (!$scorm->visible) {

@@ -75,7 +75,7 @@ class format extends base {
         if ($oldvalue == false && $disabled) {
             if (get_config('moodlecourse', 'format') === $pluginname) {
                 // The default course format can't be disabled.
-                throw new \moodle_exception('cannotdisableformat', 'error');
+                throw new \moodle_exception('cannotdisableformat', 'mod_error');
             }
             set_config('disabled', $disabled, $plugin);
             $haschanged = true;

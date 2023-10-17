@@ -30,7 +30,7 @@ $filtertype   = optional_param('filtertype', '', PARAM_ALPHA);
 $filterselect = optional_param('filterselect', 0, PARAM_INT);
 
 if (empty($CFG->enablenotes)) {
-    throw new \moodle_exception('notesdisabled', 'notes');
+    throw new \moodle_exception('notesdisabled', 'core_notes');
 }
 
 $url = new moodle_url('/notes/index.php');
@@ -91,7 +91,7 @@ $systemcontext = context_system::instance();
 // Trigger event.
 note_view($coursecontext, $userid);
 
-$strnotes = get_string('notes', 'notes');
+$strnotes = get_string('notes', 'core_notes');
 if ($userid && $course->id == SITEID) {
     $PAGE->set_context(context_user::instance($user->id));
     $PAGE->navigation->extend_for_user($user);
@@ -101,12 +101,12 @@ if ($userid && $course->id == SITEID) {
     }
 
     $notesurl = new moodle_url('/notes/index.php', array('user' => $userid));
-    $PAGE->navbar->add(get_string('notes', 'notes'), $notesurl);
+    $PAGE->navbar->add(get_string('notes', 'core_notes'), $notesurl);
 } else if ($course->id != SITEID) {
     $notenode = $PAGE->navigation->find('currentcoursenotes', null)->make_inactive();
 
     $notesurl = new moodle_url('/notes/index.php', array('user' => $userid, 'course' => $courseid));
-    $PAGE->navbar->add(get_string('notes', 'notes'), $notesurl);
+    $PAGE->navbar->add(get_string('notes', 'core_notes'), $notesurl);
 
     $PAGE->set_context(context_course::instance($courseid));
 } else {
@@ -136,10 +136,10 @@ if ($course->id != SITEID) {
 
 echo $OUTPUT->heading($strnotes);
 
-$strsitenotes = get_string('sitenotes', 'notes');
-$strcoursenotes = get_string('coursenotes', 'notes');
-$strpersonalnotes = get_string('personalnotes', 'notes');
-$straddnewnote = get_string('addnewnote', 'notes');
+$strsitenotes = get_string('sitenotes', 'core_notes');
+$strcoursenotes = get_string('coursenotes', 'core_notes');
+$strpersonalnotes = get_string('personalnotes', 'core_notes');
+$straddnewnote = get_string('addnewnote', 'core_notes');
 
 echo $OUTPUT->box_start();
 

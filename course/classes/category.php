@@ -2028,7 +2028,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
         grade_course_category_delete($this->id, 0, $showfeedback);
         $cb = new \core_contentbank\contentbank();
         if (!$cb->delete_contents($this->get_context())) {
-            throw new moodle_exception('errordeletingcontentfromcategory', 'contentbank', '', $this->get_formatted_name());
+            throw new moodle_exception('errordeletingcontentfromcategory', 'core_contentbank', '', $this->get_formatted_name());
         }
         if (!question_delete_course_category($this, null)) {
             throw new moodle_exception('cannotdeletecategoryquestions', '', '', $this->get_formatted_name());
@@ -2211,17 +2211,17 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
         $result = $cb->move_contents($context, $newparentcontext);
         if ($showfeedback) {
             if ($result) {
-                echo $OUTPUT->notification(get_string('contentsmoved', 'contentbank', $catname), 'notifysuccess');
+                echo $OUTPUT->notification(get_string('contentsmoved', 'core_contentbank', $catname), 'notifysuccess');
             } else {
                 echo $OUTPUT->notification(
-                        get_string('errordeletingcontentbankfromcategory', 'contentbank', $catname),
+                        get_string('errordeletingcontentbankfromcategory', 'core_contentbank', $catname),
                         'notifysuccess'
                 );
             }
         }
         if (!question_delete_course_category($this, $newparentcat)) {
             if ($showfeedback) {
-                echo $OUTPUT->notification(get_string('errordeletingquestionsfromcategory', 'question', $catname), 'notifysuccess');
+                echo $OUTPUT->notification(get_string('errordeletingquestionsfromcategory', 'core_question', $catname), 'notifysuccess');
             }
             return false;
         }

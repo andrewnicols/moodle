@@ -32,7 +32,7 @@
  */
 class block_settings_edit_form extends block_edit_form {
     protected function specific_definition($mform) {
-        $mform->addElement('header', 'configheader', get_string('blocksettings', 'block'));
+        $mform->addElement('header', 'configheader', get_string('blocksettings', 'core_block'));
 
         $yesnooptions = array('yes'=>get_string('yes'), 'no'=>get_string('no'));
 

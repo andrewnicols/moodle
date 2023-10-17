@@ -34,7 +34,7 @@ class plagiarism_cron_task extends scheduled_task {
      * @return string
      */
     public function get_name() {
-        return get_string('taskplagiarismcron', 'admin');
+        return get_string('taskplagiarismcron', 'core_admin');
     }
 
     /**

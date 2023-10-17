@@ -66,7 +66,7 @@ if ($options['help']) {
 }
 
 if (!\core_analytics\manager::is_analytics_enabled()) {
-    echo get_string('analyticsdisabled', 'analytics') . PHP_EOL;
+    echo get_string('analyticsdisabled', 'core_analytics') . PHP_EOL;
     exit(0);
 }
 
@@ -128,7 +128,7 @@ if (!empty($validdatasets) && !$model->is_enabled() && $options['non-interactive
     // Select a dataset, train and enable the model.
     $input = cli_input(get_string('clienablemodel', 'tool_analytics'));
     while (!\core_analytics\manager::is_valid($input, '\core_analytics\local\time_splitting\base') && $input !== 'none') {
-        mtrace(get_string('errorunexistingtimesplitting', 'analytics'));
+        mtrace(get_string('errorunexistingtimesplitting', 'core_analytics'));
         $input = cli_input(get_string('clienablemodel', 'tool_analytics'));
     }
 

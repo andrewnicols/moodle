@@ -34,7 +34,7 @@ $action = optional_param('action', 'badge', PARAM_TEXT);
 require_login();
 
 if (empty($CFG->enablebadges)) {
-    throw new \moodle_exception('badgesdisabled', 'badges');
+    throw new \moodle_exception('badgesdisabled', 'core_badges');
 }
 
 $badge = new badge($badgeid);
@@ -49,7 +49,7 @@ if ($action == 'message') {
 
 if ($badge->type == BADGE_TYPE_COURSE) {
     if (empty($CFG->badges_allowcoursebadges)) {
-        throw new \moodle_exception('coursebadgesdisabled', 'badges');
+        throw new \moodle_exception('coursebadgesdisabled', 'core_badges');
     }
     require_login($badge->courseid);
     $course = get_course($badge->courseid);
@@ -122,7 +122,7 @@ if ($form->is_cancelled()) {
             $form->set_data($badge);
             $statusmsg = get_string('changessaved');
         } else {
-            $errormsg = get_string('error:save', 'badges');
+            $errormsg = get_string('error:save', 'core_badges');
         }
     } else if ($action == 'message') {
         // Calculate next message cron if form data is different from original badge data.
@@ -144,7 +144,7 @@ if ($form->is_cancelled()) {
         if ($badge->save()) {
             $statusmsg = get_string('changessaved');
         } else {
-            $errormsg = get_string('error:save', 'badges');
+            $errormsg = get_string('error:save', 'core_badges');
         }
     }
 }

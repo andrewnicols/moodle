@@ -51,7 +51,7 @@ function import_xml_grades($text, $course, &$error) {
             // grade item locked, abort
             if ($grade_item->is_locked()) {
                 $status = false;
-                $error  = get_string('gradeitemlocked', 'grades');
+                $error  = get_string('gradeitemlocked', 'core_grades');
                 break;
             }
 
@@ -70,7 +70,7 @@ function import_xml_grades($text, $course, &$error) {
                 if ($grade_grade->is_locked()) {
                     // individual grade locked, abort
                     $status = false;
-                    $error  = get_string('gradelocked', 'grades');
+                    $error  = get_string('gradelocked', 'core_grades');
                     break;
                 }
             }
@@ -87,7 +87,7 @@ function import_xml_grades($text, $course, &$error) {
                     $newgrade->finalgrade = $result['#']['score'][0]['#'];
                 } else {
                     $status = false;
-                    $error = get_string('badgrade', 'grades');
+                    $error = get_string('badgrade', 'core_grades');
                     break;
                 }
             } else {

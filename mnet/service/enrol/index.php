@@ -35,14 +35,14 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading_with_help(get_string('clientname', 'mnetservice_enrol'), 'clientname', 'mnetservice_enrol');
 
 if (!$service->is_available()) {
-    echo $OUTPUT->box(get_string('mnetdisabled','mnet'), 'noticebox');
+    echo $OUTPUT->box(get_string('mnetdisabled','core_mnet'), 'noticebox');
     echo $OUTPUT->footer();
     die();
 }
 
 $roamingusers = get_users_by_capability(context_system::instance(), 'moodle/site:mnetlogintoremote', 'u.id');
 if (empty($roamingusers)) {
-    $capname = get_string('site:mnetlogintoremote', 'role');
+    $capname = get_string('site:mnetlogintoremote', 'core_role');
     $url = new moodle_url('/admin/roles/manage.php');
     echo notice(get_string('noroamingusers', 'mnetservice_enrol', $capname), $url);
 }

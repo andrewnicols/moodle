@@ -55,20 +55,20 @@ if ($action == 'updatecomponent' && confirm_sesskey()) {
                     $a = new stdClass();
                     $a->url  = 'https://download.moodle.org/environment/environment.zip';
                     $a->dest = $CFG->dataroot . '/';
-                    throw new \moodle_exception($cd->get_error(), 'error', $PAGE->url, $a);
+                    throw new \moodle_exception($cd->get_error(), 'mod_error', $PAGE->url, $a);
                     die();
 
                 } else {
-                    throw new \moodle_exception($cd->get_error(), 'error', $PAGE->url);
+                    throw new \moodle_exception($cd->get_error(), 'mod_error', $PAGE->url);
                     die();
                 }
 
             case COMPONENT_UPTODATE:
-                redirect($PAGE->url, get_string($cd->get_error(), 'error'));
+                redirect($PAGE->url, get_string($cd->get_error(), 'mod_error'));
                 die;
 
             case COMPONENT_INSTALLED:
-                redirect($PAGE->url, get_string('componentinstalled', 'admin'));
+                redirect($PAGE->url, get_string('componentinstalled', 'core_admin'));
                 die;
         }
     }
@@ -95,7 +95,7 @@ if ($contents = load_environment_xml()) {
             }
         }
         // Add 'upwards' to the last element
-        $versions[$env_version] = $env_version.' '.get_string('upwards', 'admin');
+        $versions[$env_version] = $env_version.' '.get_string('upwards', 'core_admin');
     } else {
         $versions = array('error' => get_string('error'));
     }

@@ -338,7 +338,7 @@ class gradelib_test extends \advanced_testcase {
         $grades1 = grade_get_grades($course->id, 'mod', 'quiz', $quiz->id);
         // We should get an error for the broken calculation.
         $this->assertNotEmpty($grades1->errors);
-        $this->assertEquals(get_string('errorcalculationbroken', 'grades', $g1->itemname), reset($grades1->errors));
+        $this->assertEquals(get_string('errorcalculationbroken', 'core_grades', $g1->itemname), reset($grades1->errors));
         // Course grade item should not have needsupdate so that we don't try to regrade again.
         $this->assertEquals(0, \grade_item::fetch_course_item($course->id)->needsupdate);
 

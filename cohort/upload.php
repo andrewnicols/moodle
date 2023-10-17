@@ -68,7 +68,7 @@ if ($uploadform->is_cancelled()) {
     redirect($returnurl);
 }
 
-$strheading = get_string('uploadcohorts', 'cohort');
+$strheading = get_string('uploadcohorts', 'core_cohort');
 $PAGE->set_title($strheading);
 $PAGE->navbar->add($strheading);
 
@@ -84,7 +84,7 @@ if ($data = $uploadform->get_data()) {
     foreach ($cohortsdata as $cohort) {
         cohort_add_cohort($cohort);
     }
-    echo $OUTPUT->notification(get_string('uploadedcohorts', 'cohort', count($cohortsdata)), 'notifysuccess');
+    echo $OUTPUT->notification(get_string('uploadedcohorts', 'core_cohort', count($cohortsdata)), 'notifysuccess');
     echo $OUTPUT->continue_button($returnurl);
 } else {
     $uploadform->display();

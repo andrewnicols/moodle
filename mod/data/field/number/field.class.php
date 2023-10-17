@@ -81,7 +81,7 @@ class data_field_number extends data_field_base {
     }
 
     function display_search_field($value = '') {
-        return '<label class="accesshide" for="f_'.$this->field->id.'">' . get_string('fieldname', 'data') . '</label>' .
+        return '<label class="accesshide" for="f_'.$this->field->id.'">' . get_string('fieldname', 'mod_data') . '</label>' .
                '<input type="text" size="16" id="f_'.$this->field->id.'" name="f_'.$this->field->id.'" ' .
                'value="'.s($value).'" class="form-control d-inline"/>';
     }

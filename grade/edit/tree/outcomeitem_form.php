@@ -35,13 +35,13 @@ class edit_outcomeitem_form extends moodleform {
         $mform =& $this->_form;
 
 /// visible elements
-        $mform->addElement('header', 'general', get_string('gradeoutcomeitem', 'grades'));
+        $mform->addElement('header', 'general', get_string('gradeoutcomeitem', 'core_grades'));
 
-        $mform->addElement('text', 'itemname', get_string('itemname', 'grades'));
+        $mform->addElement('text', 'itemname', get_string('itemname', 'core_grades'));
         $mform->addRule('itemname', get_string('required'), 'required', null, 'client');
         $mform->setType('itemname', PARAM_TEXT);
 
-        $mform->addElement('text', 'iteminfo', get_string('iteminfo', 'grades'));
+        $mform->addElement('text', 'iteminfo', get_string('iteminfo', 'core_grades'));
         $mform->addHelpButton('iteminfo', 'iteminfo', 'grades');
         $mform->setType('iteminfo', PARAM_TEXT);
 
@@ -56,8 +56,8 @@ class edit_outcomeitem_form extends moodleform {
                 $options[$outcome->id] = $outcome->get_name();
             }
         }
-        $mform->addElement('selectwithlink', 'outcomeid', get_string('outcome', 'grades'), $options, null,
-            array('link' => $CFG->wwwroot.'/grade/edit/outcome/course.php?id='.$COURSE->id, 'label' => get_string('outcomeassigntocourse', 'grades')));
+        $mform->addElement('selectwithlink', 'outcomeid', get_string('outcome', 'core_grades'), $options, null,
+            array('link' => $CFG->wwwroot.'/grade/edit/outcome/course.php?id='.$COURSE->id, 'label' => get_string('outcomeassigntocourse', 'core_grades')));
         $mform->addHelpButton('outcomeid', 'outcome', 'grades');
         $mform->addRule('outcomeid', get_string('required'), 'required');
 
@@ -69,29 +69,29 @@ class edit_outcomeitem_form extends moodleform {
                 }
             }
         }
-        $mform->addElement('select', 'cmid', get_string('linkedactivity', 'grades'), $options);
+        $mform->addElement('select', 'cmid', get_string('linkedactivity', 'core_grades'), $options);
         $mform->addHelpButton('cmid', 'linkedactivity', 'grades');
         $mform->setDefault('cmid', 0);
 
         /// hiding
         /// advcheckbox is not compatible with disabledIf !!
-        $mform->addElement('checkbox', 'hidden', get_string('hidden', 'grades'));
+        $mform->addElement('checkbox', 'hidden', get_string('hidden', 'core_grades'));
         $mform->addHelpButton('hidden', 'hidden', 'grades');
-        $mform->addElement('date_time_selector', 'hiddenuntil', get_string('hiddenuntil', 'grades'), array('optional'=>true));
+        $mform->addElement('date_time_selector', 'hiddenuntil', get_string('hiddenuntil', 'core_grades'), array('optional'=>true));
         $mform->disabledIf('hidden', 'hiddenuntil[enabled]', 'checked');
 
         //locking
-        $mform->addElement('advcheckbox', 'locked', get_string('locked', 'grades'));
+        $mform->addElement('advcheckbox', 'locked', get_string('locked', 'core_grades'));
         $mform->addHelpButton('locked', 'locked', 'grades');
-        $mform->addElement('date_time_selector', 'locktime', get_string('locktime', 'grades'), array('optional'=>true));
+        $mform->addElement('date_time_selector', 'locktime', get_string('locktime', 'core_grades'), array('optional'=>true));
 
 /// parent category related settings
-        $mform->addElement('header', 'headerparent', get_string('parentcategory', 'grades'));
+        $mform->addElement('header', 'headerparent', get_string('parentcategory', 'core_grades'));
 
-        $mform->addElement('advcheckbox', 'weightoverride', get_string('adjustedweight', 'grades'));
+        $mform->addElement('advcheckbox', 'weightoverride', get_string('adjustedweight', 'core_grades'));
         $mform->addHelpButton('weightoverride', 'weightoverride', 'grades');
 
-        $mform->addElement('text', 'aggregationcoef2', get_string('weight', 'grades'));
+        $mform->addElement('text', 'aggregationcoef2', get_string('weight', 'core_grades'));
         $mform->addHelpButton('aggregationcoef2', 'weight', 'grades');
         $mform->setType('aggregationcoef2', PARAM_RAW);
         $mform->disabledIf('aggregationcoef2', 'weightoverride');
@@ -128,7 +128,7 @@ class edit_outcomeitem_form extends moodleform {
         }
 
         if (count($categories) > 1) {
-            $mform->addElement('select', 'parentcategory', get_string('gradecategory', 'grades'), $options);
+            $mform->addElement('select', 'parentcategory', get_string('gradecategory', 'core_grades'), $options);
             $mform->disabledIf('parentcategory', 'cmid', 'noteq', 0);
         }
 
@@ -136,9 +136,9 @@ class edit_outcomeitem_form extends moodleform {
             if ($coefstring == 'aggregationcoefextrasum' || $coefstring == 'aggregationcoefextraweightsum') {
                 // advcheckbox is not compatible with disabledIf!
                 $coefstring = 'aggregationcoefextrasum';
-                $mform->addElement('checkbox', 'aggregationcoef', get_string($coefstring, 'grades'));
+                $mform->addElement('checkbox', 'aggregationcoef', get_string($coefstring, 'core_grades'));
             } else {
-                $mform->addElement('text', 'aggregationcoef', get_string($coefstring, 'grades'));
+                $mform->addElement('text', 'aggregationcoef', get_string($coefstring, 'core_grades'));
             }
             $mform->addHelpButton('aggregationcoef', $coefstring, 'grades');
         }
@@ -215,7 +215,7 @@ class edit_outcomeitem_form extends moodleform {
                     }
 
                     if ($aggcoef !== '') {
-                        $agg_el->setLabel(get_string($aggcoef, 'grades'));
+                        $agg_el->setLabel(get_string($aggcoef, 'core_grades'));
                         $mform->addHelpButton('aggregationcoef', $aggcoef, 'grades');
                     }
                 }

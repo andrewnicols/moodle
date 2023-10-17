@@ -75,7 +75,7 @@ if ($id) {
 
     // Checking wiki instance
     if (!$wiki = wiki_get_wiki($cm->instance)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
     }
     $PAGE->set_cm($cm);
 
@@ -120,17 +120,17 @@ if ($id) {
 
     // Checking page instance
     if (!$page = wiki_get_page($pageid)) {
-        throw new \moodle_exception('incorrectpageid', 'wiki');
+        throw new \moodle_exception('incorrectpageid', 'mod_wiki');
     }
 
     // Checking subwiki
     if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-        throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+        throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
     }
 
     // Checking wiki instance of that subwiki
     if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
     }
 
     // Checking course module instance
@@ -163,7 +163,7 @@ if ($id) {
 
     // Setting wiki instance
     if (!$wiki = wiki_get_wiki($wid)) {
-        throw new \moodle_exception('incorrectwikiid', 'wiki');
+        throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
     }
 
     // Checking course module
@@ -207,7 +207,7 @@ if ($id) {
         $manageandedit = $manage && $edit;
 
         if ($groupmode == VISIBLEGROUPS and ($modeanduser || $modeandgroupmember) and !$manageandedit) {
-            throw new \moodle_exception('nocontent', 'wiki');
+            throw new \moodle_exception('nocontent', 'mod_wiki');
         }
 
         $params = array('wid' => $wiki->id, 'group' => $gid, 'uid' => $uid, 'title' => $title);
@@ -275,11 +275,11 @@ if ($id) {
     //     * Error. No more options
     //     */
 } else {
-    throw new \moodle_exception('invalidparameters', 'wiki');
+    throw new \moodle_exception('invalidparameters', 'mod_wiki');
 }
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    throw new \moodle_exception('cannotviewpage', 'mod_wiki');
 }
 
 if (($edit != - 1) and $PAGE->user_allowed_editing()) {

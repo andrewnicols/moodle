@@ -89,11 +89,11 @@ class award_criteria_activity extends award_criteria {
         foreach ($this->params as $p) {
             $mod = self::get_mod_instance($p['module']);
             if (!$mod) {
-                $str = $OUTPUT->error_text(get_string('error:nosuchmod', 'badges'));
+                $str = $OUTPUT->error_text(get_string('error:nosuchmod', 'core_badges'));
             } else {
                 $str = html_writer::tag('b', '"' . get_string('modulename', $mod->modname) . ' - ' . $mod->name . '"');
                 if (isset($p['bydate'])) {
-                    $str .= get_string('criteria_descr_bydate', 'badges', userdate($p['bydate'], get_string('strftimedate', 'core_langconfig')));
+                    $str .= get_string('criteria_descr_bydate', 'core_badges', userdate($p['bydate'], get_string('strftimedate', 'core_langconfig')));
                 }
             }
             $output[] = $str;
@@ -126,11 +126,11 @@ class award_criteria_activity extends award_criteria {
         }
 
         if (!empty($missing)) {
-            $mform->addElement('header', 'category_errors', get_string('criterror', 'badges'));
+            $mform->addElement('header', 'category_errors', get_string('criterror', 'core_badges'));
             $mform->addHelpButton('category_errors', 'criterror', 'badges');
             foreach ($missing as $m) {
                 $this->config_options($mform, array('id' => $m, 'checked' => true,
-                        'name' => get_string('error:nosuchmod', 'badges'), 'error' => true));
+                        'name' => get_string('error:nosuchmod', 'core_badges'), 'error' => true));
                 $none = false;
             }
         }
@@ -163,10 +163,10 @@ class award_criteria_activity extends award_criteria {
 
         // Add aggregation.
         if (!$none) {
-            $mform->addElement('header', 'aggregation', get_string('method', 'badges'));
+            $mform->addElement('header', 'aggregation', get_string('method', 'core_badges'));
             $agg = array();
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodactivity', 'badges'), 1);
-            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodactivity', 'badges'), 2);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('allmethodactivity', 'core_badges'), 1);
+            $agg[] =& $mform->createElement('radio', 'agg', '', get_string('anymethodactivity', 'core_badges'), 2);
             $mform->addGroup($agg, 'methodgr', '', array('<br/>'), false);
             if ($this->id !== 0) {
                 $mform->setDefault('agg', $this->method);
@@ -175,7 +175,7 @@ class award_criteria_activity extends award_criteria {
             }
         }
 
-        return array($none, get_string('error:noactivities', 'badges'));
+        return array($none, get_string('error:noactivities', 'core_badges'));
     }
 
     /**

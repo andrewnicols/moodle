@@ -35,7 +35,7 @@ require_capability('gradeexport/ods:view', $context);
 
 $actionbar = new \core_grades\output\export_action_bar($context, null, 'ods');
 print_grade_page_head($COURSE->id, 'export', 'ods',
-    get_string('exportto', 'grades') . ' ' . get_string('pluginname', 'gradeexport_ods'),
+    get_string('exportto', 'core_grades') . ' ' . get_string('pluginname', 'gradeexport_ods'),
     false, false, true, null, null, null, $actionbar);
 export_verify_grades($COURSE->id);
 

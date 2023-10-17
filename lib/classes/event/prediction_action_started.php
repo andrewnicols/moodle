@@ -61,7 +61,7 @@ class prediction_action_started extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventpredictionactionstarted', 'analytics');
+        return get_string('eventpredictionactionstarted', 'core_analytics');
     }
 
     /**

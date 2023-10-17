@@ -53,7 +53,7 @@ class mod_feedback_templates_table extends flexible_table {
             $tablecolumns[] = 'actions';
         }
 
-        $tableheaders = array(get_string('template', 'feedback'), '');
+        $tableheaders = array(get_string('template', 'mod_feedback'), '');
 
         $this->set_attribute('class', 'templateslist');
 
@@ -72,13 +72,13 @@ class mod_feedback_templates_table extends flexible_table {
     public function display($templates) {
         global $OUTPUT;
         if (empty($templates)) {
-            echo $OUTPUT->box(get_string('no_templates_available_yet', 'feedback'),
+            echo $OUTPUT->box(get_string('no_templates_available_yet', 'mod_feedback'),
                              'generalbox boxaligncenter');
             return;
         }
 
         $this->setup();
-        $strdeletefeedback = get_string('delete_template', 'feedback');
+        $strdeletefeedback = get_string('delete_template', 'mod_feedback');
 
         foreach ($templates as $template) {
             $data = [];
@@ -89,7 +89,7 @@ class mod_feedback_templates_table extends flexible_table {
             if ($this->mode && has_capability('mod/feedback:deletetemplate', $this->get_context())) {
                 $deleteurl = new moodle_url('/mod/feedback/manage_templates.php',
                     $url->params() + ['deletetemplate' => $template->id]);
-                $deleteaction = new confirm_action(get_string('confirmdeletetemplate', 'feedback'));
+                $deleteaction = new confirm_action(get_string('confirmdeletetemplate', 'mod_feedback'));
                 $deleteicon = $OUTPUT->action_icon($deleteurl, new pix_icon('t/delete', $strdeletefeedback), $deleteaction);
                 if ($template->ispublic) {
                     $systemcontext = context_system::instance();

@@ -59,7 +59,7 @@ class core_external extends external_api {
                     // If a parameter is unnamed throw an exception
                     // unnamed param is only possible if one only param is sent.
                     if (empty($stringparam['name'])) {
-                        throw new moodle_exception('unnamedstringparam', 'webservice');
+                        throw new moodle_exception('unnamedstringparam', 'core_webservice');
                     }
 
                     $strparams->{$stringparam['name']} = $stringparam['value'];

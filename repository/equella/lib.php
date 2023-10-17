@@ -189,7 +189,7 @@ class repository_equella extends repository {
             unlink($cookiepathname);
         }
         if ($result !== true) {
-            throw new moodle_exception('errorwhiledownload', 'repository', '', $result);
+            throw new moodle_exception('errorwhiledownload', 'core_repository', '', $result);
         }
         return array('path'=>$path, 'url'=>$url);
     }
@@ -424,7 +424,7 @@ class repository_equella extends repository {
             $ref = unserialize(base64_decode($reference));
             return $this->get_name(). ': '. $ref->filename;
         } else {
-            return get_string('lostsource', 'repository', '');
+            return get_string('lostsource', 'core_repository', '');
         }
     }
 

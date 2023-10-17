@@ -44,23 +44,23 @@ class testoutgoingmailconf_form extends \moodleform {
 
         // Recipient.
         $options = ['maxlength' => '100', 'size' => '25', 'autocomplete' => 'email'];
-        $mform->addElement('text', 'recipient', get_string('testoutgoingmailconf_toemail', 'admin'), $options);
+        $mform->addElement('text', 'recipient', get_string('testoutgoingmailconf_toemail', 'core_admin'), $options);
         $mform->setType('recipient', PARAM_EMAIL);
         $mform->addRule('recipient', get_string('required'), 'required');
 
         // From user.
         $options = ['maxlength' => '100', 'size' => '25'];
-        $mform->addElement('text', 'from', get_string('testoutgoingmailconf_fromemail', 'admin'), $options);
+        $mform->addElement('text', 'from', get_string('testoutgoingmailconf_fromemail', 'core_admin'), $options);
         $mform->setType('from', PARAM_TEXT);
         $mform->addHelpButton('from', 'testoutgoingmailconf_fromemail', 'admin');
 
         // Additional subject text.
         $options = ['size' => '25'];
-        $mform->addElement('text', 'additionalsubject', get_string('testoutgoingmailconf_subjectadditional', 'admin'), $options);
+        $mform->addElement('text', 'additionalsubject', get_string('testoutgoingmailconf_subjectadditional', 'core_admin'), $options);
         $mform->setType('additionalsubject', PARAM_TEXT);
 
         $buttonarray = array();
-        $buttonarray[] = $mform->createElement('submit', 'send', get_string('testoutgoingmailconf_sendtest', 'admin'));
+        $buttonarray[] = $mform->createElement('submit', 'send', get_string('testoutgoingmailconf_sendtest', 'core_admin'));
         $buttonarray[] = $mform->createElement('cancel');
 
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);
@@ -83,7 +83,7 @@ class testoutgoingmailconf_form extends \moodleform {
             $userfrom = \core_user::get_user_by_username($data['from']);
 
             if (!$userfrom && !validate_email($data['from'])) {
-                $errors['from'] = get_string('testoutgoingmailconf_fromemail_invalid', 'admin');
+                $errors['from'] = get_string('testoutgoingmailconf_fromemail_invalid', 'core_admin');
             }
         }
 

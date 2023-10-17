@@ -45,7 +45,7 @@ class environment extends check {
      * @return string
      */
     public function get_name(): string {
-        return get_string('environment', 'admin');
+        return get_string('environment', 'core_admin');
     }
 
     /**
@@ -56,7 +56,7 @@ class environment extends check {
     public function get_action_link(): ?\action_link {
         return new \action_link(
             new \moodle_url('/admin/environment.php'),
-            get_string('environment', 'admin'));
+            get_string('environment', 'core_admin'));
     }
 
     /**
@@ -70,10 +70,10 @@ class environment extends check {
         list($status, $details) = check_moodle_environment($CFG->release, ENV_SELECT_NEWER);
 
         if ($status) {
-            $summary = get_string('environmentok', 'admin');
+            $summary = get_string('environmentok', 'core_admin');
             $status = result::OK;
         } else {
-            $summary = get_string('environmenterrortodo', 'admin');
+            $summary = get_string('environmenterrortodo', 'core_admin');
             $status = result::ERROR;
         }
 

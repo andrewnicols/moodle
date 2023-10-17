@@ -38,7 +38,7 @@ if ($ADMIN->fulltree) {
     // Modedit defaults.
 
     $settings->add(new admin_setting_heading('bookmodeditdefaults',
-        get_string('modeditdefaults', 'admin'), get_string('condifmodeditdefaults', 'admin')));
+        get_string('modeditdefaults', 'core_admin'), get_string('condifmodeditdefaults', 'core_admin')));
 
     $settings->add(new admin_setting_configselect('book/numbering',
         get_string('numbering', 'mod_book'), '', BOOK_NUM_NUMBERS, $options));

@@ -43,7 +43,7 @@ require_capability('moodle/grade:manage', $context);
 $gpr = new grade_plugin_return(array('type'=>'edit', 'plugin'=>'settings', 'courseid'=>$courseid));
 
 $strgrades = get_string('grades');
-$pagename  = get_string('coursesettings', 'grades');
+$pagename  = get_string('coursesettings', 'core_grades');
 
 $mform = new course_settings_form();
 
@@ -80,7 +80,7 @@ $settings = grade_get_settings($course->id);
 $mform->set_data($settings);
 
 echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthnormal centerpara');
-echo get_string('coursesettingsexplanation', 'grades');
+echo get_string('coursesettingsexplanation', 'core_grades');
 echo $OUTPUT->box_end();
 
 $mform->display();

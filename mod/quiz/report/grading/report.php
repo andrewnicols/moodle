@@ -363,7 +363,7 @@ class quiz_grading_report extends report_base {
         $header = [];
 
         $header[] = get_string('qno', 'quiz_grading');
-        $header[] = get_string('qtypeveryshort', 'question');
+        $header[] = get_string('qtypeveryshort', 'core_question');
         $header[] = get_string('questionname', 'quiz_grading');
         $header[] = get_string('tograde', 'quiz_grading');
         $header[] = get_string('alreadygraded', 'quiz_grading');

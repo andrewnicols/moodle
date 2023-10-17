@@ -43,7 +43,7 @@ class token_filter extends moodleform {
         $mform = $this->_form;
         $presetdata = $this->_customdata;
 
-        $mform->addElement('header', 'tokenfilter', get_string('tokenfilter', 'webservice'));
+        $mform->addElement('header', 'tokenfilter', get_string('tokenfilter', 'core_webservice'));
 
         if (empty($presetdata->token) && empty($presetdata->users) && empty($presetdata->services)) {
             $mform->setExpanded('tokenfilter', false);
@@ -89,7 +89,7 @@ class token_filter extends moodleform {
         $attributes = [
             'multiple' => true,
         ];
-        $mform->addElement('autocomplete', 'services', get_string('service', 'webservice'), $options, $attributes);
+        $mform->addElement('autocomplete', 'services', get_string('service', 'core_webservice'), $options, $attributes);
 
         // Action buttons.
         $mform->addGroup([

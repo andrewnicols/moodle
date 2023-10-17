@@ -413,9 +413,9 @@ class user extends base {
             'address' => new lang_string('address'),
             'lastaccess' => new lang_string('lastaccess'),
             'suspended' => new lang_string('suspended'),
-            'confirmed' => new lang_string('confirmed', 'admin'),
+            'confirmed' => new lang_string('confirmed', 'core_admin'),
             'username' => new lang_string('username'),
-            'moodlenetprofile' => new lang_string('moodlenetprofile', 'user'),
+            'moodlenetprofile' => new lang_string('moodlenetprofile', 'core_user'),
             'timecreated' => new lang_string('timecreated', 'core_reportbuilder'),
         ];
     }

@@ -70,7 +70,7 @@ class custom_completion extends activity_custom_completion {
     public function get_custom_rule_descriptions(): array {
         $completionentries = $this->cm->customdata['customcompletionrules']['completionentries'] ?? 0;
         return [
-            'completionentries' => get_string('completiondetail:entries', 'glossary', $completionentries),
+            'completionentries' => get_string('completiondetail:entries', 'mod_glossary', $completionentries),
         ];
     }
 
