@@ -61,7 +61,7 @@ class xml_format_exception extends moodle_exception {
         $a->errorstring = $errorstring;
         $a->errorline = $line;
         $a->errorchar = $char;
-        parent::__construct('errorparsingxml', 'error', $link, $a);
+        parent::__construct('errorparsingxml', 'xapi_exceptionerror', $link, $a);
     }
 }
 

@@ -835,6 +835,6 @@ class lang_installer {
 class lang_installer_exception extends moodle_exception {
 
     public function __construct($errorcode, $debuginfo = null) {
-        parent::__construct($errorcode, 'error', '', null, $debuginfo);
+        parent::__construct($errorcode, 'core_error', '', null, $debuginfo);
     }
 }

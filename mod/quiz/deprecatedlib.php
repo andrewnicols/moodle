@@ -199,7 +199,7 @@ class moodle_quiz_exception extends moodle_exception {
         if (!$link) {
             $link = $quizobj->view_url();
         }
-        parent::__construct($errorcode, 'quiz', $link, $a, $debuginfo);
+        parent::__construct($errorcode, 'mod_quiz', $link, $a, $debuginfo);
     }
 }
 

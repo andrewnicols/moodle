@@ -691,10 +691,9 @@ class mnet_server_exception extends moodle_exception {
      * @param string $module       the language module, defaults to 'mnet'
      * @param mixed  $a            params for get_string
      */
-    public function __construct($intcode, $languagekey, $module='mnet', $a=null) {
+    public function __construct($intcode, $languagekey, $module = 'core_mnet', $a=null) {
         parent::__construct($languagekey, $module, '', $a);
         $this->code    = $intcode;
 
     }
 }
-

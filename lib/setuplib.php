@@ -158,7 +158,7 @@ class require_login_exception extends moodle_exception {
      * @param string $debuginfo Information to aid the debugging process
      */
     function __construct($debuginfo) {
-        parent::__construct('requireloginerror', 'error', '', NULL, $debuginfo);
+        parent::__construct('requireloginerror', 'core_error', '', NULL, $debuginfo);
     }
 }
 
@@ -176,7 +176,7 @@ class require_login_session_timeout_exception extends require_login_exception {
      * Constructor
      */
     public function __construct() {
-        moodle_exception::__construct('sessionerroruser', 'error');
+        moodle_exception::__construct('sessionerroruser', 'core_error');
     }
 }
 
@@ -194,7 +194,7 @@ class webservice_parameter_exception extends moodle_exception {
      * @param string $debuginfo Optional information to aid debugging
      */
     function __construct($errorcode=null, $a = '', $debuginfo = null) {
-        parent::__construct($errorcode, 'webservice', '', $a, $debuginfo);
+        parent::__construct($errorcode, 'core_webservice', '', $a, $debuginfo);
     }
 }
 
@@ -243,7 +243,7 @@ class coding_exception extends moodle_exception {
      * @param string $debuginfo detailed information how to fix problem
      */
     function __construct($hint, $debuginfo=null) {
-        parent::__construct('codingerror', 'debug', '', $hint, $debuginfo);
+        parent::__construct('codingerror', 'core_debug', '', $hint, $debuginfo);
     }
 }
 
@@ -264,7 +264,7 @@ class invalid_parameter_exception extends moodle_exception {
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo=null) {
-        parent::__construct('invalidparameter', 'debug', '', null, $debuginfo);
+        parent::__construct('invalidparameter', 'core_debug', '', null, $debuginfo);
     }
 }
 
@@ -280,7 +280,7 @@ class invalid_response_exception extends moodle_exception {
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo=null) {
-        parent::__construct('invalidresponse', 'debug', '', null, $debuginfo);
+        parent::__construct('invalidresponse', 'core_debug', '', null, $debuginfo);
     }
 }
 
@@ -303,7 +303,7 @@ class invalid_state_exception extends moodle_exception {
      * @param string $debuginfo optional more detailed information
      */
     function __construct($hint, $debuginfo=null) {
-        parent::__construct('invalidstatedetected', 'debug', '', $hint, $debuginfo);
+        parent::__construct('invalidstatedetected', 'core_debug', '', $hint, $debuginfo);
     }
 }
 
@@ -321,7 +321,7 @@ class invalid_dataroot_permissions extends moodle_exception {
      * @param string $debuginfo optional more detailed information
      */
     function __construct($debuginfo = NULL) {
-        parent::__construct('invaliddatarootpermissions', 'error', '', NULL, $debuginfo);
+        parent::__construct('invaliddatarootpermissions', 'core_error', '', NULL, $debuginfo);
     }
 }
 
@@ -339,7 +339,7 @@ class file_serving_exception extends moodle_exception {
      * @param string $debuginfo optional more detailed information
      */
     function __construct($debuginfo = NULL) {
-        parent::__construct('cannotservefile', 'error', '', NULL, $debuginfo);
+        parent::__construct('cannotservefile', 'core_error', '', NULL, $debuginfo);
     }
 }
 

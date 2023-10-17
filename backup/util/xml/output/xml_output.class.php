@@ -159,6 +159,6 @@ abstract class xml_output {
 class xml_output_exception extends moodle_exception {
 
     public function __construct($errorcode, $a=NULL, $debuginfo=null) {
-        parent::__construct($errorcode, 'error', '', $a, null, $debuginfo);
+        parent::__construct($errorcode, 'core_error', '', $a, null, $debuginfo);
     }
 }

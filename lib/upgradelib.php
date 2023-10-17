@@ -45,7 +45,7 @@ class upgrade_exception extends moodle_exception {
     function __construct($plugin, $version, $debuginfo=NULL) {
         global $CFG;
         $a = (object)array('plugin'=>$plugin, 'version'=>$version);
-        parent::__construct('upgradeerror', 'admin', "$CFG->wwwroot/$CFG->admin/index.php", $a, $debuginfo);
+        parent::__construct('upgradeerror', 'core_admin', "$CFG->wwwroot/$CFG->admin/index.php", $a, $debuginfo);
     }
 }
 
@@ -62,7 +62,7 @@ class downgrade_exception extends moodle_exception {
         global $CFG;
         $plugin = is_null($plugin) ? 'moodle' : $plugin;
         $a = (object)array('plugin'=>$plugin, 'oldversion'=>$oldversion, 'newversion'=>$newversion);
-        parent::__construct('cannotdowngrade', 'debug', "$CFG->wwwroot/$CFG->admin/index.php", $a);
+        parent::__construct('cannotdowngrade', 'core_debug', "$CFG->wwwroot/$CFG->admin/index.php", $a);
     }
 }
 
@@ -80,7 +80,7 @@ class upgrade_requires_exception extends moodle_exception {
         $a->pluginversion  = $pluginversion;
         $a->currentmoodle  = $currentmoodle;
         $a->requiremoodle  = $requiremoodle;
-        parent::__construct('pluginrequirementsnotmet', 'error', "$CFG->wwwroot/$CFG->admin/index.php", $a);
+        parent::__construct('pluginrequirementsnotmet', 'core_error', "$CFG->wwwroot/$CFG->admin/index.php", $a);
     }
 }
 
@@ -106,7 +106,7 @@ class plugin_incompatible_exception extends moodle_exception {
         $a->pluginversion   = $pluginversion;
         $a->moodleversion   = $CFG->branch;
 
-        parent::__construct('pluginunsupported', 'error', "$CFG->wwwroot/$CFG->admin/index.php", $a);
+        parent::__construct('pluginunsupported', 'core_error', "$CFG->wwwroot/$CFG->admin/index.php", $a);
     }
 }
 
@@ -119,7 +119,7 @@ class plugin_incompatible_exception extends moodle_exception {
 class plugin_defective_exception extends moodle_exception {
     function __construct($plugin, $details) {
         global $CFG;
-        parent::__construct('detectedbrokenplugin', 'error', "$CFG->wwwroot/$CFG->admin/index.php", $plugin, $details);
+        parent::__construct('detectedbrokenplugin', 'core_error', "$CFG->wwwroot/$CFG->admin/index.php", $plugin, $details);
     }
 }
 

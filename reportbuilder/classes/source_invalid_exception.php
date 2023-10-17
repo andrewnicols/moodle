@@ -35,6 +35,6 @@ class source_invalid_exception extends moodle_exception {
      * @param string $source
      */
     public function __construct(string $source) {
-        parent::__construct('errorsourceinvalid', 'reportbuilder', '', null, $source);
+        parent::__construct('errorsourceinvalid', 'core_reportbuilder', '', null, $source);
     }
 }

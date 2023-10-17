@@ -1580,7 +1580,7 @@ class enrol_ajax_exception extends moodle_exception {
      * @param string $debuginfo optional debugging information
      */
     public function __construct($errorcode, $link = '', $a = NULL, $debuginfo = null) {
-        parent::__construct($errorcode, 'enrol', $link, $a, $debuginfo);
+        parent::__construct($errorcode, 'core_enrol', $link, $a, $debuginfo);
     }
 }
 

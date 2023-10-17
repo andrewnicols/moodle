@@ -832,7 +832,7 @@ class question_out_of_sequence_exception extends moodle_exception {
         if ($postdata == null) {
             $postdata = data_submitted();
         }
-        parent::__construct('submissionoutofsequence', 'question', '', null,
+        parent::__construct('submissionoutofsequence', 'core_question', '', null,
                 "QUBAid: {$qubaid}, slot: {$slot}, post data: " . print_r($postdata, true));
     }
 }

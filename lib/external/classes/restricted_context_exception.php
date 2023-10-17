@@ -28,6 +28,6 @@ class restricted_context_exception extends \moodle_exception {
      * Constructor
      */
     public function __construct() {
-        parent::__construct('restrictedcontextexception', 'error');
+        parent::__construct('restrictedcontextexception', 'core_error');
     }
 }

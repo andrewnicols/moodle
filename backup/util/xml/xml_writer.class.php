@@ -282,6 +282,6 @@ class xml_writer {
 class xml_writer_exception extends moodle_exception {
 
     public function __construct($errorcode, $a=NULL, $debuginfo=null) {
-        parent::__construct($errorcode, 'error', '', $a, $debuginfo);
+        parent::__construct($errorcode, 'core_error', '', $a, $debuginfo);
     }
 }

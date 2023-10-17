@@ -35,6 +35,6 @@ class source_unavailable_exception extends moodle_exception {
      * @param string $source
      */
     public function __construct(string $source) {
-        parent::__construct('errorsourceunavailable', 'reportbuilder', '', null, $source);
+        parent::__construct('errorsourceunavailable', 'core_reportbuilder', '', null, $source);
     }
 }

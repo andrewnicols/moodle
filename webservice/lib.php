@@ -893,7 +893,7 @@ class webservice_access_exception extends moodle_exception {
      * @param string $debuginfo the debug info
      */
     function __construct($debuginfo) {
-        parent::__construct('accessexception', 'webservice', '', null, $debuginfo);
+        parent::__construct('accessexception', 'core_webservice', '', null, $debuginfo);
     }
 }
 
