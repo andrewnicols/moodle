@@ -832,14 +832,10 @@ class page_requirements_manager {
             }
 
         } else {
-            if ($dir = core_component::get_component_directory($component)) {
-                if (file_exists("$dir/module.js")) {
-                    if (strpos($dir, $CFG->dirroot.'/') === 0) {
-                        $dir = substr($dir, strlen($CFG->dirroot));
-                        $module = array('name'=>$component, 'fullpath'=>"$dir/module.js", 'requires' => array());
-                    }
-                }
-            }
+            debugging(
+                "Support for loading YUI3 modules with find_module and js_module has been removed. Please update your code to use AMD modules.",
+                DEBUG_DEVELOPER,
+            );
         }
 
         return $module;
@@ -881,8 +877,11 @@ class page_requirements_manager {
 
         // Process module requirements and attempt to load each. This allows
         // moodle modules to require each other.
-        if (!empty($module['requires'])){
+        if (!empty($module['requires'])) {
             foreach ($module['requires'] as $requirement) {
+                if (!str_starts_with($requirement, 'core_')) {
+                    continue;
+                }
                 $rmodule = $this->find_module($requirement);
                 if (is_array($rmodule)) {
                     $this->js_module($rmodule);
