@@ -469,17 +469,17 @@ class external_test extends externallib_advanced_testcase {
             'Closed feedback (as student)' => [
                 'role' => 'student',
                 'info' => ['closed' => true],
-                'warning' => get_string('feedback_is_not_open', 'feedback'),
+                'warning' => get_string('feedback_is_not_open', 'mod_feedback'),
             ],
             'Empty feedback (as student)' => [
                 'role' => 'student',
                 'info' => ['empty' => true],
-                'warning' => get_string('no_items_available_yet', 'feedback'),
+                'warning' => get_string('no_items_available_yet', 'mod_feedback'),
             ],
             'Closed feedback (as student)' => [
                 'role' => 'student',
                 'info' => ['closed' => true],
-                'warning' => get_string('feedback_is_not_open', 'feedback'),
+                'warning' => get_string('feedback_is_not_open', 'mod_feedback'),
             ],
             'Cannot complete feedback (as student)' => [
                 'role' => 'student',
@@ -987,7 +987,7 @@ class external_test extends externallib_advanced_testcase {
     public function test_get_non_respondents_from_anonymous_feedback() {
         $this->setUser($this->student);
         $this->expectException(moodle_exception::class);
-        $this->expectExceptionMessage(get_string('anonymous', 'feedback'));
+        $this->expectExceptionMessage(get_string('anonymous', 'mod_feedback'));
         mod_feedback_external::get_non_respondents($this->feedback->id);
     }
 
@@ -1168,7 +1168,7 @@ class external_test extends externallib_advanced_testcase {
         // Test user with full capabilities that didn't complete the feedback.
         $this->setUser($this->student);
 
-        $this->expectExceptionMessage(get_string('anonymous', 'feedback'));
+        $this->expectExceptionMessage(get_string('anonymous', 'mod_feedback'));
         $this->expectException(moodle_exception::class);
         mod_feedback_external::get_last_completed($this->feedback->id);
     }
@@ -1195,7 +1195,7 @@ class external_test extends externallib_advanced_testcase {
         // Test user with full capabilities.
         $this->setUser($this->student);
 
-        $this->expectExceptionMessage(get_string('anonymous', 'feedback'));
+        $this->expectExceptionMessage(get_string('anonymous', 'mod_feedback'));
         $this->expectException(moodle_exception::class);
         mod_feedback_external::get_last_completed($this->feedback->id);
     }
@@ -1238,7 +1238,7 @@ class external_test extends externallib_advanced_testcase {
         // Test user with full capabilities that didn't complete the feedback.
         $this->setUser($this->student);
 
-        $this->expectExceptionMessage(get_string('not_completed_yet', 'feedback'));
+        $this->expectExceptionMessage(get_string('not_completed_yet', 'mod_feedback'));
         $this->expectException(moodle_exception::class);
         mod_feedback_external::get_last_completed($this->feedback->id);
     }

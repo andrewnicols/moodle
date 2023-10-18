@@ -21,11 +21,11 @@
     $event = \mod_survey\event\course_module_instance_list_viewed::create($params);
     $event->trigger();
 
-    $strsurveys = get_string("modulenameplural", "survey");
+    $strsurveys = get_string("modulenameplural", 'mod_survey');
     $strname = get_string("name");
     $strstatus = get_string("status");
-    $strdone  = get_string("done", "survey");
-    $strnotdone  = get_string("notdone", "survey");
+    $strdone  = get_string("done", 'mod_survey');
+    $strnotdone  = get_string("notdone", 'mod_survey');
 
     $PAGE->navbar->add($strsurveys);
     $PAGE->set_title($strsurveys);

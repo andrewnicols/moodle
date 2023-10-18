@@ -1984,10 +1984,10 @@ class core_course_renderer extends plugin_renderer_base {
             $subtext = '';
             if (\mod_forum\subscriptions::is_subscribed($USER->id, $forum)) {
                 if (!\mod_forum\subscriptions::is_forcesubscribed($forum)) {
-                    $subtext = get_string('unsubscribe', 'forum');
+                    $subtext = get_string('unsubscribe', 'mod_forum');
                 }
             } else {
-                $subtext = get_string('subscribe', 'forum');
+                $subtext = get_string('subscribe', 'mod_forum');
             }
             $suburl = new moodle_url('/mod/forum/subscribe.php', array('id' => $forum->id, 'sesskey' => sesskey()));
             $output .= html_writer::tag('div', html_writer::link($suburl, $subtext), array('class' => 'subscribelink'));

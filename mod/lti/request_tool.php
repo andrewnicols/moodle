@@ -65,9 +65,9 @@ if (!lti_get_tool_by_url_match($lti->toolurl, $lti->course, LTI_TOOL_STATE_ANY))
 
     lti_add_type($tooltype, $toolconfig);
 
-    echo get_string('lti_tool_request_added', 'lti');
+    echo get_string('lti_tool_request_added', 'mod_lti');
 } else {
-    echo get_string('lti_tool_request_existing', 'lti');
+    echo get_string('lti_tool_request_existing', 'mod_lti');
 }
 
 echo $OUTPUT->footer();

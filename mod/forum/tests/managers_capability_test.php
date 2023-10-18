@@ -1386,7 +1386,7 @@ class managers_capability_test extends \advanced_testcase {
         // Get reply count.
         $replycount = $postvault->get_reply_count_for_post_id_in_discussion_id(
             $user, $postentity->get_id(), $discussionentity->get_id(), true);
-        $this->expectExceptionMessage(get_string('couldnotdeletereplies', 'forum'));
+        $this->expectExceptionMessage(get_string('couldnotdeletereplies', 'mod_forum'));
         $capabilitymanager->validate_delete_post($user, $discussionentity, $postentity, $replycount);
     }
 

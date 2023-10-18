@@ -43,24 +43,24 @@ if ($ADMIN->fulltree) {
 
     //--- general settings -----------------------------------------------------------------------------------
     $settings->add(new admin_setting_configtext('url/framesize',
-        get_string('framesize', 'url'), get_string('configframesize', 'url'), 130, PARAM_INT));
+        get_string('framesize', 'mod_url'), get_string('configframesize', 'mod_url'), 130, PARAM_INT));
     $settings->add(new admin_setting_configpasswordunmask('url/secretphrase', get_string('password'),
-        get_string('configsecretphrase', 'url'), ''));
+        get_string('configsecretphrase', 'mod_url'), ''));
     $settings->add(new admin_setting_configcheckbox('url/rolesinparams',
-        get_string('rolesinparams', 'url'), get_string('configrolesinparams', 'url'), false));
+        get_string('rolesinparams', 'mod_url'), get_string('configrolesinparams', 'mod_url'), false));
     $settings->add(new admin_setting_configmultiselect('url/displayoptions',
-        get_string('displayoptions', 'url'), get_string('configdisplayoptions', 'url'),
+        get_string('displayoptions', 'mod_url'), get_string('configdisplayoptions', 'mod_url'),
         $defaultdisplayoptions, $displayoptions));
 
     //--- modedit defaults -----------------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('urlmodeditdefaults', get_string('modeditdefaults', 'admin'), get_string('condifmodeditdefaults', 'admin')));
 
     $settings->add(new admin_setting_configcheckbox('url/printintro',
-        get_string('printintro', 'url'), get_string('printintroexplain', 'url'), 1));
+        get_string('printintro', 'mod_url'), get_string('printintroexplain', 'mod_url'), 1));
     $settings->add(new admin_setting_configselect('url/display',
-        get_string('displayselect', 'url'), get_string('displayselectexplain', 'url'), RESOURCELIB_DISPLAY_AUTO, $displayoptions));
+        get_string('displayselect', 'mod_url'), get_string('displayselectexplain', 'mod_url'), RESOURCELIB_DISPLAY_AUTO, $displayoptions));
     $settings->add(new admin_setting_configtext('url/popupwidth',
-        get_string('popupwidth', 'url'), get_string('popupwidthexplain', 'url'), 620, PARAM_INT, 7));
+        get_string('popupwidth', 'mod_url'), get_string('popupwidthexplain', 'mod_url'), 620, PARAM_INT, 7));
     $settings->add(new admin_setting_configtext('url/popupheight',
-        get_string('popupheight', 'url'), get_string('popupheightexplain', 'url'), 450, PARAM_INT, 7));
+        get_string('popupheight', 'mod_url'), get_string('popupheightexplain', 'mod_url'), 450, PARAM_INT, 7));
 }

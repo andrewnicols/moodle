@@ -316,8 +316,8 @@ class files {
      */
     protected static function get_file_areas(): array {
         $areas = [];
-        $areas['presentation'] = get_string('mod_form_block_presentation', 'bigbluebuttonbn');
-        $areas['presentationdefault'] = get_string('mod_form_block_presentation_default', 'bigbluebuttonbn');
+        $areas['presentation'] = get_string('mod_form_block_presentation', 'mod_bigbluebuttonbn');
+        $areas['presentationdefault'] = get_string('mod_form_block_presentation_default', 'mod_bigbluebuttonbn');
         return $areas;
     }
 

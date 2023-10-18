@@ -73,11 +73,11 @@ if ($overrideid) {
 
     if ($override->groupid) {
         if (!groups_group_visible($override->groupid, $course, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'quiz');
+            throw new \moodle_exception('invalidoverrideid', 'mod_quiz');
         }
     } else {
         if (!groups_user_groups_visible($course, $override->userid, $cm)) {
-            throw new \moodle_exception('invalidoverrideid', 'quiz');
+            throw new \moodle_exception('invalidoverrideid', 'mod_quiz');
         }
     }
 } else {
@@ -227,7 +227,7 @@ if ($mform->is_cancelled()) {
 }
 
 // Print the form.
-$pagetitle = get_string('editoverride', 'quiz');
+$pagetitle = get_string('editoverride', 'mod_quiz');
 $PAGE->navbar->add($pagetitle);
 $PAGE->set_pagelayout('admin');
 $PAGE->add_body_class('limitedwidth');

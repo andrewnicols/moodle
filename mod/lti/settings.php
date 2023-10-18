@@ -59,12 +59,12 @@ $settings->visiblename = new lang_string('manage_tools', 'mod_lti');
 $settings->hidden = true;
 $ADMIN->add('modltifolder', $settings);
 $proxieslink = new admin_externalpage('ltitoolproxies',
-        get_string('manage_tool_proxies', 'lti'),
+        get_string('manage_tool_proxies', 'mod_lti'),
         new moodle_url('/mod/lti/toolproxies.php'));
 $proxieslink->hidden = true;
 $ADMIN->add('modltifolder', $proxieslink);
 $ADMIN->add('modltifolder', new admin_externalpage('ltitoolconfigure',
-        get_string('manage_external_tools', 'lti'),
+        get_string('manage_external_tools', 'mod_lti'),
         new moodle_url('/mod/lti/toolconfigure.php')));
 
 foreach (core_plugin_manager::instance()->get_plugins_of_type('ltisource') as $plugin) {
@@ -84,9 +84,9 @@ if ($ADMIN->fulltree) {
     $pendingtoolshtml = '';
     $rejectedtoolshtml = '';
 
-    $active = get_string('active', 'lti');
-    $pending = get_string('pending', 'lti');
-    $rejected = get_string('rejected', 'lti');
+    $active = get_string('active', 'mod_lti');
+    $pending = get_string('pending', 'mod_lti');
+    $rejected = get_string('rejected', 'mod_lti');
 
     // Gather strings used for labels in the inline JS.
     $PAGE->requires->strings_for_js(
@@ -128,8 +128,8 @@ if ($ADMIN->fulltree) {
             $activeselected = 'class="selected"';
             break;
     }
-    $addtype = get_string('addtype', 'lti');
-    $config = get_string('manage_tool_proxies', 'lti');
+    $addtype = get_string('addtype', 'mod_lti');
+    $config = get_string('manage_tool_proxies', 'mod_lti');
 
     $addtypeurl = "{$CFG->wwwroot}/mod/lti/typessettings.php?action=add&amp;sesskey={$USER->sesskey}";
 
@@ -213,8 +213,8 @@ if ($ADMIN->fulltree) {
 //]]
 </script>
 EOD;
-    $settings->add(new admin_setting_heading('lti_types', new lang_string('external_tool_types', 'lti') .
-        $OUTPUT->help_icon('main_admin', 'lti'), $template));
+    $settings->add(new admin_setting_heading('lti_types', new lang_string('external_tool_types', 'mod_lti') .
+        $OUTPUT->help_icon('main_admin', 'mod_lti'), $template));
 }
 
 // Tell core we already added the settings structure.

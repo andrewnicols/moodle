@@ -82,7 +82,7 @@ function xmldb_label_upgrade($oldversion) {
             $pbar = new progress_bar('upgrademodlabelpluginfile', 500, true);
             $current = 0;
 
-            $defaultname = get_string('modulename', 'label');
+            $defaultname = get_string('modulename', 'mod_label');
             foreach ($labels as $label) {
                 $originalname = $label->name;
                 // Make sure that all labels have now the same name according to the new convention.

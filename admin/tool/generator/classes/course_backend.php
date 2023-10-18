@@ -528,7 +528,7 @@ class tool_generator_course_backend extends tool_generator_backend {
         // Create empty forum.
         $forumgenerator = $this->generator->get_plugin_generator('mod_forum');
         $record = array('course' => $this->course,
-                'name' => get_string('pluginname', 'forum'));
+                'name' => get_string('pluginname', 'mod_forum'));
         $options = array('section' => 0);
         $forum = $forumgenerator->create_instance($record, $options);
 

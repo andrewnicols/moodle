@@ -27,7 +27,7 @@ if ($groupid !== 0) {
 $PAGE->set_url($url);
 
 if (!$chat = $DB->get_record('chat', array('id' => $id))) {
-    throw new \moodle_exception('invalidid', 'chat');
+    throw new \moodle_exception('invalidid', 'mod_chat');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $chat->course))) {
@@ -57,7 +57,7 @@ if ($groupmode = groups_get_activity_groupmode($cm)) {   // Groups are being use
     $groupname = '';
 }
 
-$strchat = get_string('modulename', 'chat'); // Must be before current_language() in chat_login_user() to force course language!
+$strchat = get_string('modulename', 'mod_chat'); // Must be before current_language() in chat_login_user() to force course language!
 
 if (!$chatsid = chat_login_user($chat->id, 'sockets', $groupid, $course)) {
     throw new \moodle_exception('cantlogin');

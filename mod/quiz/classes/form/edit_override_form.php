@@ -86,7 +86,7 @@ class edit_override_form extends moodleform {
         $cm = $this->cm;
         $mform = $this->_form;
 
-        $mform->addElement('header', 'override', get_string('override', 'quiz'));
+        $mform->addElement('header', 'override', get_string('override', 'mod_quiz'));
 
         $quizgroupmode = groups_get_activity_groupmode($cm);
         $accessallgroups = ($quizgroupmode == NOGROUPS) || has_capability('moodle/site:accessallgroups', $this->context);
@@ -99,7 +99,7 @@ class edit_override_form extends moodleform {
                     $this->groupid => format_string(groups_get_group_name($this->groupid), true, $this->context),
                 ];
                 $mform->addElement('select', 'groupid',
-                        get_string('overridegroup', 'quiz'), $groupchoices);
+                        get_string('overridegroup', 'mod_quiz'), $groupchoices);
                 $mform->freeze('groupid');
             } else {
                 // Prepare the list of groups.
@@ -108,7 +108,7 @@ class edit_override_form extends moodleform {
                 if (empty($groups)) {
                     // Generate an error.
                     $link = new moodle_url('/mod/quiz/overrides.php', ['cmid' => $cm->id]);
-                    throw new \moodle_exception('groupsnone', 'quiz', $link);
+                    throw new \moodle_exception('groupsnone', 'mod_quiz', $link);
                 }
 
                 $groupchoices = [];
@@ -124,7 +124,7 @@ class edit_override_form extends moodleform {
                 }
 
                 $mform->addElement('select', 'groupid',
-                        get_string('overridegroup', 'quiz'), $groupchoices);
+                        get_string('overridegroup', 'mod_quiz'), $groupchoices);
                 $mform->addRule('groupid', get_string('required'), 'required', null, 'client');
             }
         } else {
@@ -138,7 +138,7 @@ class edit_override_form extends moodleform {
                 $userchoices = [];
                 $userchoices[$this->userid] = self::display_user_name($user, $extrauserfields);
                 $mform->addElement('select', 'userid',
-                        get_string('overrideuser', 'quiz'), $userchoices);
+                        get_string('overrideuser', 'mod_quiz'), $userchoices);
                 $mform->freeze('userid');
             } else {
                 // Prepare the list of users.
@@ -172,7 +172,7 @@ class edit_override_form extends moodleform {
                 if (empty($users)) {
                     // Generate an error.
                     $link = new moodle_url('/mod/quiz/overrides.php', ['cmid' => $cm->id]);
-                    throw new \moodle_exception('usersnone', 'quiz', $link);
+                    throw new \moodle_exception('usersnone', 'mod_quiz', $link);
                 }
 
                 $userchoices = [];
@@ -182,7 +182,7 @@ class edit_override_form extends moodleform {
                 unset($users);
 
                 $mform->addElement('searchableselector', 'userid',
-                        get_string('overrideuser', 'quiz'), $userchoices);
+                        get_string('overrideuser', 'mod_quiz'), $userchoices);
                 $mform->addRule('userid', get_string('required'), 'required', null, 'client');
             }
         }
@@ -190,24 +190,24 @@ class edit_override_form extends moodleform {
         // Password.
         // This field has to be above the date and timelimit fields,
         // otherwise browsers will clear it when those fields are changed.
-        $mform->addElement('passwordunmask', 'password', get_string('requirepassword', 'quiz'));
+        $mform->addElement('passwordunmask', 'password', get_string('requirepassword', 'mod_quiz'));
         $mform->setType('password', PARAM_TEXT);
-        $mform->addHelpButton('password', 'requirepassword', 'quiz');
+        $mform->addHelpButton('password', 'requirepassword', 'mod_quiz');
         $mform->setDefault('password', $this->quiz->password);
 
         // Open and close dates.
         $mform->addElement('date_time_selector', 'timeopen',
-                get_string('quizopen', 'quiz'), mod_quiz_mod_form::$datefieldoptions);
+                get_string('quizopen', 'mod_quiz'), mod_quiz_mod_form::$datefieldoptions);
         $mform->setDefault('timeopen', $this->quiz->timeopen);
 
         $mform->addElement('date_time_selector', 'timeclose',
-                get_string('quizclose', 'quiz'), mod_quiz_mod_form::$datefieldoptions);
+                get_string('quizclose', 'mod_quiz'), mod_quiz_mod_form::$datefieldoptions);
         $mform->setDefault('timeclose', $this->quiz->timeclose);
 
         // Time limit.
         $mform->addElement('duration', 'timelimit',
-                get_string('timelimit', 'quiz'), ['optional' => true]);
-        $mform->addHelpButton('timelimit', 'timelimit', 'quiz');
+                get_string('timelimit', 'mod_quiz'), ['optional' => true]);
+        $mform->addHelpButton('timelimit', 'timelimit', 'mod_quiz');
         $mform->setDefault('timelimit', $this->quiz->timelimit);
 
         // Number of attempts.
@@ -216,19 +216,19 @@ class edit_override_form extends moodleform {
             $attemptoptions[$i] = $i;
         }
         $mform->addElement('select', 'attempts',
-                get_string('attemptsallowed', 'quiz'), $attemptoptions);
-        $mform->addHelpButton('attempts', 'attempts', 'quiz');
+                get_string('attemptsallowed', 'mod_quiz'), $attemptoptions);
+        $mform->addHelpButton('attempts', 'attempts', 'mod_quiz');
         $mform->setDefault('attempts', $this->quiz->attempts);
 
         // Submit buttons.
         $mform->addElement('submit', 'resetbutton',
-                get_string('reverttodefaults', 'quiz'));
+                get_string('reverttodefaults', 'mod_quiz'));
 
         $buttonarray = [];
         $buttonarray[] = $mform->createElement('submit', 'submitbutton',
-                get_string('save', 'quiz'));
+                get_string('save', 'mod_quiz'));
         $buttonarray[] = $mform->createElement('submit', 'againbutton',
-                get_string('saveoverrideandstay', 'quiz'));
+                get_string('saveoverrideandstay', 'mod_quiz'));
         $buttonarray[] = $mform->createElement('cancel');
 
         $mform->addGroup($buttonarray, 'buttonbar', '', [' '], false);
@@ -282,7 +282,7 @@ class edit_override_form extends moodleform {
         // Ensure that the dates make sense.
         if (!empty($data['timeopen']) && !empty($data['timeclose'])) {
             if ($data['timeclose'] < $data['timeopen'] ) {
-                $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
+                $errors['timeclose'] = get_string('closebeforeopen', 'mod_quiz');
             }
         }
 
@@ -296,7 +296,7 @@ class edit_override_form extends moodleform {
             }
         }
         if (!$changed) {
-            $errors['timeopen'] = get_string('nooverridedata', 'quiz');
+            $errors['timeopen'] = get_string('nooverridedata', 'mod_quiz');
         }
 
         return $errors;

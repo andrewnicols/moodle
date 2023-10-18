@@ -39,7 +39,7 @@ $url = new moodle_url('/mod/data/export.php', array('d' => $d));
 $PAGE->set_url($url);
 
 if (! $data = $DB->get_record('data', array('id'=>$d))) {
-    throw new \moodle_exception('wrongdataid', 'data');
+    throw new \moodle_exception('wrongdataid', 'mod_data');
 }
 
 if (! $cm = get_coursemodule_from_instance('data', $data->id, $data->course)) {
@@ -67,7 +67,7 @@ if(empty($fieldrecords)) {
     if (has_capability('mod/data:managetemplates', $context)) {
         redirect($CFG->wwwroot.'/mod/data/field.php?d='.$data->id);
     } else {
-        throw new \moodle_exception('nofieldindatabase', 'data');
+        throw new \moodle_exception('nofieldindatabase', 'mod_data');
     }
 }
 
@@ -130,7 +130,7 @@ $PAGE->force_settings_menu(true);
 $PAGE->set_secondary_active_tab('modulepage');
 $PAGE->activityheader->disable();
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('exportentries', 'data'));
+echo $OUTPUT->heading(get_string('exportentries', 'mod_data'));
 
 groups_print_activity_menu($cm, $url);
 

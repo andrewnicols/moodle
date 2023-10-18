@@ -47,12 +47,12 @@ $event->add_record_snapshot('course', $course);
 $event->trigger();
 
 /// Print the page header
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 $PAGE->navbar->add($strfeedbacks);
 $PAGE->set_heading($course->fullname);
-$PAGE->set_title(get_string('modulename', 'feedback').' '.get_string('activities'));
+$PAGE->set_title(get_string('modulename', 'mod_feedback').' '.get_string('activities'));
 echo $OUTPUT->header();
 if (!$PAGE->has_secondary_navigation()) {
     echo $OUTPUT->heading($strfeedbacks);
@@ -72,7 +72,7 @@ $usesections = course_format_uses_sections($course->format);
 
 $timenow = time();
 $strname  = get_string("name");
-$strresponses = get_string('responses', 'feedback');
+$strresponses = get_string('responses', 'mod_feedback');
 
 $table = new html_table();
 

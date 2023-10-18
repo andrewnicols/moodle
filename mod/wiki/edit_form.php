@@ -59,15 +59,15 @@ class mod_wiki_edit_form extends moodleform {
 
         if (isset($this->_customdata['pagetitle'])) {
             // Page title must be formatted properly here as this is output and not an element.
-            $pagetitle = get_string('editingpage', 'wiki', format_string($this->_customdata['pagetitle'], true, array('context' => context::instance_by_id($contextid, MUST_EXIST))));
+            $pagetitle = get_string('editingpage', 'mod_wiki', format_string($this->_customdata['pagetitle'], true, array('context' => context::instance_by_id($contextid, MUST_EXIST))));
         } else {
-            $pagetitle = get_string('editing', 'wiki');
+            $pagetitle = get_string('editing', 'mod_wiki');
         }
 
         //editor
         $mform->addElement('header', 'general', $pagetitle);
 
-        $fieldname = get_string('format' . $format, 'wiki');
+        $fieldname = get_string('format' . $format, 'mod_wiki');
         if ($format != 'html') {
             // Use wiki editor
             $extensions = file_get_typegroup('extension', 'web_image');
@@ -83,11 +83,11 @@ class mod_wiki_edit_form extends moodleform {
                 }
             }
             $mform->addElement('wikieditor', 'newcontent', $fieldname, array('cols' => 100, 'rows' => 20, 'wiki_format' => $format, 'files'=>$files));
-            $mform->addHelpButton('newcontent', 'format'.$format, 'wiki');
+            $mform->addHelpButton('newcontent', 'format'.$format, 'mod_wiki');
             $mform->setType('newcontent', PARAM_RAW); // processed by trust text or cleaned before the display
         } else {
             $mform->addElement('editor', 'newcontent_editor', $fieldname, null, page_wiki_edit::$attachmentoptions);
-            $mform->addHelpButton('newcontent_editor', 'formathtml', 'wiki');
+            $mform->addHelpButton('newcontent_editor', 'formathtml', 'mod_wiki');
             $mform->setType('newcontent_editor', PARAM_RAW); // processed by trust text or cleaned before the display
         }
 
@@ -107,7 +107,7 @@ class mod_wiki_edit_form extends moodleform {
                 array('itemtype' => 'wiki_pages', 'component' => 'mod_wiki'));
 
         $buttongroup = array();
-        $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('save', 'wiki'), array('id' => 'save'));
+        $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('save', 'mod_wiki'), array('id' => 'save'));
         $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('preview'), array('id' => 'preview'), false);
         $buttongroup[] = $mform->createElement('submit', 'editoption', get_string('cancel'), array('id' => 'cancel'), false);
 

@@ -100,7 +100,7 @@ echo $OUTPUT->box_end();
 //show some infos to the feedback
 if (has_capability('mod/feedback:edititems', $context)) {
 
-    echo $OUTPUT->heading(get_string('overview', 'feedback'), 3);
+    echo $OUTPUT->heading(get_string('overview', 'mod_feedback'), 3);
 
     //get the groupid
     $groupselect = groups_print_activity_menu($cm, $CFG->wwwroot.'/mod/feedback/view.php?id='.$cm->id, true);
@@ -111,7 +111,7 @@ if (has_capability('mod/feedback:edititems', $context)) {
     echo $OUTPUT->render_from_template('mod_feedback/summary', $summary->export_for_template($OUTPUT));
 
     if ($pageaftersubmit = $feedbackcompletion->page_after_submit()) {
-        echo $OUTPUT->heading(get_string("page_after_submit", "feedback"), 3);
+        echo $OUTPUT->heading(get_string("page_after_submit", 'mod_feedback'), 3);
         echo $OUTPUT->box($pageaftersubmit, 'generalbox feedback_after_submit');
     }
 }
@@ -121,16 +121,16 @@ if (!$PAGE->has_secondary_navigation()) {
         $feedbackcompletion->can_view_analysis()) {
         $analysisurl = new moodle_url('/mod/feedback/analysis.php', array('id' => $id));
         echo '<div class="mdl-align"><a href="' . $analysisurl->out() . '">';
-        echo get_string('completed_feedbacks', 'feedback') . '</a>';
+        echo get_string('completed_feedbacks', 'mod_feedback') . '</a>';
         echo '</div>';
     }
 
     if (has_capability('mod/feedback:mapcourse', $context) && $feedback->course == SITEID) {
         echo $OUTPUT->box_start('generalbox feedback_mapped_courses');
-        echo $OUTPUT->heading(get_string("mappedcourses", "feedback"), 3);
-        echo '<p>' . get_string('mapcourse_help', 'feedback') . '</p>';
+        echo $OUTPUT->heading(get_string("mappedcourses", 'mod_feedback'), 3);
+        echo '<p>' . get_string('mapcourse_help', 'mod_feedback') . '</p>';
         $mapurl = new moodle_url('/mod/feedback/mapcourse.php', array('id' => $id));
-        echo '<p class="mdl-align">' . html_writer::link($mapurl, get_string('mapcourses', 'feedback')) . '</p>';
+        echo '<p class="mdl-align">' . html_writer::link($mapurl, get_string('mapcourses', 'mod_feedback')) . '</p>';
         echo $OUTPUT->box_end();
     }
 }
@@ -139,11 +139,11 @@ if ($feedbackcompletion->can_complete()) {
     echo $OUTPUT->box_start('generalbox boxaligncenter');
     if (!$feedbackcompletion->is_open()) {
         // Feedback is not yet open or is already closed.
-        echo $OUTPUT->notification(get_string('feedback_is_not_open', 'feedback'));
+        echo $OUTPUT->notification(get_string('feedback_is_not_open', 'mod_feedback'));
         echo $OUTPUT->continue_button(course_get_url($courseid ?: $course->id));
     } else if (!$feedbackcompletion->can_submit()) {
         // Feedback was already submitted.
-        echo $OUTPUT->notification(get_string('this_feedback_is_already_submitted', 'feedback'));
+        echo $OUTPUT->notification(get_string('this_feedback_is_already_submitted', 'mod_feedback'));
         $OUTPUT->continue_button(course_get_url($courseid ?: $course->id));
     }
     echo $OUTPUT->box_end();

@@ -40,22 +40,22 @@ $action = optional_param('action', '', PARAM_ALPHANUMEXT);
 $commentid = optional_param('commentid', 0, PARAM_INT);
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    throw new \moodle_exception('incorrectpageid', 'mod_wiki');
 }
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
 }
 if (!$cm = get_coursemodule_from_instance("wiki", $subwiki->wikiid)) {
     throw new \moodle_exception('invalidcoursemodule');
 }
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
 }
 require_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    throw new \moodle_exception('cannotviewpage', 'mod_wiki');
 }
 
 $editcomments = new page_wiki_editcomment($wiki, $subwiki, $cm, 'modulepage');
@@ -65,7 +65,7 @@ if ($action == 'edit') {
         throw new \moodle_exception('invalidcomment');
     }
     if ($USER->id != $comment->userid) {
-        throw new \moodle_exception('cannotviewpage', 'wiki');
+        throw new \moodle_exception('cannotviewpage', 'mod_wiki');
     }
 }
 

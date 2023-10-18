@@ -339,7 +339,7 @@ function h5pactivity_reset_gradebook(int $courseid, string $type=''): void {
  */
 function h5pactivity_page_type_list(string $pagetype, ?stdClass $parentcontext, stdClass $currentcontext): array {
     $modulepagetype = [
-        'mod-h5pactivity-*' => get_string('page-mod-h5pactivity-x', 'h5pactivity'),
+        'mod-h5pactivity-*' => get_string('page-mod-h5pactivity-x', 'mod_h5pactivity'),
     ];
     return $modulepagetype;
 }
@@ -516,7 +516,7 @@ function h5pactivity_dndupload_register(): array {
         'files' => [
             [
                 'extension' => 'h5p',
-                'message' => get_string('dnduploadh5pactivity', 'h5pactivity')
+                'message' => get_string('dnduploadh5pactivity', 'mod_h5pactivity')
             ]
         ]
     ];
@@ -603,7 +603,7 @@ function h5pactivity_print_recent_activity($course, bool $viewfullnames, int $ti
 
     $cms = $modinfo->get_cms();
 
-    echo $OUTPUT->heading(get_string('newsubmissions', 'h5pactivity') . ':', 6);
+    echo $OUTPUT->heading(get_string('newsubmissions', 'mod_h5pactivity') . ':', 6);
 
     foreach ($recentactivity as $submission) {
         $cm = $cms[$submission->cmid];
@@ -755,7 +755,7 @@ function h5pactivity_print_recent_mod_activity(stdClass $activity, int $courseid
         'userurl' => new moodle_url('/user/view.php', array('id' => $activity->user->id, 'course' => $courseid)),
         'fullname' => $activity->user->fullname];
     if (isset($activity->grade)) {
-        $template['grade'] = get_string('grade_h5p', 'h5pactivity', $activity->grade);
+        $template['grade'] = get_string('grade_h5p', 'mod_h5pactivity', $activity->grade);
     }
 
     echo $OUTPUT->render_from_template('mod_h5pactivity/reviewattempts', $template);
@@ -862,12 +862,12 @@ function h5pactivity_extend_settings_navigation(settings_navigation $settingsnav
     if ($manager->can_view_all_attempts()) {
         $attemptsreporturl = new moodle_url('/mod/h5pactivity/report.php',
             ['a' => $settingsnav->get_page()->cm->instance]);
-        $h5pactivitynode->add(get_string('attempts_report', 'h5pactivity'), $attemptsreporturl,
+        $h5pactivitynode->add(get_string('attempts_report', 'mod_h5pactivity'), $attemptsreporturl,
             settings_navigation::TYPE_SETTING, '', 'attemptsreport');
     } else if ($manager->can_view_own_attempts() && $manager->count_attempts($USER->id)) {
         $attemptsreporturl = new moodle_url('/mod/h5pactivity/report.php',
             ['a' => $settingsnav->get_page()->cm->instance, 'userid' => $USER->id]);
-        $h5pactivitynode->add(get_string('attempts_report', 'h5pactivity'), $attemptsreporturl,
+        $h5pactivitynode->add(get_string('attempts_report', 'mod_h5pactivity'), $attemptsreporturl,
             settings_navigation::TYPE_SETTING, '', 'attemptsreport');
     }
 }

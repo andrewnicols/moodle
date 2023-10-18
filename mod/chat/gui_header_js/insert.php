@@ -23,11 +23,11 @@ $chatmessage = required_param('chat_message', PARAM_RAW);
 $PAGE->set_url('/mod/chat/gui_header_js/insert.php', array('chat_sid' => $chatsid, 'chat_message' => $chatmessage));
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new \moodle_exception('notlogged', 'chat');
+    throw new \moodle_exception('notlogged', 'mod_chat');
 }
 
 if (!$chat = $DB->get_record('chat', array('id' => $chatuser->chatid))) {
-    throw new \moodle_exception('nochat', 'chat');
+    throw new \moodle_exception('nochat', 'mod_chat');
 }
 
 if (!$course = $DB->get_record('course', array('id' => $chat->course))) {

@@ -279,8 +279,8 @@ class ChatDaemon {
 
         if (empty($str)) {
             $str = new stdClass();
-            $str->idle  = get_string("idle", "chat");
-            $str->beep  = get_string("beep", "chat");
+            $str->idle  = get_string("idle", 'mod_chat');
+            $str->beep  = get_string("beep", 'mod_chat');
             $str->day   = get_string("day");
             $str->days  = get_string("days");
             $str->hour  = get_string("hour");

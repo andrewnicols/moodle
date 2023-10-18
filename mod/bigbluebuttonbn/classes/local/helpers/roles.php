@@ -209,16 +209,16 @@ class roles {
     public static function get_participant_data(context $context, ?stdClass $bbactivity = null) {
         $data = [
             'all' => [
-                'name' => get_string('mod_form_field_participant_list_type_all', 'bigbluebuttonbn'),
+                'name' => get_string('mod_form_field_participant_list_type_all', 'mod_bigbluebuttonbn'),
                 'children' => []
             ],
         ];
         $data['role'] = [
-            'name' => get_string('mod_form_field_participant_list_type_role', 'bigbluebuttonbn'),
+            'name' => get_string('mod_form_field_participant_list_type_role', 'mod_bigbluebuttonbn'),
             'children' => self::get_roles_select($context, true)
         ];
         $data['user'] = [
-            'name' => get_string('mod_form_field_participant_list_type_user', 'bigbluebuttonbn'),
+            'name' => get_string('mod_form_field_participant_list_type_user', 'mod_bigbluebuttonbn'),
             'children' => self::get_users_array($context, $bbactivity),
         ];
         return $data;
@@ -315,9 +315,9 @@ class roles {
     public static function get_participant_selection_data(): array {
         return [
             'type_options' => [
-                'all' => get_string('mod_form_field_participant_list_type_all', 'bigbluebuttonbn'),
-                'role' => get_string('mod_form_field_participant_list_type_role', 'bigbluebuttonbn'),
-                'user' => get_string('mod_form_field_participant_list_type_user', 'bigbluebuttonbn'),
+                'all' => get_string('mod_form_field_participant_list_type_all', 'mod_bigbluebuttonbn'),
+                'role' => get_string('mod_form_field_participant_list_type_role', 'mod_bigbluebuttonbn'),
+                'user' => get_string('mod_form_field_participant_list_type_user', 'mod_bigbluebuttonbn'),
             ],
             'type_selected' => 'all',
             'options' => ['all' => '---------------'],

@@ -368,14 +368,14 @@ class discussion_list {
 
         if ($forum->is_cutoff_date_reached()) {
             $notifications[] = (new notification(
-                    get_string('cutoffdatereached', 'forum'),
+                    get_string('cutoffdatereached', 'mod_forum'),
                     notification::NOTIFY_INFO
             ))->set_show_closebutton();
         }
 
         if ($forum->has_blocking_enabled()) {
             $notifications[] = (new notification(
-                get_string('thisforumisthrottled', 'forum', [
+                get_string('thisforumisthrottled', 'mod_forum', [
                     'blockafter' => $forum->get_block_after(),
                     'blockperiod' => get_string('secondstotime' . $forum->get_block_period())
                 ]),
@@ -406,14 +406,14 @@ class discussion_list {
 
         if ('qanda' === $forum->get_type() && !$capabilitymanager->can_manage_forum($user)) {
             $notifications[] = (new notification(
-                get_string('qandanotify', 'forum'),
+                get_string('qandanotify', 'mod_forum'),
                 notification::NOTIFY_INFO
             ))->set_show_closebutton()->set_extra_classes(['mt-3']);
         }
 
         if ('eachuser' === $forum->get_type()) {
             $notifications[] = (new notification(
-                get_string('allowsdiscussions', 'forum'),
+                get_string('allowsdiscussions', 'mod_forum'),
                 notification::NOTIFY_INFO)
             )->set_show_closebutton();
         }

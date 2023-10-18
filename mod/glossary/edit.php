@@ -20,7 +20,7 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 
 if (!$glossary = $DB->get_record('glossary', array('id'=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    throw new \moodle_exception('invalidid', 'mod_glossary');
 }
 
 $url = new moodle_url('/mod/glossary/edit.php', array('cmid'=>$cm->id));
@@ -31,7 +31,7 @@ $PAGE->set_url($url);
 
 if ($id) { // if entry is specified
     if (isguestuser()) {
-        throw new \moodle_exception('guestnoedit', 'glossary', "$CFG->wwwroot/mod/glossary/view.php?id=$cmid");
+        throw new \moodle_exception('guestnoedit', 'mod_glossary', "$CFG->wwwroot/mod/glossary/view.php?id=$cmid");
     }
 
     if (!$entry = $DB->get_record('glossary_entries', array('id'=>$id, 'glossaryid'=>$glossary->id))) {

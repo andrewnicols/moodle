@@ -479,7 +479,7 @@ class capability {
 
         if ($forum->get_type() == 'single' && $discussion->is_first_post($post)) {
             // Do not allow deleting of first post in single simple type.
-            throw new moodle_exception('cannotdeletepost', 'forum');
+            throw new moodle_exception('cannotdeletepost', 'mod_forum');
         }
 
         $context = $this->get_context();
@@ -490,7 +490,7 @@ class capability {
         if (!($ownpost && $ineditingtime && has_capability('mod/forum:deleteownpost', $context, $user) && !$mailnow ||
                 has_capability('mod/forum:deleteanypost', $context, $user))) {
 
-            throw new moodle_exception('cannotdeletepost', 'forum');
+            throw new moodle_exception('cannotdeletepost', 'mod_forum');
         }
 
         if ($post->get_total_score()) {
@@ -498,7 +498,7 @@ class capability {
         }
 
         if ($hasreplies && !has_capability('mod/forum:deleteanypost', $context, $user)) {
-            throw new moodle_exception('couldnotdeletereplies', 'forum');
+            throw new moodle_exception('couldnotdeletereplies', 'mod_forum');
         }
     }
 

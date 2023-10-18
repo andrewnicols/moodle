@@ -43,7 +43,7 @@ class essay_grading_form extends moodleform {
 
         $mform = $this->_form;
 
-        $mform->addElement('header', 'formheader', get_string('question', 'lesson'));
+        $mform->addElement('header', 'formheader', get_string('question', 'mod_lesson'));
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
@@ -54,14 +54,14 @@ class essay_grading_form extends moodleform {
         $mform->addElement('hidden', 'mode', 'update');
         $mform->setType('mode', PARAM_ALPHA);
 
-        $mform->addElement('static', 'question', get_string('question', 'lesson'));
-        $mform->addElement('static', 'studentanswer', get_string('studentresponse', 'lesson', fullname($this->_customdata['user'], true)));
+        $mform->addElement('static', 'question', get_string('question', 'mod_lesson'));
+        $mform->addElement('static', 'studentanswer', get_string('studentresponse', 'mod_lesson', fullname($this->_customdata['user'], true)));
 
         $editoroptions = array('noclean' => true, 'maxfiles' => EDITOR_UNLIMITED_FILES, 'maxbytes' => $CFG->maxbytes);
-        $mform->addElement('editor', 'response_editor', get_string('comments', 'lesson'), null, $editoroptions);
+        $mform->addElement('editor', 'response_editor', get_string('comments', 'mod_lesson'), null, $editoroptions);
         $mform->setType('response', PARAM_RAW);
 
-        $mform->addElement('select', 'score', get_string('essayscore', 'lesson'), $this->_customdata['scoreoptions']);
+        $mform->addElement('select', 'score', get_string('essayscore', 'mod_lesson'), $this->_customdata['scoreoptions']);
         $mform->setType('score', PARAM_INT);
 
         $this->add_action_buttons(get_string('cancel'), get_string('savechanges'));

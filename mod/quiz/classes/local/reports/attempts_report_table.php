@@ -132,7 +132,7 @@ abstract class attempts_report_table extends \table_sql {
                 'id' => "attemptid_{$attempt->attempt}",
                 'name' => 'attemptid[]',
                 'value' => $attempt->attempt,
-                'label' => get_string('selectattempt', 'quiz'),
+                'label' => get_string('selectattempt', 'mod_quiz'),
                 'labelclasses' => 'accesshide',
             ]);
             return $OUTPUT->render($checkbox);
@@ -170,7 +170,7 @@ abstract class attempts_report_table extends \table_sql {
 
         return $html . html_writer::empty_tag('br') . html_writer::link(
                 new moodle_url('/mod/quiz/review.php', ['attempt' => $attempt->attempt]),
-                get_string('reviewattempt', 'quiz'), ['class' => 'reviewlink']);
+                get_string('reviewattempt', 'mod_quiz'), ['class' => 'reviewlink']);
     }
 
     /**
@@ -191,7 +191,7 @@ abstract class attempts_report_table extends \table_sql {
 
         $this->canreopen ??= has_capability('mod/quiz:reopenattempts', $this->context);
         if ($attempt->state == quiz_attempt::ABANDONED && $this->canreopen) {
-            $display .= ' ' . html_writer::tag('button', get_string('reopenattempt', 'quiz'), [
+            $display .= ' ' . html_writer::tag('button', get_string('reopenattempt', 'mod_quiz'), [
                 'type' => 'button',
                 'class' => 'btn btn-secondary',
                 'data-action' => 'reopen-attempt',
@@ -308,7 +308,7 @@ abstract class attempts_report_table extends \table_sql {
         $output = $OUTPUT->action_link($url, $output,
                 new popup_action('click', $url, 'reviewquestion',
                         ['height' => 450, 'width' => 650]),
-                ['title' => get_string('reviewresponse', 'quiz')]);
+                ['title' => get_string('reviewresponse', 'mod_quiz')]);
 
         if (!empty($CFG->enableplagiarism)) {
             require_once($CFG->libdir . '/plagiarismlib.php');
@@ -732,8 +732,8 @@ abstract class attempts_report_table extends \table_sql {
 
         // Build the select/deselect all control.
         $selectallid = $this->uniqueid . '-selectall-attempts';
-        $selectalltext = get_string('selectall', 'quiz');
-        $deselectalltext = get_string('selectnone', 'quiz');
+        $selectalltext = get_string('selectall', 'mod_quiz');
+        $deselectalltext = get_string('selectnone', 'mod_quiz');
         $mastercheckbox = new \core\output\checkbox_toggleall($this->togglegroup, true, [
             'id' => $selectallid,
             'name' => $selectallid,

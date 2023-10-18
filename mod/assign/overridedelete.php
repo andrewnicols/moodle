@@ -32,7 +32,7 @@ $overrideid = required_param('id', PARAM_INT);
 $confirm = optional_param('confirm', false, PARAM_BOOL);
 
 if (! $override = $DB->get_record('assign_overrides', array('id' => $overrideid))) {
-    throw new \moodle_exception('invalidoverrideid', 'assign');
+    throw new \moodle_exception('invalidoverrideid', 'mod_assign');
 }
 
 list($course, $cm) = get_course_and_cm_from_instance($override->assignid, 'assign');
@@ -46,11 +46,11 @@ require_capability('mod/assign:manageoverrides', $context);
 
 if ($override->groupid) {
     if (!groups_group_visible($override->groupid, $course, $cm)) {
-        throw new \moodle_exception('invalidoverrideid', 'assign');
+        throw new \moodle_exception('invalidoverrideid', 'mod_assign');
     }
 } else {
     if (!groups_user_groups_visible($course, $override->userid, $cm)) {
-        throw new \moodle_exception('invalidoverrideid', 'assign');
+        throw new \moodle_exception('invalidoverrideid', 'mod_assign');
     }
 }
 
@@ -74,7 +74,7 @@ if ($confirm) {
 }
 
 // Prepare the page to show the confirmation form.
-$stroverride = get_string('override', 'assign');
+$stroverride = get_string('override', 'mod_assign');
 $title = get_string('deletecheck', null, $stroverride);
 
 $PAGE->set_url($url);
@@ -94,13 +94,13 @@ echo $OUTPUT->header();
 
 if ($override->groupid) {
     $group = $DB->get_record('groups', array('id' => $override->groupid), 'id, name');
-    $confirmstr = get_string("overridedeletegroupsure", "assign", format_string($group->name, true, ['context' => $context]));
+    $confirmstr = get_string("overridedeletegroupsure", 'mod_assign', format_string($group->name, true, ['context' => $context]));
 } else {
     $userfieldsapi = \core_user\fields::for_name();
     $namefields = $userfieldsapi->get_sql('', false, '', '', false)->selects;
     $user = $DB->get_record('user', array('id' => $override->userid),
             'id, ' . $namefields);
-    $confirmstr = get_string("overridedeleteusersure", "assign", fullname($user));
+    $confirmstr = get_string("overridedeleteusersure", 'mod_assign', fullname($user));
 }
 
 echo $OUTPUT->confirm($confirmstr, $confirmurl, $cancelurl);

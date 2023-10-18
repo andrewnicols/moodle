@@ -44,7 +44,7 @@
             <p class="ml-auto">{{usergrade}}</p>
         </div>
         <div class="row px-3">
-            <h5 class="font-weight-bold description">{{#str}}gradedby, forum{{/str}}:</h5>
+            <h5 class="font-weight-bold description">{{#str}}gradedby, mod_forum{{/str}}:</h5>
             <p class="ml-auto">
                 {{#gradedby}}
                     {{gradedby}}
@@ -61,14 +61,14 @@
     {{/grade}}
     <div class="row px-3">
         <h5 class="font-weight-bold description">
-            {{#str}}gradingstatus, forum{{/str}}
+            {{#str}}gradingstatus, mod_forum{{/str}}
         </h5>
         <p class="ml-auto">
             {{#hasgrade}}
-                {{#str}}graded, forum{{/str}}
+                {{#str}}graded, mod_forum{{/str}}
             {{/hasgrade}}
             {{^hasgrade}}
-                {{#str}}notgraded, forum{{/str}}
+                {{#str}}notgraded, mod_forum{{/str}}
             {{/hasgrade}}
         </p>
     </div>

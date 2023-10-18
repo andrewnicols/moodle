@@ -435,10 +435,10 @@ function forum_update_subscriptions_button($courseid, $forumid): string {
             'The \'Manage subscribers\' button has been replaced with tertiary navigation.', DEBUG_DEVELOPER);
 
     if (!empty($USER->subscriptionsediting)) {
-        $string = get_string('managesubscriptionsoff', 'forum');
+        $string = get_string('managesubscriptionsoff', 'mod_forum');
         $edit = "off";
     } else {
-        $string = get_string('managesubscriptionson', 'forum');
+        $string = get_string('managesubscriptionson', 'mod_forum');
         $edit = "on";
     }
 

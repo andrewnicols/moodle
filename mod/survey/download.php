@@ -48,7 +48,7 @@ require_login($course, false, $cm);
 require_capability('mod/survey:download', $context) ;
 
 if (! $survey = $DB->get_record("survey", array("id"=>$cm->instance))) {
-    throw new \moodle_exception('invalidsurveyid', 'survey');
+    throw new \moodle_exception('invalidsurveyid', 'mod_survey');
 }
 
 $params = array(
@@ -129,13 +129,13 @@ foreach($allquestions as $question) {
     $questions[$question->id] = $question;
 
     //while were iterating over the questions get the question text
-    $questions[$question->id]->text = get_string($questions[$question->id]->text, "survey");
+    $questions[$question->id]->text = get_string($questions[$question->id]->text, 'mod_survey');
 }
 unset($allquestions);
 
 // Get and collate all the results in one big array
 if (! $surveyanswers = $DB->get_records("survey_answers", array("survey"=>$survey->id), "time ASC")) {
-    throw new \moodle_exception('cannotfindanswer', 'survey');
+    throw new \moodle_exception('cannotfindanswer', 'mod_survey');
 }
 
 $results = array();

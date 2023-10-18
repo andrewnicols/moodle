@@ -46,7 +46,7 @@
         href="{{{urls.subscribe}}}"
         class="dropdown-item"
         role="menuitem"
-        data-type="subscription-toggle"
+        data-type="subscripti, mod_forumn-t, mod_forumggle"
         data-action="toggle"
         data-discussionid="{{id}}"
         data-forumid="{{forumid}}"
@@ -60,10 +60,10 @@
         {{/userstate.subscribed}}
     >
         {{#userstate.subscribed}}
-            {{#str}}unsubscribediscussion, forum{{/str}}
+            {{#str}}unsubscribediscussion, mod_forum{{/str}}
         {{/userstate.subscribed}}
         {{^userstate.subscribed}}
-            {{#str}}subscribediscussion, forum{{/str}}
+            {{#str}}subscribediscussion, mod_forum{{/str}}
         {{/userstate.subscribed}}
     </a>
 {{/capabilities.subscribe}}

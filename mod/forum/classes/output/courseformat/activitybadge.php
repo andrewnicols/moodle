@@ -36,9 +36,9 @@ class activitybadge extends \core_courseformat\output\activitybadge {
         if (forum_tp_can_track_forums()) {
             if ($unread = forum_tp_count_forum_unread_posts($this->cminfo, $this->cminfo->get_course())) {
                 if ($unread == 1) {
-                    $this->content = get_string('unreadpostsone', 'forum');
+                    $this->content = get_string('unreadpostsone', 'mod_forum');
                 } else {
-                    $this->content = get_string('unreadpostsnumber', 'forum', $unread);
+                    $this->content = get_string('unreadpostsnumber', 'mod_forum', $unread);
                 }
                 $this->style = self::STYLES['dark'];
             }

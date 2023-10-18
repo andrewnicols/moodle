@@ -39,7 +39,7 @@ class navigation_panel_attempt extends navigation_panel_base {
     }
 
     public function render_before_button_bits(renderer $output) {
-        return html_writer::tag('div', get_string('navnojswarning', 'quiz'),
+        return html_writer::tag('div', get_string('navnojswarning', 'mod_quiz'),
                 ['id' => 'quiznojswarning']);
     }
 
@@ -49,7 +49,7 @@ class navigation_panel_attempt extends navigation_panel_base {
             return '';
         }
         return html_writer::link($this->attemptobj->summary_url(),
-                get_string('endtest', 'quiz'), ['class' => 'endtestlink aalink']) .
+                get_string('endtest', 'mod_quiz'), ['class' => 'endtestlink aalink']) .
                 $this->render_restart_preview_link($output);
     }
 }

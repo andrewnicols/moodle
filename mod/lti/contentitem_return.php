@@ -102,7 +102,7 @@ if ($errormsg) {
 } else if (!empty($returndata)) {
     // Means success.
     if (!$msg) {
-        $msg = get_string('successfullyfetchedtoolconfigurationfromcontent', 'lti');
+        $msg = get_string('successfullyfetchedtoolconfigurationfromcontent', 'mod_lti');
     }
     \core\notification::success($msg);
 }

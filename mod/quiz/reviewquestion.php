@@ -52,7 +52,7 @@ $accessmanager = $attemptobj->get_access_manager(time());
 $options = $attemptobj->get_display_options(true);
 
 $PAGE->set_pagelayout('popup');
-$PAGE->set_title(get_string('reviewofquestion', 'quiz', [
+$PAGE->set_title(get_string('reviewofquestion', 'mod_quiz', [
         'question' => format_string($attemptobj->get_question_name($slot)),
         'quiz' => format_string($attemptobj->get_quiz_name()), 'user' => fullname($student)]));
 $PAGE->set_heading($attemptobj->get_course()->fullname);
@@ -62,7 +62,7 @@ $output = $PAGE->get_renderer('mod_quiz');
 // quiz_attempt::check_file_access. If you change on, change them all.
 if ($attemptobj->is_own_attempt()) {
     if (!$attemptobj->is_finished()) {
-        echo $output->review_question_not_allowed($attemptobj, get_string('cannotreviewopen', 'quiz'));
+        echo $output->review_question_not_allowed($attemptobj, get_string('cannotreviewopen', 'mod_quiz'));
         die();
     } else if (!$options->attempt) {
         echo $output->review_question_not_allowed($attemptobj,
@@ -71,7 +71,7 @@ if ($attemptobj->is_own_attempt()) {
     }
 
 } else if (!$attemptobj->is_review_allowed()) {
-    throw new moodle_exception('noreviewattempt', 'quiz', $attemptobj->view_url());
+    throw new moodle_exception('noreviewattempt', 'mod_quiz', $attemptobj->view_url());
 }
 
 // Prepare summary informat about this question attempt.
@@ -89,13 +89,13 @@ $summarydata['user'] = [
 
 // Quiz name.
 $summarydata['quizname'] = [
-    'title'   => get_string('modulename', 'quiz'),
+    'title'   => get_string('modulename', 'mod_quiz'),
     'content' => format_string($attemptobj->get_quiz_name()),
 ];
 
 // Question name.
 $summarydata['questionname'] = [
-    'title'   => get_string('question', 'quiz'),
+    'title'   => get_string('question', 'mod_quiz'),
     'content' => $attemptobj->get_question_name($slot),
 ];
 
@@ -106,7 +106,7 @@ if ($attemptobj->has_capability('mod/quiz:viewreports')) {
     $attemptlist = $attemptobj->links_to_other_attempts($otherattemptsurl);
     if ($attemptlist) {
         $summarydata['attemptlist'] = [
-            'title'   => get_string('attempts', 'quiz'),
+            'title'   => get_string('attempts', 'mod_quiz'),
             'content' => $attemptlist,
         ];
     }
@@ -116,7 +116,7 @@ if ($attemptobj->has_capability('mod/quiz:viewreports')) {
 $timestamp = $attemptobj->get_question_action_time($slot);
 if ($timestamp) {
     $summarydata['timestamp'] = [
-        'title'   => get_string('completedon', 'quiz'),
+        'title'   => get_string('completedon', 'mod_quiz'),
         'content' => userdate($timestamp),
     ];
 }

@@ -69,16 +69,16 @@ if ($printclose) {  // this is for framesets
 // Check access restrictions.
 if ($timerestriction = $lesson->get_time_restriction_status()) {  // Deadline restrictions.
     echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('notavailable'));
-    echo $lessonoutput->lesson_inaccessible(get_string($timerestriction->reason, 'lesson', userdate($timerestriction->time)));
+    echo $lessonoutput->lesson_inaccessible(get_string($timerestriction->reason, 'mod_lesson', userdate($timerestriction->time)));
     echo $lessonoutput->footer();
     exit();
 } else if ($passwordrestriction = $lesson->get_password_restriction_status(null)) { // Password protected lesson code.
-    echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('passwordprotectedlesson', 'lesson', format_string($lesson->name)));
+    echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('passwordprotectedlesson', 'mod_lesson', format_string($lesson->name)));
     echo $lessonoutput->login_prompt($lesson, $userpassword !== '');
     echo $lessonoutput->footer();
     exit();
 } else if ($dependenciesrestriction = $lesson->get_dependencies_restriction_status()) { // Check for dependencies.
-    echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('completethefollowingconditions', 'lesson', format_string($lesson->name)));
+    echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('completethefollowingconditions', 'mod_lesson', format_string($lesson->name)));
     echo $lessonoutput->dependancy_errors($dependenciesrestriction->dependentlesson, $dependenciesrestriction->errors);
     echo $lessonoutput->footer();
     exit();

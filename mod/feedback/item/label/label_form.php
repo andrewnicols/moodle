@@ -38,8 +38,8 @@ class feedback_label_form extends feedback_item_form {
         $mform->addElement('hidden', 'label', '');
         $mform->setType('label', PARAM_ALPHA);
 
-        $mform->addElement('header', 'general', get_string($this->type, 'feedback'));
-        $mform->addElement('editor', 'presentation_editor', get_string('labelcontents', 'feedback'), null, $presentationoptions);
+        $mform->addElement('header', 'general', get_string($this->type, 'mod_feedback'));
+        $mform->addElement('editor', 'presentation_editor', get_string('labelcontents', 'mod_feedback'), null, $presentationoptions);
         $mform->setType('presentation_editor', PARAM_RAW);
 
         parent::definition();

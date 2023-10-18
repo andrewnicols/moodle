@@ -45,13 +45,13 @@ abstract class feedback_item_form extends moodleform {
         if (array_filter(array_keys($common['items']))) {
             $mform->addElement('select',
                                 'dependitem',
-                                get_string('dependitem', 'feedback').'&nbsp;',
+                                get_string('dependitem', 'mod_feedback').'&nbsp;',
                                 $common['items']
                                 );
-            $mform->addHelpButton('dependitem', 'depending', 'feedback');
+            $mform->addHelpButton('dependitem', 'depending', 'mod_feedback');
             $mform->addElement('text',
                                 'dependvalue',
-                                get_string('dependvalue', 'feedback'),
+                                get_string('dependvalue', 'mod_feedback'),
                                 array('size'=>FEEDBACK_ITEM_LABEL_TEXTBOX_SIZE, 'maxlength'=>255));
             $mform->hideIf('dependvalue', 'dependitem', 'eq', '0');
         } else {
@@ -64,7 +64,7 @@ abstract class feedback_item_form extends moodleform {
 
         $position_select = $mform->addElement('select',
                                             'position',
-                                            get_string('position', 'feedback').'&nbsp;',
+                                            get_string('position', 'mod_feedback').'&nbsp;',
                                             $positionlist);
         $position_select->setValue($position);
 
@@ -96,11 +96,11 @@ abstract class feedback_item_form extends moodleform {
         if (!empty($item->id)) {
             $buttonarray[] = &$mform->createElement('submit',
                                                     'update_item',
-                                                    get_string('update_item', 'feedback'));
+                                                    get_string('update_item', 'mod_feedback'));
 
             $buttonarray[] = &$mform->createElement('submit',
                                                     'clone_item',
-                                                    get_string('save_as_new_item', 'feedback'));
+                                                    get_string('save_as_new_item', 'mod_feedback'));
         } else {
             $mform->addElement('hidden', 'clone_item', 0);
             $mform->setType('clone_item', PARAM_INT);

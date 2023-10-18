@@ -58,18 +58,18 @@ $event = \mod_forum\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strforums       = get_string('forums', 'forum');
-$strforum        = get_string('forum', 'forum');
+$strforums       = get_string('forums', 'mod_forum');
+$strforum        = get_string('forum', 'mod_forum');
 $strdescription  = get_string('description');
-$strdiscussions  = get_string('discussions', 'forum');
-$strsubscribed   = get_string('subscribed', 'forum');
-$strunreadposts  = get_string('unreadposts', 'forum');
-$strtracking     = get_string('tracking', 'forum');
-$strmarkallread  = get_string('markallread', 'forum');
-$strtrackforum   = get_string('trackforum', 'forum');
-$strnotrackforum = get_string('notrackforum', 'forum');
-$strsubscribe    = get_string('subscribe', 'forum');
-$strunsubscribe  = get_string('unsubscribe', 'forum');
+$strdiscussions  = get_string('discussions', 'mod_forum');
+$strsubscribed   = get_string('subscribed', 'mod_forum');
+$strunreadposts  = get_string('unreadposts', 'mod_forum');
+$strtracking     = get_string('tracking', 'mod_forum');
+$strmarkallread  = get_string('markallread', 'mod_forum');
+$strtrackforum   = get_string('trackforum', 'mod_forum');
+$strnotrackforum = get_string('notrackforum', 'mod_forum');
+$strsubscribe    = get_string('subscribe', 'mod_forum');
+$strunsubscribe  = get_string('unsubscribe', 'mod_forum');
 $stryes          = get_string('yes');
 $strno           = get_string('no');
 $strrss          = get_string('rss');
@@ -176,7 +176,7 @@ if (!is_null($subscribe)) {
         // There should not be any links leading to this place, just redirect.
         redirect(
                 new moodle_url('/mod/forum/index.php', array('id' => $id)),
-                get_string('subscribeenrolledonly', 'forum'),
+                get_string('subscribeenrolledonly', 'mod_forum'),
                 null,
                 \core\output\notification::NOTIFY_ERROR
             );
@@ -210,14 +210,14 @@ if (!is_null($subscribe)) {
     if ($subscribe) {
         redirect(
                 $returnto,
-                get_string('nowallsubscribed', 'forum', $shortname),
+                get_string('nowallsubscribed', 'mod_forum', $shortname),
                 null,
                 \core\output\notification::NOTIFY_SUCCESS
             );
     } else {
         redirect(
                 $returnto,
-                get_string('nowallunsubscribed', 'forum', $shortname),
+                get_string('nowallunsubscribed', 'mod_forum', $shortname),
                 null,
                 \core\output\notification::NOTIFY_SUCCESS
             );
@@ -296,9 +296,9 @@ if ($generalforums) {
             if ($forum->rsstype and $forum->rssarticles) {
                 //Calculate the tooltip text
                 if ($forum->rsstype == 1) {
-                    $tooltiptext = get_string('rsssubscriberssdiscussions', 'forum');
+                    $tooltiptext = get_string('rsssubscriberssdiscussions', 'mod_forum');
                 } else {
-                    $tooltiptext = get_string('rsssubscriberssposts', 'forum');
+                    $tooltiptext = get_string('rsssubscriberssposts', 'mod_forum');
                 }
 
                 if (!isloggedin() && $course->id == SITEID) {
@@ -435,9 +435,9 @@ if ($course->id != SITEID) {    // Only real courses have learning forums
                 if ($forum->rsstype and $forum->rssarticles) {
                     //Calculate the tolltip text
                     if ($forum->rsstype == 1) {
-                        $tooltiptext = get_string('rsssubscriberssdiscussions', 'forum');
+                        $tooltiptext = get_string('rsssubscriberssdiscussions', 'mod_forum');
                     } else {
-                        $tooltiptext = get_string('rsssubscriberssposts', 'forum');
+                        $tooltiptext = get_string('rsssubscriberssposts', 'mod_forum');
                     }
                     //Get html code for RSS link
                     $row[] = rss_get_link($context->id, $USER->id, 'mod_forum', $forum->id, $tooltiptext);
@@ -472,13 +472,13 @@ if (!isguestuser() && isloggedin() && $showsubscriptioncolumns) {
 
     // Subscribe all.
     $subscriptionlink->param('subscribe', 1);
-    echo html_writer::tag('div', html_writer::link($subscriptionlink, get_string('allsubscribe', 'forum')), [
+    echo html_writer::tag('div', html_writer::link($subscriptionlink, get_string('allsubscribe', 'mod_forum')), [
             'class' => 'helplink',
         ]);
 
     // Unsubscribe all.
     $subscriptionlink->param('subscribe', 0);
-    echo html_writer::tag('div', html_writer::link($subscriptionlink, get_string('allunsubscribe', 'forum')), [
+    echo html_writer::tag('div', html_writer::link($subscriptionlink, get_string('allunsubscribe', 'mod_forum')), [
             'class' => 'helplink',
         ]);
 
@@ -487,12 +487,12 @@ if (!isguestuser() && isloggedin() && $showsubscriptioncolumns) {
 }
 
 if ($generalforums) {
-    echo $OUTPUT->heading(get_string('generalforums', 'forum'), 2);
+    echo $OUTPUT->heading(get_string('generalforums', 'mod_forum'), 2);
     echo html_writer::table($generaltable);
 }
 
 if ($learningforums) {
-    echo $OUTPUT->heading(get_string('learningforums', 'forum'), 2);
+    echo $OUTPUT->heading(get_string('learningforums', 'mod_forum'), 2);
     echo html_writer::table($learningtable);
 }
 

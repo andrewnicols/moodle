@@ -422,13 +422,13 @@ class post extends exporter {
             $timecreated = $this->get_start_time($discussion, $post);
             $message = $this->get_message($post);
         } else {
-            $subject = $isdeleted ? get_string('forumsubjectdeleted', 'forum') : get_string('forumsubjecthidden', 'forum');
-            $message = $isdeleted ? get_string('forumbodydeleted', 'forum') : get_string('forumbodyhidden', 'forum');
+            $subject = $isdeleted ? get_string('forumsubjectdeleted', 'mod_forum') : get_string('forumsubjecthidden', 'mod_forum');
+            $message = $isdeleted ? get_string('forumbodydeleted', 'mod_forum') : get_string('forumbodyhidden', 'mod_forum');
             $timecreated = null;
         }
 
         $replysubject = $subject;
-        $strre = get_string('re', 'forum');
+        $strre = get_string('re', 'mod_forum');
         if (!(substr($replysubject, 0, strlen($strre)) == $strre)) {
             $replysubject = "{$strre} {$replysubject}";
         }

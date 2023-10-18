@@ -65,7 +65,7 @@ class get_reopen_attempt_confirmation extends external_api {
         require_capability('mod/quiz:reopenattempts', $attemptobj->get_context());
         self::validate_context($attemptobj->get_context());
         if ($attemptobj->get_state() != quiz_attempt::ABANDONED) {
-            throw new moodle_exception('reopenattemptwrongstate', 'quiz', '',
+            throw new moodle_exception('reopenattemptwrongstate', 'mod_quiz', '',
                     ['attemptid' => $attemptid, 'state' => quiz_attempt_state_name($attemptobj->get_state())]);
         }
 
@@ -73,16 +73,16 @@ class get_reopen_attempt_confirmation extends external_api {
         $timestamp = time();
         $timeclose = $attemptobj->get_access_manager(time())->get_end_time($attemptobj->get_attempt());
         if ($timeclose && $timestamp > $timeclose) {
-            $expectedoutcome = get_string('reopenedattemptwillbesubmitted', 'quiz');
+            $expectedoutcome = get_string('reopenedattemptwillbesubmitted', 'mod_quiz');
         } else if ($timeclose) {
-            $expectedoutcome = get_string('reopenedattemptwillbeinprogressuntil', 'quiz', userdate($timeclose));
+            $expectedoutcome = get_string('reopenedattemptwillbeinprogressuntil', 'mod_quiz', userdate($timeclose));
         } else {
-            $expectedoutcome = get_string('reopenedattemptwillbeinprogress', 'quiz');
+            $expectedoutcome = get_string('reopenedattemptwillbeinprogress', 'mod_quiz');
         }
 
         // Return the required message.
         $user = $DB->get_record('user', ['id' => $attemptobj->get_userid()], '*', MUST_EXIST);
-        return html_writer::tag('p', get_string('reopenattemptareyousuremessage', 'quiz',
+        return html_writer::tag('p', get_string('reopenattemptareyousuremessage', 'mod_quiz',
                 ['attemptnumber' => $attemptobj->get_attempt_number(), 'attemptuser' => s(fullname($user))])) .
                 html_writer::tag('p', $expectedoutcome);
     }

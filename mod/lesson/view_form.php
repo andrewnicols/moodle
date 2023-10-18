@@ -64,7 +64,7 @@ class lesson_page_without_answers extends moodleform {
         $mform->addElement('hidden', 'newpageid');
         $mform->setType('newpageid', PARAM_INT);
 
-        $this->add_action_buttons(null, get_string("continue", "lesson"));
+        $this->add_action_buttons(null, get_string("continue", 'mod_lesson'));
 
     }
 

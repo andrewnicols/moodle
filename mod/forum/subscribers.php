@@ -53,7 +53,7 @@ require_login($course, false, $cm);
 
 $context = context_module::instance($cm->id);
 if (!has_capability('mod/forum:viewsubscribers', $context)) {
-    throw new \moodle_exception('nopermissiontosubscribe', 'forum');
+    throw new \moodle_exception('nopermissiontosubscribe', 'mod_forum');
 }
 
 unset($SESSION->fromdiscussion);
@@ -84,14 +84,14 @@ if (data_submitted()) {
         $users = $subscriberselector->get_selected_users();
         foreach ($users as $user) {
             if (!\mod_forum\subscriptions::subscribe_user($user->id, $forum)) {
-                throw new \moodle_exception('cannotaddsubscriber', 'forum', '', $user->id);
+                throw new \moodle_exception('cannotaddsubscriber', 'mod_forum', '', $user->id);
             }
         }
     } else if ($unsubscribe) {
         $users = $existingselector->get_selected_users();
         foreach ($users as $user) {
             if (!\mod_forum\subscriptions::unsubscribe_user($user->id, $forum)) {
-                throw new \moodle_exception('cannotremovesubscriber', 'forum', '', $user->id);
+                throw new \moodle_exception('cannotremovesubscriber', 'mod_forum', '', $user->id);
             }
         }
     }
@@ -100,7 +100,7 @@ if (data_submitted()) {
     $subscriberselector->set_existing_subscribers($existingselector->find_users(''));
 }
 
-$strsubscribers = get_string("subscribers", "forum");
+$strsubscribers = get_string("subscribers", 'mod_forum');
 $PAGE->navbar->add($strsubscribers, $url);
 $PAGE->set_title($strsubscribers);
 $PAGE->set_heading($COURSE->fullname);
@@ -113,12 +113,12 @@ $actionbar = new \mod_forum\output\subscription_actionbar($id, $url, $forum, $ed
 $PAGE->activityheader->disable();
 echo $OUTPUT->header();
 if (!$PAGE->has_secondary_navigation()) {
-    echo $OUTPUT->heading(get_string('forum', 'forum') . ' ' . $strsubscribers);
+    echo $OUTPUT->heading(get_string('forum', 'mod_forum') . ' ' . $strsubscribers);
 }
 echo $forumoutput->subscription_actionbar($actionbar);
 
 if ($edit === 1 && !\mod_forum\subscriptions::is_forcesubscribed($forum)) {
-    echo $OUTPUT->heading(get_string('managesubscriptionson', 'forum'), 2);
+    echo $OUTPUT->heading(get_string('managesubscriptionson', 'mod_forum'), 2);
     echo $forumoutput->subscriber_selection_form($existingselector, $subscriberselector);
 } else {
     $subscribers = \mod_forum\subscriptions::fetch_subscribed_users($forum, $currentgroup, $context);

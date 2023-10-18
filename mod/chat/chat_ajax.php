@@ -32,7 +32,7 @@ if (!confirm_sesskey()) {
 }
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new moodle_exception('notlogged', 'chat');
+    throw new moodle_exception('notlogged', 'mod_chat');
 }
 if (!$chat = $DB->get_record('chat', array('id' => $chatuser->chatid))) {
     throw new moodle_exception('invaliduserid', 'error');
@@ -45,7 +45,7 @@ if (!$cm = get_coursemodule_from_instance('chat', $chat->id, $course->id)) {
 }
 
 if (!isloggedin()) {
-    throw new moodle_exception('notlogged', 'chat');
+    throw new moodle_exception('notlogged', 'mod_chat');
 }
 
 // Set up $PAGE so that format_text will work properly.

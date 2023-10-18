@@ -142,7 +142,7 @@ function xmldb_scorm_upgrade($oldversion) {
         $total = $DB->count_records('scorm_scoes_track');
         if ($total > 500000) {
             // This site has a large number of user track records, lets warn that this next part may take some time.
-            $notification = new \core\output\notification(get_string('largetrackupgrade', 'scorm', format_float($total, 0)),
+            $notification = new \core\output\notification(get_string('largetrackupgrade', 'mod_scorm', format_float($total, 0)),
                            \core\output\notification::NOTIFY_WARNING);
             $notification->set_show_closebutton(false);
             echo $OUTPUT->render($notification);

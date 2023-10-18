@@ -45,15 +45,15 @@ $pageid = required_param('pageid', PARAM_INT);
 $section = optional_param('section', "", PARAM_TEXT);
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    throw new \moodle_exception('incorrectpageid', 'mod_wiki');
 }
 
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
 }
 
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
 }
 
 if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
@@ -63,13 +63,13 @@ if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
 if (!empty($section) && !$sectioncontent = wiki_get_section_page($page, $section)) {
-    throw new \moodle_exception('invalidsection', 'wiki');
+    throw new \moodle_exception('invalidsection', 'mod_wiki');
 }
 
 require_login($course, false, $cm);
 
 if (!wiki_user_can_edit($subwiki)) {
-    throw new \moodle_exception('cannoteditpage', 'wiki');
+    throw new \moodle_exception('cannoteditpage', 'mod_wiki');
 }
 
 $wikipage = new page_wiki_lock($wiki, $subwiki, $cm);

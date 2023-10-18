@@ -1708,10 +1708,10 @@ function lti_get_tool_table($tools, $id) {
     global $OUTPUT;
     $html = '';
 
-    $typename = get_string('typename', 'lti');
-    $baseurl = get_string('baseurl', 'lti');
-    $action = get_string('action', 'lti');
-    $createdon = get_string('createdon', 'lti');
+    $typename = get_string('typename', 'mod_lti');
+    $baseurl = get_string('baseurl', 'mod_lti');
+    $action = get_string('action', 'mod_lti');
+    $createdon = get_string('createdon', 'mod_lti');
 
     if (!empty($tools)) {
         $html .= "
@@ -1729,9 +1729,9 @@ function lti_get_tool_table($tools, $id) {
 
         foreach ($tools as $type) {
             $date = userdate($type->timecreated, get_string('strftimedatefullshort', 'core_langconfig'));
-            $accept = get_string('accept', 'lti');
-            $update = get_string('update', 'lti');
-            $delete = get_string('delete', 'lti');
+            $accept = get_string('accept', 'mod_lti');
+            $update = get_string('update', 'mod_lti');
+            $delete = get_string('delete', 'mod_lti');
 
             if (empty($type->toolproxyid)) {
                 $baseurl = new \moodle_url('/mod/lti/typessettings.php', array(
@@ -1763,7 +1763,7 @@ function lti_get_tool_table($tools, $id) {
 
             if ($type->state != LTI_TOOL_STATE_REJECTED) {
                 $deleteaction = 'reject';
-                $delete = get_string('reject', 'lti');
+                $delete = get_string('reject', 'mod_lti');
             }
 
             $updateurl = clone($baseurl);
@@ -1800,7 +1800,7 @@ function lti_get_tool_table($tools, $id) {
         }
         $html .= '</table></div>';
     } else {
-        $html .= get_string('no_' . $id, 'lti');
+        $html .= get_string('no_' . $id, 'mod_lti');
     }
 
     return $html;
@@ -1818,10 +1818,10 @@ function lti_get_tool_proxy_table($toolproxies, $id) {
     global $OUTPUT;
 
     if (!empty($toolproxies)) {
-        $typename = get_string('typename', 'lti');
-        $url = get_string('registrationurl', 'lti');
-        $action = get_string('action', 'lti');
-        $createdon = get_string('createdon', 'lti');
+        $typename = get_string('typename', 'mod_lti');
+        $url = get_string('registrationurl', 'mod_lti');
+        $action = get_string('action', 'mod_lti');
+        $createdon = get_string('createdon', 'mod_lti');
 
         $html = <<< EOD
         <div id="{$id}_tool_proxies_container" style="margin-top: 0.5em; margin-bottom: 0.5em">
@@ -1837,9 +1837,9 @@ function lti_get_tool_proxy_table($toolproxies, $id) {
 EOD;
         foreach ($toolproxies as $toolproxy) {
             $date = userdate($toolproxy->timecreated, get_string('strftimedatefullshort', 'core_langconfig'));
-            $accept = get_string('register', 'lti');
-            $update = get_string('update', 'lti');
-            $delete = get_string('delete', 'lti');
+            $accept = get_string('register', 'mod_lti');
+            $update = get_string('update', 'mod_lti');
+            $delete = get_string('delete', 'mod_lti');
 
             $baseurl = new \moodle_url('/mod/lti/registersettings.php', array(
                     'action' => 'accept',
@@ -1865,7 +1865,7 @@ EOD;
             }
 
             if (($toolproxy->state == LTI_TOOL_PROXY_STATE_CONFIGURED) || ($toolproxy->state == LTI_TOOL_PROXY_STATE_PENDING)) {
-                $delete = get_string('cancel', 'lti');
+                $delete = get_string('cancel', 'mod_lti');
             }
 
             $updateurl = clone($baseurl);
@@ -1898,7 +1898,7 @@ EOD;
         }
         $html .= '</table></div>';
     } else {
-        $html = get_string('no_' . $id, 'lti');
+        $html = get_string('no_' . $id, 'mod_lti');
     }
 
     return $html;
@@ -2334,7 +2334,7 @@ function lti_get_types_for_add_instance() {
     global $COURSE, $USER;
 
     // Always return the 'manual' type option, despite manual config being deprecated, so that we have it for legacy instances.
-    $types = [(object) ['name' => get_string('automatic', 'lti'), 'course' => 0, 'toolproxyid' => null]];
+    $types = [(object) ['name' => get_string('automatic', 'mod_lti'), 'course' => 0, 'toolproxyid' => null]];
 
     $preconfiguredtypes = \mod_lti\local\types_helper::get_lti_types_by_course($COURSE->id, $USER->id);
     foreach ($preconfiguredtypes as $type) {
@@ -2368,7 +2368,7 @@ function lti_get_configured_types($courseid, $sectionreturn = 0) {
         if ($trimmeddescription != '') {
             // Clean the description. We don't want tags here.
             $type->help     = clean_param($trimmeddescription, PARAM_NOTAGS);
-            $type->helplink = get_string('modulename_shortcut_link', 'lti');
+            $type->helplink = get_string('modulename_shortcut_link', 'mod_lti');
         }
 
         $iconurl = get_tool_type_icon_url($ltitype);
@@ -3544,11 +3544,11 @@ function lti_post_launch_html($newparms, $endpoint, $debug=false) {
         $r .= "  //]]> \n";
         $r .= "</script>\n";
         $r .= "<a id=\"displayText\" href=\"javascript:basicltiDebugToggle();\">";
-        $r .= get_string("toggle_debug_data", "lti")."</a>\n";
+        $r .= get_string("toggle_debug_data", 'mod_lti')."</a>\n";
         $r .= "<div id=\"basicltiDebug\" style=\"display:none\">\n";
-        $r .= "<b>".get_string("basiclti_endpoint", "lti")."</b><br/>\n";
+        $r .= "<b>".get_string("basiclti_endpoint", 'mod_lti')."</b><br/>\n";
         $r .= $endpoint . "<br/>\n&nbsp;<br/>\n";
-        $r .= "<b>".get_string("basiclti_parameters", "lti")."</b><br/>\n";
+        $r .= "<b>".get_string("basiclti_parameters", 'mod_lti')."</b><br/>\n";
         foreach ($newparms as $key => $value) {
             $key = htmlspecialchars($key, ENT_COMPAT);
             $value = htmlspecialchars($value, ENT_COMPAT);

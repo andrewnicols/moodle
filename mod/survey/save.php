@@ -51,10 +51,10 @@
     require_capability('mod/survey:participate', $context);
 
     if (! $survey = $DB->get_record("survey", array("id"=>$cm->instance))) {
-        throw new \moodle_exception('invalidsurveyid', 'survey');
+        throw new \moodle_exception('invalidsurveyid', 'mod_survey');
     }
 
-    $strsurveysaved = get_string('surveysaved', 'survey');
+    $strsurveysaved = get_string('surveysaved', 'mod_survey');
 
     $PAGE->set_title($strsurveysaved);
     $PAGE->set_heading($course->fullname);
@@ -62,7 +62,7 @@
     echo $OUTPUT->heading(format_string($survey->name));
 
     if (survey_already_done($survey->id, $USER->id)) {
-        notice(get_string("alreadysubmitted", "survey"), get_local_referer(false));
+        notice(get_string("alreadysubmitted", 'mod_survey'), get_local_referer(false));
         exit;
     }
 
@@ -70,7 +70,7 @@
 
 // Print the page and finish up.
 
-    notice(get_string("thanksforanswers","survey", $USER->firstname), "$CFG->wwwroot/course/view.php?id=$course->id");
+    notice(get_string("thanksforanswers",'mod_survey', $USER->firstname), "$CFG->wwwroot/course/view.php?id=$course->id");
 
     exit;
 

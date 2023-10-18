@@ -83,7 +83,7 @@ class block_news_items extends block_base {
 
             if (forum_user_can_post_discussion($forum, $currentgroup, $groupmode, $cm, $context)) {
                 $text .= '<div class="newlink"><a href="'.$CFG->wwwroot.'/mod/forum/post.php?forum='.$forum->id.'">'.
-                          get_string('addanewtopic', 'forum').'</a>...</div>';
+                          get_string('addanewtopic', 'mod_forum').'</a>...</div>';
             }
 
         /// Get all the recent discussions we're allowed to see
@@ -97,7 +97,7 @@ class block_news_items extends block_base {
             if (! $discussions = forum_get_discussions($cm, $sort, false,
                                                         -1, $this->page->course->newsitems,
                                                         false, -1, 0, FORUM_POSTS_ALL_USER_GROUPS) ) {
-                $text .= '('.get_string('nonews', 'forum').')';
+                $text .= '('.get_string('nonews', 'mod_forum').')';
                 $this->content->text = $text;
                 return $this->content;
             }
@@ -105,7 +105,7 @@ class block_news_items extends block_base {
         /// Actually create the listing now
 
             $strposttimeformat = get_string('strftimedatetime', 'core_langconfig');
-            $strmore = get_string('more', 'forum');
+            $strmore = get_string('more', 'mod_forum');
 
         /// Accessibility: markup as a list.
             $text .= "\n<ul class='unlist'>\n";
@@ -140,16 +140,16 @@ class block_news_items extends block_base {
             $this->content->text = $text;
 
             $this->content->footer = '<a href="'.$CFG->wwwroot.'/mod/forum/view.php?f='.$forum->id.'">'.
-                                      get_string('oldertopics', 'forum').'</a> ...';
+                                      get_string('oldertopics', 'mod_forum').'</a> ...';
 
         /// If RSS is activated at site and forum level and this forum has rss defined, show link
             if (isset($CFG->enablerssfeeds) && isset($CFG->forum_enablerssfeeds) &&
                 $CFG->enablerssfeeds && $CFG->forum_enablerssfeeds && $forum->rsstype && $forum->rssarticles) {
                 require_once($CFG->dirroot.'/lib/rsslib.php');   // We'll need this
                 if ($forum->rsstype == 1) {
-                    $tooltiptext = get_string('rsssubscriberssdiscussions','forum');
+                    $tooltiptext = get_string('rsssubscriberssdiscussions','mod_forum');
                 } else {
-                    $tooltiptext = get_string('rsssubscriberssposts','forum');
+                    $tooltiptext = get_string('rsssubscriberssposts','mod_forum');
                 }
                 if (!isloggedin()) {
                     $userid = $CFG->siteguest;

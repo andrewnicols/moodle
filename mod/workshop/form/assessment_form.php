@@ -93,22 +93,22 @@ class workshop_assessment_form extends moodleform {
         }
 
         if (!empty($this->options['editableweight']) and $this->is_editable()) {
-            $mform->addElement('header', 'assessmentsettings', get_string('assessmentweight', 'workshop'));
+            $mform->addElement('header', 'assessmentsettings', get_string('assessmentweight', 'mod_workshop'));
             $mform->addElement('select', 'weight',
-                    get_string('assessmentweight', 'workshop'), workshop::available_assessment_weights_list());
+                    get_string('assessmentweight', 'mod_workshop'), workshop::available_assessment_weights_list());
             $mform->setDefault('weight', 1);
         }
 
         $buttonarray = array();
         if ($this->mode == 'preview') {
-            $buttonarray[] = $mform->createElement('cancel', 'backtoeditform', get_string('backtoeditform', 'workshop'));
+            $buttonarray[] = $mform->createElement('cancel', 'backtoeditform', get_string('backtoeditform', 'mod_workshop'));
         }
         if ($this->mode == 'assessment') {
             if (!empty($this->options['pending'])) {
-                $buttonarray[] = $mform->createElement('submit', 'saveandshownext', get_string('saveandshownext', 'workshop'));
+                $buttonarray[] = $mform->createElement('submit', 'saveandshownext', get_string('saveandshownext', 'mod_workshop'));
             }
-            $buttonarray[] = $mform->createElement('submit', 'saveandclose', get_string('saveandclose', 'workshop'));
-            $buttonarray[] = $mform->createElement('submit', 'saveandcontinue', get_string('saveandcontinue', 'workshop'));
+            $buttonarray[] = $mform->createElement('submit', 'saveandclose', get_string('saveandclose', 'mod_workshop'));
+            $buttonarray[] = $mform->createElement('submit', 'saveandcontinue', get_string('saveandcontinue', 'mod_workshop'));
             $buttonarray[] = $mform->createElement('cancel');
         }
         $mform->addGroup($buttonarray, 'buttonar', '', array(' '), false);

@@ -66,12 +66,12 @@ class mod_book_mod_form extends moodleform_mod {
                 }
             }
         }
-        $mform->addElement('select', 'numbering', get_string('numbering', 'book'), $options);
+        $mform->addElement('select', 'numbering', get_string('numbering', 'mod_book'), $options);
         $mform->addHelpButton('numbering', 'numbering', 'mod_book');
         $mform->setDefault('numbering', $config->numbering);
 
         $mform->addElement('static', 'customtitlestext', get_string('customtitles', 'mod_book'));
-        $mform->addElement('checkbox', 'customtitles', get_string('customtitles', 'book'));
+        $mform->addElement('checkbox', 'customtitles', get_string('customtitles', 'mod_book'));
         $mform->addHelpButton('customtitles', 'customtitles', 'mod_book');
         $mform->setDefault('customtitles', 0);
 

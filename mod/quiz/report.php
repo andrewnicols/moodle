@@ -54,7 +54,7 @@ $PAGE->set_pagelayout('report');
 $PAGE->activityheader->disable();
 $reportlist = quiz_report_list($quizobj->get_context());
 if (empty($reportlist)) {
-    throw new \moodle_exception('erroraccessingreport', 'quiz');
+    throw new \moodle_exception('erroraccessingreport', 'mod_quiz');
 }
 
 // Validate the requested report name.
@@ -63,10 +63,10 @@ if ($mode == '') {
     $url->param('mode', reset($reportlist));
     redirect($url);
 } else if (!in_array($mode, $reportlist)) {
-    throw new \moodle_exception('erroraccessingreport', 'quiz');
+    throw new \moodle_exception('erroraccessingreport', 'mod_quiz');
 }
 if (!is_readable("report/$mode/report.php")) {
-    throw new \moodle_exception('reportnotfound', 'quiz', '', $mode);
+    throw new \moodle_exception('reportnotfound', 'mod_quiz', '', $mode);
 }
 
 // Open the selected quiz report and display it.
@@ -76,7 +76,7 @@ if (is_readable($file)) {
 }
 $reportclassname = 'quiz_' . $mode . '_report';
 if (!class_exists($reportclassname)) {
-    throw new \moodle_exception('preprocesserror', 'quiz');
+    throw new \moodle_exception('preprocesserror', 'mod_quiz');
 }
 
 $report = new $reportclassname();

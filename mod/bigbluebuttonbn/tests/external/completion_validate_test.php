@@ -151,4 +151,3 @@ class completion_validate_test extends \externallib_advanced_testcase {
         $this->assertEmpty($returnvalue['warnings']);
     }
 }
-

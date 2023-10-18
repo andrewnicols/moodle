@@ -55,7 +55,7 @@ if (empty($top)) {
     $redirect = new moodle_url('/mod/lti/registrationreturn.php', $params);
     $redirect = $redirect->out(false);
 
-    $clickhere = get_string('click_to_continue', 'lti', (object)array('link' => $redirect));
+    $clickhere = get_string('click_to_continue', 'mod_lti', (object)array('link' => $redirect));
     $html = <<< EOD
 <html>
 <head>

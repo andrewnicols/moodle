@@ -39,7 +39,7 @@ class mod_forum_mod_form extends moodleform_mod {
 //-------------------------------------------------------------------------------
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', get_string('forumname', 'forum'), array('size'=>'64'));
+        $mform->addElement('text', 'name', get_string('forumname', 'mod_forum'), array('size'=>'64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -48,31 +48,31 @@ class mod_forum_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->standard_intro_elements(get_string('forumintro', 'forum'));
+        $this->standard_intro_elements(get_string('forumintro', 'mod_forum'));
 
         $forumtypes = forum_get_forum_types();
         core_collator::asort($forumtypes, core_collator::SORT_STRING);
-        $mform->addElement('select', 'type', get_string('forumtype', 'forum'), $forumtypes);
-        $mform->addHelpButton('type', 'forumtype', 'forum');
+        $mform->addElement('select', 'type', get_string('forumtype', 'mod_forum'), $forumtypes);
+        $mform->addHelpButton('type', 'forumtype', 'mod_forum');
         $mform->setDefault('type', 'general');
 
-        $mform->addElement('header', 'availability', get_string('availability', 'forum'));
+        $mform->addElement('header', 'availability', get_string('availability', 'mod_forum'));
 
-        $name = get_string('duedate', 'forum');
+        $name = get_string('duedate', 'mod_forum');
         $mform->addElement('date_time_selector', 'duedate', $name, array('optional' => true));
-        $mform->addHelpButton('duedate', 'duedate', 'forum');
+        $mform->addHelpButton('duedate', 'duedate', 'mod_forum');
 
-        $name = get_string('cutoffdate', 'forum');
+        $name = get_string('cutoffdate', 'mod_forum');
         $mform->addElement('date_time_selector', 'cutoffdate', $name, array('optional' => true));
-        $mform->addHelpButton('cutoffdate', 'cutoffdate', 'forum');
+        $mform->addHelpButton('cutoffdate', 'cutoffdate', 'mod_forum');
 
         // Attachments and word count.
-        $mform->addElement('header', 'attachmentswordcounthdr', get_string('attachmentswordcount', 'forum'));
+        $mform->addElement('header', 'attachmentswordcounthdr', get_string('attachmentswordcount', 'mod_forum'));
 
         $choices = get_max_upload_sizes($CFG->maxbytes, $COURSE->maxbytes, 0, $CFG->forum_maxbytes);
         $choices[1] = get_string('uploadnotallowed');
-        $mform->addElement('select', 'maxbytes', get_string('maxattachmentsize', 'forum'), $choices);
-        $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'forum');
+        $mform->addElement('select', 'maxbytes', get_string('maxattachmentsize', 'mod_forum'), $choices);
+        $mform->addHelpButton('maxbytes', 'maxattachmentsize', 'mod_forum');
         $mform->setDefault('maxbytes', $CFG->forum_maxbytes);
 
         $choices = array(
@@ -91,20 +91,20 @@ class mod_forum_mod_form extends moodleform_mod {
             50 => 50,
             100 => 100
         );
-        $mform->addElement('select', 'maxattachments', get_string('maxattachments', 'forum'), $choices);
-        $mform->addHelpButton('maxattachments', 'maxattachments', 'forum');
+        $mform->addElement('select', 'maxattachments', get_string('maxattachments', 'mod_forum'), $choices);
+        $mform->addHelpButton('maxattachments', 'maxattachments', 'mod_forum');
         $mform->setDefault('maxattachments', $CFG->forum_maxattachments);
 
-        $mform->addElement('selectyesno', 'displaywordcount', get_string('displaywordcount', 'forum'));
-        $mform->addHelpButton('displaywordcount', 'displaywordcount', 'forum');
+        $mform->addElement('selectyesno', 'displaywordcount', get_string('displaywordcount', 'mod_forum'));
+        $mform->addHelpButton('displaywordcount', 'displaywordcount', 'mod_forum');
         $mform->setDefault('displaywordcount', 0);
 
         // Subscription and tracking.
-        $mform->addElement('header', 'subscriptionandtrackinghdr', get_string('subscriptionandtracking', 'forum'));
+        $mform->addElement('header', 'subscriptionandtrackinghdr', get_string('subscriptionandtracking', 'mod_forum'));
 
         $options = forum_get_subscriptionmode_options();
-        $mform->addElement('select', 'forcesubscribe', get_string('subscriptionmode', 'forum'), $options);
-        $mform->addHelpButton('forcesubscribe', 'subscriptionmode', 'forum');
+        $mform->addElement('select', 'forcesubscribe', get_string('subscriptionmode', 'mod_forum'), $options);
+        $mform->addHelpButton('forcesubscribe', 'subscriptionmode', 'mod_forum');
         if (isset($CFG->forum_subscription)) {
             $defaultforumsubscription = $CFG->forum_subscription;
         } else {
@@ -113,13 +113,13 @@ class mod_forum_mod_form extends moodleform_mod {
         $mform->setDefault('forcesubscribe', $defaultforumsubscription);
 
         $options = array();
-        $options[FORUM_TRACKING_OPTIONAL] = get_string('trackingoptional', 'forum');
-        $options[FORUM_TRACKING_OFF] = get_string('trackingoff', 'forum');
+        $options[FORUM_TRACKING_OPTIONAL] = get_string('trackingoptional', 'mod_forum');
+        $options[FORUM_TRACKING_OFF] = get_string('trackingoff', 'mod_forum');
         if ($CFG->forum_allowforcedreadtracking) {
-            $options[FORUM_TRACKING_FORCED] = get_string('trackingon', 'forum');
+            $options[FORUM_TRACKING_FORCED] = get_string('trackingon', 'mod_forum');
         }
-        $mform->addElement('select', 'trackingtype', get_string('trackingtype', 'forum'), $options);
-        $mform->addHelpButton('trackingtype', 'trackingtype', 'forum');
+        $mform->addElement('select', 'trackingtype', get_string('trackingtype', 'mod_forum'), $options);
+        $mform->addHelpButton('trackingtype', 'trackingtype', 'mod_forum');
         $default = $CFG->forum_trackingtype;
         if ((!$CFG->forum_allowforcedreadtracking) && ($default == FORUM_TRACKING_FORCED)) {
             $default = FORUM_TRACKING_OPTIONAL;
@@ -131,10 +131,10 @@ class mod_forum_mod_form extends moodleform_mod {
             $mform->addElement('header', 'rssheader', get_string('rss'));
             $choices = array();
             $choices[0] = get_string('none');
-            $choices[1] = get_string('discussions', 'forum');
-            $choices[2] = get_string('posts', 'forum');
-            $mform->addElement('select', 'rsstype', get_string('rsstype', 'forum'), $choices);
-            $mform->addHelpButton('rsstype', 'rsstype', 'forum');
+            $choices[1] = get_string('discussions', 'mod_forum');
+            $choices[2] = get_string('posts', 'mod_forum');
+            $mform->addElement('select', 'rsstype', get_string('rsstype', 'mod_forum'), $choices);
+            $mform->addHelpButton('rsstype', 'rsstype', 'mod_forum');
             if (isset($CFG->forum_rsstype)) {
                 $mform->setDefault('rsstype', $CFG->forum_rsstype);
             }
@@ -154,16 +154,16 @@ class mod_forum_mod_form extends moodleform_mod {
             $choices[40] = '40';
             $choices[50] = '50';
             $mform->addElement('select', 'rssarticles', get_string('rssarticles'), $choices);
-            $mform->addHelpButton('rssarticles', 'rssarticles', 'forum');
+            $mform->addHelpButton('rssarticles', 'rssarticles', 'mod_forum');
             $mform->hideIf('rssarticles', 'rsstype', 'eq', '0');
             if (isset($CFG->forum_rssarticles)) {
                 $mform->setDefault('rssarticles', $CFG->forum_rssarticles);
             }
         }
 
-        $mform->addElement('header', 'discussionlocking', get_string('discussionlockingheader', 'forum'));
+        $mform->addElement('header', 'discussionlocking', get_string('discussionlockingheader', 'mod_forum'));
         $options = [
-            0               => get_string('discussionlockingdisabled', 'forum'),
+            0               => get_string('discussionlockingdisabled', 'mod_forum'),
             1   * DAYSECS   => get_string('numday', 'core', 1),
             1   * WEEKSECS  => get_string('numweek', 'core', 1),
             2   * WEEKSECS  => get_string('numweeks', 'core', 2),
@@ -173,14 +173,14 @@ class mod_forum_mod_form extends moodleform_mod {
             180 * DAYSECS   => get_string('nummonths', 'core', 6),
             1   * YEARSECS  => get_string('numyear', 'core', 1),
         ];
-        $mform->addElement('select', 'lockdiscussionafter', get_string('lockdiscussionafter', 'forum'), $options);
-        $mform->addHelpButton('lockdiscussionafter', 'lockdiscussionafter', 'forum');
+        $mform->addElement('select', 'lockdiscussionafter', get_string('lockdiscussionafter', 'mod_forum'), $options);
+        $mform->addHelpButton('lockdiscussionafter', 'lockdiscussionafter', 'mod_forum');
         $mform->disabledIf('lockdiscussionafter', 'type', 'eq', 'single');
 
 //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'blockafterheader', get_string('blockafter', 'forum'));
+        $mform->addElement('header', 'blockafterheader', get_string('blockafter', 'mod_forum'));
         $options = array();
-        $options[0] = get_string('blockperioddisabled','forum');
+        $options[0] = get_string('blockperioddisabled','mod_forum');
         $options[60*60*24]   = '1 '.get_string('day');
         $options[60*60*24*2] = '2 '.get_string('days');
         $options[60*60*24*3] = '3 '.get_string('days');
@@ -188,21 +188,21 @@ class mod_forum_mod_form extends moodleform_mod {
         $options[60*60*24*5] = '5 '.get_string('days');
         $options[60*60*24*6] = '6 '.get_string('days');
         $options[60*60*24*7] = '1 '.get_string('week');
-        $mform->addElement('select', 'blockperiod', get_string('blockperiod', 'forum'), $options);
-        $mform->addHelpButton('blockperiod', 'blockperiod', 'forum');
+        $mform->addElement('select', 'blockperiod', get_string('blockperiod', 'mod_forum'), $options);
+        $mform->addHelpButton('blockperiod', 'blockperiod', 'mod_forum');
 
-        $mform->addElement('text', 'blockafter', get_string('blockafter', 'forum'));
+        $mform->addElement('text', 'blockafter', get_string('blockafter', 'mod_forum'));
         $mform->setType('blockafter', PARAM_INT);
         $mform->setDefault('blockafter', '0');
         $mform->addRule('blockafter', null, 'numeric', null, 'client');
-        $mform->addHelpButton('blockafter', 'blockafter', 'forum');
+        $mform->addHelpButton('blockafter', 'blockafter', 'mod_forum');
         $mform->hideIf('blockafter', 'blockperiod', 'eq', 0);
 
-        $mform->addElement('text', 'warnafter', get_string('warnafter', 'forum'));
+        $mform->addElement('text', 'warnafter', get_string('warnafter', 'mod_forum'));
         $mform->setType('warnafter', PARAM_INT);
         $mform->setDefault('warnafter', '0');
         $mform->addRule('warnafter', null, 'numeric', null, 'client');
-        $mform->addHelpButton('warnafter', 'warnafter', 'forum');
+        $mform->addHelpButton('warnafter', 'warnafter', 'mod_forum');
         $mform->hideIf('warnafter', 'blockperiod', 'eq', 0);
 
 //-------------------------------------------------------------------------------
@@ -307,9 +307,9 @@ class mod_forum_mod_form extends moodleform_mod {
         $mform->addElement(
                 'selectyesno',
                 $sendstudentnotificationsfieldname,
-                get_string('sendstudentnotificationsdefault', 'forum')
+                get_string('sendstudentnotificationsdefault', 'mod_forum')
         );
-        $mform->addHelpButton($sendstudentnotificationsfieldname, 'sendstudentnotificationsdefault', 'forum');
+        $mform->addHelpButton($sendstudentnotificationsfieldname, 'sendstudentnotificationsdefault', 'mod_forum');
         $mform->hideIf($sendstudentnotificationsfieldname, "{$gradefieldname}[modgrade_type]", 'eq', 'none');
     }
 
@@ -322,13 +322,13 @@ class mod_forum_mod_form extends moodleform_mod {
         //we don't want to have these appear as possible selections in the form but
         //we want the form to display them if they are set.
         if ($typevalue[0]=='news') {
-            $type->addOption(get_string('namenews', 'forum'), 'news');
-            $mform->addHelpButton('type', 'namenews', 'forum');
+            $type->addOption(get_string('namenews', 'mod_forum'), 'news');
+            $mform->addHelpButton('type', 'namenews', 'mod_forum');
             $type->freeze();
             $type->setPersistantFreeze(true);
         }
         if ($typevalue[0]=='social') {
-            $type->addOption(get_string('namesocial', 'forum'), 'social');
+            $type->addOption(get_string('namesocial', 'mod_forum'), 'social');
             $type->freeze();
             $type->setPersistantFreeze(true);
         }
@@ -338,13 +338,13 @@ class mod_forum_mod_form extends moodleform_mod {
         $errors = parent::validation($data, $files);
 
         if ($data['type'] === 'single' && $data['groupmode'] == SEPARATEGROUPS) {
-            $errors['type'] = get_string('cannotusesingletopicandseperategroups', 'forum');
-            $errors['groupmode'] = get_string('cannotuseseperategroupsandsingletopic', 'forum');
+            $errors['type'] = get_string('cannotusesingletopicandseperategroups', 'mod_forum');
+            $errors['groupmode'] = get_string('cannotuseseperategroupsandsingletopic', 'mod_forum');
         }
 
         if ($data['duedate'] && $data['cutoffdate']) {
             if ($data['duedate'] > $data['cutoffdate']) {
-                $errors['cutoffdate'] = get_string('cutoffdatevalidation', 'forum');
+                $errors['cutoffdate'] = get_string('cutoffdatevalidation', 'mod_forum');
             }
         }
 
@@ -450,7 +450,7 @@ class mod_forum_mod_form extends moodleform_mod {
 
         $group = [];
         $completionpostsenabledel = 'completionpostsenabled' . $suffix;
-        $group[] =& $mform->createElement('checkbox', $completionpostsenabledel, '', get_string('completionposts', 'forum'));
+        $group[] =& $mform->createElement('checkbox', $completionpostsenabledel, '', get_string('completionposts', 'mod_forum'));
         $completionpostsel = 'completionposts' . $suffix;
         $group[] =& $mform->createElement('text', $completionpostsel, '', ['size' => 3]);
         $mform->setType($completionpostsel, PARAM_INT);
@@ -464,7 +464,7 @@ class mod_forum_mod_form extends moodleform_mod {
             'checkbox',
             $completiondiscussionsenabledel,
             '',
-            get_string('completiondiscussions', 'forum')
+            get_string('completiondiscussions', 'mod_forum')
         );
         $completiondiscussionsel = 'completiondiscussions' . $suffix;
         $group[] =& $mform->createElement('text', $completiondiscussionsel, '', ['size' => 3]);
@@ -475,7 +475,7 @@ class mod_forum_mod_form extends moodleform_mod {
 
         $group = [];
         $completionrepliesenabledel = 'completionrepliesenabled' . $suffix;
-        $group[] =& $mform->createElement('checkbox', $completionrepliesenabledel, '', get_string('completionreplies', 'forum'));
+        $group[] =& $mform->createElement('checkbox', $completionrepliesenabledel, '', get_string('completionreplies', 'mod_forum'));
         $completionrepliesel = 'completionreplies' . $suffix;
         $group[] =& $mform->createElement('text', $completionrepliesel, '', ['size' => 3]);
         $mform->setType($completionrepliesel, PARAM_INT);

@@ -90,12 +90,12 @@ switch (strtolower($action)) {
             foreach ($errors as $error) {
                 $msgerrors .= html_writer::tag('p', $error->{'message'}, ['class' => 'alert alert-danger']) . "\n";
             }
-            throw new moodle_exception('view_error_bigbluebutton', 'bigbluebuttonbn',
+            throw new moodle_exception('view_error_bigbluebutton', 'mod_bigbluebuttonbn',
                 $CFG->wwwroot . '/mod/bigbluebuttonbn/view.php?id=' . $id, $msgerrors, $errors);
         }
 
         if (empty($bigbluebuttonbn)) {
-            echo get_string('view_message_tab_close', 'bigbluebuttonbn');
+            echo get_string('view_message_tab_close', 'mod_bigbluebuttonbn');
             die();
         }
         // Moodle event logger: Create an event for meeting left.
@@ -123,7 +123,7 @@ switch (strtolower($action)) {
         break;
     case 'join':
         if (empty($bigbluebuttonbn)) {
-            throw new moodle_exception('view_error_unable_join', 'bigbluebuttonbn');
+            throw new moodle_exception('view_error_unable_join', 'mod_bigbluebuttonbn');
             break;
         }
         // Check the origin page.

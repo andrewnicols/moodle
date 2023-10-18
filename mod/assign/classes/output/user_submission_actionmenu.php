@@ -133,14 +133,14 @@ class user_submission_actionmenu implements templatable, renderable {
 
                 if ($this->timelimit && empty($this->submission->timestarted)) {
                     $confirmation = new \confirm_action(
-                        get_string('confirmstart', 'assign', format_time($this->timelimit)),
+                        get_string('confirmstart', 'mod_assign', format_time($this->timelimit)),
                         null,
-                        get_string('beginassignment', 'assign')
+                        get_string('beginassignment', 'mod_assign')
                     );
                     $urlparams = array('id' => $this->cmid, 'action' => 'editsubmission');
                     $beginbutton = new \action_link(
                         new moodle_url('/mod/assign/view.php', $urlparams),
-                            get_string('beginassignment', 'assign'),
+                            get_string('beginassignment', 'mod_assign'),
                             $confirmation,
                             ['class' => 'btn btn-primary']
                     );

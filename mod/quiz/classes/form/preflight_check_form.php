@@ -50,7 +50,7 @@ class preflight_check_form extends moodleform {
             }
         }
 
-        $this->add_action_buttons(true, get_string('startattempt', 'quiz'));
+        $this->add_action_buttons(true, get_string('startattempt', 'mod_quiz'));
         $this->set_display_vertical();
         $mform->setDisableShortforms();
     }

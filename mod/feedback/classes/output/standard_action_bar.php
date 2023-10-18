@@ -63,7 +63,7 @@ class standard_action_bar extends base_action_bar {
 
         if (has_capability('mod/feedback:edititems', $this->context)) {
             $editurl = new moodle_url('/mod/feedback/edit.php', $this->urlparams);
-            $items['left'][]['actionlink'] = new action_link($editurl, get_string('edit_items', 'feedback'),
+            $items['left'][]['actionlink'] = new action_link($editurl, get_string('edit_items', 'mod_feedback'),
                 null, ['class' => 'btn btn-secondary']);
         }
 
@@ -78,7 +78,7 @@ class standard_action_bar extends base_action_bar {
             if ($this->course->id) {
                 $previewlnk->param('courseid', $this->course->id);
             }
-            $items['left'][]['actionlink'] = new action_link($previewlnk, get_string('previewquestions', 'feedback'),
+            $items['left'][]['actionlink'] = new action_link($previewlnk, get_string('previewquestions', 'mod_feedback'),
             null, ['class' => 'btn btn-secondary']);
         }
 
@@ -88,9 +88,9 @@ class standard_action_bar extends base_action_bar {
                 ['id' => $this->cmid, 'courseid' => $this->course->id]);
             if ($this->startpage) {
                 $completeurl->param('gopage', $this->startpage);
-                $label = get_string('continue_the_form', 'feedback');
+                $label = get_string('continue_the_form', 'mod_feedback');
             } else {
-                $label = get_string('complete_the_form', 'feedback');
+                $label = get_string('complete_the_form', 'mod_feedback');
             }
             $items['left'][]['actionlink'] = new action_link($completeurl, $label, null, ['class' => 'btn btn-primary']);
         }

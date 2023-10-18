@@ -35,7 +35,7 @@ $PAGE->set_pagelayout('incourse');
 \mod_assign\event\course_module_instance_list_viewed::create_from_course($course)->trigger();
 
 // Print the header.
-$strplural = get_string("modulenameplural", "assign");
+$strplural = get_string("modulenameplural", 'mod_assign');
 $PAGE->navbar->add($strplural);
 $PAGE->set_title($strplural);
 $PAGE->set_heading($course->fullname);

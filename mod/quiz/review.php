@@ -79,7 +79,7 @@ if ($attemptobj->is_own_attempt()) {
     }
 
 } else if (!$attemptobj->is_review_allowed()) {
-    throw new moodle_exception('noreviewattempt', 'quiz', $attemptobj->view_url());
+    throw new moodle_exception('noreviewattempt', 'mod_quiz', $attemptobj->view_url());
 }
 
 // Load the questions and states needed by this page.
@@ -131,7 +131,7 @@ if ($attempt->state == quiz_attempt::FINISHED) {
         $timetaken = "-";
     }
 } else {
-    $timetaken = get_string('unfinished', 'quiz');
+    $timetaken = get_string('unfinished', 'mod_quiz');
 }
 
 // Prepare summary informat about the whole attempt.
@@ -154,7 +154,7 @@ if ($attemptobj->has_capability('mod/quiz:viewreports')) {
             $showall));
     if ($attemptlist) {
         $summarydata['attemptlist'] = [
-            'title'   => get_string('attempts', 'quiz'),
+            'title'   => get_string('attempts', 'mod_quiz'),
             'content' => $attemptlist,
         ];
     }
@@ -162,29 +162,29 @@ if ($attemptobj->has_capability('mod/quiz:viewreports')) {
 
 // Timing information.
 $summarydata['startedon'] = [
-    'title'   => get_string('startedon', 'quiz'),
+    'title'   => get_string('startedon', 'mod_quiz'),
     'content' => userdate($attempt->timestart),
 ];
 
 $summarydata['state'] = [
-    'title'   => get_string('attemptstate', 'quiz'),
+    'title'   => get_string('attemptstate', 'mod_quiz'),
     'content' => quiz_attempt::state_name($attempt->state),
 ];
 
 if ($attempt->state == quiz_attempt::FINISHED) {
     $summarydata['completedon'] = [
-        'title'   => get_string('completedon', 'quiz'),
+        'title'   => get_string('completedon', 'mod_quiz'),
         'content' => userdate($attempt->timefinish),
     ];
     $summarydata['timetaken'] = [
-        'title'   => get_string('timetaken', 'quiz'),
+        'title'   => get_string('timetaken', 'mod_quiz'),
         'content' => $timetaken,
     ];
 }
 
 if (!empty($overtime)) {
     $summarydata['overdue'] = [
-        'title'   => get_string('overdue', 'quiz'),
+        'title'   => get_string('overdue', 'mod_quiz'),
         'content' => $overtime,
     ];
 }
@@ -198,7 +198,7 @@ if ($options->marks >= question_display_options::MARK_AND_MAX && quiz_has_grades
 
     } else if (is_null($grade)) {
         $summarydata['grade'] = [
-            'title'   => get_string('grade', 'quiz'),
+            'title'   => get_string('grade', 'mod_quiz'),
             'content' => quiz_format_grade($quiz, $grade),
         ];
 
@@ -209,8 +209,8 @@ if ($options->marks >= question_display_options::MARK_AND_MAX && quiz_has_grades
             $a->grade = quiz_format_grade($quiz, $attempt->sumgrades);
             $a->maxgrade = quiz_format_grade($quiz, $quiz->sumgrades);
             $summarydata['marks'] = [
-                'title'   => get_string('marks', 'quiz'),
-                'content' => get_string('outofshort', 'quiz', $a),
+                'title'   => get_string('marks', 'mod_quiz'),
+                'content' => get_string('outofshort', 'mod_quiz', $a),
             ];
         }
 
@@ -224,12 +224,12 @@ if ($options->marks >= question_display_options::MARK_AND_MAX && quiz_has_grades
             $a->percent = html_writer::tag('b', format_float(
                     $attempt->sumgrades * 100 / $quiz->sumgrades,
                     $quiz->decimalpoints, true, true));
-            $formattedgrade = get_string('outofpercent', 'quiz', $a);
+            $formattedgrade = get_string('outofpercent', 'mod_quiz', $a);
         } else {
-            $formattedgrade = get_string('outof', 'quiz', $a);
+            $formattedgrade = get_string('outof', 'mod_quiz', $a);
         }
         $summarydata['grade'] = [
-            'title'   => get_string('grade', 'quiz'),
+            'title'   => get_string('grade', 'mod_quiz'),
             'content' => $formattedgrade,
         ];
     }
@@ -242,7 +242,7 @@ $summarydata = array_merge($summarydata, $attemptobj->get_additional_summary_dat
 $feedback = $attemptobj->get_overall_feedback($grade);
 if ($options->overallfeedback && $feedback) {
     $summarydata['feedback'] = [
-        'title'   => get_string('feedback', 'quiz'),
+        'title'   => get_string('feedback', 'mod_quiz'),
         'content' => $feedback,
     ];
 }

@@ -348,7 +348,7 @@ function chat_print_recent_activity($course, $viewfullnames, $timestart) {
     $strftimerecent = get_string('strftimerecent');
 
     if ($past) {
-        echo $OUTPUT->heading(get_string("pastchats", 'chat') . ':', 6);
+        echo $OUTPUT->heading(get_string("pastchats", 'mod_chat') . ':', 6);
 
         foreach ($past as $cm) {
             $link = $CFG->wwwroot.'/mod/chat/view.php?id='.$cm->id;
@@ -359,7 +359,7 @@ function chat_print_recent_activity($course, $viewfullnames, $timestart) {
     }
 
     if ($current) {
-        echo $OUTPUT->heading(get_string("currentchats", 'chat') . ':', 6);
+        echo $OUTPUT->heading(get_string("currentchats", 'mod_chat') . ':', 6);
 
         $oldest = floor((time() - $CFG->chat_old_ping) / 10) * 10;  // Better db caching.
 
@@ -796,7 +796,7 @@ function chat_format_message_manually($message, $courseid, $sender, $currentuser
     // Find the correct timezone for displaying this message.
     $tz = core_date::get_user_timezone($currentuser);
 
-    $message->strtime = userdate($message->timestamp, get_string('strftimemessage', 'chat'), $tz);
+    $message->strtime = userdate($message->timestamp, get_string('strftimemessage', 'mod_chat'), $tz);
 
     $message->picture = $OUTPUT->user_picture($sender, array('size' => false, 'courseid' => $courseid, 'link' => false));
 
@@ -816,12 +816,12 @@ function chat_format_message_manually($message, $courseid, $sender, $currentuser
 
     if (!empty($message->issystem)) {
         // System event.
-        $output->text = $message->strtime.': '.get_string('message'.$message->message, 'chat', fullname($sender));
+        $output->text = $message->strtime.': '.get_string('message'.$message->message, 'mod_chat', fullname($sender));
         $output->html  = '<table class="chat-event"><tr'.$rowclass.'><td class="picture">'.$message->picture.'</td>';
         $output->html .= '<td class="text"><span class="event">'.$output->text.'</span></td></tr></table>';
         $output->basic = '<tr class="r1">
                             <th scope="row" class="cell c1 title"></th>
-                            <td class="cell c2 text">' . get_string('message'.$message->message, 'chat', fullname($sender)) . '</td>
+                            <td class="cell c2 text">' . get_string('message'.$message->message, 'mod_chat', fullname($sender)) . '</td>
                             <td class="cell c3">' . $message->strtime . '</td>
                           </tr>';
         if ($message->message == 'exit' or $message->message == 'enter') {
@@ -852,14 +852,14 @@ function chat_format_message_manually($message, $courseid, $sender, $currentuser
         $beepwho = trim(substr($rawtext, 5));
 
         if ($beepwho == 'all') {   // Everyone.
-            $outinfobasic = get_string('messagebeepseveryone', 'chat', fullname($sender));
+            $outinfobasic = get_string('messagebeepseveryone', 'mod_chat', fullname($sender));
             $outinfo = $message->strtime . ': ' . $outinfobasic;
             $outmain = '';
 
             $output->beep = true;  // Eventually this should be set to a filename uploaded by the user.
 
         } else if ($beepwho == $currentuser->id) {  // Current user.
-            $outinfobasic = get_string('messagebeepsyou', 'chat', fullname($sender));
+            $outinfobasic = get_string('messagebeepsyou', 'mod_chat', fullname($sender));
             $outinfo = $message->strtime . ': ' . $outinfobasic;
             $outmain = '';
             $output->beep = true;
@@ -891,7 +891,7 @@ function chat_format_message_manually($message, $courseid, $sender, $currentuser
         if (isset($matches[1]) && isset($matches[2])) {
             $text = format_text($matches[2], FORMAT_MOODLE, $options, $courseid);
             $outinfo = $message->strtime;
-            $outmain = $sender->firstname.' '.get_string('saidto', 'chat').' <i>'.$matches[1].'</i>: '.$text;
+            $outmain = $sender->firstname.' '.get_string('saidto', 'mod_chat').' <i>'.$matches[1].'</i>: '.$text;
         } else {
             // Error, we set special back to false to use the classic message output.
             $special = false;
@@ -991,7 +991,7 @@ function chat_format_message_theme ($message, $chatuser, $currentuser, $grouping
         $courseid = $chatuser->course;
     }
 
-    $message->strtime = userdate($message->timestamp, get_string('strftimemessage', 'chat'), $tz);
+    $message->strtime = userdate($message->timestamp, get_string('strftimemessage', 'mod_chat'), $tz);
     $message->picture = $OUTPUT->user_picture($sender, array('courseid' => $courseid));
 
     $message->picture = "<a target='_blank'".
@@ -1002,7 +1002,7 @@ function chat_format_message_theme ($message, $chatuser, $currentuser, $grouping
         $result->type = 'system';
 
         $senderprofile = $CFG->wwwroot.'/user/view.php?id='.$sender->id.'&amp;course='.$courseid;
-        $event = get_string('message'.$message->message, 'chat', fullname($sender));
+        $event = get_string('message'.$message->message, 'mod_chat', fullname($sender));
         $eventmessage = new event_message($senderprofile, fullname($sender), $message->strtime, $event, $theme);
 
         $output = $PAGE->get_renderer('mod_chat');
@@ -1038,20 +1038,20 @@ function chat_format_message_theme ($message, $chatuser, $currentuser, $grouping
         $beepwho = trim(substr($rawtext, 5));
 
         if ($beepwho == 'all') {   // Everyone.
-            $outmain = get_string('messagebeepseveryone', 'chat', fullname($sender));
+            $outmain = get_string('messagebeepseveryone', 'mod_chat', fullname($sender));
         } else if ($beepwho == $currentuser->id) {  // Current user.
-            $outmain = get_string('messagebeepsyou', 'chat', fullname($sender));
+            $outmain = get_string('messagebeepsyou', 'mod_chat', fullname($sender));
         } else if ($sender->id == $currentuser->id) {  // Something is not caught?
             // Allow beep for a active chat user only, else user can beep anyone and get fullname.
             if (!empty($chatuser) && is_numeric($beepwho)) {
                 $chatusers = chat_get_users($chatuser->chatid, $chatuser->groupid, $groupingid);
                 if (array_key_exists($beepwho, $chatusers)) {
-                    $outmain = get_string('messageyoubeep', 'chat', fullname($chatusers[$beepwho]));
+                    $outmain = get_string('messageyoubeep', 'mod_chat', fullname($chatusers[$beepwho]));
                 } else {
-                    $outmain = get_string('messageyoubeep', 'chat', $beepwho);
+                    $outmain = get_string('messageyoubeep', 'mod_chat', $beepwho);
                 }
             } else {
-                $outmain = get_string('messageyoubeep', 'chat', $beepwho);
+                $outmain = get_string('messageyoubeep', 'mod_chat', $beepwho);
             }
         }
     } else if (substr($rawtext, 0, 1) == '/') {     // It's a user command.
@@ -1078,7 +1078,7 @@ function chat_format_message_theme ($message, $chatuser, $currentuser, $grouping
         preg_match($patternto, $rawtext, $matches);
         if (isset($matches[1]) && isset($matches[2])) {
             $text = format_text($matches[2], FORMAT_MOODLE, $options, $courseid);
-            $outmain = $sender->firstname.' <b>'.get_string('saidto', 'chat').'</b> <i>'.$matches[1].'</i>: '.$text;
+            $outmain = $sender->firstname.' <b>'.get_string('saidto', 'mod_chat').'</b> <i>'.$matches[1].'</i>: '.$text;
         } else {
             // Error, we set special back to false to use the classic message output.
             $special = false;
@@ -1194,8 +1194,8 @@ function chat_print_overview() {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function chat_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'chatheader', get_string('modulenameplural', 'chat'));
-    $mform->addElement('advcheckbox', 'reset_chat', get_string('removemessages', 'chat'));
+    $mform->addElement('header', 'chatheader', get_string('modulenameplural', 'mod_chat'));
+    $mform->addElement('advcheckbox', 'reset_chat', get_string('removemessages', 'mod_chat'));
 }
 
 /**
@@ -1220,7 +1220,7 @@ function chat_reset_course_form_defaults($course) {
 function chat_reset_userdata($data) {
     global $CFG, $DB;
 
-    $componentstr = get_string('modulenameplural', 'chat');
+    $componentstr = get_string('modulenameplural', 'mod_chat');
     $status = array();
 
     if (!empty($data->reset_chat)) {
@@ -1232,7 +1232,7 @@ function chat_reset_userdata($data) {
         $DB->delete_records_select('chat_messages', "chatid IN ($chatessql)", $params);
         $DB->delete_records_select('chat_messages_current', "chatid IN ($chatessql)", $params);
         $DB->delete_records_select('chat_users', "chatid IN ($chatessql)", $params);
-        $status[] = array('component' => $componentstr, 'item' => get_string('removemessages', 'chat'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('removemessages', 'mod_chat'), 'error' => false);
     }
 
     // Updating dates - shift may be negative too.
@@ -1281,7 +1281,7 @@ function chat_extend_navigation($navigation, $course, $module, $cm) {
     $currentgroup = groups_get_activity_group($cm, true);
 
     if (has_capability('mod/chat:chat', context_module::instance($cm->id))) {
-        $strenterchat    = get_string('enterchat', 'chat');
+        $strenterchat    = get_string('enterchat', 'mod_chat');
 
         $target = $CFG->wwwroot.'/mod/chat/';
         $params = array('id' => $cm->instance);
@@ -1309,7 +1309,7 @@ function chat_extend_navigation($navigation, $course, $module, $cm) {
 
     $chatusers = chat_get_users($cm->instance, $currentgroup, $cm->groupingid);
     if (is_array($chatusers) && count($chatusers) > 0) {
-        $users = $navigation->add(get_string('currentusers', 'chat'));
+        $users = $navigation->add(get_string('currentusers', 'mod_chat'));
         foreach ($chatusers as $chatuser) {
             $userlink = new moodle_url('/user/view.php', array('id' => $chatuser->id, 'course' => $course->id));
             $users->add(fullname($chatuser).' '.format_time(time() - $chatuser->lastmessageping),
@@ -1337,7 +1337,7 @@ function chat_extend_settings_navigation(settings_navigation $settings, navigati
 
     if ($chat->studentlogs || has_capability('mod/chat:readlog', $settings->get_page()->cm->context)) {
         if ($DB->get_records_select('chat_messages', "chatid = ? $groupselect", array($chat->id))) {
-            $chatnode->add(get_string('pastsessions', 'chat'),
+            $chatnode->add(get_string('pastsessions', 'mod_chat'),
                 new moodle_url('/mod/chat/report.php', array('id' => $settings->get_page()->cm->id)),
                 navigation_node::TYPE_SETTING, null, 'pastsessions');
         }
@@ -1362,7 +1362,7 @@ function chat_user_logout(\core\event\user_loggedout $event) {
  * @param stdClass $currentcontext Current context of block
  */
 function chat_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $modulepagetype = array('mod-chat-*' => get_string('page-mod-chat-x', 'chat'));
+    $modulepagetype = array('mod-chat-*' => get_string('page-mod-chat-x', 'mod_chat'));
     return $modulepagetype;
 }
 
@@ -1463,7 +1463,7 @@ function mod_chat_core_calendar_provide_event_action(calendar_event $event,
         $actionable = $chattimemidnight == $todaymidnight;
 
         return $factory->create_instance(
-            get_string('enterchat', 'chat'),
+            get_string('enterchat', 'mod_chat'),
             new \moodle_url('/mod/chat/view.php', array('id' => $cm->id)),
             1,
             $actionable

@@ -531,7 +531,7 @@ function scorm_get_manifest($blocks, $scoes) {
             // Prevent redirect and display warning.
             define('DEBUGGING_PRINTED', 1);
         }
-        echo $OUTPUT->notification(get_string('invalidmanifestresource', 'scorm').' '. implode(', ', $manifestresourcesnotfound));
+        echo $OUTPUT->notification(get_string('invalidmanifestresource', 'mod_scorm').' '. implode(', ', $manifestresourcesnotfound));
     }
     return $scoes;
 }

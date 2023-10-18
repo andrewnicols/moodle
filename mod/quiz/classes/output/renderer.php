@@ -249,12 +249,12 @@ class renderer extends plugin_renderer_base {
             $this->page->requires->js_init_call('M.mod_quiz.secure_window.init_close_button',
                     [$url->out(false)], false, quiz_get_js_module());
             return html_writer::empty_tag('input', ['type' => 'button',
-                    'value' => get_string('finishreview', 'quiz'),
+                    'value' => get_string('finishreview', 'mod_quiz'),
                     'id' => 'secureclosebutton',
                     'class' => 'mod_quiz-next-nav btn btn-primary']);
 
         } else {
-            return html_writer::link($url, get_string('finishreview', 'quiz'),
+            return html_writer::link($url, get_string('finishreview', 'mod_quiz'),
                     ['class' => 'mod_quiz-next-nav']);
         }
     }
@@ -276,13 +276,13 @@ class renderer extends plugin_renderer_base {
     public function review_next_navigation(quiz_attempt $attemptobj, $page, $lastpage, $showall = null) {
         $nav = '';
         if ($page > 0) {
-            $nav .= link_arrow_left(get_string('navigateprevious', 'quiz'),
+            $nav .= link_arrow_left(get_string('navigateprevious', 'mod_quiz'),
                     $attemptobj->review_url(null, $page - 1, $showall), false, 'mod_quiz-prev-nav');
         }
         if ($lastpage) {
             $nav .= $this->finish_review_link($attemptobj);
         } else {
-            $nav .= link_arrow_right(get_string('navigatenext', 'quiz'),
+            $nav .= link_arrow_right(get_string('navigatenext', 'mod_quiz'),
                     $attemptobj->review_url(null, $page + 1, $showall), false, 'mod_quiz-next-nav');
         }
         return html_writer::tag('div', $nav, ['class' => 'submitbtns']);
@@ -318,7 +318,7 @@ class renderer extends plugin_renderer_base {
      * @param moodle_url $url URL to restart the attempt.
      */
     public function restart_preview_button($url) {
-        return $this->single_button($url, get_string('startnewpreview', 'quiz'));
+        return $this->single_button($url, get_string('startnewpreview', 'mod_quiz'));
     }
 
     /**
@@ -368,7 +368,7 @@ class renderer extends plugin_renderer_base {
 
         if ($button->currentpage) {
             $classes[] = 'thispage';
-            $extrainfo[] = get_string('onthispage', 'quiz');
+            $extrainfo[] = get_string('onthispage', 'mod_quiz');
         }
 
         // Flagged?
@@ -393,7 +393,7 @@ class renderer extends plugin_renderer_base {
         $a->attributes = implode(' ', $extrainfo);
         $tagcontents = html_writer::tag('span', '', ['class' => 'thispageholder']) .
                 html_writer::tag('span', '', ['class' => 'trafficlight']) .
-                get_string($qnostring, 'quiz', $a);
+                get_string($qnostring, 'mod_quiz', $a);
         $tagattributes = ['class' => implode(' ', $classes), 'id' => $button->id,
                 'title' => $tooltip, 'data-quiz-page' => $button->page];
 
@@ -412,7 +412,7 @@ class renderer extends plugin_renderer_base {
      */
     protected function render_navigation_section_heading(navigation_section_heading $heading) {
         if (empty($heading->heading)) {
-            $headingtext = get_string('sectionnoname', 'quiz');
+            $headingtext = get_string('sectionnoname', 'mod_quiz');
             $class = ' dimmed_text';
         } else {
             $headingtext = $heading->heading;
@@ -519,7 +519,7 @@ class renderer extends plugin_renderer_base {
             return '';
         }
         return $this->notification(
-                html_writer::tag('p', get_string('accessnoticesheader', 'quiz')) . $this->access_messages($messages),
+                html_writer::tag('p', get_string('accessnoticesheader', 'mod_quiz')) . $this->access_messages($messages),
                 'warning',
                 false
         );
@@ -597,14 +597,14 @@ class renderer extends plugin_renderer_base {
         $output .= html_writer::start_tag('div', ['class' => 'submitbtns']);
         if ($page > 0 && $navmethod == 'free') {
             $output .= html_writer::empty_tag('input', ['type' => 'submit', 'name' => 'previous',
-                    'value' => get_string('navigateprevious', 'quiz'), 'class' => 'mod_quiz-prev-nav btn btn-secondary',
+                    'value' => get_string('navigateprevious', 'mod_quiz'), 'class' => 'mod_quiz-prev-nav btn btn-secondary',
                     'id' => 'mod_quiz-prev-nav']);
             $this->page->requires->js_call_amd('core_form/submit', 'init', ['mod_quiz-prev-nav']);
         }
         if ($lastpage) {
-            $nextlabel = get_string('endtest', 'quiz');
+            $nextlabel = get_string('endtest', 'mod_quiz');
         } else {
-            $nextlabel = get_string('navigatenext', 'quiz');
+            $nextlabel = get_string('navigatenext', 'mod_quiz');
         }
         $output .= html_writer::empty_tag('input', ['type' => 'submit', 'name' => 'next',
                 'value' => $nextlabel, 'class' => 'mod_quiz-next-nav btn btn-primary', 'id' => 'mod_quiz-next-nav']);
@@ -623,7 +623,7 @@ class renderer extends plugin_renderer_base {
      */
     public function redo_question_button($slot, $disabled) {
         $attributes = ['type' => 'submit', 'name' => 'redoslot' . $slot,
-                'value' => get_string('redoquestion', 'quiz'),
+                'value' => get_string('redoquestion', 'mod_quiz'),
                 'class' => 'mod_quiz-redo_question_button btn btn-secondary',
                 'id' => 'redoslot' . $slot . '-submit',
                 'data-savescrollposition' => 'true',
@@ -662,10 +662,10 @@ class renderer extends plugin_renderer_base {
 
         if ($message) {
             $output .= html_writer::tag('p', $message);
-            $output .= html_writer::tag('p', get_string('windowclosing', 'quiz'));
+            $output .= html_writer::tag('p', get_string('windowclosing', 'mod_quiz'));
             $delay = 5;
         } else {
-            $output .= html_writer::tag('p', get_string('pleaseclose', 'quiz'));
+            $output .= html_writer::tag('p', get_string('pleaseclose', 'mod_quiz'));
             $delay = 0;
         }
         $this->page->requires->js_init_call('M.mod_quiz.secure_window.close',
@@ -704,7 +704,7 @@ class renderer extends plugin_renderer_base {
         $output .= $this->header();
         $output .= $this->during_attempt_tertiary_nav($attemptobj->view_url());
         $output .= $this->heading(format_string($attemptobj->get_quiz_name()));
-        $output .= $this->heading(get_string('summaryofattempt', 'quiz'), 3);
+        $output .= $this->heading(get_string('summaryofattempt', 'mod_quiz'), 3);
         $output .= $this->summary_table($attemptobj, $displayoptions);
         $output .= $this->summary_page_controls($attemptobj);
         $output .= $this->footer();
@@ -721,12 +721,12 @@ class renderer extends plugin_renderer_base {
         // Prepare the summary table header.
         $table = new html_table();
         $table->attributes['class'] = 'generaltable quizsummaryofattempt boxaligncenter';
-        $table->head = [get_string('question', 'quiz'), get_string('status', 'quiz')];
+        $table->head = [get_string('question', 'mod_quiz'), get_string('status', 'mod_quiz')];
         $table->align = ['left', 'left'];
         $table->size = ['', ''];
         $markscolumn = $displayoptions->marks >= question_display_options::MARK_AND_MAX;
         if ($markscolumn) {
-            $table->head[] = get_string('marks', 'quiz');
+            $table->head[] = get_string('marks', 'mod_quiz');
             $table->align[] = 'left';
             $table->size[] = '';
         }
@@ -747,7 +747,7 @@ class renderer extends plugin_renderer_base {
                     if (count($attemptobj->get_quizobj()->get_sections()) > 1) {
                         // If this is the start of an unnamed section, and the quiz has more
                         // than one section, then add a default heading.
-                        $heading = get_string('sectionnoname', 'quiz');
+                        $heading = get_string('sectionnoname', 'mod_quiz');
                         $rowclasses .= ' dimmed_text';
                     }
                 }
@@ -802,7 +802,7 @@ class renderer extends plugin_renderer_base {
         if ($attemptobj->get_state() == quiz_attempt::IN_PROGRESS) {
             $button = new single_button(
                     new moodle_url($attemptobj->attempt_url(null, $attemptobj->get_currentpage())),
-                    get_string('returnattempt', 'quiz'));
+                    get_string('returnattempt', 'mod_quiz'));
             $output .= $this->container($this->container($this->render($button),
                     'controls'), 'submitbtns mdl-align');
         }
@@ -819,7 +819,7 @@ class renderer extends plugin_renderer_base {
 
         $button = new single_button(
                 new moodle_url($attemptobj->processattempt_url(), $options),
-                get_string('submitallandfinish', 'quiz'));
+                get_string('submitallandfinish', 'mod_quiz'));
         $button->class = 'btn-finishattempt';
         $button->formid = 'frm-finishattempt';
         if ($attemptobj->get_state() == quiz_attempt::IN_PROGRESS) {
@@ -835,11 +835,11 @@ class renderer extends plugin_renderer_base {
         $duedate = $attemptobj->get_due_date();
         $message = '';
         if ($attemptobj->get_state() == quiz_attempt::OVERDUE) {
-            $message = get_string('overduemustbesubmittedby', 'quiz', userdate($duedate));
+            $message = get_string('overduemustbesubmittedby', 'mod_quiz', userdate($duedate));
 
         } else {
             if ($duedate) {
-                $message = get_string('mustbesubmittedby', 'quiz', userdate($duedate));
+                $message = get_string('mustbesubmittedby', 'mod_quiz', userdate($duedate));
             }
         }
 
@@ -891,7 +891,7 @@ class renderer extends plugin_renderer_base {
         }
 
         if ($viewobj->canedit && !$viewobj->quizhasquestions) {
-            $content .= html_writer::link($viewobj->editurl, get_string('addquestion', 'quiz'),
+            $content .= html_writer::link($viewobj->editurl, get_string('addquestion', 'mod_quiz'),
                     ['class' => 'btn btn-secondary']);
         }
 
@@ -914,14 +914,14 @@ class renderer extends plugin_renderer_base {
 
         if (!$viewobj->quizhasquestions) {
             $output .= html_writer::div(
-                    $this->notification(get_string('noquestions', 'quiz'), 'warning', false),
+                    $this->notification(get_string('noquestions', 'mod_quiz'), 'warning', false),
                     'text-left mb-3');
         }
         $output .= $this->access_messages($viewobj->preventmessages);
 
         if ($viewobj->showbacktocourse) {
             $output .= $this->single_button($viewobj->backtocourseurl,
-                    get_string('backtocourse', 'quiz'), 'get',
+                    get_string('backtocourse', 'mod_quiz'), 'get',
                     ['class' => 'continuebutton']);
         }
 
@@ -955,7 +955,7 @@ class renderer extends plugin_renderer_base {
         }
 
         $this->page->requires->js_call_amd('mod_quiz/preflightcheck', 'init',
-                ['.quizstartbuttondiv [type=submit]', get_string('startattempt', 'quiz'),
+                ['.quizstartbuttondiv [type=submit]', get_string('startattempt', 'mod_quiz'),
                         '#mod_quiz_preflight_form', $popupjsoptions]);
 
         return $this->render($button) . ($preflightcheckform ? $preflightcheckform->render() : '');
@@ -977,9 +977,9 @@ class renderer extends plugin_renderer_base {
         $output = html_writer::start_tag('div', ['class' => 'card text-center mb-3']);
         $output .= html_writer::start_tag('div', ['class' => 'card-body']);
 
-        $output .= $this->notification(get_string('noquestions', 'quiz'), 'warning', false);
+        $output .= $this->notification(get_string('noquestions', 'mod_quiz'), 'warning', false);
         if ($canedit) {
-            $output .= $this->single_button($editurl, get_string('editquiz', 'quiz'), 'get');
+            $output .= $this->single_button($editurl, get_string('editquiz', 'mod_quiz'), 'get');
         }
         $output .= html_writer::end_tag('div');
         $output .= html_writer::end_tag('div');
@@ -1001,7 +1001,7 @@ class renderer extends plugin_renderer_base {
         $output = '';
         $output .= $this->view_page_tertiary_nav($viewobj);
         $output .= $this->view_information($quiz, $cm, $context, $messages);
-        $guestno = html_writer::tag('p', get_string('guestsno', 'quiz'));
+        $guestno = html_writer::tag('p', get_string('guestsno', 'mod_quiz'));
         $liketologin = html_writer::tag('p', get_string('liketologin'));
         $referer = get_local_referer(false);
         $output .= $this->confirm($guestno . "\n\n" . $liketologin . "\n", get_login_url(), $referer);
@@ -1023,7 +1023,7 @@ class renderer extends plugin_renderer_base {
         $output = '';
         $output .= $this->view_page_tertiary_nav($viewobj);
         $output .= $this->view_information($quiz, $cm, $context, $messages);
-        $youneedtoenrol = html_writer::tag('p', get_string('youneedtoenrol', 'quiz'));
+        $youneedtoenrol = html_writer::tag('p', get_string('youneedtoenrol', 'mod_quiz'));
         $button = html_writer::tag('p',
                 $this->continue_button($CFG->wwwroot . '/course/view.php?id=' . $course->id));
         $output .= $this->box($youneedtoenrol . "\n\n" . $button . "\n", 'generalbox', 'notice');
@@ -1085,7 +1085,7 @@ class renderer extends plugin_renderer_base {
      * Generates the table heading.
      */
     public function view_table_heading() {
-        return $this->heading(get_string('summaryofattempts', 'quiz'), 3);
+        return $this->heading(get_string('summaryofattempts', 'mod_quiz'), 3);
     }
 
     /**
@@ -1103,21 +1103,21 @@ class renderer extends plugin_renderer_base {
         // Prepare table header.
         $table = new html_table();
         $table->attributes['class'] = 'generaltable quizattemptsummary';
-        $table->caption = get_string('summaryofattempts', 'quiz');
+        $table->caption = get_string('summaryofattempts', 'mod_quiz');
         $table->captionhide = true;
         $table->head = [];
         $table->align = [];
         $table->size = [];
         if ($viewobj->attemptcolumn) {
-            $table->head[] = get_string('attemptnumber', 'quiz');
+            $table->head[] = get_string('attemptnumber', 'mod_quiz');
             $table->align[] = 'center';
             $table->size[] = '';
         }
-        $table->head[] = get_string('attemptstate', 'quiz');
+        $table->head[] = get_string('attemptstate', 'mod_quiz');
         $table->align[] = 'left';
         $table->size[] = '';
         if ($viewobj->markcolumn) {
-            $table->head[] = get_string('marks', 'quiz') . ' / ' .
+            $table->head[] = get_string('marks', 'mod_quiz') . ' / ' .
                     quiz_format_grade($quiz, $quiz->sumgrades);
             $table->align[] = 'center';
             $table->size[] = '';
@@ -1129,12 +1129,12 @@ class renderer extends plugin_renderer_base {
             $table->size[] = '';
         }
         if ($viewobj->canreviewmine) {
-            $table->head[] = get_string('review', 'quiz');
+            $table->head[] = get_string('review', 'mod_quiz');
             $table->align[] = 'center';
             $table->size[] = '';
         }
         if ($viewobj->feedbackcolumn) {
-            $table->head[] = get_string('feedback', 'quiz');
+            $table->head[] = get_string('feedback', 'mod_quiz');
             $table->align[] = 'left';
             $table->size[] = '';
         }
@@ -1147,7 +1147,7 @@ class renderer extends plugin_renderer_base {
             // Add the attempt number.
             if ($viewobj->attemptcolumn) {
                 if ($attemptobj->is_preview()) {
-                    $row[] = get_string('preview', 'quiz');
+                    $row[] = get_string('preview', 'mod_quiz');
                 } else {
                     $row[] = $attemptobj->get_attempt_number();
                 }
@@ -1221,22 +1221,22 @@ class renderer extends plugin_renderer_base {
     public function attempt_state($attemptobj) {
         switch ($attemptobj->get_state()) {
             case quiz_attempt::IN_PROGRESS:
-                return get_string('stateinprogress', 'quiz');
+                return get_string('stateinprogress', 'mod_quiz');
 
             case quiz_attempt::OVERDUE:
-                return get_string('stateoverdue', 'quiz') . html_writer::tag('span',
-                                get_string('stateoverduedetails', 'quiz',
+                return get_string('stateoverdue', 'mod_quiz') . html_writer::tag('span',
+                                get_string('stateoverduedetails', 'mod_quiz',
                                         userdate($attemptobj->get_due_date())),
                                 ['class' => 'statedetails']);
 
             case quiz_attempt::FINISHED:
-                return get_string('statefinished', 'quiz') . html_writer::tag('span',
-                                get_string('statefinisheddetails', 'quiz',
+                return get_string('statefinished', 'mod_quiz') . html_writer::tag('span',
+                                get_string('statefinisheddetails', 'mod_quiz',
                                         userdate($attemptobj->get_submitted_date())),
                                 ['class' => 'statedetails']);
 
             case quiz_attempt::ABANDONED:
-                return get_string('stateabandoned', 'quiz');
+                return get_string('stateabandoned', 'mod_quiz');
 
             default:
                 throw new coding_exception('Unexpected attempt state');
@@ -1265,13 +1265,13 @@ class renderer extends plugin_renderer_base {
                 $a->method = quiz_get_grading_option_name($quiz->grademethod);
                 $a->mygrade = quiz_format_grade($quiz, $viewobj->mygrade);
                 $a->quizgrade = quiz_format_grade($quiz, $quiz->grade);
-                $resultinfo .= $this->heading(get_string('gradesofar', 'quiz', $a), 3);
+                $resultinfo .= $this->heading(get_string('gradesofar', 'mod_quiz', $a), 3);
             } else {
                 $a = new stdClass();
                 $a->grade = quiz_format_grade($quiz, $viewobj->mygrade);
                 $a->maxgrade = quiz_format_grade($quiz, $quiz->grade);
-                $a = get_string('outofshort', 'quiz', $a);
-                $resultinfo .= $this->heading(get_string('yourfinalgradeis', 'quiz', $a), 3);
+                $a = get_string('outofshort', 'mod_quiz', $a);
+                $resultinfo .= $this->heading(get_string('yourfinalgradeis', 'mod_quiz', $a), 3);
             }
         }
 
@@ -1281,11 +1281,11 @@ class renderer extends plugin_renderer_base {
                             ['class' => 'overriddennotice']) . "\n";
         }
         if ($viewobj->gradebookfeedback) {
-            $resultinfo .= $this->heading(get_string('comment', 'quiz'), 3);
+            $resultinfo .= $this->heading(get_string('comment', 'mod_quiz'), 3);
             $resultinfo .= html_writer::div($viewobj->gradebookfeedback, 'quizteacherfeedback') . "\n";
         }
         if ($viewobj->feedbackcolumn) {
-            $resultinfo .= $this->heading(get_string('overallfeedback', 'quiz'), 3);
+            $resultinfo .= $this->heading(get_string('overallfeedback', 'mod_quiz'), 3);
             $resultinfo .= html_writer::div(
                             quiz_feedback_for_grade($viewobj->mygrade, $quiz, $context),
                             'quizgradefeedback') . "\n";
@@ -1308,13 +1308,13 @@ class renderer extends plugin_renderer_base {
      */
     public function review_link($url, $reviewinpopup, $popupoptions) {
         if ($reviewinpopup) {
-            $button = new single_button($url, get_string('review', 'quiz'));
+            $button = new single_button($url, get_string('review', 'mod_quiz'));
             $button->add_action(new popup_action('click', $url, 'quizpopup', $popupoptions));
             return $this->render($button);
 
         } else {
-            return html_writer::link($url, get_string('review', 'quiz'),
-                    ['title' => get_string('reviewthisattempt', 'quiz')]);
+            return html_writer::link($url, get_string('review', 'mod_quiz'),
+                    ['title' => get_string('reviewthisattempt', 'mod_quiz')]);
         }
     }
 
@@ -1373,11 +1373,11 @@ class renderer extends plugin_renderer_base {
         $links = [];
         if ($counts['group']) {
             $links[] = html_writer::link(new moodle_url($baseurl, ['mode' => 'group']),
-                    get_string('overridessummarygroup', 'quiz', $counts['group']));
+                    get_string('overridessummarygroup', 'mod_quiz', $counts['group']));
         }
         if ($counts['user']) {
             $links[] = html_writer::link(new moodle_url($baseurl, ['mode' => 'user']),
-                    get_string('overridessummaryuser', 'quiz', $counts['user']));
+                    get_string('overridessummaryuser', 'mod_quiz', $counts['user']));
         }
 
         if (!$links) {
@@ -1387,13 +1387,13 @@ class renderer extends plugin_renderer_base {
         $links = implode(', ', $links);
         switch ($counts['mode']) {
             case 'onegroup':
-                return get_string('overridessummarythisgroup', 'quiz', $links);
+                return get_string('overridessummarythisgroup', 'mod_quiz', $links);
 
             case 'somegroups':
-                return get_string('overridessummaryyourgroups', 'quiz', $links);
+                return get_string('overridessummaryyourgroups', 'mod_quiz', $links);
 
             case 'allgroups':
-                return get_string('overridessummary', 'quiz', $links);
+                return get_string('overridessummary', 'mod_quiz', $links);
 
             default:
                 throw new coding_exception('Unexpected mode ' . $counts['mode']);
@@ -1432,8 +1432,8 @@ class renderer extends plugin_renderer_base {
      */
     public function connection_warning() {
         $options = ['filter' => false, 'newlines' => false];
-        $warning = format_text(get_string('connectionerror', 'quiz'), FORMAT_MARKDOWN, $options);
-        $ok = format_text(get_string('connectionok', 'quiz'), FORMAT_MARKDOWN, $options);
+        $warning = format_text(get_string('connectionerror', 'mod_quiz'), FORMAT_MARKDOWN, $options);
+        $ok = format_text(get_string('connectionok', 'mod_quiz'), FORMAT_MARKDOWN, $options);
         return html_writer::tag('div', $warning,
                         ['id' => 'connection-error', 'style' => 'display: none;', 'role' => 'alert']) .
                 html_writer::tag('div', $ok, ['id' => 'connection-ok', 'style' => 'display: none;', 'role' => 'alert']);

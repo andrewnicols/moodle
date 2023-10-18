@@ -26,7 +26,7 @@ $PAGE->set_url('/mod/chat/gui_header_js/users.php', array('chat_sid' => $chatsid
 $PAGE->set_popup_notification_allowed(false);
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new \moodle_exception('notlogged', 'chat');
+    throw new \moodle_exception('notlogged', 'mod_chat');
 }
 
 // Get the minimal course.
@@ -65,7 +65,7 @@ $refreshurl = "users.php?chat_sid=$chatsid";
 // Get list of users.
 
 if (!$chatusers = chat_get_users($chatuser->chatid, $chatuser->groupid, $cm->groupingid)) {
-    throw new \moodle_exception('errornousers', 'chat');
+    throw new \moodle_exception('errornousers', 'mod_chat');
 }
 
 $uidles = Array();
@@ -82,8 +82,8 @@ $PAGE->requires->js_init_call('M.mod_chat_header.init_users', array($uidles), fa
 
 // Print user panel body.
 $timenow    = time();
-$stridle    = get_string('idle', 'chat');
-$strbeep    = get_string('beep', 'chat');
+$stridle    = get_string('idle', 'mod_chat');
+$strbeep    = get_string('beep', 'mod_chat');
 
 $table = new html_table();
 $table->width = '100%';

@@ -128,7 +128,7 @@ class standard_action_bar implements renderable, templatable {
             'id' => 'fullsearch',
             'value' => '1',
             'checked' => $fullsearchchecked,
-            'label' => get_string("searchindefinition", "glossary"),
+            'label' => get_string("searchindefinition", 'mod_glossary'),
         ];
 
         $checkbox = $OUTPUT->render_from_template('core/checkbox', $check);
@@ -160,7 +160,7 @@ class standard_action_bar implements renderable, templatable {
             return null;
         }
         $btn = new single_button(new moodle_url('/mod/glossary/edit.php', ['cmid' => $this->cm->id]),
-            get_string('addsingleentry', 'glossary'), 'post', single_button::BUTTON_PRIMARY);
+            get_string('addsingleentry', 'mod_glossary'), 'post', single_button::BUTTON_PRIMARY);
 
         return $btn->export_for_template($output);
     }
@@ -180,7 +180,7 @@ class standard_action_bar implements renderable, templatable {
         if (has_capability('mod/glossary:import', $this->context)) {
             $items['button'] = new single_button(
                 new moodle_url('/mod/glossary/import.php', ['id' => $this->cm->id]),
-                get_string('importentries', 'glossary')
+                get_string('importentries', 'mod_glossary')
             );
         }
 
@@ -190,7 +190,7 @@ class standard_action_bar implements renderable, templatable {
                 'mode' => $this->mode,
                 'hook' => $this->hook
             ]);
-            $buttons[get_string('export', 'glossary')] = $url->out(false);
+            $buttons[get_string('export', 'mod_glossary')] = $url->out(false);
         }
 
         if (has_capability('mod/glossary:manageentries', $this->context) or $this->module->allowprintview) {
@@ -204,7 +204,7 @@ class standard_action_bar implements renderable, templatable {
                 'pagelimit' => $this->pagelimit
             );
             $printurl = new moodle_url('/mod/glossary/print.php', $params);
-            $buttons[get_string('printerfriendly', 'glossary')] = $printurl->out(false);
+            $buttons[get_string('printerfriendly', 'mod_glossary')] = $printurl->out(false);
             $openinnewwindow[] = $printurl->out(false);
         }
 
@@ -212,7 +212,7 @@ class standard_action_bar implements renderable, templatable {
                 && $this->module->rsstype && $this->module->rssarticles
                 && has_capability('mod/glossary:view', $this->context)) {
             require_once("$CFG->libdir/rsslib.php");
-            $string = get_string('rssfeed', 'glossary');
+            $string = get_string('rssfeed', 'mod_glossary');
             $url = new moodle_url(rss_get_url($this->context->id, $USER->id, 'mod_glossary', $this->cm->instance));
             $buttons[$string] = $url->out(false);
             $openinnewwindow[] = $url->out(false);
@@ -270,7 +270,7 @@ class standard_action_bar implements renderable, templatable {
                 $baseurl->params(['mode' => $tabinfo['mode']]);
                 $active = $active ?? $baseurl->out(false);
                 $active = ($tabinfo['mode'] == $this->mode ? $baseurl->out(false) : $active);
-                $options[get_string($tabinfo['descriptor'], 'glossary')] = $baseurl->out(false);
+                $options[get_string($tabinfo['descriptor'], 'mod_glossary')] = $baseurl->out(false);
             }
         }
 
@@ -280,7 +280,7 @@ class standard_action_bar implements renderable, templatable {
 
         if (count($options) > 1) {
             $select = new url_select(array_flip($options), $active, null);
-            $select->set_label(get_string('explainalphabet', 'glossary'), ['class' => 'sr-only']);
+            $select->set_label(get_string('explainalphabet', 'mod_glossary'), ['class' => 'sr-only']);
             return $select->export_for_template($output);
         }
 

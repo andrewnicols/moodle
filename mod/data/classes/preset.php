@@ -316,7 +316,7 @@ class preset {
 
         // Check if all files have been generated.
         if (! static::is_directory_a_preset($exportdir)) {
-            throw new \moodle_exception('generateerror', 'data');
+            throw new \moodle_exception('generateerror', 'mod_data');
         }
 
         $presetfilenames = array_merge(array_values(manager::TEMPLATES_LIST), ['preset.xml']);

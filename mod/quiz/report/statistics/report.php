@@ -306,7 +306,7 @@ class quiz_statistics_report extends report_base {
         $questioninfotable->attributes['class'] = 'generaltable titlesleft';
 
         $questioninfotable->data = [];
-        $questioninfotable->data[] = [get_string('modulename', 'quiz'), $quiz->name];
+        $questioninfotable->data[] = [get_string('modulename', 'mod_quiz'), $quiz->name];
         $questioninfotable->data[] = [get_string('questionname', 'quiz_statistics'),
                 $questionstat->question->name.'&nbsp;'.$datumfromtable['actions']];
 
@@ -892,8 +892,8 @@ class quiz_statistics_report extends report_base {
         foreach ($questions as $qs => $question) {
             if ($question->qtype === 'random') {
                 $question->id = 0;
-                $question->name = get_string('random', 'quiz');
-                $question->questiontext = get_string('random', 'quiz');
+                $question->name = get_string('random', 'mod_quiz');
+                $question->questiontext = get_string('random', 'mod_quiz');
                 $question->parenttype = 'random';
                 $questiondata[$question->slot] = $question;
             } else if ($question->qtype === 'missingtype') {

@@ -67,7 +67,7 @@ if ($entries) {
 }
 
 if (!empty($courseid)) {
-    $strglossaries = get_string('modulenameplural', 'glossary');
+    $strglossaries = get_string('modulenameplural', 'mod_glossary');
     $strsearch = get_string('search');
 
     $PAGE->navbar->add($strglossaries);

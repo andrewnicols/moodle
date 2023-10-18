@@ -24,20 +24,20 @@ class mod_data_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->standard_intro_elements(get_string('intro', 'data'));
+        $this->standard_intro_elements(get_string('intro', 'mod_data'));
 
         // ----------------------------------------------------------------------
-        $mform->addElement('header', 'entrieshdr', get_string('entries', 'data'));
+        $mform->addElement('header', 'entrieshdr', get_string('entries', 'mod_data'));
 
-        $mform->addElement('selectyesno', 'approval', get_string('requireapproval', 'data'));
-        $mform->addHelpButton('approval', 'requireapproval', 'data');
+        $mform->addElement('selectyesno', 'approval', get_string('requireapproval', 'mod_data'));
+        $mform->addHelpButton('approval', 'requireapproval', 'mod_data');
 
-        $mform->addElement('selectyesno', 'manageapproved', get_string('manageapproved', 'data'));
-        $mform->addHelpButton('manageapproved', 'manageapproved', 'data');
+        $mform->addElement('selectyesno', 'manageapproved', get_string('manageapproved', 'mod_data'));
+        $mform->addHelpButton('manageapproved', 'manageapproved', 'mod_data');
         $mform->setDefault('manageapproved', 1);
         $mform->hideIf('manageapproved', 'approval', 'eq', 0);
 
-        $mform->addElement('selectyesno', 'comments', get_string('allowcomments', 'data'));
+        $mform->addElement('selectyesno', 'comments', get_string('allowcomments', 'mod_data'));
         if (empty($CFG->usecomments)) {
             $mform->hardFreeze('comments');
             $mform->setConstant('comments', 0);
@@ -51,37 +51,37 @@ class mod_data_mod_form extends moodleform_mod {
         if (!empty($this->current->requiredentries)) {
             $group = array();
             $group[] = $mform->createElement('select', 'requiredentries',
-                    get_string('requiredentries', 'data'), $countoptions);
-            $mform->addGroup($group, 'requiredentriesgroup', get_string('requiredentries', 'data'), array(''), false);
-            $mform->addHelpButton('requiredentriesgroup', 'requiredentries', 'data');
-            $mform->addElement('html', $OUTPUT->notification( get_string('requiredentrieswarning', 'data')));
+                    get_string('requiredentries', 'mod_data'), $countoptions);
+            $mform->addGroup($group, 'requiredentriesgroup', get_string('requiredentries', 'mod_data'), array(''), false);
+            $mform->addHelpButton('requiredentriesgroup', 'requiredentries', 'mod_data');
+            $mform->addElement('html', $OUTPUT->notification( get_string('requiredentrieswarning', 'mod_data')));
         }
 
-        $mform->addElement('select', 'requiredentriestoview', get_string('requiredentriestoview', 'data'), $countoptions);
-        $mform->addHelpButton('requiredentriestoview', 'requiredentriestoview', 'data');
+        $mform->addElement('select', 'requiredentriestoview', get_string('requiredentriestoview', 'mod_data'), $countoptions);
+        $mform->addHelpButton('requiredentriestoview', 'requiredentriestoview', 'mod_data');
 
-        $mform->addElement('select', 'maxentries', get_string('maxentries', 'data'), $countoptions);
-        $mform->addHelpButton('maxentries', 'maxentries', 'data');
+        $mform->addElement('select', 'maxentries', get_string('maxentries', 'mod_data'), $countoptions);
+        $mform->addHelpButton('maxentries', 'maxentries', 'mod_data');
 
         // ----------------------------------------------------------------------
         $mform->addElement('header', 'availibilityhdr', get_string('availability'));
 
-        $mform->addElement('date_time_selector', 'timeavailablefrom', get_string('availablefromdate', 'data'),
+        $mform->addElement('date_time_selector', 'timeavailablefrom', get_string('availablefromdate', 'mod_data'),
                            array('optional' => true));
 
-        $mform->addElement('date_time_selector', 'timeavailableto', get_string('availabletodate', 'data'),
+        $mform->addElement('date_time_selector', 'timeavailableto', get_string('availabletodate', 'mod_data'),
                            array('optional' => true));
 
-        $mform->addElement('date_time_selector', 'timeviewfrom', get_string('viewfromdate', 'data'),
+        $mform->addElement('date_time_selector', 'timeviewfrom', get_string('viewfromdate', 'mod_data'),
                            array('optional' => true));
 
-        $mform->addElement('date_time_selector', 'timeviewto', get_string('viewtodate', 'data'),
+        $mform->addElement('date_time_selector', 'timeviewto', get_string('viewtodate', 'mod_data'),
                            array('optional' => true));
 
         // ----------------------------------------------------------------------
         if ($CFG->enablerssfeeds && $CFG->data_enablerssfeeds) {
             $mform->addElement('header', 'rsshdr', get_string('rss'));
-            $mform->addElement('select', 'rssarticles', get_string('numberrssarticles', 'data') , $countoptions);
+            $mform->addElement('select', 'rssarticles', get_string('numberrssarticles', 'mod_data') , $countoptions);
         }
 
         $this->standard_grading_coursemodule_elements();
@@ -106,11 +106,11 @@ class mod_data_mod_form extends moodleform_mod {
         // Check open and close times are consistent.
         if ($data['timeavailablefrom'] && $data['timeavailableto'] &&
                 $data['timeavailableto'] < $data['timeavailablefrom']) {
-            $errors['timeavailableto'] = get_string('availabletodatevalidation', 'data');
+            $errors['timeavailableto'] = get_string('availabletodatevalidation', 'mod_data');
         }
         if ($data['timeviewfrom'] && $data['timeviewto'] &&
                 $data['timeviewto'] < $data['timeviewfrom']) {
-            $errors['timeviewto'] = get_string('viewtodatevalidation', 'data');
+            $errors['timeviewto'] = get_string('viewtodatevalidation', 'mod_data');
         }
 
         return $errors;
@@ -131,13 +131,13 @@ class mod_data_mod_form extends moodleform_mod {
             'checkbox',
             $completionentriesenabledel,
             '',
-            get_string('completionentriescount', 'data')
+            get_string('completionentriescount', 'mod_data')
         );
         $completionentriesel = 'completionentries' . $suffix;
         $group[] = $mform->createElement(
             'text',
             $completionentriesel,
-            get_string('completionentriescount', 'data'),
+            get_string('completionentriescount', 'mod_data'),
             ['size' => '1']
         );
 

@@ -45,7 +45,7 @@ if (! $course = $DB->get_record("course", array("id"=>$cm->course))) {
 }
 
 if (! $glossary = $DB->get_record("glossary", array("id"=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    throw new \moodle_exception('invalidid', 'mod_glossary');
 }
 
 if ($pagelimit < 0) {
@@ -60,12 +60,12 @@ $fmtoptions = array(
     'context' => $context);
 
 $PAGE->set_pagelayout('print');
-$PAGE->set_title(get_string("modulenameplural", "glossary"));
+$PAGE->set_title(get_string("modulenameplural", 'mod_glossary'));
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
 if (!has_capability('mod/glossary:manageentries', $context) and !$glossary->allowprintview) {
-    notice(get_string('printviewnotallowed', 'glossary'));
+    notice(get_string('printviewnotallowed', 'mod_glossary'));
 }
 
 /// setting the default values for the display mode of the current glossary
@@ -169,7 +169,7 @@ $currentpivot = '';
 $site = $DB->get_record("course", array("id"=>1));
 
 // Print dialog link.
-$printtext = get_string('print', 'glossary');
+$printtext = get_string('print', 'mod_glossary');
 $printlinkatt = array('onclick' => 'window.print();return false;', 'class' => 'glossary_no_print printicon');
 $printiconlink = html_writer::link('#', $printtext, $printlinkatt);
 echo  html_writer::tag('div', $printiconlink, array('class' => 'displayprinticon'));
@@ -182,7 +182,7 @@ echo html_writer::tag('div', $sitename, array('class' => 'sitename'));
 $coursename = get_string("course") . ': <span class="strong">' . format_string($course->fullname) . ' ('. format_string($course->shortname) . ')</span>';
 echo html_writer::tag('div', $coursename, array('class' => 'coursename'));
 
-$modname = get_string("modulename","glossary") . ': <span class="strong">' . format_string($glossary->name, true) . '</span>';
+$modname = get_string("modulename",'mod_glossary') . ': <span class="strong">' . format_string($glossary->name, true) . '</span>';
 echo html_writer::tag('div', $modname, array('class' => 'modname'));
 
 if ( $allentries ) {

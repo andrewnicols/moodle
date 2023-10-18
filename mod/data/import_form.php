@@ -14,14 +14,14 @@ class mod_data_import_form extends moodleform {
         $dataid = $this->_customdata['dataid'];
         $backtourl = $this->_customdata['backtourl'];
 
-        $mform->addElement('filepicker', 'recordsfile', get_string('csvfile', 'data'),
+        $mform->addElement('filepicker', 'recordsfile', get_string('csvfile', 'mod_data'),
             null, ['accepted_types' => ['application/zip', 'text/csv']]);
 
         $delimiters = csv_import_reader::get_delimiter_list();
-        $mform->addElement('select', 'fielddelimiter', get_string('fielddelimiter', 'data'), $delimiters);
+        $mform->addElement('select', 'fielddelimiter', get_string('fielddelimiter', 'mod_data'), $delimiters);
         $mform->setDefault('fielddelimiter', 'comma');
 
-        $mform->addElement('text', 'fieldenclosure', get_string('fieldenclosure', 'data'));
+        $mform->addElement('text', 'fieldenclosure', get_string('fieldenclosure', 'mod_data'));
         $mform->setType('fieldenclosure', PARAM_CLEANHTML);
 
         $choices = core_text::get_encodings();

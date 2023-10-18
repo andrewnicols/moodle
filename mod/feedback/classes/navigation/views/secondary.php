@@ -60,7 +60,7 @@ class secondary extends core_secondary {
         if ($mainnode) {
             $url = new \moodle_url('/mod/' . $this->page->activityname . '/view.php', ['id' => $this->page->cm->id]);
             $setactive = $url->compare($this->page->url, URL_MATCH_BASE);
-            $node = $rootnode->add(get_string('modulename', 'feedback'), $url, null, null, 'modulepage');
+            $node = $rootnode->add(get_string('modulename', 'mod_feedback'), $url, null, null, 'modulepage');
             if ($setactive) {
                 $node->make_active();
             }

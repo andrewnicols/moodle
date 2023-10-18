@@ -250,7 +250,7 @@ function page_get_coursemodule_info($coursemodule) {
  */
 function page_get_file_areas($course, $cm, $context) {
     $areas = array();
-    $areas['content'] = get_string('content', 'page');
+    $areas['content'] = get_string('content', 'mod_page');
     return $areas;
 }
 
@@ -389,7 +389,7 @@ function page_pluginfile($course, $cm, $context, $filearea, $args, $forcedownloa
  * @param stdClass $currentcontext Current context of block
  */
 function page_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-page-*'=>get_string('page-mod-page-x', 'page'));
+    $module_pagetype = array('mod-page-*'=>get_string('page-mod-page-x', 'mod_page'));
     return $module_pagetype;
 }
 
@@ -455,8 +455,8 @@ function page_export_contents($cm, $baseurl) {
  */
 function page_dndupload_register() {
     return array('types' => array(
-                     array('identifier' => 'text/html', 'message' => get_string('createpage', 'page')),
-                     array('identifier' => 'text', 'message' => get_string('createpage', 'page'))
+                     array('identifier' => 'text/html', 'message' => get_string('createpage', 'mod_page')),
+                     array('identifier' => 'text', 'message' => get_string('createpage', 'mod_page'))
                  ));
 }
 

@@ -181,7 +181,7 @@ $viewobj->popupoptions = $accessmanager->get_popup_options();
 // Display information about this quiz.
 $viewobj->infomessages = $viewobj->accessmanager->describe_rules();
 if ($quiz->attempts != 1) {
-    $viewobj->infomessages[] = get_string('gradingmethod', 'quiz',
+    $viewobj->infomessages[] = get_string('gradingmethod', 'mod_quiz',
             quiz_get_grading_option_name($quiz->grademethod));
 }
 
@@ -190,7 +190,7 @@ if ($item && grade_floats_different($item->gradepass, 0)) {
     $a = new stdClass();
     $a->grade = quiz_format_grade($quiz, $item->gradepass);
     $a->maxgrade = quiz_format_grade($quiz, $quiz->grade);
-    $viewobj->infomessages[] = get_string('gradetopassoutof', 'quiz', $a);
+    $viewobj->infomessages[] = get_string('gradetopassoutof', 'mod_quiz', $a);
 }
 
 // Determine whether a start attempt button should be displayed.
@@ -202,22 +202,22 @@ if (!$viewobj->quizhasquestions) {
 } else {
     if ($unfinished) {
         if ($canpreview) {
-            $viewobj->buttontext = get_string('continuepreview', 'quiz');
+            $viewobj->buttontext = get_string('continuepreview', 'mod_quiz');
         } else if ($canattempt) {
-            $viewobj->buttontext = get_string('continueattemptquiz', 'quiz');
+            $viewobj->buttontext = get_string('continueattemptquiz', 'mod_quiz');
         }
     } else {
         if ($canpreview) {
-            $viewobj->buttontext = get_string('previewquizstart', 'quiz');
+            $viewobj->buttontext = get_string('previewquizstart', 'mod_quiz');
         } else if ($canattempt) {
             $viewobj->preventmessages = $viewobj->accessmanager->prevent_new_attempt(
                     $viewobj->numattempts, $viewobj->lastfinishedattempt);
             if ($viewobj->preventmessages) {
                 $viewobj->buttontext = '';
             } else if ($viewobj->numattempts == 0) {
-                $viewobj->buttontext = get_string('attemptquiz', 'quiz');
+                $viewobj->buttontext = get_string('attemptquiz', 'mod_quiz');
             } else {
-                $viewobj->buttontext = get_string('reattemptquiz', 'quiz');
+                $viewobj->buttontext = get_string('reattemptquiz', 'mod_quiz');
             }
         }
     }

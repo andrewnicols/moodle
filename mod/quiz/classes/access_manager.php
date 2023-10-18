@@ -126,7 +126,7 @@ class access_manager {
      * @return array key => lang string.
      */
     public static function get_browser_security_choices(): array {
-        $options = ['-' => get_string('none', 'quiz')];
+        $options = ['-' => get_string('none', 'mod_quiz')];
         foreach (self::get_rule_classes() as $rule) {
             $options += $rule::get_browser_security_choices();
         }

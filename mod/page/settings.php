@@ -33,20 +33,20 @@ if ($ADMIN->fulltree) {
 
     //--- general settings -----------------------------------------------------------------------------------
     $settings->add(new admin_setting_configmultiselect('page/displayoptions',
-        get_string('displayoptions', 'page'), get_string('configdisplayoptions', 'page'),
+        get_string('displayoptions', 'mod_page'), get_string('configdisplayoptions', 'mod_page'),
         $defaultdisplayoptions, $displayoptions));
 
     //--- modedit defaults -----------------------------------------------------------------------------------
     $settings->add(new admin_setting_heading('pagemodeditdefaults', get_string('modeditdefaults', 'admin'), get_string('condifmodeditdefaults', 'admin')));
 
     $settings->add(new admin_setting_configcheckbox('page/printintro',
-        get_string('printintro', 'page'), get_string('printintroexplain', 'page'), 0));
+        get_string('printintro', 'mod_page'), get_string('printintroexplain', 'mod_page'), 0));
     $settings->add(new admin_setting_configcheckbox('page/printlastmodified',
-        get_string('printlastmodified', 'page'), get_string('printlastmodifiedexplain', 'page'), 1));
+        get_string('printlastmodified', 'mod_page'), get_string('printlastmodifiedexplain', 'mod_page'), 1));
     $settings->add(new admin_setting_configselect('page/display',
-        get_string('displayselect', 'page'), get_string('displayselectexplain', 'page'), RESOURCELIB_DISPLAY_OPEN, $displayoptions));
+        get_string('displayselect', 'mod_page'), get_string('displayselectexplain', 'mod_page'), RESOURCELIB_DISPLAY_OPEN, $displayoptions));
     $settings->add(new admin_setting_configtext('page/popupwidth',
-        get_string('popupwidth', 'page'), get_string('popupwidthexplain', 'page'), 620, PARAM_INT, 7));
+        get_string('popupwidth', 'mod_page'), get_string('popupwidthexplain', 'mod_page'), 620, PARAM_INT, 7));
     $settings->add(new admin_setting_configtext('page/popupheight',
-        get_string('popupheight', 'page'), get_string('popupheightexplain', 'page'), 450, PARAM_INT, 7));
+        get_string('popupheight', 'mod_page'), get_string('popupheightexplain', 'mod_page'), 450, PARAM_INT, 7));
 }

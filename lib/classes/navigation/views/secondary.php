@@ -717,7 +717,7 @@ class secondary extends view {
             $url = new \moodle_url('/mod/' . $settingsnav->get_page()->activityname . '/view.php',
                 ['id' => $settingsnav->get_page()->cm->id]);
             $setactive = $url->compare($settingsnav->get_page()->url, URL_MATCH_BASE);
-            $node = $rootnode->add(get_string('modulename', $settingsnav->get_page()->activityname), $url,
+            $node = $rootnode->add(get_string('modulename', "mod_" . $settingsnav->get_page()->activityname), $url,
                 null, null, 'modulepage');
             if ($setactive) {
                 $node->make_active();
@@ -1136,7 +1136,7 @@ class secondary extends view {
             }
         } else { // Otherwise, add the 'View activity' node to the secondary navigation.
             $viewactivityurl = new \moodle_url('/mod/' . $page->activityname . '/view.php', ['id' => $page->cm->id]);
-            $this->add(get_string('modulename', $page->activityname), $viewactivityurl, null, null, 'modulepage');
+            $this->add(get_string('modulename', "mod_{$page->activityname}"), $viewactivityurl, null, null, 'modulepage');
             if ($this->context instanceof \context_module) {
                 $this->page->set_secondary_active_tab('modulepage');
             }

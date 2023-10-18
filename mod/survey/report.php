@@ -68,27 +68,27 @@ $context = context_module::instance($cm->id);
 require_capability('mod/survey:readresponses', $context);
 
 if (!$survey = $DB->get_record("survey", array("id" => $cm->instance))) {
-    throw new moodle_exception('invalidsurveyid', 'survey');
+    throw new moodle_exception('invalidsurveyid', 'mod_survey');
 }
 
 if (!$template = $DB->get_record("survey", array("id" => $survey->template))) {
-    throw new moodle_exception('invalidtmptid', 'survey');
+    throw new moodle_exception('invalidtmptid', 'mod_survey');
 }
 
 $showscales = ($template->name != 'ciqname');
 
-$strreport = get_string("report", "survey");
-$strsurvey = get_string("modulename", "survey");
-$strsurveys = get_string("modulenameplural", "survey");
-$strsummary = get_string("summary", "survey");
-$strscales = get_string("scales", "survey");
-$strquestion = get_string("question", "survey");
-$strquestions = get_string("questions", "survey");
-$strdownload = get_string("download", "survey");
-$strallscales = get_string("allscales", "survey");
-$strselectedquestions = get_string("selectedquestions", "survey");
-$strseemoredetail = get_string("seemoredetail", "survey");
-$strnotes = get_string("notes", "survey");
+$strreport = get_string("report", 'mod_survey');
+$strsurvey = get_string("modulename", 'mod_survey');
+$strsurveys = get_string("modulenameplural", 'mod_survey');
+$strsummary = get_string("summary", 'mod_survey');
+$strscales = get_string("scales", 'mod_survey');
+$strquestion = get_string("question", 'mod_survey');
+$strquestions = get_string("questions", 'mod_survey');
+$strdownload = get_string("download", 'mod_survey');
+$strallscales = get_string("allscales", 'mod_survey');
+$strselectedquestions = get_string("selectedquestions", 'mod_survey');
+$strseemoredetail = get_string("seemoredetail", 'mod_survey');
+$strnotes = get_string("notes", 'mod_survey');
 
 $PAGE->set_title("$course->shortname: " . format_string($survey->name));
 $PAGE->set_heading($course->fullname);
@@ -161,7 +161,7 @@ switch ($action) {
             survey_print_graph("id=$id&amp;group=$currentgroup&amp;type=overall.png");
             echo "</a></div>";
         } else {
-            echo $OUTPUT->notification(get_string("nobodyyet", "survey"), 'info', false);
+            echo $OUTPUT->notification(get_string("nobodyyet", 'mod_survey'), 'info', false);
         }
         break;
 
@@ -177,7 +177,7 @@ switch ($action) {
         }
 
         if (!$results = survey_get_responses($survey->id, $currentgroup, $groupingid)) {
-            echo $OUTPUT->notification(get_string("nobodyyet", "survey"), 'info', false);
+            echo $OUTPUT->notification(get_string("nobodyyet", 'mod_survey'), 'info', false);
 
         } else {
 
@@ -232,7 +232,7 @@ switch ($action) {
         }
 
         if (!$results = survey_get_responses($survey->id, $currentgroup, $groupingid)) {
-            echo $OUTPUT->notification(get_string("nobodyyet", "survey"), 'info', false);
+            echo $OUTPUT->notification(get_string("nobodyyet", 'mod_survey'), 'info', false);
 
         } else {
 
@@ -250,7 +250,7 @@ switch ($action) {
                 if ($question->type < 0) {  // We have some virtual scales.  DON'T show them.
                     continue;
                 }
-                $question->text = get_string($question->text, "survey");
+                $question->text = get_string($question->text, 'mod_survey');
 
                 if ($question->multi) {
                     echo $OUTPUT->heading($question->text . ':', 4);
@@ -300,11 +300,11 @@ switch ($action) {
 
     case "question":
         if (!$question = $DB->get_record("survey_questions", array("id" => $qid))) {
-            throw new \moodle_exception('cannotfindquestion', 'survey');
+            throw new \moodle_exception('cannotfindquestion', 'mod_survey');
         }
-        $question->text = get_string($question->text, "survey");
+        $question->text = get_string($question->text, 'mod_survey');
 
-        $answers = explode(",", get_string($question->options, "survey"));
+        $answers = explode(",", get_string($question->options, 'mod_survey'));
 
         echo $OUTPUT->heading("$strquestion: $question->text", 3);
 
@@ -312,10 +312,10 @@ switch ($action) {
             echo html_writer::div($groupsactivitymenu, 'mb-2');
         }
 
-        $strname = get_string("name", "survey");
-        $strtime = get_string("time", "survey");
-        $stractual = get_string("actual", "survey");
-        $strpreferred = get_string("preferred", "survey");
+        $strname = get_string("name", 'mod_survey');
+        $strtime = get_string("time", 'mod_survey');
+        $stractual = get_string("actual", 'mod_survey');
+        $strpreferred = get_string("preferred", 'mod_survey');
         $strdateformat = get_string("strftimedatetime");
 
         $table = new html_table();
@@ -350,14 +350,14 @@ switch ($action) {
 
     case "students":
 
-        echo $OUTPUT->heading(get_string("analysisof", "survey", get_string('participants')), 3);
+        echo $OUTPUT->heading(get_string("analysisof", 'mod_survey', get_string('participants')), 3);
 
         if ($groupsactivitymenu) {
             echo html_writer::div($groupsactivitymenu, 'mb-2');
         }
 
         if (!$results = survey_get_responses($survey->id, $currentgroup, $groupingid)) {
-            echo $OUTPUT->notification(get_string("nobodyyet", "survey"), 'info', false);
+            echo $OUTPUT->notification(get_string("nobodyyet", 'mod_survey'), 'info', false);
         } else {
             survey_print_all_responses($cm->id, $results, $course->id);
         }
@@ -369,7 +369,7 @@ switch ($action) {
             throw new moodle_exception('invaliduserid');
         }
 
-        echo $OUTPUT->heading(get_string("analysisof", "survey", fullname($user)), 3);
+        echo $OUTPUT->heading(get_string("analysisof", 'mod_survey', fullname($user)), 3);
 
         if ($groupsactivitymenu) {
             echo html_writer::div($groupsactivitymenu, 'mb-2');
@@ -378,15 +378,15 @@ switch ($action) {
         if ($notes != '' and confirm_sesskey()) {
             if (survey_get_analysis($survey->id, $user->id)) {
                 if (!survey_update_analysis($survey->id, $user->id, $notes)) {
-                    echo $OUTPUT->notification(get_string("errorunabletosavenotes", "survey"), "notifyproblem");
+                    echo $OUTPUT->notification(get_string("errorunabletosavenotes", 'mod_survey'), "notifyproblem");
                 } else {
-                    echo $OUTPUT->notification(get_string("savednotes", "survey"), "notifysuccess");
+                    echo $OUTPUT->notification(get_string("savednotes", 'mod_survey'), "notifysuccess");
                 }
             } else {
                 if (!survey_add_analysis($survey->id, $user->id, $notes)) {
-                    echo $OUTPUT->notification(get_string("errorunabletosavenotes", "survey"), "notifyproblem");
+                    echo $OUTPUT->notification(get_string("errorunabletosavenotes", 'mod_survey'), "notifyproblem");
                 } else {
-                    echo $OUTPUT->notification(get_string("savednotes", "survey"), "notifysuccess");
+                    echo $OUTPUT->notification(get_string("savednotes", 'mod_survey'), "notifysuccess");
                 }
             }
         }
@@ -435,10 +435,10 @@ switch ($action) {
             if ($question->type == 0 or $question->type == 1) {
                 if ($answer = survey_get_user_answer($survey->id, $question->id, $user->id)) {
                     $table = new html_table();
-                    $table->head = array(get_string($question->text, "survey"));
+                    $table->head = array(get_string($question->text, 'mod_survey'));
                     $table->align = array("left");
                     if (!empty($question->options) && $answer->answer1 > 0) {
-                        $answers = explode(',', get_string($question->options, 'survey'));
+                        $answers = explode(',', get_string($question->options, 'mod_survey'));
                         if ($answer->answer1 <= count($answers)) {
                             $table->data[] = array(s($answers[$answer->answer1 - 1])); // No html here, just plain text.
                         } else {
@@ -488,7 +488,7 @@ switch ($action) {
 
         $numusers = survey_count_responses($survey->id, $currentgroup, $groupingid);
         if ($numusers > 0) {
-            echo html_writer::tag('p', get_string("downloadinfo", "survey"), array('class' => 'centerpara'));
+            echo html_writer::tag('p', get_string("downloadinfo", 'mod_survey'), array('class' => 'centerpara'));
 
             echo $OUTPUT->container_start('reportbuttons');
             $options = array();
@@ -506,7 +506,7 @@ switch ($action) {
             echo $OUTPUT->container_end();
 
         } else {
-            echo $OUTPUT->notification(get_string("nobodyyet", "survey"), 'info', false);
+            echo $OUTPUT->notification(get_string("nobodyyet", 'mod_survey'), 'info', false);
         }
 
         break;

@@ -91,7 +91,7 @@ class workshop_random_allocator_form extends moodleform {
 
         if (empty($workshop->useselfassessment)) {
             $mform->addElement('static', 'addselfassessment', get_string('addselfassessment', 'workshopallocation_random'),
-                                                                 get_string('selfassessmentdisabled', 'workshop'));
+                                                                 get_string('selfassessmentdisabled', 'mod_workshop'));
         } else {
             $mform->addElement('checkbox', 'addselfassessment', get_string('addselfassessment', 'workshopallocation_random'));
         }

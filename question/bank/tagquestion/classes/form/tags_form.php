@@ -60,7 +60,7 @@ class tags_form extends \moodleform {
             $options = [
                 'tags' => true,
                 'multiple' => true,
-                'noselectionstring' => get_string('anytags', 'quiz'),
+                'noselectionstring' => get_string('anytags', 'mod_quiz'),
             ];
             $mform->addElement('autocomplete', 'tags',  get_string('tags'), $tagstrings, $options);
 

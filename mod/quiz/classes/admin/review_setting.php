@@ -61,14 +61,14 @@ class review_setting extends \admin_setting {
      */
     public static function fields() {
         return [
-            'attempt'          => get_string('theattempt', 'quiz'),
+            'attempt'          => get_string('theattempt', 'mod_quiz'),
             'correctness'      => get_string('whethercorrect', 'question'),
-            'maxmarks'         => get_string('maxmarks', 'quiz'),
+            'maxmarks'         => get_string('maxmarks', 'mod_quiz'),
             'marks'            => get_string('marks', 'question'),
             'specificfeedback' => get_string('specificfeedback', 'question'),
             'generalfeedback'  => get_string('generalfeedback', 'question'),
             'rightanswer'      => get_string('rightanswer', 'question'),
-            'overallfeedback'  => get_string('overallfeedback', 'quiz'),
+            'overallfeedback'  => get_string('overallfeedback', 'mod_quiz'),
         ];
     }
 
@@ -103,10 +103,10 @@ class review_setting extends \admin_setting {
      */
     protected static function times() {
         return [
-            self::DURING            => get_string('reviewduring', 'quiz'),
-            self::IMMEDIATELY_AFTER => get_string('reviewimmediately', 'quiz'),
-            self::LATER_WHILE_OPEN  => get_string('reviewopen', 'quiz'),
-            self::AFTER_CLOSE       => get_string('reviewclosed', 'quiz'),
+            self::DURING            => get_string('reviewduring', 'mod_quiz'),
+            self::IMMEDIATELY_AFTER => get_string('reviewimmediately', 'mod_quiz'),
+            self::LATER_WHILE_OPEN  => get_string('reviewopen', 'mod_quiz'),
+            self::AFTER_CLOSE       => get_string('reviewclosed', 'mod_quiz'),
         ];
     }
 
@@ -164,6 +164,6 @@ class review_setting extends \admin_setting {
         $return .= "</div>\n";
 
         return format_admin_setting($this, $this->visiblename, $return,
-                $this->description, true, '', get_string('everythingon', 'quiz'), $query);
+                $this->description, true, '', get_string('everythingon', 'mod_quiz'), $query);
     }
 }

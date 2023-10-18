@@ -32,7 +32,7 @@ class mod_chat_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', get_string('chatname', 'chat'), array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('chatname', 'mod_chat'), array('size' => '64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -41,22 +41,22 @@ class mod_chat_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->standard_intro_elements(get_string('chatintro', 'chat'));
+        $this->standard_intro_elements(get_string('chatintro', 'mod_chat'));
 
         // Chat sessions.
-        $mform->addElement('header', 'sessionshdr', get_string('sessions', 'chat'));
+        $mform->addElement('header', 'sessionshdr', get_string('sessions', 'mod_chat'));
 
-        $mform->addElement('date_time_selector', 'chattime', get_string('chattime', 'chat'));
-
-        $options = array();
-        $options[0]  = get_string('donotusechattime', 'chat');
-        $options[1]  = get_string('repeatnone', 'chat');
-        $options[2]  = get_string('repeatdaily', 'chat');
-        $options[3]  = get_string('repeatweekly', 'chat');
-        $mform->addElement('select', 'schedule', get_string('repeattimes', 'chat'), $options);
+        $mform->addElement('date_time_selector', 'chattime', get_string('chattime', 'mod_chat'));
 
         $options = array();
-        $options[0]    = get_string('neverdeletemessages', 'chat');
+        $options[0]  = get_string('donotusechattime', 'mod_chat');
+        $options[1]  = get_string('repeatnone', 'mod_chat');
+        $options[2]  = get_string('repeatdaily', 'mod_chat');
+        $options[3]  = get_string('repeatweekly', 'mod_chat');
+        $mform->addElement('select', 'schedule', get_string('repeattimes', 'mod_chat'), $options);
+
+        $options = array();
+        $options[0]    = get_string('neverdeletemessages', 'mod_chat');
         $options[365]  = get_string('numdays', '', 365);
         $options[180]  = get_string('numdays', '', 180);
         $options[150]  = get_string('numdays', '', 150);
@@ -68,10 +68,10 @@ class mod_chat_mod_form extends moodleform_mod {
         $options[14]   = get_string('numdays', '', 14);
         $options[7]    = get_string('numdays', '', 7);
         $options[2]    = get_string('numdays', '', 2);
-        $mform->addElement('select', 'keepdays', get_string('savemessages', 'chat'), $options);
+        $mform->addElement('select', 'keepdays', get_string('savemessages', 'mod_chat'), $options);
 
-        $mform->addElement('selectyesno', 'studentlogs', get_string('studentseereports', 'chat'));
-        $mform->addHelpButton('studentlogs', 'studentseereports', 'chat');
+        $mform->addElement('selectyesno', 'studentlogs', get_string('studentseereports', 'mod_chat'));
+        $mform->addHelpButton('studentlogs', 'studentseereports', 'mod_chat');
 
         $this->standard_coursemodule_elements();
 

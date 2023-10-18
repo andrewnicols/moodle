@@ -125,7 +125,7 @@ class course_settings_form extends moodleform {
                     require_once($plugindir.'/lib.php');
                     $functionname = 'grade_'.$type.'_'.$plugin.'_settings_definition';
                     if (function_exists($functionname)) {
-                        $mform->addElement('header', 'grade_'.$type.$plugin, get_string('pluginname', 'grade'.$type.'_'.$plugin, NULL));
+                        $mform->addElement('header', 'grade_'.$type.$plugin, get_string('pluginname', 'mod_grade'.$type.'_'.$plugin, NULL));
                         $mform->setExpanded('grade_'.$type.$plugin);
                         if ($can_view_admin_links) {
                             $link = '<a href="' . $CFG->wwwroot.'/'.$CFG->admin.'/settings.php?section=gradereport' . $plugin . '">' . $strchangedefaults . '</a>';

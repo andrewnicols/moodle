@@ -37,8 +37,8 @@ $event = \mod_page\event\course_module_instance_list_viewed::create(array('conte
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strpage         = get_string('modulename', 'page');
-$strpages        = get_string('modulenameplural', 'page');
+$strpage         = get_string('modulename', 'mod_page');
+$strpages        = get_string('modulenameplural', 'mod_page');
 $strname         = get_string('name');
 $strintro        = get_string('moduleintro');
 $strlastmodified = get_string('lastmodified');

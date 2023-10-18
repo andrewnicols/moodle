@@ -48,14 +48,14 @@
     }
 }}
 <div id="intro" class="box searchbox boxaligncenter">
-    {{#str}}searchforumintro, forum{{/str}}
+    {{#str}}searchforumintro, mod_forum{{/str}}
 </div>
 <div class="box generalbox boxaligncenter">
     <form id="searchform" class="mform" action="{{actionurl}}" method="get">
         <table class="searchbox table table-striped" id="form">
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="words">{{#str}}searchwords, forum{{/str}}</label>
+                    <label for="words">{{#str}}searchwords, mod_forum{{/str}}</label>
                     <input type="hidden" value="{{courseid}}" name="id">
                 </td>
                 <td class="c1">
@@ -64,7 +64,7 @@
             </tr>
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="phrase">{{#str}}searchphrase, forum{{/str}}</label>
+                    <label for="phrase">{{#str}}searchphrase, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1">
                     <input type="text" class="form-control" name="phrase" id="phrase" value="{{phrase}}">
@@ -72,7 +72,7 @@
             </tr>
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="notwords">{{#str}}searchnotwords, forum{{/str}}</label>
+                    <label for="notwords">{{#str}}searchnotwords, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1">
                     <input type="text" class="form-control" name="notwords" id="notwords" value="{{notwords}}">
@@ -81,7 +81,7 @@
             {{#showfullwords}}
                 <tr>
                     <td class="c0 text-xs-right align-bottom">
-                        <label for="fullwords">{{#str}}searchfullwords, forum{{/str}}</label>
+                        <label for="fullwords">{{#str}}searchfullwords, mod_forum{{/str}}</label>
                     </td>
                     <td class="c1">
                         <input type="text" class="form-control" name="fullwords" id="fullwords" value="{{fullwords}}">
@@ -90,7 +90,7 @@
             {{/showfullwords}}
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="timefromrestrict">{{#str}}searchdatefrom, forum{{/str}}</label>
+                    <label for="timefromrestrict">{{#str}}searchdatefrom, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1 text-nowrap form-inline">
                     <div class="fdate_time_selector d-flex flex-wrap align-items-center">
@@ -106,7 +106,7 @@
             </tr>
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="timetorestrict">{{#str}}searchdateto, forum{{/str}}</label>
+                    <label for="timetorestrict">{{#str}}searchdateto, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1 text-nowrap form-inline">
                     <div class="fdate_time_selector d-flex flex-wrap align-items-center">
@@ -122,7 +122,7 @@
             </tr>
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="menuforumid">{{#str}}searchwhichforums, forum{{/str}}</label>
+                    <label for="menuforumid">{{#str}}searchwhichforums, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1">
                     <select name="forumid" id="menuforumid" class="form-control custom-select">
@@ -134,7 +134,7 @@
             </tr>
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="subject">{{#str}}searchsubject, forum{{/str}}</label>
+                    <label for="subject">{{#str}}searchsubject, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1">
                     <input type="text" class="form-control" name="subject" id="subject" value="{{subject}}">
@@ -142,7 +142,7 @@
             </tr>
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="user">{{#str}}searchuser, forum{{/str}}</label>
+                    <label for="user">{{#str}}searchuser, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1">
                     <input type="text" class="form-control" name="user" id="user" value="{{user}}">
@@ -151,7 +151,7 @@
             {{^guestuser}}
             <tr>
                 <td class="c0 text-xs-right align-bottom">
-                    <label for="starredonly">{{#str}}starredonly, forum{{/str}}</label>
+                    <label for="starredonly">{{#str}}starredonly, mod_forum{{/str}}</label>
                 </td>
                 <td class="c1 align-middle form-inline">
                     <input type="checkbox" class="form-control" name="starredonly" id="starredonly" value="1" {{#starredonly}}checked{{/starredonly}} />
@@ -161,7 +161,7 @@
             {{#tagsenabled}}
                 <tr>
                     <td class="c0">
-                        <label for="tags" class="mt-1">{{#str}}searchtags, forum{{/str}}</label>
+                        <label for="tags" class="mt-1">{{#str}}searchtags, mod_forum{{/str}}</label>
                     </td>
                     <td class="c1">
                         <select class="custom-select" name="tags[]"
@@ -176,7 +176,7 @@
             <tr>
                 <td> </td>
                 <td class="submit">
-                    <button type="submit" class="btn btn-primary">{{#str}}searchforums, forum{{/str}}</button>
+                    <button type="submit" class="btn btn-primary">{{#str}}searchforums, mod_forum{{/str}}</button>
                 </td>
             </tr>
         </table>

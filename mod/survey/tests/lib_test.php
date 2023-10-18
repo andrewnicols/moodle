@@ -384,7 +384,7 @@ class lib_test extends \advanced_testcase {
         $moddefaults->customdata = ['customcompletionrules' => ['completionsubmit' => 1]];
         $moddefaults->completion = 2;
 
-        $activeruledescriptions = [get_string('completionsubmit', 'survey')];
+        $activeruledescriptions = [get_string('completionsubmit', 'mod_survey')];
         $this->assertEquals(mod_survey_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_survey_get_completion_active_rule_descriptions($cm2), []);
         $this->assertEquals(mod_survey_get_completion_active_rule_descriptions($moddefaults), $activeruledescriptions);

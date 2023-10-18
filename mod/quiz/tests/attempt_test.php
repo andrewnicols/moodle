@@ -543,7 +543,7 @@ class attempt_test extends \advanced_testcase {
         // Render summary previous attempts table.
         $renderer = $PAGE->get_renderer('mod_quiz');
         $table = $renderer->view_table($quiz, $context, $viewobj);
-        $captionpattern = '/<caption\b[^>]*>' . get_string('summaryofattempts', 'quiz') . '<\/caption>/';
+        $captionpattern = '/<caption\b[^>]*>' . get_string('summaryofattempts', 'mod_quiz') . '<\/caption>/';
 
         // Check caption existed.
         $this->assertMatchesRegularExpression($captionpattern, $table);

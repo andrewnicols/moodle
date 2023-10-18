@@ -49,7 +49,7 @@ class provider implements
             foreach ($prefnames as $name) {
                 $preference = get_user_preferences("{$component}_{$name}", null, $userid);
                 if ($preference !== null) {
-                    $desc = get_string('enabledcol', 'privacy:metadata:preference:enabledcol');
+                    $desc = get_string('enabledcol', 'mod_privacy:metadata:preference:enabledcol');
                     writer::export_user_preference('qbank_columnsortorder', "{$component}_{$name}", $preference, $desc);
                 }
             }

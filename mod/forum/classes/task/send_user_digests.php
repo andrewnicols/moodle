@@ -394,7 +394,7 @@ class send_user_digests extends \core\task\adhoc_task {
         $site = get_site();
 
         // Set the subject of the message.
-        $this->postsubject = get_string('digestmailsubject', 'forum', format_string($site->shortname, true));
+        $this->postsubject = get_string('digestmailsubject', 'mod_forum', format_string($site->shortname, true));
 
         // And the content of the header in body.
         $headerdata = (object) [
@@ -405,14 +405,14 @@ class send_user_digests extends \core\task\adhoc_task {
                 ]))->out(false),
             ];
 
-        $this->notificationtext .= get_string('digestmailheader', 'forum', $headerdata) . "\n";
+        $this->notificationtext .= get_string('digestmailheader', 'mod_forum', $headerdata) . "\n";
 
         if ($this->allowhtml) {
-            $headerdata->userprefs = html_writer::link($headerdata->userprefs, get_string('digestmailprefs', 'forum'), [
+            $headerdata->userprefs = html_writer::link($headerdata->userprefs, get_string('digestmailprefs', 'mod_forum'), [
                     'target' => '_blank',
                 ]);
 
-            $this->notificationhtml .= html_writer::tag('p', get_string('digestmailheader', 'forum', $headerdata));
+            $this->notificationhtml .= html_writer::tag('p', get_string('digestmailheader', 'mod_forum', $headerdata));
             $this->notificationhtml .= html_writer::empty_tag('br');
             $this->notificationhtml .= html_writer::empty_tag('hr', [
                     'size' => 1,
@@ -435,7 +435,7 @@ class send_user_digests extends \core\task\adhoc_task {
                 'context' => \context_course::instance($course->id),
             ]);
 
-        $strforums = get_string('forums', 'forum');
+        $strforums = get_string('forums', 'mod_forum');
 
         $this->discussiontext .= "\n=====================================================================\n\n";
         $this->discussiontext .= "$shortname -> $strforums -> " . format_string($forum->name, true);
@@ -530,13 +530,13 @@ class send_user_digests extends \core\task\adhoc_task {
             $forum = $this->forums[$discussion->forum];
             if (\mod_forum\subscriptions::is_forcesubscribed($forum)) {
                 // This forum is force subscribed. The user cannot unsubscribe.
-                $footerlinks[] = get_string("everyoneissubscribed", "forum");
+                $footerlinks[] = get_string("everyoneissubscribed", 'mod_forum');
             } else {
                 $footerlinks[] = "<a href=\"$CFG->wwwroot/mod/forum/subscribe.php?id=$forum->id\">" .
-                    get_string("unsubscribe", "forum") . "</a>";
+                    get_string("unsubscribe", 'mod_forum') . "</a>";
             }
             $footerlinks[] = "<a href='{$CFG->wwwroot}/mod/forum/index.php?id={$forum->course}'>" .
-                    get_string("digestmailpost", "forum") . '</a>';
+                    get_string("digestmailpost", 'mod_forum') . '</a>';
 
             $this->discussionhtml .= "\n<div class='mdl-right'><font size=\"1\">" .
                     implode('&nbsp;', $footerlinks) . '</font></div>';
@@ -593,7 +593,7 @@ class send_user_digests extends \core\task\adhoc_task {
         $eventdata->fullmessageformat = FORMAT_PLAIN;
         $eventdata->fullmessagehtml = $this->notificationhtml;
         $eventdata->notification = 1;
-        $eventdata->smallmessage = get_string('smallmessagedigest', 'forum', $this->sentcount);
+        $eventdata->smallmessage = get_string('smallmessagedigest', 'mod_forum', $this->sentcount);
 
         return message_send($eventdata);
     }

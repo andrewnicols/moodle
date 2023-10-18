@@ -457,7 +457,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('addsubmission', 'assign'), $actionevent->get_name());
+        $this->assertEquals(get_string('addsubmission', 'mod_assign'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -482,7 +482,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('addsubmission', 'assign'), $actionevent->get_name());
+        $this->assertEquals(get_string('addsubmission', 'mod_assign'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -748,7 +748,7 @@ class lib_test extends \advanced_testcase {
             'completion' => 2,
         ];
 
-        $activeruledescriptions = [get_string('completionsubmit', 'assign')];
+        $activeruledescriptions = [get_string('completionsubmit', 'mod_assign')];
         $this->assertEquals(mod_assign_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_assign_get_completion_active_rule_descriptions($cm2), []);
         $this->assertEquals(mod_assign_get_completion_active_rule_descriptions($moddefaults), $activeruledescriptions);

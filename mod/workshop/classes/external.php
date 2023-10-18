@@ -1901,7 +1901,7 @@ class mod_workshop_external extends external_api {
                 );
             }
         }
-        throw new moodle_exception('nothingfound', 'workshop');
+        throw new moodle_exception('nothingfound', 'mod_workshop');
     }
 
     /**

@@ -88,14 +88,14 @@
                 {{{ subject }}}
             </div>
             <div class="author">
-                {{# str }} bynameondate, forum, {
+                {{# str }} bynameondate, mod_forum, {
                         "name": {{# quote }}<a target='_blank' href='{{{ authorlink }}}'>{{ authorfullname }}</a>{{/ quote }},
                         "date": {{# quote }}{{ postdate }}{{/ quote }}
                     } {{/ str }}
             </div>
             {{# isprivatereply }}
             <div class="privatereplyinfo">
-                {{# str }} postisprivatereply, forum {{/ str }}
+                {{# str }} postisprivatereply, mod_forum {{/ str }}
             </div>
             {{/ isprivatereply }}
         </td>
@@ -120,7 +120,7 @@
             <div class="commands">
                 {{^ firstpost }}
                     <a target="_blank" href="{{{ parentpostlink }}}">
-                        {{# str }} parent, forum {{/ str }}
+                        {{# str }} parent, mod_forum {{/ str }}
                     </a>
                     {{# canreply }}
                         {{^ isprivatereply }}
@@ -131,7 +131,7 @@
                 {{# canreply }}
                     {{^ isprivatereply }}
                     <a target="_blank" href="{{{ replylink }}}">
-                        {{# str }} reply, forum {{/ str }}
+                        {{# str }} reply, mod_forum {{/ str }}
                     </a>
                     {{/ isprivatereply }}
                 {{/ canreply }}
@@ -139,7 +139,7 @@
 
             <div class="link">
                 <a target="_blank" href="{{{ permalink }}}">
-                    {{# str }} postincontext, forum {{/ str }}
+                    {{# str }} postincontext, mod_forum {{/ str }}
                 </a>
             </div>
         </td>

@@ -60,7 +60,7 @@ class reopen_attempt extends external_api {
         require_capability('mod/quiz:reopenattempts', $attemptobj->get_context());
         self::validate_context($attemptobj->get_context());
         if ($attemptobj->get_state() != quiz_attempt::ABANDONED) {
-            throw new moodle_exception('reopenattemptwrongstate', 'quiz', '',
+            throw new moodle_exception('reopenattemptwrongstate', 'mod_quiz', '',
                     ['attemptid' => $attemptid, 'state' => quiz_attempt_state_name($attemptobj->get_state())]);
         }
 

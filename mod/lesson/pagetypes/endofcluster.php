@@ -44,7 +44,7 @@ class lesson_page_type_endofcluster extends lesson_page {
     }
     public function get_typestring() {
         if ($this->string===null) {
-            $this->string = get_string($this->typeidstring, 'lesson');
+            $this->string = get_string($this->typeidstring, 'mod_lesson');
         }
         return $this->string;
     }
@@ -88,7 +88,7 @@ class lesson_page_type_endofcluster extends lesson_page {
         global $PAGE, $CFG;
         if ($previd != 0) {
             $addurl = new moodle_url('/mod/lesson/editpage.php', array('id'=>$PAGE->cm->id, 'pageid'=>$previd, 'sesskey'=>sesskey(), 'qtype'=>LESSON_PAGE_ENDOFCLUSTER));
-            return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_ENDOFCLUSTER, 'name'=>get_string('addendofcluster', 'lesson'));
+            return array('addurl'=>$addurl, 'type'=>LESSON_PAGE_ENDOFCLUSTER, 'name'=>get_string('addendofcluster', 'mod_lesson'));
         }
         return false;
     }
@@ -116,7 +116,7 @@ class lesson_add_page_form_endofcluster extends lesson_add_page_form_base {
         $mform->addElement('hidden', 'qtype');
         $mform->setType('qtype', PARAM_TEXT);
 
-        $mform->addElement('text', 'title', get_string("pagetitle", "lesson"), array('size'=>70));
+        $mform->addElement('text', 'title', get_string("pagetitle", 'mod_lesson'), array('size'=>70));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('title', PARAM_TEXT);
         } else {
@@ -124,7 +124,7 @@ class lesson_add_page_form_endofcluster extends lesson_add_page_form_base {
         }
 
         $this->editoroptions = array('noclean'=>true, 'maxfiles'=>EDITOR_UNLIMITED_FILES, 'maxbytes'=>$PAGE->course->maxbytes);
-        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", "lesson"), null, $this->editoroptions);
+        $mform->addElement('editor', 'contents_editor', get_string("pagecontents", 'mod_lesson'), null, $this->editoroptions);
         $mform->setType('contents_editor', PARAM_RAW);
 
         $this->add_jumpto(0);
@@ -138,7 +138,7 @@ class lesson_add_page_form_endofcluster extends lesson_add_page_form_base {
 
         // the new page is not the first page (end of cluster always comes after an existing page)
         if (!$page = $DB->get_record("lesson_pages", array("id" => $pageid))) {
-            throw new \moodle_exception('cannotfindpages', 'lesson');
+            throw new \moodle_exception('cannotfindpages', 'mod_lesson');
         }
 
         // could put code in here to check if the user really can insert an end of cluster
@@ -149,8 +149,8 @@ class lesson_add_page_form_endofcluster extends lesson_add_page_form_base {
         $newpage->nextpageid = $page->nextpageid;
         $newpage->qtype = $this->qtype;
         $newpage->timecreated = $timenow;
-        $newpage->title = get_string("endofclustertitle", "lesson");
-        $newpage->contents = get_string("endofclustertitle", "lesson");
+        $newpage->title = get_string("endofclustertitle", 'mod_lesson');
+        $newpage->contents = get_string("endofclustertitle", 'mod_lesson');
         $newpageid = $DB->insert_record("lesson_pages", $newpage);
         // update the linked list...
         $DB->set_field("lesson_pages", "nextpageid", $newpageid, array("id" => $pageid));
@@ -165,7 +165,7 @@ class lesson_add_page_form_endofcluster extends lesson_add_page_form_base {
         $newanswer->timecreated = $timenow;
         $newanswer->jumpto = LESSON_NEXTPAGE;
         $newanswerid = $DB->insert_record("lesson_answers", $newanswer);
-        $lesson->add_message(get_string('addedendofcluster', 'lesson'), 'notifysuccess');
+        $lesson->add_message(get_string('addedendofcluster', 'mod_lesson'), 'notifysuccess');
         redirect($CFG->wwwroot.'/mod/lesson/edit.php?id='.$PAGE->cm->id);
     }
 }

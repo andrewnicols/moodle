@@ -52,7 +52,7 @@ class report extends \mod_scorm\report {
 
         if ($action == 'delete' && has_capability('mod/scorm:deleteresponses', $contextmodule) && confirm_sesskey()) {
             if (scorm_delete_responses($attemptids, $scorm)) { // Delete responses.
-                echo $OUTPUT->notification(get_string('scormresponsedeleted', 'scorm'), 'notifysuccess');
+                echo $OUTPUT->notification(get_string('scormresponsedeleted', 'mod_scorm'), 'notifysuccess');
             }
         }
         // Find out current groups mode.
@@ -132,13 +132,13 @@ class report extends \mod_scorm\report {
             }
 
             $columns[] = 'attempt';
-            $headers[] = get_string('attempt', 'scorm');
+            $headers[] = get_string('attempt', 'mod_scorm');
             $columns[] = 'start';
-            $headers[] = get_string('started', 'scorm');
+            $headers[] = get_string('started', 'mod_scorm');
             $columns[] = 'finish';
-            $headers[] = get_string('last', 'scorm');
+            $headers[] = get_string('last', 'mod_scorm');
             $columns[] = 'score';
-            $headers[] = get_string('score', 'scorm');
+            $headers[] = get_string('score', 'mod_scorm');
             if ($detailedrep && $scoes = $DB->get_records('scorm_scoes', array("scorm" => $scorm->id), 'sortorder, id')) {
                 foreach ($scoes as $sco) {
                     if ($sco->launch != '') {
@@ -200,7 +200,7 @@ class report extends \mod_scorm\report {
                 // Sending HTTP headers.
                 $workbook->send($filename);
                 // Creating the first worksheet.
-                $sheettitle = get_string('report', 'scorm');
+                $sheettitle = get_string('report', 'mod_scorm');
                 $myxls = $workbook->add_worksheet($sheettitle);
                 // Format types.
                 $format = $workbook->add_format();
@@ -239,7 +239,7 @@ class report extends \mod_scorm\report {
                 // Sending HTTP headers.
                 $workbook->send($filename);
                 // Creating the first worksheet.
-                $sheettitle = get_string('report', 'scorm');
+                $sheettitle = get_string('report', 'mod_scorm');
                 $myxls = $workbook->add_worksheet($sheettitle);
                 // Format types.
                 $format = $workbook->add_format();
@@ -337,9 +337,9 @@ class report extends \mod_scorm\report {
 
                 echo \html_writer::start_div('scormattemptcounts');
                 if ( $count->nbresults == $count->nbattempts ) {
-                    echo get_string('reportcountattempts', 'scorm', $count);
+                    echo get_string('reportcountattempts', 'mod_scorm', $count);
                 } else if ( $count->nbattempts > 0 ) {
-                    echo get_string('reportcountallattempts', 'scorm', $count);
+                    echo get_string('reportcountallattempts', 'mod_scorm', $count);
                 } else {
                     echo $count->nbusers.' '.get_string('users');
                 }
@@ -353,7 +353,7 @@ class report extends \mod_scorm\report {
                 echo \html_writer::start_div('', array('id' => 'scormtablecontainer'));
                 if ($candelete) {
                     // Start form.
-                    $strreallydel  = addslashes_js(get_string('deleteattemptcheck', 'scorm'));
+                    $strreallydel  = addslashes_js(get_string('deleteattemptcheck', 'mod_scorm'));
                     echo \html_writer::start_tag('form', array('id' => 'attemptsform', 'method' => 'post',
                                                                 'action' => $PAGE->url->out(false),
                                                                 'onsubmit' => 'return confirm("'.$strreallydel.'");'));
@@ -433,7 +433,7 @@ class report extends \mod_scorm\report {
                                     if ($trackdata->status == '') {
                                         $trackdata->status = 'notattempted';
                                     }
-                                    $strstatus = get_string($trackdata->status, 'scorm');
+                                    $strstatus = get_string($trackdata->status, 'mod_scorm');
                                     // If raw score exists, print it.
                                     if ($trackdata->score_raw != '') {
                                         $score = $trackdata->score_raw;
@@ -454,16 +454,16 @@ class report extends \mod_scorm\report {
                                         $url = new \moodle_url('/mod/scorm/report/userreporttracks.php', array('id' => $cm->id,
                                             'scoid' => $sco->id, 'user' => $scouser->userid, 'attempt' => $scouser->attempt,
                                             'mode' => 'basic'));
-                                        $row[] = $OUTPUT->pix_icon($trackdata->status, $strstatus, 'scorm') . '<br>' .
-                                           \html_writer::link($url, $score, array('title' => get_string('details', 'scorm')));
+                                        $row[] = $OUTPUT->pix_icon($trackdata->status, $strstatus, 'mod_scorm') . '<br>' .
+                                           \html_writer::link($url, $score, array('title' => get_string('details', 'mod_scorm')));
                                     } else {
                                         $row[] = $score;
                                     }
                                 } else {
                                     // If we don't have track data, we haven't attempted yet.
-                                    $strstatus = get_string('notattempted', 'scorm');
+                                    $strstatus = get_string('notattempted', 'mod_scorm');
                                     if (!$download) {
-                                        $row[] = $OUTPUT->pix_icon('notattempted', $strstatus, 'scorm') . '<br>' . $strstatus;
+                                        $row[] = $OUTPUT->pix_icon('notattempted', $strstatus, 'mod_scorm') . '<br>' . $strstatus;
                                     } else {
                                         $row[] = $strstatus;
                                     }
@@ -518,7 +518,7 @@ class report extends \mod_scorm\report {
                 exit;
             }
         } else {
-            echo $OUTPUT->notification(get_string('noactivity', 'scorm'));
+            echo $OUTPUT->notification(get_string('noactivity', 'mod_scorm'));
         }
     }// Function ends.
 }

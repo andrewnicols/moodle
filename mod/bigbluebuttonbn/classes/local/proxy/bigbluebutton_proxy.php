@@ -316,12 +316,12 @@ class bigbluebutton_proxy extends proxy_base {
         $instanceprofiles = [
             instance::TYPE_ALL => [
                 'id' => instance::TYPE_ALL,
-                'name' => get_string('instance_type_default', 'bigbluebuttonbn'),
+                'name' => get_string('instance_type_default', 'mod_bigbluebuttonbn'),
                 'features' => ['all']
             ],
             instance::TYPE_ROOM_ONLY => [
                 'id' => instance::TYPE_ROOM_ONLY,
-                'name' => get_string('instance_type_room_only', 'bigbluebuttonbn'),
+                'name' => get_string('instance_type_room_only', 'mod_bigbluebuttonbn'),
                 'features' => ['showroom', 'welcomemessage', 'voicebridge', 'waitformoderator', 'userlimit',
                     'recording', 'sendnotifications', 'lock', 'preuploadpresentation', 'permissions', 'schedule', 'groups',
                     'modstandardelshdr', 'availabilityconditionsheader', 'tagshdr', 'competenciessection',
@@ -329,7 +329,7 @@ class bigbluebutton_proxy extends proxy_base {
             ],
             instance::TYPE_RECORDING_ONLY => [
                 'id' => instance::TYPE_RECORDING_ONLY,
-                'name' => get_string('instance_type_recording_only', 'bigbluebuttonbn'),
+                'name' => get_string('instance_type_recording_only', 'mod_bigbluebuttonbn'),
                 'features' => ['showrecordings', 'importrecordings', 'availabilityconditionsheader']
             ],
         ];

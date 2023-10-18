@@ -226,7 +226,7 @@ class mod_lesson_external extends external_api {
         if ($timerestriction = $lesson->get_time_restriction_status()) {
             $error = ["$timerestriction->reason" => userdate($timerestriction->time)];
             if (!$return) {
-                throw new moodle_exception(key($error), 'lesson', '', current($error));
+                throw new moodle_exception(key($error), 'mod_lesson', '', current($error));
             }
             $errors[key($error)] = current($error);
         }
@@ -235,17 +235,17 @@ class mod_lesson_external extends external_api {
         if ($passwordrestriction = $lesson->get_password_restriction_status($params['password'])) {
             $error = ["passwordprotectedlesson" => \core_external\util::format_string($lesson->name, $lesson->context)];
             if (!$return) {
-                throw new moodle_exception(key($error), 'lesson', '', current($error));
+                throw new moodle_exception(key($error), 'mod_lesson', '', current($error));
             }
             $errors[key($error)] = current($error);
         }
 
         // Check for dependencies.
         if ($dependenciesrestriction = $lesson->get_dependencies_restriction_status()) {
-            $errorhtmllist = implode(get_string('and', 'lesson') . ', ', $dependenciesrestriction->errors);
+            $errorhtmllist = implode(get_string('and', 'mod_lesson') . ', ', $dependenciesrestriction->errors);
             $error = ["completethefollowingconditions" => $dependenciesrestriction->dependentlesson->name . $errorhtmllist];
             if (!$return) {
-                throw new moodle_exception(key($error), 'lesson', '', current($error));
+                throw new moodle_exception(key($error), 'mod_lesson', '', current($error));
             }
             $errors[key($error)] = current($error);
         }
@@ -260,7 +260,7 @@ class mod_lesson_external extends external_api {
             if (!$lessonfirstpageid) {
                 $error = ["lessonnotready2" => null];
                 if (!$return) {
-                    throw new moodle_exception(key($error), 'lesson');
+                    throw new moodle_exception(key($error), 'mod_lesson');
                 }
                 $errors[key($error)] = current($error);
             }
@@ -274,7 +274,7 @@ class mod_lesson_external extends external_api {
                 if ($lesson->left_during_timed_session($attemptscount) && $lesson->timelimit && !$lesson->retake) {
                     $error = ["leftduringtimednoretake" => null];
                     if (!$return) {
-                        throw new moodle_exception(key($error), 'lesson');
+                        throw new moodle_exception(key($error), 'mod_lesson');
                     }
                     $errors[key($error)] = current($error);
                 }
@@ -282,7 +282,7 @@ class mod_lesson_external extends external_api {
                 // The user finished the lesson and no retakes are allowed.
                 $error = ["noretake" => null];
                 if (!$return) {
-                    throw new moodle_exception(key($error), 'lesson');
+                    throw new moodle_exception(key($error), 'mod_lesson');
                 }
                 $errors[key($error)] = current($error);
             }
@@ -290,7 +290,7 @@ class mod_lesson_external extends external_api {
             if (!$timers = $lesson->get_user_timers($USER->id, 'starttime DESC', '*', 0, 1)) {
                 $error = ["cannotfindtimer" => null];
                 if (!$return) {
-                    throw new moodle_exception(key($error), 'lesson');
+                    throw new moodle_exception(key($error), 'mod_lesson');
                 }
                 $errors[key($error)] = current($error);
             } else {
@@ -298,7 +298,7 @@ class mod_lesson_external extends external_api {
                 if (!$lesson->check_time($timer)) {
                     $error = ["eolstudentoutoftime" => null];
                     if (!$return) {
-                        throw new moodle_exception(key($error), 'lesson');
+                        throw new moodle_exception(key($error), 'mod_lesson');
                     }
                     $errors[key($error)] = current($error);
                 }
@@ -325,7 +325,7 @@ class mod_lesson_external extends external_api {
                     if (!isset($USER->modattempts[$lesson->id])) {
                         $error = ["studentoutoftimeforreview" => null];
                         if (!$return) {
-                            throw new moodle_exception(key($error), 'lesson');
+                            throw new moodle_exception(key($error), 'mod_lesson');
                         }
                         $errors[key($error)] = current($error);
                     }
@@ -393,7 +393,7 @@ class mod_lesson_external extends external_api {
             $result['preventaccessreasons'][] = [
                 'reason' => $reason,
                 'data' => $data,
-                'message' => get_string($reason, 'lesson', $data),
+                'message' => get_string($reason, 'mod_lesson', $data),
             ];
         }
         $result['warnings'] = $warnings;
@@ -1212,11 +1212,11 @@ class mod_lesson_external extends external_api {
             }
         } else {
             if ($params['pageid'] == LESSON_EOL) {
-                throw new moodle_exception('endoflesson', 'lesson');
+                throw new moodle_exception('endoflesson', 'mod_lesson');
             }
             $timer = $lesson->update_timer(true, true);
             if (!$lesson->check_time($timer)) {
-                throw new moodle_exception('eolstudentoutoftime', 'lesson');
+                throw new moodle_exception('eolstudentoutoftime', 'mod_lesson');
             }
         }
         $messages = self::format_lesson_messages($lesson);
@@ -1623,7 +1623,7 @@ class mod_lesson_external extends external_api {
         // Check if there are more errors.
         if (!empty($validation)) {
             reset($validation);
-            throw new moodle_exception(key($validation), 'lesson', '', current($validation));   // Throw first error.
+            throw new moodle_exception(key($validation), 'mod_lesson', '', current($validation));   // Throw first error.
         }
 
         // Set out of time to normal (it is the only existing mode).
@@ -1642,7 +1642,7 @@ class mod_lesson_external extends external_api {
                 $message = '';
                 if (in_array($el, $validmessages)) { // Check if the data comes with an informative message.
                     $a = (is_bool($value)) ? null : $value;
-                    $message = get_string($el, 'lesson', $a);
+                    $message = get_string($el, 'mod_lesson', $a);
                 }
                 // Return the data.
                 $data[] = array(

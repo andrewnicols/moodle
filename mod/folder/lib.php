@@ -189,7 +189,7 @@ function folder_delete_instance($id) {
  */
 function folder_get_file_areas($course, $cm, $context) {
     $areas = array();
-    $areas['content'] = get_string('foldercontent', 'folder');
+    $areas['content'] = get_string('foldercontent', 'mod_folder');
 
     return $areas;
 }
@@ -300,7 +300,7 @@ function folder_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
  * @param stdClass $currentcontext Current context of block
  */
 function folder_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-folder-*'=>get_string('page-mod-folder-x', 'folder'));
+    $module_pagetype = array('mod-folder-*'=>get_string('page-mod-folder-x', 'mod_folder'));
     return $module_pagetype;
 }
 
@@ -671,7 +671,7 @@ function folder_print_recent_mod_activity($activity, $courseid, $detail, $modnam
     $by = new stdClass();
     $by->name = html_writer::link($userurl, $fullname);
     $by->date = userdate($activity->timestamp);
-    $authornamedate = get_string('bynameondate', 'folder', $by);
+    $authornamedate = get_string('bynameondate', 'mod_folder', $by);
     $output .= html_writer::div($authornamedate, 'user');
 
     // Finish up the table.
@@ -754,7 +754,7 @@ function folder_print_recent_activity($course, $viewfullnames, $timestart) {
     }
 
     // Build list of files.
-    echo $OUTPUT->heading(get_string('newfoldercontent', 'folder') . ':', 6);
+    echo $OUTPUT->heading(get_string('newfoldercontent', 'mod_folder') . ':', 6);
     $list = html_writer::start_tag('ul', ['class' => 'unlist']);
     foreach ($newfiles as $file) {
         $filename = $file->get_filename();

@@ -46,7 +46,7 @@ $lessonoutput = $PAGE->get_renderer('mod_lesson');
 $url = new moodle_url('/mod/lesson/continue.php', array('id'=>$cm->id));
 $PAGE->set_url($url);
 $PAGE->set_pagetype('mod-lesson-view');
-$PAGE->navbar->add(get_string('continue', 'lesson'));
+$PAGE->navbar->add(get_string('continue', 'mod_lesson'));
 
 // This is the code updates the lesson time for a timed test
 // get time information for this user
@@ -82,13 +82,13 @@ $PAGE->set_subpage($page->id);
 
 /// Print the header, heading and tabs
 lesson_add_fake_blocks($PAGE, $cm, $lesson, $timer);
-echo $lessonoutput->header($lesson, $cm, 'view', true, $page->id, get_string('continue', 'lesson'));
+echo $lessonoutput->header($lesson, $cm, 'view', true, $page->id, get_string('continue', 'mod_lesson'));
 
 $editbuttons = new \mod_lesson\output\edit_action_buttons($lesson, $page->id ?? null);
 echo $lessonoutput->render($editbuttons);
 
 if ($lesson->displayleft) {
-    echo '<a name="maincontent" id="maincontent" title="'.get_string('anchortitle', 'lesson').'"></a>';
+    echo '<a name="maincontent" id="maincontent" title="'.get_string('anchortitle', 'mod_lesson').'"></a>';
 }
 // This calculates and prints the ongoing score message
 if ($lesson->ongoing && !$reviewmode) {
@@ -100,17 +100,17 @@ if (!$reviewmode) {
 
 // User is modifying attempts - save button and some instructions
 if (isset($USER->modattempts[$lesson->id])) {
-    $content = $OUTPUT->box(get_string("gotoendoflesson", "lesson"), 'center');
-    $content .= $OUTPUT->box(get_string("or", "lesson"), 'center');
-    $content .= $OUTPUT->box(get_string("continuetonextpage", "lesson"), 'center');
+    $content = $OUTPUT->box(get_string("gotoendoflesson", 'mod_lesson'), 'center');
+    $content .= $OUTPUT->box(get_string("or", 'mod_lesson'), 'center');
+    $content .= $OUTPUT->box(get_string("continuetonextpage", 'mod_lesson'), 'center');
     $url = new moodle_url('/mod/lesson/view.php', array('id' => $cm->id, 'pageid' => LESSON_EOL));
-    echo $content . $OUTPUT->single_button($url, get_string('finish', 'lesson'));
+    echo $content . $OUTPUT->single_button($url, get_string('finish', 'mod_lesson'));
 }
 
 // Review button back
 if (!$result->correctanswer && !$result->noanswer && !$result->isessayquestion && !$reviewmode && $lesson->review && !$result->maxattemptsreached) {
     $url = new moodle_url('/mod/lesson/view.php', array('id' => $cm->id, 'pageid' => $page->id));
-    echo $OUTPUT->single_button($url, get_string('reviewquestionback', 'lesson'));
+    echo $OUTPUT->single_button($url, get_string('reviewquestionback', 'mod_lesson'));
 }
 
 $url = new moodle_url('/mod/lesson/view.php', array('id'=>$cm->id, 'pageid'=>$result->newpageid));
@@ -120,11 +120,11 @@ if ($lesson->review && !$result->correctanswer && !$result->noanswer && !$result
     // page then don't show the "No, I just want to go on to the next question" button. It's confusing.
     if ($page->id != $result->newpageid) {
         // Button to continue the lesson (the page to go is configured by the teacher).
-        echo $OUTPUT->single_button($url, get_string('reviewquestioncontinue', 'lesson'));
+        echo $OUTPUT->single_button($url, get_string('reviewquestioncontinue', 'mod_lesson'));
     }
 } else {
     // Normal continue button
-    echo $OUTPUT->single_button($url, get_string('continue', 'lesson'));
+    echo $OUTPUT->single_button($url, get_string('continue', 'mod_lesson'));
 }
 
 echo $lessonoutput->footer();

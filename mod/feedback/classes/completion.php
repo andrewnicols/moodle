@@ -731,7 +731,7 @@ class mod_feedback_completion extends mod_feedback_structure {
                 } else {
                     $this->save_response();
                     if (!$this->get_feedback()->page_after_submit) {
-                        \core\notification::success(get_string('entries_saved', 'feedback'));
+                        \core\notification::success(get_string('entries_saved', 'mod_feedback'));
                     }
                     $this->justcompleted = true;
                 }

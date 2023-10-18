@@ -250,7 +250,7 @@ abstract class attempts_report extends report_base {
     protected function add_state_column(&$columns, &$headers) {
         global $PAGE;
         $columns[] = 'state';
-        $headers[] = get_string('attemptstate', 'quiz');
+        $headers[] = get_string('attemptstate', 'mod_quiz');
         $PAGE->requires->js_call_amd('mod_quiz/reopen_attempt_ui', 'init');
     }
 
@@ -261,13 +261,13 @@ abstract class attempts_report extends report_base {
      */
     protected function add_time_columns(&$columns, &$headers) {
         $columns[] = 'timestart';
-        $headers[] = get_string('startedon', 'quiz');
+        $headers[] = get_string('startedon', 'mod_quiz');
 
         $columns[] = 'timefinish';
-        $headers[] = get_string('timecompleted', 'quiz');
+        $headers[] = get_string('timecompleted', 'mod_quiz');
 
         $columns[] = 'duration';
-        $headers[] = get_string('attemptduration', 'quiz');
+        $headers[] = get_string('attemptduration', 'mod_quiz');
     }
 
     /**
@@ -282,13 +282,13 @@ abstract class attempts_report extends report_base {
     protected function add_grade_columns($quiz, $usercanseegrades, &$columns, &$headers, $includefeedback = true) {
         if ($usercanseegrades) {
             $columns[] = 'sumgrades';
-            $headers[] = get_string('grade', 'quiz') . '/' .
+            $headers[] = get_string('grade', 'mod_quiz') . '/' .
                     quiz_format_grade($quiz, $quiz->grade);
         }
 
         if ($includefeedback && quiz_has_feedback($quiz)) {
             $columns[] = 'feedbacktext';
-            $headers[] = get_string('feedback', 'quiz');
+            $headers[] = get_string('feedback', 'mod_quiz');
         }
     }
 

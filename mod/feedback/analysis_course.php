@@ -65,8 +65,8 @@ if ($data = $courseselectform->get_data()) {
 }
 
 /// Print the page header
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 $PAGE->set_heading($course->fullname);
 $PAGE->set_title($feedback->name);
@@ -86,7 +86,7 @@ if (has_capability('mod/feedback:viewreports', $context) && $feedbackstructure->
     echo $OUTPUT->container_start('form-buttons');
     $aurl = new moodle_url('/mod/feedback/analysis_to_excel.php',
         ['sesskey' => sesskey(), 'id' => $id, 'courseid' => (int)$courseid]);
-    echo $OUTPUT->single_button($aurl, get_string('export_to_excel', 'feedback'));
+    echo $OUTPUT->single_button($aurl, get_string('export_to_excel', 'mod_feedback'));
     echo $OUTPUT->container_end();
 }
 
@@ -141,7 +141,7 @@ if ($courseitemfilter > 0) {
         if (preg_match('/rated$/i', $item->typ)) {
             $url = new moodle_url('/mod/feedback/analysis_course.php', array('id' => $id,
                 'courseitemfilter' => $item->id, 'courseitemfiltertyp' => $item->typ));
-            $anker = html_writer::link($url, get_string('sort_by_course', 'feedback'));
+            $anker = html_writer::link($url, get_string('sort_by_course', 'mod_feedback'));
 
             echo '<tr><td colspan="2">'.$anker.'</td></tr>';
         }

@@ -305,9 +305,9 @@ class workshop {
      */
     public static function available_example_modes_list() {
         $options = array();
-        $options[self::EXAMPLES_VOLUNTARY]         = get_string('examplesvoluntary', 'workshop');
-        $options[self::EXAMPLES_BEFORE_SUBMISSION] = get_string('examplesbeforesubmission', 'workshop');
-        $options[self::EXAMPLES_BEFORE_ASSESSMENT] = get_string('examplesbeforeassessment', 'workshop');
+        $options[self::EXAMPLES_VOLUNTARY]         = get_string('examplesvoluntary', 'mod_workshop');
+        $options[self::EXAMPLES_BEFORE_SUBMISSION] = get_string('examplesbeforesubmission', 'mod_workshop');
+        $options[self::EXAMPLES_BEFORE_ASSESSMENT] = get_string('examplesbeforeassessment', 'mod_workshop');
         return $options;
     }
 
@@ -419,15 +419,15 @@ class workshop {
         $yesterday = userdate(time() - DAYSECS, '%Y%m%d', 99, false);
         $distance = (int)round(abs(time() - $timestamp) / DAYSECS);
         if ($day == $today) {
-            $a->distanceday = get_string('daystoday', 'workshop');
+            $a->distanceday = get_string('daystoday', 'mod_workshop');
         } elseif ($day == $yesterday) {
-            $a->distanceday = get_string('daysyesterday', 'workshop');
+            $a->distanceday = get_string('daysyesterday', 'mod_workshop');
         } elseif ($day < $today) {
-            $a->distanceday = get_string('daysago', 'workshop', $distance);
+            $a->distanceday = get_string('daysago', 'mod_workshop', $distance);
         } elseif ($day == $tomorrow) {
-            $a->distanceday = get_string('daystomorrow', 'workshop');
+            $a->distanceday = get_string('daystomorrow', 'mod_workshop');
         } elseif ($day > $today) {
-            $a->distanceday = get_string('daysleft', 'workshop', $distance);
+            $a->distanceday = get_string('daysleft', 'mod_workshop', $distance);
         }
         return $a;
     }
@@ -1147,10 +1147,10 @@ class workshop {
 
         if (is_null($example->grade)) {
             $summary->status = 'notgraded';
-            $summary->assesslabel = get_string('assess', 'workshop');
+            $summary->assesslabel = get_string('assess', 'mod_workshop');
         } else {
             $summary->status = 'graded';
-            $summary->assesslabel = get_string('reassess', 'workshop');
+            $summary->assesslabel = get_string('reassess', 'mod_workshop');
         }
 
         $summary->gradeinfo           = new stdclass();
@@ -2504,7 +2504,7 @@ class workshop {
         $current->feedbackreviewer          = $assessment->feedbackreviewer;
         $current->feedbackreviewerformat    = $assessment->feedbackreviewerformat;
         if (is_null($current->gradinggrade)) {
-            $current->gradinggrade = get_string('nullgrade', 'workshop');
+            $current->gradinggrade = get_string('nullgrade', 'mod_workshop');
         }
         if (!isset($options['editable'])) {
             $editable = true;   // by default
@@ -2540,7 +2540,7 @@ class workshop {
         $current->feedbackauthor        = $submission->feedbackauthor;
         $current->feedbackauthorformat  = $submission->feedbackauthorformat;
         if (is_null($current->grade)) {
-            $current->grade = get_string('nullgrade', 'workshop');
+            $current->grade = get_string('nullgrade', 'mod_workshop');
         }
         if (!isset($options['editable'])) {
             $editable = true;   // by default
@@ -2699,7 +2699,7 @@ class workshop {
      */
     public function reset_userdata(stdClass $data) {
 
-        $componentstr = get_string('pluginname', 'workshop').': '.format_string($this->name);
+        $componentstr = get_string('pluginname', 'mod_workshop').': '.format_string($this->name);
         $status = array();
 
         if (!empty($data->reset_workshop_assessments) or !empty($data->reset_workshop_submissions)) {
@@ -2995,7 +2995,7 @@ class workshop {
             $event->trigger();
         } else {
             if (empty($submission->id) or empty($submission->id) or ($submission->id != $submission->id)) {
-                throw new moodle_exception('err_submissionid', 'workshop');
+                throw new moodle_exception('err_submissionid', 'mod_workshop');
             }
         }
         $params['objectid'] = $submission->id;
@@ -3676,25 +3676,25 @@ class workshop_user_plan implements renderable {
         // * SETUP | submission | assessment | evaluation | closed
         //---------------------------------------------------------
         $phase = new stdclass();
-        $phase->title = get_string('phasesetup', 'workshop');
+        $phase->title = get_string('phasesetup', 'mod_workshop');
         $phase->tasks = array();
         if (has_capability('moodle/course:manageactivities', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('taskintro', 'workshop');
+            $task->title = get_string('taskintro', 'mod_workshop');
             $task->link = $workshop->updatemod_url();
             $task->completed = !(trim($workshop->intro) == '');
             $phase->tasks['intro'] = $task;
         }
         if (has_capability('moodle/course:manageactivities', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('taskinstructauthors', 'workshop');
+            $task->title = get_string('taskinstructauthors', 'mod_workshop');
             $task->link = $workshop->updatemod_url();
             $task->completed = !(trim($workshop->instructauthors) == '');
             $phase->tasks['instructauthors'] = $task;
         }
         if (has_capability('mod/workshop:editdimensions', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('editassessmentform', 'workshop');
+            $task->title = get_string('editassessmentform', 'mod_workshop');
             $task->link = $workshop->editform_url();
             if ($workshop->grading_strategy_instance()->form_ready()) {
                 $task->completed = true;
@@ -3705,7 +3705,7 @@ class workshop_user_plan implements renderable {
         }
         if ($workshop->useexamples and has_capability('mod/workshop:manageexamples', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('prepareexamples', 'workshop');
+            $task->title = get_string('prepareexamples', 'mod_workshop');
             if ($DB->count_records('workshop_submissions', array('example' => 1, 'workshopid' => $workshop->id)) > 0) {
                 $task->completed = true;
             } elseif ($workshop->phase > workshop::PHASE_SETUP) {
@@ -3717,7 +3717,7 @@ class workshop_user_plan implements renderable {
             // if we are in the setup phase and there is no task (typical for students), let us
             // display some explanation what is going on
             $task = new stdclass();
-            $task->title = get_string('undersetup', 'workshop');
+            $task->title = get_string('undersetup', 'mod_workshop');
             $task->completed = 'info';
             $phase->tasks['setupinfo'] = $task;
         }
@@ -3727,11 +3727,11 @@ class workshop_user_plan implements renderable {
         // setup | * SUBMISSION | assessment | evaluation | closed
         //---------------------------------------------------------
         $phase = new stdclass();
-        $phase->title = get_string('phasesubmission', 'workshop');
+        $phase->title = get_string('phasesubmission', 'mod_workshop');
         $phase->tasks = array();
         if (has_capability('moodle/course:manageactivities', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('taskinstructreviewers', 'workshop');
+            $task->title = get_string('taskinstructreviewers', 'mod_workshop');
             $task->link = $workshop->updatemod_url();
             if (trim($workshop->instructreviewers)) {
                 $task->completed = true;
@@ -3744,7 +3744,7 @@ class workshop_user_plan implements renderable {
                 and has_capability('mod/workshop:submit', $workshop->context, $userid, false)
                     and !has_capability('mod/workshop:manageexamples', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('exampleassesstask', 'workshop');
+            $task->title = get_string('exampleassesstask', 'mod_workshop');
             $examples = $this->get_examples();
             $a = new stdclass();
             $a->expected = count($examples);
@@ -3754,7 +3754,7 @@ class workshop_user_plan implements renderable {
                     $a->assessed++;
                 }
             }
-            $task->details = get_string('exampleassesstaskdetails', 'workshop', $a);
+            $task->details = get_string('exampleassesstaskdetails', 'mod_workshop', $a);
             if ($a->assessed == $a->expected) {
                 $task->completed = true;
             } elseif ($workshop->phase >= workshop::PHASE_ASSESSMENT) {
@@ -3764,7 +3764,7 @@ class workshop_user_plan implements renderable {
         }
         if (has_capability('mod/workshop:submit', $workshop->context, $userid, false)) {
             $task = new stdclass();
-            $task->title = get_string('tasksubmit', 'workshop');
+            $task->title = get_string('tasksubmit', 'mod_workshop');
             $task->link = $workshop->submission_url();
             if ($DB->record_exists('workshop_submissions', array('workshopid'=>$workshop->id, 'example'=>0, 'authorid'=>$userid))) {
                 $task->completed = true;
@@ -3793,7 +3793,7 @@ class workshop_user_plan implements renderable {
                 $phase->tasks['allocatescheduled'] = $task;
             }
             $task = new stdclass();
-            $task->title = get_string('allocate', 'workshop');
+            $task->title = get_string('allocate', 'mod_workshop');
             $task->link = $workshop->allocation_url();
             $numofauthors = $workshop->count_potential_authors(false);
             $numofsubmissions = $DB->count_records('workshop_submissions', array('workshopid'=>$workshop->id, 'example'=>0));
@@ -3816,13 +3816,13 @@ class workshop_user_plan implements renderable {
             $a->expected    = $numofauthors;
             $a->submitted   = $numofsubmissions;
             $a->allocate    = $numnonallocated;
-            $task->details  = get_string('allocatedetails', 'workshop', $a);
+            $task->details  = get_string('allocatedetails', 'mod_workshop', $a);
             unset($a);
             $phase->tasks['allocate'] = $task;
 
             if ($numofsubmissions < $numofauthors and $workshop->phase >= workshop::PHASE_SUBMISSION) {
                 $task = new stdclass();
-                $task->title = get_string('someuserswosubmission', 'workshop');
+                $task->title = get_string('someuserswosubmission', 'mod_workshop');
                 $task->completed = 'info';
                 $phase->tasks['allocateinfo'] = $task;
             }
@@ -3830,13 +3830,13 @@ class workshop_user_plan implements renderable {
         }
         if ($workshop->submissionstart) {
             $task = new stdclass();
-            $task->title = get_string('submissionstartdatetime', 'workshop', workshop::timestamp_formats($workshop->submissionstart));
+            $task->title = get_string('submissionstartdatetime', 'mod_workshop', workshop::timestamp_formats($workshop->submissionstart));
             $task->completed = 'info';
             $phase->tasks['submissionstartdatetime'] = $task;
         }
         if ($workshop->submissionend) {
             $task = new stdclass();
-            $task->title = get_string('submissionenddatetime', 'workshop', workshop::timestamp_formats($workshop->submissionend));
+            $task->title = get_string('submissionenddatetime', 'mod_workshop', workshop::timestamp_formats($workshop->submissionend));
             $task->completed = 'info';
             $phase->tasks['submissionenddatetime'] = $task;
         }
@@ -3846,7 +3846,7 @@ class workshop_user_plan implements renderable {
             if (has_capability('mod/workshop:switchphase', $workshop->context, $userid) ||
                     (!$workshop->get_submission_by_author($userid) && $workshop->submissionend < time())) {
                 $task = new stdclass();
-                $task->title = get_string('latesubmissionsallowed', 'workshop');
+                $task->title = get_string('latesubmissionsallowed', 'mod_workshop');
                 $task->completed = 'info';
                 $phase->tasks['latesubmissionsallowed'] = $task;
             }
@@ -3854,7 +3854,7 @@ class workshop_user_plan implements renderable {
         if (isset($phase->tasks['submissionstartdatetime']) or isset($phase->tasks['submissionenddatetime'])) {
             if (has_capability('mod/workshop:ignoredeadlines', $workshop->context, $userid)) {
                 $task = new stdclass();
-                $task->title = get_string('deadlinesignored', 'workshop');
+                $task->title = get_string('deadlinesignored', 'mod_workshop');
                 $task->completed = 'info';
                 $phase->tasks['deadlinesignored'] = $task;
             }
@@ -3865,7 +3865,7 @@ class workshop_user_plan implements renderable {
         // setup | submission | * ASSESSMENT | evaluation | closed
         //---------------------------------------------------------
         $phase = new stdclass();
-        $phase->title = get_string('phaseassessment', 'workshop');
+        $phase->title = get_string('phaseassessment', 'mod_workshop');
         $phase->tasks = array();
         $phase->isreviewer = has_capability('mod/workshop:peerassess', $workshop->context, $userid);
         if ($workshop->phase == workshop::PHASE_SUBMISSION and $workshop->phaseswitchassessment
@@ -3878,7 +3878,7 @@ class workshop_user_plan implements renderable {
         if ($workshop->useexamples and $workshop->examplesmode == workshop::EXAMPLES_BEFORE_ASSESSMENT
                 and $phase->isreviewer and !has_capability('mod/workshop:manageexamples', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('exampleassesstask', 'workshop');
+            $task->title = get_string('exampleassesstask', 'mod_workshop');
             $examples = $workshop->get_examples_for_reviewer($userid);
             $a = new stdclass();
             $a->expected = count($examples);
@@ -3888,7 +3888,7 @@ class workshop_user_plan implements renderable {
                     $a->assessed++;
                 }
             }
-            $task->details = get_string('exampleassesstaskdetails', 'workshop', $a);
+            $task->details = get_string('exampleassesstaskdetails', 'mod_workshop', $a);
             if ($a->assessed == $a->expected) {
                 $task->completed = true;
             } elseif ($workshop->phase > workshop::PHASE_ASSESSMENT) {
@@ -3926,8 +3926,8 @@ class workshop_user_plan implements renderable {
                 $a = new stdclass();
                 $a->total = $numofpeers;
                 $a->todo  = $numofpeerstodo;
-                $task->title = get_string('taskassesspeers', 'workshop');
-                $task->details = get_string('taskassesspeersdetails', 'workshop', $a);
+                $task->title = get_string('taskassesspeers', 'mod_workshop');
+                $task->details = get_string('taskassesspeersdetails', 'mod_workshop', $a);
                 unset($a);
                 $phase->tasks['assesspeers'] = $task;
             }
@@ -3938,26 +3938,26 @@ class workshop_user_plan implements renderable {
                 } elseif ($workshop->phase > workshop::PHASE_ASSESSMENT) {
                     $task->completed = false;
                 }
-                $task->title = get_string('taskassessself', 'workshop');
+                $task->title = get_string('taskassessself', 'mod_workshop');
                 $phase->tasks['assessself'] = $task;
             }
         }
         if ($workshop->assessmentstart) {
             $task = new stdclass();
-            $task->title = get_string('assessmentstartdatetime', 'workshop', workshop::timestamp_formats($workshop->assessmentstart));
+            $task->title = get_string('assessmentstartdatetime', 'mod_workshop', workshop::timestamp_formats($workshop->assessmentstart));
             $task->completed = 'info';
             $phase->tasks['assessmentstartdatetime'] = $task;
         }
         if ($workshop->assessmentend) {
             $task = new stdclass();
-            $task->title = get_string('assessmentenddatetime', 'workshop', workshop::timestamp_formats($workshop->assessmentend));
+            $task->title = get_string('assessmentenddatetime', 'mod_workshop', workshop::timestamp_formats($workshop->assessmentend));
             $task->completed = 'info';
             $phase->tasks['assessmentenddatetime'] = $task;
         }
         if (isset($phase->tasks['assessmentstartdatetime']) or isset($phase->tasks['assessmentenddatetime'])) {
             if (has_capability('mod/workshop:ignoredeadlines', $workshop->context, $userid)) {
                 $task = new stdclass();
-                $task->title = get_string('deadlinesignored', 'workshop');
+                $task->title = get_string('deadlinesignored', 'mod_workshop');
                 $task->completed = 'info';
                 $phase->tasks['deadlinesignored'] = $task;
             }
@@ -3968,18 +3968,18 @@ class workshop_user_plan implements renderable {
         // setup | submission | assessment | * EVALUATION | closed
         //---------------------------------------------------------
         $phase = new stdclass();
-        $phase->title = get_string('phaseevaluation', 'workshop');
+        $phase->title = get_string('phaseevaluation', 'mod_workshop');
         $phase->tasks = array();
         if (has_capability('mod/workshop:overridegrades', $workshop->context)) {
             $expected = $workshop->count_potential_authors(false);
             $calculated = $DB->count_records_select('workshop_submissions',
                     'workshopid = ? AND (grade IS NOT NULL OR gradeover IS NOT NULL)', array($workshop->id));
             $task = new stdclass();
-            $task->title = get_string('calculatesubmissiongrades', 'workshop');
+            $task->title = get_string('calculatesubmissiongrades', 'mod_workshop');
             $a = new stdclass();
             $a->expected    = $expected;
             $a->calculated  = $calculated;
-            $task->details  = get_string('calculatesubmissiongradesdetails', 'workshop', $a);
+            $task->details  = get_string('calculatesubmissiongradesdetails', 'mod_workshop', $a);
             if ($calculated >= $expected) {
                 $task->completed = true;
             } elseif ($workshop->phase > workshop::PHASE_EVALUATION) {
@@ -3991,11 +3991,11 @@ class workshop_user_plan implements renderable {
             $calculated = $DB->count_records_select('workshop_aggregations',
                     'workshopid = ? AND gradinggrade IS NOT NULL', array($workshop->id));
             $task = new stdclass();
-            $task->title = get_string('calculategradinggrades', 'workshop');
+            $task->title = get_string('calculategradinggrades', 'mod_workshop');
             $a = new stdclass();
             $a->expected    = $expected;
             $a->calculated  = $calculated;
-            $task->details  = get_string('calculategradinggradesdetails', 'workshop', $a);
+            $task->details  = get_string('calculategradinggradesdetails', 'mod_workshop', $a);
             if ($calculated >= $expected) {
                 $task->completed = true;
             } elseif ($workshop->phase > workshop::PHASE_EVALUATION) {
@@ -4005,14 +4005,14 @@ class workshop_user_plan implements renderable {
 
         } elseif ($workshop->phase == workshop::PHASE_EVALUATION) {
             $task = new stdclass();
-            $task->title = get_string('evaluategradeswait', 'workshop');
+            $task->title = get_string('evaluategradeswait', 'mod_workshop');
             $task->completed = 'info';
             $phase->tasks['evaluateinfo'] = $task;
         }
 
         if (has_capability('moodle/course:manageactivities', $workshop->context, $userid)) {
             $task = new stdclass();
-            $task->title = get_string('taskconclusion', 'workshop');
+            $task->title = get_string('taskconclusion', 'mod_workshop');
             $task->link = $workshop->updatemod_url();
             if (trim($workshop->conclusion)) {
                 $task->completed = true;
@@ -4028,7 +4028,7 @@ class workshop_user_plan implements renderable {
         // setup | submission | assessment | evaluation | * CLOSED
         //---------------------------------------------------------
         $phase = new stdclass();
-        $phase->title = get_string('phaseclosed', 'workshop');
+        $phase->title = get_string('phaseclosed', 'mod_workshop');
         $phase->tasks = array();
         $this->phases[workshop::PHASE_CLOSED] = $phase;
 

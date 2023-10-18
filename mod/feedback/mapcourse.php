@@ -48,18 +48,18 @@ if ($form->is_cancelled()) {
     redirect($mainurl);
 } else if ($data = $form->get_data()) {
     feedback_update_sitecourse_map($feedback, $data->mappedcourses);
-    redirect($mainurl, get_string('mappingchanged', 'feedback'), null, \core\output\notification::NOTIFY_SUCCESS);
+    redirect($mainurl, get_string('mappingchanged', 'mod_feedback'), null, \core\output\notification::NOTIFY_SUCCESS);
 }
 
 // Print the page header.
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 $PAGE->set_heading($course->fullname);
 $PAGE->set_title($feedback->name);
 echo $OUTPUT->header();
 
-echo $OUTPUT->box(get_string('mapcourseinfo', 'feedback'));
+echo $OUTPUT->box(get_string('mapcourseinfo', 'mod_feedback'));
 
 $form->display();
 

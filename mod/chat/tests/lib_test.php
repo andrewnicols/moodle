@@ -186,7 +186,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -222,7 +222,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -249,7 +249,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -285,7 +285,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -312,7 +312,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -348,7 +348,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -416,21 +416,21 @@ class lib_test extends \advanced_testcase {
 
         // Confirm event1 was decorated for student2 and it is actionable.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent12);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent12->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent12->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent12->get_url());
         $this->assertEquals(1, $actionevent12->get_item_count());
         $this->assertTrue($actionevent12->is_actionable());
 
         // Confirm event2 was decorated for student1 and it is actionable.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent21);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent21->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent21->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent21->get_url());
         $this->assertEquals(1, $actionevent21->get_item_count());
         $this->assertTrue($actionevent21->is_actionable());
 
         // Confirm event2 was decorated for student2 and it is not actionable.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent22);
-        $this->assertEquals(get_string('enterchat', 'chat'), $actionevent22->get_name());
+        $this->assertEquals(get_string('enterchat', 'mod_chat'), $actionevent22->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent22->get_url());
         $this->assertEquals(1, $actionevent22->get_item_count());
         $this->assertFalse($actionevent22->is_actionable());

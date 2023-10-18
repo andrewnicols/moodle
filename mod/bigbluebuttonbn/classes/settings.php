@@ -155,7 +155,7 @@ class settings {
         global $CFG;
         $settingsgeneral = new admin_settingpage(
             $this->section,
-            get_string('config_general', 'bigbluebuttonbn'),
+            get_string('config_general', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_general_shown()) && ($this->moduleenabled)
         );
@@ -163,7 +163,7 @@ class settings {
             // Configuration for BigBlueButton.
             $item = new admin_setting_heading('bigbluebuttonbn_config_general',
                 '',
-                get_string('config_general_description', 'bigbluebuttonbn')
+                get_string('config_general_description', 'mod_bigbluebuttonbn')
             );
             $settingsgeneral->add($item);
 
@@ -178,8 +178,8 @@ class settings {
 
             $item = new admin_setting_configtext(
                 'bigbluebuttonbn_server_url',
-                get_string('config_server_url', 'bigbluebuttonbn'),
-                get_string('config_server_url_description', 'bigbluebuttonbn'),
+                get_string('config_server_url', 'mod_bigbluebuttonbn'),
+                get_string('config_server_url_description', 'mod_bigbluebuttonbn'),
                 config::DEFAULT_SERVER_URL,
                 PARAM_RAW
             );
@@ -197,8 +197,8 @@ class settings {
             );
             $item = new admin_setting_configpasswordunmask(
                 'bigbluebuttonbn_shared_secret',
-                get_string('config_shared_secret', 'bigbluebuttonbn'),
-                get_string('config_shared_secret_description', 'bigbluebuttonbn'),
+                get_string('config_shared_secret', 'mod_bigbluebuttonbn'),
+                get_string('config_shared_secret_description', 'mod_bigbluebuttonbn'),
                 config::DEFAULT_SHARED_SECRET
             );
             $this->add_conditional_element(
@@ -209,8 +209,8 @@ class settings {
 
             $item = new admin_setting_configselect(
                 'bigbluebuttonbn_checksum_algorithm',
-                get_string('config_checksum_algorithm', 'bigbluebuttonbn'),
-                get_string('config_checksum_algorithm_description', 'bigbluebuttonbn'),
+                get_string('config_checksum_algorithm', 'mod_bigbluebuttonbn'),
+                get_string('config_checksum_algorithm_description', 'mod_bigbluebuttonbn'),
                 config::DEFAULT_CHECKSUM_ALGORITHM,
                 array_combine(config::CHECKSUM_ALGORITHMS, config::CHECKSUM_ALGORITHMS)
             );
@@ -223,7 +223,7 @@ class settings {
             $item = new \admin_setting_description(
                 'bigbluebuttonbn_dpa_info',
                 '',
-                get_string('config_dpa_note', 'bigbluebuttonbn', config::DEFAULT_DPA_URL),
+                get_string('config_dpa_note', 'mod_bigbluebuttonbn', config::DEFAULT_DPA_URL),
             );
             $this->add_conditional_element(
                 'dpa_info',
@@ -232,8 +232,8 @@ class settings {
             );
             $item = new admin_setting_configtext(
                 'bigbluebuttonbn_poll_interval',
-                get_string('config_poll_interval', 'bigbluebuttonbn'),
-                get_string('config_poll_interval_description', 'bigbluebuttonbn'),
+                get_string('config_poll_interval', 'mod_bigbluebuttonbn'),
+                get_string('config_poll_interval_description', 'mod_bigbluebuttonbn'),
                 bigbluebutton_proxy::DEFAULT_POLL_INTERVAL,
                 PARAM_INT
             );
@@ -253,7 +253,7 @@ class settings {
         // Configuration for 'default messages' feature.
         $defaultmessagessetting = new admin_settingpage(
             "{$this->sectionnameprefix}_default_messages",
-            get_string('config_default_messages', 'bigbluebuttonbn'),
+            get_string('config_default_messages', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_default_messages_shown()) && ($this->moduleenabled)
         );
@@ -262,13 +262,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_default_messages',
                 '',
-                get_string('config_default_messages_description', 'bigbluebuttonbn')
+                get_string('config_default_messages_description', 'mod_bigbluebuttonbn')
             );
             $defaultmessagessetting->add($item);
             $item = new admin_setting_configtextarea(
                 'bigbluebuttonbn_welcome_default',
-                get_string('config_welcome_default', 'bigbluebuttonbn'),
-                get_string('config_welcome_default_description', 'bigbluebuttonbn'),
+                get_string('config_welcome_default', 'mod_bigbluebuttonbn'),
+                get_string('config_welcome_default_description', 'mod_bigbluebuttonbn'),
                 '',
                 PARAM_TEXT
             );
@@ -279,8 +279,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_welcome_editable',
-                get_string('config_welcome_editable', 'bigbluebuttonbn'),
-                get_string('config_welcome_editable_description', 'bigbluebuttonbn'),
+                get_string('config_welcome_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_welcome_editable_description', 'mod_bigbluebuttonbn'),
                 1,
             );
             $this->add_conditional_element(
@@ -300,7 +300,7 @@ class settings {
         // Configuration for 'recording' feature.
         $recordingsetting = new admin_settingpage(
             "{$this->sectionnameprefix}_recording",
-            get_string('config_recording', 'bigbluebuttonbn'),
+            get_string('config_recording', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_record_meeting_shown()) && ($this->moduleenabled)
         );
@@ -309,13 +309,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_recording',
                 '',
-                get_string('config_recording_description', 'bigbluebuttonbn')
+                get_string('config_recording_description', 'mod_bigbluebuttonbn')
             );
             $recordingsetting->add($item);
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recording_default',
-                get_string('config_recording_default', 'bigbluebuttonbn'),
-                get_string('config_recording_default_description', 'bigbluebuttonbn'),
+                get_string('config_recording_default', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_default_description', 'mod_bigbluebuttonbn'),
                 1
             );
             $this->add_conditional_element(
@@ -325,8 +325,8 @@ class settings {
             );
             $item = new admin_setting_configtext(
                 'bigbluebuttonbn_recording_refresh_period',
-                get_string('config_recording_refresh_period', 'bigbluebuttonbn'),
-                get_string('config_recording_refresh_period_description', 'bigbluebuttonbn'),
+                get_string('config_recording_refresh_period', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_refresh_period_description', 'mod_bigbluebuttonbn'),
                 recording::RECORDING_REFRESH_DEFAULT_PERIOD,
                 PARAM_INT
             );
@@ -337,8 +337,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recording_editable',
-                get_string('config_recording_editable', 'bigbluebuttonbn'),
-                get_string('config_recording_editable_description', 'bigbluebuttonbn'),
+                get_string('config_recording_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_editable_description', 'mod_bigbluebuttonbn'),
                 1
             );
             $this->add_conditional_element(
@@ -350,8 +350,8 @@ class settings {
             // Add recording start to load and allow/hide stop/pause.
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recording_all_from_start_default',
-                get_string('config_recording_all_from_start_default', 'bigbluebuttonbn'),
-                get_string('config_recording_all_from_start_default_description', 'bigbluebuttonbn'),
+                get_string('config_recording_all_from_start_default', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_all_from_start_default_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -361,8 +361,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recording_all_from_start_editable',
-                get_string('config_recording_all_from_start_editable', 'bigbluebuttonbn'),
-                get_string('config_recording_all_from_start_editable_description', 'bigbluebuttonbn'),
+                get_string('config_recording_all_from_start_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_all_from_start_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -372,8 +372,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recording_hide_button_default',
-                get_string('config_recording_hide_button_default', 'bigbluebuttonbn'),
-                get_string('config_recording_hide_button_default_description', 'bigbluebuttonbn'),
+                get_string('config_recording_hide_button_default', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_hide_button_default_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -383,8 +383,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recording_hide_button_editable',
-                get_string('config_recording_hide_button_editable', 'bigbluebuttonbn'),
-                get_string('config_recording_hide_button_editable_description', 'bigbluebuttonbn'),
+                get_string('config_recording_hide_button_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_hide_button_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -423,7 +423,7 @@ class settings {
         // Configuration for 'import recordings' feature.
         $importrecordingsettings = new admin_settingpage(
             "{$this->sectionnameprefix}_importrecording",
-            get_string('config_importrecordings', 'bigbluebuttonbn'),
+            get_string('config_importrecordings', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_import_recordings_shown()) && ($this->moduleenabled)
         );
@@ -432,13 +432,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_importrecordings',
                 '',
-                get_string('config_importrecordings_description', 'bigbluebuttonbn')
+                get_string('config_importrecordings_description', 'mod_bigbluebuttonbn')
             );
             $importrecordingsettings->add($item);
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_importrecordings_enabled',
-                get_string('config_importrecordings_enabled', 'bigbluebuttonbn'),
-                get_string('config_importrecordings_enabled_description', 'bigbluebuttonbn'),
+                get_string('config_importrecordings_enabled', 'mod_bigbluebuttonbn'),
+                get_string('config_importrecordings_enabled_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -448,8 +448,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_importrecordings_from_deleted_enabled',
-                get_string('config_importrecordings_from_deleted_enabled', 'bigbluebuttonbn'),
-                get_string('config_importrecordings_from_deleted_enabled_description', 'bigbluebuttonbn'),
+                get_string('config_importrecordings_from_deleted_enabled', 'mod_bigbluebuttonbn'),
+                get_string('config_importrecordings_from_deleted_enabled_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -468,7 +468,7 @@ class settings {
         // Configuration for 'show recordings' feature.
         $showrecordingsettings = new admin_settingpage(
             "{$this->sectionnameprefix}_showrecordings",
-            get_string('config_recordings', 'bigbluebuttonbn'),
+            get_string('config_recordings', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_show_recordings_shown()) && ($this->moduleenabled)
         );
@@ -477,13 +477,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_recordings',
                 '',
-                get_string('config_recordings_description', 'bigbluebuttonbn')
+                get_string('config_recordings_description', 'mod_bigbluebuttonbn')
             );
             $showrecordingsettings->add($item);
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordings_deleted_default',
-                get_string('config_recordings_deleted_default', 'bigbluebuttonbn'),
-                get_string('config_recordings_deleted_default_description', 'bigbluebuttonbn'),
+                get_string('config_recordings_deleted_default', 'mod_bigbluebuttonbn'),
+                get_string('config_recordings_deleted_default_description', 'mod_bigbluebuttonbn'),
                 1
             );
             $this->add_conditional_element(
@@ -493,8 +493,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordings_deleted_editable',
-                get_string('config_recordings_deleted_editable', 'bigbluebuttonbn'),
-                get_string('config_recordings_deleted_editable_description', 'bigbluebuttonbn'),
+                get_string('config_recordings_deleted_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_recordings_deleted_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -504,8 +504,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordings_imported_default',
-                get_string('config_recordings_imported_default', 'bigbluebuttonbn'),
-                get_string('config_recordings_imported_default_description', 'bigbluebuttonbn'),
+                get_string('config_recordings_imported_default', 'mod_bigbluebuttonbn'),
+                get_string('config_recordings_imported_default_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -515,8 +515,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordings_imported_editable',
-                get_string('config_recordings_imported_editable', 'bigbluebuttonbn'),
-                get_string('config_recordings_imported_editable_description', 'bigbluebuttonbn'),
+                get_string('config_recordings_imported_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_recordings_imported_editable_description', 'mod_bigbluebuttonbn'),
                 1
             );
             $this->add_conditional_element(
@@ -526,8 +526,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordings_preview_default',
-                get_string('config_recordings_preview_default', 'bigbluebuttonbn'),
-                get_string('config_recordings_preview_default_description', 'bigbluebuttonbn'),
+                get_string('config_recordings_preview_default', 'mod_bigbluebuttonbn'),
+                get_string('config_recordings_preview_default_description', 'mod_bigbluebuttonbn'),
                 1
             );
             $this->add_conditional_element(
@@ -537,8 +537,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordings_preview_editable',
-                get_string('config_recordings_preview_editable', 'bigbluebuttonbn'),
-                get_string('config_recordings_preview_editable_description', 'bigbluebuttonbn'),
+                get_string('config_recordings_preview_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_recordings_preview_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -548,8 +548,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordings_asc_sort',
-                get_string('config_recordings_asc_sort', 'bigbluebuttonbn'),
-                get_string('config_recordings_asc_sort_description', 'bigbluebuttonbn'),
+                get_string('config_recordings_asc_sort', 'mod_bigbluebuttonbn'),
+                get_string('config_recordings_asc_sort_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -559,8 +559,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recording_protect_editable',
-                get_string('config_recording_protect_editable', 'bigbluebuttonbn'),
-                get_string('config_recording_protect_editable_description', 'bigbluebuttonbn'),
+                get_string('config_recording_protect_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_recording_protect_editable_description', 'mod_bigbluebuttonbn'),
                 1
             );
             $this->add_conditional_element(
@@ -579,7 +579,7 @@ class settings {
         // Configuration for wait for moderator feature.
         $waitmoderatorsettings = new admin_settingpage(
             "{$this->sectionnameprefix}_waitformoderator",
-            get_string('config_waitformoderator', 'bigbluebuttonbn'),
+            get_string('config_waitformoderator', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_wait_moderator_shown()) && ($this->moduleenabled)
         );
@@ -588,13 +588,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_waitformoderator',
                 '',
-                get_string('config_waitformoderator_description', 'bigbluebuttonbn')
+                get_string('config_waitformoderator_description', 'mod_bigbluebuttonbn')
             );
             $waitmoderatorsettings->add($item);
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_waitformoderator_default',
-                get_string('config_waitformoderator_default', 'bigbluebuttonbn'),
-                get_string('config_waitformoderator_default_description', 'bigbluebuttonbn'),
+                get_string('config_waitformoderator_default', 'mod_bigbluebuttonbn'),
+                get_string('config_waitformoderator_default_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -604,8 +604,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_waitformoderator_editable',
-                get_string('config_waitformoderator_editable', 'bigbluebuttonbn'),
-                get_string('config_waitformoderator_editable_description', 'bigbluebuttonbn'),
+                get_string('config_waitformoderator_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_waitformoderator_editable_description', 'mod_bigbluebuttonbn'),
                 1
             );
             $this->add_conditional_element(
@@ -615,8 +615,8 @@ class settings {
             );
             $item = new admin_setting_configtext(
                 'bigbluebuttonbn_waitformoderator_ping_interval',
-                get_string('config_waitformoderator_ping_interval', 'bigbluebuttonbn'),
-                get_string('config_waitformoderator_ping_interval_description', 'bigbluebuttonbn'),
+                get_string('config_waitformoderator_ping_interval', 'mod_bigbluebuttonbn'),
+                get_string('config_waitformoderator_ping_interval_description', 'mod_bigbluebuttonbn'),
                 10,
                 PARAM_INT
             );
@@ -627,8 +627,8 @@ class settings {
             );
             $item = new admin_setting_configtext(
                 'bigbluebuttonbn_waitformoderator_cache_ttl',
-                get_string('config_waitformoderator_cache_ttl', 'bigbluebuttonbn'),
-                get_string('config_waitformoderator_cache_ttl_description', 'bigbluebuttonbn'),
+                get_string('config_waitformoderator_cache_ttl', 'mod_bigbluebuttonbn'),
+                get_string('config_waitformoderator_cache_ttl_description', 'mod_bigbluebuttonbn'),
                 60,
                 PARAM_INT
             );
@@ -648,7 +648,7 @@ class settings {
         // Configuration for "static voice bridge" feature.
         $voicebridgesettings = new admin_settingpage(
             "{$this->sectionnameprefix}_voicebridge",
-            get_string('config_voicebridge', 'bigbluebuttonbn'),
+            get_string('config_voicebridge', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_static_voice_bridge_shown()) && ($this->moduleenabled)
         );
@@ -657,13 +657,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_voicebridge',
                 '',
-                get_string('config_voicebridge_description', 'bigbluebuttonbn')
+                get_string('config_voicebridge_description', 'mod_bigbluebuttonbn')
             );
             $voicebridgesettings->add($item);
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_voicebridge_editable',
-                get_string('config_voicebridge_editable', 'bigbluebuttonbn'),
-                get_string('config_voicebridge_editable_description', 'bigbluebuttonbn'),
+                get_string('config_voicebridge_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_voicebridge_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -682,7 +682,7 @@ class settings {
         // Configuration for "preupload presentation" feature.
         $preuploadsettings = new admin_settingpage(
             "{$this->sectionnameprefix}_preupload",
-            get_string('config_preuploadpresentation', 'bigbluebuttonbn'),
+            get_string('config_preuploadpresentation', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_preupload_presentation_shown()) && ($this->moduleenabled)
         );
@@ -692,14 +692,14 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_preuploadpresentation',
                 '',
-                get_string('config_preuploadpresentation_description', 'bigbluebuttonbn')
+                get_string('config_preuploadpresentation_description', 'mod_bigbluebuttonbn')
             );
             $preuploadsettings->add($item);
 
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_preuploadpresentation_editable',
-                get_string('config_preuploadpresentation_editable', 'bigbluebuttonbn'),
-                get_string('config_preuploadpresentation_editable_description', 'bigbluebuttonbn'),
+                get_string('config_preuploadpresentation_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_preuploadpresentation_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -717,8 +717,8 @@ class settings {
 
             $filemanager = new admin_setting_configstoredfile(
                 'mod_bigbluebuttonbn/presentationdefault',
-                get_string('config_presentation_default', 'bigbluebuttonbn'),
-                get_string('config_presentation_default_description', 'bigbluebuttonbn'),
+                get_string('config_presentation_default', 'mod_bigbluebuttonbn'),
+                get_string('config_presentation_default_description', 'mod_bigbluebuttonbn'),
                 'presentationdefault',
                 0,
                 $filemanageroptions
@@ -735,7 +735,7 @@ class settings {
     protected function add_userlimit_settings(): void {
         $userlimitsettings = new admin_settingpage(
             "{$this->sectionnameprefix}_userlimit",
-            get_string('config_userlimit', 'bigbluebuttonbn'),
+            get_string('config_userlimit', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_user_limit_shown()) && ($this->moduleenabled)
         );
@@ -745,13 +745,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_userlimit',
                 '',
-                get_string('config_userlimit_description', 'bigbluebuttonbn')
+                get_string('config_userlimit_description', 'mod_bigbluebuttonbn')
             );
             $userlimitsettings->add($item);
             $item = new admin_setting_configtext(
                 'bigbluebuttonbn_userlimit_default',
-                get_string('config_userlimit_default', 'bigbluebuttonbn'),
-                get_string('config_userlimit_default_description', 'bigbluebuttonbn'),
+                get_string('config_userlimit_default', 'mod_bigbluebuttonbn'),
+                get_string('config_userlimit_default_description', 'mod_bigbluebuttonbn'),
                 0,
                 PARAM_INT
             );
@@ -762,8 +762,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_userlimit_editable',
-                get_string('config_userlimit_editable', 'bigbluebuttonbn'),
-                get_string('config_userlimit_editable_description', 'bigbluebuttonbn'),
+                get_string('config_userlimit_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_userlimit_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -782,7 +782,7 @@ class settings {
         // Configuration for defining the default role/user that will be moderator on new activities.
         $participantsettings = new admin_settingpage(
             "{$this->sectionnameprefix}_participant",
-            get_string('config_participant', 'bigbluebuttonbn'),
+            get_string('config_participant', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_moderator_default_shown()) && ($this->moduleenabled)
         );
@@ -791,19 +791,19 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_participant',
                 '',
-                get_string('config_participant_description', 'bigbluebuttonbn')
+                get_string('config_participant_description', 'mod_bigbluebuttonbn')
             );
             $participantsettings->add($item);
 
             // UI for 'participants' feature.
             $roles = roles::get_roles(null, false);
             $owner = [
-                '0' => get_string('mod_form_field_participant_list_type_owner', 'bigbluebuttonbn')
+                '0' => get_string('mod_form_field_participant_list_type_owner', 'mod_bigbluebuttonbn')
             ];
             $item = new admin_setting_configmultiselect(
                 'bigbluebuttonbn_participant_moderator_default',
-                get_string('config_participant_moderator_default', 'bigbluebuttonbn'),
-                get_string('config_participant_moderator_default_description', 'bigbluebuttonbn'),
+                get_string('config_participant_moderator_default', 'mod_bigbluebuttonbn'),
+                get_string('config_participant_moderator_default_description', 'mod_bigbluebuttonbn'),
                 array_keys($owner),
                 $owner + $roles
             );
@@ -823,7 +823,7 @@ class settings {
         // Configuration for BigBlueButton.
         $muteonstartsetting = new admin_settingpage(
             "{$this->sectionnameprefix}_muteonstart",
-            get_string('config_muteonstart', 'bigbluebuttonbn'),
+            get_string('config_muteonstart', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_muteonstart_shown()) && ($this->moduleenabled)
         );
@@ -832,13 +832,13 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_muteonstart',
                 '',
-                get_string('config_muteonstart_description', 'bigbluebuttonbn')
+                get_string('config_muteonstart_description', 'mod_bigbluebuttonbn')
             );
             $muteonstartsetting->add($item);
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_muteonstart_default',
-                get_string('config_muteonstart_default', 'bigbluebuttonbn'),
-                get_string('config_muteonstart_default_description', 'bigbluebuttonbn'),
+                get_string('config_muteonstart_default', 'mod_bigbluebuttonbn'),
+                get_string('config_muteonstart_default_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -848,8 +848,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_muteonstart_editable',
-                get_string('config_muteonstart_editable', 'bigbluebuttonbn'),
-                get_string('config_muteonstart_editable_description', 'bigbluebuttonbn'),
+                get_string('config_muteonstart_editable', 'mod_bigbluebuttonbn'),
+                get_string('config_muteonstart_editable_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -867,7 +867,7 @@ class settings {
     protected function add_lock_settings(): void {
         $lockingsetting = new admin_settingpage(
             "{$this->sectionnameprefix}_locksettings",
-            get_string('config_locksettings', 'bigbluebuttonbn'),
+            get_string('config_locksettings', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_lock_shown()) && ($this->moduleenabled)
         );
@@ -895,8 +895,8 @@ class settings {
             // Configuration for BigBlueButton.
             $item = new admin_setting_configcheckbox(
                     'bigbluebuttonbn_' . $settingname . '_default',
-                    get_string('config_' . $settingname . '_default', 'bigbluebuttonbn'),
-                    get_string('config_' . $settingname . '_default_description', 'bigbluebuttonbn'),
+                    get_string('config_' . $settingname . '_default', 'mod_bigbluebuttonbn'),
+                    get_string('config_' . $settingname . '_default_description', 'mod_bigbluebuttonbn'),
                     config::defaultvalue($settingname . '_default')
             );
             $this->add_conditional_element(
@@ -906,8 +906,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                     'bigbluebuttonbn_' . $settingname . '_editable',
-                    get_string('config_' . $settingname . '_editable', 'bigbluebuttonbn'),
-                    get_string('config_' . $settingname . '_editable_description', 'bigbluebuttonbn'),
+                    get_string('config_' . $settingname . '_editable', 'mod_bigbluebuttonbn'),
+                    get_string('config_' . $settingname . '_editable_description', 'mod_bigbluebuttonbn'),
                     config::defaultvalue($settingname . '_editable')
             );
             $this->add_conditional_element(
@@ -925,7 +925,7 @@ class settings {
         // Configuration for extended capabilities.
         $extendedcapabilitiessetting = new admin_settingpage(
             "{$this->sectionnameprefix}_extendedcapabilities",
-            get_string('config_extended_capabilities', 'bigbluebuttonbn'),
+            get_string('config_extended_capabilities', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_settings_extended_shown()) && ($this->moduleenabled)
         );
@@ -934,14 +934,14 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_extended_capabilities',
                 '',
-                get_string('config_extended_capabilities_description', 'bigbluebuttonbn')
+                get_string('config_extended_capabilities_description', 'mod_bigbluebuttonbn')
             );
             $extendedcapabilitiessetting->add($item);
             // UI for 'notify users when recording ready' feature.
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_recordingready_enabled',
-                get_string('config_recordingready_enabled', 'bigbluebuttonbn'),
-                get_string('config_recordingready_enabled_description', 'bigbluebuttonbn'),
+                get_string('config_recordingready_enabled', 'mod_bigbluebuttonbn'),
+                get_string('config_recordingready_enabled_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -951,8 +951,8 @@ class settings {
             );
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_profile_picture_enabled',
-                get_string('config_profile_picture_enabled', 'bigbluebuttonbn'),
-                get_string('config_profile_picture_enabled_description', 'bigbluebuttonbn'),
+                get_string('config_profile_picture_enabled', 'mod_bigbluebuttonbn'),
+                get_string('config_profile_picture_enabled_description', 'mod_bigbluebuttonbn'),
                 false
             );
             $this->add_conditional_element(
@@ -972,7 +972,7 @@ class settings {
         // Configuration for experimental features should go here.
         $experimentalfeaturessetting = new admin_settingpage(
             "{$this->sectionnameprefix}_experimentalfeatures",
-            get_string('config_experimental_features', 'bigbluebuttonbn'),
+            get_string('config_experimental_features', 'mod_bigbluebuttonbn'),
             'moodle/site:config',
             !((boolean) setting_validator::section_settings_extended_shown()) && ($this->moduleenabled)
         );
@@ -981,14 +981,14 @@ class settings {
             $item = new admin_setting_heading(
                 'bigbluebuttonbn_config_experimental_features',
                 '',
-                get_string('config_experimental_features_description', 'bigbluebuttonbn')
+                get_string('config_experimental_features_description', 'mod_bigbluebuttonbn')
             );
             $experimentalfeaturessetting->add($item);
             // UI for 'register meeting events' feature.
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_meetingevents_enabled',
-                get_string('config_meetingevents_enabled', 'bigbluebuttonbn'),
-                get_string('config_meetingevents_enabled_description', 'bigbluebuttonbn'),
+                get_string('config_meetingevents_enabled', 'mod_bigbluebuttonbn'),
+                get_string('config_meetingevents_enabled_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(
@@ -999,8 +999,8 @@ class settings {
             // UI for 'register meeting events' feature.
             $item = new admin_setting_configcheckbox(
                 'bigbluebuttonbn_guestaccess_enabled',
-                get_string('config_guestaccess_enabled', 'bigbluebuttonbn'),
-                get_string('config_guestaccess_enabled_description', 'bigbluebuttonbn'),
+                get_string('config_guestaccess_enabled', 'mod_bigbluebuttonbn'),
+                get_string('config_guestaccess_enabled_description', 'mod_bigbluebuttonbn'),
                 0
             );
             $this->add_conditional_element(

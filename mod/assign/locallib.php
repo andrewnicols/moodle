@@ -642,7 +642,7 @@ class assign {
             redirect($nextpageurl, $messages, null, $messagetype);
             return;
         } else if ($action == 'savegradingresult') {
-            $message = get_string('gradingchangessaved', 'assign');
+            $message = get_string('gradingchangessaved', 'mod_assign');
             $o .= $this->view_savegrading_result($message);
         } else if ($action == 'quickgradingresult') {
             $mform = null;
@@ -685,7 +685,7 @@ class assign {
         } else if ($action == 'viewbatchmarkingallocation') {
             $o .= $this->view_batch_markingallocation($mform);
         } else if ($action == 'viewsubmitforgradingerror') {
-            $o .= $this->view_error_page(get_string('submitforgrading', 'assign'), $notices);
+            $o .= $this->view_error_page(get_string('submitforgrading', 'mod_assign'), $notices);
         } else if ($action == 'fixrescalednullgrades') {
             $o .= $this->view_fix_rescaled_null_grades();
         } else {
@@ -1126,14 +1126,14 @@ class assign {
             if ($submissionsfromdate) {
                 $mindate = [
                     $submissionsfromdate,
-                    get_string('duedatevalidation', 'assign'),
+                    get_string('duedatevalidation', 'mod_assign'),
                 ];
             }
 
             if ($cutoffdate) {
                 $maxdate = [
                     $cutoffdate,
-                    get_string('cutoffdatevalidation', 'assign'),
+                    get_string('cutoffdatevalidation', 'mod_assign'),
                 ];
             }
 
@@ -1144,7 +1144,7 @@ class assign {
                 if (!$cutoffdate || $gradingduedate < $cutoffdate) {
                     $maxdate = [
                         $gradingduedate,
-                        get_string('gradingdueduedatevalidation', 'assign'),
+                        get_string('gradingdueduedatevalidation', 'mod_assign'),
                     ];
                 }
             }
@@ -1152,12 +1152,12 @@ class assign {
             if ($duedate) {
                 $mindate = [
                     $duedate,
-                    get_string('gradingdueduedatevalidation', 'assign'),
+                    get_string('gradingdueduedatevalidation', 'mod_assign'),
                 ];
             } else if ($submissionsfromdate) {
                 $mindate = [
                     $submissionsfromdate,
-                    get_string('gradingduefromdatevalidation', 'assign'),
+                    get_string('gradingduefromdatevalidation', 'mod_assign'),
                 ];
             }
         }
@@ -1175,7 +1175,7 @@ class assign {
     public function reset_userdata($data) {
         global $CFG, $DB;
 
-        $componentstr = get_string('modulenameplural', 'assign');
+        $componentstr = get_string('modulenameplural', 'mod_assign');
         $status = array();
 
         $fs = get_file_storage();
@@ -1191,7 +1191,7 @@ class assign {
 
                 if (!$plugin->delete_instance()) {
                     $status[] = array('component'=>$componentstr,
-                                      'item'=>get_string('deleteallsubmissions', 'assign'),
+                                      'item'=>get_string('deleteallsubmissions', 'mod_assign'),
                                       'error'=>$plugin->get_error());
                 }
             }
@@ -1206,7 +1206,7 @@ class assign {
 
                 if (!$plugin->delete_instance()) {
                     $status[] = array('component'=>$componentstr,
-                                      'item'=>get_string('deleteallsubmissions', 'assign'),
+                                      'item'=>get_string('deleteallsubmissions', 'mod_assign'),
                                       'error'=>$plugin->get_error());
                 }
             }
@@ -1218,7 +1218,7 @@ class assign {
             $DB->delete_records_select('assign_user_flags', "assignment $sql", $params);
 
             $status[] = array('component'=>$componentstr,
-                              'item'=>get_string('deleteallsubmissions', 'assign'),
+                              'item'=>get_string('deleteallsubmissions', 'mod_assign'),
                               'error'=>false);
 
             if (!empty($data->reset_gradebook_grades)) {
@@ -1242,7 +1242,7 @@ class assign {
                 'assignid IN (SELECT id FROM {assign} WHERE course = ?) AND userid IS NOT NULL', array($data->courseid));
             $status[] = array(
                 'component' => $componentstr,
-                'item' => get_string('useroverridesdeleted', 'assign'),
+                'item' => get_string('useroverridesdeleted', 'mod_assign'),
                 'error' => false);
             $purgeoverrides = true;
         }
@@ -1252,7 +1252,7 @@ class assign {
                 'assignid IN (SELECT id FROM {assign} WHERE course = ?) AND groupid IS NOT NULL', array($data->courseid));
             $status[] = array(
                 'component' => $componentstr,
-                'item' => get_string('groupoverridesdeleted', 'assign'),
+                'item' => get_string('groupoverridesdeleted', 'mod_assign'),
                 'error' => false);
             $purgeoverrides = true;
         }
@@ -1420,7 +1420,7 @@ class assign {
 
         $eventtype = ASSIGN_EVENT_TYPE_DUE;
         if ($instance->duedate) {
-            $event->name = get_string('calendardue', 'assign', $instance->name);
+            $event->name = get_string('calendardue', 'mod_assign', $instance->name);
             $event->eventtype = $eventtype;
             $event->timestart = $instance->duedate;
             $event->timesort = $instance->duedate;
@@ -1446,7 +1446,7 @@ class assign {
 
         $eventtype = ASSIGN_EVENT_TYPE_GRADINGDUE;
         if ($instance->gradingduedate) {
-            $event->name = get_string('calendargradingdue', 'assign', $instance->name);
+            $event->name = get_string('calendargradingdue', 'mod_assign', $instance->name);
             $event->eventtype = $eventtype;
             $event->timestart = $instance->gradingduedate;
             $event->timesort = $instance->gradingduedate;
@@ -1665,18 +1665,18 @@ class assign {
      * @return void
      */
     public function add_all_plugin_settings(MoodleQuickForm $mform) {
-        $mform->addElement('header', 'submissiontypes', get_string('submissiontypes', 'assign'));
+        $mform->addElement('header', 'submissiontypes', get_string('submissiontypes', 'mod_assign'));
 
         $submissionpluginsenabled = array();
-        $group = $mform->addGroup(array(), 'submissionplugins', get_string('submissiontypes', 'assign'), array(' '), false);
+        $group = $mform->addGroup(array(), 'submissionplugins', get_string('submissiontypes', 'mod_assign'), array(' '), false);
         foreach ($this->submissionplugins as $plugin) {
             $this->add_plugin_settings($plugin, $mform, $submissionpluginsenabled);
         }
         $group->setElements($submissionpluginsenabled);
 
-        $mform->addElement('header', 'feedbacktypes', get_string('feedbacktypes', 'assign'));
+        $mform->addElement('header', 'feedbacktypes', get_string('feedbacktypes', 'mod_assign'));
         $feedbackpluginsenabled = array();
-        $group = $mform->addGroup(array(), 'feedbackplugins', get_string('feedbacktypes', 'assign'), array(' '), false);
+        $group = $mform->addGroup(array(), 'feedbackplugins', get_string('feedbacktypes', 'mod_assign'), array(' '), false);
         foreach ($this->feedbackplugins as $plugin) {
             $this->add_plugin_settings($plugin, $mform, $feedbackpluginsenabled);
         }
@@ -1713,7 +1713,7 @@ class assign {
         if (isset(self::$modulename)) {
             return self::$modulename;
         }
-        self::$modulename = get_string('modulename', 'assign');
+        self::$modulename = get_string('modulename', 'mod_assign');
         return self::$modulename;
     }
 
@@ -1726,7 +1726,7 @@ class assign {
         if (isset(self::$modulenameplural)) {
             return self::$modulenameplural;
         }
-        self::$modulenameplural = get_string('modulenameplural', 'assign');
+        self::$modulenameplural = get_string('modulenameplural', 'mod_assign');
         return self::$modulenameplural;
     }
 
@@ -1966,7 +1966,7 @@ class assign {
                     $displaygrade = format_float($grade, $this->get_grade_item()->get_decimals());
                 }
                 $o .= '<label class="accesshide" for="quickgrade_' . $userid . '">' .
-                       get_string('usergrade', 'assign') .
+                       get_string('usergrade', 'mod_assign') .
                        '</label>';
                 $o .= '<input type="text"
                               id="quickgrade_' . $userid . '"
@@ -2004,7 +2004,7 @@ class assign {
             if ($editing) {
                 $o .= '<label class="accesshide"
                               for="quickgrade_' . $userid . '">' .
-                      get_string('usergrade', 'assign') .
+                      get_string('usergrade', 'mod_assign') .
                       '</label>';
                 $o .= '<select name="quickgrade_' . $userid . '" class="quickgrade">';
                 $o .= '<option value="-1">' . get_string('nograde') . '</option>';
@@ -2789,7 +2789,7 @@ class assign {
 
                 $eventtype = 'assign_notification';
                 $updatetime = $submission->lastmodified;
-                $modulename = get_string('modulename', 'assign');
+                $modulename = get_string('modulename', 'mod_assign');
 
                 $uniqueid = 0;
                 if ($submission->blindmarking && !$submission->revealidentities) {
@@ -3034,7 +3034,7 @@ class assign {
                                     $this->get_context(),
                                     $this->show_intro(),
                                     $this->get_course_module()->id,
-                                    get_string('grantextension', 'assign'));
+                                    get_string('grantextension', 'mod_assign'));
         $o .= $this->get_renderer()->render($header);
         $o .= $this->get_renderer()->render(new assign_form('extensionform', $mform));
         $o .= $this->view_footer();
@@ -3098,7 +3098,7 @@ class assign {
                 unset($members[$id]);
             } else {
                 if ($this->is_blind_marking()) {
-                    $members[$id]->alias = get_string('hiddenuser', 'assign') .
+                    $members[$id]->alias = get_string('hiddenuser', 'mod_assign') .
                                            $this->get_uniqueid_for_user($id);
                 }
             }
@@ -3204,7 +3204,7 @@ class assign {
         $o = '';
 
         $course = $this->get_course();
-        $strplural = get_string('modulenameplural', 'assign');
+        $strplural = get_string('modulenameplural', 'mod_assign');
 
         if (!$cms = get_coursemodules_in_course('assign', $course->id, 'm.duedate')) {
             $o .= $this->get_renderer()->notification(get_string('thereareno', 'moodle', $strplural));
@@ -3256,9 +3256,9 @@ class assign {
                 }
 
                 if (!empty($usersubmission->status)) {
-                    $submitted = get_string('submissionstatus_' . $usersubmission->status, 'assign');
+                    $submitted = get_string('submissionstatus_' . $usersubmission->status, 'mod_assign');
                 } else {
-                    $submitted = get_string('submissionstatus_', 'assign');
+                    $submitted = get_string('submissionstatus_', 'mod_assign');
                 }
 
                 $gradinginfo = grade_get_grades($course->id, 'mod', 'assign', $cm->instance, $USER->id);
@@ -3450,12 +3450,12 @@ class assign {
             if ($submissiongroup) {
                 $groupname = $submissiongroup->name . '-';
             } else {
-                $groupname = get_string('defaultteam', 'assign') . '-';
+                $groupname = get_string('defaultteam', 'mod_assign') . '-';
             }
         }
 
         if ($this->is_blind_marking()) {
-            $prefix = $groupname . get_string('participant', 'assign');
+            $prefix = $groupname . get_string('participant', 'mod_assign');
             $prefix = str_replace('_', ' ', $prefix);
             $prefix = clean_filename($prefix . '_' . $this->get_uniqueid_for_user($user->id) . '_');
         } else {
@@ -3549,8 +3549,8 @@ class assign {
                                                       $this->get_context(),
                                                       $this->show_intro(),
                                                       $this->get_course_module()->id,
-                                                      get_string('savegradingresult', 'assign')));
-        $gradingresult = new assign_gradingmessage(get_string('savegradingresult', 'assign'),
+                                                      get_string('savegradingresult', 'mod_assign')));
+        $gradingresult = new assign_gradingmessage(get_string('savegradingresult', 'mod_assign'),
                                                    $message,
                                                    $this->get_course_module()->id);
         $o .= $this->get_renderer()->render($gradingresult);
@@ -3569,10 +3569,10 @@ class assign {
                                                       $this->get_context(),
                                                       $this->show_intro(),
                                                       $this->get_course_module()->id,
-                                                      get_string('quickgradingresult', 'assign')));
+                                                      get_string('quickgradingresult', 'mod_assign')));
         $gradingerror = in_array($message, $this->get_error_messages());
         $lastpage = optional_param('lastpage', null, PARAM_INT);
-        $gradingresult = new assign_gradingmessage(get_string('quickgradingresult', 'assign'),
+        $gradingresult = new assign_gradingmessage(get_string('quickgradingresult', 'mod_assign'),
                                                    $message,
                                                    $this->get_course_module()->id,
                                                    $gradingerror,
@@ -4058,7 +4058,7 @@ class assign {
         if ($attemptnumber != -1 && ($attemptnumber + 1) != count($allsubmissions)) {
             $params = array('attemptnumber' => $attemptnumber + 1,
                             'totalattempts' => count($allsubmissions));
-            $message = get_string('editingpreviousfeedbackwarning', 'assign', $params);
+            $message = get_string('editingpreviousfeedbackwarning', 'mod_assign', $params);
             $o .= $this->get_renderer()->notification($message);
         }
 
@@ -4124,7 +4124,7 @@ class assign {
                                     $this->get_context(),
                                     false,
                                     $this->get_course_module()->id,
-                                    get_string('grading', 'assign'));
+                                    get_string('grading', 'mod_assign'));
         $o .= $this->get_renderer()->render($header);
 
         // If userid is passed - we are only grading a single student.
@@ -4253,7 +4253,7 @@ class assign {
         if ($attemptnumber != -1 && ($attemptnumber + 1) != count($allsubmissions)) {
             $params = array('attemptnumber'=>$attemptnumber + 1,
                             'totalattempts'=>count($allsubmissions));
-            $message = get_string('editingpreviousfeedbackwarning', 'assign', $params);
+            $message = get_string('editingpreviousfeedbackwarning', 'mod_assign', $params);
             $o .= $this->get_renderer()->notification($message);
         }
 
@@ -4330,15 +4330,15 @@ class assign {
 
         if ($userid == $USER->id) {
             if ($this->is_time_limit_enabled($userid)) {
-                $confirmstr = get_string('removesubmissionconfirmwithtimelimit', 'assign');
+                $confirmstr = get_string('removesubmissionconfirmwithtimelimit', 'mod_assign');
             } else {
-                $confirmstr = get_string('removesubmissionconfirm', 'assign');
+                $confirmstr = get_string('removesubmissionconfirm', 'mod_assign');
             }
         } else {
             if ($this->is_time_limit_enabled($userid)) {
-                $confirmstr = get_string('removesubmissionconfirmforstudentwithtimelimit', 'assign', $this->fullname($user));
+                $confirmstr = get_string('removesubmissionconfirmforstudentwithtimelimit', 'mod_assign', $this->fullname($user));
             } else {
-                $confirmstr = get_string('removesubmissionconfirmforstudent', 'assign', $this->fullname($user));
+                $confirmstr = get_string('removesubmissionconfirmforstudent', 'mod_assign', $this->fullname($user));
             }
         }
         $o .= $this->get_renderer()->confirm($confirmstr,
@@ -4376,7 +4376,7 @@ class assign {
                            'action'=>'grading');
         $cancelurl = new moodle_url('/mod/assign/view.php', $urlparams);
 
-        $o .= $this->get_renderer()->confirm(get_string('revealidentitiesconfirm', 'assign'),
+        $o .= $this->get_renderer()->confirm(get_string('revealidentitiesconfirm', 'mod_assign'),
                                              $confirmurl,
                                              $cancelurl);
         $o .= $this->view_footer();
@@ -4424,12 +4424,12 @@ class assign {
         if (has_capability('gradereport/grader:view', $this->get_course_context()) &&
                 has_capability('moodle/grade:viewall', $this->get_course_context())) {
             $gradebookurl = '/grade/report/grader/index.php?id=' . $this->get_course()->id;
-            $links[$gradebookurl] = get_string('viewgradebook', 'assign');
+            $links[$gradebookurl] = get_string('viewgradebook', 'mod_assign');
         }
         if ($this->is_blind_marking() &&
                 has_capability('mod/assign:revealidentities', $this->get_context())) {
             $revealidentitiesurl = '/mod/assign/view.php?id=' . $cmid . '&action=revealidentities';
-            $links[$revealidentitiesurl] = get_string('revealidentities', 'assign');
+            $links[$revealidentitiesurl] = get_string('revealidentities', 'mod_assign');
         }
         foreach ($this->get_feedback_plugins() as $plugin) {
             if ($plugin->is_enabled() && $plugin->is_visible()) {
@@ -4448,7 +4448,7 @@ class assign {
         core_collator::asort($links);
 
         $gradingactions = new url_select($links);
-        $gradingactions->set_label(get_string('choosegradingaction', 'assign'));
+        $gradingactions->set_label(get_string('choosegradingaction', 'mod_assign'));
         $gradingactions->class .= ' mb-1';
 
         $gradingmanager = get_grading_manager($this->get_context(), 'mod_assign', 'submissions');
@@ -4472,8 +4472,8 @@ class assign {
             list($sort, $params) = users_order_by_sql('u');
             // Only enrolled users could be assigned as potential markers.
             $markers = get_enrolled_users($this->context, 'mod/assign:grade', 0, 'u.*', $sort);
-            $markingallocationoptions[''] = get_string('filternone', 'assign');
-            $markingallocationoptions[ASSIGN_MARKER_FILTER_NO_MARKER] = get_string('markerfilternomarker', 'assign');
+            $markingallocationoptions[''] = get_string('filternone', 'mod_assign');
+            $markingallocationoptions[ASSIGN_MARKER_FILTER_NO_MARKER] = get_string('markerfilternomarker', 'mod_assign');
             $viewfullnames = has_capability('moodle/site:viewfullnames', $this->context);
             foreach ($markers as $marker) {
                 $markingallocationoptions[$marker->id] = fullname($marker, $viewfullnames);
@@ -4541,7 +4541,7 @@ class assign {
                                     $this->get_context(),
                                     false,
                                     $this->get_course_module()->id,
-                                    get_string('grading', 'assign'),
+                                    get_string('grading', 'mod_assign'),
                                     '',
                                     '',
                                     $currenturl);
@@ -4561,7 +4561,7 @@ class assign {
         }
 
         if ($this->is_blind_marking() && has_capability('mod/assign:viewblinddetails', $this->get_context())) {
-            $o .= $this->get_renderer()->notification(get_string('blindmarkingenabledwarning', 'assign'), 'notifymessage');
+            $o .= $this->get_renderer()->notification(get_string('blindmarkingenabledwarning', 'mod_assign'), 'notifymessage');
         }
 
         // Load and print the table of submissions.
@@ -4621,9 +4621,9 @@ class assign {
         $courseshortname = $this->get_context()->get_course_context()->get_context_name(false, true);
         $args = [
             'contextname' => $this->get_context()->get_context_name(false, true),
-            'subpage' => get_string('grading', 'assign')
+            'subpage' => get_string('grading', 'mod_assign')
         ];
-        $title = get_string('subpagetitle', 'assign', $args);
+        $title = get_string('subpagetitle', 'mod_assign', $args);
         $title = $courseshortname . ': ' . $title;
         $PAGE->set_title($title);
 
@@ -4742,10 +4742,10 @@ class assign {
                 $uniqueid = $user->recordid;
             }
             if ($hasviewblind) {
-                return get_string('participant', 'assign') . ' ' . $uniqueid . ' (' .
+                return get_string('participant', 'mod_assign') . ' ' . $uniqueid . ' (' .
                         fullname($user, has_capability('moodle/site:viewfullnames', $this->get_context())) . ')';
             } else {
-                return get_string('participant', 'assign') . ' ' . $uniqueid;
+                return get_string('participant', 'mod_assign') . ' ' . $uniqueid;
             }
         } else {
             return fullname($user, has_capability('moodle/site:viewfullnames', $this->get_context()));
@@ -4781,7 +4781,7 @@ class assign {
             }
             // User is editing their own submission.
             require_capability('mod/assign:submit', $this->context);
-            $title = get_string('editsubmission', 'assign');
+            $title = get_string('editsubmission', 'mod_assign');
         } else {
             // User is editing another user's submission.
             if (!$this->can_edit_submission($userid, $USER->id)) {
@@ -4789,11 +4789,11 @@ class assign {
             }
 
             $name = $this->fullname($user);
-            $title = get_string('editsubmissionother', 'assign', $name);
+            $title = get_string('editsubmissionother', 'mod_assign', $name);
         }
 
         if (!$this->submissions_open($userid)) {
-            $message = array(get_string('submissionsclosed', 'assign'));
+            $message = array(get_string('submissionsclosed', 'mod_assign'));
             return $this->view_notices($title, $message);
         }
 
@@ -4821,7 +4821,7 @@ class assign {
             $bc->attributes['id'] = 'mod_assign_timelimit_block';
             $bc->attributes['role'] = 'navigation';
             $bc->attributes['aria-labelledby'] = 'mod_assign_timelimit_block_title';
-            $bc->title = get_string('assigntimeleft', 'assign');
+            $bc->title = get_string('assigntimeleft', 'mod_assign');
             $bc->content = $navbc;
             $PAGE->blocks->add_fake_block($bc, reset($regions));
         }
@@ -5085,7 +5085,7 @@ class assign {
         $viewfullnames = has_capability('moodle/site:viewfullnames', $this->get_context());
         foreach ($userlist as $userid) {
             if ($usercount >= 5) {
-                $usershtml .= get_string('moreusers', 'assign', count($userlist) - 5);
+                $usershtml .= get_string('moreusers', 'mod_assign', count($userlist) - 5);
                 break;
             }
             $user = $DB->get_record('user', array('id'=>$userid), '*', MUST_EXIST);
@@ -5112,7 +5112,7 @@ class assign {
             $this->get_context(),
             $this->show_intro(),
             $this->get_course_module()->id,
-            get_string('setmarkingworkflowstate', 'assign'));
+            get_string('setmarkingworkflowstate', 'mod_assign'));
         $o .= $this->get_renderer()->render($header);
         $o .= $this->get_renderer()->render(new assign_form('setworkflowstate', $mform));
         $o .= $this->view_footer();
@@ -5150,7 +5150,7 @@ class assign {
         $viewfullnames = has_capability('moodle/site:viewfullnames', $this->get_context());
         foreach ($userlist as $userid) {
             if ($usercount >= 5) {
-                $usershtml .= get_string('moreusers', 'assign', count($userlist) - 5);
+                $usershtml .= get_string('moreusers', 'mod_assign', count($userlist) - 5);
                 break;
             }
             $user = $DB->get_record('user', array('id'=>$userid), '*', MUST_EXIST);
@@ -5186,7 +5186,7 @@ class assign {
             $this->get_context(),
             $this->show_intro(),
             $this->get_course_module()->id,
-            get_string('setmarkingallocation', 'assign'));
+            get_string('setmarkingallocation', 'mod_assign'));
         $o .= $this->get_renderer()->render($header);
         $o .= $this->get_renderer()->render(new assign_form('setworkflowstate', $mform));
         $o .= $this->view_footer();
@@ -5232,7 +5232,7 @@ class assign {
 
         // If there are no submissions and no existing notifications to be displayed the stop.
         if (!$hassubmission && !$notifications) {
-            $notifications[] = get_string('addsubmission_help', 'assign');
+            $notifications[] = get_string('addsubmission_help', 'mod_assign');
         }
 
         $data = new stdClass();
@@ -5261,7 +5261,7 @@ class assign {
                                                               $this->get_context(),
                                                               $this->show_intro(),
                                                               $this->get_course_module()->id,
-                                                              get_string('confirmsubmissionheading', 'assign')));
+                                                              get_string('confirmsubmissionheading', 'mod_assign')));
         $submitforgradingpage = new assign_submit_for_grading_page($notifications,
                                                                    $this->get_course_module()->id,
                                                                    $mform);
@@ -6443,7 +6443,7 @@ class assign {
                      ' -> ' .
                      format_string($assignmentname, true, $formatparams) . "\n";
         $posttext .= '---------------------------------------------------------------------' . "\n";
-        $posttext .= get_string($messagetype . 'text', 'assign', $info)."\n";
+        $posttext .= get_string($messagetype . 'text', 'mod_assign', $info)."\n";
         $posttext .= "\n---------------------------------------------------------------------\n";
         return $posttext;
     }
@@ -6479,7 +6479,7 @@ class assign {
                      format_string($assignmentname, true, $formatparams) .
                      '</a></font></p>';
         $posthtml .= '<hr /><font face="sans-serif">';
-        $posthtml .= '<p>' . get_string($messagetype . 'html', 'assign', $info) . '</p>';
+        $posthtml .= '<p>' . get_string($messagetype . 'html', 'mod_assign', $info) . '</p>';
         $posthtml .= '</font><hr />';
         return $posthtml;
     }
@@ -6518,8 +6518,8 @@ class assign {
         $info = new stdClass();
         if ($blindmarking) {
             $userfrom = clone($userfrom);
-            $info->username = get_string('participant', 'assign') . ' ' . $uniqueidforuser;
-            $userfrom->firstname = get_string('participant', 'assign');
+            $info->username = get_string('participant', 'mod_assign') . ' ' . $uniqueidforuser;
+            $userfrom->firstname = get_string('participant', 'mod_assign');
             $userfrom->lastname = $uniqueidforuser;
             $userfrom->email = $CFG->noreplyaddress;
         } else {
@@ -6529,7 +6529,7 @@ class assign {
         $info->url = $CFG->wwwroot.'/mod/assign/view.php?id='.$coursemodule->id;
         $info->timeupdated = userdate($updatetime, get_string('strftimerecentfull'));
 
-        $postsubject = get_string($messagetype . 'small', 'assign', $info);
+        $postsubject = get_string($messagetype . 'small', 'mod_assign', $info);
         $posttext = self::format_notification_message_text($messagetype,
                                                            $info,
                                                            $course,
@@ -6737,7 +6737,7 @@ class assign {
         }
 
         if (!$this->submissions_open($userid)) {
-            $notices[] = get_string('submissionsclosed', 'assign');
+            $notices[] = get_string('submissionsclosed', 'mod_assign');
             return false;
         }
 
@@ -6784,7 +6784,7 @@ class assign {
 
             return true;
         }
-        $notices[] = get_string('submissionsclosed', 'assign');
+        $notices[] = get_string('submissionsclosed', 'mod_assign');
         return false;
     }
 
@@ -6801,7 +6801,7 @@ class assign {
         $userid = optional_param('userid', $USER->id, PARAM_INT);
 
         if (!$this->submissions_open($userid)) {
-            $notices[] = get_string('submissionsclosed', 'assign');
+            $notices[] = get_string('submissionsclosed', 'mod_assign');
             return false;
         }
         $data = new stdClass();
@@ -6823,7 +6823,7 @@ class assign {
         require_sesskey();
 
         if (!$this->submissions_open()) {
-            $notices[] = get_string('submissionsclosed', 'assign');
+            $notices[] = get_string('submissionsclosed', 'mod_assign');
             return false;
         }
 
@@ -6988,7 +6988,7 @@ class assign {
         $gradingmanager = get_grading_manager($this->get_context(), 'mod_assign', 'submissions');
         $controller = $gradingmanager->get_active_controller();
         if (!empty($controller)) {
-            $message = get_string('errorquickgradingvsadvancedgrading', 'assign');
+            $message = get_string('errorquickgradingvsadvancedgrading', 'mod_assign');
             $this->set_error_message($message);
             return $message;
         }
@@ -7024,7 +7024,7 @@ class assign {
         }
 
         if (empty($users)) {
-            $message = get_string('nousersselected', 'assign');
+            $message = get_string('nousersselected', 'mod_assign');
             $this->set_error_message($message);
             return $message;
         }
@@ -7080,7 +7080,7 @@ class assign {
                     // handle hidden columns.
                     if ($plugin->is_quickgrading_modified($modified->userid, $grade)) {
                         if ((int)$current->lastmodified > (int)$modified->lastmodified) {
-                            $message = get_string('errorrecordmodified', 'assign');
+                            $message = get_string('errorrecordmodified', 'mod_assign');
                             $this->set_error_message($message);
                             return $message;
                         } else {
@@ -7117,7 +7117,7 @@ class assign {
                 $badattempt = (int)$current->attemptnumber != (int)$modified->attemptnumber;
                 if ($badmodified || $badattempt) {
                     // Error - record has been modified since viewing the page.
-                    $message = get_string('errorrecordmodified', 'assign');
+                    $message = get_string('errorrecordmodified', 'mod_assign');
                     $this->set_error_message($message);
                     return $message;
                 } else {
@@ -7204,7 +7204,7 @@ class assign {
             }
         }
 
-        return get_string('quickgradingchangessaved', 'assign');
+        return get_string('quickgradingchangessaved', 'mod_assign');
     }
 
     /**
@@ -7302,8 +7302,8 @@ class assign {
         // Get markers to use in drop lists.
         $markingallocationoptions = array();
         if ($markingallocation) {
-            $markingallocationoptions[''] = get_string('filternone', 'assign');
-            $markingallocationoptions[ASSIGN_MARKER_FILTER_NO_MARKER] = get_string('markerfilternomarker', 'assign');
+            $markingallocationoptions[''] = get_string('filternone', 'mod_assign');
+            $markingallocationoptions[ASSIGN_MARKER_FILTER_NO_MARKER] = get_string('markerfilternomarker', 'mod_assign');
             list($sort, $params) = users_order_by_sql('u');
             // Only enrolled users could be assigned as potential markers.
             $markers = get_enrolled_users($this->context, 'mod/assign:grade', 0, 'u.*', $sort);
@@ -7400,14 +7400,14 @@ class assign {
             $submission = $this->get_user_submission($USER->id, true);
         }
         if (!$submission || $submission->status != ASSIGN_SUBMISSION_STATUS_REOPENED) {
-            $notices[] = get_string('submissionnotcopiedinvalidstatus', 'assign');
+            $notices[] = get_string('submissionnotcopiedinvalidstatus', 'mod_assign');
             return false;
         }
         $flags = $this->get_user_flags($USER->id, false);
 
         // Get the flags to check if it is locked.
         if ($flags && $flags->locked) {
-            $notices[] = get_string('submissionslocked', 'assign');
+            $notices[] = get_string('submissionslocked', 'mod_assign');
             return false;
         }
         if ($instance->submissiondrafts) {
@@ -7566,7 +7566,7 @@ class assign {
 
         // Get the flags to check if it is locked.
         if ($flags && $flags->locked) {
-            throw new \moodle_exception('submissionslocked', 'assign');
+            throw new \moodle_exception('submissionslocked', 'mod_assign');
             return true;
         }
 
@@ -7646,7 +7646,7 @@ class assign {
         // Need submit permission to submit an assignment.
         require_sesskey();
         if (!$this->submissions_open($userid)) {
-            $notices[] = get_string('duedatereached', 'assign');
+            $notices[] = get_string('duedatereached', 'mod_assign');
             return false;
         }
         $instance = $this->get_instance();
@@ -7804,15 +7804,15 @@ class assign {
         } else {
             // Use simple direct grading.
             if ($this->get_instance()->grade > 0) {
-                $name = get_string('gradeoutof', 'assign', $this->get_instance()->grade);
+                $name = get_string('gradeoutof', 'mod_assign', $this->get_instance()->grade);
                 if (!$gradingdisabled) {
                     $gradingelement = $mform->addElement('text', 'grade', $name);
-                    $mform->addHelpButton('grade', 'gradeoutofhelp', 'assign');
+                    $mform->addHelpButton('grade', 'gradeoutofhelp', 'mod_assign');
                     $mform->setType('grade', PARAM_RAW);
                 } else {
-                    $strgradelocked = get_string('gradelocked', 'assign');
+                    $strgradelocked = get_string('gradelocked', 'mod_assign');
                     $mform->addElement('static', 'gradedisabled', $name, $strgradelocked);
-                    $mform->addHelpButton('gradedisabled', 'gradeoutofhelp', 'assign');
+                    $mform->addHelpButton('gradedisabled', 'gradeoutofhelp', 'mod_assign');
                 }
             } else {
                 $grademenu = array(-1 => get_string("nograde")) + make_grades_menu($this->get_instance()->grade);
@@ -7860,7 +7860,7 @@ class assign {
         }
 
         $capabilitylist = array('gradereport/grader:view', 'moodle/grade:viewall');
-        $usergrade = get_string('notgraded', 'assign');
+        $usergrade = get_string('notgraded', 'mod_assign');
         if (has_all_capabilities($capabilitylist, $this->get_course_context())) {
             $urlparams = array('id'=>$this->get_course()->id);
             $url = new moodle_url('/grade/report/grader/index.php', $urlparams);
@@ -7878,9 +7878,9 @@ class assign {
 
         if ($this->get_instance()->markingworkflow) {
             $states = $this->get_marking_workflow_states_for_current_user();
-            $options = array('' => get_string('markingworkflowstatenotmarked', 'assign')) + $states;
-            $mform->addElement('select', 'workflowstate', get_string('markingworkflowstate', 'assign'), $options);
-            $mform->addHelpButton('workflowstate', 'markingworkflowstate', 'assign');
+            $options = array('' => get_string('markingworkflowstatenotmarked', 'mod_assign')) + $states;
+            $mform->addElement('select', 'workflowstate', get_string('markingworkflowstate', 'mod_assign'), $options);
+            $mform->addHelpButton('workflowstate', 'markingworkflowstate', 'mod_assign');
             $gradingstatus = $this->get_grading_status($userid);
             if ($gradingstatus != ASSIGN_MARKING_WORKFLOW_STATE_RELEASED) {
                 if ($grade->grade && $grade->grade != -1) {
@@ -7890,7 +7890,7 @@ class assign {
                         $assigngradestring = make_grades_menu($settings->grade)[grade_floatval($grade->grade)];
                     }
                     $assigngradestring = html_writer::span($assigngradestring, 'currentgrade');
-                    $label = get_string('currentassigngrade', 'assign');
+                    $label = get_string('currentassigngrade', 'mod_assign');
                     $mform->addElement('static', 'currentassigngrade', $label, $assigngradestring);
                 }
             }
@@ -7903,13 +7903,13 @@ class assign {
             list($sort, $params) = users_order_by_sql('u');
             // Only enrolled users could be assigned as potential markers.
             $markers = get_enrolled_users($this->context, 'mod/assign:grade', 0, 'u.*', $sort);
-            $markerlist = array('' =>  get_string('choosemarker', 'assign'));
+            $markerlist = array('' =>  get_string('choosemarker', 'mod_assign'));
             $viewfullnames = has_capability('moodle/site:viewfullnames', $this->context);
             foreach ($markers as $marker) {
                 $markerlist[$marker->id] = fullname($marker, $viewfullnames);
             }
-            $mform->addElement('select', 'allocatedmarker', get_string('allocatedmarker', 'assign'), $markerlist);
-            $mform->addHelpButton('allocatedmarker', 'allocatedmarker', 'assign');
+            $mform->addElement('select', 'allocatedmarker', get_string('allocatedmarker', 'mod_assign'), $markerlist);
+            $mform->addHelpButton('allocatedmarker', 'allocatedmarker', 'mod_assign');
             $mform->disabledIf('allocatedmarker', 'workflowstate', 'eq', ASSIGN_MARKING_WORKFLOW_STATE_READYFORREVIEW);
             $mform->disabledIf('allocatedmarker', 'workflowstate', 'eq', ASSIGN_MARKING_WORKFLOW_STATE_INREVIEW);
             $mform->disabledIf('allocatedmarker', 'workflowstate', 'eq', ASSIGN_MARKING_WORKFLOW_STATE_READYFORRELEASE);
@@ -7917,12 +7917,12 @@ class assign {
         }
 
         $gradestring = '<span class="currentgrade">' . $gradestring . '</span>';
-        $mform->addElement('static', 'currentgrade', get_string('currentgrade', 'assign'), $gradestring);
+        $mform->addElement('static', 'currentgrade', get_string('currentgrade', 'mod_assign'), $gradestring);
 
         if (count($useridlist) > 1) {
             $strparams = array('current'=>$rownum+1, 'total'=>count($useridlist));
-            $name = get_string('outof', 'assign', $strparams);
-            $mform->addElement('static', 'gradingstudent', get_string('gradingstudent', 'assign'), $name);
+            $name = get_string('outof', 'mod_assign', $strparams);
+            $mform->addElement('static', 'gradingstudent', get_string('gradingstudent', 'mod_assign'), $name);
         }
 
         // Let feedback plugins add elements to the grading form.
@@ -7944,8 +7944,8 @@ class assign {
         $mform->setType('userid', PARAM_INT);
 
         if ($this->get_instance()->teamsubmission) {
-            $mform->addElement('header', 'groupsubmissionsettings', get_string('groupsubmissionsettings', 'assign'));
-            $mform->addElement('selectyesno', 'applytoall', get_string('applytoteam', 'assign'));
+            $mform->addElement('header', 'groupsubmissionsettings', get_string('groupsubmissionsettings', 'mod_assign'));
+            $mform->addElement('selectyesno', 'applytoall', get_string('applytoteam', 'mod_assign'));
             $mform->setDefault('applytoall', 1);
         }
 
@@ -7953,9 +7953,9 @@ class assign {
         if (($attemptnumber == -1 ||
             ($attemptnumber + 1) == count($this->get_all_submissions($userid))) &&
             $this->get_instance()->attemptreopenmethod != ASSIGN_ATTEMPT_REOPEN_METHOD_NONE) {
-            $mform->addElement('header', 'attemptsettings', get_string('attemptsettings', 'assign'));
-            $attemptreopenmethod = get_string('attemptreopenmethod_' . $this->get_instance()->attemptreopenmethod, 'assign');
-            $mform->addElement('static', 'attemptreopenmethod', get_string('attemptreopenmethod', 'assign'), $attemptreopenmethod);
+            $mform->addElement('header', 'attemptsettings', get_string('attemptsettings', 'mod_assign'));
+            $attemptreopenmethod = get_string('attemptreopenmethod_' . $this->get_instance()->attemptreopenmethod, 'mod_assign');
+            $mform->addElement('static', 'attemptreopenmethod', get_string('attemptreopenmethod', 'mod_assign'), $attemptreopenmethod);
 
             $attemptnumber = 0;
             if ($submission) {
@@ -7963,10 +7963,10 @@ class assign {
             }
             $maxattempts = $this->get_instance()->maxattempts;
             if ($maxattempts == ASSIGN_UNLIMITED_ATTEMPTS) {
-                $maxattempts = get_string('unlimitedattempts', 'assign');
+                $maxattempts = get_string('unlimitedattempts', 'mod_assign');
             }
-            $mform->addelement('static', 'maxattemptslabel', get_string('maxattempts', 'assign'), $maxattempts);
-            $mform->addelement('static', 'attemptnumberlabel', get_string('attemptnumber', 'assign'), $attemptnumber + 1);
+            $mform->addelement('static', 'maxattemptslabel', get_string('maxattempts', 'mod_assign'), $maxattempts);
+            $mform->addelement('static', 'attemptnumberlabel', get_string('attemptnumber', 'mod_assign'), $attemptnumber + 1);
 
             $ismanual = $this->get_instance()->attemptreopenmethod == ASSIGN_ATTEMPT_REOPEN_METHOD_MANUAL;
             $issubmission = !empty($submission);
@@ -7974,14 +7974,14 @@ class assign {
             $islessthanmaxattempts = $issubmission && ($submission->attemptnumber < ($this->get_instance()->maxattempts-1));
 
             if ($ismanual && (!$issubmission || $isunlimited || $islessthanmaxattempts)) {
-                $mform->addElement('selectyesno', 'addattempt', get_string('addattempt', 'assign'));
+                $mform->addElement('selectyesno', 'addattempt', get_string('addattempt', 'mod_assign'));
                 $mform->setDefault('addattempt', 0);
             }
         }
         if (!$gradingpanel) {
-            $mform->addElement('selectyesno', 'sendstudentnotifications', get_string('sendstudentnotifications', 'assign'));
+            $mform->addElement('selectyesno', 'sendstudentnotifications', get_string('sendstudentnotifications', 'mod_assign'));
         } else {
-            $mform->addElement('hidden', 'sendstudentnotifications', get_string('sendstudentnotifications', 'assign'));
+            $mform->addElement('hidden', 'sendstudentnotifications', get_string('sendstudentnotifications', 'mod_assign'));
             $mform->setType('sendstudentnotifications', PARAM_BOOL);
         }
         // Get assignment visibility information for student.
@@ -8008,10 +8008,10 @@ class assign {
         if (!$gradingpanel) {
 
             $buttonarray = array();
-            $name = get_string('savechanges', 'assign');
+            $name = get_string('savechanges', 'mod_assign');
             $buttonarray[] = $mform->createElement('submit', 'savegrade', $name);
             if (!$last) {
-                $name = get_string('savenext', 'assign');
+                $name = get_string('savenext', 'mod_assign');
                 $buttonarray[] = $mform->createElement('submit', 'saveandshownext', $name);
             }
             $buttonarray[] = $mform->createElement('cancel', 'cancelbutton', get_string('cancel'));
@@ -8020,12 +8020,12 @@ class assign {
             $buttonarray = array();
 
             if ($rownum > 0) {
-                $name = get_string('previous', 'assign');
+                $name = get_string('previous', 'mod_assign');
                 $buttonarray[] = $mform->createElement('submit', 'nosaveandprevious', $name);
             }
 
             if (!$last) {
-                $name = get_string('nosavebutnext', 'assign');
+                $name = get_string('nosavebutnext', 'mod_assign');
                 $buttonarray[] = $mform->createElement('submit', 'nosaveandnext', $name);
             }
             if (!empty($buttonarray)) {
@@ -8163,7 +8163,7 @@ class assign {
 
         if (!$this->can_edit_submission($userid, $USER->id)) {
             $user = core_user::get_user($userid);
-            $message = get_string('usersubmissioncannotberemoved', 'assign', fullname($user));
+            $message = get_string('usersubmissioncannotberemoved', 'mod_assign', fullname($user));
             $this->set_error_message($message);
             return false;
         }
@@ -9171,17 +9171,17 @@ class assign {
         }
         $states = array();
         if (has_capability('mod/assign:grade', $this->context)) {
-            $states[ASSIGN_MARKING_WORKFLOW_STATE_INMARKING] = get_string('markingworkflowstateinmarking', 'assign');
-            $states[ASSIGN_MARKING_WORKFLOW_STATE_READYFORREVIEW] = get_string('markingworkflowstatereadyforreview', 'assign');
+            $states[ASSIGN_MARKING_WORKFLOW_STATE_INMARKING] = get_string('markingworkflowstateinmarking', 'mod_assign');
+            $states[ASSIGN_MARKING_WORKFLOW_STATE_READYFORREVIEW] = get_string('markingworkflowstatereadyforreview', 'mod_assign');
         }
         if (has_any_capability(array('mod/assign:reviewgrades',
                                      'mod/assign:managegrades'), $this->context)) {
-            $states[ASSIGN_MARKING_WORKFLOW_STATE_INREVIEW] = get_string('markingworkflowstateinreview', 'assign');
-            $states[ASSIGN_MARKING_WORKFLOW_STATE_READYFORRELEASE] = get_string('markingworkflowstatereadyforrelease', 'assign');
+            $states[ASSIGN_MARKING_WORKFLOW_STATE_INREVIEW] = get_string('markingworkflowstateinreview', 'mod_assign');
+            $states[ASSIGN_MARKING_WORKFLOW_STATE_READYFORRELEASE] = get_string('markingworkflowstatereadyforrelease', 'mod_assign');
         }
         if (has_any_capability(array('mod/assign:releasegrades',
                                      'mod/assign:managegrades'), $this->context)) {
-            $states[ASSIGN_MARKING_WORKFLOW_STATE_RELEASED] = get_string('markingworkflowstatereleased', 'assign');
+            $states[ASSIGN_MARKING_WORKFLOW_STATE_RELEASED] = get_string('markingworkflowstatereleased', 'mod_assign');
         }
         $this->markingworkflowstates = $states;
         return $this->markingworkflowstates;
@@ -9422,7 +9422,7 @@ class assign {
             unset_config('has_rescaled_null_grades_' . $instance->id, 'assign');
 
             // Display the notice.
-            $o .= $this->get_renderer()->notification(get_string('fixrescalednullgradesdone', 'assign'), 'notifysuccess');
+            $o .= $this->get_renderer()->notification(get_string('fixrescalednullgradesdone', 'mod_assign'), 'notifysuccess');
             $url = new moodle_url(
                 '/mod/assign/view.php',
                 array(
@@ -9471,8 +9471,8 @@ class assign {
             list($sort, $params) = users_order_by_sql('u');
             // Only enrolled users could be assigned as potential markers.
             $markers = get_enrolled_users($this->context, 'mod/assign:grade', 0, 'u.*', $sort);
-            $markingallocationoptions[''] = get_string('filternone', 'assign');
-            $markingallocationoptions[ASSIGN_MARKER_FILTER_NO_MARKER] = get_string('markerfilternomarker', 'assign');
+            $markingallocationoptions[''] = get_string('filternone', 'mod_assign');
+            $markingallocationoptions[ASSIGN_MARKER_FILTER_NO_MARKER] = get_string('markerfilternomarker', 'mod_assign');
             $viewfullnames = has_capability('moodle/site:viewfullnames', $this->context);
             foreach ($markers as $marker) {
                 $markingallocationoptions[$marker->id] = fullname($marker, $viewfullnames);
@@ -9504,8 +9504,8 @@ class assign {
         // Get marking states to show in form.
         $markingworkflowoptions = array();
         if ($markingworkflow) {
-            $notmarked = get_string('markingworkflowstatenotmarked', 'assign');
-            $markingworkflowoptions[''] = get_string('filternone', 'assign');
+            $notmarked = get_string('markingworkflowstatenotmarked', 'mod_assign');
+            $markingworkflowoptions[''] = get_string('filternone', 'mod_assign');
             $markingworkflowoptions[ASSIGN_MARKING_WORKFLOW_STATE_NOTMARKED] = $notmarked;
             $markingworkflowoptions = array_merge($markingworkflowoptions, $this->get_marking_workflow_states_for_current_user());
         }
@@ -9544,14 +9544,14 @@ class assign {
         // First is always "no filter" option.
         array_push($filters, [
             'key' => 'none',
-            'name' => get_string('filternone', 'assign'),
+            'name' => get_string('filternone', 'mod_assign'),
             'active' => ($current == '')
         ]);
 
         foreach ($filterkeys as $key) {
             array_push($filters, [
                 'key' => $key,
-                'name' => get_string('filter' . $key, 'assign'),
+                'name' => get_string('filter' . $key, 'mod_assign'),
                 'active' => ($current == $key)
             ]);
         }
@@ -9929,7 +9929,7 @@ class assign_portfolio_caller extends portfolio_module_caller_base {
      * @return string
      */
     public static function display_name() {
-        return get_string('modulename', 'assign');
+        return get_string('modulename', 'mod_assign');
     }
 
     /**

@@ -47,8 +47,8 @@ $event->add_record_snapshot('course', $course);
 $event->trigger();
 
 $strname = get_string('name');
-$strdata = get_string('modulename','data');
-$strdataplural  = get_string('modulenameplural','data');
+$strdata = get_string('modulename','mod_data');
+$strdataplural  = get_string('modulenameplural','mod_data');
 
 $PAGE->navbar->add($strdata, new moodle_url('/mod/data/index.php', array('id'=>$course->id)));
 $PAGE->set_title($strdata);
@@ -65,8 +65,8 @@ $usesections = course_format_uses_sections($course->format);
 $timenow  = time();
 $strname  = get_string('name');
 $strdescription = get_string("description");
-$strentries = get_string('entries', 'data');
-$strnumnotapproved = get_string('numnotapproved', 'data');
+$strentries = get_string('entries', 'mod_data');
+$strnumnotapproved = get_string('numnotapproved', 'mod_data');
 
 $table = new html_table();
 

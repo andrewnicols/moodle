@@ -95,11 +95,11 @@ class behat_mod_workshop extends behat_base {
         $this->execute("behat_navigation::i_am_on_page_instance", [$this->escape($workshopname), 'workshop activity']);
 
         $this->execute('behat_navigation::i_navigate_to_in_current_page_administration',
-            get_string('assessmentform', 'workshop'));
+            get_string('assessmentform', 'mod_workshop'));
 
         $this->execute("behat_forms::i_set_the_following_fields_to_these_values", $table);
 
-        $this->execute("behat_forms::press_button", get_string('saveandclose', 'workshop'));
+        $this->execute("behat_forms::press_button", get_string('saveandclose', 'mod_workshop'));
     }
 
     /**
@@ -116,8 +116,8 @@ class behat_mod_workshop extends behat_base {
         $submissionliteral = behat_context_helper::escape($submission);
         $xpath = "//div[contains(concat(' ', normalize-space(@class), ' '), ' assessment-summary ') ".
                 "and contains(.,$submissionliteral)]";
-        $assess = $this->escape(get_string('assess', 'workshop'));
-        $saveandclose = $this->escape(get_string('saveandclose', 'workshop'));
+        $assess = $this->escape(get_string('assess', 'mod_workshop'));
+        $saveandclose = $this->escape(get_string('saveandclose', 'mod_workshop'));
 
         $this->execute('behat_navigation::i_am_on_page_instance', [$workshopname, 'workshop activity']);
 

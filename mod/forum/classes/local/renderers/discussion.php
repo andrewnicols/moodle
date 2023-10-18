@@ -299,7 +299,7 @@ class discussion {
             null,
             'mode'
         );
-        $select->set_label(get_string('displaymode', 'forum'), ['class' => 'accesshide']);
+        $select->set_label(get_string('displaymode', 'mod_forum'), ['class' => 'accesshide']);
 
         return $this->renderer->render($select);
     }
@@ -350,7 +350,7 @@ class discussion {
                     $movebutton = null;
                 }
                 $select = new url_select($forummenu, '',
-                        ['/mod/forum/discuss.php?d=' . $discussion->get_id() => get_string("movethisdiscussionto", "forum")],
+                        ['/mod/forum/discuss.php?d=' . $discussion->get_id() => get_string("movethisdiscussionto", 'mod_forum')],
                         'forummenu', $movebutton);
                 $select->set_label(get_string('movethisdiscussionlabel', 'mod_forum'), [
                     'class' => 'sr-only',
@@ -396,19 +396,19 @@ class discussion {
 
         if ($forum->is_cutoff_date_reached()) {
             $notifications[] = (new notification(
-                    get_string('cutoffdatereached', 'forum'),
+                    get_string('cutoffdatereached', 'mod_forum'),
                     notification::NOTIFY_INFO
             ))->set_show_closebutton();
         } else if ($forum->get_type() != 'single') {
             // Due date is already shown at the top of the page for single simple discussion forums.
             if ($forum->is_due_date_reached()) {
                 $notifications[] = (new notification(
-                    get_string('thisforumisdue', 'forum', userdate($forum->get_due_date())),
+                    get_string('thisforumisdue', 'mod_forum', userdate($forum->get_due_date())),
                     notification::NOTIFY_INFO
                 ))->set_show_closebutton();
             } else if ($forum->has_due_date()) {
                 $notifications[] = (new notification(
-                    get_string('thisforumhasduedate', 'forum', userdate($forum->get_due_date())),
+                    get_string('thisforumhasduedate', 'mod_forum', userdate($forum->get_due_date())),
                     notification::NOTIFY_INFO
                 ))->set_show_closebutton();
             }
@@ -416,7 +416,7 @@ class discussion {
 
         if ($forum->is_discussion_locked($discussion)) {
             $notifications[] = (new notification(
-                get_string('discussionlocked', 'forum'),
+                get_string('discussionlocked', 'mod_forum'),
                 notification::NOTIFY_INFO
             ))
             ->set_extra_classes(['discussionlocked'])
@@ -426,14 +426,14 @@ class discussion {
         if ($forum->get_type() == 'qanda') {
             if ($this->capabilitymanager->must_post_before_viewing_discussion($user, $discussion)) {
                 $notifications[] = (new notification(
-                    get_string('qandanotify', 'forum')
+                    get_string('qandanotify', 'mod_forum')
                 ))->set_show_closebutton(true)->set_extra_classes(['mt-3']);
             }
         }
 
         if ($forum->has_blocking_enabled()) {
             $notifications[] = (new notification(
-                get_string('thisforumisthrottled', 'forum', [
+                get_string('thisforumisthrottled', 'mod_forum', [
                     'blockafter' => $forum->get_block_after(),
                     'blockperiod' => get_string('secondstotime' . $forum->get_block_period())
                 ]),

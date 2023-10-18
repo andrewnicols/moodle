@@ -121,7 +121,7 @@ class mod_forum_renderer extends plugin_renderer_base {
         $modinfo = get_fast_modinfo($course);
         if (!$users || !is_array($users) || count($users)===0) {
             $output .= $this->output->notification(
-                get_string("nosubscribers", "forum"),
+                get_string("nosubscribers", 'mod_forum'),
                 \core\output\notification::NOTIFY_INFO, false);
         } else if (!isset($modinfo->instances['forum'][$forum->id])) {
             $output .= $this->output->heading(get_string("invalidmodule", "error"));
@@ -132,7 +132,7 @@ class mod_forum_renderer extends plugin_renderer_base {
             $strparams = new stdclass();
             $strparams->name = format_string($forum->name);
             $strparams->count = count($users);
-            $output .= $this->output->heading(get_string("subscriberstowithcount", "forum", $strparams));
+            $output .= $this->output->heading(get_string("subscriberstowithcount", 'mod_forum', $strparams));
             $table = new html_table();
             $table->id = 'subscribers-table';
             $table->head = [];
@@ -166,7 +166,7 @@ class mod_forum_renderer extends plugin_renderer_base {
      */
     public function subscribed_users(user_selector_base $existingusers) {
         $output  = $this->output->box_start('subscriberdiv boxaligncenter');
-        $output .= html_writer::tag('p', get_string('forcesubscribed', 'forum'));
+        $output .= html_writer::tag('p', get_string('forcesubscribed', 'mod_forum'));
         $output .= $existingusers->display(true);
         $output .= $this->output->box_end();
         return $output;

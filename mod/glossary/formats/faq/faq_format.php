@@ -10,7 +10,7 @@ function glossary_show_entry_faq($course, $cm, $glossary, $entry, $mode="", $hoo
         echo '<th class="entryheader">';
         $entry->course = $course->id;
 
-        echo '<div class="concept">' . get_string('question','glossary') . ': ';
+        echo '<div class="concept">' . get_string('question','mod_glossary') . ': ';
         glossary_print_entry_concept($entry);
         echo '</div>';
 
@@ -26,7 +26,7 @@ function glossary_show_entry_faq($course, $cm, $glossary, $entry, $mode="", $hoo
 
         echo "\n<tr>";
         echo '<td colspan="2" class="entry">';
-        echo '<b>'.get_string('answer','glossary').':</b> ';
+        echo '<b>'.get_string('answer','mod_glossary').':</b> ';
 
         glossary_print_entry_definition($entry, $glossary, $cm);
         glossary_print_entry_attachment($entry, $cm, 'html');

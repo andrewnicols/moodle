@@ -47,7 +47,7 @@ $PAGE->activityheader->set_attrs([
     'hidecompletion' => true,
     'description' => ''
 ]);
-$PAGE->navbar->add(get_string('editingassessmentform', 'workshop'));
+$PAGE->navbar->add(get_string('editingassessmentform', 'mod_workshop'));
 
 // load the grading strategy logic
 $strategy = $workshop->grading_strategy_instance();

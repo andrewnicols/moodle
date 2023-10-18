@@ -139,7 +139,7 @@ trait testcase_helper_trait {
             $teachers[] = $teacher;
         }
         $bbactivity = $generator->create_module(
-            'bigbluebuttonbn',
+            'mod_bigbluebuttonbn',
             ['course' => $course->id],
             ['visible' => true]);
 

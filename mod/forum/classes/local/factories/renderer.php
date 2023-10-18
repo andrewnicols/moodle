@@ -368,7 +368,7 @@ class renderer {
                         $exportedpost->message = str_replace('</fgw9sdpq4>', '</span>', $exportedpost->message);
 
                         if ($missingterms) {
-                            $strmissingsearchterms = get_string('missingsearchterms', 'forum');
+                            $strmissingsearchterms = get_string('missingsearchterms', 'mod_forum');
                             $exportedpost->message = '<p class="highlight2">' . $strmissingsearchterms . ' '
                                 . $missingterms . '</p>' . $exportedpost->message;
                         }
@@ -612,7 +612,7 @@ class renderer {
         $notifications = array();
 
         if ($hasmultiplediscussions) {
-            $notifications[] = (new notification(get_string('warnformorepost', 'forum')))
+            $notifications[] = (new notification(get_string('warnformorepost', 'mod_forum')))
                 ->set_show_closebutton(true);
         }
 

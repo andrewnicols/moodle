@@ -34,7 +34,7 @@ $PAGE->set_url($url);
 
 
 if (!$chatuser = $DB->get_record('chat_users', array('sid' => $chatsid))) {
-    throw new \moodle_exception('notlogged', 'chat');
+    throw new \moodle_exception('notlogged', 'mod_chat');
 }
 
 // Get the minimal course.

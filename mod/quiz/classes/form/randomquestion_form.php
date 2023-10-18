@@ -52,7 +52,7 @@ class randomquestion_form extends \moodleform {
         $mform->addElement('questioncategory', 'category', get_string('category', 'question'),
                 ['contexts' => $usablecontexts, 'top' => true]);
 
-        $mform->addElement('advcheckbox', 'includesubcategories', get_string('recurse', 'quiz'), null, null, [0, 1]);
+        $mform->addElement('advcheckbox', 'includesubcategories', get_string('recurse', 'mod_quiz'), null, null, [0, 1]);
 
         $tops = question_get_top_categories_for_contexts(array_column($contexts->all(), 'id'));
         $mform->hideIf('includesubcategories', 'category', 'in', $tops);
@@ -64,7 +64,7 @@ class randomquestion_form extends \moodleform {
         }
         $options = [
                 'multiple' => true,
-                'noselectionstring' => get_string('anytags', 'quiz'),
+                'noselectionstring' => get_string('anytags', 'mod_quiz'),
         ];
         $mform->addElement('autocomplete', 'fromtags', get_string('randomquestiontags', 'mod_quiz'), $tagstrings, $options);
         $mform->addHelpButton('fromtags', 'randomquestiontags', 'mod_quiz');

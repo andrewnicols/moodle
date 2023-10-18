@@ -28,8 +28,8 @@ $event->trigger();
 
 /// Get all required strings
 
-$strglossarys = get_string("modulenameplural", "glossary");
-$strglossary  = get_string("modulename", "glossary");
+$strglossarys = get_string("modulenameplural", 'mod_glossary');
+$strglossary  = get_string("modulename", 'mod_glossary');
 $strrss = get_string("rss");
 
 
@@ -53,7 +53,7 @@ $usesections = course_format_uses_sections($course->format);
 
 $timenow = time();
 $strname  = get_string("name");
-$strentries  = get_string("entries", "glossary");
+$strentries  = get_string("entries", 'mod_glossary');
 
 $table = new html_table();
 
@@ -108,7 +108,7 @@ foreach ($glossarys as $glossary) {
         $rsslink = '';
         if ($glossary->rsstype and $glossary->rssarticles) {
             //Calculate the tolltip text
-            $tooltiptext = get_string("rsssubscriberss","glossary",format_string($glossary->name));
+            $tooltiptext = get_string("rsssubscriberss",'mod_glossary',format_string($glossary->name));
             if (!isloggedin()) {
                 $userid = 0;
             } else {

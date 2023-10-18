@@ -38,7 +38,7 @@ $student = $DB->get_record('user', ['id' => $attemptobj->get_userid()]);
 
 // Can only grade finished attempts.
 if (!$attemptobj->is_finished()) {
-    throw new \moodle_exception('attemptclosed', 'quiz');
+    throw new \moodle_exception('attemptclosed', 'mod_quiz');
 }
 
 // Check login and permissions.
@@ -47,7 +47,7 @@ $attemptobj->require_capability('mod/quiz:grade');
 
 // Print the page header.
 $PAGE->set_pagelayout('popup');
-$PAGE->set_title(get_string('manualgradequestion', 'quiz', [
+$PAGE->set_title(get_string('manualgradequestion', 'mod_quiz', [
         'question' => format_string($attemptobj->get_question_name($slot)),
         'quiz' => format_string($attemptobj->get_quiz_name()), 'user' => fullname($student)]));
 $PAGE->set_heading($attemptobj->get_course()->fullname);
@@ -69,13 +69,13 @@ $summarydata['user'] = [
 
 // Quiz name.
 $summarydata['quizname'] = [
-    'title'   => get_string('modulename', 'quiz'),
+    'title'   => get_string('modulename', 'mod_quiz'),
     'content' => format_string($attemptobj->get_quiz_name()),
 ];
 
 // Question name.
 $summarydata['questionname'] = [
-    'title'   => get_string('question', 'quiz'),
+    'title'   => get_string('question', 'mod_quiz'),
     'content' => $attemptobj->get_question_name($slot),
 ];
 

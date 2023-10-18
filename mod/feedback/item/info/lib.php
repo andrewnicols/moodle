@@ -64,7 +64,7 @@ class feedback_item_info extends feedback_item_base {
         if ($feedback->anonymous == FEEDBACK_ANONYMOUS_NO || $item->presentation == self::MODE_RESPONSETIME) {
             // "Response time" is hidden anyway in case of anonymous feedback, no reason to offer this option.
             // However if it was already selected leave it in the dropdown.
-            $presentationoptions[self::MODE_RESPONSETIME] = get_string('responsetime', 'feedback');
+            $presentationoptions[self::MODE_RESPONSETIME] = get_string('responsetime', 'mod_feedback');
         }
         $presentationoptions[self::MODE_COURSE]  = get_string('course');
         $presentationoptions[self::MODE_CATEGORY]  = get_string('coursecategory');

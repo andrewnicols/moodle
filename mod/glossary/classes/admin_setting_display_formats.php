@@ -29,7 +29,7 @@ class mod_glossary_admin_setting_display_formats extends admin_setting {
      */
     public function __construct() {
         $this->nosave = true;
-        parent::__construct('glossarydisplayformats', get_string('displayformatssetup', 'glossary'), '', '');
+        parent::__construct('glossarydisplayformats', get_string('displayformatssetup', 'mod_glossary'), '', '');
     }
 
     /**
@@ -80,7 +80,7 @@ class mod_glossary_admin_setting_display_formats extends admin_setting {
             if (strpos(core_text::strtolower($format->name), $query) !== false) {
                 return true;
             }
-            $localised = get_string("displayformat$format->name", "glossary");
+            $localised = get_string("displayformat$format->name", 'mod_glossary');
             if (strpos(core_text::strtolower($localised), $query) !== false) {
                 return true;
             }
@@ -102,14 +102,14 @@ class mod_glossary_admin_setting_display_formats extends admin_setting {
         $strhide = get_string("hide");
         $strshow = get_string("show");
 
-        $str = $OUTPUT->heading(get_string('displayformatssetup', 'glossary'), 3, 'main', true);
+        $str = $OUTPUT->heading(get_string('displayformatssetup', 'mod_glossary'), 3, 'main', true);
 
         $recformats = $DB->get_records("glossary_formats");
         $formats = array();
 
         // Build alphabetized list of formats.
         foreach ($recformats as $format) {
-            $formats[get_string("displayformat$format->name", "glossary")] = $format;
+            $formats[get_string("displayformat$format->name", 'mod_glossary')] = $format;
         }
         ksort($formats);
 

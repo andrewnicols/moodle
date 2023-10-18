@@ -50,7 +50,7 @@ class behat_mod_choice extends behat_base {
 
         $this->execute('behat_forms::i_set_the_field_to', array( $this->escape($option), 1));
 
-        $this->execute("behat_forms::press_button", get_string('savemychoice', 'choice'));
+        $this->execute("behat_forms::press_button", get_string('savemychoice', 'mod_choice'));
     }
 
     /**
@@ -80,7 +80,7 @@ class behat_mod_choice extends behat_base {
         }
 
         // Save choice.
-        $behatforms->press_button(get_string('savemychoice', 'choice'));
+        $behatforms->press_button(get_string('savemychoice', 'mod_choice'));
     }
 
 }

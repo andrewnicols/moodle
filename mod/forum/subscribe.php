@@ -55,7 +55,7 @@ if (!is_null($sesskey)) {
 if (!is_null($discussionid)) {
     $url->param('d', $discussionid);
     if (!$discussion = $DB->get_record('forum_discussions', array('id' => $discussionid, 'forum' => $id))) {
-        throw new \moodle_exception('invaliddiscussionid', 'forum');
+        throw new \moodle_exception('invaliddiscussionid', 'mod_forum');
     }
 }
 $PAGE->set_url($url);
@@ -68,7 +68,7 @@ $context = context_module::instance($cm->id);
 if ($user) {
     require_sesskey();
     if (!has_capability('mod/forum:managesubscriptions', $context)) {
-        throw new \moodle_exception('nopermissiontosubscribe', 'forum');
+        throw new \moodle_exception('nopermissiontosubscribe', 'mod_forum');
     }
     $user = $DB->get_record('user', array('id' => $user), '*', MUST_EXIST);
 } else {
@@ -86,7 +86,7 @@ $issubscribed = \mod_forum\subscriptions::is_subscribed($user->id, $forum, $disc
 // For a user to subscribe when a groupmode is set, they must have access to at least one group.
 if ($groupmode && !$issubscribed && !has_capability('moodle/site:accessallgroups', $context)) {
     if (!groups_get_all_groups($course->id, $USER->id)) {
-        throw new \moodle_exception('cannotsubscribe', 'forum');
+        throw new \moodle_exception('cannotsubscribe', 'mod_forum');
     }
 }
 
@@ -97,7 +97,7 @@ if (is_null($mode) and !is_enrolled($context, $USER, '', true)) {   // Guests an
     $PAGE->set_heading($course->fullname);
     if (isguestuser()) {
         echo $OUTPUT->header();
-        echo $OUTPUT->confirm(get_string('subscribeenrolledonly', 'forum').'<br /><br />'.get_string('liketologin'),
+        echo $OUTPUT->confirm(get_string('subscribeenrolledonly', 'mod_forum').'<br /><br />'.get_string('liketologin'),
                      get_login_url(), new moodle_url('/mod/forum/view.php', array('f'=>$id)));
         echo $OUTPUT->footer();
         exit;
@@ -105,7 +105,7 @@ if (is_null($mode) and !is_enrolled($context, $USER, '', true)) {   // Guests an
         // There should not be any links leading to this place, just redirect.
         redirect(
                 new moodle_url('/mod/forum/view.php', array('f'=>$id)),
-                get_string('subscribeenrolledonly', 'forum'),
+                get_string('subscribeenrolledonly', 'mod_forum'),
                 null,
                 \core\output\notification::NOTIFY_ERROR
             );
@@ -129,7 +129,7 @@ if (!is_null($mode) and has_capability('mod/forum:managesubscriptions', $context
             \mod_forum\subscriptions::set_subscription_mode($forum, FORUM_CHOOSESUBSCRIBE);
             redirect(
                     $subscribersurl,
-                    get_string('everyonecannowchoose', 'forum'),
+                    get_string('everyonecannowchoose', 'mod_forum'),
                     null,
                     \core\output\notification::NOTIFY_SUCCESS
             );
@@ -138,7 +138,7 @@ if (!is_null($mode) and has_capability('mod/forum:managesubscriptions', $context
             \mod_forum\subscriptions::set_subscription_mode($forum, FORUM_FORCESUBSCRIBE);
             redirect(
                     $subscribersurl,
-                    get_string('everyoneisnowsubscribed', 'forum'),
+                    get_string('everyoneisnowsubscribed', 'mod_forum'),
                     null,
                     \core\output\notification::NOTIFY_SUCCESS
             );
@@ -155,7 +155,7 @@ if (!is_null($mode) and has_capability('mod/forum:managesubscriptions', $context
             }
             redirect(
                     $subscribersurl,
-                    get_string('everyoneisnowsubscribed', 'forum'),
+                    get_string('everyoneisnowsubscribed', 'mod_forum'),
                     null,
                     \core\output\notification::NOTIFY_SUCCESS
             );
@@ -164,13 +164,13 @@ if (!is_null($mode) and has_capability('mod/forum:managesubscriptions', $context
             \mod_forum\subscriptions::set_subscription_mode($forum, FORUM_DISALLOWSUBSCRIBE);
             redirect(
                     $subscribersurl,
-                    get_string('noonecansubscribenow', 'forum'),
+                    get_string('noonecansubscribenow', 'mod_forum'),
                     null,
                     \core\output\notification::NOTIFY_SUCCESS
             );
             break;
         default:
-            throw new \moodle_exception(get_string('invalidforcesubscribe', 'forum'));
+            throw new \moodle_exception(get_string('invalidforcesubscribe', 'mod_forum'));
     }
 }
 
@@ -195,10 +195,10 @@ if ($issubscribed) {
             $a = new stdClass();
             $a->forum = format_string($forum->name);
             $a->discussion = format_string($discussion->name);
-            echo $OUTPUT->confirm(get_string('confirmunsubscribediscussion', 'forum', $a),
+            echo $OUTPUT->confirm(get_string('confirmunsubscribediscussion', 'mod_forum', $a),
                     $PAGE->url, $viewurl);
         } else {
-            echo $OUTPUT->confirm(get_string('confirmunsubscribe', 'forum', format_string($forum->name)),
+            echo $OUTPUT->confirm(get_string('confirmunsubscribe', 'mod_forum', format_string($forum->name)),
                     $PAGE->url, $viewurl);
         }
         echo $OUTPUT->footer();
@@ -209,33 +209,33 @@ if ($issubscribed) {
         if (\mod_forum\subscriptions::unsubscribe_user($user->id, $forum, $context, true)) {
             redirect(
                 $returnto,
-                get_string('nownotsubscribed', 'forum', $info),
+                get_string('nownotsubscribed', 'mod_forum', $info),
                 null,
                 \core\output\notification::NOTIFY_SUCCESS
             );
         } else {
-            throw new \moodle_exception('cannotunsubscribe', 'forum', get_local_referer(false));
+            throw new \moodle_exception('cannotunsubscribe', 'mod_forum', get_local_referer(false));
         }
     } else {
         if (\mod_forum\subscriptions::unsubscribe_user_from_discussion($user->id, $discussion, $context)) {
             $info->discussion = $discussion->name;
             redirect(
                 $returnto,
-                get_string('discussionnownotsubscribed', 'forum', $info),
+                get_string('discussionnownotsubscribed', 'mod_forum', $info),
                 null,
                 \core\output\notification::NOTIFY_SUCCESS
             );
         } else {
-            throw new \moodle_exception('cannotunsubscribe', 'forum', get_local_referer(false));
+            throw new \moodle_exception('cannotunsubscribe', 'mod_forum', get_local_referer(false));
         }
     }
 
 } else {  // subscribe
     if (\mod_forum\subscriptions::subscription_disabled($forum) && !has_capability('mod/forum:managesubscriptions', $context)) {
-        throw new \moodle_exception('disallowsubscribe', 'forum', get_local_referer(false));
+        throw new \moodle_exception('disallowsubscribe', 'mod_forum', get_local_referer(false));
     }
     if (!has_capability('mod/forum:viewdiscussion', $context)) {
-        throw new \moodle_exception('noviewdiscussionspermission', 'forum', get_local_referer(false));
+        throw new \moodle_exception('noviewdiscussionspermission', 'mod_forum', get_local_referer(false));
     }
     if (is_null($sesskey)) {
         // We came here via link in email.
@@ -248,10 +248,10 @@ if ($issubscribed) {
             $a = new stdClass();
             $a->forum = format_string($forum->name);
             $a->discussion = format_string($discussion->name);
-            echo $OUTPUT->confirm(get_string('confirmsubscribediscussion', 'forum', $a),
+            echo $OUTPUT->confirm(get_string('confirmsubscribediscussion', 'mod_forum', $a),
                     $PAGE->url, $viewurl);
         } else {
-            echo $OUTPUT->confirm(get_string('confirmsubscribe', 'forum', format_string($forum->name)),
+            echo $OUTPUT->confirm(get_string('confirmsubscribe', 'mod_forum', format_string($forum->name)),
                     $PAGE->url, $viewurl);
         }
         echo $OUTPUT->footer();
@@ -262,7 +262,7 @@ if ($issubscribed) {
         \mod_forum\subscriptions::subscribe_user($user->id, $forum, $context, true);
         redirect(
             $returnto,
-            get_string('nowsubscribed', 'forum', $info),
+            get_string('nowsubscribed', 'mod_forum', $info),
             null,
             \core\output\notification::NOTIFY_SUCCESS
         );
@@ -271,7 +271,7 @@ if ($issubscribed) {
         \mod_forum\subscriptions::subscribe_user_to_discussion($user->id, $discussion, $context);
         redirect(
             $returnto,
-            get_string('discussionnowsubscribed', 'forum', $info),
+            get_string('discussionnowsubscribed', 'mod_forum', $info),
             null,
             \core\output\notification::NOTIFY_SUCCESS
         );

@@ -758,7 +758,7 @@ class external_test extends externallib_advanced_testcase {
 
         $pluginwithdefaults = [
             'name' => 'assign',
-            'displayname' => get_string('pluginname', 'assign')
+            'displayname' => get_string('pluginname', 'mod_assign')
         ];
 
         // If we don't want plugins with defaults to be listed or if both of the category and purpose are set to inherit,

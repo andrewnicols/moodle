@@ -47,16 +47,16 @@ class quizobj_test extends \basic_testcase {
             $quizobj->cannot_review_message(display_options::DURING));
         $this->assertEquals('',
             $quizobj->cannot_review_message(display_options::IMMEDIATELY_AFTER));
-        $this->assertEquals(get_string('noreview', 'quiz'),
+        $this->assertEquals(get_string('noreview', 'mod_quiz'),
             $quizobj->cannot_review_message(display_options::LATER_WHILE_OPEN));
-        $this->assertEquals(get_string('noreview', 'quiz'),
+        $this->assertEquals(get_string('noreview', 'mod_quiz'),
             $quizobj->cannot_review_message(display_options::AFTER_CLOSE));
 
         $closetime = time() + 10000;
         $quiz->timeclose = $closetime;
         $quizobj = new quiz_settings($quiz, $cm, new \stdClass(), false);
 
-        $this->assertEquals(get_string('noreviewuntil', 'quiz', userdate($closetime)),
+        $this->assertEquals(get_string('noreviewuntil', 'mod_quiz', userdate($closetime)),
             $quizobj->cannot_review_message(display_options::LATER_WHILE_OPEN));
     }
 }

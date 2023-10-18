@@ -400,7 +400,7 @@ abstract class question_edit_form extends question_wizard_form {
         $options = [
             'tags' => true,
             'multiple' => true,
-            'noselectionstring' => get_string('anytags', 'quiz'),
+            'noselectionstring' => get_string('anytags', 'mod_quiz'),
         ];
         $mform->addElement('autocomplete', 'tags',  get_string('tags'), $tagstrings, $options);
 

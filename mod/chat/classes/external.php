@@ -115,7 +115,7 @@ class mod_chat_external extends external_api {
         // Get the unique chat session id.
         // Since we are going to use the chat via Web Service requests we set the ajax version (since it's the most similar).
         if (!$chatsid = chat_login_user($chat->id, 'ajax', $groupid, $course)) {
-            throw new moodle_exception('cantlogin', 'chat');
+            throw new moodle_exception('cantlogin', 'mod_chat');
         }
 
         $result = array();
@@ -172,7 +172,7 @@ class mod_chat_external extends external_api {
 
         // Request and permission validation.
         if (!$chatuser = $DB->get_record('chat_users', array('sid' => $params['chatsid']))) {
-            throw new moodle_exception('notlogged', 'chat');
+            throw new moodle_exception('notlogged', 'mod_chat');
         }
         $chat = $DB->get_record('chat', array('id' => $chatuser->chatid), '*', MUST_EXIST);
         list($course, $cm) = get_course_and_cm_from_instance($chat, 'chat');
@@ -271,7 +271,7 @@ class mod_chat_external extends external_api {
 
         // Request and permission validation.
         if (!$chatuser = $DB->get_record('chat_users', array('sid' => $params['chatsid']))) {
-            throw new moodle_exception('notlogged', 'chat');
+            throw new moodle_exception('notlogged', 'mod_chat');
         }
         $chat = $DB->get_record('chat', array('id' => $chatuser->chatid), '*', MUST_EXIST);
         list($course, $cm) = get_course_and_cm_from_instance($chat, 'chat');
@@ -354,7 +354,7 @@ class mod_chat_external extends external_api {
 
         // Request and permission validation.
         if (!$chatuser = $DB->get_record('chat_users', array('sid' => $params['chatsid']))) {
-            throw new moodle_exception('notlogged', 'chat');
+            throw new moodle_exception('notlogged', 'mod_chat');
         }
         $chat = $DB->get_record('chat', array('id' => $chatuser->chatid), '*', MUST_EXIST);
         list($course, $cm) = get_course_and_cm_from_instance($chat, 'chat');
@@ -650,7 +650,7 @@ class mod_chat_external extends external_api {
         self::validate_context($context);
 
         if (empty($chat->studentlogs) && !has_capability('mod/chat:readlog', $context)) {
-            throw new moodle_exception('nopermissiontoseethechatlog', 'chat');
+            throw new moodle_exception('nopermissiontoseethechatlog', 'mod_chat');
         }
 
         if (!empty($params['groupid'])) {
@@ -776,7 +776,7 @@ class mod_chat_external extends external_api {
         self::validate_context($context);
 
         if (empty($chat->studentlogs) && !has_capability('mod/chat:readlog', $context)) {
-            throw new moodle_exception('nopermissiontoseethechatlog', 'chat');
+            throw new moodle_exception('nopermissiontoseethechatlog', 'mod_chat');
         }
 
         if (!empty($params['groupid'])) {

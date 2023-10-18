@@ -105,7 +105,7 @@ class mod_feedback_responses_table extends table_sql {
         $name = format_string($feedbackstructure->get_feedback()->name);
         $this->is_downloadable(true);
         $this->is_downloading(optional_param($this->downloadparamname, 0, PARAM_ALPHA),
-                $name, get_string('responses', 'feedback'));
+                $name, get_string('responses', 'mod_feedback'));
         $this->useridfield = 'userid';
         $this->init($group);
     }
@@ -227,9 +227,9 @@ class mod_feedback_responses_table extends table_sql {
     public function col_deleteentry($row) {
         global $OUTPUT;
         $deleteentryurl = new moodle_url($this->baseurl, ['delete' => $row->id, 'sesskey' => sesskey()]);
-        $deleteaction = new confirm_action(get_string('confirmdeleteentry', 'feedback'));
+        $deleteaction = new confirm_action(get_string('confirmdeleteentry', 'mod_feedback'));
         return $OUTPUT->action_icon($deleteentryurl,
-            new pix_icon('t/delete', get_string('delete_entry', 'feedback')), $deleteaction);
+            new pix_icon('t/delete', get_string('delete_entry', 'mod_feedback')), $deleteaction);
     }
 
     /**
@@ -437,7 +437,7 @@ class mod_feedback_responses_table extends table_sql {
         }
 
         if (count($this->feedbackstructure->get_items(true)) > self::PREVIEWCOLUMNSLIMIT) {
-            echo $OUTPUT->notification(get_string('questionslimited', 'feedback', self::PREVIEWCOLUMNSLIMIT), 'info');
+            echo $OUTPUT->notification(get_string('questionslimited', 'mod_feedback', self::PREVIEWCOLUMNSLIMIT), 'info');
         }
 
         $this->out($this->showall ? $grandtotal : FEEDBACK_DEFAULT_PAGE_COUNT,

@@ -61,12 +61,12 @@ if ($maildigest === -1) {
     $info->maildigesttitle = $digestoptions[$info->maildigest];
     $info->maildigestdescription = get_string('emaildigest_' . $info->maildigest,
         'mod_forum', $info);
-    $updatemessage = get_string('emaildigestupdated_default', 'forum', $info);
+    $updatemessage = get_string('emaildigestupdated_default', 'mod_forum', $info);
 } else {
     $info->maildigesttitle = $digestoptions[$info->maildigest];
     $info->maildigestdescription = get_string('emaildigest_' . $info->maildigest,
         'mod_forum', $info);
-    $updatemessage = get_string('emaildigestupdated', 'forum', $info);
+    $updatemessage = get_string('emaildigestupdated', 'mod_forum', $info);
 }
 
 if ($backtoindex) {

@@ -80,27 +80,27 @@ class subscription_actionbar implements renderable, templatable {
             ['id' => $this->id, 'mode' => FORUM_DISALLOWSUBSCRIBE, 'sesskey' => $sesskey, 'edit' => $this->edit]);
 
         $menu = [
-            $optionallink->out(false) => get_string('subscriptionoptional', 'forum'),
-            $forcedlink->out(false) => get_string('subscriptionforced', 'forum'),
-            $autolink->out(false) => get_string('subscriptionauto', 'forum'),
-            $disabledlink->out(false) => get_string('subscriptiondisabled', 'forum'),
+            $optionallink->out(false) => get_string('subscriptionoptional', 'mod_forum'),
+            $forcedlink->out(false) => get_string('subscriptionforced', 'mod_forum'),
+            $autolink->out(false) => get_string('subscriptionauto', 'mod_forum'),
+            $disabledlink->out(false) => get_string('subscriptiondisabled', 'mod_forum'),
         ];
 
         switch ($modeset) {
             case FORUM_CHOOSESUBSCRIBE:
-                $set = get_string('subscriptionoptional', 'forum');
+                $set = get_string('subscriptionoptional', 'mod_forum');
                 break;
             case FORUM_FORCESUBSCRIBE:
-                $set = get_string('subscriptionforced', 'forum');
+                $set = get_string('subscriptionforced', 'mod_forum');
                 break;
             case FORUM_INITIALSUBSCRIBE:
-                $set = get_string('subscriptionauto', 'forum');
+                $set = get_string('subscriptionauto', 'mod_forum');
                 break;
             case FORUM_DISALLOWSUBSCRIBE:
-                $set = get_string('subscriptiondisabled', 'forum');
+                $set = get_string('subscriptiondisabled', 'mod_forum');
                 break;
             default:
-                throw new \moodle_exception(get_string('invalidforcesubscribe', 'forum'));
+                throw new \moodle_exception(get_string('invalidforcesubscribe', 'mod_forum'));
         }
 
         $menu = array_filter($menu, function($key) use ($set) {
@@ -130,8 +130,8 @@ class subscription_actionbar implements renderable, templatable {
         $managelink = new moodle_url('/mod/forum/subscribers.php', ['id' => $this->id, 'edit' => 'on']);
 
         $menu = [
-            $viewlink->out(false) => get_string('forum:viewsubscribers', 'forum'),
-            $managelink->out(false) => get_string('managesubscriptionson', 'forum'),
+            $viewlink->out(false) => get_string('forum:viewsubscribers', 'mod_forum'),
+            $managelink->out(false) => get_string('managesubscriptionson', 'mod_forum'),
         ];
 
         if ($this->edit === 0) {
@@ -140,7 +140,7 @@ class subscription_actionbar implements renderable, templatable {
             $this->currenturl = $managelink;
         }
         $urlselect = new url_select($menu, $this->currenturl->out(false), null, 'selectviewandmanagesubscribers');
-        $urlselect->set_label(get_string('subscribers', 'forum'), ['class' => 'accesshide']);
+        $urlselect->set_label(get_string('subscribers', 'mod_forum'), ['class' => 'accesshide']);
         return $urlselect;
     }
 

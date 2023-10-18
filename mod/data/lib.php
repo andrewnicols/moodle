@@ -100,18 +100,18 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
         global $DB;
 
         if (empty($field) && empty($data)) {
-            throw new \moodle_exception('missingfield', 'data');
+            throw new \moodle_exception('missingfield', 'mod_data');
         }
 
         if (!empty($field)) {
             if (is_object($field)) {
                 $this->field = $field;  // Programmer knows what they are doing, we hope
             } else if (!$this->field = $DB->get_record('data_fields', array('id'=>$field))) {
-                throw new \moodle_exception('invalidfieldid', 'data');
+                throw new \moodle_exception('invalidfieldid', 'mod_data');
             }
             if (empty($data)) {
                 if (!$this->data = $DB->get_record('data', array('id'=>$this->field->dataid))) {
-                    throw new \moodle_exception('invalidid', 'data');
+                    throw new \moodle_exception('invalidid', 'mod_data');
                 }
             }
         }
@@ -121,10 +121,10 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
                 if (is_object($data)) {
                     $this->data = $data;  // Programmer knows what they are doing, we hope
                 } else if (!$this->data = $DB->get_record('data', array('id'=>$data))) {
-                    throw new \moodle_exception('invalidid', 'data');
+                    throw new \moodle_exception('invalidid', 'mod_data');
                 }
             } else {                      // No way to define it!
-                throw new \moodle_exception('missingdata', 'data');
+                throw new \moodle_exception('missingdata', 'mod_data');
             }
         }
 
@@ -410,7 +410,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
 
         // Throw an exception if field type doen't exist. Anyway user should never access to edit a field with an unknown fieldtype.
         if ($this->type === 'unknown') {
-            throw new \moodle_exception(get_string('missingfieldtype', 'data', (object)['name' => $this->field->name]));
+            throw new \moodle_exception(get_string('missingfieldtype', 'mod_data', (object)['name' => $this->field->name]));
         }
 
         echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthwide');
@@ -431,7 +431,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
         $filepath = $CFG->dirroot.'/mod/data/field/'.$this->type.'/mod.html';
 
         if (!file_exists($filepath)) {
-            throw new \moodle_exception(get_string('missingfieldtype', 'data', (object)['name' => $this->field->name]));
+            throw new \moodle_exception(get_string('missingfieldtype', 'mod_data', (object)['name' => $this->field->name]));
         } else {
             require_once($filepath);
         }
@@ -626,7 +626,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
     function image() {
         global $OUTPUT;
 
-        return $OUTPUT->pix_icon('field/' . $this->type, $this->type, 'data');
+        return $OUTPUT->pix_icon('field/' . $this->type, $this->type, 'mod_data');
     }
 
     /**
@@ -1008,7 +1008,7 @@ function data_get_field_new($type, $data) {
     $filepath = $CFG->dirroot.'/mod/data/field/'.$type.'/field.class.php';
     // It should never access this method if the subfield class doesn't exist.
     if (!file_exists($filepath)) {
-        throw new \moodle_exception('invalidfieldtype', 'data');
+        throw new \moodle_exception('invalidfieldtype', 'mod_data');
     }
     require_once($filepath);
     $newfield = 'data_field_'.$type;
@@ -1165,7 +1165,7 @@ function data_tags_check($dataid, $template) {
         $pattern="/\[\[" . preg_quote($field->name, '/') . "\]\]/i";
         if (preg_match_all($pattern, $template, $dummy)>1){
             $tagsok = false;
-            echo $OUTPUT->notification('[['.$field->name.']] - '.get_string('multipletags','data'));
+            echo $OUTPUT->notification('[['.$field->name.']] - '.get_string('multipletags','mod_data'));
         }
     }
     // else return true
@@ -1314,7 +1314,7 @@ function data_user_outline($course, $user, $mod, $data) {
 
     if ($countrecords = $DB->count_records('data_records', array('dataid'=>$data->id, 'userid'=>$user->id))) {
         $result = new stdClass();
-        $result->info = get_string('numrecords', 'data', $countrecords);
+        $result->info = get_string('numrecords', 'mod_data', $countrecords);
         $lastrecord   = $DB->get_record_sql('SELECT id,timemodified FROM {data_records}
                                               WHERE dataid = ? AND userid = ?
                                            ORDER BY timemodified DESC', array($data->id, $user->id), true);
@@ -1737,7 +1737,7 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
         $advanced = 1;
         echo '<input type="hidden" name="mode" value="list" />';
     }
-    echo '<label for="pref_perpage">'.get_string('pagesize','data').'</label> ';
+    echo '<label for="pref_perpage">'.get_string('pagesize','mod_data').'</label> ';
     $pagesizes = array(2=>2,3=>3,4=>4,5=>5,6=>6,7=>7,8=>8,9=>9,10=>10,15=>15,
                        20=>20,30=>30,40=>40,50=>50,100=>100,200=>200,300=>300,400=>400,500=>500,1000=>1000);
     echo html_writer::select($pagesizes, 'perpage', $perpage, false, array('id' => 'pref_perpage', 'class' => 'custom-select'));
@@ -1756,7 +1756,7 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
     // foreach field, print the option
     echo '<select name="sort" id="pref_sortby" class="custom-select mr-1">';
     if ($fields = $DB->get_records('data_fields', array('dataid'=>$data->id), 'name')) {
-        echo '<optgroup label="'.get_string('fields', 'data').'">';
+        echo '<optgroup label="'.get_string('fields', 'mod_data').'">';
         foreach ($fields as $field) {
             if ($field->id == $sort) {
                 echo '<option value="'.$field->id.'" selected="selected">'.$field->name.'</option>';
@@ -1767,14 +1767,14 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
         echo '</optgroup>';
     }
     $options = array();
-    $options[DATA_TIMEADDED]    = get_string('timeadded', 'data');
-    $options[DATA_TIMEMODIFIED] = get_string('timemodified', 'data');
-    $options[DATA_FIRSTNAME]    = get_string('authorfirstname', 'data');
-    $options[DATA_LASTNAME]     = get_string('authorlastname', 'data');
+    $options[DATA_TIMEADDED]    = get_string('timeadded', 'mod_data');
+    $options[DATA_TIMEMODIFIED] = get_string('timemodified', 'mod_data');
+    $options[DATA_FIRSTNAME]    = get_string('authorfirstname', 'mod_data');
+    $options[DATA_LASTNAME]     = get_string('authorlastname', 'mod_data');
     if ($data->approval and has_capability('mod/data:approve', $context)) {
-        $options[DATA_APPROVED] = get_string('approved', 'data');
+        $options[DATA_APPROVED] = get_string('approved', 'mod_data');
     }
-    echo '<optgroup label="'.get_string('other', 'data').'">';
+    echo '<optgroup label="'.get_string('other', 'mod_data').'">';
     foreach ($options as $key => $name) {
         if ($key == $sort) {
             echo '<option value="'.$key.'" selected="selected">'.$name.'</option>';
@@ -1787,14 +1787,14 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
     echo '<label for="pref_order" class="accesshide">'.get_string('order').'</label>';
     echo '<select id="pref_order" name="order" class="custom-select mr-1">';
     if ($order == 'ASC') {
-        echo '<option value="ASC" selected="selected">'.get_string('ascending','data').'</option>';
+        echo '<option value="ASC" selected="selected">'.get_string('ascending','mod_data').'</option>';
     } else {
-        echo '<option value="ASC">'.get_string('ascending','data').'</option>';
+        echo '<option value="ASC">'.get_string('ascending','mod_data').'</option>';
     }
     if ($order == 'DESC') {
-        echo '<option value="DESC" selected="selected">'.get_string('descending','data').'</option>';
+        echo '<option value="DESC" selected="selected">'.get_string('descending','mod_data').'</option>';
     } else {
-        echo '<option value="DESC">'.get_string('descending','data').'</option>';
+        echo '<option value="DESC">'.get_string('descending','mod_data').'</option>';
     }
     echo '</select>';
 
@@ -1809,10 +1809,10 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
     echo '&nbsp;<input type="hidden" name="filter" value="1" />';
     echo '&nbsp;<input type="checkbox" id="advancedcheckbox" name="advanced" value="1" ' . $checked . ' ' .
          'onchange="showHideAdvSearch(this.checked);" class="mx-1" />' .
-         '<label for="advancedcheckbox">' . get_string('advancedsearch', 'data') . '</label>';
+         '<label for="advancedcheckbox">' . get_string('advancedsearch', 'mod_data') . '</label>';
     echo '</div>';
     echo '<div id="advsearch-save-sec" class="ml-auto '. $regsearchclass . '">';
-    echo '&nbsp;<input type="submit" class="btn btn-secondary" value="' . get_string('savesettings', 'data') . '" />';
+    echo '&nbsp;<input type="submit" class="btn btn-secondary" value="' . get_string('savesettings', 'mod_data') . '" />';
     echo '</div>';
     echo '</div>';
     echo '<div>';
@@ -1895,10 +1895,10 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
     $fn = !empty($search_array[DATA_FIRSTNAME]->data) ? $search_array[DATA_FIRSTNAME]->data : '';
     $ln = !empty($search_array[DATA_LASTNAME]->data) ? $search_array[DATA_LASTNAME]->data : '';
     $patterns[]    = '/##firstname##/';
-    $replacement[] = '<label class="accesshide" for="u_fn">' . get_string('authorfirstname', 'data') . '</label>' .
+    $replacement[] = '<label class="accesshide" for="u_fn">' . get_string('authorfirstname', 'mod_data') . '</label>' .
                      '<input type="text" class="form-control" size="16" id="u_fn" name="u_fn" value="' . s($fn) . '" />';
     $patterns[]    = '/##lastname##/';
-    $replacement[] = '<label class="accesshide" for="u_ln">' . get_string('authorlastname', 'data') . '</label>' .
+    $replacement[] = '<label class="accesshide" for="u_ln">' . get_string('authorlastname', 'mod_data') . '</label>' .
                      '<input type="text" class="form-control" size="16" id="u_ln" name="u_ln" value="' . s($ln) . '" />';
 
     if (core_tag_tag::is_enabled('mod_data', 'data_records')) {
@@ -1917,8 +1917,8 @@ function data_print_preference_form($data, $perpage, $search, $sort='', $order='
     echo '</td></tr>';
 
     echo '<tr><td colspan="4"><br/>' .
-         '<input type="submit" class="btn btn-primary mr-1" value="' . get_string('savesettings', 'data') . '" />' .
-         '<input type="submit" class="btn btn-secondary" name="resetadv" value="' . get_string('resetsettings', 'data') . '" />' .
+         '<input type="submit" class="btn btn-primary mr-1" value="' . get_string('savesettings', 'mod_data') . '" />' .
+         '<input type="submit" class="btn btn-secondary" name="resetadv" value="' . get_string('resetsettings', 'mod_data') . '" />' .
          '</td></tr>';
     echo '</table>';
     echo '</div>';
@@ -2495,7 +2495,7 @@ abstract class data_preset_importer {
             }
 
             if (empty($fileobj)) {
-                throw new \moodle_exception('invalidpreset', 'data', '', $this->directory);
+                throw new \moodle_exception('invalidpreset', 'mod_data', '', $this->directory);
             }
         }
 
@@ -2589,7 +2589,7 @@ abstract class data_preset_importer {
                     continue;
                 }
                 if (array_key_exists($cid, $preservedfields)){
-                    throw new \moodle_exception('notinjectivemap', 'data');
+                    throw new \moodle_exception('notinjectivemap', 'mod_data');
                 }
                 else $preservedfields[$cid] = true;
             }
@@ -2627,7 +2627,7 @@ abstract class data_preset_importer {
                 }
             }
             if (!empty($missingfieldtypes)) {
-                echo $OUTPUT->notification(get_string('missingfieldtypeimport', 'data') . html_writer::alist($missingfieldtypes));
+                echo $OUTPUT->notification(get_string('missingfieldtypeimport', 'mod_data') . html_writer::alist($missingfieldtypes));
             }
         }
 
@@ -2782,10 +2782,10 @@ function data_preset_path($course, $userid, $shortname) {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function data_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'dataheader', get_string('modulenameplural', 'data'));
-    $mform->addElement('checkbox', 'reset_data', get_string('deleteallentries','data'));
+    $mform->addElement('header', 'dataheader', get_string('modulenameplural', 'mod_data'));
+    $mform->addElement('checkbox', 'reset_data', get_string('deleteallentries','mod_data'));
 
-    $mform->addElement('checkbox', 'reset_data_notenrolled', get_string('deletenotenrolled', 'data'));
+    $mform->addElement('checkbox', 'reset_data_notenrolled', get_string('deletenotenrolled', 'mod_data'));
     $mform->disabledIf('reset_data_notenrolled', 'reset_data', 'checked');
 
     $mform->addElement('checkbox', 'reset_data_ratings', get_string('deleteallratings'));
@@ -2794,7 +2794,7 @@ function data_reset_course_form_definition(&$mform) {
     $mform->addElement('checkbox', 'reset_data_comments', get_string('deleteallcomments'));
     $mform->disabledIf('reset_data_comments', 'reset_data', 'checked');
 
-    $mform->addElement('checkbox', 'reset_data_tags', get_string('removealldatatags', 'data'));
+    $mform->addElement('checkbox', 'reset_data_tags', get_string('removealldatatags', 'mod_data'));
     $mform->disabledIf('reset_data_tags', 'reset_data', 'checked');
 }
 
@@ -2842,7 +2842,7 @@ function data_reset_userdata($data) {
     require_once($CFG->libdir.'/filelib.php');
     require_once($CFG->dirroot.'/rating/lib.php');
 
-    $componentstr = get_string('modulenameplural', 'data');
+    $componentstr = get_string('modulenameplural', 'mod_data');
     $status = array();
 
     $allrecordssql = "SELECT r.id
@@ -2889,7 +2889,7 @@ function data_reset_userdata($data) {
             // remove all grades from gradebook
             data_reset_gradebook($data->courseid);
         }
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallentries', 'data'), 'error'=>false);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallentries', 'mod_data'), 'error'=>false);
     }
 
     // remove entries by users not enrolled into course
@@ -2932,7 +2932,7 @@ function data_reset_userdata($data) {
             }
         }
         $rs->close();
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deletenotenrolled', 'data'), 'error'=>false);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deletenotenrolled', 'mod_data'), 'error'=>false);
     }
 
     // remove all ratings
@@ -2976,7 +2976,7 @@ function data_reset_userdata($data) {
 
             }
         }
-        $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'data'), 'error' => false);
+        $status[] = array('component' => $componentstr, 'item' => get_string('tagsdeleted', 'mod_data'), 'error' => false);
     }
 
     // updating dates - shift may be negative too
@@ -3225,17 +3225,17 @@ function data_extend_navigation($navigation, $course, $module, $cm) {
     $canmanageentries = has_capability('mod/data:manageentries', context_module::instance($cm->id));
 
     if ($data->entriesleft = data_get_entries_left_to_add($data, $numentries, $canmanageentries)) {
-        $entriesnode = $navigation->add(get_string('entrieslefttoadd', 'data', $data));
+        $entriesnode = $navigation->add(get_string('entrieslefttoadd', 'mod_data', $data));
         $entriesnode->add_class('note');
     }
 
-    $navigation->add(get_string('list', 'data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance)));
+    $navigation->add(get_string('list', 'mod_data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance)));
     if (!empty($rid)) {
-        $navigation->add(get_string('single', 'data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance, 'rid'=>$rid)));
+        $navigation->add(get_string('single', 'mod_data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance, 'rid'=>$rid)));
     } else {
-        $navigation->add(get_string('single', 'data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance, 'mode'=>'single')));
+        $navigation->add(get_string('single', 'mod_data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance, 'mode'=>'single')));
     }
-    $navigation->add(get_string('search', 'data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance, 'mode'=>'asearch')));
+    $navigation->add(get_string('search', 'mod_data'), new moodle_url('/mod/data/view.php', array('d'=>$cm->instance, 'mode'=>'asearch')));
 }
 
 /**
@@ -3255,9 +3255,9 @@ function data_extend_settings_navigation(settings_navigation $settings, navigati
     // Took out participation list here!
     if (data_user_can_add_entry($data, $currentgroup, $groupmode, $settings->get_page()->cm->context)) {
         if (empty($editentry)) { //TODO: undefined
-            $addstring = get_string('add', 'data');
+            $addstring = get_string('add', 'mod_data');
         } else {
-            $addstring = get_string('editentry', 'data');
+            $addstring = get_string('editentry', 'mod_data');
         }
         $addentrynode = $datanode->add($addstring,
             new moodle_url('/mod/data/edit.php', array('d' => $settings->get_page()->cm->instance)));
@@ -3267,12 +3267,12 @@ function data_extend_settings_navigation(settings_navigation $settings, navigati
     if (has_capability(DATA_CAP_EXPORT, $settings->get_page()->cm->context)) {
         // The capability required to Export database records is centrally defined in 'lib.php'
         // and should be weaker than those required to edit Templates, Fields and Presets.
-        $exportentriesnode = $datanode->add(get_string('exportentries', 'data'),
+        $exportentriesnode = $datanode->add(get_string('exportentries', 'mod_data'),
             new moodle_url('/mod/data/export.php', array('d' => $data->id)));
         $exportentriesnode->set_show_in_secondary_navigation(false);
     }
     if (has_capability('mod/data:manageentries', $settings->get_page()->cm->context)) {
-        $importentriesnode = $datanode->add(get_string('importentries', 'data'),
+        $importentriesnode = $datanode->add(get_string('importentries', 'mod_data'),
             new moodle_url('/mod/data/import.php', array('d' => $data->id)));
         $importentriesnode->set_show_in_secondary_navigation(false);
     }
@@ -3289,17 +3289,17 @@ function data_extend_settings_navigation(settings_navigation $settings, navigati
             $defaultemplate = 'singletemplate';
         }
 
-        $datanode->add(get_string('presets', 'data'), new moodle_url('/mod/data/preset.php', array('d' => $data->id)));
-        $datanode->add(get_string('fields', 'data'),
+        $datanode->add(get_string('presets', 'mod_data'), new moodle_url('/mod/data/preset.php', array('d' => $data->id)));
+        $datanode->add(get_string('fields', 'mod_data'),
             new moodle_url('/mod/data/field.php', array('d' => $data->id)));
-        $datanode->add(get_string('templates', 'data'),
+        $datanode->add(get_string('templates', 'mod_data'),
             new moodle_url('/mod/data/templates.php', array('d' => $data->id)));
     }
 
     if (!empty($CFG->enablerssfeeds) && !empty($CFG->data_enablerssfeeds) && $data->rssarticles > 0) {
         require_once("$CFG->libdir/rsslib.php");
 
-        $string = get_string('rsstype', 'data');
+        $string = get_string('rsstype', 'mod_data');
 
         $url = new moodle_url(rss_get_url($settings->get_page()->cm->context->id, $USER->id, 'mod_data', $data->id));
         $datanode->add($string, $url, settings_navigation::TYPE_SETTING, null, null, new pix_icon('i/rss', ''));
@@ -3398,7 +3398,7 @@ function data_comment_permissions($comment_param) {
         throw new comment_exception('invalidcommentitemid');
     }
     if (!$data = $DB->get_record('data', array('id'=>$record->dataid))) {
-        throw new comment_exception('invalidid', 'data');
+        throw new comment_exception('invalidid', 'mod_data');
     }
     if ($data->comments) {
         return array('post'=>true, 'view'=>true);
@@ -3433,7 +3433,7 @@ function data_comment_validate($comment_param) {
         throw new comment_exception('invalidcommentitemid');
     }
     if (!$data = $DB->get_record('data', array('id'=>$record->dataid))) {
-        throw new comment_exception('invalidid', 'data');
+        throw new comment_exception('invalidid', 'mod_data');
     }
     if (!$course = $DB->get_record('course', array('id'=>$data->course))) {
         throw new comment_exception('coursemisconf');
@@ -3442,13 +3442,13 @@ function data_comment_validate($comment_param) {
         throw new comment_exception('invalidcoursemodule');
     }
     if (!$data->comments) {
-        throw new comment_exception('commentsoff', 'data');
+        throw new comment_exception('commentsoff', 'mod_data');
     }
     $context = context_module::instance($cm->id);
 
     //check if approved
     if ($data->approval and !$record->approved and !data_isowner($record) and !has_capability('mod/data:approve', $context)) {
-        throw new comment_exception('notapprovederror', 'data');
+        throw new comment_exception('notapprovederror', 'mod_data');
     }
 
     // group access
@@ -3490,7 +3490,7 @@ function data_comment_validate($comment_param) {
  * @param stdClass $currentcontext Current context of block
  */
 function data_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-data-*'=>get_string('page-mod-data-x', 'data'));
+    $module_pagetype = array('mod-data-*'=>get_string('page-mod-data-x', 'mod_data'));
     return $module_pagetype;
 }
 
@@ -3872,7 +3872,7 @@ function data_process_submission(stdClass $mod, $fields, stdClass $datarecord) {
             if (!isset($result->fieldnotifications[$field->field->name])) {
                 $result->fieldnotifications[$field->field->name] = array();
             }
-            $result->fieldnotifications[$field->field->name][] = get_string('errormustsupplyvalue', 'data');
+            $result->fieldnotifications[$field->field->name][] = get_string('errormustsupplyvalue', 'mod_data');
             $requiredfieldsfilled = false;
         }
 
@@ -3886,7 +3886,7 @@ function data_process_submission(stdClass $mod, $fields, stdClass $datarecord) {
 
     if ($emptyform) {
         // The form is empty.
-        $result->generalnotifications[] = get_string('emptyaddform', 'data');
+        $result->generalnotifications[] = get_string('emptyaddform', 'mod_data');
     }
 
     $result->validated = $requiredfieldsfilled && !$emptyform && $fieldsvalidated;
@@ -4136,7 +4136,7 @@ function mod_data_core_calendar_provide_event_action(calendar_event $event,
     $actionable = (empty($cm->customdata['timeavailablefrom']) || $cm->customdata['timeavailablefrom'] <= $now);
 
     return $factory->create_instance(
-        get_string('add', 'data'),
+        get_string('add', 'mod_data'),
         new \moodle_url('/mod/data/view.php', array('id' => $cm->id)),
         1,
         $actionable
@@ -4204,7 +4204,7 @@ function mod_data_get_completion_active_rule_descriptions($cm) {
         switch ($key) {
             case 'completionentries':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionentriesdesc', 'data', $val);
+                    $descriptions[] = get_string('completionentriesdesc', 'mod_data', $val);
                 }
                 break;
             default:
@@ -4245,7 +4245,7 @@ function mod_data_core_calendar_get_valid_event_timestart_range(\calendar_event 
         if (!empty($instance->timeavailableto)) {
             $maxdate = [
                 $instance->timeavailableto,
-                get_string('openafterclose', 'data')
+                get_string('openafterclose', 'mod_data')
             ];
         }
     } else if ($event->eventtype == DATA_EVENT_TYPE_CLOSE) {
@@ -4254,7 +4254,7 @@ function mod_data_core_calendar_get_valid_event_timestart_range(\calendar_event 
         if (!empty($instance->timeavailablefrom)) {
             $mindate = [
                 $instance->timeavailablefrom,
-                get_string('closebeforeopen', 'data')
+                get_string('closebeforeopen', 'mod_data')
             ];
         }
     }
@@ -4335,7 +4335,7 @@ function mod_data_core_calendar_event_timestart_updated(\calendar_event $event, 
  * @return lang_string The event type lang string.
  */
 function mod_data_core_calendar_get_event_action_string(string $eventtype): string {
-    $modulename = get_string('modulename', 'data');
+    $modulename = get_string('modulename', 'mod_data');
 
     switch ($eventtype) {
         case DATA_EVENT_TYPE_OPEN:
@@ -4348,5 +4348,5 @@ function mod_data_core_calendar_get_event_action_string(string $eventtype): stri
             return get_string('requiresaction', 'calendar', $modulename);
     }
 
-    return get_string($identifier, 'data', $modulename);
+    return get_string($identifier, 'mod_data', $modulename);
 }

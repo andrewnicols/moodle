@@ -336,10 +336,10 @@ $ADMIN->add('modassignfolder', $settings);
 $settings = null;
 
 $ADMIN->add('modassignfolder', new admin_category('assignsubmissionplugins',
-    new lang_string('submissionplugins', 'assign'), !$module->is_enabled()));
+    new lang_string('submissionplugins', 'mod_assign'), !$module->is_enabled()));
 $ADMIN->add('assignsubmissionplugins', new assign_admin_page_manage_assign_plugins('assignsubmission'));
 $ADMIN->add('modassignfolder', new admin_category('assignfeedbackplugins',
-    new lang_string('feedbackplugins', 'assign'), !$module->is_enabled()));
+    new lang_string('feedbackplugins', 'mod_assign'), !$module->is_enabled()));
 $ADMIN->add('assignfeedbackplugins', new assign_admin_page_manage_assign_plugins('assignfeedback'));
 
 foreach (core_plugin_manager::instance()->get_plugins_of_type('assignsubmission') as $plugin) {

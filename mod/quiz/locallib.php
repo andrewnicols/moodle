@@ -101,7 +101,7 @@ function quiz_create_attempt(quiz_settings $quizobj, $attemptnumber, $lastattemp
 
     $quiz = $quizobj->get_quiz();
     if ($quiz->sumgrades < grade_calculator::ALMOST_ZERO && $quiz->grade > grade_calculator::ALMOST_ZERO) {
-        throw new moodle_exception('cannotstartgradesmismatch', 'quiz',
+        throw new moodle_exception('cannotstartgradesmismatch', 'mod_quiz',
                 new moodle_url('/mod/quiz/view.php', ['q' => $quiz->id]),
                     ['grade' => quiz_format_grade($quiz, $quiz->grade)]);
     }
@@ -116,7 +116,7 @@ function quiz_create_attempt(quiz_settings $quizobj, $attemptnumber, $lastattemp
     } else {
         // Build on last attempt.
         if (empty($lastattempt)) {
-            throw new \moodle_exception('cannotfindprevattempt', 'quiz');
+            throw new \moodle_exception('cannotfindprevattempt', 'mod_quiz');
         }
         $attempt = $lastattempt;
     }
@@ -230,7 +230,7 @@ function quiz_start_new_attempt($quizobj, $quba, $attempt, $attemptnumber, $time
             $questionid = $randomloader->get_next_filtered_question_id($filters);
 
             if ($questionid === null) {
-                throw new moodle_exception('notenoughrandomquestions', 'quiz',
+                throw new moodle_exception('notenoughrandomquestions', 'mod_quiz',
                                            $quizobj->view_url(), $questiondata);
             }
 
@@ -863,10 +863,10 @@ function quiz_get_attempt_usertime_sql($redundantwhereclauses = '') {
  */
 function quiz_get_grading_options() {
     return [
-        QUIZ_GRADEHIGHEST => get_string('gradehighest', 'quiz'),
-        QUIZ_GRADEAVERAGE => get_string('gradeaverage', 'quiz'),
-        QUIZ_ATTEMPTFIRST => get_string('attemptfirst', 'quiz'),
-        QUIZ_ATTEMPTLAST  => get_string('attemptlast', 'quiz')
+        QUIZ_GRADEHIGHEST => get_string('gradehighest', 'mod_quiz'),
+        QUIZ_GRADEAVERAGE => get_string('gradeaverage', 'mod_quiz'),
+        QUIZ_ATTEMPTFIRST => get_string('attemptfirst', 'mod_quiz'),
+        QUIZ_ATTEMPTLAST  => get_string('attemptlast', 'mod_quiz')
     ];
 }
 
@@ -886,9 +886,9 @@ function quiz_get_grading_option_name($option) {
  */
 function quiz_get_overdue_handling_options() {
     return [
-        'autosubmit'  => get_string('overduehandlingautosubmit', 'quiz'),
-        'graceperiod' => get_string('overduehandlinggraceperiod', 'quiz'),
-        'autoabandon' => get_string('overduehandlingautoabandon', 'quiz'),
+        'autosubmit'  => get_string('overduehandlingautosubmit', 'mod_quiz'),
+        'graceperiod' => get_string('overduehandlinggraceperiod', 'mod_quiz'),
+        'autoabandon' => get_string('overduehandlingautoabandon', 'mod_quiz'),
     ];
 }
 
@@ -898,9 +898,9 @@ function quiz_get_overdue_handling_options() {
  */
 function quiz_get_user_image_options() {
     return [
-        QUIZ_SHOWIMAGE_NONE  => get_string('shownoimage', 'quiz'),
-        QUIZ_SHOWIMAGE_SMALL => get_string('showsmallimage', 'quiz'),
-        QUIZ_SHOWIMAGE_LARGE => get_string('showlargeimage', 'quiz'),
+        QUIZ_SHOWIMAGE_NONE  => get_string('shownoimage', 'mod_quiz'),
+        QUIZ_SHOWIMAGE_SMALL => get_string('showsmallimage', 'mod_quiz'),
+        QUIZ_SHOWIMAGE_LARGE => get_string('showlargeimage', 'mod_quiz'),
     ];
 }
 
@@ -948,10 +948,10 @@ function quiz_get_user_timeclose($courseid) {
  */
 function quiz_questions_per_page_options() {
     $pageoptions = [];
-    $pageoptions[0] = get_string('neverallononepage', 'quiz');
-    $pageoptions[1] = get_string('everyquestion', 'quiz');
+    $pageoptions[0] = get_string('neverallononepage', 'mod_quiz');
+    $pageoptions[1] = get_string('everyquestion', 'mod_quiz');
     for ($i = 2; $i <= QUIZ_MAX_QPP_OPTION; ++$i) {
-        $pageoptions[$i] = get_string('everynquestions', 'quiz', $i);
+        $pageoptions[$i] = get_string('everynquestions', 'mod_quiz', $i);
     }
     return $pageoptions;
 }
@@ -964,13 +964,13 @@ function quiz_questions_per_page_options() {
 function quiz_attempt_state_name($state) {
     switch ($state) {
         case quiz_attempt::IN_PROGRESS:
-            return get_string('stateinprogress', 'quiz');
+            return get_string('stateinprogress', 'mod_quiz');
         case quiz_attempt::OVERDUE:
-            return get_string('stateoverdue', 'quiz');
+            return get_string('stateoverdue', 'mod_quiz');
         case quiz_attempt::FINISHED:
-            return get_string('statefinished', 'quiz');
+            return get_string('statefinished', 'mod_quiz');
         case quiz_attempt::ABANDONED:
-            return get_string('stateabandoned', 'quiz');
+            return get_string('stateabandoned', 'mod_quiz');
         default:
             throw new coding_exception('Unknown quiz attempt state.');
     }
@@ -1246,18 +1246,18 @@ function quiz_send_confirmation($recipient, $a, $studentisonline) {
 
     $eventdata->userfrom          = core_user::get_noreply_user();
     $eventdata->userto            = $recipient;
-    $eventdata->subject           = get_string('emailconfirmsubject', 'quiz', $a);
+    $eventdata->subject           = get_string('emailconfirmsubject', 'mod_quiz', $a);
 
     if ($studentisonline) {
-        $eventdata->fullmessage = get_string('emailconfirmbody', 'quiz', $a);
+        $eventdata->fullmessage = get_string('emailconfirmbody', 'mod_quiz', $a);
     } else {
-        $eventdata->fullmessage = get_string('emailconfirmbodyautosubmit', 'quiz', $a);
+        $eventdata->fullmessage = get_string('emailconfirmbodyautosubmit', 'mod_quiz', $a);
     }
 
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml   = '';
 
-    $eventdata->smallmessage      = get_string('emailconfirmsmall', 'quiz', $a);
+    $eventdata->smallmessage      = get_string('emailconfirmsmall', 'mod_quiz', $a);
     $eventdata->contexturl        = $a->quizurl;
     $eventdata->contexturlname    = $a->quizname;
     $eventdata->customdata        = [
@@ -1296,12 +1296,12 @@ function quiz_send_notification($recipient, $submitter, $a) {
 
     $eventdata->userfrom          = $submitter;
     $eventdata->userto            = $recipient;
-    $eventdata->subject           = get_string('emailnotifysubject', 'quiz', $a);
-    $eventdata->fullmessage       = get_string('emailnotifybody', 'quiz', $a);
+    $eventdata->subject           = get_string('emailnotifysubject', 'mod_quiz', $a);
+    $eventdata->fullmessage       = get_string('emailnotifybody', 'mod_quiz', $a);
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml   = '';
 
-    $eventdata->smallmessage      = get_string('emailnotifysmall', 'quiz', $a);
+    $eventdata->smallmessage      = get_string('emailnotifysmall', 'mod_quiz', $a);
     $eventdata->contexturl        = $a->quizreviewurl;
     $eventdata->contexturlname    = $a->quizname;
     $userpicture = new user_picture($submitter);
@@ -1477,12 +1477,12 @@ function quiz_send_overdue_message($attemptobj) {
 
     $eventdata->userfrom          = core_user::get_noreply_user();
     $eventdata->userto            = $submitter;
-    $eventdata->subject           = get_string('emailoverduesubject', 'quiz', $a);
-    $eventdata->fullmessage       = get_string('emailoverduebody', 'quiz', $a);
+    $eventdata->subject           = get_string('emailoverduesubject', 'mod_quiz', $a);
+    $eventdata->fullmessage       = get_string('emailoverduebody', 'mod_quiz', $a);
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml   = '';
 
-    $eventdata->smallmessage      = get_string('emailoverduesmall', 'quiz', $a);
+    $eventdata->smallmessage      = get_string('emailoverduesmall', 'mod_quiz', $a);
     $eventdata->contexturl        = $a->quizurl;
     $eventdata->contexturlname    = $a->quizname;
     $eventdata->customdata        = [
@@ -1557,8 +1557,8 @@ function quiz_send_notify_manual_graded_message(quiz_attempt $attemptobj, object
     $eventdata->userfrom = core_user::get_noreply_user();
     $eventdata->userto = $userto;
 
-    $eventdata->subject = get_string('emailmanualgradedsubject', 'quiz', $a);
-    $eventdata->fullmessage = get_string('emailmanualgradedbody', 'quiz', $a);
+    $eventdata->subject = get_string('emailmanualgradedsubject', 'mod_quiz', $a);
+    $eventdata->fullmessage = get_string('emailmanualgradedbody', 'mod_quiz', $a);
     $eventdata->fullmessageformat = FORMAT_PLAIN;
     $eventdata->fullmessagehtml = '';
 
@@ -1979,7 +1979,7 @@ function quiz_validate_new_attempt(quiz_settings $quizobj, access_manager $acces
             if ($redirect) {
                 redirect($quizobj->review_url($lastattempt->id));
             } else {
-                throw new moodle_exception('attemptalreadyclosed', 'quiz', $quizobj->view_url());
+                throw new moodle_exception('attemptalreadyclosed', 'mod_quiz', $quizobj->view_url());
             }
         }
 
@@ -2122,12 +2122,12 @@ function quiz_create_attempt_handling_errors($attemptid, $cmid = null) {
             $continuelink = new moodle_url('/mod/quiz/view.php', ['id' => $cmid]);
             $context = context_module::instance($cm->id);
             if (has_capability('mod/quiz:preview', $context)) {
-                throw new moodle_exception('attempterrorcontentchange', 'quiz', $continuelink);
+                throw new moodle_exception('attempterrorcontentchange', 'mod_quiz', $continuelink);
             } else {
-                throw new moodle_exception('attempterrorcontentchangeforuser', 'quiz', $continuelink);
+                throw new moodle_exception('attempterrorcontentchangeforuser', 'mod_quiz', $continuelink);
             }
         } else {
-            throw new moodle_exception('attempterrorinvalid', 'quiz');
+            throw new moodle_exception('attempterrorinvalid', 'mod_quiz');
         }
     }
     if (!empty($cmid) && $attempobj->get_cmid() != $cmid) {

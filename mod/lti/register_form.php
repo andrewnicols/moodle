@@ -46,21 +46,21 @@ class mod_lti_register_types_form extends moodleform {
 
         $mform    =& $this->_form;
 
-        $mform->addElement('header', 'setup', get_string('registration_options', 'lti'));
+        $mform->addElement('header', 'setup', get_string('registration_options', 'mod_lti'));
 
         // Tool Provider name.
 
         $strrequired = get_string('required');
-        $mform->addElement('text', 'lti_registrationname', get_string('registrationname', 'lti'));
+        $mform->addElement('text', 'lti_registrationname', get_string('registrationname', 'mod_lti'));
         $mform->setType('lti_registrationname', PARAM_TEXT);
-        $mform->addHelpButton('lti_registrationname', 'registrationname', 'lti');
+        $mform->addHelpButton('lti_registrationname', 'registrationname', 'mod_lti');
         $mform->addRule('lti_registrationname', $strrequired, 'required', null, 'client');
 
         // Registration URL.
 
-        $mform->addElement('text', 'lti_registrationurl', get_string('registrationurl', 'lti'), array('size' => '64'));
+        $mform->addElement('text', 'lti_registrationurl', get_string('registrationurl', 'mod_lti'), array('size' => '64'));
         $mform->setType('lti_registrationurl', PARAM_URL);
-        $mform->addHelpButton('lti_registrationurl', 'registrationurl', 'lti');
+        $mform->addHelpButton('lti_registrationurl', 'registrationurl', 'mod_lti');
         $mform->addRule('lti_registrationurl', $strrequired, 'required', null, 'client');
 
         // LTI Capabilities.
@@ -68,10 +68,10 @@ class mod_lti_register_types_form extends moodleform {
         $options = array_keys(lti_get_capabilities());
         natcasesort($options);
         $attributes = array( 'multiple' => 1, 'size' => min(count($options), 10) );
-        $mform->addElement('select', 'lti_capabilities', get_string('capabilities', 'lti'),
+        $mform->addElement('select', 'lti_capabilities', get_string('capabilities', 'mod_lti'),
             array_combine($options, $options), $attributes);
         $mform->setType('lti_capabilities', PARAM_TEXT);
-        $mform->addHelpButton('lti_capabilities', 'capabilities', 'lti');
+        $mform->addHelpButton('lti_capabilities', 'capabilities', 'mod_lti');
         $mform->addRule('lti_capabilities', $strrequired, 'required', null, 'client');
 
         // LTI Services.
@@ -82,9 +82,9 @@ class mod_lti_register_types_form extends moodleform {
             $options[$service->get_id()] = $service->get_name();
         }
         $attributes = array( 'multiple' => 1, 'size' => min(count($options), 10) );
-        $mform->addElement('select', 'lti_services', get_string('services', 'lti'), $options, $attributes);
+        $mform->addElement('select', 'lti_services', get_string('services', 'mod_lti'), $options, $attributes);
         $mform->setType('lti_services', PARAM_TEXT);
-        $mform->addHelpButton('lti_services', 'services', 'lti');
+        $mform->addHelpButton('lti_services', 'services', 'mod_lti');
         $mform->addRule('lti_services', $strrequired, 'required', null, 'client');
 
         $mform->addElement('hidden', 'toolproxyid');

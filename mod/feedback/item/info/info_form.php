@@ -32,22 +32,22 @@ class feedback_info_form extends feedback_item_form {
 
         $mform =& $this->_form;
 
-        $mform->addElement('header', 'general', get_string($this->type, 'feedback'));
+        $mform->addElement('header', 'general', get_string($this->type, 'mod_feedback'));
         $mform->addElement('hidden', 'required', 0);
         $mform->setType('required', PARAM_INT);
 
         $mform->addElement('text',
                             'name',
-                            get_string('item_name', 'feedback'),
+                            get_string('item_name', 'mod_feedback'),
                             array('size'=>FEEDBACK_ITEM_NAME_TEXTBOX_SIZE, 'maxlength'=>255));
         $mform->addElement('text',
                             'label',
-                            get_string('item_label', 'feedback'),
+                            get_string('item_label', 'mod_feedback'),
                             array('size'=>FEEDBACK_ITEM_LABEL_TEXTBOX_SIZE, 'maxlength'=>255));
 
         $this->infotype = &$mform->addElement('select',
                                               'presentation',
-                                              get_string('infotype', 'feedback'),
+                                              get_string('infotype', 'mod_feedback'),
                                               $presentationoptions);
 
         parent::definition();

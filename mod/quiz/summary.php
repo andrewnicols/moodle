@@ -46,7 +46,7 @@ if ($attemptobj->get_userid() != $USER->id) {
     if ($attemptobj->has_capability('mod/quiz:viewreports')) {
         redirect($attemptobj->review_url(null));
     } else {
-        throw new moodle_exception('notyourattempt', 'quiz', $attemptobj->view_url());
+        throw new moodle_exception('notyourattempt', 'mod_quiz', $attemptobj->view_url());
     }
 }
 
@@ -66,7 +66,7 @@ $accessmanager->setup_attempt_page($PAGE);
 $output = $PAGE->get_renderer('mod_quiz');
 $messages = $accessmanager->prevent_access();
 if (!$attemptobj->is_preview_user() && $messages) {
-    throw new \moodle_exception('attempterror', 'quiz', $attemptobj->view_url(),
+    throw new \moodle_exception('attempterror', 'mod_quiz', $attemptobj->view_url(),
             $output->access_messages($messages));
 }
 if ($accessmanager->is_preflight_check_required($attemptobj->get_attemptid())) {
@@ -94,7 +94,7 @@ $navbc = $attemptobj->get_navigation_panel($output, navigation_panel_attempt::cl
 $regions = $PAGE->blocks->get_regions();
 $PAGE->blocks->add_fake_block($navbc, reset($regions));
 
-$PAGE->navbar->add(get_string('summaryofattempt', 'quiz'));
+$PAGE->navbar->add(get_string('summaryofattempt', 'mod_quiz'));
 $PAGE->set_title($attemptobj->summary_page_title());
 $PAGE->set_heading($attemptobj->get_course()->fullname);
 $PAGE->activityheader->disable();

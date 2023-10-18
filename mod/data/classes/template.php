@@ -255,9 +255,9 @@ class template {
         return [
             'edit' => new pix_icon('t/editinline', get_string('edit'), '', $attrs),
             'delete' => new pix_icon('t/delete', get_string('delete'), '', $attrs),
-            'more' => new pix_icon('t/preview', get_string('more', 'data'), '', $attrs),
-            'approve' => new pix_icon('t/approve', get_string('approve', 'data'), '', $attrs),
-            'disapprove' => new pix_icon('t/block', get_string('disapprove', 'data'), '', $attrs),
+            'more' => new pix_icon('t/preview', get_string('more', 'mod_data'), '', $attrs),
+            'approve' => new pix_icon('t/approve', get_string('approve', 'mod_data'), '', $attrs),
+            'disapprove' => new pix_icon('t/block', get_string('disapprove', 'mod_data'), '', $attrs),
         ];
     }
 
@@ -647,7 +647,7 @@ class template {
         if (!$this->instance->approval) {
             return '';
         }
-        return ($entry->approved) ? '' : html_writer::div(get_string('notapproved', 'data'), 'mod-data-approval-status-badge');
+        return ($entry->approved) ? '' : html_writer::div(get_string('notapproved', 'mod_data'), 'mod-data-approval-status-badge');
     }
 
     /**
@@ -992,7 +992,7 @@ class template {
             if ($this->canmanageentries) { // Display notification for users that can manage entries.
                 $errors .= $renderer->notification(get_string(
                     'missingfieldtype',
-                    'data',
+                    'mod_data',
                     (object)['name' => $field->field->name]
                 ));
             }

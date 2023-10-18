@@ -58,7 +58,7 @@ $PAGE->activityheader->set_attrs([
     "description" => ""
 ]);
 
-$PAGE->navbar->add(get_string('assessingsubmission', 'workshop'));
+$PAGE->navbar->add(get_string('assessingsubmission', 'mod_workshop'));
 $PAGE->set_secondary_active_tab('modulepage');
 
 $cansetassessmentweight = has_capability('mod/workshop:allocate', $workshop->context);
@@ -80,7 +80,7 @@ if ($assessmenteditable) {
     list($assessed, $notice) = $workshop->check_examples_assessed_before_assessment($assessment->reviewerid);
     if (!$assessed) {
         echo $output->header();
-        notice(get_string($notice, 'workshop'), new moodle_url('/mod/workshop/view.php', array('id' => $cm->id)));
+        notice(get_string($notice, 'mod_workshop'), new moodle_url('/mod/workshop/view.php', array('id' => $cm->id)));
         echo $output->footer();
         exit;
     }
@@ -161,7 +161,7 @@ if ($canoverridegrades or $cansetassessmentweight) {
 // output starts here
 $output = $PAGE->get_renderer('mod_workshop');      // workshop renderer
 echo $output->header();
-echo $output->heading(get_string('assessedsubmission', 'workshop'), 3);
+echo $output->heading(get_string('assessedsubmission', 'mod_workshop'), 3);
 
 $submission = $workshop->get_submission_by_id($submission->id);     // reload so can be passed to the renderer
 echo $output->render($workshop->prepare_submission($submission, has_capability('mod/workshop:viewauthornames', $workshop->context)));
@@ -171,7 +171,7 @@ echo $output->render($workshop->prepare_submission($submission, has_capability('
 if (trim($workshop->instructreviewers)) {
     $instructions = file_rewrite_pluginfile_urls($workshop->instructreviewers, 'pluginfile.php', $PAGE->context->id,
         'mod_workshop', 'instructreviewers', null, workshop::instruction_editors_options($PAGE->context));
-    print_collapsible_region_start('', 'workshop-viewlet-instructreviewers', get_string('instructreviewers', 'workshop'),
+    print_collapsible_region_start('', 'workshop-viewlet-instructreviewers', get_string('instructreviewers', 'mod_workshop'),
             'workshop-viewlet-instructreviewers-collapsed');
     echo $output->box(format_text($instructions, $workshop->instructreviewersformat, array('overflowdiv'=>true)), array('generalbox', 'instructions'));
     print_collapsible_region_end();
@@ -188,7 +188,7 @@ if ($isreviewer) {
         'showweight'    => true,
     );
     $assessment = $workshop->prepare_assessment($assessment, $mform, $options);
-    $assessment->title = get_string('assessmentbyyourself', 'workshop');
+    $assessment->title = get_string('assessmentbyyourself', 'mod_workshop');
     echo $output->render($assessment);
 
 } else {

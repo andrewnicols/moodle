@@ -120,18 +120,18 @@ class mod_workshop_renderer extends plugin_renderer_base {
             $a                  = new stdclass();
             $a->name            = fullname($author);
             $a->url             = $userurl->out();
-            $byfullname         = get_string('byfullname', 'workshop', $a);
+            $byfullname         = get_string('byfullname', 'mod_workshop', $a);
             $oo  = $this->output->container($userpic, 'picture');
             $oo .= $this->output->container($byfullname, 'fullname');
 
             $o .= $this->output->container($oo, 'author');
         }
 
-        $created = get_string('userdatecreated', 'workshop', userdate($submission->timecreated));
+        $created = get_string('userdatecreated', 'mod_workshop', userdate($submission->timecreated));
         $o .= $this->output->container($created, 'userdate created');
 
         if ($submission->timemodified > $submission->timecreated) {
-            $modified = get_string('userdatemodified', 'workshop', userdate($submission->timemodified));
+            $modified = get_string('userdatemodified', 'mod_workshop', userdate($submission->timemodified));
             $o .= $this->output->container($modified, 'userdate modified');
         }
 
@@ -178,11 +178,11 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
         if ($summary->status == 'notgraded') {
             $classes    .= ' notgraded';
-            $gradestatus = $this->output->container(get_string('nogradeyet', 'workshop'), 'grade-status');
+            $gradestatus = $this->output->container(get_string('nogradeyet', 'mod_workshop'), 'grade-status');
 
         } else if ($summary->status == 'graded') {
             $classes    .= ' graded';
-            $gradestatus = $this->output->container(get_string('alreadygraded', 'workshop'), 'grade-status');
+            $gradestatus = $this->output->container(get_string('alreadygraded', 'mod_workshop'), 'grade-status');
         }
 
         $o .= $this->output->container_start($classes);  // main wrapper
@@ -198,18 +198,18 @@ class mod_workshop_renderer extends plugin_renderer_base {
             $a                  = new stdClass();
             $a->name            = fullname($author);
             $a->url             = $userurl->out();
-            $byfullname         = get_string('byfullname', 'workshop', $a);
+            $byfullname         = get_string('byfullname', 'mod_workshop', $a);
 
             $oo  = $this->output->container($userpic, 'picture');
             $oo .= $this->output->container($byfullname, 'fullname');
             $o  .= $this->output->container($oo, 'author');
         }
 
-        $created = get_string('userdatecreated', 'workshop', userdate($summary->timecreated));
+        $created = get_string('userdatecreated', 'mod_workshop', userdate($summary->timecreated));
         $o .= $this->output->container($created, 'userdate created');
 
         if ($summary->timemodified > $summary->timecreated) {
-            $modified = get_string('userdatemodified', 'workshop', userdate($summary->timemodified));
+            $modified = get_string('userdatemodified', 'mod_workshop', userdate($summary->timemodified));
             $o .= $this->output->container($modified, 'userdate modified');
         }
 
@@ -269,9 +269,9 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
         // additional info
         if ($summary->status == 'notgraded') {
-            $o .= $this->output->container(get_string('nogradeyet', 'workshop'), 'example-info nograde');
+            $o .= $this->output->container(get_string('nogradeyet', 'mod_workshop'), 'example-info nograde');
         } else {
-            $o .= $this->output->container(get_string('gradeinfo', 'workshop' , $summary->gradeinfo), 'example-info grade');
+            $o .= $this->output->container(get_string('gradeinfo', 'mod_workshop' , $summary->gradeinfo), 'example-info grade');
         }
 
         // button to assess
@@ -298,9 +298,9 @@ class mod_workshop_renderer extends plugin_renderer_base {
             'aria-labelledby' => 'mod_workshop-userplanheading',
             'aria-describedby' => 'mod_workshop-userplanaccessibilitytitle',
         ));
-        $o .= html_writer::span(get_string('userplanaccessibilitytitle', 'workshop', $numberofphases),
+        $o .= html_writer::span(get_string('userplanaccessibilitytitle', 'mod_workshop', $numberofphases),
             'accesshide', array('id' => 'mod_workshop-userplanaccessibilitytitle'));
-        $o .= html_writer::link('#mod_workshop-userplancurrenttasks', get_string('userplanaccessibilityskip', 'workshop'),
+        $o .= html_writer::link('#mod_workshop-userplancurrenttasks', get_string('userplanaccessibilityskip', 'mod_workshop'),
             array('class' => 'accesshide'));
         foreach ($plan->phases as $phasecode => $phase) {
             $o .= html_writer::start_tag('dl', array('class' => 'phase'));
@@ -309,7 +309,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
             if ($phase->active) {
                 // Mark the section as the current one.
                 $icon = $this->output->pix_icon('i/marked', '', 'moodle', ['role' => 'presentation']);
-                $actions .= get_string('userplancurrentphase', 'workshop').' '.$icon;
+                $actions .= get_string('userplancurrentphase', 'mod_workshop').' '.$icon;
 
             } else {
                 // Display a control widget to switch to the given phase or mark the phase as the current one.
@@ -369,7 +369,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
             if ($message = $result->get_message()) {
                 $message = new workshop_message($message, workshop_message::TYPE_ERROR);
             } else {
-                $message = new workshop_message(get_string('allocationerror', 'workshop'), workshop_message::TYPE_ERROR);
+                $message = new workshop_message(get_string('allocationerror', 'mod_workshop'), workshop_message::TYPE_ERROR);
             }
             break;
 
@@ -377,7 +377,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
             if ($message = $result->get_message()) {
                 $message = new workshop_message($message, workshop_message::TYPE_INFO);
             } else {
-                $message = new workshop_message(get_string('allocationconfigured', 'workshop'), workshop_message::TYPE_INFO);
+                $message = new workshop_message(get_string('allocationconfigured', 'mod_workshop'), workshop_message::TYPE_INFO);
             }
             break;
 
@@ -385,7 +385,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
             if ($message = $result->get_message()) {
                 $message = new workshop_message($message, workshop_message::TYPE_OK);
             } else {
-                $message = new workshop_message(get_string('allocationdone', 'workshop'), workshop_message::TYPE_OK);
+                $message = new workshop_message(get_string('allocationdone', 'mod_workshop'), workshop_message::TYPE_OK);
             }
             break;
 
@@ -445,9 +445,9 @@ class mod_workshop_renderer extends plugin_renderer_base {
             $sortbyname = $sortbyfirstname . ' / ' . $sortbylastname;
         }
 
-        $sortbysubmisstiontitle = $this->helper_sortable_heading(get_string('submission', 'workshop'), 'submissiontitle',
+        $sortbysubmisstiontitle = $this->helper_sortable_heading(get_string('submission', 'mod_workshop'), 'submissiontitle',
                 $options->sortby, $options->sorthow);
-        $sortbysubmisstionlastmodified = $this->helper_sortable_heading(get_string('submissionlastmodified', 'workshop'),
+        $sortbysubmisstionlastmodified = $this->helper_sortable_heading(get_string('submissionlastmodified', 'mod_workshop'),
                 'submissionmodified', $options->sortby, $options->sorthow);
         $sortbysubmisstion = $sortbysubmisstiontitle . ' / ' . $sortbysubmisstionlastmodified;
 
@@ -457,14 +457,14 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
         // If we are in submission phase ignore the following headers (columns).
         if ($options->workshopphase != workshop::PHASE_SUBMISSION) {
-            $table->head[] = $this->helper_sortable_heading(get_string('receivedgrades', 'workshop'));
+            $table->head[] = $this->helper_sortable_heading(get_string('receivedgrades', 'mod_workshop'));
             if ($options->showsubmissiongrade) {
-                $table->head[] = $this->helper_sortable_heading(get_string('submissiongradeof', 'workshop', $data->maxgrade),
+                $table->head[] = $this->helper_sortable_heading(get_string('submissiongradeof', 'mod_workshop', $data->maxgrade),
                         'submissiongrade', $options->sortby, $options->sorthow);
             }
-            $table->head[] = $this->helper_sortable_heading(get_string('givengrades', 'workshop'));
+            $table->head[] = $this->helper_sortable_heading(get_string('givengrades', 'mod_workshop'));
             if ($options->showgradinggrade) {
-                $table->head[] = $this->helper_sortable_heading(get_string('gradinggradeof', 'workshop', $data->maxgradinggrade),
+                $table->head[] = $this->helper_sortable_heading(get_string('gradinggradeof', 'mod_workshop', $data->maxgradinggrade),
                         'gradinggrade', $options->sortby, $options->sorthow);
             }
         }
@@ -530,7 +530,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     $assessment = self::array_nth($participant->reviewedby, $idx);
                     $cell = new html_table_cell();
                     $cell->text = $this->helper_grading_report_assessment($assessment, $options->showreviewernames, $userinfo,
-                            get_string('gradereceivedfrom', 'workshop'));
+                            get_string('gradereceivedfrom', 'mod_workshop'));
                     $cell->rowspan = $spanreceived;
                     $cell->attributes['class'] = 'receivedgrade';
                     if (is_null($assessment) or is_null($assessment->grade)) {
@@ -554,7 +554,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     $assessment = self::array_nth($participant->reviewerof, $idx);
                     $cell = new html_table_cell();
                     $cell->text = $this->helper_grading_report_assessment($assessment, $options->showauthornames, $userinfo,
-                            get_string('gradegivento', 'workshop'));
+                            get_string('gradegivento', 'mod_workshop'));
                     $cell->rowspan = $spangiven;
                     $cell->attributes['class'] = 'givengrade';
                     if (is_null($assessment) or is_null($assessment->grade)) {
@@ -611,7 +611,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
         $o  = '';    // output HTML code
         $o .= $this->output->container_start('feedback feedbackforauthor');
         $o .= $this->output->container_start('header');
-        $o .= $this->output->heading(get_string('feedbackby', 'workshop', s(fullname($feedback->get_provider()))), 3, 'title');
+        $o .= $this->output->heading(get_string('feedbackby', 'mod_workshop', s(fullname($feedback->get_provider()))), 3, 'title');
 
         $userpic = $this->output->user_picture($feedback->get_provider(), array('courseid' => $this->page->course->id, 'size' => 32));
         $o .= $this->output->container($userpic, 'picture');
@@ -646,7 +646,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
         if (!empty($assessment->title)) {
             $title = s($assessment->title);
         } else {
-            $title = get_string('assessment', 'workshop');
+            $title = get_string('assessment', 'mod_workshop');
         }
         if (($assessment->url instanceof moodle_url) and ($this->page->url != $assessment->url)) {
             $o .= $this->output->container(html_writer::link($assessment->url, $title), 'title');
@@ -663,7 +663,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
             $a          = new stdClass();
             $a->name    = fullname($reviewer);
             $a->url     = $userurl->out();
-            $byfullname = get_string('assessmentby', 'workshop', $a);
+            $byfullname = get_string('assessmentby', 'mod_workshop', $a);
             $oo         = $this->output->container($userpic, 'picture');
             $oo        .= $this->output->container($byfullname, 'fullname');
 
@@ -672,7 +672,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
         if (is_null($assessment->realgrade)) {
             $o .= $this->output->container(
-                get_string('notassessed', 'workshop'),
+                get_string('notassessed', 'mod_workshop'),
                 'grade nograde'
             );
         } else {
@@ -680,13 +680,13 @@ class mod_workshop_renderer extends plugin_renderer_base {
             $a->max         = $assessment->maxgrade;
             $a->received    = $assessment->realgrade;
             $o .= $this->output->container(
-                get_string('gradeinfo', 'workshop', $a),
+                get_string('gradeinfo', 'mod_workshop', $a),
                 'grade'
             );
 
             if (!is_null($assessment->weight) and $assessment->weight != 1) {
                 $o .= $this->output->container(
-                    get_string('weightinfo', 'workshop', $assessment->weight),
+                    get_string('weightinfo', 'mod_workshop', $assessment->weight),
                     'weight'
                 );
             }
@@ -702,7 +702,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
         if (!is_null($assessment->form)) {
             $o .= print_collapsible_region_start('assessment-form-wrapper', uniqid('workshop-assessment'),
-                    get_string('assessmentform', 'workshop'), 'workshop-viewlet-assessmentform-collapsed', false, true);
+                    get_string('assessmentform', 'mod_workshop'), 'workshop-viewlet-assessmentform-collapsed', false, true);
             $o .= $this->output->container(self::moodleform($assessment->form), 'assessment-form');
             $o .= print_collapsible_region_end(true);
 
@@ -792,7 +792,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
         $o = $this->output->box($o, 'overallfeedback');
         $o = print_collapsible_region($o, 'overall-feedback-wrapper', uniqid('workshop-overall-feedback'),
-                get_string('overallfeedback', 'workshop'), 'workshop-viewlet-overallfeedback-collapsed', false, true);
+                get_string('overallfeedback', 'mod_workshop'), 'workshop-viewlet-overallfeedback-collapsed', false, true);
 
         return $o;
     }
@@ -974,15 +974,15 @@ class mod_workshop_renderer extends plugin_renderer_base {
             $icon = null;
             if ($task->completed === true) {
                 $classes .= ' completed';
-                $accessibilitytext .= get_string('taskdone', 'workshop') . ' ';
+                $accessibilitytext .= get_string('taskdone', 'mod_workshop') . ' ';
             } else if ($task->completed === false) {
                 $classes .= ' fail';
-                $accessibilitytext .= get_string('taskfail', 'workshop') . ' ';
+                $accessibilitytext .= get_string('taskfail', 'mod_workshop') . ' ';
             } else if ($task->completed === 'info') {
                 $classes .= ' info';
-                $accessibilitytext .= get_string('taskinfo', 'workshop') . ' ';
+                $accessibilitytext .= get_string('taskinfo', 'mod_workshop') . ' ';
             } else {
-                $accessibilitytext .= get_string('tasktodo', 'workshop') . ' ';
+                $accessibilitytext .= get_string('tasktodo', 'mod_workshop') . ' ';
             }
             if (is_null($task->link)) {
                 $title = html_writer::tag('span', $accessibilitytext, array('class' => 'accesshide'));
@@ -1021,13 +1021,13 @@ class mod_workshop_renderer extends plugin_renderer_base {
             if ($sortby !== $sortid or $sorthow !== 'ASC') {
                 $url = new moodle_url($this->page->url);
                 $url->params(array('sortby' => $sortid, 'sorthow' => 'ASC'));
-                $out .= $this->output->action_icon($url, new pix_icon('t/sort_asc', get_string('sortasc', 'workshop')),
+                $out .= $this->output->action_icon($url, new pix_icon('t/sort_asc', get_string('sortasc', 'mod_workshop')),
                     null, array('class' => 'iconsort sort asc'));
             }
             if ($sortby !== $sortid or $sorthow !== 'DESC') {
                 $url = new moodle_url($this->page->url);
                 $url->params(array('sortby' => $sortid, 'sorthow' => 'DESC'));
-                $out .= $this->output->action_icon($url, new pix_icon('t/sort_desc', get_string('sortdesc', 'workshop')),
+                $out .= $this->output->action_icon($url, new pix_icon('t/sort_desc', get_string('sortdesc', 'mod_workshop')),
                     null, array('class' => 'iconsort sort desc'));
             }
         }
@@ -1055,13 +1055,13 @@ class mod_workshop_renderer extends plugin_renderer_base {
         global $CFG;
 
         if (is_null($participant->submissionid)) {
-            $out = $this->output->container(get_string('nosubmissionfound', 'workshop'), 'info');
+            $out = $this->output->container(get_string('nosubmissionfound', 'mod_workshop'), 'info');
         } else {
             $url = new moodle_url('/mod/workshop/submission.php',
                                   array('cmid' => $this->page->context->instanceid, 'id' => $participant->submissionid));
             $out = html_writer::link($url, format_string($participant->submissiontitle), array('class'=>'title'));
 
-            $lastmodified = get_string('userdatemodified', 'workshop', userdate($participant->submissionmodified));
+            $lastmodified = get_string('userdatemodified', 'mod_workshop', userdate($participant->submissionmodified));
             $out .= html_writer::tag('div', $lastmodified, array('class' => 'lastmodified'));
         }
 
@@ -1079,25 +1079,25 @@ class mod_workshop_renderer extends plugin_renderer_base {
         global $CFG;
 
         if (is_null($assessment)) {
-            return get_string('nullgrade', 'workshop');
+            return get_string('nullgrade', 'mod_workshop');
         }
         $a = new stdclass();
-        $a->grade = is_null($assessment->grade) ? get_string('nullgrade', 'workshop') : $assessment->grade;
-        $a->gradinggrade = is_null($assessment->gradinggrade) ? get_string('nullgrade', 'workshop') : $assessment->gradinggrade;
+        $a->grade = is_null($assessment->grade) ? get_string('nullgrade', 'mod_workshop') : $assessment->grade;
+        $a->gradinggrade = is_null($assessment->gradinggrade) ? get_string('nullgrade', 'mod_workshop') : $assessment->gradinggrade;
         $a->weight = $assessment->weight;
         // grrr the following logic should really be handled by a future language pack feature
         if (is_null($assessment->gradinggradeover)) {
             if ($a->weight == 1) {
-                $grade = get_string('formatpeergrade', 'workshop', $a);
+                $grade = get_string('formatpeergrade', 'mod_workshop', $a);
             } else {
-                $grade = get_string('formatpeergradeweighted', 'workshop', $a);
+                $grade = get_string('formatpeergradeweighted', 'mod_workshop', $a);
             }
         } else {
             $a->gradinggradeover = $assessment->gradinggradeover;
             if ($a->weight == 1) {
-                $grade = get_string('formatpeergradeover', 'workshop', $a);
+                $grade = get_string('formatpeergradeover', 'mod_workshop', $a);
             } else {
-                $grade = get_string('formatpeergradeoverweighted', 'workshop', $a);
+                $grade = get_string('formatpeergradeoverweighted', 'mod_workshop', $a);
             }
         }
         $url = new moodle_url('/mod/workshop/assessment.php',
@@ -1121,12 +1121,12 @@ class mod_workshop_renderer extends plugin_renderer_base {
      */
     protected function helper_grading_report_grade($grade, $over=null) {
         $a = new stdclass();
-        $a->grade = is_null($grade) ? get_string('nullgrade', 'workshop') : $grade;
+        $a->grade = is_null($grade) ? get_string('nullgrade', 'mod_workshop') : $grade;
         if (is_null($over)) {
-            $text = get_string('formataggregatedgrade', 'workshop', $a);
+            $text = get_string('formataggregatedgrade', 'mod_workshop', $a);
         } else {
-            $a->over = is_null($over) ? get_string('nullgrade', 'workshop') : $over;
-            $text = get_string('formataggregatedgradeover', 'workshop', $a);
+            $a->over = is_null($over) ? get_string('nullgrade', 'mod_workshop') : $over;
+            $text = get_string('formataggregatedgradeover', 'mod_workshop', $a);
         }
         return $text;
     }
@@ -1224,7 +1224,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                 if (has_capability('mod/workshop:submit', $this->page->context) && (!$examplesmust || $examplesdone)) {
                     if (!$workshop->get_submission_by_author($USER->id)) {
                         $btnurl = new moodle_url($workshop->submission_url(), ['edit' => 'on']);
-                        $btntxt = get_string('createsubmission', 'workshop');
+                        $btntxt = get_string('createsubmission', 'mod_workshop');
                         $output .= $this->single_button($btnurl, $btntxt, 'get', ['type' => single_button::BUTTON_PRIMARY]);
                     }
                 }
@@ -1235,7 +1235,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     if (!$workshop->get_submission_by_author($USER->id)) {
                         if ($workshop->creating_submission_allowed($USER->id)) {
                             $btnurl = new moodle_url($workshop->submission_url(), ['edit' => 'on']);
-                            $btntxt = get_string('createsubmission', 'workshop');
+                            $btntxt = get_string('createsubmission', 'mod_workshop');
                             $output .= $this->single_button($btnurl, $btntxt, 'get', ['type' => single_button::BUTTON_PRIMARY]);
                         }
                     }
@@ -1286,18 +1286,18 @@ class mod_workshop_renderer extends plugin_renderer_base {
         switch ($workshop->phase) {
             case workshop::PHASE_SETUP:
                 if (trim($workshop->intro)) {
-                    $output .= print_collapsible_region_start('', 'workshop-viewlet-intro', get_string('introduction', 'workshop'),
+                    $output .= print_collapsible_region_start('', 'workshop-viewlet-intro', get_string('introduction', 'mod_workshop'),
                         'workshop-viewlet-intro-collapsed', false, true);
                     $output .= $this->box(format_module_intro('workshop', $workshop, $workshop->cm->id), 'generalbox');
                     $output .= print_collapsible_region_end(true);
                 }
                 if ($workshop->useexamples && has_capability('mod/workshop:manageexamples', $this->page->context)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-allexamples',
-                        get_string('examplesubmissions', 'workshop'), 'workshop-viewlet-allexamples-collapsed', false, true);
+                        get_string('examplesubmissions', 'mod_workshop'), 'workshop-viewlet-allexamples-collapsed', false, true);
                     $output .= $this->box_start('generalbox examples');
                     if ($workshop->grading_strategy_instance()->form_ready()) {
                         if (!$examples = $workshop->get_examples_for_manager()) {
-                            $output .= $this->container(get_string('noexamples', 'workshop'), 'noexamples');
+                            $output .= $this->container(get_string('noexamples', 'mod_workshop'), 'noexamples');
                         }
                         foreach ($examples as $example) {
                             $summary = $workshop->prepare_example_summary($example);
@@ -1305,9 +1305,9 @@ class mod_workshop_renderer extends plugin_renderer_base {
                             $output .= $this->render($summary);
                         }
                         $aurl = new moodle_url($workshop->exsubmission_url(0), ['edit' => 'on']);
-                        $output .= $this->single_button($aurl, get_string('exampleadd', 'workshop'), 'get');
+                        $output .= $this->single_button($aurl, get_string('exampleadd', 'mod_workshop'), 'get');
                     } else {
-                        $output .= $this->container(get_string('noexamplesformready', 'workshop'));
+                        $output .= $this->container(get_string('noexamplesformready', 'mod_workshop'));
                     }
                     $output .= $this->box_end();
                     $output .= print_collapsible_region_end(true);
@@ -1321,7 +1321,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         'pluginfile.php', $this->page->context->id,
                         'mod_workshop', 'instructauthors', null, workshop::instruction_editors_options($this->page->context));
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-instructauthors',
-                        get_string('instructauthors', 'workshop'),
+                        get_string('instructauthors', 'mod_workshop'),
                         'workshop-viewlet-instructauthors-collapsed', false, true);
                     $output .= $this->box(format_text($instructions, $workshop->instructauthorsformat, ['overflowdiv' => true]),
                         ['generalbox', 'instructions']);
@@ -1334,11 +1334,11 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     $examples = $userplan->get_examples();
                     $total = count($examples);
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-examples',
-                        get_string('exampleassessments', 'workshop'),
+                        get_string('exampleassessments', 'mod_workshop'),
                         'workshop-viewlet-examples-collapsed', $examplesdone, true);
                     $output .= $this->box_start('generalbox exampleassessments');
                     if ($total == 0) {
-                        $output .= $this->heading(get_string('noexamples', 'workshop'), 3);
+                        $output .= $this->heading(get_string('noexamples', 'mod_workshop'), 3);
                     } else {
                         foreach ($examples as $example) {
                             $summary = $workshop->prepare_example_summary($example);
@@ -1351,13 +1351,13 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
                 if (has_capability('mod/workshop:submit', $this->page->context) && (!$examplesmust || $examplesdone)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-ownsubmission',
-                        get_string('yoursubmission', 'workshop'),
+                        get_string('yoursubmission', 'mod_workshop'),
                         'workshop-viewlet-ownsubmission-collapsed', false, true);
                     $output .= $this->box_start('generalbox ownsubmission');
                     if ($submission = $workshop->get_submission_by_author($USER->id)) {
                         $output .= $this->render($workshop->prepare_submission_summary($submission, true));
                     } else {
-                        $output .= $this->container(get_string('noyoursubmission', 'workshop'));
+                        $output .= $this->container(get_string('noyoursubmission', 'mod_workshop'));
                     }
 
                     $output .= $this->box_end();
@@ -1381,7 +1381,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     }
 
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-allsubmissions',
-                        get_string('submissionsreport', 'workshop'),
+                        get_string('submissionsreport', 'mod_workshop'),
                         'workshop-viewlet-allsubmissions-collapsed', false, true);
 
                     $perpage = get_user_preferences('workshop_perpage', 10);
@@ -1393,7 +1393,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         $a->submitted = $countsubmissions;
                         $a->notsubmitted = $data->totalcount - $countsubmissions;
 
-                        $output .= html_writer::tag('div', get_string('submittednotsubmitted', 'workshop', $a));
+                        $output .= html_writer::tag('div', get_string('submittednotsubmitted', 'mod_workshop', $a));
 
                         $output .= $this->container(
                             groups_print_activity_menu($workshop->cm, $this->page->url, true), 'groupwidget');
@@ -1417,7 +1417,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         $output .= $this->render($pagingbar);
                         $output .= $this->perpage_selector($perpage);
                     } else {
-                        $output .= html_writer::tag('div', get_string('nothingfound', 'workshop'), ['class' => 'nothingfound']);
+                        $output .= html_writer::tag('div', get_string('nothingfound', 'mod_workshop'), ['class' => 'nothingfound']);
                     }
                     $output .= print_collapsible_region_end(true);
                 }
@@ -1429,17 +1429,17 @@ class mod_workshop_renderer extends plugin_renderer_base {
                 if (has_capability('mod/workshop:submit', $this->page->context)) {
                     if ($ownsubmission = $workshop->get_submission_by_author($USER->id)) {
                         $output .= print_collapsible_region_start('', 'workshop-viewlet-ownsubmission',
-                            get_string('yoursubmission', 'workshop'),
+                            get_string('yoursubmission', 'mod_workshop'),
                             'workshop-viewlet-ownsubmission-collapsed', true, true);
                         $output .= $this->box_start('generalbox ownsubmission');
                         $output .= $this->render($workshop->prepare_submission_summary($ownsubmission, true));
                         $ownsubmissionexists = true;
                     } else {
                         $output .= print_collapsible_region_start('', 'workshop-viewlet-ownsubmission',
-                            get_string('yoursubmission', 'workshop'),
+                            get_string('yoursubmission', 'mod_workshop'),
                             'workshop-viewlet-ownsubmission-collapsed', false, true);
                         $output .= $this->box_start('generalbox ownsubmission');
-                        $output .= $this->container(get_string('noyoursubmission', 'workshop'));
+                        $output .= $this->container(get_string('noyoursubmission', 'mod_workshop'));
                         $ownsubmissionexists = false;
                     }
 
@@ -1470,7 +1470,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         $reportopts->workshopphase = $workshop->phase;
 
                         $output .= print_collapsible_region_start('', 'workshop-viewlet-gradereport',
-                            get_string('gradesreport', 'workshop'),
+                            get_string('gradesreport', 'mod_workshop'),
                             'workshop-viewlet-gradereport-collapsed', false, true);
                         $output .= $this->box_start('generalbox gradesreport');
                         $output .= $this->container(groups_print_activity_menu($workshop->cm,
@@ -1489,7 +1489,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         'pluginfile.php', $this->page->context->id,
                         'mod_workshop', 'instructreviewers', null, workshop::instruction_editors_options($this->page->context));
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-instructreviewers',
-                        get_string('instructreviewers', 'workshop'),
+                        get_string('instructreviewers', 'mod_workshop'),
                         'workshop-viewlet-instructreviewers-collapsed', false, true);
                     $output .= $this->box(format_text($instructions, $workshop->instructreviewersformat,
                         ['overflowdiv' => true]), ['generalbox', 'instructions']);
@@ -1507,9 +1507,9 @@ class mod_workshop_renderer extends plugin_renderer_base {
 
                 if (!$examplesdone && $examplesmust && ($ownsubmissionexists === false)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-examplesfail',
-                        get_string('exampleassessments', 'workshop'),
+                        get_string('exampleassessments', 'mod_workshop'),
                         'workshop-viewlet-examplesfail-collapsed', false, true);
-                    $output .= $this->box(get_string('exampleneedsubmission', 'workshop'));
+                    $output .= $this->box(get_string('exampleneedsubmission', 'mod_workshop'));
                     $output .= print_collapsible_region_end(true);
                     $examplesavailable = false;
                 }
@@ -1536,11 +1536,11 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         $examplesdone = true;
                     }
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-examples',
-                        get_string('exampleassessments', 'workshop'),
+                        get_string('exampleassessments', 'mod_workshop'),
                         'workshop-viewlet-examples-collapsed', $examplesdone, true);
                     $output .= $this->box_start('generalbox exampleassessments');
                     if ($total == 0) {
-                        $output .= $this->heading(get_string('noexamples', 'workshop'), 3);
+                        $output .= $this->heading(get_string('noexamples', 'mod_workshop'), 3);
                     } else {
                         foreach ($examples as $example) {
                             $summary = $workshop->prepare_example_summary($example);
@@ -1552,11 +1552,11 @@ class mod_workshop_renderer extends plugin_renderer_base {
                 }
                 if (!$examplesmust || $examplesdone) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-assignedassessments',
-                        get_string('assignedassessments', 'workshop'),
+                        get_string('assignedassessments', 'mod_workshop'),
                         'workshop-viewlet-assignedassessments-collapsed', false, true);
                     if (!$assessments = $workshop->get_assessments_by_reviewer($USER->id)) {
                         $output .= $this->box_start('generalbox assessment-none');
-                        $output .= $this->notification(get_string('assignedassessmentsnone', 'workshop'));
+                        $output .= $this->notification(get_string('assignedassessmentsnone', 'mod_workshop'));
                         $output .= $this->box_end();
                     } else {
                         $shownames = has_capability('mod/workshop:viewauthornames', $this->page->context);
@@ -1578,11 +1578,11 @@ class mod_workshop_renderer extends plugin_renderer_base {
                             if (is_null($assessment->grade)) {
                                 $submission->status = 'notgraded';
                                 $class = ' notgraded';
-                                $buttontext = get_string('assess', 'workshop');
+                                $buttontext = get_string('assess', 'mod_workshop');
                             } else {
                                 $submission->status = 'graded';
                                 $class = ' graded';
-                                $buttontext = get_string('reassess', 'workshop');
+                                $buttontext = get_string('reassess', 'mod_workshop');
                             }
 
                             $output .= $this->box_start('generalbox assessment-summary' . $class);
@@ -1634,7 +1634,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         $reportopts->workshopphase = $workshop->phase;
 
                         $output .= print_collapsible_region_start('', 'workshop-viewlet-gradereport',
-                            get_string('gradesreport', 'workshop'),
+                            get_string('gradesreport', 'mod_workshop'),
                             'workshop-viewlet-gradereport-collapsed', false, true);
                         $output .= $this->box_start('generalbox gradesreport');
                         $output .= $this->container(groups_print_activity_menu($workshop->cm,
@@ -1649,22 +1649,22 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     }
                 }
                 if (has_capability('mod/workshop:overridegrades', $workshop->context)) {
-                    $output .= print_collapsible_region_start('', 'workshop-viewlet-cleargrades', get_string('toolbox', 'workshop'),
+                    $output .= print_collapsible_region_start('', 'workshop-viewlet-cleargrades', get_string('toolbox', 'mod_workshop'),
                         'workshop-viewlet-cleargrades-collapsed', true, true);
                     $output .= $this->box_start('generalbox toolbox');
 
                     // Clear aggregated grades.
                     $url = new moodle_url($workshop->toolbox_url('clearaggregatedgrades'));
-                    $btn = new single_button($url, get_string('clearaggregatedgrades', 'workshop'), 'post');
-                    $btn->add_confirm_action(get_string('clearaggregatedgradesconfirm', 'workshop'));
+                    $btn = new single_button($url, get_string('clearaggregatedgrades', 'mod_workshop'), 'post');
+                    $btn->add_confirm_action(get_string('clearaggregatedgradesconfirm', 'mod_workshop'));
                     $output .= $this->container_start('toolboxaction');
                     $output .= $this->render($btn);
                     $output .= $this->help_icon('clearaggregatedgrades', 'workshop');
                     $output .= $this->container_end();
                     // Clear assessments.
                     $url = new moodle_url($workshop->toolbox_url('clearassessments'));
-                    $btn = new single_button($url, get_string('clearassessments', 'workshop'), 'post');
-                    $btn->add_confirm_action(get_string('clearassessmentsconfirm', 'workshop'));
+                    $btn = new single_button($url, get_string('clearassessments', 'mod_workshop'), 'post');
+                    $btn->add_confirm_action(get_string('clearassessmentsconfirm', 'mod_workshop'));
                     $output .= $this->container_start('toolboxaction');
                     $output .= $this->render($btn);
                     $output .= $this->help_icon('clearassessments', 'workshop');
@@ -1677,20 +1677,20 @@ class mod_workshop_renderer extends plugin_renderer_base {
                 }
                 if (has_capability('mod/workshop:submit', $this->page->context)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-ownsubmission',
-                        get_string('yoursubmission', 'workshop'),
+                        get_string('yoursubmission', 'mod_workshop'),
                         'workshop-viewlet-ownsubmission-collapsed', false, true);
                     $output .= $this->box_start('generalbox ownsubmission');
                     if ($submission = $workshop->get_submission_by_author($USER->id)) {
                         $output .= $this->render($workshop->prepare_submission_summary($submission, true));
                     } else {
-                        $output .= $this->container(get_string('noyoursubmission', 'workshop'));
+                        $output .= $this->container(get_string('noyoursubmission', 'mod_workshop'));
                     }
                     $output .= $this->box_end();
                     $output .= print_collapsible_region_end(true);
                 }
                 if ($assessments = $workshop->get_assessments_by_reviewer($USER->id)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-assignedassessments',
-                        get_string('assignedassessments', 'workshop'),
+                        get_string('assignedassessments', 'mod_workshop'),
                         'workshop-viewlet-assignedassessments-collapsed', false, true);
                     $shownames = has_capability('mod/workshop:viewauthornames', $this->page->context);
                     foreach ($assessments as $assessment) {
@@ -1708,11 +1708,11 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         if (is_null($assessment->grade)) {
                             $class = ' notgraded';
                             $submission->status = 'notgraded';
-                            $buttontext = get_string('assess', 'workshop');
+                            $buttontext = get_string('assess', 'mod_workshop');
                         } else {
                             $class = ' graded';
                             $submission->status = 'graded';
-                            $buttontext = get_string('reassess', 'workshop');
+                            $buttontext = get_string('reassess', 'mod_workshop');
                         }
                         $output .= $this->box_start('generalbox assessment-summary' . $class);
                         $output .= $this->render($workshop->prepare_submission_summary($submission, $shownames));
@@ -1726,7 +1726,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     $conclusion = file_rewrite_pluginfile_urls($workshop->conclusion, 'pluginfile.php', $workshop->context->id,
                         'mod_workshop', 'conclusion', null, workshop::instruction_editors_options($workshop->context));
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-conclusion',
-                        get_string('conclusion', 'workshop'),
+                        get_string('conclusion', 'mod_workshop'),
                         'workshop-viewlet-conclusion-collapsed', false, true);
                     $output .= $this->box(format_text($conclusion, $workshop->conclusionformat, ['overflowdiv' => true]),
                         ['generalbox', 'conclusion']);
@@ -1735,7 +1735,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                 $finalgrades = $workshop->get_gradebook_grades($USER->id);
                 if (!empty($finalgrades)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-yourgrades',
-                        get_string('yourgrades', 'workshop'),
+                        get_string('yourgrades', 'mod_workshop'),
                         'workshop-viewlet-yourgrades-collapsed', false, true);
                     $output .= $this->box_start('generalbox grades-yourgrades');
                     $output .= $this->render($finalgrades);
@@ -1765,7 +1765,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         $reportopts->workshopphase = $workshop->phase;
 
                         $output .= print_collapsible_region_start('', 'workshop-viewlet-gradereport',
-                            get_string('gradesreport', 'workshop'),
+                            get_string('gradesreport', 'mod_workshop'),
                             'workshop-viewlet-gradereport-collapsed', false, true);
                         $output .= $this->box_start('generalbox gradesreport');
                         $output .= $this->container(groups_print_activity_menu($workshop->cm,
@@ -1781,13 +1781,13 @@ class mod_workshop_renderer extends plugin_renderer_base {
                 }
                 if (has_capability('mod/workshop:submit', $this->page->context)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-ownsubmission',
-                        get_string('yoursubmissionwithassessments', 'workshop'),
+                        get_string('yoursubmissionwithassessments', 'mod_workshop'),
                         'workshop-viewlet-ownsubmission-collapsed', false, true);
                     $output .= $this->box_start('generalbox ownsubmission');
                     if ($submission = $workshop->get_submission_by_author($USER->id)) {
                         $output .= $this->render($workshop->prepare_submission_summary($submission, true));
                     } else {
-                        $output .= $this->container(get_string('noyoursubmission', 'workshop'));
+                        $output .= $this->container(get_string('noyoursubmission', 'mod_workshop'));
                     }
                     $output .= $this->box_end();
 
@@ -1801,7 +1801,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                     $shownames = has_capability('mod/workshop:viewauthorpublished', $workshop->context);
                     if ($submissions = $workshop->get_published_submissions()) {
                         $output .= print_collapsible_region_start('', 'workshop-viewlet-publicsubmissions',
-                            get_string('publishedsubmissions', 'workshop'),
+                            get_string('publishedsubmissions', 'mod_workshop'),
                             'workshop-viewlet-publicsubmissions-collapsed', false, true);
                         foreach ($submissions as $submission) {
                             $output .= $this->box_start('generalbox submission-summary');
@@ -1813,7 +1813,7 @@ class mod_workshop_renderer extends plugin_renderer_base {
                 }
                 if ($assessments = $workshop->get_assessments_by_reviewer($USER->id)) {
                     $output .= print_collapsible_region_start('', 'workshop-viewlet-assignedassessments',
-                        get_string('assignedassessments', 'workshop'),
+                        get_string('assignedassessments', 'mod_workshop'),
                         'workshop-viewlet-assignedassessments-collapsed', false, true);
                     $shownames = has_capability('mod/workshop:viewauthornames', $this->page->context);
                     foreach ($assessments as $assessment) {
@@ -1831,11 +1831,11 @@ class mod_workshop_renderer extends plugin_renderer_base {
                         if (is_null($assessment->grade)) {
                             $class = ' notgraded';
                             $submission->status = 'notgraded';
-                            $buttontext = get_string('assess', 'workshop');
+                            $buttontext = get_string('assess', 'mod_workshop');
                         } else {
                             $class = ' graded';
                             $submission->status = 'graded';
-                            $buttontext = get_string('reassess', 'workshop');
+                            $buttontext = get_string('reassess', 'mod_workshop');
                         }
                         $output .= $this->box_start('generalbox assessment-summary' . $class);
                         $output .= $this->render($workshop->prepare_submission_summary($submission, $shownames));

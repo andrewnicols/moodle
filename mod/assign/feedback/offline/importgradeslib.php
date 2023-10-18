@@ -102,8 +102,8 @@ class assignfeedback_offline_grade_importer {
         $columns = $this->csvreader->get_columns();
 
         $strgrade = get_string('gradenoun');
-        $strid = get_string('recordid', 'assign');
-        $strmodified = get_string('lastmodifiedgrade', 'assign');
+        $strid = get_string('recordid', 'mod_assign');
+        $strmodified = get_string('lastmodifiedgrade', 'mod_assign');
 
         foreach ($this->assignment->get_feedback_plugins() as $plugin) {
             if ($plugin->is_enabled() && $plugin->is_visible()) {
@@ -178,7 +178,7 @@ class assignfeedback_offline_grade_importer {
         while ($record = $this->csvreader->next()) {
             $idstr = $record[$this->idindex];
             // Strip the integer from the end of the participant string.
-            $id = substr($idstr, strlen(get_string('hiddenuser', 'assign')));
+            $id = substr($idstr, strlen(get_string('hiddenuser', 'mod_assign')));
             if ($userid = $this->assignment->get_user_id_for_uniqueid($id)) {
                 if (array_key_exists($userid, $this->validusers)) {
                     $result->grade = $record[$this->gradeindex];

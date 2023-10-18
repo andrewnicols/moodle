@@ -84,8 +84,8 @@ class userreportsactionbar implements renderable, templatable {
             $interactions = new moodle_url('/mod/scorm/report/userreportinteractions.php',
                     ['id' => $this->id, 'user' => $this->userid, 'attempt' => $this->attempt, 'mode' => $this->mode]);
 
-            $reportmenu[$learnobjects->out(false)] = get_string('scoes', 'scorm');
-            $reportmenu[$interactions->out(false)] = get_string('interactions', 'scorm');
+            $reportmenu[$learnobjects->out(false)] = get_string('scoes', 'mod_scorm');
+            $reportmenu[$interactions->out(false)] = get_string('interactions', 'mod_scorm');
 
             if ($this->reporttype === 'learning') {
                 $userreporturl = $learnobjects->out(false);

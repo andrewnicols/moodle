@@ -319,7 +319,7 @@ class question_engine_upgrade_question_loader {
         if ($qtype->name() === 'missingtype') {
             $this->logger->log_assumption("Dealing with question id {$question->id}
                     that is of an unknown type {$question->qtype}.");
-            $question->questiontext = '<p>' . get_string('warningmissingtype', 'quiz') .
+            $question->questiontext = '<p>' . get_string('warningmissingtype', 'mod_quiz') .
                     '</p>' . $question->questiontext;
         }
 

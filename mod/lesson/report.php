@@ -49,7 +49,7 @@ if ($pageid !== null) {
 }
 $PAGE->set_url($url);
 if ($action == 'reportdetail') {
-    $PAGE->navbar->add(get_string('report', 'lesson'), $url);
+    $PAGE->navbar->add(get_string('report', 'mod_lesson'), $url);
 }
 
 $lessonoutput = $PAGE->get_renderer('mod_lesson');
@@ -119,21 +119,21 @@ if ($action === 'delete') {
     list($table, $data) = lesson_get_overview_report_table_and_data($lesson, $currentgroup);
 
     if ($table === false) {
-        echo $lessonoutput->header($lesson, $cm, $action, false, null, get_string('nolessonattempts', 'lesson'));
+        echo $lessonoutput->header($lesson, $cm, $action, false, null, get_string('nolessonattempts', 'mod_lesson'));
         echo $reportactionarea;
 
         if (!empty($currentgroup)) {
             $groupname = groups_get_group_name($currentgroup);
-            echo $OUTPUT->notification(get_string('nolessonattemptsgroup', 'lesson', $groupname));
+            echo $OUTPUT->notification(get_string('nolessonattemptsgroup', 'mod_lesson', $groupname));
         } else {
-            echo $OUTPUT->notification(get_string('nolessonattempts', 'lesson'));
+            echo $OUTPUT->notification(get_string('nolessonattempts', 'mod_lesson'));
         }
         groups_print_activity_menu($cm, $url);
         echo $OUTPUT->footer();
         exit();
     }
 
-    echo $lessonoutput->header($lesson, $cm, $action, false, null, get_string('overview', 'lesson'));
+    echo $lessonoutput->header($lesson, $cm, $action, false, null, get_string('overview', 'mod_lesson'));
     echo $reportactionarea;
 
     groups_print_activity_menu($cm, $url);
@@ -170,7 +170,7 @@ if ($action === 'delete') {
             'delete' => get_string('deleteselected')
         ];
         $bulkactions = new single_select($reporturl, 'action', $attemptsactions, '', ['' => 'choosedots'], $formid);
-        $bulkactions->set_label(get_string('withselectedattempts', 'lesson'));
+        $bulkactions->set_label(get_string('withselectedattempts', 'mod_lesson'));
         $bulkactions->disabled = true;
         $bulkactions->attributes = [
             'data-action' => 'toggle',
@@ -193,55 +193,55 @@ if ($action === 'delete') {
 
     // Calculate the Statistics.
     if ($data->avetime == null) {
-        $data->avetime = get_string("notcompleted", "lesson");
+        $data->avetime = get_string("notcompleted", 'mod_lesson');
     } else {
         $data->avetime = format_float($data->avetime / $data->numofattempts, 0);
         $data->avetime = format_time($data->avetime);
     }
     if ($data->hightime == null) {
-        $data->hightime = get_string("notcompleted", "lesson");
+        $data->hightime = get_string("notcompleted", 'mod_lesson');
     } else {
         $data->hightime = format_time($data->hightime);
     }
     if ($data->lowtime == null) {
-        $data->lowtime = get_string("notcompleted", "lesson");
+        $data->lowtime = get_string("notcompleted", 'mod_lesson');
     } else {
         $data->lowtime = format_time($data->lowtime);
     }
 
     if ($data->lessonscored) {
         if ($data->numofattempts == 0) {
-            $data->avescore = get_string("notcompleted", "lesson");
+            $data->avescore = get_string("notcompleted", 'mod_lesson');
         } else {
             $data->avescore = format_float($data->avescore, 2) . '%';
         }
         if ($data->highscore === null) {
-            $data->highscore = get_string("notcompleted", "lesson");
+            $data->highscore = get_string("notcompleted", 'mod_lesson');
         } else {
             $data->highscore .= '%';
         }
         if ($data->lowscore === null) {
-            $data->lowscore = get_string("notcompleted", "lesson");
+            $data->lowscore = get_string("notcompleted", 'mod_lesson');
         } else {
             $data->lowscore .= '%';
         }
 
         // Display the full stats for the lesson.
-        echo $OUTPUT->heading(get_string('lessonstats', 'lesson'), 3);
+        echo $OUTPUT->heading(get_string('lessonstats', 'mod_lesson'), 3);
         $stattable = new html_table();
-        $stattable->head = array(get_string('averagescore', 'lesson'), get_string('averagetime', 'lesson'),
-                                get_string('highscore', 'lesson'), get_string('lowscore', 'lesson'),
-                                get_string('hightime', 'lesson'), get_string('lowtime', 'lesson'));
+        $stattable->head = array(get_string('averagescore', 'mod_lesson'), get_string('averagetime', 'mod_lesson'),
+                                get_string('highscore', 'mod_lesson'), get_string('lowscore', 'mod_lesson'),
+                                get_string('hightime', 'mod_lesson'), get_string('lowtime', 'mod_lesson'));
         $stattable->align = array('center', 'center', 'center', 'center', 'center', 'center');
         $stattable->attributes['class'] = 'standardtable generaltable';
         $stattable->data[] = array($data->avescore, $data->avetime, $data->highscore, $data->lowscore, $data->hightime, $data->lowtime);
 
     } else {
         // Display simple stats for the lesson.
-        echo $OUTPUT->heading(get_string('lessonstats', 'lesson'), 3);
+        echo $OUTPUT->heading(get_string('lessonstats', 'mod_lesson'), 3);
         $stattable = new html_table();
-        $stattable->head = array(get_string('averagetime', 'lesson'), get_string('hightime', 'lesson'),
-                                get_string('lowtime', 'lesson'));
+        $stattable->head = array(get_string('averagetime', 'mod_lesson'), get_string('hightime', 'mod_lesson'),
+                                get_string('lowtime', 'mod_lesson'));
         $stattable->align = array('center', 'center', 'center');
         $stattable->attributes['class'] = 'standardtable generaltable';
         $stattable->data[] = array($data->avetime, $data->hightime, $data->lowtime);
@@ -262,7 +262,7 @@ if ($action === 'delete') {
     4.  Print out the object which contains all the try info
 
 **************************************************************************/
-    echo $lessonoutput->header($lesson, $cm, $action, false, null, get_string('detailedstats', 'lesson'));
+    echo $lessonoutput->header($lesson, $cm, $action, false, null, get_string('detailedstats', 'mod_lesson'));
     echo $reportactionarea;
 
     groups_print_activity_menu($cm, $url);
@@ -295,7 +295,7 @@ if ($action === 'delete') {
             //$headingobject->firstname = $students[$userid]->firstname;
             //$headingobject->attempt = $try + 1;
             //print_heading(get_string("studentattemptlesson", "lesson", $headingobject));
-        echo $OUTPUT->heading(get_string('attempt', 'lesson', $try+1), 3);
+        echo $OUTPUT->heading(get_string('attempt', 'mod_lesson', $try+1), 3);
 
         $table->head = array();
         $table->align = array('right', 'left');
@@ -304,17 +304,17 @@ if ($action === 'delete') {
         if (empty($userstats->gradeinfo)) {
             $table->align = array("center");
 
-            $table->data[] = array(get_string("notcompleted", "lesson"));
+            $table->data[] = array(get_string("notcompleted", 'mod_lesson'));
         } else {
             $user = $DB->get_record('user', array('id' => $userid));
 
             $gradeinfo = lesson_grade($lesson, $try, $user->id);
 
             $table->data[] = array(get_string('name').':', $OUTPUT->user_picture($user, array('courseid'=>$course->id)).fullname($user, true));
-            $table->data[] = array(get_string("timetaken", "lesson").":", format_time($userstats->timetotake));
-            $table->data[] = array(get_string("completed", "lesson").":", userdate($userstats->completed));
-            $table->data[] = array(get_string('rawgrade', 'lesson').':', $userstats->gradeinfo->earned.'/'.$userstats->gradeinfo->total);
-            $table->data[] = array(get_string("grade", "lesson").":", $userstats->grade."%");
+            $table->data[] = array(get_string("timetaken", 'mod_lesson').":", format_time($userstats->timetotake));
+            $table->data[] = array(get_string("completed", 'mod_lesson').":", userdate($userstats->completed));
+            $table->data[] = array(get_string('rawgrade', 'mod_lesson').':', $userstats->gradeinfo->earned.'/'.$userstats->gradeinfo->total);
+            $table->data[] = array(get_string("grade", 'mod_lesson').":", $userstats->grade."%");
         }
         echo html_writer::table($table);
 
@@ -339,9 +339,9 @@ if ($action === 'delete') {
             $fontend2 = '';
         }
 
-        $table->head = array($fontstart2.$page->qtype.": ".format_string($page->title).$fontend2, $fontstart2.get_string("classstats", "lesson").$fontend2);
-        $table->data[] = array($fontstart.get_string("question", "lesson").": <br />".$fontend.$fontstart2.$page->contents.$fontend2, " ");
-        $table->data[] = array($fontstart.get_string("answer", "lesson").":".$fontend, ' ');
+        $table->head = array($fontstart2.$page->qtype.": ".format_string($page->title).$fontend2, $fontstart2.get_string("classstats", 'mod_lesson').$fontend2);
+        $table->data[] = array($fontstart.get_string("question", 'mod_lesson').": <br />".$fontend.$fontstart2.$page->contents.$fontend2, " ");
+        $table->data[] = array($fontstart.get_string("answer", 'mod_lesson').":".$fontend, ' ');
         // apply the font to each answer
         if (!empty($page->answerdata) && !empty($page->answerdata->answers)) {
             foreach ($page->answerdata->answers as $answer){
@@ -353,12 +353,12 @@ if ($action === 'delete') {
                 $table->data[] = $modified;
             }
             if (isset($page->answerdata->response)) {
-                $table->data[] = array($fontstart.get_string("response", "lesson").": <br />".$fontend
+                $table->data[] = array($fontstart.get_string("response", 'mod_lesson').": <br />".$fontend
                         .$fontstart2.$page->answerdata->response.$fontend2, " ");
             }
             $table->data[] = array($page->answerdata->score, " ");
         } else {
-            $table->data[] = array(get_string('didnotanswerquestion', 'lesson'), " ");
+            $table->data[] = array(get_string('didnotanswerquestion', 'mod_lesson'), " ");
         }
         echo html_writer::table($table);
     }

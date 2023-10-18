@@ -66,7 +66,7 @@ class submission_viewed extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventsubmissionviewed', 'workshop');
+        return get_string('eventsubmissionviewed', 'mod_workshop');
     }
 
     /**

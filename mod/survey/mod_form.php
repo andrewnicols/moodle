@@ -26,18 +26,18 @@ class mod_survey_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
 
         if (!$options = $DB->get_records_menu("survey", array("template"=>0), "name", "id, name")) {
-            throw new \moodle_exception('cannotfindsurveytmpt', 'survey');
+            throw new \moodle_exception('cannotfindsurveytmpt', 'mod_survey');
         }
 
         foreach ($options as $id => $name) {
-            $options[$id] = get_string($name, "survey");
+            $options[$id] = get_string($name, 'mod_survey');
         }
         $options = array(''=>get_string('choose').'...') + $options;
-        $mform->addElement('select', 'template', get_string("surveytype", "survey"), $options);
+        $mform->addElement('select', 'template', get_string("surveytype", 'mod_survey'), $options);
         $mform->addRule('template', $strrequired, 'required', null, 'client');
-        $mform->addHelpButton('template', 'surveytype', 'survey');
+        $mform->addHelpButton('template', 'surveytype', 'mod_survey');
 
-        $this->standard_intro_elements(get_string('customintro', 'survey'));
+        $this->standard_intro_elements(get_string('customintro', 'mod_survey'));
 
         $this->standard_coursemodule_elements();
 
@@ -75,7 +75,7 @@ class mod_survey_mod_form extends moodleform_mod {
         $mform =& $this->_form;
         $suffix = $this->get_suffix();
         $completionsubmitel = 'completionsubmit' . $suffix;
-        $mform->addElement('checkbox', $completionsubmitel, '', get_string('completionsubmit', 'survey'));
+        $mform->addElement('checkbox', $completionsubmitel, '', get_string('completionsubmit', 'mod_survey'));
         // Enable this completion rule by default.
         $mform->setDefault($completionsubmitel, 1);
         return [$completionsubmitel];

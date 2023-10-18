@@ -2755,7 +2755,7 @@ function get_component_string($component, $contextlevel) {
     // Some plugin types need an extra prefix to make the name easy to understand.
     switch ($type) {
         case 'quiz':
-            $prefix = get_string('quizreport', 'quiz') . ': ';
+            $prefix = get_string('quizreport', 'mod_quiz') . ': ';
             break;
         case 'repository':
             $prefix = get_string('repository', 'repository') . ': ';

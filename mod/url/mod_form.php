@@ -38,7 +38,7 @@ class mod_url_mod_form extends moodleform_mod {
         //-------------------------------------------------------
         $mform->addElement('header', 'general', get_string('general', 'form'));
         $mform->addElement('text', 'name', get_string('name'), array('size'=>'48'));
-        $mform->addHelpButton('name', 'name', 'url');
+        $mform->addHelpButton('name', 'name', 'mod_url');
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -46,7 +46,7 @@ class mod_url_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
-        $mform->addElement('url', 'externalurl', get_string('externalurl', 'url'), array('size'=>'60'), array('usefilepicker'=>true));
+        $mform->addElement('url', 'externalurl', get_string('externalurl', 'mod_url'), array('size'=>'60'), array('usefilepicker'=>true));
         $mform->setType('externalurl', PARAM_RAW_TRIMMED);
         $mform->addRule('externalurl', null, 'required', null, 'client');
         $this->standard_intro_elements();
@@ -68,20 +68,20 @@ class mod_url_mod_form extends moodleform_mod {
             reset($options);
             $mform->setDefault('display', key($options));
         } else {
-            $mform->addElement('select', 'display', get_string('displayselect', 'url'), $options);
+            $mform->addElement('select', 'display', get_string('displayselect', 'mod_url'), $options);
             $mform->setDefault('display', $config->display);
-            $mform->addHelpButton('display', 'displayselect', 'url');
+            $mform->addHelpButton('display', 'displayselect', 'mod_url');
         }
 
         if (array_key_exists(RESOURCELIB_DISPLAY_POPUP, $options)) {
-            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'url'), array('size'=>3));
+            $mform->addElement('text', 'popupwidth', get_string('popupwidth', 'mod_url'), array('size'=>3));
             if (count($options) > 1) {
                 $mform->hideIf('popupwidth', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
             $mform->setType('popupwidth', PARAM_INT);
             $mform->setDefault('popupwidth', $config->popupwidth);
 
-            $mform->addElement('text', 'popupheight', get_string('popupheight', 'url'), array('size'=>3));
+            $mform->addElement('text', 'popupheight', get_string('popupheight', 'mod_url'), array('size'=>3));
             if (count($options) > 1) {
                 $mform->hideIf('popupheight', 'display', 'noteq', RESOURCELIB_DISPLAY_POPUP);
             }
@@ -92,7 +92,7 @@ class mod_url_mod_form extends moodleform_mod {
         if (array_key_exists(RESOURCELIB_DISPLAY_AUTO, $options) or
           array_key_exists(RESOURCELIB_DISPLAY_EMBED, $options) or
           array_key_exists(RESOURCELIB_DISPLAY_FRAME, $options)) {
-            $mform->addElement('checkbox', 'printintro', get_string('printintro', 'url'));
+            $mform->addElement('checkbox', 'printintro', get_string('printintro', 'mod_url'));
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_POPUP);
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_OPEN);
             $mform->hideIf('printintro', 'display', 'eq', RESOURCELIB_DISPLAY_NEW);
@@ -100,8 +100,8 @@ class mod_url_mod_form extends moodleform_mod {
         }
 
         //-------------------------------------------------------
-        $mform->addElement('header', 'parameterssection', get_string('parametersheader', 'url'));
-        $mform->addElement('static', 'parametersinfo', '', get_string('parametersheader_help', 'url'));
+        $mform->addElement('header', 'parameterssection', get_string('parametersheader', 'mod_url'));
+        $mform->addElement('static', 'parametersinfo', '', get_string('parametersheader_help', 'mod_url'));
 
         if (empty($this->current->parameters)) {
             $parcount = 5;
@@ -119,7 +119,7 @@ class mod_url_mod_form extends moodleform_mod {
                 $mform->createElement('text', $parameter, '', array('size'=>'12')),
                 $mform->createElement('selectgroups', $variable, '', $options),
             );
-            $mform->addGroup($group, $pargroup, get_string('parameterinfo', 'url'), ' ', false);
+            $mform->addGroup($group, $pargroup, get_string('parameterinfo', 'mod_url'), ' ', false);
             $mform->setType($parameter, PARAM_RAW);
         }
 
@@ -172,7 +172,7 @@ class mod_url_mod_form extends moodleform_mod {
             } else if (preg_match('|^[a-z]+://|i', $url) or preg_match('|^https?:|i', $url) or preg_match('|^ftp:|i', $url)) {
                 // normal URL
                 if (!url_appears_valid_url($url)) {
-                    $errors['externalurl'] = get_string('invalidurl', 'url');
+                    $errors['externalurl'] = get_string('invalidurl', 'mod_url');
                 }
 
             } else if (preg_match('|^[a-z]+:|i', $url)) {
@@ -183,7 +183,7 @@ class mod_url_mod_form extends moodleform_mod {
                 // invalid URI, we try to fix it by adding 'http://' prefix,
                 // relative links are NOT allowed because we display the link on different pages!
                 if (!url_appears_valid_url('http://'.$url)) {
-                    $errors['externalurl'] = get_string('invalidurl', 'url');
+                    $errors['externalurl'] = get_string('invalidurl', 'mod_url');
                 }
             }
         }

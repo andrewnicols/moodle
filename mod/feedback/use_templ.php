@@ -47,8 +47,8 @@ $feedbackstructure = new mod_feedback_structure($feedback, $cm, 0, $templateid);
 require_capability('mod/feedback:edititems', $context);
 
 /// Print the page header
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 $params = ['id' => $id];
 $params += ($mode ? ['mode' => $mode] : []);

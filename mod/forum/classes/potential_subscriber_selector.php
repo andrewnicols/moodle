@@ -136,9 +136,9 @@ class mod_forum_potential_subscriber_selector extends mod_forum_subscriber_selec
         }
 
         if ($this->forcesubscribed) {
-            return array(get_string("existingsubscribers", 'forum') => $availableusers);
+            return array(get_string("existingsubscribers", 'mod_forum') => $availableusers);
         } else {
-            return array(get_string("potentialsubscribers", 'forum') => $availableusers);
+            return array(get_string("potentialsubscribers", 'mod_forum') => $availableusers);
         }
     }
 

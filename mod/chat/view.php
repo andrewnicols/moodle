@@ -36,7 +36,7 @@ if ($id) {
     chat_update_chat_times($cm->instance);
 
     if (! $chat = $DB->get_record('chat', array('id' => $cm->instance))) {
-        throw new \moodle_exception('invalidid', 'chat');
+        throw new \moodle_exception('invalidid', 'mod_chat');
     }
 
 } else {
@@ -69,7 +69,7 @@ $PAGE->add_body_class('limitedwidth');
 // Show some info for guests.
 if (isguestuser()) {
     echo $OUTPUT->header();
-    echo $OUTPUT->confirm('<p>'.get_string('noguests', 'chat').'</p>'.get_string('liketologin'),
+    echo $OUTPUT->confirm('<p>'.get_string('noguests', 'mod_chat').'</p>'.get_string('liketologin'),
             get_login_url(), $CFG->wwwroot.'/course/view.php?id='.$course->id);
 
     echo $OUTPUT->footer();
@@ -79,9 +79,9 @@ if (isguestuser()) {
 // Completion and trigger events.
 chat_view($chat, $course, $cm, $context);
 
-$strenterchat    = get_string('enterchat', 'chat');
-$stridle         = get_string('idle', 'chat');
-$strcurrentusers = get_string('currentusers', 'chat');
+$strenterchat    = get_string('enterchat', 'mod_chat');
+$stridle         = get_string('idle', 'mod_chat');
+$strcurrentusers = get_string('currentusers', 'mod_chat');
 
 // Check to see if groups are being used here.
 $groupmode = groups_get_activity_groupmode($cm);
@@ -108,7 +108,7 @@ if (has_capability('mod/chat:chat', $context)) {
     $span = $chattime - $now;
     if (!empty($chat->schedule) && $span > 0) {
         $attributes = ['class' => 'border bg-light rounded p-2'];
-        echo html_writer::tag('p', get_string('sessionstartsin', 'chat', format_time($span)), $attributes);
+        echo html_writer::tag('p', get_string('sessionstartsin', 'mod_chat', format_time($span)), $attributes);
     }
 
     $params['id'] = $chat->id;
@@ -128,7 +128,7 @@ if (has_capability('mod/chat:chat', $context)) {
     $action = new popup_action('click', $link, "chat{$course->id}_{$chat->id}{$groupparam}",
                                array('height' => 500, 'width' => 700));
     echo $OUTPUT->action_link($link, get_string('noframesjs', 'message'), $action,
-                              array('title' => get_string('modulename', 'chat'), 'class' => 'btn btn-secondary'));
+                              array('title' => get_string('modulename', 'mod_chat'), 'class' => 'btn btn-secondary'));
     echo html_writer::end_div();
     echo html_writer::end_div();
     echo html_writer::end_div();
@@ -140,7 +140,7 @@ if (has_capability('mod/chat:chat', $context)) {
         if ($msg = chat_get_session_messages($chat->id, $currentgroup)) {
             echo '<p>';
             echo html_writer::link(new moodle_url('/mod/chat/report.php', array('id' => $cm->id)),
-                                   get_string('viewreport', 'chat'));
+                                   get_string('viewreport', 'mod_chat'));
             echo '</p>';
         }
     }
@@ -151,7 +151,7 @@ if (has_capability('mod/chat:chat', $context)) {
 } else {
     groups_print_activity_menu($cm, $CFG->wwwroot . "/mod/chat/view.php?id=$cm->id");
     echo $OUTPUT->box_start('generalbox', 'notallowenter');
-    echo '<p>'.get_string('notallowenter', 'chat').'</p>';
+    echo '<p>'.get_string('notallowenter', 'mod_chat').'</p>';
     echo $OUTPUT->box_end();
 }
 

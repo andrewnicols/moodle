@@ -66,7 +66,7 @@ class submission_deleted extends \core\event\base {
      * @return string
      */
     public static function get_name() {
-        return get_string('eventsubmissiondeleted', 'workshop');
+        return get_string('eventsubmissiondeleted', 'mod_workshop');
     }
 
     /**

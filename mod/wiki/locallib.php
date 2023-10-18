@@ -1375,7 +1375,7 @@ function wiki_print_page_content($page, $context, $subwikiid) {
     if (isset($content)) {
         $box = '';
         foreach ($content['sections'] as $s) {
-            $box .= '<p>' . get_string('repeatedsection', 'wiki', $s) . '</p>';
+            $box .= '<p>' . get_string('repeatedsection', 'mod_wiki', $s) . '</p>';
         }
 
         if (!empty($box)) {
@@ -1430,14 +1430,14 @@ function wiki_print_edit_form_default_fields($format, $pageid, $version = -1, $u
     //attachments
     require_once($CFG->dirroot . '/lib/form/filemanager.php');
 
-    $filemanager = new MoodleQuickForm_filemanager('attachments', get_string('wikiattachments', 'wiki'), array('id' => 'attachments'), array('subdirs' => false, 'maxfiles' => 99, 'maxbytes' => $CFG->maxbytes));
+    $filemanager = new MoodleQuickForm_filemanager('attachments', get_string('wikiattachments', 'mod_wiki'), array('id' => 'attachments'), array('subdirs' => false, 'maxfiles' => 99, 'maxbytes' => $CFG->maxbytes));
 
     $value = file_get_submitted_draft_itemid('attachments');
     if (!empty($value) && !$upload) {
         $filemanager->setValue($value);
     }
 
-    echo "<fieldset class=\"wiki-upload-section clearfix\"><legend class=\"ftoggler\">" . get_string("uploadtitle", 'wiki') . "</legend>";
+    echo "<fieldset class=\"wiki-upload-section clearfix\"><legend class=\"ftoggler\">" . get_string("uploadtitle", 'mod_wiki') . "</legend>";
 
     echo $OUTPUT->container_start('container');
     print $filemanager->toHtml();
@@ -1453,9 +1453,9 @@ function wiki_print_edit_form_default_fields($format, $pageid, $version = -1, $u
     echo "</fieldset>";
 
     echo '<input class="wiki_button btn btn-secondary" type="submit" name="editoption" value="'
-        . get_string('save', 'wiki') . '" />';
+        . get_string('save', 'mod_wiki') . '" />';
     echo '<input class="wiki_button btn btn-secondary" type="submit" name="editoption" value="'
-        . get_string('upload', 'wiki') . '" />';
+        . get_string('upload', 'mod_wiki') . '" />';
     echo '<input class="wiki_button btn btn-secondary" type="submit" name="editoption" value="' . get_string('preview') . '" />';
     echo '<input class="wiki_button btn btn-secondary" type="submit" name="editoption" value="' . get_string('cancel') . '" />';
 }
@@ -1472,7 +1472,7 @@ function wiki_print_upload_table($context, $filearea, $fileitemid, $deleteupload
 
     $htmltable = new html_table();
 
-    $htmltable->head = array(get_string('deleteupload', 'wiki'), get_string('uploadname', 'wiki'), get_string('uploadactions', 'wiki'));
+    $htmltable->head = array(get_string('deleteupload', 'mod_wiki'), get_string('uploadname', 'mod_wiki'), get_string('uploadactions', 'mod_wiki'));
 
     $fs = get_file_storage();
     $files = $fs->get_area_files($context->id, 'mod_wiki', $filearea, $fileitemid); //TODO: this is weird (skodak)
@@ -1491,7 +1491,7 @@ function wiki_print_upload_table($context, $filearea, $fileitemid, $deleteupload
         }
     }
 
-    print '<h3 class="upload-table-title">' . get_string('uploadfiletitle', 'wiki') . "</h3>";
+    print '<h3 class="upload-table-title">' . get_string('uploadfiletitle', 'mod_wiki') . "</h3>";
     print html_writer::table($htmltable);
 }
 

@@ -99,8 +99,8 @@ class reset {
      * @return array status array
      */
     public static function reset_getstatus(string $item): array {
-        return ['component' => get_string('modulenameplural', 'bigbluebuttonbn'),
-            'item' => get_string("removed{$item}", 'bigbluebuttonbn'),
+        return ['component' => get_string('modulenameplural', 'mod_bigbluebuttonbn'),
+            'item' => get_string("removed{$item}", 'mod_bigbluebuttonbn'),
             'error' => false];
     }
 

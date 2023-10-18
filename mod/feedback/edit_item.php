@@ -65,7 +65,7 @@ if (!$item->id && $typ === 'pagebreak') {
 //get the existing item or create it
 // $formdata->itemid = isset($formdata->itemid) ? $formdata->itemid : NULL;
 if (!$typ || !file_exists($CFG->dirroot.'/mod/feedback/item/'.$typ.'/lib.php')) {
-    throw new \moodle_exception('typemissing', 'feedback', $editurl->out(false));
+    throw new \moodle_exception('typemissing', 'mod_feedback', $editurl->out(false));
 }
 
 require_once($CFG->dirroot.'/mod/feedback/item/'.$typ.'/lib.php');
@@ -87,15 +87,15 @@ if ($itemobj->get_data()) {
 
 ////////////////////////////////////////////////////////////////////////////////////
 /// Print the page header
-$strfeedbacks = get_string("modulenameplural", "feedback");
-$strfeedback  = get_string("modulename", "feedback");
+$strfeedbacks = get_string("modulenameplural", 'mod_feedback');
+$strfeedback  = get_string("modulename", 'mod_feedback');
 
 navigation_node::override_active_url(new moodle_url('/mod/feedback/edit.php',
         array('id' => $cm->id, 'do_show' => 'edit')));
 if ($item->id) {
-    $PAGE->navbar->add(get_string('edit_item', 'feedback'));
+    $PAGE->navbar->add(get_string('edit_item', 'mod_feedback'));
 } else {
-    $PAGE->navbar->add(get_string('add_item', 'feedback'));
+    $PAGE->navbar->add(get_string('add_item', 'mod_feedback'));
 }
 $PAGE->set_heading($course->fullname);
 $PAGE->set_title($feedback->name);

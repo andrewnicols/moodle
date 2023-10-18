@@ -231,4 +231,3 @@ class get_join_url_test extends \externallib_advanced_testcase {
         $this->assertEquals('userlimitreached', $joinurl['warnings'][0]['warningcode']);
     }
 }
-

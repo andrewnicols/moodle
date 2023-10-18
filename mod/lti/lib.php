@@ -304,10 +304,10 @@ function mod_lti_get_all_content_items(\core_course\local\entity\content_item $d
         if ($trimmeddescription != '') {
             // Clean the description. We don't want tags here.
             $type->help     = clean_param($trimmeddescription, PARAM_NOTAGS);
-            $type->helplink = get_string('modulename_shortcut_link', 'lti');
+            $type->helplink = get_string('modulename_shortcut_link', 'mod_lti');
         }
         if (empty($ltitype->icon)) {
-            $type->icon = $OUTPUT->pix_icon('monologo', '', 'lti', array('class' => 'icon'));
+            $type->icon = $OUTPUT->pix_icon('monologo', '', 'mod_lti', array('class' => 'icon'));
         } else {
             $type->icon = html_writer::empty_tag('img', array('src' => $ltitype->icon, 'alt' => $ltitype->name, 'class' => 'icon'));
         }

@@ -129,7 +129,7 @@ class data_field_checkbox extends data_field_base {
             return '';
         }
 
-        $requiredstr = get_string('selectedrequired', 'data');
+        $requiredstr = get_string('selectedrequired', 'mod_data');
         $str .= html_writer::checkbox('f_'.$this->field->id.'_allreq', null, $allrequired, $requiredstr, $marginclass);
         return $str;
     }

@@ -70,8 +70,8 @@ $event->add_record_snapshot('scorm', $scorm);
 $event->trigger();
 
 // Print the page header.
-$strreport = get_string('report', 'scorm');
-$strattempt = get_string('attempt', 'scorm');
+$strreport = get_string('report', 'mod_scorm');
+$strattempt = get_string('attempt', 'mod_scorm');
 
 $PAGE->set_title("$course->shortname: ".format_string($scorm->name));
 $PAGE->set_heading($course->fullname);
@@ -98,10 +98,10 @@ if ($scoes = $DB->get_records('scorm_scoes', array('scorm' => $scorm->id), 'sort
     // Print general score data.
     $table = new html_table();
     $table->head = array(
-            get_string('title', 'scorm'),
-            get_string('status', 'scorm'),
-            get_string('time', 'scorm'),
-            get_string('score', 'scorm'),
+            get_string('title', 'mod_scorm'),
+            get_string('status', 'mod_scorm'),
+            get_string('time', 'mod_scorm'),
+            get_string('score', 'mod_scorm'),
             '');
     $table->align = array('left', 'center', 'center', 'right', 'left');
     $table->wrap = array('nowrap', 'nowrap', 'nowrap', 'nowrap', 'nowrap');
@@ -123,16 +123,16 @@ if ($scoes = $DB->get_records('scorm_scoes', array('scorm' => $scorm->id), 'sort
                     }
                 }
                 $tracksurl->param('scoid', $sco->id);
-                $detailslink = html_writer::link($tracksurl, get_string('details', 'scorm'));
+                $detailslink = html_writer::link($tracksurl, get_string('details', 'mod_scorm'));
             } else {
                 $trackdata = new stdClass();
                 $trackdata->status = 'notattempted';
                 $trackdata->total_time = '&nbsp;';
                 $detailslink = '&nbsp;';
             }
-            $strstatus = get_string($trackdata->status, 'scorm');
-            $row[] = $OUTPUT->pix_icon($trackdata->status, $strstatus, 'scorm') . '&nbsp;'.format_string($sco->title);
-            $row[] = get_string($trackdata->status, 'scorm');
+            $strstatus = get_string($trackdata->status, 'mod_scorm');
+            $row[] = $OUTPUT->pix_icon($trackdata->status, $strstatus, 'mod_scorm') . '&nbsp;'.format_string($sco->title);
+            $row[] = get_string($trackdata->status, 'mod_scorm');
             $row[] = scorm_format_duration($trackdata->total_time);
             $row[] = $score;
             $row[] = $detailslink;

@@ -106,11 +106,11 @@ if ($data = $form->get_data()) {
     redirect($redirect);
 }
 
-$PAGE->set_title(get_string('toolsetup', 'lti'));
-$PAGE->navbar->add(get_string('lti_administration', 'lti'), $CFG->wwwroot.'/'.$CFG->admin.'/settings.php?section=modsettinglti');
+$PAGE->set_title(get_string('toolsetup', 'mod_lti'));
+$PAGE->navbar->add(get_string('lti_administration', 'mod_lti'), $CFG->wwwroot.'/'.$CFG->admin.'/settings.php?section=modsettinglti');
 
 echo $OUTPUT->header();
-echo $OUTPUT->heading(get_string('toolsetup', 'lti'));
+echo $OUTPUT->heading(get_string('toolsetup', 'mod_lti'));
 echo $OUTPUT->box_start('generalbox');
 
 if ($action == 'update') {

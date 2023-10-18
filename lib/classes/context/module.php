@@ -85,7 +85,7 @@ class module extends context {
                                         WHERE cm.id = ?", array($this->_instanceid))) {
             if ($mod = $DB->get_record($cm->modname, array('id' => $cm->instance))) {
                 if ($withprefix) {
-                    $name = get_string('modulename', $cm->modname).': ';
+                    $name = get_string('modulename', "mod_{$cm->modname}").': ';
                 }
                 if (!$escape) {
                     $name .= format_string($mod->name, true, array('context' => $this, 'escape' => false));

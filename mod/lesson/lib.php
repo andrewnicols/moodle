@@ -188,7 +188,7 @@ function lesson_update_events($lesson, $override = null) {
                 // Group doesn't exist, just skip it.
                 continue;
             }
-            $eventname = get_string('overridegroupeventname', 'lesson', $params);
+            $eventname = get_string('overridegroupeventname', 'mod_lesson', $params);
             // Set group override priority.
             if ($grouppriorities !== null) {
                 $openpriorities = $grouppriorities['open'];
@@ -200,7 +200,7 @@ function lesson_update_events($lesson, $override = null) {
             // User override event.
             $params = new stdClass();
             $params->lesson = $lesson->name;
-            $eventname = get_string('overrideusereventname', 'lesson', $params);
+            $eventname = get_string('overrideusereventname', 'mod_lesson', $params);
             // Set user override priority.
             $event->priority = CALENDAR_EVENT_USER_OVERRIDE_PRIORITY;
         } else {
@@ -217,7 +217,7 @@ function lesson_update_events($lesson, $override = null) {
                 } else {
                     unset($event->id);
                 }
-                $event->name = get_string('lessoneventopens', 'lesson', $eventname);
+                $event->name = get_string('lessoneventopens', 'mod_lesson', $eventname);
                 // The method calendar_event::create will reuse a db record if the id field is set.
                 calendar_event::create($event, false);
             }
@@ -228,7 +228,7 @@ function lesson_update_events($lesson, $override = null) {
                     unset($event->id);
                 }
                 $event->type      = CALENDAR_EVENT_TYPE_ACTION;
-                $event->name      = get_string('lessoneventcloses', 'lesson', $eventname);
+                $event->name      = get_string('lessoneventcloses', 'mod_lesson', $eventname);
                 $event->timestart = $deadline;
                 $event->timesort  = $deadline;
                 $event->eventtype = LESSON_EVENT_TYPE_CLOSE;
@@ -383,7 +383,7 @@ function lesson_user_outline($course, $user, $mod, $lesson) {
     $return = new stdClass();
 
     if (empty($grades->items[0]->grades)) {
-        $return->info = get_string("nolessonattempts", "lesson");
+        $return->info = get_string("nolessonattempts", 'mod_lesson');
     } else {
         $grade = reset($grades->items[0]->grades);
         if (empty($grade->grade)) {
@@ -399,13 +399,13 @@ function lesson_user_outline($course, $user, $mod, $lesson) {
             if ($attempts = $DB->get_records_sql($sql, $params, 0, 1)) {
                 $attempt = reset($attempts);
                 if ($attempt->completed) {
-                    $return->info = get_string("completed", "lesson");
+                    $return->info = get_string("completed", 'mod_lesson');
                 } else {
-                    $return->info = get_string("notyetcompleted", "lesson");
+                    $return->info = get_string("notyetcompleted", 'mod_lesson');
                 }
                 $return->time = $attempt->lessontime;
             } else {
-                $return->info = get_string("nolessonattempts", "lesson");
+                $return->info = get_string("nolessonattempts", 'mod_lesson');
             }
         } else {
             if (!$grade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
@@ -440,7 +440,7 @@ function lesson_user_complete($course, $user, $mod, $lesson) {
 
     // Display the grade and feedback.
     if (empty($grades->items[0]->grades)) {
-        echo $OUTPUT->container(get_string("nolessonattempts", "lesson"));
+        echo $OUTPUT->container(get_string("nolessonattempts", 'mod_lesson'));
     } else {
         $grade = reset($grades->items[0]->grades);
         if (empty($grade->grade)) {
@@ -454,12 +454,12 @@ function lesson_user_complete($course, $user, $mod, $lesson) {
 
             if ($attempt = $DB->get_record_sql($sql, $params, IGNORE_MULTIPLE)) {
                 if ($attempt->completed) {
-                    $status = get_string("completed", "lesson");
+                    $status = get_string("completed", 'mod_lesson');
                 } else {
-                    $status = get_string("notyetcompleted", "lesson");
+                    $status = get_string("notyetcompleted", 'mod_lesson');
                 }
             } else {
-                $status = get_string("nolessonattempts", "lesson");
+                $status = get_string("nolessonattempts", 'mod_lesson');
             }
         } else {
             if (!$grade->hidden || has_capability('moodle/grade:viewhidden', context_course::instance($course->id))) {
@@ -487,10 +487,10 @@ function lesson_user_complete($course, $user, $mod, $lesson) {
         echo $OUTPUT->box_start();
         $table = new html_table();
         // Table Headings.
-        $table->head = array (get_string("attemptheader", "lesson"),
-            get_string("totalpagesviewedheader", "lesson"),
-            get_string("numberofpagesviewedheader", "lesson"),
-            get_string("numberofcorrectanswersheader", "lesson"),
+        $table->head = array (get_string("attemptheader", 'mod_lesson'),
+            get_string("totalpagesviewedheader", 'mod_lesson'),
+            get_string("numberofpagesviewedheader", 'mod_lesson'),
+            get_string("numberofcorrectanswersheader", 'mod_lesson'),
             get_string("time"));
         $table->width = "100%";
         $table->align = array ("center", "center", "center", "center", "center");
@@ -835,12 +835,12 @@ function lesson_process_post_save(&$lesson) {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function lesson_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'lessonheader', get_string('modulenameplural', 'lesson'));
-    $mform->addElement('advcheckbox', 'reset_lesson', get_string('deleteallattempts','lesson'));
+    $mform->addElement('header', 'lessonheader', get_string('modulenameplural', 'mod_lesson'));
+    $mform->addElement('advcheckbox', 'reset_lesson', get_string('deleteallattempts','mod_lesson'));
     $mform->addElement('advcheckbox', 'reset_lesson_user_overrides',
-            get_string('removealluseroverrides', 'lesson'));
+            get_string('removealluseroverrides', 'mod_lesson'));
     $mform->addElement('advcheckbox', 'reset_lesson_group_overrides',
-            get_string('removeallgroupoverrides', 'lesson'));
+            get_string('removeallgroupoverrides', 'mod_lesson'));
 }
 
 /**
@@ -888,7 +888,7 @@ function lesson_reset_gradebook($courseid, $type='') {
 function lesson_reset_userdata($data) {
     global $CFG, $DB;
 
-    $componentstr = get_string('modulenameplural', 'lesson');
+    $componentstr = get_string('modulenameplural', 'mod_lesson');
     $status = array();
 
     if (!empty($data->reset_lesson)) {
@@ -922,7 +922,7 @@ function lesson_reset_userdata($data) {
             lesson_reset_gradebook($data->courseid);
         }
 
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallattempts', 'lesson'), 'error'=>false);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallattempts', 'mod_lesson'), 'error'=>false);
     }
 
     $purgeoverrides = false;
@@ -933,7 +933,7 @@ function lesson_reset_userdata($data) {
                 'lessonid IN (SELECT id FROM {lesson} WHERE course = ?) AND userid IS NOT NULL', array($data->courseid));
         $status[] = array(
             'component' => $componentstr,
-            'item' => get_string('useroverridesdeleted', 'lesson'),
+            'item' => get_string('useroverridesdeleted', 'mod_lesson'),
             'error' => false);
         $purgeoverrides = true;
     }
@@ -943,7 +943,7 @@ function lesson_reset_userdata($data) {
         'lessonid IN (SELECT id FROM {lesson} WHERE course = ?) AND groupid IS NOT NULL', array($data->courseid));
         $status[] = array(
             'component' => $componentstr,
-            'item' => get_string('groupoverridesdeleted', 'lesson'),
+            'item' => get_string('groupoverridesdeleted', 'mod_lesson'),
             'error' => false);
         $purgeoverrides = true;
     }
@@ -1033,14 +1033,14 @@ function lesson_extend_settings_navigation(settings_navigation $settings, naviga
 
     if (has_capability('mod/lesson:manageoverrides', $settings->get_page()->cm->context)) {
         $url = new moodle_url('/mod/lesson/overrides.php', ['cmid' => $settings->get_page()->cm->id, 'mode' => 'user']);
-        $node = navigation_node::create(get_string('overrides', 'lesson'), $url,
+        $node = navigation_node::create(get_string('overrides', 'mod_lesson'), $url,
                 navigation_node::TYPE_SETTING, null, 'mod_lesson_useroverrides');
         $lessonnode->add_node($node, $beforekey);
     }
 
     if (has_capability('mod/lesson:viewreports', $settings->get_page()->cm->context)) {
         $reportsnode = $lessonnode->add(
-            get_string('reports', 'lesson'),
+            get_string('reports', 'mod_lesson'),
             new moodle_url('/mod/lesson/report.php', ['id' => $settings->get_page()->cm->id,
                 'action' => 'reportoverview'])
         );
@@ -1241,9 +1241,9 @@ function lesson_get_file_info($browser, $areas, $course, $cm, $context, $fileare
  */
 function lesson_page_type_list($pagetype, $parentcontext, $currentcontext) {
     $module_pagetype = array(
-        'mod-lesson-*'=>get_string('page-mod-lesson-x', 'lesson'),
-        'mod-lesson-view'=>get_string('page-mod-lesson-view', 'lesson'),
-        'mod-lesson-edit'=>get_string('page-mod-lesson-edit', 'lesson'));
+        'mod-lesson-*'=>get_string('page-mod-lesson-x', 'mod_lesson'),
+        'mod-lesson-view'=>get_string('page-mod-lesson-view', 'mod_lesson'),
+        'mod-lesson-edit'=>get_string('page-mod-lesson-edit', 'mod_lesson'));
     return $module_pagetype;
 }
 
@@ -1463,7 +1463,7 @@ function mod_lesson_core_calendar_provide_event_action(calendar_event $event,
     }
 
     return $factory->create_instance(
-        get_string('startlesson', 'lesson'),
+        get_string('startlesson', 'mod_lesson'),
         new \moodle_url('/mod/lesson/view.php', ['id' => $cm->id]),
         1,
         $lesson->is_accessible()
@@ -1589,12 +1589,12 @@ function mod_lesson_get_completion_active_rule_descriptions($cm) {
         switch ($key) {
             case 'completionendreached':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionendreached_desc', 'lesson', $val);
+                    $descriptions[] = get_string('completionendreached_desc', 'mod_lesson', $val);
                 }
                 break;
             case 'completiontimespent':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completiontimespentdesc', 'lesson', format_time($val));
+                    $descriptions[] = get_string('completiontimespentdesc', 'mod_lesson', format_time($val));
                 }
                 break;
             default:
@@ -1635,7 +1635,7 @@ function mod_lesson_core_calendar_get_valid_event_timestart_range(\calendar_even
         if (!empty($instance->deadline)) {
             $maxdate = [
                 $instance->deadline,
-                get_string('openafterclose', 'lesson')
+                get_string('openafterclose', 'mod_lesson')
             ];
         }
     } else if ($event->eventtype == LESSON_EVENT_TYPE_CLOSE) {
@@ -1644,7 +1644,7 @@ function mod_lesson_core_calendar_get_valid_event_timestart_range(\calendar_even
         if (!empty($instance->available)) {
             $mindate = [
                 $instance->available,
-                get_string('closebeforeopen', 'lesson')
+                get_string('closebeforeopen', 'mod_lesson')
             ];
         }
     }
@@ -1725,7 +1725,7 @@ function mod_lesson_core_calendar_event_timestart_updated(\calendar_event $event
  * @return lang_string The event type lang string.
  */
 function mod_lesson_core_calendar_get_event_action_string(string $eventtype): string {
-    $modulename = get_string('modulename', 'lesson');
+    $modulename = get_string('modulename', 'mod_lesson');
 
     switch ($eventtype) {
         case LESSON_EVENT_TYPE_OPEN:
@@ -1738,5 +1738,5 @@ function mod_lesson_core_calendar_get_event_action_string(string $eventtype): st
             return get_string('requiresaction', 'calendar', $modulename);
     }
 
-    return get_string($identifier, 'lesson', $modulename);
+    return get_string($identifier, 'mod_lesson', $modulename);
 }

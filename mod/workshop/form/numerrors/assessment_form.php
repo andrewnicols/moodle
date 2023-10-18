@@ -73,7 +73,7 @@ class workshop_numerrors_assessment_form extends workshop_assessment_form {
             $mform->addGroup(array(
                 $mform->createElement('radio', 'grade__idx_' . $i, '', $fields->{'grade0__idx_'.$i}, -1),
                 $mform->createElement('radio', 'grade__idx_' . $i, '', $fields->{'grade1__idx_'.$i}, 1),
-            ), 'group_grade__idx_' . $i, get_string('yourassessmentfor', 'workshop', $dimtitle), '<br />', false);
+            ), 'group_grade__idx_' . $i, get_string('yourassessmentfor', 'mod_workshop', $dimtitle), '<br />', false);
             $mform->addRule('group_grade__idx_' . $i, get_string('required'), 'required');
 
             // comment

@@ -57,13 +57,13 @@ class mod_imscp_mod_form extends moodleform_mod {
         $this->standard_intro_elements();
 
         // IMS-CP file upload.
-        $mform->addElement('header', 'content', get_string('contentheader', 'imscp'));
+        $mform->addElement('header', 'content', get_string('contentheader', 'mod_imscp'));
         $mform->setExpanded('content', true);
-        $mform->addElement('filepicker', 'package', get_string('packagefile', 'imscp'));
+        $mform->addElement('filepicker', 'package', get_string('packagefile', 'mod_imscp'));
 
         $options = array('-1' => get_string('all'), '0' => get_string('no'),
                          '1' => '1', '2' => '2', '5' => '5', '10' => '10', '20' => '20');
-        $mform->addElement('select', 'keepold', get_string('keepold', 'imscp'), $options);
+        $mform->addElement('select', 'keepold', get_string('keepold', 'mod_imscp'), $options);
         $mform->setDefault('keepold', $config->keepold);
         $mform->setAdvanced('keepold', $config->keepold_adv);
 

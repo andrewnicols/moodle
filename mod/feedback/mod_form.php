@@ -41,31 +41,31 @@ class mod_feedback_mod_form extends moodleform_mod {
         //-------------------------------------------------------------------------------
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', get_string('name', 'feedback'), array('size'=>'64'));
+        $mform->addElement('text', 'name', get_string('name', 'mod_feedback'), array('size'=>'64'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
 
-        $this->standard_intro_elements(get_string('description', 'feedback'));
+        $this->standard_intro_elements(get_string('description', 'mod_feedback'));
 
         //-------------------------------------------------------------------------------
         $mform->addElement('header', 'timinghdr', get_string('availability'));
 
-        $mform->addElement('date_time_selector', 'timeopen', get_string('feedbackopen', 'feedback'),
+        $mform->addElement('date_time_selector', 'timeopen', get_string('feedbackopen', 'mod_feedback'),
             array('optional' => true));
 
-        $mform->addElement('date_time_selector', 'timeclose', get_string('feedbackclose', 'feedback'),
+        $mform->addElement('date_time_selector', 'timeclose', get_string('feedbackclose', 'mod_feedback'),
             array('optional' => true));
 
         //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'feedbackhdr', get_string('questionandsubmission', 'feedback'));
+        $mform->addElement('header', 'feedbackhdr', get_string('questionandsubmission', 'mod_feedback'));
 
         $options=array();
-        $options[1]  = get_string('anonymous', 'feedback');
-        $options[2]  = get_string('non_anonymous', 'feedback');
+        $options[1]  = get_string('anonymous', 'mod_feedback');
+        $options[2]  = get_string('non_anonymous', 'mod_feedback');
         $mform->addElement('select',
                            'anonymous',
-                           get_string('anonymous_edit', 'feedback'),
+                           get_string('anonymous_edit', 'mod_feedback'),
                            $options);
 
         // check if there is existing responses to this feedback
@@ -82,7 +82,7 @@ class mod_feedback_mod_form extends moodleform_mod {
             $multiple_submit_value = $feedback->multiple_submit ? get_string('yes') : get_string('no');
             $mform->addElement('text',
                                'multiple_submit_static',
-                               get_string('multiplesubmit', 'feedback'),
+                               get_string('multiplesubmit', 'mod_feedback'),
                                array('size'=>'4',
                                     'disabled'=>'disabled',
                                     'value'=>$multiple_submit_value));
@@ -90,29 +90,29 @@ class mod_feedback_mod_form extends moodleform_mod {
 
             $mform->addElement('hidden', 'multiple_submit', '');
             $mform->setType('multiple_submit', PARAM_INT);
-            $mform->addHelpButton('multiple_submit_static', 'multiplesubmit', 'feedback');
+            $mform->addHelpButton('multiple_submit_static', 'multiplesubmit', 'mod_feedback');
         } else {
             $mform->addElement('selectyesno',
                                'multiple_submit',
-                               get_string('multiplesubmit', 'feedback'));
+                               get_string('multiplesubmit', 'mod_feedback'));
 
-            $mform->addHelpButton('multiple_submit', 'multiplesubmit', 'feedback');
+            $mform->addHelpButton('multiple_submit', 'multiplesubmit', 'mod_feedback');
         }
 
-        $mform->addElement('selectyesno', 'email_notification', get_string('email_notification', 'feedback'));
-        $mform->addHelpButton('email_notification', 'email_notification', 'feedback');
+        $mform->addElement('selectyesno', 'email_notification', get_string('email_notification', 'mod_feedback'));
+        $mform->addHelpButton('email_notification', 'email_notification', 'mod_feedback');
 
-        $mform->addElement('selectyesno', 'autonumbering', get_string('autonumbering', 'feedback'));
-        $mform->addHelpButton('autonumbering', 'autonumbering', 'feedback');
+        $mform->addElement('selectyesno', 'autonumbering', get_string('autonumbering', 'mod_feedback'));
+        $mform->addHelpButton('autonumbering', 'autonumbering', 'mod_feedback');
 
         //-------------------------------------------------------------------------------
-        $mform->addElement('header', 'aftersubmithdr', get_string('after_submit', 'feedback'));
+        $mform->addElement('header', 'aftersubmithdr', get_string('after_submit', 'mod_feedback'));
 
-        $mform->addElement('selectyesno', 'publish_stats', get_string('show_analysepage_after_submit', 'feedback'));
+        $mform->addElement('selectyesno', 'publish_stats', get_string('show_analysepage_after_submit', 'mod_feedback'));
 
         $mform->addElement('editor',
                            'page_after_submit_editor',
-                           get_string("page_after_submit", "feedback"),
+                           get_string("page_after_submit", 'mod_feedback'),
                            null,
                            $editoroptions);
 
@@ -120,11 +120,11 @@ class mod_feedback_mod_form extends moodleform_mod {
 
         $mform->addElement('text',
                            'site_after_submit',
-                           get_string('url_for_continue', 'feedback'),
+                           get_string('url_for_continue', 'mod_feedback'),
                            array('size'=>'64', 'maxlength'=>'255'));
 
         $mform->setType('site_after_submit', PARAM_TEXT);
-        $mform->addHelpButton('site_after_submit', 'url_for_continue', 'feedback');
+        $mform->addHelpButton('site_after_submit', 'url_for_continue', 'mod_feedback');
         //-------------------------------------------------------------------------------
         $this->standard_coursemodule_elements();
         //-------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ class mod_feedback_mod_form extends moodleform_mod {
         // Check open and close times are consistent.
         if ($data['timeopen'] && $data['timeclose'] &&
                 $data['timeclose'] < $data['timeopen']) {
-            $errors['timeclose'] = get_string('closebeforeopen', 'feedback');
+            $errors['timeclose'] = get_string('closebeforeopen', 'mod_feedback');
         }
         return $errors;
     }
@@ -212,7 +212,7 @@ class mod_feedback_mod_form extends moodleform_mod {
         $mform->addElement('checkbox',
             $completionsubmitel,
             '',
-            get_string('completionsubmit', 'feedback')
+            get_string('completionsubmit', 'mod_feedback')
         );
         // Enable this completion rule by default.
         $mform->setDefault($completionsubmitel, 1);

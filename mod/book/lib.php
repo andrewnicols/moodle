@@ -179,8 +179,8 @@ function book_reset_userdata($data) {
 
 
         $status[] = [
-            'component' => get_string('modulenameplural', 'book'),
-            'item' => get_string('tagsdeleted', 'book'),
+            'component' => get_string('modulenameplural', 'mod_book'),
+            'item' => get_string('tagsdeleted', 'mod_book'),
             'error' => false
         ];
     }
@@ -194,8 +194,8 @@ function book_reset_userdata($data) {
  * @param MoodleQuickForm $mform
  */
 function book_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'bookheader', get_string('modulenameplural', 'book'));
-    $mform->addElement('checkbox', 'reset_book_tags', get_string('removeallbooktags', 'book'));
+    $mform->addElement('header', 'bookheader', get_string('modulenameplural', 'mod_book'));
+    $mform->addElement('checkbox', 'reset_book_tags', get_string('removeallbooktags', 'mod_book'));
 }
 
 /**

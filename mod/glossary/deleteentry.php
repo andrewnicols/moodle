@@ -21,10 +21,10 @@ if ($hook !== '') {
 }
 $PAGE->set_url($url);
 
-$strglossary   = get_string("modulename", "glossary");
-$strglossaries = get_string("modulenameplural", "glossary");
+$strglossary   = get_string("modulename", 'mod_glossary');
+$strglossaries = get_string("modulenameplural", 'mod_glossary');
 $stredit       = get_string("edit");
-$entrydeleted  = get_string("entrydeleted","glossary");
+$entrydeleted  = get_string("entrydeleted",'mod_glossary');
 
 
 if (! $cm = get_coursemodule_from_id('glossary', $id)) {
@@ -48,7 +48,7 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 
 if (! $glossary = $DB->get_record("glossary", array("id"=>$cm->instance))) {
-    throw new \moodle_exception('invalidid', 'glossary');
+    throw new \moodle_exception('invalidid', 'mod_glossary');
 }
 
 // Throws an exception if the user cannot delete the entry.
@@ -62,7 +62,7 @@ if ($confirm and confirm_sesskey()) { // the operation was confirmed.
     redirect("view.php?id=$cm->id&amp;mode=$prevmode&amp;hook=$hook");
 
 } else {        // the operation has not been confirmed yet so ask the user to do so
-    $strareyousuredelete = get_string("areyousuredelete", "glossary");
+    $strareyousuredelete = get_string("areyousuredelete", 'mod_glossary');
     $PAGE->navbar->add(get_string('delete'));
     $PAGE->set_title($glossary->name);
     $PAGE->set_heading($course->fullname);

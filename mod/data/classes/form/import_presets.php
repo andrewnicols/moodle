@@ -83,7 +83,7 @@ class import_presets extends dynamic_form {
      */
     protected function check_access_for_dynamic_submission(): void {
         if (!has_capability('mod/data:managetemplates', $this->get_context_for_dynamic_submission())) {
-            throw new moodle_exception('importpresetmissingcapability', 'data');
+            throw new moodle_exception('importpresetmissingcapability', 'mod_data');
         }
     }
 

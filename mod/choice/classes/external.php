@@ -83,7 +83,7 @@ class mod_choice_external extends external_api {
         $users = choice_get_response_data($choice, $cm, $groupmode, $onlyactive);
         // Show those who haven't answered the question.
         if (!empty($choice->showunanswered)) {
-            $choice->option[0] = get_string('notanswered', 'choice');
+            $choice->option[0] = get_string('notanswered', 'mod_choice');
             $choice->maxanswers[0] = 0;
         }
         $results = prepare_choice_show_results($choice, $course, $cm, $users);
@@ -214,15 +214,15 @@ class mod_choice_external extends external_api {
 
         if (!empty($choice->timeopen) && ($choice->timeopen > $timenow)) {
             $choiceopen = false;
-            $warnings[1] = get_string("notopenyet", "choice", userdate($choice->timeopen));
+            $warnings[1] = get_string("notopenyet", 'mod_choice', userdate($choice->timeopen));
             if ($choice->showpreview) {
-                $warnings[2] = get_string('previewonly', 'choice', userdate($choice->timeopen));
+                $warnings[2] = get_string('previewonly', 'mod_choice', userdate($choice->timeopen));
                 $showpreview = true;
             }
         }
         if (!empty($choice->timeclose) && ($timenow > $choice->timeclose)) {
             $choiceopen = false;
-            $warnings[3] = get_string("expired", "choice", userdate($choice->timeclose));
+            $warnings[3] = get_string("expired", 'mod_choice', userdate($choice->timeclose));
         }
 
         $optionsarray = array();
@@ -341,9 +341,9 @@ class mod_choice_external extends external_api {
 
         $timenow = time();
         if (!empty($choice->timeopen) && ($choice->timeopen > $timenow)) {
-            throw new moodle_exception("notopenyet", "choice", '', userdate($choice->timeopen));
+            throw new moodle_exception("notopenyet", 'mod_choice', '', userdate($choice->timeopen));
         } else if (!empty($choice->timeclose) && ($timenow > $choice->timeclose)) {
-            throw new moodle_exception("expired", "choice", '', userdate($choice->timeclose));
+            throw new moodle_exception("expired", 'mod_choice', '', userdate($choice->timeclose));
         }
 
         if (!choice_get_my_response($choice) or $choice->allowupdate) {
@@ -623,7 +623,7 @@ class mod_choice_external extends external_api {
             if (!$candeleteall) {
                 $timenow = time();
                 if (!empty($choice->timeclose) && ($timenow > $choice->timeclose)) {
-                    throw new moodle_exception("expired", "choice", '', userdate($choice->timeclose));
+                    throw new moodle_exception("expired", 'mod_choice', '', userdate($choice->timeclose));
                 }
             }
 

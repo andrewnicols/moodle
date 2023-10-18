@@ -1193,10 +1193,10 @@ function get_scorm_default (&$userdata, $scorm, $scoid, $attempt, $mode) {
             $userdata->$key = $value;
         }
     } else {
-        throw new \moodle_exception('cannotfindsco', 'scorm');
+        throw new \moodle_exception('cannotfindsco', 'mod_scorm');
     }
     if (!$sco = scorm_get_sco($scoid)) {
-        throw new \moodle_exception('cannotfindsco', 'scorm');
+        throw new \moodle_exception('cannotfindsco', 'mod_scorm');
     }
 
     if (isset($userdata->status)) {

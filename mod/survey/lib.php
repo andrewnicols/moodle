@@ -167,7 +167,7 @@ function survey_user_outline($course, $user, $mod, $survey) {
         $lastanswer = array_pop($answers);
 
         $result = new stdClass();
-        $result->info = get_string("done", "survey");
+        $result->info = get_string("done", 'mod_survey');
         $result->time = $lastanswer->time;
         return $result;
     }
@@ -196,7 +196,7 @@ function survey_user_complete($course, $user, $mod, $survey) {
 
             foreach ($questionorder as $key=>$val) {
                 $question = $questions[$val];
-                $questiontext = get_string($question->shorttext, "survey");
+                $questiontext = get_string($question->shorttext, 'mod_survey');
 
                 if ($answer = survey_get_user_answer($survey->id, $question->id, $user->id)) {
                     $answertext = "$answer->answer1";
@@ -274,7 +274,7 @@ function survey_print_recent_activity($course, $viewfullnames, $timestart) {
         return false;
     }
 
-    echo $OUTPUT->heading(get_string('newsurveyresponses', 'survey') . ':', 6);
+    echo $OUTPUT->heading(get_string('newsurveyresponses', 'mod_survey') . ':', 6);
     foreach ($surveys as $survey) {
         $url = $CFG->wwwroot.'/mod/survey/view.php?id='.$survey->cmid;
         print_recent_activity_note($survey->time, $survey, $survey->name, $url, false, $viewfullnames);
@@ -516,10 +516,10 @@ function survey_shorten_name ($name, $numwords) {
 function survey_print_multi($question) {
     global $USER, $DB, $qnum, $DB, $OUTPUT; //TODO: this is sloppy globals abuse
 
-    $stripreferthat = get_string("ipreferthat", "survey");
-    $strifoundthat = get_string("ifoundthat", "survey");
-    $strdefault    = get_string('notyetanswered', 'survey');
-    $strresponses  = get_string('responses', 'survey');
+    $stripreferthat = get_string("ipreferthat", 'mod_survey');
+    $strifoundthat = get_string("ifoundthat", 'mod_survey');
+    $strdefault    = get_string('notyetanswered', 'mod_survey');
+    $strresponses  = get_string('responses', 'mod_survey');
 
     echo $OUTPUT->heading($question->text, 3);
     echo "\n<table width=\"90%\" cellpadding=\"4\" cellspacing=\"1\" border=\"0\" class=\"surveytable\">";
@@ -545,7 +545,7 @@ function survey_print_multi($question) {
 
     echo "<colgroup colspan=\"7\"></colgroup>";
     echo "<tr class=\"smalltext\"><th scope=\"row\">$strresponses</th>";
-    echo "<th scope=\"col\" class=\"hresponse\">". get_string('notyetanswered', 'survey'). "</th>";
+    echo "<th scope=\"col\" class=\"hresponse\">". get_string('notyetanswered', 'mod_survey'). "</th>";
     foreach ($options as $key => $val) {
         echo "<th scope=\"col\" class=\"hresponse\">$val</th>\n";
     }
@@ -563,7 +563,7 @@ function survey_print_multi($question) {
             $rowclass = survey_question_rowclass(round($qnum / 2));
         }
         if ($q->text) {
-            $q->text = get_string($q->text, "survey");
+            $q->text = get_string($q->text, 'mod_survey');
         }
 
         echo "<tr class=\"$rowclass rblock\">";
@@ -686,7 +686,7 @@ function survey_print_graph($url) {
     global $CFG, $SURVEY_GHEIGHT, $SURVEY_GWIDTH;
 
     echo "<img class='resultgraph' height=\"$SURVEY_GHEIGHT\" width=\"$SURVEY_GWIDTH\"".
-         " src=\"$CFG->wwwroot/mod/survey/graph.php?$url\" alt=\"".get_string("surveygraph", "survey")."\" />";
+         " src=\"$CFG->wwwroot/mod/survey/graph.php?$url\" alt=\"".get_string("surveygraph", 'mod_survey')."\" />";
 }
 
 /**
@@ -725,9 +725,9 @@ function survey_get_post_actions() {
  * @param MoodleQuickForm $mform form passed by reference
  */
 function survey_reset_course_form_definition(&$mform) {
-    $mform->addElement('header', 'surveyheader', get_string('modulenameplural', 'survey'));
-    $mform->addElement('checkbox', 'reset_survey_answers', get_string('deleteallanswers','survey'));
-    $mform->addElement('checkbox', 'reset_survey_analysis', get_string('deleteanalysis','survey'));
+    $mform->addElement('header', 'surveyheader', get_string('modulenameplural', 'mod_survey'));
+    $mform->addElement('checkbox', 'reset_survey_answers', get_string('deleteallanswers','mod_survey'));
+    $mform->addElement('checkbox', 'reset_survey_analysis', get_string('deleteanalysis','mod_survey'));
     $mform->disabledIf('reset_survey_analysis', 'reset_survey_answers', 'checked');
 }
 
@@ -750,7 +750,7 @@ function survey_reset_course_form_defaults($course) {
 function survey_reset_userdata($data) {
     global $DB;
 
-    $componentstr = get_string('modulenameplural', 'survey');
+    $componentstr = get_string('modulenameplural', 'mod_survey');
     $status = array();
 
     $surveyssql = "SELECT ch.id
@@ -761,12 +761,12 @@ function survey_reset_userdata($data) {
     if (!empty($data->reset_survey_answers)) {
         $DB->delete_records_select('survey_answers', "survey IN ($surveyssql)", $params);
         $DB->delete_records_select('survey_analysis', "survey IN ($surveyssql)", $params);
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallanswers', 'survey'), 'error'=>false);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallanswers', 'mod_survey'), 'error'=>false);
     }
 
     if (!empty($data->reset_survey_analysis)) {
         $DB->delete_records_select('survey_analysis', "survey IN ($surveyssql)", $params);
-        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallanswers', 'survey'), 'error'=>false);
+        $status[] = array('component'=>$componentstr, 'item'=>get_string('deleteallanswers', 'mod_survey'), 'error'=>false);
     }
 
     // No date shifting.
@@ -823,7 +823,7 @@ function survey_extend_settings_navigation(settings_navigation $settings, naviga
         } else {
             $url->param('action', 'questions');
         }
-        $surveynode->add(get_string("responsereports", "survey"), $url);
+        $surveynode->add(get_string("responsereports", 'mod_survey'), $url);
     }
 }
 
@@ -834,7 +834,7 @@ function survey_extend_settings_navigation(settings_navigation $settings, naviga
  * @param stdClass $currentcontext Current context of block
  */
 function survey_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-survey-*'=>get_string('page-mod-survey-x', 'survey'));
+    $module_pagetype = array('mod-survey-*'=>get_string('page-mod-survey-x', 'mod_survey'));
     return $module_pagetype;
 }
 
@@ -896,19 +896,19 @@ function survey_order_questions($questions, $questionorder) {
 function survey_translate_question($question) {
 
     if ($question->text) {
-        $question->text = get_string($question->text, "survey");
+        $question->text = get_string($question->text, 'mod_survey');
     }
 
     if ($question->shorttext) {
-        $question->shorttext = get_string($question->shorttext, "survey");
+        $question->shorttext = get_string($question->shorttext, 'mod_survey');
     }
 
     if ($question->intro) {
-        $question->intro = get_string($question->intro, "survey");
+        $question->intro = get_string($question->intro, 'mod_survey');
     }
 
     if ($question->options) {
-        $question->options = get_string($question->options, "survey");
+        $question->options = get_string($question->options, 'mod_survey');
     }
     return $question;
 }
@@ -926,7 +926,7 @@ function survey_get_questions($survey) {
 
     $questionids = explode(',', $survey->questions);
     if (! $questions = $DB->get_records_list("survey_questions", "id", $questionids)) {
-        throw new moodle_exception('cannotfindquestion', 'survey');
+        throw new moodle_exception('cannotfindquestion', 'mod_survey');
     }
 
     return survey_order_questions($questions, $questionids);
@@ -1172,7 +1172,7 @@ function mod_survey_get_completion_active_rule_descriptions($cm) {
         switch ($key) {
             case 'completionsubmit':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionsubmit', 'survey');
+                    $descriptions[] = get_string('completionsubmit', 'mod_survey');
                 }
                 break;
             default:

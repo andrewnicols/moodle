@@ -2510,7 +2510,7 @@ class externallib_test extends externallib_advanced_testcase {
         $post = $this->getDataGenerator()->get_plugin_generator('mod_forum')->create_post($record);
 
         $this->setUser($otheruser);
-        $this->expectExceptionMessage(get_string('cannotdeletepost', 'forum'));
+        $this->expectExceptionMessage(get_string('cannotdeletepost', 'mod_forum'));
         mod_forum_external::delete_post($post->id);
     }
 
@@ -3321,7 +3321,7 @@ class externallib_test extends externallib_advanced_testcase {
         $message = 'Hey message updated';
         $messageformat = FORMAT_HTML;
 
-        $this->expectExceptionMessage(get_string('cannotupdatepost', 'forum'));
+        $this->expectExceptionMessage(get_string('cannotupdatepost', 'mod_forum'));
         mod_forum_external::update_discussion_post($newpost->id, $subject, $message, $messageformat);
     }
 

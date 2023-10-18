@@ -82,7 +82,7 @@ class quiz_statistics_table extends flexible_table {
         }
 
         $columns[] = 'name';
-        $headers[] = get_string('questionname', 'quiz');
+        $headers[] = get_string('questionname', 'mod_quiz');
 
         $columns[] = 's';
         $headers[] = get_string('attempts', 'quiz_statistics');

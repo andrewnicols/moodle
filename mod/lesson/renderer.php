@@ -98,7 +98,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $output  =  $this->output->box_start('generalbox boxaligncenter');
         $output .=  $this->output->box_start('center');
         $output .=  $message;
-        $output .=  $this->output->box('<a href="'.$CFG->wwwroot.'/course/view.php?id='. $this->page->course->id .'">'. get_string('returnto', 'lesson', format_string($this->page->course->fullname, true)) .'</a>', 'lessonbutton standardbutton');
+        $output .=  $this->output->box('<a href="'.$CFG->wwwroot.'/course/view.php?id='. $this->page->course->id .'">'. get_string('returnto', 'mod_lesson', format_string($this->page->course->fullname, true)) .'</a>', 'lessonbutton standardbutton');
         $output .=  $this->output->box_end();
         $output .=  $this->output->box_end();
         return $output;
@@ -119,12 +119,12 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $output .=  '<input type="hidden" name="id" value="'. $this->page->cm->id .'" />';
         $output .=  '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
         if ($failedattempt) {
-            $output .=  $this->output->notification(get_string('loginfail', 'lesson'));
+            $output .=  $this->output->notification(get_string('loginfail', 'mod_lesson'));
         }
-        $output .= get_string('passwordprotectedlesson', 'lesson', format_string($lesson->name)).'<br /><br />';
-        $output .= get_string('enterpassword', 'lesson')." <input type=\"password\" name=\"userpassword\" /><br /><br />";
-        $output .= "<div class='lessonbutton standardbutton submitbutton'><input type='submit' value='".get_string('continue', 'lesson')."' /></div>";
-        $output .= " <div class='lessonbutton standardbutton submitbutton'><input type='submit' name='backtocourse' value='".get_string('cancel', 'lesson')."' /></div>";
+        $output .= get_string('passwordprotectedlesson', 'mod_lesson', format_string($lesson->name)).'<br /><br />';
+        $output .= get_string('enterpassword', 'mod_lesson')." <input type=\"password\" name=\"userpassword\" /><br /><br />";
+        $output .= "<div class='lessonbutton standardbutton submitbutton'><input type='submit' value='".get_string('continue', 'mod_lesson')."' /></div>";
+        $output .= " <div class='lessonbutton standardbutton submitbutton'><input type='submit' name='backtocourse' value='".get_string('cancel', 'mod_lesson')."' /></div>";
         $output .=  '</fieldset></form>';
         $output .=  $this->output->box_end();
         $output .=  $this->output->box_end();
@@ -140,8 +140,8 @@ class mod_lesson_renderer extends plugin_renderer_base {
      */
     public function dependancy_errors($dependentlesson, $errors) {
         $output  = $this->output->box_start('generalbox boxaligncenter');
-        $output .= get_string('completethefollowingconditions', 'lesson', $dependentlesson->name);
-        $output .= $this->output->box(implode('<br />'.get_string('and', 'lesson').'<br />', $errors),'center');
+        $output .= get_string('completethefollowingconditions', 'mod_lesson', $dependentlesson->name);
+        $output .= $this->output->box(implode('<br />'.get_string('and', 'mod_lesson').'<br />', $errors),'center');
         $output .= $this->output->box_end();
         return $output;
     }
@@ -170,7 +170,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
      */
     public function continue_links(lesson $lesson, $lastpageseenid) {
         global $CFG;
-        $output = $this->output->box(get_string('youhaveseen','lesson'), 'generalbox boxaligncenter');
+        $output = $this->output->box(get_string('youhaveseen','mod_lesson'), 'generalbox boxaligncenter');
         $output .= $this->output->box_start('center');
 
         $yeslink = html_writer::link(new moodle_url('/mod/lesson/view.php', array('id' => $this->page->cm->id,
@@ -217,7 +217,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $npages = count($lesson->load_all_pages());
 
         $table = new html_table();
-        $table->head = array(get_string('pagetitle', 'lesson'), get_string('qtype', 'lesson'), get_string('jumps', 'lesson'), get_string('actions', 'lesson'));
+        $table->head = array(get_string('pagetitle', 'mod_lesson'), get_string('qtype', 'mod_lesson'), get_string('jumps', 'mod_lesson'), get_string('actions', 'mod_lesson'));
         $table->align = array('left', 'left', 'left', 'center');
         $table->data = array();
 
@@ -349,7 +349,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $links = array();
 
         $importquestionsurl = new moodle_url('/mod/lesson/import.php',array('id'=>$this->page->cm->id, 'pageid'=>$prevpageid));
-        $links[] = html_writer::link($importquestionsurl, get_string('importquestions', 'lesson'));
+        $links[] = html_writer::link($importquestionsurl, get_string('importquestions', 'mod_lesson'));
 
         $manager = lesson_page_type_manager::get($lesson);
         foreach($manager->get_add_page_type_links($prevpageid) as $link) {
@@ -357,7 +357,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
         }
 
         $addquestionurl = new moodle_url('/mod/lesson/editpage.php', array('id'=>$this->page->cm->id, 'pageid'=>$prevpageid));
-        $links[] = html_writer::link($addquestionurl, get_string('addaquestionpagehere', 'lesson'));
+        $links[] = html_writer::link($addquestionurl, get_string('addaquestionpagehere', 'mod_lesson'));
 
         return $this->output->box(implode(" | \n", $links), 'addlinks');
     }
@@ -371,11 +371,11 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $prevpageid = 0;
 
         $headinglevel = $this->page->activityheader->get_heading_level(3);
-        $output = $this->output->heading(get_string("whatdofirst", "lesson"), $headinglevel);
+        $output = $this->output->heading(get_string("whatdofirst", 'mod_lesson'), $headinglevel);
         $links = array();
 
         $importquestionsurl = new moodle_url('/mod/lesson/import.php',array('id'=>$this->page->cm->id, 'pageid'=>$prevpageid));
-        $links[] = html_writer::link($importquestionsurl, get_string('importquestions', 'lesson'));
+        $links[] = html_writer::link($importquestionsurl, get_string('importquestions', 'mod_lesson'));
 
         $manager = lesson_page_type_manager::get($lesson);
         foreach ($manager->get_add_page_type_links($prevpageid) as $link) {
@@ -384,7 +384,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
         }
 
         $addquestionurl = new moodle_url('/mod/lesson/editpage.php', array('id'=>$this->page->cm->id, 'pageid'=>$prevpageid, 'firstpage'=>1));
-        $links[] = html_writer::link($addquestionurl, get_string('addaquestionpage', 'lesson'));
+        $links[] = html_writer::link($addquestionurl, get_string('addaquestionpage', 'mod_lesson'));
 
         return $this->output->box($output.'<p>'.implode('</p><p>', $links).'</p>', 'generalbox firstpageoptions');
     }
@@ -405,30 +405,30 @@ class mod_lesson_renderer extends plugin_renderer_base {
         if ($printmove) {
             $url = new moodle_url('/mod/lesson/lesson.php',
                     array('id' => $this->page->cm->id, 'action' => 'move', 'pageid' => $page->id, 'sesskey' => sesskey()));
-            $label = get_string('movepagenamed', 'lesson', format_string($page->title));
+            $label = get_string('movepagenamed', 'mod_lesson', format_string($page->title));
             $img = $this->output->pix_icon('t/move', $label);
             $actions[] = html_writer::link($url, $img, array('title' => $label));
         }
         $url = new moodle_url('/mod/lesson/editpage.php', array('id' => $this->page->cm->id, 'pageid' => $page->id, 'edit' => 1));
-        $label = get_string('updatepagenamed', 'lesson', format_string($page->title));
+        $label = get_string('updatepagenamed', 'mod_lesson', format_string($page->title));
         $img = $this->output->pix_icon('t/edit', $label);
         $actions[] = html_writer::link($url, $img, array('title' => $label));
 
         // Duplicate action.
         $url = new moodle_url('/mod/lesson/lesson.php', array('id' => $this->page->cm->id, 'pageid' => $page->id,
                 'action' => 'duplicate', 'sesskey' => sesskey()));
-        $label = get_string('duplicatepagenamed', 'lesson', format_string($page->title));
+        $label = get_string('duplicatepagenamed', 'mod_lesson', format_string($page->title));
         $img = $this->output->pix_icon('e/copy', $label, 'mod_lesson');
         $actions[] = html_writer::link($url, $img, array('title' => $label));
 
         $url = new moodle_url('/mod/lesson/view.php', array('id' => $this->page->cm->id, 'pageid' => $page->id));
-        $label = get_string('previewpagenamed', 'lesson', format_string($page->title));
+        $label = get_string('previewpagenamed', 'mod_lesson', format_string($page->title));
         $img = $this->output->pix_icon('t/preview', $label);
         $actions[] = html_writer::link($url, $img, array('title' => $label));
 
         $url = new moodle_url('/mod/lesson/lesson.php',
                 array('id' => $this->page->cm->id, 'action' => 'confirmdelete', 'pageid' => $page->id, 'sesskey' => sesskey()));
-        $label = get_string('deletepagenamed', 'lesson', format_string($page->title));
+        $label = get_string('deletepagenamed', 'mod_lesson', format_string($page->title));
         $img = $this->output->pix_icon('t/delete', $label);
         $actions[] = html_writer::link($url, $img, array('title' => $label));
 
@@ -439,11 +439,11 @@ class mod_lesson_renderer extends plugin_renderer_base {
             foreach ($links as $link) {
                 $options[$link['type']] = $link['name'];
             }
-            $options[0] = get_string('addaquestionpage', 'lesson');
+            $options[0] = get_string('addaquestionpage', 'mod_lesson');
 
             $addpageurl = new moodle_url('/mod/lesson/editpage.php', array('id'=>$this->page->cm->id, 'pageid'=>$page->id, 'sesskey'=>sesskey()));
-            $addpageselect = new single_select($addpageurl, 'qtype', $options, null, array(''=>get_string('addanewpage', 'lesson').'...'), 'addpageafter'.$page->id);
-            $addpageselect->attributes = ['aria-label' => get_string('actions', 'lesson')];
+            $addpageselect = new single_select($addpageurl, 'qtype', $options, null, array(''=>get_string('addanewpage', 'mod_lesson').'...'), 'addpageafter'.$page->id);
+            $addpageselect->attributes = ['aria-label' => get_string('actions', 'mod_lesson')];
             $addpageselector = $this->output->render($addpageselect);
         }
 
@@ -498,7 +498,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
 
         // catch teachers
         if (has_capability('mod/lesson:manage', $context)) {
-            return $this->output->notification(get_string('progressbarteacherwarning2', 'lesson'));
+            return $this->output->notification(get_string('progressbarteacherwarning2', 'mod_lesson'));
         }
 
         if ($progress === null) {
@@ -512,7 +512,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $content .= $progress . "%";
         $content .= html_writer::end_tag('div');
         $content .= html_writer::end_tag('div');
-        $printprogress = html_writer::tag('div', get_string('progresscompleted', 'lesson', $progress) . $content);
+        $printprogress = html_writer::tag('div', get_string('progresscompleted', 'mod_lesson', $progress) . $content);
         return $this->output->box($printprogress, 'progress_bar');
     }
 
@@ -568,41 +568,41 @@ class mod_lesson_renderer extends plugin_renderer_base {
 
         if ($data->gradelesson) {
             $headinglevel = $this->page->activityheader->get_heading_level();
-            $output .= $this->heading(get_string("congratulations", "lesson"), $headinglevel);
+            $output .= $this->heading(get_string("congratulations", 'mod_lesson'), $headinglevel);
             $output .= $this->box_start('generalbox boxaligncenter');
         }
 
         if ($data->notenoughtimespent !== false) {
-            $output .= $this->paragraph(get_string("notenoughtimespent", "lesson", $data->notenoughtimespent), 'center');
+            $output .= $this->paragraph(get_string("notenoughtimespent", 'mod_lesson', $data->notenoughtimespent), 'center');
         }
 
         if ($data->numberofpagesviewed !== false) {
-            $output .= $this->paragraph(get_string("numberofpagesviewed", "lesson", $data->numberofpagesviewed), 'center');
+            $output .= $this->paragraph(get_string("numberofpagesviewed", 'mod_lesson', $data->numberofpagesviewed), 'center');
         }
         if ($data->youshouldview !== false) {
-            $output .= $this->paragraph(get_string("youshouldview", "lesson", $data->youshouldview), 'center');
+            $output .= $this->paragraph(get_string("youshouldview", 'mod_lesson', $data->youshouldview), 'center');
         }
         if ($data->numberofcorrectanswers !== false) {
-            $output .= $this->paragraph(get_string("numberofcorrectanswers", "lesson", $data->numberofcorrectanswers), 'center');
+            $output .= $this->paragraph(get_string("numberofcorrectanswers", 'mod_lesson', $data->numberofcorrectanswers), 'center');
         }
 
         if ($data->displayscorewithessays !== false) {
-            $output .= $this->box(get_string("displayscorewithessays", "lesson", $data->displayscorewithessays), 'center');
+            $output .= $this->box(get_string("displayscorewithessays", 'mod_lesson', $data->displayscorewithessays), 'center');
         } else if ($data->displayscorewithoutessays !== false) {
-            $output .= $this->box(get_string("displayscorewithoutessays", "lesson", $data->displayscorewithoutessays), 'center');
+            $output .= $this->box(get_string("displayscorewithoutessays", 'mod_lesson', $data->displayscorewithoutessays), 'center');
         }
 
         if ($data->yourcurrentgradeisoutof !== false) {
-            $output .= $this->paragraph(get_string("yourcurrentgradeisoutof", "lesson", $data->yourcurrentgradeisoutof), 'center');
+            $output .= $this->paragraph(get_string("yourcurrentgradeisoutof", 'mod_lesson', $data->yourcurrentgradeisoutof), 'center');
         }
         if ($data->yourcurrentgradeis !== false) {
-            $output .= $this->paragraph(get_string("yourcurrentgradeis", "lesson", $data->yourcurrentgradeis), 'center');
+            $output .= $this->paragraph(get_string("yourcurrentgradeis", 'mod_lesson', $data->yourcurrentgradeis), 'center');
         }
         if ($data->eolstudentoutoftimenoanswers !== false) {
-            $output .= $this->paragraph(get_string("eolstudentoutoftimenoanswers", "lesson"));
+            $output .= $this->paragraph(get_string("eolstudentoutoftimenoanswers", 'mod_lesson'));
         }
         if ($data->welldone !== false) {
-            $output .= $this->paragraph(get_string("welldone", "lesson"));
+            $output .= $this->paragraph(get_string("welldone", 'mod_lesson'));
         }
 
         if ($data->progresscompleted !== false) {
@@ -610,17 +610,17 @@ class mod_lesson_renderer extends plugin_renderer_base {
         }
 
         if ($data->displayofgrade !== false) {
-            $output .= $this->paragraph(get_string("displayofgrade", "lesson"), 'center');
+            $output .= $this->paragraph(get_string("displayofgrade", 'mod_lesson'), 'center');
         }
 
         $output .= $this->box_end(); // End of Lesson button to Continue.
 
         if ($data->reviewlesson !== false) {
-            $output .= html_writer::link($data->reviewlesson, get_string('reviewlesson', 'lesson'),
+            $output .= html_writer::link($data->reviewlesson, get_string('reviewlesson', 'mod_lesson'),
                 array('class' => 'centerpadded lessonbutton standardbutton pr-3'));
         }
         if ($data->modattemptsnoteacher !== false) {
-            $output .= $this->paragraph(get_string("modattemptsnoteacher", "lesson"), 'centerpadded');
+            $output .= $this->paragraph(get_string("modattemptsnoteacher", 'mod_lesson'), 'centerpadded');
         }
 
         if ($data->activitylink !== false) {
@@ -628,13 +628,13 @@ class mod_lesson_renderer extends plugin_renderer_base {
         }
 
         $url = new moodle_url('/course/view.php', array('id' => $course->id));
-        $output .= html_writer::link($url, get_string('returnto', 'lesson', format_string($course->fullname, true)),
+        $output .= html_writer::link($url, get_string('returnto', 'mod_lesson', format_string($course->fullname, true)),
                 array('class' => 'centerpadded lessonbutton standardbutton pr-3'));
 
         if (has_capability('gradereport/user:view', context_course::instance($course->id))
                 && $course->showgrades && $lesson->grade != 0 && !$lesson->practice) {
             $url = new moodle_url('/grade/index.php', array('id' => $course->id));
-            $output .= html_writer::link($url, get_string('viewgrades', 'lesson'),
+            $output .= html_writer::link($url, get_string('viewgrades', 'mod_lesson'),
                 array('class' => 'centerpadded lessonbutton standardbutton pr-3'));
         }
         return $output;

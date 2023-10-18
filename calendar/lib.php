@@ -2909,7 +2909,7 @@ function calendar_add_subscription($sub) {
             return $sub->id;
         }
     } else {
-        throw new \moodle_exception('errorbadsubscription', 'importcalendar');
+        throw new \moodle_exception('errorbadsubscription', 'mod_importcalendar');
     }
 }
 

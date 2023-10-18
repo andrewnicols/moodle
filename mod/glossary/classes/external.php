@@ -1509,7 +1509,7 @@ class mod_glossary_external extends external_api {
 
         if (!$glossary->allowduplicatedentries) {
             if (glossary_concept_exists($glossary, $params['concept'])) {
-                throw new moodle_exception('errconceptalreadyexists', 'glossary');
+                throw new moodle_exception('errconceptalreadyexists', 'mod_glossary');
             }
         }
 

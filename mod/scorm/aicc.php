@@ -51,7 +51,7 @@ if (empty($cfgscorm->allowaicchacp)) {
 } else {
     $scormsession = scorm_aicc_confirm_hacp_session($sessionid);
     if (empty($scormsession)) {
-        throw new \moodle_exception('invalidhacpsession', 'scorm');
+        throw new \moodle_exception('invalidhacpsession', 'mod_scorm');
     }
     $aiccuser = $DB->get_record('user', array('id' => $scormsession->userid), 'id,username,lastname,firstname', MUST_EXIST);
 }
@@ -192,7 +192,7 @@ if (!empty($command)) {
                         echo 'Max_Time_Allowed='.$userdata->max_time_allowed."\r\n";
                         echo 'Time_Limit_Action='.$userdata->time_limit_action."\r\n";
                     } else {
-                        throw new \moodle_exception('cannotfindsco', 'scorm');
+                        throw new \moodle_exception('cannotfindsco', 'mod_scorm');
                     }
                 }
             break;

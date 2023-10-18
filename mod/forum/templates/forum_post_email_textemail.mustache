@@ -43,32 +43,32 @@
     * forumindexlink
     * isprivatereply
 }}
-{{{ coursename }}} -> {{# str }} forums, forum {{/ str }} -> {{{ forumname }}}{{# showdiscussionname }} -> {{{ discussionname }}} {{/ showdiscussionname }}
+{{{ coursename }}} -> {{# str }} forums, mod_forum {{/ str }} -> {{{ forumname }}}{{# showdiscussionname }} -> {{{ discussionname }}} {{/ showdiscussionname }}
 {{ permalink }}
 {{{ subject }}}
-{{# str }} bynameondate, forum, {
+{{# str }} bynameondate, mod_forum, {
         "name": {{# quote }}{{{ authorfullname }}}{{/ quote }},
         "date": {{# quote}}{{ postdate }}{{/ quote }}
     } {{/ str }}
 {{# isprivatereply }}
-{{# str }} postisprivatereply, forum {{/ str }}
+{{# str }} postisprivatereply, mod_forum {{/ str }}
 {{/ isprivatereply }}
 ---------------------------------------------------------------------
 {{{ message }}}
 
 {{{ attachments }}}
 ---------------------------------------------------------------------
-{{# str }} postmailinfo, forum, {{{ coursename }}} {{/ str }}
+{{# str }} postmailinfo, mod_forum, {{{ coursename }}} {{/ str }}
 
 {{# canreply }}
     {{^ isprivatereply }}
-        {{# str }} postmailreply, forum, {{{ replylink }}} {{/ str }}
+        {{# str }} postmailreply, mod_forum, {{{ replylink }}} {{/ str }}
     {{/ isprivatereply }}
 {{/ canreply }}
 {{# unsubscribeforumlink }}
-{{# str }} unsubscribelink, forum, {{{ unsubscribeforumlink }}} {{/ str }}
+{{# str }} unsubscribelink, mod_forum, {{{ unsubscribeforumlink }}} {{/ str }}
 {{/ unsubscribeforumlink }}
 {{# unsubscribediscussionlink }}
-{{# str }} unsubscribediscussionlink, forum, {{{ unsubscribediscussionlink }}} {{/ str }}
+{{# str }} unsubscribediscussionlink, mod_forum, {{{ unsubscribediscussionlink }}} {{/ str }}
 {{/ unsubscribediscussionlink }}
-{{# str }} digestmailpostlink, forum, {{{ forumindexlink }}} {{/ str }}
+{{# str }} digestmailpostlink, mod_forum, {{{ forumindexlink }}} {{/ str }}

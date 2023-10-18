@@ -70,17 +70,17 @@ class start_submission extends external_api {
         if (!$assignment->submissions_open($USER->id)) {
             $warnings[] = self::generate_warning($assignid,
                 'submissionnotopen',
-                get_string('submissionnotopen', 'assign'));
+                get_string('submissionnotopen', 'mod_assign'));
         }
 
         if (!$assignment->is_time_limit_enabled()) {
             $warnings[] = self::generate_warning($assignid,
                 'timelimitnotenabled',
-                get_string('timelimitnotenabled', 'assign'));
+                get_string('timelimitnotenabled', 'mod_assign'));
         } else if ($assignment->is_attempt_in_progress()) {
             $warnings[] = self::generate_warning($assignid,
                 'opensubmissionexists',
-                get_string('opensubmissionexists', 'assign'));
+                get_string('opensubmissionexists', 'mod_assign'));
         }
 
         if (empty($warnings)) {

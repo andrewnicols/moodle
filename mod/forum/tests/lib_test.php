@@ -3843,9 +3843,9 @@ class lib_test extends \advanced_testcase {
         $moddefaults->completion = 2;
 
         $activeruledescriptions = [
-            get_string('completiondiscussionsdesc', 'forum', 3),
-            get_string('completionrepliesdesc', 'forum', 3),
-            get_string('completionpostsdesc', 'forum', 3)
+            get_string('completiondiscussionsdesc', 'mod_forum', 3),
+            get_string('completionrepliesdesc', 'mod_forum', 3),
+            get_string('completionpostsdesc', 'mod_forum', 3)
         ];
         $this->assertEquals(mod_forum_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_forum_get_completion_active_rule_descriptions($cm2), []);
@@ -4099,16 +4099,16 @@ class lib_test extends \advanced_testcase {
      */
     public function test_forum_get_layout_modes() {
         $expectednormal = [
-            FORUM_MODE_FLATOLDEST => get_string('modeflatoldestfirst', 'forum'),
-            FORUM_MODE_FLATNEWEST => get_string('modeflatnewestfirst', 'forum'),
-            FORUM_MODE_THREADED   => get_string('modethreaded', 'forum'),
-            FORUM_MODE_NESTED => get_string('modenested', 'forum')
+            FORUM_MODE_FLATOLDEST => get_string('modeflatoldestfirst', 'mod_forum'),
+            FORUM_MODE_FLATNEWEST => get_string('modeflatnewestfirst', 'mod_forum'),
+            FORUM_MODE_THREADED   => get_string('modethreaded', 'mod_forum'),
+            FORUM_MODE_NESTED => get_string('modenested', 'mod_forum')
         ];
         $expectedexperimental = [
-            FORUM_MODE_FLATOLDEST => get_string('modeflatoldestfirst', 'forum'),
-            FORUM_MODE_FLATNEWEST => get_string('modeflatnewestfirst', 'forum'),
-            FORUM_MODE_THREADED   => get_string('modethreaded', 'forum'),
-            FORUM_MODE_NESTED_V2 => get_string('modenestedv2', 'forum')
+            FORUM_MODE_FLATOLDEST => get_string('modeflatoldestfirst', 'mod_forum'),
+            FORUM_MODE_FLATNEWEST => get_string('modeflatnewestfirst', 'mod_forum'),
+            FORUM_MODE_THREADED   => get_string('modethreaded', 'mod_forum'),
+            FORUM_MODE_NESTED_V2 => get_string('modenestedv2', 'mod_forum')
         ];
 
         $this->assertEquals($expectednormal, forum_get_layout_modes());

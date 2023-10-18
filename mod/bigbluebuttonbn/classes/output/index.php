@@ -195,7 +195,7 @@ class index implements renderable {
     protected function get_room_record_info(renderer_base $output, instance $instance): string {
         if ($instance->is_recorded()) {
             // If it has been set when meeting created, set the variable on/off.
-            return get_string('index_enabled', 'bigbluebuttonbn');
+            return get_string('index_enabled', 'mod_bigbluebuttonbn');
         }
         return '';
     }

@@ -44,14 +44,14 @@ require_login($course, true, $cm);
 
 // Checking wiki instance
 if (!$wiki = wiki_get_wiki($cm->instance)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
 }
 
 if ($subwikiid) {
     // Subwiki id is specified.
     $subwiki = wiki_get_subwiki($subwikiid);
     if (!$subwiki || $subwiki->wikiid != $wiki->id) {
-        throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+        throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
     }
 } else {
     // Getting current group id
@@ -72,7 +72,7 @@ if ($subwikiid) {
 }
 
 if ($subwiki && !wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    throw new \moodle_exception('cannotviewpage', 'mod_wiki');
 }
 
 $wikipage = new page_wiki_search($wiki, $subwiki, $cm);

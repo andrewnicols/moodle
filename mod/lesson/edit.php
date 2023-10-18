@@ -57,7 +57,7 @@ if ($mode != get_user_preferences('lesson_view', 'collapsed') && $mode !== 'sing
 $lessonoutput = $PAGE->get_renderer('mod_lesson');
 $PAGE->navbar->add(get_string('edit'));
 
-echo $lessonoutput->header($lesson, $cm, $mode, false, null, get_string('edit', 'lesson'));
+echo $lessonoutput->header($lesson, $cm, $mode, false, null, get_string('edit', 'mod_lesson'));
 $actionarea = new \mod_lesson\output\edit_action_area($id, $url);
 echo $lessonoutput->render($actionarea);
 

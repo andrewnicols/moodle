@@ -221,7 +221,7 @@ function url_display_frame($url, $cm, $course) {
         $courseshortname = format_string($course->shortname, true, array('context' => $coursecontext));
         $title = strip_tags($courseshortname.': '.format_string($url->name));
         $framesize = $config->framesize;
-        $modulename = s(get_string('modulename','url'));
+        $modulename = s(get_string('modulename','mod_url'));
         $contentframetitle = s(format_string($url->name));
         $dir = get_string('thisdirection', 'langconfig');
 
@@ -298,7 +298,7 @@ function url_display_embed($url, $cm, $course) {
 
     $moodleurl = new moodle_url($fullurl);
     $link = html_writer::link($moodleurl, format_string($cm->name));
-    $clicktoopen = get_string('clicktoopen', 'url', $link);
+    $clicktoopen = get_string('clicktoopen', 'mod_url', $link);
 
     $extension = resourcelib_get_extension($url->externalurl);
 
@@ -380,7 +380,7 @@ function url_get_variable_options($config) {
     global $CFG;
 
     $options = array();
-    $options[''] = array('' => get_string('chooseavariable', 'url'));
+    $options[''] = array('' => get_string('chooseavariable', 'mod_url'));
 
     $options[get_string('course')] = array(
         'courseid'        => 'id',
@@ -391,7 +391,7 @@ function url_get_variable_options($config) {
         'courseformat'    => get_string('format'),
     );
 
-    $options[get_string('modulename', 'url')] = array(
+    $options[get_string('modulename', 'mod_url')] = array(
         'urlinstance'     => 'id',
         'urlcmid'         => 'cmid',
         'urlname'         => get_string('name'),
@@ -400,7 +400,7 @@ function url_get_variable_options($config) {
 
     $options[get_string('miscellaneous')] = array(
         'sitename'        => get_string('fullsitename'),
-        'serverurl'       => get_string('serverurl', 'url'),
+        'serverurl'       => get_string('serverurl', 'mod_url'),
         'currenttime'     => get_string('time'),
         'lang'            => get_string('language'),
     );

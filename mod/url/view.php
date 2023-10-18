@@ -59,7 +59,7 @@ $exturl = trim($url->externalurl);
 if (empty($exturl) or $exturl === 'http://') {
     $PAGE->activityheader->set_description(url_get_intro($url, $cm));
     url_print_header($url, $cm, $course);
-    notice(get_string('invalidstoredurl', 'url'), new moodle_url('/course/view.php', array('id'=>$cm->course)));
+    notice(get_string('invalidstoredurl', 'mod_url'), new moodle_url('/course/view.php', array('id'=>$cm->course)));
     die;
 }
 unset($exturl);

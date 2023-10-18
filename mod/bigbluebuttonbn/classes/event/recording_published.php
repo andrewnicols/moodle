@@ -42,7 +42,7 @@ class recording_published extends base {
      * @return string
      */
     public static function get_name() {
-        return get_string('event_recording_published', 'bigbluebuttonbn');
+        return get_string('event_recording_published', 'mod_bigbluebuttonbn');
     }
 
     /**

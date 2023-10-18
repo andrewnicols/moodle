@@ -34,12 +34,12 @@ $pageid    = optional_param('pageid', 0, PARAM_INT);
 $returnurl = optional_param('returnurl', '', PARAM_LOCALURL);
 
 if (!$subwiki = wiki_get_subwiki($subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
 }
 
 // Checking wiki instance of that subwiki
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
 }
 
 // Checking course module instance
@@ -55,7 +55,7 @@ $context = context_module::instance($cm->id);
 require_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    throw new \moodle_exception('cannotviewpage', 'mod_wiki');
 }
 require_capability('mod/wiki:managefiles', $context);
 
@@ -68,7 +68,7 @@ if (empty($returnurl)) {
     }
 }
 
-$title = get_string('editfiles', 'wiki');
+$title = get_string('editfiles', 'mod_wiki');
 
 $struser = get_string('user');
 $url = new moodle_url('/mod/wiki/filesedit.php', array('subwiki'=>$subwiki->id, 'pageid'=>$pageid));
@@ -76,7 +76,7 @@ $PAGE->set_url($url);
 $PAGE->set_context($context);
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
-$PAGE->navbar->add(format_string(get_string('wikifiles', 'wiki')), $CFG->wwwroot . '/mod/wiki/files.php?pageid=' . $pageid);
+$PAGE->navbar->add(format_string(get_string('wikifiles', 'mod_wiki')), $CFG->wwwroot . '/mod/wiki/files.php?pageid=' . $pageid);
 $PAGE->navbar->add(format_string($title));
 $PAGE->set_secondary_active_tab('modulepage');
 $PAGE->activityheader->set_attrs([

@@ -164,7 +164,7 @@ class feedback_item_numeric extends feedback_item_base {
                 $avg = '-';
             }
             echo '<tr><td><b>';
-            echo get_string('average', 'feedback').': '.$avg;
+            echo get_string('average', 'mod_feedback').': '.$avg;
             echo '</b></td></tr>';
             echo '</table>';
         }
@@ -184,7 +184,7 @@ class feedback_item_numeric extends feedback_item_base {
             // Export average.
             $worksheet->write_string($row_offset,
                                      2,
-                                     get_string('average', 'feedback'),
+                                     get_string('average', 'mod_feedback'),
                                      $xls_formats->value_bold);
 
             if (isset($analysed_item->avg)) {
@@ -235,11 +235,11 @@ class feedback_item_numeric extends feedback_item_base {
         }
 
         if (is_null($rangefrom) && is_numeric($rangeto)) {
-            return ' (' . get_string('maximal', 'feedback') .
+            return ' (' . get_string('maximal', 'mod_feedback') .
                         ': ' . $this->format_float($rangeto) . ')';
         }
         if (is_numeric($rangefrom) && is_null($rangeto)) {
-            return ' (' . get_string('minimal', 'feedback') .
+            return ' (' . get_string('minimal', 'mod_feedback') .
                         ': ' . $this->format_float($rangefrom) . ')';
         }
         if (is_null($rangefrom) && is_null($rangeto)) {
@@ -290,7 +290,7 @@ class feedback_item_numeric extends feedback_item_base {
             }
             if ((is_numeric($rangefrom) && $value < floatval($rangefrom)) ||
                     (is_numeric($rangeto) && $value > floatval($rangeto))) {
-                return array($inputname => get_string('numberoutofrange', 'feedback'));
+                return array($inputname => get_string('numberoutofrange', 'mod_feedback'));
             }
             return true;
         });

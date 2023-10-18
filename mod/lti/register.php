@@ -51,13 +51,13 @@ foreach ($toolproxies as $key => $toolproxy) {
 
 $redirect = new moodle_url('/mod/lti/toolproxies.php');
 if ($duplicate) {
-    redirect($redirect,  get_string('duplicateregurl', 'lti'));
+    redirect($redirect,  get_string('duplicateregurl', 'mod_lti'));
 }
 
 
 $profileservice = lti_get_service_by_name('profile');
 if (empty($profileservice)) {
-    redirect($redirect,  get_string('noprofileservice', 'lti'));
+    redirect($redirect,  get_string('noprofileservice', 'mod_lti'));
 }
 
 $url = new moodle_url('/mod/lti/register.php', array('id' => $id));
@@ -66,13 +66,13 @@ $PAGE->set_url($url);
 admin_externalpage_setup('ltitoolproxies');
 
 
-$PAGE->set_heading(get_string('toolproxyregistration', 'lti'));
-$PAGE->set_title(get_string('toolproxyregistration', 'lti'));
+$PAGE->set_heading(get_string('toolproxyregistration', 'mod_lti'));
+$PAGE->set_title(get_string('toolproxyregistration', 'mod_lti'));
 
 // Print the page header.
 echo $OUTPUT->header();
 
-echo $OUTPUT->heading(get_string('toolproxyregistration', 'lti'));
+echo $OUTPUT->heading(get_string('toolproxyregistration', 'mod_lti'));
 
 echo $OUTPUT->box_start('generalbox');
 
@@ -81,7 +81,7 @@ $registration = new moodle_url('/mod/lti/registration.php',
     array('id' => $id, 'sesskey' => sesskey()));
 
 echo "<p id=\"id_warning\" style=\"display: none; color: red; font-weight: bold; margin-top: 1em; padding-top: 1em;\">\n";
-echo get_string('register_warning', 'lti');
+echo get_string('register_warning', 'mod_lti');
 echo "\n</p>\n";
 
 echo '<iframe id="contentframe" height="600px" width="100%" src="' . $registration->out() . '" onload="doOnload()"></iframe>';

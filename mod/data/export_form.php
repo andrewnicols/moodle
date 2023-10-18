@@ -32,18 +32,18 @@ class mod_data_export_form extends moodleform {
 
     function definition() {
         $mform =& $this->_form;
-        $mform->addElement('header', 'exportformat', get_string('chooseexportformat', 'data'));
+        $mform->addElement('header', 'exportformat', get_string('chooseexportformat', 'mod_data'));
 
         $optionattrs = ['class' => 'mt-1 mb-1'];
 
         // Export format type radio group.
         $typesarray = array();
-        $typesarray[] = $mform->createElement('radio', 'exporttype', null, get_string('csvwithselecteddelimiter', 'data'), 'csv',
+        $typesarray[] = $mform->createElement('radio', 'exporttype', null, get_string('csvwithselecteddelimiter', 'mod_data'), 'csv',
             $optionattrs);
         // Temporarily commenting out Excel export option. See MDL-19864.
         //$typesarray[] = $mform->createElement('radio', 'exporttype', null, get_string('excel', 'data'), 'xls');
-        $typesarray[] = $mform->createElement('radio', 'exporttype', null, get_string('ods', 'data'), 'ods', $optionattrs);
-        $mform->addGroup($typesarray, 'exportar', get_string('exportformat', 'data'), null, false);
+        $typesarray[] = $mform->createElement('radio', 'exporttype', null, get_string('ods', 'mod_data'), 'ods', $optionattrs);
+        $mform->addGroup($typesarray, 'exportar', get_string('exportformat', 'mod_data'), null, false);
         $mform->addRule('exportar', null, 'required');
         $mform->setDefault('exporttype', 'csv');
 
@@ -54,7 +54,7 @@ class mod_data_export_form extends moodleform {
             // Array $choices contains the semicolon -> drop it (because its encrypted form also contains a semicolon):
             unset($choices[$key]);
         }
-        $mform->addElement('select', 'delimiter_name', get_string('fielddelimiter', 'data'), $choices);
+        $mform->addElement('select', 'delimiter_name', get_string('fielddelimiter', 'mod_data'), $choices);
         $mform->hideIf('delimiter_name', 'exporttype', 'neq', 'csv');
         if (array_key_exists('cfg', $choices)) {
             $mform->setDefault('delimiter_name', 'cfg');
@@ -65,13 +65,13 @@ class mod_data_export_form extends moodleform {
         }
 
         // Fields to be exported.
-        $mform->addElement('header', 'exportfieldsheader', get_string('chooseexportfields', 'data'));
+        $mform->addElement('header', 'exportfieldsheader', get_string('chooseexportfields', 'mod_data'));
         $mform->setExpanded('exportfieldsheader');
         $numfieldsthatcanbeselected = 0;
         $exportfields = [];
         $unsupportedfields = [];
         foreach ($this->_datafields as $field) {
-            $label = get_string('fieldnametype', 'data', (object)['name' => $field->field->name, 'type' => $field->name()]);
+            $label = get_string('fieldnametype', 'mod_data', (object)['name' => $field->field->name, 'type' => $field->name()]);
             if ($field->text_export_supported()) {
                 $numfieldsthatcanbeselected++;
                 $exportfields[] = $mform->createElement('advcheckbox', 'field_' . $field->field->id, '', $label,
@@ -81,7 +81,7 @@ class mod_data_export_form extends moodleform {
                 $unsupportedfields[] = $label;
             }
         }
-        $mform->addGroup($exportfields, 'exportfields', get_string('selectfields', 'data'), ['<br>'], false);
+        $mform->addGroup($exportfields, 'exportfields', get_string('selectfields', 'mod_data'), ['<br>'], false);
 
         if ($numfieldsthatcanbeselected > 1) {
             $this->add_checkbox_controller(1, null, null, 1);
@@ -89,34 +89,34 @@ class mod_data_export_form extends moodleform {
 
         // List fields that cannot be exported.
         if (!empty($unsupportedfields)) {
-            $unsupportedfieldslist = html_writer::tag('p', get_string('unsupportedfieldslist', 'data'), ['class' => 'mt-1']);
+            $unsupportedfieldslist = html_writer::tag('p', get_string('unsupportedfieldslist', 'mod_data'), ['class' => 'mt-1']);
             $unsupportedfieldslist .= html_writer::alist($unsupportedfields);
-            $mform->addElement('static', 'unsupportedfields', get_string('unsupportedfields', 'data'), $unsupportedfieldslist);
+            $mform->addElement('static', 'unsupportedfields', get_string('unsupportedfields', 'mod_data'), $unsupportedfieldslist);
         }
 
         // Export options.
-        $mform->addElement('header', 'exportoptionsheader', get_string('exportoptions', 'data'));
+        $mform->addElement('header', 'exportoptionsheader', get_string('exportoptions', 'mod_data'));
         $mform->setExpanded('exportoptionsheader');
         $exportoptions = [];
         if (core_tag_tag::is_enabled('mod_data', 'data_records')) {
-            $exportoptions[] = $mform->createElement('checkbox', 'exporttags', get_string('includetags', 'data'), '', $optionattrs);
+            $exportoptions[] = $mform->createElement('checkbox', 'exporttags', get_string('includetags', 'mod_data'), '', $optionattrs);
             $mform->setDefault('exporttags', 1);
         }
         $context = context_module::instance($this->_cm->id);
         if (has_capability('mod/data:exportuserinfo', $context)) {
-            $exportoptions[] = $mform->createElement('checkbox', 'exportuser', get_string('includeuserdetails', 'data'), '',
+            $exportoptions[] = $mform->createElement('checkbox', 'exportuser', get_string('includeuserdetails', 'mod_data'), '',
                 $optionattrs);
         }
-        $exportoptions[] = $mform->createElement('checkbox', 'exporttime', get_string('includetime', 'data'), '', $optionattrs);
+        $exportoptions[] = $mform->createElement('checkbox', 'exporttime', get_string('includetime', 'mod_data'), '', $optionattrs);
         if ($this->_data->approval) {
-            $exportoptions[] = $mform->createElement('checkbox', 'exportapproval', get_string('includeapproval', 'data'), '',
+            $exportoptions[] = $mform->createElement('checkbox', 'exportapproval', get_string('includeapproval', 'mod_data'), '',
                 $optionattrs);
         }
-        $exportoptions[] = $mform->createElement('checkbox', 'includefiles', get_string('includefiles', 'data'), '', $optionattrs);
+        $exportoptions[] = $mform->createElement('checkbox', 'includefiles', get_string('includefiles', 'mod_data'), '', $optionattrs);
         $mform->setDefault('includefiles', 1);
-        $mform->addGroup($exportoptions, 'exportoptions', get_string('selectexportoptions', 'data'), ['<br>'], false);
+        $mform->addGroup($exportoptions, 'exportoptions', get_string('selectexportoptions', 'mod_data'), ['<br>'], false);
 
-        $this->add_action_buttons(true, get_string('exportentries', 'data'));
+        $this->add_action_buttons(true, get_string('exportentries', 'mod_data'));
     }
 
 }

@@ -61,12 +61,12 @@ class mod_feedback_course_select_form extends moodleform {
 
         if (!$this->_form->_freezeAll && ($courses = $feedbackstructure->get_completed_courses()) && count($courses) > 1) {
             $elements = [];
-            $elements[] = $mform->createElement('autocomplete', 'courseid', get_string('filter_by_course', 'feedback'),
+            $elements[] = $mform->createElement('autocomplete', 'courseid', get_string('filter_by_course', 'mod_feedback'),
                 ['' => get_string('fulllistofcourses')] + $courses);
             $elements[] = $mform->createElement('submit', 'submitbutton', get_string('filter'));
             if ($feedbackstructure->get_courseid()) {
                 $elements[] = $mform->createElement('static', 'showall', '',
-                    html_writer::link($this->action, get_string('show_all', 'feedback')));
+                    html_writer::link($this->action, get_string('show_all', 'mod_feedback')));
             }
             if (defined('BEHAT_SITE_RUNNING')) {
                 // TODO MDL-53734 remove this - behat does not recognise autocomplete element inside a group.
@@ -74,7 +74,7 @@ class mod_feedback_course_select_form extends moodleform {
                     $mform->addElement($element);
                 }
             } else {
-                $mform->addGroup($elements, 'coursefilter', get_string('filter_by_course', 'feedback'), array(' '), false);
+                $mform->addGroup($elements, 'coursefilter', get_string('filter_by_course', 'mod_feedback'), array(' '), false);
             }
         }
 

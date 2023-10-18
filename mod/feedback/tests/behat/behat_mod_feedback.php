@@ -80,7 +80,7 @@ class behat_mod_feedback extends behat_base {
      */
     public function i_add_a_page_break_to_the_feedback() {
 
-        $questiontype = $this->escape(get_string('add_pagebreak', 'feedback'));
+        $questiontype = $this->escape(get_string('add_pagebreak', 'mod_feedback'));
         $this->execute('behat_forms::i_select_from_the_singleselect', array($questiontype, 'typ'));
 
         // Wait again, for page to reloaded.
@@ -98,7 +98,7 @@ class behat_mod_feedback extends behat_base {
         $username = $this->escape($username);
         $coursename = $this->escape($coursename);
         $feedbackname = $this->escape($feedbackname);
-        $completeform = $this->escape(get_string('complete_the_form', 'feedback'));
+        $completeform = $this->escape(get_string('complete_the_form', 'mod_feedback'));
 
         // Log in as user.
         $this->execute('behat_auth::i_log_in_as', $username);

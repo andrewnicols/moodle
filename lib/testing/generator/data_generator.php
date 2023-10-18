@@ -114,13 +114,7 @@ EOD;
         // Note: This global is included so that generator have access to it.
         // CFG is widely used in require statements.
         global $CFG;
-        list($type, $plugin) = core_component::normalize_component($component);
-        $cleancomponent = $type . '_' . $plugin;
-        if ($cleancomponent != $component) {
-            debugging("Please specify the component you want a generator for as " .
-                    "{$cleancomponent}, not {$component}.", DEBUG_DEVELOPER);
-            $component = $cleancomponent;
-        }
+        $component = core_component::normalize_componentname($component);
 
         if (isset($this->generators[$component])) {
             return $this->generators[$component];

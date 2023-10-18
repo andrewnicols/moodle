@@ -60,15 +60,15 @@ class mod_choice_renderer extends plugin_renderer_base {
 
             $labeltext = $option->text;
             if (!empty($option->attributes->disabled)) {
-                $labeltext .= ' ' . get_string('full', 'choice');
+                $labeltext .= ' ' . get_string('full', 'mod_choice');
                 $availableoption--;
             }
 
             if (!empty($options['limitanswers']) && !empty($options['showavailable'])) {
                 $labeltext .= html_writer::empty_tag('br');
-                $labeltext .= get_string("responsesa", "choice", $option->countanswers);
+                $labeltext .= get_string("responsesa", 'mod_choice', $option->countanswers);
                 $labeltext .= html_writer::empty_tag('br');
-                $labeltext .= get_string("limita", "choice", $option->maxanswers);
+                $labeltext .= get_string("limita", 'mod_choice', $option->maxanswers);
             }
 
             $html .= html_writer::empty_tag('input', (array)$option->attributes + $disabled);
@@ -85,11 +85,11 @@ class mod_choice_renderer extends plugin_renderer_base {
         if (empty($options['previewonly'])) {
             if (!empty($options['hascapability']) && ($options['hascapability'])) {
                 if ($availableoption < 1) {
-                    $html .= html_writer::tag('label', get_string('choicefull', 'choice'));
+                    $html .= html_writer::tag('label', get_string('choicefull', 'mod_choice'));
                 } else {
                     $html .= html_writer::empty_tag('input', array(
                         'type' => 'submit',
-                        'value' => get_string('savemychoice', 'choice'),
+                        'value' => get_string('savemychoice', 'mod_choice'),
                         'class' => 'btn btn-primary'
                     ));
                 }
@@ -97,10 +97,10 @@ class mod_choice_renderer extends plugin_renderer_base {
                 if (!empty($options['allowupdate']) && ($options['allowupdate'])) {
                     $url = new moodle_url('view.php',
                             array('id' => $coursemoduleid, 'action' => 'delchoice', 'sesskey' => sesskey()));
-                    $html .= html_writer::link($url, get_string('removemychoice', 'choice'), array('class' => 'ml-1'));
+                    $html .= html_writer::link($url, get_string('removemychoice', 'mod_choice'), array('class' => 'ml-1'));
                 }
             } else {
-                $html .= html_writer::tag('label', get_string('havetologin', 'choice'));
+                $html .= html_writer::tag('label', get_string('havetologin', 'mod_choice'));
             }
         }
 
@@ -154,7 +154,7 @@ class mod_choice_renderer extends plugin_renderer_base {
         $table->cellspacing = 0;
         $table->attributes['class'] = 'results names table table-bordered';
         $table->tablealign = 'center';
-        $table->summary = get_string('responsesto', 'choice', format_string($choices->name));
+        $table->summary = get_string('responsesto', 'mod_choice', format_string($choices->name));
         $table->data = array();
 
         $count = 0;
@@ -167,13 +167,13 @@ class mod_choice_renderer extends plugin_renderer_base {
         // This extra cell is needed in order to support accessibility for screenreader. MDL-30816
         $accessiblecell = new html_table_cell();
         $accessiblecell->scope = 'row';
-        $accessiblecell->text = get_string('choiceoptions', 'choice');
+        $accessiblecell->text = get_string('choiceoptions', 'mod_choice');
         $columns['options'][] = $accessiblecell;
 
         $usernumberheader = clone($celldefault);
         $usernumberheader->header = true;
         $usernumberheader->attributes['class'] = 'header data';
-        $usernumberheader->text = get_string('numberofuser', 'choice');
+        $usernumberheader->text = get_string('numberofuser', 'mod_choice');
         $columns['usernumber'][] = $usernumberheader;
 
         $optionsnames = [];
@@ -182,12 +182,12 @@ class mod_choice_renderer extends plugin_renderer_base {
             $cellusernumber = clone($celldefault);
 
             if ($choices->showunanswered && $optionid == 0) {
-                $headertitle = get_string('notanswered', 'choice');
+                $headertitle = get_string('notanswered', 'mod_choice');
             } else if ($optionid > 0) {
                 $headertitle = format_string($choices->options[$optionid]->text);
                 if (!empty($choices->options[$optionid]->user) && count($choices->options[$optionid]->user) > 0) {
                     if ((count($choices->options[$optionid]->user)) == ($choices->options[$optionid]->maxanswer)) {
-                        $headertitle .= ' ' . get_string('full', 'choice');
+                        $headertitle .= ' ' . get_string('full', 'mod_choice');
                     }
                 }
             }
@@ -199,8 +199,8 @@ class mod_choice_renderer extends plugin_renderer_base {
                 // Build the select/deselect all for this option.
                 $selectallid = 'select-response-option-' . $optionid;
                 $togglegroup = 'responses response-option-' . $optionid;
-                $selectalltext = get_string('selectalloption', 'choice', $headertitle);
-                $deselectalltext = get_string('deselectalloption', 'choice', $headertitle);
+                $selectalltext = get_string('selectalloption', 'mod_choice', $headertitle);
+                $deselectalltext = get_string('deselectalloption', 'mod_choice', $headertitle);
                 $mastercheckbox = new \core\output\checkbox_toggleall($togglegroup, true, [
                     'id' => $selectallid,
                     'name' => $selectallid,
@@ -219,7 +219,7 @@ class mod_choice_renderer extends plugin_renderer_base {
             }
             if (($choices->limitanswers) && ($choices->showavailable)) {
                 $numberofuser .= html_writer::empty_tag('br');
-                $numberofuser .= get_string("limita", "choice", $options->maxanswer);
+                $numberofuser .= get_string("limita", 'mod_choice', $options->maxanswer);
             }
             $celloption->text = html_writer::div($celltext, 'text-center');
             $optionsnames[$optionid] = $celltext;
@@ -236,7 +236,7 @@ class mod_choice_renderer extends plugin_renderer_base {
 
         // This extra cell is needed in order to support accessibility for screenreader. MDL-30816
         $accessiblecell = new html_table_cell();
-        $accessiblecell->text = get_string('userchoosethisoption', 'choice');
+        $accessiblecell->text = get_string('userchoosethisoption', 'mod_choice');
         $accessiblecell->header = true;
         $accessiblecell->scope = 'row';
         $accessiblecell->attributes['class'] = 'header data';
@@ -315,7 +315,7 @@ class mod_choice_renderer extends plugin_renderer_base {
             $actionoptions = array('delete' => get_string('delete'));
             foreach ($choices->options as $optionid => $option) {
                 if ($optionid > 0) {
-                    $actionoptions['choose_'.$optionid] = get_string('chooseoption', 'choice', $option->text);
+                    $actionoptions['choose_'.$optionid] = get_string('chooseoption', 'mod_choice', $option->text);
                 }
             }
             $selectattributes = [
@@ -323,9 +323,9 @@ class mod_choice_renderer extends plugin_renderer_base {
                 'data-togglegroup' => 'responses',
                 'data-toggle' => 'action',
             ];
-            $selectnothing = ['' => get_string('chooseaction', 'choice')];
+            $selectnothing = ['' => get_string('chooseaction', 'mod_choice')];
             $select = new single_select($actionurl, 'action', $actionoptions, null, $selectnothing, 'attemptsform');
-            $select->set_label(get_string('withselected', 'choice'));
+            $select->set_label(get_string('withselected', 'mod_choice'));
             $select->disabled = true;
             $select->attributes = $selectattributes;
 
@@ -397,7 +397,7 @@ class mod_choice_renderer extends plugin_renderer_base {
         if ($displaylayout == CHOICE_DISPLAY_VERTICAL) {
             $chart->set_horizontal(true); // Horizontal bars when choices are vertical.
         }
-        $series = new \core\chart_series(format_string(get_string("responses", "choice")), $data['series']);
+        $series = new \core\chart_series(format_string(get_string("responses", 'mod_choice')), $data['series']);
         $series->set_labels($data['series_labels']);
         $chart->add_series($series);
         $chart->set_labels($data['labels']);

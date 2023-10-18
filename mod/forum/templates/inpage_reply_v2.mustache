@@ -64,10 +64,10 @@
                     rows="3"
                     class="w-100"
                     {{#parentauthorname}}
-                    placeholder="{{#str}} replyingtoauthor, forum, {{.}} {{/str}}"
+                    placeholder="{{#str}} replyingtoauthor, mod_forum, {{.}} {{/str}}"
                     {{/parentauthorname}}
                     {{^parentauthorname}}
-                    placeholder="{{#str}} replyplaceholder, forum {{/str}}"
+                    placeholder="{{#str}} replyplaceholder, mod_forum {{/str}}"
                     {{/parentauthorname}}
                     data-auto-rows
                     data-min-rows="3"
@@ -90,7 +90,7 @@
                         <div class="custom-control custom-switch">
                             <input name="privatereply" type="checkbox" class="custom-control-input" id="private-reply-checkbox-{{uniqid}}">
                             <label class="custom-control-label" for="private-reply-checkbox-{{uniqid}}">
-                                {{#str}} privatereply, forum {{/str}}
+                                {{#str}} privatereply, mod_forum {{/str}}
                             </label>
                         </div>
                     </div>

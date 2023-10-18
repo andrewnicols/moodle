@@ -39,8 +39,8 @@ $event = \mod_url\event\course_module_instance_list_viewed::create($params);
 $event->add_record_snapshot('course', $course);
 $event->trigger();
 
-$strurl       = get_string('modulename', 'url');
-$strurls      = get_string('modulenameplural', 'url');
+$strurl       = get_string('modulename', 'mod_url');
+$strurls      = get_string('modulenameplural', 'mod_url');
 $strname         = get_string('name');
 $strintro        = get_string('moduleintro');
 $strlastmodified = get_string('lastmodified');

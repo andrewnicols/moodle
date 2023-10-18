@@ -96,7 +96,7 @@ class view_sessions extends external_api {
             $warnings[] = [
                 'item'        => $cm->id,
                 'warningcode' => 'nopermissiontoseethechatlog',
-                'message'     => get_string('nopermissiontoseethechatlog', 'chat')
+                'message'     => get_string('nopermissiontoseethechatlog', 'mod_chat')
             ];
         }
 

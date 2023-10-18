@@ -50,7 +50,7 @@ class save_as_preset extends dynamic_form {
         $this->_form->addRule('name', null, 'required');
 
         // Overwrite checkbox will be hidden by default. It will only appear if there is an error when saving the preset.
-        $this->_form->addElement('checkbox', 'overwrite', '', get_string('overrwritedesc', 'data'), ['class' => 'hidden']);
+        $this->_form->addElement('checkbox', 'overwrite', '', get_string('overrwritedesc', 'mod_data'), ['class' => 'hidden']);
 
         $this->_form->addElement('textarea', 'description', get_string('description'), ['rows' => 5, 'cols' => 60]);
         $this->_form->setType('name', PARAM_TEXT);
@@ -96,7 +96,7 @@ class save_as_preset extends dynamic_form {
                 }
             }
             if (!$selectedpreset instanceof preset || !$selectedpreset->can_manage()) {
-                $errors['name'] = get_string('cannotoverwritepreset', 'data');
+                $errors['name'] = get_string('cannotoverwritepreset', 'mod_data');
             }
         } else if ($formdata['action'] == 'saveaspreset' || $formdata['oldpresetname'] != $formdata['name']) {
 
@@ -106,10 +106,10 @@ class save_as_preset extends dynamic_form {
             foreach ($sitepresets as $preset) {
                 if ($formdata['name'] == $preset->name) {
                     if ($preset->can_manage()) {
-                        $errors['name'] = get_string('errorpresetexists', 'data');
+                        $errors['name'] = get_string('errorpresetexists', 'mod_data');
                         $usercandelete = true;
                     } else {
-                        $errors['name'] = get_string('errorpresetexistsbutnotoverwrite', 'data');
+                        $errors['name'] = get_string('errorpresetexistsbutnotoverwrite', 'mod_data');
                     }
                     break;
                 }
@@ -133,7 +133,7 @@ class save_as_preset extends dynamic_form {
         global $DB;
 
         if (!has_capability('mod/data:managetemplates', $this->get_context_for_dynamic_submission())) {
-            throw new moodle_exception('saveaspresetmissingcapability', 'data');
+            throw new moodle_exception('saveaspresetmissingcapability', 'mod_data');
         }
 
         $action = $this->optional_param('action', '', PARAM_ALPHANUM);
@@ -143,7 +143,7 @@ class save_as_preset extends dynamic_form {
             $hasfields = $DB->record_exists('data_fields', ['dataid' => $instanceid]);
 
             if (!$hasfields) {
-                throw new moodle_exception('nofieldindatabase', 'data');
+                throw new moodle_exception('nofieldindatabase', 'mod_data');
             }
         }
     }

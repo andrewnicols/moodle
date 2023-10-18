@@ -349,20 +349,20 @@ function forum_rss_feed_contents($forum, $sql, $params, $context) {
 
             if ($isdiscussion && !forum_user_can_see_discussion($forum, $discussion, $context)) {
                 // This is a discussion which the user has no permission to view
-                $item->title = get_string('forumsubjecthidden', 'forum');
-                $message = get_string('forumbodyhidden', 'forum');
-                $item->author = get_string('forumauthorhidden', 'forum');
+                $item->title = get_string('forumsubjecthidden', 'mod_forum');
+                $message = get_string('forumbodyhidden', 'mod_forum');
+                $item->author = get_string('forumauthorhidden', 'mod_forum');
             } else if (!$isdiscussion && !forum_user_can_see_post($forum, $discussion, $post, $USER, $cm)) {
                 if (forum_user_can_see_post($forum, $discussion, $post, $USER, $cm, false)) {
                     // This is a post which the user has no permission to view.
-                    $item->title = get_string('forumsubjecthidden', 'forum');
-                    $message = get_string('forumbodyhidden', 'forum');
-                    $item->author = get_string('forumauthorhidden', 'forum');
+                    $item->title = get_string('forumsubjecthidden', 'mod_forum');
+                    $message = get_string('forumbodyhidden', 'mod_forum');
+                    $item->author = get_string('forumauthorhidden', 'mod_forum');
                 } else {
                     // This is a post which has been deleted.
                     $item->title = get_string('privacy:request:delete:post:subject', 'mod_forum');
                     $message = get_string('privacy:request:delete:post:subject', 'mod_forum');
-                    $item->author = get_string('forumauthorhidden', 'forum');
+                    $item->author = get_string('forumauthorhidden', 'mod_forum');
                 }
             } else {
                 // The user must have permission to view

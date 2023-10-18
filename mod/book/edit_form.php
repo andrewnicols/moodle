@@ -37,7 +37,7 @@ class book_chapter_edit_form extends moodleform {
         // Disabled subchapter option when editing first node.
         $disabledmsg = null;
         if ($chapter->pagenum == 1) {
-            $disabledmsg = get_string('subchapternotice', 'book');
+            $disabledmsg = get_string('subchapternotice', 'mod_book');
         }
 
         $mform = $this->_form;

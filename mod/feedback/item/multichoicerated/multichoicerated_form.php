@@ -30,54 +30,54 @@ class feedback_multichoicerated_form extends feedback_item_form {
 
         $mform =& $this->_form;
 
-        $mform->addElement('header', 'general', get_string($this->type, 'feedback'));
+        $mform->addElement('header', 'general', get_string($this->type, 'mod_feedback'));
 
-        $mform->addElement('advcheckbox', 'required', get_string('required', 'feedback'), '' , null , array(0, 1));
+        $mform->addElement('advcheckbox', 'required', get_string('required', 'mod_feedback'), '' , null , array(0, 1));
 
         $mform->addElement('text',
                             'name',
-                            get_string('item_name', 'feedback'),
+                            get_string('item_name', 'mod_feedback'),
                             array('size'=>FEEDBACK_ITEM_NAME_TEXTBOX_SIZE,
                                   'maxlength'=>255));
 
         $mform->addElement('text',
                             'label',
-                            get_string('item_label', 'feedback'),
+                            get_string('item_label', 'mod_feedback'),
                             array('size'=>FEEDBACK_ITEM_LABEL_TEXTBOX_SIZE,
                                   'maxlength'=>255));
 
         $mform->addElement('select',
                             'subtype',
-                            get_string('multichoicetype', 'feedback').'&nbsp;',
-                            array('r'=>get_string('radio', 'feedback'),
-                                  'd'=>get_string('dropdown', 'feedback')));
+                            get_string('multichoicetype', 'mod_feedback').'&nbsp;',
+                            array('r'=>get_string('radio', 'mod_feedback'),
+                                  'd'=>get_string('dropdown', 'mod_feedback')));
 
         $mform->addElement('select',
                             'horizontal',
-                            get_string('adjustment', 'feedback').'&nbsp;',
-                            array(0 => get_string('vertical', 'feedback'),
-                                  1 => get_string('horizontal', 'feedback')));
+                            get_string('adjustment', 'mod_feedback').'&nbsp;',
+                            array(0 => get_string('vertical', 'mod_feedback'),
+                                  1 => get_string('horizontal', 'mod_feedback')));
         $mform->hideIf('horizontal', 'subtype', 'eq', 'd');
 
         $mform->addElement('selectyesno',
                            'hidenoselect',
-                           get_string('hide_no_select_option', 'feedback'));
+                           get_string('hide_no_select_option', 'mod_feedback'));
         $mform->hideIf('hidenoselect', 'subtype', 'eq', 'd');
 
         $mform->addElement('selectyesno',
                            'ignoreempty',
-                           get_string('do_not_analyse_empty_submits', 'feedback'));
+                           get_string('do_not_analyse_empty_submits', 'mod_feedback'));
         $mform->disabledIf('ignoreempty', 'required', 'eq', '1');
 
         $this->values = $mform->addElement('textarea',
                             'values',
-                            get_string('multichoice_values', 'feedback'),
+                            get_string('multichoice_values', 'mod_feedback'),
                             'wrap="virtual" rows="10" cols="65"');
 
         $mform->addElement('static',
                             'hint',
                             '',
-                            get_string('use_one_line_for_each_value', 'feedback'));
+                            get_string('use_one_line_for_each_value', 'mod_feedback'));
 
         parent::definition();
         $this->set_data($item);

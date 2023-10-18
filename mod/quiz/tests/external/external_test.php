@@ -1955,7 +1955,7 @@ class external_test extends externallib_advanced_testcase {
         // Now new attemps allowed.
         $this->assertCount(1, $result['preventnewattemptreasons']);
         $this->assertFalse($result['ispreflightcheckrequired']);
-        $this->assertEquals(get_string('nomoreattempts', 'quiz'), $result['preventnewattemptreasons'][0]);
+        $this->assertEquals(get_string('nomoreattempts', 'mod_quiz'), $result['preventnewattemptreasons'][0]);
 
     }
 

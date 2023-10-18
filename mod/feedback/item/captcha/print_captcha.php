@@ -35,7 +35,7 @@ if ($id) {
 }
 
 if (!isset($SESSION->feedback->item->captcha)) {
-    throw new \moodle_exception('captchanotset', 'feedback');
+    throw new \moodle_exception('captchanotset', 'mod_feedback');
 }
 
 $height = 40;

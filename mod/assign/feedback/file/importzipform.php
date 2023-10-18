@@ -78,7 +78,7 @@ class assignfeedback_file_import_zip_form extends moodleform implements renderab
                     $userdescs = [];
                     foreach ($users as $user) {
                         if ($assignment->is_blind_marking()) {
-                            $userdescs[] = get_string('hiddenuser', 'assign') .
+                            $userdescs[] = get_string('hiddenuser', 'mod_assign') .
                                     $assignment->get_uniqueid_for_user($user->id);
                         } else {
                             $userdescs[] = fullname($user, has_capability('moodle/site:viewfullnames', $assignment->get_context()));

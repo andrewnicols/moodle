@@ -87,21 +87,21 @@ class recording_data {
         $columns = [
             [
                 'key' => 'playback',
-                'label' => get_string('view_recording_playback', 'bigbluebuttonbn'),
+                'label' => get_string('view_recording_playback', 'mod_bigbluebuttonbn'),
                 'width' => '125px',
                 'type' => 'html',
                 'allowHTML' => true,
             ],
             [
                 'key' => 'recording',
-                'label' => get_string('view_recording_name', 'bigbluebuttonbn'),
+                'label' => get_string('view_recording_name', 'mod_bigbluebuttonbn'),
                 'width' => '125px',
                 'type' => 'html',
                 'allowHTML' => true,
             ],
             [
                 'key' => 'description',
-                'label' => get_string('view_recording_description', 'bigbluebuttonbn'),
+                'label' => get_string('view_recording_description', 'mod_bigbluebuttonbn'),
                 'sortable' => true,
                 'width' => '250px',
                 'type' => 'html',
@@ -115,7 +115,7 @@ class recording_data {
         if ($ispreviewenabled) {
             $columns[] = [
                 'key' => 'preview',
-                'label' => get_string('view_recording_preview', 'bigbluebuttonbn'),
+                'label' => get_string('view_recording_preview', 'mod_bigbluebuttonbn'),
                 'width' => '250px',
                 'type' => 'html',
                 'allowHTML' => true,
@@ -124,7 +124,7 @@ class recording_data {
 
         $columns[] = [
             'key' => 'date',
-            'label' => get_string('view_recording_date', 'bigbluebuttonbn'),
+            'label' => get_string('view_recording_date', 'mod_bigbluebuttonbn'),
             'sortable' => true,
             'width' => '225px',
             'type' => 'html',
@@ -132,7 +132,7 @@ class recording_data {
         ];
         $columns[] = [
             'key' => 'duration',
-            'label' => get_string('view_recording_duration', 'bigbluebuttonbn'),
+            'label' => get_string('view_recording_duration', 'mod_bigbluebuttonbn'),
             'width' => '50px',
             'allowHTML' => false,
             'sortable' => true,
@@ -144,7 +144,7 @@ class recording_data {
         if ($canmanagerecordings) {
             $columns[] = [
                 'key' => 'actionbar',
-                'label' => get_string('view_recording_actionbar', 'bigbluebuttonbn'),
+                'label' => get_string('view_recording_actionbar', 'mod_bigbluebuttonbn'),
                 'width' => '120px',
                 'type' => 'html',
                 'allowHTML' => true,
@@ -271,8 +271,8 @@ class recording_data {
         // Check first if string exists, and if it does not, just default to the capitalised version of the string.
         $text = ucwords($playbacktype);
         $typestringid = 'view_recording_format_' . $playbacktype;
-        if (get_string_manager()->string_exists($typestringid, 'bigbluebuttonbn')) {
-            $text = get_string($typestringid, 'bigbluebuttonbn');
+        if (get_string_manager()->string_exists($typestringid, 'mod_bigbluebuttonbn')) {
+            $text = get_string($typestringid, 'mod_bigbluebuttonbn');
         }
         return $text;
     }

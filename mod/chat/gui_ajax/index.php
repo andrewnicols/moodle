@@ -58,7 +58,7 @@ if ($theme != 'course_theme' and !file_exists(__DIR__ . '/theme/'.$theme.'/chat.
 
 // Log into the chat room.
 if (!$chatsid = chat_login_user($chat->id, 'ajax', $groupid, $course)) {
-    throw new \moodle_exception('cantlogin', 'chat');
+    throw new \moodle_exception('cantlogin', 'mod_chat');
 }
 $courseshortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
 $module = array(
@@ -82,7 +82,7 @@ $modulecfg = array(
 );
 $PAGE->requires->js_init_call('M.mod_chat_ajax.init', array($modulecfg), false, $module);
 
-$PAGE->set_title(get_string('modulename', 'chat').": $courseshortname: ".format_string($chat->name, true)."$groupname");
+$PAGE->set_title(get_string('modulename', 'mod_chat').": $courseshortname: ".format_string($chat->name, true)."$groupname");
 $PAGE->add_body_class('yui-skin-sam');
 $PAGE->activityheader->disable();
 $PAGE->set_pagelayout('embedded');
@@ -94,20 +94,20 @@ echo $OUTPUT->header();
 echo $OUTPUT->box(html_writer::tag('h2',  get_string('participants'), array('class' => 'accesshide')) .
         '<ul id="users-list" class="list-group"></ul>', '', 'chat-userlist');
 echo $OUTPUT->box('', '', 'chat-options');
-echo $OUTPUT->box(html_writer::tag('h2',  get_string('messages', 'chat'), array('class' => 'accesshide')) .
+echo $OUTPUT->box(html_writer::tag('h2',  get_string('messages', 'mod_chat'), array('class' => 'accesshide')) .
         '<ul id="messages-list"></ul>', '', 'chat-messages');
 $table = new html_table();
 $table->data = array(
     array('<div class="form-inline"><div class="d-flex"><label class="accesshide" for="input-message">'.
-          get_string('entermessage', 'chat').' </label>'.
+          get_string('entermessage', 'mod_chat').' </label>'.
           '<span class="form-group"><input type="text" disabled="true" class="form-control" ' .
           'id="input-message" value="Loading..." size="48" /></span>'.
           '<span class="form-group"><input type="button" id="button-send" class="btn btn-secondary mx-1" ' .
-          'value="'.get_string('send', 'chat').'" />' .$OUTPUT->help_icon('usingchat', 'chat'). '</span></div>' .
+          'value="'.get_string('send', 'mod_chat').'" />' .$OUTPUT->help_icon('usingchat', 'mod_chat'). '</span></div>' .
           ' <div class="form-group d-flex ml-auto"><a id="choosetheme" href="###">'.
           get_string('themes').
           ' &raquo; </a></div></div>'));
-echo $OUTPUT->box(html_writer::tag('h2',  get_string('composemessage', 'chat'), array('class' => 'accesshide')) .
+echo $OUTPUT->box(html_writer::tag('h2',  get_string('composemessage', 'mod_chat'), array('class' => 'accesshide')) .
         html_writer::table($table), '', 'chat-input-area');
 echo $OUTPUT->box('', '', 'chat-notify');
 echo $OUTPUT->footer();

@@ -123,7 +123,7 @@ switch ($mode) {
         /// Only store this new field if it doesn't already exist.
             if (($fieldinput->name == '') or data_fieldname_exists($fieldinput->name, $data->id)) {
 
-                $displaynoticebad = get_string('invalidfieldname','data');
+                $displaynoticebad = get_string('invalidfieldname','mod_data');
 
             } else {
 
@@ -147,7 +147,7 @@ switch ($mode) {
             /// Update some templates
                 data_append_new_field_to_templates($data, $fieldinput->name);
 
-                $displaynoticegood = get_string('fieldadded','data');
+                $displaynoticegood = get_string('fieldadded','mod_data');
             }
         }
         break;
@@ -160,7 +160,7 @@ switch ($mode) {
 
             if (($fieldinput->name == '') or data_fieldname_exists($fieldinput->name, $data->id, $fieldinput->fid)) {
 
-                $displaynoticebad = get_string('invalidfieldname','data');
+                $displaynoticebad = get_string('invalidfieldname','mod_data');
 
             } else {
             /// Check for arrays and convert to a comma-delimited string
@@ -192,7 +192,7 @@ switch ($mode) {
             /// Update the templates.
                 data_replace_field_in_templates($data, $oldfieldname, $field->field->name);
 
-                $displaynoticegood = get_string('fieldupdated','data');
+                $displaynoticegood = get_string('fieldupdated','mod_data');
             }
         }
         break;
@@ -220,24 +220,24 @@ switch ($mode) {
                         $DB->update_record('data', $rec);
                     }
 
-                    $displaynoticegood = get_string('fielddeleted', 'data');
+                    $displaynoticegood = get_string('fielddeleted', 'mod_data');
                 }
 
             } else {
 
                 data_print_header($course,$cm,$data, false);
-                echo $OUTPUT->heading(get_string('deletefield', 'data'), 2, 'mb-4');
+                echo $OUTPUT->heading(get_string('deletefield', 'mod_data'), 2, 'mb-4');
 
                 // Print confirmation message.
                 $field = data_get_field_from_id($fid, $data);
 
                 if ($field->type === 'unknown') {
-                    $fieldtypename = get_string('unknown', 'data');
+                    $fieldtypename = get_string('unknown', 'mod_data');
                 } else {
                     $fieldtypename = $field->name();
                 }
                 echo $OUTPUT->confirm('<strong>' . $fieldtypename . ': ' . $field->field->name . '</strong><br /><br />' .
-                        get_string('confirmdeletefield', 'data'),
+                        get_string('confirmdeletefield', 'mod_data'),
                         'field.php?d=' . $data->id . '&mode=delete&fid=' . $fid . '&confirm=1',
                         'field.php?d=' . $data->id,
                         ['type' => single_button::BUTTON_DANGER]);
@@ -273,7 +273,7 @@ switch ($mode) {
             }
             redirect($backurl);
         }
-        $PAGE->navbar->add(get_string('usestandard', 'data'));
+        $PAGE->navbar->add(get_string('usestandard', 'mod_data'));
         $fieldactionbar = $actionbar->get_fields_mapping_action_bar();
         data_print_header($course, $cm, $data, false, $fieldactionbar);
         $importer = new preset_existing_importer($manager, $fullname);
@@ -305,14 +305,14 @@ $PAGE->force_settings_menu(true);
 $PAGE->set_pagetype('mod-data-field-' . $newtype);
 if (($mode == 'new') && (!empty($newtype))) { // Adding a new field.
     data_print_header($course, $cm, $data,'fields');
-    echo $OUTPUT->heading(get_string('newfield', 'data'));
+    echo $OUTPUT->heading(get_string('newfield', 'mod_data'));
 
     $field = data_get_field_new($newtype, $data);
     $field->display_edit_field();
 
 } else if ($mode == 'display' && confirm_sesskey()) { /// Display/edit existing field
     data_print_header($course, $cm, $data,'fields');
-    echo $OUTPUT->heading(get_string('editfield', 'data'));
+    echo $OUTPUT->heading(get_string('editfield', 'mod_data'));
 
     $field = data_get_field_from_id($fid, $data);
     $field->display_edit_field();
@@ -333,17 +333,17 @@ if (($mode == 'new') && (!empty($newtype))) { // Adding a new field.
     data_print_header($course, $cm, $data, 'fields', $fieldactionbar);
 
     echo $OUTPUT->box_start();
-    echo get_string('fieldshelp', 'data');
+    echo get_string('fieldshelp', 'mod_data');
     echo $OUTPUT->box_end();
     echo $OUTPUT->box_start('d-flex flex-row-reverse');
     echo $OUTPUT->render($actionbar->get_create_fields(true));
     echo $OUTPUT->box_end();
     $table = new html_table();
     $table->head = [
-        get_string('fieldname', 'data'),
-        get_string('type', 'data'),
-        get_string('required', 'data'),
-        get_string('fielddescription', 'data'),
+        get_string('fieldname', 'mod_data'),
+        get_string('type', 'mod_data'),
+        get_string('required', 'mod_data'),
+        get_string('fielddescription', 'mod_data'),
         '&nbsp;',
     ];
     $table->align = ['left', 'left', 'left', 'left'];
@@ -406,7 +406,7 @@ if (($mode == 'new') && (!empty($newtype))) { // Adding a new field.
         ];
 
         if (!empty($missingfieldtypes)) {
-            echo $OUTPUT->notification(get_string('missingfieldtypes', 'data') . html_writer::alist($missingfieldtypes));
+            echo $OUTPUT->notification(get_string('missingfieldtypes', 'mod_data') . html_writer::alist($missingfieldtypes));
         }
     }
     echo html_writer::table($table);
@@ -417,10 +417,10 @@ if (($mode == 'new') && (!empty($newtype))) { // Adding a new field.
     echo '<input type="hidden" name="d" value="'.$data->id.'" />';
     echo '<input type="hidden" name="mode" value="sort" />';
     echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
-    echo '<label for="defaultsort">'.get_string('defaultsortfield','data').'</label>';
+    echo '<label for="defaultsort">'.get_string('defaultsortfield','mod_data').'</label>';
     echo '<select id="defaultsort" name="defaultsort" class="custom-select">';
     if ($fields = $DB->get_records('data_fields', array('dataid'=>$data->id))) {
-        echo '<optgroup label="'.get_string('fields', 'data').'">';
+        echo '<optgroup label="'.get_string('fields', 'mod_data').'">';
         foreach ($fields as $field) {
             if ($data->defaultsort == $field->id) {
                 echo '<option value="'.$field->id.'" selected="selected">'.$field->name.'</option>';
@@ -431,7 +431,7 @@ if (($mode == 'new') && (!empty($newtype))) { // Adding a new field.
         echo '</optgroup>';
     }
     $options = array();
-    $options[DATA_TIMEADDED]    = get_string('timeadded', 'data');
+    $options[DATA_TIMEADDED]    = get_string('timeadded', 'mod_data');
 // TODO: we will need to change defaultsort db to unsinged to make these work in 2.0
 /*        $options[DATA_TIMEMODIFIED] = get_string('timemodified', 'data');
     $options[DATA_FIRSTNAME]    = get_string('authorfirstname', 'data');
@@ -439,7 +439,7 @@ if (($mode == 'new') && (!empty($newtype))) { // Adding a new field.
     if ($data->approval and has_capability('mod/data:approve', $context)) {
         $options[DATA_APPROVED] = get_string('approved', 'data');
     }*/
-    echo '<optgroup label="'.get_string('other', 'data').'">';
+    echo '<optgroup label="'.get_string('other', 'mod_data').'">';
     foreach ($options as $key => $name) {
         if ($data->defaultsort == $key) {
             echo '<option value="'.$key.'" selected="selected">'.$name.'</option>';
@@ -450,11 +450,11 @@ if (($mode == 'new') && (!empty($newtype))) { // Adding a new field.
     echo '</optgroup>';
     echo '</select>';
 
-    $options = array(0 => get_string('ascending', 'data'),
-                     1 => get_string('descending', 'data'));
+    $options = array(0 => get_string('ascending', 'mod_data'),
+                     1 => get_string('descending', 'mod_data'));
     echo html_writer::label(get_string('sortby'), 'menudefaultsortdir', false, array('class' => 'accesshide'));
     echo html_writer::select($options, 'defaultsortdir', $data->defaultsortdir, false, array('class' => 'custom-select'));
-    echo '<input type="submit" class="btn btn-secondary ml-1" value="'.get_string('save', 'data').'" />';
+    echo '<input type="submit" class="btn btn-secondary ml-1" value="'.get_string('save', 'mod_data').'" />';
     echo '</div>';
     echo '</form>';
 

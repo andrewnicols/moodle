@@ -71,7 +71,7 @@ if (!empty($errormsg) || !empty($msg)) {
 }
 
 if (!empty($errormsg)) {
-    echo get_string('lti_launch_error', 'lti');
+    echo get_string('lti_launch_error', 'mod_lti');
 
     p($errormsg);
 
@@ -85,14 +85,14 @@ if (!empty($errormsg)) {
             $coursetooleditor = new moodle_url('mod/lti/coursetools.php', ['id' => $courseid]);
             $links->course_tool_editor = $coursetooleditor->out(false);
 
-            echo get_string('lti_launch_error_unsigned_help', 'lti', $links);
+            echo get_string('lti_launch_error_unsigned_help', 'mod_lti', $links);
         }
 
         if (!empty($lti) && has_capability('mod/lti:requesttooladd', $contextcourse)) {
             $adminrequesturl = new moodle_url('/mod/lti/request_tool.php', array('instanceid' => $lti->id, 'sesskey' => sesskey()));
             $links->admin_request_url = $adminrequesturl->out(false);
 
-            echo get_string('lti_launch_error_tool_request', 'lti', $links);
+            echo get_string('lti_launch_error_tool_request', 'mod_lti', $links);
         }
     }
 
@@ -125,7 +125,7 @@ if (!empty($errormsg)) {
             </script>
         ";
 
-        $clickhere = get_string('return_to_course', 'lti', (object)array('link' => $url));
+        $clickhere = get_string('return_to_course', 'mod_lti', (object)array('link' => $url));
 
         $noscript = "
             <noscript>

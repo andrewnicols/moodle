@@ -93,11 +93,11 @@ if (!has_capability('mod/data:manageentries', $context)) {
     if ($rid) {
         // User is editing an existing record.
         if (!data_user_can_manage_entry($record, $data, $context)) {
-            throw new \moodle_exception('noaccess', 'data');
+            throw new \moodle_exception('noaccess', 'mod_data');
         }
     } else if (!data_user_can_add_entry($data, $currentgroup, $groupmode, $context)) {
         // User is trying to create a new record.
-        throw new \moodle_exception('noaccess', 'data');
+        throw new \moodle_exception('noaccess', 'mod_data');
     }
 }
 
@@ -115,10 +115,10 @@ if ($data->jstemplate) {
 }
 
 // Define page variables.
-$strdata = get_string('modulenameplural','data');
+$strdata = get_string('modulenameplural','mod_data');
 
 if ($rid) {
-    $PAGE->navbar->add(get_string('editentry', 'data'));
+    $PAGE->navbar->add(get_string('editentry', 'mod_data'));
 }
 
 $PAGE->add_body_class('mediumwidth');
@@ -185,9 +185,9 @@ echo '<input name="sesskey" value="'.sesskey().'" type="hidden" />';
 echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthwide');
 
 if (!$rid){
-    echo $OUTPUT->heading(get_string('newentry','data'));
+    echo $OUTPUT->heading(get_string('newentry','mod_data'));
 } else {
-    echo $OUTPUT->heading(get_string('editentry','data'));
+    echo $OUTPUT->heading(get_string('editentry','mod_data'));
 }
 
 $template = $manager->get_template($mode);
@@ -214,7 +214,7 @@ if (!$rid && ((!$data->maxentries) ||
     (data_numentries($data) < ($data->maxentries - 1)))) {
     $actionbuttons .= html_writer::empty_tag('input', [
         'type' => 'submit', 'name' => 'saveandadd',
-        'value' => get_string('saveandadd', 'data'), 'class' => 'btn btn-primary mx-1'
+        'value' => get_string('saveandadd', 'mod_data'), 'class' => 'btn btn-primary mx-1'
     ]);
 }
 
@@ -231,6 +231,6 @@ foreach ($possiblefields as $field) {
 
 // Finish the page.
 if (empty($possiblefields)) {
-    throw new \moodle_exception('nofieldindatabase', 'data');
+    throw new \moodle_exception('nofieldindatabase', 'mod_data');
 }
 echo $OUTPUT->footer();

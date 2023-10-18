@@ -40,15 +40,15 @@ require_once($CFG->dirroot . '/mod/wiki/pagelib.php');
 $pageid = required_param('pageid', PARAM_TEXT);
 
 if (!$page = wiki_get_page($pageid)) {
-    throw new \moodle_exception('incorrectpageid', 'wiki');
+    throw new \moodle_exception('incorrectpageid', 'mod_wiki');
 }
 
 if (!$subwiki = wiki_get_subwiki($page->subwikiid)) {
-    throw new \moodle_exception('incorrectsubwikiid', 'wiki');
+    throw new \moodle_exception('incorrectsubwikiid', 'mod_wiki');
 }
 
 if (!$wiki = wiki_get_wiki($subwiki->wikiid)) {
-    throw new \moodle_exception('incorrectwikiid', 'wiki');
+    throw new \moodle_exception('incorrectwikiid', 'mod_wiki');
 }
 
 if (!$cm = get_coursemodule_from_instance('wiki', $wiki->id)) {
@@ -60,7 +60,7 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 require_course_login($course, true, $cm);
 
 if (!wiki_user_can_view($subwiki, $wiki)) {
-    throw new \moodle_exception('cannotviewpage', 'wiki');
+    throw new \moodle_exception('cannotviewpage', 'mod_wiki');
 }
 
 // Trigger comment viewed event.

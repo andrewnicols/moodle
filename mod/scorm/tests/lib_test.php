@@ -261,7 +261,7 @@ class lib_test extends \advanced_testcase {
         scorm_require_available($this->scorm, true, $this->context);
         // Now, expect exceptions.
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string("notopenyet", "scorm", userdate($this->scorm->timeopen)));
+        $this->expectExceptionMessage(get_string("notopenyet", 'mod_scorm', userdate($this->scorm->timeopen)));
 
         // Now as student other condition.
         self::setUser($this->student);
@@ -269,7 +269,7 @@ class lib_test extends \advanced_testcase {
         $this->scorm->timeclose = time() - DAYSECS;
 
         $this->expectException('moodle_exception');
-        $this->expectExceptionMessage(get_string("expired", "scorm", userdate($this->scorm->timeclose)));
+        $this->expectExceptionMessage(get_string("expired", 'mod_scorm', userdate($this->scorm->timeclose)));
         scorm_require_available($this->scorm, false);
     }
 
@@ -308,7 +308,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enter', 'scorm'), $actionevent->get_name());
+        $this->assertEquals(get_string('enter', 'mod_scorm'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -365,7 +365,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enter', 'scorm'), $actionevent->get_name());
+        $this->assertEquals(get_string('enter', 'mod_scorm'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -398,7 +398,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enter', 'scorm'), $actionevent->get_name());
+        $this->assertEquals(get_string('enter', 'mod_scorm'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -429,7 +429,7 @@ class lib_test extends \advanced_testcase {
 
         // Confirm the event was decorated.
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('enter', 'scorm'), $actionevent->get_name());
+        $this->assertEquals(get_string('enter', 'mod_scorm'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -577,9 +577,9 @@ class lib_test extends \advanced_testcase {
         $statusstring = implode(', ', $cvalues);
 
         $activeruledescriptions = [
-            get_string('completionstatusrequireddesc', 'scorm', $statusstring),
-            get_string('completionscorerequireddesc', 'scorm', $scorm1->completionscorerequired),
-            get_string('completionstatusallscos', 'scorm'),
+            get_string('completionstatusrequireddesc', 'mod_scorm', $statusstring),
+            get_string('completionscorerequireddesc', 'mod_scorm', $scorm1->completionscorerequired),
+            get_string('completionstatusallscos', 'mod_scorm'),
         ];
         $this->assertEquals(mod_scorm_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_scorm_get_completion_active_rule_descriptions($cm2), []);

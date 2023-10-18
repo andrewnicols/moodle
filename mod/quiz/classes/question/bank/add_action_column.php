@@ -32,7 +32,7 @@ class add_action_column extends \core_question\local\bank\column_base {
 
     public function init(): void {
         parent::init();
-        $this->stradd = get_string('addtoquiz', 'quiz');
+        $this->stradd = get_string('addtoquiz', 'mod_quiz');
     }
 
     public function get_extra_classes(): array {

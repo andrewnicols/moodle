@@ -240,11 +240,11 @@ class mod_workshop_portfolio_caller extends portfolio_module_caller_base {
         $output .= html_writer::tag('h2', get_string('pluginname', 'mod_workshop').': '.s($this->workshop->name));
         $output .= html_writer::tag('h3', s($workshopsubmission->title));
 
-        $created = get_string('userdatecreated', 'workshop', userdate($workshopsubmission->timecreated));
+        $created = get_string('userdatecreated', 'mod_workshop', userdate($workshopsubmission->timecreated));
         $created = html_writer::tag('span', $created);
 
         if ($workshopsubmission->timemodified > $workshopsubmission->timecreated) {
-            $modified = get_string('userdatemodified', 'workshop', userdate($workshopsubmission->timemodified));
+            $modified = get_string('userdatemodified', 'mod_workshop', userdate($workshopsubmission->timemodified));
             $modified = ' | ' . html_writer::tag('span', $modified);
         } else {
             $modified = '';
@@ -329,7 +329,7 @@ class mod_workshop_portfolio_caller extends portfolio_module_caller_base {
         $output = '';
 
         if (empty($assessment->title)) {
-            $title = get_string('assessment', 'workshop');
+            $title = get_string('assessment', 'mod_workshop');
         } else {
             $title = s($assessment->title);
         }

@@ -39,15 +39,15 @@ class mod_label_mod_form extends moodleform_mod {
         $mform->addElement('header', 'generalhdr', get_string('general'));
 
         // Add element for name.
-        $mform->addElement('text', 'name', get_string('labelname', 'label'), array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('labelname', 'mod_label'), array('size' => '64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
             $mform->setType('name', PARAM_CLEANHTML);
         }
-        $mform->addHelpButton('name', 'labelname', 'label');
+        $mform->addHelpButton('name', 'labelname', 'mod_label');
 
-        $this->standard_intro_elements(get_string('labeltext', 'label'));
+        $this->standard_intro_elements(get_string('labeltext', 'mod_label'));
 
         // Label does not add "Show description" checkbox meaning that 'intro' is always shown on the course page.
         $mform->addElement('hidden', 'showdescription', 1);

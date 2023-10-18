@@ -467,7 +467,7 @@ class mod_scorm_external extends external_api {
 
         $sco = scorm_get_sco($params['scoid'], SCO_ONLY);
         if (!$sco) {
-            throw new moodle_exception('cannotfindsco', 'scorm');
+            throw new moodle_exception('cannotfindsco', 'mod_scorm');
         }
 
         $scorm = $DB->get_record('scorm', array('id' => $sco->scorm), '*', MUST_EXIST);
@@ -559,7 +559,7 @@ class mod_scorm_external extends external_api {
 
         $sco = scorm_get_sco($params['scoid'], SCO_ONLY);
         if (!$sco) {
-            throw new moodle_exception('cannotfindsco', 'scorm');
+            throw new moodle_exception('cannotfindsco', 'mod_scorm');
         }
 
         $scorm = $DB->get_record('scorm', array('id' => $sco->scorm), '*', MUST_EXIST);
@@ -601,7 +601,7 @@ class mod_scorm_external extends external_api {
                 'item' => 'attempt',
                 'itemid' => $params['attempt'],
                 'warningcode' => 'notattempted',
-                'message' => get_string('notattempted', 'scorm')
+                'message' => get_string('notattempted', 'mod_scorm')
             );
         }
 
@@ -704,7 +704,7 @@ class mod_scorm_external extends external_api {
                             'item' => 'scorm',
                             'itemid' => $scorm->id,
                             'warningcode' => $warningkey,
-                            'message' => get_string($warningkey, 'scorm', $warningdata)
+                            'message' => get_string($warningkey, 'mod_scorm', $warningdata)
                         );
                     }
                 } else {
@@ -882,7 +882,7 @@ class mod_scorm_external extends external_api {
         scorm_require_available($scorm);
 
         if (!empty($params['scoid']) and !($sco = scorm_get_sco($params['scoid'], SCO_ONLY))) {
-            throw new moodle_exception('cannotfindsco', 'scorm');
+            throw new moodle_exception('cannotfindsco', 'mod_scorm');
         }
 
         // Mark module viewed.

@@ -332,7 +332,7 @@ class workshop_random_allocator implements workshop_allocator {
             $reviewerid = key($newallocation);
             $authorid = current($newallocation);
             if (!isset($submissions[$authorid])) {
-                throw new moodle_exception('unabletoallocateauthorwithoutsubmission', 'workshop');
+                throw new moodle_exception('unabletoallocateauthorwithoutsubmission', 'mod_workshop');
             }
             $submission = $submissions[$authorid];
             $status = $this->workshop->add_allocation($submission, $reviewerid, 1, true);   // todo configurable weight?
@@ -356,7 +356,7 @@ class workshop_random_allocator implements workshop_allocator {
         if (is_array($submissions)) {
             foreach ($submissions as $submissionid => $submission) {
                 if (isset($byauthor[$submission->authorid])) {
-                    throw new moodle_exception('moresubmissionsbyauthor', 'workshop');
+                    throw new moodle_exception('moresubmissionsbyauthor', 'mod_workshop');
                 }
                 $byauthor[$submission->authorid] = $submission;
             }
@@ -470,7 +470,7 @@ class workshop_random_allocator implements workshop_allocator {
             // get current workload
             list($squarelinks, $circlelinks) = $this->convert_assessments_to_links($assessments);
         } else {
-            throw new moodle_exception('unknownusertypepassed', 'workshop');
+            throw new moodle_exception('unknownusertypepassed', 'mod_workshop');
         }
         // get the users that are not in any group. in visible groups mode, these users are exluded
         // from allocation by this method

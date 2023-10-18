@@ -47,7 +47,7 @@ class assign_admin_page_manage_assign_plugins extends admin_externalpage {
         $this->subtype = $subtype;
         $url = new moodle_url('/mod/assign/adminmanageplugins.php', array('subtype'=>$subtype));
         parent::__construct('manage' . $subtype . 'plugins',
-                            get_string('manage' . $subtype . 'plugins', 'assign'),
+                            get_string('manage' . $subtype . 'plugins', 'mod_assign'),
                             $url);
     }
 
@@ -178,8 +178,8 @@ class assign_plugin_manager {
         $table->define_baseurl($this->pageurl);
         $table->define_columns(array('pluginname', 'version', 'hideshow', 'order',
                 'settings', 'uninstall'));
-        $table->define_headers(array(get_string($this->subtype . 'pluginname', 'assign'),
-                get_string('version'), get_string('hideshow', 'assign'),
+        $table->define_headers(array(get_string($this->subtype . 'pluginname', 'mod_assign'),
+                get_string('version'), get_string('hideshow', 'mod_assign'),
                 get_string('order'), get_string('settings'), get_string('uninstallplugin', 'core_admin')));
         $table->set_attribute('id', $this->subtype . 'plugins');
         $table->set_attribute('class', 'admintable generaltable');
@@ -242,7 +242,7 @@ class assign_plugin_manager {
         admin_externalpage_setup('manage' . $this->subtype . 'plugins');
         // Print the page heading.
         echo $OUTPUT->header();
-        echo $OUTPUT->heading(get_string('manage' . $this->subtype . 'plugins', 'assign'));
+        echo $OUTPUT->heading(get_string('manage' . $this->subtype . 'plugins', 'mod_assign'));
     }
 
     /**

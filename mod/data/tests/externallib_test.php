@@ -1125,7 +1125,7 @@ class externallib_test extends externallib_advanced_testcase {
         $this->assertCount(0, $result['generalnotifications']);
         $this->assertCount(1, $result['fieldnotifications']);
         $this->assertEquals('field-1', $result['fieldnotifications'][0]['fieldname']);
-        $this->assertEquals(get_string('errormustsupplyvalue', 'data'), $result['fieldnotifications'][0]['notification']);
+        $this->assertEquals(get_string('errormustsupplyvalue', 'mod_data'), $result['fieldnotifications'][0]['notification']);
     }
 
     /**
@@ -1141,7 +1141,7 @@ class externallib_test extends externallib_advanced_testcase {
         $this->assertEquals(0, $result['newentryid']);
         $this->assertCount(1, $result['generalnotifications']);
         $this->assertCount(0, $result['fieldnotifications']);
-        $this->assertEquals(get_string('emptyaddform', 'data'), $result['generalnotifications'][0]);
+        $this->assertEquals(get_string('emptyaddform', 'mod_data'), $result['generalnotifications'][0]);
     }
 
     /**
@@ -1156,7 +1156,7 @@ class externallib_test extends externallib_advanced_testcase {
         $DB->update_record('data', $this->database);
 
         $this->setUser($this->student1);
-        $this->expectExceptionMessage(get_string('noaccess', 'data'));
+        $this->expectExceptionMessage(get_string('noaccess', 'mod_data'));
         $this->expectException('moodle_exception');
         mod_data_external::add_entry($this->database->id, 0, []);
     }
@@ -1172,7 +1172,7 @@ class externallib_test extends externallib_advanced_testcase {
         $DB->update_record('data', $this->database);
 
         $this->setUser($this->student1);
-        $this->expectExceptionMessage(get_string('noaccess', 'data'));
+        $this->expectExceptionMessage(get_string('noaccess', 'mod_data'));
         $this->expectException('moodle_exception');
         mod_data_external::add_entry($this->database->id, 0, []);
     }
@@ -1186,7 +1186,7 @@ class externallib_test extends externallib_advanced_testcase {
         $this->add_test_field();
 
         $this->setUser($this->student1);
-        $this->expectExceptionMessage(get_string('noaccess', 'data'));
+        $this->expectExceptionMessage(get_string('noaccess', 'mod_data'));
         $this->expectException('moodle_exception');
         mod_data_external::add_entry($this->database->id, $this->group2->id, []);
     }
@@ -1340,7 +1340,7 @@ class externallib_test extends externallib_advanced_testcase {
         $this->assertCount(0, $result['generalnotifications']);
         $this->assertCount(1, $result['fieldnotifications']);
         $this->assertEquals('field-1', $result['fieldnotifications'][0]['fieldname']);
-        $this->assertEquals(get_string('errormustsupplyvalue', 'data'), $result['fieldnotifications'][0]['notification']);
+        $this->assertEquals(get_string('errormustsupplyvalue', 'mod_data'), $result['fieldnotifications'][0]['notification']);
     }
 
     /**
@@ -1355,7 +1355,7 @@ class externallib_test extends externallib_advanced_testcase {
         $this->assertFalse($result['updated']);
         $this->assertCount(1, $result['generalnotifications']);
         $this->assertCount(9, $result['fieldnotifications']);
-        $this->assertEquals(get_string('emptyaddform', 'data'), $result['generalnotifications'][0]);
+        $this->assertEquals(get_string('emptyaddform', 'mod_data'), $result['generalnotifications'][0]);
     }
 
     /**
@@ -1370,7 +1370,7 @@ class externallib_test extends externallib_advanced_testcase {
         $DB->update_record('data', $this->database);
 
         $this->setUser($this->student1);
-        $this->expectExceptionMessage(get_string('noaccess', 'data'));
+        $this->expectExceptionMessage(get_string('noaccess', 'mod_data'));
         $this->expectException('moodle_exception');
         mod_data_external::update_entry($entry11, []);
     }
@@ -1382,7 +1382,7 @@ class externallib_test extends externallib_advanced_testcase {
         // Try to update other user entry.
         list($entry11, $entry12, $entry13, $entry14, $entry21) = self::populate_database_with_entries();
         $this->setUser($this->student2);
-        $this->expectExceptionMessage(get_string('noaccess', 'data'));
+        $this->expectExceptionMessage(get_string('noaccess', 'mod_data'));
         $this->expectException('moodle_exception');
         mod_data_external::update_entry($entry11, []);
     }

@@ -296,7 +296,7 @@ class testing_generator_test extends \advanced_testcase {
         );
 
         // Create module with conditional availability.
-        $m4 = $generator->create_module('mod_assign',
+        $m4 = $generator->create_module('assign',
                 array('course' => $course->id) +
                 $optionsavailability
         );

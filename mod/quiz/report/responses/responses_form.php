@@ -44,7 +44,7 @@ class quiz_responses_settings_form extends attempts_report_options_form {
 
         if ($data['attempts'] != attempts_report::ENROLLED_WITHOUT && !(
                 $data['qtext'] || $data['resp'] || $data['right'])) {
-            $errors['coloptions'] = get_string('reportmustselectstate', 'quiz');
+            $errors['coloptions'] = get_string('reportmustselectstate', 'mod_quiz');
         }
 
         return $errors;

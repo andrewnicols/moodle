@@ -153,9 +153,9 @@ if (empty($result->posts)) {
         // No need to extend the navigation it happens automatically for the
         // current user.
         if ($discussionsonly) {
-            $notification = get_string('nodiscussionsstartedbyyou', 'forum');
+            $notification = get_string('nodiscussionsstartedbyyou', 'mod_forum');
         } else {
-            $notification = get_string('nopostsmadebyyou', 'forum');
+            $notification = get_string('nopostsmadebyyou', 'mod_forum');
         }
         // These are the user's forum interactions.
         // Shut down the navigation 'Users' node.
@@ -169,10 +169,10 @@ if (empty($result->posts)) {
             }
             // Check to see if this is a discussion or a post.
             if ($mode == 'posts') {
-                $navbar = $PAGE->navbar->add(get_string('posts', 'forum'), new moodle_url('/mod/forum/user.php',
+                $navbar = $PAGE->navbar->add(get_string('posts', 'mod_forum'), new moodle_url('/mod/forum/user.php',
                         array('id' => $user->id, 'course' => $courseid)));
             } else {
-                $navbar = $PAGE->navbar->add(get_string('discussions', 'forum'), new moodle_url('/mod/forum/user.php',
+                $navbar = $PAGE->navbar->add(get_string('discussions', 'mod_forum'), new moodle_url('/mod/forum/user.php',
                         array('id' => $user->id, 'course' => $courseid, 'mode' => 'discussions')));
             }
         }
@@ -188,24 +188,24 @@ if (empty($result->posts)) {
             }
             // Check to see if this is a discussion or a post.
             if ($mode == 'posts') {
-                $navbar = $PAGE->navbar->add(get_string('posts', 'forum'), new moodle_url('/mod/forum/user.php',
+                $navbar = $PAGE->navbar->add(get_string('posts', 'mod_forum'), new moodle_url('/mod/forum/user.php',
                         array('id' => $user->id, 'course' => $courseid)));
             } else {
-                $navbar = $PAGE->navbar->add(get_string('discussions', 'forum'), new moodle_url('/mod/forum/user.php',
+                $navbar = $PAGE->navbar->add(get_string('discussions', 'mod_forum'), new moodle_url('/mod/forum/user.php',
                         array('id' => $user->id, 'course' => $courseid, 'mode' => 'discussions')));
             }
         }
 
         $fullname = fullname($user);
         if ($discussionsonly) {
-            $notification = get_string('nodiscussionsstartedby', 'forum', $fullname);
+            $notification = get_string('nodiscussionsstartedby', 'mod_forum', $fullname);
         } else {
-            $notification = get_string('nopostsmadebyuser', 'forum', $fullname);
+            $notification = get_string('nopostsmadebyuser', 'mod_forum', $fullname);
         }
     } else {
         // Don't extend the navigation it would be giving out information that
         // the current uesr doesn't have access to.
-        $notification = get_string('cannotviewusersposts', 'forum');
+        $notification = get_string('cannotviewusersposts', 'mod_forum');
         if ($isspecificcourse) {
             $url = new moodle_url('/course/view.php', array('id' => $courseid));
         } else {
@@ -308,10 +308,10 @@ if (isset($courseid) && $courseid != SITEID) {
 
     // Check to see if this is a discussion or a post.
     if ($mode == 'posts') {
-        $navbar = $PAGE->navbar->add(get_string('posts', 'forum'), new moodle_url('/mod/forum/user.php',
+        $navbar = $PAGE->navbar->add(get_string('posts', 'mod_forum'), new moodle_url('/mod/forum/user.php',
                 array('id' => $user->id, 'course' => $courseid)));
     } else {
-        $navbar = $PAGE->navbar->add(get_string('discussions', 'forum'), new moodle_url('/mod/forum/user.php',
+        $navbar = $PAGE->navbar->add(get_string('discussions', 'mod_forum'), new moodle_url('/mod/forum/user.php',
                 array('id' => $user->id, 'course' => $courseid, 'mode' => 'discussions')));
     }
     $PAGE->set_secondary_active_tab('participants');
@@ -345,9 +345,9 @@ if (!empty($postoutput)) {
     echo $postoutput;
     echo $OUTPUT->paging_bar($result->totalcount, $page, $perpage, $url);
 } else if ($discussionsonly) {
-    echo $OUTPUT->heading(get_string('nodiscussionsstartedby', 'forum', $userfullname));
+    echo $OUTPUT->heading(get_string('nodiscussionsstartedby', 'mod_forum', $userfullname));
 } else {
-    echo $OUTPUT->heading(get_string('noposts', 'forum'));
+    echo $OUTPUT->heading(get_string('noposts', 'mod_forum'));
 }
 
 echo html_writer::end_tag('div');

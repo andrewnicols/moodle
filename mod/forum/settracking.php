@@ -32,7 +32,7 @@ $returnpage = optional_param('returnpage', 'index.php', PARAM_FILE);    // Page 
 require_sesskey();
 
 if (! $forum = $DB->get_record("forum", array("id" => $id))) {
-    throw new \moodle_exception('invalidforumid', 'forum');
+    throw new \moodle_exception('invalidforumid', 'mod_forum');
 }
 
 if (! $course = $DB->get_record("course", array("id" => $forum->course))) {
@@ -64,7 +64,7 @@ if (forum_tp_is_tracked($forum) ) {
     if (forum_tp_stop_tracking($forum->id)) {
         $event = \mod_forum\event\readtracking_disabled::create($eventparams);
         $event->trigger();
-        redirect($returnto, get_string("nownottracking", "forum", $info), 1);
+        redirect($returnto, get_string("nownottracking", 'mod_forum', $info), 1);
     } else {
         throw new \moodle_exception('cannottrack', '', get_local_referer(false));
     }
@@ -73,7 +73,7 @@ if (forum_tp_is_tracked($forum) ) {
     if (forum_tp_start_tracking($forum->id)) {
         $event = \mod_forum\event\readtracking_enabled::create($eventparams);
         $event->trigger();
-        redirect($returnto, get_string("nowtracking", "forum", $info), 1);
+        redirect($returnto, get_string("nowtracking", 'mod_forum', $info), 1);
     } else {
         throw new \moodle_exception('cannottrack', '', get_local_referer(false));
     }

@@ -76,7 +76,7 @@ class big_search_form implements renderable, templatable {
         $this->showfullwords = $DB->get_dbfamily() == 'mysql' || $DB->get_dbfamily() == 'postgres';
         $this->actionurl = new moodle_url('/mod/forum/search.php');
 
-        $forumoptions = ['' => get_string('allforums', 'forum')] + forum_menu_list($course);
+        $forumoptions = ['' => get_string('allforums', 'mod_forum')] + forum_menu_list($course);
         $this->forumoptions = array_map(function($option) use ($forumoptions) {
             return [
                 'value' => $option,

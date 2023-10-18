@@ -54,7 +54,7 @@ if ($hook > 0) {
     if ($category = $DB->get_record("glossary_categories", array("id"=>$hook))) {
         //Check it belongs to the same glossary
         if ($category->glossaryid != $glossary->id) {
-            throw new \moodle_exception('invalidid', 'glossary');
+            throw new \moodle_exception('invalidid', 'mod_glossary');
         }
     } else {
         throw new \moodle_exception('invalidcategoryid');
@@ -66,13 +66,13 @@ require_login($course, false, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/glossary:managecategories', $context);
 
-$strglossaries   = get_string("modulenameplural", "glossary");
-$strglossary     = get_string("modulename", "glossary");
+$strglossaries   = get_string("modulenameplural", 'mod_glossary');
+$strglossary     = get_string("modulename", 'mod_glossary');
 
-$PAGE->navbar->add(get_string("categories","glossary"),
+$PAGE->navbar->add(get_string("categories",'mod_glossary'),
         new moodle_url('/mod/glossary/editcategories.php', array('id' => $cm->id,'mode' => 'cat')));
 if (!empty($action)) {
-    $navaction = get_string(core_text::strtolower($action."category"), 'glossary');
+    $navaction = get_string(core_text::strtolower($action."category"), 'mod_glossary');
     $PAGE->navbar->add($navaction);
 }
 $PAGE->set_title($glossary->name);
@@ -118,7 +118,7 @@ if ( $hook >0 ) {
         } else {
             echo $OUTPUT->header();
             echo $OUTPUT->heading(format_string($glossary->name), 2);
-            echo $OUTPUT->heading(format_string(get_string("editcategory", "glossary")), 3);
+            echo $OUTPUT->heading(format_string(get_string("editcategory", 'mod_glossary')), 3);
 
             $name = $category->name;
             $usedynalink = $category->usedynalink;
@@ -144,11 +144,11 @@ if ( $hook >0 ) {
             // Reset caches.
             \mod_glossary\local\concept_cache::reset_glossary($glossary);
 
-            redirect("editcategories.php?id=$cm->id", get_string("categorydeleted", "glossary"), 2);
+            redirect("editcategories.php?id=$cm->id", get_string("categorydeleted", 'mod_glossary'), 2);
         } else {
             echo $OUTPUT->header();
             echo $OUTPUT->heading(format_string($glossary->name), 2);
-            echo $OUTPUT->heading(format_string(get_string("deletecategory", "glossary")), 3);
+            echo $OUTPUT->heading(format_string(get_string("deletecategory", 'mod_glossary')), 3);
 
             echo $OUTPUT->box_start('generalbox boxaligncenter errorboxcontent boxwidthnarrow');
             echo "<div class=\"boxaligncenter deletecatconfirm\">".format_string($category->name, true, $fmtoptions)."<br/>";
@@ -194,7 +194,7 @@ if ( $hook >0 ) {
         require_sesskey();
         $dupcategory = $DB->get_records_sql("SELECT * FROM {glossary_categories} WHERE ".$DB->sql_like('name','?', false)." AND glossaryid=?", array($name, $glossary->id));
         if ( $dupcategory ) {
-            redirect("editcategories.php?id=$cm->id&amp;action=add&amp;name=$name", get_string("duplicatecategory", "glossary"), 2);
+            redirect("editcategories.php?id=$cm->id&amp;action=add&amp;name=$name", get_string("duplicatecategory", 'mod_glossary'), 2);
 
         } else {
             $action = "";
@@ -218,7 +218,7 @@ if ( $hook >0 ) {
     } else {
         echo $OUTPUT->header();
         echo $OUTPUT->heading(format_string($glossary->name), 2);
-        echo "<h3 class=\"main\">" . get_string("addcategory", "glossary"). "</h3>";
+        echo "<h3 class=\"main\">" . get_string("addcategory", 'mod_glossary'). "</h3>";
         $name="";
         require "editcategories.html";
     }
@@ -238,7 +238,7 @@ echo $OUTPUT->heading(format_string($glossary->name), 2);
 <table width="40%" class="boxaligncenter generalbox" cellpadding="5">
         <tr>
           <th style="width:90%" align="center">
-          <?php p(get_string("categories","glossary")) ?></th>
+          <?php p(get_string("categories",'mod_glossary')) ?></th>
           <th style="width:10%" align="center">
           <?php p(get_string("action")) ?></th>
         </tr>
@@ -258,7 +258,7 @@ echo $OUTPUT->heading(format_string($glossary->name), 2);
              <tr>
                <td style="width:80%" align="$leftalignment">
                <?php
-                    echo "<span class=\"bold\">".format_string($category->name, true, $fmtoptions)."</span> <span>($num_entries " . get_string("entries","glossary") . ")</span>";
+                    echo "<span class=\"bold\">".format_string($category->name, true, $fmtoptions)."</span> <span>($num_entries " . get_string("entries",'mod_glossary') . ")</span>";
                ?>
                </td>
                <td style="width:19%" align="center" class="action">
@@ -287,12 +287,12 @@ echo $OUTPUT->heading(format_string($glossary->name), 2);
              $options['action'] = "add";
 
              echo "<table class=\"editbuttons\" border=\"0\"><tr><td align=\"$rightalignment\">";
-             echo $OUTPUT->single_button(new moodle_url("editcategories.php", $options), get_string("addcategory", "glossary"));
+             echo $OUTPUT->single_button(new moodle_url("editcategories.php", $options), get_string("addcategory", 'mod_glossary'));
              echo "</td><td align=\"$leftalignment\">";
              unset($options['action']);
              $options['mode'] = 'cat';
              $options['hook'] = $hook;
-             echo $OUTPUT->single_button(new moodle_url("view.php", $options), get_string("back","glossary"));
+             echo $OUTPUT->single_button(new moodle_url("view.php", $options), get_string("back",'mod_glossary'));
              echo "</td></tr>";
              echo "</table>";
 

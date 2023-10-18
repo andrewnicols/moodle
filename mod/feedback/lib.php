@@ -341,15 +341,15 @@ function feedback_user_outline($course, $user, $mod, $feedback) {
     $context = context_module::instance($mod->id);
     if ($completed = $DB->get_record('feedback_completed', $params)) {
         // User has completed feedback.
-        $outline->info = get_string('completed', 'feedback');
+        $outline->info = get_string('completed', 'mod_feedback');
         $outline->time = $completed->timemodified;
     } else if ($completedtmp = $DB->get_record('feedback_completedtmp', $params)) {
         // User has started but not completed feedback.
-        $outline->info = get_string('started', 'feedback');
+        $outline->info = get_string('started', 'mod_feedback');
         $outline->time = $completedtmp->timemodified;
     } else if (has_capability('mod/feedback:complete', $context, $user)) {
         // User has not started feedback but has capability to do so.
-        $outline->info = get_string('not_started', 'feedback');
+        $outline->info = get_string('not_started', 'mod_feedback');
     }
 
     return $outline;
@@ -540,13 +540,13 @@ function feedback_user_complete($course, $user, $mod, $feedback) {
                 ['id' => $mod->id, 'userid' => $user->id,
                     'showcompleted' => $completed->id]);
         }
-        $status = get_string('completedon', 'feedback', userdate($completed->timemodified));
+        $status = get_string('completedon', 'mod_feedback', userdate($completed->timemodified));
     } else if ($completedtmp = $DB->get_record('feedback_completedtmp', $params)) {
         // User has started but not completed feedback.
-        $status = get_string('startedon', 'feedback', userdate($completedtmp->timemodified));
+        $status = get_string('startedon', 'mod_feedback', userdate($completedtmp->timemodified));
     } else if (has_capability('mod/feedback:complete', $context, $user)) {
         // User has not started feedback but has capability to do so.
-        $status = get_string('not_started', 'feedback');
+        $status = get_string('not_started', 'mod_feedback');
     }
 
     if ($url && $status) {
@@ -628,7 +628,7 @@ function feedback_reset_userdata($data) {
     $resetfeedbacks = array();
     $dropfeedbacks = array();
     $status = array();
-    $componentstr = get_string('modulenameplural', 'feedback');
+    $componentstr = get_string('modulenameplural', 'mod_feedback');
 
     //get the relevant entries from $data
     foreach ($data as $key => $value) {
@@ -657,7 +657,7 @@ function feedback_reset_userdata($data) {
         $feedback = $DB->get_record('feedback', array('id'=>$id));
         feedback_delete_all_completeds($feedback);
         $status[] = array('component'=>$componentstr.':'.$feedback->name,
-                        'item'=>get_string('resetting_data', 'feedback'),
+                        'item'=>get_string('resetting_data', 'mod_feedback'),
                         'error'=>false);
     }
 
@@ -682,13 +682,13 @@ function feedback_reset_userdata($data) {
 function feedback_reset_course_form_definition(&$mform) {
     global $COURSE, $DB;
 
-    $mform->addElement('header', 'feedbackheader', get_string('modulenameplural', 'feedback'));
+    $mform->addElement('header', 'feedbackheader', get_string('modulenameplural', 'mod_feedback'));
 
     if (!$feedbacks = $DB->get_records('feedback', array('course'=>$COURSE->id), 'name')) {
         return;
     }
 
-    $mform->addElement('static', 'hint', get_string('resetting_data', 'feedback'));
+    $mform->addElement('static', 'hint', get_string('resetting_data', 'mod_feedback'));
     foreach ($feedbacks as $feedback) {
         $mform->addElement('checkbox', FEEDBACK_RESETFORM_RESET.$feedback->id, $feedback->name);
     }
@@ -730,21 +730,21 @@ function feedback_reset_course_form_defaults($course) {
 function feedback_reset_course_form($course) {
     global $DB, $OUTPUT;
 
-    echo get_string('resetting_feedbacks', 'feedback'); echo ':<br />';
+    echo get_string('resetting_feedbacks', 'mod_feedback'); echo ':<br />';
     if (!$feedbacks = $DB->get_records('feedback', array('course'=>$course->id), 'name')) {
         return;
     }
 
     foreach ($feedbacks as $feedback) {
         echo '<p>';
-        echo get_string('name', 'feedback').': '.$feedback->name.'<br />';
+        echo get_string('name', 'mod_feedback').': '.$feedback->name.'<br />';
         echo html_writer::checkbox(FEEDBACK_RESETFORM_RESET.$feedback->id,
                                 1, true,
-                                get_string('resetting_data', 'feedback'));
+                                get_string('resetting_data', 'mod_feedback'));
         echo '<br />';
         echo html_writer::checkbox(FEEDBACK_RESETFORM_DROP.$feedback->id,
                                 1, false,
-                                get_string('drop_feedback', 'feedback'));
+                                get_string('drop_feedback', 'mod_feedback'));
         echo '</p>';
     }
 }
@@ -786,7 +786,7 @@ function feedback_set_events($feedback) {
         $event = new stdClass();
         $event->eventtype    = FEEDBACK_EVENT_TYPE_OPEN;
         $event->type         = empty($feedback->timeclose) ? CALENDAR_EVENT_TYPE_ACTION : CALENDAR_EVENT_TYPE_STANDARD;
-        $event->name         = get_string('calendarstart', 'feedback', $feedback->name);
+        $event->name         = get_string('calendarstart', 'mod_feedback', $feedback->name);
         $event->description  = format_module_intro('feedback', $feedback, $feedback->coursemodule, false);
         $event->format       = FORMAT_HTML;
         $event->timestart    = $feedback->timeopen;
@@ -822,7 +822,7 @@ function feedback_set_events($feedback) {
         $event = new stdClass();
         $event->type         = CALENDAR_EVENT_TYPE_ACTION;
         $event->eventtype    = FEEDBACK_EVENT_TYPE_CLOSE;
-        $event->name         = get_string('calendarend', 'feedback', $feedback->name);
+        $event->name         = get_string('calendarend', 'mod_feedback', $feedback->name);
         $event->description  = format_module_intro('feedback', $feedback, $feedback->coursemodule, false);
         $event->format       = FORMAT_HTML;
         $event->timestart    = $feedback->timeclose;
@@ -1499,14 +1499,14 @@ function feedback_load_feedback_items($dir = 'mod/feedback/item') {
 function feedback_load_feedback_items_options() {
     global $CFG;
 
-    $feedback_options = array("pagebreak" => get_string('add_pagebreak', 'feedback'));
+    $feedback_options = array("pagebreak" => get_string('add_pagebreak', 'mod_feedback'));
 
     if (!$feedback_names = feedback_load_feedback_items('mod/feedback/item')) {
         return array();
     }
 
     foreach ($feedback_names as $fn) {
-        $feedback_options[$fn] = get_string($fn, 'feedback');
+        $feedback_options[$fn] = get_string($fn, 'mod_feedback');
     }
     asort($feedback_options);
     return $feedback_options;
@@ -2578,13 +2578,13 @@ function feedback_send_email($cm, $feedback, $course, $user, $completed = null) 
 
     if ($teachers) {
 
-        $strfeedbacks = get_string('modulenameplural', 'feedback');
-        $strfeedback  = get_string('modulename', 'feedback');
+        $strfeedbacks = get_string('modulenameplural', 'mod_feedback');
+        $strfeedback  = get_string('modulename', 'mod_feedback');
 
         if ($feedback->anonymous == FEEDBACK_ANONYMOUS_NO) {
             $printusername = fullname($user);
         } else {
-            $printusername = get_string('anonymous_user', 'feedback');
+            $printusername = get_string('anonymous_user', 'mod_feedback');
         }
 
         foreach ($teachers as $teacher) {
@@ -2604,7 +2604,7 @@ function feedback_send_email($cm, $feedback, $course, $user, $completed = null) 
 
             $a = array('username' => $info->username, 'feedbackname' => $feedback->name);
 
-            $postsubject = get_string('feedbackcompleted', 'feedback', $a);
+            $postsubject = get_string('feedbackcompleted', 'mod_feedback', $a);
             $posttext = feedback_send_email_text($info, $course);
 
             if ($teacher->mailformat == 1) {
@@ -2686,9 +2686,9 @@ function feedback_send_email_anonym($cm, $feedback, $course) {
 
     if ($teachers) {
 
-        $strfeedbacks = get_string('modulenameplural', 'feedback');
-        $strfeedback  = get_string('modulename', 'feedback');
-        $printusername = get_string('anonymous_user', 'feedback');
+        $strfeedbacks = get_string('modulenameplural', 'mod_feedback');
+        $strfeedback  = get_string('modulename', 'mod_feedback');
+        $printusername = get_string('anonymous_user', 'mod_feedback');
 
         foreach ($teachers as $teacher) {
             $info = new stdClass();
@@ -2698,7 +2698,7 @@ function feedback_send_email_anonym($cm, $feedback, $course) {
 
             $a = array('username' => $info->username, 'feedbackname' => $feedback->name);
 
-            $postsubject = get_string('feedbackcompleted', 'feedback', $a);
+            $postsubject = get_string('feedbackcompleted', 'mod_feedback', $a);
             $posttext = feedback_send_email_text($info, $course);
 
             if ($teacher->mailformat == 1) {
@@ -2743,10 +2743,10 @@ function feedback_send_email_anonym($cm, $feedback, $course) {
 function feedback_send_email_text($info, $course) {
     $coursecontext = context_course::instance($course->id);
     $courseshortname = format_string($course->shortname, true, array('context' => $coursecontext));
-    $posttext  = $courseshortname.' -> '.get_string('modulenameplural', 'feedback').' -> '.
+    $posttext  = $courseshortname.' -> '.get_string('modulenameplural', 'mod_feedback').' -> '.
                     $info->feedback."\n";
     $posttext .= '---------------------------------------------------------------------'."\n";
-    $posttext .= get_string("emailteachermail", "feedback", $info)."\n";
+    $posttext .= get_string("emailteachermail", 'mod_feedback', $info)."\n";
     $posttext .= '---------------------------------------------------------------------'."\n";
     return $posttext;
 }
@@ -2770,10 +2770,10 @@ function feedback_send_email_html($info, $course, $cm) {
 
     $posthtml = '<p><font face="sans-serif">'.
             '<a href="'.$course_url.'">'.$courseshortname.'</a> ->'.
-            '<a href="'.$feedback_all_url.'">'.get_string('modulenameplural', 'feedback').'</a> ->'.
+            '<a href="'.$feedback_all_url.'">'.get_string('modulenameplural', 'mod_feedback').'</a> ->'.
             '<a href="'.$feedback_url.'">'.$info->feedback.'</a></font></p>';
     $posthtml .= '<hr /><font face="sans-serif">';
-    $posthtml .= '<p>'.get_string('emailteachermailhtml', 'feedback', $info).'</p>';
+    $posthtml .= '<p>'.get_string('emailteachermailhtml', 'mod_feedback', $info).'</p>';
     $posthtml .= '</font><hr />';
     return $posthtml;
 }
@@ -2804,42 +2804,42 @@ function feedback_extend_settings_navigation(settings_navigation $settings, navi
     }
 
     if (has_capability('mod/feedback:edititems', $context)) {
-        $questionnode = $feedbacknode->add(get_string('questions', 'feedback'), null,
+        $questionnode = $feedbacknode->add(get_string('questions', 'mod_feedback'), null,
             navigation_node::TYPE_CUSTOM, null, 'questionnode');
-        $questionnode->add(get_string('edit_items', 'feedback'),
+        $questionnode->add(get_string('edit_items', 'mod_feedback'),
             new moodle_url('/mod/feedback/edit.php', ['id' => $settings->get_page()->cm->id]));
 
-        $questionnode->add(get_string('export_questions', 'feedback'),
+        $questionnode->add(get_string('export_questions', 'mod_feedback'),
             new moodle_url('/mod/feedback/export.php', ['id' => $settings->get_page()->cm->id, 'action' => 'exportfile']));
 
-        $questionnode->add(get_string('import_questions', 'feedback'),
+        $questionnode->add(get_string('import_questions', 'mod_feedback'),
             new moodle_url('/mod/feedback/import.php', ['id' => $settings->get_page()->cm->id]));
 
-        $feedbacknode->add(get_string('templates', 'feedback'),
+        $feedbacknode->add(get_string('templates', 'mod_feedback'),
             new moodle_url('/mod/feedback/manage_templates.php', ['id' => $settings->get_page()->cm->id, 'mode' => 'manage']),
             navigation_node::TYPE_CUSTOM, null, 'templatenode');
     }
 
     if (has_capability('mod/feedback:mapcourse', $context) && $settings->get_page()->course->id == SITEID) {
-        $feedbacknode->add(get_string('mappedcourses', 'feedback'),
+        $feedbacknode->add(get_string('mappedcourses', 'mod_feedback'),
             new moodle_url('/mod/feedback/mapcourse.php', ['id' => $settings->get_page()->cm->id]),
             navigation_node::TYPE_CUSTOM, null, 'mapcourse');
     }
 
     $feedback = $settings->get_page()->activityrecord;
     if ($feedback->course == SITEID) {
-        $analysisnode = navigation_node::create(get_string('analysis', 'feedback'),
+        $analysisnode = navigation_node::create(get_string('analysis', 'mod_feedback'),
             new moodle_url('/mod/feedback/analysis_course.php', ['id' => $settings->get_page()->cm->id]),
             navigation_node::TYPE_CUSTOM, null, 'feedbackanalysis');
     } else {
-        $analysisnode = navigation_node::create(get_string('analysis', 'feedback'),
+        $analysisnode = navigation_node::create(get_string('analysis', 'mod_feedback'),
             new moodle_url('/mod/feedback/analysis.php', ['id' => $settings->get_page()->cm->id]),
             navigation_node::TYPE_CUSTOM, null, 'feedbackanalysis');
     }
 
     if (has_capability('mod/feedback:viewreports', $context)) {
         $feedbacknode->add_node($analysisnode);
-        $feedbacknode->add(get_string(($hassecondary ? 'responses' : 'show_entries'), 'feedback'),
+        $feedbacknode->add(get_string(($hassecondary ? 'responses' : 'show_entries'), 'mod_feedback'),
             new moodle_url('/mod/feedback/show_entries.php', ['id' => $settings->get_page()->cm->id]),
             navigation_node::TYPE_CUSTOM, null, 'responses');
     } else {
@@ -2867,7 +2867,7 @@ function feedback_init_feedback_session() {
  * @param stdClass $currentcontext Current context of block
  */
 function feedback_page_type_list($pagetype, $parentcontext, $currentcontext) {
-    $module_pagetype = array('mod-feedback-*'=>get_string('page-mod-feedback-x', 'feedback'));
+    $module_pagetype = array('mod-feedback-*'=>get_string('page-mod-feedback-x', 'mod_feedback'));
     return $module_pagetype;
 }
 
@@ -3049,7 +3049,7 @@ function mod_feedback_core_calendar_provide_event_action(calendar_event $event,
     }
 
     return $factory->create_instance(
-        get_string('answerquestions', 'feedback'),
+        get_string('answerquestions', 'mod_feedback'),
         new \moodle_url('/mod/feedback/view.php', ['id' => $cm->id]),
         1,
         $actionable
@@ -3120,7 +3120,7 @@ function mod_feedback_get_completion_active_rule_descriptions($cm) {
         switch ($key) {
             case 'completionsubmit':
                 if (!empty($val)) {
-                    $descriptions[] = get_string('completionsubmit', 'feedback');
+                    $descriptions[] = get_string('completionsubmit', 'mod_feedback');
                 }
                 break;
             default:
@@ -3161,7 +3161,7 @@ function mod_feedback_core_calendar_get_valid_event_timestart_range(\calendar_ev
         if (!empty($instance->timeclose)) {
             $maxdate = [
                 $instance->timeclose,
-                get_string('openafterclose', 'feedback')
+                get_string('openafterclose', 'mod_feedback')
             ];
         }
     } else if ($event->eventtype == FEEDBACK_EVENT_TYPE_CLOSE) {
@@ -3170,7 +3170,7 @@ function mod_feedback_core_calendar_get_valid_event_timestart_range(\calendar_ev
         if (!empty($instance->timeopen)) {
             $mindate = [
                 $instance->timeopen,
-                get_string('closebeforeopen', 'feedback')
+                get_string('closebeforeopen', 'mod_feedback')
             ];
         }
     }
@@ -3251,7 +3251,7 @@ function mod_feedback_core_calendar_event_timestart_updated(\calendar_event $eve
  * @return lang_string The event type lang string.
  */
 function mod_feedback_core_calendar_get_event_action_string(string $eventtype): string {
-    $modulename = get_string('modulename', 'feedback');
+    $modulename = get_string('modulename', 'mod_feedback');
 
     switch ($eventtype) {
         case FEEDBACK_EVENT_TYPE_OPEN:
@@ -3264,5 +3264,5 @@ function mod_feedback_core_calendar_get_event_action_string(string $eventtype): 
             return get_string('requiresaction', 'calendar', $modulename);
     }
 
-    return get_string($identifier, 'feedback', $modulename);
+    return get_string($identifier, 'mod_feedback', $modulename);
 }

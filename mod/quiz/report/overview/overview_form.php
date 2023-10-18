@@ -27,7 +27,7 @@ class quiz_overview_settings_form extends attempts_report_options_form {
 
     protected function other_attempt_fields(MoodleQuickForm $mform) {
         if (has_capability('mod/quiz:regrade', $this->_customdata['context'])) {
-            $mform->addElement('advcheckbox', 'onlyregraded', get_string('reportshowonly', 'quiz'),
+            $mform->addElement('advcheckbox', 'onlyregraded', get_string('reportshowonly', 'mod_quiz'),
                     get_string('optonlyregradedattempts', 'quiz_overview'));
             $mform->disabledIf('onlyregraded', 'attempts', 'eq', attempts_report::ENROLLED_WITHOUT);
         }

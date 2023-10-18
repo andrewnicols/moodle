@@ -75,7 +75,7 @@ class core_blog_renderer extends plugin_renderer_base {
         $by->name = html_writer::link(new moodle_url('/user/view.php', $userurlparams), $fullname);
 
         $by->date = userdate($entry->created);
-        $o .= $this->output->container(get_string('bynameondate', 'forum', $by), 'author');
+        $o .= $this->output->container(get_string('bynameondate', 'mod_forum', $by), 'author');
 
         // Adding external blog link.
         if (!empty($entry->renderable->externalblogtext)) {

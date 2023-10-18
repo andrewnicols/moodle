@@ -191,7 +191,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_feedback_core_calendar_provide_event_action($event, $factory);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('answerquestions', 'feedback'), $actionevent->get_name());
+        $this->assertEquals(get_string('answerquestions', 'mod_feedback'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -227,7 +227,7 @@ class lib_test extends \advanced_testcase {
         // User2 checking $user's events.
         $actionevent = mod_feedback_core_calendar_provide_event_action($event, $factory, $user->id);
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('answerquestions', 'feedback'), $actionevent->get_name());
+        $this->assertEquals(get_string('answerquestions', 'mod_feedback'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -302,7 +302,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_feedback_core_calendar_provide_event_action($event, $factory);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('answerquestions', 'feedback'), $actionevent->get_name());
+        $this->assertEquals(get_string('answerquestions', 'mod_feedback'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -340,7 +340,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_feedback_core_calendar_provide_event_action($event, $factory, $user->id);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('answerquestions', 'feedback'), $actionevent->get_name());
+        $this->assertEquals(get_string('answerquestions', 'mod_feedback'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertFalse($actionevent->is_actionable());
@@ -363,7 +363,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_feedback_core_calendar_provide_event_action($event, $factory);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('answerquestions', 'feedback'), $actionevent->get_name());
+        $this->assertEquals(get_string('answerquestions', 'mod_feedback'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -400,7 +400,7 @@ class lib_test extends \advanced_testcase {
         $actionevent = mod_feedback_core_calendar_provide_event_action($event, $factory, $user->id);
 
         $this->assertInstanceOf('\core_calendar\local\event\value_objects\action', $actionevent);
-        $this->assertEquals(get_string('answerquestions', 'feedback'), $actionevent->get_name());
+        $this->assertEquals(get_string('answerquestions', 'mod_feedback'), $actionevent->get_name());
         $this->assertInstanceOf('moodle_url', $actionevent->get_url());
         $this->assertEquals(1, $actionevent->get_item_count());
         $this->assertTrue($actionevent->is_actionable());
@@ -662,7 +662,7 @@ class lib_test extends \advanced_testcase {
         $moddefaults->customdata = ['customcompletionrules' => ['completionsubmit' => 1]];
         $moddefaults->completion = 2;
 
-        $activeruledescriptions = [get_string('completionsubmit', 'feedback')];
+        $activeruledescriptions = [get_string('completionsubmit', 'mod_feedback')];
         $this->assertEquals(mod_feedback_get_completion_active_rule_descriptions($cm1), $activeruledescriptions);
         $this->assertEquals(mod_feedback_get_completion_active_rule_descriptions($cm2), []);
         $this->assertEquals(mod_feedback_get_completion_active_rule_descriptions($moddefaults), $activeruledescriptions);

@@ -40,7 +40,7 @@ class lesson_page_type_essay extends lesson_page {
     }
     public function get_typestring() {
         if ($this->string===null) {
-            $this->string = get_string($this->typeidstring, 'lesson');
+            $this->string = get_string($this->typeidstring, 'mod_lesson');
         }
         return $this->string;
     }
@@ -303,7 +303,7 @@ class lesson_page_type_essay extends lesson_page {
                     $context->id, 'mod_lesson', 'essay_answers', $useranswer->id);
 
                 if ($essayinfo->response == null) {
-                    $answerdata->response = get_string("nocommentyet", "lesson");
+                    $answerdata->response = get_string("nocommentyet", 'mod_lesson');
                 } else {
                     $essayinfo->response = file_rewrite_pluginfile_urls($essayinfo->response, 'pluginfile.php',
                             $answerpage->context->id, 'mod_lesson', 'essay_responses', $useranswer->id);
@@ -312,27 +312,27 @@ class lesson_page_type_essay extends lesson_page {
                 if (isset($pagestats[$this->properties->id])) {
                     $percent = $pagestats[$this->properties->id]->totalscore / $pagestats[$this->properties->id]->total * 100;
                     $percent = round($percent, 2);
-                    $percent = get_string("averagescore", "lesson").": ". $percent ."%";
+                    $percent = get_string("averagescore", 'mod_lesson').": ". $percent ."%";
                 } else {
                     // dont think this should ever be reached....
-                    $percent = get_string("nooneansweredthisquestion", "lesson");
+                    $percent = get_string("nooneansweredthisquestion", 'mod_lesson');
                 }
                 if ($essayinfo->graded) {
                     if ($this->lesson->custom) {
-                        $answerdata->score = get_string("pointsearned", "lesson").": " . $essayinfo->score;
+                        $answerdata->score = get_string("pointsearned", 'mod_lesson').": " . $essayinfo->score;
                     } elseif ($essayinfo->score) {
-                        $answerdata->score = get_string("receivedcredit", "lesson");
+                        $answerdata->score = get_string("receivedcredit", 'mod_lesson');
                     } else {
-                        $answerdata->score = get_string("didnotreceivecredit", "lesson");
+                        $answerdata->score = get_string("didnotreceivecredit", 'mod_lesson');
                     }
                 } else {
-                    $answerdata->score = get_string("havenotgradedyet", "lesson");
+                    $answerdata->score = get_string("havenotgradedyet", 'mod_lesson');
                 }
             } else {
                 $essayinfo = new stdClass();
                 if ($hasattempts && has_capability('mod/lesson:grade', $answerpage->context)) {
                     $essayinfo->answer = html_writer::link(new moodle_url("/mod/lesson/essay.php",
-                        ['id' => $PAGE->cm->id]), get_string("viewessayanswers", "lesson"));
+                        ['id' => $PAGE->cm->id]), get_string("viewessayanswers", 'mod_lesson'));
                 } else {
                     $essayinfo->answer = "";
                 }
@@ -343,10 +343,10 @@ class lesson_page_type_essay extends lesson_page {
             if (isset($pagestats[$this->properties->id])) {
                 $avescore = $pagestats[$this->properties->id]->totalscore / $pagestats[$this->properties->id]->total;
                 $avescore = round($avescore, 2);
-                $avescore = get_string("averagescore", "lesson").": ". $avescore ;
+                $avescore = get_string("averagescore", 'mod_lesson').": ". $avescore ;
             } else {
-                $avescore = $hasattempts ? get_string("essaynotgradedyet", "lesson") :
-                        get_string("nooneansweredthisquestion", "lesson");
+                $avescore = $hasattempts ? get_string("essaynotgradedyet", 'mod_lesson') :
+                        get_string("nooneansweredthisquestion", 'mod_lesson');
             }
             // This is the student's answer so it should be cleaned.
             $answerdata->answers[] = array(format_text($essayinfo->answer, $essayinfo->answerformat,
@@ -427,15 +427,15 @@ class lesson_display_answer_form_essay extends moodleform {
         if ($hasattempt) {
             $mform->addElement('hidden', 'answer', $useranswerraw);
             $mform->setType('answer', PARAM_RAW);
-            $mform->addElement('html', $OUTPUT->container(get_string('youranswer', 'lesson'), 'youranswer'));
+            $mform->addElement('html', $OUTPUT->container(get_string('youranswer', 'mod_lesson'), 'youranswer'));
             $useranswer = file_rewrite_pluginfile_urls($useranswer, 'pluginfile.php', $editoroptions['context']->id,
                 'mod_lesson', 'essay_answers', $this->_customdata['attemptid']);
             $mform->addElement('html', $OUTPUT->container($useranswer, 'reviewessay'));
-            $this->add_action_buttons(null, get_string("nextpage", "lesson"));
+            $this->add_action_buttons(null, get_string("nextpage", 'mod_lesson'));
         } else {
-            $mform->addElement('editor', 'answer_editor', get_string('youranswer', 'lesson'), null, $editoroptions);
+            $mform->addElement('editor', 'answer_editor', get_string('youranswer', 'mod_lesson'), null, $editoroptions);
             $mform->setType('answer_editor', PARAM_RAW);
-            $this->add_action_buttons(null, get_string("submit", "lesson"));
+            $this->add_action_buttons(null, get_string("submit", 'mod_lesson'));
         }
     }
 }
