@@ -113,8 +113,9 @@ class gradeimport_csv_load_data {
 
                 $displaystring = null;
                 if (!empty($gradeitem->itemmodule)) {
-                    $displaystring = get_string('modulename', $gradeitem->itemmodule).get_string('labelsep', 'langconfig')
-                            .$gradeitem->get_name();
+                    $displaystring = get_string('modulename', "mod_{$gradeitem->itemmodule}")
+                        . get_string('labelsep', 'langconfig')
+                        . $gradeitem->get_name();
                 } else {
                     $displaystring = $gradeitem->get_name();
                 }

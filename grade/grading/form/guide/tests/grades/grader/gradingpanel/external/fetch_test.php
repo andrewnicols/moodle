@@ -337,7 +337,7 @@ class fetch_test extends advanced_testcase {
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
 
         $this->setUser($teacher);
-        $controller = $guidegenerator->get_test_guide($forum->get_context(), 'forum', 'forum');
+        $controller = $guidegenerator->get_test_guide($forum->get_context(), 'mod_forum', 'forum');
         $definition = $controller->get_definition();
 
         // In the situation of mod_forum this would be the id from forum_grades.

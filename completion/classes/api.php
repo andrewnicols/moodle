@@ -75,7 +75,7 @@ class api {
 
         // Create the \stdClass we will be using for our language strings.
         $lang = new \stdClass();
-        $lang->modulename = get_string('pluginname', $modulename);
+        $lang->modulename = get_string('pluginname', "mod_{$modulename}");
         $lang->instancename = $instance->name;
 
         // Create the calendar event.

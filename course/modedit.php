@@ -122,7 +122,7 @@ if (!empty($add)) {
     }
 
     $sectionname = get_section_name($course, $cw);
-    $fullmodulename = get_string('modulename', $module->name);
+    $fullmodulename = get_string('modulename', "mod_{$module->name}");
 
     if ($data->section && $course->format != 'site') {
         $heading = new stdClass();
@@ -209,7 +209,7 @@ if ($mform->is_cancelled()) {
 } else {
 
     $streditinga = get_string('editinga', 'moodle', $fullmodulename);
-    $strmodulenameplural = get_string('modulenameplural', $module->name);
+    $strmodulenameplural = get_string('modulenameplural', "mod_{$module->name}");
 
     if (!empty($cm->id)) {
         $context = context_module::instance($cm->id);
@@ -228,10 +228,10 @@ if ($mform->is_cancelled()) {
 
     echo $OUTPUT->header();
 
-    if (get_string_manager()->string_exists('modulename_help', $module->name)) {
-        echo $OUTPUT->heading_with_help($pageheading, 'modulename', $module->name, 'monologo');
+    if (get_string_manager()->string_exists('modulename_help', "mod_{$module->name}")) {
+        echo $OUTPUT->heading_with_help($pageheading, 'modulename', "mod_{$module->name}", 'monologo');
     } else {
-        echo $OUTPUT->heading_with_help($pageheading, '', $module->name, 'monologo');
+        echo $OUTPUT->heading_with_help($pageheading, '', "mod_{$module->name}", 'monologo');
     }
 
     $mform->display();

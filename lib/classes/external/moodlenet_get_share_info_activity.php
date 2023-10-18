@@ -97,7 +97,7 @@ class moodlenet_get_share_info_activity extends external_api {
         return [
             'status' => true,
             'name' => $coursemodule->name,
-            'type' => get_string('modulename', $coursemodule->modname),
+            'type' => get_string('modulename', "mod_{$coursemodule->modname}"),
             'server' => $issuer->get_display_name(),
             'supportpageurl' => $supporturl,
             'issuerid' => $issuerid,

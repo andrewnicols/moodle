@@ -59,8 +59,8 @@ class recentlyaccesseditems_item_exporter extends \core\external\exporter {
             'courseviewurl' => (new moodle_url('/course/view.php', array('id' => $this->data->courseid)))->out(false),
             'icon' => \html_writer::img(
                 $iconurl,
-                get_string('pluginname', $this->data->modname),
-                ['title' => get_string('pluginname', $this->data->modname), 'class' => "icon $iconclass"]
+                get_string('pluginname', "mod_{$this->data->modname}"),
+                ['title' => get_string('pluginname', "mod_{$this->data->modname}"), 'class' => "icon $iconclass"]
             ),
             'purpose' => plugin_supports('mod', $this->data->modname, FEATURE_MOD_PURPOSE, MOD_PURPOSE_OTHER),
         );

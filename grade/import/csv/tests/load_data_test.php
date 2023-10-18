@@ -165,7 +165,7 @@ Bobby,Bunce,,"Moodle HQ","Rock on!",student5@example.com,75.00,,75.00,{exportdat
         }
 
         // Expected modified item name.
-        $testitemname = get_string('modulename', $gradeitemsarray[$quizkey]->itemmodule) . ': ' .
+        $testitemname = get_string('modulename', "mod_{$gradeitemsarray[$quizkey]->itemmodule}") . ': ' .
                 $gradeitemsarray[$quizkey]->itemname;
         // Check that an item that is a module, is concatenated properly.
         $this->assertEquals($testitemname, $gradeitems[$quizkey]);

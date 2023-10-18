@@ -930,7 +930,7 @@ abstract class grade_report {
         $itemtypes = $DB->get_records_sql($sql, ['courseid1' => $this->courseid, 'courseid2' => $this->courseid]);
         foreach ($itemtypes as $itemtype => $value) {
             if (file_exists("$CFG->dirroot/mod/$itemtype/lib.php")) {
-                $modnames[$itemtype] = get_string("modulename", $itemtype, null, true);
+                $modnames[$itemtype] = get_string("modulename", "mod_{$itemtype}", null, true);
             } else if ($itemtype == 'manual') {
                 $modnames[$itemtype] = get_string('manualitem', 'grades', null, true);
             }
@@ -939,4 +939,3 @@ abstract class grade_report {
         return $modnames;
     }
 }
-

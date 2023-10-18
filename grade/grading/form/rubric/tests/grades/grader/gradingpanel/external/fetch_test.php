@@ -358,7 +358,7 @@ class fetch_test extends advanced_testcase {
 
         $this->setUser($teacher);
 
-        $controller = $rubricgenerator->get_test_rubric($forum->get_context(), 'forum', 'forum');
+        $controller = $rubricgenerator->get_test_rubric($forum->get_context(), 'mod_forum', 'forum');
         $definition = $controller->get_definition();
 
         // In the situation of mod_forum this would be the id from forum_grades.

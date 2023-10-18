@@ -404,8 +404,8 @@ function get_module_types_names($plural = false, $resetcache = false) {
         if ($allmods = $DB->get_records("modules")) {
             foreach ($allmods as $mod) {
                 if (file_exists("$CFG->dirroot/mod/$mod->name/lib.php") && $mod->visible) {
-                    $modnames[0][$mod->name] = get_string("modulename", "$mod->name", null, true);
-                    $modnames[1][$mod->name] = get_string("modulenameplural", "$mod->name", null, true);
+                    $modnames[0][$mod->name] = get_string("modulename", "mod_{$mod->name}", null, true);
+                    $modnames[1][$mod->name] = get_string("modulenameplural", "mod_{$mod->name}", null, true);
                 }
             }
         }
@@ -3506,7 +3506,7 @@ function duplicate_module($course, $cm, int $sectionid = null, bool $changename 
     require_once($CFG->libdir . '/filelib.php');
 
     $a          = new stdClass();
-    $a->modtype = get_string('modulename', $cm->modname);
+    $a->modtype = get_string('modulename', "mod_{$cm->modname}");
     $a->modname = format_string($cm->name);
 
     if (!plugin_supports('mod', $cm->modname, FEATURE_BACKUP_MOODLE2)) {

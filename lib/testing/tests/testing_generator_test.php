@@ -32,8 +32,10 @@ class testing_generator_test extends \advanced_testcase {
 
     public function test_get_plugin_generator_sloppy_name() {
         $generator = $this->getDataGenerator()->get_plugin_generator('quiz');
-        $this->assertDebuggingCalled('Please specify the component you want a generator for as ' .
-                    'mod_quiz, not quiz.', DEBUG_DEVELOPER);
+        $this->assertDebuggingCalled(
+            'Components names for modules must be written in frankenstyle format: quiz => mod_quiz.',
+            DEBUG_DEVELOPER,
+        );
         $this->assertInstanceOf('mod_quiz_generator', $generator);
     }
 
@@ -294,7 +296,7 @@ class testing_generator_test extends \advanced_testcase {
         );
 
         // Create module with conditional availability.
-        $m4 = $generator->create_module('assign',
+        $m4 = $generator->create_module('mod_assign',
                 array('course' => $course->id) +
                 $optionsavailability
         );

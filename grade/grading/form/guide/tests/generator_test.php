@@ -177,7 +177,7 @@ class generator_test extends \advanced_testcase {
         $context = context_module::instance($module->cmid);
 
         $this->setUser($user);
-        $guide = $guidegenerator->get_test_guide($context, 'assign', 'submissions');
+        $guide = $guidegenerator->get_test_guide($context, 'mod_assign', 'submissions');
         $definition = $guide->get_definition();
 
         $this->assertEquals('testguide', $definition->name);
@@ -206,7 +206,7 @@ class generator_test extends \advanced_testcase {
         $context = context_module::instance($module->cmid);
 
         $this->setUser($user);
-        $controller = $guidegenerator->get_test_guide($context, 'assign', 'submissions');
+        $controller = $guidegenerator->get_test_guide($context, 'mod_assign', 'submissions');
 
         $result = $guidegenerator->get_submitted_form_data($controller, 93, [
             'Spelling mistakes' => [
@@ -254,7 +254,7 @@ class generator_test extends \advanced_testcase {
         $context = context_module::instance($module->cmid);
 
         $this->setUser($user);
-        $controller = $guidegenerator->get_test_guide($context, 'assign', 'submissions');
+        $controller = $guidegenerator->get_test_guide($context, 'mod_assign', 'submissions');
 
         // Unit under test.
         $result = $guidegenerator->get_test_form_data(

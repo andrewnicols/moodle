@@ -39,10 +39,10 @@ $addons = [
             ]
         ],
         'lang' => [
-            ['pluginname', 'bigbluebuttonbn'],
-            ['view_conference_action_join', 'bigbluebuttonbn'],
-            ['view_message_conference_room_ready', 'bigbluebuttonbn'],
-            ['view_mobile_message_reload_page_creation_time_meeting', 'bigbluebuttonbn']
+            ['pluginname', 'mod_bigbluebuttonbn'],
+            ['view_conference_action_join', 'mod_bigbluebuttonbn'],
+            ['view_message_conference_room_ready', 'mod_bigbluebuttonbn'],
+            ['view_mobile_message_reload_page_creation_time_meeting', 'mod_bigbluebuttonbn']
         ]
     ]
 ];

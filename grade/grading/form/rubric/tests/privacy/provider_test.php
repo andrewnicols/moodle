@@ -51,7 +51,7 @@ class provider_test extends provider_testcase {
         $this->setUser($user);
 
         // Generate a test rubric and get its controller.
-        $controller = $this->get_test_rubric($modulecontext, 'assign', 'submissions');
+        $controller = $this->get_test_rubric($modulecontext, 'mod_assign', 'submissions');
 
         // In the situation of mod_assign this would be the id from assign_grades.
         $itemid = 1;
@@ -91,7 +91,7 @@ class provider_test extends provider_testcase {
         $this->setUser($user);
 
         // Generate a test rubric and get its controller.
-        $controller = $this->get_test_rubric($modulecontext, 'assign', 'submissions');
+        $controller = $this->get_test_rubric($modulecontext, 'mod_assign', 'submissions');
 
         // In the situation of mod_assign this would be the id from assign_grades.
         $itemid = 1;

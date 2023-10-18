@@ -63,17 +63,17 @@ class test_external_function_throwable extends external_api {
     public static function external_function_info($function, $strictness=MUST_EXIST) {
         if ($function == 'core_throw_exception') {
             // Convert it to an object.
-            $function = new stdClass();
-            $function->name = $function;
-            $function->classname = 'test_external_function_throwable';
-            $function->methodname = 'throw_exception';
-            $function->classpath = ''; // No need to define class path because current file is already loaded.
-            $function->component = 'fake';
-            $function->capabilities = '';
-            $function->services = 'moodle_mobile_app';
-            $function->loginrequired = false;
+            $result = new stdClass();
+            $result->name = $function;
+            $result->classname = 'test_external_function_throwable';
+            $result->methodname = 'throw_exception';
+            $result->classpath = ''; // No need to define class path because current file is already loaded.
+            $result->component = 'mod_fake';
+            $result->capabilities = '';
+            $result->services = 'moodle_mobile_app';
+            $result->loginrequired = false;
         }
 
-        return parent::external_function_info($function, $strictness);
+        return parent::external_function_info($result, $strictness);
     }
 }

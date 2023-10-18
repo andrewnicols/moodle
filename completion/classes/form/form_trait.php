@@ -212,7 +212,7 @@ trait form_trait {
             $completionexpectedel = 'completionexpected' . $suffix;
             $mform->addElement('date_time_selector', $completionexpectedel, get_string('completionexpected', 'completion'),
                 ['optional' => true]);
-            $a = get_string('pluginname', $modname);
+            $a = get_string('pluginname', "mod_{$modname}");
             $mform->addHelpButton($completionexpectedel, 'completionexpected', 'completion', '', false, $a);
             $mform->hideIf($completionexpectedel, $completionel, 'eq', COMPLETION_TRACKING_NONE);
         }

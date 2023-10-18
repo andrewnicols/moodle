@@ -123,7 +123,7 @@ class component_gradeitem_test extends advanced_testcase {
 
         $this->setUser($teacher);
 
-        $controller = $rubricgenerator->get_test_rubric($forum->get_context(), 'forum', 'forum');
+        $controller = $rubricgenerator->get_test_rubric($forum->get_context(), 'mod_forum', 'forum');
 
         // In the situation of mod_forum this would be the id from forum_grades.
         $itemid = 1;
@@ -176,7 +176,7 @@ class component_gradeitem_test extends advanced_testcase {
 
         $this->setUser($teacher);
 
-        $controller = $guidegenerator->get_test_guide($forum->get_context(), 'forum', 'forum');
+        $controller = $guidegenerator->get_test_guide($forum->get_context(), 'mod_forum', 'forum');
 
         // In the situation of mod_forum this would be the id from forum_grades.
         $itemid = 1;

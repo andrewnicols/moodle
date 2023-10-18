@@ -47,14 +47,15 @@ class content_item_readonly_repository implements content_item_readonly_reposito
     private function get_core_module_help_string(string $modname): string {
         global $OUTPUT;
 
+        $component = "mod_{$modname}";
         $help = '';
         $sm = get_string_manager();
-        if ($sm->string_exists('modulename_help', $modname)) {
-            $help = get_string('modulename_help', $modname);
-            if ($sm->string_exists('modulename_link', $modname)) { // Link to further info in Moodle docs.
-                $link = get_string('modulename_link', $modname);
+        if ($sm->string_exists('modulename_help', $component)) {
+            $help = get_string('modulename_help', $component);
+            if ($sm->string_exists('modulename_link', $component)) { // Link to further info in Moodle docs.
+                $link = get_string('modulename_link', $component);
                 $linktext = get_string('morehelp');
-                $arialabel = get_string('morehelpaboutmodule', '', get_string('modulename', $modname));
+                $arialabel = get_string('morehelpaboutmodule', '', get_string('modulename', $component));
                 $doclink = $OUTPUT->doc_link($link, $linktext, true, ['aria-label' => $arialabel]);
                 $help .= \html_writer::tag('div', $doclink, ['class' => 'helpdoclink']);
             }
@@ -190,6 +191,7 @@ class content_item_readonly_repository implements content_item_readonly_reposito
             if (!file_exists("$CFG->dirroot/mod/$mod->name/lib.php")) {
                 continue;
             }
+            $component = "mod_{$mod->name}";
             // Create the content item for the module itself.
             // If the module chooses to implement the hook, this may be thrown away.
             $help = $this->get_core_module_help_string($mod->name);
@@ -207,12 +209,12 @@ class content_item_readonly_repository implements content_item_readonly_reposito
             $contentitem = new content_item(
                 $mod->id,
                 $mod->name,
-                new lang_string_title("modulename", $mod->name),
+                new lang_string_title("modulename", $component),
                 new \moodle_url('/course/mod.php', ['id' => $course->id, 'add' => $mod->name]),
-                $OUTPUT->pix_icon($icon, '', $mod->name, ['class' => "activityicon $iconclass"]),
+                $OUTPUT->pix_icon($icon, '', $component, ['class' => "activityicon $iconclass"]),
                 $help,
                 $archetype,
-                'mod_' . $mod->name,
+                $component,
                 $purpose,
             );
 

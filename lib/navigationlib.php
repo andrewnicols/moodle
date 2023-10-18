@@ -2331,9 +2331,9 @@ class global_navigation extends navigation_node {
                 continue;
             }
             if ($activity->icon) {
-                $icon = new pix_icon($activity->icon, get_string('modulename', $activity->modname), $activity->iconcomponent);
+                $icon = new pix_icon($activity->icon, get_string('modulename', "mod_{$activity->modname}"), $activity->iconcomponent);
             } else {
-                $icon = new pix_icon('monologo', get_string('modulename', $activity->modname), $activity->modname);
+                $icon = new pix_icon('monologo', get_string('modulename', "mod_{$activity->modname}"), $activity->modname);
             }
 
             // Prepare the default name and url for the node
@@ -2364,7 +2364,7 @@ class global_navigation extends navigation_node {
             }
 
             $activitynode = $sectionnode->add($activityname, $action, navigation_node::TYPE_ACTIVITY, null, $activity->id, $icon);
-            $activitynode->title(get_string('modulename', $activity->modname));
+            $activitynode->title(get_string('modulename', "mod_{$activity->modname}"));
             $activitynode->hidden = $activity->hidden;
             $activitynode->display = $showactivities && $activity->display;
             $activitynode->nodetype = $activity->nodetype;
@@ -4865,7 +4865,7 @@ class settings_navigation extends navigation_node {
             require_once($file);
         }
 
-        $modulenode = $this->add(get_string('pluginadministration', $this->page->activityname), null, self::TYPE_SETTING, null, 'modulesettings');
+        $modulenode = $this->add(get_string('pluginadministration', "mod_{$this->page->activityname}"), null, self::TYPE_SETTING, null, 'modulesettings');
         $modulenode->nodetype = navigation_node::NODETYPE_BRANCH;
         $modulenode->force_open();
 

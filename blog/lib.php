@@ -706,7 +706,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $cm->modname = $DB->get_field('modules', 'name', array('id' => $cm->module));
         $cm->name = $DB->get_field($cm->modname, 'name', array('id' => $cm->instance));
         $a = new stdClass();
-        $a->type = get_string('modulename', $cm->modname);
+        $a->type = get_string('modulename', "mod_{$cm->modname}");
         $PAGE->set_cm($cm, $course);
         $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
         $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
@@ -790,7 +790,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $a = new stdClass();
         $a->user = fullname($user);
         $a->mod = $cm->name;
-        $a->type = get_string('modulename', $cm->modname);
+        $a->type = get_string('modulename', "mod_{$cm->modname}");
         $headers['heading'] = get_string('blogentriesbyuseraboutmodule', 'blog', $a);
         $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
         $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
@@ -849,7 +849,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $a = new stdClass();
         $a->group = $group->name;
         $a->mod = $cm->name;
-        $a->type = get_string('modulename', $cm->modname);
+        $a->type = get_string('modulename', "mod_{$cm->modname}");
         $headers['heading'] = get_string('blogentriesbygroupaboutmodule', 'blog', $a);
         $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
         $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
@@ -864,7 +864,7 @@ function blog_get_headers($courseid=null, $groupid=null, $userid=null, $tagid=nu
         $PAGE->set_heading($course->fullname);
         $headers['heading'] = get_string('blogentriesabout', 'blog', $cm->name);
         $a = new stdClass();
-        $a->type = get_string('modulename', $cm->modname);
+        $a->type = get_string('modulename', "mod_{$cm->modname}");
         $headers['stradd'] = get_string('blogaboutthis', 'blog', $a);
         $headers['strview'] = get_string('viewallmodentries', 'blog', $a);
     } else if (!empty($courseid) && empty($userid) && empty($groupid) && empty($modid) && empty($entryid)) {

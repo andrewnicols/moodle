@@ -102,7 +102,7 @@ class mustache_template_finder_test extends \advanced_testcase {
     public function test_invalid_component_get_template_directories_for_component() {
         // Test something invalid.
         $this->expectException(\coding_exception::class);
-        mustache_template_finder::get_template_directories_for_component('octopus', 'classic');
+        mustache_template_finder::get_template_directories_for_component('mod_octopus', 'classic');
     }
 
     /**

@@ -1484,7 +1484,7 @@ class grade_structure {
                             $icon->pix = 'monologo';
                             $icon->component = $element['object']->itemmodule;
                         }
-                        $icon->title = s(get_string('modulename', $element['object']->itemmodule));
+                        $icon->title = s(get_string('modulename', "mod_{$element['object']->itemmodule}"));
                     }
                 } else if ($element['object']->itemtype == 'manual') {
                     if ($element['object']->is_outcome_item()) {
@@ -1544,7 +1544,7 @@ class grade_structure {
                 if ($element['object']->is_outcome_item()) {
                     return get_string('outcome', 'grades');
                 }
-                return get_string('modulename', $element['object']->itemmodule);
+                return get_string('modulename', "mod_{$element['object']->itemmodule}");
             }
             // If manual grade item.
             if ($element['object']->itemtype == 'manual') {
@@ -1600,7 +1600,7 @@ class grade_structure {
         } else {
             if ($withlink && $url = $this->get_activity_link($element)) {
                 $a = new stdClass();
-                $a->name = get_string('modulename', $element['object']->itemmodule);
+                $a->name = get_string('modulename', "mod_{$element['object']->itemmodule}");
                 $a->title = $titleunescaped;
                 $title = get_string('linktoactivity', 'grades', $a);
                 $header = html_writer::link($url, $header, [
