@@ -1059,6 +1059,15 @@ $cache = '.var_export($cache, true).';
                 $type   = 'core';
                 $plugin = $component;
             } else {
+                debugging(
+                    message: sprintf(
+                        "Components names for modules must be written in frankenstyle format: %s => mod_%s.",
+                        $component,
+                        $component,
+                    ),
+                    level: DEBUG_DEVELOPER,
+                );
+
                 // Everything else without underscore is a module.
                 $type   = 'mod';
                 $plugin = $component;

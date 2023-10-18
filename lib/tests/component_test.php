@@ -54,8 +54,8 @@ class component_test extends advanced_testcase {
             }
             $this->assertFileExists($fulldir);
             // Check that base uses realpath() separators and "/" in the subdirs.
-            $this->assertStringStartsWith($CFG->dirroot.'/', $fulldir);
-            $reldir = substr($fulldir, strlen($CFG->dirroot)+1);
+            $this->assertStringStartsWith($CFG->dirroot . '/', $fulldir);
+            $reldir = substr($fulldir, strlen($CFG->dirroot) + 1);
             $this->assertFalse(strpos($reldir, '\\'));
         }
 
@@ -74,12 +74,11 @@ class component_test extends advanced_testcase {
             if (substr($file, -4) !== '.php') {
                 continue;
             }
-            $file = substr($file, 0, strlen($file)-4);
+            $file = substr($file, 0, strlen($file) - 4);
             $this->assertArrayHasKey($file, $subsystems, 'All core lang files should be subsystems, think twice before adding anything!');
         }
         unset($item);
         unset($items);
-
     }
 
     public function test_deprecated_get_core_subsystems() {
@@ -102,7 +101,7 @@ class component_test extends advanced_testcase {
                 $this->assertNull($realsubsystems[$subsystem]);
                 continue;
             }
-            $this->assertSame($fulldir, $CFG->dirroot.'/'.$realsubsystems[$subsystem]);
+            $this->assertSame($fulldir, $CFG->dirroot . '/' . $realsubsystems[$subsystem]);
         }
     }
 
@@ -130,7 +129,7 @@ class component_test extends advanced_testcase {
         $this->assertDebuggingCalled();
 
         foreach ($plugintypes as $plugintype => $fulldir) {
-            $this->assertSame($fulldir, $CFG->dirroot.'/'.$realplugintypes[$plugintype]);
+            $this->assertSame($fulldir, $CFG->dirroot . '/' . $realplugintypes[$plugintype]);
         }
     }
 
@@ -146,7 +145,7 @@ class component_test extends advanced_testcase {
             }
             if ($plugintype !== 'auth') {
                 // Let's crosscheck it with independent implementation (auth/db is an exception).
-                $reldir = substr($fulldir, strlen($CFG->dirroot)+1);
+                $reldir = substr($fulldir, strlen($CFG->dirroot) + 1);
                 $dirs = get_list_of_plugins($reldir);
                 $dirs = array_values($dirs);
                 $this->assertDebuggingCalled();
@@ -259,12 +258,9 @@ class component_test extends advanced_testcase {
         $this->assertSame('core_admin', core_component::normalize_componentname('moodle_admin'));
 
         // Activity modules and their subplugins.
-        $this->assertSame('mod_workshop', core_component::normalize_componentname('workshop'));
         $this->assertSame('mod_workshop', core_component::normalize_componentname('mod_workshop'));
         $this->assertSame('workshopform_accumulative', core_component::normalize_componentname('workshopform_accumulative'));
-        $this->assertSame('mod_quiz', core_component::normalize_componentname('quiz'));
         $this->assertSame('quiz_grading', core_component::normalize_componentname('quiz_grading'));
-        $this->assertSame('mod_data', core_component::normalize_componentname('data'));
         $this->assertSame('datafield_checkbox', core_component::normalize_componentname('datafield_checkbox'));
 
         // Other plugin types.
@@ -275,90 +271,210 @@ class component_test extends advanced_testcase {
         $this->assertSame('local_amos', core_component::normalize_componentname('local_amos'));
         $this->assertSame('local_admin', core_component::normalize_componentname('local_admin'));
 
-        // Unknown words without underscore are supposed to be activity modules.
-        $this->assertSame('mod_whoonearthwouldcomewithsuchastupidnameofcomponent',
-            core_component::normalize_componentname('whoonearthwouldcomewithsuchastupidnameofcomponent'));
         // Module names can not contain underscores, this must be a subplugin.
-        $this->assertSame('whoonearth_wouldcomewithsuchastupidnameofcomponent',
-            core_component::normalize_componentname('whoonearth_wouldcomewithsuchastupidnameofcomponent'));
-        $this->assertSame('whoonearth_would_come_withsuchastupidnameofcomponent',
-            core_component::normalize_componentname('whoonearth_would_come_withsuchastupidnameofcomponent'));
+        $this->assertSame(
+            'whoonearth_wouldcomewithsuchastupidnameofcomponent',
+            core_component::normalize_componentname('whoonearth_wouldcomewithsuchastupidnameofcomponent')
+        );
+        $this->assertSame(
+            'whoonearth_would_come_withsuchastupidnameofcomponent',
+            core_component::normalize_componentname('whoonearth_would_come_withsuchastupidnameofcomponent')
+        );
     }
 
-    public function test_normalize_component() {
-        // Moodle core.
-        $this->assertSame(array('core', null), core_component::normalize_component('core'));
-        $this->assertSame(array('core', null), core_component::normalize_component('moodle'));
-        $this->assertSame(array('core', null), core_component::normalize_component(''));
 
-        // Moodle core subsystems.
-        $this->assertSame(array('core', 'admin'), core_component::normalize_component('admin'));
-        $this->assertSame(array('core', 'admin'), core_component::normalize_component('core_admin'));
-        $this->assertSame(array('core', 'admin'), core_component::normalize_component('moodle_admin'));
-
-        // Activity modules and their subplugins.
-        $this->assertSame(array('mod', 'workshop'), core_component::normalize_component('workshop'));
-        $this->assertSame(array('mod', 'workshop'), core_component::normalize_component('mod_workshop'));
-        $this->assertSame(array('workshopform', 'accumulative'), core_component::normalize_component('workshopform_accumulative'));
-        $this->assertSame(array('mod', 'quiz'), core_component::normalize_component('quiz'));
-        $this->assertSame(array('quiz', 'grading'), core_component::normalize_component('quiz_grading'));
-        $this->assertSame(array('mod', 'data'), core_component::normalize_component('data'));
-        $this->assertSame(array('datafield', 'checkbox'), core_component::normalize_component('datafield_checkbox'));
-
-        // Other plugin types.
-        $this->assertSame(array('auth', 'mnet'), core_component::normalize_component('auth_mnet'));
-        $this->assertSame(array('enrol', 'self'), core_component::normalize_component('enrol_self'));
-        $this->assertSame(array('block', 'html'), core_component::normalize_component('block_html'));
-        $this->assertSame(array('block', 'mnet_hosts'), core_component::normalize_component('block_mnet_hosts'));
-        $this->assertSame(array('local', 'amos'), core_component::normalize_component('local_amos'));
-        $this->assertSame(array('local', 'admin'), core_component::normalize_component('local_admin'));
-
-        // Unknown words without underscore are supposed to be activity modules.
-        $this->assertSame(array('mod', 'whoonearthwouldcomewithsuchastupidnameofcomponent'),
-            core_component::normalize_component('whoonearthwouldcomewithsuchastupidnameofcomponent'));
-        // Module names can not contain underscores, this must be a subplugin.
-        $this->assertSame(array('whoonearth', 'wouldcomewithsuchastupidnameofcomponent'),
-            core_component::normalize_component('whoonearth_wouldcomewithsuchastupidnameofcomponent'));
-        $this->assertSame(array('whoonearth', 'would_come_withsuchastupidnameofcomponent'),
-            core_component::normalize_component('whoonearth_would_come_withsuchastupidnameofcomponent'));
+    /**
+     * @dataProvider normalize_componentname_legacy_provider
+     */
+    public function test_normalize_componentname_legacy(
+        string $name,
+        string $expected,
+    ): void {
+        $this->assertSame($expected, core_component::normalize_componentname($name));
+        $this->assertDebuggingCalledCount(1);
     }
 
-    public function test_deprecated_normalize_component() {
-        // Moodle core.
-        $this->assertSame(array('core', null), normalize_component('core'));
-        $this->assertSame(array('core', null), normalize_component(''));
-        $this->assertSame(array('core', null), normalize_component('moodle'));
+    public function normalize_componentname_legacy_provider(): array {
+        return [
+            // Activity modules and their subplugins.
+            'Activity modules and their subplugins 1' => ['workshop', 'mod_workshop'],
+            'Activity modules and their subplugins 2' => ['quiz', 'mod_quiz'],
+            'Activity modules and their subplugins 3' => ['data', 'mod_data'],
 
-        // Moodle core subsystems.
-        $this->assertSame(array('core', 'admin'), normalize_component('admin'));
-        $this->assertSame(array('core', 'admin'), normalize_component('core_admin'));
-        $this->assertSame(array('core', 'admin'), normalize_component('moodle_admin'));
+            'Unknown words without underscore are supposed to be activity modules' => [
+                'whoonearthwouldcomewithsuchastupidnameofcomponent',
+                'mod_whoonearthwouldcomewithsuchastupidnameofcomponent',
+            ],
+        ];
+    }
 
-        // Activity modules and their subplugins.
-        $this->assertSame(array('mod', 'workshop'), normalize_component('workshop'));
-        $this->assertSame(array('mod', 'workshop'), normalize_component('mod_workshop'));
-        $this->assertSame(array('workshopform', 'accumulative'), normalize_component('workshopform_accumulative'));
-        $this->assertSame(array('mod', 'quiz'), normalize_component('quiz'));
-        $this->assertSame(array('quiz', 'grading'), normalize_component('quiz_grading'));
-        $this->assertSame(array('mod', 'data'), normalize_component('data'));
-        $this->assertSame(array('datafield', 'checkbox'), normalize_component('datafield_checkbox'));
+    /**
+     * @dataProvider normalize_component_provider
+     */
+    public function test_normalize_component(
+        string $name,
+        string $type,
+        ?string $component,
+    ): void {
+        $this->assertSame(
+            [$type, $component],
+            core_component::normalize_component($name),
+        );
+        $this->assertSame(
+            [$type, $component],
+            normalize_component($name),
+        );
+    }
 
-        // Other plugin types.
-        $this->assertSame(array('auth', 'mnet'), normalize_component('auth_mnet'));
-        $this->assertSame(array('enrol', 'self'), normalize_component('enrol_self'));
-        $this->assertSame(array('block', 'html'), normalize_component('block_html'));
-        $this->assertSame(array('block', 'mnet_hosts'), normalize_component('block_mnet_hosts'));
-        $this->assertSame(array('local', 'amos'), normalize_component('local_amos'));
-        $this->assertSame(array('local', 'admin'), normalize_component('local_admin'));
+    public static function normalize_component_provider(): array {
+        return [
+            // Moodle core.
+            [
+                'core',
+                'core',
+                null,
+            ],
+            [
 
-        // Unknown words without underscore are supposed to be activity modules.
-        $this->assertSame(array('mod', 'whoonearthwouldcomewithsuchastupidnameofcomponent'),
-            normalize_component('whoonearthwouldcomewithsuchastupidnameofcomponent'));
-        // Module names can not contain underscores, this must be a subplugin.
-        $this->assertSame(array('whoonearth', 'wouldcomewithsuchastupidnameofcomponent'),
-            normalize_component('whoonearth_wouldcomewithsuchastupidnameofcomponent'));
-        $this->assertSame(array('whoonearth', 'would_come_withsuchastupidnameofcomponent'),
-            normalize_component('whoonearth_would_come_withsuchastupidnameofcomponent'));
+                'moodle',
+                'core',
+                null,
+            ],
+            [
+
+                '',
+                'core',
+                null,
+            ],
+
+            // Moodle core subsystems.
+            'Moodle core subsystems' => [
+                'admin',
+                'core',
+                'admin',
+            ],
+            [
+                'core_admin',
+                'core',
+                'admin',
+            ],
+            [
+                'moodle_admin',
+                'core',
+                'admin',
+            ],
+
+            // Activity modules and their subplugins.
+            [
+                'mod_workshop',
+                'mod',
+                'workshop',
+            ],
+            [
+                'workshopform_accumulative',
+                'workshopform',
+                'accumulative',
+            ],
+            [
+                'quiz_grading',
+                'quiz',
+                'grading',
+            ],
+            [
+                'datafield_checkbox',
+                'datafield',
+                'checkbox',
+            ],
+
+            // Other plugin types.
+            [
+                'auth_mnet',
+                'auth',
+                'mnet',
+            ],
+            [
+                'enrol_self',
+                'enrol',
+                'self',
+            ],
+            [
+                'block_html',
+                'block',
+                'html',
+            ],
+            [
+                'block_mnet_hosts',
+                'block',
+                'mnet_hosts',
+            ],
+            [
+                'local_amos',
+                'local',
+                'amos',
+            ],
+            [
+                'local_admin',
+                'local',
+                'admin',
+            ],
+
+            // Module names can not contain underscores, this must be a subplugin.
+            [
+                'whoonearth_wouldcomewithsuchastupidnameofcomponent',
+                'whoonearth',
+                'wouldcomewithsuchastupidnameofcomponent',
+            ],
+            [
+                'whoonearth_would_come_withsuchastupidnameofcomponent',
+                'whoonearth',
+                'would_come_withsuchastupidnameofcomponent',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider normalize_component_legacy_provider
+     */
+    public function test_normalize_component_legacy(
+        string $name,
+        string $type,
+        ?string $component,
+    ): void {
+        $this->assertSame(
+            [$type, $component],
+            core_component::normalize_component($name),
+        );
+        $this->assertDebuggingCalledCount(1);
+        $this->assertSame(
+            [$type, $component],
+            normalize_component($name),
+        );
+        $this->assertDebuggingCalledCount(1);
+    }
+
+    public function normalize_component_legacy_provider(): array {
+        return [
+            'Activity modules and their subplugins 1' => [
+                'workshop',
+                'mod',
+                'workshop',
+            ],
+            'Activity modules and their subplugins 2' => [
+                'quiz',
+                'mod',
+                'quiz',
+            ],
+            'Activity modules and their subplugins 3' => [
+                'data',
+                'mod',
+                'data',
+            ],
+            'Unknown words without underscore are supposed to be activity modules' => [
+                'whoonearthwouldcomewithsuchastupidnameofcomponent',
+                'mod',
+                'whoonearthwouldcomewithsuchastupidnameofcomponent',
+            ],
+        ];
     }
 
     public function test_get_component_directory() {
@@ -366,13 +482,13 @@ class component_test extends advanced_testcase {
         foreach ($plugintypes as $plugintype => $fulldir) {
             $plugins = core_component::get_plugin_list($plugintype);
             foreach ($plugins as $pluginname => $plugindir) {
-                $this->assertSame($plugindir, core_component::get_component_directory(($plugintype.'_'.$pluginname)));
+                $this->assertSame($plugindir, core_component::get_component_directory(($plugintype . '_' . $pluginname)));
             }
         }
 
         $subsystems = core_component::get_core_subsystems();
         foreach ($subsystems as $subsystem => $fulldir) {
-            $this->assertSame($fulldir, core_component::get_component_directory(('core_'.$subsystem)));
+            $this->assertSame($fulldir, core_component::get_component_directory(('core_' . $subsystem)));
         }
     }
 
@@ -381,13 +497,13 @@ class component_test extends advanced_testcase {
         foreach ($plugintypes as $plugintype => $fulldir) {
             $plugins = core_component::get_plugin_list($plugintype);
             foreach ($plugins as $pluginname => $plugindir) {
-                $this->assertSame($plugindir, get_component_directory(($plugintype.'_'.$pluginname)));
+                $this->assertSame($plugindir, get_component_directory(($plugintype . '_' . $pluginname)));
             }
         }
 
         $subsystems = core_component::get_core_subsystems();
         foreach ($subsystems as $subsystem => $fulldir) {
-            $this->assertSame($fulldir, get_component_directory(('core_'.$subsystem)));
+            $this->assertSame($fulldir, get_component_directory(('core_' . $subsystem)));
         }
     }
 
@@ -441,7 +557,6 @@ class component_test extends advanced_testcase {
         );
 
         $this->assertSame($expected, $types);
-
     }
 
     public function test_get_plugin_list_with_file() {
@@ -513,7 +628,8 @@ class component_test extends advanced_testcase {
         // (We don't assert exact amounts here as the count of `output` classes will change depending on plugins installed).
         $this->assertGreaterThan(
             count(\core_component::get_component_classes_in_namespace('core', 'output')),
-            count(\core_component::get_component_classes_in_namespace(null, 'output')));
+            count(\core_component::get_component_classes_in_namespace(null, 'output'))
+        );
 
         // Without either a component or namespace it returns an empty array.
         $this->assertEmpty(\core_component::get_component_classes_in_namespace());
@@ -534,62 +650,62 @@ class component_test extends advanced_testcase {
         $directory = str_replace('\\', '/', $CFG->dirroot) . "/lib/tests/fixtures/component/";
 
         $psr0 = [
-          'psr0'      => 'lib/tests/fixtures/component/psr0',
-          'overlap'   => 'lib/tests/fixtures/component/overlap'
+            'psr0'      => 'lib/tests/fixtures/component/psr0',
+            'overlap'   => 'lib/tests/fixtures/component/overlap'
         ];
         $psr4 = [
-          'psr4'      => 'lib/tests/fixtures/component/psr4',
-          'overlap'   => 'lib/tests/fixtures/component/overlap'
+            'psr4'      => 'lib/tests/fixtures/component/psr4',
+            'overlap'   => 'lib/tests/fixtures/component/overlap'
         ];
         return [
-          'PSR-0 Classloading - Root' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr0_main',
-              'includedfiles' => "{$directory}psr0/main.php",
-          ],
-          'PSR-0 Classloading - Sub namespace - underscores' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr0_subnamespace_example',
-              'includedfiles' => "{$directory}psr0/subnamespace/example.php",
-          ],
-          'PSR-0 Classloading - Sub namespace - slashes' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr0\\subnamespace\\slashes',
-              'includedfiles' => "{$directory}psr0/subnamespace/slashes.php",
-          ],
-          'PSR-4 Classloading - Root' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr4\\main',
-              'includedfiles' => "{$directory}psr4/main.php",
-          ],
-          'PSR-4 Classloading - Sub namespace' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr4\\subnamespace\\example',
-              'includedfiles' => "{$directory}psr4/subnamespace/example.php",
-          ],
-          'PSR-4 Classloading - Ensure underscores are not converted to paths' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr4\\subnamespace\\underscore_example',
-              'includedfiles' => "{$directory}psr4/subnamespace/underscore_example.php",
-          ],
-          'Overlap - Ensure no unexpected problems with PSR-4 when overlapping namespaces.' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'overlap\\subnamespace\\example',
-              'includedfiles' => "{$directory}overlap/subnamespace/example.php",
-          ],
-          'Overlap - Ensure no unexpected problems with PSR-0 overlapping namespaces.' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'overlap_subnamespace_example2',
-              'includedfiles' => "{$directory}overlap/subnamespace/example2.php",
-          ],
+            'PSR-0 Classloading - Root' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr0_main',
+                'includedfiles' => "{$directory}psr0/main.php",
+            ],
+            'PSR-0 Classloading - Sub namespace - underscores' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr0_subnamespace_example',
+                'includedfiles' => "{$directory}psr0/subnamespace/example.php",
+            ],
+            'PSR-0 Classloading - Sub namespace - slashes' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr0\\subnamespace\\slashes',
+                'includedfiles' => "{$directory}psr0/subnamespace/slashes.php",
+            ],
+            'PSR-4 Classloading - Root' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr4\\main',
+                'includedfiles' => "{$directory}psr4/main.php",
+            ],
+            'PSR-4 Classloading - Sub namespace' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr4\\subnamespace\\example',
+                'includedfiles' => "{$directory}psr4/subnamespace/example.php",
+            ],
+            'PSR-4 Classloading - Ensure underscores are not converted to paths' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr4\\subnamespace\\underscore_example',
+                'includedfiles' => "{$directory}psr4/subnamespace/underscore_example.php",
+            ],
+            'Overlap - Ensure no unexpected problems with PSR-4 when overlapping namespaces.' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'overlap\\subnamespace\\example',
+                'includedfiles' => "{$directory}overlap/subnamespace/example.php",
+            ],
+            'Overlap - Ensure no unexpected problems with PSR-0 overlapping namespaces.' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'overlap_subnamespace_example2',
+                'includedfiles' => "{$directory}overlap/subnamespace/example2.php",
+            ],
         ];
     }
 
@@ -634,74 +750,74 @@ class component_test extends advanced_testcase {
         $directory = str_replace('\\', '/', $CFG->dirroot) . "/lib/tests/fixtures/component/";
 
         $psr0 = [
-          'psr0'      => 'lib/tests/fixtures/component/psr0',
-          'overlap'   => 'lib/tests/fixtures/component/overlap'
+            'psr0'      => 'lib/tests/fixtures/component/psr0',
+            'overlap'   => 'lib/tests/fixtures/component/overlap'
         ];
         $psr4 = [
-          'psr4'      => 'lib/tests/fixtures/component/psr4',
-          'overlap'   => 'lib/tests/fixtures/component/overlap'
+            'psr4'      => 'lib/tests/fixtures/component/psr4',
+            'overlap'   => 'lib/tests/fixtures/component/overlap'
         ];
         return [
-          'PSR-0 Classloading - Root' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr0_main',
-              'file' => "{$directory}psr0/main.php",
-          ],
-          'PSR-0 Classloading - Sub namespace - underscores' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr0_subnamespace_example',
-              'file' => "{$directory}psr0/subnamespace/example.php",
-          ],
-          'PSR-0 Classloading - Sub namespace - slashes' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr0\\subnamespace\\slashes',
-              'file' => "{$directory}psr0/subnamespace/slashes.php",
-          ],
-          'PSR-0 Classloading - non-existant file' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr0_subnamespace_nonexistant_file',
-              'file' => false,
-          ],
-          'PSR-4 Classloading - Root' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr4\\main',
-              'file' => "{$directory}psr4/main.php",
-          ],
-          'PSR-4 Classloading - Sub namespace' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr4\\subnamespace\\example',
-              'file' => "{$directory}psr4/subnamespace/example.php",
-          ],
-          'PSR-4 Classloading - Ensure underscores are not converted to paths' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr4\\subnamespace\\underscore_example',
-              'file' => "{$directory}psr4/subnamespace/underscore_example.php",
-          ],
-          'PSR-4 Classloading - non-existant file' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'psr4\\subnamespace\\nonexistant',
-              'file' => false,
-          ],
-          'Overlap - Ensure no unexpected problems with PSR-4 when overlapping namespaces.' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'overlap\\subnamespace\\example',
-              'file' => "{$directory}overlap/subnamespace/example.php",
-          ],
-          'Overlap - Ensure no unexpected problems with PSR-0 overlapping namespaces.' => [
-              'psr0' => $psr0,
-              'psr4' => $psr4,
-              'classname' => 'overlap_subnamespace_example2',
-              'file' => "{$directory}overlap/subnamespace/example2.php",
-          ],
+            'PSR-0 Classloading - Root' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr0_main',
+                'file' => "{$directory}psr0/main.php",
+            ],
+            'PSR-0 Classloading - Sub namespace - underscores' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr0_subnamespace_example',
+                'file' => "{$directory}psr0/subnamespace/example.php",
+            ],
+            'PSR-0 Classloading - Sub namespace - slashes' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr0\\subnamespace\\slashes',
+                'file' => "{$directory}psr0/subnamespace/slashes.php",
+            ],
+            'PSR-0 Classloading - non-existant file' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr0_subnamespace_nonexistant_file',
+                'file' => false,
+            ],
+            'PSR-4 Classloading - Root' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr4\\main',
+                'file' => "{$directory}psr4/main.php",
+            ],
+            'PSR-4 Classloading - Sub namespace' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr4\\subnamespace\\example',
+                'file' => "{$directory}psr4/subnamespace/example.php",
+            ],
+            'PSR-4 Classloading - Ensure underscores are not converted to paths' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr4\\subnamespace\\underscore_example',
+                'file' => "{$directory}psr4/subnamespace/underscore_example.php",
+            ],
+            'PSR-4 Classloading - non-existant file' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'psr4\\subnamespace\\nonexistant',
+                'file' => false,
+            ],
+            'Overlap - Ensure no unexpected problems with PSR-4 when overlapping namespaces.' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'overlap\\subnamespace\\example',
+                'file' => "{$directory}overlap/subnamespace/example.php",
+            ],
+            'Overlap - Ensure no unexpected problems with PSR-0 overlapping namespaces.' => [
+                'psr0' => $psr0,
+                'psr4' => $psr4,
+                'classname' => 'overlap_subnamespace_example2',
+                'file' => "{$directory}overlap/subnamespace/example2.php",
+            ],
         ];
     }
 
@@ -744,34 +860,34 @@ class component_test extends advanced_testcase {
         global $CFG;
 
         return [
-          'Getting a file with underscores' => [
-              'classname' => 'Test_With_Underscores',
-              'prefix' => "Test",
-              'path' => 'test/src',
-              'separators' => ['_'],
-              'result' => $CFG->dirroot . "/test/src/With/Underscores.php",
-          ],
-          'Getting a file with slashes' => [
-              'classname' => 'Test\\With\\Slashes',
-              'prefix' => "Test",
-              'path' => 'test/src',
-              'separators' => ['\\'],
-              'result' => $CFG->dirroot . "/test/src/With/Slashes.php",
-          ],
-          'Getting a file with multiple namespaces' => [
-              'classname' => 'Test\\With\\Multiple\\Namespaces',
-              'prefix' => "Test\\With",
-              'path' => 'test/src',
-              'separators' => ['\\'],
-              'result' => $CFG->dirroot . "/test/src/Multiple/Namespaces.php",
-          ],
-          'Getting a file with multiple namespaces' => [
-              'classname' => 'Nonexistant\\Namespace\\Test',
-              'prefix' => "Test",
-              'path' => 'test/src',
-              'separators' => ['\\'],
-              'result' => false,
-          ],
+            'Getting a file with underscores' => [
+                'classname' => 'Test_With_Underscores',
+                'prefix' => "Test",
+                'path' => 'test/src',
+                'separators' => ['_'],
+                'result' => $CFG->dirroot . "/test/src/With/Underscores.php",
+            ],
+            'Getting a file with slashes' => [
+                'classname' => 'Test\\With\\Slashes',
+                'prefix' => "Test",
+                'path' => 'test/src',
+                'separators' => ['\\'],
+                'result' => $CFG->dirroot . "/test/src/With/Slashes.php",
+            ],
+            'Getting a file with multiple namespaces' => [
+                'classname' => 'Test\\With\\Multiple\\Namespaces',
+                'prefix' => "Test\\With",
+                'path' => 'test/src',
+                'separators' => ['\\'],
+                'result' => $CFG->dirroot . "/test/src/Multiple/Namespaces.php",
+            ],
+            'Getting a file with multiple namespaces' => [
+                'classname' => 'Nonexistant\\Namespace\\Test',
+                'prefix' => "Test",
+                'path' => 'test/src',
+                'separators' => ['\\'],
+                'result' => false,
+            ],
         ];
     }
 
