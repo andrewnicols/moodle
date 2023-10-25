@@ -105,12 +105,16 @@ trait route_controller {
         ?array $queryparams = null,
     ): ResponseInterface {
         if ($pathparams === null) {
-            $params = $request->getQueryParams();
+            $pathparams = $request->getQueryParams();
         }
         if ($queryparams === null) {
-            $params = $request->getQueryParams();
+            $queryparams = $request->getQueryParams();
         }
-        $url = \core\router::get_path_for_callable($callable, $pathparams, $queryparams);
+        $url = \core\router::get_path_for_callable(
+            $callable,
+            $pathparams ?? [],
+            $queryparams ?? [],
+        );
 
         return $this->redirect($response, $url);
     }

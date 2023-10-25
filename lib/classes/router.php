@@ -132,7 +132,7 @@ class router {
         // TODO: Look into MUC caching instead of a file-based cache.
         $app->getRouteCollector()->setCacheFile(
             sprintf(
-                "%s/routes.%.cache",
+                "%s/routes.%s.cache",
                 $CFG->cachedir,
                 sha1($this->basepath),
             ),

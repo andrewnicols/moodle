@@ -39,7 +39,6 @@ class query_parameter extends parameter {
         Route $route,
     ): ServerRequestInterface {
         $params = $request->getQueryParams();
-
         if (array_key_exists($this->name, $params)) {
             // This parameter was specified.
             if ($this->get_type() === PARAM_BOOL) {
@@ -58,11 +57,17 @@ class query_parameter extends parameter {
                 param: $params[$this->name],
                 type: $this->type,
             );
+            $request = $request->withQueryParams(
+                array_merge(
+                    $params,
+                    [$this->name => $params[$this->name]],
+                ),
+            );
         } else if ($this->required) {
             throw new \coding_exception(
                 "A required parameter {$this->name} was not provided and must be specified",
             );
-        } else if ($this->default) {
+        } else if ($this->default !== null) {
             $request = $request->withQueryParams(
                 array_merge(
                     $params,

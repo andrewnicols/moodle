@@ -17,7 +17,6 @@
 namespace core_user\api;
 
 use core\router\route;
-use core\output\mustache_template_source_loader;
 use GuzzleHttp\Psr7\Response;
 use Jgut\Slim\Routing\Response\PayloadResponse;
 use Jgut\Slim\Routing\Response\ResponseType;

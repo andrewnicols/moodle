@@ -97,11 +97,7 @@ class templates {
         string $identifier,
     ): ResponseInterface {
         $params = $request->getQueryParams();
-        if (array_key_exists('includecomments', $params)) {
-            $comments = $params['includecomments'];
-        } else {
-            $comments = false;
-        }
+        $comments = $params['includecomments'];
 
         try {
             $result = [
