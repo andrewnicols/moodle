@@ -19,6 +19,7 @@ namespace core\router;
 use moodle_url;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 trait route_controller {
     /**
@@ -73,6 +74,13 @@ trait route_controller {
             ));
     }
 
+    protected function page_not_found(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+    ): ResponseInterface {
+        throw new \Slim\Exception\HttpNotFoundException($request);
+    }
+
     protected function page_response(
         ResponseInterface $response,
         \core_renderer $renderer,
@@ -87,5 +95,31 @@ trait route_controller {
         return $response
             ->withStatus(302)
             ->withHeader('Location', (string) $url);
+    }
+
+    protected function redirect_to_callable(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        $callable,
+    ): ResponseInterface {
+        $params = $request->getQueryParams();
+        $url = \core\router::get_path_for_callable($callable, $params, $params);
+
+        return $this->redirect($response, $url);
+    }
+
+    protected function get_param(
+        ServerRequestInterface $request,
+        string $key,
+        mixed $default = null,
+    ): mixed {
+        $params = $request->getQueryParams();
+        if (array_key_exists($key, $params)) {
+            return $params[$key];
+        } else {
+            debugging("Missing parameter: $key");
+        }
+
+        return $default;
     }
 }
