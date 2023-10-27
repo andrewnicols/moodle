@@ -217,6 +217,12 @@ class router {
                 ->get(response_handler::class)
                 ->standardise_response($response);
         });
+
+        // Add all standard routes.
+        $this->add_all_user_routes($app);
+
+        // Add all shimmed routes for things which have been replaced.
+        $this->add_all_shimmed_routes($app);
     }
 
     protected function configure_api_routes(App $app): void {
@@ -343,6 +349,97 @@ class router {
         }
 
         return $cachedata;
+    }
+
+    protected function get_all_shimmed_routes(): array {
+        global $CFG;
+
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('shimmed_routes'))) {
+            $cachedata = $this->get_route_data_for_namespace(
+                namespace: 'route\shim',
+                componentpathcallback: fn($component) => substr(
+                    \core_component::get_component_directory($component),
+                    strlen($CFG->dirroot) + 1,
+                ),
+            );
+
+            $cache->set('shimmed_routes', $cachedata);
+        }
+
+        return $cachedata;
+    }
+
+    protected function get_all_standard_routes(): array {
+        global $CFG;
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('standard_routes'))) {
+            $cachedata = $this->get_route_data_for_namespace(
+                namespace: 'route\controller',
+                componentpathcallback: fn($component) => substr(
+                    \core_component::get_component_directory($component),
+                    strlen($CFG->dirroot) + 1,
+                ),
+                filtercallback: fn(string $classname) => !str_contains($classname, '\\shim\\'),
+            );
+
+            $cache->set('standard_routes', $cachedata);
+        }
+
+        return $cachedata;
+    }
+
+    protected function add_all_user_routes(RouteCollectorProxy $group): void {
+        $routedata = $this->get_all_standard_routes();
+        foreach ($routedata as $data) {
+            $group
+                ->map(
+                    methods: $data['methods'],
+                    pattern: $data['pattern'],
+                    callable: $data['callable'],
+                )
+                ->setName(implode('::', $data['callable']))
+                ->add(function (ServerRequestInterface $request, $handler) use ($data) {
+                    // Add a Route middleware to validate the path, and parameters.
+                    $classinfo = new \ReflectionClass($data['callable'][0]);
+                    $routeattribute = $classinfo->getMethod($data['callable'][1])
+                        ->getAttributes(\core\router\route::class)[0]
+                        ->newInstance();
+                    $request = $routeattribute->validate_request($request);
+
+                    // Pass to the next Middleware.
+                    return $handler->handle($request);
+                });
+        }
+    }
+
+    protected function add_all_shimmed_routes(RouteCollectorProxy $group): void {
+        $routedata = $this->get_all_shimmed_routes();
+        foreach ($routedata as $data) {
+            $group
+                ->map(...$data)
+                ->add(function (ServerRequestInterface $request, $handler) use ($data) {
+                    $classinfo = new \ReflectionClass($data['callable'][0]);
+                    $routeattribute = $classinfo->getMethod($data['callable'][1])
+                    ->getAttributes(\core\router\route::class)[0]
+                        ->newInstance();
+                    // Add a Route middleware to validate the path, and parameters.
+                    $request = $routeattribute->validate_request($request);
+
+                    // Pass to the next Middleware.
+                    return $handler->handle($request);
+                })
+                ->add(function(ServerRequestInterface $request, $handler) {
+                    \core\notification::add(
+                        'The URL for this page has changed. Please update your links.',
+                        \core\notification::WARNING,
+                    );
+
+                    return $handler->handle($request);
+                });
+        }
     }
 
     protected function normalise_component_to_path(
