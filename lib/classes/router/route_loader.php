@@ -18,6 +18,7 @@ namespace core\router;
 
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
+use Slim\Interfaces\RouteInterface;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -32,6 +33,8 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
     public function configure_routes(App $app): array {
         return [
             route_loader_interface::ROUTE_GROUP_API => $this->configure_api_routes($app, route_loader_interface::ROUTE_GROUP_API),
+            route_loader_interface::ROUTE_GROUP_PAGE => $this->configure_standard_routes($app),
+            route_loader_interface::ROUTE_GROUP_SHIM => $this->configure_shim_routes($app),
         ];
     }
 
@@ -60,6 +63,35 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
     }
 
     /**
+     * Configure all standard routes.
+     *
+     * @param App $app
+     * @param string $path
+     * @return RouteInterface[]
+     */
+    protected function configure_standard_routes(App $app): array {
+        return array_map(function (array $moodleroute) use ($app): RouteInterface {
+            $slimroute = $app->map(...$moodleroute);
+            $this->set_route_name_for_callable($slimroute, $moodleroute['callable']);
+            return $slimroute;
+        }, $this->get_all_standard_routes());
+    }
+
+    /**
+     * Configure all route shims.
+     *
+     * @param App $app
+     * @param string $path
+     * @return RouteInterface[]
+     */
+    protected function configure_shim_routes(App $app): array {
+        return array_map(
+            fn (array $moodleroute) => $app->map(...$moodleroute),
+            $this->get_all_shimmed_routes(),
+        );
+    }
+
+    /**
      * Fetch all API routes.
      *
      * Note: This method caches results in MUC.
@@ -79,5 +111,45 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
         }
 
         return $routes;
+    }
+
+    protected function get_all_shimmed_routes(): array {
+        global $CFG;
+
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('shimmed_routes'))) {
+            $cachedata = $this->get_all_routes_in_namespace(
+                namespace: 'route\shim',
+                componentpathcallback: fn($component) => substr(
+                    \core_component::get_component_directory($component),
+                    strlen($CFG->dirroot) + 1,
+                ),
+            );
+
+            $cache->set('shimmed_routes', $cachedata);
+        }
+
+        return $cachedata;
+    }
+
+    protected function get_all_standard_routes(): array {
+        global $CFG;
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('standard_routes'))) {
+            $cachedata = $this->get_all_routes_in_namespace(
+                namespace: 'route\controller',
+                componentpathcallback: fn($component) => substr(
+                    \core_component::get_component_directory($component),
+                    strlen($CFG->dirroot) + 1,
+                ),
+                filtercallback: fn(string $classname) => !str_contains($classname, '\\shim\\'),
+            );
+
+            $cache->set('standard_routes', $cachedata);
+        }
+
+        return $cachedata;
     }
 }

@@ -14,36 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router;
+namespace core\router\middleware;
 
-use Slim\App;
-use Slim\Interfaces\RouteGroupInterface;
-use Slim\Interfaces\RouteInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
- * A route loader.
+ * Class standard_page_middleware
  *
  * @package    core
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface route_loader_interface {
-    /** @var string The route path prefix to use for API calls */
-    public const ROUTE_GROUP_API = '/api/rest/v2';
+class shim_middleware implements MiddlewareInterface {
+    #[\Override]
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+        \core\notification::add(
+            'The URL for this page has changed. Please update your links.',
+            \core\notification::WARNING,
+        );
 
-    /** @var string The route path prefix to use for API calls */
-    public const ROUTE_GROUP_SHIM = 'shim';
-
-    /** @var string The route path prefix to use for API calls */
-    public const ROUTE_GROUP_PAGE = '/';
-
-    /**
-     * Configure all routes for the Application.
-     *
-     * This method returns a set of RouteGroupInterface instances for each route prefix.
-     *
-     * @param App $app The application to configure routes for
-     * @return RouteInterface[]|RouteGroupInterface
-     */
-    public function configure_routes(App $app): array;
+        return $handler->handle($request);
+    }
 }

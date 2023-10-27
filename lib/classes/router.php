@@ -21,6 +21,7 @@ use core\router\middleware\cors_middleware;
 use core\router\middleware\error_handling_middleware;
 use core\router\middleware\moodle_bootstrap_middleware;
 use core\router\middleware\moodle_route_attribute_middleware;
+use core\router\middleware\shim_middleware;
 use core\router\middleware\uri_normalisation_middleware;
 use core\router\middleware\validation_middleware;
 use core\router\request_validator_interface;
@@ -32,6 +33,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
+use Slim\Interfaces\RouteInterface;
 
 /**
  * Moodle Router.
@@ -202,9 +204,11 @@ class router {
      */
     protected function configure_routes(): void {
         $routegroups = $this->routeloader->configure_routes($this->app);
-        foreach ($routegroups as $name => $group) {
+        foreach ($routegroups as $name => $collection) {
             match ($name) {
-                route_loader_interface::ROUTE_GROUP_API => $this->configure_api_route($group),
+                route_loader_interface::ROUTE_GROUP_API => $this->configure_api_route($collection),
+                route_loader_interface::ROUTE_GROUP_PAGE => array_walk($collection, [$this, 'configure_standard_route']),
+                route_loader_interface::ROUTE_GROUP_SHIM => array_walk($collection, [$this, 'configure_shim_route']),
                 default => null,
             };
         }
@@ -220,6 +224,28 @@ class router {
             ->add(di::get(error_handling_middleware::class))
             // Add a Middleware to set the CORS headers for all REST Responses.
             ->add(di::get(cors_middleware::class))
+            ->add(di::get(validation_middleware::class));
+    }
+
+    /**
+     * Configure the Standard page Route Middleware.
+     *
+     * @param RouteGroupInterface $group
+     */
+    protected function configure_standard_route(RouteInterface $group): void {
+        $group
+            ->add(di::get(error_handling_middleware::class))
+            ->add(di::get(validation_middleware::class));
+    }
+
+    /**
+     * Configure the Shim Route Middleware.
+     *
+     * @param RouteGroupInterface $group
+     */
+    protected function configure_shim_route(RouteInterface $group): void {
+        $group
+            ->add(di::get(shim_middleware::class))
             ->add(di::get(validation_middleware::class));
     }
 
