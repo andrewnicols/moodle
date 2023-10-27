@@ -94,6 +94,7 @@ class router {
         $app = router\bridge::create(
             container: $this->container,
         );
+        $this->configure_error_handling($app);
 
         $app->addBodyParsingMiddleware();
 
@@ -145,6 +146,31 @@ class router {
     public function serve(): void {
         // xdebug_break();
         $this->get_app()->run();
+    }
+
+    /**
+     * Configure error handling features of Slim.
+     *
+     * @param App $app
+     */
+    protected function configure_error_handling(App $app): void {
+        $app->add(function(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+            global $CFG;
+
+            $developerautoloadpath = $CFG->dirroot . '/vendor/autoload.php';
+            if ($CFG->debugdeveloper && file_exists($developerautoloadpath)) {
+                require_once($developerautoloadpath);
+                $guard = new \Zeuxisoo\Whoops\Slim\WhoopsGuard([
+                    'enable' => true,
+                    'editor' => $CFG->debug_developer_editor ?: null,
+                ]);
+                $guard->setRequest($request);
+                $guard->install();
+            } else {
+                // Some other standard error handling.
+            }
+            return $handler->handle($request);
+        });
     }
 
     protected function configure_routes(App $app): void {
