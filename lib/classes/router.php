@@ -19,8 +19,12 @@ namespace core;
 use core\output\routed_error_handler;
 use core\router\middleware\cors_middleware;
 use core\router\middleware\error_handling_middleware;
+use core\router\middleware\moodle_api_authentication_middleware;
+use core\router\middleware\moodle_api_scope_middleware;
+use core\router\middleware\moodle_authentication_middleware;
 use core\router\middleware\moodle_bootstrap_middleware;
 use core\router\middleware\moodle_route_attribute_middleware;
+use core\router\middleware\shim_middleware;
 use core\router\middleware\uri_normalisation_middleware;
 use core\router\middleware\validation_middleware;
 use core\router\request_validator_interface;
@@ -32,6 +36,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
+use Slim\Interfaces\RouteInterface;
 
 /**
  * Moodle Router.
@@ -107,7 +112,7 @@ class router {
 
         // The server is not configured to rewrite unknown requests to automatically use the router.
         if ($_SERVER && array_key_exists('REQUEST_URI', $_SERVER)) {
-            if (str_starts_with($_SERVER['REQUEST_URI'], $relativeroot)) {
+            if (str_starts_with($_SERVER['REQUEST_URI'], "{$scriptroot}/r.php")) {
                 $scriptroot .= '/r.php';
             }
         }
@@ -200,6 +205,8 @@ class router {
         foreach ($routegroups as $name => $collection) {
             match ($name) {
                 route_loader_interface::ROUTE_GROUP_API => $this->configure_api_route($collection),
+                route_loader_interface::ROUTE_GROUP_PAGE => array_walk($collection, [$this, 'configure_standard_route']),
+                route_loader_interface::ROUTE_GROUP_SHIM => array_walk($collection, [$this, 'configure_shim_route']),
                 default => null,
             };
         }
@@ -215,6 +222,31 @@ class router {
             ->add(di::get(error_handling_middleware::class))
             // Add a Middleware to set the CORS headers for all REST Responses.
             ->add(di::get(cors_middleware::class))
+            ->add(di::get(moodle_api_scope_middleware::class))
+            ->add(di::get(moodle_api_authentication_middleware::class))
+            ->add(di::get(validation_middleware::class));
+    }
+
+    /**
+     * Configure the Standard page Route Middleware.
+     *
+     * @param RouteGroupInterface $group
+     */
+    protected function configure_standard_route(RouteInterface $group): void {
+        $group
+            ->add(di::get(error_handling_middleware::class))
+            ->add(di::get(moodle_authentication_middleware::class))
+            ->add(di::get(validation_middleware::class));
+    }
+
+    /**
+     * Configure the Shim Route Middleware.
+     *
+     * @param RouteGroupInterface $group
+     */
+    protected function configure_shim_route(RouteInterface $group): void {
+        $group
+            ->add(di::get(shim_middleware::class))
             ->add(di::get(validation_middleware::class));
     }
 
