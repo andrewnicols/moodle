@@ -22,6 +22,7 @@
  */
 
 import {call as fetchMany} from 'core/ajax';
+import fetch from 'core/fetch';
 
 /**
  * Get single user preference
@@ -30,23 +31,32 @@ import {call as fetchMany} from 'core/ajax';
  * @param {Number} userid User ID (defaults to current user)
  * @return {Promise}
  */
-export const getUserPreference = (name, userid = 0) => {
-    return getUserPreferences(name, userid)
-        .then(response => response.preferences[0].value);
-};
+export const getUserPreference = (name, userid = 0) => getUserPreferences(name, userid)
+    .then((response) => response[name]);
 
 /**
  * Get multiple user preferences
  *
  * @param {String|null} name Name of the preference (omit if you want to retrieve all)
  * @param {Number} userid User ID (defaults to current user)
- * @return {Promise}
+ * @return {Promise<object<string, string>>}
  */
 export const getUserPreferences = (name = null, userid = 0) => {
-    return fetchMany([{
-        methodname: 'core_user_get_user_preferences',
-        args: {name, userid}
-    }])[0];
+    const endpoint = ['preferences'];
+    if (name) {
+        endpoint.push(name);
+    }
+
+    const params = {};
+    if (userid) {
+        params.userid = userid;
+    }
+
+    return fetch(
+        'core_user',
+        endpoint.join('/'),
+        params,
+    );
 };
 
 /**
@@ -57,8 +67,15 @@ export const getUserPreferences = (name = null, userid = 0) => {
  * @param {Number} userid User ID (defaults to current user)
  * @return {Promise}
  */
-export const setUserPreference = (name, value = null, userid = 0) => {
-    return setUserPreferences([{name, value, userid}]);
+export const setUserPreference = async(name, value = null, userid = 0) => {
+    const result = await fetch(
+        'core_user',
+        `preferences/${name}`,
+        {value, userid},
+        'POST',
+    );
+
+    return result[name];
 };
 
 /**
@@ -67,12 +84,14 @@ export const setUserPreference = (name, value = null, userid = 0) => {
  * @param {Object[]} preferences Array of preferences containing name/value/userid attributes
  * @return {Promise}
  */
-export const setUserPreferences = (preferences) => {
-    return fetchMany([{
-        methodname: 'core_user_set_user_preferences',
-        args: {preferences}
-    }])[0];
-};
+export const setUserPreferences = (preferences) => fetch(
+    'core_user',
+    'preferences',
+    {
+        preferences,
+    },
+    'POST',
+);
 
 /**
  * Unenrol the user with the specified user enrolmentid ID.
