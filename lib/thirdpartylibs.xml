@@ -746,4 +746,11 @@ All rights reserved.</copyright>
       <license>MIT</license>
       <repository>https://github.com/lbuchs/WebAuthn</repository>
   </library>
+  <library>
+      <location>slim</location>
+      <name>Slim Framework</name>
+      <version>4.12.0</version>
+      <license>MIT</license>
+      <repository>https://github.com/slimphp/Slim</repository>
+  </library>
 </libraries>
