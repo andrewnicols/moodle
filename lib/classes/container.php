@@ -96,6 +96,22 @@ class container {
             },
 
             \core_string_manager::class => fn() => get_string_manager(),
+
+            ServerRequestInterface::class => function() {
+                // TODO: Can we get this?
+                // Probably not, because the request is immutable and we may replace it during the course of processing.
+                // See query parameter validation for an example.
+                return \Slim\Psr7\Factory\ServerRequestFactory::createFromGlobals();
+            },
+
+            \core\router::class => function() {
+                global $CFG;
+                $scriptroot = parse_url($CFG->wwwroot, PHP_URL_PATH);
+
+                return new \core\router(
+                    basepath: $scriptroot,
+                );
+            }
         ]);
 
         // Add any additional definitions using hooks.
