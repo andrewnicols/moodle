@@ -122,6 +122,9 @@ class core_component {
         'GuzzleHttp\\Promise' => 'lib/guzzlehttp/promises/src',
         'GuzzleHttp' => 'lib/guzzlehttp/guzzle/src',
         'Kevinrob\\GuzzleCache' => 'lib/guzzlehttp/kevinrob/guzzlecache/src',
+        'Laravel\\SerializableClosure\\' => 'lib/laravel/serializable-closure/src',
+        'DI' => 'lib/php-di/php-di/src',
+        'Invoker' => 'lib/php-di/invoker/src',
     ];
 
     /**
