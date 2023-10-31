@@ -1399,6 +1399,15 @@ class page_requirements_manager {
             $output .= html_writer::script('', $this->js_fix_url('/lib/requirejs/require.js'));
         }
 
+        // Disable RequireJS Configuration - See MDL-81706.
+        $output .= html_writer::script(
+            <<<EOF
+            require.config = () => {
+                throw new Error('Configuration of RequireJS disabled. See MDL-81706 for further information.');
+            };
+            EOF,
+        );
+
         // First include must be to a module with no dependencies, this prevents multiple requests.
         $prefix = <<<EOF
 M.util.js_pending("core/first");
@@ -1604,6 +1613,16 @@ EOF;
                 $js .= js_writer::set_variable($var, $value, true);
             }
             $output .= html_writer::script($js);
+        }
+
+        if ($page->has_set_url()) {
+            $output .= html_writer::empty_tag(
+                tagname: 'link',
+                attributes: [
+                    'rel' => 'canonical',
+                    'href' => $page->url,
+                ],
+            );
         }
 
         // Mark head sending done, it is not possible to anything there.
