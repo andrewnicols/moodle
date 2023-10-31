@@ -645,6 +645,7 @@ $string['xmldberror'] = 'XMLDB error!';
 $string['alreadyloggedin'] = 'You are already logged in as {$a}, you need to log out before logging in as different user.';
 $string['youcannotdeletecategory'] = 'You cannot delete category \'{$a}\' because you can neither delete the contents, nor move them elsewhere.';
 $string['protected_cc_not_supported'] = 'Protected cartridges not supported.';
+$string['notfound'] = 'No {$a->itemtype} was found with an identifier of \'{$a->identifier}\'';
 
 // Deprecated since Moodle 4.1.
 $string['cannotswitcheditmodeon'] = 'Could not switch edit mode on';
