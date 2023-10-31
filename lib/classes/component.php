@@ -145,6 +145,9 @@ class component {
         \Matrix::class => 'lib/phpspreadsheet/markbaker/classes/src',
         \PhpOffice\PhpSpreadsheet::class => 'lib/phpspreadsheet/phpspreadsheet/src/PhpSpreadsheet',
         \Invoker::class => 'lib/php-di/invoker/src',
+        \FastRoute::class => 'lib/nikic/fast-route/src',
+        \DI\\Bridge\\Slim::class => "lib/php-di/slim-bridge/src",
+        \Slim::class => 'lib/slim/slim/Slim',
     ];
 
     /**
