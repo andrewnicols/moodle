@@ -142,7 +142,6 @@ class component {
         'FastRoute' => 'lib/nikic/fast-route/src',
         'DI' => 'lib/php-di/php-di/src',
         'Invoker' => 'lib/php-di/invoker/src',
-        'DI\\Bridge\\Slim' => "lib/php-di/slim-bridge/src",
         'Slim' => 'lib/slim/slim/Slim',
     ];
 
@@ -449,9 +448,7 @@ class component {
         $keyclasses = [
             \core\exception\moodle_exception::class,
             \core\output\bootstrap_renderer::class,
-            \core\lang_string::class,
-            \renderable::class,
-            \core\url::class,
+            \core\router::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
