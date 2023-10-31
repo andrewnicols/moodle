@@ -128,8 +128,11 @@ class core_component {
         'GuzzleHttp' => 'lib/guzzlehttp/guzzle/src',
         'Kevinrob\\GuzzleCache' => 'lib/guzzlehttp/kevinrob/guzzlecache/src',
         'Laravel\\SerializableClosure\\' => 'lib/laravel/serializable-closure/src',
+        'FastRoute' => 'lib/nikic/fast-route/src',
         'DI' => 'lib/php-di/php-di/src',
         'Invoker' => 'lib/php-di/invoker/src',
+        'DI\\Bridge\\Slim' => "lib/php-di/slim-bridge/src",
+        'Slim' => 'lib/slim/slim/Slim',
     ];
 
     /**
