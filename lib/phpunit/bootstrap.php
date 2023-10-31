@@ -81,9 +81,10 @@ if ($phpunitversion === '@package_version@') {
 }
 unset($phpunitversion);
 
-// Only load CFG from config.php, stop ASAP in lib/setup.php.
+// Only load CFG from config.php.
 define('ABORT_AFTER_CONFIG', true);
-require(__DIR__ . '/../../config.php');
+require_once(dirname(__FILE__, 3) . '/bootstrap.php');
+\core\bootstrap::early_setup();
 
 if (!defined('PHPUNIT_LONGTEST')) {
     /** Execute longer version of tests */
@@ -251,7 +252,7 @@ if (isset($CFG->phpunit_profilingenabled) && $CFG->phpunit_profilingenabled) {
     $CFG->profilingenabled = true;
     $CFG->profilingincluded = '*';
 }
-require("$CFG->dirroot/lib/setup.php");
+\core\bootstrap::full_setup();
 
 raise_memory_limit(MEMORY_HUGE);
 
