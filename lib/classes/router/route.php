@@ -21,8 +21,10 @@ use coding_exception;
 use core\openapi\specification;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 use Slim\Routing\Route as RoutingRoute;
 use Slim\Routing\RouteContext;
+use stdClass;
 
 /**
  * Routing attribute.
@@ -74,6 +76,9 @@ class route {
         /** @var \core\router\query_parameter[] A list of query parameters with matching types */
         protected array $queryparams = [],
 
+        /** @var \core\router\request_body A list of parameters found in the body */
+        protected ?request_body $requestbody = null,
+
         /** @var response[] A list of possible response types */
         protected array $responses = [],
 
@@ -104,10 +109,22 @@ class route {
         ));
     }
 
-    public function set_parent(route $parent) {
+    /**
+     * Set the parent route, usualyl a Class-level route.
+     *
+     * @param route $parent
+     * @return self
+     */
+    public function set_parent(route $parent): self {
         $this->parentroute = $parent;
+        return $this;
     }
 
+    /**
+     * Get the fully-qualified path for this route relative to root.
+     *
+     * @return string 
+     */
     public function get_path(): string {
         $path = $this->path ?? '';
 
@@ -117,6 +134,11 @@ class route {
         return $path;
     }
 
+    /**
+     * Get the list of HTTP methods associated with this route.
+     *
+     * @return string[]
+     */
     public function get_methods(): array {
         return array_merge(
             $this->parentroute ? $this->parentroute->get_methods() : [],
@@ -124,13 +146,26 @@ class route {
         );
     }
 
+    /**
+     * Validate the request content.
+     *
+     * @param ServerRequestInterface $request
+     * @return ServerRequestInterface
+     */
     public function validate_request(ServerRequestInterface $request): ServerRequestInterface {
         // Add a Route middleware to validate the path, and parameters.
         $routecontext = RouteContext::fromRequest($request);
         $route = $routecontext->getRoute();
 
+        // Validate that the path arguments are valid.
+        // If they are not, then an Exception should be thrown.
         $this->validate_path($route);
+
+        // Validate query parameters.
         $request = $this->validate_query($request, $route);
+
+        // Validate request body parameters.
+        // Found in POST, PUT, DELETE, etc.
         $request = $this->validate_request_body($request, $route);
 
         return $request;
@@ -142,7 +177,7 @@ class route {
      * @param RoutingRoute $route The route to validate.
      * @throws coding_exception
      */
-    public function validate_path(RoutingRoute $route): void {
+    protected function validate_path(RoutingRoute $route): void {
         $requiredparams = count(array_filter(
             $this->pathtypes,
             fn($pathtype) => $pathtype->is_required($this),
@@ -153,8 +188,7 @@ class route {
                 $route->getPattern(),
                 count($route->getArguments()),
                 count($this->pathtypes),
-            )
-            );
+            ));
         }
 
         foreach ($this->pathtypes as $pathtype) {
@@ -168,7 +202,7 @@ class route {
      * @param RoutingRoute $route
      * @return ServerRequestInterface
      */
-    public function validate_query(
+    protected function validate_query(
         ServerRequestInterface $request,
         RoutingRoute $route,
     ): ServerRequestInterface {
@@ -194,7 +228,7 @@ class route {
         );
 
         foreach ($this->queryparams as $queryparam) {
-            $request = $queryparam->validate($request, $route);
+            $request = $queryparam->validate($request, $request->getQueryParams());
         }
 
         return $request;
@@ -207,7 +241,7 @@ class route {
      * @param RoutingRoute $route
      * @return ServerRequestInterface
      */
-    public function validate_request_body(
+    protected function validate_request_body(
         ServerRequestInterface $request,
         RoutingRoute $route,
     ): ServerRequestInterface {
@@ -215,6 +249,11 @@ class route {
         return $request;
     }
 
+    /**
+     * Validate that the response matches the schema if a schema was specified.
+     *
+     * @param ResponseInterface $response
+     */
     public function validate_response(ResponseInterface $response): void {
         if (!array_key_exists($response->getStatusCode(), $this->responses)) {
             // Decide what we should do here.
@@ -226,6 +265,7 @@ class route {
         $this->responses[$response->getStatusCode()]->validate($response);
     }
 
+    // TODO Remove?
     public function get_operationid(): string {
         $operationid = $this->title;
         if ($this->parentroute) {
@@ -234,6 +274,15 @@ class route {
         return $operationid;
     }
 
+    /**
+     * Get the OpenAPI description for this route.
+     *
+     * @param specification $api
+     * @param string $component
+     * @param string $path
+     * @param array $parentcontexts TODO remove.
+     * @return stdClass
+     */
     public function get_openapi_description(
         specification $api,
         string $component,
@@ -254,7 +303,6 @@ class route {
                     api: $api,
                     component: $component,
                     path: $path,
-                    parentcontexts: $searchcontexts,
                 ),
                 array_merge(
                     $this->queryparams,
@@ -262,6 +310,12 @@ class route {
             ),
             'responses' => [],
         ];
+
+        if ($this->requestbody) {
+            $data->requestBody = $this->requestbody->get_openapi_description(
+                api: $api,
+            );
+        }
 
         if ($this->security !== null) {
             $data->security = $this->security;

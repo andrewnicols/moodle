@@ -14,19 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\schema;
+namespace core\router;
+
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * A scheam to describe an array of strings.
+ * Parameters found in a document body.
+ * TODO: These aren't really parameters.
+ * https://spec.openapis.org/oas/v3.1.0#request-body-object
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class array_of_strings extends array_of_things {
+class body_parameter extends validatable_parameter {
     public function __construct(
-        ...$extra,
+        ...$args,
     ) {
-        parent::__construct('string', ...$extra);
+        $args['in'] = 'query';
+        parent::__construct(...$args);
+    }
+
+
+    /**
+     * Update the request parameters.
+     *
+     * @param ServerRequestInterface $request
+     * @param array $params
+     * @return ServerRequestInterface
+     */
+    protected function update_request_params(
+        ServerRequestInterface $request,
+        array $params,
+    ): ServerRequestInterface {
+        return $request->withParsedBody($params);
     }
 }

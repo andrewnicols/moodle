@@ -20,6 +20,7 @@ use coding_exception;
 use core\openapi\schema;
 use core\router\parameter;
 use core\router\response;
+use stdClass;
 
 /**
  * Routing parameter for validation.
@@ -29,6 +30,11 @@ use core\router\response;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class openapi_base {
+
+    public function __construct(
+        ...$extra,
+    ) {
+    }
 
     /**
      * Get the $ref for this class.

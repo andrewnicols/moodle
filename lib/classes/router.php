@@ -144,7 +144,6 @@ class router {
     }
 
     public function serve(): void {
-        // xdebug_break();
         $this->get_app()->run();
     }
 

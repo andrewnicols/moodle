@@ -16,9 +16,15 @@
 
 namespace core\openapi;
 
-use core\openapi\specification;
-use core\openapi\openapi_base;
-
+/**
+ * A referenced schema.
+ *
+ * TODO: Check if we really need this given most of it is implemented in the base.
+ *
+ * @package    core
+ * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 interface referenced_schema {
     public function get_reference(): string;
 

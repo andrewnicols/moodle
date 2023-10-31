@@ -106,7 +106,6 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
             return $result->get_response();
         }
 
-        xdebug_break();
         throw new \coding_exception('Unknown response type');
     }
 

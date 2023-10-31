@@ -32,6 +32,12 @@ class bootstrap {
 
     protected static int $stage = 0;
 
+    protected static function set_stage(int $stage) {
+        if ($stage > self::$stage) {
+            self::$stage = $stage;
+        }
+    }
+
     public static function early_setup(): void {
         global $CFG, $DB, $PAGE, $OUTPUT;
 
@@ -99,7 +105,7 @@ class bootstrap {
             }
         }
 
-        self::$stage = self::AFTER_EARLY;
+        self::set_stage(self::AFTER_EARLY);
     }
 
     public static function full_setup(): void {
@@ -110,7 +116,7 @@ class bootstrap {
 
         self::setup_default_constants();
         self::late_setup();
-        self::$stage = self::AFTER_SETUP;
+        self::set_stage(self::AFTER_SETUP);
     }
 
     protected static function require_config(): void {

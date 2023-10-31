@@ -17,6 +17,7 @@
 namespace core_user\api;
 
 use core\router\payload_response;
+use core\router\response\content\payload_response_type;
 use core\router\response_type;
 use core\router\route;
 use core_user;
@@ -62,7 +63,7 @@ class preferences {
                 statuscode: 200,
                 description: 'OK',
                 content: [
-                    new \core\router\response\content\json_response(
+                    new \core\router\response\content\json_media_type(
                         schema: new \core\router\schema\array_of_strings(),
                         examples: [
                             new \core\router\response\example(
@@ -116,27 +117,36 @@ class preferences {
      * @return Response
      */
     #[route(
-        path: '',
         method: ['POST'],
-        title: 'Set a set of user preferences',
+        title: 'Set or update multiple user preferences',
+        security: [
+            'oauth' => [
+                'user:write',
+            ],
+        ],
+        requestbody: new \core\router\request_body(
+            content: new payload_response_type(
+                schema: new \core\router\schema\schema_object(
+                    content: [
+                        'preferences' => new \core\router\schema\array_of_strings(),
+                    ],
+                ),
+            ),
+        ),
         responses: [
             200 => new \core\router\response(
-                statuscode: 200,
-                description: 'OK',
-                content: [
-                    new \core\router\response\content\json_response(
-                        schema: new \core\router\schema\array_of_strings(),
-                        examples: [
-                            new \core\router\response\example(
-                                name: 'A single preference value',
-                                summary: 'A json response containing a single preference',
-                                value: [
-                                    "drawers-open-index" => "1",
-                                ],
-                            ),
-                        ]
-                    ),
-                ],
+                content: new payload_response_type(
+                    schema: new \core\router\schema\array_of_things(),
+                    examples: [
+                        new \core\router\response\example(
+                            name: 'A single preference value',
+                            summary: 'A json response containing a single preference',
+                            value: [
+                                "drawers-open-index" => "1",
+                            ],
+                        ),
+                    ]
+                ),
             ),
         ],
     )]
@@ -144,13 +154,11 @@ class preferences {
         ResponseInterface $response,
         ServerRequestInterface $request,
     ): payload_response {
-        xdebug_break();
         global $USER;
 
         $user = core_user::get_user(
             userid: $USER->id,
         );
-
         $values = $request->getParsedBody();
         $preferences = $values['preferences'] ?? [];
 
@@ -190,7 +198,7 @@ class preferences {
                 statuscode: 200,
                 description: 'OK',
                 content: [
-                    new \core\router\response\content\json_response(
+                    new \core\router\response\content\json_media_type(
                         schema: new \core\router\schema\array_of_strings(),
                         examples: [
                             new \core\router\response\example(

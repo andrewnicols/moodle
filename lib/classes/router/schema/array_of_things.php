@@ -14,58 +14,47 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\response;
+namespace core\router\schema;
 
 use core\openapi\specification;
-use Psr\Http\Message\ResponseInterface;
 
 /**
- * A Response Example Object.
+ * A schema to descirbe an array of things. These could be any type, including other schema definitions.
  *
- * https://swagger.io/specification/#example-object
+ * See https://spec.openapis.org/oas/v3.0.0#model-with-map-dictionary-properties for relevant documentation.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class example {
+class array_of_things extends \core\openapi\schema {
+    /**
+     * An array of things.
+     *
+     * @param string|null $thingtype The OpenAPI type, or null if any type is allowed.
+     * @param array $extra
+     */
     public function __construct(
-        protected string $name,
-        protected ?string $summary = null,
-        protected ?string $description = null,
-        protected mixed $value = null,
-        protected ?string $externalvalue = null,
+        protected string|null $thingtype = null,
         ...$extra,
     ) {
-        assert(
-            $value === null || $externalvalue === null,
-            'Only one of value or externalvalue can be specified.',
-        );
-    }
-
-    public function get_name(): string {
-        return $this->name;
+        parent::__construct(...$extra);
     }
 
     public function get_openapi_description(
         specification $api,
     ): \stdClass {
-        $data = (object) [];
+        $this->ensure_schema_exists($api);
 
-        if ($this->summary !== null) {
-            $data->summary = $this->summary;
-        }
+        return (object) [
+            '$ref' => $this->get_reference(),
+        ];
+    }
 
-        if ($this->description !== null) {
-            $data->description = $this->description;
-        }
-
-        if ($this->value !== null) {
-            $data->value = $this->value;
-        } else {
-            $data->externalValue = $this->externalvalue;
-        }
-
-        return $data;
+    public function get_schema(): \stdClass {
+        return (object) [
+            'type' => 'object',
+            'additionalProperties' => $this->get_additional_properties($this->thingtype),
+        ];
     }
 }

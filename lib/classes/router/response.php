@@ -17,6 +17,7 @@
 namespace core\router;
 
 use core\openapi\specification;
+use core\router\response\content\payload_response_type;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Routing\Route;
 
@@ -31,7 +32,7 @@ class response {
     public function __construct(
         protected int $statuscode = 200,
         protected string $description = '',
-        protected array $content = [],
+        protected array|payload_response_type $content = [],
         protected array $headers = [],
 
         ...$extra,
@@ -43,35 +44,42 @@ class response {
         $response;
     }
 
+    protected function get_description(): string {
+        if ($this->description !== '') {
+            return $this->description;
+        }
+
+        switch ($this->statuscode) {
+            case 200:
+                return 'OK';
+            default:
+                return '';
+        }
+    }
+
     public function get_openapi_description(
         specification $api,
         string $component,
         array $parentcontexts = [],
     ): \stdClass {
         $data = (object) [
+            'description' => $this->get_description(),
         ];
-
-        if ($this->description !== null) {
-            $data->description = $this->description;
-        }
 
         if (count($this->headers)) {
             foreach ($this->headers as $header) {
-                $data->headers[$header->get_header_name()] = $header->get_openapi_description(
-                    $api,
-                    $component,
-                    $parentcontexts,
-                );
+                $data->headers[$header->get_header_name()] = $header->get_openapi_description($api);
             }
         }
 
-        if (count($this->content)) {
+
+        if ($this->content instanceof response\content\payload_response_type) {
+            $data->content = $this->content->get_openapi_description(
+                $api,
+            );
+        } else if (count($this->content)) {
             foreach ($this->content as $body) {
-                $data->content[$body->get_mimetype()] = $body->get_openapi_description(
-                    $api,
-                    $component,
-                    $parentcontexts,
-                );
+                $data->content[$body->get_mimetype()] = $body->get_openapi_description($api);
             }
         }
 

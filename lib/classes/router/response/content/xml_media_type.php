@@ -14,19 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\schema;
+namespace core\router\response\content;
 
 /**
- * A scheam to describe an array of strings.
+ * A JSON Message body.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class array_of_strings extends array_of_things {
+class xml_media_type extends media_type {
     public function __construct(
         ...$extra,
     ) {
-        parent::__construct('string', ...$extra);
+        $extra['encoding'] = 'application/xml';
+        parent::__construct(
+            ...$extra,
+        );
     }
 }

@@ -14,56 +14,45 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\response;
+namespace core\router\schema;
 
 use core\openapi\specification;
-use Psr\Http\Message\ResponseInterface;
 
 /**
- * A Response Example Object.
+ * A schema to descirbe an array of things. These could be any type, including other schema definitions.
  *
- * https://swagger.io/specification/#example-object
+ * See https://spec.openapis.org/oas/v3.0.0#model-with-map-dictionary-properties for relevant documentation.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class example {
+class schema_object extends \core\openapi\schema {
+    /**
+     * An array of things.
+     *
+     * @param array $content The child content
+     * @param array $extra
+     */
     public function __construct(
-        protected string $name,
-        protected ?string $summary = null,
-        protected ?string $description = null,
-        protected mixed $value = null,
-        protected ?string $externalvalue = null,
+        protected array $content,
         ...$extra,
     ) {
-        assert(
-            $value === null || $externalvalue === null,
-            'Only one of value or externalvalue can be specified.',
-        );
-    }
-
-    public function get_name(): string {
-        return $this->name;
+        parent::__construct(...$extra);
     }
 
     public function get_openapi_description(
         specification $api,
     ): \stdClass {
-        $data = (object) [];
+        $data = (object) [
+            'type' => 'object',
+            'properties' => (object) [],
+        ];
 
-        if ($this->summary !== null) {
-            $data->summary = $this->summary;
-        }
-
-        if ($this->description !== null) {
-            $data->description = $this->description;
-        }
-
-        if ($this->value !== null) {
-            $data->value = $this->value;
-        } else {
-            $data->externalValue = $this->externalvalue;
+        foreach ($this->content as $name => $content) {
+            $data->properties->{$name} = $content->get_openapi_description(
+                $api,
+            );
         }
 
         return $data;

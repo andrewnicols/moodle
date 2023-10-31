@@ -16,16 +16,14 @@
 
 namespace core\router\response\content;
 
-use Psr\Http\Message\ResponseInterface;
-
 /**
- * A JSON Response body.
+ * A JSON Message body.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class json_response extends media_type {
+class json_media_type extends media_type {
     public function __construct(
         ...$extra,
     ) {

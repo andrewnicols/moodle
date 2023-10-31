@@ -16,6 +16,9 @@
 
 namespace core\router;
 
+use core\openapi\openapi_base;
+use core\openapi\specification;
+use core\router\response\content\payload_response_type;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -25,30 +28,53 @@ use Psr\Http\Message\ServerRequestInterface;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class query_parameter extends validatable_parameter {
+class request_body extends openapi_base {
     /**
      * Query parameter constructor to override the location of the parameter.
      *
      * @param array $args
      */
     public function __construct(
+        protected string $description = '',
+        protected array|payload_response_type $content = [],
+        protected bool $required = false,
         ...$args,
     ) {
-        $args['in'] = 'query';
+        if (!empty($content)) {
+            $this->required = true;
+        }
         parent::__construct(...$args);
     }
 
     /**
-     * Update the request parameters.
+     * Get the OpenAPI description for this class.
      *
-     * @param ServerRequestInterface $request
-     * @param array $params
-     * @return ServerRequestInterface
+     * @param specification $api
+     * @return stdClass
      */
-    protected function update_request_params(
-        ServerRequestInterface $request,
-        array $params,
-    ): ServerRequestInterface {
-        return $request->withQueryParams($params);
+    public function get_openapi_description(
+        specification $api,
+    ): ?\stdClass {
+        $data = (object) [
+            'description' => $this->description,
+            'required' => $this->required,
+            'content' => [],
+        ];
+
+        if ($this->content instanceof response\content\payload_response_type) {
+            $data->content = $this->content->get_openapi_description(
+                $api,
+            );
+            return $data;
+        }
+
+        foreach ($this->content as $content) {
+            $data->content[$content->get_encoding()] = $content->get_openapi_description(
+                $api,
+            );
+        }
+
+        return $data;
     }
+
 }

@@ -14,58 +14,50 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\response;
+namespace core\router\response\content;
 
 use core\openapi\specification;
-use Psr\Http\Message\ResponseInterface;
 
 /**
- * A Response Example Object.
- *
- * https://swagger.io/specification/#example-object
+ * A standard Moodle response for all supported payload types.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class example {
+class payload_response_type {
+    protected array $args;
+
     public function __construct(
-        protected string $name,
-        protected ?string $summary = null,
-        protected ?string $description = null,
-        protected mixed $value = null,
-        protected ?string $externalvalue = null,
-        ...$extra,
+        ...$args,
     ) {
-        assert(
-            $value === null || $externalvalue === null,
-            'Only one of value or externalvalue can be specified.',
-        );
+        $this->args = $args;
     }
 
-    public function get_name(): string {
-        return $this->name;
+    /**
+     * Get the supported content types.
+     *
+     * @return media_type[]
+     */
+    protected function get_supported_content_types(): array {
+        return [
+            json_media_type::class,
+            xml_media_type::class,
+        ];
     }
 
     public function get_openapi_description(
         specification $api,
     ): \stdClass {
-        $data = (object) [];
+        $content = (object) [];
 
-        if ($this->summary !== null) {
-            $data->summary = $this->summary;
+        foreach ($this->get_supported_content_types() as $contenttypeclass) {
+            $contenttype = new $contenttypeclass(...$this->args);
+            $content->{$contenttype->get_mimetype()} = $contenttype->get_openapi_description(
+                $api,
+            );
         }
 
-        if ($this->description !== null) {
-            $data->description = $this->description;
-        }
-
-        if ($this->value !== null) {
-            $data->value = $this->value;
-        } else {
-            $data->externalValue = $this->externalvalue;
-        }
-
-        return $data;
+        return $content;
     }
 }

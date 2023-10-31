@@ -139,8 +139,6 @@ class specification implements
         string $component,
         array $parentcontexts,
         route $route,
-        ?\ReflectionClass $classinfo = null,
-        ?\ReflectionMethod $methodinfo = null,
     ): self {
         // Compile the final path, complete with component prefix.
         $path = "/{$component}" . $route->get_path();
@@ -167,6 +165,7 @@ class specification implements
             }
 
             foreach ((array) $pathdocs as $method => $methoddata) {
+                // Copy each of the pathdocs into place.
                 $this->data->paths->{$path}->{$method} = $methoddata;
             }
         };
@@ -215,7 +214,7 @@ class specification implements
     }
 
     // TODO. Is this used?
-    public function get_schema_path_for_class(referenced_schema $schema): string {
+    public function get_schema_path_for_class(schema $schema): string {
         $schema = (object) $schema;
         $schema = $this->get_schema_for_class($schema);
 

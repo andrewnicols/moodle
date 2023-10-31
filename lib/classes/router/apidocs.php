@@ -30,7 +30,10 @@ use stdClass;
  */
 class apidocs {
     /**
+     * Generate the API docs for the API.
      *
+     * @param ResponseInterface $response
+     * @return ResponseInterface
      */
     public function openapi_docs(
         ResponseInterface $response,
@@ -63,6 +66,7 @@ class apidocs {
             }
         }
 
+        // At the moent only json is supported. This could be extended to support other formats in future.
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
@@ -109,8 +113,6 @@ class apidocs {
                 component: $component,
                 parentcontexts: $parentcontexts,
                 route: $routeattribute,
-                methodinfo: $method,
-                classinfo: $classinfo,
             );
         }
 

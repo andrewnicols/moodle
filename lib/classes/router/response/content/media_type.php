@@ -34,6 +34,9 @@ class media_type {
         protected ?string $example = null,
         protected array $examples = [],
 
+        // Used for request body.
+        protected bool $required = false,
+
         ...$extra,
     ) {
         assert(
@@ -44,36 +47,34 @@ class media_type {
 
     public function get_openapi_description(
         specification $api,
-        string $component,
-        array $parentcontexts = [],
     ): \stdClass {
         $data = (object) [];
 
         if ($this->schema) {
-            $data->schema = $this->schema->get_openapi_description(
-                $api,
-                $component,
-                [$this, $parentcontexts],
-            );
+            $data->schema = $this->schema->get_openapi_description($api);
         }
 
         if ($this->example) {
             $data->example = $this->example;
         } else if (count($this->examples)) {
             $data->examples = array_map(
-                fn(\core\router\response\example $example) => $example->get_openapi_description(
-                    $api,
-                    $component,
-                    [$this, $parentcontexts],
-                ),
+                fn(\core\router\response\example $example) => $example->get_openapi_description($api),
                 $this->examples,
             );
+        }
+
+        if ($this->required) {
+            $data->required = true;
         }
 
         return $data;
     }
 
     public function get_mimetype(): string {
+        return $this->encoding;
+    }
+
+    public function get_encoding(): string {
         return $this->encoding;
     }
 }
