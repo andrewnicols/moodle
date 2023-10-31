@@ -16,24 +16,24 @@
 
 namespace core_user\route\api;
 
-use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Utils;
 
 /**
  * Tests for user preference API handler.
  *
- * @package    core
+ * @package    core_user
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core_user\route\api\preferences
  * @covers \core_user\route\responses\user_preferences_response
  */
-class preferences_test extends \route_testcase {
+final class preferences_test extends \route_testcase {
     /**
      * Ensure that preferences returned for a user without login are empty.
      */
     public function test_preferences_no_login(): void {
-        $response = $this->process_request('GET', '/user/preferences');
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $response = $this->process_api_request('GET', '/preferences');
 
         $this->assert_valid_response($response);
         $payload = $this->decode_response($response);
@@ -47,50 +47,182 @@ class preferences_test extends \route_testcase {
     public function test_preferences_returned(): void {
         $this->resetAfterTest();
 
-        $this->setAdminUser();
-        set_user_preference('testpreference', 'testvalue');
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
 
-        $response = $this->process_request('GET', '/user/preferences');
+        $this->setAdminUser();
+        set_user_preference('filemanager_recentviewmode', 1);
+
+        $response = $this->process_api_request('GET', '/preferences');
 
         $this->assert_valid_response($response);
 
         $payload = $this->decode_response($response);
 
-        $this->assertObjectHasAttribute('testpreference', $payload);
-        $this->assertEquals('testvalue', $payload->testpreference);
+        $this->assertObjectHasProperty('filemanager_recentviewmode', $payload);
+        $this->assertEquals(1, $payload->filemanager_recentviewmode);
     }
 
     public function test_preference_returned(): void {
         $this->resetAfterTest();
 
-        $this->setAdminUser();
-        set_user_preference('testpreference', 'testvalue');
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
 
-        $response = $this->process_request('GET', '/user/preferences/testpreference');
+        $this->setAdminUser();
+        set_user_preference('filemanager_recentviewmode', 1);
+
+        $response = $this->process_api_request('GET', '/preferences/filemanager_recentviewmode');
 
         $this->assert_valid_response($response);
 
         $payload = $this->decode_response($response);
 
-        $this->assertObjectHasAttribute('testpreference', $payload);
-        $this->assertEquals('testvalue', $payload->testpreference);
+        $this->assertObjectHasProperty('filemanager_recentviewmode', $payload);
+        $this->assertEquals(1, $payload->filemanager_recentviewmode);
     }
 
     public function test_preferences_set(): void {
         $this->resetAfterTest();
 
-        $request = $this->create_request(
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+
+        $this->setAdminUser();
+
+        $response = $this->process_api_request(
             'POST',
-            '/user/preferences',
-        )->withBody(
-            Utils::streamFor(json_encode([
+            '/preferences',
+            body: Utils::streamFor(json_encode([
                 'preferences' => [
-                    'testpreference' => 'someothervalue',
+                    'filemanager_recentviewmode' => 2,
                 ],
             ])),
         );
 
-        $app = $this->get_app();
-        $response = $app->handle($request);
+        $this->assert_valid_response($response);
+
+        // Check that the response contained the updtaed parameter.
+        $payload = $this->decode_response($response);
+        $this->assertObjectHasProperty('filemanager_recentviewmode', $payload);
+        $this->assertEquals(2, $payload->filemanager_recentviewmode);
+
+        // Check that the preference was updated.
+        $this->assertEquals(2, get_user_preferences('filemanager_recentviewmode'));
+    }
+
+    /**
+     * Test that an invalid preference is rejected.
+     */
+    public function test_preferences_set_invalid_value(): void {
+        $this->resetAfterTest();
+
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+
+        $this->setAdminUser();
+
+        $response = $this->process_api_request(
+            'POST',
+            '/preferences',
+            body: Utils::streamFor(json_encode([
+                'preferences' => [
+                    'filemanager_recentviewmode' => 4,
+                ],
+            ])),
+        );
+
+        $this->assert_invalid_parameter_response($response);
+        $payload = $this->decode_response($response);
+        $this->assertStringContainsString('filemanager_recentviewmode', $payload->message);
+    }
+
+    /**
+     * Test that a preference the user does not have permission to is rejected.
+     */
+    public function test_preferences_set_not_permitted_valid_login(): void {
+        $this->resetAfterTest();
+
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+
+        $this->setAdminUser();
+
+        $response = $this->process_api_request(
+            'POST',
+            '/preferences',
+            body: Utils::streamFor(json_encode([
+                'preferences' => [
+                    'invalid_key' => 4,
+                ],
+            ])),
+        );
+
+        $this->assert_access_denied_response($response);
+    }
+
+    public function test_preference_set(): void {
+        $this->resetAfterTest();
+
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+
+        $this->setAdminUser();
+
+        $response = $this->process_api_request(
+            'POST',
+            '/preferences/filemanager_recentviewmode',
+            body: Utils::streamFor(json_encode([
+                'value' => 2,
+            ])),
+        );
+
+        $this->assert_valid_response($response);
+
+        // Check that the response contained the updtaed parameter.
+        $payload = $this->decode_response($response);
+        $this->assertObjectHasProperty('filemanager_recentviewmode', $payload);
+        $this->assertEquals(2, $payload->filemanager_recentviewmode);
+
+        // Check that the preference was updated.
+        $this->assertEquals(2, get_user_preferences('filemanager_recentviewmode'));
+    }
+
+    /**
+     * Test that an invalid preference is rejected.
+     */
+    public function test_preference_set_invalid_value(): void {
+        $this->resetAfterTest();
+
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+
+        $this->setAdminUser();
+
+        $response = $this->process_api_request(
+            'POST',
+            '/preferences/filemanager_recentviewmode',
+            body: Utils::streamFor(json_encode([
+                'value' => 4,
+            ])),
+        );
+
+        $this->assert_invalid_parameter_response($response);
+        $payload = $this->decode_response($response);
+        $this->assertStringContainsString('filemanager_recentviewmode', $payload->message);
+    }
+
+    /**
+     * Test that a preference the user does not have permission to is rejected.
+     */
+    public function test_preference_set_not_permitted_valid_login(): void {
+        $this->resetAfterTest();
+
+        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+
+        $this->setAdminUser();
+
+        $response = $this->process_api_request(
+            'POST',
+            '/preferences/invalid_key',
+            body: Utils::streamFor(json_encode([
+                'value' => 4,
+            ])),
+        );
+
+        $this->assert_access_denied_response($response);
     }
 }
