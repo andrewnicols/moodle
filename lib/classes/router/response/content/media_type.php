@@ -16,8 +16,9 @@
 
 namespace core\router\response\content;
 
-use core\openapi\specification;
-use Psr\Http\Message\ResponseInterface;
+use core\router\schema\openapi_base;
+use core\openapi\schema;
+use core\router\schema\specification;
 
 /**
  * An OpenAPI MediaType.
@@ -27,10 +28,9 @@ use Psr\Http\Message\ResponseInterface;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class media_type {
+abstract class media_type extends openapi_base {
     public function __construct(
-        protected string $encoding,
-        protected $schema = null,
+        protected ?schema $schema = null,
         protected ?string $example = null,
         protected array $examples = [],
 
@@ -47,18 +47,25 @@ class media_type {
 
     public function get_openapi_description(
         specification $api,
-    ): \stdClass {
+        ?string $path = null,
+    ): ?\stdClass {
         $data = (object) [];
 
         if ($this->schema) {
-            $data->schema = $this->schema->get_openapi_description($api);
+            $data->schema = $this->schema->get_openapi_description(
+                api: $api,
+                path: $path,
+            );
         }
 
         if ($this->example) {
             $data->example = $this->example;
         } else if (count($this->examples)) {
             $data->examples = array_map(
-                fn(\core\router\response\example $example) => $example->get_openapi_description($api),
+                fn(\core\router\response\example $example) => $example->get_openapi_description(
+                    api: $api,
+                    path: $path,
+                ),
                 $this->examples,
             );
         }
@@ -70,11 +77,13 @@ class media_type {
         return $data;
     }
 
-    public function get_mimetype(): string {
-        return $this->encoding;
+    public function get_schema(): schema {
+        return $this->schema;
     }
 
-    public function get_encoding(): string {
-        return $this->encoding;
+    public function get_mimetype(): string {
+        return static::get_encoding();
     }
+
+    abstract public static function get_encoding(): string;
 }

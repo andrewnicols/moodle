@@ -14,7 +14,25 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\openapi;
+namespace core_user\route\headers;
 
-interface referenced_parameter {
+use core\router\schema\header_object;
+use core\router\schema\referenced_object;
+
+/**
+ * An example of a header.
+ *
+ * @package    core
+ * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class example_header extends header_object implements referenced_object {
+    public function __construct(
+        ...$extra,
+    ) {
+        $extra['name'] = 'X-Total-Count';
+        $extra['description'] = 'The total number of preferences';
+        $extra['type'] = PARAM_INT;
+        parent::__construct(...$extra);
+    }
 }

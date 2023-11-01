@@ -14,14 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\schema;
+namespace core\router\schema\objects;
 
-use core\openapi\specification;
+use core\router\schema\specification;
 
 /**
- * A schema to descirbe an array of things. These could be any type, including other schema definitions.
+ * A schema to describe an array of things. These could be any type, including other schema definitions.
  *
- * See https://spec.openapis.org/oas/v3.0.0#model-with-map-dictionary-properties for relevant documentation.
+ * See https://spec.openapis.org/oas/v3.1.0#model-with-map-dictionary-properties for relevant documentation.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
@@ -41,20 +41,28 @@ class schema_object extends \core\openapi\schema {
         parent::__construct(...$extra);
     }
 
-    public function get_openapi_description(
-        specification $api,
-    ): \stdClass {
-        $data = (object) [
-            'type' => 'object',
-            'properties' => (object) [],
-        ];
+    public function has(string $key): bool {
+        return isset($this->content[$key]);
+    }
 
-        foreach ($this->content as $name => $content) {
-            $data->properties->{$name} = $content->get_openapi_description(
-                $api,
-            );
+    public function validate_data(array $params): array {
+        foreach ($params as $key => $values) {
+            if (!$this->has($key)) {
+                // We do not know about this one.
+                // Remove it from the params array.
+                $params = array_diff_key(
+                    $params,
+                    [$key => $values],
+                );
+                continue;
+            }
+
+            // Validate this parameter.
+            $child = $this->content[$key];
+            $params[$key] = $child->validate_data($values);
         }
 
-        return $data;
+        return $params;
     }
+
 }

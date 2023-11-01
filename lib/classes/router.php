@@ -313,7 +313,7 @@ class router {
 
         if (!($cachedata = $cache->get('api_routes'))) {
             $cachedata = $this->get_route_data_for_namespace(
-                namespace: 'api',
+                namespace: 'route\api',
                 componentpathcallback: fn($component) => $this->normalise_component_to_path($component, true),
             );
 
@@ -349,7 +349,7 @@ class router {
 
         if (!($cachedata = $cache->get('standard_routes'))) {
             $cachedata = $this->get_route_data_for_namespace(
-                namespace: 'route',
+                namespace: 'route\controller',
                 componentpathcallback: fn($component) => substr(
                     \core_component::get_component_directory($component),
                     strlen($CFG->dirroot) + 1,

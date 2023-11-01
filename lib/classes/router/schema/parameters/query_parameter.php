@@ -14,8 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router;
+namespace core\router\schema\parameters;
 
+use core\router\schema\specification;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -29,13 +30,14 @@ class query_parameter extends validatable_parameter {
     /**
      * Query parameter constructor to override the location of the parameter.
      *
-     * @param array $args
+     * @param array $extra
      */
     public function __construct(
-        ...$args,
+        protected ?bool $allowreserved = null,
+        ...$extra,
     ) {
-        $args['in'] = 'query';
-        parent::__construct(...$args);
+        $extra['in'] = 'query';
+        parent::__construct(...$extra);
     }
 
     /**
@@ -50,5 +52,22 @@ class query_parameter extends validatable_parameter {
         array $params,
     ): ServerRequestInterface {
         return $request->withQueryParams($params);
+    }
+
+    final public function get_openapi_description(
+        specification $api,
+        ?string $path = null,
+    ): ?\stdClass {
+        $data = parent::get_openapi_description($api, $path);
+
+        if ($this->allowreserved) {
+            // Determines whether the parameter value SHOULD allow reserved characters, as defined by [RFC3986]
+            // :/?#[]@!$&'()*+,;=
+            // to be included without percent-encoding.
+            // This property only applies to parameters with an in value of query. The default value is false.
+            $data->allowReserved = $this->allowreserved;
+        }
+
+        return $data;
     }
 }

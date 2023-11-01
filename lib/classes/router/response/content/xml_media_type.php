@@ -24,12 +24,7 @@ namespace core\router\response\content;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class xml_media_type extends media_type {
-    public function __construct(
-        ...$extra,
-    ) {
-        $extra['encoding'] = 'application/xml';
-        parent::__construct(
-            ...$extra,
-        );
+    public static function get_encoding(): string {
+        return 'application/xml';
     }
 }

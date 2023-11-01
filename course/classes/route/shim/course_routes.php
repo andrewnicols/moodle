@@ -16,8 +16,8 @@
 
 namespace core_course\route\shim;
 
-use core\router\path_parameter;
-use core\router\query_parameter;
+use core\router\schema\parameters\path_parameter;
+use core\router\schema\parameters\query_parameter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use core\router\route;

@@ -18,10 +18,10 @@ namespace core\router;
 
 use Attribute;
 use coding_exception;
-use core\openapi\specification;
+use core\router\schema\parameter;
+use core\router\schema\specification;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use RuntimeException;
 use Slim\Routing\Route as RoutingRoute;
 use Slim\Routing\RouteContext;
 use stdClass;
@@ -38,7 +38,7 @@ use stdClass;
 #[Attribute(Attribute::TARGET_CLASS | Attribute::TARGET_METHOD)]
 class route {
     /** @var string[] The list of HTTP Methods */
-    protected array $method = [];
+    protected null|array $method = null;
 
     /** @var route|null The parent route */
     protected ?route $parentroute = null;
@@ -67,8 +67,8 @@ class route {
         /** @var string|null The path to the route */
         public ?string $path = null,
 
-        /** @var string|string[] The method to match on */
-        array|string $method = [],
+        /** @var null|string|string[] The method to match on */
+        null|array|string $method = null,
 
         /** @var param[] A list of param types for path arguments */
         protected array $pathtypes = [],
@@ -137,13 +137,19 @@ class route {
     /**
      * Get the list of HTTP methods associated with this route.
      *
-     * @return string[]
+     * @return null|string[]
      */
-    public function get_methods(): array {
-        return array_merge(
-            $this->parentroute ? $this->parentroute->get_methods() : [],
-            $this->method,
-        );
+    public function get_methods(): ?array {
+        $parentmethods = $this->parentroute?->get_methods();
+        $methods = $this->method;
+
+        if ($parentmethods) {
+            if ($methods) {
+                return array_merge($parentmethods, $methods);
+            }
+            return $parentmethods;
+        }
+        return $methods;
     }
 
     /**
@@ -245,8 +251,18 @@ class route {
         ServerRequestInterface $request,
         RoutingRoute $route,
     ): ServerRequestInterface {
-        // TODO Validate the request body.
-        return $request;
+        xdebug_break();
+        if ($this->requestbody === null) {
+            // Clear the parsed body if there should not be one.
+            return $request->withParsedBody([]);
+        }
+
+        $bodyconfig = $this->requestbody->get_body_for_request($request);
+        $bodyschema = $bodyconfig->get_schema();
+
+        return $request->withParsedBody(
+            $bodyschema->validate_data($request->getParsedBody()),
+        );
     }
 
     /**
@@ -283,7 +299,7 @@ class route {
      * @param array $parentcontexts TODO remove.
      * @return stdClass
      */
-    public function get_openapi_description(
+    public function get_openapi_schema(
         specification $api,
         string $component,
         string $path,
@@ -299,9 +315,8 @@ class route {
             'summary' => $this->title,
             'tags' => [$component, ...$this->tags],
             'parameters' => array_map(
-                fn($param) => $param->get_openapi_description(
+                fn($param) => $param->get_openapi_schema(
                     api: $api,
-                    component: $component,
                     path: $path,
                 ),
                 array_merge(
@@ -312,8 +327,9 @@ class route {
         ];
 
         if ($this->requestbody) {
-            $data->requestBody = $this->requestbody->get_openapi_description(
+            $data->requestBody = $this->requestbody->get_openapi_schema(
                 api: $api,
+                path: $path,
             );
         }
 
@@ -326,20 +342,17 @@ class route {
         }
 
         foreach ($this->responses as $response) {
-            $data->responses[$response->get_statuscode()] = $response->get_openapi_description(
-                $api,
-                $component,
-                $searchcontexts,
+            $data->responses[$response->get_statuscode()] = $response->get_openapi_schema(
+                api: $api,
+                path: $path,
             );
         }
 
         $data->parameters = array_filter(
             array_map(
-                fn($param) => $param->get_openapi_description(
+                fn($param) => $param->get_openapi_schema(
                     api: $api,
-                    component: $component,
                     path: $path,
-                    parentcontexts: $searchcontexts,
                 ),
                 $this->pathtypes,
             ),
@@ -347,7 +360,8 @@ class route {
         );
 
         $methoddata = [];
-        foreach ($this->method as $method) {
+        $methods = $this->get_methods() ?? ['GET'];
+        foreach ($methods as $method) {
             $methoddata[strtolower($method)] = $data;
         }
 

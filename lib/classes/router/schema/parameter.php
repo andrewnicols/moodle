@@ -14,25 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router;
+namespace core\router\schema;
 
-use core\openapi\openapi_base;
-use core\openapi\referenced_parameter;
-use core\openapi\specification;
+use core\router\route;
+use core\router\schema\openapi_base;
+use core\router\schema\specification;
 use core\openapi\schema;
 use stdClass;
 
 /**
  * OpenAPI parameter.
  *
- * https://swagger.io/specification/#parameter-object
+ * https://spec.openapis.org/oas/v3.1.0#parameter-object
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class parameter extends openapi_base {
-
     // This is a Moodle PARAM_ and informs a schema.
     /**
      * Constructor for a Parameter Object.
@@ -47,24 +46,24 @@ class parameter extends openapi_base {
      * @param null|string $description
      * @param null|bool $required
      * @param null|bool $deprecated Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
-     * @param null|bool $allowemptyvalue Sets the ability to pass empty-valued parameters. This is valid only for query parameters and allows sending a parameter with an empty value.
      * @param null|string $example
      * @param array $examples
-     * @param mixed $extra
+     * @param array $extra
      */
     public function __construct(
         // Fixed fields.
         protected string $name,
         protected string $in,
-        protected ?string $type = null,
-        protected ?schema $schema = null,
         protected ?string $description = null,
         protected ?bool $required = null,
-        protected mixed $default = null,
         protected ?bool $deprecated = false,
-        protected ?bool $allowemptyvalue = false,
+
+        // Moodle-specific fields.
+        protected ?string $type = null,
+        protected mixed $default = null,
 
         // Schema fields.
+        protected ?schema $schema = null,
         protected ?string $example = null,
         protected array $examples = [],
 
@@ -87,17 +86,8 @@ class parameter extends openapi_base {
 
     public function get_openapi_description(
         specification $api,
-        string $component,
-        string $path,
-        array $parentcontexts = [],
+        ?string $path = null,
     ): ?\stdClass {
-        if (is_a($this, referenced_parameter::class)) {
-            $this->ensure_parameter_exists($api);
-            return (object) [
-                '$ref' => $this->get_reference(),
-            ];
-        }
-
         $data = (object) [
             // The `name`, and `in` values are required.
             'name' => $this->name,
@@ -123,16 +113,11 @@ class parameter extends openapi_base {
             $data->examples = [];
             foreach ($this->examples as $example) {
                 $data->examples[$example->get_name()] = $example->get_openapi_description(
-                    $api,
-                    $component,
-                    [$this, $parentcontexts],
+                    api: $api,
+                    path: $path,
                 );
             }
-        } else {
-            // TODO. Fall back to the schema example?
-            // This is _not_ clear in the spec and I have not found an example of this.
         }
-
 
         return $data;
     }
@@ -213,15 +198,6 @@ class parameter extends openapi_base {
         } else {
             return $this->get_schema_from_type();
         }
-    }
-
-    public function ensure_parameter_exists(
-        specification $api,
-    ): self {
-        if (!$api->is_reference_defined($this->get_reference())) {
-            $api->add_parameter($this->get_reference(qualify: false), $this);
-        }
-        return $this;
     }
 
     public function is_required(route $route): bool {

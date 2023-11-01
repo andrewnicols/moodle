@@ -16,45 +16,40 @@
 
 namespace core\router\schema;
 
-use core\openapi\specification;
+use core\router\schema\specification;
+use core\router\schema\parameter;
 
 /**
- * A schema to descirbe an array of things. These could be any type, including other schema definitions.
+ * A Header Object.
  *
- * See https://spec.openapis.org/oas/v3.0.0#model-with-map-dictionary-properties for relevant documentation.
+ * https://spec.openapis.org/oas/v3.1.0#headerObject
+ *
+ * The Header Object follows the structure of the Parameter Object with the following changes:
+ *
+ * - name MUST NOT be specified, it is given in the corresponding headers map.
+ * - in MUST NOT be specified, it is implicitly in header.
+ * - All traits that are affected by the location MUST be applicable to a location of header (for example, style).
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class array_of_things extends \core\openapi\schema {
-    /**
-     * An array of things.
-     *
-     * @param string|null $thingtype The OpenAPI type, or null if any type is allowed.
-     * @param array $extra
-     */
+class header_object extends parameter {
     public function __construct(
-        protected string|null $thingtype = null,
         ...$extra,
     ) {
+        $extra['in'] = 'header';
         parent::__construct(...$extra);
     }
 
-    public function get_openapi_description(
+    final public function get_openapi_description(
         specification $api,
-    ): \stdClass {
-        $this->ensure_schema_exists($api);
+        ?string $path = null,
+    ): ?\stdClass {
+        $data = parent::get_openapi_description($api);
+        unset($data->in);
+        unset($data->name);
 
-        return (object) [
-            '$ref' => $this->get_reference(),
-        ];
-    }
-
-    public function get_schema(): \stdClass {
-        return (object) [
-            'type' => 'object',
-            'additionalProperties' => $this->get_additional_properties($this->thingtype),
-        ];
+        return $data;
     }
 }

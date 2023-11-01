@@ -16,16 +16,13 @@
 
 namespace core_course\route;
 
-use coding_exception;
-use core\router\path_parameter;
-use core\router\query_parameter;
+use core\router\schema\parameters\path_parameter;
+use core\router\schema\parameters\query_parameter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use core\router\route;
-use dml_exception;
 use html_writer;
 use moodle_database;
-use moodle_exception;
 
 /**
  * Course View Controller.
@@ -95,7 +92,6 @@ class view_controller {
      * @param moodle_database $db
      * @return ResponseInterface
      */
-
     #[route(
         path: '/view/byshortname/{shortname}',
         pathtypes: [
@@ -129,7 +125,7 @@ class view_controller {
     #[route(
         path: '/view/{id:[0-9]+}',
         pathtypes: [
-            new \core\router\path_parameter(
+            new \core\router\schema\parameters\path_parameter(
                 name: 'id',
                 type: PARAM_INT,
             ),

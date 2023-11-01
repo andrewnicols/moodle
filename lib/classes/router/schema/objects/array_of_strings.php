@@ -14,10 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\schema;
+namespace core\router\schema\objects;
 
 /**
  * A scheam to describe an array of strings.
+ *
+ * TODO: This should really take a PARAM_ type for validation of both name and value.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
@@ -25,8 +27,19 @@ namespace core\router\schema;
  */
 class array_of_strings extends array_of_things {
     public function __construct(
+        protected string $keyparamtype = PARAM_RAW,
+        protected string $valueparamtype = PARAM_RAW,
         ...$extra,
     ) {
-        parent::__construct('string', ...$extra);
+        $extra['thingtype'] = 'string';
+        parent::__construct(...$extra);
+    }
+
+    public function validate_data(array $params): array {
+        foreach ($params as $name => $value) {
+            validate_param($name, PARAM_RAW);
+            validate_param($value, PARAM_RAW);
+        }
+        return $params;
     }
 }

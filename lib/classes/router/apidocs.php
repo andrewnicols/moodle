@@ -16,7 +16,7 @@
 
 namespace core\router;
 
-use core\openapi\specification;
+use core\router\schema\specification;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionClass;
 use stdClass;
@@ -40,7 +40,7 @@ class apidocs {
     ): ResponseInterface {
         $api = new specification();
 
-        $classes = \core_component::get_component_classes_in_namespace(namespace: 'api');
+        $classes = \core_component::get_component_classes_in_namespace(namespace: 'route\api');
         foreach (array_keys($classes) as $classname) {
             $classinfo = new \ReflectionClass($classname);
             [$component] = explode('\\', $classinfo->getNamespaceName());

@@ -14,13 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core_user\api;
+namespace core_user\route\api;
 
 use core\router\payload_response;
 use core\router\response\content\payload_response_type;
 use core\router\response_type;
 use core\router\route;
 use core_user;
+use core_user\route\responses\user_preferences_response;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,43 +50,16 @@ class preferences {
      */
     #[route(
         path: '[/{preference}]',
-        method: ['GET'],
         title: 'Fetch user preferences',
         description: 'Fetch one user preference, or all user preferences',
         pathtypes: [
-            new \core\router\path_parameter(
+            new \core\router\schema\parameters\path_parameter(
                 name: 'preference',
                 type: PARAM_RAW,
             ),
         ],
         responses: [
-            200 => new \core\router\response(
-                statuscode: 200,
-                description: 'OK',
-                content: [
-                    new \core\router\response\content\json_media_type(
-                        schema: new \core\router\schema\array_of_strings(),
-                        examples: [
-                            new \core\router\response\example(
-                                name: 'A single preference value',
-                                summary: 'A json response containing a single preference',
-                                value: [
-                                    "drawers-open-index" => "1",
-                                ],
-                            ),
-                            new \core\router\response\example(
-                                name: 'A set of preference values',
-                                summary: 'A json response containing a set of preferences',
-                                value: [
-                                    "drawers-open-index" => "1",
-                                    "login_failed_count_since_success" => "1",
-                                    "coursesectionspreferences_2" => "{\"contentcollapsed\":[]}",
-                                ],
-                            ),
-                        ]
-                    ),
-                ],
-            ),
+            200 => new user_preferences_response(),
         ],
     )]
     public function get_preferences(
@@ -119,35 +93,20 @@ class preferences {
     #[route(
         method: ['POST'],
         title: 'Set or update multiple user preferences',
-        security: [
-            'oauth' => [
-                'user:write',
-            ],
-        ],
         requestbody: new \core\router\request_body(
             content: new payload_response_type(
-                schema: new \core\router\schema\schema_object(
+                schema: new \core\router\schema\objects\schema_object(
                     content: [
-                        'preferences' => new \core\router\schema\array_of_strings(),
+                        'preferences' => new \core\router\schema\objects\array_of_strings(
+                            keyparamtype: PARAM_TEXT,
+                            valueparamtype: PARAM_RAW,
+                        ),
                     ],
                 ),
             ),
         ),
         responses: [
-            200 => new \core\router\response(
-                content: new payload_response_type(
-                    schema: new \core\router\schema\array_of_things(),
-                    examples: [
-                        new \core\router\response\example(
-                            name: 'A single preference value',
-                            summary: 'A json response containing a single preference',
-                            value: [
-                                "drawers-open-index" => "1",
-                            ],
-                        ),
-                    ]
-                ),
-            ),
+            200 => new user_preferences_response(),
         ],
     )]
     public function set_preferences(
@@ -188,7 +147,7 @@ class preferences {
         title: 'Set a single user preference',
         description: 'Set a single user preference',
         pathtypes: [
-            new \core\router\path_parameter(
+            new \core\router\schema\parameters\path_parameter(
                 name: 'preference',
                 type: PARAM_RAW,
             ),
@@ -199,7 +158,10 @@ class preferences {
                 description: 'OK',
                 content: [
                     new \core\router\response\content\json_media_type(
-                        schema: new \core\router\schema\array_of_strings(),
+                        schema: new \core\router\schema\objects\array_of_strings(
+                            keyparamtype: PARAM_TEXT,
+                            valueparamtype: PARAM_RAW,
+                        ),
                         examples: [
                             new \core\router\response\example(
                                 name: 'A single preference value',

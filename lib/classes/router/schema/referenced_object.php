@@ -14,19 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\openapi;
+namespace core\router\schema;
 
 /**
- * A referenced schema.
+ * An OpenAPI Schema Object which is referenced rather than inserted directly.
  *
- * TODO: Check if we really need this given most of it is implemented in the base.
+ * This mean that it is inserted into the /components/ part of the schema rather than duplicated.
  *
+ * @package core\openapi
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface referenced_schema {
-    public function get_reference(): string;
-
-    public function get_schema(): \stdClass;
+interface referenced_object {
 }

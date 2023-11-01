@@ -16,27 +16,33 @@
 
 namespace core\router;
 
-use core\openapi\specification;
+use core\router\schema\openapi_base;
+use core\router\schema\specification;
 use core\router\response\content\payload_response_type;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Routing\Route;
 
 /**
- * Routing parameter for validation.
+ * An OpenAPI Response.
+ *
+ * https://spec.openapis.org/oas/v3.1.0#response-object
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class response {
+class response extends openapi_base {
     public function __construct(
         protected int $statuscode = 200,
+
         protected string $description = '',
-        protected array|payload_response_type $content = [],
         protected array $headers = [],
+        protected array|payload_response_type $content = [],
 
         ...$extra,
-    ) {}
+    ) {
+        parent::__construct(...$extra);
+    }
 
     public function validate(
         ResponseInterface $response,
@@ -59,27 +65,30 @@ class response {
 
     public function get_openapi_description(
         specification $api,
-        string $component,
-        array $parentcontexts = [],
-    ): \stdClass {
+        ?string $path = null,
+    ): ?\stdClass {
         $data = (object) [
             'description' => $this->get_description(),
         ];
-
         if (count($this->headers)) {
             foreach ($this->headers as $header) {
-                $data->headers[$header->get_header_name()] = $header->get_openapi_description($api);
+                $data->headers[$header->get_name()] = $header->get_openapi_schema(
+                    api: $api,
+                );
             }
         }
 
-
         if ($this->content instanceof response\content\payload_response_type) {
             $data->content = $this->content->get_openapi_description(
-                $api,
+                api: $api,
+                path: $path,
             );
         } else if (count($this->content)) {
             foreach ($this->content as $body) {
-                $data->content[$body->get_mimetype()] = $body->get_openapi_description($api);
+                $data->content[$body->get_mimetype()] = $body->get_openapi_description(
+                    api: $api,
+                    path: $path,
+                );
             }
         }
 

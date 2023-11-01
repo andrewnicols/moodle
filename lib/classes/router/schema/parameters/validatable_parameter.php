@@ -14,26 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router;
+namespace core\router\schema\parameters;
 
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\Route;
 
 /**
- * Routing query parameter for validation.
+ * An OpenAPI Parameter which supports validation.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class validatable_parameter extends parameter {
-    public function __construct(
-        ...$args,
-    ) {
-        $args['in'] = 'query';
-        parent::__construct(...$args);
-    }
-
+abstract class validatable_parameter extends \core\router\schema\parameter {
     /**
      * Validate query parameters.
      *

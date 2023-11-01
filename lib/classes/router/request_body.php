@@ -16,8 +16,9 @@
 
 namespace core\router;
 
-use core\openapi\openapi_base;
-use core\openapi\specification;
+use core\router\schema\openapi_base;
+use core\router\schema\specification;
+use core\router\response\content\media_type;
 use core\router\response\content\payload_response_type;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -54,6 +55,7 @@ class request_body extends openapi_base {
      */
     public function get_openapi_description(
         specification $api,
+        ?string $path = null,
     ): ?\stdClass {
         $data = (object) [
             'description' => $this->description,
@@ -63,18 +65,42 @@ class request_body extends openapi_base {
 
         if ($this->content instanceof response\content\payload_response_type) {
             $data->content = $this->content->get_openapi_description(
-                $api,
+                api: $api,
+                path: $path,
             );
             return $data;
         }
 
         foreach ($this->content as $content) {
-            $data->content[$content->get_encoding()] = $content->get_openapi_description(
-                $api,
+            $data->content[$content::get_encoding()] = $content->get_openapi_description(
+                api: $api,
+                path: $path,
             );
         }
 
         return $data;
+    }
+
+    public function get_body_for_request(
+        ServerRequestInterface $request,
+    ): media_type {
+        if ($this->content instanceof payload_response_type) {
+            $content = $this->content->get_media_type_instance(
+                mimetype: $request->getHeaderLine('Content-Type'),
+            );
+
+            if ($content) {
+                return $content;
+            }
+        } else {
+            foreach ($this->content as $content) {
+                if ($content::get_encoding() === $request->getHeaderLine('Content-Type')) {
+                    return $content;
+                }
+            }
+        }
+
+        throw new \Exception('No matching content type found.');
     }
 
 }

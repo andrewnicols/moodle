@@ -14,11 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\openapi;
+namespace core\router\schema;
 
+use coding_exception;
 use core\router\route;
 use core\openapi\schema;
-use core\router\parameter;
+use core\router\schema\parameter;
+use core\router\request_body;
+use core\router\response;
+use core\router\response\example;
 use stdClass;
 
 /**
@@ -38,10 +42,11 @@ class specification implements
      */
     public function __construct() {
         $this->data = (object) [
-            'openapi' => '3.0.0',
+            'openapi' => '3.1.0',
             'info' => (object) [
                 'title' => 'Moodle LMS',
-                'description' => 'Moodle LMS',
+                'description' => 'REST API for Moodle LMS',
+                'summary' => 'Moodle LMS REST API',
                 'license' => (object) [
                     'name' => 'GNU GPL v3 or later',
                     'url' => 'https://www.gnu.org/licenses/gpl-3.0.html',
@@ -55,9 +60,15 @@ class specification implements
             'paths' => (object) [],
 
             'components' => (object) [
+                // Note: This list must be kept in-sync with add_component.
                 'schemas' => (object) [],
                 'responses' => (object) [],
                 'parameters' => (object) [],
+                'examples' => (object) [],
+                'requestBodies' => (object) [],
+                'headers' => (object) [],
+
+                // The add_component method does not support securitySchemes because we hard-code these.
                 'securitySchemes' => (object) [
                     'api_key' => (object) [
                         'type' => 'apiKey',
@@ -108,7 +119,70 @@ class specification implements
     }
 
     /**
+     * Add a component to the components object.
+     *
+     * https://spec.openapis.org/oas/v3.1.0#components-object
+     *
+     * Note: The following component types are supported:
+     *
+     * - schemas
+     * - responses
+     * - parameters
+     * - examples
+     * - requestBodies
+     * - headers
+     *
+     * At this time, other component types are not supported.
+     *
+     * @param openapi_base $object
+     * @return specification
+     * @throws coding_exception If the component type is unknown.
+     */
+    public function add_component(openapi_base $object): self {
+        if (is_a($object, header_object::class)) {
+            // Note: Headers are a form of Parameter, but are shown in a different section of the specification.
+            // This check must be before the parameter check.
+            $this->add_header($object);
+
+            return $this;
+        }
+
+        if (is_a($object, parameter::class)) {
+            $this->add_parameter($object);
+
+            return $this;
+        }
+
+        if (is_a($object, response::class)) {
+            $this->add_response($object);
+
+            return $this;
+        }
+
+        if (is_a($object, example::class)) {
+            $this->add_example($object);
+
+            return $this;
+        }
+
+        if (is_a($object, request_body::class)) {
+            $this->add_request_body($object);
+
+            return $this;
+        }
+
+        if (is_a($object, schema::class)) {
+            $this->add_schema($object);
+
+            return $this;
+        }
+
+        throw new \coding_exception('Unknown object type.');
+    }
+
+    /**
      * Add a server to the specification.
+     *
      * @param string $url The URL of the API base
      * @param string $description
      * @return specification
@@ -153,7 +227,7 @@ class specification implements
             );
 
             // Get the OpenAPI description for this path with the updated path.
-            $pathdocs = $route->get_openapi_description(
+            $pathdocs = $route->get_openapi_schema(
                 api: $this,
                 component: $component,
                 path: $path,
@@ -194,37 +268,91 @@ class specification implements
 
     // TODO. Is this used?
     public function add_schema(
-        string $name,
         schema $schema,
     ): self {
+        $name = $schema->get_reference(qualify: false);
         $this->data->components->schemas->$name = $schema->get_schema();
 
         return $this;
     }
 
+    /**
+     * Add a schema to the shared components section of the specification.
+     *
+     * @param schema $schema
+     * @return specification
+     */
     public function add_parameter(
-        string $name,
         parameter $parameter,
     ): self {
-        if ($schema = $parameter->get_schema()) {
-            $this->data->components->parameters->$name = $schema;
-        }
+        $name = $parameter->get_reference(qualify: false);
+        $this->data->components->parameters->$name = $parameter->get_openapi_description($this);
 
         return $this;
     }
 
-    // TODO. Is this used?
-    public function get_schema_path_for_class(schema $schema): string {
-        $schema = (object) $schema;
-        $schema = $this->get_schema_for_class($schema);
+    /**
+     * Add a header to the shared components section of the specification.
+     *
+     * @param header_object $response
+     * @return specification
+     */
+    public function add_header(
+        header_object $header,
+    ): self {
+        $name = $header->get_reference(qualify: false);
+        $this->data->components->headers->$name = $header->get_openapi_description($this);
 
-        return "#/components/schemas/{$schema->name}";
+        return $this;
+    }
+
+    /**
+     * Add a response to the shared components section of the specification.
+     *
+     * @param response $response
+     * @return specification
+     */
+    public function add_response(
+        response $response,
+    ): self {
+        $name = $response->get_reference(qualify: false);
+        $this->data->components->responses->$name = $response->get_openapi_description($this);
+
+        return $this;
+    }
+
+    /**
+     * Add an example to the shared components section of the specification.
+     *
+     * @param example $example
+     * @return specification
+     */
+    public function add_example(
+        example $example,
+    ): self {
+        $name = $example->get_reference(qualify: false);
+        $this->data->components->examples->$name = $example->get_openapi_description($this);
+
+        return $this;
+    }
+
+    /**
+     * Add a request body to the shared components section of the specification.
+     *
+     * @param request_body $body
+     * @return specification
+     */
+    public function add_request_body(
+        request_body $body,
+    ): self {
+        $name = $body->get_reference(qualify: false);
+        $this->data->components->requestBodies->$name = $body->get_openapi_description($this);
+
+        return $this;
     }
 
     /**
      * Check whether a reference is defined
-     *
-     * TODO: Check if we need this or not.
      *
      * @param string $ref
      * @return bool
@@ -236,16 +364,12 @@ class specification implements
             return false;
         }
 
-        if (str_starts_with($ref, '#/components/schema')) {
-            $schemaref = substr(
-                $ref,
-                0,
-                strlen('#/components/schema'),
-            );
+        // Remove the leading #/components/ part.
+        $ref = substr($ref, strlen('#/components/'));
 
-            return property_exists($this->data->components->schemas, $schemaref);
-        }
+        // Split the path and name.
+        [$path, $name] = explode('/', $ref, 2);
 
-        return false;
+        return property_exists($this->data->components->$path, $name);
     }
 }

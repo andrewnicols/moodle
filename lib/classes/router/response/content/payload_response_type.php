@@ -16,7 +16,8 @@
 
 namespace core\router\response\content;
 
-use core\openapi\specification;
+use core\router\schema\openapi_base;
+use core\router\schema\specification;
 
 /**
  * A standard Moodle response for all supported payload types.
@@ -25,7 +26,7 @@ use core\openapi\specification;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class payload_response_type {
+class payload_response_type extends openapi_base {
     protected array $args;
 
     public function __construct(
@@ -39,22 +40,41 @@ class payload_response_type {
      *
      * @return media_type[]
      */
-    protected function get_supported_content_types(): array {
+    public function get_supported_content_types(): array {
         return [
             json_media_type::class,
             xml_media_type::class,
         ];
     }
 
+    public function get_media_type_instance(
+        ?string $mimetype = null,
+        ?string $classname = null,
+    ): ?media_type {
+        if ($classname) {
+            return new $contenttypeclass(...$this->args);
+        }
+
+        foreach ($this->get_supported_content_types() as $contenttypeclass) {
+            if ($contenttypeclass::get_encoding() === $mimetype) {
+                return new $contenttypeclass(...$this->args);
+            }
+        }
+
+        return null;
+    }
+
     public function get_openapi_description(
         specification $api,
-    ): \stdClass {
+        ?string $path = null,
+    ): ?\stdClass {
         $content = (object) [];
 
         foreach ($this->get_supported_content_types() as $contenttypeclass) {
             $contenttype = new $contenttypeclass(...$this->args);
             $content->{$contenttype->get_mimetype()} = $contenttype->get_openapi_description(
-                $api,
+                api: $api,
+                path: $path,
             );
         }
 

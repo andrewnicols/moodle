@@ -17,6 +17,7 @@
 namespace core\router\parameters;
 
 use core\router\response\example;
+use core\router\schema\referenced_object;
 
 /**
  * A Moodle parameter referenced in the path.
@@ -25,15 +26,15 @@ use core\router\response\example;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class path_component extends \core\router\path_parameter {
+class path_component extends \core\router\schema\parameters\path_parameter implements referenced_object {
     public function __construct(
         string $name = 'component',
-        ...$args,
+        ...$extra,
     ) {
-        $args['name'] = $name;
-        $args['type'] = PARAM_COMPONENT;
-        $args['description'] = 'The name of a Moodle component, in frankenstyle format.';
-        $args['examples'] = [
+        $extra['name'] = $name;
+        $extra['type'] = PARAM_COMPONENT;
+        $extra['description'] = 'The name of a Moodle component, in frankenstyle format.';
+        $extra['examples'] = [
             new example(
                 name: 'The core subsystem',
                 value: 'core',
@@ -52,6 +53,6 @@ class path_component extends \core\router\path_parameter {
             ),
         ];
 
-        parent::__construct(...$args);
+        parent::__construct(...$extra);
     }
 }

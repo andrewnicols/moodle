@@ -16,8 +16,8 @@
 
 namespace core\openapi;
 
-use core\openapi\specification;
-use core\openapi\openapi_base;
+use core\router\schema\openapi_base;
+use core\router\schema\specification;
 
 /**
  * Part of the OpenAPI Schema.
@@ -36,21 +36,22 @@ class schema extends openapi_base {
      */
     public function __construct(
         protected array $examples = [],
-
         ...$extra,
     ) {
     }
 
     public function get_openapi_description(
         specification $api,
-    ): \stdClass {
+        ?string $path = null,
+    ): ?\stdClass {
         $data = (object) [];
 
         if (count($this->examples)) {
             $data->examples = [];
             foreach ($this->examples as $example) {
                 $data->examples[$example->get_name()] = $example->get_openapi_description(
-                    $api,
+                    api: $api,
+                    path: $path,
                 );
             }
         }
@@ -58,24 +59,9 @@ class schema extends openapi_base {
         return $data;
     }
 
-    /**
-     * Ensure the schema exists in the specification within the #/components/schemas section and is available for re-use.
-     *
-     * @param specification $api
-     * @return self
-     */
-    public function ensure_schema_exists(
-        specification $api,
-    ): self {
-        if (!$api->is_reference_defined($this->get_reference())) {
-            $api->add_schema($this->get_reference(qualify: false), $this);
-        }
-        return $this;
-    }
-
     protected function get_additional_properties(string|null|schema $type): bool|array {
         // The additionalProperties are described here:
-        // https://spec.openapis.org/oas/v3.0.0#schema-object-examples
+        // https://spec.openapis.org/oas/v3.1.0#schema-object-examples
         if ($type === null) {
             return true;
         }
@@ -93,4 +79,7 @@ class schema extends openapi_base {
         ];
     }
 
+    public function validate_data(array $params): array {
+        throw new \coding_exception('TODO');
+    }
 }

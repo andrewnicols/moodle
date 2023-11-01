@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\api;
+namespace core\route\api;
 
 use core\router\route;
 use core\output\mustache_template_source_loader;
@@ -22,6 +22,8 @@ use core\router\payload_response;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+
+use function DI\value;
 
 /**
  * Template Controller.
@@ -55,13 +57,13 @@ class templates {
         pathtypes: [
             new \core\router\parameters\path_themename(),
             new \core\router\parameters\path_component(),
-            new \core\router\path_parameter(
+            new \core\router\schema\parameters\path_parameter(
                 name: 'identifier',
                 type: PARAM_SAFEPATH,
             ),
         ],
         queryparams: [
-            new \core\router\query_parameter(
+            new \core\router\schema\parameters\query_parameter(
                 name: 'includecomments',
                 type: PARAM_BOOL,
                 description: 'Include comments in the template',
@@ -74,7 +76,10 @@ class templates {
                 description: 'OK',
                 content: [
                     new \core\router\response\content\json_media_type(
-                        schema: new \core\router\schema\array_of_strings(),
+                        schema: new \core\router\schema\objects\array_of_strings(
+                            keyparamtype: PARAM_TEXT,
+                            valueparamtype: PARAM_RAW,
+                        ),
                         examples: [
                             new \core\router\response\example(
                                 name: 'Single template value',

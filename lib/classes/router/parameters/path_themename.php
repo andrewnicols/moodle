@@ -16,7 +16,7 @@
 
 namespace core\router\parameters;
 
-use core\openapi\referenced_parameter;
+use core\router\schema\referenced_object;
 use core\router\response\example;
 
 /**
@@ -26,7 +26,7 @@ use core\router\response\example;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class path_themename extends \core\router\path_parameter {
+class path_themename extends \core\router\schema\parameters\path_parameter implements referenced_object {
     public function __construct(
         ...$args,
     ) {

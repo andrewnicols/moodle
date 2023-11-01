@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router;
+namespace core\router\schema\parameters;
 
-use core\openapi\specification;
+use core\router\route;
+use core\router\schema\specification;
 use Slim\Routing\Route as RoutingRoute;
 use stdClass;
 
@@ -27,12 +28,12 @@ use stdClass;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class path_parameter extends parameter {
+class path_parameter extends \core\router\schema\parameter {
     public function __construct(
-        ...$args,
+        ...$extra,
     ) {
-        $args['in'] = 'path';
-        parent::__construct(...$args);
+        $extra['in'] = 'path';
+        parent::__construct(...$extra);
     }
 
     public function validate(
@@ -48,21 +49,17 @@ class path_parameter extends parameter {
         );
     }
 
-    public function get_openapi_description(
+    final public function get_openapi_description(
         specification $api,
-        string $component,
-        string $path,
-        array $parentcontexts = [],
+        ?string $path = null,
     ): ?stdClass {
-        if (!str_contains($path, "{{$this->name}}")) {
+        if ($path && !str_contains($path, "{{$this->name}}")) {
             // In OpenAPI, Path parameters can never be optional.
             return null;
         }
         $data = parent::get_openapi_description(
             api: $api,
-            component: $component,
             path: $path,
-            parentcontexts: $parentcontexts,
         );
         $data->required = true;
 
