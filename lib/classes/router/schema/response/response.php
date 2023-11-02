@@ -14,13 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router;
+namespace core\router\schema\response;
 
 use core\router\schema\openapi_base;
 use core\router\schema\specification;
 use core\router\schema\response\content\payload_response_type;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Routing\Route;
 
 /**
  * An OpenAPI Response.
@@ -78,7 +77,7 @@ class response extends openapi_base {
             }
         }
 
-        if ($this->content instanceof response\content\payload_response_type) {
+        if ($this->content instanceof content\payload_response_type) {
             $data->content = $this->content->get_openapi_description(
                 api: $api,
                 path: $path,

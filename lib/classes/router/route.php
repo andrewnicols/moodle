@@ -25,6 +25,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\Route as RoutingRoute;
 use Slim\Routing\RouteContext;
 use stdClass;
+use core\router\schema\request_body;
 
 /**
  * Routing attribute.

@@ -18,9 +18,9 @@ namespace core\router\schema;
 
 use coding_exception;
 use core\openapi\schema;
-use core\router\request_body;
+use core\router\schema\request_body;
 use core\router\schema\parameter;
-use core\router\response;
+use core\router\schema\response\response;
 use stdClass;
 
 /**

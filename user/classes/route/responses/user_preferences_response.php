@@ -25,7 +25,7 @@ use core\router\schema\response\content\payload_response_type;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class user_preferences_response extends \core\router\response {
+class user_preferences_response extends \core\router\schema\response\response {
     public function __construct() {
         parent::__construct(
             headers: [

@@ -18,7 +18,7 @@ namespace core\route\api;
 
 use core\router\route;
 use core\output\mustache_template_source_loader;
-use core\router\payload_response;
+use core\router\schema\response\payload_response;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -71,7 +71,7 @@ class templates {
             ),
         ],
         responses: [
-            200 => new \core\router\response(
+            200 => new \core\router\schema\response\response(
                 statuscode: 200,
                 description: 'OK',
                 content: [

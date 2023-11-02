@@ -16,9 +16,9 @@
 
 namespace core_user\route\api;
 
-use core\router\payload_response;
+use core\router\schema\response\payload_response;
 use core\router\schema\response\content\payload_response_type;
-use core\router\response_type;
+use core\router\schema\response\response_type;
 use core\router\route;
 use core_user;
 use core_user\route\responses\user_preferences_response;
@@ -93,7 +93,7 @@ class preferences {
     #[route(
         method: ['POST'],
         title: 'Set or update multiple user preferences',
-        requestbody: new \core\router\request_body(
+        requestbody: new \core\router\schema\request_body(
             content: new payload_response_type(
                 schema: new \core\router\schema\objects\schema_object(
                     content: [
@@ -153,7 +153,7 @@ class preferences {
             ),
         ],
         responses: [
-            200 => new \core\router\response(
+            200 => new \core\router\schema\response\response(
                 statuscode: 200,
                 description: 'OK',
                 content: [

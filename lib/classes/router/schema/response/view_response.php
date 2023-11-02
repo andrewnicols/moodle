@@ -14,17 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router;
+namespace core\router\schema\response;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * A Payload Response for a Routed request.
- *
- * This response is a container for a response which contains a set of data.
- * It is used to pass data from a controller to the routing engine, where it will be formatted into the
- * response type requested by the client.
+ * An response which will render the specified template.
  *
  * This approach is inspired and based upon slim-routing https://github.com/juliangut/slim-routing
  * We only need a fraction of this functionality.
@@ -33,21 +29,24 @@ use Psr\Http\Message\ServerRequestInterface;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class payload_response extends abstract_response {
+class view_response extends abstract_response {
+    /** @var string $template The template name */
+    /** @var array $parameters The parameters to pass to the template */
+
     public function __construct(
-        private array $payload,
+        private string $template,
+        private array $parameters,
         ServerRequestInterface $request,
         ?ResponseInterface $response = null,
     ) {
         parent::__construct($request, $response);
     }
 
-    /**
-     * Get the payload data from the response.
-     *
-     * @return array 
-     */
-    public function get_payload(): array {
-        return $this->payload;
+    public function get_template_name(): string {
+        return $this->template;
+    }
+
+    public function get_parameters(): array {
+        return $this->parameters;
     }
 }
