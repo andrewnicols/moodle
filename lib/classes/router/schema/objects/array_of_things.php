@@ -45,6 +45,7 @@ class array_of_things extends \core\openapi\schema {
         specification $api,
         ?string $path = null,
     ): ?\stdClass {
+        $api->add_component($this);
         return (object) [
             '$ref' => $this->get_reference(),
         ];

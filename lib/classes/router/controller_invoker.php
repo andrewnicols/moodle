@@ -22,6 +22,7 @@ use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
+use core\router\schema\response;
 
 /**
  * Controller Invoker for the Moodle Router.
@@ -86,13 +87,13 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
             return $result;
         }
 
-        if ($result instanceof payload_response) {
+        if ($result instanceof response\payload_response) {
             // A payload response is returned, so we need to handle it as a payload and convert it according to the
             // format requested in the request.
             return $this->handle_payload($result);
         }
 
-        if ($result instanceof view_response) {
+        if ($result instanceof response\view_response) {
             // A ViewResponse is returned, so we need to render the template and return it as a response.
             return $response->withBody(Utils::streamFor(
                 $OUTPUT->render_from_template(
@@ -102,7 +103,7 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
             ));
         }
 
-        if ($result instanceof response_type) {
+        if ($result instanceof response\response_type) {
             return $result->get_response();
         }
 
@@ -127,7 +128,7 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
      * @return ResponseInterface
      */
     private function handle_payload(
-        payload_response $payload,
+        response\payload_response $payload,
     ): ResponseInterface {
         // Check the request header and emit either JSON or XML.
         $accept = $payload->get_request()->getHeaderLine('Accept');
@@ -139,7 +140,7 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
     }
 
     private function get_xml_response(
-        payload_response $payload,
+        response\payload_response $payload,
     ): ResponseInterface {
         // TODO. Implement this.
         $response = $payload->get_response();
@@ -155,7 +156,7 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
      * @return ResponseInterface
      */
     private function get_json_response(
-        payload_response $payload,
+        response\payload_response $payload,
     ): ResponseInterface {
         $response = $this->get_response($payload);
         $response->getBody()->write((string) json_encode(
@@ -183,7 +184,7 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
     }
 
     private function get_response(
-        response_type $responsetype,
+        response\response_type $responsetype,
     ): ResponseInterface {
         $response = $responsetype->get_response();
         if ($response) {

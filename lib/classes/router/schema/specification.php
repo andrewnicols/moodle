@@ -271,7 +271,9 @@ class specification implements
         schema $schema,
     ): self {
         $name = $schema->get_reference(qualify: false);
-        $this->data->components->schemas->$name = $schema->get_schema();
+        if (!property_exists($this->data->components->schemas, $name)) {
+            $this->data->components->schemas->$name = $schema->get_schema();
+        }
 
         return $this;
     }

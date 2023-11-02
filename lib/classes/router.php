@@ -190,7 +190,12 @@ class router {
             $page = $this->get(\moodle_page::class);
             $page->set_url($request->getUri());
 
-            $response = $handler->handle($request);
+            // Detect if a user login is required.
+            try {
+                $response = $handler->handle($request);
+            } catch (\required_capability_exception $e) {
+                return $response->withStatus(403);
+            }
 
             return $response;
         });
