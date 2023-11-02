@@ -706,6 +706,12 @@ if (isset($CFG->debug)) {
 }
 $CFG->debugdeveloper = (($CFG->debug & DEBUG_DEVELOPER) === DEBUG_DEVELOPER);
 
+// Set a default value for whether to show exceptions in a pretty format.
+if (!property_exists($CFG, 'debug_developer_use_pretty_exceptions')) {
+    $CFG->debug_developer_use_pretty_exceptions = true;
+
+}
+
 // Find out if PHP configured to display warnings,
 // this is a security problem because some moodle scripts may
 // disclose sensitive information.
@@ -725,6 +731,39 @@ if (!isset($CFG->debugdisplay)) {
 } else {
     // This is very problematic in XHTML strict mode!
     ini_set('display_errors', '1');
+}
+
+if (!CLI_SCRIPT && !AJAX_SCRIPT && !PHPUNIT_TEST && $CFG->debugdisplay && $CFG->debug_developer_use_pretty_exceptions) {
+    // Attempt to load some nicer Error handling.
+    $composerautoload = "{$CFG->dirroot}/vendor/autoload.php";
+    if (file_exists($composerautoload)) {
+        require_once($composerautoload);
+    }
+
+    if (class_exists(\Whoops\Run::class)) {
+        // We have Whoops installed, use it.
+        $whoops = new \Whoops\Run();
+
+        // Append a custom handler to add some more information to the frames.
+        $whoops->appendHandler(function ($exception, $inspector, $run) {
+            // Moodle exceptions often have a link to the Moodl docs pages for them.
+            // Add that to the first frame in the stack.
+            $info = get_exception_info($exception);
+            if ($info->moreinfourl) {
+                $collection = $inspector->getFrames();
+                $collection[0]->addComment("{$info->moreinfourl}", 'More info');
+            }
+        });
+
+        // Add the Pretty page handler. It's the bee's knees.
+        $handler = new \Whoops\Handler\PrettyPageHandler();
+        if (isset($CFG->debug_developer_editor)) {
+            $handler->setEditor($CFG->debug_developer_editor ?: null);
+        }
+        $whoops->appendHandler($handler);
+
+        $whoops->register();
+    }
 }
 
 // Register our shutdown manager, do NOT use register_shutdown_function().
