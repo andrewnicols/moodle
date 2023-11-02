@@ -694,6 +694,49 @@ function format_backtrace($callers, $plaintext = false) {
         return '';
     }
 
+    $editors = [
+        "sublime"  => "subl://open?url=file://%file&line=%line",
+        "textmate" => "txmt://open?url=file://%file&line=%line",
+        "emacs"    => "emacs://open?url=file://%file&line=%line",
+        "macvim"   => "mvim://open/?url=file://%file&line=%line",
+        "phpstorm" => "phpstorm://open?file=%file&line=%line",
+        "idea"     => "idea://open?file=%file&line=%line",
+        "vscode"   => "vscode://file/%file:%line",
+        "atom"     => "atom://core/open/file?filename=%file&line=%line",
+        "espresso" => "x-espresso://open?filepath=%file&lines=%line",
+        "netbeans" => "netbeans://open/?f=%file:%line",
+    ];
+
+    $geteditorference = function ($caller) use ($dirroot, $plaintext, $editors): string {
+        global $CFG;
+
+        $file = str_replace($dirroot, '', $caller['file']);
+        $linefileref = "line {$caller['line']} of {$file}";
+        if ($plaintext) {
+            return $linefileref;
+        }
+
+        if (empty($CFG->debug_developer_editor)) {
+            return $linefileref;
+        }
+
+        if (is_callable($CFG->debug_developer_editor)) {
+            $editorlink = call_user_func(
+                $CFG->debug_developer_editor,
+                $caller['file'],
+                $caller['line'],
+            );
+        } else if (isset($editors[$CFG->debug_developer_editor])) {
+            $editorlink = $editors[$CFG->debug_developer_editor];
+            $editorlink = str_replace("%line", rawurlencode($caller['line']), $editorlink);
+            $editorlink = str_replace("%file", rawurlencode($caller['file']), $editorlink);
+        } else {
+            return $linefileref;
+        }
+
+        return "<a href='{$editorlink}'>{$linefileref}</a>";
+    };
+
     $from = $plaintext ? '' : '<ul style="text-align: left" data-rel="backtrace">';
     foreach ($callers as $caller) {
         if (!isset($caller['line'])) {
@@ -703,7 +746,7 @@ function format_backtrace($callers, $plaintext = false) {
             $caller['file'] = 'unknownfile'; // probably call_user_func()
         }
         $line = $plaintext ? '* ' : '<li>';
-        $line .= 'line ' . $caller['line'] . ' of ' . str_replace($dirroot, '', $caller['file']);
+        $line .= $geteditorference($caller);
         if (isset($caller['function'])) {
             $line .= ': call to ';
             if (isset($caller['class'])) {
