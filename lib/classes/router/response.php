@@ -18,7 +18,7 @@ namespace core\router;
 
 use core\router\schema\openapi_base;
 use core\router\schema\specification;
-use core\router\response\content\payload_response_type;
+use core\router\schema\response\content\payload_response_type;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Routing\Route;
 

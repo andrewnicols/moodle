@@ -75,7 +75,7 @@ class templates {
                 statuscode: 200,
                 description: 'OK',
                 content: [
-                    new \core\router\response\content\json_media_type(
+                    new \core\router\schema\response\content\json_media_type(
                         schema: new \core\router\schema\objects\array_of_strings(
                             keyparamtype: PARAM_TEXT,
                             valueparamtype: PARAM_RAW,

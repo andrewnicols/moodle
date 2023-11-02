@@ -16,7 +16,7 @@
 
 namespace core_user\route\responses;
 
-use core\router\response\content\payload_response_type;
+use core\router\schema\response\content\payload_response_type;
 
 /**
  * A standard response for user preferences.

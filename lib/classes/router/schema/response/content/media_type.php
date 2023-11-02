@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\response\content;
+namespace core\router\schema\response\content;
 
 use core\router\schema\openapi_base;
 use core\openapi\schema;

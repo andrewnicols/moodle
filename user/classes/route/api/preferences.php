@@ -17,7 +17,7 @@
 namespace core_user\route\api;
 
 use core\router\payload_response;
-use core\router\response\content\payload_response_type;
+use core\router\schema\response\content\payload_response_type;
 use core\router\response_type;
 use core\router\route;
 use core_user;
@@ -157,7 +157,7 @@ class preferences {
                 statuscode: 200,
                 description: 'OK',
                 content: [
-                    new \core\router\response\content\json_media_type(
+                    new \core\router\schema\response\content\json_media_type(
                         schema: new \core\router\schema\objects\array_of_strings(
                             keyparamtype: PARAM_TEXT,
                             valueparamtype: PARAM_RAW,
