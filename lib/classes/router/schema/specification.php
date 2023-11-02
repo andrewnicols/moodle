@@ -21,7 +21,7 @@ use core\router\route;
 use core\openapi\schema;
 use core\router\request_body;
 use core\router\response;
-use core\router\response\example;
+use core\router\schema\example;
 use core\router\schema\parameter;
 use stdClass;
 

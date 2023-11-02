@@ -163,7 +163,7 @@ class preferences {
                             valueparamtype: PARAM_RAW,
                         ),
                         examples: [
-                            new \core\router\response\example(
+                            new \core\router\schema\example(
                                 name: 'A single preference value',
                                 summary: 'A json response containing a single preference',
                                 value: [

@@ -81,7 +81,7 @@ class templates {
                             valueparamtype: PARAM_RAW,
                         ),
                         examples: [
-                            new \core\router\response\example(
+                            new \core\router\schema\example(
                                 name: 'Single template value',
                                 summary: 'A json response containing the template for a single template',
                                 value: [

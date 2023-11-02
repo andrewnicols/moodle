@@ -17,7 +17,7 @@
 namespace core\router\parameters;
 
 use core\router\schema\referenced_object;
-use core\router\response\example;
+use core\router\schema\example;
 
 /**
  * Routing parameter for validation.

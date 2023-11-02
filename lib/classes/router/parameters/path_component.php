@@ -16,7 +16,7 @@
 
 namespace core\router\parameters;
 
-use core\router\response\example;
+use core\router\schema\example;
 use core\router\schema\referenced_object;
 
 /**
