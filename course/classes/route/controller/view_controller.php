@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core_course\route;
+namespace core_course\route\controller;
 
 use core\router\schema\parameters\path_parameter;
 use core\router\schema\parameters\query_parameter;

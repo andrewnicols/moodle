@@ -55,7 +55,7 @@ class course_routes {
             return $this->redirect_to_callable(
                 $request,
                 $response,
-                \core_course\route\view_controller::class . '::view_course',
+                \core_course\route\controller\view_controller::class . '::view_course',
                 excludeparams: ['id'],
             );
         }
@@ -63,7 +63,7 @@ class course_routes {
             return $this->redirect_to_callable(
                 $request,
                 $response,
-                \core_course\route\view_controller::class . '::view_by_idnumber',
+                \core_course\route\controller\view_controller::class . '::view_by_idnumber',
                 excludeparams: ['idnumber'],
             );
         }
@@ -71,7 +71,7 @@ class course_routes {
             return $this->redirect_to_callable(
                 $request,
                 $response,
-                \core_course\route\view_controller::class . '::view_by_shortname',
+                \core_course\route\controller\view_controller::class . '::view_by_shortname',
                 excludeparams: ['name'],
             );
         }

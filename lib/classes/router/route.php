@@ -252,7 +252,6 @@ class route {
         ServerRequestInterface $request,
         RoutingRoute $route,
     ): ServerRequestInterface {
-        xdebug_break();
         if ($this->requestbody === null) {
             // Clear the parsed body if there should not be one.
             return $request->withParsedBody([]);

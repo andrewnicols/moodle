@@ -410,7 +410,7 @@ class router {
                 })
                 ->add(function(ServerRequestInterface $request, $handler) {
                     \core\notification::add(
-                        'This page has been replaced by a newer version. Please update your code.',
+                        'The URL for this page has changed. Please update your links.',
                         \core\notification::WARNING,
                     );
 
