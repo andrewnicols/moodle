@@ -41,6 +41,11 @@ class router {
     /** @var App The SlimPHP App */
     protected App $app;
 
+    /**
+     * Create a new Router.
+     *
+     * @param string $basepath The base path to use for all requests.
+     */
     public function __construct(
         protected string $basepath,
     ) {

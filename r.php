@@ -41,7 +41,8 @@ $relativeroot = sprintf(
         realpath($_SERVER['SCRIPT_FILENAME']),
     ),
 );
-// The server is not configured for
+
+// The server is not configured to rewrite unknown requests to automatically use the router.
 if (str_starts_with($_SERVER['REQUEST_URI'], $relativeroot)) {
     $scriptroot .= '/r.php';
 }
