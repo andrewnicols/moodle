@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\openapi;
+namespace core\router\schema\objects;
 
 use core\router\schema\openapi_base;
 use core\router\schema\specification;
@@ -26,7 +26,7 @@ use core\router\schema\specification;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class schema extends openapi_base {
+abstract class type_base extends openapi_base {
 
     /**
      * Note: We do not implement the $example, because it has been deprecated in OpenApi 3.0.
@@ -58,7 +58,7 @@ class schema extends openapi_base {
         return $data;
     }
 
-    protected function get_additional_properties(string|null|schema $type): bool|array {
+    protected function get_additional_properties(string|null|type_base $type): bool|array {
         // The additionalProperties are described here:
         // https://spec.openapis.org/oas/v3.1.0#schema-object-examples
         if ($type === null) {

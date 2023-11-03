@@ -27,7 +27,7 @@ use core\router\schema\specification;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class array_of_things extends \core\openapi\schema {
+class array_of_things extends \core\router\schema\objects\type_base {
     /**
      * An array of things.
      *

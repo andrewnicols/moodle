@@ -17,7 +17,7 @@
 namespace core\router\schema\response\content;
 
 use core\router\schema\openapi_base;
-use core\openapi\schema;
+use core\router\schema\objects\type_base;
 use core\router\schema\specification;
 
 /**
@@ -30,7 +30,7 @@ use core\router\schema\specification;
  */
 abstract class media_type extends openapi_base {
     public function __construct(
-        protected ?schema $schema = null,
+        protected ?type_base $schema = null,
         protected ?string $example = null,
         protected array $examples = [],
 
@@ -75,7 +75,7 @@ abstract class media_type extends openapi_base {
         return $data;
     }
 
-    public function get_schema(): schema {
+    public function get_schema(): type_base {
         return $this->schema;
     }
 

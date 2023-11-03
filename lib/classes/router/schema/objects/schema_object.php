@@ -17,6 +17,7 @@
 namespace core\router\schema\objects;
 
 use core\router\schema\specification;
+use core\router\schema\objects\type_base;
 
 /**
  * A schema to describe an array of things. These could be any type, including other schema definitions.
@@ -27,7 +28,7 @@ use core\router\schema\specification;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class schema_object extends \core\openapi\schema {
+class schema_object extends \core\router\schema\objects\type_base {
     /**
      * An array of things.
      *
@@ -41,8 +42,24 @@ class schema_object extends \core\openapi\schema {
         parent::__construct(...$extra);
     }
 
+    /**
+     * Whether this schema object has this key as a type.
+     *
+     * @param string $key
+     * @return bool
+     */
     public function has(string $key): bool {
         return isset($this->content[$key]);
+    }
+
+    /**
+     * Get the schema object for this key.
+     *
+     * @param string $key
+     * @return type_base
+     */
+    public function get(string $key): type_base {
+        return $this->content[$key];
     }
 
     public function validate_data(array $params): array {

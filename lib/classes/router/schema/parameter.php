@@ -19,7 +19,7 @@ namespace core\router\schema;
 use core\router\route;
 use core\router\schema\openapi_base;
 use core\router\schema\specification;
-use core\openapi\schema;
+use core\router\schema\objects\type_base;
 use stdClass;
 
 /**
@@ -42,7 +42,7 @@ class parameter extends openapi_base {
      * - For all other cases, the name corresponds to the parameter name used by the in property.
      * @param string $in The location of the parameter. Possible values are "query", "header", "path" or "cookie".
      * @param null|string $type A Moodle PARAM_ type, which can be used instead of a schema.
-     * @param null|schema $schema
+     * @param null|type_base $schema
      * @param null|string $description
      * @param null|bool $required
      * @param null|bool $deprecated Specifies that a parameter is deprecated and SHOULD be transitioned out of usage.
@@ -63,7 +63,7 @@ class parameter extends openapi_base {
         protected mixed $default = null,
 
         // Schema fields.
-        protected ?schema $schema = null,
+        protected ?type_base $schema = null,
         protected ?string $example = null,
         protected array $examples = [],
 

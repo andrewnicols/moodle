@@ -17,7 +17,7 @@
 namespace core\router\schema;
 
 use coding_exception;
-use core\openapi\schema;
+use core\router\schema\objects\type_base;
 use core\router\schema\request_body;
 use core\router\schema\parameter;
 use core\router\schema\response\response;
@@ -140,7 +140,7 @@ abstract class openapi_base {
             return static::get_reference_for_request_body($reference);
         }
 
-        if (is_a($classname, schema::class, true)) {
+        if (is_a($classname, type_base::class, true)) {
             return static::get_reference_for_schema($reference);
         }
 

@@ -18,7 +18,7 @@ namespace core\router\schema;
 
 use coding_exception;
 use core\router\route;
-use core\openapi\schema;
+use core\router\schema\objects\type_base;
 use core\router\schema\request_body;
 use core\router\schema\response\response;
 use core\router\schema\example;
@@ -171,7 +171,7 @@ class specification implements
             return $this;
         }
 
-        if (is_a($object, schema::class)) {
+        if (is_a($object, type_base::class)) {
             $this->add_schema($object);
 
             return $this;
@@ -268,7 +268,7 @@ class specification implements
 
     // TODO. Is this used?
     public function add_schema(
-        schema $schema,
+        type_base $schema,
     ): self {
         $name = $schema->get_reference(qualify: false);
         if (!property_exists($this->data->components->schemas, $name)) {
@@ -281,7 +281,7 @@ class specification implements
     /**
      * Add a schema to the shared components section of the specification.
      *
-     * @param schema $schema
+     * @param type_base $schema
      * @return specification
      */
     public function add_parameter(
