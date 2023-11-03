@@ -64,17 +64,15 @@ class request_body extends openapi_base {
         ];
 
         if ($this->content instanceof response\content\payload_response_type) {
-            $data->content = $this->content->get_openapi_description(
+            $data->content = $this->content->get_openapi_schema(
                 api: $api,
-                path: $path,
             );
             return $data;
         }
 
         foreach ($this->content as $content) {
-            $data->content[$content::get_encoding()] = $content->get_openapi_description(
+            $data->content[$content::get_encoding()] = $content->get_openapi_schema(
                 api: $api,
-                path: $path,
             );
         }
 

@@ -49,9 +49,8 @@ class schema extends openapi_base {
         if (count($this->examples)) {
             $data->examples = [];
             foreach ($this->examples as $example) {
-                $data->examples[$example->get_name()] = $example->get_openapi_description(
+                $data->examples[$example->get_name()] = $example->get_openapi_schema(
                     api: $api,
-                    path: $path,
                 );
             }
         }

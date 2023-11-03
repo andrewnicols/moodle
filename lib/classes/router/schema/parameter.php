@@ -112,9 +112,8 @@ class parameter extends openapi_base {
         } else if (count($this->examples) > 0) {
             $data->examples = [];
             foreach ($this->examples as $example) {
-                $data->examples[$example->get_name()] = $example->get_openapi_description(
+                $data->examples[$example->get_name()] = $example->get_openapi_schema(
                     api: $api,
-                    path: $path,
                 );
             }
         }
@@ -180,7 +179,7 @@ class parameter extends openapi_base {
                 $pattern = '^[a-zA-Z0-9_\-]*$';
                 break;
             case PARAM_SAFEPATH:
-                $pattern = '^[a-zA-Z0-9\/_\-]*$';
+                // $pattern = '^[a-zA-Z0-9\/_\-]*$';
                 break;
         }
 

@@ -99,7 +99,7 @@ class preferences {
                     content: [
                         'preferences' => new \core\router\schema\objects\array_of_strings(
                             keyparamtype: PARAM_TEXT,
-                            valueparamtype: PARAM_RAW,
+                            valueparamtype: PARAM_INT,
                         ),
                     ],
                 ),

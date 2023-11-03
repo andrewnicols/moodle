@@ -52,7 +52,7 @@ class payload_response_type extends openapi_base {
         ?string $classname = null,
     ): ?media_type {
         if ($classname) {
-            return new $contenttypeclass(...$this->args);
+            return new $classname(...$this->args);
         }
 
         foreach ($this->get_supported_content_types() as $contenttypeclass) {
@@ -72,9 +72,8 @@ class payload_response_type extends openapi_base {
 
         foreach ($this->get_supported_content_types() as $contenttypeclass) {
             $contenttype = new $contenttypeclass(...$this->args);
-            $content->{$contenttype->get_mimetype()} = $contenttype->get_openapi_description(
+            $content->{$contenttype->get_mimetype()} = $contenttype->get_openapi_schema(
                 api: $api,
-                path: $path,
             );
         }
 

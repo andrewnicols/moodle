@@ -65,4 +65,21 @@ class schema_object extends \core\openapi\schema {
         return $params;
     }
 
+    public function get_openapi_description(
+        specification $api,
+        ?string $path = null,
+    ): ?\stdClass {
+        $data = (object) [
+            'type' => 'object',
+            'properties' => (object) [],
+        ];
+
+        foreach ($this->content as $name => $content) {
+            $data->properties->{$name} = $content->get_openapi_description(
+                $api,
+            );
+        }
+
+        return $data;
+    }
 }

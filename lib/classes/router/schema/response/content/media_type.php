@@ -52,9 +52,8 @@ abstract class media_type extends openapi_base {
         $data = (object) [];
 
         if ($this->schema) {
-            $data->schema = $this->schema->get_openapi_description(
+            $data->schema = $this->schema->get_openapi_schema(
                 api: $api,
-                path: $path,
             );
         }
 
@@ -62,9 +61,8 @@ abstract class media_type extends openapi_base {
             $data->example = $this->example;
         } else if (count($this->examples)) {
             $data->examples = array_map(
-                fn(\core\router\schema\example $example) => $example->get_openapi_description(
+                fn(\core\router\schema\example $example) => $example->get_openapi_schema(
                     api: $api,
-                    path: $path,
                 ),
                 $this->examples,
             );

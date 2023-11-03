@@ -78,15 +78,13 @@ class response extends openapi_base {
         }
 
         if ($this->content instanceof content\payload_response_type) {
-            $data->content = $this->content->get_openapi_description(
+            $data->content = $this->content->get_openapi_schema(
                 api: $api,
-                path: $path,
             );
         } else if (count($this->content)) {
             foreach ($this->content as $body) {
-                $data->content[$body->get_mimetype()] = $body->get_openapi_description(
+                $data->content[$body->get_mimetype()] = $body->get_openapi_schema(
                     api: $api,
-                    path: $path,
                 );
             }
         }
