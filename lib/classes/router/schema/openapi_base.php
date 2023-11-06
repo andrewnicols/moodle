@@ -61,8 +61,8 @@ abstract class openapi_base {
      *
      * @param specification $api
      * @param null|string $path
-     * @return null|stdClass 
-     * @throws coding_exception 
+     * @return null|stdClass
+     * @throws coding_exception
      */
     final public function get_openapi_schema(
         specification $api,
@@ -278,7 +278,7 @@ abstract class openapi_base {
                 $pattern = '^[a-zA-Z0-9_\-]*$';
                 break;
             case PARAM_SAFEPATH:
-                // $pattern = '^[a-zA-Z0-9\/_\-]*$';
+                $pattern = '^[a-zA-Z0-9\/_\-]*$';
                 break;
         }
 

@@ -47,7 +47,7 @@ class preferences {
      * @param string $themename
      * @param string $component
      * @param null|string $identifier
-     * @return Response
+     * @return payload_response
      */
     #[route(
         path: '[/{preference}]',

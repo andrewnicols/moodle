@@ -124,7 +124,7 @@ class route {
     /**
      * Get the fully-qualified path for this route relative to root.
      *
-     * @return string 
+     * @return string
      */
     public function get_path(): string {
         $path = $this->path ?? '';
