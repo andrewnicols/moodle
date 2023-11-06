@@ -35,11 +35,26 @@ class array_of_strings extends array_of_things {
         parent::__construct(...$extra);
     }
 
-    public function validate_data(array $params): array {
+    public function validate_data($params) {
         foreach ($params as $name => $value) {
-            validate_param($name, PARAM_RAW);
-            validate_param($value, PARAM_RAW);
+            validate_param(
+                param: $name,
+                type: $this->keyparamtype,
+                debuginfo: $this->get_debug_info_for_validation_failure($this->keyparamtype, $name),
+            );
+            validate_param(
+                param: $value,
+                type: $this->valueparamtype,
+                debuginfo: $this->get_debug_info_for_validation_failure($this->valueparamtype, $value),
+            );
         }
         return $params;
+    }
+
+    protected function get_debug_info_for_validation_failure(
+        string $type,
+        string $value,
+    ): string {
+        return  "The value '{$value}' was not of type {$value}.";
     }
 }

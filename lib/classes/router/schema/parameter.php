@@ -102,7 +102,7 @@ class parameter extends openapi_base {
         if ($this->schema !== null) {
             $data->schema = $this->schema;
         } else {
-            $data->schema = $this->get_schema_from_type();
+            $data->schema = $this->get_schema_from_type($this->type);
         }
 
         // Note, the spec has the following regarding examples.
@@ -125,77 +125,11 @@ class parameter extends openapi_base {
         return $this->type;
     }
 
-    // TODO Move to its own type?
-    public function get_schema_from_type(): \stdClass {
-        $type = 'string';
-        switch ($this->type) {
-            case PARAM_INT:
-                return (object) ['type' => 'integer'];
-            case PARAM_FLOAT:
-                return (object) ['type' => 'number'];
-            case PARAM_BOOL:
-                return (object) ['type' => 'boolean'];
-
-            // The following are all string types which cannot be patternised.
-            case PARAM_RAW:
-            case PARAM_RAW_TRIMMED:
-            case PARAM_CLEANHTML:
-            case PARAM_NOTAGS:
-            case PARAM_TEXT:
-                return (object) ['type' => 'string'];
-        }
-
-        // All other types are string types and most have a pattern.
-        $type = 'string';
-        $pattern = null;
-        switch ($this->type) {
-            case PARAM_LOCALISEDFLOAT:
-                // Some langauges use a comma as a decimal separator.
-                $pattern = '^\d*([\.,])\d+$';
-                break;
-            case PARAM_ALPHA:
-                $pattern = '^[a-zA-Z]*$';
-                break;
-            case PARAM_ALPHAEXT:
-                $pattern = '^[a-zA-Z_\-]*$';
-                break;
-            case PARAM_ALPHANUM:
-                $pattern = '^[a-zA-Z0-9]*$';
-                break;
-            case PARAM_ALPHANUMEXT:
-                $pattern = '^[a-zA-Z0-9_\-]*$';
-                break;
-            case PARAM_SEQUENCE:
-                $pattern = '^[0-9,]*$';
-                break;
-            case PARAM_COMPONENT:
-                $pattern = '^[a-z][a-z0-9]*(_(?:[a-z][a-z0-9_](?!__))*)?[a-z0-9]+$';
-                break;
-            case PARAM_PLUGIN:
-            case PARAM_AREA:
-                $pattern = '^[a-z](?:[a-z0-9_](?!__))*[a-z0-9]+$';
-                break;
-            case PARAM_SAFEDIR:
-                $pattern = '^[a-zA-Z0-9_\-]*$';
-                break;
-            case PARAM_SAFEPATH:
-                // $pattern = '^[a-zA-Z0-9\/_\-]*$';
-                break;
-        }
-
-        $data = (object) ['type' => $type];
-        if ($pattern !== null) {
-            $data->pattern = $pattern;
-        }
-
-        return $data;
-    }
-
     public function get_schema(): stdClass {
         if ($this->schema !== null) {
             return $this->schema;
         } else {
-            return $this->get_schema_from_type();
+            return $this->get_schema_from_type($this->type);
         }
     }
 

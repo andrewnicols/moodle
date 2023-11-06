@@ -57,15 +57,17 @@ abstract class media_type extends openapi_base {
             );
         }
 
+        $data->examples = [];
         if ($this->example) {
-            $data->example = $this->example;
+            $data->examples[$this->example->get_name()] = $this->example;
         } else if (count($this->examples)) {
-            $data->examples = array_map(
-                fn(\core\router\schema\example $example) => $example->get_openapi_schema(
-                    api: $api,
-                ),
-                $this->examples,
-            );
+            foreach ($this->examples as $name => $example) {
+                if (is_int($name)) {
+                    $name = $example->get_name();
+                }
+                $schema = $example->get_openapi_schema($api);
+                $data->examples[$name] = $schema;
+            }
         }
 
         if ($this->required) {

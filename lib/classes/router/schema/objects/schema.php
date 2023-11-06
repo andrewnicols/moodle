@@ -26,7 +26,7 @@ use core\router\schema\specification;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class type_base extends openapi_base {
+class type_base extends openapi_base {
 
     /**
      * Note: We do not implement the $example, because it has been deprecated in OpenApi 3.0.
@@ -78,5 +78,7 @@ abstract class type_base extends openapi_base {
         ];
     }
 
-    abstract public function validate_data($data);
+    public function validate_data(array $params): array {
+        throw new \coding_exception('TODO');
+    }
 }

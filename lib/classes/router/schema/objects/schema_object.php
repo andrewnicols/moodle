@@ -32,13 +32,19 @@ class schema_object extends \core\router\schema\objects\type_base {
     /**
      * An array of things.
      *
-     * @param array $content The child content
+     * @param type_base[] $content The child content
      * @param array $extra
      */
     public function __construct(
         protected array $content,
+        protected bool $required = true,
+
         ...$extra,
     ) {
+        array_map(
+            fn($child) => assert($child instanceof type_base),
+            $content,
+        );
         parent::__construct(...$extra);
     }
 
@@ -62,7 +68,7 @@ class schema_object extends \core\router\schema\objects\type_base {
         return $this->content[$key];
     }
 
-    public function validate_data(array $params): array {
+    public function validate_data($params) {
         foreach ($params as $key => $values) {
             if (!$this->has($key)) {
                 // We do not know about this one.

@@ -16,10 +16,11 @@
 
 namespace core_user\route\api;
 
+use core\router\response\invalid_parameter_response;
+use core\router\route;
 use core\router\schema\response\payload_response;
 use core\router\schema\response\content\payload_response_type;
 use core\router\schema\response\response_type;
-use core\router\route;
 use core_user;
 use core_user\route\responses\user_preferences_response;
 use GuzzleHttp\Psr7\Response;
@@ -60,6 +61,7 @@ class preferences {
         ],
         responses: [
             200 => new user_preferences_response(),
+            400 => new invalid_parameter_response(),
         ],
     )]
     public function get_preferences(

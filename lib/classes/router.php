@@ -16,7 +16,10 @@
 
 namespace core;
 
+use core\router\response_handler;
 use core\router\route;
+use core\router\schema\response\payload_response;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Uri;
 use moodle_url;
 use Psr\Http\Message\RequestInterface;
@@ -190,14 +193,29 @@ class router {
             $page = $this->get(\moodle_page::class);
             $page->set_url($request->getUri());
 
-            // Detect if a user login is required.
             try {
                 $response = $handler->handle($request);
+                // TODO Detect if a user login is required.
             } catch (\required_capability_exception $e) {
-                return $response->withStatus(403);
+                // Capability not met.
+                $response = $response->withStatus(403);
+            } catch (\invalid_parameter_exception $e) {
+                $response = new payload_response(
+                    payload: [
+                        'stacktrace' => $e->getTrace(),
+                    ],
+                    request: $request,
+                    response: new Response(
+                        status: 400,
+                        body: $e->getMessage(),
+                        reason: $e->errorcode,
+                    ),
+                );
             }
 
-            return $response;
+            return $this
+                ->get(response_handler::class)
+                ->standardise_response($response);
         });
 
         // Add all standard routes.

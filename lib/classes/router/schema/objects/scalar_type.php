@@ -19,46 +19,46 @@ namespace core\router\schema\objects;
 use core\router\schema\specification;
 
 /**
- * A schema to descirbe an array of things. These could be any type, including other schema definitions.
- *
- * See https://spec.openapis.org/oas/v3.0.0#model-with-map-dictionary-properties for relevant documentation.
+ * A scalar type.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class array_of_things extends \core\router\schema\objects\type_base {
+class scalar_type extends type_base {
     /**
-     * An array of things.
+     * Instantiate a new Scalar Type
      *
-     * @param string|null $thingtype The OpenAPI type, or null if any type is allowed.
-     * @param array $extra
+     * @param string $type The Moodle PARAM_ type
+     * @param bool $required Whether the value is required or not
+     * @param mixed $default The value used if none was supplied (request bodies only)
+     * @param mixed $extra
      */
     public function __construct(
-        protected string|null $thingtype = null,
+        protected string $type,
+        protected bool $required = false,
+        protected $default = null,
         ...$extra,
     ) {
-        parent::__construct(...$extra);
+        if (!defined($type)) {
+            throw new \coding_exception("Invalid parameter type: {$type}");
+        }
     }
 
     public function get_openapi_description(
         specification $api,
         ?string $path = null,
     ): ?\stdClass {
-        $api->add_component($this);
-        return (object) [
-            '$ref' => $this->get_reference(),
-        ];
-    }
-
-    public function get_schema(): \stdClass {
-        return (object) [
-            'type' => 'object',
-            'additionalProperties' => $this->get_additional_properties($this->thingtype),
-        ];
+        return self::get_schema_from_type($this->type);
     }
 
     public function validate_data($data) {
+        validate_param(
+            param: $data,
+            type: $this->type,
+            allownull: $this->required ? NULL_NOT_ALLOWED : NULL_ALLOWED,
+        );
+
         return $data;
     }
 }

@@ -304,6 +304,7 @@ class route {
         string $component,
         string $path,
         array $parentcontexts = [],
+        array $commonresponses = [],
     ): \stdClass {
         $searchcontexts = [$this];
         if ($this->parentroute) {
@@ -359,6 +360,10 @@ class route {
             fn($param) => $param !== null,
         );
 
+        foreach ($api->get_common_request_responses() as $callable) {
+            $data = $callable($this, $data);
+        }
+
         $methoddata = [];
         $methods = $this->get_methods() ?? ['GET'];
         foreach ($methods as $method) {
@@ -378,5 +383,13 @@ class route {
         }
 
         return $parameters;
+    }
+
+    public function has_request_body(): bool {
+        return $this->requestbody !== null;
+    }
+
+    public function has_any_validatable_parameter(): bool {
+        return count($this->pathtypes) || count($this->queryparams) || $this->requestbody;
     }
 }

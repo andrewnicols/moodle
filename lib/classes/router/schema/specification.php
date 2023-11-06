@@ -17,6 +17,7 @@
 namespace core\router\schema;
 
 use coding_exception;
+use core\router\response\invalid_parameter_response;
 use core\router\route;
 use core\router\schema\objects\type_base;
 use core\router\schema\request_body;
@@ -36,6 +37,12 @@ class specification implements
     \JsonSerializable
 {
     protected stdClass $data;
+
+    /** @var Whether the data has been finalised for output yet */
+    protected bool $finalised = false;
+
+    /** @var callable[] A list of common responses that are frequently found in paths */
+    protected array $commonresponses = [];
 
     /**
      * Constructor to configure base information.
@@ -95,15 +102,41 @@ class specification implements
                 'url' => 'https://moodledev.io',
             ],
         ];
+
+        $this->generate_common_responses();
+    }
+
+    protected function generate_common_responses(): self {
+        $invalidresponse = new invalid_parameter_response();
+        $this->commonresponses[] = function(route $route, stdClass $data) use ($invalidresponse): stdClass {
+            if ($route->has_any_validatable_parameter()) {
+                if (!array_key_exists(invalid_parameter_response::STATUSCODE, $data->responses)) {
+                    $data->responses[invalid_parameter_response::STATUSCODE] = $invalidresponse->get_openapi_schema($this);
+                }
+            }
+
+            return $data;
+        };
+        return $this;
+    }
+
+    public function get_common_request_responses(): array {
+        if (empty($this->commonresponses)) {
+            $this->generate_common_responses();
+        }
+
+        return $this->commonresponses;
     }
 
     /**
-     * Implement the json serialisation interface.
-     *
-     * @return mixed
+     * Finalise the data and prepare it for consumption.
      */
-    public function jsonSerialize(): mixed {
+    protected function finalise(): self {
         global $CFG;
+
+        if ($this->finalised) {
+            return $this;
+        }
 
         // Add the Moodle site version here.
         $this->data->info->version = $CFG->version;
@@ -115,7 +148,20 @@ class specification implements
             $serverdescription,
         );
 
-        return $this->data;
+        $this->finalised = true;
+
+        return $this;
+    }
+
+    /**
+     * Implement the json serialisation interface.
+     *
+     * @return mixed
+     */
+    public function jsonSerialize(): mixed {
+        return $this
+            ->finalise()
+            ->data;
     }
 
     /**
@@ -256,7 +302,7 @@ class specification implements
         );
 
         if (!empty($optionalparameters)) {
-            // Go through the path from end to start removing optional parameres and adding them to the path list.
+            // Go through the path from end to start removing optional parameters and adding them to the path list.
             while (strrpos($path, '[') !== false) {
                 $path = substr($path, 0, strrpos($path, '['));
                 $addpath($path);

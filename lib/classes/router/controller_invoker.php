@@ -66,8 +66,6 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
         ResponseInterface $response,
         array $routeargs,
     ): ResponseInterface {
-        global $OUTPUT;
-
         // Inject the request and response by parameter name.
         $parameters = [
             'request'  => self::inject_route_arguments($request, $routeargs),
@@ -82,34 +80,21 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
 
         $result = $this->invoker->call($callable, $parameters);
 
-        if ($result instanceof ResponseInterface) {
-            // An object implementing ResponseInterface is returned, so we can just return it.
-            return $result;
-        }
-
-        if ($result instanceof response\payload_response) {
-            // A payload response is returned, so we need to handle it as a payload and convert it according to the
-            // format requested in the request.
-            return $this->handle_payload($result);
-        }
-
-        if ($result instanceof response\view_response) {
-            // A ViewResponse is returned, so we need to render the template and return it as a response.
-            return $response->withBody(Utils::streamFor(
-                $OUTPUT->render_from_template(
-                    $result->get_template_name(),
-                    $result->get_parameters(),
-                ),
-            ));
-        }
-
-        if ($result instanceof response\response_type) {
-            return $result->get_response();
-        }
-
-        throw new \coding_exception('Unknown response type');
+        return $this
+            ->container
+            ->get(response_handler::class)
+            ->standardise_response($result);
     }
 
+    /**
+     * Helper to inject route arguments.
+     *
+     * This is based on the ControllerInvoker.
+     *
+     * @param ServerRequestInterface $request 
+     * @param array $routeargs 
+     * @return ServerRequestInterface 
+     */
     private static function inject_route_arguments(
         ServerRequestInterface $request,
         array $routeargs,
@@ -119,80 +104,5 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
             $args = $args->withAttribute($key, $value);
         }
         return $args;
-    }
-
-    /**
-     * Handle the response to a payload and convert it to the requested format.
-     *
-     * @param payload_response $payload
-     * @return ResponseInterface
-     */
-    private function handle_payload(
-        response\payload_response $payload,
-    ): ResponseInterface {
-        // Check the request header and emit either JSON or XML.
-        $accept = $payload->get_request()->getHeaderLine('Accept');
-        if (strpos($accept, 'application/xml') !== false) {
-            // return $this->get_xml_response($payload);
-        }
-
-        return $this->get_json_response($payload);
-    }
-
-    private function get_xml_response(
-        response\payload_response $payload,
-    ): ResponseInterface {
-        // TODO. Implement this.
-        $response = $payload->get_response();
-        $response->getBody()->write((string) $payload->get_payload());
-        return $response->withHeader('Content-Type', 'application/xml; charset=utf-8');
-
-    }
-
-    /**
-     * Handle the payload as JSON and return a JSON-formatted output.
-     *
-     * @param payload_response $payload
-     * @return ResponseInterface
-     */
-    private function get_json_response(
-        response\payload_response $payload,
-    ): ResponseInterface {
-        $response = $this->get_response($payload);
-        $response->getBody()->write((string) json_encode(
-            $payload->get_payload(),
-            $this->get_json_flags(),
-        ));
-        return $response->withHeader('Content-Type', 'application/json; charset=utf-8');
-    }
-
-    /**
-     * Get the flags to use when encoding JSON.
-     *
-     * @return int
-     */
-    private function get_json_flags(): int {
-        global $CFG;
-
-        $flags = \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE | \JSON_PRESERVE_ZERO_FRACTION;
-
-        if ($CFG->debugdeveloper) {
-            $flags |= \JSON_PRETTY_PRINT;
-        }
-
-        return $flags;
-    }
-
-    private function get_response(
-        response\response_type $responsetype,
-    ): ResponseInterface {
-        $response = $responsetype->get_response();
-        if ($response) {
-            return $response;
-        }
-
-        $app = $this->container->get(App::class);
-        $factory = $app->getResponseFactory();
-        return $factory->createResponse();
     }
 }
