@@ -40,7 +40,7 @@ class scalar_type extends type_base {
         protected $default = null,
         ...$extra,
     ) {
-        if (!defined($type)) {
+        if (!\core\param::is_valid_param_type($type)) {
             throw new \coding_exception("Invalid parameter type: {$type}");
         }
     }
