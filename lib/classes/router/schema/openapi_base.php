@@ -227,7 +227,6 @@ abstract class openapi_base {
     }
 
     public static function get_schema_from_type(string $type): \stdClass {
-        $type = 'string';
         switch ($type) {
             case PARAM_INT:
                 return (object) ['type' => 'integer'];

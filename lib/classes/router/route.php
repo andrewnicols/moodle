@@ -315,15 +315,7 @@ class route {
             'description' => $this->description,
             'summary' => $this->title,
             'tags' => [$component, ...$this->tags],
-            'parameters' => array_map(
-                fn($param) => $param->get_openapi_schema(
-                    api: $api,
-                    path: $path,
-                ),
-                array_merge(
-                    $this->queryparams,
-                ),
-            ),
+            'parameters' => [],
             'responses' => [],
         ];
 
@@ -355,7 +347,10 @@ class route {
                     api: $api,
                     path: $path,
                 ),
-                $this->pathtypes,
+                array_merge(
+                    $this->pathtypes,
+                    $this->queryparams,
+                ),
             ),
             fn($param) => $param !== null,
         );
