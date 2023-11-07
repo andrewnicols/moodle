@@ -263,6 +263,7 @@ enum param: string {
 
     /**
      * PARAM_CLEANFILE - deprecated alias of PARAM_FILE; originally was removing regional chars too
+     * @deprecated since 2.0
      */
     case CLEANFILE = 'cleanfile';
 
