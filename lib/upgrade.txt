@@ -26,6 +26,7 @@ information provided here is intended especially for developers.
     - set_attempts_available(): Used to set the number of attempts available for the task
     - get_attempts_available(): Used to get the number of attempts available for the task.
 * There is a new DML method $DB->get_fieldset. For some reason, this did not exist even though get_fieldset_select etc. did.
+* Added missing deprecation for PARAM_CLEANFILE which was deprecated in Moodle 2.0.
 
 === 4.3 ===
 
