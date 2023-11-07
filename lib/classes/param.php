@@ -358,6 +358,9 @@ enum param: string {
      * @throws coding_exception
      */
     public function clean(mixed $value): mixed {
+        if ($this->is_deprecated()) {
+            throw new coding_exception("Deprecated parameter type '{$this->value}' used.");
+        }
         if (is_array($value)) {
             throw new coding_exception('clean() can not process arrays, please use clean_array() instead.');
         } else if (is_object($value)) {
