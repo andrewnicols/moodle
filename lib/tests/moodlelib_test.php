@@ -383,12 +383,13 @@ class moodlelib_test extends \advanced_testcase {
      * @covers \core\param
      * @covers \clean_param
      */
-    public function test_clean_param_clean() {
+    public function test_clean_param_clean(): void {
+        $this->assertSame('', clean_param(null, PARAM_CLEANHTML));
+
         // PARAM_CLEAN is an ugly hack, do not use in new code (skodak),
         // instead use more specific type, or submit sothing that can be verified properly.
-        $this->assertSame('xx', clean_param('xx<script>', PARAM_CLEAN));
-        $this->assertSame('', clean_param(null, PARAM_CLEAN));
-        $this->assertSame('', clean_param(null, PARAM_CLEANHTML));
+        $this->expectException(\coding_exception::class);
+        clean_param('xx<script>', PARAM_CLEAN);
     }
 
     /**

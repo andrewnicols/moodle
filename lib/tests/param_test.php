@@ -99,4 +99,30 @@ class param_test extends \advanced_testcase {
             [param::NUMBER, true],
         ];
     }
+
+    /**
+     * Test that deprecated params throw an exception when cleaning.
+     *
+     * @dataProvider deprecated_param_provider
+     * @param param $params
+     */
+    public function test_deprecated_params_except(param $param): void {
+        $this->expectException(\coding_exception::class);
+        $param->clean('foo');
+    }
+
+    /**
+     * Provider for deprecated parameters.
+     *
+     * @return array
+     */
+    public static function deprecated_param_provider(): array {
+        return array_map(
+            fn (param $param): array => [$param],
+            array_filter(
+                param::cases(),
+                fn (param $param): bool => $param->is_deprecated(),
+            ),
+        );
+    }
 }
