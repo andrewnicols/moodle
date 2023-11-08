@@ -566,7 +566,7 @@ class router {
         $methodroute = $methodattributes ? $methodattributes[0]->newInstance() : null;
 
         if (!$methodroute) {
-            // No route found
+            // No route found.
             return null;
         }
 
