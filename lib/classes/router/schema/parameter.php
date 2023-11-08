@@ -38,8 +38,11 @@ class parameter extends openapi_base {
      * Constructor for a Parameter Object.
      *
      * @param string $name The name of the parameter. Parameter names are case sensitive.
-     * - If in is "path", the name field MUST correspond to a template expression occurring within the path field in the Paths Object. See Path Templating for further information.
-     * - If in is "header" and the name field is "Accept", "Content-Type" or "Authorization", the parameter definition SHALL be ignored.
+     * - If in is "path", the name field MUST correspond to a template expression occurring within the
+     *   path field in the Paths Object.
+     *   See Path Templating for further information.
+     * - If in is "header" and the name field is "Accept", "Content-Type" or "Authorization",
+     *   the parameter definition SHALL be ignored.
      * - For all other cases, the name corresponds to the parameter name used by the in property.
      * @param string $in The location of the parameter. Possible values are "query", "header", "path" or "cookie".
      * @param null|param $type A Moodle parameter type, which can be used instead of a schema.
