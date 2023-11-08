@@ -220,25 +220,45 @@ enum param: string {
      * It was one of the first types, that is why it is abused so much ;-)
      * @deprecated since 2.0
      */
+    #[deprecated(
+        'param::CLEAN',
+        since: '2.0',
+        reason: 'Please use a more specific type of parameter',
+    )]
     case CLEAN = 'clean';
 
     /**
      * PARAM_INTEGER - deprecated alias for PARAM_INT
      * @deprecated since 2.0
      */
+    #[deprecated(
+        'param::INTEGER',
+        since: '2.0',
+        reason: 'Alias for INT',
+    )]
     case INTEGER = 'integer';
 
     /**
      * PARAM_NUMBER - deprecated alias of PARAM_FLOAT
      * @deprecated since 2.0
      */
+    #[deprecated(
+        'param::NUMBER',
+        since: '2.0',
+        reason: 'Alias for FLOAT',
+    )]
     case NUMBER = 'number';
 
     /**
      * PARAM_ACTION - deprecated alias for PARAM_ALPHANUMEXT, use for various actions in forms and urls
-     * NOTE: originally alias for PARAM_APLHA
+     * NOTE: originally alias for PARAM_ALPHANUMEXT
      * @deprecated since 2.0
      */
+    #[deprecated(
+        'param::ACTION',
+        since: '2.0',
+        reason: 'Alias for PARAM_ALPHANUMEXT',
+    )]
     case ACTION = 'action';
 
     /**
@@ -246,12 +266,22 @@ enum param: string {
      * NOTE: originally alias for PARAM_APLHA
      * @deprecated since 2.0
      */
+    #[deprecated(
+        'param::FORMAT',
+        since: '2.0',
+        reason: 'Alias for PARAM_ALPHANUMEXT',
+    )]
     case FORMAT = 'format';
 
     /**
      * PARAM_MULTILANG - deprecated alias of PARAM_TEXT.
      * @deprecated since 2.0
      */
+    #[deprecated(
+        'param::MULTILANG',
+        since: '2.0',
+        reason: 'Alias for PARAM_TEXT',
+    )]
     case MULTILANG = 'multilang';
 
     /**
@@ -331,16 +361,36 @@ enum param: string {
      * @return bool
      */
     public function is_deprecated(): bool {
-        return match ($this) {
-            self::ACTION => true,
-            self::CLEAN => true,
-            self::CLEANFILE => true,
-            self::FORMAT => true,
-            self::INTEGER => true,
-            self::MULTILANG => true,
-            self::NUMBER => true,
-            default => false,
-        };
+        if ($this->get_deprecation_attribute()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Get the deprecation attribute for the parameter if it is set.
+     *
+     * @return null|deprecated
+     */
+    protected function get_deprecation_attribute(): ?deprecated {
+        $ref = new \ReflectionClassConstant(self::class, $this->name);
+        if ($attributes = $ref->getAttributes(deprecated::class)) {
+            return $attributes[0]->newInstance();
+        }
+
+        return null;
+    }
+
+    /**
+     * Emit a deprecation notice if the parameter is deprecated.
+     */
+    protected function emit_deprecation_notice(): void {
+        if ($deprecation = $this->get_deprecation_attribute()) {
+            debugging(
+                $deprecation->get_deprecation_string(),
+                DEBUG_DEVELOPER,
+            );
+        }
     }
 
     /**
