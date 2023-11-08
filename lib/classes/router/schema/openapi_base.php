@@ -233,66 +233,19 @@ abstract class openapi_base {
     }
 
     public static function get_schema_from_type(param $type): \stdClass {
-        $type = $type->value;
-        switch ($type) {
-            case PARAM_INT:
-                return (object) ['type' => 'integer'];
-            case PARAM_FLOAT:
-                return (object) ['type' => 'number'];
-            case PARAM_BOOL:
-                return (object) ['type' => 'boolean'];
+        $data = new \stdClass();
 
-                // The following are all string types which cannot be patternised.
-            case PARAM_RAW:
-            case PARAM_RAW_TRIMMED:
-            case PARAM_CLEANHTML:
-            case PARAM_NOTAGS:
-            case PARAM_TEXT:
-                return (object) ['type' => 'string'];
-        }
+        $data->type = match($type) {
+            // OpenAPI uses an extension of the JSON Schema to define both integers and numbers (float).
+            param::INT => 'integer',
+            param::FLOAT => 'number',
+            param::BOOL => 'boolean',
 
-        // All other types are string types and most have a pattern.
-        $type = 'string';
-        $pattern = null;
-        switch ($type) {
-            case PARAM_LOCALISEDFLOAT:
-                // Some langauges use a comma as a decimal separator.
-                $pattern = '^\d*([\.,])\d+$';
-                break;
-            case PARAM_ALPHA:
-                $pattern = '^[a-zA-Z]*$';
-                break;
-            case PARAM_ALPHAEXT:
-                $pattern = '^[a-zA-Z_\-]*$';
-                break;
-            case PARAM_ALPHANUM:
-                $pattern = '^[a-zA-Z0-9]*$';
-                break;
-            case PARAM_ALPHANUMEXT:
-                $pattern = '^[a-zA-Z0-9_\-]*$';
-                break;
-            case PARAM_SEQUENCE:
-                $pattern = '^[0-9,]*$';
-                break;
-            case PARAM_COMPONENT:
-                $pattern = '^[a-z][a-z0-9]*(_(?:[a-z][a-z0-9_](?!__))*)?[a-z0-9]+$';
-                break;
-            case PARAM_PLUGIN:
-            case PARAM_AREA:
-                $pattern = '^[a-z](?:[a-z0-9_](?!__))*[a-z0-9]+$';
-                break;
-            case PARAM_SAFEDIR:
-                $pattern = '^[a-zA-Z0-9_\-]*$';
-                break;
-            case PARAM_SAFEPATH:
-                $pattern = '^[a-zA-Z0-9\/_\-]*$';
-                break;
-        }
+            // All other types are string types and most have a pattern.
+            default => 'string',
+        };
 
-        $data = (object) [
-            'type' => $type,
-        ];
-        if ($pattern !== null) {
+        if ($pattern = $type->get_clientside_expression()) {
             $data->pattern = $pattern;
         }
 
