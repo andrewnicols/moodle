@@ -16,6 +16,7 @@
 
 namespace core_course\route\controller;
 
+use core\param;
 use core\router\schema\parameters\path_parameter;
 use core\router\schema\parameters\query_parameter;
 use Psr\Http\Message\ResponseInterface;
@@ -66,7 +67,7 @@ class view_controller {
         pathtypes: [
             new path_parameter(
                 name: 'idnumber',
-                type: PARAM_RAW,
+                type: param::RAW,
             ),
         ],
     )]
@@ -97,7 +98,7 @@ class view_controller {
         pathtypes: [
             new path_parameter(
                 name: 'shortname',
-                type: PARAM_TEXT,
+                type: param::TEXT,
             ),
         ],
     )]
@@ -127,58 +128,58 @@ class view_controller {
         pathtypes: [
             new \core\router\schema\parameters\path_parameter(
                 name: 'id',
-                type: PARAM_INT,
+                type: param::INT,
             ),
         ],
         queryparams: [
             new query_parameter(
                 name: 'sectionid',
-                type: PARAM_INT,
+                type: param::INT,
                 description: 'The database ID of the section to highlight',
             ),
             new query_parameter(
                 name: 'section',
-                type: PARAM_INT,
+                type: param::INT,
                 description: 'The zero-indexed section number of the section to highlight',
             ),
             new query_parameter(
                 name: 'expandsection',
-                type: PARAM_INT,
+                type: param::INT,
             ),
             new query_parameter(
                 name: 'edit',
-                type: PARAM_INT,
+                type: param::INT,
                 default: -1,
             ),
             new query_parameter(
                 name: 'hide',
-                type: PARAM_INT,
+                type: param::INT,
                 default: null,
             ),
             new query_parameter(
                 name: 'show',
-                type: PARAM_INT,
+                type: param::INT,
                 default: null,
             ),
             new query_parameter(
                 name: 'switchrole',
-                type: PARAM_INT,
+                type: param::INT,
             ),
             new query_parameter(
                 name: 'duplicatesection',
-                type: PARAM_INT,
+                type: param::INT,
             ),
             new query_parameter(
                 name: 'return',
-                type: PARAM_LOCALURL,
+                type: param::LOCALURL,
             ),
             new query_parameter(
                 name: 'move',
-                type: PARAM_INT,
+                type: param::INT,
             ),
             new query_parameter(
                 name: 'marker',
-                type: PARAM_INT,
+                type: param::INT,
                 default: -1,
             ),
         ],

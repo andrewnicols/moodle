@@ -16,6 +16,7 @@
 
 namespace core_user\route\headers;
 
+use core\param;
 use core\router\schema\header_object;
 use core\router\schema\referenced_object;
 
@@ -32,7 +33,7 @@ class example_header extends header_object implements referenced_object {
     ) {
         $extra['name'] = 'X-Total-Count';
         $extra['description'] = 'The total number of preferences';
-        $extra['type'] = PARAM_INT;
+        $extra['type'] = param::INT;
         parent::__construct(...$extra);
     }
 }

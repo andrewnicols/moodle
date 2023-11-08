@@ -17,6 +17,7 @@
 namespace core\router\schema;
 
 use coding_exception;
+use core\param;
 use core\router\schema\objects\type_base;
 use core\router\schema\request_body;
 use core\router\schema\parameter;
@@ -226,7 +227,8 @@ abstract class openapi_base {
         );
     }
 
-    public static function get_schema_from_type(string $type): \stdClass {
+    public static function get_schema_from_type(param $type): \stdClass {
+        $type = $type->value;
         switch ($type) {
             case PARAM_INT:
                 return (object) ['type' => 'integer'];

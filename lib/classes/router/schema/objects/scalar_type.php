@@ -16,6 +16,7 @@
 
 namespace core\router\schema\objects;
 
+use core\param;
 use core\router\schema\specification;
 
 /**
@@ -29,20 +30,17 @@ class scalar_type extends type_base {
     /**
      * Instantiate a new Scalar Type
      *
-     * @param string $type The Moodle PARAM_ type
+     * @param param $type The Moodle PARAM_ type
      * @param bool $required Whether the value is required or not
      * @param mixed $default The value used if none was supplied (request bodies only)
      * @param mixed $extra
      */
     public function __construct(
-        protected string $type,
+        protected param $type,
         protected bool $required = false,
         protected $default = null,
         ...$extra,
     ) {
-        if (!\core\param::is_valid_param_type($type)) {
-            throw new \coding_exception("Invalid parameter type: {$type}");
-        }
     }
 
     public function get_openapi_description(

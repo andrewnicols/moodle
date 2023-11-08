@@ -16,10 +16,12 @@
 
 namespace core\router\schema\objects;
 
+use core\param;
+
 /**
  * A scheam to describe an array of strings.
  *
- * TODO: This should really take a PARAM_ type for validation of both name and value.
+ * TODO: This should really take a param:: type for validation of both name and value.
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
@@ -27,8 +29,8 @@ namespace core\router\schema\objects;
  */
 class array_of_strings extends array_of_things {
     public function __construct(
-        protected string $keyparamtype = PARAM_RAW,
-        protected string $valueparamtype = PARAM_RAW,
+        protected param $keyparamtype = param::RAW,
+        protected param $valueparamtype = param::RAW,
         ...$extra,
     ) {
         $extra['thingtype'] = 'string';

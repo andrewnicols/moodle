@@ -16,6 +16,7 @@
 
 namespace core_course\route\controller;
 
+use core\param;
 use core\router\schema\parameters\path_parameter;
 use core\router\schema\parameters\query_parameter;
 use Psr\Http\Message\ResponseInterface;
@@ -32,7 +33,7 @@ class edit_controller {
         pathtypes: [
             new path_parameter(
                 name: 'id',
-                type: PARAM_INT,
+                type: param::INT,
             ),
         ],
         method: [
@@ -172,7 +173,7 @@ class edit_controller {
         queryparams: [
             new query_parameter(
                 name: 'category',
-                type: PARAM_INT,
+                type: param::INT,
                 description: 'The category ID',
             ),
         ],

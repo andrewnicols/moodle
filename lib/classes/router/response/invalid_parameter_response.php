@@ -16,6 +16,7 @@
 
 namespace core\router\response;
 
+use core\param;
 use core\router\schema\objects\array_of_things;
 use core\router\schema\objects\scalar_type;
 use core\router\schema\objects\schema_object;
@@ -46,12 +47,12 @@ class invalid_parameter_response extends \core\router\schema\response\response i
                             required: false,
                             content: [
                                 new schema_object(content: [
-                                    'file' => new scalar_type(PARAM_PATH),
-                                    'line' => new scalar_type(PARAM_INT),
-                                    'function' => new scalar_type(PARAM_RAW),
+                                    'file' => new scalar_type(param::PATH),
+                                    'line' => new scalar_type(param::INT),
+                                    'function' => new scalar_type(param::RAW),
                                     'args' => new array_of_things(),
-                                    'class' => new scalar_type(PARAM_RAW),
-                                    'type' => new scalar_type(PARAM_RAW),
+                                    'class' => new scalar_type(param::RAW),
+                                    'type' => new scalar_type(param::RAW),
                                 ]),
                             ],
                         ),

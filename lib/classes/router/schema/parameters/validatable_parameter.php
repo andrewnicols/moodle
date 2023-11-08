@@ -16,6 +16,7 @@
 
 namespace core\router\schema\parameters;
 
+use core\param;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\Route;
 
@@ -39,7 +40,7 @@ abstract class validatable_parameter extends \core\router\schema\parameter {
     ): ServerRequestInterface {
         if (array_key_exists($this->name, $params)) {
             // This parameter was specified. Validate it.
-            if ($this->get_type() === PARAM_BOOL) {
+            if ($this->get_type() === param::BOOL) {
                 switch ($params[$this->name]) {
                     case 'true':
                         $params[$this->name] = 1;

@@ -16,6 +16,7 @@
 
 namespace core\router\schema;
 
+use core\param;
 use core\router\route;
 use core\router\schema\openapi_base;
 use core\router\schema\specification;
@@ -41,7 +42,7 @@ class parameter extends openapi_base {
      * - If in is "header" and the name field is "Accept", "Content-Type" or "Authorization", the parameter definition SHALL be ignored.
      * - For all other cases, the name corresponds to the parameter name used by the in property.
      * @param string $in The location of the parameter. Possible values are "query", "header", "path" or "cookie".
-     * @param null|string $type A Moodle PARAM_ type, which can be used instead of a schema.
+     * @param null|param $type A Moodle parameter type, which can be used instead of a schema.
      * @param null|type_base $schema
      * @param null|string $description
      * @param null|bool $required
@@ -59,7 +60,7 @@ class parameter extends openapi_base {
         protected ?bool $deprecated = false,
 
         // Moodle-specific fields.
-        protected ?string $type = null,
+        protected ?param $type = null,
         protected mixed $default = null,
 
         // Schema fields.
@@ -121,7 +122,7 @@ class parameter extends openapi_base {
         return $data;
     }
 
-    protected function get_type(): string {
+    protected function get_type(): param {
         return $this->type;
     }
 

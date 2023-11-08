@@ -16,6 +16,7 @@
 
 namespace core\route\api;
 
+use core\param;
 use core\router\route;
 use core\output\mustache_template_source_loader;
 use core\router\schema\response\payload_response;
@@ -57,13 +58,13 @@ class templates {
             new \core\router\parameters\path_component(),
             new \core\router\schema\parameters\path_parameter(
                 name: 'identifier',
-                type: PARAM_SAFEPATH,
+                type: param::SAFEPATH,
             ),
         ],
         queryparams: [
             new \core\router\schema\parameters\query_parameter(
                 name: 'includecomments',
-                type: PARAM_BOOL,
+                type: param::BOOL,
                 description: 'Include comments in the template',
                 default: false,
             ),
@@ -75,8 +76,8 @@ class templates {
                 content: [
                     new \core\router\schema\response\content\json_media_type(
                         schema: new \core\router\schema\objects\array_of_strings(
-                            keyparamtype: PARAM_TEXT,
-                            valueparamtype: PARAM_RAW,
+                            keyparamtype: param::TEXT,
+                            valueparamtype: param::RAW,
                         ),
                         examples: [
                             new \core\router\schema\example(

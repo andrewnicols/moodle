@@ -16,6 +16,7 @@
 
 namespace core_user\route\api;
 
+use core\param;
 use core\router\response\invalid_parameter_response;
 use core\router\route;
 use core\router\schema\response\payload_response;
@@ -56,7 +57,7 @@ class preferences {
         pathtypes: [
             new \core\router\schema\parameters\path_parameter(
                 name: 'preference',
-                type: PARAM_RAW,
+                type: param::RAW,
             ),
         ],
         responses: [
@@ -100,8 +101,8 @@ class preferences {
                 schema: new \core\router\schema\objects\schema_object(
                     content: [
                         'preferences' => new \core\router\schema\objects\array_of_strings(
-                            keyparamtype: PARAM_TEXT,
-                            valueparamtype: PARAM_INT,
+                            keyparamtype: param::TEXT,
+                            valueparamtype: param::INT,
                         ),
                     ],
                 ),
@@ -151,7 +152,7 @@ class preferences {
         pathtypes: [
             new \core\router\schema\parameters\path_parameter(
                 name: 'preference',
-                type: PARAM_RAW,
+                type: param::RAW,
             ),
         ],
         responses: [
@@ -161,8 +162,8 @@ class preferences {
                 content: [
                     new \core\router\schema\response\content\json_media_type(
                         schema: new \core\router\schema\objects\array_of_strings(
-                            keyparamtype: PARAM_TEXT,
-                            valueparamtype: PARAM_RAW,
+                            keyparamtype: param::TEXT,
+                            valueparamtype: param::RAW,
                         ),
                         examples: [
                             new \core\router\schema\example(

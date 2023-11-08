@@ -16,13 +16,11 @@
 
 namespace core_course\route\shim;
 
-use core\router\schema\parameters\path_parameter;
+use core\param;
 use core\router\schema\parameters\query_parameter;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use core\router\route;
-use html_writer;
-use moodle_database;
 
 class course_routes {
     use \core\router\route_controller;
@@ -32,17 +30,17 @@ class course_routes {
         queryparams: [
             new query_parameter(
                 name: 'id',
-                type: PARAM_INT,
+                type: param::INT,
                 description: 'The course ID',
             ),
             new query_parameter(
                 name: 'idnumber',
-                type: PARAM_RAW,
+                type: param::RAW,
                 description: 'The course idnumber',
             ),
             new query_parameter(
                 name: 'name',
-                type: PARAM_TEXT,
+                type: param::TEXT,
                 description: 'The course shortname',
             ),
         ],

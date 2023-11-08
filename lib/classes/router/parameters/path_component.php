@@ -16,6 +16,7 @@
 
 namespace core\router\parameters;
 
+use core\param;
 use core\router\schema\example;
 use core\router\schema\referenced_object;
 
@@ -32,7 +33,7 @@ class path_component extends \core\router\schema\parameters\path_parameter imple
         ...$extra,
     ) {
         $extra['name'] = $name;
-        $extra['type'] = PARAM_COMPONENT;
+        $extra['type'] = param::COMPONENT;
         $extra['description'] = 'The name of a Moodle component, in frankenstyle format.';
         $extra['examples'] = [
             new example(

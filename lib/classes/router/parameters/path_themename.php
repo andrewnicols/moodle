@@ -16,6 +16,7 @@
 
 namespace core\router\parameters;
 
+use core\param;
 use core\router\schema\referenced_object;
 use core\router\schema\example;
 
@@ -34,7 +35,7 @@ class path_themename extends \core\router\schema\parameters\path_parameter imple
             $args['name'] = 'themename';
         }
 
-        $args['type'] = PARAM_ALPHANUMEXT;
+        $args['type'] = param::ALPHANUMEXT;
         $args['description'] = 'The name of a Moodle theme.';
         $args['examples'] = [
             new example(

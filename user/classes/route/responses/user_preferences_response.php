@@ -16,6 +16,7 @@
 
 namespace core_user\route\responses;
 
+use core\param;
 use core\router\schema\response\content\payload_response_type;
 
 /**
@@ -33,8 +34,8 @@ class user_preferences_response extends \core\router\schema\response\response {
             ],
             content: new payload_response_type(
                 schema: new \core\router\schema\objects\array_of_strings(
-                    keyparamtype: PARAM_TEXT,
-                    valueparamtype: PARAM_RAW,
+                    keyparamtype: param::TEXT,
+                    valueparamtype: param::RAW,
                 ),
                 examples: [
                     new \core\router\schema\example(
