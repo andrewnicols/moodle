@@ -175,7 +175,7 @@ class formatter {
      */
     public function format_text(
         ?string $text,
-        string $format = FORMAT_MOODLE,
+        ?string $format = FORMAT_MOODLE,
         ?array $options = null,
 
     ) {
@@ -282,10 +282,9 @@ class formatter {
 
             case FORMAT_WIKI:
                 // This format is deprecated.
-                $text = '<p>NOTICE: Wiki-like formatting has been removed from Moodle.  You should not be seeing
-                     this message as all texts should have been converted to Markdown format instead.
-                     Please post a bug report to http://moodle.org/bugs with information about where you
-                     saw this message.</p>' . s($text);
+                throw new \coding_exception(
+                    'The FORMAT_WIKI format has been removed from Moodle and should no longer be used.',
+                );
                 break;
 
             case FORMAT_MARKDOWN:

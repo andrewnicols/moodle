@@ -1263,8 +1263,10 @@ function format_text_menu() {
 function format_text($text, $format = FORMAT_MOODLE, $options = null, $courseiddonotuse = null) {
     global $CFG;
 
-    // Manually include the formatter class for now until after the release after 4.5 LTS.
+    // Manually include the formatter and container classes for now until after the release after 4.5 LTS.
+    // This is not normally done but these are critical paths and we don't want to break upgrade.
     require_once("{$CFG->libdir}/classes/formatter.php");
+    require_once("{$CFG->libdir}/classes/container.php");
 
     if ($options) {
         $options = (array) $options;
@@ -1342,8 +1344,10 @@ function reset_text_filters_cache($phpunitreset = false) {
 function format_string($string, $striplinks = true, $options = null) {
     global $CFG;
 
-    // Manually include the formatter class for now until after the release after 4.5 LTS.
+    // Manually include the formatter and container classes for now until after the release after 4.5 LTS.
+    // This is not normally done but these are critical paths and we don't want to break upgrade.
     require_once("{$CFG->libdir}/classes/formatter.php");
+    require_once("{$CFG->libdir}/classes/container.php");
 
     return \core\container::get(\core\formatter::class)->format_string(
         $string,
