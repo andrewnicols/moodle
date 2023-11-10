@@ -19,6 +19,8 @@ information provided here is intended especially for developers.
   that are also members of these groups.
 * The options for `format_string()`, and `format_text()` are now checked for incorrectly passed context objects.
   Please note that this was never an accepted value but previously failed silently.
+* The `format_string()` method has moved to `\core\formatting::format_string()`.
+  The old method will be maintained, but new code should use the new method with first-class parameters.
 
 === 4.3 ===
 
