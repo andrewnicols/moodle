@@ -29,20 +29,38 @@ class formatter_test extends \advanced_testcase {
     /**
      * @covers ::format_string
      */
-    public function test_format_string_striptags(): void {
+    public function test_format_string_striptags_cfg(): void {
         global $CFG;
 
         $this->resetAfterTest();
 
         $formatter = new formatter();
 
-        // < and > signs.
+        // Check < and > signs.
         $CFG->formatstringstriptags = false;
         $this->assertSame('x &lt; 1', $formatter->format_string('x < 1'));
         $this->assertSame('x &gt; 1', $formatter->format_string('x > 1'));
         $this->assertSame('x &lt; 1 and x &gt; 0', $formatter->format_string('x < 1 and x > 0'));
 
         $CFG->formatstringstriptags = true;
+        $this->assertSame('x &lt; 1', $formatter->format_string('x < 1'));
+        $this->assertSame('x &gt; 1', $formatter->format_string('x > 1'));
+        $this->assertSame('x &lt; 1 and x &gt; 0', $formatter->format_string('x < 1 and x > 0'));
+    }
+
+    /**
+     * @covers ::format_string
+     */
+    public function test_format_string_striptags_prop(): void {
+        $formatter = new formatter();
+
+        // Check < and > signs.
+        $formatter->set_striptags(false);
+        $this->assertSame('x &lt; 1', $formatter->format_string('x < 1'));
+        $this->assertSame('x &gt; 1', $formatter->format_string('x > 1'));
+        $this->assertSame('x &lt; 1 and x &gt; 0', $formatter->format_string('x < 1 and x > 0'));
+
+        $formatter->set_striptags(true);
         $this->assertSame('x &lt; 1', $formatter->format_string('x < 1'));
         $this->assertSame('x &gt; 1', $formatter->format_string('x > 1'));
         $this->assertSame('x &lt; 1 and x &gt; 0', $formatter->format_string('x < 1 and x > 0'));
