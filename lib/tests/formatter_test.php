@@ -148,15 +148,32 @@ class formatter_test extends \advanced_testcase {
         $this->assertEquals($expectednofilter, $nofilterresult);
 
         // Add the multilang filter. Make sure it's enabled globally.
-        $CFG->filterall = true;
         $CFG->stringfilters = 'multilang';
         filter_set_global_state('multilang', TEXTFILTER_ON);
         filter_set_local_state('multilang', $context->id, TEXTFILTER_ON);
-        // This time we want to apply the filters.
+
+        // Even after setting the filters, no filters are applied yet.
+        $nofilterresult = $formatter->format_string($rawstring, $striplinks, $options);
+        $this->assertEquals($expectednofilter, $nofilterresult);
+
+        // Apply the filter as an option.
         $options['filter'] = true;
         $filterresult = $formatter->format_string($rawstring, $striplinks, $options);
         $this->assertMatchesRegularExpression("/$expectedfilter/", $filterresult);
 
+        // Apply it as a formatter setting.
+        unset($options['filter']);
+        $formatter->set_filterall(true);
+        $filterresult = $formatter->format_string($rawstring, $striplinks, $options);
+        $this->assertMatchesRegularExpression("/$expectedfilter/", $filterresult);
+
+        // Unset it and we do not filter.
+        $formatter->set_filterall(false);
+        $nofilterresult = $formatter->format_string($rawstring, $striplinks, $options);
+        $this->assertEquals($expectednofilter, $nofilterresult);
+
+        // Set it again.
+        $formatter->set_filterall(true);
         filter_set_local_state('multilang', $context->id, TEXTFILTER_OFF);
 
         // Confirm that we get back the cached string. The result should be
