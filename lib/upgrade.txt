@@ -13,6 +13,9 @@ information provided here is intended especially for developers.
 * A new class, core\formatter, has been introduced with relevant `format_string` and `format_text` methods moving into it.
   No change is required for developers at this time
 * Passing a course id to format_text will not emit a deprecation notice. The parameter was deprecated in Moodle 2.6 but not deprecated.
+* The striplinks argument to format_string has been updated to only accept boolean values.
+  The use of null values will emit debugging notices.
+  Support for other values was never intended, or documented, and results may be undefined in certain cases.
 
 === 4.3 ===
 

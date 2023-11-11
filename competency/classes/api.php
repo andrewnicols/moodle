@@ -4729,7 +4729,7 @@ class api {
         $coursecompetencies = course_competency::get_records_select($sql, $params);
 
         $course = get_course($event->courseid);
-        $courseshortname = format_string($course->shortname, null, array('context' => $event->contextid));
+        $courseshortname = format_string($course->shortname, false, array('context' => $event->contextid));
 
         foreach ($coursecompetencies as $coursecompetency) {
 

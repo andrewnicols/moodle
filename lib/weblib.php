@@ -1349,6 +1349,16 @@ function format_string($string, $striplinks = true, $options = null) {
     require_once("{$CFG->libdir}/classes/formatter.php");
     require_once("{$CFG->libdir}/classes/container.php");
 
+    if ($striplinks === null) {
+        // Using a null value here was never a supported option.
+        // Normalise it to false because the uses of it in format_string would be closest to that.
+        $striplinks = false;
+        debugging(
+            'The striplinks option to format_string() should be a boolean.',
+            DEBUG_DEVELOPER,
+        );
+    }
+
     return \core\container::get(\core\formatter::class)->format_string(
         $string,
         $striplinks,
