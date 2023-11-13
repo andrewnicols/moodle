@@ -52,68 +52,6 @@ class view_controller {
     }
 
     /**
-     * View a course by its idnumber attribute.
-     *
-     * This can be useful for courses linked to from internal systems.
-     *
-     * The course still has a canonical URI, which is the one with the ID.
-     *
-     * @param string $idnumber
-     * @param moodle_database $db
-     * @return ResponseInterface
-     */
-    #[route(
-        path: '/view/byidnumber/{idnumber}',
-        pathtypes: [
-            new path_parameter(
-                name: 'idnumber',
-                type: param::RAW,
-            ),
-        ],
-    )]
-    public function view_by_idnumber(
-        string $idnumber,
-        moodle_database $db,
-    ): ResponseInterface {
-        $id = $db->get_field('course', 'id', ['idnumber' => $idnumber], MUST_EXIST);
-        \core\router::redirect_with_params(
-            "/course/view/{$id}",
-            ['idnumber'],
-        );
-    }
-
-    /**
-     * View a course by its shortname attribute.
-     *
-     * This can be useful for courses linked to from internal systems.
-     *
-     * The course still has a canonical URI, which is the one with the ID.
-     *
-     * @param string $idnumber
-     * @param moodle_database $db
-     * @return ResponseInterface
-     */
-    #[route(
-        path: '/view/byshortname/{shortname}',
-        pathtypes: [
-            new path_parameter(
-                name: 'shortname',
-                type: param::TEXT,
-            ),
-        ],
-    )]
-    public function view_by_shortname(
-        string $shortname,
-        moodle_database $db,
-    ): ResponseInterface {
-        $id = $db->get_field('course', 'id', ['shortname' => $shortname], MUST_EXIST);
-        \core\router::redirect_with_params(
-            "/course/view/{$id}",
-            ['idnumber'],
-        );
-    }
-
-    /**
      * View a course by its id.
      *
      * @param ServerRequestInterface $request
@@ -124,12 +62,9 @@ class view_controller {
      * @return ResponseInterface
      */
     #[route(
-        path: '/view/{id:[0-9]+}',
+        path: '/view/{course}',
         pathtypes: [
-            new \core\router\schema\parameters\path_parameter(
-                name: 'id',
-                type: param::INT,
-            ),
+            new \core\router\parameters\course_parameter(),
         ],
         queryparams: [
             new query_parameter(
@@ -187,11 +122,14 @@ class view_controller {
     public function view_course(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        int $id,
+        \stdClass $course,
+        \core\context\course $coursecontext,
         \moodle_page $PAGE,
         \moodle_database $db,
     ): ResponseInterface {
         global $CFG, $USER, $OUTPUT, $SESSION;
+
+        $id = $course->id;
 
         $edit = $this->get_param($request, 'edit');
         $hide = $this->get_param($request, 'hide');
@@ -207,13 +145,7 @@ class view_controller {
         $switchrole = $this->get_param($request, 'switchrole');
         $return = $this->get_param($request, 'return');
 
-        $course = $db->get_record('course', ['id' => $id]);
-
-        // Preload the course context, and all child contexts.
-        \core\context_helper::preload_course($course->id);
-        $context = \core\context\course::instance($course->id, MUST_EXIST);
-
-        $urlparams = ['id' => $course->id];
+        $urlparams = [];
 
         // Sectionid should get priority over section number.
         $section = null;
@@ -233,13 +165,10 @@ class view_controller {
         // Prevent caching of this page to stop confusion when changing page after making AJAX changes.
         $PAGE->set_cacheable(false);
 
-        \core\context_helper::preload_course($course->id);
-        $context = \core\context\course::instance($course->id, MUST_EXIST);
-
         // Remove any switched roles before checking login.
         if ($switchrole = $this->get_param($request, 'switchrole', null)) {
             if ($switchrole == 0 && confirm_sesskey()) {
-                role_switch($switchrole, $context);
+                role_switch($switchrole, $coursecontext);
             }
         }
 
@@ -249,13 +178,13 @@ class view_controller {
         $resetuserallowedediting = false;
         if (
             $switchrole > 0 && confirm_sesskey() &&
-            has_capability('moodle/role:switchroles', $context)
+            has_capability('moodle/role:switchroles', $coursecontext)
         ) {
             // Is this role assignable in this context?
             // Inquiring minds want to know.
-            $aroles = get_switchable_roles($context);
+            $aroles = get_switchable_roles($coursecontext);
             if (is_array($aroles) && isset($aroles[$switchrole])) {
-                role_switch($switchrole, $context);
+                role_switch($switchrole, $coursecontext);
                 // Double check that this role is allowed here.
                 require_login($course);
             }
@@ -303,7 +232,7 @@ class view_controller {
                     // Note: We actually already know they don't have this capability
                     // or uservisible would have been true; this is just to get the
                     // correct error message shown.
-                    require_capability('moodle/course:viewhiddensections', $context);
+                    require_capability('moodle/course:viewhiddensections', $coursecontext);
                 }
             }
         }
@@ -365,7 +294,7 @@ class view_controller {
                 }
             }
 
-            if (has_capability('moodle/course:sectionvisibility', $context)) {
+            if (has_capability('moodle/course:sectionvisibility', $coursecontext)) {
                 $hide = $this->get_param($request, 'hide');
                 $show = $this->get_param($request, 'show');
                 if ($hide && confirm_sesskey()) {
@@ -381,7 +310,7 @@ class view_controller {
 
             if (
                 !empty($section) && !empty($coursesections) && !empty($duplicatesection)
-                && has_capability('moodle/course:update', $context) && confirm_sesskey()
+                && has_capability('moodle/course:update', $coursecontext) && confirm_sesskey()
             ) {
                 $newsection = $format->duplicate_section($coursesections);
                 redirect(course_get_url($course, $newsection->section));
@@ -389,7 +318,7 @@ class view_controller {
 
             if (
                 !empty($section) && !empty($move) &&
-                has_capability('moodle/course:movesections', $context) && confirm_sesskey()
+                has_capability('moodle/course:movesections', $coursecontext) && confirm_sesskey()
             ) {
                 $destsection = $section + $move;
                 if (move_section_to($course, $section, $destsection)) {
@@ -420,7 +349,7 @@ class view_controller {
         }
 
         // Determine whether the user has permission to download course content.
-        $candownloadcourse = \core\content::can_export_context($context, $USER);
+        $candownloadcourse = \core\content::can_export_context($coursecontext, $USER);
 
         // We are currently keeping the button here from 1.x to help new teachers figure out
         // what to do, even though the link also appears in the course admin block.  It also
@@ -460,9 +389,9 @@ class view_controller {
         $PAGE->set_heading($course->fullname);
 
         // Show communication room status notification.
-        if (\core_communication\api::is_available() && has_capability('moodle/course:update', $context)) {
+        if (\core_communication\api::is_available() && has_capability('moodle/course:update', $coursecontext)) {
             $communication = \core_communication\api::load_by_instance(
-                $context,
+                $coursecontext,
                 'core_course',
                 'coursecommunication',
                 $course->id
