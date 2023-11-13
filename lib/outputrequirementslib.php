@@ -1604,6 +1604,16 @@ EOF;
             $output .= html_writer::script($js);
         }
 
+        if ($page->has_set_url()) {
+            $output .= html_writer::empty_tag(
+                tagname: 'link',
+                attributes: [
+                    'rel' => 'canonical',
+                    'href' => $page->url,
+                ],
+            );
+        }
+
         // Mark head sending done, it is not possible to anything there.
         $this->headdone = true;
 

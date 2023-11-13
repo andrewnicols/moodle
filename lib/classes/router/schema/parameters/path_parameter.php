@@ -18,6 +18,7 @@ namespace core\router\schema\parameters;
 
 use core\router\route;
 use core\router\schema\specification;
+use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\Route as RoutingRoute;
 use stdClass;
 
@@ -37,16 +38,26 @@ class path_parameter extends \core\router\schema\parameter {
     }
 
     public function validate(
+        ServerRequestInterface $request,
         RoutingRoute $route,
-    ): void {
-        validate_param(
-            param: $route->getArgument($this->name),
-            type: $this->type,
+    ): ServerRequestInterface {
+        $args = $route->getArguments();
+        $value = $args[$this->name];
 
-            // The fact that this route was matched means that the parameter is optional.
-            // Do not fail validation on empty values.
+        $this->type->validate_param(
+            param: $value,
             allownull: NULL_ALLOWED,
         );
+
+        if ($this instanceof mapped_property_parameter) {
+            // Unfortunately args must be a string, but mapped properties can be an object.
+            // Remove the argument, and instead provide the mapped property as an attribute.
+            unset($args[$this->name]);
+            $route->setArguments($args);
+            $request = $this->add_attributes_for_parameter_value($request, $value);
+        }
+
+        return $request;
     }
 
     final public function get_openapi_description(

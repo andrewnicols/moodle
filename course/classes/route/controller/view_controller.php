@@ -124,12 +124,9 @@ class view_controller {
      * @return ResponseInterface
      */
     #[route(
-        path: '/view/{id:[0-9]+}',
+        path: '/view/{course}',
         pathtypes: [
-            new \core\router\schema\parameters\path_parameter(
-                name: 'id',
-                type: param::INT,
-            ),
+            new \core\router\parameters\course_parameter(),
         ],
         queryparams: [
             new query_parameter(
@@ -187,11 +184,14 @@ class view_controller {
     public function view_course(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        int $id,
+        \stdClass $course,
+        \core\context\course $coursecontext,
         \moodle_page $PAGE,
         \moodle_database $db,
     ): ResponseInterface {
         global $CFG, $USER, $OUTPUT, $SESSION;
+
+        $id = $course->id;
 
         $edit = $this->get_param($request, 'edit');
         $hide = $this->get_param($request, 'hide');
@@ -207,13 +207,12 @@ class view_controller {
         $switchrole = $this->get_param($request, 'switchrole');
         $return = $this->get_param($request, 'return');
 
-        $course = $db->get_record('course', ['id' => $id]);
-
         // Preload the course context, and all child contexts.
         \core\context_helper::preload_course($course->id);
         $context = \core\context\course::instance($course->id, MUST_EXIST);
 
-        $urlparams = ['id' => $course->id];
+        $urlparams = [];
+        // $urlparams = ['id' => $course->id];
 
         // Sectionid should get priority over section number.
         $section = null;
