@@ -166,7 +166,7 @@ class route {
 
         // Validate that the path arguments are valid.
         // If they are not, then an Exception should be thrown.
-        $this->validate_path($route);
+        $request = $this->validate_path($request, $route);
 
         // Validate query parameters.
         $request = $this->validate_query($request, $route);
@@ -181,10 +181,15 @@ class route {
     /**
      * Validate that the path arguments match those supplied in the route.
      *
+     * @param ServerRequestInterface $request
      * @param RoutingRoute $route The route to validate.
+     * @return ServerRequestInterface
      * @throws coding_exception
      */
-    protected function validate_path(RoutingRoute $route): void {
+    protected function validate_path(
+        ServerRequestInterface $request,
+        RoutingRoute $route,
+    ): ServerRequestInterface {
         $requiredparams = count(array_filter(
             $this->pathtypes,
             fn($pathtype) => $pathtype->is_required($this),
@@ -199,8 +204,10 @@ class route {
         }
 
         foreach ($this->pathtypes as $pathtype) {
-            $pathtype->validate($route);
+            $request = $pathtype->validate($request, $route);
         }
+
+        return $request;
     }
 
     /**

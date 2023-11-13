@@ -101,7 +101,9 @@ class controller_invoker extends \DI\Bridge\Slim\ControllerInvoker {
     ): ServerRequestInterface {
         $args = $request;
         foreach ($routeargs as $key => $value) {
-            $args = $args->withAttribute($key, $value);
+            if (!$args->getAttribute($key)) {
+                $args = $args->withAttribute($key, $value);
+            }
         }
         return $args;
     }
