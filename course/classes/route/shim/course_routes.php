@@ -49,11 +49,13 @@ class course_routes {
         ServerRequestInterface $request,
         ResponseInterface $response,
     ): ResponseInterface {
+        $params = $request->getQueryParams();
         if ($this->get_param($request, 'id')) {
             return $this->redirect_to_callable(
                 $request,
                 $response,
                 \core_course\route\controller\view_controller::class . '::view_course',
+                pathparams: $params + ['course' => $params['id']],
                 excludeparams: ['id'],
             );
         }
@@ -61,7 +63,8 @@ class course_routes {
             return $this->redirect_to_callable(
                 $request,
                 $response,
-                \core_course\route\controller\view_controller::class . '::view_by_idnumber',
+                \core_course\route\controller\view_controller::class . '::view_course',
+                pathparams: $params + ['course' => "idnumber:{$params['idnumber']}"],
                 excludeparams: ['idnumber'],
             );
         }
@@ -69,7 +72,8 @@ class course_routes {
             return $this->redirect_to_callable(
                 $request,
                 $response,
-                \core_course\route\controller\view_controller::class . '::view_by_shortname',
+                \core_course\route\controller\view_controller::class . '::view_course',
+                pathparams: $params + ['course' => "name:{$params['name']}"],
                 excludeparams: ['name'],
             );
         }
