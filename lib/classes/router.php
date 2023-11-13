@@ -52,8 +52,21 @@ class router {
     public function __construct(
         protected string $basepath,
     ) {
-        $this->container = container::get_container();
     }
+
+    /**
+     * Get the DI Container.
+     *
+     * @return ContainerInterface
+     */
+    protected function get_container(): ContainerInterface {
+        if (!isset($this->container)) {
+            $this->container = container::get_container();
+        }
+
+        return $this->container;
+    }
+
 
     /**
      * Redirect to the specified URL, carrying all parameters across too.
@@ -70,7 +83,6 @@ class router {
         $url = new \moodle_url(
             $path,
             $params,
-            // TODO Anchor.
         );
         $url->remove_params($excludeparams);
 
@@ -100,13 +112,32 @@ class router {
 
         // Create an App using the DI Bridge.
         $app = router\bridge::create(
-            container: $this->container,
+            container: $this->get_container(),
         );
+
         $this->configure_error_handling($app);
-
         $app->addBodyParsingMiddleware();
+        $this->add_request_normalisation_middleware($app);
+        $this->add_bootstrap_middlware($app);
+        $this->configure_caching($app);
+        $this->configure_routes($app);
+        $app->setBasePath($basepath);
 
-        $app->add(function(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+        return $app;
+    }
+
+    /**
+     * Add Middleware to normalise the request path.
+     *
+     * This is required to ensure that the request path is matched correctly and includes:
+     * - Removing duplicate slashes
+     * - Ensuring that there is a path ('' is not a valid path for '/')
+     * - Removing trailing slashes
+     *
+     * @param App $app
+     */
+    protected function add_request_normalisation_middleware(App $app): void {
+        $app->add(function (ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
             $uri = $request->getUri();
             $path = $uri->getPath();
 
@@ -128,6 +159,15 @@ class router {
 
             return $handler->handle($request);
         });
+    }
+
+    /**
+     * Configure caching for the routes.
+     *
+     * @param App $app
+     */
+    protected function configure_caching(App $app): void {
+        global $CFG;
 
         // TODO: Look into MUC caching instead of a file-based cache.
         $app->getRouteCollector()->setCacheFile(
@@ -137,12 +177,6 @@ class router {
                 sha1($this->basepath),
             ),
         );
-
-        $this->configure_routes($app);
-
-        $app->setBasePath($basepath);
-
-        return $app;
     }
 
     public function handle_request(
@@ -169,7 +203,7 @@ class router {
                 require_once($developerautoloadpath);
                 $guard = new \Zeuxisoo\Whoops\Slim\WhoopsGuard([
                     'enable' => true,
-                    'editor' => $CFG->debug_developer_editor ?: null,
+                    'editor' => isset($CFG->debug_developer_editor) ? $CFG->debug_developer_editor : null,
                 ]);
                 $guard->setRequest($request);
                 $guard->install();
@@ -180,14 +214,11 @@ class router {
         });
     }
 
-    protected function configure_routes(App $app): void {
-        // Handle the REST API.
-        $this->configure_api_routes($app);
-
+    protected function add_bootstrap_middlware(App $app): void {
         // Middleware to set flags and define setup.
         $app->add(function (RequestInterface $request, $handler) {
             if (str_contains($request->getUri(), '/api/rest/v2')) {
-                define('AJAX_SCRIPT', true);
+                // define('AJAX_SCRIPT', true);
             }
             \core\bootstrap::full_setup();
             $page = $this->get(\moodle_page::class);
@@ -217,9 +248,14 @@ class router {
                 ->get(response_handler::class)
                 ->standardise_response($response);
         });
+    }
+
+    protected function configure_routes(App $app): void {
+        // Handle the REST API.
+        $this->configure_api_routes($app);
 
         // Add all standard routes.
-        $this->add_all_user_routes($app);
+        $this->add_all_standard_routes($app);
 
         // Add all shimmed routes for things which have been replaced.
         $this->add_all_shimmed_routes($app);
@@ -234,7 +270,9 @@ class router {
 
             $group->get('/openapi.json', [\core\router\apidocs::class, 'openapi_docs']);
         })->add(function (RequestInterface $request, $handler) {
-            \core\bootstrap::full_setup();
+            if (!PHPUNIT_TEST) {
+                \core\bootstrap::full_setup();
+            }
 
             $this->get(\moodle_page::class)->set_context(\core\context\system::instance());
 
@@ -274,8 +312,6 @@ class router {
 
                     return $response;
                 });
-
-                ;
         }
     }
 
@@ -391,7 +427,7 @@ class router {
         return $cachedata;
     }
 
-    protected function add_all_user_routes(RouteCollectorProxy $group): void {
+    protected function add_all_standard_routes(RouteCollectorProxy $group): void {
         $routedata = $this->get_all_standard_routes();
         foreach ($routedata as $data) {
             $group
