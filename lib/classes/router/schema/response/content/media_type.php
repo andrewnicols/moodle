@@ -70,6 +70,10 @@ abstract class media_type extends openapi_base {
             }
         }
 
+        if (empty($data->examples)) {
+            unset($data->examples);
+        }
+
         if ($this->required) {
             $data->required = true;
         }

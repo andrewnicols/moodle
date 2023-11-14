@@ -371,8 +371,7 @@
                                         "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
                                     }
                                 }
-                            },
-                            "examples": []
+                            }
                         },
                         "application/xml": {
                             "schema": {
@@ -382,8 +381,7 @@
                                         "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
                                     }
                                 }
-                            },
-                            "examples": []
+                            }
                         }
                     }
                 }
