@@ -219,10 +219,15 @@ abstract class openapi_base {
         // Note https://swagger.io/docs/specification/using-ref/ defines the following replacements:
         // ~ => ~0
         // / => ~1
+        // We also add some other replacements:
+        // \ => --
         // These must be used in all reference names.
+        // See also https://spec.openapis.org/oas/v3.1.0#components-object
+        // And the following regular expression:
+        // ^[a-zA-Z0-9\.\-_]+$.
         return str_replace(
-            ['~', '/'],
-            ['~0', '~1'],
+            ['~', '/', '\\'],
+            ['~0', '~1', '--'],
             $reference,
         );
     }

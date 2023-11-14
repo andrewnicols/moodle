@@ -26,10 +26,10 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core\\router\\parameters\\path_themename"
+                        "$ref": "#/components/parameters/core--router--parameters--path_themename"
                     },
                     {
-                        "$ref": "#/components/parameters/core\\router\\parameters\\path_component"
+                        "$ref": "#/components/parameters/core--router--parameters--path_component"
                     },
                     {
                         "name": "identifier",
@@ -55,7 +55,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "Single template value": {
@@ -69,7 +69,7 @@
                         }
                     },
                     "400": {
-                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     }
                 },
                 "security": []
@@ -84,12 +84,12 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core\\router\\parameters\\course_parameter"
+                        "$ref": "#/components/parameters/core--router--parameters--course_parameter"
                     }
                 ],
                 "responses": {
                     "400": {
-                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     }
                 }
             }
@@ -103,12 +103,12 @@
                 ],
                 "parameters": [
                     {
-                        "$ref": "#/components/parameters/core\\router\\parameters\\course_parameter"
+                        "$ref": "#/components/parameters/core--router--parameters--course_parameter"
                     }
                 ],
                 "responses": {
                     "400": {
-                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     }
                 }
             }
@@ -135,13 +135,13 @@
                         "description": "OK",
                         "headers": {
                             "X-Total-Count": {
-                                "$ref": "#/components/headers/core_user\\route\\headers\\example_header"
+                                "$ref": "#/components/headers/core_user--route--headers--example_header"
                             }
                         },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "A single preference value": {
@@ -162,7 +162,7 @@
                             },
                             "application/xml": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "A single preference value": {
@@ -184,7 +184,7 @@
                         }
                     },
                     "400": {
-                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     }
                 }
             },
@@ -210,7 +210,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "A single preference value": {
@@ -224,7 +224,7 @@
                         }
                     },
                     "400": {
-                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     }
                 }
             }
@@ -242,13 +242,13 @@
                         "description": "OK",
                         "headers": {
                             "X-Total-Count": {
-                                "$ref": "#/components/headers/core_user\\route\\headers\\example_header"
+                                "$ref": "#/components/headers/core_user--route--headers--example_header"
                             }
                         },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "A single preference value": {
@@ -269,7 +269,7 @@
                             },
                             "application/xml": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "A single preference value": {
@@ -291,7 +291,7 @@
                         }
                     },
                     "400": {
-                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     }
                 }
             },
@@ -307,13 +307,13 @@
                         "description": "OK",
                         "headers": {
                             "X-Total-Count": {
-                                "$ref": "#/components/headers/core_user\\route\\headers\\example_header"
+                                "$ref": "#/components/headers/core_user--route--headers--example_header"
                             }
                         },
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "A single preference value": {
@@ -334,7 +334,7 @@
                             },
                             "application/xml": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                 },
                                 "examples": {
                                     "A single preference value": {
@@ -356,7 +356,7 @@
                         }
                     },
                     "400": {
-                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                        "$ref": "#/components/responses/core--router--response--invalid_parameter_response"
                     }
                 },
                 "requestBody": {
@@ -368,7 +368,7 @@
                                 "type": "object",
                                 "properties": {
                                     "preferences": {
-                                        "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                     }
                                 }
                             }
@@ -378,7 +378,7 @@
                                 "type": "object",
                                 "properties": {
                                     "preferences": {
-                                        "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                        "$ref": "#/components/schemas/core--router--schema--objects--array_of_strings"
                                     }
                                 }
                             }
@@ -390,19 +390,19 @@
     },
     "components": {
         "schemas": {
-            "core\\router\\schema\\objects\\array_of_strings": {
+            "core--router--schema--objects--array_of_strings": {
                 "type": "object",
                 "additionalProperties": {
                     "type": "string"
                 }
             },
-            "core\\router\\schema\\objects\\array_of_things": {
+            "core--router--schema--objects--array_of_things": {
                 "type": "object",
                 "additionalProperties": true
             }
         },
         "responses": {
-            "core\\router\\response\\invalid_parameter_response": {
+            "core--router--response--invalid_parameter_response": {
                 "description": "The parameter provided was invalid in some way.",
                 "content": {
                     "application/json": {
@@ -425,7 +425,7 @@
                                                     "type": "string"
                                                 },
                                                 "args": {
-                                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_things"
+                                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_things"
                                                 },
                                                 "class": {
                                                     "type": "string"
@@ -509,7 +509,7 @@
                                                     "type": "string"
                                                 },
                                                 "args": {
-                                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_things"
+                                                    "$ref": "#/components/schemas/core--router--schema--objects--array_of_things"
                                                 },
                                                 "class": {
                                                     "type": "string"
@@ -577,7 +577,7 @@
             }
         },
         "parameters": {
-            "core\\router\\parameters\\path_themename": {
+            "core--router--parameters--path_themename": {
                 "name": "themename",
                 "in": "path",
                 "description": "The name of a Moodle theme.",
@@ -595,7 +595,7 @@
                 },
                 "required": true
             },
-            "core\\router\\parameters\\path_component": {
+            "core--router--parameters--path_component": {
                 "name": "component",
                 "in": "path",
                 "description": "The name of a Moodle component, in frankenstyle format.",
@@ -619,7 +619,7 @@
                 },
                 "required": true
             },
-            "core\\router\\parameters\\course_parameter": {
+            "core--router--parameters--course_parameter": {
                 "name": "course",
                 "in": "path",
                 "description": "The course identifier.\n\nThis can be the id of the course, the idnumber of the course, or the shortname of the course.\n\nIf specifying a course idnumber, the value should be in the format `idnumber:[idnumber]`.\n\nIf specifying a course shortname, the value should be in the format `name:[shortname]`.",
@@ -643,7 +643,7 @@
         "examples": {},
         "requestBodies": {},
         "headers": {
-            "core_user\\route\\headers\\example_header": {
+            "core_user--route--headers--example_header": {
                 "description": "The total number of preferences",
                 "schema": {
                     "type": "integer"
