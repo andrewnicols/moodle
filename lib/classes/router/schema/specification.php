@@ -261,7 +261,18 @@ class specification implements
         route $route,
     ): self {
         // Compile the final path, complete with component prefix.
-        $path = "/{$component}" . $route->get_path();
+        [$type, $subsystem] = \core_component::normalize_component($component);
+
+        if ($type === 'core') {
+            if ($subsystem) {
+                $path = "/{$subsystem}";
+            } else {
+                $path = "/core";
+            }
+        } else {
+            $path === "/{$component}";
+        }
+        $path .= $route->get_path();
 
         // Helper to add the path to the specification.
         $addpath = function(string $path) use ($route, $component, $parentcontexts) {

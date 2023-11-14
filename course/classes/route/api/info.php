@@ -36,30 +36,15 @@ use stdClass;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[route(
-    path: '/info',
-)]
-class info {
-    use \core\router\route_controller;
 
-    /**
-     * Fetch a single user preference, or a set of user preferences.
-     *
-     * @param ResponseInterface $response
-     * @param string $themename
-     * @param string $component
-     * @param null|string $identifier
-     * @return payload_response
-     */
+
+class info {
+
     #[route(
-        path: '[/{course}]',
-        title: 'Fetch user preferences',
-        description: 'Fetch one user preference, or all user preferences',
+        path: '/{course}',
+        title: 'Fetch information about a course',
         pathtypes: [
             new \core\router\parameters\course_parameter(),
-        ],
-        responses: [
-            400 => new invalid_parameter_response(),
         ],
     )]
     public function get_info(

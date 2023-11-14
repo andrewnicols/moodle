@@ -42,7 +42,8 @@ class path_parameter extends \core\router\schema\parameter {
         RoutingRoute $route,
     ): ServerRequestInterface {
         $args = $route->getArguments();
-        $value = $args[$this->name];
+
+        $value = $route->getArgument($this->name);
 
         $this->type->validate_param(
             param: $value,

@@ -301,7 +301,6 @@ class router {
                 ->add(function (ServerRequestInterface $request, $handler) use ($data) {
                     $routeattribute = self::get_route_instance_for_method($data['callable']);
 
-                    xdebug_break();
                     // Validate the request.
                     $request = $routeattribute->validate_request($request);
 
@@ -379,7 +378,7 @@ class router {
         if (!($cachedata = $cache->get('api_routes'))) {
             $cachedata = $this->get_route_data_for_namespace(
                 namespace: 'route\api',
-                componentpathcallback: fn($component) => $this->normalise_component_to_path($component, true),
+                componentpathcallback: fn($component) => $this->normalise_component_to_path($component, false),
             );
 
             $cache->set('api_routes', $cachedata);

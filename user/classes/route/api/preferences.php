@@ -35,21 +35,13 @@ use Psr\Http\Message\ServerRequestInterface;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 #[route(
     path: '/preferences',
 )]
 class preferences {
     use \core\router\route_controller;
 
-    /**
-     * Fetch a single user preference, or a set of user preferences.
-     *
-     * @param ResponseInterface $response
-     * @param string $themename
-     * @param string $component
-     * @param null|string $identifier
-     * @return payload_response
-     */
     #[route(
         path: '[/{preference}]',
         title: 'Fetch user preferences',
@@ -62,7 +54,6 @@ class preferences {
         ],
         responses: [
             200 => new user_preferences_response(),
-            400 => new invalid_parameter_response(),
         ],
     )]
     public function get_preferences(
@@ -70,8 +61,7 @@ class preferences {
         ServerRequestInterface $request,
         ?string $preference,
     ): response_type {
-        // TODO User validation.
-
+        // ...
         $result = get_user_preferences(
             name: $preference,
         );
