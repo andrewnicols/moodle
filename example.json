@@ -1,0 +1,678 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Moodle LMS",
+        "description": "REST API for Moodle LMS",
+        "summary": "Moodle LMS REST API",
+        "license": {
+            "name": "GNU GPL v3 or later",
+            "url": "https://www.gnu.org/licenses/gpl-3.0.html"
+        },
+        "version": "2023102000"
+    },
+    "servers": [
+        {
+            "url": "http://mandarin.local/ws2/api/rest/v2",
+            "description": "Example"
+        }
+    ],
+    "paths": {
+        "/core/templates/{themename}/{component}/{identifier}": {
+            "get": {
+                "description": "Fetch a single template for a component in a theme",
+                "summary": "Fetch a single template",
+                "tags": [
+                    "core"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/core\\router\\parameters\\path_themename"
+                    },
+                    {
+                        "$ref": "#/components/parameters/core\\router\\parameters\\path_component"
+                    },
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[a-zA-Z0-9\\/_\\-]*$"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "includecomments",
+                        "in": "query",
+                        "description": "Include comments in the template",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "Single template value": {
+                                        "summary": "A json response containing the template for a single template",
+                                        "value": {
+                                            "mod_example/template_identifier": "<div class=\"example\">Hello World</div>"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                    }
+                },
+                "security": []
+            }
+        },
+        "/core_course/info/{course}": {
+            "get": {
+                "description": "Fetch one user preference, or all user preferences",
+                "summary": "Fetch user preferences",
+                "tags": [
+                    "core_course"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/core\\router\\parameters\\course_parameter"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                    }
+                }
+            }
+        },
+        "/core_course/info": {
+            "get": {
+                "description": "Fetch one user preference, or all user preferences",
+                "summary": "Fetch user preferences",
+                "tags": [
+                    "core_course"
+                ],
+                "parameters": [
+                    {
+                        "$ref": "#/components/parameters/core\\router\\parameters\\course_parameter"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                    }
+                }
+            }
+        },
+        "/core_user/preferences/{preference}": {
+            "get": {
+                "description": "Fetch one user preference, or all user preferences",
+                "summary": "Fetch user preferences",
+                "tags": [
+                    "core_user"
+                ],
+                "parameters": [
+                    {
+                        "name": "preference",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "X-Total-Count": {
+                                "$ref": "#/components/headers/core_user\\route\\headers\\example_header"
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "A single preference value": {
+                                        "summary": "A json response containing a single preference",
+                                        "value": {
+                                            "drawers-open-index": "1"
+                                        }
+                                    },
+                                    "A set of preference values": {
+                                        "summary": "A json response containing a set of preferences",
+                                        "value": {
+                                            "drawers-open-index": "1",
+                                            "login_failed_count_since_success": "1",
+                                            "coursesectionspreferences_2": "{\"contentcollapsed\":[]}"
+                                        }
+                                    }
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "A single preference value": {
+                                        "summary": "A json response containing a single preference",
+                                        "value": {
+                                            "drawers-open-index": "1"
+                                        }
+                                    },
+                                    "A set of preference values": {
+                                        "summary": "A json response containing a set of preferences",
+                                        "value": {
+                                            "drawers-open-index": "1",
+                                            "login_failed_count_since_success": "1",
+                                            "coursesectionspreferences_2": "{\"contentcollapsed\":[]}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                    }
+                }
+            },
+            "post": {
+                "description": "Set a single user preference",
+                "summary": "Set a single user preference",
+                "tags": [
+                    "core_user"
+                ],
+                "parameters": [
+                    {
+                        "name": "preference",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "A single preference value": {
+                                        "summary": "A json response containing a single preference",
+                                        "value": {
+                                            "drawers-open-index": "1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                    }
+                }
+            }
+        },
+        "/core_user/preferences": {
+            "get": {
+                "description": "Fetch one user preference, or all user preferences",
+                "summary": "Fetch user preferences",
+                "tags": [
+                    "core_user"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "X-Total-Count": {
+                                "$ref": "#/components/headers/core_user\\route\\headers\\example_header"
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "A single preference value": {
+                                        "summary": "A json response containing a single preference",
+                                        "value": {
+                                            "drawers-open-index": "1"
+                                        }
+                                    },
+                                    "A set of preference values": {
+                                        "summary": "A json response containing a set of preferences",
+                                        "value": {
+                                            "drawers-open-index": "1",
+                                            "login_failed_count_since_success": "1",
+                                            "coursesectionspreferences_2": "{\"contentcollapsed\":[]}"
+                                        }
+                                    }
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "A single preference value": {
+                                        "summary": "A json response containing a single preference",
+                                        "value": {
+                                            "drawers-open-index": "1"
+                                        }
+                                    },
+                                    "A set of preference values": {
+                                        "summary": "A json response containing a set of preferences",
+                                        "value": {
+                                            "drawers-open-index": "1",
+                                            "login_failed_count_since_success": "1",
+                                            "coursesectionspreferences_2": "{\"contentcollapsed\":[]}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                    }
+                }
+            },
+            "post": {
+                "description": "",
+                "summary": "Set or update multiple user preferences",
+                "tags": [
+                    "core_user"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "headers": {
+                            "X-Total-Count": {
+                                "$ref": "#/components/headers/core_user\\route\\headers\\example_header"
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "A single preference value": {
+                                        "summary": "A json response containing a single preference",
+                                        "value": {
+                                            "drawers-open-index": "1"
+                                        }
+                                    },
+                                    "A set of preference values": {
+                                        "summary": "A json response containing a set of preferences",
+                                        "value": {
+                                            "drawers-open-index": "1",
+                                            "login_failed_count_since_success": "1",
+                                            "coursesectionspreferences_2": "{\"contentcollapsed\":[]}"
+                                        }
+                                    }
+                                }
+                            },
+                            "application/xml": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                },
+                                "examples": {
+                                    "A single preference value": {
+                                        "summary": "A json response containing a single preference",
+                                        "value": {
+                                            "drawers-open-index": "1"
+                                        }
+                                    },
+                                    "A set of preference values": {
+                                        "summary": "A json response containing a set of preferences",
+                                        "value": {
+                                            "drawers-open-index": "1",
+                                            "login_failed_count_since_success": "1",
+                                            "coursesectionspreferences_2": "{\"contentcollapsed\":[]}"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "$ref": "#/components/responses/core\\router\\response\\invalid_parameter_response"
+                    }
+                },
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "preferences": {
+                                        "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    }
+                                }
+                            },
+                            "examples": []
+                        },
+                        "application/xml": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "preferences": {
+                                        "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_strings"
+                                    }
+                                }
+                            },
+                            "examples": []
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "core\\router\\schema\\objects\\array_of_strings": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string"
+                }
+            },
+            "core\\router\\schema\\objects\\array_of_things": {
+                "type": "object",
+                "additionalProperties": true
+            }
+        },
+        "responses": {
+            "core\\router\\response\\invalid_parameter_response": {
+                "description": "The parameter provided was invalid in some way.",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "stacktrace": {
+                                    "type": "object",
+                                    "properties": {
+                                        "0": {
+                                            "type": "object",
+                                            "properties": {
+                                                "file": {
+                                                    "type": "string"
+                                                },
+                                                "line": {
+                                                    "type": "integer"
+                                                },
+                                                "function": {
+                                                    "type": "string"
+                                                },
+                                                "args": {
+                                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_things"
+                                                },
+                                                "class": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "examples": {
+                            "A parameter was not of the right type": {
+                                "value": {
+                                    "stacktrace": [
+                                        {
+                                            "file": "/Users/nicols/Sites/moodles/ws2/moodle/lib/classes/router/schema/objects/array_of_strings.php",
+                                            "line": 48,
+                                            "function": "validate_param",
+                                            "args": [
+                                                "string",
+                                                "int",
+                                                false,
+                                                "The value 'string' was not of type string."
+                                            ]
+                                        },
+                                        {
+                                            "file": "/Users/nicols/Sites/moodles/ws2/moodle/lib/classes/router/schema/objects/schema_object.php",
+                                            "line": 85,
+                                            "function": "validate_data",
+                                            "class": "core\\router\\schema\\objects\\array_of_strings",
+                                            "type": "->",
+                                            "args": [
+                                                {
+                                                    "additionalProp1": "string",
+                                                    "additionalProp2": "string",
+                                                    "additionalProp3": "string"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "file": "/Users/nicols/Sites/moodles/ws2/moodle/lib/classes/router/route.php",
+                                            "line": 264,
+                                            "function": "validate_data",
+                                            "class": "core\\router\\schema\\objects\\schema_object",
+                                            "type": "->",
+                                            "args": [
+                                                {
+                                                    "preferences": {
+                                                        "additionalProp1": "string",
+                                                        "additionalProp2": "string",
+                                                        "additionalProp3": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "application/xml": {
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "stacktrace": {
+                                    "type": "object",
+                                    "properties": {
+                                        "0": {
+                                            "type": "object",
+                                            "properties": {
+                                                "file": {
+                                                    "type": "string"
+                                                },
+                                                "line": {
+                                                    "type": "integer"
+                                                },
+                                                "function": {
+                                                    "type": "string"
+                                                },
+                                                "args": {
+                                                    "$ref": "#/components/schemas/core\\router\\schema\\objects\\array_of_things"
+                                                },
+                                                "class": {
+                                                    "type": "string"
+                                                },
+                                                "type": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "examples": {
+                            "A parameter was not of the right type": {
+                                "value": {
+                                    "stacktrace": [
+                                        {
+                                            "file": "/Users/nicols/Sites/moodles/ws2/moodle/lib/classes/router/schema/objects/array_of_strings.php",
+                                            "line": 48,
+                                            "function": "validate_param",
+                                            "args": [
+                                                "string",
+                                                "int",
+                                                false,
+                                                "The value 'string' was not of type string."
+                                            ]
+                                        },
+                                        {
+                                            "file": "/Users/nicols/Sites/moodles/ws2/moodle/lib/classes/router/schema/objects/schema_object.php",
+                                            "line": 85,
+                                            "function": "validate_data",
+                                            "class": "core\\router\\schema\\objects\\array_of_strings",
+                                            "type": "->",
+                                            "args": [
+                                                {
+                                                    "additionalProp1": "string",
+                                                    "additionalProp2": "string",
+                                                    "additionalProp3": "string"
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "file": "/Users/nicols/Sites/moodles/ws2/moodle/lib/classes/router/route.php",
+                                            "line": 264,
+                                            "function": "validate_data",
+                                            "class": "core\\router\\schema\\objects\\schema_object",
+                                            "type": "->",
+                                            "args": [
+                                                {
+                                                    "preferences": {
+                                                        "additionalProp1": "string",
+                                                        "additionalProp2": "string",
+                                                        "additionalProp3": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "parameters": {
+            "core\\router\\parameters\\path_themename": {
+                "name": "themename",
+                "in": "path",
+                "description": "The name of a Moodle theme.",
+                "schema": {
+                    "type": "string",
+                    "pattern": "^[a-zA-Z0-9_\\-]*$"
+                },
+                "examples": {
+                    "The Boost theme": {
+                        "value": "boost"
+                    },
+                    "The Classic theme": {
+                        "value": "classic"
+                    }
+                },
+                "required": true
+            },
+            "core\\router\\parameters\\path_component": {
+                "name": "component",
+                "in": "path",
+                "description": "The name of a Moodle component, in frankenstyle format.",
+                "schema": {
+                    "type": "string",
+                    "pattern": "^[a-z][a-z0-9]*(_(?:[a-z][a-z0-9_](?!__))*)?[a-z0-9]+$"
+                },
+                "examples": {
+                    "The core subsystem": {
+                        "value": "core"
+                    },
+                    "The Course subsystem": {
+                        "value": "core_course"
+                    },
+                    "An activity module": {
+                        "value": "mod_assign"
+                    },
+                    "An assignment subplugin": {
+                        "value": "assignsubmission_file"
+                    }
+                },
+                "required": true
+            },
+            "core\\router\\parameters\\course_parameter": {
+                "name": "course",
+                "in": "path",
+                "description": "The course identifier.\n\nThis can be the id of the course, the idnumber of the course, or the shortname of the course.\n\nIf specifying a course idnumber, the value should be in the format `idnumber:[idnumber]`.\n\nIf specifying a course shortname, the value should be in the format `name:[shortname]`.",
+                "schema": {
+                    "type": "string"
+                },
+                "examples": {
+                    "A course id": {
+                        "value": 54
+                    },
+                    "A course specified by its idnumber": {
+                        "value": "idnumber:000117-physics-101-1"
+                    },
+                    "A course specified by its shortname": {
+                        "value": "name:000117-phys101-0"
+                    }
+                },
+                "required": true
+            }
+        },
+        "examples": {},
+        "requestBodies": {},
+        "headers": {
+            "core_user\\route\\headers\\example_header": {
+                "description": "The total number of preferences",
+                "schema": {
+                    "type": "integer"
+                }
+            }
+        },
+        "securitySchemes": {
+            "api_key": {
+                "type": "apiKey",
+                "name": "api_key",
+                "in": "header"
+            },
+            "cookie": {
+                "type": "apiKey",
+                "name": "MoodleSession",
+                "in": "cookie"
+            }
+        }
+    },
+    "security": [
+        {
+            "api_key": [],
+            "cookie": []
+        }
+    ],
+    "externalDocs": {
+        "description": "Moodle Developer Docs",
+        "url": "https://moodledev.io"
+    }
+}

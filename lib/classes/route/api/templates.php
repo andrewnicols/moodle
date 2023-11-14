@@ -52,7 +52,7 @@ class templates {
         title: 'Fetch a single template',
         description: 'Fetch a single template for a component in a theme',
         security: [],
-        tags: ['Templates'],
+        // tags: ['Templates'],
         pathtypes: [
             new \core\router\parameters\path_themename(),
             new \core\router\parameters\path_component(),
