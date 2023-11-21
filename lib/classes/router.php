@@ -426,7 +426,7 @@ class router {
         if (!($cachedata = $cache->get('api_routes'))) {
             $cachedata = $this->get_route_data_for_namespace(
                 namespace: 'route\api',
-                componentpathcallback: fn($component) => $this->normalise_component_to_path($component, true),
+                componentpathcallback: fn($component) => $this->normalise_component_to_path($component, false),
             );
 
             $cache->set('api_routes', $cachedata);
