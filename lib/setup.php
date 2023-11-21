@@ -432,28 +432,8 @@ if (!defined('MOODLE_INTERNAL')) { // Necessary because cli installer has to def
 // core_component can be used in any scripts, it does not need anything else.
 require_once($CFG->libdir .'/classes/component.php');
 
-// special support for highly optimised scripts that do not need libraries and DB connection
-if (defined('ABORT_AFTER_CONFIG')) {
-    if (!defined('ABORT_AFTER_CONFIG_CANCEL')) {
-        // hide debugging if not enabled in config.php - we do not want to disclose sensitive info
-        error_reporting($CFG->debug);
-        if (NO_DEBUG_DISPLAY) {
-            // Some parts of Moodle cannot display errors and debug at all.
-            ini_set('display_errors', '0');
-            ini_set('log_errors', '1');
-        } else if (empty($CFG->debugdisplay)) {
-            ini_set('display_errors', '0');
-            ini_set('log_errors', '1');
-        } else {
-            ini_set('display_errors', '1');
-        }
-        require_once("$CFG->dirroot/lib/configonlylib.php");
-        return;
-    }
-}
-
 // Early profiling start, based exclusively on config.php $CFG settings
-if (!empty($CFG->earlyprofilingenabled)) {
+if (!empty($CFG->earlyprofilingenabled) && !defined('ABORT_AFTER_CONFIG_CANCEL')) {
     require_once($CFG->libdir . '/xhprof/xhprof_moodle.php');
     profiling_start();
 }
@@ -573,11 +553,19 @@ if (NO_OUTPUT_BUFFERING) {
     disable_output_buffering();
 }
 
+// Point pear include path to moodles lib/pear so that includes and requires will search there for files before anywhere else
+// the problem is that we need specific version of quickforms and hacked excel files :-(.
+ini_set('include_path', $CFG->libdir . '/pear' . PATH_SEPARATOR . ini_get('include_path'));
+
+// Register our classloader, in theory somebody might want to replace it to load other hacked core classes.
+if (defined('COMPONENT_CLASSLOADER')) {
+    spl_autoload_register(COMPONENT_CLASSLOADER);
+} else {
+    spl_autoload_register('core_component::classloader');
+}
+
 // Increase memory limits if possible
 raise_memory_limit(MEMORY_STANDARD);
-
-// Time to start counting
-init_performance_info();
 
 // Put $OUTPUT in place, so errors can be displayed.
 $OUTPUT = new bootstrap_renderer();
@@ -611,17 +599,6 @@ if (!empty($_SERVER['HTTP_X_moz']) && $_SERVER['HTTP_X_moz'] === 'prefetch'){
     exit(1);
 }
 
-//point pear include path to moodles lib/pear so that includes and requires will search there for files before anywhere else
-//the problem is that we need specific version of quickforms and hacked excel files :-(
-ini_set('include_path', $CFG->libdir.'/pear' . PATH_SEPARATOR . ini_get('include_path'));
-
-// Register our classloader, in theory somebody might want to replace it to load other hacked core classes.
-if (defined('COMPONENT_CLASSLOADER')) {
-    spl_autoload_register(COMPONENT_CLASSLOADER);
-} else {
-    spl_autoload_register('core_component::classloader');
-}
-
 // Remember the default PHP timezone, we will need it later.
 core_date::store_default_php_timezone();
 
@@ -645,6 +622,29 @@ require_once($CFG->libdir .'/editorlib.php');       // All text editor related f
 require_once($CFG->libdir .'/messagelib.php');      // Messagelib functions
 require_once($CFG->libdir .'/modinfolib.php');      // Cached information on course-module instances
 require_once($CFG->dirroot.'/cache/lib.php');       // Cache API
+
+// Special support for highly optimised scripts that do not need libraries and DB connection.
+if (defined('ABORT_AFTER_CONFIG')) {
+    if (!defined('ABORT_AFTER_CONFIG_CANCEL')) {
+        // hide debugging if not enabled in config.php - we do not want to disclose sensitive info
+        error_reporting($CFG->debug);
+        if (NO_DEBUG_DISPLAY) {
+            // Some parts of Moodle cannot display errors and debug at all.
+            ini_set('display_errors', '0');
+            ini_set('log_errors', '1');
+        } else if (empty($CFG->debugdisplay)) {
+            ini_set('display_errors', '0');
+            ini_set('log_errors', '1');
+        } else {
+            ini_set('display_errors', '1');
+        }
+        require_once("$CFG->dirroot/lib/configonlylib.php");
+        return;
+    }
+}
+
+// Time to start counting
+init_performance_info();
 
 // make sure PHP is not severly misconfigured
 setup_validate_php_configuration();
