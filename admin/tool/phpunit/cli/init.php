@@ -44,6 +44,7 @@ list($options, $unrecognized) = cli_get_params(
         'disable-composer'     => false,
         'composer-upgrade'     => true,
         'composer-self-update' => true,
+        'buildcomponentconfigs' => true,
     ],
     [
         'h' => 'help',
@@ -66,6 +67,11 @@ Usage:
 --disable-composer
                     A shortcut to disable composer self-update and dependency update
                     Note: Installation of composer and/or dependencies will still happen as required
+
+--no-buildcomponentconfigs
+                    By default, initialising phpunit will generate the configuration files for a full-site run,
+                    and also the configuration for each component.
+                    You can prevent the generation of per-component configuration with this option.
 
 -h, --help          Print out this help
 
@@ -121,6 +127,9 @@ if ($code == 0) {
 }
 
 passthru("php util.php --buildconfig", $code);
+if ($options['buildcomponentconfigs']) {
+    passthru("php util.php --buildcomponentconfigs", $code);
+}
 
 echo "\n";
 echo "PHPUnit test environment setup complete.\n";
