@@ -125,7 +125,21 @@ class parameter extends openapi_base {
         return $data;
     }
 
-    protected function get_type(): param {
+    /**
+     * Get the OpenAPI 'in' property.
+     *
+     * @return string
+     */
+    public function get_in(): string {
+        return $this->in;
+    }
+
+    /**
+     * Fetch the underlying param.
+     *
+     * @return param
+     */
+    public function get_type(): param {
         return $this->type;
     }
 
