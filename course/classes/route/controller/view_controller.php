@@ -64,7 +64,7 @@ class view_controller {
     #[route(
         path: '/view/{course}',
         pathtypes: [
-            new \core\router\parameters\course_parameter(),
+            new \core\router\parameters\path_course(),
         ],
         queryparams: [
             new query_parameter(

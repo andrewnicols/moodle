@@ -43,6 +43,15 @@ class request_body extends openapi_base {
     ) {
         if (!empty($content)) {
             $this->required = true;
+            if (is_array($content)) {
+                array_map(
+                    fn ($content) => assert(
+                        $content instanceof media_type,
+                        new \coding_exception('Content must be an instance of media_type.')
+                    ),
+                    $content,
+                );
+            }
         }
         parent::__construct(...$args);
     }
@@ -71,7 +80,7 @@ class request_body extends openapi_base {
         }
 
         foreach ($this->content as $content) {
-            $data->content[$content::get_encoding()] = $content->get_openapi_schema(
+            $data->content[$content->get_encoding()] = $content->get_openapi_schema(
                 api: $api,
             );
         }
@@ -98,7 +107,7 @@ class request_body extends openapi_base {
             }
         }
 
-        throw new \Exception('No matching content type found.');
+        throw new \invalid_parameter_exception('No matching content type found.');
     }
 
 }

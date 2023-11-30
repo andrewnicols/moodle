@@ -15,6 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 use core\router;
+use core\router\bridge;
+use core\router\schema\openapi_base;
+use core\router\schema\referenced_object;
+use core\router\schema\specification;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
@@ -22,6 +26,9 @@ use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
+use Slim\Middleware\RoutingMiddleware;
+use Slim\Routing\Route;
+use Slim\Routing\RouteContext;
 
 /**
  * Tests for user preference API handler.
@@ -33,11 +40,17 @@ use Slim\App;
 class route_testcase extends \advanced_testcase {
 
     /**
-     * Get an instance of the Moodle Routing Application.
+     * Get a fully-configured instance of the Moodle Routing Application.
      *
      * @return App
      */
     protected function get_app(): App {
+        $router = $this->get_router();
+
+        return $router->get_app();
+    }
+
+    protected function get_router(): router {
         // Create a partial mock for the Router, removing certain features.
         /** @var (router&\PHPUnit\Framework\MockObject\MockObject) */
         $router = $this->getMockBuilder(router::class)
@@ -48,12 +61,68 @@ class route_testcase extends \advanced_testcase {
                 'add_bootstrap_middlware',
             ])
             ->getMock();
-
+            
         $router
-            ->expects($this->any())
+        ->expects($this->any())
             ->method('configure_caching');
 
-        return $router->get_app();
+        return $router;
+    }
+
+    /**
+     * Get an unconfigured instance of the Slim Application.
+     *
+     * @return App
+     */
+    protected function get_simple_app(): App {
+        global $CFG;
+        require_once("{$CFG->libdir}/nikic/fast-route/src/functions.php");
+        $app = bridge::create(
+            container: \core\container::get_container(),
+        );
+
+        return $app;
+    }
+
+    protected function get_app_for_route(
+        \core\router\route $route,
+        ?string $name = null,
+    ): App {
+        $app = $this->get_simple_app();
+        $route = $app->get(
+            $route->get_path(),
+            fn ($request, $response) => $response->withStatus(200),
+        );
+
+        if ($name) {
+            $route->setName($name);
+        }
+
+        return $app;
+    }
+
+    protected function get_request_for_routed_route(
+        \core\router\route $route,
+        string $path,
+        ?App $app = null,
+    ): ServerRequestInterface {
+        if ($app === null) {
+            $app = $this->get_app_for_route($route);
+        }
+
+        $methods = $route->get_methods();
+        $method = $methods ? reset($methods) : 'GET';
+
+        $request = $this->route_request(
+            $app,
+            $this->create_request(
+                method: $method,
+                path: $path,
+                prefix: '',
+            ),
+        );
+
+        return $request;
     }
 
     /**
@@ -69,11 +138,11 @@ class route_testcase extends \advanced_testcase {
     protected function create_request(
         string $method,
         string $path,
+        string $prefix = '/api/rest/v2',
         array $headers = ['Content-Type' => 'application/json'],
         array $cookies = [],
         array $serverparams = [],
     ): ServerRequestInterface {
-        $prefix = '/api/rest/v2';
         $uri = new Uri($prefix . $path);
 
         $request = new ServerRequest(
@@ -82,6 +151,17 @@ class route_testcase extends \advanced_testcase {
             uri: $uri,
             serverParams: $serverparams,
         );
+
+        // Sadly Guzzle's Uri only deals with query strings, not query params.
+        $query = $uri->getQuery();
+        if ($query) {
+            $queryparams = [];
+            foreach (explode('&', $query) as $queryparam) {
+                [$key, $value] = explode('=', $queryparam, 2);
+                $queryparams[$key] = $value;
+            }
+            $request = $request->withQueryParams($queryparams);
+        }
 
         return $request
             ->withCookieParams($cookies);
@@ -100,6 +180,7 @@ class route_testcase extends \advanced_testcase {
     protected function process_request(
         string $method,
         string $path,
+        string $prefix = '/api/rest/v2',
         array $headers = ['HTTP_ACCEPT' => 'application/json'],
         array $cookies = [],
         array $serverparams = [],
@@ -108,10 +189,40 @@ class route_testcase extends \advanced_testcase {
         return $app->handle($this->create_request(
             $method,
             $path,
+            $prefix,
             $headers,
             $cookies,
             $serverparams,
         ));
+    }
+
+    protected function route_request(
+        App $app,
+        ServerRequestInterface $request,
+    ): ServerRequestInterface {
+        $routingmiddleware = new RoutingMiddleware(
+            $app->getRouteResolver(),
+            $app->getRouteCollector()->getRouteParser(),
+        );
+
+        return $routingmiddleware->performRouting($request);
+    }
+
+    protected function create_route(
+        string $routepath,
+        string $requestpath,
+    ): ServerRequestInterface {
+        $app = $this->get_simple_app();
+        $app->get($routepath, fn () => new Response());
+        $request = $this->route_request($app, new ServerRequest('GET', $requestpath));
+
+        return $request;
+    }
+
+    protected function get_slim_route_from_request(
+        ServerRequestInterface $request,
+    ): Route {
+        return $request->getAttribute(RouteContext::ROUTE);
     }
 
     /**
@@ -145,4 +256,35 @@ class route_testcase extends \advanced_testcase {
             flags: JSON_FORCE_OBJECT,
         );
     }
-}
+
+    protected function get_api_component_schema(
+        specification $api,
+        openapi_base $component,
+    ): ?stdClass {
+        $this->assertInstanceOf(referenced_object::class, $component);
+
+        if (is_a($component, \core\router\schema\header_object::class)) {
+            $type = 'headers';
+        } else if (is_a($component, \core\router\schema\parameter::class)) {
+            $type = 'parameters';
+        } else if (is_a($component, \core\router\schema\response\response::class)) {
+            $type = 'responses';
+        } else if (is_a($component, \core\router\schema\example::class)) {
+            $type = 'examples';
+        } else if (is_a($component, \core\router\schema\request_body::class)) {
+            $type = 'requestBodies';
+        } else if (is_a($component, \core\router\schema\objects\type_base::class)) {
+            $type = 'schemas';
+        } else {
+            $this->fail('Component is not a recognised type');
+        }
+
+        $ref = $component->get_reference(false);
+
+        $schema = $api->get_schema();
+        $components = $schema->components;
+        $component = $components->{$type}->{$ref} ?? null;
+
+        return $component;
+    }
+ }

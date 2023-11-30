@@ -16,6 +16,7 @@
 
 namespace core\router\schema;
 
+use coding_exception;
 use core\param;
 use core\router\route;
 use core\router\schema\openapi_base;
@@ -68,17 +69,17 @@ class parameter extends openapi_base {
 
         // Schema fields.
         protected ?type_base $schema = null,
-        protected ?string $example = null,
+        protected ?example $example = null,
         protected array $examples = [],
-
-        // TODO All of the rest.
 
         ...$extra,
     ) {
-        assert(
-            $example === null || count($examples) === 0,
-            'Only one of example or examples can be specified.',
-        );
+        if ($example) {
+            if (count($examples)) {
+                throw new coding_exception('Only one of example or examples can be specified.');
+            }
+            $this->examples[$example->get_name()] = $example;
+        }
 
         assert(
             ($required === true && $default === null)
@@ -102,18 +103,14 @@ class parameter extends openapi_base {
             $data->description = $this->description;
         }
 
-        // TODO...
+        // Allow another schema to be passed.
         if ($this->schema !== null) {
-            $data->schema = $this->schema;
+            $data->schema = $this->schema->get_openapi_schema($api, $path);
         } else {
             $data->schema = $this->get_schema_from_type($this->type);
         }
 
-        // Note, the spec has the following regarding examples.
-        // If referencing a schema that contains an example, the examples value SHALL override the example provided by the schema.
-        if ($this->example) {
-            $data->example = $this->example;
-        } else if (count($this->examples) > 0) {
+        if (count($this->examples) > 0) {
             $data->examples = [];
             foreach ($this->examples as $example) {
                 $data->examples[$example->get_name()] = $example->get_openapi_schema(
@@ -125,20 +122,26 @@ class parameter extends openapi_base {
         return $data;
     }
 
-    protected function get_type(): param {
+    /**
+     * Get the OpenAPI 'in' property.
+     *
+     * @return string
+     */
+    public function get_in(): string {
+        return $this->in;
+    }
+
+    /**
+     * Fetch the underlying param.
+     *
+     * @return param
+     */
+    public function get_type(): param {
         return $this->type;
     }
 
-    public function get_schema(): stdClass {
-        if ($this->schema !== null) {
-            return $this->schema;
-        } else {
-            return $this->get_schema_from_type($this->type);
-        }
-    }
-
     public function is_required(route $route): bool {
-        return $this->required;
+        return $this->required ?? false;
     }
 
     public function get_name(): string {

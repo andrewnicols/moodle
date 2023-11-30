@@ -20,8 +20,9 @@ use core\router\response\invalid_parameter_response;
 use core\router\response\not_found_response;
 use core\router\response_handler;
 use core\router\route;
-use GuzzleHttp\Psr7\Uri;
 use moodle_url;
+use Closure;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -82,6 +83,7 @@ class router {
      * @param string|moodle_url $path
      * @param array $excludeparams Any parameters to exlude from the query params
      * @return never
+     * @codeCoverageIgnore
      */
     public static function redirect_with_params(
         string|moodle_url $path,
@@ -132,16 +134,17 @@ class router {
         // See https://www.slimframework.com/docs/v4/middleware/body-parsing.html for further information.
         $app->addBodyParsingMiddleware();
 
-        // Add request normalisation middleware to standardise the URI.
-        $this->add_request_normalisation_middleware($app);
-
         // Add Middleware to Bootstrap Moodle from a request.
         $this->add_bootstrap_middlware($app);
 
-        // Add the Routing Middleware as the outer-most middleware.
+        // Add the Routing Middleware as one of the outer-most middleware.
         // This allows the Route to be accessed before it is handled.
         // See https://www.slimframework.com/docs/v4/cookbook/retrieving-current-route.html for further information.
         $app->addRoutingMiddleware();
+
+        // Add request normalisation middleware to standardise the URI.
+        // This must be done after the Routing Middleware to ensure that the route is matched correctly.
+        $this->add_request_normalisation_middleware($app);
 
         $this->configure_caching($app);
         $this->configure_routes($app);
@@ -167,16 +170,17 @@ class router {
             $uri = $request->getUri();
             $path = $uri->getPath();
 
-            if ($path === '') {
-                // Ensure that there is always a path.
-                $path = '/';
-            }
-
             // Remove duplicate slashes.
             $path = preg_replace('@/+@', '/', $path);
 
             // Remove trailing slashes.
             $path = rtrim($path, '/');
+
+            // Ensure that there is always a path.
+            // Note: This must be performed after handling removal of duplicate and trailing slashes.
+            if ($path === '') {
+                $path = '/';
+            }
 
             if ($uri->getPath() !== $path) {
                 // Path has changed. Update it.
@@ -225,18 +229,32 @@ class router {
         }
 
         // Ok, now we need to start normal moodle script, we need to load all libs and $DB.
+        if (defined('ABORT_AFTER_CONFIG_CANCEL') && ABORT_AFTER_CONFIG_CANCEL) {
+            return;
+        }
         define('ABORT_AFTER_CONFIG_CANCEL', true);
 
         require("{$CFG->dirroot}/lib/setup.php");
         $this->fullyloaded = true;
     }
 
+    /**
+     * Handle the specified Request.
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function handle_request(
         ServerRequestInterface $request,
     ): ResponseInterface {
         return $this->get_app()->handle($request);
     }
 
+    /**
+     * Serve the current request using global variables.
+     *
+     * @codeCoverageIgnore
+     */
     public function serve(): void {
         $this->get_app()->run();
     }
@@ -266,12 +284,17 @@ class router {
             }
 
             $page = $this->get(\moodle_page::class);
-            $page->set_url($request->getUri());
+            $page->set_url((string) $request->getUri());
 
             return $handler->handle($request);
         });
     }
 
+    /**
+     * Configure all routes.
+     *
+     * @param App $app
+     */
     protected function configure_routes(App $app): void {
         // Handle the REST API.
         $this->configure_api_routes($app);
@@ -386,9 +409,14 @@ class router {
             if (empty($httpmethods)) {
                 $httpmethods = ['GET'];
             }
+            $pattern = "/{$componentpath}{$path}";
+            if (str_contains($pattern, '//')) {
+                // Remove duplicate slashes.
+                $pattern = preg_replace('@/+@', '/', $pattern);
+            }
             $cachedata[] = [
                 'methods' => $httpmethods,
-                'pattern' => "/{$componentpath}{$path}",
+                'pattern' => $pattern,
                 'callable' => [$classinfo->getName(), $method->getName()],
             ];
         }
@@ -505,10 +533,12 @@ class router {
             $group
                 ->map(...$data)
                 ->add(function (ServerRequestInterface $request, $handler) use ($data) {
-                    $classinfo = new \ReflectionClass($data['callable'][0]);
-                    $routeattribute = $classinfo->getMethod($data['callable'][1])
-                    ->getAttributes(\core\router\route::class)[0]
-                        ->newInstance();
+                    $routeattribute = self::get_route_instance_for_method($data['callable']);
+
+                    // $classinfo = new \ReflectionClass($data['callable'][0]);
+                    // $routeattribute = $classinfo->getMethod($data['callable'][1])
+                    // ->getAttributes(\core\router\route::class)[0]
+                    //     ->newInstance();
                     // Add a Route middleware to validate the path, and parameters.
                     $request = $routeattribute->validate_request($request);
 
@@ -530,6 +560,9 @@ class router {
         string $component,
         bool $includecore = true,
     ): string {
+        if ($component === 'core') {
+            return $component;
+        }
         [$type, $subsystem] = \core_component::normalize_component($component);
         if ($type === 'core') {
             if (!$includecore) {
@@ -544,6 +577,13 @@ class router {
         return $component;
     }
 
+    /**
+     * Redirect to the route at the callable supplied.
+     *
+     * @param callable $callable
+     * @param array $params Any parameters to include in the path
+     * @codeCoverageIgnore
+     */
     public static function redirect_to_callable(
         $callable,
         array $params = [],
@@ -651,14 +691,18 @@ class router {
         $resolver = $container->get(\Invoker\CallableResolver::class);
         $callable = $resolver->resolve($callable);
 
+        if (is_a($callable, Closure::class)) {
+            return null;
+        }
+
         // Locate the Class for this callable.
         $classinfo = new \ReflectionClass($callable[0]);
 
         // Locate the method for this callable.
         $methodinfo = $classinfo->getMethod($callable[1]);
         if (!$methodinfo) {
-            // The method does not exist - could be anonymous somehow?
-            return null;
+            // The method does not exist. This shouldn't be possible because the resolver will throw an exception.
+            return null; // @codeCoverageIgnore
         }
 
         $methodattributes = $methodinfo->getAttributes(\core\router\route::class);

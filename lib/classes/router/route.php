@@ -16,16 +16,18 @@
 
 namespace core\router;
 
-use Attribute;
 use coding_exception;
 use core\router\schema\parameter;
+use core\router\schema\request_body;
 use core\router\schema\specification;
+use stdClass;
+use Attribute;
+use invalid_parameter_exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\Route as RoutingRoute;
+use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
-use stdClass;
-use core\router\schema\request_body;
+use Slim\Interfaces\RouteInterface;
 
 /**
  * Routing attribute.
@@ -106,12 +108,21 @@ class route {
         $this->method = $method;
 
         // Validate the path and query parameters.
-        $allparams = array_merge(
-            $this->pathtypes,
-            $this->queryparams,
-        );
-        array_walk($allparams, fn($pathtype) => assert(
+        array_walk($this->pathtypes, fn($pathtype) => assert(
             $pathtype instanceof parameter,
+            new \coding_exception('All properties must be an instance of \core\router\parameter.'),
+        ));
+        array_walk($this->queryparams, fn($pathtype) => assert(
+            $pathtype->get_in() === 'query',
+            new \coding_exception('All properties must be an instance of \core\router\parameter.'),
+        ));
+
+        array_walk($this->pathtypes, fn($pathtype) => assert(
+            $pathtype instanceof parameter,
+            new \coding_exception('All properties must be an instance of \core\router\parameter.'),
+        ));
+        array_walk($this->pathtypes, fn($pathtype) => assert(
+            $pathtype->get_in() === 'path',
             new \coding_exception('All properties must be an instance of \core\router\parameter.'),
         ));
     }
@@ -152,11 +163,24 @@ class route {
 
         if ($parentmethods) {
             if ($methods) {
-                return array_merge($parentmethods, $methods);
+                $methods = array_unique(
+                    array_merge($parentmethods, $methods),
+                );
+            } else {
+                $methods = $parentmethods;
             }
-            return $parentmethods;
         }
+
+        if ($methods) {
+            sort($methods);
+        }
+
         return $methods;
+    }
+
+    protected function get_route_for_request(ServerRequestInterface $request): ?RouteInterface {
+        $routecontext = RouteContext::fromRequest($request);
+        return $routecontext->getRoute();
     }
 
     /**
@@ -167,8 +191,7 @@ class route {
      */
     public function validate_request(ServerRequestInterface $request): ServerRequestInterface {
         // Add a Route middleware to validate the path, and parameters.
-        $routecontext = RouteContext::fromRequest($request);
-        $route = $routecontext->getRoute();
+        $route = $this->get_route_for_request($request);
 
         // Validate that the path arguments are valid.
         // If they are not, then an Exception should be thrown.
@@ -188,13 +211,13 @@ class route {
      * Validate that the path arguments match those supplied in the route.
      *
      * @param ServerRequestInterface $request
-     * @param RoutingRoute $route The route to validate.
+     * @param RouteInterface $route The route to validate.
      * @return ServerRequestInterface
      * @throws coding_exception
      */
     protected function validate_path(
         ServerRequestInterface $request,
-        RoutingRoute $route,
+        RouteInterface $route,
     ): ServerRequestInterface {
         $requiredparams = count(array_filter(
             $this->pathtypes,
@@ -210,7 +233,11 @@ class route {
         }
 
         foreach ($this->pathtypes as $pathtype) {
-            $request = $pathtype->validate($request, $route);
+            try {
+                $request = $pathtype->validate($request, $route);
+            } catch (invalid_parameter_exception $e) {
+                throw new HttpNotFoundException($request, $e->getMessage());
+            }
         }
 
         return $request;
@@ -219,12 +246,12 @@ class route {
     /**
      * Validate that the query parameters match those supplied in the route.
      * @param ServerRequestInterface $request
-     * @param RoutingRoute $route
+     * @param RouteInterface $route
      * @return ServerRequestInterface
      */
     protected function validate_query(
         ServerRequestInterface $request,
-        RoutingRoute $route,
+        RouteInterface $route,
     ): ServerRequestInterface {
         $requestparams = $request->getQueryParams();
         $paramnames = array_map(
@@ -258,12 +285,12 @@ class route {
      * Validate that the request body matches the schema.
      *
      * @param ServerRequestInterface $request
-     * @param RoutingRoute $route
+     * @param RouteInterface $route
      * @return ServerRequestInterface
      */
     protected function validate_request_body(
         ServerRequestInterface $request,
-        RoutingRoute $route,
+        RouteInterface $route,
     ): ServerRequestInterface {
         if ($this->requestbody === null) {
             // Clear the parsed body if there should not be one.
@@ -292,15 +319,6 @@ class route {
         }
 
         $this->responses[$response->getStatusCode()]->validate($response);
-    }
-
-    // TODO Remove?
-    public function get_operationid(): string {
-        $operationid = $this->title;
-        if ($this->parentroute) {
-            $operationid = $this->parentroute->get_operationid() . $operationid;
-        }
-        return $operationid;
     }
 
     /**
@@ -381,6 +399,11 @@ class route {
         return (object) $methoddata;
     }
 
+    /**
+     * Get the list of path parameters, including any from the parent.
+     *
+     * @return array
+     */
     public function get_path_parameters(): array {
         $parameters = [];
         if ($this->parentroute) {
@@ -393,10 +416,21 @@ class route {
         return $parameters;
     }
 
+    /**
+     * Whether this route expects a request body.
+     *
+     * @return bool
+     */
     public function has_request_body(): bool {
         return $this->requestbody !== null;
     }
 
+    /**
+     * Whether this route expects any validatable parameters.
+     * That is, any parameter in the path, query params, or the reqeust body.
+     *
+     * @return bool
+     */
     public function has_any_validatable_parameter(): bool {
         return count($this->pathtypes) || count($this->queryparams) || $this->requestbody;
     }

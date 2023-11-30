@@ -113,15 +113,7 @@ class templates {
                 ),
             ];
         } catch (\moodle_exception $e) {
-            return $this->value_not_found_response(
-                $response,
-                sprintf(
-                    "No template found for component '%s' with name '%s' in theme '%s'",
-                    $component,
-                    $identifier,
-                    $themename,
-                ),
-            );
+            throw new \core\not_found_exception('template', "{$component}/{$identifier}");
         }
 
         return new payload_response(

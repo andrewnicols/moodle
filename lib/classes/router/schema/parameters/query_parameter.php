@@ -16,6 +16,8 @@
 
 namespace core\router\schema\parameters;
 
+use core\param;
+use core\router\schema\parameter;
 use core\router\schema\specification;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -26,7 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class query_parameter extends validatable_parameter {
+class query_parameter extends parameter {
     /**
      * Query parameter constructor to override the location of the parameter.
      *
@@ -38,6 +40,64 @@ class query_parameter extends validatable_parameter {
     ) {
         $extra['in'] = 'query';
         parent::__construct(...$extra);
+    }
+
+    /**
+     * Validate query parameters.
+     *
+     * @param ServerRequestInterface $request
+     * @param Route $route
+     */
+    public function validate(
+        ServerRequestInterface $request,
+        array $params,
+    ): ServerRequestInterface {
+        if (array_key_exists($this->name, $params)) {
+            // This parameter was specified. Validate it.
+            if ($this->get_type() === param::BOOL) {
+                match ($params[$this->name]) {
+                    'true' => $params[$this->name] = 1,
+                    'false' => $params[$this->name] = 0,
+                    default => throw new \ValueError('Invalid boolean value.'),
+                };
+            }
+            $this->type->validate_param($params[$this->name]);
+
+            return $this->update_request_params(
+                $request,
+                array_merge(
+                    $params,
+                    [$this->name => $params[$this->name]],
+                ),
+            );
+        }
+
+        if ($this->required) {
+            throw new \coding_exception(
+                "A required parameter {$this->name} was not provided and must be specified",
+            );
+        }
+
+        if ($this->default !== null) {
+            // This parameter is optional. Fill the default.
+            return $this->update_request_params(
+                $request,
+                array_merge(
+                    $params,
+                    [$this->name => $this->default],
+                ),
+            );
+        }
+
+        // This parameter is optional and there is no default.
+        // Fill a null value.
+        return $this->update_request_params(
+            $request,
+            array_merge(
+                $params,
+                [$this->name => null],
+            ),
+        );
     }
 
     /**

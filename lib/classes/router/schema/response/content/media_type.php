@@ -16,6 +16,7 @@
 
 namespace core\router\schema\response\content;
 
+use core\router\schema\example;
 use core\router\schema\openapi_base;
 use core\router\schema\objects\type_base;
 use core\router\schema\specification;
@@ -31,7 +32,7 @@ use core\router\schema\specification;
 abstract class media_type extends openapi_base {
     public function __construct(
         protected ?type_base $schema = null,
-        protected ?string $example = null,
+        protected ?example $example = null,
         protected array $examples = [],
 
         // Used for request body.
@@ -39,10 +40,12 @@ abstract class media_type extends openapi_base {
 
         ...$extra,
     ) {
-        assert(
-            $example === null || count($examples) === 0,
-            'Only one of example or examples can be specified.',
-        );
+        if ($example) {
+            if (count($examples)) {
+                throw new \coding_exception('Only one of example or examples can be specified.');
+            }
+            $this->examples[$example->get_name()] = $example;
+        }
     }
 
     public function get_openapi_description(
@@ -57,21 +60,11 @@ abstract class media_type extends openapi_base {
             );
         }
 
-        $data->examples = [];
-        if ($this->example) {
-            $data->examples[$this->example->get_name()] = $this->example;
-        } else if (count($this->examples)) {
-            foreach ($this->examples as $name => $example) {
-                if (is_int($name)) {
-                    $name = $example->get_name();
-                }
-                $schema = $example->get_openapi_schema($api);
-                $data->examples[$name] = $schema;
+        if (count($this->examples)) {
+            $data->examples = [];
+            foreach ($this->examples as $example) {
+                $data->examples[$example->get_name()] = $example->get_openapi_schema($api);
             }
-        }
-
-        if (empty($data->examples)) {
-            unset($data->examples);
         }
 
         if ($this->required) {

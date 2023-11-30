@@ -168,9 +168,14 @@ class specification implements
      * @return mixed
      */
     public function jsonSerialize(): mixed {
+        return $this->get_schema();
+    }
+
+    final public function get_schema(): stdClass {
         return $this
             ->finalise()
-            ->data;
+            ->data
+        ;
     }
 
     /**
@@ -279,7 +284,7 @@ class specification implements
                 $path = "/core";
             }
         } else {
-            $path === "/{$component}";
+            $path = "/{$component}";
         }
         $path .= $route->get_path();
 
@@ -332,8 +337,13 @@ class specification implements
         return $this;
     }
 
-    // TODO. Is this used?
-    public function add_schema(
+    /**
+     * Add a schema to the shared components section of the specification.
+     *
+     * @param type_base $schema 
+     * @return specification
+     */
+    protected function add_schema(
         type_base $schema,
     ): self {
         $name = $schema->get_reference(qualify: false);
@@ -350,11 +360,11 @@ class specification implements
      * @param type_base $schema
      * @return specification
      */
-    public function add_parameter(
+    protected function add_parameter(
         parameter $parameter,
     ): self {
         $name = $parameter->get_reference(qualify: false);
-        $this->data->components->parameters->$name = $parameter->get_openapi_description($this);
+            $this->data->components->parameters->$name = $parameter->get_openapi_description($this);
 
         return $this;
     }
@@ -365,7 +375,7 @@ class specification implements
      * @param header_object $response
      * @return specification
      */
-    public function add_header(
+    protected function add_header(
         header_object $header,
     ): self {
         $name = $header->get_reference(qualify: false);
@@ -380,7 +390,7 @@ class specification implements
      * @param response $response
      * @return specification
      */
-    public function add_response(
+    protected function add_response(
         response $response,
     ): self {
         $name = $response->get_reference(qualify: false);
@@ -395,7 +405,7 @@ class specification implements
      * @param example $example
      * @return specification
      */
-    public function add_example(
+    protected function add_example(
         example $example,
     ): self {
         $name = $example->get_reference(qualify: false);
@@ -410,7 +420,7 @@ class specification implements
      * @param request_body $body
      * @return specification
      */
-    public function add_request_body(
+    protected function add_request_body(
         request_body $body,
     ): self {
         $name = $body->get_reference(qualify: false);
@@ -437,6 +447,10 @@ class specification implements
 
         // Split the path and name.
         [$path, $name] = explode('/', $ref, 2);
+
+        if (!property_exists($this->data->components, $path)) {
+            return false;
+        }
 
         return property_exists($this->data->components->$path, $name);
     }
