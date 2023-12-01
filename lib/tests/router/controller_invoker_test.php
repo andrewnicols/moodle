@@ -28,6 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\router\controller_invoker
  * @covers     \core\router\bridge
+ * @covers     \core\router\response_handler
  */
 class controller_invoker_test extends \route_testcase {
     /**
@@ -117,14 +118,14 @@ class controller_invoker_test extends \route_testcase {
             'example' => 'This is an examplar attribute!',
         ]);
 
-        // Attributes will override Route arguments.
+        // Attributes will be overridden by Route arguments.
         $serverrequest = $this->create_request('GET', '/example')
             ->withAttribute('example', 'This is an examplar attribute!');
         $callable = function(
             string $example,
         ) use ($testcase): Response {
             $testcase->assertCount(1, func_get_args());
-            $testcase->assertEquals('This is an examplar attribute!', $example);
+            $testcase->assertEquals('This is a different examplar attribute!', $example);
             return new Response();
         };
 

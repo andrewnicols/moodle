@@ -264,6 +264,7 @@ class invalid_parameter_exception extends moodle_exception {
      * @param string $debuginfo some detailed information
      */
     function __construct($debuginfo=null) {
+        get_string('invalidparameter', 'debug');
         parent::__construct('invalidparameter', 'debug', '', null, $debuginfo);
     }
 }

@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 use core\router;
+use core\router\bridge;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
@@ -22,6 +23,7 @@ use PHPUnit\Framework\ExpectationFailedException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
+use Slim\Middleware\RoutingMiddleware;
 
 /**
  * Tests for user preference API handler.
@@ -33,7 +35,7 @@ use Slim\App;
 class route_testcase extends \advanced_testcase {
 
     /**
-     * Get an instance of the Moodle Routing Application.
+     * Get a fully-configured instance of the Moodle Routing Application.
      *
      * @return App
      */
@@ -57,6 +59,55 @@ class route_testcase extends \advanced_testcase {
     }
 
     /**
+     * Get an unconfigured instance of the Slim Application.
+     *
+     * @return App
+     */
+    protected function get_simple_app(): App {
+        global $CFG;
+        require_once("{$CFG->libdir}/nikic/fast-route/src/functions.php");
+        $app = bridge::create(
+            container: \core\container::get_container(),
+        );
+
+        return $app;
+    }
+
+    protected function get_app_for_route(\core\router\route $route): App {
+        $app = $this->get_simple_app();
+        $app->get(
+            $route->get_path(),
+            fn ($request, $response) => $response->withStatus(200),
+        );
+
+        return $app;
+    }
+
+    protected function get_request_for_routed_route(
+        \core\router\route $route,
+        string $path,
+        ?App $app = null,
+    ): ServerRequestInterface {
+        if ($app === null) {
+            $app = $this->get_app_for_route($route);
+        }
+
+        $methods = $route->get_methods();
+        $method = $methods ? reset($methods) : 'GET';
+
+        $request = $this->route_request(
+            $app,
+            $this->create_request(
+                method: $method,
+                path: $path,
+                prefix: '',
+            ),
+        );
+
+        return $request;
+    }
+
+    /**
      * Create a Request object.
      *
      * @param string $method
@@ -69,11 +120,11 @@ class route_testcase extends \advanced_testcase {
     protected function create_request(
         string $method,
         string $path,
+        string $prefix = '/api/rest/v2',
         array $headers = ['Content-Type' => 'application/json'],
         array $cookies = [],
         array $serverparams = [],
     ): ServerRequestInterface {
-        $prefix = '/api/rest/v2';
         $uri = new Uri($prefix . $path);
 
         $request = new ServerRequest(
@@ -82,6 +133,17 @@ class route_testcase extends \advanced_testcase {
             uri: $uri,
             serverParams: $serverparams,
         );
+
+        // Sadly Guzzle's Uri only deals with query strings, not query params.
+        $query = $uri->getQuery();
+        if ($query) {
+            $queryparams = [];
+            foreach (explode('&', $query) as $queryparam) {
+                [$key, $value] = explode('=', $queryparam, 2);
+                $queryparams[$key] = $value;
+            }
+            $request = $request->withQueryParams($queryparams);
+        }
 
         return $request
             ->withCookieParams($cookies);
@@ -100,6 +162,7 @@ class route_testcase extends \advanced_testcase {
     protected function process_request(
         string $method,
         string $path,
+        string $prefix = '/api/rest/v2',
         array $headers = ['HTTP_ACCEPT' => 'application/json'],
         array $cookies = [],
         array $serverparams = [],
@@ -108,10 +171,23 @@ class route_testcase extends \advanced_testcase {
         return $app->handle($this->create_request(
             $method,
             $path,
+            $prefix,
             $headers,
             $cookies,
             $serverparams,
         ));
+    }
+
+    protected function route_request(
+        App $app,
+        ServerRequestInterface $request,
+    ): ServerRequestInterface {
+        $routingmiddleware = new RoutingMiddleware(
+            $app->getRouteResolver(),
+            $app->getRouteCollector()->getRouteParser(),
+        );
+
+        return $routingmiddleware->performRouting($request);
     }
 
     /**

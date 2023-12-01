@@ -21,6 +21,9 @@ use core\router\schema\parameters\path_parameter;
 use core\router\schema\parameters\query_parameter;
 use core\router\schema\request_body;
 use core\router\route;
+use invalid_parameter_exception;
+use Psr\Http\Message\ServerRequestInterface;
+use Slim\Exception\HttpNotFoundException;
 
 /**
  * Tests for user preference API handler.
@@ -30,7 +33,7 @@ use core\router\route;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\router\route
  */
-class route_test extends \advanced_testcase {
+class route_test extends \route_testcase {
     /**
      * Test that the Attribute is configured correctly.
      */
@@ -331,7 +334,6 @@ class route_test extends \advanced_testcase {
     /**
      * Test abort_after_config control.
      */
-
     public function test_abort_after_config(): void {
         // By default we do not abort after config.
         $route = new route();
@@ -348,5 +350,171 @@ class route_test extends \advanced_testcase {
             abortafterconfig: true,
         );
         $this->assertTrue($route->abort_after_config());
+    }
+
+    /**
+     * A basic test of request validation.
+     */
+    public function test_validate_request(): void {
+        // The route being tested.
+        $route = new route(
+            path: '/example/{required}',
+            pathtypes: [
+                new path_parameter(
+                    name: 'required',
+                    type: param::INT,
+                ),
+            ],
+        );
+        $request = $this->get_request_for_routed_route($route, '/example/123');
+
+        $this->assertInstanceOf(ServerRequestInterface::class, $route->validate_request($request));
+    }
+
+    /**
+     * A basic test of request validation.
+     */
+    public function test_validate_request_missing_pathtype(): void {
+        // A route with a parameter defined in the path, but no pathtype for it.
+        $route = new route(
+            path: '/example/{required}',
+        );
+
+        $request = $this->get_request_for_routed_route($route, '/example/123');
+
+        $this->assertInstanceOf(ServerRequestInterface::class, $route->validate_request($request));
+    }
+
+    /**
+     * When a defined pathtype is missing from the path.
+     */
+    public function test_validate_request_missing_path_component(): void {
+        // A route with a parameter defined in the path, but no pathtype for it.
+        $route = new route(
+            path: '/example/123',
+            pathtypes: [
+                new path_parameter(
+                    name: 'required',
+                    type: param::INT,
+                ),
+            ],
+        );
+
+        $request = $this->get_request_for_routed_route($route, '/example/123');
+
+        $this->expectException(\coding_exception::class);
+        $this->expectExceptionMessageMatches('/Route.*has 0 arguments.* 1 pathtypes./');
+        $route->validate_request($request);
+    }
+
+    /**
+     * When a pathtype fails to validate, it will result in an HttpNotFoundException.
+     */
+    public function test_validate_request_invalid_path_component(): void {
+        // Most of the path types are converted to regexes and will lead to a 404 before they get this far.
+        $type = param::INT;
+        $this->assertEmpty(
+            $type->get_clientside_expression(),
+            'This test requires a type with no clientside expression. Please update the test.',
+        );
+
+        $route = new route(
+            path: '/example/{required}',
+            pathtypes: [
+                new path_parameter(
+                    name: 'required',
+                    type: $type,
+                ),
+            ],
+        );
+
+        $request = $this->get_request_for_routed_route($route, '/example/abc');
+
+        $this->expectException(HttpNotFoundException::class);
+        $route->validate_request($request);
+    }
+
+    /**
+     * When a pathtype fails to validate, it will result in an HttpNotFoundException.
+     */
+    public function test_validate_request_invalid_path_component_native(): void {
+        // Most of the path types are converted to regexes and will lead to a 404 before they get this far.
+        $type = param::ALPHA;
+        $this->assertNotEmpty(
+            $type->get_clientside_expression(),
+            'This test requires a type with clientside expression. Please update the test.',
+        );
+        $route = new route(
+            path: '/example/{required}',
+            pathtypes: [
+                new path_parameter(
+                    name: 'required',
+                    type: $type,
+                ),
+            ],
+        );
+
+        // A value which does not meet the param validation.
+        $request = $this->get_request_for_routed_route($route, '/example/123');
+
+        $this->expectException(HttpNotFoundException::class);
+        $route->validate_request($request);
+    }
+
+    /**
+     * Query parameter validation.
+     */
+    public function test_validate_request_query_parameter_valid(): void {
+        $type = param::INT;
+        $value = 123;
+
+        $route = new route(
+            path: '/example',
+            queryparams: [
+                new query_parameter(
+                    name: 'required',
+                    type: $type,
+                ),
+            ],
+        );
+
+        $request = $this->get_request_for_routed_route($route, "/example?required={$value}");
+        $this->assertEquals($value, $request->getQueryParams()['required']);
+
+        // Validate the request.
+        $validatedrequest = $route->validate_request($request);
+        $this->assertInstanceOf(ServerRequestInterface::class, $validatedrequest);
+        $this->assertEquals($value, $validatedrequest->getQueryParams()['required']);
+    }
+
+    /**
+     * Query parameter validation failure.
+     */
+    public function test_validate_request_query_parameter_invalid(): void {
+        $type = param::INT;
+        $value = 'abc';
+
+        $route = new route(
+            path: '/example',
+            queryparams: [
+                new query_parameter(
+                    name: 'required',
+                    type: $type,
+                ),
+            ],
+        );
+
+        $request = $this->get_request_for_routed_route($route, "/example?required={$value}");
+        $this->assertEquals($value, $request->getQueryParams()['required']);
+
+        // Validate the request.
+        $this->expectException(invalid_parameter_exception::class);
+        $route->validate_request($request);
+    }
+
+    /**
+     * @todo Test request body validation.
+     */
+    public function test_validate_request_body_valid(): void {
     }
 }

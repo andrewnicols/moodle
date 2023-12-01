@@ -71,14 +71,6 @@ trait route_controller {
         ResponseInterface $response,
         mixed $data,
     ): ResponseInterface {
-        [
-            'function' => $function,
-            'class' => $class,
-        ] = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3)[1];
-
-        $rc = new \ReflectionClass($class);
-        $attributes = $rc->getMethod($function)->getAttributes();
-
         return $response
             ->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
                 json_encode($data)
@@ -90,13 +82,6 @@ trait route_controller {
         ResponseInterface $response,
     ): ResponseInterface {
         throw new \Slim\Exception\HttpNotFoundException($request);
-    }
-
-    protected function page_response(
-        ResponseInterface $response,
-        \core_renderer $renderer,
-    ): ResponseInterface {
-        return $response;
     }
 
     protected function redirect(

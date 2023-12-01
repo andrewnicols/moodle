@@ -16,18 +16,17 @@
 
 namespace core\router;
 
-use Attribute;
 use coding_exception;
 use core\router\schema\parameter;
-use core\router\schema\parameters\path_parameter;
-use core\router\schema\parameters\query_parameter;
+use core\router\schema\request_body;
 use core\router\schema\specification;
+use stdClass;
+use Attribute;
+use invalid_parameter_exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\Route as RoutingRoute;
+use Slim\Exception\HttpNotFoundException;
 use Slim\Routing\RouteContext;
-use stdClass;
-use core\router\schema\request_body;
 use Slim\Interfaces\RouteInterface;
 
 /**
@@ -212,13 +211,13 @@ class route {
      * Validate that the path arguments match those supplied in the route.
      *
      * @param ServerRequestInterface $request
-     * @param RoutingRoute $route The route to validate.
+     * @param RouteInterface $route The route to validate.
      * @return ServerRequestInterface
      * @throws coding_exception
      */
     protected function validate_path(
         ServerRequestInterface $request,
-        RoutingRoute $route,
+        RouteInterface $route,
     ): ServerRequestInterface {
         $requiredparams = count(array_filter(
             $this->pathtypes,
@@ -234,7 +233,11 @@ class route {
         }
 
         foreach ($this->pathtypes as $pathtype) {
-            $request = $pathtype->validate($request, $route);
+            try {
+                $request = $pathtype->validate($request, $route);
+            } catch (invalid_parameter_exception $e) {
+                throw new HttpNotFoundException($request, $e->getMessage());
+            }
         }
 
         return $request;
@@ -243,12 +246,12 @@ class route {
     /**
      * Validate that the query parameters match those supplied in the route.
      * @param ServerRequestInterface $request
-     * @param RoutingRoute $route
+     * @param RouteInterface $route
      * @return ServerRequestInterface
      */
     protected function validate_query(
         ServerRequestInterface $request,
-        RoutingRoute $route,
+        RouteInterface $route,
     ): ServerRequestInterface {
         $requestparams = $request->getQueryParams();
         $paramnames = array_map(
@@ -282,12 +285,12 @@ class route {
      * Validate that the request body matches the schema.
      *
      * @param ServerRequestInterface $request
-     * @param RoutingRoute $route
+     * @param RouteInterface $route
      * @return ServerRequestInterface
      */
     protected function validate_request_body(
         ServerRequestInterface $request,
-        RoutingRoute $route,
+        RouteInterface $route,
     ): ServerRequestInterface {
         if ($this->requestbody === null) {
             // Clear the parsed body if there should not be one.
