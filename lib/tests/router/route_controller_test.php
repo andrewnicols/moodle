@@ -16,10 +16,12 @@
 
 namespace core\router;
 
-use core\router\route;
+use core\router;
 use GuzzleHttp\Psr7\Response;
+use GuzzleHttp\Psr7\ServerRequest;
+use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ResponseInterface;
-use Slim\App;
+use Slim\Exception\HttpNotFoundException;
 
 /**
  * Tests for the route_controller trait.
@@ -49,6 +51,21 @@ class route_controller_test extends \route_testcase {
         $response = $helper->test(new Response(), '/test');
         $this->assertEquals(302, $response->getStatusCode());
         $this->assertEquals('/test', $response->getHeaderLine('Location'));
+    }
+
+    public function test_page_not_found(): void {
+        $request = new ServerRequest('GET', '/test');
+        $response = new Response();
+
+        $helper = new class(\core\container::get_container()) {
+            use route_controller;
+        };
+
+        $rc = new \ReflectionClass($helper);
+        $rcm = $rc->getMethod('page_not_found');
+
+        $this->expectException(HttpNotFoundException::class);
+        $rcm->invokeArgs($helper, [$request, $response]);
     }
 
     /**
@@ -82,5 +99,49 @@ class route_controller_test extends \route_testcase {
         $result = $rcm->invokeArgs($helper, [$request, 'fake', 'Used default']);
         $this->assertEquals('Used default', $result);
         $this->assertdebuggingcalledcount(1);
+    }
+
+    /**
+     * @covers \core\router\route_controller::redirect_to_callable
+     */
+    public function test_redirect_to_callable(): void {
+        require_once(dirname(__DIR__) . '/fixtures/router/route_on_class.php');
+
+        $rc = new \ReflectionClass(\core\fixtures\route_on_class::class);
+        $rcm = $rc->getMethod('method_with_route');
+        $route = $rcm->getAttributes(route::class)[0]->newInstance();
+        $router = $this->get_router();
+        $app = $router->get_app();
+        \core\container::get_container()->set(router::class, $router);
+
+        $app
+            ->get(
+                $route->get_path(),
+                ['core\fixtures\route_on_class', 'method_with_route'],
+            )
+            ->setName('core\fixtures\route_on_class::method_with_route')
+            ;
+
+        $helper = new class(\core\container::get_container()) {
+            use route_controller;
+        };
+        $rc = new \ReflectionClass($helper);
+        $rcm = $rc->getMethod('redirect_to_callable');
+
+        $response = $rcm->invokeArgs(
+            $helper,
+            [
+                new ServerRequest('GET', '/test'),
+                new Response(),
+                'core\fixtures\route_on_class::method_with_route',
+            ],
+        );
+        $this->assertInstanceOf(ResponseInterface::class, $response);
+        $this->assertEquals(302, $response->getStatusCode());
+        $this->assertTrue($response->hasHeader('Location'));
+
+        $uri = new Uri($response->getHeader('Location')[0]);
+
+        $this->assertEmpty($uri->getQuery());
     }
 }

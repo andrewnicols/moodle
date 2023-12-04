@@ -102,7 +102,6 @@ class templates {
     ) {
         $params = $request->getQueryParams();
         $comments = $params['includecomments'];
-        xdebug_break();
 
         try {
             $result = [

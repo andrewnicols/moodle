@@ -30,7 +30,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class course_parameter extends \core\router\schema\parameters\path_parameter implements
+class path_course extends \core\router\schema\parameters\path_parameter implements
     referenced_object,
     mapped_property_parameter
 {

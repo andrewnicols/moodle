@@ -50,5 +50,4 @@ if (str_starts_with($_SERVER['REQUEST_URI'], $relativeroot)) {
 $router = new \core\router(
     basepath: $scriptroot,
 );
-
 $router->serve();

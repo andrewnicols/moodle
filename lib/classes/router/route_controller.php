@@ -16,12 +16,8 @@
 
 namespace core\router;
 
-use Exception;
-use InvalidArgumentException;
 use moodle_url;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -44,39 +40,13 @@ trait route_controller {
     }
 
     /**
-     * Create a response for a value not found with an optional message.
+     * Generate a Page Not Found result.
      *
+     * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     * @param string $message
      * @return ResponseInterface
+     * @throws \Slim\Exception\HttpNotFoundException
      */
-    protected function value_not_found_response(
-        ResponseInterface $response,
-        string $message = 'Value Not Found',
-    ): ResponseInterface {
-        return $this->json_response(
-            response: $response->withStatus(404),
-            data: $message,
-        );
-    }
-
-    /**
-     * Create a response for JSON Content.
-     *
-     * @param ResponseInterface $response
-     * @param mixed $data
-     * @return ResponseInterface
-     */
-    protected function json_response(
-        ResponseInterface $response,
-        mixed $data,
-    ): ResponseInterface {
-        return $response
-            ->withBody(\GuzzleHttp\Psr7\Utils::streamFor(
-                json_encode($data)
-            ));
-    }
-
     protected function page_not_found(
         ServerRequestInterface $request,
         ResponseInterface $response,

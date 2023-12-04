@@ -409,9 +409,14 @@ class router {
             if (empty($httpmethods)) {
                 $httpmethods = ['GET'];
             }
+            $pattern = "/{$componentpath}{$path}";
+            if (str_contains($pattern, '//')) {
+                // Remove duplicate slashes.
+                $pattern = preg_replace('@/+@', '/', $pattern);
+            }
             $cachedata[] = [
                 'methods' => $httpmethods,
-                'pattern' => "/{$componentpath}{$path}",
+                'pattern' => $pattern,
                 'callable' => [$classinfo->getName(), $method->getName()],
             ];
         }
@@ -555,6 +560,9 @@ class router {
         string $component,
         bool $includecore = true,
     ): string {
+        if ($component === 'core') {
+            return $component;
+        }
         [$type, $subsystem] = \core_component::normalize_component($component);
         if ($type === 'core') {
             if (!$includecore) {

@@ -44,7 +44,7 @@ class info {
         path: '/{course}',
         title: 'Fetch information about a course',
         pathtypes: [
-            new \core\router\parameters\course_parameter(),
+            new \core\router\parameters\path_course(),
         ],
     )]
     public function get_info(

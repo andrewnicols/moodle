@@ -40,6 +40,12 @@ class route_testcase extends \advanced_testcase {
      * @return App
      */
     protected function get_app(): App {
+        $router = $this->get_router();
+
+        return $router->get_app();
+    }
+
+    protected function get_router(): router {
         // Create a partial mock for the Router, removing certain features.
         /** @var (router&\PHPUnit\Framework\MockObject\MockObject) */
         $router = $this->getMockBuilder(router::class)
@@ -50,12 +56,12 @@ class route_testcase extends \advanced_testcase {
                 'add_bootstrap_middlware',
             ])
             ->getMock();
-
+            
         $router
-            ->expects($this->any())
+        ->expects($this->any())
             ->method('configure_caching');
 
-        return $router->get_app();
+        return $router;
     }
 
     /**
@@ -73,12 +79,19 @@ class route_testcase extends \advanced_testcase {
         return $app;
     }
 
-    protected function get_app_for_route(\core\router\route $route): App {
+    protected function get_app_for_route(
+        \core\router\route $route,
+        ?string $name = null,
+    ): App {
         $app = $this->get_simple_app();
-        $app->get(
+        $route = $app->get(
             $route->get_path(),
             fn ($request, $response) => $response->withStatus(200),
         );
+
+        if ($name) {
+            $route->setName($name);
+        }
 
         return $app;
     }
