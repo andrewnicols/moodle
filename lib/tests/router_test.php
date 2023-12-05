@@ -141,4 +141,31 @@ class router_test extends \route_testcase {
 
         $this->assertEmpty((array) $payload);
     }
+
+    public function test_get_path_for_callable(): void {
+        require_once(__DIR__ . '/fixtures/router/route_on_class.php');
+
+        $rc = new \ReflectionClass(\core\fixtures\route_on_class::class);
+        $rcm = $rc->getMethod('method_with_route');
+        $route = $rcm->getAttributes(route::class)[0]->newInstance();
+        $router = $this->get_router();
+        $app = $router->get_app();
+        \core\container::get_container()->set(router::class, $router);
+
+        $app
+            ->get(
+                $route->get_path(),
+                ['core\fixtures\route_on_class', 'method_with_route'],
+            )
+            ->setName('core\fixtures\route_on_class::method_with_route');
+
+        $url = router::get_path_for_callable(
+            'core\fixtures\route_on_class::method_with_route',
+            [],
+            [],
+        );
+
+        $parsedurl = parse_url($url);
+        $this->assertEquals('/method/path', $parsedurl['path']);
+    }
 }

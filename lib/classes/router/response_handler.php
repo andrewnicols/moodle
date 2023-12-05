@@ -59,6 +59,8 @@ class response_handler {
     public function standardise_response(
         ResponseInterface | response_type $response,
     ): ResponseInterface {
+        global $OUTPUT;
+
         if ($response instanceof ResponseInterface) {
             // An object implementing ResponseInterface is returned, so we can just return it.
             return $response;
