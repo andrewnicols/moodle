@@ -107,11 +107,13 @@ class path_course extends \core\router\schema\parameters\path_parameter implemen
     public function get_schema_from_type(param $type): \stdClass {
         $schema = parent::get_schema_from_type($type);
 
-        $schema->pattern = implode("|", [
+        $schema->pattern = "^(";
+        $schema->pattern .= implode("|", [
             '\d+',
-            'idnumber:.*',
-            'name:.*',
+            'idnumber:.+',
+            'name:.+',
         ]);
+        $schema->pattern .= ")$";
 
         return $schema;
     }

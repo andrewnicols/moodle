@@ -168,9 +168,14 @@ class specification implements
      * @return mixed
      */
     public function jsonSerialize(): mixed {
+        return $this->get_schema();
+    }
+
+    final public function get_schema(): stdClass {
         return $this
             ->finalise()
-            ->data;
+            ->data
+        ;
     }
 
     /**

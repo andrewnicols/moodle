@@ -16,6 +16,9 @@
 
 use core\router;
 use core\router\bridge;
+use core\router\schema\openapi_base;
+use core\router\schema\referenced_object;
+use core\router\schema\specification;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
 use GuzzleHttp\Psr7\Uri;
@@ -24,6 +27,8 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Middleware\RoutingMiddleware;
+use Slim\Routing\Route;
+use Slim\Routing\RouteContext;
 
 /**
  * Tests for user preference API handler.
@@ -203,6 +208,23 @@ class route_testcase extends \advanced_testcase {
         return $routingmiddleware->performRouting($request);
     }
 
+    protected function create_route(
+        string $routepath,
+        string $requestpath,
+    ): ServerRequestInterface {
+        $app = $this->get_simple_app();
+        $app->get($routepath, fn () => new Response());
+        $request = $this->route_request($app, new ServerRequest('GET', $requestpath));
+
+        return $request;
+    }
+
+    protected function get_slim_route_from_request(
+        ServerRequestInterface $request,
+    ): Route {
+        return $request->getAttribute(RouteContext::ROUTE);
+    }
+
     /**
      * Assert that a Response object was valid.
      *
@@ -234,4 +256,35 @@ class route_testcase extends \advanced_testcase {
             flags: JSON_FORCE_OBJECT,
         );
     }
-}
+
+    protected function get_api_component_schema(
+        specification $api,
+        openapi_base $component,
+    ): ?stdClass {
+        $this->assertInstanceOf(referenced_object::class, $component);
+
+        if (is_a($component, \core\router\schema\header_object::class)) {
+            $type = 'headers';
+        } else if (is_a($component, \core\router\schema\parameter::class)) {
+            $type = 'parameters';
+        } else if (is_a($component, \core\router\schema\response\response::class)) {
+            $type = 'responses';
+        } else if (is_a($component, \core\router\schema\example::class)) {
+            $type = 'examples';
+        } else if (is_a($component, \core\router\schema\request_body::class)) {
+            $type = 'requestBodies';
+        } else if (is_a($component, \core\router\schema\objects\type_base::class)) {
+            $type = 'schemas';
+        } else {
+            $this->fail('Component is not a recognised type');
+        }
+
+        $ref = $component->get_reference(false);
+
+        $schema = $api->get_schema();
+        $components = $schema->components;
+        $component = $components->{$type}->{$ref} ?? null;
+
+        return $component;
+    }
+ }

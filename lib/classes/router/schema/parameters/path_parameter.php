@@ -78,9 +78,20 @@ class path_parameter extends \core\router\schema\parameter {
         return $data;
     }
 
+    /**
+     * Check whether this parameter is required for the given route.
+     *
+     * @param route $route
+     * @return bool
+     */
     public function is_required(route $route): bool {
         $path = $route->get_path();
+
+        // Find the position of the parameter in the path.
         $paramposition = strpos($path, '{' . $this->name . '}');
+
+        // If _any_ part of the path before the parameter contains a '[' character, then this _must_ be optional.
+        // A required parameter cannot follow an optional parameter.
         return !str_contains(substr($path, 0, $paramposition), '[');
     }
 }
