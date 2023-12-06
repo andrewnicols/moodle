@@ -117,5 +117,8 @@ class stacktrace extends type_base implements referenced_object {
     }
 
     public function validate_data($data) {
+        // Do not validate the data at all.
+        // Stacktraces tend to be used with exceptions and we want whatever was passed through to come out.
+        return $data;
     }
 }

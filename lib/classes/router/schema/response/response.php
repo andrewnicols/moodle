@@ -17,6 +17,7 @@
 namespace core\router\schema\response;
 
 use core\router\schema\openapi_base;
+use core\router\schema\response\content\media_type;
 use core\router\schema\specification;
 use core\router\schema\response\content\payload_response_type;
 use Psr\Http\Message\ResponseInterface;
@@ -40,6 +41,16 @@ class response extends openapi_base {
 
         ...$extra,
     ) {
+
+        if (is_array($content)) {
+            array_map(
+                fn($content) => assert(
+                    $content instanceof media_type,
+                    new \coding_exception('Content must be an array of media types'),
+                ),
+                $content,
+            );
+        }
         parent::__construct(...$extra);
     }
 

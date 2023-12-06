@@ -51,12 +51,9 @@ class scalar_type extends type_base {
     }
 
     public function validate_data($data) {
-        validate_param(
+        return $this->type->validate_param(
             param: $data,
-            type: $this->type,
             allownull: $this->required ? NULL_NOT_ALLOWED : NULL_ALLOWED,
         );
-
-        return $data;
     }
 }

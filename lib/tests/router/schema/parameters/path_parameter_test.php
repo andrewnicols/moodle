@@ -18,6 +18,7 @@ namespace core\router\schema\parameters;
 
 use core\param;
 use core\router\route;
+use core\router\schema\referenced_object;
 use core\router\schema\specification;
 use invalid_parameter_exception;
 use Psr\Http\Message\ServerRequestInterface;
@@ -31,6 +32,7 @@ use Slim\Routing\RouteContext;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\router\schema\parameter
  * @covers     \core\router\schema\parameters\path_parameter
+ * @covers     \core\router\schema\openapi_base
  */
 class path_parameter_test extends \route_testcase {
     public function test_in_path(): void {
@@ -126,5 +128,21 @@ class path_parameter_test extends \route_testcase {
 
         $validatedresult = $param->validate($request, $route);
         $this->assertInstanceOf(ServerRequestInterface::class, $validatedresult);
+    }
+
+    public function test_referenced_object(): void {
+        $object = new class(
+            name: 'example',
+            type: param::INT,
+        ) extends path_parameter implements referenced_object {
+        };
+
+        $schema = $object->get_openapi_description(new specification());
+        $this->assertObjectNotHasAttribute('$ref', $schema);
+        $this->assertObjectHasAttribute('schema', $schema);
+
+        $reference = $object->get_openapi_schema(new specification());
+        $this->assertObjectNotHasAttribute('schema', $reference);
+        $this->assertObjectHasAttribute('$ref', $reference);
     }
 }

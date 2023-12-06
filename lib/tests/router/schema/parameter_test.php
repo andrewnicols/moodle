@@ -29,6 +29,7 @@ use core\router\schema\specification;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\router\schema\parameter
+ * @covers     \core\router\schema\openapi_base
  */
 class parameter_test extends \route_testcase {
     public function test_basics(): void {
@@ -124,5 +125,17 @@ class parameter_test extends \route_testcase {
         $description = $param->get_openapi_description(new specification());
         $this->assertNotNull($description->schema);
         $this->assertEquals('object', $description->schema->type);
+    }
+
+    public function test_schema_includes_clientside_pattern(): void {
+        $param = new parameter(
+            name: 'example',
+            in: 'header',
+            type: param::ALPHANUM,
+        );
+        $description = $param->get_openapi_description(new specification());
+        $this->assertNotNull($description->schema);
+        $this->assertEquals('string', $description->schema->type);
+        $this->assertIsString($description->schema->pattern);
     }
 }

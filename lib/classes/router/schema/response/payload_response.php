@@ -45,7 +45,7 @@ class payload_response extends abstract_response {
     /**
      * Get the payload data from the response.
      *
-     * @return array 
+     * @return array
      */
     public function get_payload(): array {
         return $this->payload;

@@ -45,11 +45,7 @@ class array_of_things extends \core\router\schema\objects\type_base {
         specification $api,
         ?string $path = null,
     ): ?\stdClass {
-        // $api->add_component($this);
         return $this->get_schema();
-        return (object) [
-            '$ref' => $this->get_reference(),
-        ];
     }
 
     public function get_schema(): \stdClass {

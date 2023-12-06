@@ -22,7 +22,7 @@ use core\router\schema\specification;
 /**
  * A Response Example Object.
  *
- * https://swagger.io/specification/#example-object
+ * https://spec.openapis.org/oas/v3.1.0#example-object
  *
  * @package    core
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
@@ -39,7 +39,7 @@ class example extends openapi_base {
     ) {
         assert(
             $value === null || $externalvalue === null,
-            'Only one of value or externalvalue can be specified.',
+            new \coding_exception('Only one of value or externalvalue can be specified.'),
         );
     }
 

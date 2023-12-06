@@ -16,13 +16,8 @@
 
 namespace core\router;
 
-use core\param;
-use core\router\schema\parameters\path_parameter;
-use core\router\schema\parameters\query_parameter;
-use core\router\schema\request_body;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
-use Slim\Routing\Route;
 
 /**
  * Tests for user preference API handler.
@@ -35,6 +30,7 @@ use Slim\Routing\Route;
 class apidocs_test extends \advanced_testcase {
     public function test_openapi_docs(): void {
         $apidocs = new apidocs();
+
         $result = $apidocs->openapi_docs(new Response());
         $this->assertInstanceOf(ResponseInterface::class, $result);
 
