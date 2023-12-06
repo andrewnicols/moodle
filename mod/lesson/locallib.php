@@ -4308,7 +4308,6 @@ abstract class lesson_page extends lesson_base {
                 $options->para = true;
                 $options->overflowdiv = true;
                 $options->context = $context;
-                $options->attemptid = isset($attempt) ? $attempt->id : null;
 
                 $result->feedback .= $OUTPUT->box(format_text($this->get_contents(), $this->properties->contentsformat, $options),
                         'generalbox boxaligncenter py-3');
