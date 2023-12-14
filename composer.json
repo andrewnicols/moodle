@@ -15,7 +15,8 @@
         "symfony/mime": "^4.4 || ^5.0 || ^6.0",
         "behat/behat": "3.13.*",
         "oleg-andreyev/mink-phpwebdriver": "1.2.*",
-        "filp/whoops": "^2.15"
+        "filp/whoops": "^2.15",
+        "phpdocumentor/reflection-docblock": "^5.3"
     },
     "autoload-dev": {
         "psr-0": {

@@ -30,6 +30,8 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\facade\formatting;
+
 defined('MOODLE_INTERNAL') || die();
 
 // Constants.
@@ -1376,7 +1378,7 @@ function format_text($text, $format = FORMAT_MOODLE, $options = null, $courseidd
         $params['format'] = $format;
     }
 
-    return \core\di::get(\core\formatting::class)->format_text(...$params);
+    return formatting::format_text(...$params);
 }
 
 /**
@@ -1517,9 +1519,7 @@ function format_string($string, $striplinks = true, $options = null) {
         }
     }
 
-    return \core\di::get(\core\formatting::class)->format_string(
-        ...$params,
-    );
+    return formatting::format_string(...$params);
 }
 
 /**

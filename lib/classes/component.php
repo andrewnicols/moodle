@@ -1407,18 +1407,16 @@ $cache = ' . var_export($cache, true) . ';
     }
 
     /**
-     * Returns a list of frankenstyle component names.
+     * Returns a list of frankenstyle component names, inlcuding all plugins, subplugins, and subsystems.
      *
-     * E.g.
-     *  [
-     *      'core_course',
-     *      'core_message',
-     *      'mod_assign',
-     *      ...
-     *  ]
-     * @return array the list of frankenstyle component names.
+     * Note: By default the 'core' subsystem is not included.
+     *
+     * @param bool $includecore Whether to include the 'core' subsystem
+     * @return string[] the list of frankenstyle component names.
      */
-    public static function get_component_names(): array {
+    public static function get_component_names(
+        bool $includecore = false,
+    ): array {
         $componentnames = [];
         // Get all plugins.
         foreach (self::get_plugin_types() as $plugintype => $typedir) {
@@ -1430,7 +1428,39 @@ $cache = ' . var_export($cache, true) . ';
         foreach (self::get_core_subsystems() as $subsystemname => $subsystempath) {
             $componentnames[] = 'core_' . $subsystemname;
         }
+
+        if ($includecore) {
+            $componentnames[] = 'core';
+        }
         return $componentnames;
+    }
+
+    public static function get_component_from_classname(string $classname): ?string {
+        $components = static::get_component_names(true);
+
+        $classname = ltrim($classname, '\\');
+
+        // Prefer PSR-4 classnames.
+        $parts = explode('\\', $classname);
+        if ($parts) {
+            $component = array_shift($parts);
+            if (array_search($component, $components) !== false) {
+                return $component;
+            }
+            return null;
+        }
+
+        // Frankenstyle classnames. Maybe one day we'll rid ourselves of this sin.
+        $parts = explode('_', $classname);
+        $reconstructed = [];
+        if ($parts) {
+            $reconstructed[] = array_shift($parts);
+            $component = implode('_', $reconstructed);
+            if (array_key_exists($component, $components)) {
+                return $component;
+            }
+            return null;
+        }
     }
 
     /**
