@@ -161,7 +161,7 @@ class formatting {
      */
     public function format_text(
         ?string $text,
-        string $format = FORMAT_MOODLE,
+        string $format = \FORMAT_MOODLE,
         ?context $context = null,
         bool $trusted = false,
         ?bool $clean = null,
@@ -179,7 +179,7 @@ class formatting {
             return '';
         }
 
-        if ($format == FORMAT_MARKDOWN) {
+        if ($format == \FORMAT_MARKDOWN) {
             // Markdown format cannot be trusted in trusttext areas,
             // because we do not know how to sanitise it before editing.
             $trusted = false;
@@ -225,14 +225,14 @@ class formatting {
         }
 
         switch ($format) {
-            case FORMAT_HTML:
+            case \FORMAT_HTML:
                 $filteroptions['stage'] = 'pre_format';
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 // Text is already in HTML format, so just continue to the next filtering stage.
                 $filteroptions['stage'] = 'pre_clean';
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 if ($clean) {
-                    $text = clean_text($text, FORMAT_HTML, [
+                    $text = clean_text($text, \FORMAT_HTML, [
                         'allowid' => $allowid,
                     ]);
                 }
@@ -240,21 +240,21 @@ class formatting {
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 break;
 
-            case FORMAT_PLAIN:
+            case \FORMAT_PLAIN:
                 $text = s($text); // Cleans dangerous JS.
                 $text = rebuildnolinktag($text);
                 $text = str_replace('  ', '&nbsp; ', $text);
                 $text = nl2br($text);
                 break;
 
-            case FORMAT_MARKDOWN:
+            case \FORMAT_MARKDOWN:
                 $filteroptions['stage'] = 'pre_format';
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 $text = markdown_to_html($text);
                 $filteroptions['stage'] = 'pre_clean';
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 if ($clean) {
-                    $text = clean_text($text, FORMAT_HTML, [
+                    $text = clean_text($text, \FORMAT_HTML, [
                         'allowid' => $allowid,
                     ]);
                 }
@@ -262,21 +262,21 @@ class formatting {
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 break;
 
-            case FORMAT_MOODLE:
+            case \FORMAT_MOODLE:
                 $filteroptions['stage'] = 'pre_format';
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 $text = text_to_html($text, null, $para, $newlines);
                 $filteroptions['stage'] = 'pre_clean';
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 if ($clean) {
-                    $text = clean_text($text, FORMAT_HTML, [
+                    $text = clean_text($text, \FORMAT_HTML, [
                         'allowid' => $allowid,
                     ]);
                 }
                 $filteroptions['stage'] = 'post_clean';
                 $text = $filtermanager->filter_text($text, $context, $filteroptions);
                 break;
-            default:  // FORMAT_MOODLE or anything else.
+            default:  // \FORMAT_MOODLE or anything else.
                 throw new \coding_exception("Unkown format passed to format_text: {$format}");
         }
 

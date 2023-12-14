@@ -130,6 +130,13 @@ class core_component {
     ];
 
     /**
+     * The namespace for all real-time facades.
+     *
+     * @var string
+     */
+    protected static $facadenamespace = 'Moodle\\Facades\\';
+
+    /**
      * Class loader for Frankenstyle named classes in standard locations.
      * Frankenstyle namespaces are supported.
      *
@@ -147,6 +154,10 @@ class core_component {
      */
     public static function classloader($classname) {
         self::init();
+
+        if (str_starts_with($classname, static::$facadenamespace)) {
+            return static::facade_realtime_autoload($classname);
+        }
 
         if (isset(self::$classmap[$classname])) {
             // Global $CFG is expected in included scripts.
@@ -207,6 +218,36 @@ class core_component {
         }
 
         return false;
+    }
+
+    protected static function facade_realtime_autoload(string $classname): bool {
+        $cachedir = make_localcache_directory('realtime-facades');
+        $cachefile = sprintf(
+            "%s/facade-%s.php",
+            $cachedir,
+            sha1($classname),
+        );
+        if (!is_file($cachefile) || !is_readable($cachefile)) {
+            $replacements = [
+                str_replace('/', '\\', dirname(str_replace('\\', '/', $classname))),
+                str_replace('/', '\\', basename(str_replace('\\', '/', $classname))),
+                substr($classname, strlen(static::$facadenamespace)),
+            ];
+
+            $stub = str_replace(
+                ['FacadeNamespace', 'FacadeClassName', 'OriginalClassName'],
+                $replacements,
+                file_get_contents(__DIR__ . '/facade.stub'),
+            );
+            file_put_contents(
+                $cachefile,
+                $stub,
+            );
+        }
+
+        include_once($cachefile);
+
+        return true;
     }
 
     /**
@@ -1407,18 +1448,16 @@ $cache = ' . var_export($cache, true) . ';
     }
 
     /**
-     * Returns a list of frankenstyle component names.
+     * Returns a list of frankenstyle component names, inlcuding all plugins, subplugins, and subsystems.
      *
-     * E.g.
-     *  [
-     *      'core_course',
-     *      'core_message',
-     *      'mod_assign',
-     *      ...
-     *  ]
-     * @return array the list of frankenstyle component names.
+     * Note: By default the 'core' subsystem is not included.
+     *
+     * @param bool $includecore Whether to include the 'core' subsystem
+     * @return string[] the list of frankenstyle component names.
      */
-    public static function get_component_names(): array {
+    public static function get_component_names(
+        bool $includecore = false,
+    ): array {
         $componentnames = [];
         // Get all plugins.
         foreach (self::get_plugin_types() as $plugintype => $typedir) {
@@ -1430,7 +1469,39 @@ $cache = ' . var_export($cache, true) . ';
         foreach (self::get_core_subsystems() as $subsystemname => $subsystempath) {
             $componentnames[] = 'core_' . $subsystemname;
         }
+
+        if ($includecore) {
+            $componentnames[] = 'core';
+        }
         return $componentnames;
+    }
+
+    public static function get_component_from_classname(string $classname): ?string {
+        $components = static::get_component_names(true);
+
+        $classname = ltrim($classname, '\\');
+
+        // Prefer PSR-4 classnames.
+        $parts = explode('\\', $classname);
+        if ($parts) {
+            $component = array_shift($parts);
+            if (array_search($component, $components) !== false) {
+                return $component;
+            }
+            return null;
+        }
+
+        // Frankenstyle classnames. Maybe one day we'll rid ourselves of this sin.
+        $parts = explode('_', $classname);
+        $reconstructed = [];
+        if ($parts) {
+            $reconstructed[] = array_shift($parts);
+            $component = implode('_', $reconstructed);
+            if (array_key_exists($component, $components)) {
+                return $component;
+            }
+            return null;
+        }
     }
 
     /**
