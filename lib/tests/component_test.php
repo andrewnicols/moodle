@@ -689,6 +689,12 @@ class component_test extends advanced_testcase {
               'classname' => 'overlap_subnamespace_example2',
               'includedfiles' => "{$directory}overlap/subnamespace/example2.php",
           ],
+            'Tests directory' => [
+                'psr0' => [],
+                'psr4' => [],
+                'classname' => \core\tests\example::class,
+                'includedfiles' => "{$CFG->dirroot}/lib/tests/classes/example.php",
+            ],
         ];
     }
 
@@ -825,6 +831,60 @@ class component_test extends advanced_testcase {
                 'includedfiles' => "{$dirroot}/lib/psr/http-factory/src/ServerRequestFactoryInterface.php",
             ],
         ];
+    }
+
+    public function test_classloader_again(): void {
+        global $CFG;
+
+        $this->resetAfterTest();
+
+        $getclassfilecontent = function (string $classname, ?string $namespace): string {
+            if ($namespace) {
+                $content = "<?php\nnamespace $namespace;\nclass $classname {}";
+            } else {
+                $content = "<?php\nclass $classname {}";
+            }
+            return $content;
+        };
+
+        $vfileroot = \org\bovigo\vfs\vfsStream::setup('root', null, [
+            'lib' => [
+                'classes' => [
+                    'example.php' => $getclassfilecontent('example', 'core'),
+                ],
+                'tests' => [
+                    'classes' => [
+                        'example_classname.php' => $getclassfilecontent('example_classname', \core\tests::class),
+                    ],
+                ],
+            ],
+        ]);
+
+        // Note: This is pretty hacky, but it's the only way to test the classloader.
+        // We have to override the dirroot and libdir,
+        $dirroot = $CFG->dirroot;
+        $libdir = $CFG->libdir;
+        $CFG->dirroot = $vfileroot->url();
+        $CFG->libdir = $vfileroot->url() . '/lib';
+
+        $plugintypes = new ReflectionProperty('core_component', 'plugintypes');
+
+        $plugintypes->setValue(null, null);
+
+        $this->assertTrue(
+            class_exists(\core\example::class),
+        );
+        $this->assertTrue(
+            class_exists(\core\tests\example_classname::class),
+        );
+        $this->assertFalse(
+            class_exists(\core\tests\example_classname_not_found::class),
+        );
+    }
+
+    public function tearDown(): void {
+        $plugintypes = new ReflectionProperty('core_component', 'plugintypes');
+        $plugintypes->setValue(null, null);
     }
 
     /**
