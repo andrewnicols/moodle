@@ -483,13 +483,33 @@ class util {
         // Get settings (singleton).
         $settings = external_settings::get_instance();
 
-        if (!$settings->get_raw()) {
-            $options['context'] = $context;
-            $options['filter'] = isset($options['filter']) && !$options['filter'] ? false : $settings->get_filter();
-            return format_string($content, $striplinks, $options);
+        if ($settings->get_raw()) {
+            return $content;
         }
 
-        return $content;
+        // Get the formatter.
+        $formatter = \core\di::get(\core\formatting::class);
+
+        $args = [
+            'string' => $content,
+            'context' => $context,
+            'striplinks' => $striplinks,
+        ];
+
+
+        if (array_key_exists('filter', $options) && !$options['filter']) {
+            // If a filter value is specified and false, then use it.
+            $args['filter'] = false;
+        } else {
+            // Otherwise defer to the site settings.
+            $args['filter'] = $settings->get_filter();
+        }
+
+        if (array_key_exists('escape', $options)) {
+            $args['escape'] = $options['escape'];
+        }
+
+        return $formatter->format_string(...$args);
     }
 
     /**
@@ -558,42 +578,57 @@ class util {
         // Note that $CFG->forceclean does not apply here if the client requests for the raw database content.
         // This is consistent with web clients that are still able to load non-cleaned text into editors, too.
 
-        if (!$settings->get_raw()) {
-            $options = (array) $options;
-
-            // If context is passed in options, check that is the same to show a debug message.
-            if (isset($options['context'])) {
-                if (is_int($options['context'])) {
-                    if ($options['context'] != $context->id) {
-                        debugging(
-                            'Different contexts found in external_format_text parameters. $options[\'context\'] not allowed. ' .
-                            'Using $contextid parameter...',
-                            DEBUG_DEVELOPER
-                        );
-                    }
-                } else if ($options['context'] instanceof context) {
-                    if ($options['context']->id != $context->id) {
-                        debugging(
-                            'Different contexts found in external_format_text parameters. $options[\'context\'] not allowed. ' .
-                            'Using $contextid parameter...',
-                            DEBUG_DEVELOPER
-                        );
-                    }
-                }
-            }
-
-            $options['filter'] = isset($options['filter']) && !$options['filter'] ? false : $settings->get_filter();
-            $options['para'] = isset($options['para']) ? $options['para'] : false;
-            $options['context'] = $context;
-            $options['allowid'] = isset($options['allowid']) ? $options['allowid'] : true;
-
-            $text = format_text($text, $textformat, $options);
-            // Once converted to html (from markdown, plain... lets inform consumer this is already HTML).
-            $textformat = FORMAT_HTML;
+        if ($settings->get_raw()) {
+            // Note: The formats defined in weblib are strings.
+            return [$text, $textformat];
         }
 
-        // Note: The formats defined in weblib are strings.
-        return [$text, $textformat];
+        $options = (array) $options;
+
+        // If context is passed in options, check that is the same to show a debug message.
+        if (isset($options['context'])) {
+            if (is_int($options['context'])) {
+                if ($options['context'] != $context->id) {
+                    debugging(
+                        'Different contexts found in external_format_text parameters. $options[\'context\'] not allowed. ' .
+                        'Using $contextid parameter...',
+                        DEBUG_DEVELOPER
+                    );
+                }
+            } else if ($options['context'] instanceof \core\context) {
+                if ($options['context']->id != $context->id) {
+                    debugging(
+                        'Different contexts found in external_format_text parameters. $options[\'context\'] not allowed. ' .
+                        'Using $contextid parameter...',
+                        DEBUG_DEVELOPER
+                    );
+                }
+            }
+        }
+
+        $formatter = \core\di::get(\core\formatting::class);
+
+        $args = [
+            'text' => $text,
+            'format' => $textformat,
+            'context' => $context,
+            'para' => array_key_exists('para', $options) ? $options['para'] : false,
+            'allowid' => array_key_exists('allowid', $options) ? $options['allowid'] : true,
+        ];
+
+        if (array_key_exists('filter', $options) && !$options['filter']) {
+            // If a filter value is specified and false, then use it.
+            $args['filter'] = false;
+        } else {
+            // Otherwise defer to the site settings.
+            $args['filter'] = $settings->get_filter();
+        }
+
+        // Once converted to html (from markdown, plain... lets inform consumer this is already HTML).
+        return [
+            $formatter->format_text(...$args),
+            FORMAT_HTML,
+        ];
     }
 
     /**
