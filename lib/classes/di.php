@@ -111,12 +111,25 @@ class di {
         $builder->addDefinitions([
             // The hook manager should be in the container.
             \core\hook\manager::class => $hookmanager,
-            
+
             // The database.
             \moodle_database::class => $DB,
 
             // The string manager.
             \core_string_manager::class => fn() => get_string_manager(),
+
+            \core\logger::class => function (): \core\logger {
+                global $CFG;
+
+                // The default logger is \core\logger.
+                $class = \core\logger::class;
+                if (property_exists($CFG, 'alternative_logger_class')) {
+                    if (class_exists($CFG->alternative_logger_class) && is_subclass_of($CFG->alternative_logger_class, \core\logger::class)) {
+                        $class = $CFG->alternative_logger_class;
+                    }
+                }
+                return new $class();
+            },
         ]);
 
         // Add any additional definitions using hooks.

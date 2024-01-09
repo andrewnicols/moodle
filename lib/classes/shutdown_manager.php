@@ -212,12 +212,22 @@ class core_shutdown_manager {
             if ($apachereleasemem) {
                 error_log('Mem usage over '.$apachereleasemem.': marking Apache child for reaping.');
             }
+
+            $perf = get_performance_info();
+            \core\facade\logger::info(
+                message: 'Performance info',
+                context: array_filter($perf, function ($key) {
+                    return $key !== 'txt' && $key !== 'html';
+                }, ARRAY_FILTER_USE_KEY),
+                channel: 'performance',
+            );
+
             if (MDL_PERFTOLOG) {
-                $perf = get_performance_info();
+                // TODO Deprecate.
                 error_log("PERF: " . $perf['txt']);
             }
+
             if (!empty($PERF->perfdebugdeferred)) {
-                $perf = get_performance_info();
                 echo $OUTPUT->select_element_for_replace('#perfdebugfooter', $perf['html']);
             }
             if (MDL_PERFINC) {

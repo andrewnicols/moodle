@@ -3274,6 +3274,20 @@ function debugging($message = '', $level = DEBUG_NORMAL, $backtrace = null) {
         $forcedebug = in_array($USER->id, $debugusers);
     }
 
+    if (is_string($message) && $message) {
+        $context = [];
+        if ($backtrace) {
+            $context['backtrace'] = $backtrace;
+        }
+
+        \core\facade\logger::log(
+            level: \core\logger::get_log_level_from_debug_level($level),
+            message: $message,
+            context: $context,
+            channel: 'debug',
+        );
+    }
+
     if (!$forcedebug and (empty($CFG->debug) || ($CFG->debug != -1 and $CFG->debug < $level))) {
         return false;
     }

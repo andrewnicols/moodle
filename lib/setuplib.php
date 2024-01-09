@@ -421,6 +421,18 @@ function default_exception_handler($ex) {
         redirect(get_login_url());
     }
 
+    if (class_exists(\core\facade\logger::class)) {
+        // Log the exception using the logger API.
+        // Note: We have to be careful how we do this because the logger API may not be instantiable yet if the exception was very early.
+        \core\facade\logger::warning(
+            message: get_class($ex),
+            context: [
+                'exception' => $ex,
+            ],
+            channel: 'exceptions',
+        );
+    }
+
     $info = get_exception_info($ex);
 
     // If we already tried to send the header remove it, the content length
@@ -492,10 +504,28 @@ function default_error_handler($errno, $errstr, $errfile, $errline) {
         // If whoops is available we will use it. The get_whoops() function checks whether all conditions are met.
         $whoops->handleError($errno, $errstr, $errfile, $errline);
     }
+
     if ($errno == 4096) {
-        //fatal catchable error
+        // Fatal catchable error.
         throw new coding_exception('PHP catchable fatal error', $errstr);
     }
+
+    if (error_reporting() !== 0) {
+        if (class_exists(\core\facade\logger::class)) {
+            // Log the error using the logger API.
+            \core\facade\logger::error(
+                message: $errstr,
+                context: [
+                    'errno' => $errno,
+                    'errstr' => $errstr,
+                    'errfile' => $errfile,
+                    'errline' => $errline,
+                ],
+                channel: 'exceptions',
+            );
+        }
+    }
+
     return false;
 }
 
