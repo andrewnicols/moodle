@@ -168,6 +168,7 @@ class component {
         \Slim::class => 'public/lib/slim/slim/Slim',
         \Spatie\Cloneable::class => 'public/lib/spatie/php-cloneable/src',
         \ZipStream::class => 'public/lib/zipstream/src',
+        \Monolog::class => 'public/lib/monolog/src/Monolog',
     ];
 
     /**

@@ -71,6 +71,14 @@
     <customised/>
   </library>
   <library>
+    <location>monolog</location>
+    <name>Monolog</name>
+    <description>Logging for PHP.</description>
+    <version>3.9.0</version>
+    <license>MIT</license>
+    <repository>https://github.com/Seldaek/monolog</repository>
+  </library>
+  <library>
     <location>phpspreadsheet/markbaker/complex</location>
     <name>PHPComplex</name>
     <description>PHP Class Library for working with Complex numbers.</description>
