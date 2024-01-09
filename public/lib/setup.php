@@ -27,6 +27,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+if (!defined('PAGE_ID')) {
+    /**
+     * @var string
+     *
+     * A page id used for logging.
+     */
+    define('PAGE_ID', substr(uniqid(), 0, 16)); // Unique identifier for this page load, used in logging.
+}
+
 /**
  * Holds the core settings that affect how Moodle works. Some of its fields
  * are set in config.php, and the rest are loaded from the config table.

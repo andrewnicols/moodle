@@ -2462,6 +2462,22 @@ function debugging($message = '', $level = DEBUG_NORMAL, $backtrace = null) {
         $forcedebug = in_array($USER->id, $debugusers);
     }
 
+    if (is_string($message) && $message) {
+        $context = [];
+        if ($backtrace) {
+            $context['backtrace'] = $backtrace;
+        }
+
+        if (class_exists(\core\logger::class)) {
+            \core\logger::log(
+                level: \core\logger::get_log_level_from_moodle_debug_level($level),
+                message: $message,
+                context: $context,
+                channel: \core\logger::CHANNEL_DEBUG,
+            );
+        }
+    }
+
     if (!$forcedebug and (empty($CFG->debug) || ($CFG->debug != -1 and $CFG->debug < $level))) {
         return false;
     }
