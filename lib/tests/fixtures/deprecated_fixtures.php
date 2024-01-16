@@ -14,49 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-use \core\deprecated;
+namespace core\fixtures;
+
+use core\deprecated;
 
 /**
- * TODO describe file deprecated_enum_fixture
+ * A file containing a variety of fixturs for deprecated attribute tests.
  *
  * @package    core
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-enum deprecated_enum_fixture {
-    use \core\deprecated_enum;
 
-    case NOT_DEPRECATED;
+#[deprecated('Deprecated class')]
+class deprecated_class {
+    protected string $notdeprecatedproperty = 'Not deprecated property';
 
-    #[deprecated(
-        'Deprecated with defaults',
-    )]
-    case DEPRECATED_DEFAULT;
+    #[deprecated('Deprecated property')]
+    protected string $deprecatedproperty = 'Deprecated property';
 
-    #[deprecated(
-        'Deprecated not final not emit',
-        final: false,
-        emit: false,
-    )]
-    case DEPRECATED_NOT_FINAL_NOT_EMIT;
+    const NOT_DEPRECATED_CONST = 'Not deprecated const';
 
-    #[deprecated(
-        'Deprecated not final not emit',
-        final: false,
-    )]
-    case DEPRECATED_NOT_FINAL_EMIT;
+    #[deprecated('Deprecated const')]
+    const DEPRECATED_CONST = 'Deprecated const';
 
-    #[deprecated(
-        'Deprecated not final not emit',
-        final: true,
-        emit: false,
-    )]
-    case DEPRECATED_FINAL_NOT_EMIT;
+    public function not_deprecated_method() {}
 
-    #[deprecated(
-        'Deprecated not final not emit',
-        final: true,
-        emit: true,
-    )]
-    case DEPRECATED_FINAL_EMIT;
+    #[deprecated('Deprecated method')]
+    public function deprecated_method() {}
 }
+
+class not_deprecated_class {}
+
+function not_deprecated_function() {}
+
+#[deprecated('Deprecated function')]
+function deprecated_function() {}

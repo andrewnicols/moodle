@@ -31,9 +31,6 @@ use moodle_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 enum param: string {
-    // This enum has deprecated cases.
-    use deprecated_enum;
-
     /**
      * PARAM_ALPHA - contains only English ascii letters [a-zA-Z].
      */
@@ -386,7 +383,7 @@ enum param: string {
      */
     public function clean(mixed $value): mixed {
         // Check and emit a deprecation notice if required.
-        $this->emit_deprecation_notice();
+        deprecated::emit_deprecation_if_present($this);
 
         if (is_array($value)) {
             throw new coding_exception('clean() can not process arrays, please use clean_array() instead.');
@@ -1327,5 +1324,14 @@ enum param: string {
         } else {
             return '';
         }
+    }
+
+    /**
+     * Whether the parameter is deprecated.
+     *
+     * @return bool
+     */
+    public function is_deprecated(): bool {
+        return deprecated::from($this) !== null;
     }
 }

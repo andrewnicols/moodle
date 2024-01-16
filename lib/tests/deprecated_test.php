@@ -16,8 +16,6 @@
 
 namespace core;
 
-use deprecated_enum_fixture;
-
 /**
  * Tests for \core\deprecated.
  *
@@ -167,6 +165,76 @@ class deprecated_test extends \advanced_testcase {
                 'https://docs.moodle.org/311/en/Deprecated',
                 'Deprecation: Test description has been deprecated since 4.1. Test reason. Use Test replacement instead. See https://docs.moodle.org/311/en/Deprecated for more information.',
             ],
+        ];
+    }
+
+    /**
+     * @dataProvider from_provider
+     */
+    public function test_from($reference, bool $isdeprecated): void {
+        $attribute = deprecated::from($reference);
+        if ($isdeprecated) {
+            $this->assertInstanceOf(deprecated::class, $attribute);
+            $this->assertTrue(deprecated::is_deprecated($reference));
+            $this->assertDebuggingNotCalled();
+
+            deprecated::emit_deprecation_if_present($reference);
+            $this->assertDebuggingCalled($attribute->get_deprecation_string());
+        } else {
+            $this->assertNull($attribute);
+            $this->assertFalse(deprecated::is_deprecated($reference));
+            deprecated::emit_deprecation_if_present($reference);
+            $this->assertDebuggingNotCalled();
+        }
+    }
+
+    public function test_from_object(): void {
+        require_once(dirname(__FILE__) . '/fixtures/deprecated_fixtures.php');
+
+        $this->assertNull(deprecated::from(new \core\fixtures\not_deprecated_class()));
+        $this->assertInstanceOf(deprecated::class, deprecated::from([new \core\fixtures\deprecated_class()]));
+    }
+
+    public static function from_provider(): array {
+        require_once(dirname(__FILE__) . '/fixtures/deprecated_fixtures.php');
+        return [
+            // Classes.
+            [\core\fixtures\deprecated_class::class, true],
+            [[\core\fixtures\deprecated_class::class], true],
+            [\core\fixtures\not_deprecated_class::class, false],
+            [[\core\fixtures\not_deprecated_class::class], false],
+
+            // Class properties.
+            [\core\fixtures\deprecated_class::class . '::deprecatedproperty', true],
+            [[\core\fixtures\deprecated_class::class, 'deprecatedproperty'], true],
+
+            [\core\fixtures\deprecated_class::class . '::notdeprecatedproperty', false],
+            [[\core\fixtures\deprecated_class::class, 'notdeprecatedproperty'], false],
+
+            // Class constants.
+            [\core\fixtures\deprecated_class::class . '::DEPRECATED_CONST', true],
+            [[\core\fixtures\deprecated_class::class, 'DEPRECATED_CONST'], true],
+
+            [\core\fixtures\deprecated_class::class . '::NOT_DEPRECATED_CONST', false],
+            [[\core\fixtures\deprecated_class::class, 'NOT_DEPRECATED_CONST'], false],
+
+            // Class methods.
+            [\core\fixtures\deprecated_class::class . '::deprecated_method', true],
+            [[\core\fixtures\deprecated_class::class, 'deprecated_method'], true],
+
+            [\core\fixtures\deprecated_class::class . '::not_deprecated_method', false],
+            [[\core\fixtures\deprecated_class::class, 'not_deprecated_method'], false],
+
+            // Non-existent class.
+            ['non_existent_class', false],
+            [['non_existent_class'], false],
+
+            // Not-deprecated class.
+            [\core\fixtures\not_deprecated_class::class, false],
+
+            // Deprecated global function.
+            ['core\fixtures\deprecated_function', true],
+            ['core\fixtures\not_deprecated_function', false],
         ];
     }
 }

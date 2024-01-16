@@ -124,14 +124,10 @@ class param_test extends \advanced_testcase {
             array_filter(
                 param::cases(),
                 function (param $param): bool {
-                    $rp = new \ReflectionEnum($param);
-                    $rpm = $rp->getMethod('get_deprecation_attribute');
-                    $attribute = $rpm->invoke($param);
-                    if (!$attribute) {
-                        return false;
+                    if ($attribute = deprecated::from($param)) {
+                        return $attribute->emit && $attribute->final;
                     }
-
-                    return $attribute->emit && $attribute->final;
+                    return false;
                 },
             ),
         );
