@@ -31,6 +31,9 @@ use moodle_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 enum param: string {
+    // This enum has deprecated cases.
+    use deprecated_enum;
+
     /**
      * PARAM_ALPHA - contains only English ascii letters [a-zA-Z].
      */
@@ -224,6 +227,7 @@ enum param: string {
         'param::CLEAN',
         since: '2.0',
         reason: 'Please use a more specific type of parameter',
+        emit: false,
     )]
     case CLEAN = 'clean';
 
@@ -235,6 +239,7 @@ enum param: string {
         'param::INTEGER',
         since: '2.0',
         reason: 'Alias for INT',
+        final: true,
     )]
     case INTEGER = 'integer';
 
@@ -246,6 +251,7 @@ enum param: string {
         'param::NUMBER',
         since: '2.0',
         reason: 'Alias for FLOAT',
+        final: true,
     )]
     case NUMBER = 'number';
 
@@ -258,6 +264,7 @@ enum param: string {
         'param::ACTION',
         since: '2.0',
         reason: 'Alias for PARAM_ALPHANUMEXT',
+        final: true,
     )]
     case ACTION = 'action';
 
@@ -270,6 +277,7 @@ enum param: string {
         'param::FORMAT',
         since: '2.0',
         reason: 'Alias for PARAM_ALPHANUMEXT',
+        final: true,
     )]
     case FORMAT = 'format';
 
@@ -281,6 +289,7 @@ enum param: string {
         'param::MULTILANG',
         since: '2.0',
         reason: 'Alias for PARAM_TEXT',
+        final: true,
     )]
     case MULTILANG = 'multilang';
 
@@ -299,6 +308,7 @@ enum param: string {
         'param::CLEANFILE',
         since: '2.0',
         reason: 'Alias for PARAM_FILE',
+        final: true,
     )]
     case CLEANFILE = 'cleanfile';
 
@@ -361,44 +371,6 @@ enum param: string {
     }
 
     /**
-     * Whether the parameter is deprecated.
-     *
-     * @return bool
-     */
-    public function is_deprecated(): bool {
-        if ($this->get_deprecation_attribute()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Get the deprecation attribute for the parameter if it is set.
-     *
-     * @return null|deprecated
-     */
-    protected function get_deprecation_attribute(): ?deprecated {
-        $ref = new \ReflectionClassConstant(self::class, $this->name);
-        if ($attributes = $ref->getAttributes(deprecated::class)) {
-            return $attributes[0]->newInstance();
-        }
-
-        return null;
-    }
-
-    /**
-     * Emit a deprecation notice if the parameter is deprecated.
-     */
-    protected function emit_deprecation_notice(): void {
-        if ($deprecation = $this->get_deprecation_attribute()) {
-            debugging(
-                $deprecation->get_deprecation_string(),
-                DEBUG_DEVELOPER,
-            );
-        }
-    }
-
-    /**
      * Used by {@link optional_param()} and {@link required_param()} to
      * clean the variables and/or cast to specific types, based on
      * an options field.
@@ -413,6 +385,9 @@ enum param: string {
      * @throws coding_exception
      */
     public function clean(mixed $value): mixed {
+        // Check and emit a deprecation notice if required.
+        $this->emit_deprecation_notice();
+
         if (is_array($value)) {
             throw new coding_exception('clean() can not process arrays, please use clean_array() instead.');
         } else if (is_object($value)) {

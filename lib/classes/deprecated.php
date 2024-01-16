@@ -42,6 +42,8 @@ class deprecated {
         public readonly ?string $reason = null,
         public readonly ?string $replacement = null,
         public readonly ?string $mdl = null,
+        public readonly bool $final = false,
+        public readonly bool $emit = true,
     ) {
     }
 
@@ -71,5 +73,24 @@ class deprecated {
         }
 
         return $output;
+    }
+
+    /**
+     * Emit the relevant deprecation notice.
+     */
+    public function emit_deprecation_notice(): void {
+        if (!$this->emit) {
+            return;
+        }
+        if ($this->final) {
+            throw new \coding_exception(
+                $this->get_deprecation_string(),
+            );
+        }
+
+        debugging(
+            $this->get_deprecation_string(),
+            DEBUG_DEVELOPER,
+        );
     }
 }
