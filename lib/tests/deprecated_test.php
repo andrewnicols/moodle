@@ -24,6 +24,7 @@ namespace core;
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\deprecated
+ * @covers \core\deprecation
  */
 class deprecated_test extends \advanced_testcase {
     /**
@@ -43,7 +44,7 @@ class deprecated_test extends \advanced_testcase {
             ...$args,
         );
 
-        $attribute->emit_deprecation_notice();
+        deprecation::emit_deprecation_notice($attribute);
 
         if ($expectdebugging) {
             $this->assertdebuggingcalledcount(1);
@@ -99,7 +100,7 @@ class deprecated_test extends \advanced_testcase {
         string $expected,
     ): void {
         $attribute = new deprecated(
-            descriptor: $descriptor,
+            reason: $descriptor,
             since: $since,
             reason: $reason,
             replacement: $replacement,
@@ -108,10 +109,10 @@ class deprecated_test extends \advanced_testcase {
 
         $this->assertEquals(
             $expected,
-            $attribute->get_deprecation_string(),
+            deprecation::get_deprecation_string($attribute),
         );
 
-        $attribute->emit_deprecation_notice();
+        deprecation::emit_deprecation_notice($attribute);
         $this->assertDebuggingCalled($expected);
     }
 
@@ -172,18 +173,18 @@ class deprecated_test extends \advanced_testcase {
      * @dataProvider from_provider
      */
     public function test_from($reference, bool $isdeprecated): void {
-        $attribute = deprecated::from($reference);
+        $attribute = deprecation::from($reference);
         if ($isdeprecated) {
             $this->assertInstanceOf(deprecated::class, $attribute);
-            $this->assertTrue(deprecated::is_deprecated($reference));
+            $this->assertTrue(deprecation::is_deprecated($reference));
             $this->assertDebuggingNotCalled();
 
-            deprecated::emit_deprecation_if_present($reference);
-            $this->assertDebuggingCalled($attribute->get_deprecation_string());
+            deprecation::emit_deprecation_if_present($reference);
+            $this->assertDebuggingCalled(deprecation::get_deprecation_string($attribute));
         } else {
             $this->assertNull($attribute);
-            $this->assertFalse(deprecated::is_deprecated($reference));
-            deprecated::emit_deprecation_if_present($reference);
+            $this->assertFalse(deprecation::is_deprecated($reference));
+            deprecation::emit_deprecation_if_present($reference);
             $this->assertDebuggingNotCalled();
         }
     }
@@ -191,8 +192,8 @@ class deprecated_test extends \advanced_testcase {
     public function test_from_object(): void {
         require_once(dirname(__FILE__) . '/fixtures/deprecated_fixtures.php');
 
-        $this->assertNull(deprecated::from(new \core\fixtures\not_deprecated_class()));
-        $this->assertInstanceOf(deprecated::class, deprecated::from([new \core\fixtures\deprecated_class()]));
+        $this->assertNull(deprecation::from(new \core\fixtures\not_deprecated_class()));
+        $this->assertInstanceOf(deprecated::class, deprecation::from([new \core\fixtures\deprecated_class()]));
     }
 
     public static function from_provider(): array {

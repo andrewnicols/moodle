@@ -382,7 +382,7 @@ enum param: string {
      */
     public function clean(mixed $value): mixed {
         // Check and emit a deprecation notice if required.
-        deprecated::emit_deprecation_if_present($this);
+        deprecation::emit_deprecation_if_present($this);
 
         if (is_array($value)) {
             throw new coding_exception('clean() can not process arrays, please use clean_array() instead.');
@@ -1331,6 +1331,6 @@ enum param: string {
      * @return bool
      */
     public function is_deprecated(): bool {
-        return deprecated::from($this) !== null;
+        return deprecation::is_deprecated($this);
     }
 }

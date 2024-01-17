@@ -124,7 +124,7 @@ class param_test extends \advanced_testcase {
             array_filter(
                 param::cases(),
                 function (param $param): bool {
-                    if ($attribute = deprecated::from($param)) {
+                    if ($attribute = deprecation::from($param)) {
                         return $attribute->emit && $attribute->final;
                     }
                     return false;
