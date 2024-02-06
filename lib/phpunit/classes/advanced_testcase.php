@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use Psr\Clock\ClockInterface;
+
 /**
  * Advanced PHPUnit test case customised for Moodle.
  *
@@ -727,5 +729,21 @@ abstract class advanced_testcase extends base_testcase {
             $task->execute();
             \core\task\manager::adhoc_task_complete($task);
         }
+    }
+
+    /**
+     * Mock the \Psr\Clock\ClockInterface with ab incrementing clock.
+     *
+     * @param null|int $starttime
+     * @return ClockInterface
+     */
+    public function mock_clock_with_incrementing(
+        ?int $starttime = null,
+    ): \core\clock {
+        $clock = new \incrementing_clock($starttime);
+
+        \core\di::set(\core\clock::class, $clock);
+
+        return $clock;
     }
 }

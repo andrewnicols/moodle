@@ -264,6 +264,9 @@ if (PHPUNIT_UTIL) {
 // this is not using caches intentionally to help with development.
 \core\hook\manager::get_instance();
 
+// Load the incrementing clock - this must come after setup.php because it uses the \Psr\Clock interface.
+require_once(__DIR__ . '/classes/incrementing_clock.php');
+
 // Is database and dataroot ready for testing?
 [$errorcode, $message] = phpunit_util::testing_ready_problem();
 // Print some version info.
