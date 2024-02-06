@@ -15,17 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Data generator.
- *
- * @package    core
- * @category   test
- * @copyright  2012 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
  * Data generator class for unit tests and other tools that need to create fake test sites.
  *
  * @package    core
@@ -49,9 +38,6 @@ class testing_data_generator {
     protected $groupingcount = 0;
     protected $rolecount = 0;
     protected $tagcount = 0;
-
-    /** @var array list of plugin generators */
-    protected $generators = array();
 
     /** @var array lis of common last names */
     public $lastnames = array(
@@ -99,10 +85,6 @@ EOD;
         $this->groupingcount = 0;
         $this->rolecount = 0;
         $this->tagcount = 0;
-
-        foreach ($this->generators as $generator) {
-            $generator->reset();
-        }
     }
 
     /**
@@ -114,36 +96,36 @@ EOD;
         // Note: This global is included so that generator have access to it.
         // CFG is widely used in require statements.
         global $CFG;
-        list($type, $plugin) = core_component::normalize_component($component);
-        $cleancomponent = $type . '_' . $plugin;
+
+        $cleancomponent = core_component::normalize_componentname($component);
         if ($cleancomponent != $component) {
-            debugging("Please specify the component you want a generator for as " .
-                    "{$cleancomponent}, not {$component}.", DEBUG_DEVELOPER);
+            debugging(
+                "Please specify the component you want a generator for as {$cleancomponent}, not {$component}.",
+                DEBUG_DEVELOPER,
+            );
+
             $component = $cleancomponent;
         }
 
-        if (isset($this->generators[$component])) {
-            return $this->generators[$component];
+        $classname = "{$component}_generator";
+
+        if (class_exists($classname)) {
+            return \core\di::get($classname);
         }
 
         $dir = core_component::get_component_directory($component);
-        $lib = $dir . '/tests/generator/lib.php';
+        $lib = "{$dir}/tests/generator/lib.php";
         if (!$dir || !is_readable($lib)) {
-            $this->generators[$component] = $this->get_default_plugin_generator($component);
-
-            return $this->generators[$component];
+            return $this->get_default_plugin_generator($component);
         }
 
         include_once($lib);
-        $classname = $component . '_generator';
 
         if (class_exists($classname)) {
-            $this->generators[$component] = new $classname($this);
-        } else {
-            $this->generators[$component] = $this->get_default_plugin_generator($component, $classname);
+            return \core\di::get($classname);
         }
 
-        return $this->generators[$component];
+        return $this->get_default_plugin_generator($component, $classname);
     }
 
     /**
@@ -1521,7 +1503,13 @@ EOD;
 
         switch ($type) {
             case 'block':
-                return new default_block_generator($this, $plugin);
+                return \core\di::get_container()->make(
+                    default_block_generator::class,
+                    [
+                        $this,
+                        'blockname' => $plugin,
+                    ],
+                );
         }
 
         if (is_null($classname)) {
