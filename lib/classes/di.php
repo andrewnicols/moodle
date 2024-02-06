@@ -91,10 +91,10 @@ class di {
 
         // Configure the Container builder.
         $builder = new \DI\ContainerBuilder();
-
-        // At the moment we are using autowiring, but not automatic attribute injection.
-        // Automatic attribute injection is a php-di specific feature.
         $builder->useAutowiring(true);
+
+        // We now support attribute injection. This ties us to using php-di.
+        $builder->useAttributes(true);
 
         if (!$CFG->debugdeveloper) {
             // Enable compilation of the container and write proxies to disk in production.
@@ -120,6 +120,9 @@ class di {
 
             // The Moodle Clock implementation, which itself is an extension of PSR-20.
             \core\clock::class => fn() => new \core\system_clock(),
+
+            // Note: libphonenumber PhoneNumberUtil uses a singleton.
+            \libphonenumber\PhoneNumberUtil::class => fn() => \libphonenumber\PhoneNumberUtil::getInstance(),
         ]);
 
         // Add any additional definitions using hooks.
