@@ -129,6 +129,7 @@ class core_component {
         'DI' => 'lib/php-di/php-di/src',
         'Invoker' => 'lib/php-di/invoker/src',
         'Spatie\\Cloneable' => 'lib/spatie/php-cloneable/src',
+        'libphonenumber' => 'lib/giggsey/libphonenumber-for-php-lite/src'
     ];
 
     /**
