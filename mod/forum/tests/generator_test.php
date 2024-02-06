@@ -204,4 +204,67 @@ class generator_test extends \advanced_testcase {
         $this->assertEquals(array('Cats', 'mice'),
             array_values(\core_tag_tag::get_item_tags_array('mod_forum', 'forum_posts', $post5->id)));
     }
+
+    public function test_create_post_time_system(): void {
+        $this->resetAfterTest(true);
+
+        $user = self::getDataGenerator()->create_user();
+        $course = $this->getDataGenerator()->create_course();
+        $forum = self::getDataGenerator()->create_module('forum', (object) [
+            'course' => $course->id,
+        ]);
+
+        $starttime = time();
+
+        // Add a discussion.
+        $discussion = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_discussion((object) [
+            'course' => $course->id,
+            'forum' => $forum->id,
+            'userid' => $user->id,
+        ]);
+
+        // Add a post.
+        $post = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_post((object) [
+            'discussion' => $discussion->id,
+            'userid' => $user->id,
+        ]);
+
+        $this->assertGreaterThanOrEqual($starttime, $discussion->timemodified);
+        $this->assertGreaterThanOrEqual($starttime, $post->created);
+
+        // The fallback behavior is to add the number of created posts to the current time to avoid duplicates.
+        $this->assertLessThanOrEqual(time() + 1, $discussion->timemodified);
+        $this->assertLessThanOrEqual(time() + 2, $post->created);
+    }
+
+    public function test_create_post_time_frozen(): void {
+        $this->resetAfterTest(true);
+
+        $clock = $this->mock_clock_with_frozen(100);
+
+        $user = self::getDataGenerator()->create_user();
+        $course = $this->getDataGenerator()->create_course();
+        $forum = self::getDataGenerator()->create_module('forum', (object) [
+            'course' => $course->id,
+        ]);
+
+        $starttime = time();
+
+        // Add a discussion.
+        $discussion = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_discussion((object) [
+            'course' => $course->id,
+            'forum' => $forum->id,
+            'userid' => $user->id,
+        ]);
+        $this->assertEquals(100, $discussion->timemodified);
+
+        // Add a post.
+        $clock->set_to(200);
+        $post = self::getDataGenerator()->get_plugin_generator('mod_forum')->create_post((object) [
+            'discussion' => $discussion->id,
+            'userid' => $user->id,
+        ]);
+
+        $this->assertEquals(200, $post->created);
+    }
 }
