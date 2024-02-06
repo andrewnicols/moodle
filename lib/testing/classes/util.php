@@ -131,11 +131,8 @@ abstract class testing_util {
      * @return testing_data_generator
      */
     public static function get_data_generator() {
-        if (is_null(self::$generator)) {
-            require_once(__DIR__ . '/../generator/lib.php');
-            self::$generator = new testing_data_generator();
-        }
-        return self::$generator;
+        require_once(__DIR__ . '/../generator/lib.php');
+        return \core\di::get(testing_data_generator::class);
     }
 
     /**
