@@ -120,6 +120,9 @@ class di {
 
             // The Moodle Clock implementation, which itself is an extension of PSR-20.
             \core\clock::class => fn() => new \core\system_clock(),
+
+            // Note: libphonenumber PhoneNumberUtil uses a singleton.
+            \libphonenumber\PhoneNumberUtil::class => fn() => \libphonenumber\PhoneNumberUtil::getInstance(),
         ]);
 
         // Add any additional definitions using hooks.
