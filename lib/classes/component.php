@@ -128,6 +128,7 @@ class core_component {
         'Laravel\\SerializableClosure' => 'lib/laravel/serializable-closure/src',
         'DI' => 'lib/php-di/php-di/src',
         'Invoker' => 'lib/php-di/invoker/src',
+        'Spatie\\Cloneable' => 'lib/spatie/php-cloneable/src',
     ];
 
     /**
