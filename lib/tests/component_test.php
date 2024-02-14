@@ -26,7 +26,7 @@
  *
  * @covers \core_component
  */
-class component_test extends advanced_testcase {
+final class component_test extends advanced_testcase {
     /**
      * To be changed if number of subsystems increases/decreases,
      * this is defined here to annoy devs that try to add more without any thinking,

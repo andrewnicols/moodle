@@ -28,7 +28,7 @@ use mod_data\local\importer\preset_importer;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \mod_data\local\importer\preset_importer
  */
-class preset_importer_test extends \advanced_testcase {
+final class preset_importer_test extends \advanced_testcase {
 
     /**
      * Data provider for build providers for test_needs_mapping and test_set_affected_fields.

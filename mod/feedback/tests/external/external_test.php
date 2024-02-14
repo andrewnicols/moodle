@@ -49,7 +49,7 @@ require_once($CFG->dirroot . '/mod/feedback/lib.php');
  * @since      Moodle 3.3
  * @covers     \mod_feedback_external
  */
-class external_test extends externallib_advanced_testcase {
+final class external_test extends externallib_advanced_testcase {
 
     // TODO These should be removed.
     // Testcase classes should not have any properties or store state.

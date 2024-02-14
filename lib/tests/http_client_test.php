@@ -36,7 +36,7 @@ use GuzzleHttp\Psr7\Uri;
  * @coversDefaultClass \core\local\guzzle\cache_handler
  * @coversDefaultClass \core\local\guzzle\cache_storage
  */
-class http_client_test extends \advanced_testcase {
+final class http_client_test extends \advanced_testcase {
 
     /**
      * Read the object attributes and return the configs for test.

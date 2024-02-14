@@ -33,7 +33,7 @@ global $CFG;
 require_once($CFG->dirroot . '/filter/urltolink/filter.php'); // Include the code to test
 
 
-class filter_test extends \basic_testcase {
+final class filter_test extends \basic_testcase {
 
     function get_convert_urls_into_links_test_cases() {
         // Create a 4095 and 4096 long URLs.

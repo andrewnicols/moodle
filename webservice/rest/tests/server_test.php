@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/webservice/rest/locallib.php');
  * @copyright  2016 Frédéric Massart - FMCorz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class server_test extends \advanced_testcase {
+final class server_test extends \advanced_testcase {
 
     /**
      * Data provider for test_xmlize.

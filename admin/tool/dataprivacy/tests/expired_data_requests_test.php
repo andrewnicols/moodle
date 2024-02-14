@@ -29,7 +29,7 @@ require_once('data_privacy_testcase.php');
  * @copyright  2018 Michael Hawkins
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class expired_data_requests_test extends data_privacy_testcase {
+final class expired_data_requests_test extends data_privacy_testcase {
 
     /**
      * Test tearDown.

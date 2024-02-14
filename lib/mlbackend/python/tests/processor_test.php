@@ -24,7 +24,7 @@ namespace mlbackend_python;
  * @copyright 2019 David Mudrák <david@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class processor_test extends \advanced_testcase {
+final class processor_test extends \advanced_testcase {
 
     /**
      * Test implementation of the {@link \mlbackend_python\processor::check_pip_package_version()} method.

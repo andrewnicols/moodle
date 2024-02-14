@@ -25,7 +25,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2014 Frédéric Massart - FMCorz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class report_test extends \advanced_testcase {
+final class report_test extends \advanced_testcase {
 
     /**
      * Create some grades.

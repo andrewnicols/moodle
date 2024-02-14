@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/mod/assign/tests/generator.php');
  * @copyright  2022 Mikhail Golenkov <mikhailgolenkov@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class document_services_test extends advanced_testcase {
+final class document_services_test extends advanced_testcase {
     use mod_assign_test_generator;
 
     /**

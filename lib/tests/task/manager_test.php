@@ -27,7 +27,7 @@ require_once(__DIR__ . '/../fixtures/task_fixtures.php');
  * @copyright 2019 Brendan Heywood <brendan@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class manager_test extends \advanced_testcase {
+final class manager_test extends \advanced_testcase {
 
     /**
      * Data provider for test_get_candidate_adhoc_tasks.

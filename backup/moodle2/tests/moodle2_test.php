@@ -36,7 +36,7 @@ require_once($CFG->libdir . '/completionlib.php');
  * @copyright 2014 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class moodle2_test extends \advanced_testcase {
+final class moodle2_test extends \advanced_testcase {
 
     /**
      * Tests the availability field on modules and sections is correctly

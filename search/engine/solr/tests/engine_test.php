@@ -46,7 +46,7 @@ require_once($CFG->dirroot . '/search/engine/solr/tests/fixtures/testable_engine
  *
  * @runTestsInSeparateProcesses
  */
-class engine_test extends \advanced_testcase {
+final class engine_test extends \advanced_testcase {
 
     /**
      * @var \core_search\manager

@@ -23,7 +23,7 @@ namespace core_analytics;
  * @copyright 2017 David Monllaó {@link http://www.davidmonllao.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class calculation_info_test extends \advanced_testcase {
+final class calculation_info_test extends \advanced_testcase {
 
     /**
      * test_calculation_info description

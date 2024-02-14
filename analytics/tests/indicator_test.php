@@ -29,7 +29,7 @@ require_once(__DIR__ . '/fixtures/test_indicator_min.php');
  * @copyright 2017 David Monllaó {@link http://www.davidmonllao.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class indicator_test extends \advanced_testcase {
+final class indicator_test extends \advanced_testcase {
 
     /**
      * test_validate_calculated_value

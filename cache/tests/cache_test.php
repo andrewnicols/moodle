@@ -52,7 +52,7 @@ use cacheable_object_array;
  * @coversDefaultClass \cache
  * @covers \cache
  */
-class cache_test extends \advanced_testcase {
+final class cache_test extends \advanced_testcase {
 
     /**
      * Load required libraries and fixtures.

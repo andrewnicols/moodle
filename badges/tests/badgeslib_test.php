@@ -33,7 +33,7 @@ require_once($CFG->dirroot . '/badges/lib.php');
 use core_badges\helper;
 use core\task\manager;
 
-class badgeslib_test extends advanced_testcase {
+final class badgeslib_test extends advanced_testcase {
     protected $badgeid;
     protected $course;
     protected $user;

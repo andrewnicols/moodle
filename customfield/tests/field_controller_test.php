@@ -31,7 +31,7 @@ use customfield_textarea;
  * @copyright  2018 Ruslan Kabalin
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class field_controller_test extends \advanced_testcase {
+final class field_controller_test extends \advanced_testcase {
 
     /**
      * Get generator.

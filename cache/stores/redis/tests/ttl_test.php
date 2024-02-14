@@ -29,7 +29,7 @@ namespace cachestore_redis;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \cachestore_redis
  */
-class ttl_test extends \advanced_testcase {
+final class ttl_test extends \advanced_testcase {
     /** @var \cachestore_redis|null Cache store  */
     protected $store = null;
 

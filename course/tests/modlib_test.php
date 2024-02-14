@@ -30,7 +30,7 @@ require_once($CFG->dirroot . '/course/modlib.php');
  * @copyright  2016 Juan Leyva
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class modlib_test extends \advanced_testcase {
+final class modlib_test extends \advanced_testcase {
 
     /**
      * Test prepare_new_moduleinfo_data

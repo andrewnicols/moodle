@@ -31,7 +31,7 @@ require_once('all_checks.php');
 /**
  * Class test_css_text_has_contrast_test
  */
-class css_text_has_contrast_test extends all_checks {
+final class css_text_has_contrast_test extends all_checks {
     /** @var string The check type. */
     protected $checktype = 'css_text_has_contrast';
 

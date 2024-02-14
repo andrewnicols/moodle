@@ -44,7 +44,7 @@ use stdClass;
  * @copyright 2020 Andrew Nicols <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class participants_search_test extends advanced_testcase {
+final class participants_search_test extends advanced_testcase {
 
     /**
      * Helper to convert a moodle_recordset to an array of records.

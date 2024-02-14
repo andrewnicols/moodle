@@ -24,7 +24,7 @@ namespace mod_forum;
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class generator_test extends \advanced_testcase {
+final class generator_test extends \advanced_testcase {
 
     public function setUp(): void {
         // We must clear the subscription caches. This has to be done both before each test, and after in case of other

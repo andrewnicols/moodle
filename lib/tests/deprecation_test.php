@@ -26,7 +26,7 @@ namespace core;
  * @covers \core\deprecated
  * @covers \core\deprecation
  */
-class deprecation_test extends \advanced_testcase {
+final class deprecation_test extends \advanced_testcase {
     /**
      * @dataProvider emit_provider
      */

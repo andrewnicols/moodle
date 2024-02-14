@@ -29,7 +29,7 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_courseformat\stateactions
  */
-class stateactions_test extends \advanced_testcase {
+final class stateactions_test extends \advanced_testcase {
     /**
      * Helper method to create an activity into a section and add it to the $sections and $activities arrays.
      *

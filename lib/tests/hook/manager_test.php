@@ -26,7 +26,7 @@ namespace core\hook;
  * @copyright 2022 Open LMS
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class manager_test extends \advanced_testcase {
+final class manager_test extends \advanced_testcase {
     /**
      * Test public factory method to get hook manager.
      * @covers ::get_instance

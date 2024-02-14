@@ -40,7 +40,7 @@ require_once($CFG->dirroot.'/lib/dml/sqlsrv_native_moodle_database.php');
  * @copyright  2017 John Okely
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class sqlsrv_native_moodle_database_test extends \advanced_testcase {
+final class sqlsrv_native_moodle_database_test extends \advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();

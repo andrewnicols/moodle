@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/question/type/ddimageortext/tests/helper.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers qtype_ddimageortext_question
  */
-class question_test extends \basic_testcase {
+final class question_test extends \basic_testcase {
 
     public function test_get_question_summary() {
         $dd = \test_question_maker::make_question('ddimageortext');

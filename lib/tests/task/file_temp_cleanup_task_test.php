@@ -25,7 +25,7 @@ namespace core\task;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \core\task\file_temp_cleanup_task
  */
-class file_temp_cleanup_task_test extends \basic_testcase {
+final class file_temp_cleanup_task_test extends \basic_testcase {
 
     /**
      * Data provider for cron_delete_from_temp.

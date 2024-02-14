@@ -31,7 +31,7 @@ require_once(__DIR__ . '/fixtures/test_target_course_level_shortname.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \core_analytics\manager
  */
-class manager_test extends \advanced_testcase {
+final class manager_test extends \advanced_testcase {
 
     /**
      * test_deleted_context

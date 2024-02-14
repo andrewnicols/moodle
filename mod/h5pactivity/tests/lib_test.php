@@ -27,7 +27,7 @@ use mod_h5pactivity\local\manager;
  * @copyright  2021 Ilya Tregubov <ilya@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class lib_test extends advanced_testcase {
+final class lib_test extends advanced_testcase {
 
     /**
      * Load required test libraries

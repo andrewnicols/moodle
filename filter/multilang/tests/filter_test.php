@@ -33,7 +33,7 @@ use filter_multilang;
  * @copyright 2019 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_test extends \advanced_testcase {
+final class filter_test extends \advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();

@@ -32,7 +32,7 @@ require_once("{$CFG->dirroot}/iplookup/lib.php");
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class geoip_test extends \advanced_testcase {
+final class geoip_test extends \advanced_testcase {
     public function setUp(): void {
         $this->resetAfterTest();
     }

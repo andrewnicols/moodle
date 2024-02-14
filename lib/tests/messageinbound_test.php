@@ -39,7 +39,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2015 Andrew Nicols <andrew@nicols.co.uk>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class messageinbound_test extends \advanced_testcase {
+final class messageinbound_test extends \advanced_testcase {
 
     /**
      * @dataProvider message_inbound_handler_trim_testprovider

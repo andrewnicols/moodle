@@ -34,7 +34,7 @@ require_once($CFG->dirroot.'/lib/tests/fixtures/testable_plugininfo_base.php');
  * @copyright 2013 Petr Skoda {@link http://skodak.org}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class plugin_manager_test extends \advanced_testcase {
+final class plugin_manager_test extends \advanced_testcase {
 
     public function tearDown(): void {
         // The caches of the testable singleton must be reset explicitly. It is

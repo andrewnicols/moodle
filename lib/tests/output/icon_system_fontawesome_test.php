@@ -24,7 +24,7 @@ namespace core\output;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\output\icon_system_fontawesome
  */
-class icon_system_fontawesome_test extends \advanced_testcase {
+final class icon_system_fontawesome_test extends \advanced_testcase {
     /**
      * Returns a list of all mapped icons along with the component dir, and file name (without any suffix/extension).
      *

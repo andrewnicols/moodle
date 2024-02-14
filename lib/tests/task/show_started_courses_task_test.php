@@ -28,7 +28,7 @@ use advanced_testcase;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core\task\show_started_courses_task
  */
-class show_started_courses_task_test extends advanced_testcase {
+final class show_started_courses_task_test extends advanced_testcase {
 
     /**
      * Test show_started_courses cron task.

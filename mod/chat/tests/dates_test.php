@@ -34,7 +34,7 @@ use core\activity_dates;
 /**
  * Class for unit testing mod_chat\dates.
  */
-class dates_test extends advanced_testcase {
+final class dates_test extends advanced_testcase {
 
     /**
      * Data provider for get_dates_for_module().

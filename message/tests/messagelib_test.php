@@ -31,7 +31,7 @@ require_once($CFG->dirroot . '/message/lib.php');
  * @copyright 2014 Rajesh Taneja <rajesh@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class messagelib_test extends \advanced_testcase {
+final class messagelib_test extends \advanced_testcase {
 
     /** @var phpunit_message_sink keep track of messages. */
     protected $messagesink = null;

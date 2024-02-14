@@ -25,7 +25,7 @@ namespace core_courseformat;
  * @covers     \core_courseformat\sectiondelegate
  * @coversDefaultClass \core_courseformat\sectiondelegate
  */
-class sectiondelegate_test extends \advanced_testcase {
+final class sectiondelegate_test extends \advanced_testcase {
 
     /**
      * Setup to ensure that fixtures are loaded.

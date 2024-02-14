@@ -29,7 +29,7 @@ require_once(__DIR__ . '/../fixtures/task_fixtures.php');
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core\task\manager
  */
-class adhoc_task_test extends \advanced_testcase {
+final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test getting name of task that implements it's own get_name method

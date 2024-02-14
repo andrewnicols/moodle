@@ -39,7 +39,7 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @covers \restore_quiz_activity_structure_step
  * @covers \quiz_question_helper_test_trait
  */
-class quiz_question_restore_test extends \advanced_testcase {
+final class quiz_question_restore_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
 
     /**
