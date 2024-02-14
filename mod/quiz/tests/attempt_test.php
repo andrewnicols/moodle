@@ -82,7 +82,7 @@ class attempt_test extends \advanced_testcase {
         return quiz_attempt::create($attempt->id);
     }
 
-    public function test_attempt_url() {
+    public function test_attempt_url(): void {
         $attempt = $this->create_quiz_and_attempt_with_layout('1,2,0,3,4,0,5,6,0');
 
         $attemptid = $attempt->get_attempt()->id;
@@ -226,7 +226,7 @@ class attempt_test extends \advanced_testcase {
     /**
      * Tests attempt page titles when all questions are on a single page.
      */
-    public function test_attempt_titles_single() {
+    public function test_attempt_titles_single(): void {
         $attempt = $this->create_quiz_and_attempt_with_layout('1,2,0');
 
         // Attempt page.
@@ -242,7 +242,7 @@ class attempt_test extends \advanced_testcase {
     /**
      * Tests attempt page titles when questions are on multiple pages, but are reviewed on a single page.
      */
-    public function test_attempt_titles_multiple_single() {
+    public function test_attempt_titles_multiple_single(): void {
         $attempt = $this->create_quiz_and_attempt_with_layout('1,2,0,3,4,0,5,6,0');
 
         // Attempt page.
@@ -260,7 +260,7 @@ class attempt_test extends \advanced_testcase {
     /**
      * Tests attempt page titles when questions are on multiple pages, and they are reviewed on multiple pages as well.
      */
-    public function test_attempt_titles_multiple_multiple() {
+    public function test_attempt_titles_multiple_multiple(): void {
         $attempt = $this->create_quiz_and_attempt_with_layout(
                 '1,2,3,4,5,6,7,8,9,10,0,11,12,13,14,15,16,17,18,19,20,0,' .
                 '21,22,23,24,25,26,27,28,29,30,0,31,32,33,34,35,36,37,38,39,40,0,' .
@@ -284,7 +284,7 @@ class attempt_test extends \advanced_testcase {
         $this->assertEquals('Quiz 1: Attempt review', $attempt->review_page_title(1, true));
     }
 
-    public function test_is_participant() {
+    public function test_is_participant(): void {
         global $USER;
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -322,7 +322,7 @@ class attempt_test extends \advanced_testcase {
     /**
      * Test quiz_prepare_and_start_new_attempt function
      */
-    public function test_quiz_prepare_and_start_new_attempt() {
+    public function test_quiz_prepare_and_start_new_attempt(): void {
         global $USER;
         $this->resetAfterTest();
 
@@ -382,7 +382,7 @@ class attempt_test extends \advanced_testcase {
     /**
      * Test check_page_access function
      */
-    public function test_check_page_access() {
+    public function test_check_page_access(): void {
         $timenow = time();
 
         // Free navigation.

@@ -216,7 +216,7 @@ class external_test extends externallib_advanced_testcase {
     /*
      * Test get quizzes by courses
      */
-    public function test_mod_quiz_get_quizzes_by_courses() {
+    public function test_mod_quiz_get_quizzes_by_courses(): void {
         global $DB;
 
         // Create additional course.
@@ -364,7 +364,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test test_view_quiz
      */
-    public function test_view_quiz() {
+    public function test_view_quiz(): void {
         global $DB;
 
         // Test invalid instance id.
@@ -426,7 +426,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_user_attempts
      */
-    public function test_get_user_attempts() {
+    public function test_get_user_attempts(): void {
 
         // Create a quiz with one attempt finished.
         list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true, true);
@@ -510,7 +510,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_user_attempts with marks hidden
      */
-    public function test_get_user_attempts_with_marks_hidden() {
+    public function test_get_user_attempts_with_marks_hidden(): void {
         // Create quiz with one attempt finished and hide the mark.
         list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(
                 true, true, 'deferredfeedback', false,
@@ -546,7 +546,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_user_best_grade
      */
-    public function test_get_user_best_grade() {
+    public function test_get_user_best_grade(): void {
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $questioncat = $questiongenerator->create_question_category();
@@ -714,7 +714,7 @@ class external_test extends externallib_advanced_testcase {
      * Test get_combined_review_options.
      * This is a basic test, this is already tested in display_options_testcase.
      */
-    public function test_get_combined_review_options() {
+    public function test_get_combined_review_options(): void {
         global $DB;
 
         // Create a new quiz with attempts.
@@ -927,7 +927,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test start_attempt
      */
-    public function test_start_attempt() {
+    public function test_start_attempt(): void {
         global $DB;
 
         // Create a new quiz with questions.
@@ -1018,7 +1018,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test validate_attempt
      */
-    public function test_validate_attempt() {
+    public function test_validate_attempt(): void {
         global $DB;
 
         // Create a new quiz with one attempt started.
@@ -1127,7 +1127,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_attempt_data
      */
-    public function test_get_attempt_data() {
+    public function test_get_attempt_data(): void {
         global $DB;
 
         $timenow = time();
@@ -1241,7 +1241,7 @@ class external_test extends externallib_advanced_testcase {
      * Test get_attempt_data with blocked questions.
      * @since 3.2
      */
-    public function test_get_attempt_data_with_blocked_questions() {
+    public function test_get_attempt_data_with_blocked_questions(): void {
         global $DB;
 
         // Create a new quiz with one attempt started and using immediatefeedback.
@@ -1285,7 +1285,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_attempt_summary
      */
-    public function test_get_attempt_summary() {
+    public function test_get_attempt_summary(): void {
 
         $timenow = time();
         // Create a new quiz with one attempt started.
@@ -1348,7 +1348,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test save_attempt
      */
-    public function test_save_attempt() {
+    public function test_save_attempt(): void {
 
         $timenow = time();
         // Create a new quiz with one attempt started.
@@ -1421,7 +1421,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test process_attempt
      */
-    public function test_process_attempt() {
+    public function test_process_attempt(): void {
         global $DB;
 
         $timenow = time();
@@ -1610,7 +1610,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test validate_attempt_review
      */
-    public function test_validate_attempt_review() {
+    public function test_validate_attempt_review(): void {
         global $DB;
 
         // Create a new quiz with one attempt started.
@@ -1664,7 +1664,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_attempt_review
      */
-    public function test_get_attempt_review() {
+    public function test_get_attempt_review(): void {
         global $DB;
 
         // Create a new quiz with two questions and one attempt finished.
@@ -1726,7 +1726,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test test_view_attempt
      */
-    public function test_view_attempt() {
+    public function test_view_attempt(): void {
         global $DB;
 
         // Create a new quiz with two questions and one attempt started.
@@ -1779,7 +1779,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test test_view_attempt_summary
      */
-    public function test_view_attempt_summary() {
+    public function test_view_attempt_summary(): void {
         global $DB;
 
         // Create a new quiz with two questions and one attempt started.
@@ -1820,7 +1820,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test test_view_attempt_summary
      */
-    public function test_view_attempt_review() {
+    public function test_view_attempt_review(): void {
         global $DB;
 
         // Create a new quiz with two questions and one attempt finished.
@@ -1853,7 +1853,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_quiz_feedback_for_grade
      */
-    public function test_get_quiz_feedback_for_grade() {
+    public function test_get_quiz_feedback_for_grade(): void {
         global $DB;
 
         // Add feedback to the quiz.
@@ -1903,7 +1903,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_quiz_access_information
      */
-    public function test_get_quiz_access_information() {
+    public function test_get_quiz_access_information(): void {
         global $DB;
 
         // Create a new quiz.
@@ -1966,7 +1966,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_attempt_access_information
      */
-    public function test_get_attempt_access_information() {
+    public function test_get_attempt_access_information(): void {
         global $DB;
 
         $this->setAdminUser();
@@ -2052,7 +2052,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_quiz_required_qtypes
      */
-    public function test_get_quiz_required_qtypes() {
+    public function test_get_quiz_required_qtypes(): void {
         $this->setAdminUser();
 
         // Create a new quiz.
@@ -2097,7 +2097,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test get_quiz_required_qtypes for quiz with random questions
      */
-    public function test_get_quiz_required_qtypes_random() {
+    public function test_get_quiz_required_qtypes_random(): void {
         $this->setAdminUser();
 
         // Create a new quiz.
@@ -2148,7 +2148,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test that a sequential navigation quiz is not allowing to see questions in advance except if reviewing
      */
-    public function test_sequential_navigation_view_attempt() {
+    public function test_sequential_navigation_view_attempt(): void {
         // Test user with full capabilities.
         $quiz = $this->prepare_sequential_quiz();
         $attemptobj = $this->create_quiz_attempt_object($quiz);
@@ -2166,7 +2166,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test that a sequential navigation quiz is not allowing to see questions content in advance for a student.
      */
-    public function test_sequential_navigation_attempt_summary() {
+    public function test_sequential_navigation_attempt_summary(): void {
         // Test user with full capabilities.
         $quiz = $this->prepare_sequential_quiz();
         $attemptobj = $this->create_quiz_attempt_object($quiz);
@@ -2184,7 +2184,7 @@ class external_test extends externallib_advanced_testcase {
     /**
      * Test that a sequential navigation quiz is not allowing to see questions in advance for student
      */
-    public function test_sequential_navigation_get_attempt_data() {
+    public function test_sequential_navigation_get_attempt_data(): void {
         // Test user with full capabilities.
         $quiz = $this->prepare_sequential_quiz();
         $attemptobj = $this->create_quiz_attempt_object($quiz);

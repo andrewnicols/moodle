@@ -70,7 +70,7 @@ class externallib_test extends externallib_advanced_testcase {
     /**
      * Test update question flag
      */
-    public function test_core_question_update_flag() {
+    public function test_core_question_update_flag(): void {
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -112,7 +112,7 @@ class externallib_test extends externallib_advanced_testcase {
     /**
      * Data provider for the get_random_question_summaries test.
      */
-    public function get_random_question_summaries_test_cases() {
+    public static function get_random_question_summaries_test_cases() {
         return [
             'empty category' => [
                 'categoryindex' => 'emptycat',
@@ -184,7 +184,7 @@ class externallib_test extends externallib_advanced_testcase {
      *          Parent: cat1
      *      Category: emptycat
      *
-     * @dataProvider get_random_question_summaries_test_cases()
+     * @dataProvider get_random_question_summaries_test_cases
      * @param string $categoryindex The named index for the category to use
      * @param bool $includesubcategories If the search should include subcategories
      * @param string[] $usetagnames The tag names to include in the search
@@ -257,7 +257,7 @@ class externallib_test extends externallib_advanced_testcase {
      * get_random_question_summaries should throw an invalid_parameter_exception if not
      * given an integer for the category id.
      */
-    public function test_get_random_question_summaries_invalid_category_id_param() {
+    public function test_get_random_question_summaries_invalid_category_id_param(): void {
         $this->resetAfterTest();
 
         $context = \context_system::instance();
@@ -269,7 +269,7 @@ class externallib_test extends externallib_advanced_testcase {
      * get_random_question_summaries should throw an invalid_parameter_exception if not
      * given a boolean for the $includesubcategories parameter.
      */
-    public function test_get_random_question_summaries_invalid_includesubcategories_param() {
+    public function test_get_random_question_summaries_invalid_includesubcategories_param(): void {
         $this->resetAfterTest();
 
         $context = \context_system::instance();
@@ -281,7 +281,7 @@ class externallib_test extends externallib_advanced_testcase {
      * get_random_question_summaries should throw an invalid_parameter_exception if not
      * given an array of integers for the tag ids parameter.
      */
-    public function test_get_random_question_summaries_invalid_tagids_param() {
+    public function test_get_random_question_summaries_invalid_tagids_param(): void {
         $this->resetAfterTest();
 
         $context = \context_system::instance();
@@ -293,7 +293,7 @@ class externallib_test extends externallib_advanced_testcase {
      * get_random_question_summaries should throw an invalid_parameter_exception if not
      * given a context.
      */
-    public function test_get_random_question_summaries_invalid_context() {
+    public function test_get_random_question_summaries_invalid_context(): void {
         $this->resetAfterTest();
 
         $this->expectException('\invalid_parameter_exception');
@@ -305,7 +305,7 @@ class externallib_test extends externallib_advanced_testcase {
      * if the given context is outside of the set of restricted contexts the user
      * is allowed to call external functions in.
      */
-    public function test_get_random_question_summaries_restricted_context() {
+    public function test_get_random_question_summaries_restricted_context(): void {
         $this->resetAfterTest();
 
         $course = $this->getDataGenerator()->create_course();
@@ -332,7 +332,7 @@ class externallib_test extends externallib_advanced_testcase {
     /**
      * get_random_question_summaries should return a question that is formatted correctly.
      */
-    public function test_get_random_question_summaries_formats_returned_questions() {
+    public function test_get_random_question_summaries_formats_returned_questions(): void {
         $this->resetAfterTest();
 
         list($category, $questions) = $this->create_category_and_questions(1);
@@ -412,7 +412,7 @@ class externallib_test extends externallib_advanced_testcase {
      * get_random_question_summaries should throw an exception if the user doesn't
      * have the capability to use the questions in the requested category.
      */
-    public function test_get_random_question_summaries_without_capability() {
+    public function test_get_random_question_summaries_without_capability(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator();
         $user = $generator->create_user();
