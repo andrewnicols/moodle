@@ -38,7 +38,7 @@ class random_question_loader_test extends \advanced_testcase {
 
     use \quiz_question_helper_test_trait;
 
-    public function test_empty_category_gives_null() {
+    public function test_empty_category_gives_null(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -52,14 +52,14 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_unknown_category_behaves_like_empty() {
+    public function test_unknown_category_behaves_like_empty(): void {
         // It is up the caller to make sure the category id is valid.
         $loader = new \core_question\local\bank\random_question_loader(new qubaid_list([]));
         $filters = question_filter_test_helper::create_filters([-1], 1);
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_descriptions_not_returned() {
+    public function test_descriptions_not_returned(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -71,7 +71,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_hidden_questions_not_returned() {
+    public function test_hidden_questions_not_returned(): void {
         global $DB;
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -86,7 +86,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_cloze_subquestions_not_returned() {
+    public function test_cloze_subquestions_not_returned(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -99,7 +99,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_random_questions_not_returned() {
+    public function test_random_questions_not_returned(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -114,7 +114,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_one_question_category_returns_that_q_then_null() {
+    public function test_one_question_category_returns_that_q_then_null(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -129,7 +129,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_two_question_category_returns_both_then_null() {
+    public function test_two_question_category_returns_both_then_null(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -149,7 +149,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_nested_categories() {
+    public function test_nested_categories(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -168,7 +168,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_used_question_not_returned_until_later() {
+    public function test_used_question_not_returned_until_later(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -183,7 +183,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_previously_used_question_not_returned_until_later() {
+    public function test_previously_used_question_not_returned_until_later(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -206,7 +206,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertNull($loader->get_next_filtered_question_id($filters));
     }
 
-    public function test_empty_category_does_not_have_question_available() {
+    public function test_empty_category_does_not_have_question_available(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -219,7 +219,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertFalse($loader->is_filtered_question_available($filters, 1));
     }
 
-    public function test_descriptions_not_available() {
+    public function test_descriptions_not_available(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -233,7 +233,7 @@ class random_question_loader_test extends \advanced_testcase {
         $this->assertFalse($loader->is_filtered_question_available($filters, $info->id));
     }
 
-    public function test_existing_question_is_available_but_then_marked_used() {
+    public function test_existing_question_is_available_but_then_marked_used(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
@@ -251,7 +251,7 @@ class random_question_loader_test extends \advanced_testcase {
     /**
      * Data provider for the get_questions test.
      */
-    public function get_questions_test_cases() {
+    public static function get_questions_test_cases() {
         return [
                 'empty category' => [
                         'categoryindex' => 'emptycat',
@@ -323,7 +323,7 @@ class random_question_loader_test extends \advanced_testcase {
      *          Parent: cat1
      *      Category: emptycat
      *
-     * @dataProvider get_questions_test_cases()
+     * @dataProvider get_questions_test_cases
      * @param string $categoryindex The named index for the category to use
      * @param bool $includesubcategories If the search should include subcategories
      * @param string[] $usetagnames The tag names to include in the search
@@ -393,7 +393,7 @@ class random_question_loader_test extends \advanced_testcase {
     /**
      * get_questions should allow limiting and offsetting of the result set.
      */
-    public function test_get_questions_with_limit_and_offset() {
+    public function test_get_questions_with_limit_and_offset(): void {
         $this->resetAfterTest();
         $numberofquestions = 5;
         $includesubcategories = false;
@@ -428,7 +428,7 @@ class random_question_loader_test extends \advanced_testcase {
      * get_questions should allow retrieving questions with only a subset of
      * fields populated.
      */
-    public function test_get_questions_with_restricted_fields() {
+    public function test_get_questions_with_restricted_fields(): void {
         $this->resetAfterTest();
         $includesubcategories = false;
         $tagids = [];
@@ -459,7 +459,7 @@ class random_question_loader_test extends \advanced_testcase {
     /**
      * Data provider for the count_questions test.
      */
-    public function count_questions_test_cases() {
+    public static function count_questions_test_cases() {
         return [
                 'empty category' => [
                         'categoryindex' => 'emptycat',
@@ -531,7 +531,7 @@ class random_question_loader_test extends \advanced_testcase {
      *          Parent: cat1
      *      Category: emptycat
      *
-     * @dataProvider count_questions_test_cases()
+     * @dataProvider count_questions_test_cases
      * @param string $categoryindex The named index for the category to use
      * @param bool $includesubcategories If the search should include subcategories
      * @param string[] $usetagnames The tag names to include in the search

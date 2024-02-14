@@ -56,7 +56,7 @@ class update_question_version_status_test extends \advanced_testcase {
      * @covers ::execute
      * @covers \qbank_editquestion\editquestion_helper::get_question_status_string
      */
-    public function test_submit_status_updates_the_question_status() {
+    public function test_submit_status_updates_the_question_status(): void {
         global $DB;
         $this->resetAfterTest();
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -74,7 +74,7 @@ class update_question_version_status_test extends \advanced_testcase {
      *
      * @covers ::execute
      */
-    public function test_submit_status_error() {
+    public function test_submit_status_error(): void {
         global $DB;
         $this->resetAfterTest();
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -97,7 +97,7 @@ class update_question_version_status_test extends \advanced_testcase {
      *
      * @covers ::execute
      */
-    public function test_submit_status_does_not_create_a_new_version() {
+    public function test_submit_status_does_not_create_a_new_version(): void {
         global $DB;
         $this->resetAfterTest();
 

@@ -139,7 +139,7 @@ class custom_completion_test extends advanced_testcase {
      * Test checking the completion state of a quiz base on core's completionpassgrade criteria.
      * The quiz requires a passing grade to be completed.
      */
-    public function test_completionpass() {
+    public function test_completionpass(): void {
         list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
             'nbstudents' => 2,
             'qtype' => 'numerical',
@@ -191,7 +191,7 @@ class custom_completion_test extends advanced_testcase {
      * Test checking the completion state of a quiz.
      * To be completed, this quiz requires either a passing grade or for all attempts to be used up.
      */
-    public function test_completionexhausted() {
+    public function test_completionexhausted(): void {
         list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
             'nbstudents' => 2,
             'qtype' => 'numerical',
@@ -266,7 +266,7 @@ class custom_completion_test extends advanced_testcase {
      * Test checking the completion state of a quiz.
      * To be completed, this quiz requires a minimum number of attempts.
      */
-    public function test_completionminattempts() {
+    public function test_completionminattempts(): void {
         list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
             'nbstudents' => 1,
             'qtype' => 'essay',
@@ -316,7 +316,7 @@ class custom_completion_test extends advanced_testcase {
     /**
      * Test for get_defined_custom_rules().
      */
-    public function test_get_defined_custom_rules() {
+    public function test_get_defined_custom_rules(): void {
         $rules = custom_completion::get_defined_custom_rules();
         $this->assertCount(2, $rules);
         $this->assertEquals(
@@ -328,7 +328,7 @@ class custom_completion_test extends advanced_testcase {
     /**
      * Test update moduleinfo.
      */
-    public function test_update_moduleinfo() {
+    public function test_update_moduleinfo(): void {
         $this->setAdminUser();
         // We need lite cm object not a full cm because update_moduleinfo is not allow some properties to be updated.
         list($students, $quiz, $cm, $litecm) = $this->setup_quiz_for_testing_completion([

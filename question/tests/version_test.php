@@ -74,7 +74,7 @@ class version_test extends \advanced_testcase {
     /**
      * Test if creating a question a new version and bank entry records are created.
      */
-    public function test_make_question_create_version_and_bank_entry() {
+    public function test_make_question_create_version_and_bank_entry(): void {
         global $DB;
 
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
@@ -108,7 +108,7 @@ class version_test extends \advanced_testcase {
      *
      * @covers \question_delete_question
      */
-    public function test_delete_question_delete_versions() {
+    public function test_delete_question_delete_versions(): void {
         global $DB;
 
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
@@ -160,7 +160,7 @@ class version_test extends \advanced_testcase {
      * @covers \quiz_add_quiz_question
      * @covers \question_delete_question
      */
-    public function test_delete_question_in_use() {
+    public function test_delete_question_in_use(): void {
         global $DB;
 
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
@@ -192,7 +192,7 @@ class version_test extends \advanced_testcase {
      *
      * @covers \quiz_add_quiz_question
      */
-    public function test_move_category_with_questions() {
+    public function test_move_category_with_questions(): void {
         global $DB;
 
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
@@ -225,7 +225,7 @@ class version_test extends \advanced_testcase {
     /**
      * Test that all versions will have the same bank entry idnumber value.
      */
-    public function test_id_number_in_bank_entry() {
+    public function test_id_number_in_bank_entry(): void {
         global $DB;
 
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
@@ -262,7 +262,7 @@ class version_test extends \advanced_testcase {
     /**
      * Test that all the versions are available from the method.
      */
-    public function test_get_all_versions_of_question() {
+    public function test_get_all_versions_of_question(): void {
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
         $question = $this->qgenerator->create_question('shortanswer', null,
             [
@@ -289,7 +289,7 @@ class version_test extends \advanced_testcase {
     /**
      * Test that all the versions of questions are available from the method.
      */
-    public function test_get_all_versions_of_questions() {
+    public function test_get_all_versions_of_questions(): void {
         global $DB;
 
         $questionversions = [];
@@ -325,7 +325,7 @@ class version_test extends \advanced_testcase {
      *
      * @covers \core_question\output\question_version_info::populate_latest_versions()
      */
-    public function test_populate_definition_latestversions() {
+    public function test_populate_definition_latestversions(): void {
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
         $question1 = $this->qgenerator->create_question('shortanswer', null, ['category' => $qcategory->id]);
         $question2 = $this->qgenerator->create_question('shortanswer', null, ['category' => $qcategory->id]);

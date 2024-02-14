@@ -57,7 +57,7 @@ class qbank_helper_test extends \advanced_testcase {
     /**
      * Test reference records.
      */
-    public function test_reference_records() {
+    public function test_reference_records(): void {
         $this->resetAfterTest();
 
         $quiz = $this->create_test_quiz($this->course);
@@ -105,7 +105,7 @@ class qbank_helper_test extends \advanced_testcase {
     /**
      * Test question structure data.
      */
-    public function test_get_question_structure() {
+    public function test_get_question_structure(): void {
         $this->resetAfterTest();
 
         // Create a quiz.
