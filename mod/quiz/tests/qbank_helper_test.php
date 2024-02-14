@@ -68,8 +68,11 @@ class qbank_helper_test extends \advanced_testcase {
         /** @var \core_question_generator $questiongenerator */
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(['contextid' => $context->id]);
-        $numq = $questiongenerator->create_question('essay', null,
-            ['category' => $cat->id, 'name' => 'This is the first version']);
+        $numq = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is the first version']
+        );
 
         // Create two version.
         $questiongenerator->update_question($numq, null, ['name' => 'This is the second version']);
@@ -87,7 +90,11 @@ class qbank_helper_test extends \advanced_testcase {
         $slot = reset($slots);
         $this->assertEquals(3, count(qbank_helper::get_version_options($question->id)));
         $this->assertEquals($question->id, qbank_helper::choose_question_for_redo(
-                $quiz->id, $context, $slot->id, new \qubaid_list([])));
+            $quiz->id,
+            $context,
+            $slot->id,
+            new \qubaid_list([])
+        ));
 
         // Create another version.
         $questiongenerator->update_question($numq, null, ['name' => 'This is the latest version']);
@@ -99,7 +106,11 @@ class qbank_helper_test extends \advanced_testcase {
         $questions = $quizobj->get_questions();
         $question = reset($questions);
         $this->assertEquals($question->id, qbank_helper::choose_question_for_redo(
-                $quiz->id, $context, $slot->id, new \qubaid_list([])));
+            $quiz->id,
+            $context,
+            $slot->id,
+            new \qubaid_list([])
+        ));
     }
 
     /**
@@ -116,8 +127,11 @@ class qbank_helper_test extends \advanced_testcase {
         /** @var \core_question_generator $questiongenerator */
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(['contextid' => $quizcontext->id]);
-        $q = $questiongenerator->create_question('essay', null,
-            ['category' => $cat->id, 'name' => 'This is the first version']);
+        $q = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is the first version']
+        );
 
         // Edit it to create a second and third version.
         $questiongenerator->update_question($q, null, ['name' => 'This is the second version']);
@@ -154,20 +168,35 @@ class qbank_helper_test extends \advanced_testcase {
         /** @var \core_question_generator $questiongenerator */
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(['contextid' => $quizcontext->id]);
-        $q1 = $questiongenerator->create_question('essay', null,
-                ['category' => $cat->id, 'name' => 'This is q1 the first version']);
-        $q2 = $questiongenerator->create_question('essay', null,
-                ['category' => $cat->id, 'name' => 'This is q2 the first version',
-                        'status' => question_version_status::QUESTION_STATUS_DRAFT]);
-        $q3 = $questiongenerator->create_question('essay', null,
-                ['category' => $cat->id, 'name' => 'This is q3 the first version',
-                        'status' => question_version_status::QUESTION_STATUS_DRAFT]);
+        $q1 = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is q1 the first version']
+        );
+        $q2 = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is q2 the first version',
+            'status' => question_version_status::QUESTION_STATUS_DRAFT]
+        );
+        $q3 = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is q3 the first version',
+            'status' => question_version_status::QUESTION_STATUS_DRAFT]
+        );
 
         // Create a new draft version of a question.
-        $q1final = $questiongenerator->update_question(clone $q1, null,
-                ['name' => 'This is q1 the second version', 'status' => question_version_status::QUESTION_STATUS_DRAFT]);
-        $q3final = $questiongenerator->update_question(clone $q3, null,
-                ['name' => 'This is q3 the second version', 'status' => question_version_status::QUESTION_STATUS_DRAFT]);
+        $q1final = $questiongenerator->update_question(
+            clone $q1,
+            null,
+            ['name' => 'This is q1 the second version', 'status' => question_version_status::QUESTION_STATUS_DRAFT]
+        );
+        $q3final = $questiongenerator->update_question(
+            clone $q3,
+            null,
+            ['name' => 'This is q3 the second version', 'status' => question_version_status::QUESTION_STATUS_DRAFT]
+        );
 
         // Add the questions to the quiz.
         quiz_add_quiz_question($q1->id, $quiz);

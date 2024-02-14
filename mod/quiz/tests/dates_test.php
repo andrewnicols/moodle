@@ -38,7 +38,6 @@ use core\activity_dates;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class dates_test extends advanced_testcase {
-
     /**
      * Data provider for get_dates_for_module().
      * @return array[]
@@ -52,53 +51,53 @@ class dates_test extends advanced_testcase {
 
         return [
             'without any dates' => [
-                null, null, null, null, null, null, []
+                null, null, null, null, null, null, [],
             ],
             'only with opening time' => [
                 $after, null, null, null, null, null, [
                     ['label' => get_string('activitydate:opens', 'course'), 'timestamp' => $after, 'dataid' => 'timeopen'],
-                ]
+                ],
             ],
             'only with closing time' => [
                 null, $after, null, null, null, null, [
                     ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $after, 'dataid' => 'timeclose'],
-                ]
+                ],
             ],
             'with both times' => [
                 $after, $later, null, null, null, null, [
                     ['label' => get_string('activitydate:opens', 'course'), 'timestamp' => $after, 'dataid' => 'timeopen'],
                     ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'timeclose'],
-                ]
+                ],
             ],
             'between the dates' => [
                 $before, $after, null, null, null, null, [
                     ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $before, 'dataid' => 'timeopen'],
                     ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $after, 'dataid' => 'timeclose'],
-                ]
+                ],
             ],
             'dates are past' => [
                 $earlier, $before, null, null, null, null, [
                     ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'timeopen'],
                     ['label' => get_string('activitydate:closed', 'course'), 'timestamp' => $before, 'dataid' => 'timeclose'],
-                ]
+                ],
             ],
             'with user override' => [
                 $before, $after, $earlier, $later, null, null, [
                     ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'timeopen'],
                     ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'timeclose'],
-                ]
+                ],
             ],
             'with group override' => [
                 $before, $after, null, null, $earlier, $later, [
                     ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'timeopen'],
                     ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'timeclose'],
-                ]
+                ],
             ],
             'with both user and group overrides' => [
                 $before, $after, $earlier, $later, $earlier - DAYSECS, $later + DAYSECS, [
                     ['label' => get_string('activitydate:opened', 'course'), 'timestamp' => $earlier, 'dataid' => 'timeopen'],
                     ['label' => get_string('activitydate:closes', 'course'), 'timestamp' => $later, 'dataid' => 'timeclose'],
-                ]
+                ],
             ],
         ];
     }
@@ -115,10 +114,15 @@ class dates_test extends advanced_testcase {
      * @param int|null $grouptimeclose The group override for closing the quiz.
      * @param array $expected The expected value of calling get_dates_for_module()
      */
-    public function test_get_dates_for_module(?int $timeopen, ?int $timeclose,
-            ?int $usertimeopen, ?int $usertimeclose,
-            ?int $grouptimeopen, ?int $grouptimeclose,
-            array $expected): void {
+    public function test_get_dates_for_module(
+        ?int $timeopen,
+        ?int $timeclose,
+        ?int $usertimeopen,
+        ?int $usertimeclose,
+        ?int $grouptimeopen,
+        ?int $grouptimeclose,
+        array $expected
+): void {
 
         $this->resetAfterTest();
         $generator = $this->getDataGenerator();

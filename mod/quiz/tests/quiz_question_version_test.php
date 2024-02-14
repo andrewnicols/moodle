@@ -62,8 +62,11 @@ class quiz_question_version_test extends \advanced_testcase {
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         // Create a couple of questions.
         $cat = $questiongenerator->create_question_category(['contextid' => $context->id]);
-        $numq = $questiongenerator->create_question('essay', null,
-            ['category' => $cat->id, 'name' => 'This is the first version']);
+        $numq = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is the first version']
+        );
         // Create two version.
         $questiongenerator->update_question($numq, null, ['name' => 'This is the second version']);
         $questiongenerator->update_question($numq, null, ['name' => 'This is the third version']);
@@ -102,7 +105,7 @@ class quiz_question_version_test extends \advanced_testcase {
             if ($version->version === $slot->version) {
                 continue;
             }
-            $selectversions [$version->version] = $version;
+            $selectversions[$version->version] = $version;
         }
         // Change to version 1.
         submit_question_version::execute($slot->id, (int)$selectversions[1]->version);
@@ -141,13 +144,16 @@ class quiz_question_version_test extends \advanced_testcase {
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         // Create a couple of questions.
         $cat = $questiongenerator->create_question_category(['contextid' => $context->id]);
-        $numq = $questiongenerator->create_question('numerical', null,
-            ['category' => $cat->id, 'name' => 'This is the first version']);
+        $numq = $questiongenerator->create_question(
+            'numerical',
+            null,
+            ['category' => $cat->id, 'name' => 'This is the first version']
+        );
         // Create two version.
         $questiongenerator->update_question($numq, null, ['name' => 'This is the second version']);
         $questiongenerator->update_question($numq, null, ['name' => 'This is the third version']);
         quiz_add_quiz_question($numq->id, $quiz);
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $this->student);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $this->student);
         $this->assertEquals('This is the third version', $attemptobj->get_question_attempt(1)->get_question()->name);
         // Create the quiz object.
         $quizobj = \mod_quiz\quiz_settings::create($quiz->id);
@@ -162,22 +168,22 @@ class quiz_question_version_test extends \advanced_testcase {
             if ($version->version === $slot->version) {
                 continue;
             }
-            $selectversions [$version->version] = $version;
+            $selectversions[$version->version] = $version;
         }
         // Change to version 1.
         $this->expectException('moodle_exception');
         submit_question_version::execute($slot->id, (int)$selectversions[1]->version);
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $this->student, 2);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $this->student, 2);
         $this->assertEquals('This is the first version', $attemptobj->get_question_attempt(1)->get_question()->name);
         // Change to version 2.
         submit_question_version::execute($slot->id, (int)$selectversions[2]->version);
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $this->student, 3);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $this->student, 3);
         $this->assertEquals('This is the second version', $attemptobj->get_question_attempt(1)->get_question()->name);
         // Create another version.
         $questiongenerator->update_question($numq, null, ['name' => 'This is the latest version']);
         // Change to always latest.
         submit_question_version::execute($slot->id, 0);
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $this->student, 4);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $this->student, 4);
         $this->assertEquals('This is the latest version', $attemptobj->get_question_attempt(1)->get_question()->name);
     }
 }

@@ -381,7 +381,7 @@ class lib_test extends \advanced_testcase {
             'quiz' => $quiz->id,
             'groupid' => $group1->id,
             'timeopen' => $now,
-            'timeclose' => $now + 20
+            'timeclose' => $now + 20,
         ];
         $DB->insert_record('quiz_overrides', $override1);
 
@@ -389,7 +389,7 @@ class lib_test extends \advanced_testcase {
             'quiz' => $quiz->id,
             'groupid' => $group2->id,
             'timeopen' => $now - 10,
-            'timeclose' => $now + 10
+            'timeclose' => $now + 10,
         ];
         $DB->insert_record('quiz_overrides', $override2);
 
@@ -761,15 +761,21 @@ class lib_test extends \advanced_testcase {
 
         // Create the activity.
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id],
-            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module(
+            'quiz',
+            ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]
+        );
 
         // Get some additional data.
         $cm = get_coursemodule_from_instance('quiz', $quiz->id);
 
         // Create a calendar event.
-        $event = $this->create_action_event($course->id, $quiz->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+        $event = $this->create_action_event(
+            $course->id,
+            $quiz->id,
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
 
         // Mark the activity as completed.
         $completion = new \completion_info($course);
@@ -792,8 +798,11 @@ class lib_test extends \advanced_testcase {
 
         // Create the activity.
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id],
-            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module(
+            'quiz',
+            ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]
+        );
 
         // Enrol a student in the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -802,8 +811,11 @@ class lib_test extends \advanced_testcase {
         $cm = get_coursemodule_from_instance('quiz', $quiz->id);
 
         // Create a calendar event.
-        $event = $this->create_action_event($course->id, $quiz->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+        $event = $this->create_action_event(
+            $course->id,
+            $quiz->id,
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
 
         // Mark the activity as completed for the student.
         $completion = new \completion_info($course);
@@ -861,7 +873,7 @@ class lib_test extends \advanced_testcase {
         $quiz2 = $this->getDataGenerator()->create_module('quiz', [
             'course' => $course->id,
             'completion' => 2,
-            'completionusegrade' => 0
+            'completionusegrade' => 0,
         ]);
         $cm1 = \cm_info::create(get_coursemodule_from_instance('quiz', $quiz1->id));
         $cm2 = \cm_info::create(get_coursemodule_from_instance('quiz', $quiz2->id));

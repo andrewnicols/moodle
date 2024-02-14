@@ -35,7 +35,6 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @covers     \mod_quiz\local\structure\slot_random
  */
 class local_structure_slot_random_test extends \advanced_testcase {
-
     use \quiz_question_helper_test_trait;
 
     /**
@@ -202,7 +201,7 @@ class local_structure_slot_random_test extends \advanced_testcase {
                 'isstandard' => 1,
                 'flag' => 0,
                 'rawname' => $tagname,
-                'description' => $tagname . ' desc'
+                'description' => $tagname . ' desc',
             ];
             $tags[$tagname] = $this->getDataGenerator()->create_tag($tagrecord);
         }
@@ -214,7 +213,7 @@ class local_structure_slot_random_test extends \advanced_testcase {
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        list($randomslot, $tags) = $this->setup_for_test_tags(['foo', 'bar']);
+        [$randomslot, $tags] = $this->setup_for_test_tags(['foo', 'bar']);
 
         $qtagids = [$tags['foo']->id, $tags['bar']->id];
         $filtercondition = new \stdClass();
@@ -226,8 +225,10 @@ class local_structure_slot_random_test extends \advanced_testcase {
         $rcp->setAccessible(true);
         $tagspropery = $rcp->getValue($randomslot);
 
-        $this->assertEquals([$tags['foo']->id, $tags['bar']->id],
-            (array)json_decode($tagspropery)->filters->qtagids->values);
+        $this->assertEquals(
+            [$tags['foo']->id, $tags['bar']->id],
+            (array)json_decode($tagspropery)->filters->qtagids->values
+        );
     }
 
     public function test_insert() {
@@ -259,14 +260,14 @@ class local_structure_slot_random_test extends \advanced_testcase {
             'isstandard' => 1,
             'flag' => 0,
             'rawname' => 'foo',
-            'description' => 'foo desc'
+            'description' => 'foo desc',
         ];
         $footag = $this->getDataGenerator()->create_tag($tagrecord);
         $tagrecord = [
             'isstandard' => 1,
             'flag' => 0,
             'rawname' => 'bar',
-            'description' => 'bar desc'
+            'description' => 'bar desc',
         ];
         $bartag = $this->getDataGenerator()->create_tag($tagrecord);
 
@@ -298,12 +299,14 @@ class local_structure_slot_random_test extends \advanced_testcase {
 
         $this->assertCount(2, $filter['qtagids']['values']);
         $this->assertEqualsCanonicalizing(
-                [
+            [
                     ['tagid' => $footag->id],
-                    ['tagid' => $bartag->id]
+                    ['tagid' => $bartag->id],
                 ],
-                array_map(function($tagid) {
+            array_map(function ($tagid) {
                     return ['tagid' => $tagid];
-                }, $filter['qtagids']['values']));
+            },
+            $filter['qtagids']['values'])
+        );
     }
 }

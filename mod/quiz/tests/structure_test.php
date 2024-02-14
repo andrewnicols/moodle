@@ -31,7 +31,6 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @covers \mod_quiz\structure
  */
 class structure_test extends \advanced_testcase {
-
     use \quiz_question_helper_test_trait;
 
     /**
@@ -77,7 +76,7 @@ class structure_test extends \advanced_testcase {
      * @return quiz_settings the created quiz.
      */
     protected function create_test_quiz($layout) {
-        list($quiz, $cm, $course) = $this->prepare_quiz_data();
+        [$quiz, $cm, $course] = $this->prepare_quiz_data();
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category();
 
@@ -90,15 +89,17 @@ class structure_test extends \advanced_testcase {
                     throw new \coding_exception('Sections cannot be empty.');
                 }
                 $headings[$lastpage + 1] = $item;
-
             } else {
-                list($name, $page, $qtype) = $item;
+                [$name, $page, $qtype] = $item;
                 if ($page < 1 || !($page == $lastpage + 1 ||
                         (!isset($headings[$lastpage + 1]) && $page == $lastpage))) {
                     throw new \coding_exception('Page numbers wrong.');
                 }
-                $q = $questiongenerator->create_question($qtype, null,
-                        ['name' => $name, 'category' => $cat->id]);
+                $q = $questiongenerator->create_question(
+                    $qtype,
+                    null,
+                    ['name' => $name, 'category' => $cat->id]
+                );
 
                 quiz_add_quiz_question($q->id, $quiz, $page);
                 $lastpage = $page;
@@ -108,7 +109,7 @@ class structure_test extends \advanced_testcase {
         $quizobj = new quiz_settings($quiz, $cm, $course);
         $structure = structure::create_for_quiz($quizobj);
         if (isset($headings[1])) {
-            list($heading, $shuffle) = $this->parse_section_name($headings[1]);
+            [$heading, $shuffle] = $this->parse_section_name($headings[1]);
             $sections = $structure->get_sections();
             $firstsection = reset($sections);
             $structure->set_section_heading($firstsection->id, $heading);
@@ -117,7 +118,7 @@ class structure_test extends \advanced_testcase {
         }
 
         foreach ($headings as $startpage => $heading) {
-            list($heading, $shuffle) = $this->parse_section_name($heading);
+            [$heading, $shuffle] = $this->parse_section_name($heading);
             $id = $structure->add_section_heading($startpage, $heading);
             $structure->set_section_shuffle($id, $shuffle);
         }
@@ -136,7 +137,7 @@ class structure_test extends \advanced_testcase {
         $slot = 1;
         foreach ($expectedlayout as $item) {
             if (is_string($item)) {
-                list($heading, $shuffle) = $this->parse_section_name($item);
+                [$heading, $shuffle] = $this->parse_section_name($item);
                 $section = array_shift($sections);
 
                 if ($slot > 1 && $section->heading == '' && $section->firstslot == 1) {
@@ -147,9 +148,8 @@ class structure_test extends \advanced_testcase {
                 $this->assertEquals($slot, $section->firstslot);
                 $this->assertEquals($heading, $section->heading);
                 $this->assertEquals($shuffle, $section->shufflequestions);
-
             } else {
-                list($name, $page, $qtype) = $item;
+                [$name, $page, $qtype] = $item;
                 $question = $structure->get_question_in_slot($slot);
                 $this->assertEquals($name,  $question->name);
                 $this->assertEquals($slot,  $question->slot,  'Slot number wrong for question ' . $name);
@@ -167,7 +167,7 @@ class structure_test extends \advanced_testcase {
         if (!empty($sections)) {
             $section = array_shift($sections);
             if ($section->heading != '' || $section->firstslot != 1) {
-                $this->fail('Unexpected section (' . $section->heading .') found in the quiz.');
+                $this->fail('Unexpected section (' . $section->heading . ') found in the quiz.');
             }
         }
     }
@@ -715,8 +715,10 @@ class structure_test extends \advanced_testcase {
         $this->assert_quiz_layout([
                 ['TF1', 1, 'truefalse'],
         ], $structure);
-        $this->assertFalse($DB->record_exists('question_set_references',
-            ['id' => $randomq->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']));
+        $this->assertFalse($DB->record_exists(
+            'question_set_references',
+            ['id' => $randomq->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']
+        ));
     }
 
     /**
@@ -760,8 +762,11 @@ class structure_test extends \advanced_testcase {
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category();
-        $q = $questiongenerator->create_question('truefalse', null,
-                ['name' => 'TF2', 'category' => $cat->id]);
+        $q = $questiongenerator->create_question(
+            'truefalse',
+            null,
+            ['name' => 'TF2', 'category' => $cat->id]
+        );
 
         quiz_add_quiz_question($q->id, $quizobj->get_quiz(), 0);
         $structure = structure::create_for_quiz($quizobj);
@@ -781,8 +786,11 @@ class structure_test extends \advanced_testcase {
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category();
-        $q = $questiongenerator->create_question('truefalse', null,
-                ['name' => 'TF3', 'category' => $cat->id]);
+        $q = $questiongenerator->create_question(
+            'truefalse',
+            null,
+            ['name' => 'TF3', 'category' => $cat->id]
+        );
 
         quiz_add_quiz_question($q->id, $quizobj->get_quiz(), 1);
 
@@ -807,8 +815,11 @@ class structure_test extends \advanced_testcase {
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category();
-        $q = $questiongenerator->create_question('truefalse', null,
-                ['name' => 'TF4', 'category' => $cat->id]);
+        $q = $questiongenerator->create_question(
+            'truefalse',
+            null,
+            ['name' => 'TF4', 'category' => $cat->id]
+        );
 
         quiz_add_quiz_question($q->id, $quizobj->get_quiz(), 1);
 
@@ -833,8 +844,11 @@ class structure_test extends \advanced_testcase {
 
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category();
-        $q = $questiongenerator->create_question('truefalse', null,
-                ['name' => 'TF3', 'category' => $cat->id]);
+        $q = $questiongenerator->create_question(
+            'truefalse',
+            null,
+            ['name' => 'TF3', 'category' => $cat->id]
+        );
 
         quiz_add_quiz_question($q->id, $quizobj->get_quiz(), 0);
 
@@ -937,8 +951,11 @@ class structure_test extends \advanced_testcase {
         // Create a question with two versions.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(['contextid' => $quizobj->get_context()->id]);
-        $q = $questiongenerator->create_question('essay', null,
-                ['category' => $cat->id, 'name' => 'This is the first version']);
+        $q = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is the first version']
+        );
         $questiongenerator->update_question($q, null, ['name' => 'This is the second version']);
         $questiongenerator->update_question($q, null, ['name' => 'This is the third version']);
         quiz_add_quiz_question($q->id, $quizobj->get_quiz());
@@ -967,8 +984,11 @@ class structure_test extends \advanced_testcase {
         $quizobj = $this->create_test_quiz([]);
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $cat = $questiongenerator->create_question_category(['contextid' => $quizobj->get_context()->id]);
-        $q = $questiongenerator->create_question('essay', null,
-            ['category' => $cat->id, 'name' => 'This is essay question']);
+        $q = $questiongenerator->create_question(
+            'essay',
+            null,
+            ['category' => $cat->id, 'name' => 'This is essay question']
+        );
         quiz_add_quiz_question($q->id, $quizobj->get_quiz());
 
         // Create the quiz object.

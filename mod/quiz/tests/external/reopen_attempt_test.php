@@ -75,9 +75,11 @@ class reopen_attempt_test extends externallib_advanced_testcase {
 
         $message = get_reopen_attempt_confirmation::execute($attemptid);
 
-        $this->assertEquals('<p>This will reopen attempt 1 by ' . fullname($this->student) .
+        $this->assertEquals(
+            '<p>This will reopen attempt 1 by ' . fullname($this->student) .
                 '.</p><p>The attempt will remain open and can be continued.</p>',
-                $message);
+            $message
+        );
     }
 
     public function test_get_reopen_attempt_confirmation_staying_open_until(): void {
@@ -88,10 +90,12 @@ class reopen_attempt_test extends externallib_advanced_testcase {
 
         $message = get_reopen_attempt_confirmation::execute($attemptid);
 
-        $this->assertEquals('<p>This will reopen attempt 1 by ' . fullname($this->student) .
+        $this->assertEquals(
+            '<p>This will reopen attempt 1 by ' . fullname($this->student) .
                 '.</p><p>The attempt will remain open and can be continued until the quiz closes on ' .
                 userdate($timeclose) . '.</p>',
-                $message);
+            $message
+        );
     }
 
     public function test_get_reopen_attempt_confirmation_submitting(): void {
@@ -102,9 +106,11 @@ class reopen_attempt_test extends externallib_advanced_testcase {
 
         $message = get_reopen_attempt_confirmation::execute($attemptid);
 
-        $this->assertEquals('<p>This will reopen attempt 1 by ' . fullname($this->student) .
+        $this->assertEquals(
+            '<p>This will reopen attempt 1 by ' . fullname($this->student) .
                 '.</p><p>The attempt will be immediately submitted for grading.</p>',
-                $message);
+            $message
+        );
     }
 
     public function test_get_reopen_attempt_confirmation_service_checks_permissions(): void {
@@ -143,7 +149,7 @@ class reopen_attempt_test extends externallib_advanced_testcase {
         $quiz = $quizgenerator->create_instance([
             'course' => $SITE->id,
             'timeclose' => $timeclose,
-            'overduehandling' => 'autoabandon'
+            'overduehandling' => 'autoabandon',
         ]);
 
         // Create a question.

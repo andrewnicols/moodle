@@ -52,7 +52,6 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @since  Moodle 3.1
  */
 class testable_mod_quiz_external extends mod_quiz_external {
-
     /**
      * Public accessor.
      *
@@ -152,14 +151,21 @@ class external_test extends externallib_advanced_testcase {
      * @param  array $extraoptions extra options for Quiz.
      * @return array array containing the quiz, context and the attempt
      */
-    private function create_quiz_with_questions($startattempt = false, $finishattempt = false, $behaviour = 'deferredfeedback',
-            $includeqattachments = false, $extraoptions = []) {
+    private function create_quiz_with_questions(
+        $startattempt = false,
+        $finishattempt = false,
+        $behaviour = 'deferredfeedback',
+        $includeqattachments = false,
+        $extraoptions = []
+) {
 
         // Create a new quiz with attempts.
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
-        $data = ['course' => $this->course->id,
-                      'sumgrades' => 2,
-                      'preferredbehaviour' => $behaviour];
+        $data = [
+            'course' => $this->course->id,
+            'sumgrades' => 2,
+            'preferredbehaviour' => $behaviour,
+        ];
         $data = array_merge($data, $extraoptions);
         $quiz = $quizgenerator->create_instance($data);
         $context = \context_module::instance($quiz->cmid);
@@ -429,7 +435,7 @@ class external_test extends externallib_advanced_testcase {
     public function test_get_user_attempts(): void {
 
         // Create a quiz with one attempt finished.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true, true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj] = $this->create_quiz_with_questions(true, true);
 
         $this->setUser($this->student);
         $result = mod_quiz_external::get_user_attempts($quiz->id);
@@ -512,9 +518,13 @@ class external_test extends externallib_advanced_testcase {
      */
     public function test_get_user_attempts_with_marks_hidden(): void {
         // Create quiz with one attempt finished and hide the mark.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(
-                true, true, 'deferredfeedback', false,
-                ['marksduring' => 0, 'marksimmediately' => 0, 'marksopen' => 0, 'marksclosed' => 0]);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj] = $this->create_quiz_with_questions(
+            true,
+            true,
+            'deferredfeedback',
+            false,
+            ['marksduring' => 0, 'marksimmediately' => 0, 'marksopen' => 0, 'marksclosed' => 0]
+        );
 
         // Student cannot see the grades.
         $this->setUser($this->student);
@@ -555,7 +565,7 @@ class external_test extends externallib_advanced_testcase {
         $quizapi1 = $quizgenerator->create_instance([
                 'name' => 'Test Quiz API 1',
                 'course' => $this->course->id,
-                'sumgrades' => 1
+                'sumgrades' => 1,
         ]);
         $quizapi2 = $quizgenerator->create_instance([
                 'name' => 'Test Quiz API 2',
@@ -564,7 +574,7 @@ class external_test extends externallib_advanced_testcase {
                 'marksduring' => 0,
                 'marksimmediately' => 0,
                 'marksopen' => 0,
-                'marksclosed' => 0
+                'marksclosed' => 0,
         ]);
 
         // Create a question.
@@ -584,7 +594,7 @@ class external_test extends externallib_advanced_testcase {
                 'itemtype' => 'mod',
                 'itemmodule' => 'quiz',
                 'iteminstance' => $quizapi1->id,
-                'outcomeid' => null
+                'outcomeid' => null,
         ]);
         $item->gradepass = 80;
         $item->update();
@@ -594,7 +604,7 @@ class external_test extends externallib_advanced_testcase {
                 'itemtype' => 'mod',
                 'itemmodule' => 'quiz',
                 'iteminstance' => $quizapi2->id,
-                'outcomeid' => null
+                'outcomeid' => null,
         ]);
         $item->gradepass = 80;
         $item->update();
@@ -854,7 +864,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a closed quiz with review marks only when quiz is closed.
-        list($quiz, $context, $quizobj) = $this->create_quiz_with_questions(true, true, 'deferredfeedback', false, [
+        [$quiz, $context, $quizobj] = $this->create_quiz_with_questions(true, true, 'deferredfeedback', false, [
             'timeclose' => time() - HOURSECS,
             'marksduring' => 0,
             'maxmarksduring' => 0,
@@ -931,7 +941,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with questions.
-        list($quiz, $context, $quizobj) = $this->create_quiz_with_questions();
+        [$quiz, $context, $quizobj] = $this->create_quiz_with_questions();
 
         $this->setUser($this->student);
 
@@ -1022,7 +1032,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with one attempt started.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj] = $this->create_quiz_with_questions(true);
 
         $this->setUser($this->student);
 
@@ -1245,8 +1255,11 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with one attempt started and using immediatefeedback.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(
-                true, false, 'immediatefeedback');
+        [$quiz, $context, $quizobj, $attempt, $attemptobj] = $this->create_quiz_with_questions(
+            true,
+            false,
+            'immediatefeedback'
+        );
 
         $quizobj = $attemptobj->get_quizobj();
 
@@ -1289,7 +1302,7 @@ class external_test extends externallib_advanced_testcase {
 
         $timenow = time();
         // Create a new quiz with one attempt started.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj] = $this->create_quiz_with_questions(true);
 
         $this->setUser($this->student);
         $result = mod_quiz_external::get_attempt_summary($attempt->id);
@@ -1352,7 +1365,7 @@ class external_test extends externallib_advanced_testcase {
 
         $timenow = time();
         // Create a new quiz with one attempt started.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj, $quba) = $this->create_quiz_with_questions(true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj, $quba] = $this->create_quiz_with_questions(true);
 
         // Response for slot 1.
         $prefix = $quba->get_field_prefix(1);
@@ -1426,8 +1439,12 @@ class external_test extends externallib_advanced_testcase {
 
         $timenow = time();
         // Create a new quiz with three questions and one attempt started.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj, $quba) = $this->create_quiz_with_questions(true, false,
-            'deferredfeedback', true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj, $quba] = $this->create_quiz_with_questions(
+            true,
+            false,
+            'deferredfeedback',
+            true
+        );
 
         // Response for slot 1.
         $prefix = $quba->get_field_prefix(1);
@@ -1614,7 +1631,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with one attempt started.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj] = $this->create_quiz_with_questions(true);
 
         $this->setUser($this->student);
 
@@ -1637,7 +1654,7 @@ class external_test extends externallib_advanced_testcase {
         }
 
         // Test ok case (finished attempt).
-        list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true, true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj] = $this->create_quiz_with_questions(true, true);
 
         $params = ['attemptid' => $attempt->id];
         testable_mod_quiz_external::validate_attempt_review($params);
@@ -1668,7 +1685,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with two questions and one attempt finished.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj, $quba) = $this->create_quiz_with_questions(true, true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj, $quba] = $this->create_quiz_with_questions(true, true);
 
         // Add feedback to the quiz.
         $feedback = new \stdClass();
@@ -1730,7 +1747,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with two questions and one attempt started.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj, $quba) = $this->create_quiz_with_questions(true, false);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj, $quba] = $this->create_quiz_with_questions(true, false);
 
         // Test user with full capabilities.
         $this->setUser($this->student);
@@ -1783,7 +1800,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with two questions and one attempt started.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj, $quba) = $this->create_quiz_with_questions(true, false);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj, $quba] = $this->create_quiz_with_questions(true, false);
 
         // Test user with full capabilities.
         $this->setUser($this->student);
@@ -1824,7 +1841,7 @@ class external_test extends externallib_advanced_testcase {
         global $DB;
 
         // Create a new quiz with two questions and one attempt finished.
-        list($quiz, $context, $quizobj, $attempt, $attemptobj, $quba) = $this->create_quiz_with_questions(true, true);
+        [$quiz, $context, $quizobj, $attempt, $attemptobj, $quba] = $this->create_quiz_with_questions(true, true);
 
         // Test user with full capabilities.
         $this->setUser($this->student);
@@ -1927,7 +1944,7 @@ class external_test extends externallib_advanced_testcase {
             // This rule is always used, even if the quiz has no open or close date.
             'activerulenames' => ['quizaccess_openclosedate'],
             'preventaccessreasons' => [],
-            'warnings' => []
+            'warnings' => [],
         ];
 
         $this->assertEquals($expected, $result);
@@ -2010,7 +2027,7 @@ class external_test extends externallib_advanced_testcase {
         $expected = [
             'isfinished' => false,
             'preventnewattemptreasons' => [],
-            'warnings' => []
+            'warnings' => [],
         ];
 
         $this->assertEquals($expected, $result);
@@ -2076,8 +2093,11 @@ class external_test extends externallib_advanced_testcase {
         $question = $questiongenerator->create_question('essay', null, ['category' => $cat->id]);
         quiz_add_quiz_question($question->id, $quiz);
 
-        $question = $questiongenerator->create_question('multichoice', null,
-                ['category' => $cat->id, 'status' => question_version_status::QUESTION_STATUS_DRAFT]);
+        $question = $questiongenerator->create_question(
+            'multichoice',
+            null,
+            ['category' => $cat->id, 'status' => question_version_status::QUESTION_STATUS_DRAFT]
+        );
         quiz_add_quiz_question($question->id, $quiz);
 
         $this->setUser($this->student);
@@ -2087,7 +2107,7 @@ class external_test extends externallib_advanced_testcase {
 
         $expected = [
             'questiontypes' => ['essay', 'numerical', 'shortanswer', 'truefalse'],
-            'warnings' => []
+            'warnings' => [],
         ];
 
         $this->assertEquals($expected, $result);
@@ -2233,7 +2253,7 @@ class external_test extends externallib_advanced_testcase {
             'sumgrades' => 2,
             'questionsperpage' => 1,
             'preferredbehaviour' => 'deferredfeedback',
-            'navmethod' => QUIZ_NAVMETHOD_SEQ
+            'navmethod' => QUIZ_NAVMETHOD_SEQ,
         ];
         $quiz = $quizgenerator->create_instance($data);
 
@@ -2243,7 +2263,7 @@ class external_test extends externallib_advanced_testcase {
         for ($pageindex = 1; $pageindex <= 5; $pageindex++) {
             $question = $questiongenerator->create_question('truefalse', null, [
                 'category' => $cat->id,
-                'questiontext' => ['text' => "Question ($pageindex)"]
+                'questiontext' => ['text' => "Question ($pageindex)"],
             ]);
             quiz_add_quiz_question($question->id, $quiz, $pageindex);
         }

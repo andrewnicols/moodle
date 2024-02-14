@@ -33,7 +33,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_mod_quiz_generator extends behat_generator_base {
-
     protected function get_creatable_entities(): array {
         return [
             'group overrides' => [

@@ -82,7 +82,9 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Check if the questions and associated data are deleted properly.
         $this->assertEquals(0, count(\mod_quiz\question\bank\qbank_helper::get_question_structure(
-                $quiz->id, $oldquizcontext)));
+            $quiz->id,
+            $oldquizcontext
+        )));
 
         // Restore the course.
         $newcourse = $this->getDataGenerator()->create_course();
@@ -92,7 +94,9 @@ class quiz_question_restore_test extends \advanced_testcase {
         $modules = get_fast_modinfo($newcourse->id)->get_instances_of('quiz');
         $module = reset($modules);
         $questions = \mod_quiz\question\bank\qbank_helper::get_question_structure(
-                $module->instance, $module->context);
+            $module->instance,
+            $module->context
+        );
         $this->assertCount(3, $questions);
     }
 
@@ -118,7 +122,9 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Check if the questions and associated datas are deleted properly.
         $this->assertEquals(0, count(\mod_quiz\question\bank\qbank_helper::get_question_structure(
-                $quiz->id, $quizcontext)));
+            $quiz->id,
+            $quizcontext
+        )));
 
         // Restore the course.
         $newcourse = $this->getDataGenerator()->create_course();
@@ -128,7 +134,9 @@ class quiz_question_restore_test extends \advanced_testcase {
         $modules = get_fast_modinfo($newcourse->id)->get_instances_of('quiz');
         $module = reset($modules);
         $this->assertEquals(3, count(\mod_quiz\question\bank\qbank_helper::get_question_structure(
-                $module->instance, $module->context)));
+            $module->instance,
+            $module->context
+        )));
     }
 
     /**
@@ -147,7 +155,9 @@ class quiz_question_restore_test extends \advanced_testcase {
                JOIN {question_bank_entries} qbe ON qbe.id = qv.questionbankentryid
                JOIN {question_categories} qc on qc.id = qbe.questioncategoryid
               WHERE qc.contextid = ?
-              $extracondition", [$contextid]);
+              $extracondition",
+            [$contextid]
+        );
     }
 
     /**
@@ -224,7 +234,9 @@ class quiz_question_restore_test extends \advanced_testcase {
         $module = reset($modules);
         $this->assertCount(1, quiz_get_user_attempts($module->instance, $this->student->id));
         $this->assertCount(3, \mod_quiz\question\bank\qbank_helper::get_question_structure(
-                $module->instance, $module->context));
+            $module->instance,
+            $module->context
+        ));
     }
 
     /**
@@ -238,13 +250,21 @@ class quiz_question_restore_test extends \advanced_testcase {
         $backupid = 'abc';
         $backuppath = make_backup_temp_directory($backupid);
         get_file_packer('application/vnd.moodle.backup')->extract_to_pathname(
-            __DIR__ . "/fixtures/moodle_28_quiz.mbz", $backuppath);
+            __DIR__ . "/fixtures/moodle_28_quiz.mbz",
+            $backuppath
+        );
 
         // Do the restore to new course with default settings.
         $categoryid = $DB->get_field_sql("SELECT MIN(id) FROM {course_categories}");
         $newcourseid = \restore_dbops::create_new_course('Test fullname', 'Test shortname', $categoryid);
-        $rc = new \restore_controller($backupid, $newcourseid, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id,
-            \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $newcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
 
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
@@ -285,13 +305,21 @@ class quiz_question_restore_test extends \advanced_testcase {
         $backupid = 'abc';
         $backuppath = make_backup_temp_directory($backupid);
         get_file_packer('application/vnd.moodle.backup')->extract_to_pathname(
-            __DIR__ . "/fixtures/random_by_tag_quiz.mbz", $backuppath);
+            __DIR__ . "/fixtures/random_by_tag_quiz.mbz",
+            $backuppath
+        );
 
         // Do the restore to new course with default settings.
         $categoryid = $DB->get_field_sql("SELECT MIN(id) FROM {course_categories}");
         $newcourseid = \restore_dbops::create_new_course('Test fullname', 'Test shortname', $categoryid);
-        $rc = new \restore_controller($backupid, $newcourseid, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id,
-            \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $newcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
 
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
@@ -314,8 +342,10 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Count the questions for course question bank.
         $this->assertEquals(6, $this->question_count(\context_course::instance($newcourseid)->id));
-        $this->assertEquals(6, $this->question_count(\context_course::instance($newcourseid)->id,
-            "AND q.qtype <> 'random'"));
+        $this->assertEquals(6, $this->question_count(
+            \context_course::instance($newcourseid)->id,
+            "AND q.qtype <> 'random'"
+        ));
 
         // Count the questions in quiz qbank.
         $this->assertEquals(0, $this->question_count($quizobj->get_context()->id));
@@ -335,13 +365,21 @@ class quiz_question_restore_test extends \advanced_testcase {
         $backupid = 'abc';
         $backuppath = make_backup_temp_directory($backupid);
         get_file_packer('application/vnd.moodle.backup')->extract_to_pathname(
-            __DIR__ . "/fixtures/moodle_311_quiz.mbz", $backuppath);
+            __DIR__ . "/fixtures/moodle_311_quiz.mbz",
+            $backuppath
+        );
 
         // Do the restore to new course with default settings.
         $categoryid = $DB->get_field_sql("SELECT MIN(id) FROM {course_categories}");
         $newcourseid = \restore_dbops::create_new_course('Test fullname', 'Test shortname', $categoryid);
-        $rc = new \restore_controller($backupid, $newcourseid, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id,
-            \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $newcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
 
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
@@ -363,8 +401,10 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Check if the tags match with the actual restored data.
         foreach ($slots as $slot) {
-            $setreference = $DB->get_record('question_set_references',
-                ['itemid' => $slot->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']);
+            $setreference = $DB->get_record(
+                'question_set_references',
+                ['itemid' => $slot->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']
+            );
             $filterconditions = json_decode($setreference->filtercondition);
             $tags = [];
             foreach ($filterconditions->tags as $tagstring) {
@@ -386,13 +426,21 @@ class quiz_question_restore_test extends \advanced_testcase {
         $backupid = 'abc';
         $backuppath = make_backup_temp_directory($backupid);
         get_file_packer('application/vnd.moodle.backup')->extract_to_pathname(
-                __DIR__ . "/fixtures/pre-40-shared-random-question.mbz", $backuppath);
+            __DIR__ . "/fixtures/pre-40-shared-random-question.mbz",
+            $backuppath
+        );
 
         // Do the restore to new course with default settings.
         $categoryid = $DB->get_field_sql("SELECT MIN(id) FROM {course_categories}");
         $newcourseid = \restore_dbops::create_new_course('Test fullname', 'Test shortname', $categoryid);
-        $rc = new \restore_controller($backupid, $newcourseid, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id,
-                \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $newcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
 
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
@@ -420,8 +468,10 @@ class quiz_question_restore_test extends \advanced_testcase {
         // Count the questions for course question bank.
         // We should have a single question, the random question should have been deleted after the restore.
         $this->assertEquals(1, $this->question_count(\context_course::instance($newcourseid)->id));
-        $this->assertEquals(1, $this->question_count(\context_course::instance($newcourseid)->id,
-                "AND q.qtype <> 'random'"));
+        $this->assertEquals(1, $this->question_count(
+            \context_course::instance($newcourseid)->id,
+            "AND q.qtype <> 'random'"
+        ));
 
         // Count the questions in quiz qbank.
         $this->assertEquals(0, $this->question_count($quizobj->get_context()->id));
@@ -509,13 +559,21 @@ class quiz_question_restore_test extends \advanced_testcase {
         $backupid = 'abc';
         $backuppath = make_backup_temp_directory($backupid);
         get_file_packer('application/vnd.moodle.backup')->extract_to_pathname(
-                __DIR__ . "/fixtures/moodle_42_random_question.mbz", $backuppath);
+            __DIR__ . "/fixtures/moodle_42_random_question.mbz",
+            $backuppath
+        );
 
         // Do the restore to new course with default settings.
         $categoryid = $DB->get_field_sql("SELECT MIN(id) FROM {course_categories}");
         $newcourseid = \restore_dbops::create_new_course('Test fullname', 'Test shortname', $categoryid);
-        $rc = new \restore_controller($backupid, $newcourseid, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id,
-                \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $newcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
 
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
@@ -537,8 +595,10 @@ class quiz_question_restore_test extends \advanced_testcase {
 
         // Check that the filtercondition now matches the 4.3 structure.
         foreach ($slots as $slot) {
-            $setreference = $DB->get_record('question_set_references',
-                    ['itemid' => $slot->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']);
+            $setreference = $DB->get_record(
+                'question_set_references',
+                ['itemid' => $slot->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']
+            );
             $filterconditions = json_decode($setreference->filtercondition, true);
             $this->assertArrayHasKey('cat', $filterconditions);
             $this->assertArrayHasKey('jointype', $filterconditions);

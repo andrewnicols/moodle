@@ -37,7 +37,6 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @covers \mod_quiz\quiz_attempt
  */
 class attempt_walkthrough_test extends \advanced_testcase {
-
     use \quiz_question_helper_test_trait;
 
     /**
@@ -103,8 +102,8 @@ class attempt_walkthrough_test extends \advanced_testcase {
             3 => [
                 'frog' => 'amphibian',
                 'cat' => 'mammal',
-                'newt' => ''
-            ]
+                'newt' => '',
+            ],
         ];
 
         $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
@@ -115,8 +114,8 @@ class attempt_walkthrough_test extends \advanced_testcase {
             3 => [
                 'frog' => 'amphibian',
                 'cat' => 'mammal',
-                'newt' => 'amphibian'
-            ]
+                'newt' => 'amphibian',
+            ],
         ];
 
         $attemptobj->process_submitted_actions($timenow, false, $tosubmit);
@@ -171,8 +170,10 @@ class attempt_walkthrough_test extends \advanced_testcase {
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
 
         $quiz = $quizgenerator->create_instance(
-                ['course' => $SITE->id, 'timeclose' => $timeclose,
-                        'overduehandling' => $overduehandling, 'graceperiod' => HOURSECS]);
+            ['course' => $SITE->id, 'timeclose' => $timeclose,
+            'overduehandling' => $overduehandling,
+            'graceperiod' => HOURSECS]
+        );
 
         // Create a question.
         /** @var \core_question_generator $questiongenerator */
@@ -514,8 +515,10 @@ class attempt_walkthrough_test extends \advanced_testcase {
         $this->assertEquals(quiz_attempt::IN_PROGRESS, $attemptobj->get_state());
         $this->assertEquals(0, $attemptobj->get_submitted_date());
         $this->assertEquals($user->id, $attemptobj->get_userid());
-        $this->assertEquals($overriddentimeclose,
-                $attemptobj->get_access_manager($reopentime)->get_end_time($attemptobj->get_attempt()));
+        $this->assertEquals(
+            $overriddentimeclose,
+            $attemptobj->get_access_manager($reopentime)->get_end_time($attemptobj->get_attempt())
+        );
 
         // Verify this was logged correctly.
         $events = $sink->get_events();
@@ -524,8 +527,10 @@ class attempt_walkthrough_test extends \advanced_testcase {
         $reopenedevent = array_shift($events);
         $this->assertInstanceOf('\mod_quiz\event\attempt_reopened', $reopenedevent);
         $this->assertEquals($attemptobj->get_context(), $reopenedevent->get_context());
-        $this->assertEquals(new moodle_url('/mod/quiz/review.php', ['attempt' => $attemptobj->get_attemptid()]),
-                $reopenedevent->get_url());
+        $this->assertEquals(
+            new moodle_url('/mod/quiz/review.php', ['attempt' => $attemptobj->get_attemptid()]),
+            $reopenedevent->get_url()
+        );
     }
 
     public function test_quiz_attempt_walkthrough_abandoned_attempt_reopened_after_close_time(): void {
@@ -574,13 +579,17 @@ class attempt_walkthrough_test extends \advanced_testcase {
         $reopenedevent = array_shift($events);
         $this->assertInstanceOf('\mod_quiz\event\attempt_reopened', $reopenedevent);
         $this->assertEquals($attemptobj->get_context(), $reopenedevent->get_context());
-        $this->assertEquals(new moodle_url('/mod/quiz/review.php', ['attempt' => $attemptobj->get_attemptid()]),
-                $reopenedevent->get_url());
+        $this->assertEquals(
+            new moodle_url('/mod/quiz/review.php', ['attempt' => $attemptobj->get_attemptid()]),
+            $reopenedevent->get_url()
+        );
 
         $submittedevent = array_pop($events);
         $this->assertInstanceOf('\mod_quiz\event\attempt_submitted', $submittedevent);
         $this->assertEquals($attemptobj->get_context(), $submittedevent->get_context());
-        $this->assertEquals(new moodle_url('/mod/quiz/review.php', ['attempt' => $attemptobj->get_attemptid()]),
-                $submittedevent->get_url());
+        $this->assertEquals(
+            new moodle_url('/mod/quiz/review.php', ['attempt' => $attemptobj->get_attemptid()]),
+            $submittedevent->get_url()
+        );
     }
 }

@@ -52,8 +52,11 @@ class generator_test extends \advanced_testcase {
         $context = \context_module::instance($cm->id);
         $this->assertEquals($quiz->cmid, $context->instanceid);
 
-        $this->assertEqualsWithDelta($createtime,
-                $DB->get_field('quiz', 'timecreated', ['id' => $cm->instance]), 2);
+        $this->assertEqualsWithDelta(
+            $createtime,
+            $DB->get_field('quiz', 'timecreated', ['id' => $cm->instance]),
+            2
+        );
     }
 
     public function test_generating_a_user_override(): void {
@@ -74,8 +77,13 @@ class generator_test extends \advanced_testcase {
         ]);
 
         // Check the corresponding calendar event now exists.
-        $events = calendar_get_events(strtotime('2022-01-01'),
-                strtotime('2022-12-31'), $user->id, false, $course->id);
+        $events = calendar_get_events(
+            strtotime('2022-01-01'),
+            strtotime('2022-12-31'),
+            $user->id,
+            false,
+            $course->id
+        );
         $this->assertCount(1, $events);
         $event = reset($events);
         $this->assertEquals($user->id, $event->userid);
@@ -104,8 +112,13 @@ class generator_test extends \advanced_testcase {
         ]);
 
         // Check the corresponding calendar event now exists.
-        $events = calendar_get_events(strtotime('2022-01-01'),
-                strtotime('2022-12-31'), false, $group->id, $course->id);
+        $events = calendar_get_events(
+            strtotime('2022-01-01'),
+            strtotime('2022-12-31'),
+            false,
+            $group->id,
+            $course->id
+        );
         $this->assertCount(1, $events);
         $event = reset($events);
         $this->assertEquals(0, $event->userid);

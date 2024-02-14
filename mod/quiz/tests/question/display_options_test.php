@@ -44,8 +44,10 @@ class display_options_test extends \basic_testcase {
         $quiz->reviewrightanswer      = 0x00100;
         $quiz->reviewoverallfeedback  = 0x00010;
 
-        $options = display_options::make_from_quiz($quiz,
-            display_options::DURING);
+        $options = display_options::make_from_quiz(
+            $quiz,
+            display_options::DURING
+        );
 
         $this->assertEquals(true, $options->attempt);
         $this->assertEquals(display_options::VISIBLE, $options->correctness);
@@ -59,8 +61,10 @@ class display_options_test extends \basic_testcase {
         $quiz->questiondecimalpoints = 5;
         $quiz->reviewmaxmarks         = 0x11000; // Max marks is set.
         $quiz->reviewmarks            = 0x11000; // Marks is also set.
-        $options = display_options::make_from_quiz($quiz,
-            display_options::IMMEDIATELY_AFTER);
+        $options = display_options::make_from_quiz(
+            $quiz,
+            display_options::IMMEDIATELY_AFTER
+        );
 
         $this->assertEquals(display_options::MARK_AND_MAX, $options->marks);
         $this->assertEquals(display_options::VISIBLE, $options->generalfeedback);
@@ -72,15 +76,19 @@ class display_options_test extends \basic_testcase {
 
         $quiz->reviewmaxmarks         = 0x00000; // Max marks is NOT set.
         $quiz->reviewmarks            = 0x00000; // Marks is also NOT set.
-        $options = display_options::make_from_quiz($quiz,
-            display_options::LATER_WHILE_OPEN);
+        $options = display_options::make_from_quiz(
+            $quiz,
+            display_options::LATER_WHILE_OPEN
+        );
 
         $this->assertEquals(display_options::HIDDEN, $options->marks);
         $this->assertEquals(display_options::VISIBLE, $options->rightanswer);
         $this->assertEquals(display_options::HIDDEN, $options->generalfeedback);
 
-        $options = display_options::make_from_quiz($quiz,
-            display_options::AFTER_CLOSE);
+        $options = display_options::make_from_quiz(
+            $quiz,
+            display_options::AFTER_CLOSE
+        );
 
         $this->assertEquals(display_options::VISIBLE, $options->overallfeedback);
         $this->assertEquals(display_options::HIDDEN, $options->rightanswer);

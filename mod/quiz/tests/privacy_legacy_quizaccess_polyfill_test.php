@@ -113,7 +113,6 @@ class test_privacy_legacy_quizaccess_polyfill_provider implements
         \core_privacy\local\metadata\provider,
         \mod_quiz\privacy\quizaccess_provider,
         \mod_quiz\privacy\quizaccess_user_provider {
-
     use \mod_quiz\privacy\legacy_quizaccess_polyfill;
     use \core_privacy\local\legacy_polyfill;
 

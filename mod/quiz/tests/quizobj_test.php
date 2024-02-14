@@ -124,7 +124,9 @@ class quizobj_test extends basic_testcase {
         }
 
         // Test.
-        $this->assertEquals($expectation,
-            $quizobj->cannot_review_message($attemptstate, false, $submittime));
+        $this->assertEquals(
+            $expectation,
+            $quizobj->cannot_review_message($attemptstate, false, $submittime)
+        );
     }
 }

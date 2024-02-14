@@ -29,7 +29,6 @@ require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_override_test extends \restore_date_testcase {
-
     /**
      * Test restore overrides.
      */
@@ -51,7 +50,7 @@ class restore_override_test extends \restore_date_testcase {
             'quiz' => $quiz->id,
             'groupid' => $group1->id,
             'timeopen' => $now,
-            'timeclose' => $now + 20
+            'timeclose' => $now + 20,
         ];
         $DB->insert_record('quiz_overrides', $groupoverride1);
 
@@ -59,7 +58,7 @@ class restore_override_test extends \restore_date_testcase {
             'quiz' => $quiz->id,
             'groupid' => $group2->id,
             'timeopen' => $now,
-            'timeclose' => $now + 40
+            'timeclose' => $now + 40,
         ];
         $DB->insert_record('quiz_overrides', $groupoverride2);
 
@@ -73,7 +72,7 @@ class restore_override_test extends \restore_date_testcase {
             'userid' => $USER->id,
             'sortorder' => 1,
             'timeopen' => 100,
-            'timeclose' => 200
+            'timeclose' => 200,
         ];
         $DB->insert_record('quiz_overrides', $useroverride);
 

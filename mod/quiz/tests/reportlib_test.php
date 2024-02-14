@@ -59,12 +59,18 @@ class reportlib_test extends \advanced_testcase {
         $quiz->sumgrades = 10;
         $quiz->decimalpoints = 2;
 
-        $this->assertEquals('12.34567%',
-            quiz_report_scale_summarks_as_percentage(1.234567, $quiz, false));
-        $this->assertEquals('12.35%',
-            quiz_report_scale_summarks_as_percentage(1.234567, $quiz, true));
-        $this->assertEquals('-',
-            quiz_report_scale_summarks_as_percentage('-', $quiz, true));
+        $this->assertEquals(
+            '12.34567%',
+            quiz_report_scale_summarks_as_percentage(1.234567, $quiz, false)
+        );
+        $this->assertEquals(
+            '12.35%',
+            quiz_report_scale_summarks_as_percentage(1.234567, $quiz, true)
+        );
+        $this->assertEquals(
+            '-',
+            quiz_report_scale_summarks_as_percentage('-', $quiz, true)
+        );
     }
 
     public function test_quiz_report_qm_filter_select_only_one_attempt_allowed(): void {

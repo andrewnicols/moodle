@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/quiz/classes/repaginate.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_quiz_repaginate_testable extends repaginate {
-
     public function __construct($quizid = 0, $slots = null) {
         return parent::__construct($quizid, $slots);
     }
@@ -63,7 +62,6 @@ class mod_quiz_repaginate_testable extends repaginate {
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class repaginate_test extends \advanced_testcase {
-
     /** @var array stores the slots. */
     private $quizslots;
     /** @var mod_quiz_repaginate_testable the object being tested. */
