@@ -37,8 +37,7 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.1
  */
-class externallib_test extends externallib_advanced_testcase {
-
+final class externallib_test extends externallib_advanced_testcase {
     /** @var \stdClass course record. */
     protected $course;
 
@@ -112,56 +111,56 @@ class externallib_test extends externallib_advanced_testcase {
     /**
      * Data provider for the get_random_question_summaries test.
      */
-    public static function get_random_question_summaries_test_cases() {
+    public static function get_random_question_summaries_test_cases(): array {
         return [
             'empty category' => [
                 'categoryindex' => 'emptycat',
                 'includesubcategories' => false,
                 'usetagnames' => [],
-                'expectedquestionindexes' => []
+                'expectedquestionindexes' => [],
             ],
             'single category' => [
                 'categoryindex' => 'cat1',
                 'includesubcategories' => false,
                 'usetagnames' => [],
-                'expectedquestionindexes' => ['cat1q1', 'cat1q2']
+                'expectedquestionindexes' => ['cat1q1', 'cat1q2'],
             ],
             'include sub category' => [
                 'categoryindex' => 'cat1',
                 'includesubcategories' => true,
                 'usetagnames' => [],
-                'expectedquestionindexes' => ['cat1q1', 'cat1q2', 'subcatq1', 'subcatq2']
+                'expectedquestionindexes' => ['cat1q1', 'cat1q2', 'subcatq1', 'subcatq2'],
             ],
             'single category with tags' => [
                 'categoryindex' => 'cat1',
                 'includesubcategories' => false,
                 'usetagnames' => ['cat1'],
-                'expectedquestionindexes' => ['cat1q1']
+                'expectedquestionindexes' => ['cat1q1'],
             ],
             'include sub category with tag on parent' => [
                 'categoryindex' => 'cat1',
                 'includesubcategories' => true,
                 'usetagnames' => ['cat1'],
-                'expectedquestionindexes' => ['cat1q1']
+                'expectedquestionindexes' => ['cat1q1'],
             ],
             'include sub category with tag on sub' => [
                 'categoryindex' => 'cat1',
                 'includesubcategories' => true,
                 'usetagnames' => ['subcat'],
-                'expectedquestionindexes' => ['subcatq1']
+                'expectedquestionindexes' => ['subcatq1'],
             ],
             'include sub category with same tag on parent and sub' => [
                 'categoryindex' => 'cat1',
                 'includesubcategories' => true,
                 'usetagnames' => ['foo'],
-                'expectedquestionindexes' => ['cat1q1', 'subcatq1']
+                'expectedquestionindexes' => ['cat1q1', 'subcatq1'],
             ],
             'include sub category with tag not matching' => [
                 'categoryindex' => 'cat1',
                 'includesubcategories' => true,
                 'usetagnames' => ['cat1', 'cat2'],
-                'expectedquestionindexes' => []
-            ]
+                'expectedquestionindexes' => [],
+            ],
         ];
     }
 
@@ -195,7 +194,7 @@ class externallib_test extends externallib_advanced_testcase {
         $includesubcategories,
         $usetagnames,
         $expectedquestionindexes
-    ) {
+    ): void {
         $this->resetAfterTest();
 
         $context = \context_system::instance();
@@ -205,42 +204,47 @@ class externallib_test extends externallib_advanced_testcase {
             'cat1',
             'cat2',
             'subcat',
-            'foo'
+            'foo',
         ];
         $collid = \core_tag_collection::get_default();
         $tags = \core_tag_tag::create_if_missing($collid, $tagnames);
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         // First category and questions.
-        list($category, $categoryquestions) = $this->create_category_and_questions(2, ['cat1', 'foo']);
+        [$category, $categoryquestions] = $this->create_category_and_questions(2, ['cat1', 'foo']);
         $categories['cat1'] = $category;
         $questions['cat1q1'] = $categoryquestions[0];
         $questions['cat1q2'] = $categoryquestions[1];
         // Second category and questions.
-        list($category, $categoryquestions) = $this->create_category_and_questions(2, ['cat2', 'foo']);
+        [$category, $categoryquestions] = $this->create_category_and_questions(2, ['cat2', 'foo']);
         $categories['cat2'] = $category;
         $questions['cat2q1'] = $categoryquestions[0];
         $questions['cat2q2'] = $categoryquestions[1];
         // Sub category and questions.
-        list($category, $categoryquestions) = $this->create_category_and_questions(2, ['subcat', 'foo'], $categories['cat1']);
+        [$category, $categoryquestions] = $this->create_category_and_questions(2, ['subcat', 'foo'], $categories['cat1']);
         $categories['subcat'] = $category;
         $questions['subcatq1'] = $categoryquestions[0];
         $questions['subcatq2'] = $categoryquestions[1];
         // Empty category.
-        list($category, $categoryquestions) = $this->create_category_and_questions(0);
+        [$category, $categoryquestions] = $this->create_category_and_questions(0);
         $categories['emptycat'] = $category;
 
         // Generate the arguments for the get_questions function.
         $category = $categories[$categoryindex];
-        $tagids = array_map(function($tagname) use ($tags) {
+        $tagids = array_map(function ($tagname) use ($tags) {
             return $tags[$tagname]->id;
         }, $usetagnames);
 
-        $result = core_question_external::get_random_question_summaries($category->id, $includesubcategories, $tagids, $context->id);
+        $result = core_question_external::get_random_question_summaries(
+            $category->id,
+            $includesubcategories,
+            $tagids,
+            $context->id
+        );
         $resultquestions = $result['questions'];
         $resulttotalcount = $result['totalcount'];
         // Generate the expected question set.
-        $expectedquestions = array_map(function($index) use ($questions) {
+        $expectedquestions = array_map(function ($index) use ($questions) {
             return $questions[$index];
         }, $expectedquestionindexes);
 
@@ -335,7 +339,7 @@ class externallib_test extends externallib_advanced_testcase {
     public function test_get_random_question_summaries_formats_returned_questions(): void {
         $this->resetAfterTest();
 
-        list($category, $questions) = $this->create_category_and_questions(1);
+        [$category, $questions] = $this->create_category_and_questions(1);
         $context = \context_system::instance();
         $question = $questions[0];
         $expected = (object) [
@@ -343,7 +347,7 @@ class externallib_test extends externallib_advanced_testcase {
             'category' => $question->category,
             'parent' => $question->parent,
             'name' => $question->name,
-            'qtype' => $question->qtype
+            'qtype' => $question->qtype,
         ];
 
         $result = core_question_external::get_random_question_summaries($category->id, false, [], $context->id);
@@ -365,7 +369,7 @@ class externallib_test extends externallib_advanced_testcase {
     /**
      * get_random_question_summaries should allow limiting and offsetting of the result set.
      */
-    public function test_get_random_question_summaries_with_limit_and_offset() {
+    public function test_get_random_question_summaries_with_limit_and_offset(): void {
         $this->resetAfterTest();
         $numberofquestions = 5;
         $includesubcategories = false;
@@ -373,10 +377,10 @@ class externallib_test extends externallib_advanced_testcase {
         $limit = 1;
         $offset = 0;
         $context = \context_system::instance();
-        list($category, $questions) = $this->create_category_and_questions($numberofquestions);
+        [$category, $questions] = $this->create_category_and_questions($numberofquestions);
 
         // Sort the questions by id to match the ordering of the result.
-        usort($questions, function($a, $b) {
+        usort($questions, function ($a, $b) {
             $aid = $a->id;
             $bid = $b->id;
 
@@ -422,7 +426,7 @@ class externallib_test extends externallib_advanced_testcase {
         $includesubcategories = false;
         $tagids = [];
         $context = \context_system::instance();
-        list($category, $questions) = $this->create_category_and_questions($numberofquestions);
+        [$category, $questions] = $this->create_category_and_questions($numberofquestions);
         $categorycontext = \context::instance_by_id($category->contextid);
 
         $generator->role_assign($roleid, $user->id, $systemcontext->id);

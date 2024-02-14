@@ -216,8 +216,6 @@ class column_manager_test extends advanced_testcase {
 
     /**
      * Test function get_columns in helper class, that proper data is returned.
-     *
-     * @covers ::get_columns
      */
     public function test_getcolumns_function(): void {
         $this->resetAfterTest(true);

@@ -29,7 +29,7 @@ require_once(__DIR__ . '/../test_helper_trait.php');
  * @author     Andrew Madden <andrewmadden@catalyst-au.net>
  * @copyright  2021 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \quizaccess_seb\external\validate_quiz_access
+ * @covers \quizaccess_seb\external\validate_quiz_keys
  */
 class validate_quiz_access_test extends \advanced_testcase {
     use \quizaccess_seb_test_helper_trait;

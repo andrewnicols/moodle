@@ -25,7 +25,7 @@ use mod_quiz\quiz_settings;
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->dirroot.'/group/lib.php');
+require_once($CFG->dirroot . '/group/lib.php');
 
 /**
  * Unit tests for quiz attempt overdue handling
@@ -35,18 +35,17 @@ require_once($CFG->dirroot.'/group/lib.php');
  * @copyright  2012 Matt Petro
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class attempts_test extends \advanced_testcase {
-
+final class attempts_test extends \advanced_testcase {
     /**
-     * Test the functions quiz_update_open_attempts(), get_list_of_overdue_attempts() and
-     * update_overdue_attempts().
+     * @covers \quiz_update_open_attempts
+     * @covers \mod_quiz\task\update_overdue_attempts
      */
     public function test_bulk_update_functions(): void {
         global $DB;
         $this->resetAfterTest();
         $this->setAdminUser();
 
-        // Setup course, user and groups
+        // Setup course, user and groups.
 
         $course = $this->getDataGenerator()->create_course();
         $user1 = $this->getDataGenerator()->create_user();
@@ -64,291 +63,501 @@ class attempts_test extends \advanced_testcase {
         /** @var mod_quiz_generator $quizgenerator */
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
 
-        // Basic quiz settings
+        // Basic quiz settings.
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id,
+            'userid' => $user1->id,
+            'state' => 'inprogress',
+            'timestart' => 100,
+            'timecheckstate' => 0,
+            'layout' => '',
+            'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 600, 'message' => 'Test1A', 'time1000state' => 'finished'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 1800]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id,
+            'userid' => $user1->id,
+            'state' => 'inprogress',
+            'timestart' => 100,
+            'timecheckstate' => 0,
+            'layout' => '',
+            'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 1800, 'message' => 'Test1B', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 0]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 0, 'message' => 'Test1C', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 0, 'timelimit' => 600]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 600, 'message' => 'Test1D', 'time1000state' => 'finished'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 0, 'timelimit' => 0]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 0, 'message' => 'Test1E', 'time1000state' => 'inprogress'];
 
-        // Group overrides
+        // Group overrides.
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 0]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => null]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => null]
+        );
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 0, 'message' => 'Test2A', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 0]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1100, 'timelimit' => null]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1100, 'timelimit' => null]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1100, 'timelimit' => 0, 'message' => 'Test2B', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(
-                ['course' => $course->id, 'timeclose' => 0, 'timelimit' => 600, 'overduehandling' => 'autoabandon']);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 700]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+            ['course' => $course->id, 'timeclose' => 0, 'timelimit' => 600, 'overduehandling' => 'autoabandon']
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 700]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 700, 'message' => 'Test2C', 'time1000state' => 'abandoned'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 0, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 500]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 500]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 500, 'message' => 'Test2D', 'time1000state' => 'finished'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 0, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 0]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 0]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 0, 'message' => 'Test2E', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 500, 'message' => 'Test2F', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 500, 'message' => 'Test2G', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group3->id, 'timeclose' => 1300, 'timelimit' => 500]); // User not in group.
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group3->id, 'timeclose' => 1300, 'timelimit' => 500]
+        ); // User not in group.
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 600, 'message' => 'Test2H', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 600, 'message' => 'Test2I', 'time1000state' => 'inprogress'];
 
-        // Multiple group overrides
+        // Multiple group overrides.
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 501]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1301, 'timelimit' => 500]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 501]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1301, 'timelimit' => 500]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 501, 'message' => 'Test3A', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 501, 'message' => 'Test3B', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1301, 'timelimit' => 500]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1300, 'timelimit' => 501]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
-        $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 501, 'message' => 'Test3C', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1301, 'timelimit' => 500]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1300, 'timelimit' => 501]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id,
+            'userid' => $user1->id,
+            'state' => 'inprogress',
+            'timestart' => 100,
+            'timecheckstate' => 0,
+            'layout' => '',
+            'uniqueid' => $this->usage_id($quiz),
+        ]);
+        $usertimes[$attemptid] = [
+            'timeclose' => 1301,
+            'timelimit' => 501,
+            'message' => 'Test3C',
+            'time1000state' => 'finished',
+        ];
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id,
+            'userid' => $user1->id,
+            'state' => 'inprogress',
+            'timestart' => 1000,
+            'timecheckstate' => 0,
+            'layout' => '',
+            'uniqueid' => $this->usage_id($quiz),
+            'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 501, 'message' => 'Test3D', 'time1000state' => 'inprogress'];
 
-        $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600,
-                'overduehandling' => 'autoabandon']);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1301, 'timelimit' => 500]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1300, 'timelimit' => 501]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group3->id, 'timeclose' => 1500, 'timelimit' => 1000]); // User not in group.
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $quiz = $quizgenerator->create_instance([
+            'course' => $course->id,
+            'timeclose' => 1200,
+            'timelimit' => 600,
+            'overduehandling' => 'autoabandon',
+        ]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1301, 'timelimit' => 500]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1300, 'timelimit' => 501]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group3->id, 'timeclose' => 1500, 'timelimit' => 1000]
+        ); // User not in group.
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id,
+            'userid' => $user1->id,
+            'state' => 'inprogress',
+            'timestart' => 100,
+            'timecheckstate' => 0,
+            'layout' => '',
+            'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 501, 'message' => 'Test3E', 'time1000state' => 'abandoned'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 501, 'message' => 'Test3F', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => null, 'timelimit' => 501]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => null, 'timelimit' => 501]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 501, 'message' => 'Test3G', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 501, 'message' => 'Test3H', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1301, 'timelimit' => null]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1301, 'timelimit' => null]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 500, 'message' => 'Test3I', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 500, 'message' => 'Test3J', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1301, 'timelimit' => 0]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1301, 'timelimit' => 0]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 0, 'message' => 'Test3K', 'time1000state' => 'inprogress'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1301, 'timelimit' => 0, 'message' => 'Test3L', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 0, 'timelimit' => 501]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 500]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 0, 'timelimit' => 501]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 501, 'message' => 'Test3M', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 501, 'message' => 'Test3N', 'time1000state' => 'inprogress'];
 
-        // User overrides
+        // User overrides.
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => 601]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => 601]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 601, 'message' => 'Test4A', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 601, 'message' => 'Test4B', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 0, 'timelimit' => 601]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 0, 'timelimit' => 601]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 601, 'message' => 'Test4C', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 601, 'message' => 'Test4D', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => 0]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => 0]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 0, 'message' => 'Test4E', 'time1000state' => 'inprogress'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 0, 'message' => 'Test4F', 'time1000state' => 'inprogress'];
 
-        $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600,
-                'overduehandling' => 'autoabandon']);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => null, 'timelimit' => 601]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $quiz = $quizgenerator->create_instance([
+            'course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600,
+            'overduehandling' => 'autoabandon',
+        ]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => null, 'timelimit' => 601]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 601, 'message' => 'Test4G', 'time1000state' => 'abandoned'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 601, 'message' => 'Test4H', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 700]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => null, 'timelimit' => 601]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => null, 'timelimit' => 700]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => null, 'timelimit' => 601]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 601, 'message' => 'Test4I', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 601, 'message' => 'Test4J', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => null]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => null]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 700, 'message' => 'Test4K', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 700, 'message' => 'Test4L', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => null]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => null]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => null]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => $user1->id, 'timeclose' => 1201, 'timelimit' => null]
+        );
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 600, 'message' => 'Test4M', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1201, 'timelimit' => 600, 'message' => 'Test4N', 'time1000state' => 'inprogress'];
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]);
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'userid' => 0, 'timeclose' => 1201, 'timelimit' => 601]); // Not user.
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => 700]
+        );
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'userid' => 0, 'timeclose' => 1201, 'timelimit' => 601]
+        ); // Not user.
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 700, 'message' => 'Test4O', 'time1000state' => 'finished'];
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
+            'timestart' => 1000, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), 'attempt' => 1,
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1300, 'timelimit' => 700, 'message' => 'Test4P', 'time1000state' => 'inprogress'];
 
-        // Attempt state overdue
+        // Attempt state overdue.
 
-        $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600,
-                'overduehandling' => 'graceperiod', 'graceperiod' => 250]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'overdue',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $quiz = $quizgenerator->create_instance([
+            'course' => $course->id, 'timeclose' => 1200, 'timelimit' => 600,
+            'overduehandling' => 'graceperiod', 'graceperiod' => 250,
+        ]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'overdue',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 1200, 'timelimit' => 600, 'message' => 'Test5A', 'time1000state' => 'overdue'];
 
-        $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 0, 'timelimit' => 600,
-                'overduehandling' => 'graceperiod', 'graceperiod' => 250]);
-        $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'overdue',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+        $quiz = $quizgenerator->create_instance([
+            'course' => $course->id, 'timeclose' => 0, 'timelimit' => 600,
+            'overduehandling' => 'graceperiod', 'graceperiod' => 250,
+        ]);
+        $attemptid = $DB->insert_record('quiz_attempts', [
+            'quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'overdue',
+            'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz),
+        ]);
         $usertimes[$attemptid] = ['timeclose' => 0, 'timelimit' => 600, 'message' => 'Test5B', 'time1000state' => 'overdue'];
 
         // Compute expected end time for each attempt.
@@ -364,9 +573,7 @@ class attempts_test extends \advanced_testcase {
             }
         }
 
-        //
         // Test quiz_update_open_attempts().
-        //
 
         quiz_update_open_attempts(['courseid' => $course->id]);
         foreach ($usertimes as $attemptid => $times) {
@@ -384,13 +591,11 @@ class attempts_test extends \advanced_testcase {
             }
         }
 
-        //
         // Test get_list_of_overdue_attempts().
-        //
 
         $overduehander = new update_overdue_attempts();
 
-        $attempts = $overduehander->get_list_of_overdue_attempts(100000); // way in the future
+        $attempts = $overduehander->get_list_of_overdue_attempts(100000); // Way in the future.
         $count = 0;
         foreach ($attempts as $attempt) {
             $this->assertTrue(isset($usertimes[$attempt->id]));
@@ -398,12 +603,11 @@ class attempts_test extends \advanced_testcase {
             $this->assertEquals($times['timeclose'], $attempt->usertimeclose, $times['message']);
             $this->assertEquals($times['timelimit'], $attempt->usertimelimit, $times['message']);
             $count++;
-
         }
         $attempts->close();
         $this->assertEquals($DB->count_records_select('quiz_attempts', 'timecheckstate IS NOT NULL'), $count);
 
-        $attempts = $overduehander->get_list_of_overdue_attempts(0); // before all attempts
+        $attempts = $overduehander->get_list_of_overdue_attempts(0); // Before all attempts.
         $count = 0;
         foreach ($attempts as $attempt) {
             $count++;
@@ -411,14 +615,15 @@ class attempts_test extends \advanced_testcase {
         $attempts->close();
         $this->assertEquals(0, $count);
 
-        //
         // Test update_overdue_attempts().
-        //
-
         [$count, $quizcount] = $overduehander->update_all_overdue_attempts(1000, 940);
 
-        $attempts = $DB->get_records('quiz_attempts', null, 'quiz, userid, attempt',
-                'id, quiz, userid, attempt, state, timestart, timefinish, timecheckstate');
+        $attempts = $DB->get_records(
+            'quiz_attempts',
+            null,
+            'quiz, userid, attempt',
+            'id, quiz, userid, attempt, state, timestart, timefinish, timecheckstate'
+        );
         foreach ($attempts as $attempt) {
             $this->assertTrue(isset($usertimes[$attempt->id]));
             $times = $usertimes[$attempt->id];
@@ -457,8 +662,10 @@ class attempts_test extends \advanced_testcase {
      * @return int question usage id.
      */
     protected function usage_id(\stdClass $quiz): int {
-        $quba = question_engine::make_questions_usage_by_activity('mod_quiz',
-                \context_module::instance($quiz->cmid));
+        $quba = question_engine::make_questions_usage_by_activity(
+            'mod_quiz',
+            \context_module::instance($quiz->cmid)
+        );
         $quba->set_preferred_behaviour('deferredfeedback');
         question_engine::save_questions_usage_by_activity($quba);
         return $quba->get_id();
@@ -474,7 +681,7 @@ class attempts_test extends \advanced_testcase {
 
         $this->setAdminUser();
 
-        // Setup course, user and groups
+        // Setup course, user and groups.
 
         $course = $this->getDataGenerator()->create_course();
         $user1 = $this->getDataGenerator()->create_user();
@@ -491,46 +698,50 @@ class attempts_test extends \advanced_testcase {
 
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'timeclose' => 1200, 'timelimit' => 0]);
 
-        // add a group1 override
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => null]);
+        // Add a group1 override.
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group1->id, 'timeclose' => 1300, 'timelimit' => null]
+        );
 
-        // add an attempt
+        // Add an attempt.
         $attemptid = $DB->insert_record('quiz_attempts', ['quiz' => $quiz->id, 'userid' => $user1->id, 'state' => 'inprogress',
-                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz)]);
+                'timestart' => 100, 'timecheckstate' => 0, 'layout' => '', 'uniqueid' => $this->usage_id($quiz), ]);
 
-        // update timecheckstate
+        // Update timecheckstate.
         quiz_update_open_attempts(['quizid' => $quiz->id]);
         $this->assertEquals(1300, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
 
-        // remove from group
+        // Remove from group.
         $this->assertTrue(groups_remove_member($group1, $user1));
         $this->assertEquals(1200, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
 
-        // add back to group
+        // Add back to group.
         $this->assertTrue(groups_add_member($group1, $user1));
         $this->assertEquals(1300, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
 
-        // delete group
+        // Delete group.
         groups_delete_group($group1);
         $this->assertEquals(1200, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
         $this->assertEquals(0, $DB->count_records('quiz_overrides', ['quiz' => $quiz->id]));
 
-        // add a group2 override
-        $DB->insert_record('quiz_overrides',
-                ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1400, 'timelimit' => null]);
+        // Add a group2 override.
+        $DB->insert_record(
+            'quiz_overrides',
+            ['quiz' => $quiz->id, 'groupid' => $group2->id, 'timeclose' => 1400, 'timelimit' => null]
+        );
         quiz_update_open_attempts(['quizid' => $quiz->id]);
         $this->assertEquals(1400, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
 
-        // delete user1 from all groups
+        // Delete user1 from all groups.
         groups_delete_group_members($course->id, $user1->id);
         $this->assertEquals(1200, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
 
-        // add back to group2
+        // Add back to group2.
         $this->assertTrue(groups_add_member($group2, $user1));
         $this->assertEquals(1400, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
 
-        // delete everyone from all groups
+        // Delete everyone from all groups.
         groups_delete_group_members($course->id);
         $this->assertEquals(1200, $DB->get_field('quiz_attempts', 'timecheckstate', ['id' => $attemptid]));
     }
@@ -552,7 +763,7 @@ class attempts_test extends \advanced_testcase {
         /** @var core_question_generator $questiongenerator */
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $quiz = $quizgenerator->create_instance(['course' => $course->id, 'questionsperpage' => 0, 'grade' => 100.0,
-            'sumgrades' => 2]);
+            'sumgrades' => 2, ]);
         // Create questions.
         $cat = $questiongenerator->create_question_category();
         $saq = $questiongenerator->create_question('shortanswer', null, ['category' => $cat->id]);

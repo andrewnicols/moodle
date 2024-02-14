@@ -41,9 +41,9 @@ require_once(__DIR__ . '/../../engine/tests/helpers.php');
  * @package    core_question
  * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \core_question\privacy\provider
  */
-class provider_test extends \core_privacy\tests\provider_testcase {
-
+final class provider_test extends \core_privacy\tests\provider_testcase {
     // Include the privacy helper which has assertions on it.
     use \core_question_privacy_helper;
 
@@ -390,17 +390,17 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         // Q4 - Created by the other user, Modified by the other user.
         // Q5 - Created by the UUT, Modified by the UUT, but in a different context.
         $this->setUser($user);
-        $q1 = $questiongenerator->create_question('shortanswer', null, array('category' => $cat->id));
-        $q2 = $questiongenerator->create_question('shortanswer', null, array('category' => $cat->id));
+        $q1 = $questiongenerator->create_question('shortanswer', null, ['category' => $cat->id]);
+        $q2 = $questiongenerator->create_question('shortanswer', null, ['category' => $cat->id]);
 
         $this->setUser($otheruser);
         $questiongenerator->update_question($q2);
-        $q3 = $questiongenerator->create_question('shortanswer', null, array('category' => $cat->id));
-        $q4 = $questiongenerator->create_question('shortanswer', null, array('category' => $cat->id));
+        $q3 = $questiongenerator->create_question('shortanswer', null, ['category' => $cat->id]);
+        $q4 = $questiongenerator->create_question('shortanswer', null, ['category' => $cat->id]);
 
         $this->setUser($user);
         $questiongenerator->update_question($q3);
-        $q5 = $questiongenerator->create_question('shortanswer', null, array('category' => $othercat->id));
+        $q5 = $questiongenerator->create_question('shortanswer', null, ['category' => $othercat->id]);
 
         // Find out how many questions are in the question bank to start with.
         $questioncount = $DB->count_records('question');
@@ -508,37 +508,46 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->setUser($user1);
         $questiongenerator->setup_course_and_questions();
 
-        $approveduserlist = new \core_privacy\local\request\approved_userlist($course1context, 'core_question',
-                [$user1->id, $user2->id]);
+        $approveduserlist = new \core_privacy\local\request\approved_userlist(
+            $course1context,
+            'core_question',
+            [$user1->id, $user2->id]
+        );
         provider::delete_data_for_users($approveduserlist);
 
         // Now, there should be no question related to user1 or user2 in course1.
-        $this->assertEquals(0,
-                $DB->count_records_sql("SELECT COUNT(q.id)
+        $this->assertEquals(
+            0,
+            $DB->count_records_sql(
+                "SELECT COUNT(q.id)
                                           FROM {question} q
                                           JOIN {question_versions} qv ON qv.questionid = q.id
                                           JOIN {question_bank_entries} qbe ON qbe.id = qv.questionbankentryid
                                           JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid
                                          WHERE qc.contextid = ?
                                            AND (q.createdby = ? OR q.modifiedby = ? OR q.createdby = ? OR q.modifiedby = ?)",
-                        [$course1context->id, $user1->id, $user1->id, $user2->id, $user2->id])
+                [$course1context->id, $user1->id, $user1->id, $user2->id, $user2->id]
+            )
         );
 
         // User3 data in course1 should not change.
-        $this->assertEquals(2,
-                $DB->count_records_sql("SELECT COUNT(q.id)
+        $this->assertEquals(
+            2,
+            $DB->count_records_sql(
+                "SELECT COUNT(q.id)
                                           FROM {question} q
                                           JOIN {question_versions} qv ON qv.questionid = q.id
                                           JOIN {question_bank_entries} qbe ON qbe.id = qv.questionbankentryid
                                           JOIN {question_categories} qc ON qc.id = qbe.questioncategoryid
                                          WHERE qc.contextid = ? AND (q.createdby = ? OR q.modifiedby = ?)",
-                        [$course1context->id, $user3->id, $user3->id])
+                [$course1context->id, $user3->id, $user3->id]
+            )
         );
 
         // User1 has authored 2 questions in another course.
         $this->assertEquals(
-                2,
-                $DB->count_records_select('question', "createdby = ? OR modifiedby = ?", [$user1->id, $user1->id])
+            2,
+            $DB->count_records_select('question', "createdby = ? OR modifiedby = ?", [$user1->id, $user1->id])
         );
     }
 }

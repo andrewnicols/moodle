@@ -37,7 +37,7 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @copyright  2008 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-class lib_test extends \advanced_testcase {
+final class lib_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
 
     public function test_quiz_has_grades(): void {
@@ -381,7 +381,7 @@ class lib_test extends \advanced_testcase {
             'quiz' => $quiz->id,
             'groupid' => $group1->id,
             'timeopen' => $now,
-            'timeclose' => $now + 20
+            'timeclose' => $now + 20,
         ];
         $DB->insert_record('quiz_overrides', $override1);
 
@@ -389,7 +389,7 @@ class lib_test extends \advanced_testcase {
             'quiz' => $quiz->id,
             'groupid' => $group2->id,
             'timeopen' => $now - 10,
-            'timeclose' => $now + 10
+            'timeclose' => $now + 10,
         ];
         $DB->insert_record('quiz_overrides', $override2);
 
@@ -417,8 +417,11 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'timeopen' => time() - DAYSECS, 'timeclose' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'timeopen' => time() - DAYSECS,
+            'timeclose' => time() + DAYSECS,
+        ]);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_OPEN);
@@ -448,8 +451,11 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'timeopen' => time() - DAYSECS, 'timeclose' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'timeopen' => time() - DAYSECS,
+             'timeclose' => time() + DAYSECS,
+        ]);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_OPEN);
@@ -477,8 +483,10 @@ class lib_test extends \advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'timeclose' => time() - DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'timeclose' => time() - DAYSECS,
+        ]);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_CLOSE);
@@ -502,8 +510,10 @@ class lib_test extends \advanced_testcase {
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'timeclose' => time() - DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'timeclose' => time() - DAYSECS,
+        ]);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_CLOSE);
@@ -525,8 +535,10 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'timeopen' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'timeopen' => time() + DAYSECS,
+        ]);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_CLOSE);
@@ -556,8 +568,10 @@ class lib_test extends \advanced_testcase {
         // Create a student and enrol into the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'timeopen' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'timeopen' => time() + DAYSECS,
+        ]);
 
         // Create a calendar event.
         $event = $this->create_action_event($course->id, $quiz->id, QUIZ_EVENT_TYPE_CLOSE);
@@ -665,8 +679,10 @@ class lib_test extends \advanced_testcase {
         $this->assertTrue($this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id));
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'sumgrades' => 1]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'sumgrades' => 1,
+        ]);
 
         // Add a question to the quiz.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -720,8 +736,10 @@ class lib_test extends \advanced_testcase {
         $this->assertTrue($this->getDataGenerator()->enrol_user($student->id, $course->id, $studentrole->id));
 
         // Create a quiz.
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id,
-            'sumgrades' => 1]);
+        $quiz = $this->getDataGenerator()->create_module('quiz', [
+            'course' => $course->id,
+            'sumgrades' => 1,
+        ]);
 
         // Add a question to the quiz.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -761,15 +779,21 @@ class lib_test extends \advanced_testcase {
 
         // Create the activity.
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id],
-            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module(
+            'quiz',
+            ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]
+        );
 
         // Get some additional data.
         $cm = get_coursemodule_from_instance('quiz', $quiz->id);
 
         // Create a calendar event.
-        $event = $this->create_action_event($course->id, $quiz->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+        $event = $this->create_action_event(
+            $course->id,
+            $quiz->id,
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
 
         // Mark the activity as completed.
         $completion = new \completion_info($course);
@@ -792,8 +816,11 @@ class lib_test extends \advanced_testcase {
 
         // Create the activity.
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id],
-            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]);
+        $quiz = $this->getDataGenerator()->create_module(
+            'quiz',
+            ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1, 'completionexpected' => time() + DAYSECS]
+        );
 
         // Enrol a student in the course.
         $student = $this->getDataGenerator()->create_and_enrol($course, 'student');
@@ -802,8 +829,11 @@ class lib_test extends \advanced_testcase {
         $cm = get_coursemodule_from_instance('quiz', $quiz->id);
 
         // Create a calendar event.
-        $event = $this->create_action_event($course->id, $quiz->id,
-            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED);
+        $event = $this->create_action_event(
+            $course->id,
+            $quiz->id,
+            \core_completion\api::COMPLETION_EVENT_TYPE_DATE_COMPLETION_EXPECTED
+        );
 
         // Mark the activity as completed for the student.
         $completion = new \completion_info($course);
@@ -861,7 +891,7 @@ class lib_test extends \advanced_testcase {
         $quiz2 = $this->getDataGenerator()->create_module('quiz', [
             'course' => $course->id,
             'completion' => 2,
-            'completionusegrade' => 0
+            'completionusegrade' => 0,
         ]);
         $cm1 = \cm_info::create(get_coursemodule_from_instance('quiz', $quiz1->id));
         $cm2 = \cm_info::create(get_coursemodule_from_instance('quiz', $quiz2->id));
@@ -870,9 +900,11 @@ class lib_test extends \advanced_testcase {
         // This type of input would occur when checking the default completion rules for an activity type, where we don't have
         // any access to cm_info, rather the input is a stdClass containing completion and customdata attributes, just like cm_info.
         $moddefaults = new \stdClass();
-        $moddefaults->customdata = ['customcompletionrules' => [
-            'completionattemptsexhausted' => 1,
-        ]];
+        $moddefaults->customdata = [
+            'customcompletionrules' => [
+                'completionattemptsexhausted' => 1,
+            ],
+        ];
         $moddefaults->completion = 2;
 
         $activeruledescriptions = [

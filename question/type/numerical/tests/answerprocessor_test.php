@@ -49,7 +49,6 @@ class answerprocessor_test extends \advanced_testcase {
     /**
      * Test the parse_response function.
      *
-     * @covers ::parse_response
      * @dataProvider parse_response_provider
      * @param array $expected
      * @param mixed $args

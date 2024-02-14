@@ -28,8 +28,7 @@ require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
  * @copyright  2017 onwards Ankit Agarwal <ankit.agrr@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_date_test extends \restore_date_testcase {
-
+final class restore_date_test extends \restore_date_testcase {
     /**
      * Test restore dates.
      */
@@ -37,9 +36,16 @@ class restore_date_test extends \restore_date_testcase {
         global $DB, $USER;
 
         // Create quiz data.
-        $record = ['timeopen' => 100, 'timeclose' => 100, 'timemodified' => 100, 'tiemcreated' => 100, 'questionsperpage' => 0,
-            'grade' => 100.0, 'sumgrades' => 2];
-        list($course, $quiz) = $this->create_course_and_module('quiz', $record);
+        $record = [
+            'timeopen' => 100,
+            'timeclose' => 100,
+            'timemodified' => 100,
+            'tiemcreated' => 100,
+            'questionsperpage' => 0,
+            'grade' => 100.0,
+            'sumgrades' => 2,
+        ];
+        [$course, $quiz] = $this->create_course_and_module('quiz', $record);
 
         // Create questions.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
@@ -72,7 +78,7 @@ class restore_date_test extends \restore_date_testcase {
             'userid' => $USER->id,
             'sortorder' => 1,
             'timeopen' => 100,
-            'timeclose' => 200
+            'timeclose' => 200,
         ];
         $DB->insert_record('quiz_overrides', $override);
 

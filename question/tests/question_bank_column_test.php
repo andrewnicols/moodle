@@ -32,9 +32,9 @@ require_once($CFG->dirroot . '/question/tests/fixtures/testable_core_question_co
  * @package core_question
  * @copyright 2018 Huong Nguyen <huongnv13@gmail.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \core_question\local\bank\column_base
  */
-class question_bank_column_test extends \advanced_testcase {
-
+final class question_bank_column_test extends \advanced_testcase {
     /**
      * Test function display_header multiple sorts with no custom tooltips.
      *
@@ -43,21 +43,21 @@ class question_bank_column_test extends \advanced_testcase {
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $questionbank = new view(
-                new question_edit_contexts(\context_course::instance($course->id)),
-                new \moodle_url('/'),
-                $course
+            new question_edit_contexts(\context_course::instance($course->id)),
+            new \moodle_url('/'),
+            $course
         );
         $columnbase = new testable_core_question_column($questionbank);
 
         $sortable = [
                 'apple' => [
                         'field' => 'apple',
-                        'title' => 'Apple'
+                        'title' => 'Apple',
                 ],
                 'banana' => [
                         'field' => 'banana',
-                        'title' => 'Banana'
-                ]
+                        'title' => 'Banana',
+                ],
         ];
         $columnbase->set_sortable($sortable);
 
@@ -77,9 +77,9 @@ class question_bank_column_test extends \advanced_testcase {
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $questionbank = new view(
-                new question_edit_contexts(\context_course::instance($course->id)),
-                new \moodle_url('/'),
-                $course
+            new question_edit_contexts(\context_course::instance($course->id)),
+            new \moodle_url('/'),
+            $course
         );
         $columnbase = new testable_core_question_column($questionbank);
 
@@ -87,13 +87,13 @@ class question_bank_column_test extends \advanced_testcase {
                 'apple' => [
                         'field' => 'apple',
                         'title' => 'Apple',
-                        'tip' => 'Apple Tooltips'
+                        'tip' => 'Apple Tooltips',
                 ],
                 'banana' => [
                         'field' => 'banana',
                         'title' => 'Banana',
-                        'tip' => 'Banana Tooltips'
-                ]
+                        'tip' => 'Banana Tooltips',
+                ],
         ];
         $columnbase->set_sortable($sortable);
 

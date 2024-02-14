@@ -55,7 +55,7 @@ class testable_qformat extends qformat_default {
  * @copyright  2009 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class importexport_test extends \advanced_testcase {
+final class importexport_test extends \advanced_testcase {
     public function test_assemble_category_path(): void {
         $format = new testable_qformat();
         $pathsections = [
@@ -64,10 +64,12 @@ class importexport_test extends \advanced_testcase {
             "Tricky things like / // and so on",
             'Category name ending in /',
             '/ and one that starts with one',
-            '<span lang="en" class="multilang">Matematically</span> <span lang="sv" class="multilang">Matematiskt (svenska)</span>'
+            '<span lang="en" class="multilang">Matematically</span> <span lang="sv" class="multilang">Matematiskt (svenska)</span>',
         ];
-        $this->assertEquals('$course$/Tim\'s questions/Tricky things like // //// and so on/Category name ending in // / // and one that starts with one/<span lang="en" class="multilang">Matematically<//span> <span lang="sv" class="multilang">Matematiskt (svenska)<//span>',
-                $format->assemble_category_path($pathsections));
+        $this->assertEquals(
+            '$course$/Tim\'s questions/Tricky things like // //// and so on/Category name ending in // / // and one that starts with one/<span lang="en" class="multilang">Matematically<//span> <span lang="sv" class="multilang">Matematiskt (svenska)<//span>',
+            $format->assemble_category_path($pathsections)
+        );
     }
 
     public function test_split_category_path(): void {
@@ -79,7 +81,7 @@ class importexport_test extends \advanced_testcase {
                     "Tricky things like / // and so on",
                     'Category name ending in /',
                     '/ and one that starts with one',
-                    '<span lang="en" class="multilang">Matematically</span> <span lang="sv" class="multilang">Matematiskt (svenska)</span>'
+                    '<span lang="en" class="multilang">Matematically</span> <span lang="sv" class="multilang">Matematiskt (svenska)</span>',
                 ], $format->split_category_path($path));
     }
 
@@ -133,8 +135,10 @@ class importexport_test extends \advanced_testcase {
         $this->assertEquals($text, $format->create_default_question_name($text, 'Default'));
 
         $text = 'Evil <script type="text/javascrip">alert("You have been hacked!");</script>';
-        $this->assertEquals('Evil alert("You have been hacked!");',
-                $format->create_default_question_name($text, 'Default'));
+        $this->assertEquals(
+            'Evil alert("You have been hacked!");',
+            $format->create_default_question_name($text, 'Default')
+        );
 
         $text = 'This is a very long question text. It goes on and on and on. ' .
                 'I wonder if it will ever stop. The question name field in the database is only ' .

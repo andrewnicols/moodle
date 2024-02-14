@@ -18,9 +18,9 @@
 
 require_once(__DIR__ . '/behat_question_base.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode;
-use Behat\Mink\Exception\ExpectationException as ExpectationException;
-use Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException;
+use Behat\Gherkin\Node\TableNode;
+use Behat\Mink\Exception\ExpectationException;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 /**
  * Steps definitions related with the question bank management.
@@ -31,7 +31,6 @@ use Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_core_question extends behat_question_base {
-
     /**
      * Convert page names to URLs for steps like 'When I am on the "[page name]" page'.
      *
@@ -68,30 +67,42 @@ class behat_core_question extends behat_question_base {
     protected function resolve_page_instance_url(string $type, string $identifier): moodle_url {
         switch (strtolower($type)) {
             case 'course question bank':
-                return new moodle_url('/question/edit.php',
-                        ['courseid' => $this->get_course_id($identifier)]);
+                return new moodle_url(
+                    '/question/edit.php',
+                    ['courseid' => $this->get_course_id($identifier)]
+                );
 
             case 'course question categories':
-                return new moodle_url('/question/bank/managecategories/category.php',
-                        ['courseid' => $this->get_course_id($identifier)]);
+                return new moodle_url(
+                    '/question/bank/managecategories/category.php',
+                    ['courseid' => $this->get_course_id($identifier)]
+                );
 
             case 'course question import':
-                return new moodle_url('/question/bank/importquestions/import.php',
-                        ['courseid' => $this->get_course_id($identifier)]);
+                return new moodle_url(
+                    '/question/bank/importquestions/import.php',
+                    ['courseid' => $this->get_course_id($identifier)]
+                );
 
             case 'course question export':
-                return new moodle_url('/question/bank/exportquestions/export.php',
-                        ['courseid' => $this->get_course_id($identifier)]);
+                return new moodle_url(
+                    '/question/bank/exportquestions/export.php',
+                    ['courseid' => $this->get_course_id($identifier)]
+                );
 
             case 'preview':
                 [$questionid, $otheridtype, $otherid] = $this->find_question_by_name($identifier);
-                return new moodle_url('/question/bank/previewquestion/preview.php',
-                        ['id' => $questionid, $otheridtype => $otherid]);
+                return new moodle_url(
+                    '/question/bank/previewquestion/preview.php',
+                    ['id' => $questionid, $otheridtype => $otherid]
+                );
 
             case 'edit':
                 [$questionid, $otheridtype, $otherid] = $this->find_question_by_name($identifier);
-                return new moodle_url('/question/bank/editquestion/question.php',
-                        ['id' => $questionid, $otheridtype => $otherid]);
+                return new moodle_url(
+                    '/question/bank/editquestion/question.php',
+                    ['id' => $questionid, $otheridtype => $otherid]
+                );
 
             default:
                 throw new Exception('Unrecognised core_question page type "' . $type . '."');
@@ -181,7 +192,7 @@ class behat_core_question extends behat_question_base {
                 'table_row',
             ]);
             $this->execute('behat_action_menu::i_choose_in_the_open_action_menu', [
-                $action
+                $action,
             ]);
         } else {
             // This method doesn't open the menu correctly when Javascript is running.
@@ -234,8 +245,10 @@ class behat_core_question extends behat_question_base {
      */
     public function i_should_see_question_bulk_action($action) {
         // Check if its visible.
-        $this->execute("behat_general::should_be_visible",
-            ["#bulkactionsui-container input[name='$action']", "css_element"]);
+        $this->execute(
+            "behat_general::should_be_visible",
+            ["#bulkactionsui-container input[name='$action']", "css_element"]
+        );
     }
 
     /**
@@ -246,8 +259,10 @@ class behat_core_question extends behat_question_base {
      */
     public function i_should_not_see_question_bulk_action($action) {
         // Check if its visible.
-        $this->execute("behat_general::should_not_be_visible",
-            ["#bulkactionsui-container input[name='$action']", "css_element"]);
+        $this->execute(
+            "behat_general::should_not_be_visible",
+            ["#bulkactionsui-container input[name='$action']", "css_element"]
+        );
     }
 
     /**
@@ -258,8 +273,10 @@ class behat_core_question extends behat_question_base {
      */
     public function i_click_on_question_bulk_action($action) {
         // Click the bulk action.
-        $this->execute("behat_general::i_click_on",
-            ["#bulkactionsui-container input[name='$action']", "css_element"]);
+        $this->execute(
+            "behat_general::i_click_on",
+            ["#bulkactionsui-container input[name='$action']", "css_element"]
+        );
     }
 
     /**
@@ -321,15 +338,17 @@ class behat_core_question extends behat_question_base {
      * @param string $filtertype The filter we are adding
      */
     public function i_add_question_bank_filter(string $filtertype) {
-        $filter = $this->getSession()->getPage()->find('css',
-                '[data-filterregion=filter] [data-field-title="' . $filtertype . '"]');
+        $filter = $this->getSession()->getPage()->find(
+            'css',
+            '[data-filterregion=filter] [data-field-title="' . $filtertype . '"]'
+        );
         if ($filter === null) {
             $this->execute('behat_forms::press_button', [get_string('addcondition')]);
             $this->execute('behat_forms::i_set_the_field_in_container_to', [
                     "type",
                     "[data-filterregion=filter]:last-child fieldset",
                     "css_element",
-                    $filtertype
+                    $filtertype,
             ]);
         }
     }
@@ -354,7 +373,7 @@ class behat_core_question extends behat_question_base {
         // Set the filter value.
         $this->execute('behat_forms::i_set_the_field_to', [
             $filtertype,
-            $value
+            $value,
         ]);
 
         // Apply filters.

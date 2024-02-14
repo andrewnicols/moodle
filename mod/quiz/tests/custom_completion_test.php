@@ -40,8 +40,7 @@ require_once($CFG->libdir . '/completionlib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mod_quiz\completion\custom_completion
  */
-class custom_completion_test extends advanced_testcase {
-
+final class custom_completion_test extends advanced_testcase {
     /**
      * Setup function for all tests.
      *
@@ -74,7 +73,7 @@ class custom_completion_test extends advanced_testcase {
             'grade' => 100.0,
             'questionsperpage' => 0,
             'sumgrades' => $sumgrades,
-            'completion' => COMPLETION_TRACKING_AUTOMATIC
+            'completion' => COMPLETION_TRACKING_AUTOMATIC,
         ], $completionoptions['quizoptions']);
         $quiz = $quizgenerator->create_instance($data);
         $litecm = get_coursemodule_from_id('quiz', $quiz->cmid);
@@ -94,15 +93,20 @@ class custom_completion_test extends advanced_testcase {
         }
 
         // Set grade to pass.
-        $item = grade_item::fetch(['courseid' => $course->id, 'itemtype' => 'mod', 'itemmodule' => 'quiz',
-            'iteminstance' => $quiz->id, 'outcomeid' => null]);
+        $item = grade_item::fetch([
+            'courseid' => $course->id,
+            'itemtype' => 'mod',
+            'itemmodule' => 'quiz',
+            'iteminstance' => $quiz->id,
+            'outcomeid' => null,
+        ]);
         $item->gradepass = 80;
         $item->update();
         return [
             $students,
             $quiz,
             $cm,
-            $litecm
+            $litecm,
         ];
     }
 
@@ -120,8 +124,14 @@ class custom_completion_test extends advanced_testcase {
         $quba->set_preferred_behaviour($quizobj->get_quiz()->preferredbehaviour);
 
         $timenow = time();
-        $attempt = quiz_create_attempt($quizobj, $attemptoptions['attemptnumber'], false, $timenow, false,
-            $attemptoptions['student']->id);
+        $attempt = quiz_create_attempt(
+            $quizobj,
+            $attemptoptions['attemptnumber'],
+            false,
+            $timenow,
+            false,
+            $attemptoptions['student']->id
+        );
         quiz_start_new_attempt($quizobj, $quba, $attempt, $attemptoptions['attemptnumber'], $timenow);
         quiz_attempt_save_started($quizobj, $quba, $attempt);
 
@@ -140,23 +150,23 @@ class custom_completion_test extends advanced_testcase {
      * The quiz requires a passing grade to be completed.
      */
     public function test_completionpass(): void {
-        list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
+        [$students, $quiz, $cm] = $this->setup_quiz_for_testing_completion([
             'nbstudents' => 2,
             'qtype' => 'numerical',
             'quizoptions' => [
                 'completionusegrade' => 1,
-                'completionpassgrade' => 1
-            ]
+                'completionpassgrade' => 1,
+            ],
         ]);
 
-        list($passstudent, $failstudent) = $students;
+        [$passstudent, $failstudent] = $students;
 
         // Do a passing attempt.
         $this->do_attempt_quiz([
             'quiz' => $quiz,
             'student' => $passstudent,
             'attemptnumber' => 1,
-            'tosubmit' => [1 => ['answer' => '3.14']]
+            'tosubmit' => [1 => ['answer' => '3.14']],
         ]);
 
         $completioninfo = new \completion_info($cm->get_course());
@@ -174,7 +184,7 @@ class custom_completion_test extends advanced_testcase {
             'quiz' => $quiz,
             'student' => $failstudent,
             'attemptnumber' => 1,
-            'tosubmit' => [1 => ['answer' => '0']]
+            'tosubmit' => [1 => ['answer' => '0']],
         ]);
 
         $completiondetails = new cm_completion_details($completioninfo, $cm, (int) $failstudent->id);
@@ -192,25 +202,25 @@ class custom_completion_test extends advanced_testcase {
      * To be completed, this quiz requires either a passing grade or for all attempts to be used up.
      */
     public function test_completionexhausted(): void {
-        list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
+        [$students, $quiz, $cm] = $this->setup_quiz_for_testing_completion([
             'nbstudents' => 2,
             'qtype' => 'numerical',
             'quizoptions' => [
                 'attempts' => 2,
                 'completionusegrade' => 1,
                 'completionpassgrade' => 1,
-                'completionattemptsexhausted' => 1
-            ]
+                'completionattemptsexhausted' => 1,
+            ],
         ]);
 
-        list($passstudent, $exhauststudent) = $students;
+        [$passstudent, $exhauststudent] = $students;
 
         // Start a passing attempt.
         $this->do_attempt_quiz([
             'quiz' => $quiz,
             'student' => $passstudent,
             'attemptnumber' => 1,
-            'tosubmit' => [1 => ['answer' => '3.14']]
+            'tosubmit' => [1 => ['answer' => '3.14']],
         ]);
 
         $completioninfo = new \completion_info($cm->get_course());
@@ -230,7 +240,7 @@ class custom_completion_test extends advanced_testcase {
             'quiz' => $quiz,
             'student' => $exhauststudent,
             'attemptnumber' => 1,
-            'tosubmit' => [1 => ['answer' => '0']]
+            'tosubmit' => [1 => ['answer' => '0']],
         ]);
 
         // Check the results. Quiz is not completed by $exhauststudent yet because of failing grade and of remaining attempts.
@@ -248,7 +258,7 @@ class custom_completion_test extends advanced_testcase {
             'quiz' => $quiz,
             'student' => $exhauststudent,
             'attemptnumber' => 2,
-            'tosubmit' => [1 => ['answer' => '0']]
+            'tosubmit' => [1 => ['answer' => '0']],
         ]);
 
         // Check the results. Quiz is completed by $exhauststudent because there are no remaining attempts.
@@ -259,7 +269,6 @@ class custom_completion_test extends advanced_testcase {
             'Receive a pass grade or complete all available attempts',
             $customcompletion->get_custom_rule_descriptions()['completionpassorattemptsexhausted']
         );
-
     }
 
     /**
@@ -267,23 +276,23 @@ class custom_completion_test extends advanced_testcase {
      * To be completed, this quiz requires a minimum number of attempts.
      */
     public function test_completionminattempts(): void {
-        list($students, $quiz, $cm) = $this->setup_quiz_for_testing_completion([
+        [$students, $quiz, $cm] = $this->setup_quiz_for_testing_completion([
             'nbstudents' => 1,
             'qtype' => 'essay',
             'quizoptions' => [
                 'completionminattemptsenabled' => 1,
-                'completionminattempts' => 2
-            ]
+                'completionminattempts' => 2,
+            ],
         ]);
 
-        list($student) = $students;
+        [$student] = $students;
 
         // Do a first attempt.
         $this->do_attempt_quiz([
             'quiz' => $quiz,
             'student' => $student,
             'attemptnumber' => 1,
-            'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']]
+            'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']],
         ]);
 
         // Check the results. Quiz is not completed yet because only one attempt was done.
@@ -300,7 +309,7 @@ class custom_completion_test extends advanced_testcase {
             'quiz' => $quiz,
             'student' => $student,
             'attemptnumber' => 2,
-            'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']]
+            'tosubmit' => [1 => ['answer' => 'Lorem ipsum.', 'answerformat' => '1']],
         ]);
 
         // Check the results. Quiz is completed by $student because two attempts were done.
@@ -331,7 +340,7 @@ class custom_completion_test extends advanced_testcase {
     public function test_update_moduleinfo(): void {
         $this->setAdminUser();
         // We need lite cm object not a full cm because update_moduleinfo is not allow some properties to be updated.
-        list($students, $quiz, $cm, $litecm) = $this->setup_quiz_for_testing_completion([
+        [$students, $quiz, $cm, $litecm] = $this->setup_quiz_for_testing_completion([
             'nbstudents' => 1,
             'qtype' => 'numerical',
             'nbquestions' => 2,
@@ -341,17 +350,17 @@ class custom_completion_test extends advanced_testcase {
                 'completionusegrade' => 1,
                 'completionpassgrade' => 1,
                 'completionview' => 0,
-            ]
+            ],
         ]);
         $course = $cm->get_course();
 
-        list($student) = $students;
+        [$student] = $students;
         // Do a first attempt with a pass marks = 20.
         $this->do_attempt_quiz([
             'quiz' => $quiz,
             'student' => $student,
             'attemptnumber' => 1,
-            'tosubmit' => [1 => ['answer' => '3.14']]
+            'tosubmit' => [1 => ['answer' => '3.14']],
         ]);
         $completioninfo = new \completion_info($course);
         $cminfo = \cm_info::create($cm);
@@ -382,7 +391,7 @@ class custom_completion_test extends advanced_testcase {
             'quiz' => $quiz,
             'student' => $student,
             'attemptnumber' => 2,
-            'tosubmit' => [2 => ['answer' => '3.14']]
+            'tosubmit' => [2 => ['answer' => '3.14']],
         ]);
 
         // Update quiz with gradepass = 80 and use highest grade to calculate completion.
@@ -460,8 +469,13 @@ class custom_completion_test extends advanced_testcase {
      * @param string $grademethod grade attempt method.
      * @return stdClass
      */
-    private function prepare_module_info(cm_info $cm, stdClass $quiz, stdClass $course,
-            int $gradepass, string $grademethod): \stdClass {
+    private function prepare_module_info(
+        cm_info $cm,
+        stdClass $quiz,
+        stdClass $course,
+        int $gradepass,
+        string $grademethod
+    ): \stdClass {
         $grouping = $this->getDataGenerator()->create_grouping(['courseid' => $course->id]);
         // Module test values.
         $moduleinfo = new \stdClass();

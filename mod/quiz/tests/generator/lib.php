@@ -27,11 +27,10 @@ defined('MOODLE_INTERNAL') || die();
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_quiz_generator extends testing_module_generator {
-
     public function create_instance($record = null, array $options = null) {
         global $CFG;
 
-        require_once($CFG->dirroot.'/mod/quiz/locallib.php');
+        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
         $record = (object)(array)$record;
 
         $defaultquizsettings = [
@@ -119,8 +118,12 @@ class mod_quiz_generator extends testing_module_generator {
      *      variants is 'randomly' selected.
      * @return stdClass the new attempt.
      */
-    public function create_attempt($quizid, $userid, array $forcedrandomquestions = [],
-            array $forcedvariants = []) {
+    public function create_attempt(
+        $quizid,
+        $userid,
+        array $forcedrandomquestions = [],
+        array $forcedvariants = []
+    ) {
         // Build quiz object and load questions.
         $quizobj = quiz_settings::create($quizid, $userid);
 
@@ -135,8 +138,14 @@ class mod_quiz_generator extends testing_module_generator {
             $attemptnumber = $attempt->attempt + 1;
         }
 
-        return quiz_prepare_and_start_new_attempt($quizobj, $attemptnumber, $attempt, false,
-                $forcedrandomquestions, $forcedvariants);
+        return quiz_prepare_and_start_new_attempt(
+            $quizobj,
+            $attemptnumber,
+            $attempt,
+            false,
+            $forcedrandomquestions,
+            $forcedvariants
+        );
     }
 
     /**
@@ -158,7 +167,10 @@ class mod_quiz_generator extends testing_module_generator {
         $attemptobj = quiz_attempt::create($attemptid);
 
         $postdata = $questiongenerator->get_simulated_post_data_for_questions_in_usage(
-                $attemptobj->get_question_usage(), $responses, $checkbutton);
+            $attemptobj->get_question_usage(),
+            $responses,
+            $checkbutton
+        );
 
         $attemptobj->process_submitted_actions(time(), false, $postdata);
 

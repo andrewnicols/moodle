@@ -33,7 +33,6 @@ use core_question\local\bank\question_version_status;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class core_question_generator extends component_generator_base {
-
     /**
      * @var number of created instances
      */
@@ -63,7 +62,7 @@ class core_question_generator extends component_generator_base {
             'infoformat' => FORMAT_HTML,
             'stamp'      => make_unique_id_code(),
             'sortorder'  => 999,
-            'idnumber'   => null
+            'idnumber'   => null,
         ];
 
         $record = $this->datagenerator->combine_defaults_and_record($defaults, $record);
@@ -111,8 +110,14 @@ class core_question_generator extends component_generator_base {
      */
     public function create_question_tag(array $data): void {
         $question = question_bank::load_question($data['questionid']);
-        core_tag_tag::add_item_tag('core_question', 'question', $question->id,
-                context::instance_by_id($question->contextid), $data['tag'], 0);
+        core_tag_tag::add_item_tag(
+            'core_question',
+            'question',
+            $question->id,
+            context::instance_by_id($question->contextid),
+            $data['tag'],
+            0
+        );
     }
 
     /**
@@ -170,7 +175,7 @@ class core_question_generator extends component_generator_base {
         $category = $datagenerator->create_category();
         $course = $datagenerator->create_course([
             'numsections' => 5,
-            'category' => $category->id
+            'category' => $category->id,
         ]);
 
         switch ($type) {
@@ -214,12 +219,18 @@ class core_question_generator extends component_generator_base {
      * @return array that can be passed to methods like $quba->process_all_actions as simulated POST data.
      */
     public function get_simulated_post_data_for_questions_in_usage(
-            question_usage_by_activity $quba, array $responses, $checkbutton) {
+        question_usage_by_activity $quba,
+        array $responses,
+        $checkbutton
+    ) {
         $postdata = [];
 
         foreach ($responses as $slot => $responsesummary) {
             $postdata += $this->get_simulated_post_data_for_question_attempt(
-                    $quba->get_question_attempt($slot), $responsesummary, $checkbutton);
+                $quba->get_question_attempt($slot),
+                $responsesummary,
+                $checkbutton
+            );
         }
 
         return $postdata;
@@ -240,7 +251,10 @@ class core_question_generator extends component_generator_base {
      * @return array the simulated post data that can be passed to $quba->process_all_actions.
      */
     public function get_simulated_post_data_for_question_attempt(
-            question_attempt $qa, $responsesummary, $checkbutton) {
+        question_attempt $qa,
+        $responsesummary,
+        $checkbutton
+    ) {
 
         $question = $qa->get_question();
         if (!$question instanceof question_with_responses) {

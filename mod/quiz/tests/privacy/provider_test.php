@@ -41,9 +41,9 @@ require_once($CFG->dirroot . '/question/tests/privacy_helper.php');
  * @package    mod_quiz
  * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \mod_quiz\privacy\provider
  */
-class provider_test extends \core_privacy\tests\provider_testcase {
-
+final class provider_test extends \core_privacy\tests\provider_testcase {
     use \core_question_privacy_helper;
 
     /**
@@ -150,7 +150,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
             ]);
 
         // Run as the user and make an attempt on the quiz.
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $user);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $user);
         $this->attempt_quiz($quiz, $otheruser);
         $context = $quizobj->get_context();
 
@@ -302,8 +302,8 @@ class provider_test extends \core_privacy\tests\provider_testcase {
             ]);
 
         // Run as the user and make an attempt on the quiz.
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $user);
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $otheruser);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $user);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $otheruser);
 
         // Create another quiz and questions, and repeat the data insertion.
         $this->setUser();
@@ -316,8 +316,8 @@ class provider_test extends \core_privacy\tests\provider_testcase {
             ]);
 
         // Run as the user and make an attempt on the quiz.
-        list($otherquizobj, $otherquba, $otherattemptobj) = $this->attempt_quiz($otherquiz, $user);
-        list($otherquizobj, $otherquba, $otherattemptobj) = $this->attempt_quiz($otherquiz, $otheruser);
+        [$otherquizobj, $otherquba, $otherattemptobj] = $this->attempt_quiz($otherquiz, $user);
+        [$otherquizobj, $otherquba, $otherattemptobj] = $this->attempt_quiz($otherquiz, $otheruser);
 
         // Delete all data for all users in the context under test.
         $this->setUser();
@@ -487,15 +487,16 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         ]);
 
         // Make an attempt on the quiz as user2.
-        list($quizobj, $quba, $attemptobj) = $this->attempt_quiz($quiz, $anotheruser);
+        [$quizobj, $quba, $attemptobj] = $this->attempt_quiz($quiz, $anotheruser);
         $context = $quizobj->get_context();
 
         // Fetch users - user1 and user2 should be returned.
         $userlist = new \core_privacy\local\request\userlist($context, 'mod_quiz');
         provider::get_users_in_context($userlist);
         $this->assertEqualsCanonicalizing(
-                [$user->id, $anotheruser->id],
-                $userlist->get_userids());
+            [$user->id, $anotheruser->id],
+            $userlist->get_userids()
+        );
     }
 
     /**
@@ -517,7 +518,7 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $quiz2 = $this->create_test_quiz($course2);
 
         // Attempt quiz1 as user1 and user2.
-        list($quiz1obj) = $this->attempt_quiz($quiz1, $user1);
+        [$quiz1obj] = $this->attempt_quiz($quiz1, $user1);
         $this->attempt_quiz($quiz1, $user2);
 
         // Create an override in quiz1 for user3.
@@ -533,26 +534,29 @@ class provider_test extends \core_privacy\tests\provider_testcase {
 
         // Delete the data for user1 and user3 in course1 and check it is removed.
         $quiz1context = $quiz1obj->get_context();
-        $approveduserlist = new \core_privacy\local\request\approved_userlist($quiz1context, 'mod_quiz',
-                [$user1->id, $user3->id]);
+        $approveduserlist = new \core_privacy\local\request\approved_userlist(
+            $quiz1context,
+            'mod_quiz',
+            [$user1->id, $user3->id]
+        );
         provider::delete_data_for_users($approveduserlist);
 
         // Only the attempt of user2 should be remained in quiz1.
         $this->assertEquals(
-                [$user2->id],
-                $DB->get_fieldset_select('quiz_attempts', 'userid', 'quiz = ?', [$quiz1->id])
+            [$user2->id],
+            $DB->get_fieldset_select('quiz_attempts', 'userid', 'quiz = ?', [$quiz1->id])
         );
 
         // The attempt that user1 made in quiz2 should be remained.
         $this->assertEquals(
-                [$user1->id],
-                $DB->get_fieldset_select('quiz_attempts', 'userid', 'quiz = ?', [$quiz2->id])
+            [$user1->id],
+            $DB->get_fieldset_select('quiz_attempts', 'userid', 'quiz = ?', [$quiz2->id])
         );
 
         // The quiz override in quiz1 that we had for user3 should be deleted.
         $this->assertEquals(
-                [],
-                $DB->get_fieldset_select('quiz_overrides', 'userid', 'quiz = ?', [$quiz1->id])
+            [],
+            $DB->get_fieldset_select('quiz_overrides', 'userid', 'quiz = ?', [$quiz1->id])
         );
     }
 }

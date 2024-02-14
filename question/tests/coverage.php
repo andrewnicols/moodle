@@ -21,6 +21,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @copyright  2022 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package core_question
  */
 return new class extends phpunit_coverage_info {
     /** @var array The list of files relative to the plugin root to include in coverage generation. */

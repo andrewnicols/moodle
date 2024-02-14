@@ -19,6 +19,7 @@
  *
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_quiz
  */
 
 namespace mod_quiz;
@@ -28,8 +29,9 @@ namespace mod_quiz;
  *
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_quiz
  */
-class privacy_legacy_quizaccess_polyfill_test extends \advanced_testcase {
+final class privacy_legacy_quizaccess_polyfill_test extends \advanced_testcase {
     /**
      * Test that the core_quizaccess\privacy\legacy_polyfill works and that the static _export_quizaccess_user_data can
      * be called.
@@ -108,12 +110,12 @@ class privacy_legacy_quizaccess_polyfill_test extends \advanced_testcase {
  *
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_quiz
  */
 class test_privacy_legacy_quizaccess_polyfill_provider implements
-        \core_privacy\local\metadata\provider,
-        \mod_quiz\privacy\quizaccess_provider,
-        \mod_quiz\privacy\quizaccess_user_provider {
-
+    \core_privacy\local\metadata\provider,
+    \mod_quiz\privacy\quizaccess_provider,
+    \mod_quiz\privacy\quizaccess_user_provider {
     use \mod_quiz\privacy\legacy_quizaccess_polyfill;
     use \core_privacy\local\legacy_polyfill;
 
@@ -176,6 +178,7 @@ class test_privacy_legacy_quizaccess_polyfill_provider implements
  *
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package mod_quiz
  */
 class test_privacy_legacy_quizaccess_polyfill_mock_wrapper {
     /**

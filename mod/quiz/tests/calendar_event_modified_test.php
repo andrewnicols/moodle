@@ -31,8 +31,7 @@ require_once($CFG->dirroot . '/mod/quiz/lib.php');
  * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-class calendar_event_modified_test extends \advanced_testcase {
-
+final class calendar_event_modified_test extends \advanced_testcase {
     /**
      * Create an instance of the quiz activity.
      *
@@ -85,7 +84,7 @@ class calendar_event_modified_test extends \advanced_testcase {
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
             'timestart' => time(),
             'timeduration' => 86400,
-            'visible' => 1
+            'visible' => 1,
         ];
 
         return new \calendar_event(array_merge($defaultproperties, $eventproperties));
@@ -104,7 +103,7 @@ class calendar_event_modified_test extends \advanced_testcase {
         $quiz = $this->create_quiz_instance(['timeopen' => $timeopen, 'timeclose' => $timeclose]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_OPEN . "SOMETHING ELSE",
-            'timestart' => 1
+            'timestart' => 1,
         ]);
 
         mod_quiz_core_calendar_event_timestart_updated($event, $quiz);
@@ -130,11 +129,11 @@ class calendar_event_modified_test extends \advanced_testcase {
         $quiz = $this->create_quiz_instance([
             'timeopen' => $timeopen,
             'timeclose' => $timeclose,
-            'timemodified' => $timemodified
+            'timemodified' => $timemodified,
         ]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
-            'timestart' => $newtimeopen
+            'timestart' => $newtimeopen,
         ]);
 
         mod_quiz_core_calendar_event_timestart_updated($event, $quiz);
@@ -164,11 +163,11 @@ class calendar_event_modified_test extends \advanced_testcase {
         $quiz = $this->create_quiz_instance([
             'timeopen' => $timeopen,
             'timeclose' => $timeclose,
-            'timemodified' => $timemodified
+            'timemodified' => $timemodified,
         ]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_CLOSE,
-            'timestart' => $newtimeclose
+            'timestart' => $newtimeclose,
         ]);
 
         mod_quiz_core_calendar_event_timestart_updated($event, $quiz);
@@ -199,16 +198,16 @@ class calendar_event_modified_test extends \advanced_testcase {
         $quiz = $this->create_quiz_instance([
             'timeopen' => $timeopen,
             'timeclose' => $timeclose,
-            'timemodified' => $timemodified
+            'timemodified' => $timemodified,
         ]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'userid' => $user->id,
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
-            'timestart' => $newtimeopen
+            'timestart' => $newtimeopen,
         ]);
         $record = (object) [
             'quiz' => $quiz->id,
-            'userid' => $user->id
+            'userid' => $user->id,
         ];
 
         $DB->insert_record('quiz_overrides', $record);
@@ -245,7 +244,7 @@ class calendar_event_modified_test extends \advanced_testcase {
         $newtimeopen = (new \DateTime())->setTimestamp($now)->modify('+1 day');
         $quiz = $this->create_quiz_instance([
             'course' => $course->id,
-            'timeopen' => $timeopen->getTimestamp()
+            'timeopen' => $timeopen->getTimestamp(),
         ]);
 
         $generator->enrol_user($user->id, $course->id, 'student');
@@ -253,7 +252,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
-            'timestart' => $timeopen->getTimestamp()
+            'timestart' => $timeopen->getTimestamp(),
         ]);
 
         assign_capability('moodle/course:manageactivities', CAP_PROHIBIT, $roleid, $context, true);
@@ -289,7 +288,7 @@ class calendar_event_modified_test extends \advanced_testcase {
         $newtimeopen = (new \DateTime())->setTimestamp($now)->modify('+1 day');
         $quiz = $this->create_quiz_instance([
             'course' => $course->id,
-            'timeopen' => $timeopen->getTimestamp()
+            'timeopen' => $timeopen->getTimestamp(),
         ]);
 
         $generator->enrol_user($user->id, $course->id, 'teacher');
@@ -297,7 +296,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
-            'timestart' => $newtimeopen->getTimestamp()
+            'timestart' => $newtimeopen->getTimestamp(),
         ]);
 
         assign_capability('moodle/course:manageactivities', CAP_ALLOW, $roleid, $context, true);
@@ -310,7 +309,7 @@ class calendar_event_modified_test extends \advanced_testcase {
         mod_quiz_core_calendar_event_timestart_updated($event, $quiz);
 
         $triggeredevents = $sink->get_events();
-        $moduleupdatedevents = array_filter($triggeredevents, function($e) {
+        $moduleupdatedevents = array_filter($triggeredevents, function ($e) {
             return is_a($e, 'core\event\course_module_updated');
         });
 
@@ -336,14 +335,14 @@ class calendar_event_modified_test extends \advanced_testcase {
         $timeclose = $timeopen + DAYSECS;
         $quiz = $this->create_quiz_instance([
             'timeopen' => $timeopen,
-            'timeclose' => $timeclose
+            'timeclose' => $timeclose,
         ]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_OPEN . "SOMETHING ELSE",
-            'timestart' => 1
+            'timestart' => 1,
         ]);
 
-        list ($min, $max) = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
+         [$min, $max] = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
         $this->assertNull($min);
         $this->assertNull($max);
     }
@@ -360,22 +359,22 @@ class calendar_event_modified_test extends \advanced_testcase {
         $timeclose = $timeopen + DAYSECS;
         $quiz = $this->create_quiz_instance([
             'timeopen' => $timeopen,
-            'timeclose' => $timeclose
+            'timeclose' => $timeclose,
         ]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
-            'timestart' => 1
+            'timestart' => 1,
         ]);
 
         // The max limit should be bounded by the timeclose value.
-        list ($min, $max) = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
+         [$min, $max] = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
 
         $this->assertNull($min);
         $this->assertEquals($timeclose, $max[0]);
 
         // No timeclose value should result in no upper limit.
         $quiz->timeclose = 0;
-        list ($min, $max) = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
+         [$min, $max] = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
 
         $this->assertNull($min);
         $this->assertNull($max);
@@ -397,21 +396,21 @@ class calendar_event_modified_test extends \advanced_testcase {
         $quiz = $this->create_quiz_instance([
             'course' => $course->id,
             'timeopen' => $timeopen,
-            'timeclose' => $timeclose
+            'timeclose' => $timeclose,
         ]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'userid' => $user->id,
             'eventtype' => QUIZ_EVENT_TYPE_OPEN,
-            'timestart' => 1
+            'timestart' => 1,
         ]);
         $record = (object) [
             'quiz' => $quiz->id,
-            'userid' => $user->id
+            'userid' => $user->id,
         ];
 
         $DB->insert_record('quiz_overrides', $record);
 
-        list ($min, $max) = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
+         [$min, $max] = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
 
         $this->assertFalse($min);
         $this->assertFalse($max);
@@ -429,7 +428,7 @@ class calendar_event_modified_test extends \advanced_testcase {
         $timeclose = $timeopen + DAYSECS;
         $quiz = $this->create_quiz_instance([
             'timeopen' => $timeopen,
-            'timeclose' => $timeclose
+            'timeclose' => $timeclose,
         ]);
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_CLOSE,
@@ -437,14 +436,14 @@ class calendar_event_modified_test extends \advanced_testcase {
         ]);
 
         // The max limit should be bounded by the timeclose value.
-        list ($min, $max) = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
+         [$min, $max] = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
 
         $this->assertEquals($timeopen, $min[0]);
         $this->assertNull($max);
 
         // No timeclose value should result in no upper limit.
         $quiz->timeopen = 0;
-        list ($min, $max) = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
+         [$min, $max] = mod_quiz_core_calendar_get_valid_event_timestart_range($event, $quiz);
 
         $this->assertNull($min);
         $this->assertNull($max);
@@ -477,7 +476,7 @@ class calendar_event_modified_test extends \advanced_testcase {
             'course' => $course->id,
             'timeopen' => $timeopen->getTimestamp(),
             'timeclose' => $timeclose->getTimestamp(),
-            'timelimit' => $timelimit
+            'timelimit' => $timelimit,
         ]);
 
         $generator->enrol_user($student->id, $course->id, 'student');
@@ -486,7 +485,7 @@ class calendar_event_modified_test extends \advanced_testcase {
 
         $event = $this->create_quiz_calendar_event($quiz, [
             'eventtype' => QUIZ_EVENT_TYPE_CLOSE,
-            'timestart' => $newtimeclose
+            'timestart' => $newtimeclose,
         ]);
 
         assign_capability('moodle/course:manageactivities', CAP_ALLOW, $roleid, $context, true);
@@ -500,7 +499,7 @@ class calendar_event_modified_test extends \advanced_testcase {
                 'timestart' => $timeopen->getTimestamp(),
                 'timecheckstate' => 0,
                 'layout' => '',
-                'uniqueid' => 1
+                'uniqueid' => 1,
             ]
         );
 

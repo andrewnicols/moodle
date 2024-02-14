@@ -28,7 +28,7 @@ use mod_quiz\quiz_settings;
  * @author     2021 Safat Shahin <safatshahin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class tags_test extends \advanced_testcase {
+final class tags_test extends \advanced_testcase {
     public function test_restore_random_question_by_tag(): void {
         global $CFG, $USER, $DB;
 
@@ -41,13 +41,21 @@ class tags_test extends \advanced_testcase {
         $backupid = 'abc';
         $backuppath = make_backup_temp_directory($backupid);
         get_file_packer('application/vnd.moodle.backup')->extract_to_pathname(
-                __DIR__ . "/fixtures/random_by_tag_quiz.mbz", $backuppath);
+            __DIR__ . "/fixtures/random_by_tag_quiz.mbz",
+            $backuppath
+        );
 
         // Do the restore to new course with default settings.
         $categoryid = $DB->get_field_sql("SELECT MIN(id) FROM {course_categories}");
         $newcourseid = \restore_dbops::create_new_course('Test fullname', 'Test shortname', $categoryid);
-        $rc = new \restore_controller($backupid, $newcourseid, \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id,
-                \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $newcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
 
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
@@ -87,8 +95,10 @@ class tags_test extends \advanced_testcase {
 
         $defaultcategory = question_get_default_category(\context_course::instance($newcourseid)->id);
         $this->assertEquals($defaultcategory->id, $question->category);
-        $randomincludingsubcategories = $DB->get_record('question_set_references',
-            ['itemid' => reset($slots)->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']);
+        $randomincludingsubcategories = $DB->get_record(
+            'question_set_references',
+            ['itemid' => reset($slots)->id, 'component' => 'mod_quiz', 'questionarea' => 'slot']
+        );
         $filtercondition = json_decode($randomincludingsubcategories->filtercondition);
         $this->assertEquals(0, $filtercondition->includingsubcategories);
     }
@@ -101,8 +111,10 @@ class tags_test extends \advanced_testcase {
      */
     protected function get_tags_for_slot(int $slotid): array {
         global $DB;
-        $referencedata = $DB->get_record('question_set_references',
-                ['itemid' => $slotid, 'component' => 'mod_quiz', 'questionarea' => 'slot']);
+        $referencedata = $DB->get_record(
+            'question_set_references',
+            ['itemid' => $slotid, 'component' => 'mod_quiz', 'questionarea' => 'slot']
+        );
         if (isset($referencedata->filtercondition)) {
             $filtercondition = json_decode($referencedata->filtercondition);
             if (isset($filtercondition->tags)) {

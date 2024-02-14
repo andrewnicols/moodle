@@ -39,8 +39,7 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @copyright  2008 Tim Hunt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class locallib_test extends \advanced_testcase {
-
+final class locallib_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
 
     public function test_quiz_rescale_grade(): void {
@@ -51,16 +50,20 @@ class locallib_test extends \advanced_testcase {
         $quiz->sumgrades = 10;
         $this->assertEquals(quiz_rescale_grade(0.12345678, $quiz, false), 0.12345678);
         $this->assertEquals(quiz_rescale_grade(0.12345678, $quiz, true), format_float(0.12, 2));
-        $this->assertEquals(quiz_rescale_grade(0.12345678, $quiz, 'question'),
-            format_float(0.123, 3));
+        $this->assertEquals(
+            quiz_rescale_grade(0.12345678, $quiz, 'question'),
+            format_float(0.123, 3)
+        );
         $quiz->sumgrades = 5;
         $this->assertEquals(quiz_rescale_grade(0.12345678, $quiz, false), 0.24691356);
         $this->assertEquals(quiz_rescale_grade(0.12345678, $quiz, true), format_float(0.25, 2));
-        $this->assertEquals(quiz_rescale_grade(0.12345678, $quiz, 'question'),
-            format_float(0.247, 3));
+        $this->assertEquals(
+            quiz_rescale_grade(0.12345678, $quiz, 'question'),
+            format_float(0.247, 3)
+        );
     }
 
-    public static function quiz_attempt_state_data_provider() {
+    public static function quiz_attempt_state_data_provider(): array {
         return [
             [quiz_attempt::IN_PROGRESS, null, null, display_options::DURING],
             [quiz_attempt::FINISHED, -90, null, display_options::IMMEDIATELY_AFTER],
@@ -85,8 +88,12 @@ class locallib_test extends \advanced_testcase {
      * @param int $expectedstate expected result. One of the display_options constants.
      * @covers ::quiz_attempt_state
      */
-    public function test_quiz_attempt_state(string $attemptstate,
-            ?int $relativetimefinish, ?int $relativetimeclose, int $expectedstate): void {
+    public function test_quiz_attempt_state(
+        string $attemptstate,
+        ?int $relativetimefinish,
+        ?int $relativetimeclose,
+        int $expectedstate
+    ): void {
 
         $attempt = new \stdClass();
         $attempt->state = $attemptstate;
@@ -149,8 +156,11 @@ class locallib_test extends \advanced_testcase {
         $this->setAdminUser();
         // Setup test data.
         $course = $this->getDataGenerator()->create_course(['enablecompletion' => 1]);
-        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id],
-                                                            ['completion' => 2, 'completionview' => 1]);
+        $quiz = $this->getDataGenerator()->create_module(
+            'quiz',
+            ['course' => $course->id],
+            ['completion' => 2, 'completionview' => 1]
+        );
         $context = \context_module::instance($quiz->cmid);
         $cm = get_coursemodule_from_instance('quiz', $quiz->id);
 
@@ -195,7 +205,7 @@ class locallib_test extends \advanced_testcase {
         $event = new \calendar_event((object)[
             'modulename' => 'quiz',
             'instance' => $quiz->id,
-            'userid' => $user->id
+            'userid' => $user->id,
         ]);
 
         $this->assertFalse(quiz_is_overriden_calendar_event($event));
@@ -217,7 +227,7 @@ class locallib_test extends \advanced_testcase {
         $quiz = $quizgenerator->create_instance(['course' => $course->id]);
 
         $event = new \calendar_event((object)[
-            'userid' => $user->id
+            'userid' => $user->id,
         ]);
 
         $this->assertFalse(quiz_is_overriden_calendar_event($event));
@@ -243,12 +253,12 @@ class locallib_test extends \advanced_testcase {
         $event = new \calendar_event((object) [
             'modulename' => 'quiz',
             'instance' => $quiz->id,
-            'userid' => $user->id
+            'userid' => $user->id,
         ]);
 
         $record = (object) [
             'quiz' => $quiz2->id,
-            'userid' => $user->id
+            'userid' => $user->id,
         ];
 
         $DB->insert_record('quiz_overrides', $record);
@@ -274,12 +284,12 @@ class locallib_test extends \advanced_testcase {
         $event = new \calendar_event((object) [
             'modulename' => 'quiz',
             'instance' => $quiz->id,
-            'userid' => $user->id
+            'userid' => $user->id,
         ]);
 
         $record = (object) [
             'quiz' => $quiz->id,
-            'userid' => $user->id
+            'userid' => $user->id,
         ];
 
         $DB->insert_record('quiz_overrides', $record);
@@ -308,12 +318,12 @@ class locallib_test extends \advanced_testcase {
         $event = new \calendar_event((object) [
             'modulename' => 'quiz',
             'instance' => $quiz->id,
-            'groupid' => $groupid
+            'groupid' => $groupid,
         ]);
 
         $record = (object) [
             'quiz' => $quiz->id,
-            'groupid' => $groupid
+            'groupid' => $groupid,
         ];
 
         $DB->insert_record('quiz_overrides', $record);
@@ -371,7 +381,7 @@ class locallib_test extends \advanced_testcase {
         $record1 = (object) [
             'quiz' => $quiz1->id,
             'groupid' => $group1id,
-            'timeclose' => $basetimestamp + 10800 // In three hours.
+            'timeclose' => $basetimestamp + 10800, // In three hours.
         ];
         $DB->insert_record('quiz_overrides', $record1);
 
@@ -418,7 +428,7 @@ class locallib_test extends \advanced_testcase {
         $record2 = (object) [
             'quiz' => $quiz1->id,
             'userid' => $student2id,
-            'timeclose' => $basetimestamp + 14400 // In four hours.
+            'timeclose' => $basetimestamp + 14400, // In four hours.
         ];
         $DB->insert_record('quiz_overrides', $record2);
 
@@ -497,7 +507,7 @@ class locallib_test extends \advanced_testcase {
                 'isstandard' => 1,
                 'flag' => 0,
                 'rawname' => $tagname,
-                'description' => $tagname . ' desc'
+                'description' => $tagname . ' desc',
             ];
             $tagobjects[$tagname] = $this->getDataGenerator()->create_tag($tagrecord);
         }
@@ -550,10 +560,14 @@ class locallib_test extends \advanced_testcase {
 
         // Initial test (as admin) with no data.
         $this->setAdminUser();
-        $this->assertEquals(['group' => 0, 'user' => 0, 'mode' => 'allgroups'],
-                quiz_override_summary($quiz, $cm));
-        $this->assertEquals(['group' => 0, 'user' => 0, 'mode' => 'onegroup'],
-                quiz_override_summary($quiz, $cm, $group->id));
+        $this->assertEquals(
+            ['group' => 0, 'user' => 0, 'mode' => 'allgroups'],
+            quiz_override_summary($quiz, $cm)
+        );
+        $this->assertEquals(
+            ['group' => 0, 'user' => 0, 'mode' => 'onegroup'],
+            quiz_override_summary($quiz, $cm, $group->id)
+        );
 
         // Editing teacher.
         $teacher = $generator->create_user();
@@ -579,17 +593,25 @@ class locallib_test extends \advanced_testcase {
         // Initial test now users exist, but before overrides.
         // Test as teacher.
         $this->setUser($teacher);
-        $this->assertEquals(['group' => 0, 'user' => 0, 'mode' => 'allgroups'],
-                quiz_override_summary($quiz, $cm));
-        $this->assertEquals(['group' => 0, 'user' => 0, 'mode' => 'onegroup'],
-                quiz_override_summary($quiz, $cm, $group->id));
+        $this->assertEquals(
+            ['group' => 0, 'user' => 0, 'mode' => 'allgroups'],
+            quiz_override_summary($quiz, $cm)
+        );
+        $this->assertEquals(
+            ['group' => 0, 'user' => 0, 'mode' => 'onegroup'],
+            quiz_override_summary($quiz, $cm, $group->id)
+        );
 
         // Test as tutor.
         $this->setUser($tutor);
-        $this->assertEquals(['group' => 0, 'user' => 0, 'mode' => 'somegroups'],
-                quiz_override_summary($quiz, $cm));
-        $this->assertEquals(['group' => 0, 'user' => 0, 'mode' => 'onegroup'],
-                quiz_override_summary($quiz, $cm, $group->id));
+        $this->assertEquals(
+            ['group' => 0, 'user' => 0, 'mode' => 'somegroups'],
+            quiz_override_summary($quiz, $cm)
+        );
+        $this->assertEquals(
+            ['group' => 0, 'user' => 0, 'mode' => 'onegroup'],
+            quiz_override_summary($quiz, $cm, $group->id)
+        );
         $this->assertEquals('', $renderer->quiz_override_summary_links($quiz, $cm));
 
         // Quiz setting overrides for students 1 and 3.
@@ -601,36 +623,56 @@ class locallib_test extends \advanced_testcase {
 
         // Test as teacher.
         $this->setUser($teacher);
-        $this->assertEquals(['group' => 2, 'user' => 2, 'mode' => 'allgroups'],
-                quiz_override_summary($quiz, $cm));
-        $this->assertEquals('Settings overrides exist (Groups: 2, Users: 2)',
-                // Links checked by Behat, so strip them for these tests.
-                html_to_text($renderer->quiz_override_summary_links($quiz, $cm), 0, false));
-        $this->assertEquals(['group' => 1, 'user' => 1, 'mode' => 'onegroup'],
-                quiz_override_summary($quiz, $cm, $group->id));
-        $this->assertEquals('Settings overrides exist (Groups: 1, Users: 1) for this group',
-                html_to_text($renderer->quiz_override_summary_links($quiz, $cm, $group->id), 0, false));
+        $this->assertEquals(
+            ['group' => 2, 'user' => 2, 'mode' => 'allgroups'],
+            quiz_override_summary($quiz, $cm)
+        );
+        $this->assertEquals(
+            'Settings overrides exist (Groups: 2, Users: 2)',
+            // Links checked by Behat, so strip them for these tests.
+            html_to_text($renderer->quiz_override_summary_links($quiz, $cm), 0, false)
+        );
+        $this->assertEquals(
+            ['group' => 1, 'user' => 1, 'mode' => 'onegroup'],
+            quiz_override_summary($quiz, $cm, $group->id)
+        );
+        $this->assertEquals(
+            'Settings overrides exist (Groups: 1, Users: 1) for this group',
+            html_to_text($renderer->quiz_override_summary_links($quiz, $cm, $group->id), 0, false)
+        );
 
         // Test as tutor.
         $this->setUser($tutor);
-        $this->assertEquals(['group' => 1, 'user' => 1, 'mode' => 'somegroups'],
-                quiz_override_summary($quiz, $cm));
-        $this->assertEquals('Settings overrides exist (Groups: 1, Users: 1) for your groups',
-                html_to_text($renderer->quiz_override_summary_links($quiz, $cm), 0, false));
-        $this->assertEquals(['group' => 1, 'user' => 1, 'mode' => 'onegroup'],
-                quiz_override_summary($quiz, $cm, $group->id));
-        $this->assertEquals('Settings overrides exist (Groups: 1, Users: 1) for this group',
-                html_to_text($renderer->quiz_override_summary_links($quiz, $cm, $group->id), 0, false));
+        $this->assertEquals(
+            ['group' => 1, 'user' => 1, 'mode' => 'somegroups'],
+            quiz_override_summary($quiz, $cm)
+        );
+        $this->assertEquals(
+            'Settings overrides exist (Groups: 1, Users: 1) for your groups',
+            html_to_text($renderer->quiz_override_summary_links($quiz, $cm), 0, false)
+        );
+        $this->assertEquals(
+            ['group' => 1, 'user' => 1, 'mode' => 'onegroup'],
+            quiz_override_summary($quiz, $cm, $group->id)
+        );
+        $this->assertEquals(
+            'Settings overrides exist (Groups: 1, Users: 1) for this group',
+            html_to_text($renderer->quiz_override_summary_links($quiz, $cm, $group->id), 0, false)
+        );
 
         // Now set the quiz to be group mode: no groups, and re-test as tutor.
         // In this case, the tutor should see all groups.
         $DB->set_field('course_modules', 'groupmode', NOGROUPS, ['id' => $cm->id]);
         $cm = get_coursemodule_from_id('quiz', $quiz->cmid, $course->id);
 
-        $this->assertEquals(['group' => 2, 'user' => 2, 'mode' => 'allgroups'],
-                quiz_override_summary($quiz, $cm));
-        $this->assertEquals('Settings overrides exist (Groups: 2, Users: 2)',
-                html_to_text($renderer->quiz_override_summary_links($quiz, $cm), 0, false));
+        $this->assertEquals(
+            ['group' => 2, 'user' => 2, 'mode' => 'allgroups'],
+            quiz_override_summary($quiz, $cm)
+        );
+        $this->assertEquals(
+            'Settings overrides exist (Groups: 2, Users: 2)',
+            html_to_text($renderer->quiz_override_summary_links($quiz, $cm), 0, false)
+        );
     }
 
     /**
@@ -652,8 +694,13 @@ class locallib_test extends \advanced_testcase {
 
         // Allow recipent to receive email confirm submission.
         $studentrole = $DB->get_record('role', ['shortname' => 'student']);
-        assign_capability('mod/quiz:emailconfirmsubmission', CAP_ALLOW, $studentrole->id,
-            \context_course::instance($course->id), true);
+        assign_capability(
+            'mod/quiz:emailconfirmsubmission',
+            CAP_ALLOW,
+            $studentrole->id,
+            \context_course::instance($course->id),
+            true
+        );
         $this->getDataGenerator()->enrol_user($recipient->id, $course->id, $studentrole->id, 'manual');
 
         $timenow = time();
@@ -673,16 +720,20 @@ class locallib_test extends \advanced_testcase {
         quiz_send_confirmation($recipient, $data, true);
         $messages = $sink->get_messages();
         $message = reset($messages);
-        $this->assertStringContainsString("Thank you for submitting your answers" ,
-            quoted_printable_decode($message->body));
+        $this->assertStringContainsString(
+            "Thank you for submitting your answers",
+            quoted_printable_decode($message->body)
+        );
         $sink->close();
 
         $sink = $this->redirectEmails();
         quiz_send_confirmation($recipient, $data, false);
         $messages = $sink->get_messages();
         $message = reset($messages);
-        $this->assertStringContainsString("Your answers were submitted automatically" ,
-            quoted_printable_decode($message->body));
+        $this->assertStringContainsString(
+            "Your answers were submitted automatically",
+            quoted_printable_decode($message->body)
+        );
         $sink->close();
     }
 }

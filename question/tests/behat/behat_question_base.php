@@ -27,9 +27,9 @@
 
 require_once(__DIR__ . '/../../../lib/behat/behat_base.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode,
-    Behat\Mink\Exception\ExpectationException as ExpectationException,
-    Behat\Mink\Exception\ElementNotFoundException as ElementNotFoundException;
+use Behat\Gherkin\Node\TableNode,
+    Behat\Mink\Exception\ExpectationException,
+    Behat\Mink\Exception\ElementNotFoundException;
 
 /**
  * Steps definitions related with the question bank management.
@@ -40,7 +40,6 @@ use Behat\Gherkin\Node\TableNode as TableNode,
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_question_base extends behat_base {
-
     /**
      * Helper used by {@link i_add_a_question_filling_the_form_with()} and
      * {@link behat_mod_quiz::i_add_question_to_the_quiz_with to finish creating()}.

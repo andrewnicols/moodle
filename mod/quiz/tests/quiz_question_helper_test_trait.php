@@ -29,7 +29,6 @@ use mod_quiz\quiz_settings;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 trait quiz_question_helper_test_trait {
-
     /** @var \stdClass $course Test course to contain quiz. */
     protected $course;
 
@@ -141,8 +140,14 @@ trait quiz_question_helper_test_trait {
 
         $backupid = 'test-question-backup-restore';
 
-        $bc = new backup_controller(backup::TYPE_1ACTIVITY, $quiz->cmid, backup::FORMAT_MOODLE,
-            backup::INTERACTIVE_NO, backup::MODE_GENERAL, $user->id);
+        $bc = new backup_controller(
+            backup::TYPE_1ACTIVITY,
+            $quiz->cmid,
+            backup::FORMAT_MOODLE,
+            backup::INTERACTIVE_NO,
+            backup::MODE_GENERAL,
+            $user->id
+        );
         $bc->execute_plan();
 
         $results = $bc->get_results();
@@ -163,8 +168,14 @@ trait quiz_question_helper_test_trait {
      * @param stdClass $user
      */
     protected function restore_quiz(string $backupid, stdClass $course, stdClass $user): void {
-        $rc = new restore_controller($backupid, $course->id,
-            backup::INTERACTIVE_NO, backup::MODE_GENERAL, $user->id, backup::TARGET_CURRENT_ADDING);
+        $rc = new restore_controller(
+            $backupid,
+            $course->id,
+            backup::INTERACTIVE_NO,
+            backup::MODE_GENERAL,
+            $user->id,
+            backup::TARGET_CURRENT_ADDING
+        );
         $this->assertTrue($rc->execute_precheck());
         $rc->execute_plan();
         $rc->destroy();

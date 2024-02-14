@@ -34,6 +34,7 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @copyright  2021 Catalyst IT Australia Pty Ltd
  * @author     Nathan Nguyen <nathannguyen@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \qbank_statistics\helper
  */
 class helper_test extends \advanced_testcase {
 
@@ -42,7 +43,6 @@ class helper_test extends \advanced_testcase {
     /**
      * Test quizzes that contain a specified question.
      *
-     * @covers ::get_all_places_where_questions_were_attempted
      * @deprecated since Moodle 4.3 please use the method from statistics_bulk_loader.
      * @todo MDL-78090 Final deprecation in Moodle 4.7
      */

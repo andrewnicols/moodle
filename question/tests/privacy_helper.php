@@ -14,17 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Helper for privacy tests.
- *
- * @package    core_question
- * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-use \core_privacy\local\request\writer;
+use core_privacy\local\request\writer;
 
 /**
  * Helper for privacy tests.
@@ -44,11 +34,11 @@ trait core_question_privacy_helper {
      * @param   \stdClass                   $data The data to check.
      */
     public function assert_question_slot_equals(
-            \question_usage_by_activity $quba,
-            $slotno,
-            \question_display_options $options,
-            $data
-        ) {
+        \question_usage_by_activity $quba,
+        $slotno,
+        \question_display_options $options,
+        $data
+    ) {
         $attempt = $quba->get_question_attempt($slotno);
         $question = $attempt->get_question(false);
 

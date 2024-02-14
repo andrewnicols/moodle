@@ -30,8 +30,9 @@ namespace core_question;
  *
  * @copyright  2013 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \core_question_generator
  */
-class generator_test extends \advanced_testcase {
+final class generator_test extends \advanced_testcase {
     public function test_create(): void {
         global $DB;
 
@@ -53,19 +54,25 @@ class generator_test extends \advanced_testcase {
     public function test_idnumbers_in_categories_and_questions(): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
-        list($category, $course, $qcat, $questions) = $generator->setup_course_and_questions();
+        [$category, $course, $qcat, $questions] = $generator->setup_course_and_questions();
         // Check default idnumbers in question_category and questions.
         $this->assertNull($qcat->idnumber);
         $this->assertNull($questions[0]->idnumber);
         $this->assertNull($questions[1]->idnumber);
         // Check created idnumbers.
         $qcat1 = $generator->create_question_category([
-                'name' => 'My category', 'sortorder' => 1, 'idnumber' => 'myqcat']);
+            'name' => 'My category',
+            'sortorder' => 1,
+            'idnumber' => 'myqcat',
+        ]);
         $this->assertSame('myqcat', $qcat1->idnumber);
         $quest1 = $generator->update_question($questions[0], null, ['idnumber' => 'myquest']);
         $this->assertSame('myquest', $quest1->idnumber);
-        $quest3 = $generator->create_question('shortanswer', null,
-                ['name' => 'sa1', 'category' => $qcat1->id, 'idnumber' => 'myquest_3']);
+        $quest3 = $generator->create_question(
+            'shortanswer',
+            null,
+            ['name' => 'sa1', 'category' => $qcat1->id, 'idnumber' => 'myquest_3']
+        );
         $this->assertSame('myquest_3', $quest3->idnumber);
         // Check idnumbers of questions moved. Note have to use load_question_data or we only get to see old cached data.
         question_move_questions_to_category([$quest1->id], $qcat1->id);

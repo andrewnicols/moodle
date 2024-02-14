@@ -37,8 +37,7 @@ use context_module;
  * @copyright  2013 Adrian Greeve
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class events_test extends \advanced_testcase {
-
+final class events_test extends \advanced_testcase {
     /**
      * Setup a quiz.
      *
@@ -54,8 +53,12 @@ class events_test extends \advanced_testcase {
         // Make a quiz.
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
 
-        $quiz = $quizgenerator->create_instance(['course' => $course->id, 'questionsperpage' => 0,
-                'grade' => 100.0, 'sumgrades' => 2]);
+        $quiz = $quizgenerator->create_instance([
+            'course' => $course->id,
+            'questionsperpage' => 0,
+            'grade' => 100.0,
+            'sumgrades' => 2,
+        ]);
 
         $cm = get_coursemodule_from_instance('quiz', $quiz->id, $course->id);
 
@@ -108,9 +111,12 @@ class events_test extends \advanced_testcase {
         return $this->prepare_quiz_attempt($quizobj, $ispreview);
     }
 
+    /**
+     * @covers \mod_quiz\quiz_attempt
+     * @covers \mod_quiz\event\attempt_submitted
+     */
     public function test_attempt_submitted(): void {
-
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
         $attemptobj = quiz_attempt::create($attempt->id);
 
         // Catch the event.
@@ -132,9 +138,12 @@ class events_test extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * @covers \mod_quiz\quiz_attempt
+     * @covers \mod_quiz\event\attempt_becameoverdue
+     */
     public function test_attempt_becameoverdue(): void {
-
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
         $attemptobj = quiz_attempt::create($attempt->id);
 
         // Catch the event.
@@ -156,9 +165,12 @@ class events_test extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * @covers \mod_quiz\quiz_attempt
+     * @covers \mod_quiz\event\attempt_abandoned
+     */
     public function test_attempt_abandoned(): void {
-
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
         $attemptobj = quiz_attempt::create($attempt->id);
 
         // Catch the event.
@@ -179,6 +191,10 @@ class events_test extends \advanced_testcase {
         $this->assertEventContextNotUsed($event);
     }
 
+    /**
+     * @covers \quiz_attempt_save_started
+     * @covers \mod_quiz\event\attempt_started
+     */
     public function test_attempt_started(): void {
         $quizobj = $this->prepare_quiz();
 
@@ -209,9 +225,11 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for replacing a question, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_question_restarted
      */
     public function test_attempt_question_restarted(): void {
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
 
         $params = [
             'objectid' => 1,
@@ -222,8 +240,8 @@ class events_test extends \advanced_testcase {
                 'quizid' => $quizobj->get_quizid(),
                 'page' => 2,
                 'slot' => 3,
-                'newquestionid' => 2
-            ]
+                'newquestionid' => 2,
+            ],
         ];
         $event = \mod_quiz\event\attempt_question_restarted::create($params);
 
@@ -244,9 +262,11 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating an attempt, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_updated
      */
     public function test_attempt_updated(): void {
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
 
         $params = [
             'objectid' => 1,
@@ -255,8 +275,8 @@ class events_test extends \advanced_testcase {
             'context' => \context_module::instance($quizobj->get_cmid()),
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
-                'page' => 0
-            ]
+                'page' => 0,
+            ],
         ];
         $event = \mod_quiz\event\attempt_updated::create($params);
 
@@ -277,9 +297,11 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for auto-saving an attempt, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_autosaved
      */
     public function test_attempt_autosaved(): void {
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
 
         $params = [
             'objectid' => 1,
@@ -288,8 +310,8 @@ class events_test extends \advanced_testcase {
             'context' => \context_module::instance($quizobj->get_cmid()),
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
-                'page' => 0
-            ]
+                'page' => 0,
+            ],
         ];
 
         $event = \mod_quiz\event\attempt_autosaved::create($params);
@@ -311,6 +333,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating a quiz, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\edit_page_viewed
      */
     public function test_edit_page_viewed(): void {
         $this->resetAfterTest();
@@ -323,8 +347,8 @@ class events_test extends \advanced_testcase {
             'courseid' => $course->id,
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
-                'quizid' => $quiz->id
-            ]
+                'quizid' => $quiz->id,
+            ],
         ];
         $event = \mod_quiz\event\edit_page_viewed::create($params);
 
@@ -342,9 +366,11 @@ class events_test extends \advanced_testcase {
 
     /**
      * Test the attempt deleted event.
+     *
+     * @covers \mod_quiz\event\attempt_deleted
      */
     public function test_attempt_deleted(): void {
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
 
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
@@ -360,10 +386,12 @@ class events_test extends \advanced_testcase {
 
     /**
      * Test that preview attempt deletions are not logged.
+     *
+     * @covers \quiz_delete_attempt
      */
     public function test_preview_attempt_deleted(): void {
         // Create quiz with preview attempt.
-        list($quizobj, $quba, $previewattempt) = $this->prepare_quiz_data(true);
+        [$quizobj, $quba, $previewattempt] = $this->prepare_quiz_data(true);
 
         // Delete a preview attempt, capturing events.
         $sink = $this->redirectEvents();
@@ -378,6 +406,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for viewing reports, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\report_viewed
      */
     public function test_report_viewed(): void {
         $this->resetAfterTest();
@@ -390,8 +420,8 @@ class events_test extends \advanced_testcase {
             'context' => $context = \context_module::instance($quiz->cmid),
             'other' => [
                 'quizid' => $quiz->id,
-                'reportname' => 'overview'
-            ]
+                'reportname' => 'overview',
+            ],
         ];
         $event = \mod_quiz\event\report_viewed::create($params);
 
@@ -412,6 +442,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for reviewing attempts, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_reviewed
      */
     public function test_attempt_reviewed(): void {
         $this->resetAfterTest();
@@ -426,8 +458,8 @@ class events_test extends \advanced_testcase {
             'courseid' => $course->id,
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
-                'quizid' => $quiz->id
-            ]
+                'quizid' => $quiz->id,
+            ],
         ];
         $event = \mod_quiz\event\attempt_reviewed::create($params);
 
@@ -448,6 +480,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for viewing the attempt summary, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_summary_viewed
      */
     public function test_attempt_summary_viewed(): void {
         $this->resetAfterTest();
@@ -462,8 +496,8 @@ class events_test extends \advanced_testcase {
             'courseid' => $course->id,
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
-                'quizid' => $quiz->id
-            ]
+                'quizid' => $quiz->id,
+            ],
         ];
         $event = \mod_quiz\event\attempt_summary_viewed::create($params);
 
@@ -484,6 +518,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for creating a user override, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\user_override_created
      */
     public function test_user_override_created(): void {
         $this->resetAfterTest();
@@ -497,8 +533,8 @@ class events_test extends \advanced_testcase {
             'relateduserid' => 2,
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
-                'quizid' => $quiz->id
-            ]
+                'quizid' => $quiz->id,
+            ],
         ];
         $event = \mod_quiz\event\user_override_created::create($params);
 
@@ -519,6 +555,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for creating a group override, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\group_override_created
      */
     public function test_group_override_created(): void {
         $this->resetAfterTest();
@@ -532,8 +570,8 @@ class events_test extends \advanced_testcase {
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
                 'quizid' => $quiz->id,
-                'groupid' => 2
-            ]
+                'groupid' => 2,
+            ],
         ];
         $event = \mod_quiz\event\group_override_created::create($params);
 
@@ -554,6 +592,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating a user override, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\user_override_updated
      */
     public function test_user_override_updated(): void {
         $this->resetAfterTest();
@@ -567,8 +607,8 @@ class events_test extends \advanced_testcase {
             'relateduserid' => 2,
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
-                'quizid' => $quiz->id
-            ]
+                'quizid' => $quiz->id,
+            ],
         ];
         $event = \mod_quiz\event\user_override_updated::create($params);
 
@@ -589,6 +629,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating a group override, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\group_override_updated
      */
     public function test_group_override_updated(): void {
         $this->resetAfterTest();
@@ -602,8 +644,8 @@ class events_test extends \advanced_testcase {
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
                 'quizid' => $quiz->id,
-                'groupid' => 2
-            ]
+                'groupid' => 2,
+            ],
         ];
         $event = \mod_quiz\event\group_override_updated::create($params);
 
@@ -621,6 +663,8 @@ class events_test extends \advanced_testcase {
 
     /**
      * Test the user override deleted event.
+     *
+     * @covers \mod_quiz\event\user_override_deleted
      */
     public function test_user_override_deleted(): void {
         global $DB;
@@ -651,6 +695,8 @@ class events_test extends \advanced_testcase {
 
     /**
      * Test the group override deleted event.
+     *
+     * @covers \mod_quiz\event\group_override_deleted
      */
     public function test_group_override_deleted(): void {
         global $DB;
@@ -684,6 +730,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for continuing an attempt, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_viewed
      */
     public function test_attempt_viewed(): void {
         $this->resetAfterTest();
@@ -699,8 +747,8 @@ class events_test extends \advanced_testcase {
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
                 'quizid' => $quiz->id,
-                'page' => 0
-            ]
+                'page' => 0,
+            ],
         ];
         $event = \mod_quiz\event\attempt_viewed::create($params);
 
@@ -718,6 +766,9 @@ class events_test extends \advanced_testcase {
 
     /**
      * Test the attempt previewed event.
+     *
+     * @covers \quiz_create_attempt
+     * @covers \mod_quiz\event\attempt_preview_started
      */
     public function test_attempt_preview_started(): void {
         $quizobj = $this->prepare_quiz();
@@ -746,9 +797,11 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for manually grading a question, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\question_manually_graded
      */
     public function test_question_manually_graded(): void {
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
 
         $params = [
             'objectid' => 1,
@@ -757,8 +810,8 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
                 'attemptid' => 2,
-                'slot' => 3
-            ]
+                'slot' => 3,
+            ],
         ];
         $event = \mod_quiz\event\question_manually_graded::create($params);
 
@@ -779,6 +832,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for regrading attempts, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_regraded
      */
     public function test_attempt_regraded(): void {
         $this->resetAfterTest();
@@ -793,8 +848,8 @@ class events_test extends \advanced_testcase {
             'courseid' => $course->id,
             'context' => \context_module::instance($quiz->cmid),
             'other' => [
-                'quizid' => $quiz->id
-            ]
+                'quizid' => $quiz->id,
+            ],
         ];
         $event = \mod_quiz\event\attempt_regraded::create($params);
 
@@ -814,10 +869,12 @@ class events_test extends \advanced_testcase {
      * Test the attempt notify manual graded event.
      * There is no external API for notification email when manual grading of user's attempt is completed,
      * so the unit test will simply create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\attempt_manual_grading_completed
      */
     public function test_attempt_manual_grading_completed(): void {
         $this->resetAfterTest();
-        list($quizobj, $quba, $attempt) = $this->prepare_quiz_data();
+        [$quizobj, $quba, $attempt] = $this->prepare_quiz_data();
         $attemptobj = quiz_attempt::create($attempt->id);
 
         $params = [
@@ -826,8 +883,8 @@ class events_test extends \advanced_testcase {
             'courseid' => $attemptobj->get_course()->id,
             'context' => \context_module::instance($attemptobj->get_cmid()),
             'other' => [
-                'quizid' => $attemptobj->get_quizid()
-            ]
+                'quizid' => $attemptobj->get_quizid(),
+            ],
         ];
         $event = \mod_quiz\event\attempt_manual_grading_completed::create($params);
 
@@ -853,6 +910,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for creating page break, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\page_break_created
      */
     public function test_page_break_created(): void {
         $quizobj = $this->prepare_quiz();
@@ -863,7 +922,7 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
                 'slotnumber' => 3,
-            ]
+            ],
         ];
         $event = \mod_quiz\event\page_break_created::create($params);
 
@@ -884,6 +943,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for deleting page break, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\page_break_deleted
      */
     public function test_page_deleted_created(): void {
         $quizobj = $this->prepare_quiz();
@@ -894,7 +955,7 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
                 'slotnumber' => 3,
-            ]
+            ],
         ];
         $event = \mod_quiz\event\page_break_deleted::create($params);
 
@@ -915,6 +976,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating quiz grade, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\quiz_grade_updated
      */
     public function test_quiz_grade_updated(): void {
         $quizobj = $this->prepare_quiz();
@@ -925,7 +988,7 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'oldgrade' => 1,
                 'newgrade' => 3,
-            ]
+            ],
         ];
         $event = \mod_quiz\event\quiz_grade_updated::create($params);
 
@@ -946,6 +1009,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for re-paginating quiz, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\quiz_repaginated
      */
     public function test_quiz_repaginated(): void {
         $quizobj = $this->prepare_quiz();
@@ -955,7 +1020,7 @@ class events_test extends \advanced_testcase {
             'context' => context_module::instance($quizobj->get_cmid()),
             'other' => [
                 'slotsperpage' => 3,
-            ]
+            ],
         ];
         $event = \mod_quiz\event\quiz_repaginated::create($params);
 
@@ -976,6 +1041,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for creating section break, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\section_break_created
      */
     public function test_section_break_created(): void {
         $quizobj = $this->prepare_quiz();
@@ -987,8 +1054,8 @@ class events_test extends \advanced_testcase {
                 'quizid' => $quizobj->get_quizid(),
                 'firstslotid' => 1,
                 'firstslotnumber' => 2,
-                'title' => 'New title'
-            ]
+                'title' => 'New title',
+            ],
         ];
         $event = \mod_quiz\event\section_break_created::create($params);
 
@@ -1010,6 +1077,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for deleting section break, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\section_break_deleted
      */
     public function test_section_break_deleted(): void {
         $quizobj = $this->prepare_quiz();
@@ -1020,8 +1089,8 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
                 'firstslotid' => 1,
-                'firstslotnumber' => 2
-            ]
+                'firstslotnumber' => 2,
+            ],
         ];
         $event = \mod_quiz\event\section_break_deleted::create($params);
 
@@ -1042,6 +1111,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating section shuffle, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\section_shuffle_updated
      */
     public function test_section_shuffle_updated(): void {
         $quizobj = $this->prepare_quiz();
@@ -1052,8 +1123,8 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
                 'firstslotnumber' => 2,
-                'shuffle' => true
-            ]
+                'shuffle' => true,
+            ],
         ];
         $event = \mod_quiz\event\section_shuffle_updated::create($params);
 
@@ -1074,6 +1145,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating section title, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\section_title_updated
      */
     public function test_section_title_updated(): void {
         $quizobj = $this->prepare_quiz();
@@ -1085,8 +1158,8 @@ class events_test extends \advanced_testcase {
                 'quizid' => $quizobj->get_quizid(),
                 'firstslotid' => 1,
                 'firstslotnumber' => 2,
-                'newtitle' => 'New title'
-            ]
+                'newtitle' => 'New title',
+            ],
         ];
         $event = \mod_quiz\event\section_title_updated::create($params);
 
@@ -1108,6 +1181,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for creating slot, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\slot_created
      */
     public function test_slot_created(): void {
         $quizobj = $this->prepare_quiz();
@@ -1118,8 +1193,8 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
                 'slotnumber' => 1,
-                'page' => 1
-            ]
+                'page' => 1,
+            ],
         ];
         $event = \mod_quiz\event\slot_created::create($params);
 
@@ -1140,6 +1215,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for deleting slot, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\slot_deleted
      */
     public function test_slot_deleted(): void {
         $quizobj = $this->prepare_quiz();
@@ -1150,7 +1227,7 @@ class events_test extends \advanced_testcase {
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
                 'slotnumber' => 1,
-            ]
+            ],
         ];
         $event = \mod_quiz\event\slot_deleted::create($params);
 
@@ -1171,6 +1248,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating slot mark, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\slot_mark_updated
      */
     public function test_slot_mark_updated(): void {
         $quizobj = $this->prepare_quiz();
@@ -1182,7 +1261,7 @@ class events_test extends \advanced_testcase {
                 'quizid' => $quizobj->get_quizid(),
                 'previousmaxmark' => 1,
                 'newmaxmark' => 2,
-            ]
+            ],
         ];
         $event = \mod_quiz\event\slot_mark_updated::create($params);
 
@@ -1203,6 +1282,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for moving slot, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\slot_moved
      */
     public function test_slot_moved(): void {
         $quizobj = $this->prepare_quiz();
@@ -1214,8 +1295,8 @@ class events_test extends \advanced_testcase {
                 'quizid' => $quizobj->get_quizid(),
                 'previousslotnumber' => 1,
                 'afterslotnumber' => 2,
-                'page' => 1
-            ]
+                'page' => 1,
+            ],
         ];
         $event = \mod_quiz\event\slot_moved::create($params);
 
@@ -1236,6 +1317,8 @@ class events_test extends \advanced_testcase {
      *
      * There is no external API for updating slot require previous option, so the unit test will simply
      * create and trigger the event and ensure the event data is returned as expected.
+     *
+     * @covers \mod_quiz\event\slot_requireprevious_updated
      */
     public function test_slot_requireprevious_updated(): void {
         $quizobj = $this->prepare_quiz();
@@ -1245,8 +1328,8 @@ class events_test extends \advanced_testcase {
             'context' => context_module::instance($quizobj->get_cmid()),
             'other' => [
                 'quizid' => $quizobj->get_quizid(),
-                'requireprevious' => true
-            ]
+                'requireprevious' => true,
+            ],
         ];
         $event = \mod_quiz\event\slot_requireprevious_updated::create($params);
 

@@ -28,8 +28,7 @@ use restore_dbops;
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_attempt_test extends \advanced_testcase {
-
+final class restore_attempt_test extends \advanced_testcase {
     /**
      * Load required libraries
      */
@@ -64,8 +63,14 @@ class restore_attempt_test extends \advanced_testcase {
         $categoryid = $DB->get_field('course_categories', 'MIN(id)', []);
         $courseid = restore_dbops::create_new_course('Test fullname', 'Test shortname', $categoryid);
 
-        $controller = new restore_controller($backuptempdir, $courseid, backup::INTERACTIVE_NO, backup::MODE_GENERAL, $USER->id,
-            backup::TARGET_NEW_COURSE);
+        $controller = new restore_controller(
+            $backuptempdir,
+            $courseid,
+            backup::INTERACTIVE_NO,
+            backup::MODE_GENERAL,
+            $USER->id,
+            backup::TARGET_NEW_COURSE
+        );
 
         $this->assertTrue($controller->execute_precheck());
         $controller->execute_plan();
@@ -82,10 +87,14 @@ class restore_attempt_test extends \advanced_testcase {
             backup::LOG_INFO,
         ]);
 
-        $this->assertContains("Mapped user ID not found for user 4, quiz {$restoredquiz->id}, attempt 1. Skipping quiz attempt",
-            $loginfomessages);
-        $this->assertContains("Mapped user ID not found for user 5, quiz {$restoredquiz->id}, attempt 1. Skipping quiz attempt",
-            $loginfomessages);
+        $this->assertContains(
+            "Mapped user ID not found for user 4, quiz {$restoredquiz->id}, attempt 1. Skipping quiz attempt",
+            $loginfomessages
+        );
+        $this->assertContains(
+            "Mapped user ID not found for user 5, quiz {$restoredquiz->id}, attempt 1. Skipping quiz attempt",
+            $loginfomessages
+        );
 
         // User 01 has supplied the wrong answer, assert dates match the backup file too.
         $user01attempt = $DB->get_record('quiz_attempts', [

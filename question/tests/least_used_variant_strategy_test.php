@@ -32,16 +32,18 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @package    core_question
  * @copyright  2015 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \core_question\engine\variants\least_used_strategy
  */
-class least_used_variant_strategy_test extends \advanced_testcase {
-
+final class least_used_variant_strategy_test extends \advanced_testcase {
     public function test_question_with_one_variant_always_picks_that(): void {
         $question = \test_question_maker::make_question('shortanswer');
         $quba = question_engine::make_questions_usage_by_activity('test', \context_system::instance());
         $quba->set_preferred_behaviour('deferredfeedback');
         $slot = $quba->add_question($question);
         $quba->start_all_questions(new least_used_strategy(
-                $quba, new qubaid_list([])));
+            $quba,
+            new qubaid_list([])
+        ));
         $this->assertEquals(1, $quba->get_variant($slot));
     }
 
@@ -53,7 +55,9 @@ class least_used_variant_strategy_test extends \advanced_testcase {
         $slot1 = $quba->add_question($question);
         $slot2 = $quba->add_question($question);
         $quba->start_all_questions(new least_used_strategy(
-                $quba, new qubaid_list([])));
+            $quba,
+            new qubaid_list([])
+        ));
         $this->assertEquals($quba->get_variant($slot1), $quba->get_variant($slot2));
     }
 
@@ -80,14 +84,22 @@ class least_used_variant_strategy_test extends \advanced_testcase {
                        AND qdd.name = ?", [$questiondata->id, 'b']);
         $DB->set_field('question_dataset_definitions', 'itemcount', 2, ['id' => $adefinitionid]);
         $DB->set_field('question_dataset_definitions', 'itemcount', 2, ['id' => $bdefinitionid]);
-        $DB->insert_record('question_dataset_items', ['definition' => $adefinitionid,
-                'itemnumber' => 1, 'value' => 3]);
-        $DB->insert_record('question_dataset_items', ['definition' => $bdefinitionid,
-                'itemnumber' => 1, 'value' => 7]);
-        $DB->insert_record('question_dataset_items', ['definition' => $adefinitionid,
-                'itemnumber' => 2, 'value' => 6]);
-        $DB->insert_record('question_dataset_items', ['definition' => $bdefinitionid,
-                'itemnumber' => 2, 'value' => 4]);
+        $DB->insert_record('question_dataset_items', [
+            'definition' => $adefinitionid,
+            'itemnumber' => 1, 'value' => 3,
+        ]);
+        $DB->insert_record('question_dataset_items', [
+            'definition' => $bdefinitionid,
+            'itemnumber' => 1, 'value' => 7,
+        ]);
+        $DB->insert_record('question_dataset_items', [
+            'definition' => $adefinitionid,
+            'itemnumber' => 2, 'value' => 6,
+        ]);
+        $DB->insert_record('question_dataset_items', [
+            'definition' => $bdefinitionid,
+            'itemnumber' => 2, 'value' => 4,
+        ]);
 
         $question = question_bank::load_question($questiondata->id);
 
@@ -95,7 +107,9 @@ class least_used_variant_strategy_test extends \advanced_testcase {
         $quba1->set_preferred_behaviour('deferredfeedback');
         $slot1 = $quba1->add_question($question);
         $quba1->start_all_questions(new least_used_strategy(
-                $quba1, new qubaid_list([])));
+            $quba1,
+            new qubaid_list([])
+        ));
         question_engine::save_questions_usage_by_activity($quba1);
         $variant1 = $quba1->get_variant($slot1);
 
@@ -104,7 +118,9 @@ class least_used_variant_strategy_test extends \advanced_testcase {
         $quba2->set_preferred_behaviour('deferredfeedback');
         $slot2 = $quba2->add_question($question);
         $quba2->start_all_questions(new least_used_strategy(
-                $quba1, new qubaid_list([$quba1->get_id()])));
+            $quba1,
+            new qubaid_list([$quba1->get_id()])
+        ));
         question_engine::save_questions_usage_by_activity($quba2);
         $variant2 = $quba2->get_variant($slot2);
 
@@ -115,7 +131,9 @@ class least_used_variant_strategy_test extends \advanced_testcase {
         $quba3->set_preferred_behaviour('deferredfeedback');
         $slot3 = $quba3->add_question($question);
         $quba3->start_all_questions(new least_used_strategy(
-                $quba1, new qubaid_list([$quba1->get_id(), $quba2->get_id()])));
+            $quba1,
+            new qubaid_list([$quba1->get_id(), $quba2->get_id()])
+        ));
         $variant3 = $quba3->get_variant($slot3);
 
         $this->assertTrue($variant3 == $variant1 || $variant3 == $variant2);

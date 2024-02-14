@@ -36,8 +36,7 @@ global $CFG;
 
 require_once($CFG->dirroot . '/question/editlib.php');
 
-class events_test extends \advanced_testcase {
-
+final class events_test extends \advanced_testcase {
     /**
      * Tests set up.
      */
@@ -49,6 +48,7 @@ class events_test extends \advanced_testcase {
      * Test the questions imported event.
      * There is no easy way to trigger this event using the API, so the unit test will simply
      * create and trigger the event and ensure data is returned as expected.
+     * @covers \core\event\questions_imported
      */
     public function test_questions_imported(): void {
 
@@ -62,13 +62,14 @@ class events_test extends \advanced_testcase {
         $defaultcategory = $defaultcategoryobj->id . ',' . $defaultcategoryobj->contextid;
 
         $qcobject = new question_category_object(
-                1,
-                new \moodle_url('/mod/quiz/edit.php', ['cmid' => $quiz->cmid]),
-                $contexts->having_one_edit_tab_cap('categories'),
-                $defaultcategoryobj->id,
-                $defaultcategory,
-                null,
-                $contexts->having_cap('moodle/question:add'));
+            1,
+            new \moodle_url('/mod/quiz/edit.php', ['cmid' => $quiz->cmid]),
+            $contexts->having_one_edit_tab_cap('categories'),
+            $defaultcategoryobj->id,
+            $defaultcategory,
+            null,
+            $contexts->having_cap('moodle/question:add')
+        );
 
         // Create the category.
         $categoryid = $qcobject->add_category($defaultcategory, 'newcategory', '', true);
@@ -93,13 +94,13 @@ class events_test extends \advanced_testcase {
         $this->assertEquals($categoryid, $event->other['categoryid']);
         $this->assertEquals('testformat', $event->other['format']);
         $this->assertDebuggingNotCalled();
-
     }
 
     /**
      * Test the questions exported event.
      * There is no easy way to trigger this event using the API, so the unit test will simply
      * create and trigger the event and ensure data is returned as expected.
+     * @covers \core\event\questions_exported
      */
     public function test_questions_exported(): void {
 
@@ -113,13 +114,14 @@ class events_test extends \advanced_testcase {
         $defaultcategory = $defaultcategoryobj->id . ',' . $defaultcategoryobj->contextid;
 
         $qcobject = new question_category_object(
-                1,
-                new \moodle_url('/mod/quiz/edit.php', ['cmid' => $quiz->cmid]),
-                $contexts->having_one_edit_tab_cap('categories'),
-                $defaultcategoryobj->id,
-                $defaultcategory,
-                null,
-                $contexts->having_cap('moodle/question:add'));
+            1,
+            new \moodle_url('/mod/quiz/edit.php', ['cmid' => $quiz->cmid]),
+            $contexts->having_one_edit_tab_cap('categories'),
+            $defaultcategoryobj->id,
+            $defaultcategory,
+            null,
+            $contexts->having_cap('moodle/question:add')
+        );
 
         // Create the category.
         $categoryid = $qcobject->add_category($defaultcategory, 'newcategory', '', true);
@@ -144,11 +146,11 @@ class events_test extends \advanced_testcase {
         $this->assertEquals($categoryid, $event->other['categoryid']);
         $this->assertEquals('testformat', $event->other['format']);
         $this->assertDebuggingNotCalled();
-
     }
 
     /**
      * Test the question created event.
+     * @covers \core\event\question_created
      */
     public function test_question_created(): void {
 
@@ -170,11 +172,11 @@ class events_test extends \advanced_testcase {
         $this->assertEquals($question->id, $event->objectid);
         $this->assertEquals($cat->id, $event->other['categoryid']);
         $this->assertDebuggingNotCalled();
-
     }
 
     /**
      * Test the question deleted event.
+     * @covers \core\event\question_deleted
      */
     public function test_question_deleted(): void {
 
@@ -197,11 +199,13 @@ class events_test extends \advanced_testcase {
         $this->assertEquals($question->id, $event->objectid);
         $this->assertEquals($cat->id, $event->other['categoryid']);
         $this->assertDebuggingNotCalled();
-
     }
 
     /**
      * Test the question updated event.
+     *
+     * @covers \core\event\question_created
+     * @covers \core\event\question_updated
      */
     public function test_question_updated(): void {
 
@@ -238,11 +242,11 @@ class events_test extends \advanced_testcase {
         $this->assertEquals($question->id, $event->objectid);
         $this->assertEquals($cat->id, $event->other['categoryid']);
         $this->assertDebuggingNotCalled();
-
     }
 
     /**
      * Test the question moved event.
+     * @covers \core\event\question_moved
      */
     public function test_question_moved(): void {
 
@@ -250,10 +254,15 @@ class events_test extends \advanced_testcase {
         $generator = $this->getDataGenerator()->get_plugin_generator('core_question');
 
         $cat1 = $generator->create_question_category([
-                'name' => 'My category 1', 'sortorder' => 1]);
+            'name' => 'My category 1',
+            'sortorder' => 1,
+        ]);
 
-        $cat2 = $generator->create_question_category([
-                'name' => 'My category 2', 'sortorder' => 2]);
+        $cat2 =
+        $generator->create_question_category([
+            'name' => 'My category 2',
+            'sortorder' => 2,
+        ]);
 
         $questiondata = $generator->create_question('description', null, ['category' => $cat1->id]);
         $question = \question_bank::load_question($questiondata->id);
@@ -270,13 +279,13 @@ class events_test extends \advanced_testcase {
         $this->assertEquals($cat1->id, $event->other['oldcategoryid']);
         $this->assertEquals($cat2->id, $event->other['newcategoryid']);
         $this->assertDebuggingNotCalled();
-
     }
 
     /**
      * Test the question viewed event.
      * There is no external API for viewing the question, so the unit test will simply
      * create and trigger the event and ensure data is returned as expected.
+     * @covers \core\event\question_viewed
      */
     public function test_question_viewed(): void {
 
@@ -301,6 +310,5 @@ class events_test extends \advanced_testcase {
         $this->assertEquals($question->id, $event->objectid);
         $this->assertEquals($cat->id, $event->other['categoryid']);
         $this->assertDebuggingNotCalled();
-
     }
 }

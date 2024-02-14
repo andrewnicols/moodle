@@ -29,8 +29,7 @@ use question_bank;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \question_bank
  */
-class version_test extends \advanced_testcase {
-
+final class version_test extends \advanced_testcase {
     /**
      * @var \context_module module context.
      */
@@ -197,7 +196,7 @@ class version_test extends \advanced_testcase {
 
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
         $qcategorychild = $this->qgenerator->create_question_category(['contextid' => $this->context->id,
-            'parent' => $qcategory->id]);
+            'parent' => $qcategory->id, ]);
         $systemcontext = \context_system::instance();
         $qcategorysys = $this->qgenerator->create_question_category(['contextid' => $systemcontext->id]);
         $question = $this->qgenerator->create_question('shortanswer', null, ['category' => $qcategorychild->id]);
@@ -208,10 +207,15 @@ class version_test extends \advanced_testcase {
 
         // Move the category to system context.
         $contexts = new \core_question\local\bank\question_edit_contexts($systemcontext);
-        $qcobject = new \qbank_managecategories\question_category_object(null,
+        $qcobject = new \qbank_managecategories\question_category_object(
+            null,
             new \moodle_url('/question/bank/managecategories/category.php', ['courseid' => SITEID]),
-            $contexts->having_one_edit_tab_cap('categories'), 0, null, 0,
-            $contexts->having_cap('moodle/question:add'));
+            $contexts->having_one_edit_tab_cap('categories'),
+            0,
+            null,
+            0,
+            $contexts->having_cap('moodle/question:add')
+        );
         $qcobject->move_questions_and_delete_category($qcategorychild->id, $qcategorysys->id);
 
         // The bank entry record should point to the new category in order to not break quizzes.
@@ -229,11 +233,14 @@ class version_test extends \advanced_testcase {
         global $DB;
 
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
-        $question = $this->qgenerator->create_question('shortanswer', null,
+        $question = $this->qgenerator->create_question(
+            'shortanswer',
+            null,
             [
                 'category' => $qcategory->id,
-                'idnumber' => 'id1'
-            ]);
+                'idnumber' => 'id1',
+            ]
+        );
         $questionid1 = $question->id;
 
         // Create a new version and try to remove it after adding it to a quiz.
@@ -264,11 +271,14 @@ class version_test extends \advanced_testcase {
      */
     public function test_get_all_versions_of_question(): void {
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
-        $question = $this->qgenerator->create_question('shortanswer', null,
+        $question = $this->qgenerator->create_question(
+            'shortanswer',
+            null,
             [
                 'category' => $qcategory->id,
-                'idnumber' => 'id1'
-            ]);
+                'idnumber' => 'id1',
+            ]
+        );
         $questionid1 = $question->id;
 
         // Create a new version.
@@ -294,11 +304,14 @@ class version_test extends \advanced_testcase {
 
         $questionversions = [];
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
-        $question = $this->qgenerator->create_question('shortanswer', null,
+        $question = $this->qgenerator->create_question(
+            'shortanswer',
+            null,
             [
                 'category' => $qcategory->id,
-                'idnumber' => 'id1'
-            ]);
+                'idnumber' => 'id1',
+            ]
+        );
         $questionversions[1] = $question->id;
 
         // Create a new version.

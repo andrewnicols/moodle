@@ -42,7 +42,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2021 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class quiz_notify_attempt_manual_grading_completed_test extends advanced_testcase {
+final class quiz_notify_attempt_manual_grading_completed_test extends advanced_testcase {
     /** @var \stdClass $course Test course to contain quiz. */
     protected $course;
 
@@ -104,8 +104,12 @@ class quiz_notify_attempt_manual_grading_completed_test extends advanced_testcas
 
         // Make a quiz.
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
-        $this->quiz = $quizgenerator->create_instance(['course' => $this->course->id, 'questionsperpage' => 0,
-            'grade' => 100.0, 'sumgrades' => 2]);
+        $this->quiz = $quizgenerator->create_instance([
+            'course' => $this->course->id,
+            'questionsperpage' => 0,
+            'grade' => 100.0,
+            'sumgrades' => 2,
+        ]);
 
         // Create a truefalse question and an essay question.
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');

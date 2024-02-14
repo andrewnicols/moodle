@@ -32,8 +32,7 @@ require_once($CFG->dirroot . '/question/editlib.php');
  * @copyright  2018 the Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class quiz_question_bank_view_test extends \advanced_testcase {
-
+final class quiz_question_bank_view_test extends \advanced_testcase {
     public function test_viewing_question_bank_should_not_load_individual_questions(): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -51,8 +50,11 @@ class quiz_question_bank_view_test extends \advanced_testcase {
         $contexts = new question_edit_contexts($context);
         question_make_default_categories($contexts->all());
         $cat = question_get_default_category($context->id);
-        $questiondata = $questiongenerator->create_question('numerical', null,
-                ['name' => 'Example question', 'category' => $cat->id]);
+        $questiondata = $questiongenerator->create_question(
+            'numerical',
+            null,
+            ['name' => 'Example question', 'category' => $cat->id]
+        );
 
         // Ensure the question is not in the cache.
         $cache = \cache::make('core', 'questiondata');
@@ -66,7 +68,7 @@ class quiz_question_bank_view_test extends \advanced_testcase {
             'recurse' => false,
             'showhidden' => false,
             'qbshowtext' => false,
-            'tabname' => 'editq'
+            'tabname' => 'editq',
         ];
         $extraparams = ['cmid' => $cm->id];
         $view = new custom_view($contexts, new \moodle_url('/'), $course, $cm, $params, $extraparams);

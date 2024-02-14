@@ -36,7 +36,6 @@ require_once($CFG->dirroot . '/mod/quiz/classes/repaginate.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_quiz_repaginate_testable extends repaginate {
-
     public function __construct($quizid = 0, $slots = null) {
         return parent::__construct($quizid, $slots);
     }
@@ -62,8 +61,7 @@ class mod_quiz_repaginate_testable extends repaginate {
  * @copyright 2014 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class repaginate_test extends \advanced_testcase {
-
+final class repaginate_test extends \advanced_testcase {
     /** @var array stores the slots. */
     private $quizslots;
     /** @var mod_quiz_repaginate_testable the object being tested. */
@@ -86,7 +84,11 @@ class repaginate_test extends \advanced_testcase {
         $quizgenerator = $this->getDataGenerator()->get_plugin_generator('mod_quiz');
 
         $quiz = $quizgenerator->create_instance([
-                'course' => $SITE->id, 'questionsperpage' => 0, 'grade' => 100.0, 'sumgrades' => 2]);
+            'course' => $SITE->id,
+            'questionsperpage' => 0,
+            'grade' => 100.0,
+            'sumgrades' => 2,
+        ]);
         $cm = get_coursemodule_from_instance('quiz', $quiz->id, $SITE->id);
 
         // Create five questions.
@@ -289,5 +291,4 @@ class repaginate_test extends \advanced_testcase {
         $actual = $this->repaginate->repaginate_the_rest($newslots, $slotfrom, $type, false);
         $this->assertEquals($expected, $actual);
     }
-
 }

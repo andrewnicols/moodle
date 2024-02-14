@@ -25,15 +25,15 @@ use core_question\statistics\questions\calculated_question_summary;
  * @category   test
  * @copyright  2018 Shamim Rezaie <shamim@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \core_question\statistics\questions\calculated_question_summary
  */
-class calculated_question_summary_test extends \advanced_testcase {
-
+final class calculated_question_summary_test extends \advanced_testcase {
     /**
      * Provider for test_get_min_max_of.
      *
      * @return array
      */
-    public static function get_min_max_provider() {
+    public static function get_min_max_provider(): array {
         return [
             'negative number and null' => [
                 [
@@ -42,7 +42,7 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 3, 'index' => null],
                     (object)['questionid' => 4, 'index' => 12],
                 ],
-                [-7, 12]
+                [-7, 12],
             ],
             'null and negative number' => [
                 [
@@ -51,7 +51,7 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 3, 'index' => -7],
                     (object)['questionid' => 4, 'index' => 12],
                 ],
-                [-7, 12]
+                [-7, 12],
             ],
             'negative number and null as maximum' => [
                 [
@@ -59,7 +59,7 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 2, 'index' => null],
                     (object)['questionid' => 3, 'index' => -7],
                 ],
-                [-7, null]
+                [-7, null],
             ],
             'zero and null' => [
                 [
@@ -68,7 +68,7 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 3, 'index' => null],
                     (object)['questionid' => 4, 'index' => 12],
                 ],
-                [0, 12]
+                [0, 12],
             ],
             'null as minimum' => [
                 [
@@ -76,7 +76,7 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 2, 'index' => null],
                     (object)['questionid' => 3, 'index' => 12],
                 ],
-                [null, 12]
+                [null, 12],
             ],
             'null and null' => [
                 [
@@ -84,7 +84,7 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 2, 'index' => null],
                     (object)['questionid' => 3, 'index' => null],
                 ],
-                [null, 2]
+                [null, 2],
             ],
         ];
     }
@@ -105,7 +105,7 @@ class calculated_question_summary_test extends \advanced_testcase {
      *
      * @return array
      */
-    public static function get_sd_min_max_provider() {
+    public static function get_sd_min_max_provider(): array {
         return [
             'null and number' => [
                 [
@@ -114,7 +114,7 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 3, 'sd' => 0.1049, 'maxmark' => 1],
                     (object)['questionid' => 4, 'sd' => 0.12, 'maxmark' => 1],
                 ],
-                [null, 0.4]
+                [null, 0.4],
             ],
             'null and zero' => [
                 [
@@ -123,28 +123,28 @@ class calculated_question_summary_test extends \advanced_testcase {
                     (object)['questionid' => 3, 'sd' => 0, 'maxmark' => 1],
                     (object)['questionid' => 4, 'sd' => 0.12, 'maxmark' => 1],
                 ],
-                [0, 0.4]
+                [0, 0.4],
             ],
             'zero mark' => [
                 [
                     (object)['questionid' => 1, 'sd' => 0, 'maxmark' => 0],
                     (object)['questionid' => 2, 'sd' => 0.1049, 'maxmark' => 1],
                 ],
-                [null, 0.1049]
+                [null, 0.1049],
             ],
             'nonzero and nonzero' => [
                 [
                     (object)['questionid' => 1, 'sd' => 0.2, 'maxmark' => 0.5],
                     (object)['questionid' => 2, 'sd' => 0.7, 'maxmark' => 2],
                 ],
-                [0.35, 0.4]
+                [0.35, 0.4],
             ],
             'zero max mark as loaded from the DB' => [
                 [
                     (object)['questionid' => 1, 'sd' => '0.0000000000', 'maxmark' => '0.0000000'],
                     (object)['questionid' => 2, 'sd' => '0.0000000000', 'maxmark' => '0.0000000'],
                 ],
-                [null, null]
+                [null, null],
             ],
         ];
     }

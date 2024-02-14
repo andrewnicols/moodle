@@ -30,8 +30,7 @@ require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
  * @copyright  2018 Shamim Rezaie <shamim@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_test extends \advanced_testcase {
-
+final class backup_test extends \advanced_testcase {
     /**
      * Makes a backup of the course.
      *
@@ -46,9 +45,14 @@ class backup_test extends \advanced_testcase {
 
         // Do backup with default settings. MODE_IMPORT means it will just
         // create the directory and not zip it.
-        $bc = new \backup_controller(\backup::TYPE_1COURSE, $course->id,
-                \backup::FORMAT_MOODLE, \backup::INTERACTIVE_NO, \backup::MODE_IMPORT,
-                $USER->id);
+        $bc = new \backup_controller(
+            \backup::TYPE_1COURSE,
+            $course->id,
+            \backup::FORMAT_MOODLE,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_IMPORT,
+            $USER->id
+        );
         $backupid = $bc->get_backupid();
         $bc->execute_plan();
         $bc->destroy();
@@ -74,9 +78,14 @@ class backup_test extends \advanced_testcase {
 
         // Do restore to new course with default settings.
         $newcourseid = \restore_dbops::create_new_course($fullname, $shortname, $categoryid);
-        $rc = new \restore_controller($backupid, $newcourseid,
-                \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id,
-                \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $newcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
 
         $precheck = $rc->execute_precheck();
         if (!$expectedprecheckwarning) {
@@ -184,7 +193,7 @@ class backup_test extends \advanced_testcase {
 
         $expectedwarnings = [
                 get_string('qcategory2coursefallback', 'backup', (object) ['name' => 'top']),
-                get_string('qcategory2coursefallback', 'backup', (object) ['name' => $qcat->name])
+                get_string('qcategory2coursefallback', 'backup', (object) ['name' => $qcat->name]),
         ];
 
         // Restore to a new course in the new course category.
@@ -211,7 +220,6 @@ class backup_test extends \advanced_testcase {
                 $this->assertEquals($coursecontext3->id, $tag->taginstancecontextid);
             }
         }
-
     }
 
     /**
@@ -231,11 +239,11 @@ class backup_test extends \advanced_testcase {
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $questioncategory = $questiongenerator->create_question_category();
         $overrides = ['name' => 'Test question', 'category' => $questioncategory->id,
-                'createdby' => $user->id, 'modifiedby' => $user->id];
+                'createdby' => $user->id, 'modifiedby' => $user->id, ];
         $question = $questiongenerator->create_question('truefalse', null, $overrides);
 
         // Create a quiz and a questions.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
         quiz_add_quiz_question($question->id, $quiz);
 
         // Enrol user with a teacher role.
@@ -243,8 +251,14 @@ class backup_test extends \advanced_testcase {
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $teacherrole->id, 'manual');
 
         // Backup the course.
-        $bc = new \backup_controller(\backup::TYPE_1COURSE, $course->id, \backup::FORMAT_MOODLE,
-            \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id);
+        $bc = new \backup_controller(
+            \backup::TYPE_1COURSE,
+            $course->id,
+            \backup::FORMAT_MOODLE,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id
+        );
         $backupid = $bc->get_backupid();
         $bc->execute_plan();
         $results = $bc->get_results();
@@ -260,8 +274,14 @@ class backup_test extends \advanced_testcase {
 
         // Restore the course.
         $restoredcourseid = \restore_dbops::create_new_course($course->fullname, $course->shortname . '_1', $category->id);
-        $rc = new \restore_controller($backupid, $restoredcourseid, \backup::INTERACTIVE_NO,
-            \backup::MODE_GENERAL, $USER->id, \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $restoredcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
         $rc->execute_precheck();
         $rc->execute_plan();
         $rc->destroy();
@@ -292,16 +312,22 @@ class backup_test extends \advanced_testcase {
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $questioncategory = $questiongenerator->create_question_category();
         $overrides = ['name' => 'Test question', 'category' => $questioncategory->id,
-                'createdby' => $user->id, 'modifiedby' => $user->id];
+                'createdby' => $user->id, 'modifiedby' => $user->id, ];
         $question = $questiongenerator->create_question('truefalse', null, $overrides);
 
         // Create a quiz and a questions.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
         quiz_add_quiz_question($question->id, $quiz);
 
         // Backup the course.
-        $bc = new \backup_controller(\backup::TYPE_1COURSE, $course->id, \backup::FORMAT_MOODLE,
-            \backup::INTERACTIVE_NO, \backup::MODE_GENERAL, $USER->id);
+        $bc = new \backup_controller(
+            \backup::TYPE_1COURSE,
+            $course->id,
+            \backup::FORMAT_MOODLE,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id
+        );
         $backupid = $bc->get_backupid();
         $bc->execute_plan();
         $results = $bc->get_results();
@@ -317,8 +343,14 @@ class backup_test extends \advanced_testcase {
 
         // Restore the course.
         $restoredcourseid = \restore_dbops::create_new_course($course->fullname, $course->shortname . '_1', $category->id);
-        $rc = new \restore_controller($backupid, $restoredcourseid, \backup::INTERACTIVE_NO,
-            \backup::MODE_GENERAL, $USER->id, \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $restoredcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_GENERAL,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
         $rc->execute_precheck();
         $rc->execute_plan();
         $rc->destroy();
@@ -349,16 +381,22 @@ class backup_test extends \advanced_testcase {
         $questiongenerator = $this->getDataGenerator()->get_plugin_generator('core_question');
         $questioncategory = $questiongenerator->create_question_category();
         $overrides = ['name' => 'Test question', 'category' => $questioncategory->id,
-                'createdby' => $user->id, 'modifiedby' => $user->id];
+                'createdby' => $user->id, 'modifiedby' => $user->id, ];
         $question = $questiongenerator->create_question('truefalse', null, $overrides);
 
         // Create a quiz and a questions.
-        $quiz = $this->getDataGenerator()->create_module('quiz', array('course' => $course->id));
+        $quiz = $this->getDataGenerator()->create_module('quiz', ['course' => $course->id]);
         quiz_add_quiz_question($question->id, $quiz);
 
         // Backup the course.
-        $bc = new \backup_controller(\backup::TYPE_1COURSE, $course->id, \backup::FORMAT_MOODLE,
-            \backup::INTERACTIVE_NO, \backup::MODE_SAMESITE, $USER->id);
+        $bc = new \backup_controller(
+            \backup::TYPE_1COURSE,
+            $course->id,
+            \backup::FORMAT_MOODLE,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_SAMESITE,
+            $USER->id
+        );
         $backupid = $bc->get_backupid();
         $bc->execute_plan();
         $results = $bc->get_results();
@@ -377,8 +415,14 @@ class backup_test extends \advanced_testcase {
 
         // Restore the course.
         $restoredcourseid = \restore_dbops::create_new_course($course->fullname, $course->shortname . '_1', $category->id);
-        $rc = new \restore_controller($backupid, $restoredcourseid, \backup::INTERACTIVE_NO,
-            \backup::MODE_SAMESITE, $USER->id, \backup::TARGET_NEW_COURSE);
+        $rc = new \restore_controller(
+            $backupid,
+            $restoredcourseid,
+            \backup::INTERACTIVE_NO,
+            \backup::MODE_SAMESITE,
+            $USER->id,
+            \backup::TARGET_NEW_COURSE
+        );
         $rc->execute_precheck();
         $rc->execute_plan();
         $rc->destroy();

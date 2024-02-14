@@ -41,7 +41,6 @@ use mod_quiz\quiz_settings;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_mod_quiz extends behat_question_base {
-
     /**
      * Convert page names to URLs for steps like 'When I am on the "[page name]" page'.
      *
@@ -85,50 +84,70 @@ class behat_mod_quiz extends behat_question_base {
 
         switch (strtolower($type)) {
             case 'view':
-                return new moodle_url('/mod/quiz/view.php',
-                        ['id' => $this->get_cm_by_quiz_name($identifier)->id]);
+                return new moodle_url(
+                    '/mod/quiz/view.php',
+                    ['id' => $this->get_cm_by_quiz_name($identifier)->id]
+                );
 
             case 'edit':
-                return new moodle_url('/mod/quiz/edit.php',
-                        ['cmid' => $this->get_cm_by_quiz_name($identifier)->id]);
+                return new moodle_url(
+                    '/mod/quiz/edit.php',
+                    ['cmid' => $this->get_cm_by_quiz_name($identifier)->id]
+                );
 
             case 'group overrides':
-                return new moodle_url('/mod/quiz/overrides.php',
-                    ['cmid' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'group']);
+                return new moodle_url(
+                    '/mod/quiz/overrides.php',
+                    ['cmid' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'group']
+                );
 
             case 'user overrides':
-                return new moodle_url('/mod/quiz/overrides.php',
-                    ['cmid' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'user']);
+                return new moodle_url(
+                    '/mod/quiz/overrides.php',
+                    ['cmid' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'user']
+                );
 
             case 'grades report':
-                return new moodle_url('/mod/quiz/report.php',
-                    ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'overview']);
+                return new moodle_url(
+                    '/mod/quiz/report.php',
+                    ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'overview']
+                );
 
             case 'responses report':
-                return new moodle_url('/mod/quiz/report.php',
-                    ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'responses']);
+                return new moodle_url(
+                    '/mod/quiz/report.php',
+                    ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'responses']
+                );
 
             case 'statistics report':
-                return new moodle_url('/mod/quiz/report.php',
-                    ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'statistics']);
+                return new moodle_url(
+                    '/mod/quiz/report.php',
+                    ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'statistics']
+                );
 
             case 'manual grading report':
-                return new moodle_url('/mod/quiz/report.php',
-                        ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'grading']);
+                return new moodle_url(
+                    '/mod/quiz/report.php',
+                    ['id' => $this->get_cm_by_quiz_name($identifier)->id, 'mode' => 'grading']
+                );
             case 'attempt view':
-                list($quizname, $username, $attemptno, $pageno) = explode(' > ', $identifier);
+                [$quizname, $username, $attemptno, $pageno] = explode(' > ', $identifier);
                 $pageno = intval($pageno);
                 $pageno = $pageno > 0 ? $pageno - 1 : 0;
-                $attemptno = (int) trim(str_replace ('Attempt', '', $attemptno));
+                $attemptno = (int) trim(str_replace('Attempt', '', $attemptno));
                 $quiz = $this->get_quiz_by_name($quizname);
                 $quizcm = get_coursemodule_from_instance('quiz', $quiz->id, $quiz->course);
                 $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
-                $attempt = $DB->get_record('quiz_attempts',
-                    ['quiz' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno], '*', MUST_EXIST);
+                $attempt = $DB->get_record(
+                    'quiz_attempts',
+                    ['quiz' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno],
+                    '*',
+                    MUST_EXIST
+                );
                 return new moodle_url('/mod/quiz/attempt.php', [
                     'attempt' => $attempt->id,
                     'cmid' => $quizcm->id,
-                    'page' => $pageno
+                    'page' => $pageno,
                 ]);
             case 'attempt review':
                 if (substr_count($identifier, ' > ') !== 2) {
@@ -136,12 +155,16 @@ class behat_mod_quiz extends behat_question_base {
                             '"{Quiz name} > {username} > Attempt {attemptnumber}", ' .
                             'for example "Quiz 1 > student > Attempt 1".');
                 }
-                list($quizname, $username, $attemptno) = explode(' > ', $identifier);
-                $attemptno = (int) trim(str_replace ('Attempt', '', $attemptno));
+                [$quizname, $username, $attemptno] = explode(' > ', $identifier);
+                $attemptno = (int) trim(str_replace('Attempt', '', $attemptno));
                 $quiz = $this->get_quiz_by_name($quizname);
                 $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
-                $attempt = $DB->get_record('quiz_attempts',
-                        ['quiz' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno], '*', MUST_EXIST);
+                $attempt = $DB->get_record(
+                    'quiz_attempts',
+                    ['quiz' => $quiz->id, 'userid' => $user->id, 'attempt' => $attemptno],
+                    '*',
+                    MUST_EXIST
+                );
                 return new moodle_url('/mod/quiz/review.php', ['attempt' => $attempt->id]);
 
             case 'question bank':
@@ -246,15 +269,19 @@ class behat_mod_quiz extends behat_question_base {
             // Page number.
             $page = clean_param($questiondata['page'], PARAM_INT);
             if ($page <= 0 || (string) $page !== $questiondata['page']) {
-                throw new ExpectationException('The page number for question "' .
+                throw new ExpectationException(
+                    'The page number for question "' .
                          $questiondata['question'] . '" must be a positive integer.',
-                        $this->getSession());
+                    $this->getSession()
+                );
             }
             if ($page < $lastpage || $page > $lastpage + 1) {
-                throw new ExpectationException('When adding questions to a quiz, ' .
+                throw new ExpectationException(
+                    'When adding questions to a quiz, ' .
                         'the page number for each question must either be the same, ' .
                         'or one more, then the page number for the previous question.',
-                        $this->getSession());
+                    $this->getSession()
+                );
             }
             $lastpage = $page;
 
@@ -264,9 +291,11 @@ class behat_mod_quiz extends behat_question_base {
             } else {
                 $maxmark = clean_param($questiondata['maxmark'], PARAM_LOCALISEDFLOAT);
                 if (!is_numeric($maxmark) || $maxmark < 0) {
-                    throw new ExpectationException('The max mark for question "' .
+                    throw new ExpectationException(
+                        'The max mark for question "' .
                             $questiondata['question'] . '" must be a positive number.',
-                            $this->getSession());
+                        $this->getSession()
+                    );
                 }
             }
 
@@ -296,8 +325,12 @@ class behat_mod_quiz extends behat_question_base {
             // Display number (allowing editable customised question number).
             if (array_key_exists('displaynumber', $questiondata)) {
                 $slot = $DB->get_field('quiz_slots', 'MAX(slot)', ['quizid' => $quiz->id]);
-                $DB->set_field('quiz_slots', 'displaynumber', $questiondata['displaynumber'],
-                        ['quizid' => $quiz->id, 'slot' => $slot]);
+                $DB->set_field(
+                    'quiz_slots',
+                    'displaynumber',
+                    $questiondata['displaynumber'],
+                    ['quizid' => $quiz->id, 'slot' => $slot]
+                );
                 if (!is_number($questiondata['displaynumber']) && !is_string($questiondata['displaynumber'])) {
                     throw new ExpectationException('Displayed question number for "' . $questiondata['question'] .
                             '" should either be \'i\', automatically numbered (eg. 1, 2, 3),
@@ -309,12 +342,18 @@ class behat_mod_quiz extends behat_question_base {
             if (array_key_exists('requireprevious', $questiondata)) {
                 if ($questiondata['requireprevious'] === '1') {
                     $slot = $DB->get_field('quiz_slots', 'MAX(slot)', ['quizid' => $quiz->id]);
-                    $DB->set_field('quiz_slots', 'requireprevious', 1,
-                            ['quizid' => $quiz->id, 'slot' => $slot]);
+                    $DB->set_field(
+                        'quiz_slots',
+                        'requireprevious',
+                        1,
+                        ['quizid' => $quiz->id, 'slot' => $slot]
+                    );
                 } else if ($questiondata['requireprevious'] !== '' && $questiondata['requireprevious'] !== '0') {
-                    throw new ExpectationException('Require previous for question "' .
+                    throw new ExpectationException(
+                        'Require previous for question "' .
                             $questiondata['question'] . '" should be 0, 1 or blank.',
-                            $this->getSession());
+                        $this->getSession()
+                    );
                 }
             }
         }
@@ -375,21 +414,27 @@ class behat_mod_quiz extends behat_question_base {
             $section->firstslot = clean_param($sectiondata['firstslot'], PARAM_INT);
             if ($section->firstslot <= $previousfirstslot ||
                     (string) $section->firstslot !== $sectiondata['firstslot']) {
-                throw new ExpectationException('The firstslot number for section "' .
+                throw new ExpectationException(
+                    'The firstslot number for section "' .
                         $sectiondata['heading'] . '" must an integer greater than the previous section firstslot.',
-                        $this->getSession());
+                    $this->getSession()
+                );
             }
             if ($rownumber == 0 && $section->firstslot != 1) {
-                throw new ExpectationException('The first section must have firstslot set to 1.',
-                        $this->getSession());
+                throw new ExpectationException(
+                    'The first section must have firstslot set to 1.',
+                    $this->getSession()
+                );
             }
 
             // Shuffle.
             $section->shufflequestions = clean_param($sectiondata['shuffle'], PARAM_INT);
             if ((string) $section->shufflequestions !== $sectiondata['shuffle']) {
-                throw new ExpectationException('The shuffle value for section "' .
+                throw new ExpectationException(
+                    'The shuffle value for section "' .
                         $sectiondata['heading'] . '" must be 0 or 1.',
-                        $this->getSession());
+                    $this->getSession()
+                );
             }
 
             if ($rownumber == 0) {
@@ -400,8 +445,10 @@ class behat_mod_quiz extends behat_question_base {
         }
 
         if ($section->firstslot > $DB->count_records('quiz_slots', ['quizid' => $quiz->id])) {
-            throw new ExpectationException('The section firstslot must be less than the total number of slots in the quiz.',
-                    $this->getSession());
+            throw new ExpectationException(
+                'The section firstslot must be less than the total number of slots in the quiz.',
+                $this->getSession()
+            );
         }
     }
 
@@ -468,8 +515,10 @@ class behat_mod_quiz extends behat_question_base {
         } else if (preg_match('~Page (\d+)~', $pageorlast, $matches)) {
             $xpath = "//li[@id = 'page-{$matches[1]}']//a[contains(@data-toggle, 'dropdown') and contains(., 'Add')]";
         } else {
-            throw new ExpectationException("The I open the add to quiz menu step must specify either 'Page N' or 'last'.",
-                $this->getSession());
+            throw new ExpectationException(
+                "The I open the add to quiz menu step must specify either 'Page N' or 'last'.",
+                $this->getSession()
+            );
         }
         $this->find('xpath', $xpath)->click();
     }
@@ -675,7 +724,8 @@ class behat_mod_quiz extends behat_question_base {
         $destinationxpath = "//li[contains(@class, ' slot ') or contains(@class, 'pagenumber ')]" .
                 "[contains(., '" . $this->escape($target) . "')]";
 
-        $this->execute('behat_general::i_drag_and_i_drop_it_in',
+        $this->execute(
+            'behat_general::i_drag_and_i_drop_it_in',
             [$iconxpath, 'xpath_element', $destinationxpath, 'xpath_element']
         );
     }
@@ -694,7 +744,8 @@ class behat_mod_quiz extends behat_question_base {
 
         $this->execute("behat_general::i_click_on", [$slotxpath . $deletexpath, "xpath_element"]);
 
-        $this->execute('behat_general::i_click_on_in_the',
+        $this->execute(
+            'behat_general::i_click_on_in_the',
             ['Yes', "button", "Confirm", "dialogue"]
         );
     }
@@ -762,8 +813,12 @@ class behat_mod_quiz extends behat_question_base {
             }
 
             if (!empty($slotinfo['actualquestion'])) {
-                $forcedrandomquestions[$slotinfo['slot']] = $DB->get_field('question', 'id',
-                        ['name' => $slotinfo['actualquestion']], MUST_EXIST);
+                $forcedrandomquestions[$slotinfo['slot']] = $DB->get_field(
+                    'question',
+                    'id',
+                    ['name' => $slotinfo['actualquestion']],
+                    MUST_EXIST
+                );
             }
 
             if (!empty($slotinfo['variant'])) {
@@ -838,14 +893,18 @@ class behat_mod_quiz extends behat_question_base {
         $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
 
-        list($forcedrandomquestions, $forcedvariants) =
+        [$forcedrandomquestions, $forcedvariants] =
                 $this->extract_forced_randomisation_from_attempt_info($attemptinfo);
         $responses = $this->extract_responses_from_attempt_info($attemptinfo);
 
         $this->set_user($user);
 
-        $attempt = $quizgenerator->create_attempt($quizid, $user->id,
-                $forcedrandomquestions, $forcedvariants);
+        $attempt = $quizgenerator->create_attempt(
+            $quizid,
+            $user->id,
+            $forcedrandomquestions,
+            $forcedvariants
+        );
 
         $quizgenerator->submit_responses($attempt->id, $responses, false, true);
 
@@ -893,13 +952,17 @@ class behat_mod_quiz extends behat_question_base {
         $quizid = $DB->get_field('quiz', 'id', ['name' => $quizname], MUST_EXIST);
         $user = $DB->get_record('user', ['username' => $username], '*', MUST_EXIST);
 
-        list($forcedrandomquestions, $forcedvariants) =
+        [$forcedrandomquestions, $forcedvariants] =
                 $this->extract_forced_randomisation_from_attempt_info($attemptinfo);
 
         $this->set_user($user);
 
-        $quizgenerator->create_attempt($quizid, $user->id,
-                $forcedrandomquestions, $forcedvariants);
+        $quizgenerator->create_attempt(
+            $quizid,
+            $user->id,
+            $forcedrandomquestions,
+            $forcedvariants
+        );
 
         $this->set_user();
     }
@@ -1029,8 +1092,10 @@ class behat_mod_quiz extends behat_question_base {
      */
     public static function get_exact_named_selectors(): array {
         return [
-            new behat_component_named_selector('Edit slot',
-            ["//li[contains(@class,'qtype')]//span[@class='slotnumber' and contains(., %locator%)]/.."])
+            new behat_component_named_selector(
+                'Edit slot',
+                ["//li[contains(@class,'qtype')]//span[@class='slotnumber' and contains(., %locator%)]/.."]
+            ),
         ];
     }
 }

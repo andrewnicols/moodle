@@ -43,6 +43,7 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @package    quiz_overview
  * @copyright  2014 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \question_usage_by_activity
  */
 class report_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
@@ -325,8 +326,6 @@ class report_test extends \advanced_testcase {
 
     /**
      * Test question regrade for selected versions.
-     *
-     * @covers ::regrade_question
      */
     public function test_regrade_question() {
         global $DB;
