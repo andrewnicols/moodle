@@ -16,7 +16,6 @@
 
 namespace core\hook\output;
 
-use core\hook\described_hook;
 use core\hook\deprecated_callback_replacement;
 
 /**
@@ -26,29 +25,12 @@ use core\hook\deprecated_callback_replacement;
  * @copyright  2023 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class standard_head_html_prepend implements described_hook, deprecated_callback_replacement {
+#[\core\attribute\tags('output')]
+#[\core\attribute\label('Allows plugins to add any elements to the page &lt;head&gt; html tag.')]
+class standard_head_html_prepend implements deprecated_callback_replacement {
     /** @var string $output Stores results from callbacks */
     private $output = '';
 
-    /**
-     * Describes the hook purpose.
-     *
-     * @return string
-     */
-    public static function get_hook_description(): string {
-        return 'Allows plugins to add any elements to the page &lt;head&gt; html tag.';
-    }
-
-    /**
-     * List of tags that describe this hook.
-     *
-     * @return string[]
-     */
-    public static function get_hook_tags(): array {
-        return ['output'];
-    }
-
-    /**
      * Returns list of lib.php plugin callbacks that were deprecated by the hook.
      *
      * @return array
