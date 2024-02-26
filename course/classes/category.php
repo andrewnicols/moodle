@@ -366,8 +366,15 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      *              - returnhidden Return categories even if they are hidden
      * @return  core_course_category[]
      */
-    public static function get_all($options = []) {
+    public static function get_all(
+        array $options = [],
+        bool $returnhidden = false,
+    ) {
         global $DB;
+
+        if (array_key_exists('returnhidden', $options)) {
+            $returnhidden = !empty($options['returnhidden']);
+        }
 
         $coursecatrecordcache = cache::make('core', 'coursecatrecords');
 
@@ -389,7 +396,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
             $category = new self($record);
             $toset[$category->id] = $category;
 
-            if (!empty($options['returnhidden']) || $category->is_uservisible()) {
+            if ($returnhidden || $category->is_uservisible()) {
                 $categories[$record->id] = $category;
             }
         }
@@ -1169,13 +1176,23 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      *     on not visible courses and 'moodle/category:viewcourselist' on all courses
      * @return array array of stdClass objects
      */
-    protected static function get_course_records($whereclause, $params, $options, $checkvisibility = false) {
+    protected static function get_course_records(
+        $whereclause,
+        $params,
+        $checkvisibility = false,
+        bool $fetchsummary = false,
+    ) {
         global $DB;
+
+        if (array_key_exists('summary', $options)) {
+            $fetchsummary = !empty($options['summary']);
+        }
+
         $ctxselect = context_helper::get_preload_record_columns_sql('ctx');
         $fields = array('c.id', 'c.category', 'c.sortorder',
                         'c.shortname', 'c.fullname', 'c.idnumber',
                         'c.startdate', 'c.enddate', 'c.visible', 'c.cacherev');
-        if (!empty($options['summary'])) {
+        if ($fetchsummary) {
             $fields[] = 'c.summary';
             $fields[] = 'c.summaryformat';
         } else {
@@ -1324,24 +1341,29 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      *    - limit - maximum number of children to return, 0 or null for no limit
      * @return core_course_category[] Array of core_course_category objects indexed by category id
      */
-    public function get_children($options = array()) {
+    public function get_children(
+        array $options = [],
+        int $offset = 0,
+        ?int $limit = null,
+        array $sortfields = [
+            'sortorder' => 1,
+        ],
+    ) {
         global $DB;
-        $coursecatcache = cache::make('core', 'coursecat');
 
-        // Get default values for options.
-        if (!empty($options['sort']) && is_array($options['sort'])) {
+        if (array_key_exists('offset', $options)) {
+            $offset = $options['offset'];
+        }
+
+        if (array_key_exists('limit', $options)) {
+            $limit = $options['limit'];
+        }
+
+        if (array_key_exists('sort', $options)) {
             $sortfields = $options['sort'];
-        } else {
-            $sortfields = array('sortorder' => 1);
         }
-        $limit = null;
-        if (!empty($options['limit']) && (int)$options['limit']) {
-            $limit = (int)$options['limit'];
-        }
-        $offset = 0;
-        if (!empty($options['offset']) && (int)$options['offset']) {
-            $offset = (int)$options['offset'];
-        }
+
+        $coursecatcache = cache::make('core', 'coursecat');
 
         // First retrieve list of user-visible and sorted children ids from cache.
         $sortedids = $coursecatcache->get('c'. $this->id. ':'.  serialize($sortfields));
@@ -1578,11 +1600,50 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      * @param array $requiredcapabilities List of capabilities required to see return course.
      * @return core_course_list_element[]
      */
-    public static function search_courses($search, $options = array(), $requiredcapabilities = array()) {
+    public static function search_courses(
+        array $search,
+        array $options = [],
+        array $requiredcapabilities = [],
+        int $offset = 0,
+        int $limit = 0,
+        array $sortfields = [
+            'sortorder' => 1,
+        ],
+        bool $loadcoursecontacts = false,
+        bool $loadcustomfields = false,
+        bool $idonly = false,
+        bool $fetchsummary = false,
+    ) {
         global $DB;
-        $offset = !empty($options['offset']) ? $options['offset'] : 0;
-        $limit = !empty($options['limit']) ? $options['limit'] : null;
-        $sortfields = !empty($options['sort']) ? $options['sort'] : array('sortorder' => 1);
+
+        if (array_key_exists('offset', $options)) {
+            $offset = $options['offset'];
+
+        }
+
+        if (array_key_exists('limit', $options)) {
+            $limit = $options['limit'];
+        }
+
+        if (array_key_exists('sort', $options)) {
+            $sortfields = $options['sort'];
+        }
+
+        if (array_key_exists('coursecontacts', $options)) {
+            $loadcoursecontacts = !empty($options['coursecontacts']);
+        }
+
+        if (array_key_exists('customfields', $options)) {
+            $loadcustomfields = !empty($options['customfields']);
+        }
+
+        if (array_key_exists('idonly', $options)) {
+            $idonly = !empty($options['idonly']);
+        }
+
+        if (array_key_exists('summary', $options)) {
+            $fetchsummary = !empty($options['summary']);
+        }
 
         $coursecatcache = cache::make('core', 'coursecat');
         $cachekey = 's-'. serialize(
@@ -1597,17 +1658,21 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
             $courses = array();
             if (!empty($ids)) {
                 list($sql, $params) = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'id');
-                $records = self::get_course_records("c.id ". $sql, $params, $options);
+                $records = self::get_course_records(
+                    whereclause: "c.id {$sql}",
+                    params: $params,
+                    fetchsummary: $fetchsummary,
+                );
                 // Preload course contacts if necessary - saves DB queries later to do it for each course separately.
-                if (!empty($options['coursecontacts'])) {
+                if ($loadcoursecontacts) {
                     self::preload_course_contacts($records);
                 }
                 // Preload custom fields if necessary - saves DB queries later to do it for each course separately.
-                if (!empty($options['customfields'])) {
+                if ($loadcustomfields) {
                     self::preload_custom_fields($records);
                 }
                 // If option 'idonly' is specified no further action is needed, just return list of ids.
-                if (!empty($options['idonly'])) {
+                if ($idonly) {
                     return array_keys($records);
                 }
                 // Prepare the list of core_course_list_element objects.
@@ -1621,8 +1686,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
             return $courses;
         }
 
-        $preloadcoursecontacts = !empty($options['coursecontacts']);
-        unset($options['coursecontacts']);
+        $preloadcoursecontacts = $loadcoursecontacts;
 
         // Empty search string will return all results.
         if (!isset($search['search'])) {
@@ -1681,9 +1745,14 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
                 }
             } else {
                 debugging('No criteria is specified while searching courses', DEBUG_DEVELOPER);
-                return array();
+                return [];
             }
-            $courselist = self::get_course_records($where, $params, $options, true);
+            $courselist = self::get_course_records(
+                whereclause: $where,
+                params: $params,
+                checkvisibility: true,
+                fetchsummary: $fetchsummary,
+            );
             if (!empty($requiredcapabilities)) {
                 foreach ($courselist as $key => $course) {
                     context_helper::preload_from_record($course);
@@ -1704,15 +1773,15 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
             self::preload_course_contacts($records);
         }
         // Preload custom fields if necessary - saves DB queries later to do it for each course separately.
-        if (!empty($options['customfields'])) {
+        if ($loadcustomfields) {
             self::preload_custom_fields($records);
         }
         // If option 'idonly' is specified no further action is needed, just return list of ids.
-        if (!empty($options['idonly'])) {
+        if ($idonly) {
             return array_keys($records);
         }
         // Prepare the list of core_course_list_element objects.
-        $courses = array();
+        $courses = [];
         foreach ($records as $record) {
             $courses[$record->id] = new core_course_list_element($record);
         }
@@ -1732,17 +1801,26 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      * @param array $requiredcapabilities List of capabilities required to see return course.
      * @return int
      */
-    public static function search_courses_count($search, $options = array(), $requiredcapabilities = array()) {
+    public static function search_courses_count(
+        $search,
+        array $options = [],
+        $requiredcapabilities = [],
+        bool $loadcustomfields = false,
+    ) {
         $coursecatcache = cache::make('core', 'coursecat');
         $cntcachekey = 'scnt-'. serialize($search) . serialize($requiredcapabilities);
         if (($cnt = $coursecatcache->get($cntcachekey)) === false) {
+            if (array_key_exists('customfields', $options)) {
+                $loadcustomfields = $options['customfields'];
+            }
+
             // Cached value not found. Retrieve ALL courses and return their count.
-            unset($options['offset']);
-            unset($options['limit']);
-            unset($options['summary']);
-            unset($options['coursecontacts']);
-            $options['idonly'] = true;
-            $courses = self::search_courses($search, $options, $requiredcapabilities);
+            $courses = self::search_courses(
+                search: $search,
+                requiredcapabilities: $requiredcapabilities,
+                loadcustomfields: $loadcustomfields,
+                idonly: true,
+            );
             $cnt = count($courses);
         }
         return $cnt;
@@ -1785,12 +1863,52 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      *               used only in get_courses_count()
      * @return core_course_list_element[]
      */
-    public function get_courses($options = array()) {
+    public function get_courses(
+        array $options = [],
+        int $offset = 0,
+        ?int $limit = null,
+        array $sortfields = [
+            'sortorder' => 1,
+        ],
+        bool $loadcoursecontacts = false,
+        bool $loadcustomfields = false,
+        bool $idonly = false,
+        bool $fetchsummary = false,
+        bool $recursive = false,
+    ) {
         global $DB;
-        $recursive = !empty($options['recursive']);
-        $offset = !empty($options['offset']) ? $options['offset'] : 0;
-        $limit = !empty($options['limit']) ? $options['limit'] : null;
-        $sortfields = !empty($options['sort']) ? $options['sort'] : array('sortorder' => 1);
+
+        if (array_key_exists('offset', $options)) {
+            $offset = $options['offset'];
+        }
+
+        if (array_key_exists('limit', $options)) {
+            $limit = $options['limit'];
+        }
+
+        if (array_key_exists('sort', $options)) {
+            $sortfields = $options['sort'];
+        }
+
+        if (array_key_exists('coursecontacts', $options)) {
+            $loadcoursecontacts = !empty($options['coursecontacts']);
+        }
+
+        if (array_key_exists('customfields', $options)) {
+            $loadcustomfields = !empty($options['customfields']);
+        }
+
+        if (array_key_exists('idonly', $options)) {
+            $idonly = !empty($options['idonly']);
+        }
+
+        if (array_key_exists('summary', $options)) {
+            $fetchsummary = !empty($options['summary']);
+        }
+
+        if (array_key_exists('recursive', $options)) {
+            $recursive = !empty($options['recursive']);
+        }
 
         if (!$this->id && !$recursive) {
             // There are no courses on system level unless we need recursive list.
@@ -1798,29 +1916,33 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
         }
 
         $coursecatcache = cache::make('core', 'coursecat');
-        $cachekey = 'l-'. $this->id. '-'. (!empty($options['recursive']) ? 'r' : '').
-                 '-'. serialize($sortfields);
-        $cntcachekey = 'lcnt-'. $this->id. '-'. (!empty($options['recursive']) ? 'r' : '');
+        $recursiveflag = $recursive ? 'r' : '';
+        $cachekey = "l-{$this->id}-{$recursiveflag}-" . serialize($sortfields);
+        $cntcachekey = "lcnt-{$this->id}-{$recursiveflag}";
 
         // Check if we have already cached results.
         $ids = $coursecatcache->get($cachekey);
         if ($ids !== false) {
             // We already cached last search result and it did not expire yet.
             $ids = array_slice($ids, $offset, $limit);
-            $courses = array();
+            $courses = [];
             if (!empty($ids)) {
-                list($sql, $params) = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'id');
-                $records = self::get_course_records("c.id ". $sql, $params, $options);
+                [$sql, $params] = $DB->get_in_or_equal($ids, SQL_PARAMS_NAMED, 'id');
+                $records = self::get_course_records(
+                    whereclause: "c.id {$sql}",
+                    params: $params,
+                    fetchsummary: $fetchsummary,
+                );
                 // Preload course contacts if necessary - saves DB queries later to do it for each course separately.
-                if (!empty($options['coursecontacts'])) {
+                if ($loadcoursecontacts) {
                     self::preload_course_contacts($records);
                 }
                 // If option 'idonly' is specified no further action is needed, just return list of ids.
-                if (!empty($options['idonly'])) {
+                if ($idonly) {
                     return array_keys($records);
                 }
                 // Preload custom fields if necessary - saves DB queries later to do it for each course separately.
-                if (!empty($options['customfields'])) {
+                if ($loadcustomfields) {
                     self::preload_custom_fields($records);
                 }
                 // Prepare the list of core_course_list_element objects.
@@ -1848,7 +1970,12 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
             $params['categoryid'] = $this->id;
         }
         // Get list of courses without preloaded coursecontacts because we don't need them for every course.
-        $list = $this->get_course_records($where, $params, array_diff_key($options, array('coursecontacts' => 1)), true);
+        $list = $this->get_course_records(
+            whereclause: $where,
+            params: $params,
+            fetchsummary: $fetchsummary,
+            checkvisibility: true,
+        );
 
         // Sort and cache list.
         self::sort_records($list, $sortfields);
@@ -1856,22 +1983,22 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
         $coursecatcache->set($cntcachekey, count($list));
 
         // Apply offset/limit, convert to core_course_list_element and return.
-        $courses = array();
+        $courses = [];
         if (isset($list)) {
             if ($offset || $limit) {
                 $list = array_slice($list, $offset, $limit, true);
             }
             // Preload course contacts if necessary - saves DB queries later to do it for each course separately.
-            if (!empty($options['coursecontacts'])) {
-                self::preload_course_contacts($list);
+            if ($loadcoursecontacts) {
+                self::preload_course_contacts($records);
             }
             // Preload custom fields if necessary - saves DB queries later to do it for each course separately.
-            if (!empty($options['customfields'])) {
-                self::preload_custom_fields($list);
+            if ($loadcustomfields) {
+                self::preload_custom_fields($records);
             }
             // If option 'idonly' is specified no further action is needed, just return list of ids.
-            if (!empty($options['idonly'])) {
-                return array_keys($list);
+            if ($idonly) {
+                return array_keys($records);
             }
             // Prepare the list of core_course_list_element objects.
             foreach ($list as $record) {
@@ -1888,20 +2015,33 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      *     number of courses (i.e. sort, summary, offset, limit etc.)
      * @return int
      */
-    public function get_courses_count($options = array()) {
-        $cntcachekey = 'lcnt-'. $this->id. '-'. (!empty($options['recursive']) ? 'r' : '');
-        $coursecatcache = cache::make('core', 'coursecat');
-        if (($cnt = $coursecatcache->get($cntcachekey)) === false) {
-            // Cached value not found. Retrieve ALL courses and return their count.
-            unset($options['offset']);
-            unset($options['limit']);
-            unset($options['summary']);
-            unset($options['coursecontacts']);
-            $options['idonly'] = true;
-            $courses = $this->get_courses($options);
-            $cnt = count($courses);
+    public function get_courses_count(
+        array $options = [],
+        bool $loadcustomfields = false,
+        bool $recursive = false,
+    ) {
+        if (array_key_exists('recursive', $options)) {
+            $recursive = !empty($options['recursive']);
         }
-        return $cnt;
+
+        $coursecatcache = cache::make('core', 'coursecat');
+        $recursiveflag = $recursive ? 'r' : '';
+        $cntcachekey = "lcnt-{$this->id}-{$recursiveflag}";
+
+        if (($count = $coursecatcache->get($cntcachekey)) === false) {
+            // Cached value not found. Retrieve ALL courses and return their count.
+            if (array_key_exists('customfields', $options)) {
+                $loadcustomfields = !empty($options['customfields']);
+            }
+
+            $courses = $this->get_courses(
+                loadcustomfields: $loadcustomfields,
+                recursive: $recursive,
+                idonly: true,
+            );
+            $count = count($courses);
+        }
+        return $count;
     }
 
     /**
