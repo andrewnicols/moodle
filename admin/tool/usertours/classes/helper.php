@@ -548,7 +548,13 @@ class helper {
 
             $filternames = [];
             foreach ($filters as $filter) {
-                    $filternames[] = $filter::get_filter_name();
+                if ($component = \core_component::get_component_from_classname($filter)) {
+                    $filternames[] = sprintf(
+                        "%s/filter_%s",
+                        $component,
+                        $filter::get_filter_name(),
+                    );
+                }
             }
 
             $PAGE->requires->js_call_amd('tool_usertours/usertours', 'init', [
@@ -564,13 +570,18 @@ class helper {
      * @return  array
      */
     public static function get_all_filters() {
-        $filters = \core_component::get_component_classes_in_namespace('tool_usertours', 'local\filter');
-        $filters = array_keys($filters);
+        $hook = new hook\before_serverside_filter_fetch(array_keys(
+            \core_component::get_component_classes_in_namespace('tool_usertours', 'local\filter')
+        ));
+        \core\di::get(\core\hook\manager::class)->dispatch($hook);
 
-        $filters = array_filter($filters, function($filterclass) {
-            $rc = new \ReflectionClass($filterclass);
-            return $rc->isInstantiable();
-        });
+        $filters = array_filter(
+            $hook->get_filter_list(),
+            function ($filterclass) {
+                $rc = new \ReflectionClass($filterclass);
+                return $rc->isInstantiable();
+            }
+        );
 
         $filters = array_merge($filters, static::get_all_clientside_filters());
 
@@ -583,13 +594,18 @@ class helper {
      * @return  array
      */
     public static function get_all_clientside_filters() {
-        $filters = \core_component::get_component_classes_in_namespace('tool_usertours', 'local\clientside_filter');
-        $filters = array_keys($filters);
+        $hook = new hook\before_clientside_filter_fetch(array_keys(
+            \core_component::get_component_classes_in_namespace('tool_usertours', 'local\clientside_filter')
+        ));
+        \core\di::get(\core\hook\manager::class)->dispatch($hook);
 
-        $filters = array_filter($filters, function($filterclass) {
-            $rc = new \ReflectionClass($filterclass);
-            return $rc->isInstantiable();
-        });
+        $filters = array_filter(
+            $hook->get_filter_list(),
+            function ($filterclass) {
+                $rc = new \ReflectionClass($filterclass);
+                return $rc->isInstantiable();
+            }
+        );
 
         return $filters;
     }

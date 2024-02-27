@@ -46,7 +46,7 @@ abstract class clientside_filter extends base {
     public static function get_client_side_values(tour $tour): stdClass {
         $data = (object) [];
 
-        if (is_a(static::class, clientside_filter::class, true)) {
+        if (is_a(static::class, self::class, true)) {
             $data->filterdata = $tour->get_filter_values(static::get_filter_name());
         }
 
