@@ -22,40 +22,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace tool_usertours\test\hook;
-
 defined('MOODLE_INTERNAL') || die();
 
-final class serverside_filter_fixture extends \tool_usertours\local\filter\base {
+final class nocomponent_serverside_filter_fixture {
 }
 
-final class clientside_filter_fixture extends \tool_usertours\local\clientside_filter\clientside_filter {
-}
-
-final class hook_fixtures {
+final class nocomponent_serverside_hook_fixtures {
     public static function example_serverside_hook(
         \tool_usertours\hook\before_serverside_filter_fetch $hook
     ): void {
-        // Add a valid serverside and an invalid clientside filter.
-        $hook->add_filter_by_classname(\tool_usertours\test\hook\serverside_filter_fixture::class);
-        $hook->remove_filter_by_classname(\tool_usertours\local\filter\accessdate::class);
-    }
-
-    public static function example_clientside_hook(
-        \tool_usertours\hook\before_clientside_filter_fetch $hook
-    ): void {
-        $hook->add_filter_by_classname(\tool_usertours\test\hook\clientside_filter_fixture::class);
-        $hook->remove_filter_by_classname(\tool_usertours\local\clientside_filter\cssselector::class);
+        $hook->add_filter_by_classname(\nocomponent_serverside_filter_fixture::class);
     }
 }
 
 $callbacks = [
     [
         'hook' => \tool_usertours\hook\before_serverside_filter_fetch::class,
-        'callback' => \tool_usertours\test\hook\hook_fixtures::class . '::example_serverside_hook',
-    ],
-    [
-        'hook' => \tool_usertours\hook\before_clientside_filter_fetch::class,
-        'callback' => \tool_usertours\test\hook\hook_fixtures::class . '::example_clientside_hook',
+        'callback' => \nocomponent_serverside_hook_fixtures::class . '::example_serverside_hook',
     ],
 ];

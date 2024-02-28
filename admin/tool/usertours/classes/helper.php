@@ -14,20 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Tour helper.
- *
- * @package    tool_usertours
- * @copyright  2016 Andrew Nicols <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_usertours;
 
+use coding_exception;
 use core\output\inplace_editable;
-use tool_usertours\local\clientside_filter\clientside_filter;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Tour helper.
@@ -538,30 +528,45 @@ class helper {
         if ($tours) {
             $filters = static::get_all_clientside_filters();
 
-            $tourdetails = array_map(function($tour) use ($filters) {
+            $tourdetails = array_map(function ($tour) use ($filters) {
                 return [
-                        'tourId' => $tour->get_id(),
-                        'startTour' => $tour->should_show_for_user(),
-                        'filtervalues' => $tour->get_client_filter_values($filters),
+                    'tourId' => $tour->get_id(),
+                    'startTour' => $tour->should_show_for_user(),
+                    'filtervalues' => $tour->get_client_filter_values($filters),
                 ];
             }, $tours);
 
-            $filternames = [];
-            foreach ($filters as $filter) {
-                if ($component = \core_component::get_component_from_classname($filter)) {
-                    $filternames[] = sprintf(
-                        "%s/filter_%s",
-                        $component,
-                        $filter::get_filter_name(),
-                    );
-                }
-            }
+            $filternames = self::get_clientside_filter_module_names($filters);
 
             $PAGE->requires->js_call_amd('tool_usertours/usertours', 'init', [
-                    $tourdetails,
-                    $filternames,
+                $tourdetails,
+                $filternames,
             ]);
         }
+    }
+
+    /**
+     * Get the JS module names for the filters.
+     *
+     * @param array $filters
+     * @return array
+     * @throws coding_exception
+     */
+    public static function get_clientside_filter_module_names(array $filters): array {
+        $filternames = [];
+        foreach ($filters as $filter) {
+            if ($component = \core_component::get_component_from_classname($filter)) {
+                $filternames[] = sprintf(
+                    "%s/filter_%s",
+                    $component,
+                    $filter::get_filter_name(),
+                );
+            } else {
+                throw new \coding_exception("Could not determine component for filter class {$filter}");
+            }
+        }
+
+        return $filternames;
     }
 
     /**

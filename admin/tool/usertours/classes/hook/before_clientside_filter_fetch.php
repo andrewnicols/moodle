@@ -37,10 +37,11 @@ class before_clientside_filter_fetch {
      * @param string $classname
      * @return self
      */
-    public function add_filter_classname(string $classname): self {
-        if (\is_a($classname, \tool_usertours\local\clientside_filter\clientside_filter::class, true)) {
-            $this->filters[] = $classname;
+    public function add_filter_by_classname(string $classname): self {
+        if (!\is_a($classname, \tool_usertours\local\clientside_filter\clientside_filter::class, true)) {
+            throw new \coding_exception("Invalid clientside filter class {$classname}");
         }
+        $this->filters[] = $classname;
 
         return $this;
     }

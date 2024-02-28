@@ -24,6 +24,8 @@ namespace tool_usertours;
  * @copyright  2022 Huong Nguyen <huongnv13@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \tool_usertours\helper
+ * @covers \tool_usertours\hook\before_serverside_filter_fetch
+ * @covers \tool_usertours\hook\before_clientside_filter_fetch
  */
 final class helper_test extends \advanced_testcase {
     /**
@@ -90,6 +92,51 @@ final class helper_test extends \advanced_testcase {
         $this->assertNotContains(\tool_usertours\test\hook\clientside_filter_fixture::class, $filters);
         $this->assertContains(\tool_usertours\local\filter\accessdate::class, $filters);
         $this->assertContains(\tool_usertours\local\clientside_filter\cssselector::class, $filters);
+
+        $filters = helper::get_all_clientside_filters();
+        $names = helper::get_clientside_filter_module_names($filters);
+        array_map(
+            function ($filter) {
+                $this->assertIsString($filter);
+            },
+            $filters,
+        );
+    }
+
+    public function test_get_invalid_server_filter(): void {
+        \core\di::set(
+            \core\hook\manager::class,
+            \core\hook\manager::phpunit_get_instance([
+                'test_plugin1' => __DIR__ . '/fixtures/invalid_serverside_hook_fixture.php',
+            ]),
+        );
+
+        $this->expectException(\coding_exception::class);
+        helper::get_all_filters();
+    }
+
+    public function test_clientside_filter_for_serverside_hook(): void {
+        \core\di::set(
+            \core\hook\manager::class,
+            \core\hook\manager::phpunit_get_instance([
+                'test_plugin1' => __DIR__ . '/fixtures/clientside_filter_for_serverside_hook.php',
+            ]),
+        );
+
+        $this->expectException(\coding_exception::class);
+        helper::get_all_filters();
+    }
+
+    public function test_serverside_filter_for_clientside_hook(): void {
+        \core\di::set(
+            \core\hook\manager::class,
+            \core\hook\manager::phpunit_get_instance([
+                'test_plugin1' => __DIR__ . '/fixtures/serverside_filter_for_clientside_hook.php',
+            ]),
+        );
+
+        $this->expectException(\coding_exception::class);
+        helper::get_all_clientside_filters();
     }
 
     public function test_filter_hooks(): void {
@@ -123,5 +170,20 @@ final class helper_test extends \advanced_testcase {
             },
             $filters,
         );
+    }
+
+    public function test_get_clientside_filter_module_names(): void {
+        \core\di::set(
+            \core\hook\manager::class,
+            \core\hook\manager::phpunit_get_instance([
+                'test_plugin1' => __DIR__ . '/fixtures/invalid_clientside_hook_fixture.php',
+            ]),
+        );
+
+        $filters = helper::get_all_clientside_filters();
+
+        $this->expectException(\coding_exception::class);
+        $this->expectExceptionMessageMatches('/Could not determine component/');
+        helper::get_clientside_filter_module_names($filters);
     }
 }
