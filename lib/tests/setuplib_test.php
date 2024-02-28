@@ -157,6 +157,7 @@ class setuplib_test extends \advanced_testcase {
         clearstatcache();
         $this->assertSame($now - 2, filemtime($timestampfile));
 
+        clearstatcache();
         $this->setCurrentTimeStart();
         $dir = make_localcache_directory('', false);
         $this->assertSame("$CFG->localcachedir", $dir);
