@@ -449,6 +449,9 @@ class component_test extends advanced_testcase {
             // A plugin.
             [\mod_forum\example::class, 'mod_forum'],
 
+            // A plugin in the old style is not supported.
+            [\mod_forum_example::class, null],
+
             // A fake plugin.
             [\mod_fake\example::class, null],
 

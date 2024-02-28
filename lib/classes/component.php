@@ -1109,20 +1109,13 @@ $cache = ' . var_export($cache, true) . ';
             if (array_search($component, $components) !== false) {
                 return $component;
             }
-            return null;
         }
 
-        // Frankenstyle classnames. Maybe one day we'll rid ourselves of this sin.
-        $parts = explode('_', $classname);
-        $reconstructed = [];
-        if ($parts) {
-            $reconstructed[] = array_shift($parts);
-            $component = implode('_', $reconstructed);
-            if (array_key_exists($component, $components)) {
-                return $component;
-            }
-            return null;
-        }
+        // Note: Frankenstyle classnames are not supported as they lead to false positives, for example:
+        // \core_typo\example => \core instead of \core_typo because it does not exist
+        // Please *do not* add support for Frankenstyle classnames. They will break other things.
+
+        return null;
     }
 
     /**
