@@ -1,0 +1,5 @@
+issueNumber: MDL-80960
+notes:
+  core_sms:
+    - message: A new `\core_sms` subsystem has been created
+      type: improved
