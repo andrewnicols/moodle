@@ -83,30 +83,6 @@ function tool_mfa_extend_navigation_user_settings(navigation_node $navigation, s
 }
 
 /**
- * Triggered as soon as practical on every moodle bootstrap after config has
- * been loaded. The $USER object is available at this point too.
- *
- * @return void
- */
-function tool_mfa_after_config(): void {
-    global $CFG, $SESSION;
-
-    // Tests for hooks being fired to test patches.
-    // Store in $CFG, $SESSION not present at this point.
-    if (PHPUNIT_TEST) {
-        $CFG->mfa_config_hook_test = true;
-    }
-
-    // Check for not logged in.
-    if (isloggedin() && !isguestuser()) {
-        // If not authenticated, force login required.
-        if (empty($SESSION->tool_mfa_authenticated)) {
-            \tool_mfa\manager::require_auth();
-        }
-    }
-}
-
-/**
  * Any plugin typically an admin tool can add new bulk user actions
  *
  * @return array
