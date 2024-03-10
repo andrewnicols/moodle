@@ -93,9 +93,13 @@ echo $OUTPUT->header();
 // Print selector drop down.
 $pluginname = get_string('pluginname', 'report_outline');
 report_helper::print_report_selector($pluginname);
-
-list($uselegacyreader, $useinternalreader, $minloginternalreader, $logtable, $usedatabasereader)
-        = report_outline_get_common_log_variables();
+[
+    $uselegacyreader,
+    $useinternalreader,
+    $minloginternalreader,
+    $logtable,
+    $usedatabasereader,
+] = report_outline_get_common_log_variables();
 
 // If no legacy and no internal log then don't proceed.
 if (!$uselegacyreader && !$usedatabasereader && !$useinternalreader) {
@@ -202,15 +206,12 @@ if ($useinternalreader || $usedatabasereader) {
                AND contextlevel = :contextmodule
                $limittime
           GROUP BY contextinstanceid";
+    $database = $DB;
     if ($usedatabasereader) {
-        $sql = str_replace(array('{', '}'), '', $sql);
         $logmanager = get_log_manager();
-        $store = new \logstore_database\log\store($logmanager);
-        $dbext = $store->get_extdb();
-        $v = $dbext->get_records_sql($sql, $params);
-    } else {
-        $v = $DB->get_records_sql($sql, $params);
+        $database = (new \logstore_database\log\store($logmanager))->get_extdb();
     }
+    $v = $database->get_records_sql($sql, $params);
 
     if (empty($views)) {
         $views = $v;
