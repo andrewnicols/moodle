@@ -17,7 +17,7 @@
 /**
  * Display user activity reports for a course (totals)
  *
- * @package    report
+ * @package    report_outline
  * @subpackage outline
  * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,15 +26,15 @@
 use core\report_helper;
 
 require('../../config.php');
-require_once($CFG->dirroot.'/report/outline/locallib.php');
+require_once($CFG->dirroot . '/report/outline/locallib.php');
 
-$id = required_param('id',PARAM_INT);       // course id
+$id = required_param('id', PARAM_INT);       // Course id.
 $startdate = optional_param('startdate', null, PARAM_INT);
 $enddate = optional_param('enddate', null, PARAM_INT);
 
-$course = $DB->get_record('course', array('id'=>$id), '*', MUST_EXIST);
+$course = $DB->get_record('course', ['id' => $id], '*', MUST_EXIST);
 
-$pageparams = array('id' => $id);
+$pageparams = ['id' => $id];
 if ($startdate) {
     $pageparams['startdate'] = $startdate;
 }
@@ -69,7 +69,7 @@ if ($filter = $filterform->get_data()) {
 }
 
 // Trigger an activity report viewed event.
-$event = \report_outline\event\activity_report_viewed::create(array('context' => $context));
+$event = \report_outline\event\activity_report_viewed::create(['context' => $context]);
 $event->trigger();
 
 $showlastaccess = true;
@@ -86,7 +86,7 @@ $strreports        = get_string('reports');
 $strviews          = get_string('views');
 $strrelatedblogentries = get_string('relatedblogentries', 'blog');
 
-$PAGE->set_title($course->shortname .': '. $stractivityreport);
+$PAGE->set_title($course->shortname . ': ' . $stractivityreport);
 $PAGE->set_heading($course->fullname);
 echo $OUTPUT->header();
 
@@ -132,7 +132,7 @@ $outlinetable = new html_table();
 $outlinetable->attributes['class'] = 'generaltable boxaligncenter';
 $outlinetable->cellpadding = 5;
 $outlinetable->id = 'outlinetable';
-$outlinetable->head = array($stractivity, $strviews);
+$outlinetable->head = [$stractivity, $strviews];
 
 if (!empty($CFG->enableblogs) && $CFG->useblogassociations) {
     $outlinetable->head[] = $strrelatedblogentries;
@@ -148,7 +148,7 @@ $modinfo = get_fast_modinfo($course);
 if ($uselegacyreader) {
     // If we are going to use the internal (not legacy) log table, we should only get records
     // from the legacy table that exist before we started adding logs to the new table.
-    $params = array('courseid' => $course->id, 'action' => 'view%', 'visible' => 1);
+    $params = ['courseid' => $course->id, 'action' => 'view%', 'visible' => 1];
     $limittime = '';
     if (!empty($minloginternalreader)) {
         $limittime = ' AND time < :timeto ';
@@ -188,7 +188,7 @@ if ($useinternalreader || $usedatabasereader) {
     if ($showlastaccess) {
         $sqllasttime = ", MAX(timecreated) AS lasttime";
     }
-    $params = array('courseid' => $course->id, 'contextmodule' => CONTEXT_MODULE);
+    $params = ['courseid' => $course->id, 'contextmodule' => CONTEXT_MODULE];
     $limittime = '';
     if ($startdate) {
         $limittime .= ' AND timecreated >= :startdate ';
@@ -231,7 +231,7 @@ if ($useinternalreader || $usedatabasereader) {
 }
 
 $prevsecctionnum = 0;
-foreach ($modinfo->sections as $sectionnum=>$section) {
+foreach ($modinfo->sections as $sectionnum => $section) {
     foreach ($section as $cmid) {
         $cm = $modinfo->cms[$cmid];
         if (!$cm->has_view()) {
@@ -262,14 +262,18 @@ foreach ($modinfo->sections as $sectionnum=>$section) {
         $activitycell = new html_table_cell();
         $activitycell->attributes['class'] = 'activity';
 
-        $activityicon = $OUTPUT->pix_icon('monologo', $modulename, $cm->modname, array('class'=>'icon'));
+        $activityicon = $OUTPUT->pix_icon('monologo', $modulename, $cm->modname, ['class' => 'icon']);
 
-        $attributes = array();
+        $attributes = [];
         if (!$cm->visible) {
             $attributes['class'] = 'dimmed';
         }
 
-        $activitycell->text = $activityicon . html_writer::link("$CFG->wwwroot/mod/$cm->modname/view.php?id=$cm->id", format_string($cm->name), $attributes);
+        $activitycell->text = $activityicon . html_writer::link(
+            "$CFG->wwwroot/mod/$cm->modname/view.php?id=$cm->id",
+            format_string($cm->name),
+            $attributes,
+        );
 
         $reportrow->cells[] = $activitycell;
 
@@ -285,11 +289,11 @@ foreach ($modinfo->sections as $sectionnum=>$section) {
         $reportrow->cells[] = $numviewscell;
 
         if (!empty($CFG->enableblogs) && $CFG->useblogassociations) {
-            require_once($CFG->dirroot.'/blog/lib.php');
+            require_once($CFG->dirroot . '/blog/lib.php');
             $blogcell = new html_table_cell();
             $blogcell->attributes['class'] = 'blog';
             if ($blogcount = blog_get_associated_count($course->id, $cm->id)) {
-                $blogurl = new moodle_url('/blog/index.php', array('modid' => $cm->id));
+                $blogurl = new moodle_url('/blog/index.php', ['modid' => $cm->id]);
                 $blogcell->text = html_writer::link($blogurl, $blogcount);
             } else {
                 $blogcell->text = '-';
@@ -303,7 +307,7 @@ foreach ($modinfo->sections as $sectionnum=>$section) {
 
             if (isset($views[$cm->id]->lasttime)) {
                 $timeago = format_time(time() - $views[$cm->id]->lasttime);
-                $lastaccesscell->text = userdate($views[$cm->id]->lasttime)." ($timeago)";
+                $lastaccesscell->text = userdate($views[$cm->id]->lasttime) . " ($timeago)";
             }
             $reportrow->cells[] = $lastaccesscell;
         }
