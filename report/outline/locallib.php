@@ -17,7 +17,7 @@
 /**
  * This file contains functions used by the outline reports
  *
- * @package    report
+ * @package    report_outline
  * @subpackage outline
  * @copyright  1999 onwards Martin Dougiamas (http://dougiamas.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,9 +25,16 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-require_once(__DIR__.'/lib.php');
-require_once($CFG->dirroot.'/course/lib.php');
+require_once(__DIR__ . '/lib.php');
+require_once($CFG->dirroot . '/course/lib.php');
 
+/**
+ * Prints the outline report table.
+ *
+ * @param \stdClass $mod The activity to show
+ * @param \stdClass $instance The instance of the activity
+ * @param \stdClass $result The result of the activity
+ */
 function report_outline_print_row($mod, $instance, $result) {
     global $OUTPUT, $CFG;
 
@@ -37,7 +44,7 @@ function report_outline_print_row($mod, $instance, $result) {
     echo "<td valign=\"top\">$image</td>";
     echo "<td valign=\"top\" style=\"width:300\">";
     echo "   <a title=\"$mod->modfullname\"";
-    echo "   href=\"$CFG->wwwroot/mod/$mod->modname/view.php?id=$mod->id\">".format_string($instance->name,true)."</a></td>";
+    echo "   href=\"$CFG->wwwroot/mod/$mod->modname/view.php?id=$mod->id\">" . format_string($instance->name, true) . "</a></td>";
     echo "<td>&nbsp;&nbsp;&nbsp;</td>";
     echo "<td valign=\"top\">";
     if (isset($result->info)) {
@@ -49,7 +56,7 @@ function report_outline_print_row($mod, $instance, $result) {
     echo "<td>&nbsp;&nbsp;&nbsp;</td>";
     if (!empty($result->time)) {
         $timeago = format_time(time() - $result->time);
-        echo "<td valign=\"top\" style=\"white-space: nowrap\">".userdate($result->time)." ($timeago)</td>";
+        echo "<td valign=\"top\" style=\"white-space: nowrap\">" . userdate($result->time) . " ($timeago)</td>";
     }
     echo "</tr>";
 }
@@ -155,7 +162,7 @@ function report_outline_user_outline(int $userid, int $cmid, string $module, int
     // If using legacy log then get users from old table.
     if ($uselegacyreader) {
         // Create the params for the query.
-        $params = array('userid' => $userid, 'module' => $module, 'action' => 'view', 'info' => $instanceid);
+        $params = ['userid' => $userid, 'module' => $module, 'action' => 'view', 'info' => $instanceid];
         // If we are going to use the internal (not legacy) log table, we should only get records
         // from the legacy table that exist before we started adding logs to the new table.
         $limittime = '';
@@ -184,9 +191,9 @@ function report_outline_user_outline(int $userid, int $cmid, string $module, int
 
     // Get record from sql_internal_table_reader and combine with the number of views from the legacy log table (if needed).
     if ($useinternalreader || $usedatabasereader) {
-        $params = array('userid' => $userid, 'contextlevel' => CONTEXT_MODULE, 'contextinstanceid' => $cmid, 'crud' => 'r',
+        $params = ['userid' => $userid, 'contextlevel' => CONTEXT_MODULE, 'contextinstanceid' => $cmid, 'crud' => 'r',
                 'edulevel1' => core\event\base::LEVEL_PARTICIPATING, 'edulevel2' => core\event\base::LEVEL_TEACHING,
-                'edulevel3' => core\event\base::LEVEL_OTHER, 'anonymous' => 0);
+                'edulevel3' => core\event\base::LEVEL_OTHER, 'anonymous' => 0, ];
         $select = "SELECT COUNT(*) as count ";
         $conditions = "WHERE userid = :userid
                     AND contextlevel = :contextlevel
@@ -255,7 +262,7 @@ function report_outline_user_complete(int $userid, int $cmid, string $module, in
     // If using legacy log then get users from old table.
     if ($uselegacyreader) {
         // Create the params for the query.
-        $params = array('userid' => $userid, 'module' => $module, 'action' => 'view', 'info' => $instanceid);
+        $params = ['userid' => $userid, 'module' => $module, 'action' => 'view', 'info' => $instanceid];
         // If we are going to use the internal (not legacy) log table, we should only get records
         // from the legacy table that exist before we started adding logs to the new table.
         $limittime = '';
@@ -282,9 +289,9 @@ function report_outline_user_complete(int $userid, int $cmid, string $module, in
 
     // Get record from sql_internal_table_reader and combine with the number of views from the legacy log table (if needed).
     if ($useinternalreader || $usedatabasereader) {
-        $params = array('userid' => $userid, 'contextlevel' => CONTEXT_MODULE, 'contextinstanceid' => $cmid, 'crud' => 'r',
+        $params = ['userid' => $userid, 'contextlevel' => CONTEXT_MODULE, 'contextinstanceid' => $cmid, 'crud' => 'r',
                 'edulevel1' => core\event\base::LEVEL_PARTICIPATING, 'edulevel2' => core\event\base::LEVEL_TEACHING,
-                'edulevel3' => core\event\base::LEVEL_OTHER, 'anonymous' => 0);
+                'edulevel3' => core\event\base::LEVEL_OTHER, 'anonymous' => 0, ];
         $select = "SELECT COUNT(*) as count ";
         $conditions = "WHERE userid = :userid
                     AND contextlevel = :contextlevel
