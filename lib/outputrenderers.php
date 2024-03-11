@@ -2699,6 +2699,9 @@ class core_renderer extends renderer_base {
      * $OUTPUT->render($userpic);
      * </pre>
      *
+     * If the renderer is for an email, the token will be included in the URL.
+     * This behaviour can be overridden by passing the 'includetoken' option as false.
+     *
      * Theme developers: DO NOT OVERRIDE! Please override function
      * {@link core_renderer::render_user_picture()} instead.
      *
@@ -2720,11 +2723,18 @@ class core_renderer extends renderer_base {
      */
     public function user_picture(stdClass $user, array $options = null) {
         $userpicture = new user_picture($user);
+
+        if (in_array($this->target, [RENDERER_TARGET_HTMLEMAIL, RENDERER_TARGET_TEXTEMAIL])) {
+            // If this is an email, we want to include the token.
+            $userpicture->includetoken = true;
+        }
+
         foreach ((array)$options as $key=>$value) {
             if (property_exists($userpicture, $key)) {
                 $userpicture->$key = $value;
             }
         }
+
         return $this->render($userpicture);
     }
 
