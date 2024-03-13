@@ -26,26 +26,9 @@ use core_external\util;
 
 defined('MOODLE_INTERNAL') || die;
 
-// Please note that this file and all of the classes and functions listed below will be deprecated from Moodle 4.6.
-// This deprecation is delayed to aid plugin developers when maintaining plugins for multiple Moodle versions.
-// See MDL-76583 for further information.
-
 // If including this file for unit testing, it _must_ be run in an isolated process to prevent
 // any side effect upon other tests.
 require_phpunit_isolation();
-
-class_alias(\core_external\external_api::class, 'external_api');
-class_alias(\core_external\restricted_context_exception::class, 'restricted_context_exception');
-class_alias(\core_external\external_description::class, 'external_description');
-class_alias(\core_external\external_value::class, 'external_value');
-class_alias(\core_external\external_format_value::class, 'external_format_value');
-class_alias(\core_external\external_single_structure::class, 'external_single_structure');
-class_alias(\core_external\external_multiple_structure::class, 'external_multiple_structure');
-class_alias(\core_external\external_function_parameters::class, 'external_function_parameters');
-class_alias(\core_external\util::class, 'external_util');
-class_alias(\core_external\external_files::class, 'external_files');
-class_alias(\core_external\external_warnings::class, 'external_warnings');
-class_alias(\core_external\external_settings::class, 'external_settings');
 
 /**
  * Generate a token
@@ -58,8 +41,11 @@ class_alias(\core_external\external_settings::class, 'external_settings');
  * @param string $iprestriction allowed ip - if 0 or empty then all ips are allowed
  * @return string generated token
  * @since Moodle 2.0
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::generate_token', since: '5.0', mdl: 'MDL-76583')]
 function external_generate_token($tokentype, $serviceorid, $userid, $contextorid, $validuntil = 0, $iprestriction = '') {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     if (is_numeric($serviceorid)) {
         $service = util::get_service_by_id($serviceorid);
     } else if (is_string($serviceorid)) {
@@ -94,8 +80,11 @@ function external_generate_token($tokentype, $serviceorid, $userid, $contextorid
  * @param int $context context within which the web service can operate.
  * @return int returns token id.
  * @since Moodle 2.0
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::generate_token', since: '5.0', mdl: 'MDL-76583')]
 function external_create_service_token($servicename, $contextid) {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     global $USER;
 
     return util::generate_token(
@@ -110,8 +99,11 @@ function external_create_service_token($servicename, $contextid) {
  * Delete all pre-built services (+ related tokens) and external functions information defined in the specified component.
  *
  * @param string $component name of component (moodle, etc.)
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::delete_service_descriptions', since: '5.0', mdl: 'MDL-76583')]
 function external_delete_descriptions($component) {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     util::delete_service_descriptions($component);
 }
 
@@ -122,8 +114,11 @@ function external_delete_descriptions($component) {
  * @return the validated format
  * @throws coding_exception
  * @since Moodle 2.3
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::validate_format', since: '5.0', mdl: 'MDL-76583')]
 function external_validate_format($format) {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     return util::validate_format($format);
 }
 
@@ -145,8 +140,11 @@ function external_validate_format($format) {
  * @param array $options options array/object or courseid
  * @return string text
  * @since Moodle 3.0
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::format_string', since: '5.0', mdl: 'MDL-76583')]
 function external_format_string($str, $context, $striplinks = true, $options = []) {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     if (!$context instanceof context) {
         $context = context::instance_by_id($context);
     }
@@ -187,8 +185,11 @@ function external_format_string($str, $context, $striplinks = true, $options = [
  * @return array text + textformat
  * @since Moodle 2.3
  * @since Moodle 3.2 component, filearea and itemid are optional parameters
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::format_text', since: '5.0', mdl: 'MDL-76583')]
 function external_format_text($text, $textformat, $context, $component = null, $filearea = null, $itemid = null, $options = null) {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     if (!$context instanceof context) {
         $context = context::instance_by_id($context);
     }
@@ -203,8 +204,11 @@ function external_format_text($text, $textformat, $context, $component = null, $
  * @param stdClass $service external service object
  * @return stdClass token object
  * @since Moodle 3.2
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::generate_token_for_current_user', since: '5.0', mdl: 'MDL-76583')]
 function external_generate_token_for_current_user($service) {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     return util::generate_token_for_current_user($service);
 }
 
@@ -216,7 +220,10 @@ function external_generate_token_for_current_user($service) {
  *
  * @param  stdClass $token token object
  * @since  Moodle 3.2
+ * @deprecated since Moodle 5.0 - MDL-76853
  */
+#[\core\attribute\deprecated('\core_external\util::log_token_request', since: '5.0', mdl: 'MDL-76583')]
 function external_log_token_request($token): void {
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
     util::log_token_request($token);
 }

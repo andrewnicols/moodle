@@ -49,4 +49,19 @@ $renamedclasses = [
     'core_question\\bank\\search\\condition' => 'core_question\\local\\bank\\condition',
     'core_question\\bank\\search\\category_condition' => 'qbank_managecategories\\category_condition',
     'core_question\\bank\\search\\hidden_condition' => 'qbank_deletequestion\\hidden_condition',
+
+    // Since Moodle 5.0.
+    \core_external\external_api::class => \external_api::class,
+    \core_external\restricted_context_exception::class => \restricted_context_exception::class,
+    \core_external\external_description::class => \external_description::class,
+    \core_external\external_value::class => \external_value::class,
+    \core_external\external_format_value::class => \external_format_value::class,
+    \core_external\external_single_structure::class => \external_single_structure::class,
+    \core_external\external_multiple_structure::class => \external_multiple_structure::class,
+    \core_external\external_function_parameters::class => \external_function_parameters::class,
+    \core_external\util::class => \external_util::class,
+    \core_external\external_files::class => \external_files::class,
+    \core_external\external_warnings::class => \external_warnings::class,
+    \core_external\external_settings::class => \external_settings::class,
+
 ];
