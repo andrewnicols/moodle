@@ -28,6 +28,7 @@ use mod_data\local\exporter\utils;
  * @copyright  2023 ISB Bayern
  * @author     Philipp Memmel
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @covers \mod_data\local\exporter\entries_exporter
  */
 class entries_export_test extends \advanced_testcase {
 
@@ -91,14 +92,9 @@ class entries_export_test extends \advanced_testcase {
     /**
      * Tests the exporting of the content of a mod_data instance by using the csv_entries_exporter.
      *
-     * It also includes more general testing of the functionality of the entries_exporter the csv_entries_exporter
-     * is inheriting from.
-     *
      * @covers \mod_data\local\exporter\entries_exporter
-     * @covers \mod_data\local\exporter\entries_exporter::get_records_count()
-     * @covers \mod_data\local\exporter\entries_exporter::send_file()
      * @covers \mod_data\local\exporter\csv_entries_exporter
-     * @covers \mod_data\local\exporter\utils::data_exportdata
+     * @covers \mod_data\local\exporter\utils
      */
     public function test_export_csv(): void {
         global $DB;
@@ -107,8 +103,8 @@ class entries_export_test extends \advanced_testcase {
             'cm' => $cm,
         ] = $this->get_test_data();
 
-        $exporter = new csv_entries_exporter();
-        $exporter->set_export_file_name('testexportfile');
+        $exporter = new csv_entries_exporter(streamtouser: false);
+        $exporter->set_export_filename('testexportfile');
         $fieldrecords = $DB->get_records('data_fields', ['dataid' => $data->id], 'id');
 
         $fields = [];
@@ -130,22 +126,39 @@ class entries_export_test extends \advanced_testcase {
         $includefiles = false;
         utils::data_exportdata($data->id, $fields, $selectedfields, $exporter, $currentgroup, $context,
             $exportuser, $exporttime, $exportapproval, $tags, $includefiles);
-        $this->assertEquals(file_get_contents(__DIR__ . '/fixtures/test_data_export_without_files.csv'),
-            $exporter->send_file(false));
+
+        $exporter->finalise_file();
+
+        $zipfile = $exporter->get_path_to_zip();
+
+        // Need to unzip it view the content.
+        $requestdir = make_request_directory();
+        $filetarget = $requestdir . '/' . $exporter->get_export_filename();
+
+        $fp = get_file_packer('application/zip');
+        $fp->extract_to_pathname($zipfile, $requestdir, [
+            $exporter->get_export_filename(),
+        ]);
+
+        $this->assertEquals(
+            file_get_contents(__DIR__ . '/fixtures/test_data_export_without_files.csv'),
+            file_get_contents($filetarget),
+        );
 
         $this->assertEquals(1, $exporter->get_records_count());
 
         // We now test the export including files. This will generate a zip archive.
         $includefiles = true;
-        $exporter = new csv_entries_exporter();
-        $exporter->set_export_file_name('testexportfile');
+        $exporter = new csv_entries_exporter(streamtouser: false);
+        $exporter->set_export_filename('testexportfile');
         utils::data_exportdata($data->id, $fields, $selectedfields, $exporter, $currentgroup, $context,
             $exportuser, $exporttime, $exportapproval, $tags, $includefiles);
         // We now write the zip archive temporary to disc to be able to parse it and assert it has the correct structure.
         $tmpdir = make_request_directory();
-        file_put_contents($tmpdir . '/testexportarchive.zip', $exporter->send_file(false));
+        $exporter->finalise_file();
+
         $ziparchive = new \zip_archive();
-        $ziparchive->open($tmpdir . '/testexportarchive.zip');
+        $ziparchive->open($exporter->get_path_to_zip());
         $expectedfilecontents = [
             // The test generator for mod_data uses a copy of field/picture/pix/sample.png as sample file content for the
             // file stored in a file and picture field.
@@ -166,11 +179,13 @@ class entries_export_test extends \advanced_testcase {
             $filestream = $ziparchive->get_stream($i);
             $fileinfo = $ziparchive->get_info($i);
             $filecontent = fread($filestream, $fileinfo->size);
-            $this->assertEquals(file_get_contents($expectedfilecontents[$fileinfo->pathname]), $filecontent);
+            $this->assertEquals(
+                file_get_contents($expectedfilecontents[$fileinfo->pathname]),
+                $filecontent,
+            );
             fclose($filestream);
         }
         $ziparchive->close();
-        unlink($tmpdir . '/testexportarchive.zip');
     }
 
     /**
@@ -186,8 +201,8 @@ class entries_export_test extends \advanced_testcase {
             'cm' => $cm,
         ] = $this->get_test_data();
 
-        $exporter = new ods_entries_exporter();
-        $exporter->set_export_file_name('testexportfile');
+        $exporter = new ods_entries_exporter(streamtouser: false);
+        $exporter->set_export_filename('testexportfile');
         $fieldrecords = $DB->get_records('data_fields', ['dataid' => $data->id], 'id');
 
         $fields = [];
@@ -209,7 +224,21 @@ class entries_export_test extends \advanced_testcase {
         $includefiles = false;
         utils::data_exportdata($data->id, $fields, $selectedfields, $exporter, $currentgroup, $context,
             $exportuser, $exporttime, $exportapproval, $tags, $includefiles);
-        $odsrows = $this->get_ods_rows_content($exporter->send_file(false));
+        $exporter->finalise_file();
+        $zipfile = $exporter->get_path_to_zip();
+
+        // Need to unzip it view the content.
+        $requestdir = make_request_directory();
+        $filetarget = $requestdir . '/' . $exporter->get_export_filename();
+
+        $fp = get_file_packer('application/zip');
+
+        $fp->extract_to_pathname($zipfile, $requestdir, [
+            $exporter->get_export_filename(),
+        ]);
+        $odsrows = $this->get_ods_rows_content(
+            file_get_contents($filetarget)
+        );
 
         // Check, if the headings match with the first row of the ods file.
         $i = 0;

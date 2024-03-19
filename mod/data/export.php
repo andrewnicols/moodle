@@ -95,7 +95,6 @@ if ($mform->is_cancelled()) {
 
     $currentgroup = groups_get_activity_group($cm);
 
-    $exporter = null;
     switch ($formdata['exporttype']) {
         case 'csv':
             $exporter = new \mod_data\local\exporter\csv_entries_exporter();
@@ -105,21 +104,33 @@ if ($mform->is_cancelled()) {
             $exporter = new \mod_data\local\exporter\ods_entries_exporter();
             break;
         default:
-            throw new coding_exception('Invalid export format has been specified. '
-                . 'Only "csv" and "ods" are currently supported.');
+            throw new coding_exception(
+                'Invalid export format has been specified. Only "csv" and "ods" are currently supported.',
+            );
     }
 
     $includefiles = !empty($formdata['includefiles']);
-    \mod_data\local\exporter\utils::data_exportdata($data->id, $fields, $selectedfields, $exporter, $currentgroup, $context,
-        $exportuser, $exporttime, $exportapproval, $tags, $includefiles);
+    \mod_data\local\exporter\utils::data_exportdata(
+        $data->id,
+        $fields,
+        $selectedfields,
+        $exporter,
+        $currentgroup,
+        $context,
+        $exportuser,
+        $exporttime,
+        $exportapproval,
+        $tags,
+        $includefiles,
+    );
     $count = $exporter->get_records_count();
     $filename = clean_filename("{$data->name}-{$count}_record");
     if ($count > 1) {
         $filename .= 's';
     }
     $filename .= clean_filename('-' . gmdate("Ymd_Hi"));
-    $exporter->set_export_file_name($filename);
-    $exporter->send_file();
+    $exporter->set_export_filename($filename);
+    $exporter->finalise_file();
 }
 
 // Build header to match the rest of the UI.

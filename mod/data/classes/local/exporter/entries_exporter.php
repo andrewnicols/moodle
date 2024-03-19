@@ -16,9 +16,8 @@
 
 namespace mod_data\local\exporter;
 
-use file_serving_exception;
-use moodle_exception;
-use zip_archive;
+use core_files\archive_writer;
+use core_files\local\archive_writer\zip_writer;
 
 /**
  * Exporter class for exporting data and - if needed - files as well in a zip archive.
@@ -29,30 +28,23 @@ use zip_archive;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class entries_exporter {
-
     /** @var int Tracks the currently edited row of the export data file. */
-    private int $currentrow;
+    private int $currentrow = 0;
 
     /**
      * @var array The data structure containing the data for exporting. It's a 2-dimensional array of
      *  rows and columns.
      */
-    protected array $exportdata;
+    protected array $exportdata = [];
 
     /** @var string Name of the export file name without extension. */
     protected string $exportfilename;
 
-    /** @var zip_archive The zip archive object we store all the files in, if we need to export files as well. */
-    private zip_archive $ziparchive;
-
-    /** @var bool Tracks the state if the zip archive already has been closed. */
-    private bool $isziparchiveclosed;
-
-    /** @var string full path of the zip archive. */
-    private string $zipfilepath;
-
     /** @var array Array to store all filenames in the zip archive for export. */
-    private array $filenamesinzip;
+    private array $filenamesinzip = [];
+
+    /** @var archive_writer The zip writer used to send files */
+    private readonly archive_writer $zipwriter;
 
     /**
      * Creates an entries_exporter object.
@@ -60,12 +52,33 @@ abstract class entries_exporter {
      * This object can be used to export data to different formats including files. If files are added,
      * everything will be bundled up in a zip archive.
      */
-    public function __construct() {
-        $this->currentrow = 0;
-        $this->exportdata = [];
-        $this->exportfilename = 'Exportfile';
-        $this->filenamesinzip = [];
-        $this->isziparchiveclosed = true;
+    public function __construct(
+        /** @ var bool Whether to stream this file to the user */
+        public readonly bool $streamtouser = true,
+    ) {
+        if ($streamtouser) {
+            $this->zipwriter = archive_writer::get_stream_writer('export.zip', archive_writer::ZIP_WRITER);
+        } else {
+            $this->zipwriter = archive_writer::get_file_writer('export.zip', archive_writer::ZIP_WRITER);
+        }
+    }
+
+    /**
+     * Sets the export file name without extension.
+     *
+     * @param string $exportfilename the name of the data file within the export
+     */
+    public function set_export_filename(string $exportfilename): void {
+        $this->exportfilename = $exportfilename;
+    }
+
+    /**
+     * Returns the export file name including the file extension.
+     *
+     * @return string
+     */
+    public function get_export_filename(): string {
+        return $this->exportfilename . '.' . $this->get_export_data_file_extension();
     }
 
     /**
@@ -99,18 +112,6 @@ abstract class entries_exporter {
     }
 
     /**
-     * Sets the name of the export file.
-     *
-     * Only use the basename without path and without extension here.
-     *
-     * @param string $exportfilename name of the file without path and extension
-     * @return void
-     */
-    public function set_export_file_name(string $exportfilename): void {
-        $this->exportfilename = $exportfilename;
-    }
-
-    /**
      * The entries_exporter will prepare a data file from the rows and columns being added.
      * Overwrite this method to generate the data file as string.
      *
@@ -141,63 +142,59 @@ abstract class entries_exporter {
     }
 
     /**
+     * Standardise the filename, removing any duplicate slashes.
+     *
+     * @param string $directory The directory path within the zip file
+     * @param string $filename The file name
+     * @return string The standardised filename
+     */
+    protected function standardise_filename(
+        string $directory,
+        string $filename,
+    ): string {
+        return implode('/', array_filter([
+            ...explode('/', $directory),
+            $filename,
+        ]));
+    }
+
+    /**
      * Use this method to add a file which should be exported to the entries_exporter.
      *
      * @param string $filename the name of the file which should be added
      * @param string $filecontent the content of the file as a string
      * @param string $zipsubdir the subdirectory in the zip archive. Defaults to 'files/'.
-     * @return void
-     * @throws moodle_exception if there is an error adding the file to the zip archive
      */
     public function add_file_from_string(string $filename, string $filecontent, string $zipsubdir = 'files/'): void {
-        if (empty($this->filenamesinzip)) {
-            // No files added yet, so we need to create a zip archive.
-            $this->create_zip_archive();
-        }
-        if (!str_ends_with($zipsubdir, '/')) {
-            $zipsubdir .= '/';
-        }
-        $zipfilename = $zipsubdir . $filename;
+        $zipfilename = $this->standardise_filename($zipsubdir, $filename);
         $this->filenamesinzip[] = $zipfilename;
-        $this->ziparchive->add_file_from_string($zipfilename, $filecontent);
+
+        $this->zipwriter->add_file_from_string($zipfilename, $filecontent);
     }
 
     /**
      * Sends the generated export file.
-     *
-     * Care: By default this function finishes the current PHP request and directly serves the file to the user as download.
-     *
-     * @param bool $sendtouser true if the file should be sent directly to the user, if false the file content will be returned
-     *  as string
-     * @return string|null file content as string if $sendtouser is true
-     * @throws moodle_exception if there is an issue adding the data file
-     * @throws file_serving_exception if the file could not be served properly
      */
-    public function send_file(bool $sendtouser = true): null|string {
-        if (empty($this->filenamesinzip)) {
-            if ($sendtouser) {
-                send_file($this->get_data_file_content(),
-                    $this->exportfilename . '.' . $this->get_export_data_file_extension(),
-                    null, 0, true, true);
-                return null;
-            } else {
-                return $this->get_data_file_content();
-            }
-        }
-        $this->add_file_from_string($this->exportfilename . '.' . $this->get_export_data_file_extension(),
-            $this->get_data_file_content(), '/');
-        $this->finish_zip_archive();
+    public function finalise_file(): void {
+        $this->add_file_from_string(
+            filename: $this->get_export_filename(),
+            filecontent: $this->get_data_file_content(),
+            zipsubdir: '/',
+        );
+        $this->zipwriter->finish();
+    }
 
-        if ($this->isziparchiveclosed) {
-            if ($sendtouser) {
-                send_file($this->zipfilepath, $this->exportfilename . '.zip', null, 0, false, true);
-                return null;
-            } else {
-                return file_get_contents($this->zipfilepath);
-            }
-        } else {
-            throw new file_serving_exception('Could not serve zip file, it could not be closed properly.');
+    /**
+     * Returns the path to the zip file.
+     *
+     * @return string The path on disk
+     */
+    public function get_path_to_zip(): string {
+        if ($this->streamtouser) {
+            throw new \coding_exception('This method can only be called if the file is not being streamed');
         }
+
+        return $this->zipwriter->get_path_to_zip();
     }
 
     /**
@@ -212,13 +209,16 @@ abstract class entries_exporter {
      * @return bool true if file with the given name already exists, false otherwise
      */
     public function file_exists(string $filename, string $zipsubdir = 'files/'): bool {
-        if (!str_ends_with($zipsubdir, '/')) {
-            $zipsubdir .= '/';
-        }
         if (empty($filename)) {
             return false;
         }
-        return in_array($zipsubdir . $filename, $this->filenamesinzip, true);
+
+        $filepath = $this->standardise_filename($zipsubdir, $filename);
+        return in_array(
+            needle: $filepath,
+            haystack: $this->filenamesinzip,
+            strict: true,
+        );
     }
 
     /**
@@ -227,7 +227,7 @@ abstract class entries_exporter {
      * This method adds "_1", "_2", ... to the given file name until the newly generated filename
      * is not equal to any of the already saved ones in the export file bundle.
      *
-     * @param string $filename the filename based on which a unique filename should be generated
+     * @param string $newfilename the filename based on which a unique filename should be generated
      * @return string the unique filename
      */
     public function create_unique_filename(string $filename): string {
@@ -235,43 +235,22 @@ abstract class entries_exporter {
             return $filename;
         }
 
+        $path = pathinfo($filename, PATHINFO_DIRNAME);
+        if ($path === '.') {
+            $path = '';
+        }
+        $originalbasename = pathinfo($filename, PATHINFO_FILENAME);
         $extension = pathinfo($filename, PATHINFO_EXTENSION);
-        $filenamewithoutextension = empty($extension)
-            ? $filename
-            : substr($filename, 0,strlen($filename) - strlen($extension) - 1);
-        $filenamewithoutextension = $filenamewithoutextension . '_1';
+        if (!empty($extension)) {
+            $extension = ".{$extension}";
+        }
+
         $i = 1;
-        $filename = empty($extension) ? $filenamewithoutextension : $filenamewithoutextension . '.' . $extension;
-        while ($this->file_exists($filename)) {
-            // In case we have already a file ending with '_XX' where XX is an ascending number, we have to
-            // remove '_XX' first before adding '_YY' again where YY is the successor of XX.
-            $filenamewithoutextension = preg_replace('/_' . $i . '$/', '_' . ($i + 1), $filenamewithoutextension);
-            $filename = empty($extension) ? $filenamewithoutextension : $filenamewithoutextension . '.' . $extension;
+        do {
+            $newfilename = "{$path}{$originalbasename}_{$i}{$extension}";
             $i++;
-        }
-        return $filename;
-    }
+        } while ($this->file_exists($newfilename));
 
-    /**
-     * Prepares the zip archive.
-     *
-     * @return void
-     */
-    private function create_zip_archive(): void {
-        $tmpdir = make_request_directory();
-        $this->zipfilepath = $tmpdir . '/' . $this->exportfilename . '.zip';
-        $this->ziparchive = new zip_archive();
-        $this->isziparchiveclosed = !$this->ziparchive->open($this->zipfilepath);
-    }
-
-    /**
-     * Closes the zip archive.
-     *
-     * @return void
-     */
-    private function finish_zip_archive(): void {
-        if (!$this->isziparchiveclosed) {
-            $this->isziparchiveclosed = $this->ziparchive->close();
-        }
+        return $newfilename;
     }
 }
