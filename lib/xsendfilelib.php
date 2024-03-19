@@ -51,6 +51,20 @@ function xsendfile($filepath) {
 
     $aliased = false;
     if (!empty($CFG->xsendfilealiases) and is_array($CFG->xsendfilealiases)) {
+        // Check whether the file to be served is stored in the per-request directory.
+        // This cannot be served using xsendfile as the directory will be cleared at the end
+        // of the PHP thread, before the web server has a chance to serve the file.
+        $requestrootdir = get_request_storage_directory(
+            exceptiononerror: false,
+            forcecreate: false,
+        );
+        if ($requestrootdir) {
+            $requestrootdir = realpath($requestrootdir);
+            if ($requestrootdir !== false && strpos($filepath, $requestrootdir) === 0) {
+                return false;
+            }
+        }
+
         foreach ($CFG->xsendfilealiases as $alias=>$dir) {
             $dir = realpath($dir);
             if ($dir === false) {
