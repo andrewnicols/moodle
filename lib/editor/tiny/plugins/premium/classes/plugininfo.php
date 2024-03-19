@@ -19,6 +19,7 @@ namespace tiny_premium;
 use context;
 use editor_tiny\editor;
 use editor_tiny\plugin;
+use editor_tiny\plugin_with_configuration;
 
 /**
  * Tiny Premium plugin.
@@ -27,7 +28,7 @@ use editor_tiny\plugin;
  * @copyright   2023 David Woloszyn <david.woloszyn@moodle.com>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class plugininfo extends plugin {
+class plugininfo extends plugin implements plugin_with_configuration {
 
     /**
      * Determine if the plugin should be enabled by checking the capability and if the Tiny Premium API key is set.
@@ -45,5 +46,16 @@ class plugininfo extends plugin {
         ?editor $editor = null
     ): bool {
         return has_capability('tiny/premium:accesspremium', $context) && (get_config('tiny_premium', 'apikey') != false);
+    }
+
+    public static function get_plugin_configuration_for_context(
+        context $context,
+        array $options,
+        array $fpoptions,
+        ?\editor_tiny\editor $editor = null
+    ): array {
+        return [
+            'premiumplugins' => get_config('tiny_premium', 'enabledplugins'),
+        ];
     }
 }

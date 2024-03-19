@@ -33,4 +33,12 @@ $functions = [
         'capabilities'    => '',
         'ajax'            => true,
     ],
+    'tiny_premium_get_plugins' => [
+        'classname'       => 'tiny_premium\external\get_plugins',
+        'methodname'      => 'execute',
+        'description'     => 'Get the enabled Tiny Premium plugins',
+        'type'            => 'read',
+        'capabilities'    => '',
+        'ajax'            => true,
+    ],
 ];
