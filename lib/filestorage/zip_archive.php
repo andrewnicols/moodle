@@ -29,6 +29,10 @@ require_once("$CFG->libdir/filestorage/file_archive.php");
 /**
  * Zip file archive class.
  *
+ * Please note that this class is considered legacy and should not be used in new code.
+ * Please use \core_files\archive_writer instead.
+ *
+ * @deprecated Since 4.4 Use \core_files\archive_writer instead.
  * @package   core_files
  * @category  files
  * @copyright 2008 Petr Skoda (http://skodak.org)
