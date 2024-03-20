@@ -14,12 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace mod_data;
+namespace mod_data\local\exporter;
 
 use context_module;
-use mod_data\local\exporter\csv_entries_exporter;
-use mod_data\local\exporter\ods_entries_exporter;
-use mod_data\local\exporter\utils;
 
 /**
  * Unit tests for exporting entries.
@@ -30,7 +27,7 @@ use mod_data\local\exporter\utils;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mod_data\local\exporter\entries_exporter
  */
-class entries_export_test extends \advanced_testcase {
+final class entries_export_test extends \advanced_testcase {
 
     /**
      * Get the test data.
@@ -141,7 +138,7 @@ class entries_export_test extends \advanced_testcase {
         ]);
 
         $this->assertEquals(
-            file_get_contents(__DIR__ . '/fixtures/test_data_export_without_files.csv'),
+            file_get_contents(dirname(__DIR__, 2) . '/fixtures/test_data_export_without_files.csv'),
             file_get_contents($filetarget),
         );
 
@@ -171,7 +168,7 @@ class entries_export_test extends \advanced_testcase {
             // that the filenames in the csv file correspond to the names of the exported file.
             // It also verifies that files with identical file names in different fields (or records) will be numbered
             // automatically (samplefile.png, samplefile_1.png, ...).
-            'testexportfile.csv' => __DIR__ . '/fixtures/test_data_export_with_files.csv'
+            'testexportfile.csv' => dirname(__DIR__, 2) . '/fixtures/test_data_export_with_files.csv',
         ];
         for ($i = 0; $i < $ziparchive->count(); $i++) {
             // We here iterate over all files in the zip archive and check if their content is identical to the files

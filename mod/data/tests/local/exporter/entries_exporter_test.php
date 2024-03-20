@@ -14,9 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace mod_data;
-
-use mod_data\local\exporter\csv_entries_exporter;
+namespace mod_data\local\exporter;
 
 /**
  * Unit tests for entries_exporter and csv_entries_exporter classes.
@@ -213,5 +211,8 @@ final class entries_exporter_test extends \advanced_testcase {
                 'resultfilename' => 'foo_2',
             ],
         ];
+    }
+
+    public function test_something(): void {
     }
 }
