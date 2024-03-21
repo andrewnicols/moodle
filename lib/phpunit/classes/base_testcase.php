@@ -129,14 +129,15 @@ abstract class base_testcase extends PHPUnit\Framework\TestCase {
      * One such example is from ICU 72.1 which changed the time format to include a narrow-non-breaking-space (U+202F)
      * between the time and AM/PM.
      *
-     * We should not update our tests to match these changes, as it is not our code that is generating the strings and they may change again.
-     * In addition the changes are not equal amongst all systems as they depend on the version of ICU installed.
+     * We should not update our tests to match these changes, as it is not our code that is
+     * generating the strings and they may change again.
+     * In addition, the changes are not equal amongst all systems as they depend on the version of ICU installed.
      *
      * @param string $expected
      * @param string $actual
-     * @param ?string $message
+     * @param string $message
      */
-    public function assertEqualsIgnoringWhitespace($expected, $actual, string $message = '') {
+    public function assertEqualsIgnoringWhitespace($expected, $actual, string $message = ''): void {
         // ICU 72.1 introduced the use of a narrow-non-breaking-space (U+202F) between the time and the AM/PM.
         // Normalise all whitespace when performing the comparison.
         $expected = preg_replace('/\s+/u', ' ', $expected);
