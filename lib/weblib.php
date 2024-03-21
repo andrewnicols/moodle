@@ -621,10 +621,41 @@ class moodle_url {
             $uri .= '?' . $querystring;
         }
         if (!is_null($this->anchor)) {
-            $uri .= '#'.$this->anchor;
+            $uri .= '#';
+            $uri .= $this->encode_anchor($this->anchor);
         }
 
         return $uri;
+    }
+
+    /**
+     * Encode the anchor according to RFC 3986.
+     *
+     * @param null|string $anchor The anchor to encode
+     * @return string The encoded anchor
+     */
+    protected function encode_anchor(?string $anchor): string {
+        if (is_null($anchor)) {
+            return '';
+        }
+
+        // RFC 3986 allows the following characters in a fragment without them being encoded:
+        // pct-encoded: "%" HEXDIG HEXDIG
+        // unreserved:  ALPHA / DIGIT / "-" / "." / "_" / "~" /
+        // sub-delims:  "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "=" / ":" / "@"
+        // fragment:    "/" / "?"
+        //
+        // All other characters should be encoded.
+        // These should not be encoded in the fragment unless they were already encoded.
+
+        $allowed = 'a-zA-Z0-9\\-._~!$&\'()*+,;=:@\/?%';
+        return preg_replace_callback(
+            '/[^' . $allowed . ']/',
+            function ($matches) {
+                return rawurlencode($matches[0]);
+            },
+            $anchor
+        );
     }
 
     /**
