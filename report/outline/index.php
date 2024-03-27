@@ -95,12 +95,12 @@ $pluginname = get_string('pluginname', 'report_outline');
 report_helper::print_report_selector($pluginname);
 
 [
-        'uselegacyreader' => $uselegacyreader,
-        'useinternalreader' => $useinternalreader,
-        'usedatabasereader' => $usedatabasereader,
-        'minloginternalreader' => $minloginternalreader,
-        'logtable' => $logtable,
-        'reader' => $logreader,
+    'uselegacyreader' => $uselegacyreader,
+    'useinternalreader' => $useinternalreader,
+    'usedatabasereader' => $usedatabasereader,
+    'minloginternalreader' => $minloginternalreader,
+    'logtable' => $logtable,
+    'reader' => $logreader,
 ] = report_outline_get_common_log_variables();
 
 // If no legacy and no internal log then don't proceed.
@@ -118,7 +118,7 @@ if ($uselegacyreader) {
     $minlog = $DB->get_field_sql('SELECT min(time) FROM {log}');
 }
 
-// If we are using the internal reader check the minimum time in that table.
+// If we are using a database or internal reader check the minimum time in that table.
 if ($useinternalreader || $usedatabasereader) {
     // If new log table has older data then don't use the minimum time obtained from the legacy table.
     if (empty($minlog) || ($minloginternalreader <= $minlog)) {
@@ -193,78 +193,74 @@ if ($useinternalreader || $usedatabasereader) {
     $params = array('courseid' => $course->id, 'contextmodule' => CONTEXT_MODULE);
     $limittime = '';
     if ($startdate) {
-        $limittime .= ' AND timecreated >= :startdate ';
+        $limittime .= 'timecreated >= :startdate ';
         $params['startdate'] = $startdate;
     }
     if ($enddate) {
-        $limittime .= ' AND timecreated < :enddate ';
+        $limittime .= 'timecreated < :enddate ';
         $params['enddate'] = $enddate;
     }
-    $sql = "SELECT contextinstanceid as cmid, COUNT('x') AS numviews, COUNT(DISTINCT userid) AS distinctusers $sqllasttime
-              FROM {" . $logtable . "} l
-             WHERE courseid = :courseid
-               AND anonymous = 0
-               AND crud = 'r'
-               AND contextlevel = :contextmodule
-               $limittime
-          GROUP BY contextinstanceid";
+
+    $conditions = [
+        'courseid = :courseid',
+        'anonymous = 0',
+        "crud = 'r'",
+        'contextlevel = :contextmodule',
+        $limittime,
+    ];
+    $baseselect = implode(' AND ', $conditions);
+    $selectwhere = "{$baseselect} GROUP BY contextinstanceid";
 
     if ($usedatabasereader) {
-        $selectwhere = "courseid = :courseid
-               AND anonymous = 0
-               AND crud = 'r'
-               AND contextlevel = :contextmodule
-               $limittime
-               GROUP BY contextinstanceid";
         $events = $logreader->get_events_select($selectwhere, $params, '', '', '');
 
         if ($events) {
+            $distinctuserswhere = "{$baseselect} AND contextinstanceid = :cmid GROUP BY userid";
+            $timecreatedwhere = "$baseselect AND contextinstanceid = :cmid";
+
             foreach ($events as $event) {
                 $cmid = $event->contextinstanceid;
-                $o = new StdClass();
-                $o->cmid = $cmid;
+                $cmidview = (object) [
+                    'cmid' => $cmid,
+                    'lasttime' => 0,
+                    'numviews' => 0,
+                    'distinctusers' => 0,
+                ];
 
-                $selectwhere2 = "courseid = :courseid
-                    AND anonymous = 0
-                    AND crud = 'r'
-                    AND contextlevel = :contextmodule
-                    AND contextinstanceid = :cmid
-                    $limittime";
-                $params2 = array_merge($params, ["cmid" => $cmid]);
-                $o->numviews = $logreader->get_events_select_count($selectwhere2, $params2);
+                $cmidparams = array_merge($params, ["cmid" => $cmid]);
+                $cmidview->numviews = $logreader->get_events_select_count($timecreatedwhere, $cmidparams);
 
-                $events2 = $logreader->get_events_select($selectwhere, $params, 'timecreated DESC', 0, 1);
-                if ($events2) {
-                    $event2 = reset($events2);
-                    $o->lasttime = $event2->timecreated;
+                $timecreated = $logreader->get_events_select($selectwhere, $params, 'timecreated DESC', 0, 1);
+                if ($timecreated) {
+                    $event2 = reset($timecreated);
+                    $cmidview->lasttime = $event2->timecreated;
                 }
 
-                $selectwhere3 = "courseid = :courseid
-                    AND anonymous = 0
-                    AND crud = 'r'
-                    AND contextlevel = :contextmodule
-                    AND contextinstanceid = :cmid
-                    $limittime
-                    GROUP BY userid";
-                $events3 = $logreader->get_events_select($selectwhere3, $params2, '', '', '');
+                $cmidview->distinctusers = $logreader->get_events_select_count($distinctuserswhere, $cmidparams, '', '', '');
 
-                if ($events3) {
-                    $o->distinctusers = count($events3);
-                }
-
-                $v[$cmid] = $o;
+                $dbviews[$cmid] = $cmidview;
             }
         }
     } else {
+        $sql = <<<EOF
+            SELECT
+                contextinstanceid as cmid,
+                COUNT('x') AS numviews,
+                COUNT(DISTINCT userid) AS distinctusers
+                $sqllasttime
+             FROM {" . $logtable . "} l
+            WHERE {$selectwhere}
+        EOF;
+
         // Internal database reader.
-        $v = $DB->get_records_sql($sql, $params);
+        $dbviews = $DB->get_records_sql($sql, $params);
     }
 
     if (empty($views)) {
-        $views = $v;
+        $views = $dbviews;
     } else {
         // Merge two view arrays.
-        foreach ($v as $key => $value) {
+        foreach ($dbviews as $key => $value) {
             if (isset($views[$key]) && !empty($views[$key]->numviews)) {
                 $views[$key]->numviews += $value->numviews;
                 if ($value->lasttime > $views[$key]->lasttime) {
