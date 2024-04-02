@@ -195,7 +195,7 @@ function report_outline_user_outline(int $userid, int $cmid, string $module, int
                 'edulevel1' => core\event\base::LEVEL_PARTICIPATING, 'edulevel2' => core\event\base::LEVEL_TEACHING,
                 'edulevel3' => core\event\base::LEVEL_OTHER, 'anonymous' => 0, ];
         $select = "SELECT COUNT(*) as count ";
-        $conditions = "WHERE userid = :userid
+        $conditions = "userid = :userid
                     AND contextlevel = :contextlevel
                     AND contextinstanceid = :contextinstanceid
                     AND crud = :crud
@@ -293,7 +293,7 @@ function report_outline_user_complete(int $userid, int $cmid, string $module, in
                 'edulevel1' => core\event\base::LEVEL_PARTICIPATING, 'edulevel2' => core\event\base::LEVEL_TEACHING,
                 'edulevel3' => core\event\base::LEVEL_OTHER, 'anonymous' => 0, ];
         $select = "SELECT COUNT(*) as count ";
-        $conditions = "WHERE userid = :userid
+        $conditions = "userid = :userid
                     AND contextlevel = :contextlevel
                     AND contextinstanceid = :contextinstanceid
                     AND crud = :crud
@@ -316,7 +316,8 @@ function report_outline_user_complete(int $userid, int $cmid, string $module, in
             } else {
                 $events = $logreader->get_events_select($conditions, $params, 'timecreated DESC', 0, 1);
                 if ($events) {
-                    $lastlogtime = $events->timecreated;
+                    $event = reset($events);
+                    $lastlogtime = $event->timecreated;
                 }
             }
 

@@ -206,8 +206,10 @@ if ($useinternalreader || $usedatabasereader) {
         'anonymous = 0',
         "crud = 'r'",
         'contextlevel = :contextmodule',
-        $limittime,
     ];
+    if (!empty($limittime)) {
+        $conditions[] = $limittime;
+    }
     $baseselect = implode(' AND ', $conditions);
     $selectwhere = "{$baseselect} GROUP BY contextinstanceid";
 
