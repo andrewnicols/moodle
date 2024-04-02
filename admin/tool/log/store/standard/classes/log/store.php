@@ -72,9 +72,13 @@ class store implements \tool_log\log\writer, \core\log\sql_internal_table_reader
     public function get_events_select($selectwhere, array $params, $sort, $limitfrom, $limitnum) {
         global $DB;
 
-        $sort = self::tweak_sort_by_id($sort);
+        xdebug_break();
+        if (!str_contains($selectwhere, 'GROUP BY')) {
+            $sort = self::tweak_sort_by_id($sort);
+        }
 
         $events = array();
+
         $records = $DB->get_recordset_select('logstore_standard_log', $selectwhere, $params, $sort, '*', $limitfrom, $limitnum);
 
         foreach ($records as $data) {
@@ -105,7 +109,9 @@ class store implements \tool_log\log\writer, \core\log\sql_internal_table_reader
     public function get_events_select_iterator($selectwhere, array $params, $sort, $limitfrom, $limitnum) {
         global $DB;
 
-        $sort = self::tweak_sort_by_id($sort);
+        if (!str_contains($selectwhere, 'GROUP BY')) {
+            $sort = self::tweak_sort_by_id($sort);
+        }
 
         $recordset = $DB->get_recordset_select('logstore_standard_log', $selectwhere, $params, $sort, '*', $limitfrom, $limitnum);
 

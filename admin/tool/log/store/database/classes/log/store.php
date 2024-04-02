@@ -171,7 +171,9 @@ class store implements \tool_log\log\writer, \core\log\sql_reader {
             return array();
         }
 
-        $sort = self::tweak_sort_by_id($sort);
+        if (!str_contains($selectwhere, 'GROUP BY')) {
+            $sort = self::tweak_sort_by_id($sort);
+        }
 
         $events = array();
         $records = $this->extdb->get_records_select($dbtable, $selectwhere, $params, $sort, '*', $limitfrom, $limitnum);
@@ -208,7 +210,9 @@ class store implements \tool_log\log\writer, \core\log\sql_reader {
             return array();
         }
 
-        $sort = self::tweak_sort_by_id($sort);
+        if (!str_contains($selectwhere, 'GROUP BY')) {
+            $sort = self::tweak_sort_by_id($sort);
+        }
 
         $recordset = $this->extdb->get_recordset_select($dbtable, $selectwhere, $params, $sort, '*', $limitfrom, $limitnum);
 

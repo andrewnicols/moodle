@@ -1,27 +1,27 @@
-@report @report_outline
+@report @report_outline @javascript
 Feature: View an outline report
-  In order to ensure the outline report works as expected
-  As a teacher
-  I need to log in as a teacher and view the outline report
+    In order to ensure the outline report works as expected
+    As a teacher
+    I need to log in as a teacher and view the outline report
 
   Background:
     Given the following "courses" exist:
       | fullname | shortname | format |
-      | Course 1 | C1 | topics |
+      | Course 1 | C1        | topics |
     And the following "users" exist:
-      | username | firstname | lastname | email |
-      | teacher1 | Teacher | 1 | teacher1@example.com |
-      | student1 | Student | 1 | student1@example.com |
-      | student2 | Student | 2 | student2@example.com |
+      | username | firstname | lastname | email                |
+      | teacher1 | Teacher   | 1        | teacher1@example.com |
+      | student1 | Student   | 1        | student1@example.com |
+      | student2 | Student   | 2        | student2@example.com |
     And the following "course enrolments" exist:
-      | user | course | role |
-      | teacher1 | C1 | editingteacher |
-      | student1 | C1 | student |
-      | student2 | C1 | student |
+      | user     | course | role           |
+      | teacher1 | C1     | editingteacher |
+      | student1 | C1     | student        |
+      | student2 | C1     | student        |
     And the following "activities" exist:
-      | activity   | name                      | course | idnumber |
-      | forum      | Forum name                | C1     | forum1   |
-      | book       | Book name                 | C1     | book1    |
+      | activity | name       | course | idnumber |
+      | forum    | Forum name | C1     | forum1   |
+      | book     | Book name  | C1     | book1    |
     When I am on the "Course 1" course page logged in as admin
 
   Scenario: View the outline report when only the standard log reader is enabled

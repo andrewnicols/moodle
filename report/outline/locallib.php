@@ -69,6 +69,7 @@ function report_outline_print_row($mod, $instance, $result) {
  */
 function report_outline_get_common_log_variables(): array {
     global $DB;
+    xdebug_break();
 
     static $uselegacyreader;
     static $useinternalreader;
@@ -107,7 +108,12 @@ function report_outline_get_common_log_variables(): array {
     if (!empty($readers)) {
         foreach ($readers as $readerpluginname => $reader) {
             $logreader = $reader;
-            if ($reader instanceof \core\log\sql_reader) {
+            if ($reader instanceof \core\log\sql_internal_table_reader) {
+                // If sql_internal_table_reader is preferred reader.
+                $useinternalreader = true;
+                $logtable = $reader->get_internal_log_table_name();
+                $minloginternalreader = $DB->get_field_sql('SELECT min(timecreated) FROM {' . $logtable . '}');
+            } else if ($reader instanceof \core\log\sql_reader) {
                 $usedatabasereader = true;
                 $logtable = get_config('logstore_database', 'dbtable');
                 $events = $reader->get_events_select('', [], 'timecreated ASC', 0, 1);
@@ -115,11 +121,6 @@ function report_outline_get_common_log_variables(): array {
                     $event = reset($events);
                     $minloginternalreader = $event->timecreated;
                 }
-            } else if ($reader instanceof \core\log\sql_internal_table_reader) {
-                // If sql_internal_table_reader is preferred reader.
-                $useinternalreader = true;
-                $logtable = $reader->get_internal_log_table_name();
-                $minloginternalreader = $DB->get_field_sql('SELECT min(timecreated) FROM {' . $logtable . '}');
             }
         }
     }

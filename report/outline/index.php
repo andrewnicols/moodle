@@ -212,7 +212,7 @@ if ($useinternalreader || $usedatabasereader) {
     }
     $baseselect = implode(' AND ', $conditions);
     $selectwhere = "{$baseselect} GROUP BY contextinstanceid";
-
+xdebug_break();
     if ($usedatabasereader) {
         $events = $logreader->get_events_select($selectwhere, $params, '', '', '');
 
