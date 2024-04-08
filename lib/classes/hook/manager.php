@@ -58,6 +58,9 @@ final class manager implements
     /** @var array list of redirected callbacks in PHPUnit tests */
     private $redirectedcallbacks = [];
 
+    /** @var bool Whether the instance has been initialised */
+    private bool $initialised = false;
+
     /**
      * Constructor can be used only from factory methods.
      */
@@ -73,7 +76,6 @@ final class manager implements
     public static function get_instance(): manager {
         if (!self::$instance) {
             self::$instance = new self();
-            self::$instance->init_standard_callbacks();
         }
         return self::$instance;
     }
@@ -146,6 +148,7 @@ final class manager implements
      * @return array list of callback definitions
      */
     public function get_callbacks_for_hook(string $hookclassname): array {
+        $this->ensure_initialisation_complete();
         return $this->allcallbacks[$hookclassname] ?? [];
     }
 
@@ -155,6 +158,7 @@ final class manager implements
      * @return iterable
      */
     public function get_all_callbacks(): iterable {
+        $this->ensure_initialisation_complete();
         return $this->allcallbacks;
     }
 
@@ -268,6 +272,7 @@ final class manager implements
      * @return array
      */
     public function get_hooks_with_callbacks(): array {
+        $this->ensure_initialisation_complete();
         return array_keys($this->allcallbacks);
     }
 
@@ -323,12 +328,26 @@ final class manager implements
     }
 
     /**
+     * Ensure that the manager is initialised.
+     */
+    private function ensure_initialisation_complete(): void {
+        if ($this->initialised) {
+            return;
+        }
+        $this->init_standard_callbacks();
+    }
+
+    /**
      * Initialise list of all callbacks for each hook.
      *
      * @return void
      */
     private function init_standard_callbacks(): void {
         global $CFG;
+
+        if ($this->initialised) {
+            return;
+        }
 
         $this->allcallbacks = [];
         $this->alldeprecations = [];
@@ -374,6 +393,8 @@ final class manager implements
             $cache->set('deprecations', $this->alldeprecations);
             $cache->set('overrideshash', $this->calculate_overrides_hash());
         }
+
+        $this->initialised = true;
     }
 
     /**
@@ -611,6 +632,8 @@ final class manager implements
      * @return ?array
      */
     public function get_hooks_deprecating_plugin_callback(string $plugincallback): ?array {
+        $this->ensure_initialisation_complete();
+
         return $this->alldeprecations[$plugincallback] ?? null;
     }
 
@@ -625,6 +648,8 @@ final class manager implements
      * @return bool
      */
     public function is_deprecating_hook_present(string $component, string $plugincallback): bool {
+        $this->ensure_initialisation_complete();
+
         if (!isset($this->alldeprecations[$plugincallback])) {
             return false;
         }
