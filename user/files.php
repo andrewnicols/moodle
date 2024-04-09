@@ -25,6 +25,8 @@
 
 require('../config.php');
 
+$PAGE->set_url('/user/files.php');
+
 require_login();
 if (isguestuser()) {
     die();
@@ -34,8 +36,6 @@ $context = context_user::instance($USER->id);
 require_capability('moodle/user:manageownfiles', $context);
 
 $title = get_string('privatefiles');
-
-$PAGE->set_url('/user/files.php');
 $PAGE->set_context($context);
 $PAGE->set_title($title);
 $PAGE->set_heading(fullname($USER));

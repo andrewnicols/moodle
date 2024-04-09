@@ -44,14 +44,14 @@ if ($u) {  // Two ways to specify the module
 
 $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 
+$PAGE->set_url('/mod/url/view.php', ['id' => $cm->id]);
+
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/url:view', $context);
 
 // Completion and trigger events.
 url_view($url, $course, $cm, $context);
-
-$PAGE->set_url('/mod/url/view.php', array('id' => $cm->id));
 
 // Make sure URL exists before generating output - some older sites may contain empty urls
 // Do not use PARAM_URL here, it is too strict and does not support general URIs!

@@ -48,6 +48,12 @@ if (!empty($id)) {
 }
 $cm = cm_info::create($cm);
 
+$url = new moodle_url('/mod/glossary/view.php', ['id' => $cm->id]);
+if (isset($mode) && $mode) {
+    $url->param('mode', $mode);
+}
+$PAGE->set_url($url);
+
 require_course_login($course->id, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/glossary:view', $context);
@@ -276,11 +282,6 @@ $strwaitingapproval = get_string('pendingapproval', 'glossary');
 /// If we are in approval mode, prit special header
 $PAGE->set_title($glossary->name);
 $PAGE->set_heading($course->fullname);
-$url = new moodle_url('/mod/glossary/view.php', array('id'=>$cm->id));
-if (isset($mode) && $mode) {
-    $url->param('mode', $mode);
-}
-$PAGE->set_url($url);
 
 $renderer = $PAGE->get_renderer('mod_glossary');
 $actionbar = new \mod_glossary\output\standard_action_bar($cm, $glossary, $dp, $mode, $hook,

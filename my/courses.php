@@ -33,25 +33,23 @@ require_once($CFG->dirroot . '/course/lib.php');
 
 redirect_if_major_upgrade_required();
 
+// Start setting up the page.
+$context = context_system::instance();
+$PAGE->set_url('/my/courses.php');
+$PAGE->set_context($context);
+$PAGE->add_body_classes(['limitedwidth', 'page-mycourses']);
+$PAGE->set_pagelayout('mycourses');
 require_login();
 
-$hassiteconfig = has_capability('moodle/site:config', context_system::instance());
+$hassiteconfig = has_capability('moodle/site:config', $context);
 if ($hassiteconfig && moodle_needs_upgrading()) {
     redirect(new moodle_url('/admin/index.php'));
 }
-
-$context = context_system::instance();
 
 // Get the My Moodle page info.  Should always return something unless the database is broken.
 if (!$currentpage = my_get_page(null, MY_PAGE_PUBLIC, MY_PAGE_COURSES)) {
     throw new Exception('mymoodlesetup');
 }
-
-// Start setting up the page.
-$PAGE->set_context($context);
-$PAGE->set_url('/my/courses.php');
-$PAGE->add_body_classes(['limitedwidth', 'page-mycourses']);
-$PAGE->set_pagelayout('mycourses');
 
 $PAGE->set_pagetype('my-index');
 $PAGE->blocks->add_region('content');

@@ -43,6 +43,10 @@ redirect_if_major_upgrade_required();
 $edit   = optional_param('edit', null, PARAM_BOOL);    // Turn editing on and off
 $reset  = optional_param('reset', null, PARAM_BOOL);
 
+// Start setting up the page
+$params = [];
+$PAGE->set_url('/my/index.php', $params);
+
 require_login();
 
 $hassiteconfig = has_capability('moodle/site:config', context_system::instance());
@@ -90,9 +94,7 @@ if (!$currentpage = my_get_page($userid, MY_PAGE_PRIVATE)) {
 }
 
 // Start setting up the page
-$params = array();
 $PAGE->set_context($context);
-$PAGE->set_url('/my/index.php', $params);
 $PAGE->set_pagelayout('mydashboard');
 $PAGE->add_body_class('limitedwidth');
 $PAGE->set_pagetype('my-index');

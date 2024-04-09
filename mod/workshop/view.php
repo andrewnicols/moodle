@@ -48,12 +48,11 @@ if ($id) {
     $cm             = get_coursemodule_from_instance('workshop', $workshoprecord->id, $course->id, false, MUST_EXIST);
 }
 
+$workshop = new workshop($workshoprecord, $cm, $course);
+$PAGE->set_url($workshop->view_url());
+
 require_login($course, true, $cm);
 require_capability('mod/workshop:view', $PAGE->context);
-
-$workshop = new workshop($workshoprecord, $cm, $course);
-
-$PAGE->set_url($workshop->view_url());
 
 // Mark viewed.
 $workshop->set_module_viewed();

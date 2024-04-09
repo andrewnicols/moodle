@@ -48,6 +48,9 @@ $quiz = $quizobj->get_quiz();
 $cm = $quizobj->get_cm();
 $course = $quizobj->get_course();
 
+// Initialize $PAGE, compute blocks.
+$PAGE->set_url('/mod/quiz/view.php', ['id' => $cm->id]);
+
 // Check login and get context.
 require_login($course, false, $cm);
 $context = $quizobj->get_context();
@@ -65,9 +68,6 @@ $accessmanager = new access_manager($quizobj, $timenow,
 
 // Trigger course_module_viewed event and completion.
 quiz_view($quiz, $course, $cm, $context);
-
-// Initialize $PAGE, compute blocks.
-$PAGE->set_url('/mod/quiz/view.php', ['id' => $cm->id]);
 
 // Create view object which collects all the information the renderer will need.
 $viewobj = new view_page();

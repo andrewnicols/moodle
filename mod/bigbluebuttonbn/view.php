@@ -54,6 +54,7 @@ if (!$instance) {
 $cm = $instance->get_cm();
 $course = $instance->get_course();
 $bigbluebuttonbn = $instance->get_instance_data();
+$PAGE->set_url($instance->get_view_url());
 
 require_login($course, true, $cm);
 
@@ -72,7 +73,6 @@ $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
 // Print the page header.
-$PAGE->set_url($instance->get_view_url());
 $PAGE->set_title($cm->name);
 $PAGE->set_cacheable(false);
 $PAGE->set_heading($course->fullname);

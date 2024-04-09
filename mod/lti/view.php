@@ -87,16 +87,15 @@ $PAGE->set_cm($cm, $course); // Set's up global $COURSE.
 $context = context_module::instance($cm->id);
 $PAGE->set_context($context);
 
+$url = new moodle_url('/mod/lti/view.php', array('id' => $cm->id));
+$PAGE->set_url($url);
+
 require_login($course, true, $cm);
 require_capability('mod/lti:view', $context);
 
 if (!empty($foruserid) && (int)$foruserid !== (int)$USER->id) {
     require_capability('gradereport/grader:view', $context);
 }
-
-$url = new moodle_url('/mod/lti/view.php', array('id' => $cm->id));
-$PAGE->set_url($url);
-
 
 if (!empty($missingtooltype)) {
     $PAGE->set_pagelayout('incourse');

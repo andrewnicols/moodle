@@ -29,7 +29,9 @@ $courseid = optional_param('courseid', false, PARAM_INT);
 
 $current_tab = 'view';
 
-list($course, $cm) = get_course_and_cm_from_cmid($id, 'feedback');
+[$course, $cm] = get_course_and_cm_from_cmid($id, 'feedback');
+$PAGE->set_url('/mod/feedback/view.php', ['id' => $cm->id]);
+
 require_course_login($course, true, $cm);
 $feedback = $PAGE->activityrecord;
 
@@ -40,7 +42,6 @@ $context = context_module::instance($cm->id);
 if ($course->id == SITEID) {
     $PAGE->set_pagelayout('incourse');
 }
-$PAGE->set_url('/mod/feedback/view.php', array('id' => $cm->id));
 $PAGE->set_title($feedback->name);
 $PAGE->set_heading($course->fullname);
 $PAGE->add_body_class('limitedwidth');

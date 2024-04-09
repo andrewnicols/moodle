@@ -50,14 +50,14 @@ if ($r) {
 
 $course = $DB->get_record('course', array('id'=>$cm->course), '*', MUST_EXIST);
 
+$PAGE->set_url('/mod/resource/view.php', ['id' => $cm->id]);
+
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/resource:view', $context);
 
 // Completion and trigger events.
 resource_view($resource, $course, $cm, $context);
-
-$PAGE->set_url('/mod/resource/view.php', array('id' => $cm->id));
 
 if ($resource->tobemigrated) {
     resource_print_tobemigrated($resource, $cm, $course);

@@ -53,6 +53,7 @@ if ($id) {
     }
 }
 
+$PAGE->set_url('/mod/chat/view.php', ['id' => $cm->id]);
 require_course_login($course, true, $cm);
 
 $context = context_module::instance($cm->id);
@@ -61,7 +62,6 @@ $PAGE->set_context($context);
 // Initialize $PAGE.
 $courseshortname = format_string($course->shortname, true, array('context' => context_course::instance($course->id)));
 $title = $courseshortname . ': ' . format_string($chat->name);
-$PAGE->set_url('/mod/chat/view.php', ['id' => $cm->id]);
 $PAGE->set_title($title);
 $PAGE->set_heading($course->fullname);
 $PAGE->add_body_class('limitedwidth');

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -39,6 +38,12 @@ $cm = get_coursemodule_from_id('lesson', $id, 0, false, MUST_EXIST);
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 $lesson = new lesson($DB->get_record('lesson', array('id' => $cm->instance), '*', MUST_EXIST), $cm, $course);
 
+$url = new moodle_url('/mod/lesson/view.php', ['id' => $id]);
+if ($pageid !== null) {
+    $url->param('pageid', $pageid);
+}
+$PAGE->set_url($url);
+
 require_login($course, false, $cm);
 
 if ($backtocourse) {
@@ -48,11 +53,6 @@ if ($backtocourse) {
 // Apply overrides.
 $lesson->update_effective_access($USER->id);
 
-$url = new moodle_url('/mod/lesson/view.php', array('id'=>$id));
-if ($pageid !== null) {
-    $url->param('pageid', $pageid);
-}
-$PAGE->set_url($url);
 $PAGE->force_settings_menu();
 $PAGE->add_body_class('limitedwidth');
 

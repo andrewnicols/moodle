@@ -46,6 +46,16 @@ if ($id) {
     $id = $cm->id;
 }
 
+$urlparams = [
+    'id' => $id,
+];
+
+if ($chapterid) {
+    $urlparams['chapterid'] = $chapterid;
+}
+
+$PAGE->set_url('/mod/book/view.php', $urlparams);
+
 require_course_login($course, true, $cm);
 
 $context = context_module::instance($cm->id);
@@ -104,11 +114,9 @@ $PAGE->add_body_class('limitedwidth');
 
 // No content in the book.
 if (!$chapterid) {
-    $PAGE->set_url('/mod/book/view.php', array('id' => $id));
     echo $OUTPUT->header();
     echo $OUTPUT->notification(get_string('nocontent', 'mod_book'), 'info', false);
 } else {
-    $PAGE->set_url('/mod/book/view.php', ['id' => $id, 'chapterid' => $chapterid]);
     // The chapter doesnt exist or it is hidden for students.
     if (!$chapter or ($chapter->hidden and !$viewhidden)) {
         $courseurl = new moodle_url('/course/view.php', ['id' => $course->id]);

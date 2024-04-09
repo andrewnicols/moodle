@@ -41,6 +41,8 @@ if ($i) {  // Two ways to specify the module.
 
 $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST);
 
+$PAGE->set_url('/mod/imscp/view.php', ['id' => $cm->id]);
+
 require_course_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 require_capability('mod/imscp:view', $context);
@@ -48,7 +50,6 @@ require_capability('mod/imscp:view', $context);
 // Completion and trigger events.
 imscp_view($imscp, $course, $cm, $context);
 
-$PAGE->set_url('/mod/imscp/view.php', array('id' => $cm->id));
 $PAGE->requires->js('/mod/imscp/dummyapi.js', true);
 
 $PAGE->requires->string_for_js('navigation', 'imscp');

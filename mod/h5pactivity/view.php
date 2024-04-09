@@ -32,7 +32,9 @@ require_once(__DIR__.'/lib.php');
 
 $id = required_param('id', PARAM_INT);
 
-list ($course, $cm) = get_course_and_cm_from_cmid($id, 'h5pactivity');
+[$course, $cm[] = get_course_and_cm_from_cmid($id, 'h5pactivity');
+
+$PAGE->set_url('/mod/h5pactivity/view.php', ['id' => $cm->id]);
 
 require_login($course, true, $cm);
 
@@ -57,8 +59,6 @@ $file = reset($files);
 $fileurl = moodle_url::make_pluginfile_url($file->get_contextid(), $file->get_component(),
                     $file->get_filearea(), $file->get_itemid(), $file->get_filepath(),
                     $file->get_filename(), false);
-
-$PAGE->set_url('/mod/h5pactivity/view.php', ['id' => $cm->id]);
 
 $shortname = format_string($course->shortname, true, ['context' => $context]);
 $pagetitle = strip_tags($shortname.': '.format_string($moduleinstance->name));
