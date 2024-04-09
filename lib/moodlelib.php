@@ -2454,11 +2454,11 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
                 if ($preventredirect) {
                     throw new require_login_exception('Course is hidden');
                 }
-                $PAGE->set_context(null);
-                // We need to override the navigation URL as the course won't have been added to the navigation and thus
-                // the navigation will mess up when trying to find it.
-                navigation_node::override_active_url(new moodle_url('/'));
-                notice(get_string('coursehidden'), $CFG->wwwroot .'/');
+                redirect(
+                    url: new moodle_url('/'),
+                    message: get_string('coursehidden'),
+                    messagetype: \core\output\notification::NOTIFY_WARNING,
+                );
             }
         }
     }
@@ -2475,9 +2475,11 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
                 if ($preventredirect) {
                     throw new require_login_exception('Invalid course login-as access');
                 }
-                $PAGE->set_context(null);
-                echo $OUTPUT->header();
-                notice(get_string('studentnotallowed', '', fullname($USER, true)), $CFG->wwwroot .'/');
+                redirect(
+                    url: new moodle_url('/'),
+                    message: get_string('studentnotallowed', '', fullname($USER, true)),
+                    messagetype: \core\output\notification::NOTIFY_WARNING,
+                );
             }
         }
 
@@ -2567,11 +2569,11 @@ function require_login($courseorid = null, $autologinguest = true, $cm = null, $
                     if ($preventredirect) {
                         throw new require_login_exception('Course is not available');
                     }
-                    $PAGE->set_context(null);
-                    // We need to override the navigation URL as the course won't have been added to the navigation and thus
-                    // the navigation will mess up when trying to find it.
-                    navigation_node::override_active_url(new moodle_url('/'));
-                    notice(get_string('coursehidden'), $CFG->wwwroot .'/');
+                    redirect(
+                        url: new moodle_url('/'),
+                        message: get_string('coursehidden'),
+                        messagetype: \core\output\notification::NOTIFY_WARNING,
+                    );
                 }
             }
         }
