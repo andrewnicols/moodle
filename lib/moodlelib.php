@@ -2210,6 +2210,13 @@ function get_login_url() {
 function require_login($courseorid = null, $autologinguest = true, $cm = null, $setwantsurltome = true, $preventredirect = false) {
     global $CFG, $SESSION, $USER, $PAGE, $SITE, $DB, $OUTPUT;
 
+    if (empty($CFG->debug_developer_ignore_missing_page_urls) && !$PAGE->has_set_url()) {
+        debugging(
+            'URL not set for page before calling require_login()',
+            DEBUG_DEVELOPER,
+        );
+    }
+
     // Must not redirect when byteserving already started.
     if (!empty($_SERVER['HTTP_RANGE'])) {
         $preventredirect = true;

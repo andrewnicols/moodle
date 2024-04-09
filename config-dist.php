@@ -797,6 +797,11 @@ $CFG->admin = 'admin';
 // If this property is not specified then it will be true if pretty exceptions are usable.
 // $CFG->debug_developer_debugging_as_error = true;
 //
+// A debugging notice is shown when a page does not set its URL before calling require_login and in certain
+// other conditions.
+// You can choose to not show that message by setting the following to true;
+// $CFG->debug_developer_ignore_missing_page_urls = false; // Default false.
+//
 // The Whoops! UI can also provide a link to open files in  your preferred editor.
 // You can set your preferred editor by setting:
 // $CFG->debug_developer_editor = 'vscode';
