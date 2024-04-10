@@ -59,6 +59,83 @@ module.exports = grunt => {
     };
 
     /**
+     * Generate the PHPCS configuration.
+     *
+     * @param {Object} thirdPartyPaths
+     */
+    const phpDocumentorIgnore = (thirdPartyPaths) => {
+        const {toXML} = require('jstoxml');
+
+        const ignores = [
+            {
+                path: '.git',
+            }, {
+                path: '**/tests/**',
+            },
+        ];
+        thirdPartyPaths.forEach(library => {
+            ignores.push({
+                path: library,
+            });
+        });
+
+        const content = {
+            _name: 'phpdocumentor',
+            _attrs: {
+                configVersion: "3.0",
+                "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+                xmlns: "https://www.phpdoc.org",
+                "xsi:noNamespaceSchemaLocation":"https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd",
+            },
+            _content: [
+                {
+                    _name: 'paths',
+                    _content: {
+                        output: 'phpdocs/api',
+                        cache: 'phpdocs/cache',
+                    }
+                },
+                {
+                    _name: 'version',
+                    _attrs: {
+                        number: "3.0",
+                    },
+                    _content: {
+                        _name: 'api',
+                        _attrs: {
+                            format: 'php',
+                        },
+                        _content: [
+                            {
+                                _name: 'source',
+                                _attrs: {
+                                    dsn: ".",
+                                },
+                                _content: {
+                                    path: '.',
+                                },
+                            },
+                            {
+                                _name: 'ignore',
+                                _attrs: {
+                                    hidden: 'true',
+                                    symlinks: 'true',
+                                },
+                                _content: ignores,
+                            },
+                        ],
+                    },
+                },
+            ],
+        };
+
+        grunt.file.write('phpdoc.xml.dist', toXML(content, {
+            header: true,
+            indent: '  ',
+        }) + "\n");
+    };
+
+    /**
      * Generate ignore files (utilising thirdpartylibs.xml data)
      */
     const handler = function() {
@@ -92,6 +169,7 @@ module.exports = grunt => {
         grunt.file.write('.stylelintignore', stylelintIgnores.join('\n') + '\n');
 
         phpcsIgnore(thirdPartyPaths);
+        phpDocumentorIgnore(thirdPartyPaths);
     };
 
     grunt.registerTask('ignorefiles', 'Generate ignore files for linters', handler);
