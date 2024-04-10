@@ -91,7 +91,7 @@ class mod_lesson_renderer extends plugin_renderer_base {
      * Returns HTML for a lesson inaccessible message
      *
      * @param string $message
-     * @return <type>
+     * @return string
      */
     public function lesson_inaccessible($message) {
         global $CFG;

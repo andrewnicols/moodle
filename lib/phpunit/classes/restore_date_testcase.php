@@ -138,7 +138,7 @@ abstract class restore_date_testcase extends advanced_testcase {
      *
      * @param stdClass $oldinstance
      * @param stdClass $newinstance
-     * @param [] $props
+     * @param array $props
      */
     protected function assertFieldsNotRolledForward($oldinstance, $newinstance, $props) {
         foreach ($props as $prop) {
@@ -151,7 +151,7 @@ abstract class restore_date_testcase extends advanced_testcase {
      *
      * @param stdClass $oldinstance
      * @param stdClass $newinstance
-     * @param [] $props
+     * @param array $props
      */
     protected function assertFieldsRolledForward($oldinstance, $newinstance, $props) {
         $diff = $this->get_diff();

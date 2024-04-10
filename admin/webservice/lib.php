@@ -48,7 +48,7 @@ class service_user_selector extends user_selector_base {
     /**
      * Find allowed or not allowed users of a service (depend of $this->displayallowedusers)
      * @global object $DB
-     * @param <type> $search
+     * @param string $search
      * @return array
      */
     public function find_users($search) {

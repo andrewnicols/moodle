@@ -47,7 +47,7 @@ class test_indicator_discrete extends \core_analytics\local\indicator\discrete {
 
     /**
      * The different classes this discrete indicator provides.
-     * @return [type] [description]
+     * @return type[] [description]
      */
     protected static function get_classes() {
         return [0, 1, 2, 3, 4];

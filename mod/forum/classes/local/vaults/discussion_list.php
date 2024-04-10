@@ -549,7 +549,7 @@ class discussion_list extends db_table_vault {
      * Get the standard favouriting sql.
      *
      * @param int $userid The ID of the user we are getting the sql for
-     * @return [$sql, $params] An array comprising of the sql and any associated params
+     * @return array An array comprising of the sql and any associated params
      */
     private function get_favourite_sql(int $userid): array {
 

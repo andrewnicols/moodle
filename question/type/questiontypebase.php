@@ -705,7 +705,7 @@ class question_type {
      * @param object $questiondata This holds the information from the question editing form or import.
      * @param int $key A key of the answer in question.
      * @param object $context needed for working with files.
-     * @return $answer answer with filled data.
+     * @return \stdClass answer with filled data.
      */
     protected function fill_answer_fields($answer, $questiondata, $key, $context) {
         $answer->answer   = $questiondata->answer[$key];
@@ -739,7 +739,7 @@ class question_type {
      * @param int $key A key of the answer in question.
      * @param object $context needed for working with files.
      * @param array $extraanswerfields extra answer fields (without table name).
-     * @return $answer answerextra with filled data.
+     * @return \stdClass answerextra with filled data.
      */
     protected function fill_extra_answer_fields($answerextra, $questiondata, $key, $context, $extraanswerfields) {
         foreach ($extraanswerfields as $field) {

@@ -175,7 +175,7 @@ class core_course_category implements renderable, cacheable_object, IteratorAggr
      * Get list of plugin callback functions.
      *
      * @param string $name Callback function name.
-     * @return [callable] $pluginfunctions
+     * @return callable[]] $pluginfunctions
      */
     public function get_plugins_callback_function(string $name): array {
         $pluginfunctions = [];

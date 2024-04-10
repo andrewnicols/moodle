@@ -158,7 +158,7 @@ function survey_delete_instance($id) {
  * @param object $user
  * @param object $mod
  * @param object $survey
- * @return $result
+ * @return \stdClass
  */
 function survey_user_outline($course, $user, $mod, $survey) {
     global $DB;

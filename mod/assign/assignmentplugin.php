@@ -91,7 +91,6 @@ abstract class assign_plugin {
      * This function should be overridden to provide an array of elements that can be added to a moodle
      * form for display in the settings page for the assignment.
      * @param MoodleQuickForm $mform The form to add the elements to
-     * @return $array
      */
     public function get_settings(MoodleQuickForm $mform) {
         return;
