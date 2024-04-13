@@ -80,7 +80,7 @@ class cohorts_test extends core_reportbuilder_testcase {
      *
      * @return array[]
      */
-    public function cohorts_datasource_user_select_provider(): array {
+    public static function cohorts_datasource_user_select_provider(): array {
         return [
             ['user01', 'Cohort01'],
             ['user02', 'Cohort02'],
