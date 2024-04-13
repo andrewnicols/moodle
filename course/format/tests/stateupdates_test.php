@@ -81,7 +81,7 @@ class stateupdates_test extends \advanced_testcase {
      *
      * @return array testing scenarios
      */
-    public function add_course_put_provider() {
+    public static function add_course_put_provider() {
         return [
             'Admin role' => [
                 'admin',

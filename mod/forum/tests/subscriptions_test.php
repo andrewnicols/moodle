@@ -1411,7 +1411,7 @@ class subscriptions_test extends \advanced_testcase {
         $this->assertFalse(\mod_forum\subscriptions::is_subscribable($forum));
     }
 
-    public function is_subscribable_loggedin_provider() {
+    public static function is_subscribable_loggedin_provider() {
         return [
             [
                 ['forcesubscribe' => FORUM_DISALLOWSUBSCRIBE],

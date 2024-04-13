@@ -353,7 +353,7 @@ class preset_importer_test extends \advanced_testcase {
      *
      * @return array[]
      */
-    public function get_field_names_provider(): array {
+    public static function get_field_names_provider(): array {
         return [
             'Empty list' => [
                 'fields' => [],

@@ -488,7 +488,7 @@ TEMPLATE;
     /**
      * Test the scan_template_source_for_dependencies function.
      *
-     * @dataProvider scan_template_source_for_dependencies_test_cases()
+     * @dataProvider scan_template_source_for_dependencies_test_cases
      * @param mustache_template_source_loader $loader The loader
      * @param string $source The template to test
      * @param string $expected The expected output

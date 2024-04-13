@@ -608,7 +608,7 @@ class externallib_test extends externallib_advanced_testcase {
      *
      * @return array
      */
-    public function course_empty_field_provider(): array {
+    public static function course_empty_field_provider(): array {
         return [
             [[
                 'fullname' => '',
@@ -3303,7 +3303,7 @@ class externallib_test extends externallib_advanced_testcase {
     /**
      * Test cases for the get_enrolled_courses_by_timeline_classification test.
      */
-    public function get_get_enrolled_courses_by_timeline_classification_test_cases(): array {
+    public static function get_get_enrolled_courses_by_timeline_classification_test_cases(): array {
         $now = time();
         $day = 86400;
 
@@ -3726,7 +3726,7 @@ class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the get_enrolled_courses_by_timeline_classification function.
      *
-     * @dataProvider get_get_enrolled_courses_by_timeline_classification_test_cases()
+     * @dataProvider get_get_enrolled_courses_by_timeline_classification_test_cases
      * @param array $coursedata Courses to create
      * @param string $classification Timeline classification
      * @param int $limit Maximum number of results
