@@ -792,7 +792,7 @@ class session_manager_test extends \advanced_testcase {
      *
      * @return array
      */
-    public function sessionlocks_info_provider(): array {
+    public static function sessionlocks_info_provider(): array {
         return [
             [
                 'url'      => null,
