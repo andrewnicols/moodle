@@ -669,7 +669,7 @@ All rights reserved.</copyright>
     <location>guzzlehttp/guzzle</location>
     <name>GuzzleHttp/Guzzle</name>
     <description>Guzzle is a PHP HTTP client library</description>
-    <version>7.5.0</version>
+    <version>7.8.1</version>
     <license>MIT</license>
     <repository>https://github.com/guzzle/guzzle</repository>
   </library>
