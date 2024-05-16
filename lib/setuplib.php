@@ -52,26 +52,6 @@ define('MEMORY_EXTRA', -3);
 define('MEMORY_HUGE', -4);
 
 /**
- * Exception indicating programming error, must be fixed by a programer. For example
- * a core API might throw this type of exception if a plugin calls it incorrectly.
- *
- * @package    core
- * @subpackage lib
- * @copyright  2008 Petr Skoda  {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class coding_exception extends moodle_exception {
-    /**
-     * Constructor
-     * @param string $hint short description of problem
-     * @param string $debuginfo detailed information how to fix problem
-     */
-    function __construct($hint, $debuginfo=null) {
-        parent::__construct('codingerror', 'debug', '', $hint, $debuginfo);
-    }
-}
-
-/**
  * Exception indicating malformed parameter problem.
  * This exception is not supposed to be thrown when processing
  * user submitted data in forms. It is more suitable
