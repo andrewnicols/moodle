@@ -3224,3 +3224,21 @@ function question_fix_top_names() {
 function search_generate_text_SQL() {
     \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
 }
+
+/**
+ * Web service parameter exception class
+ * @deprecated since Moodle 2.2 - use moodle exception instead
+ * This exception must be thrown to the web service client when a web service parameter is invalid
+ * The error string is gotten from webservice.php
+ */
+class webservice_parameter_exception extends moodle_exception {
+    /**
+     * Constructor
+     * @param string $errorcode The name of the string from webservice.php to print
+     * @param string $a The name of the parameter
+     * @param string $debuginfo Optional information to aid debugging
+     */
+    function __construct($errorcode=null, $a = '', $debuginfo = null) {
+        parent::__construct($errorcode, 'webservice', '', $a, $debuginfo);
+    }
+}
