@@ -34,6 +34,7 @@ $legacyclasses = [
     \coding_exception::class => 'exception/coding_exception.php',
     \dml_connection_exception::class => 'exception/dml_connection_exception.php',
     \dml_exception::class => 'exception/dml_exception.php',
+    \dml_missing_record_exception::class => 'exception/dml_missing_record_exception.php',
     \dml_multiple_records_exception::class => 'exception/dml_multiple_records_exception.php',
     \dml_read_exception::class => 'exception/dml_read_exception.php',
     \dml_sessionwait_exception::class => 'exception/dml_sessionwait_exception.php',

@@ -52,59 +52,6 @@ define('IGNORE_MULTIPLE', 1);
 define('MUST_EXIST', 2);
 
 /**
- * Caused by missing record that is required for normal operation.
- *
- * @package    core
- * @category   dml
- * @subpackage dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class dml_missing_record_exception extends dml_exception {
-    /** @var string A table's name.*/
-    public $tablename;
-    /** @var string An SQL query.*/
-    public $sql;
-    /** @var array The SQL's parameters.*/
-    public $params;
-
-    /**
-     * Constructor
-     * @param string $tablename The table name if known, '' if unknown.
-     * @param string $sql Optional SQL query.
-     * @param array $params Optional SQL query's parameters.
-     */
-    function __construct($tablename, $sql='', array $params=null) {
-        if (empty($tablename)) {
-            $tablename = null;
-        }
-        $this->tablename = $tablename;
-        $this->sql       = $sql;
-        $this->params    = $params;
-
-        switch ($tablename) {
-            case null:
-                $errcode = 'invalidrecordunknown';
-                break;
-            case 'course':
-                $errcode = empty($sql) ? 'invalidcourseid' : 'invalidrecord';
-                break;
-            case 'course_modules':
-                $errcode = 'invalidcoursemodule';
-                break;
-            case 'user':
-                $errcode = 'invaliduser';
-                break;
-            default:
-                $errcode = 'invalidrecord';
-                break;
-        }
-        $errorinfo = $sql."\n[".var_export($params, true).']';
-        parent::__construct($errcode, $tablename, $errorinfo);
-    }
-}
-
-/**
  * DML write exception - triggered by some SQL syntax errors, etc.
  *
  * @package    core
