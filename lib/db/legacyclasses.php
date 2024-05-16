@@ -34,6 +34,7 @@ $legacyclasses = [
     \coding_exception::class => 'exception/coding_exception.php',
     \dml_connection_exception::class => 'exception/dml_connection_exception.php',
     \dml_exception::class => 'exception/dml_exception.php',
+    \dml_sessionwait_exception::class => 'exception/dml_sessionwait_exception.php',
     \file_serving_exception::class => 'exception/file_serving_exception.php',
     \invalid_dataroot_permissions::class => 'exception/invalid_dataroot_permissions.php',
     \invalid_parameter_exception::class => 'exception/invalid_parameter_exception.php',

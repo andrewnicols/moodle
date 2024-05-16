@@ -52,24 +52,6 @@ define('IGNORE_MULTIPLE', 1);
 define('MUST_EXIST', 2);
 
 /**
- * DML db session wait exception - triggered when session lock request times out.
- *
- * @package    core
- * @category   dml
- * @subpackage dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class dml_sessionwait_exception extends dml_exception {
-    /**
-     * Constructor
-     */
-    function __construct() {
-        parent::__construct('sessionwaiterr');
-    }
-}
-
-/**
  * DML read exception - triggered by some SQL syntax errors, etc.
  *
  * @package    core
