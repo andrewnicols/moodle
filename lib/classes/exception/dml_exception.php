@@ -14,14 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\exception;
-
 /**
- * Class dml_exception
+ * DML exception class, use instead of throw new \moodle_exception() in dml code.
  *
  * @package    core
- * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
+ * @category   dml
+ * @subpackage dml
+ * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dml_exception {
+class dml_exception extends moodle_exception {
+    /**
+     * @param string $errorcode The name of the string from error.php to print.
+     * @param mixed  $a Extra words and phrases that might be required in the error string.
+     * @param string $debuginfo Optional debugging information.
+     */
+    function __construct($errorcode, $a=NULL, $debuginfo=null) {
+        parent::__construct($errorcode, '', '', $a, $debuginfo);
+    }
 }

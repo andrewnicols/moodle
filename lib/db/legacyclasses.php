@@ -32,6 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 $legacyclasses = [
     \bootstrap_renderer::class => 'output\bootstrap_renderer',
     \coding_exception::class => 'exception/coding_exception.php',
+    \dml_exception::class => 'exception/dml_exception.php',
     \file_serving_exception::class => 'exception/file_serving_exception.php',
     \invalid_dataroot_permissions::class => 'exception/invalid_dataroot_permissions.php',
     \invalid_parameter_exception::class => 'exception/invalid_parameter_exception.php',
