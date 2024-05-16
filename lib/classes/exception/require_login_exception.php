@@ -15,21 +15,20 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file contains mappings for legacy classes that do not fit the standard class naming conventions.
+ * Course/activity access exception.
  *
- * In time these classes should be renamed to fit the standard class naming conventions but this is not an overnight process.
+ * This exception is thrown from require_login()
  *
- * @package    core
- * @copyright  Andrew Lyons <andrew@nicols.co.uk>
+ * @package    core_access
+ * @copyright  2010 Petr Skoda  {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-// Like other files in the db directory this file uses an array.
-// The old class name is the key, the path to the file containing the class is the vlaue.
-// The array must be called $legacyclasses.
-$legacyclasses = [
-    \moodle_exception::class => 'exception/moodle_exception.php',
-    \require_login_exception::class => 'exception/require_login_exception.php',
-];
+class require_login_exception extends moodle_exception {
+    /**
+     * Constructor
+     * @param string $debuginfo Information to aid the debugging process
+     */
+    function __construct($debuginfo) {
+        parent::__construct('requireloginerror', 'error', '', NULL, $debuginfo);
+    }
+}
