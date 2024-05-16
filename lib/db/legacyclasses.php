@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 // The old class name is the key, the path to the file containing the class is the vlaue.
 // The array must be called $legacyclasses.
 $legacyclasses = [
+    \coding_exception::class => 'exception/coding_exception.php',
     \moodle_exception::class => 'exception/moodle_exception.php',
     \require_login_exception::class => 'exception/require_login_exception.php',
     \require_login_session_timeout_exception::class => 'exception/require_login_session_timeout_exception.php',
