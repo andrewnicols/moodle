@@ -52,38 +52,6 @@ define('IGNORE_MULTIPLE', 1);
 define('MUST_EXIST', 2);
 
 /**
- * DML read exception - triggered by some SQL syntax errors, etc.
- *
- * @package    core
- * @category   dml
- * @subpackage dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class dml_read_exception extends dml_exception {
-    /** @var string The name of the string from error.php to print.*/
-    public $error;
-    /** @var string The SQL that ran just before this read error.*/
-    public $sql;
-    /** @var array The SQL's related parameters.*/
-    public $params;
-
-    /**
-     * Constructor
-     * @param string $error The name of the string from error.php to print.
-     * @param string $sql The SQL that ran just before this read error.
-     * @param array $params The SQL's related parameters.(optional)
-     */
-    function __construct($error, $sql=null, array $params=null) {
-        $this->error  = $error;
-        $this->sql    = $sql;
-        $this->params = $params;
-        $errorinfo = $error."\n".$sql."\n[".var_export($params, true).']';
-        parent::__construct('dmlreadexception', NULL, $errorinfo);
-    }
-}
-
-/**
  * Caused by multiple records found in get_record() call.
  *
  * @package    core
