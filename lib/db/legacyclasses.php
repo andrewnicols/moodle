@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 // The old class name is the key, the new class name is the value.
 // The array must be called $renamedclasses.
 $legacyclasses = [
+    \bootstrap_renderer::class => 'output\bootstrap_renderer',
     \coding_exception::class => 'exception/coding_exception.php',
     \file_serving_exception::class => 'exception/file_serving_exception.php',
     \invalid_dataroot_permissions::class => 'exception/invalid_dataroot_permissions.php',
