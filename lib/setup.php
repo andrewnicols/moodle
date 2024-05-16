@@ -622,6 +622,7 @@ require_once($CFG->libdir .'/setuplib.php');        // Functions that MUST be lo
 
 // TODO MDL-81933 Remove after Moodle 4.5 release.
 require_once($CFG->libdir . '/classes/exception/moodle_exception.php');       // Required by some other legacy libraries.
+require_once($CFG->libdir . '/classes/output/bootstrap_renderer.php');        // Required by some other legacy libraries.
 
 // Load up standard libraries.
 require_once($CFG->libdir .'/filterlib.php');       // Functions for filtering test as it is output.
