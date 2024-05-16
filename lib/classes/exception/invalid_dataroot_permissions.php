@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\exception;
 
 /**
  * An exception that indicates incorrect permissions in $CFG->dataroot
@@ -33,3 +34,8 @@ class invalid_dataroot_permissions extends moodle_exception {
         parent::__construct('invaliddatarootpermissions', 'error', '', null, $debuginfo);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(invalid_dataroot_permissions::class, \invalid_dataroot_permissions::class);

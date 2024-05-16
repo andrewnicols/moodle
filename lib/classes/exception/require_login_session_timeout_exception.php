@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\exception;
+
 /**
  * Session timeout exception.
  *
@@ -31,3 +33,8 @@ class require_login_session_timeout_exception extends require_login_exception {
         moodle_exception::__construct('sessionerroruser', 'error');
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(require_login_session_timeout_exception::class, \require_login_session_timeout_exception::class);
