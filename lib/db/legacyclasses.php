@@ -38,6 +38,7 @@ $legacyclasses = [
     \dml_multiple_records_exception::class => 'exception/dml_multiple_records_exception.php',
     \dml_read_exception::class => 'exception/dml_read_exception.php',
     \dml_sessionwait_exception::class => 'exception/dml_sessionwait_exception.php',
+    \dml_transaction_exception::class => 'exception/dml_transaction_exception.php',
     \dml_write_exception::class => 'exception/dml_write_exception.php',
     \file_serving_exception::class => 'exception/file_serving_exception.php',
     \invalid_dataroot_permissions::class => 'exception/invalid_dataroot_permissions.php',

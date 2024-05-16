@@ -52,32 +52,6 @@ define('IGNORE_MULTIPLE', 1);
 define('MUST_EXIST', 2);
 
 /**
- * DML transaction exception - triggered by problems related to DB transactions.
- *
- * @todo MDL-20625 Use the info from $transaction for debugging purposes.
- *
- * @package    core
- * @category   dml
- * @subpackage dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class dml_transaction_exception extends dml_exception {
-    /** @var moodle_transaction An instance of a transaction.*/
-    public $transaction;
-
-    /**
-     * Constructor
-     * @param ?string $debuginfo Optional debugging information.
-     * @param ?moodle_transaction $transaction The instance of the transaction.(Optional)
-     */
-    function __construct($debuginfo=null, $transaction=null) {
-        $this->transaction = $transaction; // TODO: MDL-20625 use the info from $transaction for debugging purposes
-        parent::__construct('dmltransactionexception', NULL, $debuginfo);
-    }
-}
-
-/**
  * Sets up global $DB moodle_database instance
  *
  * @global stdClass $CFG The global configuration instance.
