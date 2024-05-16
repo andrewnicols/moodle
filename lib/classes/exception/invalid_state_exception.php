@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\exception;
+
 /**
  * An exception that indicates something really weird happened. For example,
  * if you do switch ($context->contextlevel), and have one case for each
@@ -37,3 +39,8 @@ class invalid_state_exception extends moodle_exception {
         parent::__construct('invalidstatedetected', 'debug', '', $hint, $debuginfo);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(invalid_state_exception::class, \invalid_state_exception::class);
