@@ -52,35 +52,6 @@ define('MEMORY_EXTRA', -3);
 define('MEMORY_HUGE', -4);
 
 /**
- * Exceptions indicating user does not have permissions to do something
- * and the execution can not continue.
- *
- * @package    core_access
- * @copyright  2009 Petr Skoda  {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class required_capability_exception extends moodle_exception {
-    /**
-     * Constructor
-     * @param context $context The context used for the capability check
-     * @param string $capability The required capability
-     * @param string $errormessage The error message to show the user
-     * @param string $stringfile
-     */
-    function __construct($context, $capability, $errormessage, $stringfile) {
-        $capabilityname = get_capability_string($capability);
-        if ($context->contextlevel == CONTEXT_MODULE and preg_match('/:view$/', $capability)) {
-            // we can not go to mod/xx/view.php because we most probably do not have cap to view it, let's go to course instead
-            $parentcontext = $context->get_parent_context();
-            $link = $parentcontext->get_url();
-        } else {
-            $link = $context->get_url();
-        }
-        parent::__construct($errormessage, $stringfile, $link, $capabilityname);
-    }
-}
-
-/**
  * Exception indicating programming error, must be fixed by a programer. For example
  * a core API might throw this type of exception if a plugin calls it incorrectly.
  *
