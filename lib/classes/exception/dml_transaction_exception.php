@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\exception;
+
 /**
  * DML transaction exception - triggered by problems related to DB transactions.
  *
@@ -26,17 +28,22 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class dml_transaction_exception extends dml_exception {
-    /** @var moodle_transaction An instance of a transaction.*/
+    /** @var \moodle_transaction An instance of a transaction.*/
     public $transaction;
 
     /**
      * Constructor.
      *
      * @param ?string $debuginfo Optional debugging information.
-     * @param ?moodle_transaction $transaction The instance of the transaction.(Optional)
+     * @param ?\moodle_transaction $transaction The instance of the transaction.(Optional)
      */
     public function __construct($debuginfo = null, $transaction = null) {
         $this->transaction = $transaction; // TODO: MDL-20625 use the info from $transaction for debugging purposes.
         parent::__construct('dmltransactionexception', null, $debuginfo);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(dml_transaction_exception::class, \dml_transaction_exception::class);
