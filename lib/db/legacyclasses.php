@@ -33,4 +33,5 @@ $legacyclasses = [
     \moodle_exception::class => 'exception/moodle_exception.php',
     \require_login_exception::class => 'exception/require_login_exception.php',
     \require_login_session_timeout_exception::class => 'exception/require_login_session_timeout_exception.php',
+    \webservice_parameter_exception::class => 'exception/webservice_parameter_exception.php',
 ];
