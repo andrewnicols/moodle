@@ -52,24 +52,6 @@ define('MEMORY_EXTRA', -3);
 define('MEMORY_HUGE', -4);
 
 /**
- * An exception that indicates that file can not be served
- *
- * @package    core
- * @subpackage lib
- * @copyright  2010 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class file_serving_exception extends moodle_exception {
-    /**
-     * Constructor
-     * @param string $debuginfo optional more detailed information
-     */
-    function __construct($debuginfo = NULL) {
-        parent::__construct('cannotservefile', 'error', '', NULL, $debuginfo);
-    }
-}
-
-/**
  * Get the Whoops! handler.
  *
  * @return \Whoops\Run|null
