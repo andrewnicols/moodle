@@ -32,6 +32,7 @@ defined('MOODLE_INTERNAL') || die();
 $legacyclasses = [
     \coding_exception::class => 'exception/coding_exception.php',
     \invalid_parameter_exception::class => 'exception/invalid_parameter_exception.php',
+    \invalid_response_exception::class => 'exception/invalid_response_exception.php',
     \moodle_exception::class => 'exception/moodle_exception.php',
     \require_login_exception::class => 'exception/require_login_exception.php',
     \require_login_session_timeout_exception::class => 'exception/require_login_session_timeout_exception.php',
