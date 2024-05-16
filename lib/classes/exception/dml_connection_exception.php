@@ -25,11 +25,12 @@
  */
 class dml_connection_exception extends dml_exception {
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param string $error Optional debugging information.
      */
-    function __construct($error) {
+    public function __construct($error) {
         $errorinfo = $error;
-        parent::__construct('dbconnectionfailed', NULL, $errorinfo);
+        parent::__construct('dbconnectionfailed', null, $errorinfo);
     }
 }

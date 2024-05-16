@@ -25,9 +25,9 @@
  */
 class dml_sessionwait_exception extends dml_exception {
     /**
-     * Constructor
+     * Constructor.
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct('sessionwaiterr');
     }
 }

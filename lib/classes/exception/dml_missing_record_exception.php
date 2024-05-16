@@ -32,12 +32,13 @@ class dml_missing_record_exception extends dml_exception {
     public $params;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param string $tablename The table name if known, '' if unknown.
      * @param string $sql Optional SQL query.
      * @param array $params Optional SQL query's parameters.
      */
-    function __construct($tablename, $sql='', array $params=null) {
+    public public function __construct($tablename, $sql = '', array $params = null) {
         if (empty($tablename)) {
             $tablename = null;
         }
@@ -62,7 +63,7 @@ class dml_missing_record_exception extends dml_exception {
                 $errcode = 'invalidrecord';
                 break;
         }
-        $errorinfo = $sql."\n[".var_export($params, true).']';
+        $errorinfo = $sql . "\n[" . var_export($params, true) . ']';
         parent::__construct($errcode, $tablename, $errorinfo);
     }
 }

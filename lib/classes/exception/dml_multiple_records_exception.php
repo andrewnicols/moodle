@@ -30,12 +30,13 @@ class dml_multiple_records_exception extends dml_exception {
     public $params;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param string $sql The SQL that ran just before this read error.
      * @param array $params The SQL's related parameters.(optional)
      */
-    function __construct($sql='', array $params=null) {
-        $errorinfo = $sql."\n[".var_export($params, true).']';
+    public function __construct($sql = '', array $params = null) {
+        $errorinfo = $sql . "\n[" . var_export($params, true) . ']';
         parent::__construct('multiplerecordsfound', null, $errorinfo);
     }
 }

@@ -32,16 +32,17 @@ class dml_write_exception extends dml_exception {
     public $params;
 
     /**
-     * Constructor
+     * Constructor.
+     *
      * @param string $error The name of the string from error.php to print.
      * @param string $sql The SQL that ran just before this write error.
      * @param array $params The SQL's related parameters.(optional)
      */
-    function __construct($error, $sql=null, array $params=null) {
+    public function __construct($error, $sql = null, array $params = null) {
         $this->error  = $error;
         $this->sql    = $sql;
         $this->params = $params;
-        $errorinfo = $error."\n".$sql."\n[".var_export($params, true).']';
-        parent::__construct('dmlwriteexception', NULL, $errorinfo);
+        $errorinfo = $error . "\n" . $sql . "\n[" . var_export($params, true) . ']';
+        parent::__construct('dmlwriteexception', null, $errorinfo);
     }
 }
