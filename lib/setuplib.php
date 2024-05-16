@@ -52,29 +52,6 @@ define('MEMORY_EXTRA', -3);
 define('MEMORY_HUGE', -4);
 
 /**
- * An exception that indicates something really weird happened. For example,
- * if you do switch ($context->contextlevel), and have one case for each
- * CONTEXT_... constant. You might throw an invalid_state_exception in the
- * default case, to just in case something really weird is going on, and
- * $context->contextlevel is invalid - rather than ignoring this possibility.
- *
- * @package    core
- * @subpackage lib
- * @copyright  2009 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class invalid_state_exception extends moodle_exception {
-    /**
-     * Constructor
-     * @param string $hint short description of problem
-     * @param string $debuginfo optional more detailed information
-     */
-    function __construct($hint, $debuginfo=null) {
-        parent::__construct('invalidstatedetected', 'debug', '', $hint, $debuginfo);
-    }
-}
-
-/**
  * An exception that indicates incorrect permissions in $CFG->dataroot
  *
  * @package    core
