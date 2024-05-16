@@ -52,38 +52,6 @@ define('IGNORE_MULTIPLE', 1);
 define('MUST_EXIST', 2);
 
 /**
- * DML write exception - triggered by some SQL syntax errors, etc.
- *
- * @package    core
- * @category   dml
- * @subpackage dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class dml_write_exception extends dml_exception {
-    /** @var string The name of the string from error.php to print.*/
-    public $error;
-    /** @var string The SQL that ran just before this write error.*/
-    public $sql;
-    /** @var array The SQL's related parameters.*/
-    public $params;
-
-    /**
-     * Constructor
-     * @param string $error The name of the string from error.php to print.
-     * @param string $sql The SQL that ran just before this write error.
-     * @param array $params The SQL's related parameters.(optional)
-     */
-    function __construct($error, $sql=null, array $params=null) {
-        $this->error  = $error;
-        $this->sql    = $sql;
-        $this->params = $params;
-        $errorinfo = $error."\n".$sql."\n[".var_export($params, true).']';
-        parent::__construct('dmlwriteexception', NULL, $errorinfo);
-    }
-}
-
-/**
  * DML transaction exception - triggered by problems related to DB transactions.
  *
  * @todo MDL-20625 Use the info from $transaction for debugging purposes.
