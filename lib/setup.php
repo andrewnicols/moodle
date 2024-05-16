@@ -551,8 +551,6 @@ global $SCRIPT;
 // The httpswwwroot has been deprecated, we keep it as an alias for backwards compatibility with plugins only.
 $CFG->httpswwwroot = $CFG->wwwroot;
 
-require_once($CFG->libdir .'/setuplib.php');        // Functions that MUST be loaded first
-
 if (NO_OUTPUT_BUFFERING) {
     // we have to call this always before starting session because it discards headers!
     disable_output_buffering();
@@ -588,6 +586,8 @@ if (defined('ABORT_AFTER_CONFIG')) {
         return;
     }
 }
+
+require_once($CFG->libdir .'/setuplib.php');        // Functions that MUST be loaded first
 
 // Load up standard libraries
 require_once($CFG->libdir .'/filterlib.php');       // Functions for filtering test as it is output
