@@ -52,26 +52,6 @@ define('IGNORE_MULTIPLE', 1);
 define('MUST_EXIST', 2);
 
 /**
- * DML db connection exception - triggered if database not accessible.
- *
- * @package    core
- * @category   dml
- * @subpackage dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class dml_connection_exception extends dml_exception {
-    /**
-     * Constructor
-     * @param string $error Optional debugging information.
-     */
-    function __construct($error) {
-        $errorinfo = $error;
-        parent::__construct('dbconnectionfailed', NULL, $errorinfo);
-    }
-}
-
-/**
  * DML db session wait exception - triggered when session lock request times out.
  *
  * @package    core
