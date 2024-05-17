@@ -1,0 +1,5 @@
+issueNumber: MDL-81962
+notes:
+  core:
+    - message: Final deprecation of moodle-core-notification-confirm
+      type: removed
