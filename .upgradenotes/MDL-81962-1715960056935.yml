@@ -1,0 +1,9 @@
+issueNumber: MDL-81962
+notes:
+  core:
+    - message: |
+        Final deprecation of moodle-core-notification features:
+
+         - method: `keyDelegation`
+         - property: `lightbox`
+      type: removed
