@@ -162,8 +162,15 @@ final class manager implements
             if ($definition['disabled']) {
                 continue;
             }
-            $callback = $definition['callback'];
 
+            if (is_a($event, component_targetted_hook::class)) {
+                $targets = $event->get_target_components();
+                if (!in_array($definition['component'], $targets)) {
+                    continue;
+                }
+            }
+
+            $callback = $definition['callback'];
             if ($this->is_callback_valid($definition['component'], $callback)) {
                 yield $callback;
             }
