@@ -1012,14 +1012,26 @@ abstract class context extends stdClass implements IteratorAggregate {
      * Reset all cached permissions and definitions if the necessary.
      * @return void
      */
-    public function reload_if_dirty() {
+    public function reload_if_dirty(?int $userid = null) {
         global $ACCESSLIB_PRIVATE, $USER;
+
+        if ($userid === null) {
+            $userid = $USER->id;
+        }
 
         // Load dirty contexts list if needed.
         if (CLI_SCRIPT) {
             if (!isset($ACCESSLIB_PRIVATE->dirtycontexts)) {
                 // We do not load dirty flags in CLI and cron.
                 $ACCESSLIB_PRIVATE->dirtycontexts = array();
+            }
+
+            if (!empty($ACCESSLIB_PRIVATE->accessdatabyuser[$userid])) {
+                $access = $ACCESSLIB_PRIVATE->accessdatabyuser[$userid];
+                if (get_cache_flag('accesslib/dirtyusers', $userid, $access['time'])) {
+                    reload_all_capabilities();
+                    return;
+                }
             }
         } else {
             if (!isset($USER->access['time'])) {

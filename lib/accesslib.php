@@ -565,7 +565,7 @@ function has_capability($capability, context $context, $user = null, $doanything
     }
 
     // Careful check for staleness...
-    $context->reload_if_dirty();
+    $context->reload_if_dirty($userid);
 
     if ($USER->id == $userid) {
         if (!isset($USER->access)) {
