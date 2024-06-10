@@ -1,0 +1,13 @@
+issueNumber: MDL-81960
+notes:
+  core:
+    - message: >-
+        The following classes have been renamed and now support autoloading.
+        Existing classes are currently unaffected.
+
+        | Old class name | New class name |
+
+        | --- | --- |
+
+        | `\moodle_url` | `\core\moodle_url` |
+      type: improved
