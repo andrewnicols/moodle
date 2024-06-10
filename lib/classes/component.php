@@ -391,6 +391,7 @@ class core_component {
             \core\exception\moodle_exception::class,
             \core\output\bootstrap_renderer::class,
             \renderable::class,
+            \core\url::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
