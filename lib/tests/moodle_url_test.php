@@ -57,7 +57,7 @@ final class moodle_url_test extends \advanced_testcase {
     }
 
     /**
-     * Tests moodle_moodle_url::get_path().
+     * Tests moodle_url::get_path().
      */
     public function test_get_path(): void {
         $url = new moodle_url('http://www.example.org:447/my/file/is/here.txt?really=1');
@@ -173,26 +173,6 @@ final class moodle_url_test extends \advanced_testcase {
         $this->assertTrue($url1->compare($url2, URL_MATCH_BASE));
         $this->assertTrue($url1->compare($url2, URL_MATCH_PARAMS));
         $this->assertTrue($url1->compare($url2, URL_MATCH_EXACT));
-    }
-
-    public function test_out_as_local_url(): void {
-        global $CFG;
-        // Test http url.
-        $url1 = new moodle_url('/lib/tests/weblib_test.php');
-        $this->assertSame('/lib/tests/weblib_test.php', $url1->out_as_local_url());
-
-        // Test https url.
-        $httpswwwroot = str_replace("http://", "https://", $CFG->wwwroot);
-        $url2 = new moodle_url($httpswwwroot . '/login/profile.php');
-        $this->assertSame('/login/profile.php', $url2->out_as_local_url());
-
-        // Test http url matching wwwroot.
-        $url3 = new moodle_url($CFG->wwwroot);
-        $this->assertSame('', $url3->out_as_local_url());
-
-        // Test http url matching wwwroot ending with slash (/).
-        $url3 = new moodle_url($CFG->wwwroot . '/');
-        $this->assertSame('/', $url3->out_as_local_url());
     }
 
     public function test_out_as_local_url_error(): void {
@@ -334,7 +314,7 @@ final class moodle_url_test extends \advanced_testcase {
         $this->resetAfterTest();
 
         $CFG->slasharguments = $slashargs;
-        $url = call_user_func_array([moodle_moodle_url::class, 'make_pluginfile_url'], $args);
+        $url = call_user_func_array([moodle_url::class, 'make_pluginfile_url'], $args);
         $this->assertMatchesRegularExpression($expected, $url->out(true));
     }
 
@@ -518,18 +498,18 @@ final class moodle_url_test extends \advanced_testcase {
     }
 
     /**
-     * Data provider for throwing coding exceptions in <u>url::out_as_local_url()</u>.
+     * Data provider for throwing coding exceptions in <u>moodle_url::out_as_local_url()</u>.
      *
      * @return array
      */
     public static function out_as_local_url_coding_exception_provider(): array {
         return [
             'Google Maps CDN (HTTPS)' => [
-                new url('https://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
+                new moodle_url('https://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
                 'Coding error detected, it must be fixed by a programmer: out_as_local_url called on a non-local URL',
             ],
             'Google Maps CDN (HTTP)' => [
-                new url('http://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
+                new moodle_url('http://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
                 'Coding error detected, it must be fixed by a programmer: out_as_local_url called on a non-local URL',
             ],
         ];
@@ -558,7 +538,7 @@ final class moodle_url_test extends \advanced_testcase {
     }
 
     /**
-     * Data provider for returning local paths via <u>url::out_as_local_url()</u>.
+     * Data provider for returning local paths via <u>moodle_url::out_as_local_url()</u>.
      *
      * @return array
      */
@@ -569,33 +549,33 @@ final class moodle_url_test extends \advanced_testcase {
 
         return [
             'HTTP URL' => [
-                new url("{$wwwroot}/lib/tests/weblib_test.php"),
+                new moodle_url("{$wwwroot}/lib/tests/weblib_test.php"),
                 '/lib/tests/weblib_test.php',
                 $wwwroot,
             ],
             'HTTPS URL' => [
-                new url("{$httpswwwroot}/lib/tests/weblib_test.php"),
+                new moodle_url("{$httpswwwroot}/lib/tests/weblib_test.php"),
                 '/lib/tests/weblib_test.php',
                 $httpswwwroot,
             ],
             'Plain wwwroot' => [
-                new url($CFG->wwwroot),
+                new moodle_url($CFG->wwwroot),
                 '',
             ],
             'wwwroot With trailing /' => [
-                new url($CFG->wwwroot . '/'),
+                new moodle_url($CFG->wwwroot . '/'),
                 '/',
             ],
             'Environment XML file' => [
-                new url('/admin/environment.xml'),
+                new moodle_url('/admin/environment.xml'),
                 '/admin/environment.xml',
             ],
             'H5P JS internal resource' => [
-                new url('/h5p/js/embed.js'),
+                new moodle_url('/h5p/js/embed.js'),
                 '/h5p/js/embed.js',
             ],
             'A Moodle JS resource using the full path including the proper JS Handler' => [
-                new url($wwwroot . '/lib/javascript.php/1/lib/editor/tiny/js/tinymce/tinymce.js'),
+                new moodle_url($wwwroot . '/lib/javascript.php/1/lib/editor/tiny/js/tinymce/tinymce.js'),
                 '/lib/javascript.php/1/lib/editor/tiny/js/tinymce/tinymce.js',
             ],
         ];
@@ -613,7 +593,7 @@ final class moodle_url_test extends \advanced_testcase {
     }
 
     /**
-     * Data provider for testing <u>url::is_local_url()</u>.
+     * Data provider for testing <u>moodle_url::is_local_url()</u>.
      *
      * @return array
      */
@@ -623,27 +603,27 @@ final class moodle_url_test extends \advanced_testcase {
 
         return [
             'Google Maps CDN (HTTPS)' => [
-                new url('https://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
+                new moodle_url('https://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
                 false,
             ],
             'Google Maps CDN (HTTP)' => [
-                new url('http://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
+                new moodle_url('http://maps.googleapis.com/maps/api/js', ['key' => 'googlemapkey3', 'sensor' => 'false']),
                 false,
             ],
             'wwwroot' => [
-                new url($wwwroot),
+                new moodle_url($wwwroot),
                 true,
             ],
             'wwwroot/' => [
-                new url($wwwroot . '/'),
+                new moodle_url($wwwroot . '/'),
                 true,
             ],
             'Environment XML file' => [
-                new url('/admin/environment.xml'),
+                new moodle_url('/admin/environment.xml'),
                 true,
             ],
             'H5P JS internal resource' => [
-                new url('/h5p/js/embed.js'),
+                new moodle_url('/h5p/js/embed.js'),
                 true,
             ],
         ];
@@ -653,7 +633,7 @@ final class moodle_url_test extends \advanced_testcase {
      * @dataProvider remove_params_provider
      */
     public function test_remove_params($params, $remove, $expected): void {
-        $url = new url('/index.php', $params);
+        $url = new moodle_url('/index.php', $params);
         if ($remove !== null) {
             $url->remove_params(...$remove);
         }
