@@ -92,7 +92,7 @@ class url {
      * Url parameters as associative array.
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * Create new instance of url.
@@ -120,7 +120,6 @@ class url {
             $this->slashargument = $url->slashargument;
             $this->params = $url->params;
             $this->anchor = $url->anchor;
-
         } else {
             $url = $url ?? '';
             // Detect if anchor used.
@@ -134,7 +133,7 @@ class url {
 
             // Normalise shortened form of our url ex.: '/course/view.php'.
             if (strpos($url, '/') === 0) {
-                $url = $CFG->wwwroot.$url;
+                $url = $CFG->wwwroot . $url;
             }
 
             if ($CFG->admin !== 'admin') {
@@ -191,7 +190,7 @@ class url {
                 if (is_array($value)) {
                     throw new coding_exception('Url parameters values can not be arrays!');
                 }
-                if (is_object($value) and !method_exists($value, '__toString')) {
+                if (is_object($value) && !method_exists($value, '__toString')) {
                     throw new coding_exception('Url parameters values can not be objects, unless __toString() is defined!');
                 }
             }
@@ -210,9 +209,9 @@ class url {
      * @param string[]|string $params,... either an array of param names, or 1..n string params to remove as args.
      * @return array url parameters
      */
-    public function remove_params($params = null) {
+    public function remove_params($params = null, ...$remainingparams) {
         if (!is_array($params)) {
-            $params = func_get_args();
+            $params = [$params, ...$remainingparams];
         }
         foreach ($params as $param) {
             unset($this->params[$param]);
@@ -223,12 +222,10 @@ class url {
     /**
      * Remove all url parameters.
      *
-     * @todo remove the unused param.
-     * @param array $params Unused param
-     * @return void
+     * @param array $unused Unused param
      */
-    public function remove_all_params($params = null) {
-        $this->params = array();
+    public function remove_all_params($unsed = null) {
+        $this->params = [];
         $this->slashargument = '';
     }
 
@@ -244,7 +241,7 @@ class url {
     public function param($paramname, $newvalue = '') {
         if (func_num_args() > 1) {
             // Set new value.
-            $this->params(array($paramname => $newvalue));
+            $this->params([$paramname => $newvalue]);
         }
         if (isset($this->params[$paramname])) {
             return $this->params[$paramname];
@@ -270,7 +267,7 @@ class url {
             if (is_array($value)) {
                 throw new coding_exception('Overridden parameters values can not be arrays!');
             }
-            if (is_object($value) and !method_exists($value, '__toString')) {
+            if (is_object($value) && !method_exists($value, '__toString')) {
                 throw new coding_exception('Overridden parameters values can not be objects, unless __toString() is defined!');
             }
             $params[$key] = (string)$value;
@@ -289,7 +286,7 @@ class url {
      * @return string query string that can be added to a url.
      */
     public function get_query_string($escaped = true, array $overrideparams = null) {
-        $arr = array();
+        $arr = [];
         if ($overrideparams !== null) {
             $params = $this->merge_overrideparams($overrideparams);
         } else {
@@ -298,11 +295,11 @@ class url {
         foreach ($params as $key => $val) {
             if (is_array($val)) {
                 foreach ($val as $index => $value) {
-                    $arr[] = rawurlencode($key.'['.$index.']')."=".rawurlencode($value);
+                    $arr[] = rawurlencode($key . '[' . $index . ']') . "=" . rawurlencode($value);
                 }
             } else {
                 if (isset($val) && $val !== '') {
-                    $arr[] = rawurlencode($key)."=".rawurlencode($val);
+                    $arr[] = rawurlencode($key) . "=" . rawurlencode($val);
                 } else {
                     $arr[] = rawurlencode($key);
                 }
@@ -327,7 +324,7 @@ class url {
         foreach ($this->params as $key => $val) {
             if (is_array($val)) {
                 foreach ($val as $index => $value) {
-                    $data[] = ['name' => $key.'['.$index.']', 'value' => $value];
+                    $data[] = ['name' => $key . '[' . $index . ']', 'value' => $value];
                 }
             } else {
                 $data[] = ['name' => $key, 'value' => $val];
@@ -360,7 +357,7 @@ class url {
         global $CFG;
 
         if (!is_bool($escaped)) {
-            debugging('Escape parameter must be of type boolean, '.gettype($escaped).' given instead.');
+            debugging('Escape parameter must be of type boolean, ' . gettype($escaped) . ' given instead.');
         }
 
         $url = $this;
@@ -375,7 +372,6 @@ class url {
         }
 
         return $url->raw_out($escaped, $overrideparams);
-
     }
 
     /**
@@ -389,10 +385,10 @@ class url {
      */
     public function raw_out($escaped = true, array $overrideparams = null) {
         if (!is_bool($escaped)) {
-            debugging('Escape parameter must be of type boolean, '.gettype($escaped).' given instead.');
+            debugging('Escape parameter must be of type boolean, ' . gettype($escaped) . ' given instead.');
         }
 
-        $uri = $this->out_omit_querystring().$this->slashargument;
+        $uri = $this->out_omit_querystring() . $this->slashargument;
 
         $querystring = $this->get_query_string($escaped, $overrideparams);
         if ($querystring !== '') {
@@ -468,10 +464,10 @@ class url {
      */
     public function out_omit_querystring($includeanchor = false) {
 
-        $uri = $this->scheme ? $this->scheme.':'.((strtolower($this->scheme) == 'mailto') ? '':'//'): '';
-        $uri .= $this->user ? $this->user.($this->pass? ':'.$this->pass:'').'@':'';
+        $uri = $this->scheme ? $this->scheme . ':' . ((strtolower($this->scheme) == 'mailto') ? '' : '//') : '';
+        $uri .= $this->user ? $this->user . ($this->pass ? ':' . $this->pass : '') . '@' : '';
         $uri .= $this->host ? $this->host : '';
-        $uri .= $this->port ? ':'.$this->port : '';
+        $uri .= $this->port ? ':' . $this->port : '';
         $uri .= $this->path ? $this->path : '';
         if ($includeanchor) {
             $uri .= $this->get_encoded_anchor();
@@ -575,7 +571,6 @@ class url {
      * @param string $path usually file path
      * @param string $parameter name of page parameter if slasharguments not supported
      * @param bool $supported usually null, then it depends on $CFG->slasharguments, use true or false for other servers
-     * @return void
      */
     public function set_slashargument($path, $parameter = 'file', $supported = null) {
         global $CFG;
@@ -589,7 +584,6 @@ class url {
             $path  = implode('/', $parts);
             $this->slashargument = $path;
             unset($this->params[$parameter]);
-
         } else {
             $this->slashargument = '';
             $this->params[$parameter] = $path;
@@ -627,7 +621,7 @@ class url {
      * @return self
      */
     public static function make_file_url($urlbase, $path, $forcedownload = false) {
-        $params = array();
+        $params = [];
         if ($forcedownload) {
             $params['forcedownload'] = 1;
         }
@@ -656,8 +650,16 @@ class url {
      *                user who will not be logged in when viewing, then we use a token to authenticate the user.
      * @return url
      */
-    public static function make_pluginfile_url($contextid, $component, $area, $itemid, $pathname, $filename,
-                                               $forcedownload = false, $includetoken = false) {
+    public static function make_pluginfile_url(
+        $contextid,
+        $component,
+        $area,
+        $itemid,
+        $pathname,
+        $filename,
+        $forcedownload = false,
+        $includetoken = false
+    ) {
         global $CFG, $USER;
 
         $path = [];
@@ -704,14 +706,21 @@ class url {
      * @param bool $forcedownload
      * @return url
      */
-    public static function make_webservice_pluginfile_url($contextid, $component, $area, $itemid, $pathname, $filename,
-                                               $forcedownload = false) {
+    public static function make_webservice_pluginfile_url(
+        $contextid,
+        $component,
+        $area,
+        $itemid,
+        $pathname,
+        $filename,
+        $forcedownload = false
+    ) {
         global $CFG;
         $urlbase = "$CFG->wwwroot/webservice/pluginfile.php";
         if ($itemid === null) {
-            return self::make_file_url($urlbase, "/$contextid/$component/$area".$pathname.$filename, $forcedownload);
+            return self::make_file_url($urlbase, "/$contextid/$component/$area" . $pathname . $filename, $forcedownload);
         } else {
-            return self::make_file_url($urlbase, "/$contextid/$component/$area/$itemid".$pathname.$filename, $forcedownload);
+            return self::make_file_url($urlbase, "/$contextid/$component/$area/$itemid" . $pathname . $filename, $forcedownload);
         }
     }
 
@@ -729,7 +738,7 @@ class url {
         $urlbase = "$CFG->wwwroot/draftfile.php";
         $context = context_user::instance($USER->id);
 
-        return self::make_file_url($urlbase, "/$context->id/user/draft/$draftid".$pathname.$filename, $forcedownload);
+        return self::make_file_url($urlbase, "/$context->id/user/draft/$draftid" . $pathname . $filename, $forcedownload);
     }
 
     /**
@@ -744,7 +753,7 @@ class url {
         global $CFG;
 
         $urlbase = "$CFG->wwwroot/file.php";
-        return self::make_file_url($urlbase, '/'.$courseid.'/'.$filepath, $forcedownload);
+        return self::make_file_url($urlbase, '/' . $courseid . '/' . $filepath, $forcedownload);
     }
 
     /**
@@ -757,7 +766,7 @@ class url {
 
         $url = $this->out();
         // Does URL start with wwwroot? Otherwise, URL isn't relative to wwwroot.
-        return ( ($url === $CFG->wwwroot) || (strpos($url, $CFG->wwwroot.'/') === 0) );
+        return ( ($url === $CFG->wwwroot) || (strpos($url, $CFG->wwwroot . '/') === 0) );
     }
 
     /**
