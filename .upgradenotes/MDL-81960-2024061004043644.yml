@@ -10,4 +10,20 @@ notes:
         | --- | --- |
 
         | `\moodle_url` | `\core\moodle_url` |
+
+        | `\progress_trace` | `\core\output\progress_trace` |
+
+        | `\combined_progress_trace` | `\core\output\progress_trace\combined_progress_trace` |
+
+        | `\error_log_progress_trace` | `\core\output\progress_trace\error_log_progress_trace` |
+
+        | `\html_list_progress_trace` | `\core\output\progress_trace\html_list_progress_trace` |
+
+        | `\html_progress_trace` | `\core\output\progress_trace\html_progress_trace` |
+
+        | `\null_progress_trace` | `\core\output\progress_trace\null_progress_trace` |
+
+        | `\progress_trace_buffer` | `\core\output\progress_trace\progress_trace_buffer` |
+
+        | `\text_progress_trace` | `\core\output\progress_trace\text_progress_trace` |
       type: improved
