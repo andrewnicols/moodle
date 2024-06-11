@@ -393,6 +393,7 @@ class core_component {
             \core\lang_string::class,
             \renderable::class,
             \core\url::class,
+            \core_cache\cache::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
