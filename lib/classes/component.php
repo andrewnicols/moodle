@@ -392,6 +392,7 @@ class core_component {
             \core\output\bootstrap_renderer::class,
             \renderable::class,
             \core\url::class,
+            \core\cache::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
