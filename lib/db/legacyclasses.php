@@ -48,6 +48,7 @@ $legacyclasses = [
     // Cache API.
     \cache::class => 'cache.php',
     \cache_application::class => 'application_cache.php',
+    \cache_definition::class => 'definition.php',
     \cache_request::class => 'request_cache.php',
     \cache_session::class => 'session_cache.php',
     \cache_cached_object::class => 'cached_object.php',
