@@ -63,9 +63,6 @@ $legacyclasses = [
     \action_link::class => 'output/action_link.php',
     \html_writer::class => 'output/html_writer.php',
     \js_writer::class => 'output/js_writer.php',
-    \html_table::class => 'output/html_table.php',
-    \html_table_row::class => 'output/html_table_row.php',
-    \html_table_cell::class => 'output/html_table_cell.php',
     \paging_bar::class => 'output/paging_bar.php',
     \initials_bar::class => 'output/initials_bar.php',
     \block_contents::class => 'output/block_contents.php',
@@ -99,4 +96,18 @@ $legacyclasses = [
     \page_requirements_manager::class => 'output/requirements/page_requirements_manager.php',
     \YUI_config::class => 'output/requirements/yui.php',
     \fragment_requirements_manager::class => 'output/requirements/fragment_requirements_manager.php',
+
+    // Table Subsystem.
+    \html_table::class => [
+        'core_table',
+        'output/html_table.php',
+    ],
+    \html_table_row::class => [
+        'core_table',
+        'output/html_table_row.php',
+    ],
+    \html_table_cell::class => [
+        'core_table',
+        'output/html_table_cell.php',
+    ],
 ];
