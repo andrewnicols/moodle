@@ -65,8 +65,6 @@ $legacyclasses = [
     \js_writer::class => 'output/js_writer.php',
     \paging_bar::class => 'output/paging_bar.php',
     \initials_bar::class => 'output/initials_bar.php',
-    \block_contents::class => 'output/block_contents.php',
-    \block_move_target::class => 'output/block_move_target.php',
     \custom_menu_item::class => 'output/custom_menu_item.php',
     \custom_menu::class => 'output/custom_menu.php',
     \tabobject::class => 'output/tabobject.php',
@@ -96,6 +94,16 @@ $legacyclasses = [
     \page_requirements_manager::class => 'output/requirements/page_requirements_manager.php',
     \YUI_config::class => 'output/requirements/yui.php',
     \fragment_requirements_manager::class => 'output/requirements/fragment_requirements_manager.php',
+
+    // Block Subsystem.
+    \block_contents::class => [
+        'core_block',
+        'output/block_contents.php',
+    ],
+    \block_move_target::class => [
+        'core_block',
+        'output/block_move_target.php',
+    ],
 
     // Table Subsystem.
     \html_table::class => [
