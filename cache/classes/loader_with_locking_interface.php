@@ -19,10 +19,10 @@ namespace core_cache;
 /**
  * Cache Loader supporting locking.
  *
- * This interface should be given to classes already implementing cache_loader that also wish to support locking.
+ * This interface should be given to classes already implementing core_cache\loader_interface that also wish to support locking.
  * It outlines the required structure for utilising locking functionality when using a cache.
  *
- * Can be implemented by any class already implementing the cache_loader interface.
+ * Can be implemented by any class already implementing the core_cache\loader_interface interface.
  * @package core_cache
  */
 interface loader_with_locking_interface {
