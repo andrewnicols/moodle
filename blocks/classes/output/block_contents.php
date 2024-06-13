@@ -30,7 +30,7 @@ namespace core_block\output;
  * @copyright 2009 Tim Hunt
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.0
- * @package core
+ * @package core_block
  * @category output
  */
 class block_contents {
@@ -122,23 +122,24 @@ class block_contents {
      * this array should be an array('url' => $url, 'icon' => $icon, 'caption' => $caption).
      * $icon is the icon name. Fed to $OUTPUT->image_url.
      */
-    public $controls = array();
+    public $controls = [];
 
 
     /**
-     * Create new instance of block content
-     * @param array $attributes
+     * Create new instance of block content.
+     *
+     * @param null|array $attributes
      */
-    public function __construct(array $attributes = null) {
+    public function __construct(?array $attributes = null) {
         $this->skipid = self::$idcounter;
         self::$idcounter += 1;
 
         if ($attributes) {
-            // standard block
+            // Standard block.
             $this->attributes = $attributes;
         } else {
-            // simple "fake" blocks used in some modules and "Add new block" block
-            $this->attributes = array('class'=>'block');
+            // Simple "fake" blocks used in some modules and "Add new block" block.
+            $this->attributes = ['class' => 'block'];
         }
     }
 
@@ -148,7 +149,7 @@ class block_contents {
      * @param string $class
      */
     public function add_class($class) {
-        $this->attributes['class'] .= ' '.$class;
+        $this->attributes['class'] .= ' ' . $class;
     }
 
     /**

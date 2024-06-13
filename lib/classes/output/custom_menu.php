@@ -62,7 +62,7 @@ class custom_menu extends custom_menu_item {
      * @param array $children
      */
     public function override_children(array $children) {
-        $this->children = array();
+        $this->children = [];
         foreach ($children as $child) {
             if ($child instanceof custom_menu_item) {
                 $this->children[] = $child;
@@ -100,7 +100,7 @@ class custom_menu extends custom_menu_item {
         $root = new custom_menu();
         $lastitem = $root;
         $lastdepth = 0;
-        $hiddenitems = array();
+        $hiddenitems = [];
         $lines = explode("\n", $text);
         foreach ($lines as $linenumber => $line) {
             $line = trim($line);

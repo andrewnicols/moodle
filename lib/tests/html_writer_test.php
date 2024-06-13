@@ -17,6 +17,7 @@
 /**
  * Unit tests for the html_writer class.
  *
+ * @package core
  * @copyright 2010 Tim Hunt
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \html_writer

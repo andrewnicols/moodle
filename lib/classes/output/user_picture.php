@@ -40,7 +40,7 @@ class user_picture implements renderable {
     /**
      * @var int The course id. Used when constructing the link to the user's
      * profile, page course id used if not specified.
-    */
+     */
     public $courseid;
 
     /**
@@ -104,15 +104,19 @@ class user_picture implements renderable {
         foreach (\core_user\fields::get_picture_fields() as $field) {
             if (!property_exists($user, $field)) {
                 $needrec = true;
-                debugging('Missing '.$field.' property in $user object, this is a performance problem that needs to be fixed by a developer. '
-                    .'Please use the \core_user\fields API to get the full list of required fields.', DEBUG_DEVELOPER);
+                debugging('Missing ' . $field . ' property in $user object, this is a performance problem that needs to be fixed by a developer. '
+                    . 'Please use the \core_user\fields API to get the full list of required fields.', DEBUG_DEVELOPER);
                 break;
             }
         }
 
         if ($needrec) {
-            $this->user = $DB->get_record('user', array('id' => $user->id),
-                implode(',', \core_user\fields::get_picture_fields()), MUST_EXIST);
+            $this->user = $DB->get_record(
+                'user',
+                ['id' => $user->id],
+                implode(',', \core_user\fields::get_picture_fields()),
+                MUST_EXIST
+            );
         } else {
             $this->user = clone($user);
         }
@@ -126,14 +130,19 @@ class user_picture implements renderable {
      * id of the result record. Please note it has to be converted back to id before rendering.
      *
      * @param string $tableprefix name of database table prefix in query
-     * @param array $extrafields extra fields to be included in result (do not include TEXT columns because it would break SELECT DISTINCT in MSSQL and ORACLE)
+     * @param null|array $extrafields extra fields to be included in result (do not include TEXT columns because it would break SELECT DISTINCT in MSSQL and ORACLE)
      * @param string $idalias alias of id field
      * @param string $fieldprefix prefix to add to all columns in their aliases, does not apply to 'id'
      * @return string
      * @deprecated since Moodle 3.11 MDL-45242
      * @see \core_user\fields
      */
-    public static function fields($tableprefix = '', array $extrafields = NULL, $idalias = 'id', $fieldprefix = '') {
+    public static function fields(
+        $tableprefix = '',
+        ?array $extrafields = null,
+        $idalias = 'id',
+        $fieldprefix = '',
+    ) {
         debugging('user_picture::fields() is deprecated. Please use the \core_user\fields API instead.', DEBUG_DEVELOPER);
         $userfields = \core_user\fields::for_userpic();
         if ($extrafields) {
@@ -152,17 +161,21 @@ class user_picture implements renderable {
     /**
      * Extract the aliased user fields from a given record
      *
-     * Given a record that was previously obtained using {@link self::fields()} with aliases,
+     * Given a record that was previously obtained using {@see self::fields()} with aliases,
      * this method extracts user related unaliased fields.
      *
      * @param stdClass $record containing user picture fields
-     * @param array $extrafields extra fields included in the $record
+     * @param null|array $extrafields extra fields included in the $record
      * @param string $idalias alias of the id field
      * @param string $fieldprefix prefix added to all columns in their aliases, does not apply to 'id'
      * @return stdClass object with unaliased user fields
      */
-    public static function unalias(stdClass $record, array $extrafields = null, $idalias = 'id', $fieldprefix = '') {
-
+    public static function unalias(
+        stdClass $record,
+        ?array $extrafields = null,
+        $idalias = 'id',
+        $fieldprefix = '',
+    ) {
         if (empty($idalias)) {
             $idalias = 'id';
         }
@@ -175,8 +188,8 @@ class user_picture implements renderable {
                     $return->id = $record->{$idalias};
                 }
             } else {
-                if (property_exists($record, $fieldprefix.$field)) {
-                    $return->{$field} = $record->{$fieldprefix.$field};
+                if (property_exists($record, $fieldprefix . $field)) {
+                    $return->{$field} = $record->{$fieldprefix . $field};
                 }
             }
         }
@@ -186,7 +199,7 @@ class user_picture implements renderable {
                 if ($e === 'id' or property_exists($return, $e)) {
                     continue;
                 }
-                $return->{$e} = $record->{$fieldprefix.$e};
+                $return->{$e} = $record->{$fieldprefix . $e};
             }
         }
 
@@ -200,10 +213,13 @@ class user_picture implements renderable {
      * if requests are made for non-existent files etc.
      *
      * @param moodle_page $page
-     * @param renderer_base $renderer
+     * @param null|renderer_base $renderer
      * @return moodle_url
      */
-    public function get_url(moodle_page $page, renderer_base $renderer = null) {
+    public function get_url(
+        moodle_page $page,
+        ?renderer_base $renderer = null,
+    ) {
         global $CFG;
 
         if (is_null($renderer)) {
@@ -229,10 +245,12 @@ class user_picture implements renderable {
             $size = (int)$this->size;
         }
 
-        $defaulturl = $renderer->image_url('u/'.$filename); // default image
+        $defaulturl = $renderer->image_url('u/' . $filename); // default image
 
-        if ((!empty($CFG->forcelogin) and !isloggedin()) ||
-            (!empty($CFG->forceloginforprofileimage) && (!isloggedin() || isguestuser()))) {
+        if (
+            (!empty($CFG->forcelogin) and !isloggedin()) ||
+            (!empty($CFG->forceloginforprofileimage) && (!isloggedin() || isguestuser()))
+        ) {
             // Protect images if login required and not logged in;
             // also if login is required for profile images and is not logged in or guest
             // do not use require_login() because it is expensive and not suitable here anyway.
@@ -265,11 +283,19 @@ class user_picture implements renderable {
                 // in the circumstance that the profile picture is not available
                 // when the user actually requests it they still get the profile
                 // picture for the correct theme.
-                $path .= $page->theme->name.'/';
+                $path .= $page->theme->name . '/';
             }
             // Set the image URL to the URL for the uploaded file and return.
             $url = moodle_url::make_pluginfile_url(
-                $contextid, 'user', 'icon', null, $path, $filename, false, $this->includetoken);
+                $contextid,
+                'user',
+                'icon',
+                null,
+                $path,
+                $filename,
+                false,
+                $this->includetoken
+            );
             $url->param('rev', $this->user->picture);
             return $url;
         }
@@ -285,7 +311,7 @@ class user_picture implements renderable {
 
             // Find the best default image URL we can (MDL-35669)
             if (empty($CFG->gravatardefaulturl)) {
-                $absoluteimagepath = $page->theme->resolve_image_location('u/'.$filename, 'core');
+                $absoluteimagepath = $page->theme->resolve_image_location('u/' . $filename, 'core');
                 if (strpos($absoluteimagepath, $CFG->dirroot) === 0) {
                     $gravatardefault = $CFG->wwwroot . substr($absoluteimagepath, strlen($CFG->dirroot));
                 } else {
@@ -298,9 +324,9 @@ class user_picture implements renderable {
             // If the currently requested page is https then we'll return an
             // https gravatar page.
             if (is_https()) {
-                return new moodle_url("https://secure.gravatar.com/avatar/{$md5}", array('s' => $size, 'd' => $gravatardefault));
+                return new moodle_url("https://secure.gravatar.com/avatar/{$md5}", ['s' => $size, 'd' => $gravatardefault]);
             } else {
-                return new moodle_url("http://www.gravatar.com/avatar/{$md5}", array('s' => $size, 'd' => $gravatardefault));
+                return new moodle_url("http://www.gravatar.com/avatar/{$md5}", ['s' => $size, 'd' => $gravatardefault]);
             }
         }
 

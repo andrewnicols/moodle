@@ -104,17 +104,17 @@ class renderer_base {
             // We only expose the variables that are exposed to JS templates.
             $safeconfig = $this->page->requires->get_config_for_javascript($this->page, $this);
 
-            $helpers = array('config' => $safeconfig,
-                             'str' => array($stringhelper, 'str'),
-                             'cleanstr' => array($cleanstringhelper, 'cleanstr'),
-                             'quote' => array($quotehelper, 'quote'),
-                             'js' => array($jshelper, 'help'),
-                             'pix' => array($pixhelper, 'pix'),
-                             'shortentext' => array($shortentexthelper, 'shorten'),
-                             'userdate' => array($userdatehelper, 'transform'),
-                         );
+            $helpers = ['config' => $safeconfig,
+                             'str' => [$stringhelper, 'str'],
+                             'cleanstr' => [$cleanstringhelper, 'cleanstr'],
+                             'quote' => [$quotehelper, 'quote'],
+                             'js' => [$jshelper, 'help'],
+                             'pix' => [$pixhelper, 'pix'],
+                             'shortentext' => [$shortentexthelper, 'shorten'],
+                             'userdate' => [$userdatehelper, 'transform'],
+                         ];
 
-            $this->mustache = new mustache_engine(array(
+            $this->mustache = new mustache_engine([
                 'cache' => $cachedir,
                 'escape' => 's',
                 'loader' => $loader,
@@ -126,8 +126,7 @@ class renderer_base {
                 'disallowednestedhelpers' => ['js'],
                 // Disable lambda rendering - content in helpers is already rendered, no need to render it again.
                 'disable_lambda_rendering' => true,
-            ));
-
+            ]);
         }
 
         return $this->mustache;
@@ -357,8 +356,14 @@ class renderer_base {
         $filepath = ((int) $maxwidth . 'x' . (int) $maxheight) . '/';
 
         // Use $CFG->themerev to prevent browser caching when the file changes.
-        return moodle_url::make_pluginfile_url(context_system::instance()->id, 'core_admin', 'logo', $filepath,
-            theme_get_revision(), $logo);
+        return moodle_url::make_pluginfile_url(
+            context_system::instance()->id,
+            'core_admin',
+            'logo',
+            $filepath,
+            theme_get_revision(),
+            $logo
+        );
     }
 
     /**
@@ -379,8 +384,14 @@ class renderer_base {
         $filepath = ((int) $maxwidth . 'x' . (int) $maxheight) . '/';
 
         // Use $CFG->themerev to prevent browser caching when the file changes.
-        return moodle_url::make_pluginfile_url(context_system::instance()->id, 'core_admin', 'logocompact', $filepath,
-            theme_get_revision(), $logo);
+        return moodle_url::make_pluginfile_url(
+            context_system::instance()->id,
+            'core_admin',
+            'logocompact',
+            $filepath,
+            theme_get_revision(),
+            $logo
+        );
     }
 
     /**

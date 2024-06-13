@@ -34,7 +34,7 @@ class js_writer {
      * @param int $delay execution delay in seconds
      * @return string JS code fragment
      */
-    public static function function_call($function, array $arguments = null, $delay=0) {
+    public static function function_call($function, array $arguments = null, $delay = 0) {
         if ($arguments) {
             $arguments = array_map('json_encode', convert_to_array($arguments));
             $arguments = implode(', ', $arguments);
@@ -44,7 +44,7 @@ class js_writer {
         $js = "$function($arguments);";
 
         if ($delay) {
-            $delay = $delay * 1000; // in miliseconds
+            $delay = $delay * 1000; // Delay in miliseconds.
             $js = "setTimeout(function() { $js }, $delay);";
         }
         return $js . "\n";
@@ -57,7 +57,7 @@ class js_writer {
      * @param array $extraarguments Any arguments to pass to it
      * @return string Some JS code
      */
-    public static function function_call_with_Y($function, array $extraarguments = null) {
+    public static function function_call_with_y($function, array $extraarguments = null) {
         if ($extraarguments) {
             $extraarguments = array_map('json_encode', convert_to_array($extraarguments));
             $arguments = 'Y, ' . implode(', ', $extraarguments);
@@ -77,7 +77,7 @@ class js_writer {
      * @param int $delay The delay before initialisation. 0 = no delay.
      * @return string Some JS code
      */
-    public static function object_init($var, $class, array $arguments = null, array $requirements = null, $delay=0) {
+    public static function object_init($var, $class, array $arguments = null, array $requirements = null, $delay = 0) {
         if (is_array($arguments)) {
             $arguments = array_map('json_encode', convert_to_array($arguments));
             $arguments = implode(', ', $arguments);
@@ -85,14 +85,14 @@ class js_writer {
 
         if ($var === null) {
             $js = "new $class(Y, $arguments);";
-        } else if (strpos($var, '.')!==false) {
+        } else if (strpos($var, '.') !== false) {
             $js = "$var = new $class(Y, $arguments);";
         } else {
             $js = "var $var = new $class(Y, $arguments);";
         }
 
         if ($delay) {
-            $delay = $delay * 1000; // in miliseconds
+            $delay = $delay * 1000; // Delay in miliseconds.
             $js = "setTimeout(function() { $js }, $delay);";
         }
 
@@ -100,7 +100,7 @@ class js_writer {
             $requirements = implode("', '", $requirements);
             $js = "Y.use('$requirements', function(Y){ $js });";
         }
-        return $js."\n";
+        return $js . "\n";
     }
 
     /**
@@ -122,7 +122,7 @@ class js_writer {
             }
         }
 
-        $output .= "$name = ".json_encode($value).";";
+        $output .= "$name = " . json_encode($value) . ";";
 
         return $output;
     }

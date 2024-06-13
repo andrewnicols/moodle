@@ -59,7 +59,6 @@ function theme_get_revision() {
         } else {
             return $CFG->themerev;
         }
-
     } else {
         return -1;
     }
@@ -99,11 +98,11 @@ function theme_get_next_revision() {
     global $CFG;
 
     $next = time();
-    if (isset($CFG->themerev) and $next <= $CFG->themerev and $CFG->themerev - $next < 60*60) {
+    if (isset($CFG->themerev) and $next <= $CFG->themerev and $CFG->themerev - $next < 60 * 60) {
         // This resolves problems when reset is requested repeatedly within 1s,
         // the < 1h condition prevents accidental switching to future dates
         // because we might not recover from it.
-        $next = $CFG->themerev+1;
+        $next = $CFG->themerev + 1;
     }
 
     return $next;
@@ -191,8 +190,12 @@ function theme_get_css_filename($themename, $globalrevision, $themerevision, $di
  * @param bool           $cache        Should the generated files be stored in local cache.
  * @return array         The built theme content in a multi-dimensional array of name => direction => content
  */
-function theme_build_css_for_themes($themeconfigs = [], $directions = ['rtl', 'ltr'],
-        $cache = true, $mtraceprogress = false): array {
+function theme_build_css_for_themes(
+    $themeconfigs = [],
+    $directions = ['rtl', 'ltr'],
+    $cache = true,
+    $mtraceprogress = false
+): array {
     global $CFG;
 
     if (empty($themeconfigs)) {
@@ -361,11 +364,11 @@ function js_reset_all_caches() {
     global $CFG;
 
     $next = time();
-    if (isset($CFG->jsrev) and $next <= $CFG->jsrev and $CFG->jsrev - $next < 60*60) {
+    if (isset($CFG->jsrev) and $next <= $CFG->jsrev and $CFG->jsrev - $next < 60 * 60) {
         // This resolves problems when reset is requested repeatedly within 1s,
         // the < 1h condition prevents accidental switching to future dates
         // because we might not recover from it.
-        $next = $CFG->jsrev+1;
+        $next = $CFG->jsrev + 1;
     }
 
     set_config('jsrev', $next);
