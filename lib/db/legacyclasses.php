@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 // The old class name is the key, the path to the file containing the class is the vlaue.
 // The array must be called $legacyclasses.
 $legacyclasses = [
+    // Exception API.
     \bootstrap_renderer::class => 'output/bootstrap_renderer.php',
     \coding_exception::class => 'exception/coding_exception.php',
     \file_serving_exception::class => 'exception/file_serving_exception.php',
@@ -49,6 +50,25 @@ $legacyclasses = [
 
     \renderable::class => 'output/renderable.php',
     \templatable::class => 'output/templatable.php',
+
+    // Output API: Renderer Factories.
+    \renderer_factory::class => 'output/renderer_factory/renderer_factory_interface.php',
+    \renderer_factory_base::class => 'output/renderer_factory/renderer_factory_base.php',
+    \standard_renderer_factory::class => 'output/renderer_factory/standard_renderer_factory.php',
+    \theme_overridden_renderer_factory::class => 'output/renderer_factory/theme_overridden_renderer_factory.php',
+
+    // Output API: Renderers.
+    \renderer_base::class => 'output/renderer_base.php',
+    \plugin_renderer_base::class => 'output/plugin_renderer_base.php',
+    \core_renderer::class => 'output/core_renderer.php',
+    \core_renderer_cli::class => 'output/core_renderer_cli.php',
+    \core_renderer_ajax::class => 'output/core_renderer_ajax.php',
+    \core_renderer_maintenance::class => 'output/core_renderer_maintenance.php',
+    \page_requirements_manager::class => 'output/requirements/page_requirements_manager.php',
+    \YUI_config::class => 'output/requirements/yui.php',
+    \fragment_requirements_manager::class => 'output/requirements/fragment_requirements_manager.php',
+
+    // Output API: components.
     \file_picker::class => 'output/file_picker.php',
     \user_picture::class => 'output/user_picture.php',
     \help_icon::class => 'output/help_icon.php',
@@ -81,19 +101,6 @@ $legacyclasses = [
     \component_action::class => 'output/actions/component_action.php',
     \confirm_action::class => 'output/actions/confirm_action.php',
     \popup_action::class => 'output/actions/popup_action.php',
-    \renderer_factory::class => 'output/renderer_factory/renderer_factory_interface.php',
-    \renderer_factory_base::class => 'output/renderer_factory/renderer_factory_base.php',
-    \standard_renderer_factory::class => 'output/renderer_factory/standard_renderer_factory.php',
-    \theme_overridden_renderer_factory::class => 'output/renderer_factory/theme_overridden_renderer_factory.php',
-    \renderer_base::class => 'output/renderer_base.php',
-    \plugin_renderer_base::class => 'output/plugin_renderer_base.php',
-    \core_renderer::class => 'output/core_renderer.php',
-    \core_renderer_cli::class => 'output/core_renderer_cli.php',
-    \core_renderer_ajax::class => 'output/core_renderer_ajax.php',
-    \core_renderer_maintenance::class => 'output/core_renderer_maintenance.php',
-    \page_requirements_manager::class => 'output/requirements/page_requirements_manager.php',
-    \YUI_config::class => 'output/requirements/yui.php',
-    \fragment_requirements_manager::class => 'output/requirements/fragment_requirements_manager.php',
 
     // Block Subsystem.
     \block_contents::class => [
