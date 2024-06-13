@@ -62,7 +62,7 @@ class progress_bar implements renderable, templatable {
         if (!empty($htmlid)) {
             $this->html_id  = $htmlid;
         } else {
-            $this->html_id  = 'pbar_'.uniqid();
+            $this->html_id  = 'pbar_' . uniqid();
         }
 
         $this->width = $width;

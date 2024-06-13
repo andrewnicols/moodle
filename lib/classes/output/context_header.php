@@ -27,8 +27,8 @@ namespace core\output;
  */
 class context_header implements renderable, templatable {
 /**
-     * @var string $heading Main heading.
-     */
+ * @var string $heading Main heading.
+ */
     public $heading;
     /**
      * @var int $headinglevel Main heading 'h' tag level.
@@ -101,8 +101,10 @@ class context_header implements renderable, templatable {
                 $class = 'btn';
             }
             // Add the bootstrap 'btn' class for formatting.
-            $this->additionalbuttons[$buttontype]['linkattributes'] = array_merge($button['linkattributes'],
-                array('class' => $class));
+            $this->additionalbuttons[$buttontype]['linkattributes'] = array_merge(
+                $button['linkattributes'],
+                ['class' => $class]
+            );
         }
     }
 

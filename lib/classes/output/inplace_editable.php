@@ -40,7 +40,7 @@ use lang_string;
  * @copyright  2016 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class inplace_editable implements templatable, renderable {
+class inplace_editable implements renderable, templatable {
     /**
      * @var string component responsible for diplsying/updating
      */
@@ -112,8 +112,17 @@ class inplace_editable implements templatable, renderable {
      * @param lang_string|string $editlabel label for the input element in the editing mode (for screenreaders)
      * @param pix_icon|null $editicon icon to use to toggle editing
      */
-    public function __construct($component, $itemtype, $itemid, $editable,
-            $displayvalue, $value = null, $edithint = null, $editlabel = null, ?pix_icon $editicon = null) {
+    public function __construct(
+        $component,
+        $itemtype,
+        $itemid,
+        $editable,
+        $displayvalue,
+        $value = null,
+        $edithint = null,
+        $editlabel = null,
+        ?pix_icon $editicon = null
+    ) {
         $this->component = $component;
         $this->itemtype = $itemtype;
         $this->itemid = $itemid;
@@ -138,7 +147,7 @@ class inplace_editable implements templatable, renderable {
      */
     public function set_type_toggle($options = null) {
         if ($options === null) {
-            $options = array(0, 1);
+            $options = [0, 1];
         }
         $options = array_values($options);
         $idx = array_search($this->value, $options, true);
@@ -235,16 +244,16 @@ class inplace_editable implements templatable, renderable {
      */
     public function export_for_template(\renderer_base $output) {
         if (!$this->editable) {
-            return array(
-                'displayvalue' => (string)$this->displayvalue
-            );
+            return [
+                'displayvalue' => (string)$this->displayvalue,
+            ];
         }
 
         if ($this->editicon === null) {
             $this->editicon = new pix_icon('t/editstring', (string) $this->edithint);
         }
 
-        return array(
+        return [
             'component' => $this->component,
             'itemtype' => $this->itemtype,
             'itemid' => $this->itemid,
@@ -256,7 +265,7 @@ class inplace_editable implements templatable, renderable {
             'type' => $this->type,
             'options' => $this->options,
             'linkeverything' => $this->get_linkeverything() ? 1 : 0,
-        );
+        ];
     }
 
     /**

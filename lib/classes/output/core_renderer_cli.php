@@ -59,10 +59,10 @@ class core_renderer_cli extends core_renderer {
         $status = $result->get_status();
 
         $labels = [
-            check_result::NA        => '      ' . cli_ansi_format('<colour:darkGray>' ) . ' NA ',
+            check_result::NA        => '      ' . cli_ansi_format('<colour:darkGray>') . ' NA ',
             check_result::OK        => '      ' . cli_ansi_format('<colour:green>') . ' OK ',
-            check_result::INFO      => '    '   . cli_ansi_format('<colour:blue>' ) . ' INFO ',
-            check_result::UNKNOWN   => ' '      . cli_ansi_format('<colour:darkGray>' ) . ' UNKNOWN ',
+            check_result::INFO      => '    '   . cli_ansi_format('<colour:blue>') . ' INFO ',
+            check_result::UNKNOWN   => ' '      . cli_ansi_format('<colour:darkGray>') . ' UNKNOWN ',
             check_result::WARNING   => ' '      . cli_ansi_format('<colour:black><bgcolour:yellow>') . ' WARNING ',
             check_result::ERROR     => '   '    . cli_ansi_format('<bgcolour:red>') . ' ERROR ',
             check_result::CRITICAL  => ''       . cli_ansi_format('<bgcolour:red>') . ' CRITICAL ',
@@ -96,7 +96,7 @@ class core_renderer_cli extends core_renderer {
         $ascii = "\n";
 
         if (stream_isatty(STDOUT)) {
-            require_once($CFG->libdir.'/clilib.php');
+            require_once($CFG->libdir . '/clilib.php');
 
             $ascii .= "[" . str_repeat(' ', $size) . "] 0% \n";
             return cli_ansi_format($ascii);

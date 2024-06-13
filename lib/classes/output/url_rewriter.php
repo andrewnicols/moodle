@@ -36,7 +36,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 interface url_rewriter {
-
     /**
      * Rewrite moodle_urls into another form.
      *
@@ -52,7 +51,4 @@ interface url_rewriter {
      * @return void
      */
     public static function html_head_setup();
-
-
 }
-

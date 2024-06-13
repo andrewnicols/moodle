@@ -34,7 +34,6 @@ namespace core\output;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class language_menu implements renderable, templatable {
-
     /** @var \moodle_page $page the moodle page that the languague menu belongs to */
     protected $page;
 
@@ -175,5 +174,4 @@ class language_menu implements renderable, templatable {
         $singleselect->class = 'langmenu';
         return $singleselect->export_for_template($output);
     }
-
 }

@@ -52,18 +52,18 @@ class file_picker implements renderable {
      */
     public function __construct(stdClass $options) {
         global $CFG, $USER, $PAGE;
-        require_once($CFG->dirroot. '/repository/lib.php');
-        $defaults = array(
-            'accepted_types'=>'*',
-            'return_types'=>FILE_INTERNAL,
+        require_once($CFG->dirroot . '/repository/lib.php');
+        $defaults = [
+            'accepted_types' => '*',
+            'return_types' => FILE_INTERNAL,
             'env' => 'filepicker',
             'client_id' => uniqid(),
             'itemid' => 0,
-            'maxbytes'=>-1,
-            'maxfiles'=>1,
-            'buttonname'=>false
-        );
-        foreach ($defaults as $key=>$value) {
+            'maxbytes' => -1,
+            'maxfiles' => 1,
+            'buttonname' => false,
+        ];
+        foreach ($defaults as $key => $value) {
             if (empty($options->$key)) {
                 $options->$key = $value;
             }
@@ -89,7 +89,7 @@ class file_picker implements renderable {
         $this->options = initialise_filepicker($options);
 
         // copying other options
-        foreach ($options as $name=>$value) {
+        foreach ($options as $name => $value) {
             if (!isset($this->options->$name)) {
                 $this->options->$name = $value;
             }

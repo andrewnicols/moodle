@@ -33,7 +33,6 @@ use stdClass;
  * @category output
  */
 class single_select implements renderable, templatable {
-
     /**
      * @var moodle_url Target url - includes hidden fields
      */
@@ -65,7 +64,7 @@ class single_select implements renderable, templatable {
     /**
      * @var array Extra select field attributes
      */
-    var $attributes = array();
+    var $attributes = [];
 
     /**
      * @var string Button label
@@ -75,7 +74,7 @@ class single_select implements renderable, templatable {
     /**
      * @var array Button label's attributes
      */
-    var $labelattributes = array();
+    var $labelattributes = [];
 
     /**
      * @var string Form submit method post or get
@@ -119,7 +118,7 @@ class single_select implements renderable, templatable {
      * @param ?array $nothing
      * @param string $formid
      */
-    public function __construct(moodle_url $url, $name, array $options, $selected = '', $nothing = array('' => 'choosedots'), $formid = null) {
+    public function __construct(moodle_url $url, $name, array $options, $selected = '', $nothing = ['' => 'choosedots'], $formid = null) {
         $this->url      = $url;
         $this->name     = $name;
         $this->options  = $options;
@@ -135,7 +134,7 @@ class single_select implements renderable, templatable {
      * @param string $confirmmessage The yes/no confirmation question. If "Yes" is clicked, the original action will occur.
      */
     public function add_confirm_action($confirmmessage) {
-        $this->add_action(new component_action('submit', 'M.util.show_confirm_dialog', array('message' => $confirmmessage)));
+        $this->add_action(new component_action('submit', 'M.util.show_confirm_dialog', ['message' => $confirmmessage]));
     }
 
     /**
@@ -172,10 +171,9 @@ class single_select implements renderable, templatable {
      * @param string $label
      * @param array $attributes (optional)
      */
-    public function set_label($label, $attributes = array()) {
+    public function set_label($label, $attributes = []) {
         $this->label = $label;
         $this->labelattributes = $attributes;
-
     }
 
     /**
@@ -207,7 +205,7 @@ class single_select implements renderable, templatable {
         unset($attributes['disabled']);
 
         // Map the attributes.
-        $data->attributes = array_map(function($key) use ($attributes) {
+        $data->attributes = array_map(function ($key) use ($attributes) {
             return ['name' => $key, 'value' => $attributes[$key]];
         }, array_keys($attributes));
 
@@ -260,7 +258,7 @@ class single_select implements renderable, templatable {
                     $data->options[] = [
                         'name' => $optgroupname,
                         'optgroup' => true,
-                        'options' => $sublist
+                        'options' => $sublist,
                     ];
                 }
             } else {
@@ -268,7 +266,7 @@ class single_select implements renderable, templatable {
                     'value' => $value,
                     'name' => $options[$value],
                     'selected' => strval($this->selected) === strval($value),
-                    'optgroup' => false
+                    'optgroup' => false,
                 ];
 
                 if ($hasnothing && $nothingkey === $value) {

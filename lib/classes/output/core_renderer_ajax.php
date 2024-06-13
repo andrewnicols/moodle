@@ -50,9 +50,9 @@ class core_renderer_ajax extends core_renderer {
         $e = new stdClass();
         $e->error      = $message;
         $e->errorcode  = $errorcode;
-        $e->stacktrace = NULL;
-        $e->debuginfo  = NULL;
-        $e->reproductionlink = NULL;
+        $e->stacktrace = null;
+        $e->debuginfo  = null;
+        $e->reproductionlink = null;
         if (!empty($CFG->debug) and $CFG->debug >= DEBUG_DEVELOPER) {
             $link = (string) $link;
             if ($link) {
@@ -98,7 +98,8 @@ class core_renderer_ajax extends core_renderer {
         $delay,
         $debugdisableredirect,
         $messagetype = notification::NOTIFY_INFO,
-    ) {}
+    ) {
+    }
 
     /**
      * Prepares the start of an AJAX output.
@@ -130,7 +131,8 @@ class core_renderer_ajax extends core_renderer {
      * There is no footer for an AJAX request, however we must override the
      * footer method to prevent the default footer.
      */
-    public function footer() {}
+    public function footer() {
+    }
 
     /**
      * No need for headers in an AJAX request... this should never happen.
@@ -139,7 +141,8 @@ class core_renderer_ajax extends core_renderer {
      * @param string $classes
      * @param string $id
      */
-    public function heading($text, $level = 2, $classes = 'main', $id = null) {}
+    public function heading($text, $level = 2, $classes = 'main', $id = null) {
+    }
 }
 
 // Alias this class to the old name.

@@ -36,16 +36,16 @@ class xhtml_container_stack {
     /**
      * @var array Stores the list of open containers.
      */
-    protected $opencontainers = array();
+    protected $opencontainers = [];
 
     /**
      * @var array In developer debug mode, stores a stack trace of all opens and
      * closes, so we can output helpful error messages when there is a mismatch.
      */
-    protected $log = array();
+    protected $log = [];
 
     /**
-     * @var boolean Store whether we are developer debug mode. We need this in
+     * @var bool Store whether we are developer debug mode. We need this in
      * several places including in the destructor where we may not have access to $CFG.
      */
     protected $isdebugging;

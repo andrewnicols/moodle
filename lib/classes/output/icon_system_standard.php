@@ -33,5 +33,4 @@ class icon_system_standard extends icon_system {
     public function get_amd_name() {
         return 'core/icon_system_standard';
     }
-
 }

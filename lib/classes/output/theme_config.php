@@ -32,6 +32,8 @@ use moodle_page;
 use moodle_url;
 use stdClass;
 
+// phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameUnderscore
+
 /**
  * This class represents the configuration variables of a Moodle theme.
  *
@@ -53,7 +55,6 @@ use stdClass;
  * @category output
  */
 class theme_config {
-
     /**
      * @var string Default theme, used when requested theme not found.
      */
@@ -76,7 +77,7 @@ class theme_config {
      * @var array The names of all the stylesheets from this theme that you would
      * like included, in order. Give the names of the files without .css.
      */
-    public $sheets = array();
+    public $sheets = [];
 
     /**
      * @var array The names of all the stylesheets from parents that should be excluded.
@@ -95,7 +96,7 @@ class theme_config {
      * @var array List of style sheets that are included in the text editor bodies.
      * Sheets from parent themes are used automatically and can not be excluded.
      */
-    public $editor_sheets = array();
+    public $editor_sheets = [];
 
     /**
      * @var bool Whether a fallback version of the stylesheet will be used
@@ -107,13 +108,13 @@ class theme_config {
      * @var array The names of all the javascript files this theme that you would
      * like included from head, in order. Give the names of the files without .js.
      */
-    public $javascripts = array();
+    public $javascripts = [];
 
     /**
      * @var array The names of all the javascript files this theme that you would
      * like included from footer, in order. Give the names of the files without .js.
      */
-    public $javascripts_footer = array();
+    public $javascripts_footer = [];
 
     /**
      * @var array The names of all the javascript files from parents that should
@@ -171,7 +172,7 @@ class theme_config {
      * that someone added blocks using a different theme that used different region
      * names, and then switched to this theme.)
      */
-    public $layouts = array();
+    public $layouts = [];
 
     /**
      * @var string Name of the renderer factory class to use. Must implement the
@@ -267,7 +268,7 @@ class theme_config {
      */
     public $requiredblocks = false;
 
-    //==Following properties are not configurable from theme config.php==
+    // ==Following properties are not configurable from theme config.php==
 
     /**
      * @var string The name of this theme. Set automatically when this theme is
@@ -303,7 +304,7 @@ class theme_config {
      * @var array list of YUI CSS modules to be included on each page. This may be used
      * to remove cssreset and use cssnormalise module instead.
      */
-    public $yuicssmodules = array('cssreset', 'cssfonts', 'cssgrids', 'cssbase');
+    public $yuicssmodules = ['cssreset', 'cssfonts', 'cssgrids', 'cssbase'];
 
     /**
      * An associative array of block manipulations that should be made if the user is using an rtl language.
@@ -311,7 +312,7 @@ class theme_config {
      * This is used when displaying blocks for regions only.
      * @var array
      */
-    public $blockrtlmanipulations = array();
+    public $blockrtlmanipulations = [];
 
     /**
      * @var renderer_factory Instance of the renderer_factory implementation
@@ -322,7 +323,7 @@ class theme_config {
     /**
      * @var array List of parent config objects.
      **/
-    protected $parent_configs = array();
+    protected $parent_configs = [];
 
     /**
      * Used to determine whether we can serve SVG images or not.
@@ -436,7 +437,7 @@ class theme_config {
 
         // load theme settings from db
         try {
-            $settings = get_config('theme_'.$themename);
+            $settings = get_config('theme_' . $themename);
         } catch (dml_exception $e) {
             // most probably moodle tables not created yet
             $settings = new stdClass();
@@ -444,15 +445,12 @@ class theme_config {
 
         if ($config = self::find_theme_config($themename, $settings)) {
             return new self($config);
-
         } else if ($themename == self::DEFAULT_THEME) {
-            throw new coding_exception('Default theme '.self::DEFAULT_THEME.' not available or broken!');
-
+            throw new coding_exception('Default theme ' . self::DEFAULT_THEME . ' not available or broken!');
         } else if ($config = self::find_theme_config($CFG->theme, $settings)) {
             debugging('This page should be using theme ' . $themename .
                     ' which cannot be initialised. Falling back to the site theme ' . $CFG->theme, DEBUG_NORMAL);
             return new self($config);
-
         } else {
             // bad luck, the requested theme has some problems - admin see details in theme config
             debugging('This page should be using theme ' . $themename .
@@ -473,8 +471,8 @@ class theme_config {
      * @return array description of problems
      */
     public static function diagnose($themename) {
-        //TODO: MDL-21108
-        return array();
+        // TODO: MDL-21108
+        return [];
     }
 
     /**
@@ -482,7 +480,7 @@ class theme_config {
      * @param stdClass $config
      */
     private function __construct($config) {
-        global $CFG; //needed for included lib.php files
+        global $CFG; // needed for included lib.php files
 
         $this->settings = $config->settings;
         $this->name     = $config->name;
@@ -506,7 +504,7 @@ class theme_config {
             'removedprimarynavitems',
         ];
 
-        foreach ($config as $key=>$value) {
+        foreach ($config as $key => $value) {
             if (in_array($key, $configurable)) {
                 $this->$key = $value;
             }
@@ -518,37 +516,37 @@ class theme_config {
                 // this is not good - better exclude faulty parents
                 continue;
             }
-            $libfile = $parent_config->dir.'/lib.php';
+            $libfile = $parent_config->dir . '/lib.php';
             if (is_readable($libfile)) {
                 // theme may store various function here
                 include_once($libfile);
             }
-            $renderersfile = $parent_config->dir.'/renderers.php';
+            $renderersfile = $parent_config->dir . '/renderers.php';
             if (is_readable($renderersfile)) {
                 // may contain core and plugin renderers and renderer factory
                 include_once($renderersfile);
             }
             $this->parent_configs[$parent] = $parent_config;
         }
-        $libfile = $this->dir.'/lib.php';
+        $libfile = $this->dir . '/lib.php';
         if (is_readable($libfile)) {
             // theme may store various function here
             include_once($libfile);
         }
-        $rendererfile = $this->dir.'/renderers.php';
+        $rendererfile = $this->dir . '/renderers.php';
         if (is_readable($rendererfile)) {
             // may contain core and plugin renderers and renderer factory
             include_once($rendererfile);
         } else {
             // check if renderers.php file is missnamed renderer.php
-            if (is_readable($this->dir.'/renderer.php')) {
-                debugging('Developer hint: '.$this->dir.'/renderer.php should be renamed to ' . $this->dir."/renderers.php.
+            if (is_readable($this->dir . '/renderer.php')) {
+                debugging('Developer hint: ' . $this->dir . '/renderer.php should be renamed to ' . $this->dir . "/renderers.php.
                     See: http://docs.moodle.org/dev/Output_renderers#Theme_renderers.", DEBUG_DEVELOPER);
             }
         }
 
         // cascade all layouts properly
-        foreach ($baseconfig->layouts as $layout=>$value) {
+        foreach ($baseconfig->layouts as $layout => $value) {
             if (!isset($this->layouts[$layout])) {
                 foreach ($this->parent_configs as $parent_config) {
                     if (isset($parent_config->layouts[$layout])) {
@@ -560,7 +558,7 @@ class theme_config {
             }
         }
 
-        //fix arrows if needed
+        // fix arrows if needed
         $this->check_theme_arrows();
     }
 
@@ -572,7 +570,7 @@ class theme_config {
      * @param moodle_page $page
      */
     public function init_page(moodle_page $page) {
-        $themeinitfunction = 'theme_'.$this->name.'_page_init';
+        $themeinitfunction = 'theme_' . $this->name . '_page_init';
         if (function_exists($themeinitfunction)) {
             $themeinitfunction($page);
         }
@@ -599,24 +597,28 @@ class theme_config {
             } else {
                 $uagent = $_SERVER['HTTP_USER_AGENT'];
             }
-            if (false !== strpos($uagent, 'Opera')
-                || false !== strpos($uagent, 'Mac')) {
+            if (
+                false !== strpos($uagent, 'Opera')
+                || false !== strpos($uagent, 'Mac')
+            ) {
                 // Looks good in Win XP/Mac/Opera 8/9, Mac/Firefox 2, Camino, Safari.
                 // Not broken in Mac/IE 5, Mac/Netscape 7 (?).
                 $this->rarrow = '&#x25B6;&#xFE0E;';
                 $this->larrow = '&#x25C0;&#xFE0E;';
-            }
-            elseif ((false !== strpos($uagent, 'Konqueror'))
-                || (false !== strpos($uagent, 'Android')))  {
+            } else if (
+                (false !== strpos($uagent, 'Konqueror'))
+                || (false !== strpos($uagent, 'Android'))
+            ) {
                 // The fonts on Android don't include the characters required for this to work as expected.
                 // So we use the same ones Konqueror uses.
                 $this->rarrow = '&rarr;';
                 $this->larrow = '&larr;';
                 $this->uarrow = '&uarr;';
                 $this->darrow = '&darr;';
-            }
-            elseif (isset($_SERVER['HTTP_ACCEPT_CHARSET'])
-                && false === stripos($_SERVER['HTTP_ACCEPT_CHARSET'], 'utf-8')) {
+            } else if (
+                isset($_SERVER['HTTP_ACCEPT_CHARSET'])
+                && false === stripos($_SERVER['HTTP_ACCEPT_CHARSET'], 'utf-8')
+            ) {
                 // (Win/IE 5 doesn't set ACCEPT_CHARSET, but handles Unicode.)
                 // To be safe, non-Unicode browsers!
                 $this->rarrow = '&gt;';
@@ -643,10 +645,10 @@ class theme_config {
     public function renderer_prefixes() {
         global $CFG; // just in case the included files need it
 
-        $prefixes = array('theme_'.$this->name);
+        $prefixes = ['theme_' . $this->name];
 
         foreach ($this->parent_configs as $parent) {
-            $prefixes[] = 'theme_'.$parent->name;
+            $prefixes[] = 'theme_' . $parent->name;
         }
 
         return $prefixes;
@@ -658,7 +660,7 @@ class theme_config {
      * @param bool $encoded false means use & and true use &amp; in URLs
      * @return moodle_url
      */
-    public function editor_css_url($encoded=true) {
+    public function editor_css_url($encoded = true) {
         global $CFG;
         $rev = theme_get_revision();
         $type = 'editor';
@@ -700,14 +702,14 @@ class theme_config {
      * @return array
      */
     public function editor_css_files() {
-        $files = array();
+        $files = [];
 
         // First editor plugins.
         $plugins = core_component::get_plugin_list('editor');
         foreach ($plugins as $plugin => $fulldir) {
             $sheetfile = "$fulldir/editor_styles.css";
             if (is_readable($sheetfile)) {
-                $files['plugin_'.$plugin] = $sheetfile;
+                $files['plugin_' . $plugin] = $sheetfile;
             }
 
             $subplugintypes = core_component::get_subplugins("editor_{$plugin}") ?? [];
@@ -731,7 +733,7 @@ class theme_config {
             foreach ($parent_config->editor_sheets as $sheet) {
                 $sheetfile = "$parent_config->dir/style/$sheet.css";
                 if (is_readable($sheetfile)) {
-                    $files['parent_'.$parent_config->name.'_'.$sheet] = $sheetfile;
+                    $files['parent_' . $parent_config->name . '_' . $sheet] = $sheetfile;
                 }
             }
         }
@@ -740,7 +742,7 @@ class theme_config {
             foreach ($this->editor_sheets as $sheet) {
                 $sheetfile = "$this->dir/style/$sheet.css";
                 if (is_readable($sheetfile)) {
-                    $files['theme_'.$sheet] = $sheetfile;
+                    $files['theme_' . $sheet] = $sheetfile;
                 }
             }
         }
@@ -803,7 +805,7 @@ class theme_config {
 
         $rev = theme_get_revision();
 
-        $urls = array();
+        $urls = [];
 
         $svg = $this->use_svg_icons();
         $separate = (core_useragent::is_ie() && !core_useragent::check_ie_version('10'));
@@ -824,15 +826,15 @@ class theme_config {
                 if (!$svg) {
                     // We add a simple /_s to the start of the path.
                     // The underscore is used to ensure that it isn't a valid theme name.
-                    $slashargs .= '/_s'.$slashargs;
+                    $slashargs .= '/_s' . $slashargs;
                 }
-                $slashargs .= '/'.$this->name.'/'.$rev.'/'.$filename;
+                $slashargs .= '/' . $this->name . '/' . $rev . '/' . $filename;
                 if ($separate) {
                     $slashargs .= '/chunk0';
                 }
                 $url->set_slashargument($slashargs, 'noparam', true);
             } else {
-                $params = array('theme' => $this->name, 'rev' => $rev, 'type' => $filename);
+                $params = ['theme' => $this->name, 'rev' => $rev, 'type' => $filename];
                 if (!$svg) {
                     // We add an SVG param so that we know not to serve SVG images.
                     // We do this because all modern browsers support SVG and this param will one day be removed.
@@ -844,7 +846,6 @@ class theme_config {
                 $url->params($params);
             }
             $urls[] = $url;
-
         } else {
             $baseurl = new moodle_url('/theme/styles_debug.php');
 
@@ -863,33 +864,32 @@ class theme_config {
             }
             if (core_useragent::is_ie()) {
                 // Lalala, IE does not allow more than 31 linked CSS files from main document.
-                $urls[] = new moodle_url($baseurl, array('theme'=>$this->name, 'type'=>'ie', 'subtype'=>'plugins'));
-                foreach ($css['parents'] as $parent=>$sheets) {
+                $urls[] = new moodle_url($baseurl, ['theme' => $this->name, 'type' => 'ie', 'subtype' => 'plugins']);
+                foreach ($css['parents'] as $parent => $sheets) {
                     // We need to serve parents individually otherwise we may easily exceed the style limit IE imposes (4096).
-                    $urls[] = new moodle_url($baseurl, array('theme'=>$this->name,'type'=>'ie', 'subtype'=>'parents', 'sheet'=>$parent));
+                    $urls[] = new moodle_url($baseurl, ['theme' => $this->name, 'type' => 'ie', 'subtype' => 'parents', 'sheet' => $parent]);
                 }
                 if ($this->get_scss_property()) {
                     // No need to define the type as IE here.
-                    $urls[] = new moodle_url($baseurl, array('theme' => $this->name, 'type' => 'scss'));
+                    $urls[] = new moodle_url($baseurl, ['theme' => $this->name, 'type' => 'scss']);
                 }
-                $urls[] = new moodle_url($baseurl, array('theme'=>$this->name, 'type'=>'ie', 'subtype'=>'theme'));
-
+                $urls[] = new moodle_url($baseurl, ['theme' => $this->name, 'type' => 'ie', 'subtype' => 'theme']);
             } else {
-                foreach ($css['plugins'] as $plugin=>$unused) {
-                    $urls[] = new moodle_url($baseurl, array('theme'=>$this->name,'type'=>'plugin', 'subtype'=>$plugin));
+                foreach ($css['plugins'] as $plugin => $unused) {
+                    $urls[] = new moodle_url($baseurl, ['theme' => $this->name, 'type' => 'plugin', 'subtype' => $plugin]);
                 }
-                foreach ($css['parents'] as $parent=>$sheets) {
-                    foreach ($sheets as $sheet=>$unused2) {
-                        $urls[] = new moodle_url($baseurl, array('theme'=>$this->name,'type'=>'parent', 'subtype'=>$parent, 'sheet'=>$sheet));
+                foreach ($css['parents'] as $parent => $sheets) {
+                    foreach ($sheets as $sheet => $unused2) {
+                        $urls[] = new moodle_url($baseurl, ['theme' => $this->name, 'type' => 'parent', 'subtype' => $parent, 'sheet' => $sheet]);
                     }
                 }
                 foreach ($css['theme'] as $sheet => $filename) {
                     if ($sheet === self::SCSS_KEY) {
                         // This is the theme SCSS file.
-                        $urls[] = new moodle_url($baseurl, array('theme' => $this->name, 'type' => 'scss'));
+                        $urls[] = new moodle_url($baseurl, ['theme' => $this->name, 'type' => 'scss']);
                     } else {
                         // Sheet first in order to make long urls easier to read.
-                        $urls[] = new moodle_url($baseurl, array('sheet'=>$sheet, 'theme'=>$this->name, 'type'=>'theme'));
+                        $urls[] = new moodle_url($baseurl, ['sheet' => $sheet, 'theme' => $this->name, 'type' => 'theme']);
                     }
                 }
             }
@@ -1010,14 +1010,13 @@ class theme_config {
             return '';
         }
 
-        $cssfiles = array();
+        $cssfiles = [];
         $css = $this->get_css_files(true);
 
         if ($type === 'ie') {
             // IE is a sloppy browser with weird limits, sorry.
             if ($subtype === 'plugins') {
                 $cssfiles = $css['plugins'];
-
             } else if ($subtype === 'parents') {
                 if (empty($sheet)) {
                     // Do not bother with the empty parent here.
@@ -1037,17 +1036,14 @@ class theme_config {
                     }
                 }
             }
-
         } else if ($type === 'plugin') {
             if (isset($css['plugins'][$subtype])) {
                 $cssfiles[] = $css['plugins'][$subtype];
             }
-
         } else if ($type === 'parent') {
             if (isset($css['parents'][$subtype][$sheet])) {
                 $cssfiles[] = $css['parents'][$subtype][$sheet];
             }
-
         } else if ($type === 'theme') {
             if (isset($css['theme'][$sheet])) {
                 $cssfiles[] = $css['theme'][$sheet];
@@ -1060,7 +1056,7 @@ class theme_config {
             $contents = $this->post_process($contents);
             $comment = "/** Path: $type $subtype $sheet.' **/\n";
             $stats = '';
-            $csscontent .= $comment.$stats.$contents."\n\n";
+            $csscontent .= $comment . $stats . $contents . "\n\n";
         }
 
         return $csscontent;
@@ -1079,7 +1075,7 @@ class theme_config {
 
         // If editor has static CSS, include it.
         foreach ($cssfiles as $file) {
-            $css .= file_get_contents($file)."\n";
+            $css .= file_get_contents($file) . "\n";
         }
 
         // If editor has SCSS, compile and include it.
@@ -1104,10 +1100,10 @@ class theme_config {
         $cache = null;
         $cachekey = 'cssfiles';
         if ($themedesigner) {
-            require_once($CFG->dirroot.'/lib/csslib.php');
+            require_once($CFG->dirroot . '/lib/csslib.php');
             // We need some kind of caching here because otherwise the page navigation becomes
             // way too slow in theme designer mode. Feel free to create full cache definition later...
-            $cache = cache::make_from_params(cache_store::MODE_APPLICATION, 'core', 'themedesigner', array('theme' => $this->name));
+            $cache = cache::make_from_params(cache_store::MODE_APPLICATION, 'core', 'themedesigner', ['theme' => $this->name]);
             if ($files = $cache->get($cachekey)) {
                 if ($files['created'] > time() - THEME_DESIGNER_CACHE_LIFETIME) {
                     unset($files['created']);
@@ -1116,30 +1112,32 @@ class theme_config {
             }
         }
 
-        $cssfiles = array('plugins'=>array(), 'parents'=>array(), 'theme'=>array());
+        $cssfiles = ['plugins' => [], 'parents' => [], 'theme' => []];
 
         // Get all plugin sheets.
         $excludes = $this->resolve_excludes('plugins_exclude_sheets');
         if ($excludes !== true) {
-            foreach (core_component::get_plugin_types() as $type=>$unused) {
+            foreach (core_component::get_plugin_types() as $type => $unused) {
                 if ($type === 'theme' || (!empty($excludes[$type]) and $excludes[$type] === true)) {
                     continue;
                 }
                 $plugins = core_component::get_plugin_list($type);
-                foreach ($plugins as $plugin=>$fulldir) {
-                    if (!empty($excludes[$type]) and is_array($excludes[$type])
-                            and in_array($plugin, $excludes[$type])) {
+                foreach ($plugins as $plugin => $fulldir) {
+                    if (
+                        !empty($excludes[$type]) and is_array($excludes[$type])
+                            and in_array($plugin, $excludes[$type])
+                    ) {
                         continue;
                     }
 
                     // Get the CSS from the plugin.
                     $sheetfile = "$fulldir/styles.css";
                     if (is_readable($sheetfile)) {
-                        $cssfiles['plugins'][$type.'_'.$plugin] = $sheetfile;
+                        $cssfiles['plugins'][$type . '_' . $plugin] = $sheetfile;
                     }
 
                     // Create a list of candidate sheets from parents (direct parent last) and current theme.
-                    $candidates = array();
+                    $candidates = [];
                     foreach (array_reverse($this->parent_configs) as $parent_config) {
                         $candidates[] = $parent_config->name;
                     }
@@ -1149,7 +1147,7 @@ class theme_config {
                     foreach ($candidates as $candidate) {
                         $sheetthemefile = "$fulldir/styles_{$candidate}.css";
                         if (is_readable($sheetthemefile)) {
-                            $cssfiles['plugins'][$type.'_'.$plugin.'_'.$candidate] = $sheetthemefile;
+                            $cssfiles['plugins'][$type . '_' . $plugin . '_' . $candidate] = $sheetthemefile;
                         }
                     }
                 }
@@ -1165,8 +1163,10 @@ class theme_config {
                     continue;
                 }
                 foreach ($parent_config->sheets as $sheet) {
-                    if (!empty($excludes[$parent]) && is_array($excludes[$parent])
-                            && in_array($sheet, $excludes[$parent])) {
+                    if (
+                        !empty($excludes[$parent]) && is_array($excludes[$parent])
+                            && in_array($sheet, $excludes[$parent])
+                    ) {
                         continue;
                     }
 
@@ -1212,7 +1212,7 @@ class theme_config {
     protected function get_css_content_from_scss($themedesigner) {
         global $CFG;
 
-        list($paths, $scss) = $this->get_scss_property();
+        [$paths, $scss] = $this->get_scss_property();
         if (!$scss) {
             throw new coding_exception('The theme did not define a SCSS file, or it is not readable.');
         }
@@ -1227,11 +1227,11 @@ class theme_config {
         $cachedir = make_localcache_directory('scsscache-' . $this->name, false);
         $cacheoptions = [];
         if ($themedesigner) {
-            $cacheoptions = array(
+            $cacheoptions = [
                   'cacheDir' => $cachedir,
                   'prefix' => 'scssphp_',
                   'forceRefresh' => false,
-            );
+            ];
         } else {
             if (file_exists($cachedir)) {
                 remove_dir($cachedir);
@@ -1245,7 +1245,7 @@ class theme_config {
             // Enable source maps.
             $compiler->setSourceMapOptions([
                 'sourceMapBasepath' => str_replace('\\', '/', $CFG->dirroot),
-                'sourceMapRootpath' => $CFG->wwwroot . '/'
+                'sourceMapRootpath' => $CFG->wwwroot . '/',
             ]);
             $compiler->setSourceMap($compiler::SOURCE_MAP_INLINE);
         }
@@ -1262,7 +1262,6 @@ class theme_config {
         try {
             // Compile!
             $compiled = $compiler->to_css();
-
         } catch (\Exception $e) {
             $compiled = false;
             debugging('Error while compiling SCSS: ' . $e->getMessage(), DEBUG_DEVELOPER);
@@ -1328,7 +1327,7 @@ class theme_config {
         $content = '';
 
         // Getting all the candidate functions.
-        $candidates = array();
+        $candidates = [];
         foreach (array_reverse($this->parent_configs) as $parent_config) {
             if (!isset($parent_config->extrascsscallback)) {
                 continue;
@@ -1361,7 +1360,7 @@ class theme_config {
         $content = '';
 
         // Getting all the candidate functions.
-        $candidates = array();
+        $candidates = [];
         foreach (array_reverse($this->parent_configs) as $parent_config) {
             if (!isset($parent_config->prescsscallback)) {
                 continue;
@@ -1415,7 +1414,6 @@ class theme_config {
                 if ($scss && is_dir($path)) {
                     $paths[] = $path;
                 }
-
             }
 
             $this->scsscache = $scss !== null ? [$paths, $scss] : false;
@@ -1437,7 +1435,7 @@ class theme_config {
         global $CFG;
 
         $rev = theme_get_revision();
-        $params = array('theme'=>$this->name,'rev'=>$rev);
+        $params = ['theme' => $this->name, 'rev' => $rev];
         $params['type'] = $inhead ? 'head' : 'footer';
 
         // Return early if there are no files to serve
@@ -1447,7 +1445,7 @@ class theme_config {
 
         if (!empty($CFG->slasharguments) and $rev > 0) {
             $url = new moodle_url("/theme/javascript.php");
-            $url->set_slashargument('/'.$this->name.'/'.$rev.'/'.$params['type'], 'noparam', true);
+            $url->set_slashargument('/' . $this->name . '/' . $rev . '/' . $params['type'], 'noparam', true);
             return $url;
         } else {
             return new moodle_url('/theme/javascript.php', $params);
@@ -1469,7 +1467,7 @@ class theme_config {
             $type = 'javascripts';
         }
 
-        $js = array();
+        $js = [];
         // find out wanted parent javascripts
         $excludes = $this->resolve_excludes('parents_exclude_javascripts');
         if ($excludes !== true) {
@@ -1482,8 +1480,10 @@ class theme_config {
                     continue;
                 }
                 foreach ($parent_config->$type as $javascript) {
-                    if (!empty($excludes[$parent]) and is_array($excludes[$parent])
-                        and in_array($javascript, $excludes[$parent])) {
+                    if (
+                        !empty($excludes[$parent]) and is_array($excludes[$parent])
+                        and in_array($javascript, $excludes[$parent])
+                    ) {
                         continue;
                     }
                     $javascriptfile = "$parent_config->dir/javascript/$javascript.js";
@@ -1542,7 +1542,7 @@ class theme_config {
         $jsfiles = $this->javascript_files($type);
         $js = '';
         foreach ($jsfiles as $jsfile) {
-            $js .= file_get_contents($jsfile)."\n";
+            $js .= file_get_contents($jsfile) . "\n";
         }
         return $js;
     }
@@ -1561,7 +1561,7 @@ class theme_config {
     public function post_process($css) {
         // now resolve all image locations
         if (preg_match_all('/\[\[pix:([a-z0-9_]+\|)?([^\]]+)\]\]/', $css, $matches, PREG_SET_ORDER)) {
-            $replaced = array();
+            $replaced = [];
             foreach ($matches as $match) {
                 if (isset($replaced[$match[0]])) {
                     continue;
@@ -1578,7 +1578,7 @@ class theme_config {
 
         // Now resolve all font locations.
         if (preg_match_all('/\[\[font:([a-z0-9_]+\|)?([^\]]+)\]\]/', $css, $matches, PREG_SET_ORDER)) {
-            $replaced = array();
+            $replaced = [];
             foreach ($matches as $match) {
                 if (isset($replaced[$match[0]])) {
                     continue;
@@ -1604,7 +1604,6 @@ class theme_config {
         $treeprocessor = $this->get_css_tree_post_processor();
         $needsparsing = !empty($treeprocessor) || !empty($this->rtlmode);
         if ($needsparsing) {
-
             // We might need more memory/time to do this, so let's play safe.
             raise_memory_limit(MEMORY_EXTRA);
             core_php_time_limit::raise(300);
@@ -1666,7 +1665,7 @@ class theme_config {
     public function image_url($imagename, $component) {
         global $CFG;
 
-        $params = array('theme'=>$this->name);
+        $params = ['theme' => $this->name];
         $svg = $this->use_svg_icons();
 
         if (empty($component) or $component === 'moodle' or $component === 'core') {
@@ -1684,11 +1683,11 @@ class theme_config {
 
         $url = new moodle_url("/theme/image.php");
         if (!empty($CFG->slasharguments) and $rev > 0) {
-            $path = '/'.$params['theme'].'/'.$params['component'].'/'.$params['rev'].'/'.$params['image'];
+            $path = '/' . $params['theme'] . '/' . $params['component'] . '/' . $params['rev'] . '/' . $params['image'];
             if (!$svg) {
                 // We add a simple /_s to the start of the path.
                 // The underscore is used to ensure that it isn't a valid theme name.
-                $path = '/_s'.$path;
+                $path = '/_s' . $path;
             }
             $url->set_slashargument($path, 'noparam', true);
         } else {
@@ -1713,7 +1712,7 @@ class theme_config {
     public function font_url($font, $component) {
         global $CFG;
 
-        $params = array('theme'=>$this->name);
+        $params = ['theme' => $this->name];
 
         if (empty($component) or $component === 'moodle' or $component === 'core') {
             $params['component'] = 'core';
@@ -1730,7 +1729,7 @@ class theme_config {
 
         $url = new moodle_url("/theme/font.php");
         if (!empty($CFG->slasharguments) and $rev > 0) {
-            $path = '/'.$params['theme'].'/'.$params['component'].'/'.$params['rev'].'/'.$params['font'];
+            $path = '/' . $params['theme'] . '/' . $params['component'] . '/' . $params['rev'] . '/' . $params['font'];
             $url->set_slashargument($path, 'noparam', true);
         } else {
             $url->params($params);
@@ -1756,12 +1755,12 @@ class theme_config {
             return null;
         }
 
-        $component = 'theme_'.$this->name;
+        $component = 'theme_' . $this->name;
         $itemid = theme_get_revision();
         $filepath = $this->settings->$setting;
         $syscontext = context_system::instance();
 
-        $url = moodle_url::make_file_url("$CFG->wwwroot/pluginfile.php", "/$syscontext->id/$component/$filearea/$itemid".$filepath);
+        $url = moodle_url::make_file_url("$CFG->wwwroot/pluginfile.php", "/$syscontext->id/$component/$filearea/$itemid" . $filepath);
 
         // Now this is tricky because the we can not hardcode http or https here, lets use the relative link.
         // Note: unfortunately moodle_url does not support //urls yet.
@@ -1785,13 +1784,13 @@ class theme_config {
         require_once("$CFG->libdir/filelib.php");
 
         $syscontext = context_system::instance();
-        $component = 'theme_'.$this->name;
+        $component = 'theme_' . $this->name;
 
         $revision = array_shift($args);
         if ($revision < 0) {
             $lifetime = 0;
         } else {
-            $lifetime = 60*60*24*60;
+            $lifetime = 60 * 60 * 24 * 60;
             // By default, theme files must be cache-able by both browsers and proxies.
             if (!array_key_exists('cacheability', $options)) {
                 $options['cacheability'] = 'public';
@@ -1851,8 +1850,7 @@ class theme_config {
                 return $imagefile;
             }
             return null;
-
-        } else if ($component === 'theme') { //exception
+        } else if ($component === 'theme') { // exception
             if ($image === 'favicon') {
                 return "$this->dir/pix/favicon.ico";
             }
@@ -1865,12 +1863,11 @@ class theme_config {
                 }
             }
             return null;
-
         } else {
             if (strpos($component, '_') === false) {
                 $component = "mod_{$component}";
             }
-            list($type, $plugin) = explode('_', $component, 2);
+            [$type, $plugin] = explode('_', $component, 2);
 
             // In Moodle 4.0 we introduced a new image format.
             // Support that image format here.
@@ -1938,7 +1935,6 @@ class theme_config {
                 return "$CFG->dirroot/lib/fonts/$font";
             }
             return null;
-
         } else if ($component === 'theme') { // Exception.
             if (file_exists("$this->dir/fonts/$font")) {
                 return "$this->dir/fonts/$font";
@@ -1949,12 +1945,11 @@ class theme_config {
                 }
             }
             return null;
-
         } else {
             if (strpos($component, '_') === false) {
-                $component = 'mod_'.$component;
+                $component = 'mod_' . $component;
             }
-            list($type, $plugin) = explode('_', $component, 2);
+            [$type, $plugin] = explode('_', $component, 2);
 
             if (file_exists("$this->dir/fonts_plugins/$type/$plugin/$font")) {
                 return "$this->dir/fonts_plugins/$type/$plugin/$font";
@@ -2053,13 +2048,13 @@ class theme_config {
     private static function image_exists($filepath, $svg = false) {
         if ($svg && file_exists("$filepath.svg")) {
             return "$filepath.svg";
-        } else  if (file_exists("$filepath.png")) {
+        } else if (file_exists("$filepath.png")) {
             return "$filepath.png";
         } else if (file_exists("$filepath.gif")) {
             return "$filepath.gif";
-        } else  if (file_exists("$filepath.jpg")) {
+        } else if (file_exists("$filepath.jpg")) {
             return "$filepath.jpg";
-        } else  if (file_exists("$filepath.jpeg")) {
+        } else if (file_exists("$filepath.jpeg")) {
             return "$filepath.jpeg";
         } else {
             return false;
@@ -2122,16 +2117,14 @@ class theme_config {
 
         if (file_exists("$CFG->dirroot/theme/$themename/config.php")) {
             $dir = "$CFG->dirroot/theme/$themename";
-
         } else if (!empty($CFG->themedir) and file_exists("$CFG->themedir/$themename/config.php")) {
             $dir = "$CFG->themedir/$themename";
-
         } else {
             return null;
         }
 
         if (file_exists("$dir/styles.php")) {
-            //legacy theme - needs to be upgraded - upgrade info is displayed on the admin settings page
+            // legacy theme - needs to be upgraded - upgrade info is displayed on the admin settings page
             return null;
         }
 
@@ -2187,9 +2180,9 @@ class theme_config {
         $layoutfile = $layoutinfo['file'];
 
         if (array_key_exists('theme', $layoutinfo)) {
-            $themes = array($layoutinfo['theme']);
+            $themes = [$layoutinfo['theme']];
         } else {
-            $themes = array_merge(array($this->name),$this->parents);
+            $themes = array_merge([$this->name], $this->parents);
         }
 
         foreach ($themes as $theme) {
@@ -2217,7 +2210,7 @@ class theme_config {
         if (!empty($info['options'])) {
             return $info['options'];
         }
-        return array();
+        return [];
     }
 
     /**
@@ -2268,7 +2261,7 @@ class theme_config {
      * @return array internal region name => human readable name.
      */
     public function get_all_block_regions() {
-        $regions = array();
+        $regions = [];
         foreach ($this->layouts as $layoutinfo) {
             foreach ($layoutinfo['regions'] as $region) {
                 $regions[$region] = $this->get_region_name($region, $this->name);
@@ -2283,7 +2276,7 @@ class theme_config {
      * @return string
      */
     public function get_theme_name() {
-        return get_string('pluginname', 'theme_'.$this->name);
+        return get_string('pluginname', 'theme_' . $this->name);
     }
 
     /**
@@ -2326,7 +2319,6 @@ class theme_config {
         }
         return null;
     }
-
 }
 // Alias this class to the old name.
 // This file will be autoloaded by the legacyclasses autoload system.

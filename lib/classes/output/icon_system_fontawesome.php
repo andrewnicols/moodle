@@ -30,7 +30,6 @@ namespace core\output;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class icon_system_fontawesome extends icon_system_font {
-
     /**
      * @var array $map Cached map of moodle icon names to font awesome icon names.
      */
@@ -459,7 +458,7 @@ class icon_system_fontawesome extends icon_system_font {
 
             // Create different mapping keys for different icon system classes, there may be several different
             // themes on the same site.
-            $mapkey = 'mapping_'.preg_replace('/[^a-zA-Z0-9_]/', '_', get_class($this));
+            $mapkey = 'mapping_' . preg_replace('/[^a-zA-Z0-9_]/', '_', get_class($this));
             $this->map = $cache->get($mapkey);
 
             if (empty($this->map)) {
@@ -476,7 +475,6 @@ class icon_system_fontawesome extends icon_system_font {
                 }
                 $cache->set($mapkey, $this->map);
             }
-
         }
         return $this->map;
     }
@@ -507,5 +505,4 @@ class icon_system_fontawesome extends icon_system_font {
 
         return $output->render_from_template('core/pix_icon_fontawesome', $data);
     }
-
 }

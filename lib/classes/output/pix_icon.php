@@ -26,7 +26,6 @@ namespace core\output;
  * @category output
  */
 class pix_icon implements renderable, templatable {
-
     /**
      * @var string The icon name
      */
@@ -40,7 +39,7 @@ class pix_icon implements renderable, templatable {
     /**
      * @var array An array of attributes to use on the icon
      */
-    var $attributes = array();
+    var $attributes = [];
 
     /**
      * Constructor
@@ -50,7 +49,12 @@ class pix_icon implements renderable, templatable {
      * @param string $component component name
      * @param array $attributes html attributes
      */
-    public function __construct($pix, $alt, $component='moodle', array $attributes = null) {
+    public function __construct(
+        $pix,
+        $alt,
+        $component = 'moodle',
+        ?array $attributes = null,
+    ) {
         global $PAGE;
 
         $this->pix = $pix;
@@ -109,18 +113,18 @@ class pix_icon implements renderable, templatable {
         }
 
         $attributes['src'] = $output->image_url($this->pix, $this->component)->out(false);
-        $templatecontext = array();
+        $templatecontext = [];
         foreach ($attributes as $name => $value) {
-            $templatecontext[] = array('name' => $name, 'value' => $value);
+            $templatecontext[] = ['name' => $name, 'value' => $value];
         }
         $title = isset($attributes['title']) ? $attributes['title'] : '';
         if (empty($title)) {
             $title = isset($attributes['alt']) ? $attributes['alt'] : '';
         }
-        $data = array(
+        $data = [
             'attributes' => $templatecontext,
-            'extraclasses' => $extraclasses
-        );
+            'extraclasses' => $extraclasses,
+        ];
 
         return $data;
     }
