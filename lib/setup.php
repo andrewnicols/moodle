@@ -598,26 +598,6 @@ if (defined('COMPONENT_CLASSLOADER')) {
     spl_autoload_register([\core_component::class, 'classloader']);
 }
 
-// Special support for highly optimised scripts that do not need libraries and DB connection.
-if (defined('ABORT_AFTER_CONFIG')) {
-    if (!defined('ABORT_AFTER_CONFIG_CANCEL')) {
-        // Hide debugging if not enabled in config.php - we do not want to disclose sensitive info.
-        error_reporting($CFG->debug);
-        if (NO_DEBUG_DISPLAY) {
-            // Some parts of Moodle cannot display errors and debug at all.
-            ini_set('display_errors', '0');
-            ini_set('log_errors', '1');
-        } else if (empty($CFG->debugdisplay)) {
-            ini_set('display_errors', '0');
-            ini_set('log_errors', '1');
-        } else {
-            ini_set('display_errors', '1');
-        }
-        require_once("$CFG->dirroot/lib/configonlylib.php");
-        return;
-    }
-}
-
 require_once($CFG->libdir .'/setuplib.php');        // Functions that MUST be loaded first.
 
 // Load up standard libraries.
@@ -640,6 +620,26 @@ require_once($CFG->libdir .'/editorlib.php');       // All text editor related f
 require_once($CFG->libdir .'/messagelib.php');      // Messagelib functions.
 require_once($CFG->libdir .'/modinfolib.php');      // Cached information on course-module instances.
 require_once($CFG->dirroot.'/cache/lib.php');       // Cache API.
+
+// Special support for highly optimised scripts that do not need libraries and DB connection.
+if (defined('ABORT_AFTER_CONFIG')) {
+    if (!defined('ABORT_AFTER_CONFIG_CANCEL')) {
+        // Hide debugging if not enabled in config.php - we do not want to disclose sensitive info.
+        error_reporting($CFG->debug);
+        if (NO_DEBUG_DISPLAY) {
+            // Some parts of Moodle cannot display errors and debug at all.
+            ini_set('display_errors', '0');
+            ini_set('log_errors', '1');
+        } else if (empty($CFG->debugdisplay)) {
+            ini_set('display_errors', '0');
+            ini_set('log_errors', '1');
+        } else {
+            ini_set('display_errors', '1');
+        }
+        require_once("$CFG->dirroot/lib/configonlylib.php");
+        return;
+    }
+}
 
 // Increase memory limits if possible.
 raise_memory_limit(MEMORY_STANDARD);
