@@ -27,11 +27,10 @@ namespace core\output;
  * @copyright 2009 David Mudrak <david.mudrak@gmail.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.0
- * @package core
+ * @package core_table
  * @category output
  */
 class html_table {
-
     /**
      * @var string Value to use for the id attribute of the table
      */
@@ -40,7 +39,7 @@ class html_table {
     /**
      * @var array Attributes of HTML attributes for the <table> element
      */
-    public $attributes = array();
+    public $attributes = [];
 
     /**
      * @var array An array of headings. The n-th array item is used as a heading of the n-th column.
@@ -122,20 +121,20 @@ class html_table {
     public $data = [];
 
     /**
-     * @deprecated since Moodle 2.0. Styling should be in the CSS.
      * @var string Width of the table, percentage of the page preferred.
+     * @deprecated since Moodle 2.0. Styling should be in the CSS.
      */
     public $width = null;
 
     /**
-     * @deprecated since Moodle 2.0. Styling should be in the CSS.
      * @var string Alignment for the whole table. Can be 'right', 'left' or 'center' (default).
+     * @deprecated since Moodle 2.0. Styling should be in the CSS.
      */
     public $tablealign = null;
 
     /**
-     * @deprecated since Moodle 2.0. Styling should be in the CSS.
      * @var int Padding on each cell, in pixels
+     * @deprecated since Moodle 2.0. Styling should be in the CSS.
      */
     public $cellpadding = null;
 
