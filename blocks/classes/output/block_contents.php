@@ -126,10 +126,11 @@ class block_contents {
 
 
     /**
-     * Create new instance of block content
-     * @param array $attributes
+     * Create new instance of block content.
+     *
+     * @param null|array $attributes
      */
-    public function __construct(array $attributes = null) {
+    public function __construct(?array $attributes = null) {
         $this->skipid = self::$idcounter;
         self::$idcounter += 1;
 
