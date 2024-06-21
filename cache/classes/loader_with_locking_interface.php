@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_cache;
+
 /**
  * Cache Loader supporting locking.
  *
@@ -21,8 +23,9 @@
  * It outlines the required structure for utilising locking functionality when using a cache.
  *
  * Can be implemented by any class already implementing the cache_loader interface.
+ * @package core_cache
  */
-interface cache_loader_with_locking {
+interface loader_with_locking_interface {
     /**
      * Acquires a lock for the given key.
      *
@@ -67,3 +70,8 @@ interface cache_loader_with_locking {
      */
     public function release_lock($key);
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(loader_with_locking_interface::class, \cache_loader_with_locking::class);
