@@ -14,18 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_cache;
+
 /**
  * A cached object wrapper.
  *
  * This class gets used when the data is an object that has implemented the cacheable_object interface.
  *
- * @package    core
+ * @package    core_cache
  * @category   cache
  * @copyright  2012 Sam Hemelryk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class cache_cached_object {
-
+class cached_object {
     /**
      * The class of the cacheable object
      * @var string
@@ -40,9 +41,9 @@ class cache_cached_object {
 
     /**
      * Constructs a cached object wrapper.
-     * @param cacheable_object $obj
+     * @param cacheable_object_interface $obj
      */
-    public function __construct(cacheable_object $obj) {
+    public function __construct(cacheable_object_interface $obj) {
         $this->class = get_class($obj);
         $this->data = $obj->prepare_to_cache();
     }
@@ -56,3 +57,8 @@ class cache_cached_object {
         return $class::wake_from_cache($this->data);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(cached_object::class, \cache_cached_object::class);
