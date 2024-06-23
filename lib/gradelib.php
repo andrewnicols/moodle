@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core_grades\local\penalty\manager as penalty_manager;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
@@ -1666,4 +1668,25 @@ function grade_get_date_for_user_grade(\stdClass $grade, \stdClass $user): ?int 
     } else {
         return $grade->datesubmitted;
     }
+}
+
+/**
+ * Apply penalty to user.
+ *
+ * @param int $userid The user ID
+ * @param grade_item $gradeitem grade item
+ * @param int $submissiondate submission date
+ * @param int $duedate due date
+ * @param bool $previewonly do not update the grade if true, only return the penalty
+ * @return float deducted penalty percentage
+ */
+function apply_grade_penalty_to_user(int $userid, grade_item $gradeitem,
+                                     int $submissiondate, int $duedate, bool $previewonly = false): float {
+    try {
+        $deductedpercentage = penalty_manager::apply_penalty($userid, $gradeitem, $submissiondate, $duedate, $previewonly);
+    } catch (\core\exception\moodle_exception $e) {
+        debugging($e->getMessage(), DEBUG_DEVELOPER);
+        return 0;
+    }
+    return $deductedpercentage;
 }
