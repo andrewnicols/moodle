@@ -94,12 +94,6 @@ class single_button implements renderable {
     protected $type;
 
     /**
-     * @var bool True if button is primary button. Used for styling.
-     * @deprecated since Moodle 4.2
-     */
-    private $primary = false;
-
-    /**
      * @var bool True if button disabled, false if normal
      */
     public $disabled = false;
