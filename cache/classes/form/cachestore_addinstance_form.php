@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_cache\form;
+
+use core_cache\administration_helper;
+use moodleform;
+
 /**
  * Add store instance form.
  *
@@ -82,7 +87,7 @@ class cachestore_addinstance_form extends moodleform {
             if (!preg_match('#^[a-zA-Z0-9\-_ ]+$#', $data['name'])) {
                 $errors['name'] = get_string('storenameinvalid', 'cache');
             } else if (empty($this->_customdata['store'])) {
-                $stores = core_cache\administration_helper::get_store_instance_summaries();
+                $stores = administration_helper::get_store_instance_summaries();
                 if (array_key_exists($data['name'], $stores)) {
                     $errors['name'] = get_string('storenamealreadyused', 'cache');
                 }
@@ -102,3 +107,8 @@ class cachestore_addinstance_form extends moodleform {
         return $errors;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(cachestore_addinstance_form::class, \cachestore_addinstance_form::class);
