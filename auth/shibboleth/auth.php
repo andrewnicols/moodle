@@ -43,13 +43,6 @@ class auth_plugin_shibboleth extends auth_plugin_base {
         $this->config = get_config('auth_shibboleth');
     }
 
-    /**
-     * Old syntax of class constructor. Deprecated in PHP7.
-     *
-     * @deprecated since Moodle 3.1
-     */
-    public function auth_plugin_shibboleth() {
-        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
         self::__construct();
     }
 

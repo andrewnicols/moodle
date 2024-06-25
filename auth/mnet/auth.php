@@ -31,7 +31,6 @@ require_once($CFG->libdir.'/authlib.php');
  * Moodle Network authentication plugin.
  */
 class auth_plugin_mnet extends auth_plugin_base {
-
     /** @var mnet_environment mnet environment. */
     protected $mnet;
 
@@ -42,16 +41,6 @@ class auth_plugin_mnet extends auth_plugin_base {
         $this->authtype = 'mnet';
         $this->config = get_config('auth_mnet');
         $this->mnet = get_mnet_environment();
-    }
-
-    /**
-     * Old syntax of class constructor. Deprecated in PHP7.
-     *
-     * @deprecated since Moodle 3.1
-     */
-    public function auth_plugin_mnet() {
-        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
-        self::__construct();
     }
 
     /**

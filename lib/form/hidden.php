@@ -54,16 +54,6 @@ class MoodleQuickForm_hidden extends HTML_QuickForm_hidden{
     }
 
     /**
-     * Old syntax of class constructor. Deprecated in PHP7.
-     *
-     * @deprecated since Moodle 3.1
-     */
-    public function MoodleQuickForm_hidden($elementName=null, $value='', $attributes=null) {
-        debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
-        return self::__construct($elementName, $value, $attributes);
-    }
-
-    /**
      * @deprecated since Moodle 2.0
      */
     function setHelpButton($helpbuttonargs, $function='helpbutton'){
