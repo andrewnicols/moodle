@@ -21,6 +21,8 @@ notes:
 
         | `\action_menu` | `\core\output\action_menu` |
 
+        | `\core\output\local\action_menu\subpanel::class` | `\core\output\action_menu\subpanel::class` |
+
         | `\block_contents` | `\core_block\output\block_contents` |
 
         | `\block_move_target` | `\core_block\output\block_move_target` |
