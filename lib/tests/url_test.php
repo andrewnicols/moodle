@@ -629,4 +629,45 @@ final class url_test extends \advanced_testcase {
             ],
         ];
     }
+
+    /**
+     * @dataProvider remove_params_provider
+     */
+    public function test_remove_params($params, $remove, $expected): void {
+        $url = new url('/index.php', $params);
+        if ($remove !== null) {
+            $url->remove_params(...$remove);
+        }
+        $this->assertSame($expected, $url->params());
+    }
+
+    public static function remove_params_provider(): array {
+        return [
+            [
+                ['id' => 1, 'cid' => 2, 'sid' => 3],
+                null,
+                ['id' => '1', 'cid' => '2', 'sid' => '3'],
+            ],
+            [
+                ['id' => 1, 'cid' => 2, 'sid' => 3],
+                [],
+                ['id' => '1', 'cid' => '2', 'sid' => '3'],
+            ],
+            [
+                ['id' => 1, 'cid' => 2, 'sid' => 3],
+                ['other'],
+                ['id' => '1', 'cid' => '2', 'sid' => '3'],
+            ],
+            [
+                ['id' => 1, 'cid' => 2, 'sid' => 3],
+                ['id', 'sid'],
+                ['cid' => '2'],
+            ],
+            [
+                ['id' => 1, 'cid' => 2, 'sid' => 3],
+                [['id', 'sid']],
+                ['cid' => '2'],
+            ],
+        ];
+    }
 }

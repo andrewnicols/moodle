@@ -103,11 +103,15 @@ class url {
      *      query string because it may result in double encoded values. Use the
      *      $params instead. For admin URLs, just use /admin/script.php, this
      *      class takes care of the $CFG->admin issue.
-     * @param array $params these params override current params or add new
+     * @param null|array $params these params override current params or add new
      * @param string $anchor The anchor to use as part of the URL if there is one.
      * @throws moodle_exception
      */
-    public function __construct($url, array $params = null, $anchor = null) {
+    public function __construct(
+        $url,
+        ?array $params = null,
+        $anchor = null,
+    ) {
         global $CFG;
 
         if ($url instanceof self) {
@@ -175,11 +179,11 @@ class url {
      *
      * The added params override existing ones if they have the same name.
      *
-     * @param array $params Defaults to null. If null then returns all params.
+     * @param null|array $params Defaults to null. If null then returns all params.
      * @return array Array of Params for url.
      * @throws coding_exception
      */
-    public function params(array $params = null) {
+    public function params(?array $params = null) {
         $params = (array)$params;
 
         foreach ($params as $key => $value) {
@@ -206,13 +210,19 @@ class url {
      * Can be called as either remove_params('param1', 'param2')
      * or remove_params(array('param1', 'param2')).
      *
-     * @param string[]|string $params,... either an array of param names, or 1..n string params to remove as args.
+     * @param string[]|string ...$params either an array of param names, or 1..n string params to remove as args.
      * @return array url parameters
      */
-    public function remove_params($params = null, ...$remainingparams) {
-        if (!is_array($params)) {
-            $params = [$params, ...$remainingparams];
+    public function remove_params(...$params) {
+        if (empty($params)) {
+            return $this->params;
         }
+
+        $firstparam = reset($params);
+        if (is_array($firstparam)) {
+            $params = $firstparam;
+        }
+
         foreach ($params as $param) {
             unset($this->params[$param]);
         }
@@ -224,7 +234,7 @@ class url {
      *
      * @param array $unused Unused param
      */
-    public function remove_all_params($unsed = null) {
+    public function remove_all_params($unused = null) {
         $this->params = [];
         $this->slashargument = '';
     }
@@ -253,11 +263,11 @@ class url {
     /**
      * Merges parameters and validates them
      *
-     * @param array $overrideparams
+     * @param null|array $overrideparams
      * @return array merged parameters
      * @throws coding_exception
      */
-    protected function merge_overrideparams(array $overrideparams = null) {
+    protected function merge_overrideparams(?array $overrideparams = null) {
         $overrideparams = (array)$overrideparams;
         $params = $this->params;
         foreach ($overrideparams as $key => $value) {
@@ -281,11 +291,11 @@ class url {
      * This method should not be used outside of this method.
      *
      * @param bool $escaped Use &amp; as params separator instead of plain &
-     * @param array $overrideparams params to add to the output params, these
+     * @param null|array $overrideparams params to add to the output params, these
      *      override existing ones with the same name.
      * @return string query string that can be added to a url.
      */
-    public function get_query_string($escaped = true, array $overrideparams = null) {
+    public function get_query_string($escaped = true, ?array $overrideparams = null) {
         $arr = [];
         if ($overrideparams !== null) {
             $params = $this->merge_overrideparams($overrideparams);
@@ -349,10 +359,10 @@ class url {
      * the returned URL in HTTP headers, you want $escaped=false.
      *
      * @param bool $escaped Use &amp; as params separator instead of plain &
-     * @param array $overrideparams params to add to the output url, these override existing ones with the same name.
+     * @param null|array $overrideparams params to add to the output url, these override existing ones with the same name.
      * @return string Resulting URL
      */
-    public function out($escaped = true, array $overrideparams = null) {
+    public function out($escaped = true, ?array $overrideparams = null) {
 
         global $CFG;
 
@@ -380,10 +390,10 @@ class url {
      * This is identical in signature and use to out() but doesn't call the rewrite handler.
      *
      * @param bool $escaped Use &amp; as params separator instead of plain &
-     * @param array $overrideparams params to add to the output url, these override existing ones with the same name.
+     * @param null|array $overrideparams params to add to the output url, these override existing ones with the same name.
      * @return string Resulting URL
      */
-    public function raw_out($escaped = true, array $overrideparams = null) {
+    public function raw_out($escaped = true, ?array $overrideparams = null) {
         if (!is_bool($escaped)) {
             debugging('Escape parameter must be of type boolean, ' . gettype($escaped) . ' given instead.');
         }
@@ -459,7 +469,7 @@ class url {
     /**
      * Returns url without parameters, everything before '?'.
      *
-     * @param bool $includeanchor if {@link self::anchor} is defined, should it be returned?
+     * @param bool $includeanchor if {@see self::anchor} is defined, should it be returned?
      * @return string
      */
     public function out_omit_querystring($includeanchor = false) {
@@ -775,11 +785,11 @@ class url {
      * Can be used for passing around urls with the wwwroot stripped
      *
      * @param boolean $escaped Use &amp; as params separator instead of plain &
-     * @param array $overrideparams params to add to the output url, these override existing ones with the same name.
+     * @param ?array $overrideparams params to add to the output url, these override existing ones with the same name.
      * @return string Resulting URL
      * @throws coding_exception if called on a non-local url
      */
-    public function out_as_local_url($escaped = true, array $overrideparams = null) {
+    public function out_as_local_url($escaped = true, ?array $overrideparams = null) {
         global $CFG;
 
         // URL should be relative to wwwroot. If not then throw exception.
