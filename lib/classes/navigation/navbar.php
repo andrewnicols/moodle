@@ -14,6 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\navigation;
+
+use core_course_category;
+use core\context_helper;
+use core\context\course as context_course;
+use core\context\coursecat as context_coursecat;
+use core\output\action_link;
+use core\output\pix_icon;
+use core\url;
+use moodle_page;
+
 /**
  * Navbar class
  *
@@ -25,7 +36,7 @@
  * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class navbar extends navigation_node {
+class navbar extends node {
     /** @var bool A switch for whether the navbar is initialised or not */
     protected $initialised = false;
     /** @var mixed keys used to reference the nodes on the navbar */
@@ -63,7 +74,7 @@ class navbar extends navigation_node {
         $this->page = $page;
         $this->text = get_string('home');
         $this->shorttext = get_string('home');
-        $this->action = new moodle_url($CFG->wwwroot);
+        $this->action = new url($CFG->wwwroot);
         $this->nodetype = self::NODETYPE_BRANCH;
         $this->type = self::TYPE_SYSTEM;
     }
@@ -245,8 +256,8 @@ class navbar extends navigation_node {
                     continue;
                 }
 
-                $displaycontext = \context_helper::get_navigation_filter_context($context);
-                $url = new moodle_url('/course/index.php', ['categoryid' => $category->id]);
+                $displaycontext = context_helper::get_navigation_filter_context($context);
+                $url = new url('/course/index.php', ['categoryid' => $category->id]);
                 $name = format_string($category->name, true, ['context' => $displaycontext]);
                 $categorynode = breadcrumb_navigation_node::create($name, $url, self::TYPE_CATEGORY, null, $category->id);
                 if (!$category->visible) {
@@ -264,7 +275,7 @@ class navbar extends navigation_node {
                 // Courses node may not be present.
                 $courses = breadcrumb_navigation_node::create(
                     get_string('courses'),
-                    new moodle_url('/course/index.php'),
+                    new url('/course/index.php'),
                     self::TYPE_CONTAINER
                 );
             }
@@ -282,12 +293,12 @@ class navbar extends navigation_node {
      * end of the navbar
      *
      * @param string $text
-     * @param string|moodle_url|action_link $action An action to associate with this node.
-     * @param int $type One of navigation_node::TYPE_*
+     * @param string|url|action_link $action An action to associate with this node.
+     * @param int $type One of node::TYPE_*
      * @param string $shorttext
      * @param string|int $key A key to identify this node with. Key + type is unique to a parent.
      * @param pix_icon $icon An optional icon to use for this node.
-     * @return navigation_node
+     * @return node
      */
     public function add($text, $action=null, $type=self::TYPE_CUSTOM, $shorttext=null, $key=null, pix_icon $icon=null) {
         if ($this->content !== null) {
@@ -319,21 +330,21 @@ class navbar extends navigation_node {
         $itemarray['key'] = $key;
         // Set the parent to this node
         $itemarray['parent'] = $this;
-        // Add the child using the navigation_node_collections add method
+        // Add the child using the node_collections add method
         $this->children[] = new breadcrumb_navigation_node($itemarray);
         return $this;
     }
 
     /**
-     * Prepends a new navigation_node to the start of the navbar
+     * Prepends a new node to the start of the navbar
      *
      * @param string $text
-     * @param string|moodle_url|action_link $action An action to associate with this node.
-     * @param int $type One of navigation_node::TYPE_*
+     * @param string|url|action_link $action An action to associate with this node.
+     * @param int $type One of node::TYPE_*
      * @param string $shorttext
      * @param string|int $key A key to identify this node with. Key + type is unique to a parent.
      * @param pix_icon $icon An optional icon to use for this node.
-     * @return navigation_node
+     * @return node
      */
     public function prepend($text, $action=null, $type=self::TYPE_CUSTOM, $shorttext=null, $key=null, pix_icon $icon=null) {
         if ($this->content !== null) {
@@ -369,3 +380,8 @@ class navbar extends navigation_node {
         return $this;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(navbar::class, \navbar::class);

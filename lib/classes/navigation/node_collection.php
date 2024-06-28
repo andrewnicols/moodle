@@ -14,6 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\navigation;
+
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use Traversable;
+
 /**
  * Navigation node collection
  *
@@ -30,7 +37,7 @@
  * @copyright 2010 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class navigation_node_collection implements IteratorAggregate, Countable {
+class node_collection implements Countable, IteratorAggregate {
     /**
      * A multidimensional array to where the first key is the type and the second
      * key is the nodes key.
@@ -45,7 +52,7 @@ class navigation_node_collection implements IteratorAggregate, Countable {
     protected $orderedcollection = array();
     /**
      * A reference to the last node that was added to the collection
-     * @var navigation_node
+     * @var node
      */
     protected $last = null;
     /**
@@ -63,12 +70,12 @@ class navigation_node_collection implements IteratorAggregate, Countable {
     /**
      * Adds a navigation node to the collection
      *
-     * @param navigation_node $node Node to add
+     * @param node $node Node to add
      * @param string $beforekey If specified, adds before a node with this key,
      *   otherwise adds at end
-     * @return navigation_node Added node
+     * @return node Added node
      */
-    public function add(navigation_node $node, $beforekey=null) {
+    public function add(node $node, $beforekey=null) {
         global $CFG;
         $key = $node->key;
         $type = $node->type;
@@ -157,8 +164,8 @@ class navigation_node_collection implements IteratorAggregate, Countable {
      * Fetches a node from this collection.
      *
      * @param string|int $key The key of the node we want to find.
-     * @param int $type One of navigation_node::TYPE_*.
-     * @return navigation_node|null|false
+     * @param int $type One of node::TYPE_*.
+     * @return node|null|false
      */
     public function get($key, $type=null) {
         if ($type !== null) {
@@ -186,8 +193,8 @@ class navigation_node_collection implements IteratorAggregate, Countable {
      * Recursive.
      *
      * @param string|int $key  The key of the node we want to find.
-     * @param int $type  One of navigation_node::TYPE_*.
-     * @return navigation_node|false
+     * @param int $type  One of node::TYPE_*.
+     * @return node|false
      */
     public function find($key, $type=null) {
         if ($type !== null && array_key_exists($type, $this->orderedcollection) && array_key_exists($key, $this->orderedcollection[$type])) {
@@ -214,7 +221,7 @@ class navigation_node_collection implements IteratorAggregate, Countable {
     /**
      * Fetches the last node that was added to this collection
      *
-     * @return navigation_node
+     * @return node
      */
     public function last() {
         return $this->last;
@@ -279,3 +286,8 @@ class navigation_node_collection implements IteratorAggregate, Countable {
         return new ArrayIterator($this->collection);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(node_collection::class, \navigation_node_collection::class);

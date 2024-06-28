@@ -16,6 +16,8 @@
 
 namespace core\navigation;
 
+use moodle_page;
+
 /**
  * Class used to populate site admin navigation for ajax.
  *
@@ -33,7 +35,7 @@ class settings_navigation_ajax extends settings_navigation {
     public function __construct(moodle_page &$page) {
         $this->page = $page;
         $this->cache = new navigation_cache(NAVIGATION_CACHE_NAME);
-        $this->children = new navigation_node_collection();
+        $this->children = new node_collection();
         $this->initialise();
     }
 
@@ -53,3 +55,8 @@ class settings_navigation_ajax extends settings_navigation {
         $this->initialised = true;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(settings_navigation_ajax::class, \settings_navigation_ajax::class);
