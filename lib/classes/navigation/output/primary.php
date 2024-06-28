@@ -82,7 +82,7 @@ class primary implements renderable, templatable {
         $nodes = [];
         foreach ($parent->children as $node) {
             $children = $this->get_primary_nav($node);
-            $activechildren = array_filter($children, function($child) {
+            $activechildren = array_filter($children, function ($child) {
                 return !empty($child['isactive']);
             });
             if ($node->preceedwithhr && count($nodes) && empty($nodes[count($nodes) - 1]['divider'])) {
@@ -260,7 +260,7 @@ class primary implements renderable, templatable {
         // Gather all the avatar data to be displayed in the user menu.
         $usermenudata['avatardata'][] = [
             'content' => $info->metadata['useravatar'],
-            'classes' => 'current'
+            'classes' => 'current',
         ];
         $usermenudata['userfullname'] = $info->metadata['realuserfullname'] ?? $info->metadata['userfullname'];
 
@@ -268,11 +268,11 @@ class primary implements renderable, templatable {
         if ($info->metadata['asotheruser']) {
             $usermenudata['avatardata'][] = [
                 'content' => $info->metadata['realuseravatar'],
-                'classes' => 'realuser'
+                'classes' => 'realuser',
             ];
             $usermenudata['metadata'][] = [
                 'content' => get_string('loggedinas', 'moodle', $info->metadata['userfullname']),
-                'classes' => 'viewingas'
+                'classes' => 'viewingas',
             ];
         }
 
@@ -298,12 +298,12 @@ class primary implements renderable, templatable {
                 $customclass = str_replace('##GENERATEDCLASS##', $generatedclass, ($value['class'] ?? ''));
                 $usermenudata['metadata'][] = [
                     'content' => $content,
-                    'classes' => $customclass
+                    'classes' => $customclass,
                 ];
             }
         }
 
-        $modifiedarray = array_map(function($value) {
+        $modifiedarray = array_map(function ($value) {
             $value->divider = $value->itemtype == 'divider';
             $value->link = $value->itemtype == 'link';
             if (isset($value->pix) && !empty($value->pix)) {

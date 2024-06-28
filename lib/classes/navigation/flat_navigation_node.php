@@ -25,7 +25,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class flat_navigation_node extends navigation_node {
-
     /** @var $indent integer The indent level */
     private $indent = 0;
 
@@ -45,7 +44,6 @@ class flat_navigation_node extends navigation_node {
         if (is_array($navnode)) {
             parent::__construct($navnode);
         } else if ($navnode instanceof navigation_node) {
-
             // Just clone everything.
             $objvalues = get_object_vars($navnode);
             foreach ($objvalues as $key => $value) {

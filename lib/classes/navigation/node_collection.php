@@ -43,13 +43,13 @@ class node_collection implements Countable, IteratorAggregate {
      * key is the nodes key.
      * @var array
      */
-    protected $collection = array();
+    protected $collection = [];
     /**
      * An array that contains references to nodes in the same order they were added.
      * This is maintained as a progressive array.
      * @var array
      */
-    protected $orderedcollection = array();
+    protected $orderedcollection = [];
     /**
      * A reference to the last node that was added to the collection
      * @var node
@@ -75,21 +75,21 @@ class node_collection implements Countable, IteratorAggregate {
      *   otherwise adds at end
      * @return node Added node
      */
-    public function add(node $node, $beforekey=null) {
+    public function add(node $node, $beforekey = null) {
         global $CFG;
         $key = $node->key;
         $type = $node->type;
 
-        // First check we have a 2nd dimension for this type
+        // First check we have a 2nd dimension for this type.
         if (!array_key_exists($type, $this->orderedcollection)) {
-            $this->orderedcollection[$type] = array();
+            $this->orderedcollection[$type] = [];
         }
-        // Check for a collision and report if debugging is turned on
+        // Check for a collision and report if debugging is turned on.
         if ($CFG->debug && array_key_exists($key, $this->orderedcollection[$type])) {
-            debugging('Navigation node intersect: Adding a node that already exists '.$key, DEBUG_DEVELOPER);
+            debugging('Navigation node intersect: Adding a node that already exists ' . $key, DEBUG_DEVELOPER);
         }
 
-        // Find the key to add before
+        // Find the key to add before.
         $newindex = $this->count;
         $last = true;
         if ($beforekey !== null) {
@@ -107,11 +107,11 @@ class node_collection implements Countable, IteratorAggregate {
         }
 
         // Add the node to the appropriate place in the by-type structure (which
-        // is not ordered, despite the variable name)
+        // is not ordered, despite the variable name).
         $this->orderedcollection[$type][$key] = $node;
         if (!$last) {
             // Update existing references in the ordered collection (which is the
-            // one that isn't called 'ordered') to shuffle them along if required
+            // one that isn't called 'ordered') to shuffle them along if required.
             for ($oldindex = $this->count; $oldindex > $newindex; $oldindex--) {
                 $this->collection[$oldindex] = $this->collection[$oldindex - 1];
             }
@@ -121,12 +121,12 @@ class node_collection implements Countable, IteratorAggregate {
         // Update the last property to a reference to this new node.
         $this->last = $this->orderedcollection[$type][$key];
 
-        // Reorder the array by index if needed
+        // Reorder the array by index if needed.
         if (!$last) {
             ksort($this->collection);
         }
         $this->count++;
-        // Return the reference to the now added node
+        // Return the reference to the now added node.
         return $node;
     }
 
@@ -135,7 +135,7 @@ class node_collection implements Countable, IteratorAggregate {
      * @return array the keys.
      */
     public function get_key_list() {
-        $keys = array();
+        $keys = [];
         foreach ($this->collection as $node) {
             $keys[] = $node->key;
         }
@@ -167,14 +167,14 @@ class node_collection implements Countable, IteratorAggregate {
      * @param int $type One of node::TYPE_*.
      * @return node|null|false
      */
-    public function get($key, $type=null) {
+    public function get($key, $type = null) {
         if ($type !== null) {
-            // If the type is known then we can simply check and fetch
+            // If the type is known then we can simply check and fetch.
             if (!empty($this->orderedcollection[$type][$key])) {
                 return $this->orderedcollection[$type][$key];
             }
         } else {
-            // Because we don't know the type we look in the progressive array
+            // Because we don't know the type we look in the progressive array.
             foreach ($this->collection as $node) {
                 if ($node->key === $key) {
                     return $node;
@@ -196,18 +196,22 @@ class node_collection implements Countable, IteratorAggregate {
      * @param int $type  One of node::TYPE_*.
      * @return node|false
      */
-    public function find($key, $type=null) {
-        if ($type !== null && array_key_exists($type, $this->orderedcollection) && array_key_exists($key, $this->orderedcollection[$type])) {
+    public function find($key, $type = null) {
+        if (
+            $type !== null
+            && array_key_exists($type, $this->orderedcollection)
+            && array_key_exists($key, $this->orderedcollection[$type])
+        ) {
             return $this->orderedcollection[$type][$key];
         } else {
             $nodes = $this->getIterator();
-            // Search immediate children first
+            // Search immediate children first.
             foreach ($nodes as &$node) {
                 if ($node->key === $key && ($type === null || $type === $node->type)) {
                     return $node;
                 }
             }
-            // Now search each childs children
+            // Now search each childs children.
             foreach ($nodes as &$node) {
                 $result = $node->children->find($key, $type);
                 if ($result !== false) {
@@ -235,7 +239,7 @@ class node_collection implements Countable, IteratorAggregate {
      */
     public function type($type) {
         if (!array_key_exists($type, $this->orderedcollection)) {
-            $this->orderedcollection[$type] = array();
+            $this->orderedcollection[$type] = [];
         }
         return $this->orderedcollection[$type];
     }
@@ -246,7 +250,7 @@ class node_collection implements Countable, IteratorAggregate {
      * @param int $type
      * @return bool
      */
-    public function remove($key, $type=null) {
+    public function remove($key, $type = null) {
         $child = $this->get($key, $type);
         if ($child !== false) {
             foreach ($this->collection as $colkey => $node) {
@@ -263,25 +267,12 @@ class node_collection implements Countable, IteratorAggregate {
         return false;
     }
 
-    /**
-     * Gets the number of nodes in this collection
-     *
-     * This option uses an internal count rather than counting the actual options to avoid
-     * a performance hit through the count function.
-     *
-     * @return int
-     */
+    #[\Override]
     public function count(): int {
         return $this->count;
     }
-    /**
-     * Gets an array iterator for the collection.
-     *
-     * This is required by the IteratorAggregator interface and is used by routines
-     * such as the foreach loop.
-     *
-     * @return ArrayIterator
-     */
+
+    #[\Override]
     public function getIterator(): Traversable {
         return new ArrayIterator($this->collection);
     }

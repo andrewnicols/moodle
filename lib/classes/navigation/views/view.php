@@ -113,8 +113,10 @@ abstract class view extends navigation_node {
      * @param int $strictness How stict to be with the scan for the active node.
      * @return navigation_node|null
      */
-    protected function active_node_scan(navigation_node $node,
-        int $strictness = URL_MATCH_EXACT): ?navigation_node {
+    protected function active_node_scan(
+        navigation_node $node,
+        int $strictness = URL_MATCH_EXACT
+    ): ?navigation_node {
 
         $result = null;
         $activekey = $this->page->get_secondary_active_tab();

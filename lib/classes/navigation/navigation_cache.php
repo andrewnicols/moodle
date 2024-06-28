@@ -73,11 +73,11 @@ class navigation_cache {
      *                cache
      * @param int $timeout The number of seconds to time the information out after
      */
-    public function __construct($area, $timeout=1800) {
+    public function __construct($area, $timeout = 1800) {
         $this->creation = time();
         $this->area = $area;
         $this->timeout = time() - $timeout;
-        if (rand(0,100) === 0) {
+        if (rand(0, 100) === 0) {
             $this->garbage_collection();
         }
     }
@@ -92,10 +92,10 @@ class navigation_cache {
         global $SESSION;
         if (empty($this->session)) {
             if (!isset($SESSION->navcache)) {
-                $SESSION->navcache = new stdClass;
+                $SESSION->navcache = new stdClass();
             }
             if (!isset($SESSION->navcache->{$this->area})) {
-                $SESSION->navcache->{$this->area} = array();
+                $SESSION->navcache->{$this->area} = [];
             }
             $this->session = &$SESSION->navcache->{$this->area}; // pointer to array, =& is correct here
         }
@@ -135,7 +135,7 @@ class navigation_cache {
         global $USER;
         $this->ensure_session_cache_initialised();
         $information = serialize($information);
-        $this->session[$key]= array(self::CACHETIME=>time(), self::CACHEUSERID=>$USER->id, self::CACHEVALUE=>$information);
+        $this->session[$key] = [self::CACHETIME => time(), self::CACHEUSERID => $USER->id, self::CACHEVALUE => $information];
     }
     /**
      * Check the existence of the identifier in the cache
@@ -146,9 +146,22 @@ class navigation_cache {
     public function cached($key) {
         global $USER;
         $this->ensure_session_cache_initialised();
-        if (!array_key_exists($key, $this->session) || !is_array($this->session[$key]) || $this->session[$key][self::CACHEUSERID]!=$USER->id || $this->session[$key][self::CACHETIME] < $this->timeout) {
+
+        if (!array_key_exists($key, $this->session)) {
             return false;
         }
+        if (!is_array($this->session[$key])) {
+            return false;
+        }
+
+        if ($this->session[$key][self::CACHEUSERID] != $USER->id) {
+            return false;
+        }
+
+        if ($this->session[$key][self::CACHETIME] < $this->timeout) {
+            return false;
+        }
+
         return true;
     }
     /**
@@ -187,8 +200,8 @@ class navigation_cache {
         if (empty($this->session)) {
             return true;
         }
-        foreach ($this->session as $key=>$cachedinfo) {
-            if (is_array($cachedinfo) && $cachedinfo[self::CACHETIME]<$this->timeout) {
+        foreach ($this->session as $key => $cachedinfo) {
+            if (is_array($cachedinfo) && $cachedinfo[self::CACHETIME] < $this->timeout) {
                 unset($this->session[$key]);
             }
         }
@@ -204,9 +217,9 @@ class navigation_cache {
      * @param bool $setting True to destroy the cache false not too
      */
     public function volatile($setting = true) {
-        if (self::$volatilecaches===null) {
-            self::$volatilecaches = array();
-            core_shutdown_manager::register_function(array('navigation_cache','destroy_volatile_caches'));
+        if (self::$volatilecaches === null) {
+            self::$volatilecaches = [];
+            core_shutdown_manager::register_function(['navigation_cache', 'destroy_volatile_caches']);
         }
 
         if ($setting) {
@@ -226,12 +239,12 @@ class navigation_cache {
      */
     public static function destroy_volatile_caches() {
         global $SESSION;
-        if (is_array(self::$volatilecaches) && count(self::$volatilecaches)>0) {
+        if (is_array(self::$volatilecaches) && count(self::$volatilecaches) > 0) {
             foreach (self::$volatilecaches as $area) {
-                $SESSION->navcache->{$area} = array();
+                $SESSION->navcache->{$area} = [];
             }
         } else {
-            $SESSION->navcache = new stdClass;
+            $SESSION->navcache = new stdClass();
         }
     }
 }

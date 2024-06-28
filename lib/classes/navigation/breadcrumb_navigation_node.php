@@ -51,7 +51,8 @@ class breadcrumb_navigation_node extends node {
     }
 
     /**
-     * Getter for "last"
+     * Getter for "last".
+     *
      * @return boolean
      */
     public function is_last() {
@@ -59,7 +60,8 @@ class breadcrumb_navigation_node extends node {
     }
 
     /**
-     * Setter for "last"
+     * Setter for "last".
+     *
      * @param $val boolean
      */
     public function set_last($val) {

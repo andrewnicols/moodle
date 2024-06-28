@@ -39,7 +39,6 @@ use moodle_page;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class global_navigation_for_ajax extends global_navigation {
-
     /** @var int used for determining what type of node::TYPE_* is being used */
     protected $branchtype;
 
@@ -47,7 +46,7 @@ class global_navigation_for_ajax extends global_navigation {
     protected $instanceid;
 
     /** @var array Holds an array of expandable nodes */
-    protected $expandable = array();
+    protected $expandable = [];
 
     /**
      * Constructs the navigation for use in an AJAX request
@@ -64,11 +63,8 @@ class global_navigation_for_ajax extends global_navigation {
         $this->instanceid = $id;
         $this->initialise();
     }
-    /**
-     * Initialise the navigation given the type and id for the branch to expand.
-     *
-     * @return array An array of the expandable nodes
-     */
+
+    #[\Override]
     public function initialise() {
         global $DB, $SITE;
 
@@ -77,7 +73,7 @@ class global_navigation_for_ajax extends global_navigation {
         }
         $this->initialised = true;
 
-        $this->rootnodes = array();
+        $this->rootnodes = [];
         $this->rootnodes['site']    = $this->add_course($SITE);
         $this->rootnodes['mycourses'] = $this->add(
             get_string('mycourses'),
@@ -100,14 +96,14 @@ class global_navigation_for_ajax extends global_navigation {
                     $this->load_courses_other();
                 }
                 break;
-            case self::TYPE_CATEGORY :
+            case self::TYPE_CATEGORY:
                 $this->load_category($this->instanceid);
                 break;
-            case self::TYPE_MY_CATEGORY :
+            case self::TYPE_MY_CATEGORY:
                 $this->load_category($this->instanceid, self::TYPE_MY_CATEGORY);
                 break;
-            case self::TYPE_COURSE :
-                $course = $DB->get_record('course', array('id' => $this->instanceid), '*', MUST_EXIST);
+            case self::TYPE_COURSE:
+                $course = $DB->get_record('course', ['id' => $this->instanceid], '*', MUST_EXIST);
                 if (!can_access_course($course, null, '', true)) {
                     // Thats OK all courses are expandable by default. We don't need to actually expand it we can just
                     // add the course node and break. This leads to an empty node.
@@ -120,24 +116,24 @@ class global_navigation_for_ajax extends global_navigation {
                 $this->add_course_essentials($coursenode, $course);
                 $this->load_course_sections($course, $coursenode);
                 break;
-            case self::TYPE_SECTION :
+            case self::TYPE_SECTION:
                 $sql = 'SELECT c.*, cs.section AS sectionnumber
                         FROM {course} c
                         LEFT JOIN {course_sections} cs ON cs.course = c.id
                         WHERE cs.id = ?';
-                $course = $DB->get_record_sql($sql, array($this->instanceid), MUST_EXIST);
+                $course = $DB->get_record_sql($sql, [$this->instanceid], MUST_EXIST);
                 require_course_login($course, true, null, false, true);
                 $this->page->set_context(context_course::instance($course->id));
                 $coursenode = $this->add_course($course, false, self::COURSE_CURRENT);
                 $this->add_course_essentials($coursenode, $course);
                 $this->load_course_sections($course, $coursenode, $course->sectionnumber);
                 break;
-            case self::TYPE_ACTIVITY :
+            case self::TYPE_ACTIVITY:
                 $sql = "SELECT c.*
                           FROM {course} c
                           JOIN {course_modules} cm ON cm.course = c.id
                          WHERE cm.id = :cmid";
-                $params = array('cmid' => $this->instanceid);
+                $params = ['cmid' => $this->instanceid];
                 $course = $DB->get_record_sql($sql, $params, MUST_EXIST);
                 $modinfo = get_fast_modinfo($course);
                 $cm = $modinfo->get_cm($this->instanceid);
@@ -152,7 +148,6 @@ class global_navigation_for_ajax extends global_navigation {
                 break;
             default:
                 throw new \Exception('Unknown type');
-                return $this->expandable;
         }
 
         if ($this->page->context->contextlevel == CONTEXT_COURSE && $this->page->context->instanceid != $SITE->id) {
@@ -181,7 +176,6 @@ class global_navigation_for_ajax extends global_navigation {
      * This is because with the AJAX navigation we know exactly what is wanted and only need to
      * request that.
      *
-     * @global moodle_database $DB
      * @param int $categoryid id of category to load in navigation.
      * @param int $nodetype type of node, if category is under MyHome then it's TYPE_MY_CATEGORY
      * @return void.
@@ -198,13 +192,13 @@ class global_navigation_for_ajax extends global_navigation {
         $sql = "SELECT cc.*, $catcontextsql
                   FROM {course_categories} cc
                   JOIN {context} ctx ON cc.id = ctx.instanceid
-                 WHERE ctx.contextlevel = ".CONTEXT_COURSECAT." AND
+                 WHERE ctx.contextlevel = " . CONTEXT_COURSECAT . " AND
                        (cc.id = :categoryid1 OR cc.parent = :categoryid2)
               ORDER BY cc.depth ASC, cc.sortorder ASC, cc.id ASC";
-        $params = array('categoryid1' => $categoryid, 'categoryid2' => $categoryid);
+        $params = ['categoryid1' => $categoryid, 'categoryid2' => $categoryid];
         $categories = $DB->get_recordset_sql($sql, $params, 0, $limit);
-        $categorylist = array();
-        $subcategories = array();
+        $categorylist = [];
+        $subcategories = [];
         $basecategory = null;
         foreach ($categories as $category) {
             $categorylist[] = $category->id;
@@ -223,7 +217,7 @@ class global_navigation_for_ajax extends global_navigation {
         // else show all courses.
         if ($nodetype === self::TYPE_MY_CATEGORY) {
             $courses = enrol_get_my_courses('*');
-            $categoryids = array();
+            $categoryids = [];
 
             // Only search for categories if basecategory was found.
             if (!is_null($basecategory)) {
@@ -234,13 +228,13 @@ class global_navigation_for_ajax extends global_navigation {
 
                 // Get a unique list of category ids which a part of the path
                 // to user's courses.
-                $coursesubcategories = array();
-                $addedsubcategories = array();
+                $coursesubcategories = [];
+                $addedsubcategories = [];
 
-                list($sql, $params) = $DB->get_in_or_equal($categoryids);
-                $categories = $DB->get_recordset_select('course_categories', 'id '.$sql, $params, 'sortorder, id', 'id, path');
+                [$sql, $params] = $DB->get_in_or_equal($categoryids);
+                $categories = $DB->get_recordset_select('course_categories', 'id ' . $sql, $params, 'sortorder, id', 'id, path');
 
-                foreach ($categories as $category){
+                foreach ($categories as $category) {
                     $coursesubcategories = array_merge($coursesubcategories, explode('/', trim($category->path, "/")));
                 }
                 $categories->close();
@@ -249,8 +243,10 @@ class global_navigation_for_ajax extends global_navigation {
                 // Only add a subcategory if it is part of the path to user's course and
                 // wasn't already added.
                 foreach ($subcategories as $subid => $subcategory) {
-                    if (in_array($subid, $coursesubcategories) &&
-                            !in_array($subid, $addedsubcategories)) {
+                    if (
+                        in_array($subid, $coursesubcategories) &&
+                            !in_array($subid, $addedsubcategories)
+                    ) {
                             $this->add_category($subcategory, $basecategory, $nodetype);
                             $addedsubcategories[] = $subid;
                     }
@@ -265,11 +261,11 @@ class global_navigation_for_ajax extends global_navigation {
             }
         } else {
             if (!is_null($basecategory)) {
-                foreach ($subcategories as $key=>$category) {
+                foreach ($subcategories as $key => $category) {
                     $this->add_category($category, $basecategory, $nodetype);
                 }
             }
-            $courses = $DB->get_recordset('course', array('category' => $categoryid), 'sortorder', '*' , 0, $limit);
+            $courses = $DB->get_recordset('course', ['category' => $categoryid], 'sortorder', '*', 0, $limit);
             foreach ($courses as $course) {
                 $this->add_course($course);
             }
