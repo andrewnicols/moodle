@@ -39,9 +39,7 @@ class settings_navigation_ajax extends settings_navigation {
         $this->initialise();
     }
 
-    /**
-     * Initialise the site admin navigation.
-     */
+    #[\Override]
     public function initialise() {
         if ($this->initialised || during_initial_install()) {
             return false;

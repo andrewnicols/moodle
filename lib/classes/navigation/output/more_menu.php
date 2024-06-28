@@ -16,10 +16,9 @@
 
 namespace core\navigation\output;
 
-use renderable;
-use renderer_base;
-use templatable;
-use custom_menu;
+use core\output\renderable;
+use core\output\renderer_base;
+use core\output\templatable;
 
 /**
  * more menu navigation renderable
@@ -30,12 +29,6 @@ use custom_menu;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class more_menu implements renderable, templatable {
-
-    protected $content;
-    protected $navbarstyle;
-    protected $haschildren;
-    protected $istablist;
-
     /**
      * Constructor for this class.
      *
@@ -45,19 +38,19 @@ class more_menu implements renderable, templatable {
      * @param bool $istablist When true, the more menu should be rendered and behave with a tablist ARIA role.
      *                        If false, it's rendered with a menubar ARIA role. Defaults to false.
      */
-    public function __construct(object $content, string $navbarstyle, bool $haschildren = true, bool $istablist = false) {
-        $this->content = $content;
-        $this->navbarstyle = $navbarstyle;
-        $this->haschildren = $haschildren;
-        $this->istablist = $istablist;
+    public function __construct(
+        /** @var object Navigation objects */
+        protected object $content,
+        /** @var string Class name to apply to the navbar */
+        protected string $navbarstyle,
+        /** @var bool Whether the content has any child */
+        protected bool $haschildren = true,
+        /** @var bool Whether the content should be rendered as an ARIA tablist (true) or menubar (false) */
+        protected bool $istablist = false,
+    ) {
     }
 
-    /**
-     * Return data for rendering a template.
-     *
-     * @param renderer_base $output The output
-     * @return array Data for rendering a template
-     */
+    #[\Override]
     public function export_for_template(renderer_base $output): array {
         $data = [
             'navbarstyle' => $this->navbarstyle,
@@ -73,8 +66,10 @@ class more_menu implements renderable, templatable {
             // (as required by the template) we need to set the node's property 'moremenuid' to a new unique value and
             // 'haschildren' to true.
             foreach ($this->content->children as &$item) {
-                if ($item->showchildreninsubmenu && isset($this->content->children) &&
-                        count($this->content->children) > 0) {
+                if (
+                    $item->showchildreninsubmenu && isset($this->content->children) &&
+                        count($this->content->children) > 0
+                ) {
                     $item->moremenuid = uniqid();
                     $item->haschildren = true;
                 }
@@ -88,5 +83,4 @@ class more_menu implements renderable, templatable {
 
         return $data;
     }
-
 }

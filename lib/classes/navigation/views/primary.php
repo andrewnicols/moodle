@@ -44,8 +44,14 @@ class primary extends view {
             !in_array('home', $this->page->theme->removedprimarynavitems);
         // We do not need to change the text for the home/dashboard depending on the set homepage.
         if ($showhomenode) {
-            $sitehome = $this->add(get_string('home'), new \moodle_url('/'), self::TYPE_SYSTEM,
-                null, 'home', new \pix_icon('i/home', ''));
+            $sitehome = $this->add(
+                get_string('home'),
+                new \moodle_url('/'),
+                self::TYPE_SYSTEM,
+                null,
+                'home',
+                new \pix_icon('i/home', '')
+            );
         }
         if (isloggedin() && !isguestuser()) {
             $homepage = get_home_page();
@@ -60,8 +66,14 @@ class primary extends view {
             $showmyhomenode = !empty($CFG->enabledashboard) && (empty($this->page->theme->removedprimarynavitems) ||
                 !in_array('myhome', $this->page->theme->removedprimarynavitems));
             if ($showmyhomenode) {
-                $this->add(get_string('myhome'), new \moodle_url('/my/'),
-                    self::TYPE_SETTING, null, 'myhome', new \pix_icon('i/dashboard', ''));
+                $this->add(
+                    get_string('myhome'),
+                    new \moodle_url('/my/'),
+                    self::TYPE_SETTING,
+                    null,
+                    'myhome',
+                    new \pix_icon('i/dashboard', '')
+                );
             }
 
             // Add the mycourses link.
@@ -156,8 +168,10 @@ class primary extends view {
      * @param array $actionnodes navigation nodes array to set active and inactive.
      * @return navigation_node|null
      */
-    private function search_and_set_active_node(navigation_node $node,
-        array &$actionnodes = []): ?navigation_node {
+    private function search_and_set_active_node(
+        navigation_node $node,
+        array &$actionnodes = []
+    ): ?navigation_node {
         global $PAGE;
 
         $activekey = $PAGE->get_primary_activate_tab();

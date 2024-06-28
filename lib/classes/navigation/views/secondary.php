@@ -148,7 +148,7 @@ class secondary extends view {
                 'permissions' => 2,
                 'roles' => 2.1,
                 'rolecheck' => 2.2,
-            ]
+            ],
         ];
     }
 
@@ -177,7 +177,7 @@ class secondary extends view {
     protected function get_default_module_more_menu_nodes(): array {
         return ['roleoverride', 'rolecheck', 'logreport', 'roleassign', 'filtermanage', 'backup', 'restore',
             'competencybreakdown', "mod_{$this->page->activityname}_useroverrides",
-            "mod_{$this->page->activityname}_groupoverrides"];
+            "mod_{$this->page->activityname}_groupoverrides", ];
     }
 
     /**
@@ -325,8 +325,12 @@ class secondary extends view {
      * @param navigation_node|null $root The parent node nodes are to be added/removed to.
      * @param bool $forceadd Whether or not to bypass the external action check and force add all nodes
      */
-    protected function add_external_nodes_to_secondary(navigation_node $node, navigation_node $basenode,
-           ?navigation_node $root = null, bool $forceadd = false) {
+    protected function add_external_nodes_to_secondary(
+        navigation_node $node,
+        navigation_node $basenode,
+        ?navigation_node $root = null,
+        bool $forceadd = false
+    ) {
         $root = $root ?? $this;
         // Add the first node.
         if ($node->has_action() && !$this->get($node->key)) {
@@ -428,8 +432,14 @@ class secondary extends view {
         // Add the respective first node, provided there are other nodes included.
         if (!empty($nodekeys = $rootnode->children->get_key_list())) {
             $rootnode->add_node(
-                navigation_node::create($firstnodeidentifier, new \moodle_url('/course/view.php', ['id' => $course->id]),
-                    self::TYPE_COURSE, null, 'coursehome'), reset($nodekeys)
+                navigation_node::create(
+                    $firstnodeidentifier,
+                    new \moodle_url('/course/view.php', ['id' => $course->id]),
+                    self::TYPE_COURSE,
+                    null,
+                    'coursehome'
+                ),
+                reset($nodekeys)
             );
         }
 
@@ -469,7 +479,7 @@ class secondary extends view {
 
         // Remove our specific created elements (user - participants, badges - coursebadges, grades - gradebooksetup,
         // grades - outcomes).
-        $shortdiff = array_filter($diff, function($value) {
+        $shortdiff = array_filter($diff, function ($value) {
             return !($value == 'users' || $value == 'coursebadges' || $value == 'gradebooksetup' ||
                 $value == 'outcomes');
         });
@@ -491,7 +501,6 @@ class secondary extends view {
         }
         $this->courseoverflownode = $navnode;
         return $navnode;
-
     }
 
     /**
@@ -607,8 +616,10 @@ class secondary extends view {
             }
             if ($incourseadmin) {
                 // Validate whether the active node is part of the expected course overflow nodes.
-                if (($activenode->key !== $courseoverflownode->key) &&
-                    !$courseoverflownode->find($activenode->key, $activenode->type)) {
+                if (
+                    ($activenode->key !== $courseoverflownode->key) &&
+                    !$courseoverflownode->find($activenode->key, $activenode->type)
+                ) {
                     return null;
                 }
             }
@@ -658,9 +669,11 @@ class secondary extends view {
         // that are redirected to, be in the course context or module context depending on which callback was used.
         // Third part plugins were checked to see if any existing plugins had settings in a system context and none were found.
         // The request of third party developers is to keep their settings within the specified context.
-        if ($this->page->context->contextlevel != CONTEXT_COURSE
+        if (
+            $this->page->context->contextlevel != CONTEXT_COURSE
                 && $this->page->context->contextlevel != CONTEXT_MODULE
-                && $this->page->context->contextlevel != CONTEXT_COURSECAT) {
+                && $this->page->context->contextlevel != CONTEXT_COURSECAT
+        ) {
             return null;
         }
 
@@ -706,11 +719,18 @@ class secondary extends view {
         $nodes = $this->get_default_module_mapping();
 
         if ($mainnode) {
-            $url = new \moodle_url('/mod/' . $settingsnav->get_page()->activityname . '/view.php',
-                ['id' => $settingsnav->get_page()->cm->id]);
+            $url = new \moodle_url(
+                '/mod/' . $settingsnav->get_page()->activityname . '/view.php',
+                ['id' => $settingsnav->get_page()->cm->id]
+            );
             $setactive = $url->compare($settingsnav->get_page()->url, URL_MATCH_BASE);
-            $node = $rootnode->add(get_string('modulename', $settingsnav->get_page()->activityname), $url,
-                null, null, 'modulepage');
+            $node = $rootnode->add(
+                get_string('modulename', $settingsnav->get_page()->activityname),
+                $url,
+                null,
+                null,
+                'modulepage'
+            );
             if ($setactive) {
                 $node->make_active();
             }
@@ -817,8 +837,11 @@ class secondary extends view {
      *                                       explicitly defined, the nodes will be added to the secondary root node by
      *                                       default.
      */
-    protected function load_remaining_nodes(navigation_node $completenode, array $nodesmap,
-            ?navigation_node $rootnode = null): void {
+    protected function load_remaining_nodes(
+        navigation_node $completenode,
+        array $nodesmap,
+        ?navigation_node $rootnode = null
+    ): void {
         $flattenednodes = [];
         $rootnode = $rootnode ?? $this;
         foreach ($nodesmap as $nodecontainer) {
@@ -861,8 +884,10 @@ class secondary extends view {
             }
             // If the navigation node is in the pre-defined list of nodes that should be added by default in the
             // "more" menu or the maximum limit of displayed navigation nodes has been reached (if defined).
-            if (in_array($child->key, $defaultmoremenunodes) ||
-                    (!is_null($maxdisplayednodes) && $displayednodescount >= $maxdisplayednodes)) {
+            if (
+                in_array($child->key, $defaultmoremenunodes) ||
+                    (!is_null($maxdisplayednodes) && $displayednodescount >= $maxdisplayednodes)
+            ) {
                 // Force the node and its children into the "more" menu.
                 $child->set_force_into_more_menu(true);
                 continue;
