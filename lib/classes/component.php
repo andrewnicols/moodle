@@ -390,9 +390,7 @@ class core_component {
         $keyclasses = [
             \core\exception\moodle_exception::class,
             \core\output\bootstrap_renderer::class,
-            \core\lang_string::class,
-            \renderable::class,
-            \core\url::class,
+            \core\navigation\navbar::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {

@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\navigation;
+
+use core\context_helper;
+use core\context\course as context_course;
+use core\context\module as context_module;
+use core\url;
+use moodle_database;
+use moodle_page;
+
 /**
  * The global navigation class used especially for AJAX requests.
  *
@@ -31,7 +40,7 @@
  */
 class global_navigation_for_ajax extends global_navigation {
 
-    /** @var int used for determining what type of navigation_node::TYPE_* is being used */
+    /** @var int used for determining what type of node::TYPE_* is being used */
     protected $branchtype;
 
     /** @var int the instance id */
@@ -50,7 +59,7 @@ class global_navigation_for_ajax extends global_navigation {
     public function __construct($page, $branchtype, $id) {
         $this->page = $page;
         $this->cache = new navigation_cache(NAVIGATION_CACHE_NAME);
-        $this->children = new navigation_node_collection();
+        $this->children = new node_collection();
         $this->branchtype = $branchtype;
         $this->instanceid = $id;
         $this->initialise();
@@ -72,7 +81,7 @@ class global_navigation_for_ajax extends global_navigation {
         $this->rootnodes['site']    = $this->add_course($SITE);
         $this->rootnodes['mycourses'] = $this->add(
             get_string('mycourses'),
-            new moodle_url('/my/courses.php'),
+            new url('/my/courses.php'),
             self::TYPE_ROOTNODE,
             null,
             'mycourses'
@@ -82,7 +91,7 @@ class global_navigation_for_ajax extends global_navigation {
         // This mimicks what is done during {@link global_navigation::initialise()}.
         $this->rootnodes['courses']->isexpandable = true;
 
-        // Branchtype will be one of navigation_node::TYPE_*
+        // Branchtype will be one of node::TYPE_*
         switch ($this->branchtype) {
             case 0:
                 if ($this->instanceid === 'mycourses') {
@@ -142,7 +151,7 @@ class global_navigation_for_ajax extends global_navigation {
                 }
                 break;
             default:
-                throw new Exception('Unknown type');
+                throw new \Exception('Unknown type');
                 return $this->expandable;
         }
 
@@ -276,3 +285,8 @@ class global_navigation_for_ajax extends global_navigation {
         return $this->expandable;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(global_navigation_for_ajax::class, \global_navigation_for_ajax::class);

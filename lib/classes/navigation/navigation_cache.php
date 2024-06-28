@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\navigation;
+
+use core_shutdown_manager;
+use stdClass;
+
 /**
  * The cache class used by global navigation and settings navigation.
  *
@@ -193,7 +198,7 @@ class navigation_cache {
      * Marks the cache as being volatile (likely to change)
      *
      * Any caches marked as volatile will be destroyed at the on shutdown by
-     * {@link navigation_node::destroy_volatile_caches()} which is registered
+     * {@link node::destroy_volatile_caches()} which is registered
      * as a shutdown function if any caches are marked as volatile.
      *
      * @param bool $setting True to destroy the cache false not too
@@ -230,3 +235,8 @@ class navigation_cache {
         }
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(navigation_cache::class, \navigation_cache::class);

@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\navigation;
+
+use core\url;
+use core\output\action_link;
+use core\output\pix_icon;
+
 /**
  * Simple class used to output a navigation branch in XML
  *
@@ -30,7 +36,7 @@ class navigation_json {
     /**
      * Turns a branch and all of its children into XML
      *
-     * @param navigation_node $branch
+     * @param node $branch
      * @return string XML string
      */
     public function convert($branch) {
@@ -50,7 +56,7 @@ class navigation_json {
     /**
      * Recusively converts a child node and its children to XML for output
      *
-     * @param navigation_node $child The child to convert
+     * @param node $child The child to convert
      * @param int $depth Pointlessly used to track the depth of the XML structure
      * @return string JSON
      */
@@ -96,14 +102,14 @@ class navigation_json {
         }
         if (is_string($child->action)) {
             $attributes['link'] = $child->action;
-        } else if ($child->action instanceof moodle_url) {
+        } else if ($child->action instanceof url) {
             $attributes['link'] = $child->action->out();
         } else if ($child->action instanceof action_link) {
             $attributes['link'] = $child->action->url->out();
         }
         $attributes['hidden'] = ($child->hidden);
-        $attributes['haschildren'] = ($child->children->count()>0 || $child->type == navigation_node::TYPE_CATEGORY);
-        $attributes['haschildren'] = $attributes['haschildren'] || $child->type == navigation_node::TYPE_MY_CATEGORY;
+        $attributes['haschildren'] = ($child->children->count()>0 || $child->type == node::TYPE_CATEGORY);
+        $attributes['haschildren'] = $attributes['haschildren'] || $child->type == node::TYPE_MY_CATEGORY;
 
         if ($child->children->count() > 0) {
             $attributes['children'] = array();
@@ -119,3 +125,8 @@ class navigation_json {
         }
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(navigation_json::class, \navigation_json::class);
