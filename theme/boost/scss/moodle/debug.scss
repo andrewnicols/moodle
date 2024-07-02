@@ -7,6 +7,14 @@ body.behat-site {
         position: absolute;
     }
 
+    &.lockscroll {
+        // The WebDriver specs often require that the element being interacted with is scrolled into view.
+        // Where we lock the scroll using overflow: hidden, the element may still be moved by scrollIntoView and,
+        // as a result, the test will fail.
+        // We need to disable the overflow: hidden to allow the element to be scrolled into view.
+        overflow: inherit;
+    }
+
     // Sticky footer can overlap with elements so we keep it relative for behat.
     &.hasstickyfooter .stickyfooter,
     .stickyfooter {
