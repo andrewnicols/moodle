@@ -15,15 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
+ * Hook fixtures registered for testing.
  *
- * @package    mod_assign
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   mod_assign
+ * @copyright 2024 Catalyst IT Australia Pty Ltd
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->component = 'mod_assign'; // Full name of the plugin (used for diagnostics).
-$plugin->version  = 2024121801;    // The current module version (Date: YYYYMMDDXX).
-$plugin->requires = 2024100100;    // Requires this Moodle version.
+$callbacks = [
+    [
+        'hook' => \core_grades\hook\before_penalty_applied::class,
+        'callback' => \mod_assign\test\hooks\plugin1_hook_listener::class . '::apply_penalty',
+    ],
+];

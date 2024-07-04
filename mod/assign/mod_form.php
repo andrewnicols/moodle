@@ -244,6 +244,19 @@ class mod_assign_mod_form extends moodleform_mod {
         $mform->hideIf('markinganonymous', 'markingworkflow', 'eq', 0);
         $mform->hideIf('markinganonymous', 'blindmarking', 'eq', 0);
 
+        // Add Penalty settings if the module supports it.
+        if (\core_grades\local\penalty\manager::is_penalty_enabled_for_module('assign')) {
+            $mform->addElement('selectyesno', 'gradepenalty', get_string('gradepenalty', 'mod_assign'));
+            $mform->addHelpButton('gradepenalty', 'gradepenalty', 'mod_assign');
+            $mform->setDefault('gradepenalty', 0);
+
+            // Hide if the due date is not enabled.
+            $mform->hideIf('gradepenalty', 'duedate[enabled]');
+
+            // Hide if the grade type is not set to point.
+            $mform->hideIf('gradepenalty', 'grade[modgrade_type]', 'neq', 'point');
+        }
+
         $this->standard_coursemodule_elements();
         $this->apply_admin_defaults();
 

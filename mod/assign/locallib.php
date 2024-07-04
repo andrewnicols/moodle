@@ -792,6 +792,10 @@ class assign {
                 $update->markinganonymous = $formdata->markinganonymous;
             }
         }
+
+        // Grade penalties.
+        $update->gradepenalty = $formdata->gradepenalty ?? 0;
+
         $returnid = $DB->insert_record('assign', $update);
         $this->instance = $DB->get_record('assign', array('id'=>$returnid), '*', MUST_EXIST);
         // Cache the course record.
@@ -1581,6 +1585,9 @@ class assign {
             $update->markinganonymous = 0;
         }
 
+        // Grade penalties.
+        $update->gradepenalty = $formdata->gradepenalty ?? 0;
+
         $result = $DB->update_record('assign', $update);
         $this->instance = $DB->get_record('assign', array('id'=>$update->id), '*', MUST_EXIST);
 
@@ -1992,9 +1999,10 @@ class assign {
      * @param boolean $editing Are we allowing changes to this grade?
      * @param int $userid The user id the grade belongs to
      * @param int $modified Timestamp from when the grade was last modified
+     * @param float $penalty The penalty to apply to the grade
      * @return string User-friendly representation of grade
      */
-    public function display_grade($grade, $editing, $userid=0, $modified=0) {
+    public function display_grade($grade, $editing, $userid=0, $modified=0, $penalty = 0) {
         global $DB;
 
         static $scalegrades = array();
@@ -2002,6 +2010,11 @@ class assign {
         $o = '';
 
         if ($this->get_instance()->grade >= 0) {
+            // Apply penalty percentage to the grade.
+            if (!is_null($grade) && $grade >= 0) {
+                $grade *= 1 - $penalty / 100;
+            }
+
             // Normal number.
             if ($editing && $this->get_instance()->grade > 0) {
                 if ($grade < 0) {
@@ -3977,6 +3990,7 @@ class assign {
             if ($attemptnumber >= 0) {
                 $grade->attemptnumber = $attemptnumber;
             }
+            $grade->penalty = 0.0;
 
             $gid = $DB->insert_record('assign_grades', $grade);
             $grade->id = $gid;
@@ -5680,7 +5694,7 @@ class assign {
                                                                      $grade->grade,
                                                                      $cangrade);
             } else {
-                $grade->gradefordisplay = $this->display_grade($grade->grade, false);
+                $grade->gradefordisplay = $this->display_grade($grade->grade, false, 0, 0, $grade->penalty);
             }
 
         }

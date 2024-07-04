@@ -326,6 +326,8 @@ $string['gradelocked'] = 'This grade is locked or overridden in the gradebook.';
 $string['gradeoutof'] = 'Grade out of {$a}';
 $string['gradeoutofhelp'] = 'Grade';
 $string['gradeoutofhelp_help'] = 'Enter the grade for the student\'s submission here. You may include decimals.';
+$string['gradepenalty'] = 'Grade penalties';
+$string['gradepenalty_help'] = 'If enabled, penalties will be applied to submissions';
 $string['gradestudent'] = 'Grade student: (id={$a->id}, fullname={$a->fullname}). ';
 $string['grading'] = 'Grading';
 $string['gradingchangessaved'] = 'The grade changes were saved';

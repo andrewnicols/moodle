@@ -384,6 +384,8 @@ function assign_supports($feature) {
             return true;
         case FEATURE_GRADE_HAS_GRADE:
             return true;
+        case FEATURE_GRADE_HAS_PENALTY:
+            return true;
         case FEATURE_GRADE_OUTCOMES:
             return true;
         case FEATURE_BACKUP_MOODLE2:
@@ -470,6 +472,14 @@ function assign_extend_settings_navigation(settings_navigation $settings, naviga
             type: navigation_node::TYPE_SETTING,
             key: 'mod_assign_submissions'
         );
+    }
+
+    // Allow changing grade penalty settings at course module level.
+    if (\mod_assign\penalty\helper::is_penalty_enabled($cm->instance)) {
+        $gradepenalties = get_plugin_list_with_function('gradepenalty', 'extend_navigation_module', 'lib.php');
+        foreach ($gradepenalties as $penaltyfunction) {
+            $penaltyfunction($navref, $cm);
+        }
     }
 }
 
@@ -1063,7 +1073,7 @@ function assign_grade_item_update($assign, $grades=null) {
         $grades = null;
     }
 
-    return grade_update('mod/assign',
+    $result = grade_update('mod/assign',
                         $assign->courseid,
                         'mod',
                         'assign',
@@ -1071,6 +1081,31 @@ function assign_grade_item_update($assign, $grades=null) {
                         0,
                         $grades,
                         $params);
+
+    // Get lists of users whose grades are updated.
+    $userids = [];
+    if (is_array($grades)) {
+        // The $grades is array/object of grade(s).
+        // We are checking if it is single user (array with simple values such as userid and rawgrade).
+        // Or it is array of grade objects, for multiple users.
+        if (isset($grades['userid']) && isset($grades['rawgrade'])) {
+            // Single user grade update.
+            $userids = [$grades['userid']];
+        } else {
+            // Multiple user grade update.
+            foreach ($grades as $grade) {
+                if (is_object($grade) && isset($grade->userid)) {
+                    $userids[] = $grade->userid;
+                }
+            }
+        }
+    }
+    // Apply penalty to each user.
+    foreach ($userids as $userid) {
+        \mod_assign\penalty\helper::apply_penalty_to_user($assign->id, $userid);
+    }
+
+    return $result;
 }
 
 /**
