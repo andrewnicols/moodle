@@ -27,7 +27,7 @@
 
 require_once(__DIR__ . '/../../../lib/behat/behat_base.php');
 
-use Behat\Gherkin\Node\TableNode as TableNode;
+use Behat\Gherkin\Node\TableNode;
 
 class behat_grade extends behat_base {
 
@@ -83,6 +83,30 @@ class behat_grade extends behat_base {
             $savechanges = get_string('savechanges', 'grades');
             $this->execute('behat_forms::press_button', $this->escape($savechanges));
         }
+    }
+
+    /**
+     * Set the grade aggregations.
+     *
+     * Note
+     *
+     * @Given /the following grade aggregations are enabled:/
+     * @param TableNode $table
+     */
+    public function i_set_grade_aggregations_to(TableNode $table): void {
+        global $CFG;
+
+        require_once($CFG->dirroot . '/grade/lib.php');
+
+        $aggregations = array_map('trim', $table->getColumn(0));
+        array_shift($aggregations); // Remove the header.
+        $strings = \grade_helper::get_aggregation_strings();
+
+        $aggregations = array_filter(
+            array_map(fn ($aggregation) => array_search($aggregation, $strings), $aggregations),
+            fn ($aggregation) => $aggregation !== false,
+        );
+        set_config('grade_aggregations_visible', implode(',', $aggregations));
     }
 
     /**
