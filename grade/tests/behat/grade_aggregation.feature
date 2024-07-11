@@ -1,20 +1,20 @@
 @core @core_grades @javascript
 Feature: We can use calculated grade totals
-  In order to calculate grade totals
-  As an teacher
-  I need to add aggregate columns to the gradebook
+    In order to calculate grade totals
+    As an teacher
+    I need to add aggregate columns to the gradebook
 
   Background:
     Given the following "courses" exist:
       | fullname | shortname | category | groupmode |
-      | Course 1 | C1 | 0 | 1 |
+      | Course 1 | C1        | 0        | 1         |
     And the following "users" exist:
       | username | firstname | lastname | email                | idnumber |
       | teacher1 | Teacher   | 1        | teacher1@example.com | t1       |
       | student1 | Student   | 1        | student1@example.com | s1       |
       # Additional students must be enrolled in the course to ensure that the action menu for hiding grades is displayed correctly.
-      | student2 | Student   | 2        | student2@example.com | s2       |
-      | student3 | Student   | 3        | student3@example.com | s3       |
+      | student2 | Student | 2 | student2@example.com | s2 |
+      | student3 | Student | 3 | student3@example.com | s3 |
     And the following "course enrolments" exist:
       | user     | course | role           |
       | teacher1 | C1     | editingteacher |
@@ -32,18 +32,26 @@ Feature: We can use calculated grade totals
       | assign   | C1     | a3       | Test assignment three | Submit something! | 150   |
       | assign   | C1     | a4       | Test assignment four  | Submit nothing!   | 150   |
     And the following "activities" exist:
-      | activity | course | idnumber | name | intro | gradecategory | grade |
-      | assign | C1 | a5 | Test assignment five | Submit something! | Sub category 1 | 20 |
-      | assign | C1 | a6 | Test assignment six | Submit something! | Sub category 1 | 10 |
-      | assign | C1 | a7 | Test assignment seven | Submit nothing! | Sub category 1 | 15 |
+      | activity | course | idnumber | name                  | intro             | gradecategory  | grade |
+      | assign   | C1     | a5       | Test assignment five  | Submit something! | Sub category 1 | 20    |
+      | assign   | C1     | a6       | Test assignment six   | Submit something! | Sub category 1 | 10    |
+      | assign   | C1     | a7       | Test assignment seven | Submit nothing!   | Sub category 1 | 15    |
     And the following "activities" exist:
       | activity | course | idnumber | name                  | intro             | gradecategory    | grade |
       | assign   | C1     | a8       | Test assignment eight | Submit something! | Sub category 2 & | 20    |
       | assign   | C1     | a9       | Test assignment nine  | Submit something! | Sub category 2 & | 10    |
       | assign   | C1     | 10       | Test assignment ten   | Submit nothing!   | Sub category 2 & | 15    |
-    And I log in as "admin"
-    And I set the following administration settings values:
-      | grade_aggregations_visible | Mean of grades,Weighted mean of grades,Simple weighted mean of grades,Mean of grades (with extra credits),Median of grades,Lowest grade,Highest grade,Mode of grades,Natural |
+    And the following grade aggregations are enabled:
+      | Aggregations                        |
+      | Mean of grades                      |
+      | Weighted mean of grades             |
+      | Simple weighted mean of grades      |
+      | Mean of grades (with extra credits) |
+      | Median of grades                    |
+      | Lowest grade                        |
+      | Highest grade                       |
+      | Mode of grades                      |
+      | Natural                             |
     And the following "grade grades" exist:
       | gradeitem             | user     | grade |
       | Test assignment one & | student1 | 60.00 |
@@ -67,9 +75,9 @@ Feature: We can use calculated grade totals
   Scenario: Mean of grades aggregation
     When I navigate to "View > Grader report" in the course gradebook
     And I set the following settings for grade item "Course 1" of type "course" on "grader" page:
-      | Aggregation          | Mean of grades |
+      | Aggregation | Mean of grades |
     And I set the following settings for grade item "Sub category 1" of type "category" on "grader" page:
-      | Aggregation          | Mean of grades |
+      | Aggregation | Mean of grades |
     And I set the following settings for grade item "Sub category 2 &" of type "category" on "grader" page:
       | Aggregation          | Mean of grades |
       | Exclude empty grades | 0              |
@@ -86,10 +94,10 @@ Feature: We can use calculated grade totals
   Scenario: Weighted mean of grades aggregation
     When I navigate to "View > Grader report" in the course gradebook
     And I set the following settings for grade item "Course 1" of type "course" on "grader" page:
-      | Aggregation          | Weighted mean of grades |
+      | Aggregation | Weighted mean of grades |
     And I set the following settings for grade item "Sub category 1" of type "category" on "grader" page:
-      | Aggregation          | Weighted mean of grades |
-      | Item weight          | 1                       |
+      | Aggregation | Weighted mean of grades |
+      | Item weight | 1                       |
     And I set the following settings for grade item "Sub category 2 &" of type "category" on "grader" page:
       | Aggregation          | Weighted mean of grades |
       | Item weight          | 1                       |
@@ -109,9 +117,9 @@ Feature: We can use calculated grade totals
   Scenario: Simple weighted mean of grades aggregation
     When I navigate to "View > Grader report" in the course gradebook
     And I set the following settings for grade item "Course 1" of type "course" on "grader" page:
-      | Aggregation          | Simple weighted mean of grades |
+      | Aggregation | Simple weighted mean of grades |
     And I set the following settings for grade item "Sub category 1" of type "category" on "grader" page:
-      | Aggregation          | Simple weighted mean of grades |
+      | Aggregation | Simple weighted mean of grades |
     And I set the following settings for grade item "Sub category 2 &" of type "category" on "grader" page:
       | Aggregation          | Simple weighted mean of grades |
       | Exclude empty grades | 0                              |
@@ -130,14 +138,14 @@ Feature: We can use calculated grade totals
   Scenario: Mean of grades (with extra credits) aggregation
     When I navigate to "View > Grader report" in the course gradebook
     And I set the following settings for grade item "Course 1" of type "course" on "grader" page:
-      | Aggregation          | Mean of grades (with extra credits) |
+      | Aggregation | Mean of grades (with extra credits) |
     And I set the following settings for grade item "Sub category 1" of type "category" on "grader" page:
-      | Aggregation          | Mean of grades (with extra credits) |
+      | Aggregation | Mean of grades (with extra credits) |
     And I set the following settings for grade item "Sub category 2 &" of type "category" on "grader" page:
       | Aggregation          | Mean of grades (with extra credits) |
       | Exclude empty grades | 0                                   |
     And I set the following settings for grade item "Test assignment one &" of type "gradeitem" on "grader" page:
-      | Extra credit weight  | 2 |
+      | Extra credit weight | 2 |
     And I turn editing mode off
     Then I should see "42.50 (42.50 %)" in the ".course" "css_element"
     And I navigate to "Setup > Course grade settings" in the course gradebook
@@ -194,9 +202,9 @@ Feature: We can use calculated grade totals
   Scenario: Highest grade aggregation
     When I navigate to "View > Grader report" in the course gradebook
     And I set the following settings for grade item "Course 1" of type "course" on "grader" page:
-      | Aggregation          | Highest grade |
+      | Aggregation | Highest grade |
     And I set the following settings for grade item "Sub category 1" of type "category" on "grader" page:
-      | Aggregation          | Highest grade |
+      | Aggregation | Highest grade |
     And I set the following settings for grade item "Sub category 2 &" of type "category" on "grader" page:
       | Aggregation          | Highest grade |
       | Exclude empty grades | 0             |
@@ -215,9 +223,9 @@ Feature: We can use calculated grade totals
   Scenario: Mode of grades aggregation
     When I navigate to "View > Grader report" in the course gradebook
     And I set the following settings for grade item "Course 1" of type "course" on "grader" page:
-      | Aggregation          | Mode of grades |
+      | Aggregation | Mode of grades |
     And I set the following settings for grade item "Sub category 1" of type "category" on "grader" page:
-      | Aggregation          | Mode of grades |
+      | Aggregation | Mode of grades |
     And I set the following settings for grade item "Sub category 2 &" of type "category" on "grader" page:
       | Aggregation          | Mode of grades |
       | Exclude empty grades | 0              |
@@ -266,7 +274,7 @@ Feature: We can use calculated grade totals
     And "Test outcome item one" row "Grade" column of "user-grade" table should contain "Excellent (100.00 %)"
     And I am on the "Course 1" "grades > gradebook setup" page logged in as "teacher1"
     And I set the following settings for grade item "Test outcome item one" of type "gradeitem" on "setup" page:
-      | aggregationcoef     | 1   |
+      | aggregationcoef | 1 |
     And I log out
     And I log in as "student1"
     And I follow "Grades" in the user menu
@@ -332,8 +340,8 @@ Feature: We can use calculated grade totals
       | Aggregation          | Natural |
       | Exclude empty grades | 1       |
     And I set the following settings for grade item "Test assignment six" of type "gradeitem" on "grader" page:
-      | Weight adjusted  | 1   |
-      | aggregationcoef2 | 50  |
+      | Weight adjusted  | 1  |
+      | aggregationcoef2 | 50 |
     And I set the following settings for grade item "Test assignment three" of type "gradeitem" on "grader" page:
       | Extra credit | 1 |
     And I turn editing mode off
@@ -348,31 +356,31 @@ Feature: We can use calculated grade totals
     And I click on "Student 1" in the "user" search widget
     And I set the field "View report as" to "Myself"
     And the following should exist in the "user-grade" table:
-      | Grade item | Calculated weight | Grade | Range | Contribution to course total |
-      | Test assignment five | 28.57 % | 10.00 (50.00 %) | 0–20 | 1.03 % |
-      | Test assignment six | 50.00 % | 5.00 (50.00 %) | 0–10 | 1.80 % |
-      | Test assignment seven | 21.43 % | - | 0–15 | 0.00 % |
-      | Test assignment eight | 66.67 % | 10.00 (50.00 %) | 0–20 | 1.60 % |
-      | Test assignment nine | 33.33 % | 5.00 (50.00 %) | 0–10 | 0.80 % |
-      | Test assignment ten | 0.00 %( Empty ) | - | 0–15 | 0.00 % |
-      | Test assignment one & | 48.00 % | 60.00 (20.00 %) | 0–300 | 9.60 % |
-      | Test assignment two | 16.00 % | 20.00 (20.00 %) | 0–100 | 3.20 % |
-      | Test assignment three | 24.00 %( Extra credit ) | 40.00 (26.67 %) | 0–150 | 6.40 % |
-      | Test assignment four | 24.00 % | - | 0–150 | 0.00 % |
+      | Grade item            | Calculated weight       | Grade           | Range | Contribution to course total |
+      | Test assignment five  | 28.57 %                 | 10.00 (50.00 %) | 0–20  | 1.03 %                       |
+      | Test assignment six   | 50.00 %                 | 5.00 (50.00 %)  | 0–10  | 1.80 %                       |
+      | Test assignment seven | 21.43 %                 | -               | 0–15  | 0.00 %                       |
+      | Test assignment eight | 66.67 %                 | 10.00 (50.00 %) | 0–20  | 1.60 %                       |
+      | Test assignment nine  | 33.33 %                 | 5.00 (50.00 %)  | 0–10  | 0.80 %                       |
+      | Test assignment ten   | 0.00 %( Empty )         | -               | 0–15  | 0.00 %                       |
+      | Test assignment one & | 48.00 %                 | 60.00 (20.00 %) | 0–300 | 9.60 %                       |
+      | Test assignment two   | 16.00 %                 | 20.00 (20.00 %) | 0–100 | 3.20 %                       |
+      | Test assignment three | 24.00 %( Extra credit ) | 40.00 (26.67 %) | 0–150 | 6.40 %                       |
+      | Test assignment four  | 24.00 %                 | -               | 0–150 | 0.00 %                       |
     And I log out
     And I log in as "student1"
     And I follow "Grades" in the user menu
     And I should see "113.75 (23.45 %)" in the "overview-grade" "table"
     And I click on "Course 1" "link" in the "region-main" "region"
     And the following should exist in the "user-grade" table:
-      | Grade item | Calculated weight | Grade | Range | Contribution to course total |
-      | Test assignment six | 70.00 % | 5.00 (50.00 %) | 0–10 | 1.80 % |
-      | Test assignment seven | 30.00 % | - | 0–15 | 0.00 % |
-      | Test assignment nine | 100.00 % | 5.00 (50.00 %) | 0–10 | 1.03 % |
-      | Test assignment ten | -( Empty ) | - | 0–15 | - |
-      | Test assignment one & | 61.86 % | 60.00 (20.00 %) | 0–300 | 12.37 % |
-      | Test assignment three | 30.93 %( Extra credit ) | 40.00 (26.67 %) | 0–150 | 8.25 % |
-      | Test assignment four | 30.93 % | - | 0–150 | 0.00 % |
+      | Grade item            | Calculated weight       | Grade           | Range | Contribution to course total |
+      | Test assignment six   | 70.00 %                 | 5.00 (50.00 %)  | 0–10  | 1.80 %                       |
+      | Test assignment seven | 30.00 %                 | -               | 0–15  | 0.00 %                       |
+      | Test assignment nine  | 100.00 %                | 5.00 (50.00 %)  | 0–10  | 1.03 %                       |
+      | Test assignment ten   | -( Empty )              | -               | 0–15  | -                            |
+      | Test assignment one & | 61.86 %                 | 60.00 (20.00 %) | 0–300 | 12.37 %                      |
+      | Test assignment three | 30.93 %( Extra credit ) | 40.00 (26.67 %) | 0–150 | 8.25 %                       |
+      | Test assignment four  | 30.93 %                 | -               | 0–150 | 0.00 %                       |
 
   Scenario: Natural aggregation with drop lowest
     When I am on the "Course 1" "grades > Grader report > View" page logged in as "admin"
@@ -389,24 +397,24 @@ Feature: We can use calculated grade totals
     And I navigate to "Setup > Gradebook setup" in the course gradebook
     And I choose the "Add category" item in the "Add" action menu
     And I set the following fields to these values:
-      | Category name | Sub category 3 |
-      | Aggregation | Natural |
-      | Drop the lowest | 1 |
+      | Category name   | Sub category 3 |
+      | Aggregation     | Natural        |
+      | Drop the lowest | 1              |
     And I click on "Save" "button" in the "New category" "dialogue"
     And I wait until the page is ready
     And I choose the "Add grade item" item in the "Add" action menu
     And I set the following fields to these values:
-      | Item name | Manual item 1 |
+      | Item name      | Manual item 1  |
       | Grade category | Sub category 3 |
     And I click on "Save" "button" in the "New grade item" "dialogue"
     And I choose the "Add grade item" item in the "Add" action menu
     And I set the following fields to these values:
-      | Item name | Manual item 2 |
+      | Item name      | Manual item 2  |
       | Grade category | Sub category 3 |
     And I click on "Save" "button" in the "New grade item" "dialogue"
     And I choose the "Add grade item" item in the "Add" action menu
     And I set the following fields to these values:
-      | Item name | Manual item 3 |
+      | Item name      | Manual item 3  |
       | Grade category | Sub category 3 |
     And I click on "Save" "button" in the "New grade item" "dialogue"
     And I navigate to "View > Grader report" in the course gradebook
@@ -423,9 +431,9 @@ Feature: We can use calculated grade totals
     And I should see "270.00 (27.27 %)" in the ".course" "css_element"
     And I turn editing mode on
     And I set the following settings for grade item "Manual item 2" of type "gradeitem" on "grader" page:
-      | Rescale existing grades | No |
-      | Maximum grade | 200 |
-      | Extra credit  | 0   |
+      | Rescale existing grades | No  |
+      | Maximum grade           | 200 |
+      | Extra credit            | 0   |
     # Change window size to ultra-wide to avoid 'out-of-bounds' random failures.
     And I change window size to "5120x2160"
     And I give the grade "21.00" to the user "Student 1" for the grade item "Manual item 2"
@@ -436,9 +444,9 @@ Feature: We can use calculated grade totals
     And I should see "270.00 (22.69 %)" in the ".course" "css_element"
     And I turn editing mode on
     And I set the following settings for grade item "Manual item 2" of type "gradeitem" on "grader" page:
-      | Rescale existing grades | No |
-      | Maximum grade | 100 |
-      | Extra credit  | 0   |
+      | Rescale existing grades | No  |
+      | Maximum grade           | 100 |
+      | Extra credit            | 0   |
     # Change window size to ultra-wide to avoid 'out-of-bounds' random failures.
     And I change window size to "5120x2160"
     And I give the grade "21.00" to the user "Student 1" for the grade item "Manual item 2"
@@ -450,8 +458,8 @@ Feature: We can use calculated grade totals
     And I navigate to "Setup > Gradebook setup" in the course gradebook
     And I choose the "Add category" item in the "Add" action menu
     And I set the following fields to these values:
-      | Category name | Sub sub category 1 |
-      | Parent category | Sub category 3 |
+      | Category name   | Sub sub category 1 |
+      | Parent category | Sub category 3     |
     And I click on "Save" "button" in the "New category" "dialogue"
     And I wait until the page is ready
     And I navigate to "View > Grader report" in the course gradebook
@@ -460,11 +468,11 @@ Feature: We can use calculated grade totals
   Scenario: Natural aggregation from the setup screen
     When I navigate to "Setup > Gradebook setup" in the course gradebook
     And I set the following settings for grade item "Course 1" of type "course" on "setup" page:
-      | Aggregation          | Natural |
+      | Aggregation | Natural |
     And I set the following settings for grade item "Sub category 1" of type "category" on "setup" page:
-      | Aggregation          | Natural |
+      | Aggregation | Natural |
     And I set the following settings for grade item "Sub category 2 &" of type "category" on "setup" page:
-      | Aggregation          | Natural |
+      | Aggregation | Natural |
     And the field "Weight of Test assignment one &" matches value "37.975"
     And the field "Weight of Test assignment two" matches value "12.658"
     And the field "Weight of Sub category 1" matches value "5.696"
@@ -546,15 +554,15 @@ Feature: We can use calculated grade totals
     And I set the field "View report as" to "Myself"
     And the following should exist in the "user-grade" table:
       | Grade item            | Calculated weight | Grade           | Contribution to course total |
-      | Test assignment five  | 57.14 %           | 10.00 (50.00 %) | 2.25 %                        |
-      | Test assignment six   | 0.00 %            | 5.00 (50.00 %)  | 0.00 %                        |
-      | Test assignment seven | 42.86 %           | -               | 0.00 %                        |
-      | Test assignment eight | 0.00 %            | 10.00 (50.00 %) | 0.00 %                        |
-      | Test assignment nine  | 100.00 %          | 5.00 (50.00 %)  | 1.12 %                         |
-      | Test assignment ten   | 0.00 %            | -               | 0.00 %                         |
-      | Test assignment one & | 0.00 %            | 60.00 (20.00 %) | 0.00 %                         |
-      | Test assignment two   | 22.47 %           | 20.00 (20.00 %) | 4.49 %                        |
-      | Test assignment three | 33.71 %           | 40.00 (26.67 %) | 8.99 %                        |
+      | Test assignment five  | 57.14 %           | 10.00 (50.00 %) | 2.25 %                       |
+      | Test assignment six   | 0.00 %            | 5.00 (50.00 %)  | 0.00 %                       |
+      | Test assignment seven | 42.86 %           | -               | 0.00 %                       |
+      | Test assignment eight | 0.00 %            | 10.00 (50.00 %) | 0.00 %                       |
+      | Test assignment nine  | 100.00 %          | 5.00 (50.00 %)  | 1.12 %                       |
+      | Test assignment ten   | 0.00 %            | -               | 0.00 %                       |
+      | Test assignment one & | 0.00 %            | 60.00 (20.00 %) | 0.00 %                       |
+      | Test assignment two   | 22.47 %           | 20.00 (20.00 %) | 4.49 %                       |
+      | Test assignment three | 33.71 %           | 40.00 (26.67 %) | 8.99 %                       |
       | Test assignment four  | 33.71 %           | -               | 0.00                         |
     And I log out
     And I log in as "student1"
@@ -563,10 +571,10 @@ Feature: We can use calculated grade totals
     And I click on "Course 1" "link" in the "region-main" "region"
     And the following should exist in the "user-grade" table:
       | Grade item            | Calculated weight | Grade           | Contribution to course total |
-      | Test assignment six   | 0.00 %            | 5.00 (50.00 %)  | 0.00 %                         |
-      | Test assignment seven | 100.00 %          | -               | 0.00 %                         |
-      | Test assignment nine  | 100.00 %          | 5.00 (50.00 %)  | 1.54 %                         |
-      | Test assignment ten   | 0.00              | -               | 0.00 %                         |
-      | Test assignment one & | 0.00 %            | 60.00 (20.00 %) | 0.00 %                         |
-      | Test assignment three | 46.15 %           | 40.00 (26.67 %) | 12.31 %                        |
-      | Test assignment four  | 46.15 %           | -               | 0.00 %                        |
+      | Test assignment six   | 0.00 %            | 5.00 (50.00 %)  | 0.00 %                       |
+      | Test assignment seven | 100.00 %          | -               | 0.00 %                       |
+      | Test assignment nine  | 100.00 %          | 5.00 (50.00 %)  | 1.54 %                       |
+      | Test assignment ten   | 0.00              | -               | 0.00 %                       |
+      | Test assignment one & | 0.00 %            | 60.00 (20.00 %) | 0.00 %                       |
+      | Test assignment three | 46.15 %           | 40.00 (26.67 %) | 12.31 %                      |
+      | Test assignment four  | 46.15 %           | -               | 0.00 %                       |
