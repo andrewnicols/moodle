@@ -16,15 +16,6 @@
 
 namespace core_backup;
 
-use core_backup_backup_restore_base_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once('backup_restore_base_testcase.php');
-require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
-require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
-
 /**
  * Backup restore permission tests.
  *
@@ -33,8 +24,7 @@ require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
  * @copyright 2023 Catalyst IT Pty Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class backup_restore_group_test extends core_backup_backup_restore_base_testcase {
-
+final class backup_restore_group_test extends \core_backup\tests\backup_restore_testcase {
     /**
      * Test for backup/restore with customfields.
      * @covers \backup_groups_structure_step

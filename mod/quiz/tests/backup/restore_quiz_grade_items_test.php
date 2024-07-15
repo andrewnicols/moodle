@@ -16,14 +16,9 @@
 
 namespace mod_quiz;
 
+use core_backup\tests\restore_date_testcase;
 use core_question_generator;
 use mod_quiz_generator;
-use restore_date_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
 
 /**
  * Test of backup and restore of quiz grade items.
@@ -35,7 +30,6 @@ require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
  * @covers    \restore_quiz_activity_structure_step
  */
 final class restore_quiz_grade_items_test extends restore_date_testcase {
-
     public function test_restore_quiz_grade_items(): void {
         global $DB;
         $this->resetAfterTest();

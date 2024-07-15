@@ -14,24 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * BBB Library tests class.
- *
- * @package   mod_bigbluebuttonbn
- * @copyright 2018 - present, Blindside Networks Inc
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author    Laurent David (laurent@call-learning.fr)
- */
-
 namespace mod_bigbluebuttonbn;
 
+use core_backup\tests\restore_date_testcase;
 use mod_bigbluebuttonbn\test\testcase_helper_trait;
-use restore_date_testcase;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
-global $CFG;
-require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
 
 /**
  * BBB Library tests class.
@@ -43,15 +30,8 @@ require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
  * @covers \backup_bigbluebuttonbn_activity_task
  * @covers \restore_bigbluebuttonbn_activity_task
  */
-class backup_restore_test extends restore_date_testcase {
+final class backup_restore_test extends restore_date_testcase {
     use testcase_helper_trait;
-
-    /**
-     * Setup
-     */
-    public function setUp(): void {
-        parent::setUp();
-    }
 
     /**
      * All instance types

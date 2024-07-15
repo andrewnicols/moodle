@@ -16,12 +16,13 @@
 
 namespace mod_workshop\backup;
 
+use core_backup\tests\restore_date_testcase;
+
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 require_once($CFG->dirroot . '/mod/workshop/locallib.php');
 require_once($CFG->dirroot . '/mod/workshop/lib.php');
-require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
 require_once($CFG->dirroot . "/mod/workshop/tests/fixtures/testable.php");
 
 /**
@@ -31,8 +32,7 @@ require_once($CFG->dirroot . "/mod/workshop/tests/fixtures/testable.php");
  * @copyright  2017 onwards Ankit Agarwal <ankit.agrr@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_date_test extends \restore_date_testcase {
-
+final class restore_date_test extends restore_date_testcase {
     /**
      * Test restore dates.
      */

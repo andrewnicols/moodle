@@ -16,13 +16,13 @@
 
 namespace core_backup;
 
+use core_backup\tests\restore_date_testcase;
 use mod_quiz\quiz_attempt;
 use mod_quiz\quiz_settings;
 
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-require_once($CFG->libdir . "/phpunit/classes/restore_date_testcase.php");
 require_once($CFG->libdir . "/badgeslib.php");
 require_once($CFG->dirroot . '/mod/assign/tests/base_test.php');
 
@@ -33,8 +33,7 @@ require_once($CFG->dirroot . '/mod/assign/tests/base_test.php');
  * @copyright  2017 Adrian Greeve <adrian@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_stepslib_date_test extends \restore_date_testcase {
-
+final class restore_stepslib_date_test extends restore_date_testcase {
     /**
      * Restoring a manual grade item does not result in the timecreated or
      * timemodified dates being changed.
