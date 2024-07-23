@@ -38,6 +38,8 @@
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
 
+use core_calendar\information;
+
 /**
  * Display the calendar page.
  * @copyright 2003 Jon Papaioannou
@@ -114,7 +116,7 @@ if ($iscoursecalendar && !empty($courseid)) {
 $autologinguest = !$iscoursecalendar;
 require_login($course, $autologinguest);
 
-$calendar = calendar_information::create($time, $courseid, $categoryid);
+$calendar = information::create($time, $courseid, $categoryid);
 
 $pagetitle = '';
 

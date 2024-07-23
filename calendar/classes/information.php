@@ -14,6 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_calendar;
+
+use block_contents;
+use cache;
+use core\context\course as context_course;
+use core\context\coursecat as context_coursecat;
+use core\context\system as context_system;
+use core\exception\moodle_exception;
+use core_calendar_renderer;
+use core_course_category;
+use stdClass;
 /**
  * Calendar information class
  *
@@ -22,10 +33,10 @@
  *
  * @package core_calendar
  * @category calendar
- * @copyright 2010 Sam Hemelryk
+ * @copyright Sam Hemelryk
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class calendar_information {
+class information {
 
     /**
      * @var int The timestamp
@@ -112,9 +123,9 @@ class calendar_information {
      * @param   int                     $courseid The ID of the course the user wishes to view.
      * @param   int                     $categoryid The ID of the category the user wishes to view
      *                                  If a courseid is specified, this value is ignored.
-     * @return  calendar_information
+     * @return  self
      */
-    public static function create($time, int $courseid, int $categoryid = null): calendar_information {
+    public static function create($time, int $courseid, int $categoryid = null): self {
         $calendar = new static(0, 0, 0, $time);
         if ($courseid != SITEID && !empty($courseid)) {
             // Course ID must be valid and existing.
@@ -126,14 +137,14 @@ class calendar_information {
             }
 
             $courses = [$course->id => $course];
-            $category = (\core_course_category::get($course->category, MUST_EXIST, true))->get_db_record();
+            $category = (core_course_category::get($course->category, MUST_EXIST, true))->get_db_record();
         } else if (!empty($categoryid)) {
             $course = get_site();
             $courses = calendar_get_default_courses(null, 'id, category, groupmode, groupmodeforce');
 
             // Filter available courses to those within this category or it's children.
             $ids = [$categoryid];
-            $category = \core_course_category::get($categoryid);
+            $category = core_course_category::get($categoryid);
             $ids = array_merge($ids, array_keys($category->get_children()));
             $courses = array_filter($courses, function($course) use ($ids) {
                 return array_search($course->category, $ids) !== false;
@@ -217,7 +228,7 @@ class calendar_information {
             // A specific course was requested.
             // Fetch the category that this course is in, along with all parents.
             // Do not include child categories of this category, as the user many not have enrolments in those siblings or children.
-            $category = \core_course_category::get($course->category, MUST_EXIST, true);
+            $category = core_course_category::get($course->category, MUST_EXIST, true);
             $this->categoryid = $category->id;
 
             $this->categories = $category->get_parents();
@@ -225,7 +236,7 @@ class calendar_information {
         } else if (null !== $category && $category->id > 0) {
             // A specific category was requested.
             // Fetch all parents of this category, along with all children too.
-            $category = \core_course_category::get($category->id);
+            $category = core_course_category::get($category->id);
             $this->categoryid = $category->id;
 
             // Build the category list.
@@ -247,7 +258,7 @@ class calendar_information {
             if ($this->categories === false) {
                 // Use the category id as the key in the following array. That way we do not have to remove duplicates.
                 $categories = [];
-                foreach (\core_course_category::get_all() as $category) {
+                foreach (core_course_category::get_all() as $category) {
                     if (isset($coursecategories[$category->id]) ||
                             has_capability('moodle/category:manage', $category->get_context(), $USER, false)) {
                         // If the user has access to a course in this category or can manage the category,
@@ -344,3 +355,8 @@ class calendar_information {
         $this->viewmode = $viewmode;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(information::class, \calendar_information::class);

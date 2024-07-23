@@ -535,7 +535,7 @@ class lib_test extends \advanced_testcase {
         ]);
 
         $this->setUser($user);
-        $calendar = \calendar_information::create(time() - 10, SITEID, null);
+        $calendar = information::create(time() - 10, SITEID, null);
 
         list($data, $template) = calendar_get_view($calendar, 'day', $skipnavigation, $skipevents);
         $this->assertEmpty($data->events);

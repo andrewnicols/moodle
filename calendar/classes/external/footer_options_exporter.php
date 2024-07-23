@@ -16,6 +16,7 @@
 
 namespace core_calendar\external;
 
+use core_calendar\information;
 use core\external\exporter;
 use renderer_base;
 use stdClass;
@@ -31,7 +32,7 @@ use moodle_url;
 class footer_options_exporter extends exporter {
 
     /**
-     * @var \calendar_information $calendar The calendar to be rendered.
+     * @var information $calendar The calendar to be rendered.
      */
     protected $calendar;
 
@@ -53,14 +54,14 @@ class footer_options_exporter extends exporter {
     /**
      * Constructor for month_exporter.
      *
-     * @param \calendar_information $calendar The calendar being represented
+     * @param information $calendar The calendar being represented
      * @param int $userid The user id
      * @param string $token The user sha1 token.
      * @param array $options Display options for the footer. If an option is not set, a default value will be provided.
      *                      It consists of:
      *                      - showfullcalendarlink - bool - Whether to show the full calendar link or not. Defaults to false.
      */
-    public function __construct(\calendar_information $calendar, $userid, $token, array $options = []) {
+    public function __construct(information $calendar, $userid, $token, array $options = []) {
         $this->calendar = $calendar;
         $this->userid = $userid;
         $this->token = $token;

@@ -24,8 +24,7 @@
 
 namespace core_calendar\external;
 
-defined('MOODLE_INTERNAL') || die();
-
+use core_calendar\information;
 use core\external\exporter;
 use renderer_base;
 use moodle_url;
@@ -46,7 +45,7 @@ class month_exporter extends exporter {
     protected $calendarinstanceid = 0;
 
     /**
-     * @var \calendar_information $calendar The calendar to be rendered.
+     * @var information $calendar The calendar to be rendered.
      */
     protected $calendar;
 
@@ -78,11 +77,11 @@ class month_exporter extends exporter {
     /**
      * Constructor for month_exporter.
      *
-     * @param \calendar_information $calendar The calendar being represented
+     * @param information $calendar The calendar being represented
      * @param \core_calendar\type_base $type The calendar type (e.g. Gregorian)
      * @param array $related The related information
      */
-    public function __construct(\calendar_information $calendar, \core_calendar\type_base $type, $related) {
+    public function __construct(information $calendar, \core_calendar\type_base $type, $related) {
         // Increment the calendar instances count on initialisation.
         self::$calendarinstances++;
         // Assign this instance an ID based on the latest calendar instances count.

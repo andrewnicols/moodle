@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot . '/calendar/lib.php');
 
+use core_calendar\information;
 use core_calendar\local\api as local_api;
 use core_calendar\local\event\container as event_container;
 use core_calendar\local\event\forms\create as create_event_form;
@@ -1047,7 +1048,7 @@ class core_calendar_external extends external_api {
         $type = \core_calendar\type_factory::get_calendar_instance();
 
         $time = $type->convert_to_timestamp($params['year'], $params['month'], $params['day']);
-        $calendar = \calendar_information::create($time, $params['courseid'], $params['categoryid']);
+        $calendar = information::create($time, $params['courseid'], $params['categoryid']);
         self::validate_context($calendar->context);
 
         $view = $params['view'] ?? ($params['mini'] ? 'mini' : 'month');
@@ -1124,7 +1125,7 @@ class core_calendar_external extends external_api {
         $type = \core_calendar\type_factory::get_calendar_instance();
 
         $time = $type->convert_to_timestamp($params['year'], $params['month'], $params['day']);
-        $calendar = \calendar_information::create($time, $params['courseid'], $params['categoryid']);
+        $calendar = information::create($time, $params['courseid'], $params['categoryid']);
         self::validate_context($calendar->context);
 
         list($data, $template) = calendar_get_view($calendar, 'day');
@@ -1259,7 +1260,7 @@ class core_calendar_external extends external_api {
         self::validate_context($context);
         $PAGE->set_url('/calendar/');
 
-        $calendar = \calendar_information::create(time(), $params['courseid'], $params['categoryid']);
+        $calendar = information::create(time(), $params['courseid'], $params['categoryid']);
         self::validate_context($calendar->context);
 
         list($data, $template) = calendar_get_view($calendar, 'upcoming');

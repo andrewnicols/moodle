@@ -453,6 +453,7 @@ class component {
             \core\exception\moodle_exception::class,
             \core\output\bootstrap_renderer::class,
             \core\router::class,
+            \core_calendar\information::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {

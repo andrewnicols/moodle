@@ -20,6 +20,7 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/calendar/lib.php');
 
+use core_calendar\information;
 use core\external\exporter;
 use core_date;
 use DateTimeImmutable;
@@ -36,7 +37,7 @@ use moodle_url;
 class day_exporter extends exporter {
 
     /**
-     * @var \calendar_information $calendar The calendar being displayed.
+     * @var information $calendar The calendar being displayed.
      */
     protected $calendar;
 
@@ -47,11 +48,11 @@ class day_exporter extends exporter {
     /**
      * Constructor.
      *
-     * @param \calendar_information $calendar The calendar information for the period being displayed
+     * @param information $calendar The calendar information for the period being displayed
      * @param mixed $data Either an stdClass or an array of values.
      * @param array $related Related objects.
      */
-    public function __construct(\calendar_information $calendar, $data, $related) {
+    public function __construct(information $calendar, $data, $related) {
         $this->calendar = $calendar;
 
         $url = new moodle_url('/calendar/view.php', [

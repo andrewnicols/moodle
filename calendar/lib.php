@@ -24,6 +24,7 @@
  */
 
 use core_external\external_api;
+use core_calendar\information;
 
 if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.');    ///  It must be included from a Moodle page
@@ -2229,14 +2230,14 @@ function calendar_get_legacy_events($tstart, $tend, $users, $groups, $courses,
 /**
  * Get the calendar view output.
  *
- * @param   \calendar_information $calendar The calendar being represented
+ * @param   information $calendar The calendar being represented
  * @param   string  $view The type of calendar to have displayed
  * @param   bool    $includenavigation Whether to include navigation
  * @param   bool    $skipevents Whether to load the events or not
  * @param   int     $lookahead Overwrites site and users's lookahead setting.
  * @return  array[array, string]
  */
-function calendar_get_view(\calendar_information $calendar, $view, $includenavigation = true, bool $skipevents = false,
+function calendar_get_view(information $calendar, $view, $includenavigation = true, bool $skipevents = false,
         ?int $lookahead = null) {
     global $PAGE, $CFG;
 
@@ -2555,7 +2556,7 @@ function calendar_get_timestamp($d, $m, $y, $time = 0) {
 /**
  * Get the calendar footer options.
  *
- * @param calendar_information $calendar The calendar information object.
+ * @param information $calendar The calendar information object.
  * @param array $options Display options for the footer. If an option is not set, a default value will be provided.
  *                      It consists of:
  *                      - showfullcalendarlink - bool - Whether to show the full calendar link or not. Defaults to false.

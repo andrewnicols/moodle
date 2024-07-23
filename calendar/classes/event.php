@@ -14,6 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_calendar;
+
+use core\context\coursecat as context_coursecat;
+use core\context\course as context_course;
+use core\context\user as context_user;
+use core\context\system as context_system;
+use core_course_category;
+use core_date;
+use core\exception\moodle_exception;
+use core\exception\coding_exception;
+use stdClass;
+use DateTime;
+use DateInterval;
+
 /**
  * Manage calendar events.
  *
@@ -48,8 +62,7 @@
  * @property int $sequence ?
  * @property int $timemodified The time last modified as a timestamp
  */
-class calendar_event {
-
+class event {
     /** @var stdClass An object containing the event properties can be accessed via the magic __get/set methods */
     protected $properties = null;
 
@@ -161,7 +174,7 @@ class calendar_event {
             return $this->{'get_'.$key}();
         }
         if (!property_exists($this->properties, $key)) {
-            throw new \coding_exception('Undefined property requested');
+            throw new coding_exception('Undefined property requested');
         }
         return $this->properties->{$key};
     }
@@ -194,26 +207,26 @@ class calendar_event {
 
         $context = null;
         if (isset($this->properties->categoryid) && $this->properties->categoryid > 0) {
-            $context = \context_coursecat::instance($this->properties->categoryid);
+            $context = context_coursecat::instance($this->properties->categoryid);
         } else if (isset($this->properties->courseid) && $this->properties->courseid > 0) {
-            $context = \context_course::instance($this->properties->courseid);
+            $context = context_course::instance($this->properties->courseid);
         } else if (isset($this->properties->course) && $this->properties->course > 0) {
-            $context = \context_course::instance($this->properties->course);
+            $context = context_course::instance($this->properties->course);
         } else if (isset($this->properties->groupid) && $this->properties->groupid > 0) {
             $group = $DB->get_record('groups', array('id' => $this->properties->groupid));
-            $context = \context_course::instance($group->courseid);
+            $context = context_course::instance($group->courseid);
         } else if (isset($this->properties->userid) && $this->properties->userid > 0
             && $this->properties->userid == $USER->id) {
-            $context = \context_user::instance($this->properties->userid);
+            $context = context_user::instance($this->properties->userid);
         } else if (isset($this->properties->userid) && $this->properties->userid > 0
             && $this->properties->userid != $USER->id &&
             !empty($this->properties->modulename) &&
             isset($this->properties->instance) && $this->properties->instance > 0) {
             $cm = get_coursemodule_from_instance($this->properties->modulename, $this->properties->instance, 0,
                 false, MUST_EXIST);
-            $context = \context_course::instance($cm->course);
+            $context = context_course::instance($cm->course);
         } else {
-            $context = \context_user::instance($this->properties->userid);
+            $context = context_user::instance($this->properties->userid);
         }
 
         return $context;
@@ -348,7 +361,7 @@ class calendar_event {
         if (empty($this->properties->id) || $this->properties->id < 1) {
             if ($checkcapability) {
                 if (!calendar_add_event_allowed($this->properties)) {
-                    throw new \moodle_exception('nopermissiontoupdatecalendar');
+                    throw new moodle_exception('nopermissiontoupdatecalendar');
                 }
             }
 
@@ -428,12 +441,12 @@ class calendar_event {
                 $eventcopy = clone($this->properties);
                 unset($eventcopy->id);
 
-                $timestart = new \DateTime('@' . $eventcopy->timestart);
-                $timestart->setTimezone(\core_date::get_user_timezone_object());
+                $timestart = new DateTime('@' . $eventcopy->timestart);
+                $timestart->setTimezone(core_date::get_user_timezone_object());
 
                 for ($i = 1; $i < $eventcopy->repeats; $i++) {
 
-                    $timestart->add(new \DateInterval('P7D'));
+                    $timestart->add(new DateInterval('P7D'));
                     $eventcopy->timestart = $timestart->getTimestamp();
 
                     // Get the event id for the log record.
@@ -464,7 +477,7 @@ class calendar_event {
 
             if ($checkcapability) {
                 if (!calendar_edit_event_allowed($this->properties)) {
-                    throw new \moodle_exception('nopermissiontoupdatecalendar');
+                    throw new moodle_exception('nopermissiontoupdatecalendar');
                 }
             }
 
@@ -632,7 +645,7 @@ class calendar_event {
             // For each of the returned events populate an event object and call delete.
             // make sure the arg passed is false as we are already deleting all repeats.
             foreach ($events as $event) {
-                $event = new calendar_event($event);
+                $event = new self($event);
                 $event->delete(false);
             }
         }
@@ -680,7 +693,7 @@ class calendar_event {
                     // First check the course is valid.
                     $course = $DB->get_record('course', array('id' => $properties->courseid));
                     if (!$course) {
-                        throw new \moodle_exception('invalidcourse');
+                        throw new moodle_exception('invalidcourse');
                     }
                     // Course context.
                     $this->editorcontext = $this->get_context();
@@ -689,7 +702,7 @@ class calendar_event {
                     $this->editoroptions['maxbytes'] = $course->maxbytes;
                 } else if ($properties->eventtype === 'category') {
                     // First check the course is valid.
-                    \core_course_category::get($properties->categoryid, MUST_EXIST, true);
+                    core_course_category::get($properties->categoryid, MUST_EXIST, true);
                     // Course context.
                     $this->editorcontext = $this->get_context();
                 } else {
@@ -786,15 +799,15 @@ class calendar_event {
      * it will result in an exception being thrown.
      *
      * @param int|object $param event object or event id
-     * @return calendar_event
+     * @return self
      */
     public static function load($param) {
         global $DB;
         if (is_object($param)) {
-            $event = new calendar_event($param);
+            $event = new self($param);
         } else {
             $event = $DB->get_record('event', array('id' => (int)$param), '*', MUST_EXIST);
-            $event = new calendar_event($event);
+            $event = new self($event);
         }
         return $event;
     }
@@ -815,16 +828,16 @@ class calendar_event {
      * @param bool $checkcapability If Moodle should check the user can manage the calendar events for this call or not.
      * @throws \coding_exception
      *
-     * @return calendar_event|bool The event object or false if it failed
+     * @return self|bool The event object or false if it failed
      */
     public static function create($properties, $checkcapability = true) {
         if (is_array($properties)) {
             $properties = (object)$properties;
         }
         if (!is_object($properties)) {
-            throw new \coding_exception('When creating an event properties should be either an object or an assoc array');
+            throw new coding_exception('When creating an event properties should be either an object or an assoc array');
         }
-        $event = new calendar_event($properties);
+        $event = new self($properties);
         if ($event->update($properties, $checkcapability)) {
             return $event;
         } else {
@@ -888,3 +901,8 @@ class calendar_event {
         );
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(event::class, \calendar_event::class);

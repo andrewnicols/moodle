@@ -24,8 +24,7 @@
 
 namespace core_calendar\external;
 
-defined('MOODLE_INTERNAL') || die();
-
+use core_calendar\information;
 use core\external\exporter;
 use renderer_base;
 use moodle_url;
@@ -40,7 +39,7 @@ use \core_calendar\local\event\container;
  */
 class calendar_upcoming_exporter extends exporter {
     /**
-     * @var \calendar_information $calendar The calendar to be rendered.
+     * @var information $calendar The calendar to be rendered.
      */
     protected $calendar;
 
@@ -52,10 +51,10 @@ class calendar_upcoming_exporter extends exporter {
     /**
      * Constructor for upcoming exporter.
      *
-     * @param \calendar_information $calendar The calendar being represented.
+     * @param information $calendar The calendar being represented.
      * @param array $related The related information
      */
-    public function __construct(\calendar_information $calendar, $related) {
+    public function __construct(information $calendar, $related) {
         $this->calendar = $calendar;
 
         parent::__construct([], $related);

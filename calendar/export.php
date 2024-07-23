@@ -117,7 +117,7 @@ if ($action !== '') {
 
 $PAGE->set_url($url);
 
-$calendar = new calendar_information(0, 0, 0, $time);
+$calendar = new \core_calendar\information(0, 0, 0, $time);
 $calendar->set_sources($course, $courses);
 
 $pagetitle = get_string('export', 'calendar');

@@ -24,8 +24,7 @@
 
 namespace core_calendar\external;
 
-defined('MOODLE_INTERNAL') || die();
-
+use core_calendar\information;
 use renderer_base;
 
 /**
@@ -40,14 +39,14 @@ class week_day_exporter extends day_exporter {
     /**
      * Constructor.
      *
-     * @param \calendar_information $calendar The calendar information for the period being displayed
+     * @param information $calendar The calendar information for the period being displayed
      * @param mixed $data Either an stdClass or an array of values.
      * @param array $related Related objects.
      */
-    public function __construct(\calendar_information $calendar, $data, $related) {
+    public function __construct(information $calendar, $data, $related) {
         parent::__construct($calendar, $data, $related);
         // Fix the url for today to be based on the today timestamp
-        // rather than the calendar_information time set in the parent
+        // rather than the calendar information time set in the parent
         // constructor.
         $this->url->param('time', $this->data[0]);
     }

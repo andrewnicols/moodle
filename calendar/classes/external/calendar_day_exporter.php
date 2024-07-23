@@ -16,6 +16,7 @@
 
 namespace core_calendar\external;
 
+use core_calendar\information;
 use core\external\exporter;
 use core_date;
 use DateTimeImmutable;
@@ -32,7 +33,7 @@ use core_calendar\local\event\container;
  */
 class calendar_day_exporter extends exporter {
     /**
-     * @var \calendar_information $calendar The calendar to be rendered.
+     * @var information $calendar The calendar to be rendered.
      */
     protected $calendar;
 
@@ -44,10 +45,10 @@ class calendar_day_exporter extends exporter {
     /**
      * Constructor for day exporter.
      *
-     * @param \calendar_information $calendar The calendar being represented.
+     * @param information $calendar The calendar being represented.
      * @param array $related The related information
      */
-    public function __construct(\calendar_information $calendar, $related) {
+    public function __construct(information $calendar, $related) {
         $this->calendar = $calendar;
 
         parent::__construct([], $related);
