@@ -184,4 +184,14 @@ $legacyclasses = [
         'core_filters',
         'form/local_settings_form.php',
     ],
+
+    // The Calendar subsystem.
+    \calendar_event::class => [
+        'core_calendar',
+        'event.php',
+    ],
+    \calendar_information::class => [
+        'core_calendar',
+        'information.php',
+    ],
 ];
