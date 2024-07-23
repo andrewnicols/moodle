@@ -20,29 +20,25 @@
  * @copyright  2017 Simey Lameze <lameze@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
 import Ajax from 'core/ajax';
+import Fetch from 'core/fetch';
 
 /**
  * Delete a calendar event.
  *
  * @method deleteEvent
  * @param {number} eventId The event id.
- * @param {boolean} deleteSeries Whether to delete all events in the series
+ * @param {boolean} repeat Whether to delete all events in the series
  * @return {promise} Resolved with requested calendar event
  */
-export const deleteEvent = (eventId, deleteSeries = false) => {
-    const request = {
-        methodname: 'core_calendar_delete_calendar_events',
-        args: {
-            events: [{
-                eventid: eventId,
-                repeat: deleteSeries,
-            }]
-        }
-    };
-
-    return Ajax.call([request])[0];
-};
+export const deleteEvent = (eventId, repeat = false) => Fetch.performDelete(
+    'core_calendar',
+    `event/${eventId}`,
+    {
+        params: {repeat},
+    },
+);
 
 /**
  * Get a calendar event by id.

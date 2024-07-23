@@ -78,6 +78,16 @@ class core_calendar_external extends external_api {
     }
 
     /**
+     * Delete calendar service is deprecated
+     *
+     * @return bool
+     * @deprecated since Moodle 4.5
+     */
+    public static function delete_calendar_events_is_deprecated() {
+        return true;
+    }
+
+    /**
      * Delete Calendar events
      *
      * @param array $eventids A list of event ids with repeat flag to delete

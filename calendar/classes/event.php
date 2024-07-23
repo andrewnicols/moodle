@@ -19,7 +19,6 @@ namespace core_calendar;
 use core\context\coursecat as context_coursecat;
 use core\context\course as context_course;
 use core\context\user as context_user;
-use core\context\system as context_system;
 use core_course_category;
 use core_date;
 use core\exception\moodle_exception;
