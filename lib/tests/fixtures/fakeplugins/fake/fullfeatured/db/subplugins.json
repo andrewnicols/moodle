@@ -1,0 +1,11 @@
+{
+  "plugintypes": {
+    "fullsubtype": "lib\/tests\/fixtures\/fakeplugins\/fake\/fullfeatured\/fullsubtype"
+  },
+  "deprecatedplugintypes": {
+    "fulldeprecatedsubtype": "lib\/tests\/fixtures\/fakeplugins\/fake\/fullfeatured\/fulldeprecatedsubtype"
+  },
+  "deletedplugintypes": {
+    "fulldeletedsubtype": "lib\/tests\/fixtures\/fakeplugins\/fake\/fullfeatured\/fulldeletedsubtype"
+  }
+}
