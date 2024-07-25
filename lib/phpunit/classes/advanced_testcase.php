@@ -776,6 +776,146 @@ abstract class advanced_testcase extends base_testcase {
     }
 
     /**
+     * Add a mocked plugintype at the component sources level, allowing core_component to pick up the type and its plugins.
+     *
+     * Unlike {@see add_mocked_plugintype}, this method doesn't inject the mocked type into the existing cache at surface level,
+     * but instead injects it into component sources, allowing core_component to fully populate its caches from the mock sources.
+     *
+     * Please note that tests calling this method must be run in separate isolation mode.
+     * Please avoid using this if at all possible.
+     *
+     * @param string $plugintype The name of the plugintype
+     * @param string $path The path to the plugintype's root
+     * @param bool $subpluginsupport whether the mock plugintype supports subplugins.
+     * @return void
+     */
+    protected function add_full_mocked_plugintype(
+        string $plugintype,
+        string $path,
+        bool $subpluginsupport = false
+    ): void {
+
+        require_phpunit_isolation();
+
+        // Inject the plugintype into the mock component sources. This will be picked up during \core_component::init().
+        $mockedcomponent = new \ReflectionClass(\core_component::class);
+        $componentsource = $mockedcomponent->getStaticPropertyValue('componentsource');
+        $componentsourcekey = 'plugintypes';
+        if (object_property_exists($componentsource[$componentsourcekey], $plugintype)) {
+            throw new \coding_exception("The plugintype '{$plugintype}' already exists in component sources.");
+        }
+        $componentsource[$componentsourcekey]->$plugintype = $path;
+        $mockedcomponent->setStaticPropertyValue('componentsource', $componentsource);
+
+        // Force subplugin support for the plugin type, if specified.
+        if ($subpluginsupport) {
+            $typessupporting = $mockedcomponent->getStaticPropertyValue('supportsubplugins');
+            if (array_search($plugintype, $typessupporting) === false) {
+                $typessupporting[] = $plugintype;
+            }
+            $mockedcomponent->setStaticPropertyValue('supportsubplugins', $typessupporting);
+        }
+
+        // Force clear the static plugintypes cache, as this cache determines whether \core_component::init() will rebuild
+        // core_component caches from component sources.
+        $mockedcomponent->setStaticPropertyValue('plugintypes', null);
+
+        // Mock the installation of all plugins belonging to the plugintype (and those from the subtypes, if supported).
+        $allpluginsoftype = \core_component::get_plugin_list($plugintype);
+        foreach ($allpluginsoftype as $name => $plugindir) {
+            // Mock the installation of the plugin.
+            $plugin = (object) [];
+            require("$plugindir/version.php");
+            $fullpluginname = $plugintype . '_' . $name;
+            set_config('version', $plugin->version, $fullpluginname);
+            update_capabilities($fullpluginname);
+
+            // Mock the installation of the subplugins, if supported.
+            if ($subpluginsupport) {
+                if ($subpluginsoftype = \core_component::get_all_subplugins($fullpluginname)) {
+                    $alltypes = \core_component::get_all_plugin_types();
+                    foreach ($subpluginsoftype as $subplugintype => $subplugins) {
+                        foreach ($subplugins as $index => $name) {
+                            $subplugindir = $alltypes[$subplugintype] . '/' . $name;
+                            $fullsubpluginname = $subplugintype . '_' . $name;
+                            $plugin = (object) [];
+                            require("$subplugindir/version.php");
+                            set_config('version', $plugin->version, $fullsubpluginname);
+                            update_capabilities($fullsubpluginname);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Helper to deprecate a mocked plugin type at the component sources level.
+     *
+     * This method is to be used alongside {@see add_full_mocked_plugintype} only. It does not support deprecating shallow mocks
+     * of plugin types, such as those created with {@see add_mocked_plugintype}.
+     *
+     * @param string $plugintype the plugin type.
+     * @return void
+     * @throws coding_exception if the plugintype hasn't already been mocked or if it's already been deprecated.
+     */
+    protected function deprecate_full_mocked_plugintype(
+        string $plugintype,
+    ): void {
+        $mockedcomponent = new \ReflectionClass(\core_component::class);
+        $componentsource = $mockedcomponent->getStaticPropertyValue('componentsource');
+        $deprecatedkey = 'deprecatedplugintypes';
+        $typeskey = 'plugintypes';
+        $componentsource['deprecatedplugintypes'] = $componentsource['deprecatedplugintypes'] ?? (object) [];
+        if (!object_property_exists($componentsource[$typeskey], $plugintype)) {
+            throw new coding_exception("The plugintype '{$plugintype}' does not exist and cannot be deprecated.");
+        }
+        if (object_property_exists($componentsource[$deprecatedkey], $plugintype)) {
+            throw new coding_exception("The plugintype '{$plugintype}' has already been deprecated.");
+        }
+        $componentsource[$deprecatedkey]->$plugintype = $componentsource[$typeskey]->$plugintype;
+        unset($componentsource[$typeskey]->$plugintype);
+        $mockedcomponent->setStaticPropertyValue('componentsource', $componentsource);
+
+        // Force clear the static plugintypes cache, as this cache determines whether \core_component::init() will rebuild
+        // core_component caches from component sources.
+        $mockedcomponent->setStaticPropertyValue('plugintypes', null);
+    }
+
+    /**
+     * Helper to delete a mocked plugin type at the component sources level.
+     *
+     * This method is to be used alongside {@see add_full_mocked_plugintype} only. It does not support deleting shallow mocks
+     * of plugin types, such as those created with {@see add_mocked_plugintype}.
+     *
+     * @param string $plugintype the plugin type.
+     * @return void
+     * @throws coding_exception if the plugintype hasn't already been mocked or if it's already been deprecated.
+     */
+    protected function delete_full_mocked_plugintype(
+        string $plugintype,
+    ): void {
+        $mockedcomponent = new \ReflectionClass(\core_component::class);
+        $componentsource = $mockedcomponent->getStaticPropertyValue('componentsource');
+        $deletedkey = 'deletedplugintypes';
+        $typeskey = 'plugintypes';
+        $componentsource['deletedplugintypes'] = $componentsource['deletedplugintypes'] ?? (object) [];
+        if (!object_property_exists($componentsource[$typeskey], $plugintype)) {
+            throw new coding_exception("The plugintype '{$plugintype}' does not exist and cannot be deleted.");
+        }
+        if (object_property_exists($componentsource[$deletedkey], $plugintype)) {
+            throw new coding_exception("The plugintype '{$plugintype}' has already been deleted.");
+        }
+        $componentsource[$deletedkey]->$plugintype = $componentsource[$typeskey]->$plugintype;
+        unset($componentsource[$typeskey]->$plugintype);
+        $mockedcomponent->setStaticPropertyValue('componentsource', $componentsource);
+
+        // Force clear the static plugintypes cache, as this cache determines whether \core_component::init() will rebuild
+        // core_component caches from component sources.
+        $mockedcomponent->setStaticPropertyValue('plugintypes', null);
+    }
+
+    /**
      * Add a mocked plugintype to Moodle.
      *
      * A new plugintype name must be provided with a path to the plugintype's root.
@@ -785,22 +925,25 @@ abstract class advanced_testcase extends base_testcase {
      *
      * @param string $plugintype The name of the plugintype
      * @param string $path The path to the plugintype's root
+     * @param bool $deprecated whether to add the plugintype as a deprecated plugin type.
      */
     protected function add_mocked_plugintype(
         string $plugintype,
         string $path,
+        bool $deprecated = false,
     ): void {
         require_phpunit_isolation();
 
         $mockedcomponent = new \ReflectionClass(\core_component::class);
-        $plugintypes = $mockedcomponent->getStaticPropertyValue('plugintypes');
+        $propertyname = $deprecated ? 'deprecatedplugintypes' : 'plugintypes';
+        $plugintypes = $mockedcomponent->getStaticPropertyValue($propertyname);
 
         if (array_key_exists($plugintype, $plugintypes)) {
             throw new \coding_exception("The plugintype '{$plugintype}' already exists.");
         }
 
         $plugintypes[$plugintype] = $path;
-        $mockedcomponent->setStaticPropertyValue('plugintypes', $plugintypes);
+        $mockedcomponent->setStaticPropertyValue($propertyname, $plugintypes);
 
         $this->resetDebugging();
     }
