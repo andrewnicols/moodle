@@ -25,7 +25,7 @@ namespace core\event;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\event\manager
  */
-class manager_test extends \advanced_testcase {
+final class manager_test extends \advanced_testcase {
 
     /**
      * Test verifying that observers are not returned for deprecated plugin types.
