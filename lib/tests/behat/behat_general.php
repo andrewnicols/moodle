@@ -1,4 +1,5 @@
 <?php
+use Facebook\WebDriver\Exception\ElementNotInteractableException;
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -409,7 +410,14 @@ class behat_general extends behat_base {
      */
     public function i_click_on($element, $selectortype) {
         // Gets the node based on the requested selector type and locator.
-        $this->get_selected_node($selectortype, $element)->click();
+        $node = $this->get_selected_node($selectortype, $element);
+        try {
+            $node->click();
+        } catch (ElementNotInteractableException $e) {
+            error_log($node->getOuterHtml());
+            error_log($node->getXpath());
+            throw $e;
+        }
     }
 
     /**
