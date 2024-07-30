@@ -67,7 +67,7 @@ abstract class abstract_route_loader {
         string $componentpath,
         \ReflectionClass $classinfo,
     ): array {
-        // Filte rout any methods which are public but do not have any route attached.
+        // Filter out any methods which are public but do not have any route attached.
         return array_filter(
             array_map(
                 fn ($methodinfo) => $this->get_route_data_for_method(

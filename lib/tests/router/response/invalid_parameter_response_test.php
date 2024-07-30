@@ -23,7 +23,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 use invalid_parameter_exception;
 
 /**
- * Tests for the path paraemter.
+ * Tests for the path parameter.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>

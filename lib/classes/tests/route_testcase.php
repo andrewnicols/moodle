@@ -509,7 +509,7 @@ abstract class route_testcase extends \advanced_testcase {
      *
      * All components are subclasses of the openapi_base class and may be referenced.
      *
-     * Any component which implements the referenced_object interface will return an a reference
+     * Any component which implements the referenced_object interface will return a reference
      * to the stored internal object.
      *
      * @param specification $api

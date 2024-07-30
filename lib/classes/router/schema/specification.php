@@ -41,7 +41,7 @@ class specification implements
     /** @var string The OpenAPI version represented in this specification */
     public const OPENAPI_VERSION = '3.1.0';
 
-    /** @var stdClass The data which forms the specifcation */
+    /** @var stdClass The data which forms the specification */
     protected stdClass $data;
 
     /** @var bool Whether the data has been finalised for output yet */
@@ -284,7 +284,7 @@ class specification implements
         // Note: We use this helper because OpenAPI does not support optional parameters.
         // Therefore we must handle that in Moodle, adding path variants with and without each optional parameter.
         $addpath = function (string $path) use ($route, $component, $parentcontexts) {
-            // Remove the optional parameters delimeters from the path.
+            // Remove the optional parameters delimiters from the path.
             $path = str_replace(
                 ['[', ']'],
                 '',

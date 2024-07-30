@@ -85,7 +85,7 @@ final class array_of_things_test extends route_testcase {
 
 
     /**
-     * Test tha the validate_data method successfulyl validates content.
+     * Test tha the validate_data method successfully validates content.
      *
      * @dataProvider successful_validation_provider
      * @param param|string|type_base|null $valueparamtype

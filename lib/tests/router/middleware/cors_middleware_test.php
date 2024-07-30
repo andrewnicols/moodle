@@ -60,7 +60,7 @@ final class cors_middleware_test extends route_testcase {
     }
 
     /**
-     * CORS methods are added for multiple routes matcing the same path.
+     * CORS methods are added for multiple routes matching the same path.
      */
     public function test_cors_multiple_methods_headers(): void {
         $app = $this->get_simple_app();

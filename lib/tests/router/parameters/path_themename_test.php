@@ -24,7 +24,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
 
 /**
- * Tests for the Theme name path paraemter.
+ * Tests for the Theme name path parameter.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>

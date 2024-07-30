@@ -48,7 +48,7 @@ class header_object extends parameter {
         protected bool $multiple = false,
         ...$extra,
     ) {
-        $extra['in'] = 'header';
+        $extra['in'] = parameter::IN_HEADER;
         parent::__construct(...$extra);
     }
 

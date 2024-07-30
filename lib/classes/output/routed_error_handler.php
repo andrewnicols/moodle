@@ -44,6 +44,7 @@ class routed_error_handler implements ErrorRendererInterface {
         } else {
             default_exception_handler($exception);
         }
-    }
 
+        return '';
+    }
 }

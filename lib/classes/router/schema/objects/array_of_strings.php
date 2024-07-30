@@ -20,7 +20,7 @@ use core\param;
 use core\router\schema\referenced_object;
 
 /**
- * A scheam to describe an array of strings.
+ * A schema to describe an array of strings.
  *
  * TODO: This should really take a param:: type for validation of both name and value.
  *

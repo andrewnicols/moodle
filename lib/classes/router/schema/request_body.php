@@ -109,7 +109,7 @@ class request_body extends openapi_base {
     /**
      * Get the relevant body for the specified request.
      *
-     * Requeset bodies can be different for different content-types, as noted in the request.
+     * Request bodies can be different for different content-types, as noted in the request.
      *
      * @param ServerRequestInterface $request
      * @return media_type

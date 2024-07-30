@@ -65,7 +65,7 @@ final class abstract_route_loader_test extends \advanced_testcase {
     }
 
     /**
-     * Test tha the normalise_component_path method works as expetected.
+     * Test tha the normalise_component_path method works as expected.
      *
      * @dataProvider normalise_component_path_provider
      * @param string $input

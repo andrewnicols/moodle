@@ -22,7 +22,7 @@ use core\tests\route_testcase;
 use GuzzleHttp\Psr7\ServerRequest;
 
 /**
- * Tests for the Moodle route attribute middlware.
+ * Tests for the Moodle route attribute middleware.
  *
  * @package    core
  * @category   test

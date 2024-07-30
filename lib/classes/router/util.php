@@ -40,7 +40,7 @@ class util {
      * Redirect to the specified URL, carrying all parameters across too.
      *
      * @param string|moodle_url $path
-     * @param array $excludeparams Any parameters to exlude from the query params
+     * @param array $excludeparams Any parameters to exclude from the query params
      * @codeCoverageIgnore
      */
     public static function redirect_with_params(

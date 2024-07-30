@@ -20,7 +20,7 @@ use core\param;
 use core\router\schema\specification;
 
 /**
- * A schema to descirbe an array of things. These could be any type, including other schema definitions.
+ * A schema to describe an array of things. These could be any type, including other schema definitions.
  *
  * See https://spec.openapis.org/oas/v3.0.0#model-with-map-dictionary-properties for relevant documentation.
  *
@@ -36,7 +36,7 @@ class array_of_things extends \core\router\schema\objects\type_base {
      * @param mixed[] ...$extra
      */
     public function __construct(
-        /** @var string|type_base|param|null The child item teype */
+        /** @var string|type_base|param|null The child item type */
         protected string|type_base|param|null $thingtype = null,
         ...$extra,
     ) {
@@ -85,7 +85,7 @@ class array_of_things extends \core\router\schema\objects\type_base {
             $validator = fn ($value) => $param->validate_param($value);
         }
 
-        foreach (array_values($data) as $value) {
+        foreach ($data as $value) {
             $validator($value);
         }
         return $data;

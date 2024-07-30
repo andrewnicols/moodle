@@ -119,7 +119,7 @@ class apidocs {
     /**
      * Get the API Docs for the specified Route.
      *
-     * @param string $component The compomnent that the route relates to
+     * @param string $component The component that the route relates to
      * @param ReflectionClass $classinfo
      * @param specification $api
      * @param array $parentcontexts

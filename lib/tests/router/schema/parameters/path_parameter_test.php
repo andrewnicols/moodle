@@ -26,7 +26,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
 
 /**
- * Tests for the path paraemter.
+ * Tests for the path parameter.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
@@ -74,7 +74,7 @@ final class path_parameter_test extends route_testcase {
      * Test fo the OPenAPI description in different configurations.
      *
      * @dataProvider openapi_required_values_provider
-     * @param string $path If the a value is a required part of the apth
+     * @param string $path If the a value is a required part of the path
      * @param bool $required If the value is expected to be required
      */
     public function test_get_openapi_description_required_values(

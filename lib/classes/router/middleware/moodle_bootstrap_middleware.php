@@ -83,6 +83,7 @@ class moodle_bootstrap_middleware implements MiddlewareInterface {
      * @codeCoverageIgnore
      */
     protected function load_full_moodle(): void {
+        // Note: These globals should be defined even if they are not used as they are used in the require.
         global $CFG, $DB, $SESSION, $OUTPUT, $PAGE;
 
         if ($this->is_full_moodle_loaded()) {

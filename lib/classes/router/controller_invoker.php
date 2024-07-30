@@ -27,7 +27,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * This class handles invocation of the route callable, and the conversion of the response into an appropriate format.
  *
  * @package    core
- * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class controller_invoker implements \Slim\Interfaces\InvocationStrategyInterface {
@@ -50,16 +50,19 @@ class controller_invoker implements \Slim\Interfaces\InvocationStrategyInterface
         callable $callable,
         ServerRequestInterface $request,
         ResponseInterface $response,
-        array $routeargs,
+        array $routeArguments, // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
     ): ResponseInterface {
         // Inject the request and response by parameter name.
         $parameters = [
-            'request'  => self::inject_route_arguments($request, $routeargs),
+            'request'  => self::inject_route_arguments(
+                $request,
+                $routeArguments, // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
+            ),
             'response' => $response,
         ];
 
         // Inject the route arguments by name.
-        $parameters += $routeargs;
+        $parameters += $routeArguments; // phpcs:ignore moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
 
         // Inject the attributes defined on the request.
         $parameters += $request->getAttributes();

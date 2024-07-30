@@ -22,7 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * An response which will render the specified template.
+ * A response which will render the specified template.
  *
  * This approach is inspired and based upon slim-routing https://github.com/juliangut/slim-routing
  * We only need a fraction of this functionality.

@@ -56,6 +56,7 @@ class query_parameter extends parameter {
      *
      * @param ServerRequestInterface $request
      * @param array $params
+     * @return ServerRequestInterface
      */
     public function validate(
         ServerRequestInterface $request,

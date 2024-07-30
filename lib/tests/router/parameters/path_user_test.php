@@ -23,7 +23,7 @@ use GuzzleHttp\Psr7\ServerRequest;
 use stdClass;
 
 /**
- * Tests for the User Path paraemter.
+ * Tests for the User Path parameter.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>

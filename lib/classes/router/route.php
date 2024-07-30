@@ -306,7 +306,7 @@ class route {
 
     /**
      * Whether this route expects any validatable parameters.
-     * That is, any parameter in the path, query params, or the reqeust body.
+     * That is, any parameter in the path, query params, or the request body.
      *
      * @return bool
      */

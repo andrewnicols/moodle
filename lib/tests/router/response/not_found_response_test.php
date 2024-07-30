@@ -23,7 +23,7 @@ use core\tests\route_testcase;
 use GuzzleHttp\Psr7\ServerRequest;
 
 /**
- * Tests for the path paraemter.
+ * Tests for the path parameter.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
