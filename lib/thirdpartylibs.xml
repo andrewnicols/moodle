@@ -652,6 +652,7 @@ All rights reserved.</copyright>
     <license>MIT</license>
     <repository>https://github.com/php-fig/http-server-handler</repository>
   </library>
+  <library>
     <location>psr/http-server-middleware</location>
     <name>psr/http-server-middleware</name>
     <description>Common interface for HTTP server-side middleware</description>
@@ -667,6 +668,7 @@ All rights reserved.</copyright>
     <license>MIT</license>
     <repository>https://github.com/php-fig/event-dispatcher</repository>
   </library>
+  <library>
     <location>psr/log</location>
     <name>log</name>
     <description>Common interface for logging libraries</description>
