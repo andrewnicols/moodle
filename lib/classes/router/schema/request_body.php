@@ -16,8 +16,6 @@
 
 namespace core\router\schema;
 
-use core\router\schema\openapi_base;
-use core\router\schema\specification;
 use core\router\schema\response\content\media_type;
 use core\router\schema\response\content\payload_response_type;
 use Psr\Http\Message\ServerRequestInterface;
@@ -73,13 +71,7 @@ class request_body extends openapi_base {
         parent::__construct(...$args);
     }
 
-    /**
-     * Get the OpenAPI description for this class.
-     *
-     * @param specification $api
-     * @param string|null $path
-     * @return \stdClass
-     */
+    #[\Override]
     public function get_openapi_description(
         specification $api,
         ?string $path = null,

@@ -41,6 +41,7 @@ class response extends openapi_base {
      * @param array $headers The headers associated with this response
      * @param array|payload_response_type $content The content of this response
      * @param mixed ...$extra Any extra data to store
+     * @throws coding_exception
      */
     public function __construct(
         /** @var int The status code for this response */
@@ -85,21 +86,13 @@ class response extends openapi_base {
             return $this->description;
         }
 
-        switch ($this->statuscode) {
-            case 200:
-                return 'OK';
-            default:
-                return '';
-        }
+        return match ($this->statuscode) {
+            200 => 'OK',
+            default => '',
+        };
     }
 
-    /**
-     * Get the OpenAPI schema for this response.
-     *
-     * @param specification $api The API to get the schema for
-     * @param string|null $path The path to get the schema for
-     * @return \stdClass
-     */
+    #[\Override]
     public function get_openapi_description(
         specification $api,
         ?string $path = null,

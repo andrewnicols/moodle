@@ -38,6 +38,7 @@ final class header_object_test extends route_testcase {
             type: param::TEXT,
         );
 
+        /** @var ServerRequestInterface $request */ // phpcs:ignore moodle.Commenting.InlineComment.DocBlock
         $request = (new ServerRequest('GET', 'http://example.com'))
             // A known header.
             ->withHeader('Accept', 'application/json')
@@ -50,7 +51,7 @@ final class header_object_test extends route_testcase {
             ->withAddedHeader('X-Unknown', 'value1')
             ->withAddedHeader('X-Unknown', 'value2');
 
-        $result = $param->validate($request, $request->getHeaders());
+        $result = $param->validate($request);
         $this->assertInstanceOf(ServerRequestInterface::class, $result);
 
         $this->assertEquals('application/json', $result->getHeaderLine('Accept'));
@@ -68,7 +69,7 @@ final class header_object_test extends route_testcase {
         );
 
         $this->expectException(invalid_parameter_exception::class);
-        $param->validate($request, []);
+        $param->validate($request);
     }
 
     public function test_optional_default(): void {
@@ -80,7 +81,7 @@ final class header_object_test extends route_testcase {
             default: 'default',
         );
 
-        $request = $param->validate($request, []);
+        $request = $param->validate($request);
         $this->assertEquals('default', $request->getHeaderLine('example'));
     }
 
@@ -92,7 +93,7 @@ final class header_object_test extends route_testcase {
             required: false,
         );
 
-        $request = $param->validate($request, []);
+        $request = $param->validate($request);
         $this->assertEquals(null, $request->getHeaderLine('example'));
     }
 
@@ -107,7 +108,7 @@ final class header_object_test extends route_testcase {
             multiple: true,
         );
 
-        $request = $param->validate($request, $request->getHeaders());
+        $request = $param->validate($request);
         $this->assertEquals(['value1', 'value2'], $request->getHeader('example'));
     }
 
@@ -123,7 +124,7 @@ final class header_object_test extends route_testcase {
         );
 
         $this->expectException(invalid_parameter_exception::class);
-        $param->validate($request, $request->getHeaders());
+        $param->validate($request);
     }
 
     public function test_boolean_param(): void {
@@ -134,7 +135,7 @@ final class header_object_test extends route_testcase {
             type: param::BOOL,
         );
 
-        $request = $param->validate($request, $request->getHeaders());
+        $request = $param->validate($request);
         $this->assertEquals([true], $request->getHeader('example'));
     }
 
@@ -149,7 +150,7 @@ final class header_object_test extends route_testcase {
             multiple: true,
         );
 
-        $request = $param->validate($request, $request->getHeaders());
+        $request = $param->validate($request);
         $this->assertEquals([true, false, true], $request->getHeader('example'));
     }
 
@@ -165,6 +166,6 @@ final class header_object_test extends route_testcase {
         );
 
         $this->expectException(ValueError::class);
-        $param->validate($request, $request->getHeaders());
+        $param->validate($request);
     }
 }

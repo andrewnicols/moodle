@@ -16,8 +16,7 @@
 
 namespace core\router\schema;
 
-use core\router\schema\openapi_base;
-use core\router\schema\specification;
+use core\exception\coding_exception;
 
 /**
  * A Response Example Object.
@@ -38,7 +37,7 @@ class example extends openapi_base {
      * @param mixed $value Embedded literal example.
      * @param string|null $externalvalue A URI that points to the literal example.
      * @param mixed ...$extra
-     * @throws \coding_exception if both the value and externalvalue are null
+     * @throws coding_exception if both the value and externalvalue are null
      */
     public function __construct(
         /** @var string The name of the example */
@@ -69,8 +68,10 @@ class example extends openapi_base {
         ...$extra,
     ) {
         if (!($value === null || $externalvalue === null)) {
-            throw new \coding_exception('Only one of value or externalvalue can be specified.');
+            throw new coding_exception('Only one of value or externalvalue can be specified.');
         }
+
+        parent::__construct(...$extra);
     }
 
     /**

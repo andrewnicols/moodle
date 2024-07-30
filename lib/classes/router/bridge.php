@@ -52,14 +52,14 @@ class bridge {
     public static function create(?ContainerInterface $container = null): App {
         $container = $container ?: di::get_container();
 
-        $container->set(
+        di::set(
             CallableResolverInterface::class,
-            new \core\router\callable_resolver(new \Invoker\CallableResolver($container)),
+            new callable_resolver(new \Invoker\CallableResolver($container)),
         );
 
         $app = AppFactory::createFromContainer($container);
 
-        $container->set(App::class, $app);
+        di::set(App::class, $app);
 
         $controllerinvoker = static::create_controller_invoker($container);
         $app->getRouteCollector()->setDefaultInvocationStrategy($controllerinvoker);
@@ -71,6 +71,7 @@ class bridge {
      * Create a controller invoker
      *
      * @param ContainerInterface $container
+     * @return InvocationStrategyInterface
      */
     protected static function create_controller_invoker(ContainerInterface $container): InvocationStrategyInterface {
         $resolvers = [

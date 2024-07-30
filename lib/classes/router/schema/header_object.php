@@ -16,9 +16,6 @@
 
 namespace core\router\schema;
 
-use core\router\schema\specification;
-use core\router\schema\parameter;
-
 /**
  * A Header Object.
  *

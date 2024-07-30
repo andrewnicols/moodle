@@ -41,7 +41,7 @@ class scalar_type extends type_base {
         /** @var bool Whether the value is required or not */
         protected bool $required = false,
         /** @var mixed $default The value used if none was supplied (request bodies only) */
-        protected $default = null,
+        protected mixed $default = null,
         ...$extra,
     ) {
         parent::__construct(...$extra);
@@ -56,7 +56,7 @@ class scalar_type extends type_base {
     }
 
     #[\Override]
-    public function validate_data($data) {
+    public function validate_data(mixed $data) {
         return $this->type->validate_param(
             param: $data,
             allownull: $this->required ? NULL_NOT_ALLOWED : NULL_ALLOWED,

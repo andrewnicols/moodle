@@ -16,7 +16,6 @@
 
 namespace core\router;
 
-use core\router\route;
 use moodle_url;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ServerRequestInterface;

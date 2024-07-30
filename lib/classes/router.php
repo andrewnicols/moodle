@@ -51,9 +51,6 @@ class router {
     /** @var App The SlimPHP App */
     protected readonly App $app;
 
-    /** @var bool Whether Moodle is fully loaded or not */
-    protected bool $fullyloaded = false;
-
     /**
      * Create a new Router.
      *

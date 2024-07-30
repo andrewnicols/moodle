@@ -28,7 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * We only need a fraction of this functionality.
  *
  * @package    core
- * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class view_response extends abstract_response {
@@ -42,9 +42,9 @@ class view_response extends abstract_response {
      */
     public function __construct(
         /** @var string The template name */
-        private string $template,
+        private readonly string $template,
         /** @var array The parameters to pass */
-        private array $parameters,
+        private readonly array $parameters,
         ServerRequestInterface $request,
         ?ResponseInterface $response = null,
     ) {

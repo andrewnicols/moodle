@@ -28,7 +28,7 @@ use core\router\schema\specification;
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class array_of_things extends \core\router\schema\objects\type_base {
+class array_of_things extends type_base {
     /**
      * An array of things.
      *
@@ -64,7 +64,7 @@ class array_of_things extends \core\router\schema\objects\type_base {
     }
 
     #[\Override]
-    public function validate_data($data) {
+    public function validate_data(mixed $data) {
         if (!is_array($data)) {
             throw new \invalid_parameter_exception('Invalid data type, expected array.');
         }

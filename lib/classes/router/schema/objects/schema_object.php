@@ -16,8 +16,8 @@
 
 namespace core\router\schema\objects;
 
+use core\exception\coding_exception;
 use core\router\schema\specification;
-use core\router\schema\objects\type_base;
 
 /**
  * A schema to describe an array of things. These could be any type, including other schema definitions.
@@ -34,6 +34,7 @@ class schema_object extends type_base {
      *
      * @param type_base[] $content The child content
      * @param mixed[] ...$extra
+     * @throws coding_exception
      */
     public function __construct(
         /** @var type_base[] The child content */
@@ -43,7 +44,7 @@ class schema_object extends type_base {
     ) {
         foreach ($content as $child) {
             if (!$child instanceof type_base) {
-                throw new \coding_exception('Content must be an array of type_base objects');
+                throw new coding_exception('Content must be an array of type_base objects');
             }
         }
 
@@ -71,13 +72,13 @@ class schema_object extends type_base {
     }
 
     #[\Override]
-    public function validate_data($params) {
-        foreach ($params as $key => $values) {
+    public function validate_data(mixed $data) {
+        foreach ($data as $key => $values) {
             if (!$this->has($key)) {
                 // We do not know about this one.
                 // Remove it from the params array.
-                $params = array_diff_key(
-                    $params,
+                $data = array_diff_key(
+                    $data,
                     [$key => $values],
                 );
                 continue;
@@ -85,10 +86,10 @@ class schema_object extends type_base {
 
             // Validate this parameter.
             $child = $this->content[$key];
-            $params[$key] = $child->validate_data($values);
+            $data[$key] = $child->validate_data($values);
         }
 
-        return $params;
+        return $data;
     }
 
     #[\Override]

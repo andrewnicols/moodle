@@ -79,7 +79,7 @@ trait route_controller {
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
-     * @param mixed $callable
+     * @param array|callable|string $callable
      * @param null|array $pathparams
      * @param null|array $queryparams
      * @param null|array $excludeparams A list of any parameters to remove the URI during the redirect
@@ -88,7 +88,7 @@ trait route_controller {
     protected function redirect_to_callable(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        $callable,
+        array|callable|string $callable,
         ?array $pathparams = null,
         ?array $queryparams = null,
         ?array $excludeparams = null,

@@ -52,14 +52,14 @@ class request_validator implements request_validator_interface {
         $request = $this->validate_path($request, $moodleroute, $slimroute);
 
         // Validate query parameters.
-        $request = $this->validate_query($request, $moodleroute, $slimroute);
+        $request = $this->validate_query($request, $moodleroute);
 
         // Validate request headers.
-        $request = $this->validate_request_header($request, $moodleroute, $slimroute);
+        $request = $this->validate_request_header($request, $moodleroute);
 
         // Validate request body parameters.
         // Found in POST, PUT, DELETE, etc.
-        $request = $this->validate_request_body($request, $moodleroute, $slimroute);
+        $request = $this->validate_request_body($request, $moodleroute);
 
         return $request;
     }
@@ -107,13 +107,11 @@ class request_validator implements request_validator_interface {
      *
      * @param ServerRequestInterface $request
      * @param route $moodleroute
-     * @param RouteInterface $route
      * @return ServerRequestInterface
      */
     protected function validate_query(
         ServerRequestInterface $request,
         route $moodleroute,
-        RouteInterface $route,
     ): ServerRequestInterface {
         $requestparams = $request->getQueryParams();
         $paramnames = array_map(
@@ -148,13 +146,11 @@ class request_validator implements request_validator_interface {
      *
      * @param ServerRequestInterface $request
      * @param route $moodleroute
-     * @param RouteInterface $route
      * @return ServerRequestInterface
      */
     protected function validate_request_header(
         ServerRequestInterface $request,
         route $moodleroute,
-        RouteInterface $route,
     ): ServerRequestInterface {
         $headerparams = $moodleroute->get_header_parameters();
 
@@ -170,13 +166,11 @@ class request_validator implements request_validator_interface {
      *
      * @param ServerRequestInterface $request
      * @param route $moodleroute
-     * @param RouteInterface $route
      * @return ServerRequestInterface
      */
     protected function validate_request_body(
         ServerRequestInterface $request,
         route $moodleroute,
-        RouteInterface $route,
     ): ServerRequestInterface {
         if ($moodleroute->get_request_body() === null) {
             // Clear the parsed body if there should not be one.

@@ -39,7 +39,7 @@ interface response_type {
      * Get the Response object for this response.
      *
      * @param ResponseFactoryInterface $responsefactory The response factory
-     * @return ResponseInterface
+     * @return null|ResponseInterface
      */
     public function get_response(
         ResponseFactoryInterface $responsefactory,

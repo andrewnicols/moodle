@@ -16,6 +16,7 @@
 
 namespace core\router\schema\parameters;
 
+use core\exception\coding_exception;
 use core\param;
 use core\router\schema\parameter;
 use core\router\schema\specification;
@@ -57,6 +58,8 @@ class query_parameter extends parameter {
      * @param ServerRequestInterface $request
      * @param array $params
      * @return ServerRequestInterface
+     * @throws coding_exception
+     * @throws \ValueError
      */
     public function validate(
         ServerRequestInterface $request,
@@ -83,7 +86,7 @@ class query_parameter extends parameter {
         }
 
         if ($this->required) {
-            throw new \coding_exception(
+            throw new coding_exception(
                 "A required parameter {$this->name} was not provided and must be specified",
             );
         }

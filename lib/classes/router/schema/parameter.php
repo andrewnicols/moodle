@@ -16,11 +16,9 @@
 
 namespace core\router\schema;
 
-use coding_exception;
+use core\exception\coding_exception;
 use core\param;
 use core\router\route;
-use core\router\schema\openapi_base;
-use core\router\schema\specification;
 use core\router\schema\objects\type_base;
 use stdClass;
 
@@ -66,6 +64,7 @@ class parameter extends openapi_base {
      * @param null|example $example
      * @param example[] $examples
      * @param mixed[] ...$extra
+     * @throws coding_exception
      */
     public function __construct(
         /** @var string The name of the parameter. Parameter names are case sensitive */

@@ -48,7 +48,7 @@ class payload_response_type extends openapi_base {
     /**
      * Get the supported content types.
      *
-     * @return string[]
+     * @return \class-string<media_type>[]
      */
     public function get_supported_content_types(): array {
         return [

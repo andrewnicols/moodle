@@ -18,8 +18,6 @@ namespace core\router\schema\objects;
 
 use core\param;
 use core\router\schema\example;
-use core\router\schema\objects\array_of_things;
-use core\router\schema\objects\scalar_type;
 use core\router\schema\referenced_object;
 use core\router\schema\specification;
 

@@ -199,7 +199,7 @@ class user {
         string $fields = '*',
         ?int $mnethostid = null,
         int $strictness = IGNORE_MISSING,
-    ) {
+    ): stdClass|bool {
         global $DB, $CFG;
 
         // Because we use the username as the search criteria, we must also restrict our search based on mnet host.

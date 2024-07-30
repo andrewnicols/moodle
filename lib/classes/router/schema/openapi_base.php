@@ -19,8 +19,6 @@ namespace core\router\schema;
 use coding_exception;
 use core\param;
 use core\router\schema\objects\type_base;
-use core\router\schema\request_body;
-use core\router\schema\parameter;
 use core\router\schema\response\response;
 use stdClass;
 
@@ -95,7 +93,7 @@ abstract class openapi_base {
      *
      * @param specification $api
      * @param null|string $path
-     * @return stdClass
+     * @return null|stdClass
      */
     abstract public function get_openapi_description(
         specification $api,

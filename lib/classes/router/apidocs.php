@@ -49,7 +49,7 @@ class apidocs {
             $classinfo = new ReflectionClass($classname);
             [$component] = explode('\\', $classinfo->getNamespaceName());
 
-            $classroutes = $classinfo->getAttributes(\core\router\route::class);
+            $classroutes = $classinfo->getAttributes(route::class);
 
             if ($classroutes) {
                 foreach ($classroutes as $classroute) {
@@ -150,7 +150,6 @@ class apidocs {
             // Add this path to the OpenAPI specification.
             $api->add_path(
                 component: $component,
-                parentcontexts: $parentcontexts,
                 route: $routeattribute,
             );
         }

@@ -53,7 +53,7 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
             }
 
             // Add the OpenAPI docs route.
-            $callable = [\core\router\apidocs::class, 'openapi_docs'];
+            $callable = [apidocs::class, 'openapi_docs'];
             $slimroute = $group->get('/openapi.json', $callable);
             $this->set_route_name_for_callable($slimroute, $callable);
         });

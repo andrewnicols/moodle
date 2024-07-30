@@ -48,8 +48,8 @@ final class array_of_strings extends array_of_things implements referenced_objec
     }
 
     #[\Override]
-    public function validate_data($params) {
-        foreach ($params as $name => $value) {
+    public function validate_data(mixed $data) {
+        foreach ($data as $name => $value) {
             $this->keyparamtype->validate_param(
                 param: $name,
                 debuginfo: $this->get_debug_info_for_validation_failure($this->keyparamtype, $name),
@@ -59,7 +59,7 @@ final class array_of_strings extends array_of_things implements referenced_objec
                 debuginfo: $this->get_debug_info_for_validation_failure($this->valueparamtype, $value),
             );
         }
-        return $params;
+        return $data;
     }
 
     /**

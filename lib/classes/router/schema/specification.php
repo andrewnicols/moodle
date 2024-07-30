@@ -22,10 +22,7 @@ use core\router\response\not_found_response;
 use core\router\route;
 use core\router\route_loader_interface;
 use core\router\schema\objects\type_base;
-use core\router\schema\request_body;
 use core\router\schema\response\response;
-use core\router\schema\example;
-use core\router\schema\parameter;
 use stdClass;
 
 /**
@@ -86,12 +83,12 @@ class specification implements
                     'api_key' => (object) [
                         'type' => 'apiKey',
                         'name' => 'api_key',
-                        'in' => 'header',
+                        'in' => parameter::IN_HEADER,
                     ],
                     'cookie' => (object) [
                         'type' => 'apiKey',
                         'name' => 'MoodleSession',
-                        'in' => 'cookie',
+                        'in' => parameter::IN_COOKIE,
                     ],
                     // TODO MDL-82242: Add support for OAuth2.
                 ],
@@ -257,13 +254,11 @@ class specification implements
      * Add an API Path.
      *
      * @param string $component The Moodle component
-     * @param array $parentcontexts The parent contexts that this path relates to (if any)
      * @param route $route The route which handles this request
      * @return specification
      */
     public function add_path(
         string $component,
-        array $parentcontexts,
         route $route,
     ): self {
         // Compile the final path, complete with component prefix.
@@ -283,7 +278,7 @@ class specification implements
         // Helper to add the path to the specification.
         // Note: We use this helper because OpenAPI does not support optional parameters.
         // Therefore we must handle that in Moodle, adding path variants with and without each optional parameter.
-        $addpath = function (string $path) use ($route, $component, $parentcontexts) {
+        $addpath = function (string $path) use ($route, $component) {
             // Remove the optional parameters delimiters from the path.
             $path = str_replace(
                 ['[', ']'],
@@ -296,7 +291,6 @@ class specification implements
                 route: $route,
                 component: $component,
                 path: $path,
-                parentcontexts: $parentcontexts,
             );
 
             if (!property_exists($this->data->paths, $path)) {
@@ -458,16 +452,12 @@ class specification implements
      * @param route $route
      * @param string $component
      * @param string $path
-     * @param array $parentcontexts
-     * @param array $commonresponses
      * @return stdClass
      */
     public function get_openapi_schema_for_route(
         route $route,
         string $component,
         string $path,
-        array $parentcontexts = [],
-        array $commonresponses = [],
     ): stdClass {
         $data = (object) [
             'description' => $route->description,

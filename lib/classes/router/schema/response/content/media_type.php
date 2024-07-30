@@ -16,6 +16,7 @@
 
 namespace core\router\schema\response\content;
 
+use core\exception\coding_exception;
 use core\router\schema\example;
 use core\router\schema\openapi_base;
 use core\router\schema\objects\type_base;
@@ -38,6 +39,7 @@ abstract class media_type extends openapi_base {
      * @param example[] $examples An array of examples of the media type
      * @param bool $required Whether the media_type is required
      * @param mixed[] ...$extra
+     * @throws coding_exception
      */
     public function __construct(
         /** @var type_base|null The OpenAPI Schema to use */
@@ -54,10 +56,12 @@ abstract class media_type extends openapi_base {
     ) {
         if ($example) {
             if (count($examples)) {
-                throw new \coding_exception('Only one of example or examples can be specified.');
+                throw new coding_exception('Only one of example or examples can be specified.');
             }
             $this->examples[$example->get_name()] = $example;
         }
+
+        parent::__construct(...$extra);
     }
 
     #[\Override]

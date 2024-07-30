@@ -87,7 +87,6 @@ final class specification_test extends route_testcase {
 
         $spec->add_path(
             $component,
-            [],
             new route(
                 path: $path,
             ),
@@ -127,7 +126,6 @@ final class specification_test extends route_testcase {
 
         $spec->add_path(
             'core',
-            [],
             new route(
                 path: '/example/path/with[/{option}]',
                 pathtypes: [
@@ -146,7 +144,6 @@ final class specification_test extends route_testcase {
 
         $spec->add_path(
             'core',
-            [],
             new route(
                 path: '/example/path/with[/{optional}][/{extras}]',
                 pathtypes: [
@@ -165,7 +162,7 @@ final class specification_test extends route_testcase {
     public function test_add_parameter(): void {
         $spec = new specification();
 
-        /** @var path_parameter&\PHPUnit\Framework\MockObject\MockObject */
+        /** @var path_parameter&\PHPUnit\Framework\MockObject\MockObject $child */
         $child = $this->getMockBuilder(path_parameter::class)
             ->onlyMethods([])
             ->setConstructorArgs([
@@ -186,7 +183,7 @@ final class specification_test extends route_testcase {
     public function test_add_header(): void {
         $spec = new specification();
 
-        /** @var header_object&\PHPUnit\Framework\MockObject\MockObject */
+        /** @var header_object&\PHPUnit\Framework\MockObject\MockObject $child */
         $child = $this->getMockBuilder(header_object::class)
             ->onlyMethods([])
             ->setConstructorArgs([
@@ -207,7 +204,7 @@ final class specification_test extends route_testcase {
     public function test_add_response(): void {
         $spec = new specification();
 
-        /** @var response&\PHPUnit\Framework\MockObject\MockObject */
+        /** @var response&\PHPUnit\Framework\MockObject\MockObject $child */
         $child = $this->getMockBuilder(response::class)
             ->onlyMethods([])
             ->setConstructorArgs([
@@ -226,7 +223,7 @@ final class specification_test extends route_testcase {
     public function test_add_example(): void {
         $spec = new specification();
 
-        /** @var example&\PHPUnit\Framework\MockObject\MockObject */
+        /** @var example&\PHPUnit\Framework\MockObject\MockObject $child */
         $child = $this->getMockBuilder(example::class)
             ->onlyMethods([])
             ->setConstructorArgs([
@@ -283,7 +280,6 @@ final class specification_test extends route_testcase {
 
         $spec->add_path(
             'core',
-            [],
             $route,
         );
 
@@ -312,7 +308,6 @@ final class specification_test extends route_testcase {
 
         $spec->add_path(
             'core',
-            [],
             $route,
         );
 
@@ -341,7 +336,6 @@ final class specification_test extends route_testcase {
 
         $spec->add_path(
             'core',
-            [],
             $route,
         );
 

@@ -16,6 +16,7 @@
 
 namespace core\router;
 
+use core\exception\coding_exception;
 use core\router\schema\parameter;
 use core\router\schema\response\response;
 use core\router\schema\request_body;
@@ -62,6 +63,7 @@ class route {
      * @param bool $cookies Whether this request requires cookies
      * @param bool $abortafterconfig Whether to abort after configuration
      * @param mixed[] ...$extra Any additional arguments not yet supported in this version of Moodle
+     * @throws coding_exception
      */
     public function __construct(
         /** @var string A title to briefly describe the route (not translated) */
@@ -97,7 +99,7 @@ class route {
         /** @var parameter[] A list of header parameters */
         protected readonly array $headerparams = [],
 
-        /** @var \core\router\request_body A list of parameters found in the body */
+        /** @var null|request_body A list of parameters found in the body */
         public readonly ?request_body $requestbody = null,
 
         /** @var response[] A list of possible response types */
@@ -127,26 +129,26 @@ class route {
 
         // Validate the query parameters.
         if (count(array_filter($this->queryparams, fn($pathtype) => !is_a($pathtype, parameter::class)))) {
-            throw new \coding_exception('All query parameters must be an instance of \core\router\parameter.');
+            throw new coding_exception('All query parameters must be an instance of \core\router\parameter.');
         }
         if (count(array_filter($this->queryparams, fn($pathtype) => $pathtype->get_in() !== 'query'))) {
-            throw new \coding_exception('All query parameters must be in the query.');
+            throw new coding_exception('All query parameters must be in the query.');
         }
 
         // Validate the path parameters.
         if (count(array_filter($this->pathtypes, fn($pathtype) => !is_a($pathtype, parameter::class)))) {
-            throw new \coding_exception('All path parameters must be an instance of \core\router\parameter.');
+            throw new coding_exception('All path parameters must be an instance of \core\router\parameter.');
         }
         if (count(array_filter($this->pathtypes, fn($pathtype) => $pathtype->get_in() !== 'path'))) {
-            throw new \coding_exception('All path properties must be in the path.');
+            throw new coding_exception('All path properties must be in the path.');
         }
 
         // Validate the header parameters.
         if (count(array_filter($this->headerparams, fn($pathtype) => !is_a($pathtype, parameter::class)))) {
-            throw new \coding_exception('All path parameters must be an instance of \core\router\parameter.');
+            throw new coding_exception('All path parameters must be an instance of \core\router\parameter.');
         }
         if (count(array_filter($this->headerparams, fn($pathtype) => $pathtype->get_in() !== 'header'))) {
-            throw new \coding_exception('All header properties must be in the path.');
+            throw new coding_exception('All header properties must be in the path.');
         }
     }
 

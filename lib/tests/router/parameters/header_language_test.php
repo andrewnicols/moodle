@@ -60,7 +60,7 @@ final class header_language_test extends route_testcase {
     public function test_valid_value(string $component): void {
         $param = new header_language();
 
-        /** @var ServerRequestInterface */ // phpcs:ignore moodle.Commenting.InlineComment.DocBlock
+        /** @var ServerRequestInterface $request */ // phpcs:ignore moodle.Commenting.InlineComment.DocBlock
         $request = (new ServerRequest('GET', '/example'))
             ->withAddedHeader('Language', $component);
 

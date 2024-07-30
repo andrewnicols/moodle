@@ -38,6 +38,7 @@ abstract class type_base extends openapi_base {
         protected array $examples = [],
         ...$extra,
     ) {
+        parent::__construct(...$extra);
     }
 
     #[\Override]
@@ -90,5 +91,5 @@ abstract class type_base extends openapi_base {
      *
      * @param mixed $data
      */
-    abstract public function validate_data($data);
+    abstract public function validate_data(mixed $data);
 }

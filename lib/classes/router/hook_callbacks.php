@@ -15,8 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace core\router;
-use Slim\App;
-use Slim\CallableResolver;
 
 /**
  * Class hook_callbacks
