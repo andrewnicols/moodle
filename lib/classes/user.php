@@ -19,7 +19,6 @@ namespace core;
 use core\context\user as context_user;
 use core\context\course as context_course;
 use core\context\system as context_system;
-use core\context_helper;
 use core_user\fields;
 use core\exception\invalid_parameter_exception;
 use core\exception\moodle_exception;
