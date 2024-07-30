@@ -835,7 +835,7 @@ class user {
                 // Check that the value is part of a list of allowed values.
                 if (
                     !empty(self::$propertiescache[$property]['choices']) &&
-                        !isset(self::$propertiescache[$property]['choices'][$value])
+                    !isset(self::$propertiescache[$property]['choices'][$value])
                 ) {
                     throw new invalid_parameter_exception($value);
                 }
@@ -966,10 +966,8 @@ class user {
         self::fill_properties_cache();
 
         if (
-            !array_key_exists($property, self::$propertiescache) && !array_key_exists(
-                'choices',
-                self::$propertiescache[$property]
-            )
+            !array_key_exists($property, self::$propertiescache) &&
+            !array_key_exists('choices', self::$propertiescache[$property])
         ) {
             throw new coding_exception('Invalid property requested, or the property does not has a list of choices.');
         }
