@@ -32,7 +32,7 @@ use stdClass;
 /**
  * User class to access user details.
  *
- * @todo       move api's from user/lib.php and deprecate old ones.
+ * @todo       MDL-82650 Move api's from user/lib.php and deprecate old ones.
  * @package    core
  * @copyright  2013 Rajesh Taneja <rajesh@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
