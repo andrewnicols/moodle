@@ -43,7 +43,11 @@ class header_language extends \core\router\schema\parameters\header_object imple
         $extra['name'] = $name;
         $extra['type'] = param::LANG;
         $extra['description'] = 'The language of the requested response.';
-        $extra['default'] = $CFG->lang;
+
+        // Generally speaking, the default language should be the site default.
+        // This is a value which is usually stored in DB, so we have a fallback for when the full
+        // Moodle configuration has not been loaded.
+        $extra['default'] = $CFG->lang ?? 'en';
 
         $extra['examples'] = [
             new example(
