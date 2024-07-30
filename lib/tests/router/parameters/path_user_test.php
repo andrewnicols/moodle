@@ -45,10 +45,10 @@ final class path_user_test extends route_testcase {
         );
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('user'));
-        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('user_context'));
+        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('usercontext'));
 
         $this->assertEquals($user->id, $newrequest->getAttribute('user')->id);
-        $this->assertEquals($context->id, $newrequest->getAttribute('user_context')->id);
+        $this->assertEquals($context->id, $newrequest->getAttribute('usercontext')->id);
     }
 
     public function test_user_id(): void {
@@ -64,10 +64,10 @@ final class path_user_test extends route_testcase {
         );
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('user'));
-        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('user_context'));
+        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('usercontext'));
 
         $this->assertEquals($user->id, $newrequest->getAttribute('user')->id);
-        $this->assertEquals($context->id, $newrequest->getAttribute('user_context')->id);
+        $this->assertEquals($context->id, $newrequest->getAttribute('usercontext')->id);
     }
 
     public function test_user_idnumber(): void {
@@ -85,10 +85,10 @@ final class path_user_test extends route_testcase {
         );
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('user'));
-        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('user_context'));
+        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('usercontext'));
 
         $this->assertEquals($user->id, $newrequest->getAttribute('user')->id);
-        $this->assertEquals($context->id, $newrequest->getAttribute('user_context')->id);
+        $this->assertEquals($context->id, $newrequest->getAttribute('usercontext')->id);
     }
 
     public function test_username(): void {
@@ -104,10 +104,10 @@ final class path_user_test extends route_testcase {
         );
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('user'));
-        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('user_context'));
+        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('usercontext'));
 
         $this->assertEquals($user->id, $newrequest->getAttribute('user')->id);
-        $this->assertEquals($context->id, $newrequest->getAttribute('user_context')->id);
+        $this->assertEquals($context->id, $newrequest->getAttribute('usercontext')->id);
     }
 
     public function test_validation(): void {
@@ -126,10 +126,10 @@ final class path_user_test extends route_testcase {
         $newrequest = $param->validate($request, $route);
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('user'));
-        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('user_context'));
+        $this->assertInstanceOf(\core\context\user::class, $newrequest->getAttribute('usercontext'));
 
         $this->assertEquals($user->id, $newrequest->getAttribute('user')->id);
-        $this->assertEquals($context->id, $newrequest->getAttribute('user_context')->id);
+        $this->assertEquals($context->id, $newrequest->getAttribute('usercontext')->id);
     }
 
     /**

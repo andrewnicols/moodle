@@ -115,7 +115,7 @@ class path_course extends \core\router\schema\parameters\path_parameter implemen
 
         return $request
             ->withAttribute($this->name, $course)
-            ->withAttribute("{$this->name}_context", \core\context\course::instance($course->id));
+            ->withAttribute("{$this->name}context", \core\context\course::instance($course->id));
     }
 
     #[\Override]
