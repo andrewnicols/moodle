@@ -199,9 +199,9 @@ class router {
      */
     protected function configure_routes(): void {
         $routegroups = $this->routeloader->configure_routes($this->app);
-        foreach ($routegroups as $name => $group) {
+        foreach ($routegroups as $name => $collection) {
             match ($name) {
-                route_loader_interface::ROUTE_GROUP_API => $this->configure_api_route($group),
+                route_loader_interface::ROUTE_GROUP_API => $this->configure_api_route($collection),
                 default => null,
             };
         }

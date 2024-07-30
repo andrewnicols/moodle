@@ -50,7 +50,13 @@ final class route_loader_test extends route_testcase {
         $this->assertGreaterThanOrEqual(1, count($routegroups));
         foreach ($routegroups as $group) {
             // Each of the returned groups shoudl be a RouteGroupInterface.
-            $this->assertInstanceOf(\Slim\Interfaces\RouteGroupInterface::class, $group);
+            if (is_array($group)) {
+                foreach ($group as $thisgroup) {
+                    $this->assertInstanceOf(\Slim\Interfaces\RouteInterface::class, $thisgroup);
+                }
+            } else {
+                $this->assertInstanceOf(\Slim\Interfaces\RouteGroupInterface::class, $group);
+            }
         }
 
         // Note: It is not possible to test the actual routes that are added to

@@ -18,6 +18,7 @@ namespace core\router;
 
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
+use Slim\Interfaces\RouteInterface;
 
 /**
  * A route loader.
@@ -36,7 +37,7 @@ interface route_loader_interface {
      * This method returns a set of RouteGroupInterface instances for each route prefix.
      *
      * @param App $app The application to configure routes for
-     * @return RouteGroupInterface[]
+     * @return RouteInterface[]|RouteGroupInterface
      */
     public function configure_routes(App $app): array;
 }
