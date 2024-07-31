@@ -24,7 +24,6 @@
 import Config from 'core/config';
 import {call as fetchMany} from 'core/ajax';
 import {performGet, performPost} from 'core/fetch';
-import {wrapPromiseInWhenable} from 'core/utils';
 
 const checkUserId = (userid) => {
     if (Number(userid) === 0) {
@@ -96,10 +95,7 @@ export const getUserPreferences = (name = null, userid = 0) => {
         endpoint.push(name);
     }
 
-    return wrapPromiseInWhenable(performGet(
-        'core_user',
-        endpoint.join('/'),
-    ));
+    return performGet('core_user', endpoint.join('/'));
 };
 
 /**
@@ -112,17 +108,15 @@ export const getUserPreferences = (name = null, userid = 0) => {
  */
 export const setUserPreference = (name, value = null, userid = 0) => {
     checkUserId(userid);
-    return wrapPromiseInWhenable(
-        performPost(
-            'core_user',
-            `current/preferences/${name}`,
-            {
-                body: {value},
-            },
-        )
-        // Return the result of the fetch call, and also add in the legacy saved property.
-        .then((response) => addLegacySavedProperty(response, [{name}]))
-    );
+    return performPost(
+        'core_user',
+        `current/preferences/${name}`,
+        {
+            body: {value},
+        },
+    )
+    // Return the result of the fetch call, and also add in the legacy saved property.
+    .then((response) => addLegacySavedProperty(response, [{name}]));
 };
 
 /**
@@ -133,19 +127,17 @@ export const setUserPreference = (name, value = null, userid = 0) => {
  */
 export const setUserPreferences = (preferences) => {
     preferences.forEach((preference) => checkUserId(preference.userid));
-    return wrapPromiseInWhenable(
-        performPost(
-            'core_user',
-            'current/preferences',
-            {
-                body: {
-                    preferences: Object.fromEntries (preferences.map((preference) => ([preference.name, preference.value]))),
-                },
+    return performPost(
+        'core_user',
+        'current/preferences',
+        {
+            body: {
+                preferences: Object.fromEntries (preferences.map((preference) => ([preference.name, preference.value]))),
             },
-        )
-        // Return the result of the fetch call, and also add in the legacy saved property.
-        .then((response) => addLegacySavedProperty(response, preferences))
-    );
+        },
+    )
+    // Return the result of the fetch call, and also add in the legacy saved property.
+    .then((response) => addLegacySavedProperty(response, preferences));
 };
 
 /**
