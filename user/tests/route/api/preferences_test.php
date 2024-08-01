@@ -33,7 +33,7 @@ final class preferences_test extends route_testcase {
      * Ensure that preferences returned for a user without login are empty.
      */
     public function test_preferences_no_login(): void {
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
         $response = $this->process_api_request('GET', '/current/preferences');
 
         $this->assert_valid_response($response);
@@ -48,7 +48,7 @@ final class preferences_test extends route_testcase {
     public function test_preferences_returned(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
         set_user_preference('filemanager_recentviewmode', 1);
@@ -66,7 +66,7 @@ final class preferences_test extends route_testcase {
     public function test_preference_returned(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
         set_user_preference('filemanager_recentviewmode', 1);
@@ -84,7 +84,7 @@ final class preferences_test extends route_testcase {
     public function test_preferences_set(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
 
@@ -118,7 +118,7 @@ final class preferences_test extends route_testcase {
     public function test_preferences_set_invalid_value(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
 
@@ -143,7 +143,7 @@ final class preferences_test extends route_testcase {
     public function test_preferences_set_not_permitted_valid_login(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
 
@@ -163,7 +163,7 @@ final class preferences_test extends route_testcase {
     public function test_preference_set(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
 
@@ -192,7 +192,7 @@ final class preferences_test extends route_testcase {
     public function test_preference_set_invalid_value(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
 
@@ -215,7 +215,7 @@ final class preferences_test extends route_testcase {
     public function test_preference_set_invalid_preference(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
 
@@ -238,7 +238,7 @@ final class preferences_test extends route_testcase {
     public function test_preference_set_not_permitted_valid_login(): void {
         $this->resetAfterTest();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         $this->setAdminUser();
 
@@ -261,7 +261,7 @@ final class preferences_test extends route_testcase {
         $this->setAdminUser();
         $user = $this->getDataGenerator()->create_user();
 
-        $this->add_class_routes_to_route_loader(\core_user\route\api\preferences::class);
+        $this->add_class_routes_to_route_loader(preferences::class);
 
         // Get all preferences.
         $response = $this->process_api_request('GET', "/{$user->id}/preferences");
