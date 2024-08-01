@@ -119,7 +119,7 @@ class path_user extends \core\router\schema\parameters\path_parameter implements
         $request = $request->withAttribute($this->name, $user);
 
         if ($user->id) {
-            $request = $request->withAttribute("{$this->name}_context", \core\context\user::instance($user->id));
+            $request = $request->withAttribute("{$this->name}context", \core\context\user::instance($user->id));
         }
 
         return $request;

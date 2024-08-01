@@ -44,10 +44,10 @@ final class path_course_test extends route_testcase {
         $newrequest = $param->add_attributes_for_parameter_value($request, $course->id);
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('course'));
-        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('course_context'));
+        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('coursecontext'));
 
         $this->assertEquals($course->id, $newrequest->getAttribute('course')->id);
-        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('course_context')->id);
+        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('coursecontext')->id);
     }
 
     public function test_course_idnumber(): void {
@@ -63,10 +63,10 @@ final class path_course_test extends route_testcase {
         $newrequest = $param->add_attributes_for_parameter_value($request, "idnumber:{$course->idnumber}");
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('course'));
-        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('course_context'));
+        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('coursecontext'));
 
         $this->assertEquals($course->id, $newrequest->getAttribute('course')->id);
-        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('course_context')->id);
+        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('coursecontext')->id);
     }
 
     public function test_course_name(): void {
@@ -80,10 +80,10 @@ final class path_course_test extends route_testcase {
         $newrequest = $param->add_attributes_for_parameter_value($request, "name:{$course->shortname}");
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('course'));
-        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('course_context'));
+        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('coursecontext'));
 
         $this->assertEquals($course->id, $newrequest->getAttribute('course')->id);
-        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('course_context')->id);
+        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('coursecontext')->id);
     }
 
     public function test_validation(): void {
@@ -102,10 +102,10 @@ final class path_course_test extends route_testcase {
         $newrequest = $param->validate($request, $route);
 
         $this->assertInstanceOf(stdClass::class, $newrequest->getAttribute('course'));
-        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('course_context'));
+        $this->assertInstanceOf(\core\context\course::class, $newrequest->getAttribute('coursecontext'));
 
         $this->assertEquals($course->id, $newrequest->getAttribute('course')->id);
-        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('course_context')->id);
+        $this->assertEquals($coursecontext->id, $newrequest->getAttribute('coursecontext')->id);
     }
 
     /**
