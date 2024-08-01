@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\exception;
+namespace Moodle\core\exception;
 
 /**
  * Exception indicating programming error, must be fixed by a programer. For example
