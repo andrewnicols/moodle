@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace core;
+namespace Moodle\core;
 
 use core\exception\coding_exception;
 use stdClass;
@@ -162,7 +162,20 @@ class component {
             global $CFG;
             // Function include would be faster, but for BC it is better to include only once.
             include_once(self::$classmap[$classname]);
+
+            if ($variant = self::get_variant($classname)) {
+                if (self::any_exist($classname, false)) {
+                    if (!self::any_exist($variant)) {
+                        class_alias($classname, $variant);
+                    }
+                } else if (self::any_exist($variant, false)) {
+                    class_alias($variant, $classname);
+                }
+            }
+
             return;
+        } else if (str_starts_with($classname, 'Moodle\\')) {
+            return self::classloader(self::get_variant($classname));
         }
         if (isset(self::$classmaprenames[$classname]) && isset(self::$classmap[self::$classmaprenames[$classname]])) {
             $newclassname = self::$classmaprenames[$classname];
@@ -1637,6 +1650,32 @@ $cache = ' . var_export($cache, true) . ';
             return false;
         }
         return file_exists("$plugindir/pix/monologo.svg") || file_exists("$plugindir/pix/monologo.png");
+    }
+
+    protected static function any_exist(string $class, bool $autoload = true): bool {
+        if (class_exists($class, $autoload)) {
+            return true;
+        }
+        if (interface_exists($class, $autoload)) {
+            return true;
+        }
+        if (trait_exists($class, $autoload)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected static function get_variant(string $class): ?string {
+        if (!str_contains($class, '\\')) {
+            return null;
+        }
+
+        if (str_starts_with($class, 'Moodle\\')) {
+            // Remove the Moodle namespace.
+            return substr($class, 7);
+        }
+
+        return "Moodle\\{$class}";
     }
 }
 
