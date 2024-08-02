@@ -14,26 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Tests for the enrol_lti_plugin class.
- *
- * @package enrol_lti
- * @copyright 2016 Jun Pataleta <jun@moodle.com>
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 namespace enrol_lti;
 
 use course_enrolment_manager;
+use enrol_lti\tests\lti_advantage_testcase;
 use enrol_lti_plugin;
 use IMSGlobal\LTI\ToolProvider\ResourceLink;
 use IMSGlobal\LTI\ToolProvider\ToolConsumer;
 use IMSGlobal\LTI\ToolProvider\ToolProvider;
 use IMSGlobal\LTI\ToolProvider\User;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__ . '/local/ltiadvantage/lti_advantage_testcase.php');
-
 /**
  * Tests for the enrol_lti_plugin class.
  *
@@ -41,8 +31,7 @@ require_once(__DIR__ . '/local/ltiadvantage/lti_advantage_testcase.php');
  * @copyright 2016 Jun Pataleta <jun@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class lib_test extends \lti_advantage_testcase {
-
+final class lib_test extends lti_advantage_testcase {
     /**
      * Test set up.
      *

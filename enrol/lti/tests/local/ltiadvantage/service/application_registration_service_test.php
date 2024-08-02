@@ -22,10 +22,7 @@ use enrol_lti\local\ltiadvantage\repository\context_repository;
 use enrol_lti\local\ltiadvantage\repository\deployment_repository;
 use enrol_lti\local\ltiadvantage\repository\resource_link_repository;
 use enrol_lti\local\ltiadvantage\repository\user_repository;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__ . '/../lti_advantage_testcase.php');
+use enrol_lti\tests\lti_advantage_testcase;
 
 /**
  * Tests for the application_registration_service.
@@ -35,7 +32,7 @@ require_once(__DIR__ . '/../lti_advantage_testcase.php');
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \enrol_lti\local\ltiadvantage\service\application_registration_service
  */
-class application_registration_service_test extends \lti_advantage_testcase {
+final class application_registration_service_test extends lti_advantage_testcase {
     /**
      * Helper to get an application_registration_service instance.
      * @return application_registration_service

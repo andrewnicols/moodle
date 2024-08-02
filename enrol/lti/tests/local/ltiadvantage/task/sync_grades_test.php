@@ -17,13 +17,7 @@
 namespace enrol_lti\local\ltiadvantage\task;
 
 use enrol_lti\helper;
-use Packback\Lti1p3\LtiAssignmentsGradesService;
-use Packback\Lti1p3\LtiGrade;
-use Packback\Lti1p3\LtiLineitem;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__ . '/../lti_advantage_testcase.php');
+use enrol_lti\tests\lti_advantage_testcase;
 
 /**
  * Tests for the enrol_lti\local\ltiadvantage\task\sync_grades scheduled task.
@@ -33,8 +27,7 @@ require_once(__DIR__ . '/../lti_advantage_testcase.php');
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \enrol_lti\local\ltiadvantage\task\sync_grades
  */
-class sync_grades_test extends \lti_advantage_testcase {
-
+final class sync_grades_test extends lti_advantage_testcase {
     /**
      * Test confirming task name.
      *
