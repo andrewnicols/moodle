@@ -16,11 +16,7 @@
 
 namespace repository_googledocs;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/repository/googledocs/tests/repository_googledocs_testcase.php');
-require_once($CFG->dirroot . '/repository/googledocs/lib.php');
+use repository_googledocs\tests\repository_googledocs_testcase;
 
 /**
  * Class containing unit tests for the helper class.
@@ -29,8 +25,14 @@ require_once($CFG->dirroot . '/repository/googledocs/lib.php');
  * @copyright  2021 Mihail Geshoski <mihail@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class helper_test extends \repository_googledocs_testcase {
+final class helper_test extends repository_googledocs_testcase {
+    public static function setUpBeforeClass(): void {
+        // The helper class is being tested, so we need to include the file containing the class.
+        global $CFG;
+        require_once($CFG->dirroot . '/repository/googledocs/lib.php');
 
+        parent::setUpBeforeClass();
+    }
     /**
      * Test build_node_path().
      *

@@ -16,11 +16,7 @@
 
 namespace repository_googledocs\local\browser;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/repository/googledocs/tests/googledocs_content_testcase.php');
-require_once($CFG->dirroot . '/repository/googledocs/lib.php');
+use repository_googledocs\tests\googledocs_content_testcase;
 
 /**
  * Class containing unit tests for the repository root browser class.
@@ -29,7 +25,14 @@ require_once($CFG->dirroot . '/repository/googledocs/lib.php');
  * @copyright  2021 Mihail Geshoski <mihail@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class googledocs_root_content_test extends \googledocs_content_testcase {
+final class googledocs_root_content_test extends googledocs_content_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/repository/googledocs/lib.php');
+    }
 
     /**
      * Test get_content_nodes().

@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace repository_googledocs\tests;
+
+use repository_googledocs\helper;
+use stdClass;
+
 /**
  * Base class for the googledoc repository unit tests.
  *
@@ -22,7 +27,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class repository_googledocs_testcase extends \advanced_testcase {
-
     /**
      * Create an array that would replicate the structure of a repository folder node array.
      *
@@ -40,7 +44,7 @@ abstract class repository_googledocs_testcase extends \advanced_testcase {
         return [
             'id' => $id,
             'title' => $name,
-            'path' => repository_googledocs\helper::build_node_path($id, $name, $path),
+            'path' => helper::build_node_path($id, $name, $path),
             'date' => $modified,
             'thumbnail' => "{$CFG->wwwroot}/theme/image.php/boost/core/1/" . file_folder_icon(),
             'thumbnail_height' => 64,
@@ -90,9 +94,9 @@ abstract class repository_googledocs_testcase extends \advanced_testcase {
      *
      * @param string $id The ID of the shared drive
      * @param string $name The name of the shared drive
-     * @return \stdClass The shared drive object
+     * @return stdClass The shared drive object
      */
-    protected function create_google_drive_shared_drive_object(string $id, string $name): \stdClass {
+    protected function create_google_drive_shared_drive_object(string $id, string $name): stdClass {
         return (object)[
             'kind' => 'drive#drive',
             'id' => $id,
@@ -106,9 +110,9 @@ abstract class repository_googledocs_testcase extends \advanced_testcase {
      * @param string $id The ID of the folder
      * @param string $name The name of the folder
      * @param string|null $modified The date of the last modification
-     * @return \stdClass The folder object
+     * @return stdClass The folder object
      */
-    protected function create_google_drive_folder_object(string $id, string $name, ?string $modified = null): \stdClass {
+    protected function create_google_drive_folder_object(string $id, string $name, ?string $modified = null): stdClass {
         return (object)[
             'id' => $id,
             'name' => $name,
@@ -130,11 +134,11 @@ abstract class repository_googledocs_testcase extends \advanced_testcase {
      * @param string|null $modified The date of the last modification
      * @param string|null $webcontentlink The link for downloading the content of the file
      * @param string|null $webviewlink The link for opening the file in a browser
-     * @return \stdClass The file object
+     * @return stdClass The file object
      */
     protected function create_google_drive_file_object(string $id, string $name, string $mimetype,
             ?string $extension = null, ?string $size = null, ?string $modified = null, ?string $webcontentlink = null,
-            ?string $webviewlink = null): \stdClass {
+            ?string $webviewlink = null): stdClass {
 
         $googledrivefile = [
             'id' => $id,

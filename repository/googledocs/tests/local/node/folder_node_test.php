@@ -16,10 +16,7 @@
 
 namespace repository_googledocs\local\node;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/repository/googledocs/tests/repository_googledocs_testcase.php');
+use repository_googledocs\tests\repository_googledocs_testcase;
 
 /**
  * Class containing unit tests for the repository folder node class.
@@ -28,8 +25,7 @@ require_once($CFG->dirroot . '/repository/googledocs/tests/repository_googledocs
  * @copyright  2021 Mihail Geshoski <mihail@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class folder_node_test extends \repository_googledocs_testcase {
-
+final class folder_node_test extends repository_googledocs_testcase {
     /**
      * Test create_node_array().
      *

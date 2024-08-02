@@ -14,10 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/repository/googledocs/tests/repository_googledocs_testcase.php');
+namespace repository_googledocs\tests;
 
 /**
  * Base class for the googledoc repository unit tests related to content browsing and searching.
@@ -27,7 +24,6 @@ require_once($CFG->dirroot . '/repository/googledocs/tests/repository_googledocs
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class googledocs_content_testcase extends repository_googledocs_testcase {
-
     /** @var array The array which contains the disallowed file extensions. */
     protected $disallowedextensions = [];
 
