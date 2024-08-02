@@ -16,10 +16,7 @@
 
 namespace tool_dataprivacy;
 
-use data_privacy_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-require_once('data_privacy_testcase.php');
+use tool_dataprivacy\tests\data_privacy_testcase;
 
 /**
  * Tests for the data_request persistent.
@@ -28,8 +25,7 @@ require_once('data_privacy_testcase.php');
  * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class data_request_test extends data_privacy_testcase {
-
+final class data_request_test extends data_privacy_testcase {
     /**
      * Data provider for testing is_resettable, and is_active.
      *

@@ -16,11 +16,7 @@
 
 namespace tool_dataprivacy;
 
-use data_privacy_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once('data_privacy_testcase.php');
+use tool_dataprivacy\tests\data_privacy_testcase;
 
 /**
  * Expired data requests tests.
@@ -31,7 +27,6 @@ require_once('data_privacy_testcase.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class expired_data_requests_test extends data_privacy_testcase {
-
     /**
      * Test tearDown.
      */

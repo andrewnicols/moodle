@@ -14,15 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Parent class for tests which need data privacy functionality.
- *
- * @package    tool_dataprivacy
- * @copyright  2018 Michael Hawkins
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace tool_dataprivacy\tests;
 
-defined('MOODLE_INTERNAL') || die();
+use advanced_testcase;
+use context_system;
+use stdClass;
 
 /**
  * Parent class for tests which need data privacy functionality.
@@ -32,7 +28,6 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class data_privacy_testcase extends advanced_testcase {
-
     /**
      * Assign one or more user IDs as site DPO
      *
