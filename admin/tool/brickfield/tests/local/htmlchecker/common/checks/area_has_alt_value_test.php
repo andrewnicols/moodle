@@ -24,14 +24,12 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class area_has_alt_value_testcase
  */
-class area_has_alt_value_test extends all_checks {
+final class area_has_alt_value_test extends check_testcase {
     /** @var string Check type */
     protected $checktype = 'area_has_alt_value';
 

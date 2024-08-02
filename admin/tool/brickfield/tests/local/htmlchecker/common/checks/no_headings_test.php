@@ -24,14 +24,12 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class no_headings_test
  */
-class no_headings_test extends all_checks {
+final class no_headings_test extends check_testcase {
     /** @var string Check type */
     public $checktype = 'no_headings';
 

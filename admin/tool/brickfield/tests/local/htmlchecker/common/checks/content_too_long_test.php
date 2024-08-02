@@ -24,14 +24,12 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class content_too_long_testcase
  */
-class content_too_long_test extends all_checks {
+final class content_too_long_test extends check_testcase {
     /** @var string Check type */
     protected $checktype = 'content_too_long';
 

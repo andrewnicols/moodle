@@ -13,15 +13,10 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace tool_brickfield\local\areas\core_question;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/admin/tool/brickfield/tests/area_test_base.php');
-
-use tool_brickfield\area_test_base;
-
+use tool_brickfield\tests\area_testcase;
 /**
  * Tests for questiontext.
  *
@@ -30,7 +25,7 @@ use tool_brickfield\area_test_base;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \tool_brickfield\local\areas\core_question\base
  */
-class questiontext_test extends area_test_base {
+final class questiontext_test extends area_testcase {
     /**
      * Set up before class.
      */

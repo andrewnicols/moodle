@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_brickfield;
+namespace tool_brickfield\tests;
 
 /**
  * Class area_test_base provides some utility functions that can be used by testing.
@@ -23,7 +23,7 @@ namespace tool_brickfield;
  * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class area_test_base extends \advanced_testcase {
+abstract class area_testcase extends \advanced_testcase {
     /** @var string Message for failed area test. */
     protected $areatestmessage = 'Expected %component% area not found';
 

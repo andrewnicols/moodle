@@ -24,14 +24,12 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class blink_is_not_used_testcase
  */
-class blink_is_not_used_test extends all_checks {
+final class blink_is_not_used_test extends check_testcase {
     /** @var string Check type */
     protected $checktype = 'blink_is_not_used';
 

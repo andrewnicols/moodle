@@ -24,16 +24,14 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class marquee_is_not_used_test
  *
  * This check test does not currently exist
  */
-class marquee_is_not_used_test extends all_checks {
+final class marquee_is_not_used_test extends check_testcase {
     /** @var string Check type */
     public $checktype = 'marquee_is_not_used';
 

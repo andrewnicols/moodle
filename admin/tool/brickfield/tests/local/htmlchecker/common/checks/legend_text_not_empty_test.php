@@ -24,14 +24,12 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class legend_text_not_empty_test
  */
-class legend_text_not_empty_test extends all_checks {
+final class legend_text_not_empty_test extends check_testcase {
     /** @var string Check type */
     public $checktype = 'legend_text_not_empty';
 

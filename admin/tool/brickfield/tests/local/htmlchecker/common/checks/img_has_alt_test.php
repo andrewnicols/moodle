@@ -24,14 +24,12 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class test_css_text_has_contrast_testcase
  */
-class img_has_alt_test extends all_checks {
+final class img_has_alt_test extends check_testcase {
     /** @var string Check type */
     public $checktype = 'img_has_alt';
 

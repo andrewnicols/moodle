@@ -24,14 +24,12 @@
 
 namespace tool_brickfield\local\htmlchecker\common\checks;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
+use tool_brickfield\tests\check_testcase;
 
 /**
  * Class test_css_text_has_contrast_test
  */
-class css_text_has_contrast_test extends all_checks {
+final class css_text_has_contrast_test extends check_testcase {
     /** @var string The check type. */
     protected $checktype = 'css_text_has_contrast';
 
