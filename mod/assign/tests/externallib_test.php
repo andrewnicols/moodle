@@ -22,15 +22,6 @@ use core_user_external;
 use mod_assign_external;
 use mod_assign_testable_assign;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/assign/externallib.php');
-require_once($CFG->dirroot . '/mod/assign/tests/externallib_advanced_testcase.php');
-require_once(__DIR__ . '/fixtures/testable_assign.php');
-
 /**
  * External mod assign functions unit tests
  *
@@ -39,8 +30,7 @@ require_once(__DIR__ . '/fixtures/testable_assign.php');
  * @copyright 2012 Paul Charsley
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class externallib_test extends \mod_assign\externallib_advanced_testcase {
-
+final class externallib_test extends \mod_assign\tests\externallib_advanced_testcase {
     /**
      * Test get_grades
      */

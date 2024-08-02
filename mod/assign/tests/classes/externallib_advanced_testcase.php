@@ -14,14 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace mod_assign;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/assign/externallib.php');
-require_once(__DIR__ . '/fixtures/testable_assign.php');
+namespace mod_assign\tests;
 
 /**
  * Base class for unit tests for external functions in mod_assign.
@@ -32,6 +25,14 @@ require_once(__DIR__ . '/fixtures/testable_assign.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class externallib_advanced_testcase extends \externallib_advanced_testcase {
+    #[\Override]
+    public function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        self::load_fixture('mod_assign', 'testable_assign.php');
+        require_once($CFG->dirroot . '/mod/assign/externallib.php');
+    }
 
     /**
      * Create a submission for testing the get_submission_status function.
