@@ -35,6 +35,7 @@ use mod_quiz\quiz_settings;
 use mod_quiz\structure;
 use mod_quiz_external;
 use moodle_exception;
+use ReflectionClass;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -42,39 +43,6 @@ global $CFG;
 
 require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
-
-/**
- * Silly class to access mod_quiz_external internal methods.
- *
- * @package mod_quiz
- * @copyright 2016 Juan Leyva <juan@moodle.com>
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since  Moodle 3.1
- */
-class testable_mod_quiz_external extends mod_quiz_external {
-
-    /**
-     * Public accessor.
-     *
-     * @param  array $params Array of parameters including the attemptid and preflight data
-     * @param  bool $checkaccessrules whether to check the quiz access rules or not
-     * @param  bool $failifoverdue whether to return error if the attempt is overdue
-     * @return  array containing the attempt object and access messages
-     */
-    public static function validate_attempt($params, $checkaccessrules = true, $failifoverdue = true) {
-        return parent::validate_attempt($params, $checkaccessrules, $failifoverdue);
-    }
-
-    /**
-     * Public accessor.
-     *
-     * @param  array $params Array of parameters including the attemptid
-     * @return  array containing the attempt object and display options
-     */
-    public static function validate_attempt_review($params) {
-        return parent::validate_attempt_review($params);
-    }
-}
 
 /**
  * Quiz module external functions tests
@@ -86,8 +54,7 @@ class testable_mod_quiz_external extends mod_quiz_external {
  * @since      Moodle 3.1
  * @covers \mod_quiz_external
  */
-class external_test extends externallib_advanced_testcase {
-
+final class external_test extends externallib_advanced_testcase {
     use \quiz_question_helper_test_trait;
 
     /** @var \stdClass course record. */
@@ -1059,6 +1026,8 @@ class external_test extends externallib_advanced_testcase {
     public function test_validate_attempt(): void {
         global $DB;
 
+        $reflectedexternalquizclass = new ReflectionClass(mod_quiz_external::class);
+
         // Create a new quiz with one attempt started.
         list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true);
 
@@ -1067,7 +1036,7 @@ class external_test extends externallib_advanced_testcase {
         // Invalid attempt.
         try {
             $params = ['attemptid' => -1, 'page' => 0];
-            testable_mod_quiz_external::validate_attempt($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due to invalid attempt id.');
         } catch (\dml_missing_record_exception $e) {
             $this->assertEquals('invalidrecord', $e->errorcode);
@@ -1075,7 +1044,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Test OK case.
         $params = ['attemptid' => $attempt->id, 'page' => 0];
-        $result = testable_mod_quiz_external::validate_attempt($params);
+        $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
         $this->assertEquals($attempt->id, $result[0]->get_attempt()->id);
         $this->assertEquals([], $result[1]);
 
@@ -1086,7 +1055,7 @@ class external_test extends externallib_advanced_testcase {
         try {
             $params = ['attemptid' => $attempt->id, 'page' => 0,
                             'preflightdata' => [["name" => "quizpassword", "value" => 'bad']]];
-            testable_mod_quiz_external::validate_attempt($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due to invalid passwod.');
         } catch (moodle_exception $e) {
             $this->assertEquals(get_string('passworderror', 'quizaccess_password'), $e->errorcode);
@@ -1094,7 +1063,7 @@ class external_test extends externallib_advanced_testcase {
 
         // Now, try everything correct.
         $params['preflightdata'][0]['value'] = 'abc';
-        $result = testable_mod_quiz_external::validate_attempt($params);
+        $result = $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
         $this->assertEquals($attempt->id, $result[0]->get_attempt()->id);
         $this->assertEquals([], $result[1]);
 
@@ -1102,7 +1071,7 @@ class external_test extends externallib_advanced_testcase {
         $DB->update_record('quiz', $quiz);
         $params['page'] = 4;
         try {
-            testable_mod_quiz_external::validate_attempt($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due to page out of range.');
         } catch (moodle_exception $e) {
             $this->assertEquals('Invalid page number', $e->errorcode);
@@ -1115,11 +1084,11 @@ class external_test extends externallib_advanced_testcase {
         $DB->update_record('quiz', $quiz);
 
         // This should work, ommit access rules.
-        testable_mod_quiz_external::validate_attempt($params, false);
+        $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params, false]);
 
         // Get a generic error because prior to checking the dates the attempt is closed.
         try {
-            testable_mod_quiz_external::validate_attempt($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due to passed dates.');
         } catch (moodle_exception $e) {
             $this->assertEquals('attempterror', $e->errorcode);
@@ -1130,7 +1099,7 @@ class external_test extends externallib_advanced_testcase {
         $attemptobj->process_finish(time(), false);
 
         try {
-            testable_mod_quiz_external::validate_attempt($params, false);
+            $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params, false]);
             $this->fail('Exception expected due to attempt finished.');
         } catch (moodle_exception $e) {
             $this->assertEquals('attemptalreadyclosed', $e->errorcode);
@@ -1144,7 +1113,7 @@ class external_test extends externallib_advanced_testcase {
         \course_modinfo::clear_instance_cache();
 
         try {
-            testable_mod_quiz_external::validate_attempt($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due to missing permissions.');
         } catch (\required_capability_exception $e) {
             $this->assertEquals('nopermissions', $e->errorcode);
@@ -1155,7 +1124,7 @@ class external_test extends externallib_advanced_testcase {
 
         $params['page'] = 0;
         try {
-            testable_mod_quiz_external::validate_attempt($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due to not your attempt.');
         } catch (moodle_exception $e) {
             $this->assertEquals('notyourattempt', $e->errorcode);
@@ -1651,6 +1620,8 @@ class external_test extends externallib_advanced_testcase {
     public function test_validate_attempt_review(): void {
         global $DB;
 
+        $reflectedexternalquizclass = new ReflectionClass(mod_quiz_external::class);
+
         // Create a new quiz with one attempt started.
         list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true);
 
@@ -1659,7 +1630,7 @@ class external_test extends externallib_advanced_testcase {
         // Invalid attempt, invalid id.
         try {
             $params = ['attemptid' => -1];
-            testable_mod_quiz_external::validate_attempt_review($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt_review')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due invalid id.');
         } catch (\dml_missing_record_exception $e) {
             $this->assertEquals('invalidrecord', $e->errorcode);
@@ -1668,7 +1639,7 @@ class external_test extends externallib_advanced_testcase {
         // Invalid attempt, not closed.
         try {
             $params = ['attemptid' => $attempt->id];
-            testable_mod_quiz_external::validate_attempt_review($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt_review')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due not closed attempt.');
         } catch (moodle_exception $e) {
             $this->assertEquals('attemptclosed', $e->errorcode);
@@ -1678,11 +1649,11 @@ class external_test extends externallib_advanced_testcase {
         list($quiz, $context, $quizobj, $attempt, $attemptobj) = $this->create_quiz_with_questions(true, true);
 
         $params = ['attemptid' => $attempt->id];
-        testable_mod_quiz_external::validate_attempt_review($params);
+        $reflectedexternalquizclass->getMethod('validate_attempt_review')->invokeArgs(null, [$params]);
 
         // Teacher should be able to view the review of one student's attempt.
         $this->setUser($this->teacher);
-        testable_mod_quiz_external::validate_attempt_review($params);
+        $reflectedexternalquizclass->getMethod('validate_attempt_review')->invokeArgs(null, [$params]);
 
         // We should not see other students attempts.
         $anotherstudent = self::getDataGenerator()->create_user();
@@ -1691,7 +1662,7 @@ class external_test extends externallib_advanced_testcase {
         $this->setUser($anotherstudent);
         try {
             $params = ['attemptid' => $attempt->id];
-            testable_mod_quiz_external::validate_attempt_review($params);
+            $reflectedexternalquizclass->getMethod('validate_attempt_review')->invokeArgs(null, [$params]);
             $this->fail('Exception expected due missing permissions.');
         } catch (moodle_exception $e) {
             $this->assertEquals('noreviewattempt', $e->errorcode);
