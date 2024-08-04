@@ -14,29 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Workshop module external functions tests
- *
- * @package    mod_workshop
- * @category   external
- * @copyright  2017 Juan Leyva <juan@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 3.4
- */
 
 namespace mod_workshop\external;
 
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_workshop_external;
+use stdClass;
 use workshop;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/workshop/lib.php');
 
 /**
  * Workshop module external functions tests
@@ -47,7 +32,14 @@ require_once($CFG->dirroot . '/mod/workshop/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.4
  */
-class external_test extends externallib_advanced_testcase {
+final class external_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/workshop/lib.php');
+    }
 
     /** @var stdClass course object */
     private $course;

@@ -16,15 +16,8 @@
 
 namespace gradereport_overview;
 
-use core_external\external_api;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use gradereport_overview_external;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
  * Overview grade report functions unit tests
@@ -34,8 +27,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2015 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class externallib_test extends externallib_advanced_testcase {
-
+final class externallib_test extends externallib_advanced_testcase {
     /** @var \stdClass Course 1 record. */
     protected $course1;
 

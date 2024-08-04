@@ -16,13 +16,8 @@
 
 namespace mod_quiz;
 
-defined('MOODLE_INTERNAL') || die();
-
 use mod_quiz\question\bank\qbank_helper;
-
-global $CFG;
-require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Class mod_quiz_local_structure_slot_random_test
@@ -34,9 +29,16 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \mod_quiz\local\structure\slot_random
  */
-class local_structure_slot_random_test extends \advanced_testcase {
+final class local_structure_slot_random_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
-    use \quiz_question_helper_test_trait;
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
+    }
 
     /**
      * Constructor test.

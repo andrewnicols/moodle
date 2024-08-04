@@ -18,17 +18,12 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\external\filters;
 
-use core_reportbuilder_generator;
-use core_reportbuilder\manager;
-use core_reportbuilder\exception\report_access_exception;
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_reportbuilder_generator;
+use core_reportbuilder\exception\report_access_exception;
+use core_reportbuilder\manager;
 use core_user\reportbuilder\datasource\users;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Unit tests external filters set class
@@ -38,8 +33,7 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * @copyright   2022 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class set_test extends externallib_advanced_testcase {
-
+final class set_test extends externallib_advanced_testcase {
     /**
      * Text execute method
      */

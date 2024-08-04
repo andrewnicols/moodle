@@ -26,15 +26,7 @@
 
 namespace tool_analytics\external;
 
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/analytics/tests/fixtures/test_indicator_max.php');
-require_once($CFG->dirroot . '/analytics/tests/fixtures/test_target_course_level_shortname.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Tool analytics external functions tests
@@ -45,7 +37,16 @@ require_once($CFG->dirroot . '/analytics/tests/fixtures/test_target_course_level
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.8
  */
-class external_test extends externallib_advanced_testcase {
+final class external_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        self::load_fixture('core_analytics', 'test_indicator_max.php');
+        self::load_fixture('core_analytics', 'test_target_course_level_shortname.php');
+
+    }
 
     /**
      * test_potential_contexts description

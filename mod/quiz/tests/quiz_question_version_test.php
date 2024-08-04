@@ -19,10 +19,7 @@ namespace mod_quiz;
 use core_question\local\bank\condition;
 use mod_quiz\external\submit_question_version;
 use mod_quiz\question\bank\qbank_helper;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__ . '/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Question versions test for quiz.
@@ -34,8 +31,8 @@ require_once(__DIR__ . '/quiz_question_helper_test_trait.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mod_quiz\question\bank\qbank_helper
  */
-class quiz_question_version_test extends \advanced_testcase {
-    use \quiz_question_helper_test_trait;
+final class quiz_question_version_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
     /** @var \stdClass user record. */
     protected $student;

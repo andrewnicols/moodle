@@ -27,19 +27,22 @@ namespace mod_quiz;
 use context_module;
 use core_external\external_api;
 use mod_quiz\quiz_settings;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/lib.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * @copyright  2008 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-class lib_test extends \advanced_testcase {
-    use \quiz_question_helper_test_trait;
+final class lib_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
+
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/quiz/lib.php');
+    }
 
     public function test_quiz_has_grades(): void {
         $quiz = new \stdClass();

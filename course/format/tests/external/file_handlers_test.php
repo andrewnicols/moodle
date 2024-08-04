@@ -17,12 +17,7 @@
 namespace core_courseformat\external;
 
 use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
+use core_webservice\tests\externallib_advanced_testcase;
 use dndupload_handler;
 
 /**
@@ -34,15 +29,14 @@ use dndupload_handler;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_courseformat\external\file_handlers
  */
-class file_handlers_test extends \externallib_advanced_testcase {
-
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void { // phpcs:ignore
+final class file_handlers_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void { // phpcs:ignore
         global $CFG;
+
         require_once($CFG->dirroot . '/course/lib.php');
         require_once($CFG->dirroot . '/course/dnduploadlib.php');
+        parent::setUpBeforeClass();
     }
 
     /**

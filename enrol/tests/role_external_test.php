@@ -16,12 +16,7 @@
 
 namespace core_enrol;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/enrol/externallib.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Role external PHPunit tests
@@ -32,15 +27,13 @@ require_once($CFG->dirroot . '/enrol/externallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.4
  */
-class role_external_test extends \externallib_advanced_testcase {
-
-    /**
-     * Tests set up
-     */
-    protected function setUp(): void {
+final class role_external_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
         global $CFG;
+
+        parent::setUpBeforeClass();
         require_once($CFG->dirroot . '/enrol/externallib.php');
-        parent::setUp();
     }
 
     /**

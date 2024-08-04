@@ -19,13 +19,7 @@ namespace core_comment;
 use comment_exception;
 use core_comment_external;
 use core_external\external_api;
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * External comment functions unit tests
@@ -36,8 +30,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 2.9
  */
-class externallib_test extends externallib_advanced_testcase {
-
+final class externallib_test extends externallib_advanced_testcase {
     /**
      * Tests set up
      */

@@ -19,15 +19,7 @@ namespace core_backup;
 use backup;
 use core_backup_external;
 use core_external\external_api;
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
-require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/backup/externallib.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Backup webservice tests.
@@ -37,11 +29,18 @@ require_once($CFG->dirroot . '/backup/externallib.php');
  * @author     Matt Porritt <mattp@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
 
-    /**
-     * Set up tasks for all tests.
-     */
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/backup/util/includes/backup_includes.php');
+        require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
+        require_once($CFG->dirroot . '/backup/externallib.php');
+    }
+
+    #[\Override]
     protected function setUp(): void {
         global $CFG;
         parent::setUp();

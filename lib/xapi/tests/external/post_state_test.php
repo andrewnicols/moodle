@@ -16,18 +16,13 @@
 
 namespace core_xapi\external;
 
-use core_xapi\xapi_exception;
-use core_xapi\local\statement\item_agent;
-use externallib_advanced_testcase;
 use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 use core_xapi\iri;
 use core_xapi\local\state;
+use core_xapi\local\statement\item_agent;
 use core_xapi\test_helper;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_xapi\xapi_exception;
 
 /**
  * Unit tests for xAPI post state webservice.
@@ -38,15 +33,13 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2023 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class post_state_test extends externallib_advanced_testcase {
-
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
+final class post_state_test extends externallib_advanced_testcase {
+    #[\Override]
     public static function setUpBeforeClass(): void {
         global $CFG;
-        require_once($CFG->dirroot . '/lib/xapi/tests/helper.php');
+
         parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/lib/xapi/tests/helper.php');
     }
 
     /**

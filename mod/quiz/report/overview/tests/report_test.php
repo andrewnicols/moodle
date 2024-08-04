@@ -19,23 +19,13 @@ namespace quiz_overview;
 use core_question\local\bank\question_version_status;
 use mod_quiz\external\submit_question_version;
 use mod_quiz\quiz_attempt;
-use question_engine;
 use mod_quiz\quiz_settings;
 use mod_quiz\local\reports\attempts_report;
+use mod_quiz\tests\quiz_question_helper_test_trait;
+use question_engine;
 use quiz_overview_options;
 use quiz_overview_report;
 use quiz_overview_table;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/report.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/overview_form.php');
-require_once($CFG->dirroot . '/mod/quiz/report/overview/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
-
 
 /**
  * Tests for the quiz overview report.
@@ -44,8 +34,20 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @copyright  2014 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class report_test extends \advanced_testcase {
-    use \quiz_question_helper_test_trait;
+final class report_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
+
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+        require_once($CFG->dirroot . '/mod/quiz/report/reportlib.php');
+        require_once($CFG->dirroot . '/mod/quiz/report/overview/report.php');
+        require_once($CFG->dirroot . '/mod/quiz/report/overview/overview_form.php');
+        require_once($CFG->dirroot . '/mod/quiz/report/overview/tests/helpers.php');
+    }
 
     /**
      * Data provider for test_report_sql.

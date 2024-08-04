@@ -17,12 +17,7 @@
 namespace core_grades\external;
 
 use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die;
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Unit tests for core_grades\external\get_grade_tree.
@@ -32,8 +27,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2023 Mihail Geshoski <mihail@moodle.com>
  * @covers     \core_grades\external\get_grade_tree
  */
-class get_grade_tree_test extends \externallib_advanced_testcase {
-
+final class get_grade_tree_test extends externallib_advanced_testcase {
     /**
      * Test the return value of the external function.
      *

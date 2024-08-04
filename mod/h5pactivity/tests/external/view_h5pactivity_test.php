@@ -14,29 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * External function test for view_h5pactivity.
- *
- * @package    mod_h5pactivity
- * @category   external
- * @since      Moodle 3.9
- * @copyright  2020 Carlos Escobedo <carlos@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_h5pactivity\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
-use core_external\external_api;
-use externallib_advanced_testcase;
-use stdClass;
 use context_module;
+use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 use course_modinfo;
+use stdClass;
 
 /**
  * External function test for view_h5pactivity.
@@ -45,8 +29,7 @@ use course_modinfo;
  * @copyright  2020 Carlos Escobedo <carlos@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class view_h5pactivity_test extends externallib_advanced_testcase {
-
+final class view_h5pactivity_test extends externallib_advanced_testcase {
     /**
      * Test test_view_h5pactivity invalid id.
      */

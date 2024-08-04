@@ -24,9 +24,9 @@ namespace mod_assign\tests;
  * @copyright  2021 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class externallib_advanced_testcase extends \externallib_advanced_testcase {
+abstract class externallib_advanced_testcase extends \core_webservice\tests\externallib_advanced_testcase {
     #[\Override]
-    public function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void {
         global $CFG;
 
         parent::setUpBeforeClass();

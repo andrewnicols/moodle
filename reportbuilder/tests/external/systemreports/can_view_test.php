@@ -20,13 +20,8 @@ namespace core_reportbuilder\external\systemreports;
 
 use core\context\system;
 use core_external\external_api;
-use externallib_advanced_testcase;
 use core_reportbuilder\local\systemreports\reports_list;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Unit tests of external class for validating access to a system report
@@ -36,8 +31,7 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * @copyright   2023 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class can_view_test extends externallib_advanced_testcase {
-
+final class can_view_test extends externallib_advanced_testcase {
     /**
      * Text execute method
      */

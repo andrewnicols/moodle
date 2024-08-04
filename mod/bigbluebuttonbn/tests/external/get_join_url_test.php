@@ -19,14 +19,10 @@ namespace mod_bigbluebuttonbn\external;
 use context_course;
 use core_external\external_api;
 use core_external\restricted_context_exception;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_bigbluebuttonbn\instance;
 use mod_bigbluebuttonbn\test\testcase_helper_trait;
 use moodle_exception;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
  * Tests for the get_join_url class.
@@ -38,7 +34,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @author    Laurent David (laurent@call-learning.fr)
  * @covers \mod_bigbluebuttonbn\external\get_join_url
  */
-class get_join_url_test extends \externallib_advanced_testcase {
+final class get_join_url_test extends externallib_advanced_testcase {
     use testcase_helper_trait;
 
     /**
@@ -256,4 +252,3 @@ class get_join_url_test extends \externallib_advanced_testcase {
         $this->assertEquals('userlimitreached', $joinurl['warnings'][0]['warningcode']);
     }
 }
-

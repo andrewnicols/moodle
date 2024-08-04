@@ -17,15 +17,8 @@
 namespace mod_forum;
 
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_forum_external;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/forum/lib.php');
 
 /**
  * The module forums external functions unit tests
@@ -35,11 +28,16 @@ require_once($CFG->dirroot . '/mod/forum/lib.php');
  * @copyright  2012 Mark Nelson <markn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class externallib_test extends externallib_advanced_testcase {
+final final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
 
-    /**
-     * Tests set up
-     */
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/forum/lib.php');
+    }
+
+    #[\Override]
     protected function setUp(): void {
         global $CFG;
         parent::setUp();

@@ -16,15 +16,10 @@
 
 namespace core_grades\external;
 
-use core_grades\external\get_gradeitems as get_gradeitems;
 use core_external\external_api;
+use core_grades\external\get_gradeitems as get_gradeitems;
+use core_webservice\tests\externallib_advanced_testcase;
 use grade_item;
-
-defined('MOODLE_INTERNAL') || die;
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
  * Unit tests for the core_grades\external\get_gradeitems.
@@ -34,7 +29,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2023 Mathew May <Mathew.solutions>
  * @covers     \core_grades\external\get_gradeitems
  */
-class get_gradeitems_test extends \externallib_advanced_testcase {
+final class get_gradeitems_test extends externallib_advanced_testcase {
     public function test_execute(): void {
         $this->resetAfterTest();
         $this->setAdminUser();

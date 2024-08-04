@@ -18,14 +18,7 @@ namespace core_question;
 
 use core_external\restricted_context_exception;
 use core_question_external;
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Question external functions tests
@@ -37,7 +30,14 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.1
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
+    }
 
     /** @var \stdClass course record. */
     protected $course;

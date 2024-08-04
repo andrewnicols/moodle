@@ -13,14 +13,11 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace quiz_statistics;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
-
 use core\task\manager;
+use mod_quiz\tests\quiz_question_helper_test_trait;
 use quiz_statistics\task\recalculate;
 use quiz_statistics\tests\statistics_helper;
 use quiz_statistics\tests\statistics_test_trait;
@@ -34,8 +31,8 @@ use quiz_statistics\tests\statistics_test_trait;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \quiz_statistics\hook_callbacks::quiz_attempt_submitted_or_deleted
  */
-class quiz_attempt_submitted_test extends \advanced_testcase {
-    use \quiz_question_helper_test_trait;
+final class quiz_attempt_submitted_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
     use statistics_test_trait;
 
     /**

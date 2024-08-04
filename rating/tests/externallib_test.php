@@ -14,27 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * External rating functions unit tests
- *
- * @package    core_rating
- * @category   external
- * @copyright  2015 Costantino Cito <ccito@cvaconsulting.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace core_rating;
 
 use core_external\external_api;
 use core_rating_external;
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/rating/lib.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * External rating functions unit tests
@@ -44,7 +28,14 @@ require_once($CFG->dirroot . '/rating/lib.php');
  * @copyright  2015 Costantino Cito <ccito@cvaconsulting.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/rating/lib.php');
+    }
 
     /** @var \stdClass course record. */
     protected $course;

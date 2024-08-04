@@ -19,17 +19,11 @@ declare(strict_types=1);
 namespace core_reportbuilder\external\reports;
 
 use context_system;
-use core_reportbuilder_generator;
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_reportbuilder_generator;
 use core_reportbuilder\exception\report_access_exception;
-use core_reportbuilder\local\models\report;
 use core_user\reportbuilder\datasource\users;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Unit tests of external class for listing reports
@@ -40,7 +34,6 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class listing_test extends externallib_advanced_testcase {
-
     /**
      * Text execute method
      */

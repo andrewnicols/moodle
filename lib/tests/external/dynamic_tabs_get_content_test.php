@@ -19,12 +19,7 @@ declare(strict_types=1);
 namespace core\external;
 
 use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/lib/tests/fixtures/testeable_dynamic_tab.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Unit tests external dynamic tabs get content
@@ -34,8 +29,12 @@ require_once($CFG->dirroot . '/lib/tests/fixtures/testeable_dynamic_tab.php');
  * @copyright   2021 David Matamoros <davidmc@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dynamic_tabs_get_content_test extends \externallib_advanced_testcase {
-
+final class dynamic_tabs_get_content_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        parent::setUpBeforeClass();
+        self::load_fixture('core', 'testeable_dynamic_tab.php');
+    }
     /**
      * Text execute method
      */

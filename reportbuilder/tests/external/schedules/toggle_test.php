@@ -18,16 +18,11 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\external\schedules;
 
-use core_reportbuilder_generator;
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_reportbuilder_generator;
 use core_reportbuilder\exception\report_access_exception;
 use core_user\reportbuilder\datasource\users;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Unit tests of external class for toggling report schedules
@@ -37,8 +32,7 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class toggle_test extends externallib_advanced_testcase {
-
+final class toggle_test extends externallib_advanced_testcase {
     /**
      * Text execute method
      */

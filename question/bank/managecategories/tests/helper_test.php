@@ -18,11 +18,9 @@ namespace qbank_managecategories;
 
 defined('MOODLE_INTERNAL') || die();
 
-use moodle_url;
 use core_question\local\bank\question_edit_contexts;
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
+use moodle_url;
 
 /**
  * Unit tests for helper class.
@@ -33,9 +31,8 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \qbank_managecategories\helper
  */
-class helper_test extends \advanced_testcase {
-
-    use \quiz_question_helper_test_trait;
+final class helper_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
     /**
      * @var \context_module module context.

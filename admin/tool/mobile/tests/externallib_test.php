@@ -16,16 +16,8 @@
 
 namespace tool_mobile;
 
-use externallib_advanced_testcase;
 use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/admin/tool/mobile/tests/fixtures/output/mobile.php');
-require_once($CFG->dirroot . '/webservice/lib.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Moodle Mobile admin tool external functions tests.
@@ -35,7 +27,15 @@ require_once($CFG->dirroot . '/webservice/lib.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since       Moodle 3.1
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        self::load_fixture('tool_mobile', 'output/mobile.php');
+        require_once($CFG->dirroot . '/webservice/lib.php');
+    }
 
     /**
      * Test get_plugins_supporting_mobile.

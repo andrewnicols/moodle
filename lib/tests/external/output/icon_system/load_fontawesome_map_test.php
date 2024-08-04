@@ -14,24 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * External functions test for record_feedback_action.
- *
- * @package    core
- * @category   test
- * @copyright  2020 Andrew Nicols <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace core\external\output\icon_system;
 
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Class record_userfeedback_action_testcase
@@ -40,7 +25,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core\external\output\icon_system\load_fontawesome_map
  */
-class load_fontawesome_map_test extends externallib_advanced_testcase {
+final class load_fontawesome_map_test extends externallib_advanced_testcase {
     /**
      * Ensure that a valid theme which uses fontawesome returns a map.
      *

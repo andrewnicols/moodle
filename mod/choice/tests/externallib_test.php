@@ -17,15 +17,8 @@
 namespace mod_choice;
 
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_choice_external;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/choice/lib.php');
 
 /**
  * External choice functions unit tests
@@ -35,7 +28,14 @@ require_once($CFG->dirroot . '/mod/choice/lib.php');
  * @copyright  2015 Costantino Cito <ccito@cvaconsulting.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        gloabl $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/choice/lib.php');
+    }
 
     /**
      * Test get_choice_results

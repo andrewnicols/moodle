@@ -14,26 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * External function test for get_user_attempts.
- *
- * @package    mod_h5pactivity
- * @category   external
- * @since      Moodle 3.11
- * @copyright  2020 Ilya Tregubov <ilya@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace mod_h5pactivity\external;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 use mod_h5pactivity\local\manager;
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * External function test for get_user_attempts.
@@ -42,8 +27,7 @@ use externallib_advanced_testcase;
  * @copyright  2020 Ilya Tregubov <ilya@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_user_attempts_test extends externallib_advanced_testcase {
-
+final class get_user_attempts_test extends externallib_advanced_testcase {
     /**
      * Test the behaviour of get_user_attempts getting more than one user at once.
      *

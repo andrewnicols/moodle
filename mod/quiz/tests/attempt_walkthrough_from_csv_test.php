@@ -18,12 +18,7 @@ namespace mod_quiz;
 
 use question_engine;
 use mod_quiz\quiz_settings;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Quiz attempt walk through using data from csv file.
@@ -34,9 +29,16 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @author     Jamie Pratt <me@jamiep.org>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class attempt_walkthrough_from_csv_test extends \advanced_testcase {
+final class attempt_walkthrough_from_csv_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
-    use \quiz_question_helper_test_trait;
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+    }
 
     /**
      * @var string[] names of the files which contain the test data.

@@ -21,15 +21,7 @@ use core_external\external_api;
 use core_group\customfield\group_handler;
 use core_group\customfield\grouping_handler;
 use core_group_external;
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/group/externallib.php');
-require_once($CFG->dirroot . '/group/lib.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Group external PHPunit tests
@@ -41,7 +33,14 @@ require_once($CFG->dirroot . '/group/lib.php');
  * @since Moodle 2.4
  * @covers \core_group_external
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/group/lib.php');
+        require_once($CFG->dirroot . '/group/externallib.php');
+    }
 
     /**
      * Create group custom field for testing.

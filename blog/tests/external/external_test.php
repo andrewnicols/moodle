@@ -25,13 +25,7 @@
 namespace core_blog\external;
 
 use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/blog/locallib.php');
-require_once($CFG->dirroot . '/blog/lib.php');
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Unit tests for blog external API.
@@ -40,7 +34,15 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2018 Juan Leyva
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class external_test extends \externallib_advanced_testcase {
+final class external_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/blog/locallib.php');
+        require_once($CFG->dirroot . '/blog/lib.php');
+    }
 
     private $courseid;
     private $cmid;

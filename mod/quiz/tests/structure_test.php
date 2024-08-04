@@ -16,10 +16,7 @@
 
 namespace mod_quiz;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Unit tests for quiz events.
@@ -30,9 +27,8 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mod_quiz\structure
  */
-class structure_test extends \advanced_testcase {
-
-    use \quiz_question_helper_test_trait;
+final class structure_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
     /**
      * Create a course with an empty quiz.

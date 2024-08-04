@@ -16,9 +16,7 @@
 
 namespace mod_quiz\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__ . '/../../../../webservice/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Tests for override webservices
@@ -30,7 +28,7 @@ require_once(__DIR__ . '/../../../../webservice/tests/helpers.php');
  * @covers \mod_quiz\external\save_overrides
  * @covers \mod_quiz\external\delete_overrides
  */
-final class override_test extends \externallib_advanced_testcase {
+final class override_test extends externallib_advanced_testcase {
     /**
      * Creates a quiz for testing.
      *

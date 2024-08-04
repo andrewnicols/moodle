@@ -16,15 +16,9 @@
 
 namespace core_grades\external;
 
-use core_grades\external\create_gradecategories;
 use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die;
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
+use core_grades\external\create_gradecategories;
+use core_webservice\tests\externallib_advanced_testcase;
 /**
  * Unit tests for the core_grades\external\create_gradecategories webservice.
  *
@@ -34,8 +28,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.11
  */
-class create_gradecategories_test extends \externallib_advanced_testcase {
-
+final class create_gradecategories_test extends externallib_advanced_testcase {
     /**
      * Test create_gradecategories.
      *

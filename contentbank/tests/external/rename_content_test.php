@@ -14,26 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Core content bank external functions tests.
- *
- * @package    core_contentbank
- * @category   external
- * @copyright  2020 Sara Arjona <sara@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 3.9
- */
-
 namespace core_contentbank\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_contenttype.php');
-require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_content.php');
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
 use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Core content bank external functions tests.
@@ -43,7 +27,14 @@ use core_external\external_api;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_contentbank\external\rename_content
  */
-class rename_content_test extends \externallib_advanced_testcase {
+final class rename_content_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        parent::setUpBeforeClass();
+
+        self::load_fixture('core_contentbank', 'testable_contenttype.php');
+        self::load_fixture('core_contentbank', 'testable_content.php');
+    }
 
     /**
      * Data provider for test_rename_content.

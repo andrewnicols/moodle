@@ -16,13 +16,9 @@
 
 namespace mod_quiz\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__ . '/../../../../webservice/tests/helpers.php');
-
 use coding_exception;
 use core_question_generator;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_quiz\quiz_attempt;
 use mod_quiz\quiz_settings;
 use required_capability_exception;
@@ -38,7 +34,7 @@ use stdClass;
  * @covers \mod_quiz\external\reopen_attempt
  * @covers \mod_quiz\external\get_reopen_attempt_confirmation
  */
-class reopen_attempt_test extends externallib_advanced_testcase {
+final class reopen_attempt_test extends externallib_advanced_testcase {
     /** @var stdClass|null if we make a quiz attempt, we store the student object here. */
     protected $student;
 

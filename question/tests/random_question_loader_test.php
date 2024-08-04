@@ -20,17 +20,11 @@ use core_question\local\bank\condition;
 use core_question\local\bank\question_version_status;
 use core_question\local\bank\random_question_loader;
 use core_question_generator;
-use mod_quiz\quiz_settings;
+use mod_quiz\tests\quiz_question_helper_test_trait;
 use qubaid_list;
 use question_bank;
 use question_engine;
 use question_filter_test_helper;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
 
 /**
  * Tests for the {@see \core_question\local\bank\random_question_loader} class.
@@ -41,8 +35,15 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @covers    \random_question_loader
  */
 final class random_question_loader_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
-    use \quiz_question_helper_test_trait;
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
+    }
 
     public function test_empty_category_gives_null(): void {
         $this->resetAfterTest();

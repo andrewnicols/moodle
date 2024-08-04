@@ -16,12 +16,8 @@
 
 namespace core_courseformat\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
 use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Tests for the get_state class.
@@ -32,17 +28,14 @@ use core_external\external_api;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_courseformat\external\get_state
  */
-class get_state_test extends \externallib_advanced_testcase {
-
+final class get_state_test extends externallib_advanced_testcase {
     /** @var array Sections in the testing course. */
     private $sections;
 
     /** @var array Activities in the testing course. */
     private $activities;
 
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
+    #[\Override]
     public static function setupBeforeClass(): void {
         global $CFG;
 

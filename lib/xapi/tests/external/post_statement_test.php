@@ -14,31 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * This file contains unit test related to xAPI library.
- *
- * @package    core_xapi
- * @copyright  2020 Ferran Recio
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 namespace core_xapi\external;
 
-use core_xapi\xapi_exception;
-use core_xapi\test_helper;
+use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 use core_xapi\external\post_statement;
 use core_xapi\local\statement;
+use core_xapi\local\statement\item_activity;
 use core_xapi\local\statement\item_agent;
 use core_xapi\local\statement\item_group;
 use core_xapi\local\statement\item_verb;
-use core_xapi\local\statement\item_activity;
-use externallib_advanced_testcase;
-use stdClass;
-use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_xapi\test_helper;
+use core_xapi\xapi_exception;
 
 /**
  * Unit tests for xAPI statement processing webservice.
@@ -48,16 +35,17 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2020 Ferran Recio
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class post_statement_test extends externallib_advanced_testcase {
-
+final class post_statement_test extends externallib_advanced_testcase {
     /** @var test_helper for generating valid xapi statements. */
     private $testhelper;
 
     /**
      * Setup to ensure that fixtures are loaded.
      */
-    public static function setupBeforeClass(): void {
+    public static function setUpBeforeClass(): void {
         global $CFG;
+
+        parent::setUpBeforeClass();
         require_once($CFG->dirroot.'/lib/xapi/tests/helper.php');
     }
 

@@ -16,13 +16,9 @@
 
 namespace core_courseformat\external;
 
-use stdClass;
+use core_webservice\tests\externallib_advanced_testcase;
 use moodle_exception;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use stdClass;
 
 /**
  * Tests for the update_course class.
@@ -33,17 +29,15 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_courseformat\external\update_course
  */
-class update_course_test extends \externallib_advanced_testcase {
-
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void {
+final class update_course_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
         global $CFG;
 
-        require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest.php');
-        require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_output_course_format_state.php');
-        require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_stateactions.php');
+        parent::setUpBeforeClass();
+        self::load_fixture('core_coureformat', 'format_theunittest.php');
+        self::load_fixture('core_coureformat', 'format_theunittest_output_course_format_state.php');
+        self::load_fixture('core_coureformat', 'format_theunittest_stateactions.php');
     }
 
     /**

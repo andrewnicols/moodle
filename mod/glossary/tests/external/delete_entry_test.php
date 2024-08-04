@@ -16,13 +16,8 @@
 
 namespace mod_glossary\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * External function test for delete_entry.
@@ -35,7 +30,6 @@ use externallib_advanced_testcase;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class delete_entry_test extends externallib_advanced_testcase {
-
     /**
      * Test the behaviour of delete_entry().
      */

@@ -16,15 +16,8 @@
 
 namespace enrol_manual;
 
+use core_webservice\tests\externallib_advanced_testcase;
 use enrol_manual_external;
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/enrol/manual/externallib.php');
 
 /**
  * Enrol manual external PHPunit tests
@@ -35,7 +28,13 @@ require_once($CFG->dirroot . '/enrol/manual/externallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.4
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/enrol/manual/externallib.php');
+    }
 
     /**
      * Test get_enrolled_users

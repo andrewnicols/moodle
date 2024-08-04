@@ -16,25 +16,19 @@
 
 namespace core\external\check;
 
-defined('MOODLE_INTERNAL') || die();
-
 use admin_category;
 use admin_root;
 use admin_setting_check;
 use admin_settingpage;
 use core\check\result;
-use externallib_advanced_testcase;
 use required_capability_exception;
 use context_system;
 use core\check\access\guestrole;
 use core\check\check;
 use core\check\external\get_result_admintree;
 use core\check\security\passwordpolicy;
+use core_webservice\tests\externallib_advanced_testcase;
 use ReflectionMethod;
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->libdir . '/adminlib.php');
 
 /**
  * Unit tests check API get_result webservice
@@ -45,7 +39,14 @@ require_once($CFG->libdir . '/adminlib.php');
  * @copyright   Catalyst IT, 2023
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class get_result_admintree_test extends externallib_advanced_testcase {
+final class get_result_admintree_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->libdir . '/adminlib.php');
+    }
 
     /**
      * Sets up admin tree for the given settings.

@@ -14,26 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Tests for external function mod_chat_view_sessions.
- *
- * @package    mod_chat
- * @category   external
- * @copyright  2022 Rodrigo Mady <rodrigo.mady@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 4.3
- */
-
 namespace mod_chat\external;
 
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use moodle_exception;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
  * Test Class for external function mod_chat_view_sessions.
@@ -45,8 +29,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @since      Moodle 4.3
  * @coversDefaultClass \mod_chat\external\view_sessions
  */
-class view_sessions_test extends externallib_advanced_testcase {
-
+final class view_sessions_test extends externallib_advanced_testcase {
     /**
      * Prepare the test.
      *

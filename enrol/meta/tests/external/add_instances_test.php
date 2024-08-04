@@ -17,10 +17,7 @@
 namespace enrol_meta\external;
 
 use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die();
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Tests for add_instances external class
@@ -31,11 +28,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2021 WKS KV Bildung
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class add_instances_test extends \externallib_advanced_testcase {
-
-    /**
-     * Test setup
-     */
+final class add_instances_test extends externallib_advanced_testcase {
+    #[\Override]
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();

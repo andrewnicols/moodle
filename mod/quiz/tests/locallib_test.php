@@ -26,12 +26,7 @@ namespace mod_quiz;
 
 use mod_quiz\output\renderer;
 use mod_quiz\question\display_options;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/locallib.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Unit tests for (some of) mod/quiz/locallib.php.
@@ -39,9 +34,16 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @copyright  2008 Tim Hunt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class locallib_test extends \advanced_testcase {
+final class locallib_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
+    
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
 
-    use \quiz_question_helper_test_trait;
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/quiz/locallib.php');
+    }
 
     public function test_quiz_rescale_grade(): void {
         $quiz = new \stdClass();

@@ -13,16 +13,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace quiz_statistics;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
 
 use core\progress\none;
 use mod_quiz\grade_calculator;
-use mod_quiz\quiz_settings;
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Unit tests for quiz_statistics\event\observer\slots_updated
@@ -33,8 +29,8 @@ use mod_quiz\quiz_settings;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \quiz_statistics\quiz_structure_modified
  */
-class quiz_structure_modified_test extends \advanced_testcase {
-    use \quiz_question_helper_test_trait;
+final class quiz_structure_modified_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
     /**
      * Clear the statistics cache for a quiz when it structure is modified.

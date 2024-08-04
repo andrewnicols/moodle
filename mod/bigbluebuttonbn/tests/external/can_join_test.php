@@ -17,14 +17,10 @@
 namespace mod_bigbluebuttonbn\external;
 
 use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_bigbluebuttonbn\instance;
 use mod_bigbluebuttonbn\test\testcase_helper_trait;
 use moodle_exception;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
 
 /**
  * Tests for the update_course class.
@@ -35,7 +31,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mod_bigbluebuttonbn\external\can_join
  */
-class can_join_test extends \externallib_advanced_testcase {
+final class can_join_test extends externallib_advanced_testcase {
     use testcase_helper_trait;
     /**
      * Setup for test

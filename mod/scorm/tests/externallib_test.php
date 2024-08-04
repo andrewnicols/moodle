@@ -17,15 +17,8 @@
 namespace mod_scorm;
 
 use core_external\external_api;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_scorm_external;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/scorm/lib.php');
 
 /**
  * SCORM module external functions tests
@@ -36,7 +29,14 @@ require_once($CFG->dirroot . '/mod/scorm/lib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.0
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/scorm/lib.php');
+    }
 
     /** @var \stdClass course record. */
     protected \stdClass $course;

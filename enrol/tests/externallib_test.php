@@ -18,16 +18,9 @@ namespace core_enrol;
 
 use core_enrol_external;
 use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 use enrol_user_enrolment_form;
-use externallib_advanced_testcase;
 use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/enrol/externallib.php');
 
 /**
  * Enrol external PHPunit tests
@@ -39,6 +32,12 @@ require_once($CFG->dirroot . '/enrol/externallib.php');
  * @since Moodle 2.4
  */
 final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/enrol/externallib.php');
+    }
 
     /**
      * dataProvider for test_get_enrolled_users_visibility().

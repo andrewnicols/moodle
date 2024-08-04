@@ -29,15 +29,7 @@ namespace core_user;
 use core_external\external_api;
 use core_files_external;
 use core_user_external;
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/user/externallib.php');
-require_once($CFG->dirroot . '/files/externallib.php');
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Tests for the user external functions.
@@ -46,6 +38,14 @@ require_once($CFG->dirroot . '/files/externallib.php');
  * @covers \core_user_external
  */
 final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+        
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/user/externallib.php');
+        require_once($CFG->dirroot . '/files/externallib.php');
+    }
 
     /**
      * Test get_users

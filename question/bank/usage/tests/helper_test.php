@@ -16,12 +16,8 @@
 
 namespace qbank_usage;
 
-defined('MOODLE_INTERNAL') || die();
-
 use mod_quiz\quiz_attempt;
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Helper test.
@@ -32,9 +28,8 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \qbank_usage\helper
  */
-class helper_test extends \advanced_testcase {
-
-    use \quiz_question_helper_test_trait;
+final class helper_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
     /**
      * @var \stdClass $quiz

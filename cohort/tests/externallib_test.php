@@ -17,16 +17,9 @@
 namespace core_cohort;
 
 use core_cohort_external;
-use core_external\external_api;
-use externallib_advanced_testcase;
 use core_cohort\customfield\cohort_handler;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/cohort/externallib.php');
+use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * External cohort API
@@ -36,7 +29,14 @@ require_once($CFG->dirroot . '/cohort/externallib.php');
  * @copyright  MediaTouch 2000 srl
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/cohort/externallib.php');
+    }
 
     /**
      * Create cohort custom fields for testing.

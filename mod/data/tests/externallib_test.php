@@ -16,16 +16,11 @@
 
 namespace mod_data;
 
-use externallib_advanced_testcase;
 use mod_data_external;
 use core_external\external_api;
 use core_external\external_settings;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
+use core_webservice\tests\externallib_advanced_testcase;
+use stdClass;
 
 /**
  * Database module external functions tests
@@ -37,8 +32,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @since      Moodle 2.9
  * @coversDefaultClass \mod_data_external
  */
-class externallib_test extends externallib_advanced_testcase {
-
+final class externallib_test extends externallib_advanced_testcase {
     /** @var stdClass Test module context. */
     protected $context;
 

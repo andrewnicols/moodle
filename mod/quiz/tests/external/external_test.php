@@ -14,35 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Quiz module external functions tests.
- *
- * @package    mod_quiz
- * @category   external
- * @copyright  2016 Juan Leyva <juan@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      Moodle 3.1
- */
-
 namespace mod_quiz\external;
 
 use core_external\external_api;
 use core_question\local\bank\question_version_status;
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_quiz\question\display_options;
 use mod_quiz\quiz_attempt;
 use mod_quiz\quiz_settings;
 use mod_quiz\structure;
+use mod_quiz\tests\quiz_question_helper_test_trait;
 use mod_quiz_external;
 use moodle_exception;
 use ReflectionClass;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
 
 /**
  * Quiz module external functions tests
@@ -55,7 +39,7 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @covers \mod_quiz_external
  */
 final class external_test extends externallib_advanced_testcase {
-    use \quiz_question_helper_test_trait;
+    use quiz_question_helper_test_trait;
 
     /** @var \stdClass course record. */
     protected $course;

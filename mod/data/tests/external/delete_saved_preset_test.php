@@ -16,13 +16,8 @@
 
 namespace mod_data\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
-use externallib_advanced_testcase;
 use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 use mod_data\manager;
 
 /**
@@ -35,8 +30,7 @@ use mod_data\manager;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \mod_data\external\delete_saved_preset
  */
-class delete_saved_preset_test extends externallib_advanced_testcase {
-
+final class delete_saved_preset_test extends externallib_advanced_testcase {
     /**
      * Test the behaviour of delete_saved_preset().
      *

@@ -19,10 +19,7 @@ namespace mod_quiz;
 use core_question\local\bank\question_version_status;
 use mod_quiz\external\submit_question_version;
 use mod_quiz\question\bank\qbank_helper;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__ . '/quiz_question_helper_test_trait.php');
+use mod_quiz\tests\quiz_question_helper_test_trait;
 
 /**
  * Qbank helper test for quiz.
@@ -34,8 +31,8 @@ require_once(__DIR__ . '/quiz_question_helper_test_trait.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \mod_quiz\question\bank\qbank_helper
  */
-class qbank_helper_test extends \advanced_testcase {
-    use \quiz_question_helper_test_trait;
+final class qbank_helper_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
     /**
      * @var \stdClass test student user.

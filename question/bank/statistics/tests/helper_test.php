@@ -16,16 +16,12 @@
 
 namespace qbank_statistics;
 
-defined('MOODLE_INTERNAL') || die();
-
 use core_question\statistics\questions\all_calculated_for_qubaid_condition;
-use quiz_statistics\tests\statistics_helper;
 use mod_quiz\quiz_attempt;
 use mod_quiz\quiz_settings;
+use mod_quiz\tests\quiz_question_helper_test_trait;
 use question_engine;
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.php');
+use quiz_statistics\tests\statistics_helper;
 
 /**
  * Tests for question statistics.
@@ -35,9 +31,8 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @author     Nathan Nguyen <nathannguyen@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class helper_test extends \advanced_testcase {
-
-    use \quiz_question_helper_test_trait;
+final class helper_test extends \advanced_testcase {
+    use quiz_question_helper_test_trait;
 
     /**
      * Test quizzes that contain a specified question.

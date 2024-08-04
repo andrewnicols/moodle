@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_tag\external;
+
+use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
+
 /**
  * Unit tests for WS in tags
  *
@@ -22,19 +27,7 @@
  * @copyright 2015 Marina Glancy
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace core_tag\external;
-
-use externallib_advanced_testcase;
-use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
-class external_test extends externallib_advanced_testcase {
+final class external_test extends externallib_advanced_testcase {
     /**
      * Test update_categories
      */

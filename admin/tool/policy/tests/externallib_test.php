@@ -16,15 +16,8 @@
 
 namespace tool_policy;
 
-use externallib_advanced_testcase;
+use core_webservice\tests\externallib_advanced_testcase;
 use tool_mobile\external as external_mobile;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/user/externallib.php');
 
 /**
  * External policy webservice API tests.
@@ -33,7 +26,14 @@ require_once($CFG->dirroot . '/user/externallib.php');
  * @copyright 2018 Sara Arjona <sara@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class externallib_test extends externallib_advanced_testcase {
+final class externallib_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/user/externallib.php');
+    }
 
     /** @var \tool_policy\policy_version $policy1 Policy document 1. */
     protected $policy1;

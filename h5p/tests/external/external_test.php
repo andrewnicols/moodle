@@ -26,16 +26,9 @@
 
 namespace core_h5p\external;
 
-use externallib_advanced_testcase;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
 use core_h5p\external;
 use core_h5p\local\library\autoloader;
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Core h5p external functions tests
@@ -46,8 +39,7 @@ use core_h5p\local\library\autoloader;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.8
  */
-class external_test extends externallib_advanced_testcase {
-
+final class external_test extends externallib_advanced_testcase {
     protected function setUp(): void {
         parent::setUp();
         autoloader::register();

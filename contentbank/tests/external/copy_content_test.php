@@ -16,14 +16,8 @@
 
 namespace core_contentbank\external;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_contenttype.php');
-require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_content.php');
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-
 use core_external\external_api;
+use core_webservice\tests\externallib_advanced_testcase;
 
 /**
  * Content bank's copy content external function tests.
@@ -33,7 +27,14 @@ use core_external\external_api;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_contentbank\external\copy_content
  */
-class copy_content_test extends \externallib_advanced_testcase {
+final class copy_content_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        parent::setUpBeforeClass();
+
+        self::load_fixture('core_contentbank', 'testable_contenttype.php');
+        self::load_fixture('core_contentbank', 'testable_content.php');
+    }
 
     /**
      * Test the behaviour of copy_content() for users with permission.
