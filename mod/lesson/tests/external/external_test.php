@@ -26,42 +26,12 @@
 
 namespace mod_lesson\external;
 
-use externallib_advanced_testcase;
-use mod_lesson_external;
-use lesson;
 use core_external\external_api;
 use core_external\external_settings;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-require_once($CFG->dirroot . '/webservice/tests/helpers.php');
-require_once($CFG->dirroot . '/mod/lesson/locallib.php');
-
-/**
- * Silly class to access mod_lesson_external internal methods.
- *
- * @package mod_lesson
- * @copyright 2017 Juan Leyva <juan@moodle.com>
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since  Moodle 3.3
- */
-class testable_mod_lesson_external extends mod_lesson_external {
-
-    /**
-     * Validates a new attempt.
-     *
-     * @param  lesson  $lesson lesson instance
-     * @param  array   $params request parameters
-     * @param  boolean $return whether to return the errors or throw exceptions
-     * @return [array          the errors (if return set to true)
-     * @since  Moodle 3.3
-     */
-    public static function validate_attempt(lesson $lesson, $params, $return = false) {
-        return parent::validate_attempt($lesson, $params, $return);
-    }
-}
+use core_webservice\tests\externallib_advanced_testcase;
+use lesson;
+use mod_lesson_external;
+use ReflectionClass;
 
 /**
  * Lesson module external functions tests
@@ -72,7 +42,14 @@ class testable_mod_lesson_external extends mod_lesson_external {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.3
  */
-class external_test extends externallib_advanced_testcase {
+final class external_test extends externallib_advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+        require_once($CFG->dirroot . '/mod/lesson/locallib.php');
+    }
 
     /** @var \stdClass course record. */
     protected \stdClass $course;
@@ -275,13 +252,15 @@ class external_test extends externallib_advanced_testcase {
     public function test_validate_attempt(): void {
         global $DB;
 
+        $reflectedclass = new ReflectionClass(mod_lesson_external::class);
+
         $this->setUser($this->student);
         // Test deadline.
         $oldtime = time() - DAYSECS;
         $DB->set_field('lesson', 'deadline', $oldtime, array('id' => $this->lesson->id));
 
         $lesson = new lesson($DB->get_record('lesson', array('id' => $this->lesson->id)));
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => ''], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => ''], true]);
         $this->assertEquals('lessonclosed', key($validation));
         $this->assertCount(1, $validation);
 
@@ -291,7 +270,7 @@ class external_test extends externallib_advanced_testcase {
         $DB->set_field('lesson', 'available', $futuretime, array('id' => $this->lesson->id));
 
         $lesson = new lesson($DB->get_record('lesson', array('id' => $this->lesson->id)));
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => ''], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => ''], true]);
         $this->assertEquals('lessonopen', key($validation));
         $this->assertCount(1, $validation);
 
@@ -302,12 +281,12 @@ class external_test extends externallib_advanced_testcase {
         $DB->set_field('lesson', 'password', 'abc', array('id' => $this->lesson->id));
 
         $lesson = new lesson($DB->get_record('lesson', array('id' => $this->lesson->id)));
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => ''], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => ''], true]);
         $this->assertEquals('passwordprotectedlesson', key($validation));
         $this->assertCount(1, $validation);
 
         $lesson = new lesson($DB->get_record('lesson', array('id' => $this->lesson->id)));
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => 'abc'], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => 'abc'], true]);
         $this->assertCount(0, $validation);
 
         // Dependencies.
@@ -320,13 +299,13 @@ class external_test extends externallib_advanced_testcase {
 
         $lesson = new lesson($DB->get_record('lesson', array('id' => $this->lesson->id)));
         $lesson->conditions = serialize((object) ['completed' => true, 'timespent' => 0, 'gradebetterthan' => 0]);
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => ''], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => ''], true]);
         $this->assertEquals('completethefollowingconditions', key($validation));
         $this->assertCount(1, $validation);
 
         // Lesson withou pages.
         $lesson = new lesson($lesson2);
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => ''], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => ''], true]);
         $this->assertEquals('lessonnotready2', key($validation));
         $this->assertCount(1, $validation);
 
@@ -342,7 +321,7 @@ class external_test extends externallib_advanced_testcase {
         ];
         $DB->insert_record('lesson_grades', (object) $record);
         $lesson = new lesson($DB->get_record('lesson', array('id' => $this->lesson->id)));
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => ''], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => ''], true]);
         $this->assertEquals('noretake', key($validation));
         $this->assertCount(1, $validation);
 
@@ -360,7 +339,7 @@ class external_test extends externallib_advanced_testcase {
         // Out of time.
         $DB->set_field('lesson', 'timelimit', HOURSECS, array('id' => $this->lesson->id));
         $lesson = new lesson($DB->get_record('lesson', array('id' => $this->lesson->id)));
-        $validation = testable_mod_lesson_external::validate_attempt($lesson, ['password' => '', 'pageid' => 1], true);
+        $validation = $reflectedclass->getMethod('validate_attempt')->invokeArgs(null, [$lesson, ['password' => '', 'pageid' => 1], true]);
         $this->assertEquals('eolstudentoutoftime', key($validation));
         $this->assertCount(1, $validation);
     }
