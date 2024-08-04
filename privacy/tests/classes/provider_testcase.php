@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core_privacy\tests;
+
 /**
  * Testcase for providers implementing parts of the core_privacy subsystem.
  *
@@ -21,25 +23,12 @@
  * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace core_privacy\tests;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-/**
- * Testcase for providers implementing parts of the core_privacy subsystem.
- *
- * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 abstract class provider_testcase extends \advanced_testcase {
-
     /**
      * Test tearDown.
      */
     public function tearDown(): void {
+        parent::tearDown();
         \core_privacy\local\request\writer::reset();
     }
 
