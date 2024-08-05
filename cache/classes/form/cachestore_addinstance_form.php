@@ -22,16 +22,13 @@ use moodleform;
 /**
  * Add store instance form.
  *
- * @package    core
+ * @package    core_cache
  * @category   cache
  * @copyright  2012 Sam Hemelryk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cachestore_addinstance_form extends moodleform {
-
-    /**
-     * The definition of the add instance form
-     */
+    #[\Override]
     final protected function definition() {
         $form = $this->_form;
         $store = $this->_customdata['store'];
@@ -61,8 +58,12 @@ class cachestore_addinstance_form extends moodleform {
         } else {
             $form->addElement('hidden', 'lock', '');
             $form->setType('lock', PARAM_ALPHANUMEXT);
-            $form->addElement('static', 'lock-value', get_string('locking', 'cache'),
-                    '<em>'.get_string('nativelocking', 'cache').'</em>');
+            $form->addElement(
+                'static',
+                'lock-value',
+                get_string('locking', 'cache'),
+                '<em>' . get_string('nativelocking', 'cache') . '</em>'
+            );
         }
 
         if (method_exists($this, 'configuration_definition')) {
@@ -73,13 +74,7 @@ class cachestore_addinstance_form extends moodleform {
         $this->add_action_buttons();
     }
 
-    /**
-     * Validates the add instance form data
-     *
-     * @param array $data
-     * @param array $files
-     * @return array
-     */
+    #[\Override]
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
@@ -96,7 +91,7 @@ class cachestore_addinstance_form extends moodleform {
 
         if (method_exists($this, 'configuration_validation')) {
             $newerrors = $this->configuration_validation($data, $files, $errors);
-            // We need to selectiviliy merge here
+            // We need to selectiviliy merge here.
             foreach ($newerrors as $element => $error) {
                 if (!array_key_exists($element, $errors)) {
                     $errors[$element] = $error;
