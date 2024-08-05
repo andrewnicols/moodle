@@ -23,6 +23,7 @@ use core\router\route;
 use core\router\route_loader_interface;
 use core\router\schema\objects\type_base;
 use core\router\schema\response\response;
+use core\url;
 use stdClass;
 
 /**
@@ -168,7 +169,7 @@ class specification implements
         // Add the server configuration.
         $serverdescription = str_replace("'", "\'", format_string(get_site()->fullname));
         $this->add_server(
-            $CFG->wwwroot . route_loader_interface::ROUTE_GROUP_API,
+            url::routed_path(route_loader_interface::ROUTE_GROUP_API)->out(),
             $serverdescription,
         );
 
