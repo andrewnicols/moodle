@@ -337,6 +337,7 @@ class page_requirements_manager {
                 'templaterev'           => $this->get_templaterev(),
                 'siteId'                => (int) SITEID,
                 'userId'                => (int) $USER->id,
+                'batchFetchRequests'    => $CFG->batch_fetch_requests ?? true,
             ];
             if ($CFG->debugdeveloper) {
                 $this->M_cfg['developerdebug'] = true;

@@ -37,6 +37,9 @@ interface route_loader_interface {
     /** @var string The route path prefix to use for API calls */
     public const ROUTE_GROUP_PAGE = '/';
 
+    /** @var string The route path prefix to use for batched API calls */
+    public const ROUTE_BATCH_API = '/api/$batch';
+
     /**
      * Configure all routes for the Application.
      *
