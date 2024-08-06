@@ -35,6 +35,10 @@ class MockRequest {
         this.body = init.body ?? null;
         this.signal = (init.signal as AbortSignal | null | undefined) ?? null;
     }
+
+    async text(): Promise<string> {
+        return this.body ?? '';
+    }
 }
 
 class MockResponse {
@@ -42,12 +46,22 @@ class MockResponse {
     status: number;
     statusText: string;
     headers: Headers;
+    body: any;
 
     constructor(body?: any, init: {status?: number; statusText?: string; headers?: Record<string, string>} = {}) {
         this.status = init.status ?? 200;
         this.statusText = init.statusText ?? 'OK';
         this.ok = this.status >= 200 && this.status < 300;
         this.headers = new Headers(init.headers);
+        this.body = body ?? null;
+    }
+
+    async text(): Promise<string> {
+        return this.body ?? '';
+    }
+
+    async json(): Promise<any> {
+        return typeof this.body === 'string' ? JSON.parse(this.body) : this.body;
     }
 }
 
@@ -338,6 +352,181 @@ describe('@moodle/lms/core/fetch', () => {
             abortGlobalFetches();
 
             await expect(requestPromise).rejects.toThrow('aborted');
+        });
+    });
+
+    // ── batching (instance methods / execute) ───────────────────────────────
+
+    describe('batching', () => {
+        /**
+         * Build a multipart/mixed ODATA $batch response body from a list of per-request results,
+         * in the same wire format produced by Fetch's own batch request builder.
+         */
+        const buildBatchResponseBody = (
+            boundary: string,
+            parts: Array<{id: string; status?: number; statusText?: string; contentType?: string; body?: string}>,
+        ): string => {
+            const partsText = parts.map(({id, status = 200, statusText = 'OK', contentType = 'application/json', body}) => {
+                const lines = [
+                    `--${boundary}`,
+                    'Content-Type: application/http',
+                    '',
+                    `HTTP/1.1 ${status} ${statusText}`,
+                    `Content-Type: ${contentType}`,
+                    `Content-ID: ${id}`,
+                    '',
+                ];
+                if (body) {
+                    lines.push(body);
+                }
+                lines.push('');
+                return lines.join('\n');
+            });
+
+            return [...partsText, `--${boundary}--`, ''].join('');
+        };
+
+        /** Extract the Content-ID values, in order, from an outgoing $batch request body. */
+        const getRequestIds = (body: string): string[] =>
+            [...body.matchAll(/^Content-ID: (.+)$/gm)].map(([, id]) => id);
+
+        afterEach(() => {
+            (globalThis as any).M.cfg.batchFetchRequests = false;
+        });
+
+        it('executes a single queued request directly, without using the batch endpoint', async() => {
+            const batcher = new Fetch();
+            const resultPromise = batcher.performGet('mod_example', 'list');
+            await batcher.execute();
+            await resultPromise;
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
+            const req = mockFetch.mock.calls[0][0];
+            expect(req.url).toBe('https://example.com/rest/v2/mod_example/list');
+            expect(req.method).toBe('GET');
+        });
+
+        it('executes immediately when batchFetchRequests is disabled', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = false;
+            const batcher = new Fetch();
+
+            await batcher.performGet('mod_example', 'list');
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
+            const req = mockFetch.mock.calls[0][0];
+            expect(req.url).toBe('https://example.com/rest/v2/mod_example/list');
+        });
+
+        it('queues requests until execute() is called when batchFetchRequests is enabled', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+
+            const first = batcher.performGet('mod_example', 'list');
+            const second = batcher.performPost('mod_example', 'create', {body: {name: 'new'}});
+
+            // Nothing has been sent yet.
+            expect(mockFetch).not.toHaveBeenCalled();
+
+            mockFetch.mockImplementation(async(req: MockRequest) => {
+                const ids = getRequestIds(req.body);
+                return new MockResponse(
+                    buildBatchResponseBody('resp-boundary', [
+                        {id: ids[0], body: JSON.stringify({items: []})},
+                        {id: ids[1], status: 201, statusText: 'Created', body: JSON.stringify({id: 1})},
+                    ]),
+                    {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+                );
+            });
+
+            await batcher.execute();
+
+            expect(mockFetch).toHaveBeenCalledTimes(1);
+            const batchRequest = mockFetch.mock.calls[0][0];
+            expect(batchRequest.method).toBe('POST');
+            expect(batchRequest.url).toBe('https://example.com/$batch');
+            expect(batchRequest.headers.get('Content-Type')).toMatch(/^multipart\/mixed;boundary=/);
+
+            const firstResponse = await first;
+            expect(await firstResponse.json()).toEqual({items: []});
+
+            const secondResponse = await second;
+            expect(secondResponse.status).toBe(201);
+            expect(await secondResponse.json()).toEqual({id: 1});
+        });
+
+        it('rejects all queued requests when the batch response is not ok', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+
+            const first = batcher.performGet('mod_example', 'list');
+            const second = batcher.performGet('mod_example', 'other');
+
+            mockFetch.mockResolvedValue(errorResponse(500, 'Internal Server Error'));
+
+            await batcher.execute();
+
+            await expect(first).rejects.toBe('Internal Server Error');
+            await expect(second).rejects.toBe('Internal Server Error');
+        });
+
+        it('rejects a request with no matching Content-ID in the batch response', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+
+            const first = batcher.performGet('mod_example', 'list');
+            const second = batcher.performGet('mod_example', 'other');
+
+            mockFetch.mockImplementation(async(req: MockRequest) => {
+                const ids = getRequestIds(req.body);
+                // Only respond to the first request.
+                return new MockResponse(
+                    buildBatchResponseBody('resp-boundary', [
+                        {id: ids[0], body: JSON.stringify({ok: true})},
+                    ]),
+                    {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+                );
+            });
+
+            await batcher.execute();
+
+            await expect(first).resolves.toBeDefined();
+            await expect(second).rejects.toMatch('No response provided for request');
+        });
+
+        it('does nothing when execute() is called with no queued requests', async() => {
+            const batcher = new Fetch();
+
+            await expect(batcher.execute()).resolves.toBeUndefined();
+            expect(mockFetch).not.toHaveBeenCalled();
+        });
+
+        describe('getBatcher', () => {
+            afterEach(() => {
+                jest.useRealTimers();
+            });
+
+            it('returns the same singleton instance on repeated calls', () => {
+                expect(Fetch.getBatcher()).toBe(Fetch.getBatcher());
+            });
+
+            it('automatically executes the batch after the auto-batch timeout', async() => {
+                jest.useFakeTimers();
+                (globalThis as any).M.cfg.batchFetchRequests = true;
+
+                // Use a dedicated instance (rather than the shared getBatcher() singleton) configured
+                // with the same 50ms auto-batch timeout, so this test is isolated from other tests.
+                const batcher = new Fetch(50);
+                batcher.performGet('mod_example', 'list');
+
+                expect(mockFetch).not.toHaveBeenCalled();
+
+                jest.advanceTimersByTime(50);
+                // Allow any queued microtasks from execute() to flush.
+                await Promise.resolve();
+                await Promise.resolve();
+
+                expect(mockFetch).toHaveBeenCalledTimes(1);
+            });
         });
     });
 });
