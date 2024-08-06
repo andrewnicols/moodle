@@ -16,6 +16,7 @@
 
 namespace core\router;
 
+use cache;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
 use Slim\Routing\RouteCollectorProxy;
@@ -32,6 +33,7 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
     public function configure_routes(App $app): array {
         return [
             route_loader_interface::ROUTE_GROUP_API => $this->configure_api_routes($app, route_loader_interface::ROUTE_GROUP_API),
+            route_loader_interface::ROUTE_BATCH_API => $this->configure_batch_api_route($app),
         ];
     }
 
@@ -67,7 +69,7 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
      * @return array[]
      */
     protected function get_all_api_routes(): array {
-        $cache = \cache::make('core', 'routes');
+        $cache = cache::make('core', 'routes');
 
         if (!($routes = $cache->get('api_routes'))) {
             $routes = $this->get_all_routes_in_namespace(
