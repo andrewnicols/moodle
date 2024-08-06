@@ -18,6 +18,7 @@ namespace core\router;
 
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
+use Slim\Interfaces\RouteInterface;
 use Slim\Routing\RouteCollectorProxy;
 
 /**
@@ -32,6 +33,7 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
     public function configure_routes(App $app): array {
         return [
             route_loader_interface::ROUTE_GROUP_API => $this->configure_api_routes($app, route_loader_interface::ROUTE_GROUP_API),
+            route_loader_interface::ROUTE_BATCH_API => $this->configure_batch_api_route($app),
         ];
     }
 
@@ -52,11 +54,26 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
                 $this->set_route_name_for_callable($slimroute, $apiroute['callable']);
             }
 
+            // Add the bulk route.
+            $callable = [bulk_route::class, 'handle'];
+            $slimroute = $group->get('/', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+
             // Add the OpenAPI docs route.
             $callable = [apidocs::class, 'openapi_docs'];
             $slimroute = $group->get('/openapi.json', $callable);
             $this->set_route_name_for_callable($slimroute, $callable);
         });
+    }
+
+    /**
+     * Configure Batch API Routes.
+     *
+     * @param App $app
+     * @return RouteInterface
+     */
+    protected function configure_batch_api_route(App $app): RouteInterface {
+        return $app->post(route_loader_interface::ROUTE_BATCH_API, [bulk_route::class, 'handle']);
     }
 
     /**
