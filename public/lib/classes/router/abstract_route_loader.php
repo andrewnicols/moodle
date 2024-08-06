@@ -16,6 +16,7 @@
 
 namespace core\router;
 
+use Slim\App;
 use Slim\Interfaces\RouteInterface;
 
 /**
@@ -26,6 +27,16 @@ use Slim\Interfaces\RouteInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class abstract_route_loader {
+    /**
+     * Configure Batch API Routes.
+     *
+     * @param App $app
+     * @return RouteInterface
+     */
+    protected function configure_batch_api_route(App $app): RouteInterface {
+        return $app->post(route_loader_interface::ROUTE_BATCH_API, [bulk_route::class, 'handle']);
+    }
+
     /**
      * Get all routes in the namespace.
      *
