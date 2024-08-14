@@ -114,7 +114,8 @@ class manager {
         // Apply the penalty to the grade.
         if (!$previewonly) {
             // Update the final grade after the penalty is applied.
-            $gradeitem->update_raw_grade($userid, $beforepenaltyhook->get_grade_after_penalty());
+            $gradeitem->update_raw_grade($userid, $beforepenaltyhook->get_grade_after_penalty(), 'gradepenalty');
+            $gradeitem->update_deducted_mark($userid, $beforepenaltyhook->get_deducted_grade());
 
             // Hook for plugins to process further after the penalty is applied to the grade.
             $afterpenaltyhook = new after_penalty_applied($userid, $gradeitem, $submissiondate, $duedate,

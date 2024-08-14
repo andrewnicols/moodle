@@ -50,7 +50,7 @@ class grade_grade extends grade_object {
     public $required_fields = array('id', 'itemid', 'userid', 'rawgrade', 'rawgrademax', 'rawgrademin',
                                  'rawscaleid', 'usermodified', 'finalgrade', 'hidden', 'locked',
                                  'locktime', 'exported', 'overridden', 'excluded', 'timecreated',
-                                 'timemodified', 'aggregationstatus', 'aggregationweight');
+                                 'timemodified', 'aggregationstatus', 'aggregationweight', 'deductedmark');
 
     /**
      * Array of optional fields with default values (these should match db defaults)
@@ -217,6 +217,9 @@ class grade_grade extends grade_object {
      * @var string $label
      */
     public $label;
+
+    /** @var float $deductedmark mark deducted from final grade */
+    public $deductedmark = 0;
 
     /**
      * Returns array of grades for given grade_item+users

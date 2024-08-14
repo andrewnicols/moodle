@@ -1200,6 +1200,7 @@ class grade_report_grader extends grade_report {
                         $context->extraclasses = 'gradevalue ' . $hidden . $gradepass;
                         $context->text = grade_format_gradevalue($gradeval, $item, true,
                             $gradedisplaytype, null);
+                        $context->text .= show_penalty_indicator($grade);
                     }
                 }
 

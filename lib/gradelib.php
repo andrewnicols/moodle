@@ -534,6 +534,7 @@ function grade_get_grades($courseid, $itemtype, $itemmodule, $iteminstance, $use
                         $grade->usermodified   = $grade_grades[$userid]->usermodified;
                         $grade->datesubmitted  = $grade_grades[$userid]->get_datesubmitted();
                         $grade->dategraded     = $grade_grades[$userid]->get_dategraded();
+                        $grade->deductedmark   = $grade_grades[$userid]->deductedmark;
 
                         // create text representation of grade
                         if ($grade_item->gradetype == GRADE_TYPE_TEXT or $grade_item->gradetype == GRADE_TYPE_NONE) {
@@ -846,6 +847,25 @@ function grade_format_gradevalue(?float $value, &$grade_item, $localized=true, $
         default:
             return '';
     }
+}
+
+/**
+ * Show if penalty is applied to the grade
+ *
+ * @param grade_grade $grade Grade object
+ * @return string HTML code for penalty indicator
+ */
+function show_penalty_indicator(grade_grade $grade): string {
+    global $PAGE;
+
+    // Show penalty indicator if penalty is greater than 0.
+    if ($grade->deductedmark > 0) {
+        $indicator = new \core_grades\output\penalty_indicator(2, $grade);
+        $renderer = $PAGE->get_renderer('core_grades');
+        return $renderer->render_penalty_indicator($indicator);
+    }
+
+    return '';
 }
 
 /**
