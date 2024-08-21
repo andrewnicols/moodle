@@ -2006,22 +2006,17 @@ class assign {
      * @param boolean $editing Are we allowing changes to this grade?
      * @param int $userid The user id the grade belongs to
      * @param int $modified Timestamp from when the grade was last modified
-     * @param float $penalty The penalty to apply to the grade
+     * @param float $deductedmark The deducted mark if penalty is applied
      * @return string User-friendly representation of grade
      */
-    public function display_grade($grade, $editing, $userid=0, $modified=0, $penalty = 0) {
-        global $DB;
+    public function display_grade($grade, $editing, $userid=0, $modified=0, $deductedmark = 0) {
+        global $DB, $PAGE;
 
         static $scalegrades = array();
 
         $o = '';
 
         if ($this->get_instance()->grade >= 0) {
-            // Apply penalty percentage to the grade.
-            if (!is_null($grade) && $grade >= 0) {
-                $grade *= 1 - $penalty / 100;
-            }
-
             // Normal number.
             if ($editing && $this->get_instance()->grade > 0) {
                 if ($grade < 0) {
@@ -2040,7 +2035,6 @@ class assign {
                               maxlength="10"
                               class="quickgrade"/>';
                 $o .= '&nbsp;/&nbsp;' . format_float($this->get_instance()->grade, $this->get_grade_item()->get_decimals());
-                return $o;
             } else {
                 if ($grade == -1 || $grade === null) {
                     $o .= '-';
@@ -2052,9 +2046,19 @@ class assign {
                         $o .= '&nbsp;/&nbsp;' . format_float($this->get_instance()->grade, $item->get_decimals());
                     }
                 }
-                return $o;
             }
 
+            // Add penalty indicator.
+            $penaltyindicator = '';
+            if ($deductedmark > 0) {
+                $usergrade = new \grade_grade();
+                $usergrade->deductedmark = $deductedmark;
+                $indicator = new \core_grades\output\penalty_indicator(2, $usergrade);
+                $renderer = $PAGE->get_renderer('core_grades');
+                $penaltyindicator = $renderer->render_penalty_indicator($indicator);
+            }
+
+            return $penaltyindicator . $o;
         } else {
             // Scale.
             if (empty($this->cache['scale'])) {
@@ -5485,7 +5489,7 @@ class assign {
                     );
                     $gradefordisplay = $gradebookgrade->str_long_grade;
                 } else {
-                    $gradefordisplay = $this->display_grade($gradebookgrade->grade, false);
+                    $gradefordisplay = $this->display_grade($gradebookgrade->grade, false, 0, 0, $gradebookgrade->deductedmark);
                 }
                 $gradeddate = $gradebookgrade->dategraded;
 
@@ -5692,21 +5696,45 @@ class assign {
                 }
             }
 
+            [$penalisedgrade, $deductedmark] = $this->calculate_penalised_grade($grade);
+
             // Now get the gradefordisplay.
             if ($controller) {
                 $controller->set_grade_range(make_grades_menu($this->get_instance()->grade), $this->get_instance()->grade > 0);
                 $grade->gradefordisplay = $controller->render_grade($PAGE,
                                                                      $grade->id,
                                                                      $gradingitem,
-                                                                     $grade->grade,
+                                                                     $penalisedgrade,
                                                                      $cangrade);
             } else {
-                $grade->gradefordisplay = $this->display_grade($grade->grade, false, 0, 0, $grade->penalty);
+                $grade->gradefordisplay = $this->display_grade($penalisedgrade, false, 0, 0, $deductedmark);
             }
 
         }
 
         return $grades;
+    }
+
+    /**
+     * Calculate penalised grade and deducted mark.
+     *
+     * @param stdClass $grade The grade object
+     * @return array [$penalisedgrade, $deductedmark] the penalised grade and the deducted mark
+     */
+    public function calculate_penalised_grade(stdClass $grade): array {
+        $penalisedgrade = $grade->grade;
+        $deductedmark = 0;
+
+        // No calculation needed if the grade is null or negative.
+        if (is_null($penalisedgrade) || $penalisedgrade < 0) {
+            return [$penalisedgrade, $deductedmark];
+        }
+
+        if ($grade->penalty > 0) {
+            $deductedmark = $grade->grade * $grade->penalty / 100;
+            $penalisedgrade = $grade->grade - $deductedmark;
+        }
+        return [$penalisedgrade, $deductedmark];
     }
 
     /**
@@ -7783,7 +7811,7 @@ class assign {
      * @return void
      */
     public function add_grade_form_elements(MoodleQuickForm $mform, stdClass $data, $params) {
-        global $USER, $CFG, $SESSION;
+        global $USER, $CFG, $SESSION, $PAGE;
         $settings = $this->get_instance();
 
         $rownum = isset($params['rownum']) ? $params['rownum'] : 0;
@@ -7903,6 +7931,17 @@ class assign {
                 $usergrade = $gradinginfo->items[0]->grades[$userid]->str_grade;
             }
             $gradestring = $usergrade;
+        }
+
+        // Penalty indicator.
+        $userassigngrade = $gradinginfo->items[0]->grades[$userid];
+        if (isset($userassigngrade->grade) && $userassigngrade->deductedmark > 0) {
+            $gradegrade = new \grade_grade();
+            $gradegrade->deductedmark = $userassigngrade->deductedmark;
+            $indicator = new \core_grades\output\penalty_indicator(2, $gradegrade);
+            $renderer = $PAGE->get_renderer('core_grades');
+            $penaltyindicator = $renderer->render_penalty_indicator($indicator);
+            $gradestring = $penaltyindicator . $gradestring;
         }
 
         if ($this->get_instance()->markingworkflow) {
