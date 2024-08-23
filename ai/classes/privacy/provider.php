@@ -343,12 +343,12 @@ class provider implements
         $aagtids = $DB->get_records_sql_menu($sql, $params);
         if ($aagtids) {
             [$aagtidsql, $aagtidparams] = $DB->get_in_or_equal(array_keys($aagtids), SQL_PARAMS_NAMED);
-            $sql = "UPDATE {ai_action_generate_text} aagt
+            $sql = "UPDATE {ai_action_generate_text}
                    SET prompt = '',
                        responseid = '',
                        fingerprint = '',
                        generatedcontent = ''
-                 WHERE aagt.id " . $aagtidsql;
+                 WHERE id " . $aagtidsql;
             $DB->execute($sql, $aagtidparams);
         }
 
@@ -367,11 +367,11 @@ class provider implements
         $aagiids = $DB->get_records_sql_menu($sql, $params);
         if ($aagiids) {
             [$aagiidsql, $aagiidparams] = $DB->get_in_or_equal(array_keys($aagiids), SQL_PARAMS_NAMED);
-            $sql = "UPDATE {ai_action_generate_image} aagi
+            $sql = "UPDATE {ai_action_generate_image}
                    SET prompt = '',
                        sourceurl = '',
                        revisedprompt = ''
-                 WHERE aagi.id " . $aagiidsql;
+                 WHERE id " . $aagiidsql;
             $DB->execute($sql, $aagiidparams);
         }
 
@@ -390,12 +390,12 @@ class provider implements
         $aastids = $DB->get_records_sql_menu($sql, $params);
         if ($aastids) {
             [$aastidsql, $aastidparams] = $DB->get_in_or_equal(array_keys($aastids), SQL_PARAMS_NAMED);
-            $sql = "UPDATE {ai_action_summarise_text} aast
+            $sql = "UPDATE {ai_action_summarise_text}
                    SET prompt = '',
                        responseid = '',
                        fingerprint = '',
                        generatedcontent = ''
-                 WHERE aast.id " . $aastidsql;
+                 WHERE id " . $aastidsql;
             $DB->execute($sql, $aastidparams);
         }
     }
@@ -603,12 +603,12 @@ class provider implements
         $aagtids = $DB->get_records_sql_menu($sql, $params);
         if ($aagtids) {
             [$aagtidsql, $aagtidparams] = $DB->get_in_or_equal(array_keys($aagtids), SQL_PARAMS_NAMED);
-            $sql = "UPDATE {ai_action_generate_text} aagt
+            $sql = "UPDATE {ai_action_generate_text}
                    SET prompt = '',
                        responseid = '',
                        fingerprint = '',
                        generatedcontent = ''
-                 WHERE aagt.id " . $aagtidsql;
+                 WHERE id " . $aagtidsql;
             $DB->execute($sql, $aagtidparams);
         }
 
@@ -625,11 +625,11 @@ class provider implements
         $aagiids = $DB->get_records_sql_menu($sql, $params);
         if ($aagiids) {
             [$aagiidsql, $aagiidparams] = $DB->get_in_or_equal(array_keys($aagiids), SQL_PARAMS_NAMED);
-            $sql = "UPDATE {ai_action_generate_image} aagi
+            $sql = "UPDATE {ai_action_generate_image}
                    SET prompt = '',
                        sourceurl = '',
                        revisedprompt = ''
-                 WHERE aagi.id " . $aagiidsql;
+                 WHERE id " . $aagiidsql;
             $DB->execute($sql, $aagiidparams);
         }
 
@@ -646,12 +646,12 @@ class provider implements
         $aastids = $DB->get_records_sql_menu($sql, $params);
         if ($aastids) {
             [$aastidsql, $aastidparams] = $DB->get_in_or_equal(array_keys($aastids), SQL_PARAMS_NAMED);
-            $sql = "UPDATE {ai_action_summarise_text} aast
+            $sql = "UPDATE {ai_action_summarise_text}
                    SET prompt = '',
                        responseid = '',
                        fingerprint = '',
                        generatedcontent = ''
-                 WHERE aast.id " . $aastidsql;
+                 WHERE id " . $aastidsql;
             $DB->execute($sql, $aastidparams);
         }
     }
