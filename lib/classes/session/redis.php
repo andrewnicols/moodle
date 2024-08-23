@@ -45,6 +45,12 @@ class redis extends handler implements SessionHandlerInterface {
      */
     const COMPRESSION_ZSTD      = 'zstd';
 
+    /** @var string Minimum server version */
+    const REDIS_MIN_SERVER_VERSION = "5.0.0";
+
+    /** @var string Minimum extension version */
+    const REDIS_MIN_EXTENSION_VERSION = "5.1.0";
+
     /** @var array $host save_path string  */
     protected array $host = [];
     /** @var int $port The port to connect to */
@@ -202,8 +208,12 @@ class redis extends handler implements SessionHandlerInterface {
         }
 
         $version = phpversion('Redis');
-        if (!$version || version_compare($version, '5.1.0') <= 0) {
-            throw new exception('sessionhandlerproblem', 'error', '', null, 'redis extension version must be at least 5.1.0');
+        if (!$version || version_compare($version, self::REDIS_MIN_EXTENSION_VERSION) <= 0) {
+            throw new exception(
+                errorcode: 'sessionhandlerproblem',
+                module: 'error',
+                debuginfo: sprintf('redis extension version must be at least %s', self::REDIS_MIN_EXTENSION_VERSION),
+            );
         }
 
         $result = session_set_save_handler($this);
@@ -295,12 +305,25 @@ class redis extends handler implements SessionHandlerInterface {
                         throw new $exceptionclass('Unable to set the Redis Prefix option.');
                     }
                 }
-                if ($this->sslopts && !$this->connection->ping('Ping')) {
-                    // In case of a TLS connection,
-                    // if phpredis client does not communicate immediately with the server the connection hangs.
-                    // See https://github.com/phpredis/phpredis/issues/2332.
-                    throw new $exceptionclass("Ping failed");
+                $info = $this->connection->info('server');
+                if (!$info) {
+                    throw new $exceptionclass("Failed to fetch server information");
                 }
+
+                // Check the server version.
+                // Note: In case of a TLS connection,
+                // if phpredis client does not communicate immediately with the server the connection hangs.
+                // See https://github.com/phpredis/phpredis/issues/2332.
+                // This version check satisfies that requirement.
+                $version = $info['redis_version'];
+                if (!$version || version_compare($version, static::REDIS_MIN_SERVER_VERSION) <= 0) {
+                    throw new $exceptionclass(sprintf(
+                        "Version %s is not supported. The minimum version required is %s.",
+                        $version,
+                        static::REDIS_MIN_SERVER_VERSION,
+                    ));
+                }
+
                 if ($this->database !== 0) {
                     if (!$this->connection->select($this->database)) {
                         throw new $exceptionclass('Unable to select the Redis database ' . $this->database . '.');
