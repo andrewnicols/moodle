@@ -24,5 +24,6 @@
  */
 
 $string['csv:view'] = 'Import grades from CSV';
+$string['gradepenalties'] = 'Grade penalties will not be applied to imported grades.';
 $string['pluginname'] = 'CSV file';
 $string['privacy:metadata'] = 'The import grades from CSV plugin does not store any personal data.';
