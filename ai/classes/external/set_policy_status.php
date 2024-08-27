@@ -64,7 +64,7 @@ class set_policy_status extends external_api {
             'contextid' => $contextid,
         ]);
 
-        $usercontext = \core\context\user::instance($USER->Id);
+        $usercontext = \core\context\user::instance($USER->id);
         require_capability('moodle/ai:acceptpolicy', $usercontext);
 
         return [

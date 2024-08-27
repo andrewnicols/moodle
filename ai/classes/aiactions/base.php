@@ -16,7 +16,6 @@
 
 namespace core_ai\aiactions;
 
-use coding_exception;
 use core_ai\aiactions\responses\response_base;
 
 /**
@@ -119,5 +118,9 @@ abstract class base {
     protected function get_tablename(): string {
         // Table name should always be in this format.
         return 'ai_action_' . $this->get_basename();
+    }
+
+    public static function get_response_classname(): string {
+        return responses::class . '\\response_' . self::get_basename();
     }
 }

@@ -886,6 +886,7 @@ abstract class advanced_testcase extends base_testcase {
     /**
      * Get a mocked HTTP Client, inserting it into the Dependency Injector.
      *
+     * @param array|null $history An array which will contain the Request/Response history of the HTTP client
      * @return array Containing the client, the mock, and the history
      */
     protected function get_mocked_http_client(
