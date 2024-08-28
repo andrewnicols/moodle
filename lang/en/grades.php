@@ -526,6 +526,8 @@ $string['modgradedonotmodify'] = 'Do not modify existing grades';
 $string['modgradeerrorbadpoint'] = 'Invalid grade value. This must be an integer between 1 and {$a}';
 $string['modgradeerrorbadscale'] = 'Invalid scale selected. Please make sure you select a scale from the selections below.';
 $string['modgrademaxgrade'] = 'Maximum grade';
+$string['modgraderecalculatepenalty'] = 'Recalculate penalty';
+$string['modgraderecalculatepenalty_help'] = 'The penalty will be recalculated for all users.';
 $string['modgraderescalegrades'] = 'Rescale existing grades';
 $string['modgraderescalegrades_help'] = 'When changing the maximum grades on a gradebook item you need to specify whether or not this will cause existing percentage grades to change as well.
 

@@ -1620,6 +1620,13 @@ class assign {
         $update->nosubmissions = (!$this->is_any_submission_plugin_enabled()) ? 1: 0;
         $DB->update_record('assign', $update);
 
+        // Check if we need to recalculate penalty for existing grades.
+        if (!empty($formdata->recalculatepenalty) && $formdata->recalculatepenalty === 'yes') {
+            $assign = clone $this->get_instance();
+            $assign->cmidnumber = $this->get_course_module()->idnumber;
+            assign_update_grades($assign);
+        }
+
         return $result;
     }
 

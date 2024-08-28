@@ -1094,7 +1094,7 @@ function assign_grade_item_update($assign, $grades=null) {
         } else {
             // Multiple user grade update.
             foreach ($grades as $grade) {
-                if (is_object($grade) && isset($grade->userid)) {
+                if (is_object($grade) && isset($grade->userid) && isset($grade->rawgrade)) {
                     $userids[] = $grade->userid;
                 }
             }

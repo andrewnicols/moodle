@@ -229,11 +229,31 @@ foreach ($overrides as $override) {
             array('id' => $override->id, 'action' => 'duplicate'));
     $iconstr .= '<a title="' . get_string('copy') . '" href="' . $copyurlstr . '">' .
             $OUTPUT->pix_icon('t/copy', get_string('copy')) . '</a> ';
+
     // Delete.
-    $deleteurlstr = $overridedeleteurl->out(true,
-            array('id' => $override->id, 'sesskey' => sesskey()));
-    $iconstr .= '<a title="' . get_string('delete') . '" href="' . $deleteurlstr . '">' .
-                $OUTPUT->pix_icon('t/delete', get_string('delete')) . '</a> ';
+    $deletelink = html_writer::link("#",
+        $OUTPUT->pix_icon('t/delete', get_string('delete')),
+        [
+            'class' => 'delete-override',
+            'data-overrideid' => $override->id,
+            'data-sesskey' => sesskey(),
+        ]
+    );
+    $iconstr .= $deletelink;
+
+    // Confirm message for deletion.
+    if ($override->groupid) {
+        $group = $DB->get_record('groups', ['id' => $override->groupid], 'id, name');
+        $confirmstr = get_string("overridedeletegroupsure", "assign", format_string($group->name, true, ['context' => $context]));
+    } else {
+        $userfieldsapi = \core_user\fields::for_name();
+        $namefields = $userfieldsapi->get_sql('', false, '', '', false)->selects;
+        $user = $DB->get_record('user', ['id' => $override->userid],
+            'id, ' . $namefields);
+        $confirmstr = get_string("overridedeleteusersure", "assign", fullname($user));
+    }
+    // Add js script for "override delete" button.
+    $PAGE->requires->js_call_amd('mod_assign/override_delete_modal', 'init', [$confirmstr, $assign->gradepenalty]);
 
     if ($groupmode) {
         $usergroupstr = '<a href="' . $groupurl->out(true, ['group' => $override->groupid]) . '" >' .

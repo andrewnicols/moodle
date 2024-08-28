@@ -39,6 +39,36 @@ final class penalty_test extends \advanced_testcase {
     use mod_assign_test_generator;
 
     /**
+     * Set up test
+     *
+     * @return array The course and student.
+     */
+    protected function set_up_test(): array {
+        $this->setAdminUser();
+
+        // Hook mock up.
+        require_once(__DIR__ . '/fixtures/hooks/plugin1_hook_listener.php');
+        \core\di::set(
+            \core\hook\manager::class,
+            \core\hook\manager::phpunit_get_instance([
+                'test_plugin1' => __DIR__ . '/fixtures/hooks/hooks.php',
+            ]),
+        );
+
+        // Enable penalty feature.
+        set_config('gradepenalty_enabled', 1);
+        set_config('gradepenalty_supportedplugins', 'assign');
+        \core\plugininfo\gradepenalty::enable_plugin('fake_deduction', true);
+
+        // Create a course with user.
+        $generator = $this->getDataGenerator();
+        $course = $generator->create_course();
+        $student = $this->getDataGenerator()->create_and_enrol($course);
+
+        return [$course, $student];
+    }
+
+    /**
      * Test penalty support.
      *
      * @covers ::assign_supports
@@ -112,28 +142,10 @@ final class penalty_test extends \advanced_testcase {
         global $DB;
 
         $this->resetAfterTest();
-        $this->setAdminUser();
-
-        // Hook mock up.
-        require_once(__DIR__ . '/fixtures/hooks/plugin1_hook_listener.php');
-        \core\di::set(
-            \core\hook\manager::class,
-            \core\hook\manager::phpunit_get_instance([
-                'test_plugin1' => __DIR__ . '/fixtures/hooks/hooks.php',
-            ]),
-        );
-
-        // Enable penalty feature.
-        set_config('gradepenalty_enabled', 1);
-        set_config('gradepenalty_supportedplugins', 'assign');
-        \core\plugininfo\gradepenalty::enable_plugin('fake_deduction', true);
-
-        // Create a course with 2 users.
-        $generator = $this->getDataGenerator();
-        $course = $generator->create_course();
-        $student = $this->getDataGenerator()->create_and_enrol($course);
+        [$course, $student] = $this->set_up_test();
 
         // Assignment.
+        $generator = $this->getDataGenerator();
         $assignmentgenerator = $generator->get_plugin_generator('mod_assign');
         $instance = $assignmentgenerator->create_instance([
             'course' => $course->id,
@@ -194,5 +206,69 @@ final class penalty_test extends \advanced_testcase {
             ]
         );
         $this->assertEquals($expectedgrade, $gradeitem->get_final($student->id)->finalgrade);
+    }
+
+    /**
+     * Test recalculation.
+     *
+     * @covers \mod_assign\penalty\helper::apply_penalty_to_submission
+     *
+     */
+    public function test_recalculate_penalty(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        [$course, $student] = $this->set_up_test();
+
+        // Assignment.
+        $duedate = time() + DAYSECS;
+        $generator = $this->getDataGenerator();
+        $assignmentgenerator = $generator->get_plugin_generator('mod_assign');
+        $instance = $assignmentgenerator->create_instance([
+            'course' => $course->id,
+            'duedate' => $duedate,
+            'assignsubmission_onlinetext_enabled' => 1,
+            'gradepenalty' => 1,
+            'grade' => 200,
+        ]);
+        $cm = get_coursemodule_from_instance('assign', $instance->id);
+        $context = \context_module::instance($cm->id);
+        $assign = new mod_assign_testable_assign($context, $cm, $course);
+
+        // Add submission and grade.
+        $submissiondate = $duedate + HOURSECS;
+        $this->add_submission($student, $assign, 'Sample text');
+        $this->submit_for_grading($student, $assign);
+        // Submission date.
+        $DB->set_field('assign_submission', 'timemodified', $submissiondate, ['userid' => $student->id]);
+        $assign->testable_apply_grade_to_user((object)['grade' => 50.0], $student->id, 0);
+
+        $this->assertdebuggingcalledcount(2);
+
+        // Check the grade.
+        $gradeitem = grade_item::fetch(
+            [
+                'courseid' => $course->id,
+                'itemtype' => 'mod',
+                'itemmodule' => 'assign',
+                'iteminstance' => $instance->id,
+                'itemnumber' => 0,
+            ]
+        );
+        $this->assertEquals(30, $gradeitem->get_final($student->id)->finalgrade);
+
+        // Change the due date.
+        $duedate = time() + DAYSECS * 2;
+        $DB->set_field('assign', 'duedate', $duedate, ['id' => $instance->id]);
+
+        // Recalculate the penalty.
+        $clonedassign = clone $assign->get_instance();
+        $clonedassign->cmidnumber = $assign->get_course_module()->idnumber;
+        assign_update_grades($clonedassign);
+        $this->assertdebuggingcalledcount(2);
+
+        // Check the grade.
+        $this->assertEquals(50, $gradeitem->get_final($student->id)->finalgrade);
     }
 }
