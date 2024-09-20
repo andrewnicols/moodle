@@ -216,54 +216,75 @@ class renderer_base {
      * @return string
      */
     public function render(renderable $widget) {
+        $callable = function (string $classname) use ($widget): ?string {
+            $classparts = explode('\\', $classname);
+            // Strip namespaces.
+            $classpartname = array_pop($classparts);
+            // Remove _renderable suffixes.
+            $classname = preg_replace('/_renderable$/', '', $classpartname);
+
+            $rendermethods = [];
+
+            // If the renderable is located within a namespace, and that namespace is within the `output` L2 API,
+            // include the namespace as a possible renderer method name.
+            if (array_search('output', $classparts) === 1 && count($classparts) > 2) {
+                $concatenators = array_slice($classparts, 2);
+                $concatenators[] = $classname;
+                $rendermethods[] = "render_" . implode('__', $concatenators);
+            }
+
+            // Fall back to the last part of the class name.
+            $rendermethods[] = "render_{$classname}";
+
+            foreach ($rendermethods as $rendermethod) {
+                if (method_exists($this, $rendermethod)) {
+                    // Call the render_[widget_name] function.
+                    // Note: This has a higher priority than the named_templatable to allow the theme to override the template.
+                    return $this->$rendermethod($widget);
+                }
+            }
+
+            if ($widget instanceof named_templatable) {
+                // This is a named templatable.
+                // Fetch the template name from the get_template_name function instead.
+                // Note: This has higher priority than the guessed template name.
+                return $this->render_from_template(
+                    $widget->get_template_name($this),
+                    $widget->export_for_template($this)
+                );
+            }
+
+            if ($widget instanceof templatable) {
+                // Guess the templat ename based on the class name.
+                // Note: There's no benefit to moving this aboved the named_templatable and this approach is more costly.
+                $component = array_shift($classparts);
+                if (!$component) {
+                    $component = 'core';
+                }
+                $template = $component . '/' . $classname;
+                $context = $widget->export_for_template($this);
+                return $this->render_from_template($template, $context);
+            }
+
+            return null;
+        };
+
+        $classname = get_class($widget);
+        do {
+            $rendered = $callable($classname);
+            if ($rendered !== null) {
+                return $rendered;
+            }
+
+            $classname = get_parent_class($classname);
+        } while ($classname !== false);
+
         $classparts = explode('\\', get_class($widget));
         // Strip namespaces.
         $classpartname = array_pop($classparts);
         // Remove _renderable suffixes.
         $classname = preg_replace('/_renderable$/', '', $classpartname);
-
-        $rendermethods = [];
-
-        // If the renderable is located within a namespace, and that namespace is within the `output` L2 API,
-        // include the namespace as a possible renderer method name.
-        if (array_search('output', $classparts) === 1 && count($classparts) > 2) {
-            $concatenators = array_slice($classparts, 2);
-            $concatenators[] = $classname;
-            $rendermethods[] = "render_" . implode('__', $concatenators);
-        }
-
-        // Fall back to the last part of the class name.
-        $rendermethods[] = "render_{$classname}";
-
-        foreach ($rendermethods as $rendermethod) {
-            if (method_exists($this, $rendermethod)) {
-                // Call the render_[widget_name] function.
-                // Note: This has a higher priority than the named_templatable to allow the theme to override the template.
-                return $this->$rendermethod($widget);
-            }
-        }
-
-        if ($widget instanceof named_templatable) {
-            // This is a named templatable.
-            // Fetch the template name from the get_template_name function instead.
-            // Note: This has higher priority than the guessed template name.
-            return $this->render_from_template(
-                $widget->get_template_name($this),
-                $widget->export_for_template($this)
-            );
-        }
-
-        if ($widget instanceof templatable) {
-            // Guess the templat ename based on the class name.
-            // Note: There's no benefit to moving this aboved the named_templatable and this approach is more costly.
-            $component = array_shift($classparts);
-            if (!$component) {
-                $component = 'core';
-            }
-            $template = $component . '/' . $classname;
-            $context = $widget->export_for_template($this);
-            return $this->render_from_template($template, $context);
-        }
+        $rendermethod = "render_{$classname}";
 
         $rendermethod = reset($rendermethods);
         throw new coding_exception("Can not render widget, renderer method ('{$rendermethod}') not found.");

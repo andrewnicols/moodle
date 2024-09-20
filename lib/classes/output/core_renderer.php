@@ -1409,32 +1409,6 @@ class core_renderer extends renderer_base {
     }
 
     /**
-     * @deprecated Since Moodle 4.5. Will be removed in MDL-83221
-     */
-    #[\core\attribute\deprecated(
-        replacement: 'render_action_menu__link_primary',
-        since: '4.5',
-        mdl: 'MDL-83164',
-    )]
-    protected function render_action_menu_primary(action_menu_link $action) {
-        \core\deprecation::emit_deprecation_if_present([$this, __FUNCTION__]);
-        return $this->render_action_menu__link_primary($action);
-    }
-
-    /**
-     * @deprecated Since Moodle 4.5. Will be removed in MDL-83221
-     */
-    #[\core\attribute\deprecated(
-        replacement: 'render_action_menu__link_secondary',
-        since: '4.5',
-        mdl: 'MDL-83164',
-    )]
-    protected function render_action_menu_secondary(action_menu_link $action) {
-        \core\deprecation::emit_deprecation_if_present([$this, __FUNCTION__]);
-        return $this->render_action_menu__link_secondary($action);
-    }
-
-    /**
      * Renders an action_menu_link item.
      *
      * @param action_menu_link $action
@@ -1452,26 +1426,6 @@ class core_renderer extends renderer_base {
      */
     protected function render_action_menu__filler(action_menu\filler $action) {
         return html_writer::span('&nbsp;', 'filler');
-    }
-
-    /**
-     * Renders a primary action_menu_link item.
-     *
-     * @param action_menu_link_primary $action
-     * @return string HTML fragment
-     */
-    protected function render_action_menu__link_primary(action_menu\link_primary $action) {
-        return $this->render_action_menu__link($action);
-    }
-
-    /**
-     * Renders a secondary action_menu_link item.
-     *
-     * @param action_menu_link_secondary $action
-     * @return string HTML fragment
-     */
-    protected function render_action_menu__link_secondary(action_menu\link_secondary $action) {
-        return $this->render_action_menu__link($action);
     }
 
     /**
