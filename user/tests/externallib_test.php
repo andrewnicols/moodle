@@ -515,7 +515,7 @@ final class externallib_test extends externallib_advanced_testcase {
             'country' => 'AU',
             'preferences' => [[
                     'type' => 'htmleditor',
-                    'value' => 'atto'
+                    'value' => 'tiny'
                 ], [
                     'type' => 'invalidpreference',
                     'value' => 'abcd'
@@ -555,7 +555,7 @@ final class externallib_test extends externallib_advanced_testcase {
 
             if ($createduser['username'] === $user1['username']) {
                 $usertotest = $user1;
-                $this->assertEquals('atto', get_user_preferences('htmleditor', null, $dbuser));
+                $this->assertEquals('tiny', get_user_preferences('htmleditor', null, $dbuser));
                 $this->assertEquals(null, get_user_preferences('invalidpreference', null, $dbuser));
                 // Confirm user interests have been saved.
                 $interests = \core_tag_tag::get_item_tags_array('core', 'user', $createduser['id'],
@@ -828,7 +828,7 @@ final class externallib_test extends externallib_advanced_testcase {
             'country' => 'AU',
             'preferences' => [[
                     'type' => 'htmleditor',
-                    'value' => 'atto'
+                    'value' => 'textarea'
                 ], [
                     'type' => 'invialidpreference',
                     'value' => 'abcd'
@@ -892,7 +892,7 @@ final class externallib_test extends externallib_advanced_testcase {
         $this->assertEquals($dbuser->institution, $user1['institution']);
         $this->assertEquals($dbuser->phone1, $user1['phone1']);
         $this->assertEquals($dbuser->maildisplay, $user1['maildisplay']);
-        $this->assertEquals('atto', get_user_preferences('htmleditor', null, $dbuser));
+        $this->assertEquals('textarea', get_user_preferences('htmleditor', null, $dbuser));
         $this->assertEquals(null, get_user_preferences('invalidpreference', null, $dbuser));
 
         // Confirm user interests have been saved.
@@ -1385,7 +1385,7 @@ final class externallib_test extends externallib_advanced_testcase {
         $preferences = array(
             array(
                 'name' => 'htmleditor',
-                'value' => 'atto',
+                'value' => 'textarea',
                 'userid' => $user1->id,
             ),
             array(
@@ -1401,7 +1401,7 @@ final class externallib_test extends externallib_advanced_testcase {
         $this->assertCount(2, $result['saved']);
 
         // Get preference from DB to avoid cache.
-        $this->assertEquals('atto', $DB->get_field('user_preferences', 'value',
+        $this->assertEquals('textarea', $DB->get_field('user_preferences', 'value',
             array('userid' => $user1->id, 'name' => 'htmleditor')));
         $this->assertEquals('tiny', $DB->get_field('user_preferences', 'value',
             array('userid' => $user2->id, 'name' => 'htmleditor')));
@@ -1525,7 +1525,7 @@ final class externallib_test extends externallib_advanced_testcase {
         $preferences = array(
             array(
                 'name' => 'htmleditor',
-                'value' => 'atto',
+                'value' => 'textarea',
                 'userid' => $user->id,
             )
         );
@@ -1536,7 +1536,7 @@ final class externallib_test extends externallib_advanced_testcase {
         $this->assertCount(1, $result['saved']);
 
         // Get preference from DB to avoid cache.
-        $this->assertEquals('atto', $DB->get_field('user_preferences', 'value',
+        $this->assertEquals('textarea', $DB->get_field('user_preferences', 'value',
             array('userid' => $user->id, 'name' => 'htmleditor')));
 
         // Now, unset.

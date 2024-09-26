@@ -134,3 +134,5 @@ filterbothactive,core_grades
 filterbyname,core_grades
 filterfirstactive,core_grades
 filterlastactive,core_grades
+atto_h5p,core_h5p
+atto_h5p_description,core_h5p

@@ -77,14 +77,14 @@ class provider_test extends \core_privacy\tests\provider_testcase {
     /**
      * When an editor is set, the name of that editor will be reported.
      */
-    public function test_editor_atto(): void {
+    public function test_editor_tiny(): void {
         $this->resetAfterTest();
 
         // Create test user, add some preferences.
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
 
-        set_user_preference('htmleditor', 'atto');
+        set_user_preference('htmleditor', 'tiny');
 
         // Switch to admin user (so we can validate preferences of the correct user are being exported).
         $this->setAdminUser();
@@ -99,13 +99,13 @@ class provider_test extends \core_privacy\tests\provider_testcase {
         $this->assertNotEmpty($prefs->htmleditor);
         $this->assertNotEmpty($prefs->htmleditor->value);
         $this->assertNotEmpty($prefs->htmleditor->description);
-        $this->assertEquals('atto', $prefs->htmleditor->value);
+        $this->assertEquals('tiny', $prefs->htmleditor->value);
 
         $this->assertEquals(
             get_string(
                 'privacy:preference:htmleditor',
                 'core_editor',
-                get_string('pluginname', "editor_atto")
+                get_string('pluginname', "editor_tiny")
             ),
             $prefs->htmleditor->description
         );
