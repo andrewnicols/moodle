@@ -1421,5 +1421,15 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2024092000.01);
     }
 
+    if ($oldversion < 2024102800.00) {
+        if (!file_exists($CFG->dirroot . '/lib/editor/atto/version.php')) {
+            // If atto is no longer present, remove it.
+            // Note: The uninstall_plugin method will also remove all subplugins.
+            uninstall_plugin('editor', 'atto');
+        }
+
+        upgrade_main_savepoint(true, 2024102800.00);
+    }
+
     return true;
 }
