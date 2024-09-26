@@ -1447,5 +1447,15 @@ function xmldb_main_upgrade($oldversion) {
     // Automatically generated Moodle v4.5.0 release upgrade line.
     // Put any upgrade step following this.
 
+    if ($oldversion < 2024101400.00) {
+        if (!file_exists($CFG->dirroot . '/lib/editor/atto/version.php')) {
+            // If atto is no longer present, remove it.
+            // Note: The uninstall_plugin method will also remove all subplugins.
+            uninstall_plugin('editor', 'atto');
+        }
+
+        upgrade_main_savepoint(true, 2024101400.00);
+    }
+
     return true;
 }
