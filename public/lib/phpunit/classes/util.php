@@ -528,12 +528,12 @@ class phpunit_util extends testing_util {
 
         $template = <<<EOF
             <testsuite name="@component@_testsuite">
-              <directory suffix="_test.php">@dir@</directory>
-              <exclude>@dir@/classes</exclude>
+              <directory suffix="_test.php">public/@dir@</directory>
+              <exclude>public/@dir@/classes</exclude>
             </testsuite>
 
         EOF;
-        $data = file_get_contents("$CFG->dirroot/phpunit.xml.dist");
+        $data = file_get_contents("$CFG->dirroot/../phpunit.xml.dist");
 
         $suites = '';
         $includelists = [];
@@ -552,8 +552,8 @@ class phpunit_util extends testing_util {
 
             $dir = substr($fulldir, strlen($CFG->dirroot) + 1);
             if ($coverageinfo = self::get_coverage_info($fulldir)) {
-                $includelists = array_merge($includelists, $coverageinfo->get_includelists($dir));
-                $excludelists = array_merge($excludelists, $coverageinfo->get_excludelists($dir));
+                $includelists = array_merge($includelists, $coverageinfo->get_includelists("public/{$dir}"));
+                $excludelists = array_merge($excludelists, $coverageinfo->get_excludelists("public/{$dir}"));
             }
         }
 
@@ -579,8 +579,8 @@ class phpunit_util extends testing_util {
 
                 if ($coverageinfo = self::get_coverage_info($plugindir)) {
 
-                    $includelists = array_merge($includelists, $coverageinfo->get_includelists($dir));
-                    $excludelists = array_merge($excludelists, $coverageinfo->get_excludelists($dir));
+                    $includelists = array_merge($includelists, $coverageinfo->get_includelists("public/{$dir}"));
+                    $excludelists = array_merge($excludelists, $coverageinfo->get_excludelists("public/{$dir}"));
                 }
             }
         }
@@ -641,7 +641,7 @@ class phpunit_util extends testing_util {
         $sequencestart = 100000 + mt_rand(0, 99) * 1000;
 
         // Use the upstream file as source for the distributed configurations
-        $ftemplate = file_get_contents("$CFG->dirroot/phpunit.xml.dist");
+        $ftemplate = file_get_contents("$CFG->dirroot/../phpunit.xml.dist");
         $ftemplate = preg_replace('| *<!--All core suites.*</testsuites>|s', '<!--@component_suite@-->', $ftemplate);
 
         // Gets all the components with tests

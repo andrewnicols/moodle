@@ -30,7 +30,7 @@ module.exports = grunt => {
      * @param   {string} path
      * @returns {string}
      */
-    const getCLPath = path => `admin/tool/componentlibrary/${path}`;
+    const getCLPath = path => `public/admin/tool/componentlibrary/${path}`;
 
     /**
      * Get a spawn handler.

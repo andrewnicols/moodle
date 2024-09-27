@@ -1,3 +1,4 @@
+<?php
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -12,32 +13,12 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/* jshint node: true, browser: false */
-/* eslint-env node */
 
 /**
- * @copyright  2021 Andrew Nicols
+ * TODO describe file index
+ *
+ * @package    core
+ * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-module.exports = grunt => {
-    grunt.loadNpmTasks('grunt-sass');
-
-    grunt.config.merge({
-        sass: {
-            dist: {
-                files: {
-                    "public/theme/boost/style/moodle.css": "public/theme/boost/scss/preset/default.scss",
-                    "public/theme/classic/style/moodle.css": "public/theme/classic/scss/classicgrunt.scss"
-                }
-            },
-            options: {
-                implementation: require('sass'),
-                includePaths: [
-                    "public/theme/boost/scss/",
-                    "public/theme/classic/scss/",
-                ]
-            }
-        },
-    });
-};
+redirect('public/index.php');
