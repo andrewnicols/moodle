@@ -69,6 +69,9 @@ jobs:
           - os: ubuntu-22.04
             php: 8.3
             db: pgsql
+          - os: ubuntu-22.04
+            php: 8.4
+            db: pgsql
 
     steps:
       - name: Setting up DB mysql
