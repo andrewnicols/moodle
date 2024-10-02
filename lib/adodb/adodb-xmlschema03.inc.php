@@ -1806,8 +1806,8 @@ class adoSchema {
 		xml_set_object( $xmlParser, $this );
 
 		// Initialize the XML callback functions
-		xml_set_element_handler( $xmlParser, '_tag_open', '_tag_close' );
-		xml_set_character_data_handler( $xmlParser, '_tag_cdata' );
+		xml_set_element_handler( $xmlParser, [ $this, '_tag_open' ], [ $this, '_tag_close' ] );
+		xml_set_character_data_handler( $xmlParser, [ $this, '_tag_cdata' ] );
 
 		return $xmlParser;
 	}
