@@ -35,9 +35,9 @@ define('DEBUG_MINIMAL', E_ERROR | E_PARSE);
 /** Errors, warnings and notices */
 define('DEBUG_NORMAL', E_ERROR | E_PARSE | E_WARNING | E_NOTICE);
 /** All problems except strict PHP warnings */
-define('DEBUG_ALL', E_ALL & ~E_STRICT);
+define('DEBUG_ALL', E_ALL);
 /** DEBUG_ALL with all debug messages and strict warnings */
-define('DEBUG_DEVELOPER', E_ALL | E_STRICT);
+define('DEBUG_DEVELOPER', E_ALL);
 
 /** Remove any memory limits */
 define('MEMORY_UNLIMITED', -1);
