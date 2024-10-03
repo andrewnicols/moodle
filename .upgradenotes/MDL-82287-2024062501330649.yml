@@ -2,7 +2,7 @@ issueNumber: MDL-82287
 notes:
   core:
     - message: >
-        The following functions have been formally deprecated:
+        The following functions have been initially deprecated:
 
 
         - `\get_core_subsystems()`

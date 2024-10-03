@@ -1,9 +1,9 @@
 issueNumber: MDL-82510
 notes:
   core_courseformat:
-    - message: >-
-        A new class, `\core_courseformat\output\local\content\cm\delegatedcontrolmenu`,
-        has been created extending
-        `\core_courseformat\output\local\content\basecontrolmenu` to render
-        delegated section action menus combining section and module action menu.
+    - message: >
+        Course sections now use an action menu to display possible actions that a
+        user may take in each section. This action menu is rendered using the
+        `\core_courseformat\output\local\content\cm\delegatedcontrolmenu` renderable
+        class.
       type: improved

@@ -2,7 +2,7 @@ issueNumber: MDL-74583
 notes:
   core_reportbuilder:
     - message: >-
-        Support for the following entity classes, renamed since 4.1, hav now
+        Support for the following entity classes, renamed since 4.1, have now
         been removed completely:
 
 

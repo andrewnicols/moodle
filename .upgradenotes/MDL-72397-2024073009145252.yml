@@ -16,18 +16,13 @@ notes:
         other parts of the system wishing to manipulate question categories from
         having to violate cross-component communication rules.
       type: changed
-    - message: >+
+    - message: |
         The following methods of `\qbank_managecategories\helper`have been deprecated and moved to
         `\core_question\category_manager`:
 
-        | Method | Replacement |
-
-        | --- | --- |
-
-        | `question_is_only_child_of_top_category_in_context` | `\core_question\category_manager::is_only_child_of_top_category_in_context` |
-
-        | `question_is_top_category` | `\core_question\category_manager::is_top_category` |
-
-        | `question_can_delete_cat` | `\core_question\category_manager::can_delete_cat` |
-
+        | Method                                               | Replacement                                                                  |
+        | ---                                                  | ---                                                                          |
+        | `question_is_only_child_of_top_category_in_context`  | `\core_question\category_manager::is_only_child_of_top_category_in_context`  |
+        | `question_is_top_category`                           | `\core_question\category_manager::is_top_category`                           |
+        | `question_can_delete_cat`                            | `\core_question\category_manager::can_delete_cat`                            |
       type: deprecated

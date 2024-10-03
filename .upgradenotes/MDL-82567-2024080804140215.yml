@@ -6,6 +6,7 @@ notes:
         allow classes implementing this interface to perform access checks
         on the dynamic table.
 
-        Note: This is a breaking change that all dynamic table
-        implementations must implement for continued functionality.
+        Note: This is a breaking change. All implementations of the `\core_table\dynamic`
+        table interface _must_ implement the new `has_capability(): bool` method for continued
+        functionality.
       type: changed
