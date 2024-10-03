@@ -2,8 +2,8 @@ issueNumber: MDL-82510
 notes:
   core_courseformat:
     - message: >-
-        New `\core_courseformat\output\local\content\cm\delegatedcontrolmenu` class
+        A new class, `\core_courseformat\output\local\content\cm\delegatedcontrolmenu`,
         has been created extending
-        `\core_courseformat\output\local\content\basecontrolmenu` class to render
-        delegated section action menu combining section and module action menu.
+        `\core_courseformat\output\local\content\basecontrolmenu` to render
+        delegated section action menus combining section and module action menu.
       type: improved
