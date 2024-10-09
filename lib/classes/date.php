@@ -741,9 +741,9 @@ class core_date {
         $intl_formats = [
           '%a' => 'EEE',	// An abbreviated textual representation of the day	Sun through Sat
           '%A' => 'EEEE',	// A full textual representation of the day	Sunday through Saturday
-          '%b' => 'MMM',	// Abbreviated month name, based on the locale	Jan through Dec
-          '%B' => 'MMMM',	// Full month name, based on the locale	January through December
-          '%h' => 'MMM',	// Abbreviated month name, based on the locale (an alias of %b)	Jan through Dec
+          '%b' => 'LLL',	// Abbreviated month name, based on the locale	Jan through Dec
+          '%B' => 'LLLL',	// Full month name, based on the locale	January through December
+          '%h' => 'LLL',	// Abbreviated month name, based on the locale (an alias of %b)	Jan through Dec
         ];
 
         $intl_formatter = function (DateTimeInterface $timestamp, string $format) use ($intl_formats, $locale) {
