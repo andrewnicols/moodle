@@ -114,7 +114,7 @@ Options:
 -h, --help     Print out this help
 
 Example:
-\$ php ".testing_cli_argument_path('/admin/tool/phpunit/cli/util.php')." --install
+\$ php ".testing_cli_argument_path('/public/admin/tool/phpunit/cli/util.php')." --install
 ";
     echo $help;
     exit(0);

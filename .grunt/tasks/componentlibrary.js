@@ -97,7 +97,7 @@ module.exports = grunt => {
         '--source-map',
         '--embed-sources',
         '--precision', 6,
-        '--load-path', process.cwd(),
+        '--load-path', `${process.cwd()}/public`,
         getCLPath('hugo/scss/docs.scss'),
         getCLPath('hugo/dist/css/docs.css'),
     ]);
