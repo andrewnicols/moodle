@@ -210,34 +210,67 @@ final class advanced_test extends \advanced_testcase {
     public function test_change_detection(): void {
         global $DB, $CFG, $COURSE, $SITE, $USER;
 
+        // We need to supply a custom error handlere which
+        $handler = new class() {
+            public int $invocationcount = 0;
+            public int $errno;
+            public string $errstring;
+            public string $errfile;
+            public int $errline;
+            public ?array $errcontext = [];
+
+            public function __invoke(
+                int $errno,
+                string $errstring,
+                string $errfile,
+                int $errline,
+                ?array $errcontext = [],
+            ): void {
+                $this->invocationcount++;
+                $this->errno = $errno;
+                $this->errstring = $errstring;
+                $this->errfile = $errfile;
+                $this->errline = $errline;
+                $this->errcontext = $errcontext;
+            }
+            public function reset(): void {
+                $this->invocationcount = 0;
+            }
+        };
+
+        set_error_handler($handler, E_USER_WARNING);
+
         $this->preventResetByRollback();
         self::resetAllData(true);
+
+        $this->assertEquals(0, $handler->invocationcount);
 
         // Database change.
         $this->assertEquals(1, $DB->get_field('user', 'confirmed', array('id'=>2)));
         $DB->set_field('user', 'confirmed', 0, array('id'=>2));
-        try {
-            self::resetAllData(true);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('PHPUnit\Framework\Error\Warning', $e);
-        }
-        $this->assertEquals(1, $DB->get_field('user', 'confirmed', array('id'=>2)));
 
+        self::resetAllData(true);
+        $this->assertEquals(1, $handler->invocationcount);
+        $handler->reset();
+
+        $this->assertEquals(1, $DB->get_field('user', 'confirmed', array('id'=>2)));
         // Config change.
         $CFG->xx = 'yy';
         unset($CFG->admin);
         $CFG->rolesactive = 0;
-        try {
-            self::resetAllData(true);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('PHPUnit\Framework\Error\Warning', $e);
-            $this->assertStringContainsString('xx', $e->getMessage());
-            $this->assertStringContainsString('admin', $e->getMessage());
-            $this->assertStringContainsString('rolesactive', $e->getMessage());
-        }
+        $handler->reset();
+
+        self::resetAllData(true);
+        $this->assertEquals(1, $handler->invocationcount);
+        $handler->reset();
+
+        $this->assertStringContainsString('xx', $handler->errstring);
+        $this->assertStringContainsString('admin', $handler->errstring);
+        $this->assertStringContainsString('rolesactive', $handler->errstring);
         $this->assertFalse(isset($CFG->xx));
         $this->assertTrue(isset($CFG->admin));
         $this->assertEquals(1, $CFG->rolesactive);
+
 
         // _GET change.
         $_GET['__somethingthatwillnotnormallybepresent__'] = 'yy';
@@ -265,27 +298,29 @@ final class advanced_test extends \advanced_testcase {
         self::resetAllData(true);
         $this->assertFalse(isset($_SERVER['xx']));
 
+        $this->assertEquals(0, $handler->invocationcount);
         // COURSE change.
         $SITE->id = 10;
         $COURSE = new \stdClass();
         $COURSE->id = 7;
-        try {
-            self::resetAllData(true);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('PHPUnit\Framework\Error\Warning', $e);
-            $this->assertEquals(1, $SITE->id);
-            $this->assertSame($SITE, $COURSE);
-            $this->assertSame($SITE, $COURSE);
-        }
+
+        self::resetAllData(true);
+        $this->assertEquals(1, $handler->invocationcount);
+        $handler->reset();
+
+        $this->assertEquals(1, $SITE->id);
+        $this->assertSame($SITE, $COURSE);
+        $this->assertSame($SITE, $COURSE);
 
         // USER change.
         $this->setUser(2);
-        try {
-            self::resetAllData(true);
-        } catch (\Exception $e) {
-            $this->assertInstanceOf('PHPUnit\Framework\Error\Warning', $e);
-            $this->assertEquals(0, $USER->id);
-        }
+
+        self::resetAllData(true);
+        $this->assertEquals(1, $handler->invocationcount);
+        $handler->reset();
+
+        $this->assertEquals(0, $USER->id);
+
     }
 
     public function test_getDataGenerator(): void {

@@ -109,14 +109,14 @@ final class preset_importer_test extends \advanced_testcase {
     public static function needs_mapping_provider(): array {
         $basedprovider = static::preset_importer_provider();
 
-        $basedprovider['Empty database / Empty importer']['needsmapping'] = false;
-        $basedprovider['Empty database / Importer with fields']['needsmapping'] = false;
-        $basedprovider['Database with fields / Empty importer']['needsmapping'] = true;
-        $basedprovider['Same fields']['needsmapping'] = false;
-        $basedprovider['Fields to create']['needsmapping'] = true;
-        $basedprovider['Fields to remove']['needsmapping'] = true;
-        $basedprovider['Fields to update']['needsmapping'] = true;
-        $basedprovider['Fields to create, remove and update']['needsmapping'] = true;
+        $basedprovider['Empty database / Empty importer']['expectedresult'] = false;
+        $basedprovider['Empty database / Importer with fields']['expectedresult'] = false;
+        $basedprovider['Database with fields / Empty importer']['expectedresult'] = true;
+        $basedprovider['Same fields']['expectedresult'] = false;
+        $basedprovider['Fields to create']['expectedresult'] = true;
+        $basedprovider['Fields to remove']['expectedresult'] = true;
+        $basedprovider['Fields to update']['expectedresult'] = true;
+        $basedprovider['Fields to create, remove and update']['expectedresult'] = true;
 
         return $basedprovider;
     }
@@ -330,7 +330,7 @@ final class preset_importer_test extends \advanced_testcase {
         $saved = $plugingenerator->create_preset($presetactivity, $record);
         $savedimporter = new preset_existing_importer($manager, $USER->id . '/Testing preset name');
         $information = $savedimporter->get_mapping_information();
-        $this->assertEquals($savedimporter->needs_mapping(), $information['needsmapping']);
+        $this->assertEquals($savedimporter->needs_mapping(), $information['expectedresult']);
         $this->assertEquals(count($savedimporter->fieldstoremove), $fieldstoremove);
         $this->assertEquals(count($savedimporter->fieldstocreate), $fieldstocreate);
         $this->assertEquals(count($savedimporter->fieldstoupdate), $fieldstoupdate);
@@ -340,7 +340,7 @@ final class preset_importer_test extends \advanced_testcase {
             $plugin = preset::create_from_plugin(null, $pluginname);
             $pluginimporter = new preset_existing_importer($manager, '/' . $pluginname);
             $information = $pluginimporter->get_mapping_information();
-            $this->assertEquals($pluginimporter->needs_mapping(), $information['needsmapping']);
+            $this->assertEquals($pluginimporter->needs_mapping(), $information['expectedresult']);
             $this->assertEquals(count($pluginimporter->fieldstoremove), $fieldstoremove);
             $this->assertEquals(count($pluginimporter->fieldstocreate), $fieldstocreate);
             $this->assertEquals(count($pluginimporter->fieldstoupdate), $fieldstoupdate);

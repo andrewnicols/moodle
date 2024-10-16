@@ -122,8 +122,8 @@ final class format_message_test extends \advanced_testcase {
     /**
      * @dataProvider chat_format_message_manually_provider
      */
-    public function test_chat_format_message_manually($messagetext, $issystem, $willreturn,
-            $expecttext, $refreshusers, $expectbeep): void {
+    public function test_chat_format_message_manually($message, $issystem, $willreturn,
+            $expecttext, $refreshusers, $beep): void {
 
         $this->resetAfterTest();
 
@@ -135,11 +135,11 @@ final class format_message_test extends \advanced_testcase {
         // Replace the message texts.
         // These can't be done in the provider because it runs before the
         // test starts.
-        $messagetext = str_replace('__CURRENTUSER__', $currentuser->id, $messagetext);
-        $messagetext = str_replace('__OTHERUSER__', $otheruser->id, $messagetext);
+        $message = str_replace('__CURRENTUSER__', $currentuser->id, $message);
+        $message = str_replace('__OTHERUSER__', $otheruser->id, $message);
 
         $message = (object) [
-            'message'   => $messagetext,
+            'message'   => $message,
             'timestamp' => time(),
             'issystem'  => $issystem,
         ];
@@ -157,7 +157,7 @@ final class format_message_test extends \advanced_testcase {
             }
 
             $this->assertEquals($refreshusers, $result->refreshusers);
-            $this->assertEquals($expectbeep, $result->beep);
+            $this->assertEquals($beep, $result->beep);
         }
     }
 }

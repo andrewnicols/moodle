@@ -49,7 +49,7 @@ final class migration_claim_test extends \advanced_testcase {
      * Test instantiation and getters of the migration_claim.
      *
      * @dataProvider migration_claim_provider
-     * @param array $migrationclaimdata the lti1p1 migration claim.
+     * @param array $lti1p1migrationclaim the lti1p1 migration claim.
      * @param string $deploymentid string id of the tool deployment.
      * @param string $platform string url of the issuer.
      * @param string $clientid string id of the client.
@@ -59,17 +59,17 @@ final class migration_claim_test extends \advanced_testcase {
      * @param array $expected array containing expectation data.
      * @covers ::__construct
      */
-    public function test_migration_claim(array $migrationclaimdata, string $deploymentid, string $platform,
+    public function test_migration_claim(array $lti1p1migrationclaim, string $deploymentid, string $platform,
             string $clientid, string $exp, string $nonce, legacy_consumer_repository $legacyconsumerrepo,
             array $expected): void {
 
         if (!empty($expected['exception'])) {
             $this->expectException($expected['exception']);
             $this->expectExceptionMessage($expected['exceptionmessage']);
-            new migration_claim($migrationclaimdata, $deploymentid, $platform, $clientid, $exp, $nonce,
+            new migration_claim($lti1p1migrationclaim, $deploymentid, $platform, $clientid, $exp, $nonce,
                 $legacyconsumerrepo);
         } else {
-            $migrationclaim = new migration_claim($migrationclaimdata, $deploymentid, $platform, $clientid, $exp,
+            $migrationclaim = new migration_claim($lti1p1migrationclaim, $deploymentid, $platform, $clientid, $exp,
                 $nonce, $legacyconsumerrepo);
             $this->assertInstanceOf(migration_claim::class, $migrationclaim);
             $this->assertEquals($expected['user_id'], $migrationclaim->get_user_id());

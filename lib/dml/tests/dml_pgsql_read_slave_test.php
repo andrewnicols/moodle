@@ -277,6 +277,9 @@ final class dml_pgsql_read_slave_test extends \advanced_testcase {
             'connecttimeout' => 1
         ];
 
+        set_error_handler(function ($errno, $errstr) {
+            $this->assertStringContainsString('could not connect to server', $errstr);
+        }, E_ALL);
         $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
         $this->assertTrue(count($db2->get_records('user')) > 0);
