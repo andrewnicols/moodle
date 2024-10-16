@@ -501,7 +501,7 @@ final class grouplib_test extends \advanced_testcase {
                 'userid' => $user2->id,
                 'groupnames' => $group1->name,
             ],
-        ], $records);
+        ], array_values($records));
     }
 
     public function test_groups_get_group_by_name(): void {

@@ -4666,7 +4666,7 @@ EOD;
                 'name' => 'Bob',
                 'falias' => 'Dan, Grace',
             ],
-        ], $DB->get_records_sql($sql));
+        ], array_values($DB->get_records_sql($sql)));
     }
 
     /**

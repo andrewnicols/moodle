@@ -143,7 +143,7 @@ STRING;
     public function test_assert_tag(): void {
         // This should succeed.
         self::assertTag(['id' => 'testid'], "<div><span id='testid'></span></div>");
-        $this->expectException(\PHPUnit\Framework\ExpectationFailedException::class);
+        $this->expectException(\PHPUnit\Util\Xml\XmlException::class);
         self::assertTag(['id' => 'testid'], "<div><div>");
     }
 
