@@ -25,6 +25,7 @@
  */
 
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Base class for PHPUnit test cases customised for Moodle
@@ -612,4 +613,18 @@ abstract class base_testcase extends PHPUnit\Framework\TestCase {
         return $counter->getInvocationCount();
     }
     // phpcs:enable
+
+    /**
+     * Determine whether the test is running in isolation.
+     *
+     * Note: This was previously a public method of the TestCase, but as removed in PHPUnit 10.
+     * There is no direct replacement, but we can use reflection to access the protected property.
+     * @return bool
+     */
+    public function isInIsolation(): bool {
+        $rc = new \ReflectionClass(TestCase::class);
+        $rcp = $rc->getProperty('inIsolation');
+
+        return $rcp->getValue($this);
+    }
 }
