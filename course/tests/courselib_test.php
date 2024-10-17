@@ -1937,7 +1937,7 @@ final class courselib_test extends advanced_testcase {
 
         // Create the XML file we want to use.
         $course->category = (array)$course->category;
-        $imstestcase = new imsenterprise_test();
+        $imstestcase = new imsenterprise_test('courselib_imsenterprise_test');
         $imstestcase->imsplugin = enrol_get_plugin('imsenterprise');
         $imstestcase->set_test_config();
         $imstestcase->set_xml_file(false, array($course));
