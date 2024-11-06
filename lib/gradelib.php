@@ -859,7 +859,7 @@ function show_penalty_indicator(grade_grade $grade): string {
     global $PAGE;
 
     // Show penalty indicator if penalty is greater than 0.
-    if ($grade->deductedmark > 0) {
+    if ($grade->is_penalty_applied_to_final_grade()) {
         $indicator = new \core_grades\output\penalty_indicator(2, $grade);
         $renderer = $PAGE->get_renderer('core_grades');
         return $renderer->render_penalty_indicator($indicator);

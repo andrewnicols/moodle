@@ -144,4 +144,14 @@ class behat_gradereport_grader extends behat_base {
             ),
         ];
     }
+
+    /**
+     * Enable penalty for overridden grade.
+     *
+     * @Given I enable penalty for overridden grade
+     */
+    public function i_enable_penalty_for_overridden_grade(): void {
+        set_config('gradepenalty_enabled', 1);
+        set_config('gradepenalty_overriddengrade', 1);
+    }
 }
