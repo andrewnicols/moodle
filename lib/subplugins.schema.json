@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://moodle.org/subplugins.schema.json",
     "title": "Subplugins",
-    "description": "Moodle Subplugin types",
+    "description": "Subplugin definitions for a Moodle Plugin",
     "type": "object",
     "patternProperties": {
         "plugintypes": {
@@ -17,7 +17,8 @@
         },
         "subplugintypes": {
             "type": "object",
-            "properties": {
+            "description": "A list of subplugin types and their paths where the path is relative to the plugin's root directory",
+            "patternProperties": {
                 "^[a-z][a-z0-9]+$": {
                     "description": "The path to the subplugin type relative to the plugin's directory root",
                     "type": "string"
