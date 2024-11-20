@@ -86,9 +86,6 @@ class di {
     protected static function create_container(): ContainerInterface {
         global $CFG, $DB;
 
-        // PHP Does not support function autoloading. We must manually include the file.
-        require_once("{$CFG->libdir}/php-di/php-di/src/functions.php");
-
         // Configure the Container builder.
         $builder = new \DI\ContainerBuilder();
 

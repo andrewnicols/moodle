@@ -51,15 +51,6 @@
     <customised/>
   </library>
   <library>
-    <location>phpspreadsheet/phpspreadsheet</location>
-    <name>PhpSpreadsheet</name>
-    <description>Library to read, write and create spreadsheet documents in PHP.</description>
-    <version>1.29.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/PHPOffice/PhpSpreadsheet</repository>
-    <customised/>
-  </library>
-  <library>
     <location>google</location>
     <name>Google APIs</name>
     <description>Library Google APIs Client Library for PHP</description>
@@ -68,32 +59,6 @@
     <licenseversion>2.0</licenseversion>
     <repository>https://github.com/googleapis/google-api-php-client</repository>
     <customised/>
-  </library>
-  <library>
-    <location>htmlpurifier</location>
-    <name>HTML Purifier</name>
-    <description>Filters HTML.</description>
-    <version>4.17.0</version>
-    <license>LGPL</license>
-    <licenseversion>2.1+</licenseversion>
-    <repository>https://github.com/ezyang/htmlpurifier</repository>
-  </library>
-  <library>
-    <location>minify/matthiasmullie-minify</location>
-    <name>MatthiasMullie\Minify</name>
-    <description>CSS &amp; JavaScript minifier, in PHP</description>
-    <version>1.3.73</version>
-    <license>MIT</license>
-    <repository>https://github.com/matthiasmullie/minify</repository>
-    <customised/>
-  </library>
-  <library>
-    <location>minify/matthiasmullie-pathconverter</location>
-    <name>MatthiasMullie\PathConverter</name>
-    <description>CSS path converter, in PHP</description>
-    <version>1.1.3</version>
-    <license>MIT</license>
-    <repository>https://github.com/matthiasmullie/path-converter</repository>
   </library>
   <library>
     <location>pear/HTML/Common.php</location>
@@ -150,18 +115,6 @@
     </copyrights>
     <customised/>
     <upgradable>false</upgradable>
-  </library>
-  <library>
-    <location>phpmailer</location>
-    <name>PHPMailer</name>
-    <description>Class for sending email using either sendmail, PHP mail(), or SMTP. Methods are based upon the standard AspEmail(tm) classes.</description>
-    <version>6.9.1</version>
-    <license>LGPL</license>
-    <licenseversion>2.1</licenseversion>
-    <repository>https://github.com/PHPMailer/PHPMailer</repository>
-    <copyrights>
-      <copyright>2003 Brent R. Matzelle (bmatzelle AT yahoo DOT com)</copyright>
-    </copyrights>
   </library>
   <library>
     <location>simplepie</location>
@@ -230,32 +183,6 @@
     <copyrights>
       <copyright>2016 The jQuery Foundation and other contributors</copyright>
     </copyrights>
-  </library>
-  <library>
-    <location>html2text</location>
-    <name>HTML2Text</name>
-    <description>PHP script to convert HTML into an approximate text equivalent.</description>
-    <version>4.3.2</version>
-    <license>GPL</license>
-    <licenseversion>2.0+</licenseversion>
-    <repository>https://github.com/mtibben/html2text</repository>
-    <copyrights>
-      <copyright>2005-2007 Jon Abernathy jon@chuggnutt.com</copyright>
-    </copyrights>
-  </library>
-  <library>
-    <location>markdown</location>
-    <name>Markdown</name>
-    <description>Functions to convert from the Markdown text format into clean XHTML.</description>
-    <version>2.0.0</version>
-    <license>BSD</license>
-    <repository>https://github.com/michelf/php-markdown</repository>
-    <copyrights>
-      <copyright>2004-2016 Michel Fortin https://michelf.com/projects/php-markdown/</copyright>
-      <copyright>(Original Markdown) 2004-2006 John Gruber https://daringfireball.net/projects/markdown/
-All rights reserved.</copyright>
-    </copyrights>
-    <customised/>
   </library>
   <library>
     <location>xhprof</location>
@@ -328,18 +255,6 @@ All rights reserved.</copyright>
     </copyrights>
   </library>
   <library>
-    <location>php-css-parser</location>
-    <name>PHP-CSS-Parser</name>
-    <description>A Parser for CSS Files written in PHP.</description>
-    <version>8.4.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/sabberworm/PHP-CSS-Parser</repository>
-    <copyrights>
-      <copyright>2011 Raphael Schweikert, http://sabberworm.com/</copyright>
-    </copyrights>
-    <customised/>
-  </library>
-  <library>
     <location>rtlcss</location>
     <name>RTLCSS for PHP</name>
     <description>RTLCSS is a framework for converting Left-To-Right (LTR) Cascading Style Sheets(CSS) to Right-To-Left (RTL).</description>
@@ -348,28 +263,6 @@ All rights reserved.</copyright>
     <repository>https://github.com/moodlehq/rtlcss-php</repository>
     <copyrights>
       <copyright>Frédéric Massart</copyright>
-    </copyrights>
-  </library>
-  <library>
-    <location>scssphp</location>
-    <name>scssphp</name>
-    <description>scssphp is a compiler for SCSS written in PHP.</description>
-    <version>1.12.1</version>
-    <license>MIT</license>
-    <repository>https://github.com/scssphp/scssphp/</repository>
-    <copyrights>
-      <copyright>2015 Leaf Corcoran</copyright>
-    </copyrights>
-  </library>
-  <library>
-    <location>openspout</location>
-    <name>OpenSpout</name>
-    <description>Library to read and write spreadsheet files (CSV, XLSX and ODS).</description>
-    <version>4.23.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/openspout/openspout</repository>
-    <copyrights>
-      <copyright>OpenSpout</copyright>
     </copyrights>
   </library>
   <library>
@@ -383,30 +276,6 @@ All rights reserved.</copyright>
       <copyright>2014-2022 Chart.js Contributors</copyright>
     </copyrights>
     <customised/>
-  </library>
-  <library>
-    <location>maxmind/GeoIp2</location>
-    <name>GeoIP2 PHP API</name>
-    <description>Library for processing of GeoIP data files.</description>
-    <version>3.0.0</version>
-    <license>Apache</license>
-    <licenseversion>2.0</licenseversion>
-    <repository>https://github.com/maxmind/GeoIP2-php</repository>
-    <copyrights>
-      <copyright>MaxMind</copyright>
-    </copyrights>
-  </library>
-  <library>
-    <location>maxmind/MaxMind</location>
-    <name>MaxMind DB Reader API</name>
-    <description>PHP API for reading MaxMind DB files.</description>
-    <version>1.11.1</version>
-    <license>Apache</license>
-    <licenseversion>2.0</licenseversion>
-    <repository>https://github.com/maxmind/MaxMind-DB-Reader-php/</repository>
-    <copyrights>
-      <copyright>MaxMind</copyright>
-    </copyrights>
   </library>
   <library>
     <location>ltiprovider</location>
@@ -501,29 +370,6 @@ All rights reserved.</copyright>
     </copyrights>
   </library>
   <library>
-    <location>geopattern-php</location>
-    <name>GeoPattern</name>
-    <description>Library for creating beautiful generative background images from a string.</description>
-    <version>1.1.2</version>
-    <license>MIT</license>
-    <repository>https://github.com/RedeyeGroup/geopattern-php</repository>
-    <copyrights>
-      <copyright>2015 Leaf Corcoran</copyright>
-    </copyrights>
-  </library>
-  <library>
-    <location>php-jwt</location>
-    <name>PHP-JWT</name>
-    <description>A simple library to encode and decode JSON Web Tokens (JWT) in PHP, conforming to RFC 7519</description>
-    <version>6.10.0</version>
-    <license>BSD</license>
-    <licenseversion>3-Clause</licenseversion>
-    <repository>https://github.com/firebase/php-jwt</repository>
-    <copyrights>
-      <copyright>2011, Neuman Vong</copyright>
-    </copyrights>
-  </library>
-  <library>
     <location>polyfills</location>
     <name>regenerator-runtime</name>
     <description>This package implements a fully-functional source transformation that takes the syntax for generators/yield from ECMAScript 2015 or ES2015 and Asynchronous Iteration proposal and spits out efficient JS-of-today (ES5) that behaves the same way.</description>
@@ -578,248 +424,5 @@ All rights reserved.</copyright>
       <copyright>2018 Teclib</copyright>
       <copyright>2009 Christian Kruse, Rodney Rehm</copyright>
     </copyrights>
-  </library>
-  <library>
-    <location>zipstream</location>
-    <name>ZipStream-PHP</name>
-    <description>PHP ZIP Streaming Library</description>
-    <version>3.1.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/maennchen/ZipStream-PHP</repository>
-    <copyrights>
-      <copyright>2007-2009 Paul Duncan pabs@pablotron.org</copyright>
-      <copyright>2014 Jonatan Männchen jonatan@maennchen.ch</copyright>
-      <copyright>2014 Jesse G. Donat donatj@gmail.com</copyright>
-      <copyright>2018 Nicolas CARPi nicolas.carpi@curie.fr</copyright>
-    </copyrights>
-  </library>
-  <library>
-    <location>php-enum</location>
-    <name>php-enum</name>
-    <description>PHP Enum implementation inspired from SplEnum</description>
-    <version>1.8.4</version>
-    <license>MIT</license>
-    <repository>https://github.com/myclabs/php-enum</repository>
-    <copyrights>
-      <copyright>2015 My C-Labs</copyright>
-    </copyrights>
-  </library>
-  <library>
-    <location>psr/container</location>
-    <name>container</name>
-    <description>Common Container Interface (PHP FIG PSR-11).</description>
-    <version>2.0.2</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/container</repository>
-  </library>
-  <library>
-    <location>psr/clock</location>
-    <name>clock</name>
-    <description>Clock Interface (PHP FIG PSR-20).</description>
-    <version>1.0.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/clock</repository>
-  </library>
-  <library>
-    <location>psr/http-client</location>
-    <name>http-client</name>
-    <description>Provides an abstraction that describe the components of a HTTP Client.</description>
-    <version>1.0.3</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/http-client</repository>
-  </library>
-  <library>
-    <location>psr/http-factory</location>
-    <name>http-factory</name>
-    <description>Provides interfaces that describe the components of a HTTP Factory.</description>
-    <version>1.1.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/http-factory</repository>
-  </library>
-  <library>
-    <location>psr/http-message</location>
-    <name>http-message</name>
-    <description>Provide a set of common interfaces for HTTP messages as described in RFC 7230 and RFC 7231</description>
-    <version>2.0.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/http-message</repository>
-  </library>
-  <library>
-    <location>psr/http-server-handler</location>
-    <name>psr/http-server-handler</name>
-    <description>Common interface for HTTP server-side request handler</description>
-    <version>1.0.2</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/http-server-handler</repository>
-  </library>
-  <library>
-    <location>psr/http-server-middleware</location>
-    <name>psr/http-server-middleware</name>
-    <description>Common interface for HTTP server-side middleware</description>
-    <version>1.0.2</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/http-server-middleware</repository>
-  </library>
-  <library>
-    <location>psr/event-dispatcher</location>
-    <name>event-dispatcher</name>
-    <description>Provides interfaces that descirbe an event dispatching mechanism.</description>
-    <version>1.0.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/event-dispatcher</repository>
-  </library>
-  <library>
-    <location>psr/log</location>
-    <name>log</name>
-    <description>Common interface for logging libraries</description>
-    <version>3.0.2</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/log</repository>
-  </library>
-  <library>
-    <location>psr/simple-cache</location>
-    <name>simple-cache</name>
-    <description>Common interface for logging libraries</description>
-    <version>3.0.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/php-fig/simple-cache</repository>
-  </library>
-  <library>
-    <location>phpxmlrpc</location>
-    <name>phpxmlrpc</name>
-    <description>A php library for building xml-rpc clients and servers</description>
-    <version>4.10.1</version>
-    <license>BSD</license>
-    <licenseversion>3-Clause</licenseversion>
-    <repository>https://github.com/gggeek/phpxmlrpc</repository>
-    <copyrights>
-      <copyright>1999,2000,2001 Edd Dumbill, Useful Information Company</copyright>
-    </copyrights>
-    <customised/>
-  </library>
-  <library>
-    <location>guzzlehttp/guzzle</location>
-    <name>GuzzleHttp/Guzzle</name>
-    <description>Guzzle is a PHP HTTP client library</description>
-    <version>7.8.1</version>
-    <license>MIT</license>
-    <repository>https://github.com/guzzle/guzzle</repository>
-  </library>
-  <library>
-    <location>guzzlehttp/promises</location>
-    <name>GuzzleHttp/Promises</name>
-    <description>Guzzle promises library</description>
-    <version>2.0.2</version>
-    <license>MIT</license>
-    <repository>https://github.com/guzzle/promises</repository>
-  </library>
-  <library>
-    <location>ralouphie/getallheaders</location>
-    <name>getallheaders polyfill</name>
-    <description>A polyfill for getallheaders</description>
-    <version>3.0.3</version>
-    <license>MIT</license>
-    <repository>https://github.com/ralouphie/getallheaders</repository>
-  </library>
-  <library>
-    <location>guzzlehttp/psr7</location>
-    <name>GuzzleHttp/PSR7</name>
-    <description>PSR-7 message implementation that also provides common utility methods</description>
-    <version>2.6.2</version>
-    <license>MIT</license>
-    <repository>https://github.com/guzzle/psr7</repository>
-  </library>
-  <library>
-    <location>symfony/deprecation-contracts</location>
-    <name>Symfony Deprecation contracts</name>
-    <description>A generic function and convention to trigger deprecation notices</description>
-    <version>3.5.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/symfony/deprecation-contracts</repository>
-  </library>
-  <library>
-    <location>guzzlehttp/kevinrob/guzzlecache</location>
-    <name>Guzzle cache middleware</name>
-    <description>A HTTP Cache for Guzzle as a simple Middleware to be added in the HandlerStack.</description>
-    <version>5.1.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/Kevinrob/guzzle-cache-middleware</repository>
-  </library>
-  <library>
-      <location>webauthn</location>
-      <name>WebAuthn</name>
-      <version>2.1.1</version>
-      <license>MIT</license>
-      <repository>https://github.com/lbuchs/WebAuthn</repository>
-  </library>
-  <library>
-    <location>aws-sdk</location>
-    <name>AWS SDK for PHP</name>
-    <description>The AWS SDK for PHP library</description>
-    <version>3.318.0</version>
-    <license>Apache</license>
-    <licenseversion>2.0</licenseversion>
-    <repository>https://github.com/aws/aws-sdk-php</repository>
-  </library>
-  <library>
-    <location>jmespath</location>
-    <name>JMESPath</name>
-    <description>The JMESPath library</description>
-    <version>2.7.0</version>
-    <license>MIT</license>
-    <repository>https://github.com/jmespath/jmespath.php</repository>
-    <copyrights>
-      <copyright>2014 Michael Dowling, https://github.com/mtdowling</copyright>
-    </copyrights>
-  </library>
-  <library>
-      <location>laravel/serializable-closure</location>
-      <name>Serializable Closure</name>
-      <version>1.3.3</version>
-      <license>MIT</license>
-      <repository>https://github.com/laravel/serializable-closure</repository>
-  </library>
-  <library>
-      <location>php-di/php-di</location>
-      <name>PHP Dependency Injector</name>
-      <version>7.0.6</version>
-      <license>MIT</license>
-      <repository>https://github.com/PHP-DI/PHP-DI</repository>
-  </library>
-  <library>
-      <location>php-di/invoker</location>
-      <name>PHP DI Invoker</name>
-      <version>2.3.4</version>
-      <license>MIT</license>
-      <repository>https://github.com/php-di/invoker</repository>
-  </library>
-  <library>
-      <location>slim/slim</location>
-      <name>Slim Framework</name>
-      <version>4.13.0</version>
-      <license>MIT</license>
-      <repository>https://github.com/slimphp/Slim</repository>
-  </library>
-  <library>
-      <location>nikic/fast-route</location>
-      <name>FastRoute</name>
-      <version>1.3.0</version>
-      <license>BSD</license>
-      <licenseversion>3-Clause</licenseversion>
-      <repository>https://github.com/nikic/FastRoute</repository>
-  </library>
-  <library>
-      <location>spatie/php-cloneable</location>
-      <name>PHP Cloneable</name>
-      <version>1.0.2</version>
-      <license>MIT</license>
-      <repository>https://github.com/spatie/php-cloneable</repository>
-  </library>
-  <library>
-      <location>giggsey/libphonenumber-for-php-lite</location>
-      <name>libphonenumber for PHP (Lite)</name>
-      <version>8.13.31</version>
-      <license>Apache 2.0</license>
-      <repository>https://github.com/giggsey/libphonenumber-for-php-lite</repository>
   </library>
 </libraries>
