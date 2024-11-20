@@ -59,3 +59,6 @@ moodle-plugin-ci.phar
 phpcs.xml
 jsconfig.json
 UPGRADING-CURRENT.md
+composer.lock
+/core/vendor
+/core-dev/vendor

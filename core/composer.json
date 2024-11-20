@@ -1,0 +1,38 @@
+{
+    "name": "moodle/moodle",
+    "license": "GPL-3.0-or-later",
+    "description": "Moodle - the world's open source learning platform",
+    "type": "metapackage",
+    "homepage": "https://moodle.org",
+    "require": {
+        "php": ">=8.1.0",
+        "ext-ctype": "*",
+        "ext-curl": "*",
+        "ext-dom": "*",
+        "ext-fileinfo": "*",
+        "ext-gd": "*",
+        "ext-hash": "*",
+        "ext-iconv": "*",
+        "ext-intl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pcre": "*",
+        "ext-simplexml": "*",
+        "ext-sodium": "*",
+        "ext-spl": "*",
+        "ext-xml": "*",
+        "ext-xmlreader": "*",
+        "ext-zip": "*",
+        "ext-zlib": "*"
+    },
+    "suggest": {
+        "ext-exif": "Enabling Exif PHP extension is recommended, it is used by Moodle to parse image meta data.",
+        "ext-mysqli": "Needed when Moodle uses MySQL or MariaDB database.",
+        "ext-oci8": "Needed when Moodle uses Oracle database.",
+        "ext-pgsql": "Needed when Moodle uses PostgreSQL database.",
+        "ext-soap": "Enabling SOAP PHP extension is useful for web services and some plugins.",
+        "ext-sqlsrv": "Needed when Moodle uses MS SQL Server database.",
+        "ext-tokenizer": "Enabling Tokenizer PHP extension is recommended, it improves Moodle Networking functionality."
+    }
+}
