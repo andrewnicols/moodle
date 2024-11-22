@@ -14,25 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\local\htmlchecker\common\checks;
+
+use tool_brickfield\tests\local\htmlchecker\common\checks\all_checks_testcase;
+
 /**
- * Class test_css_text_has_contrast test
+ * Class test_css_text_has_contrast_test.
  *
  * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace tool_brickfield\local\htmlchecker\common\checks;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
-
-/**
- * Class test_css_text_has_contrast_test
  * @covers \tool_brickfield\local\htmlchecker\brickfield_accessibility
  */
-final class css_text_has_contrast_test extends all_checks {
+final class css_text_has_contrast_test extends all_checks_testcase {
     /** @var string The check type. */
     protected $checktype = 'css_text_has_contrast';
 
