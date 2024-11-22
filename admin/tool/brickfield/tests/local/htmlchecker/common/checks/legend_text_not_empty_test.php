@@ -14,24 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\local\htmlchecker\common\checks;
+
+use tool_brickfield\tests\local\htmlchecker\common\checks\all_checks_testcase;
+
 /**
- * tool_brickfield check test.
+ * Class legend_text_not_empty_test.
  *
  * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace tool_brickfield\local\htmlchecker\common\checks;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
-
-/**
- * Class legend_text_not_empty_test
- */
-final class legend_text_not_empty_test extends all_checks {
+final class legend_text_not_empty_test extends all_checks_testcase {
     /** @var string Check type */
     public $checktype = 'legend_text_not_empty';
 
