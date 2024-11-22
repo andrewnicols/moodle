@@ -14,24 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace tool_brickfield\local\htmlchecker\common\checks;
+
+use tool_brickfield\tests\local\htmlchecker\common\checks\all_checks_testcase;
+
 /**
- * tool_brickfield check test.
+ * Class header_h3_testcase.
  *
  * @package    tool_brickfield
  * @copyright  2020 onward: Brickfield Education Labs, https://www.brickfield.ie
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace tool_brickfield\local\htmlchecker\common\checks;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once('all_checks.php');
-
-/**
- * Class header_h3_testcase
- */
-final class header_h3_test extends all_checks {
+final class header_h3_test extends all_checks_testcase {
     /** @var string Check type */
     protected $checktype = 'header_h3';
 
