@@ -16,6 +16,7 @@
 
 namespace core\tests;
 
+use core\di;
 use core\router;
 use core\router\bridge;
 use core\router\mocking_route_loader;
@@ -161,12 +162,15 @@ abstract class route_testcase extends \advanced_testcase {
      * @return router
      */
     protected function get_router(string $basepath = ''): router {
-        \core\di::set(
-            router::class,
-            \DI\autowire(router::class)->constructorParameter('basepath', $basepath),
-        );
+        $entries = di::get_container()->getKnownEntryNames();
+        if (!array_search(router::class, $entries)) {
+            di::set(
+                router::class,
+                \DI\autowire(router::class)->constructorParameter('basepath', $basepath),
+            );
+        }
 
-        return \core\di::get(router::class);
+        return di::get(router::class);
     }
 
     /**
