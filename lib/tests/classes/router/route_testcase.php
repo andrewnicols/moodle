@@ -141,6 +141,14 @@ abstract class route_testcase extends \advanced_testcase {
     }
 
     /**
+     * Mock the Slim Logger.
+     */
+    protected function mock_route_logger(): void {
+        $logger = $this->getMockBuilder(\Slim\Logger::class)->getMock();
+        \core\di::set(\Slim\Logger::class, $logger);
+    }
+
+    /**
      * Get a fully-configured instance of the Moodle Routing Application.
      *
      * @return App

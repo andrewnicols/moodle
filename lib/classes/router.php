@@ -32,6 +32,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
+use Slim\Logger;
 
 /**
  * Moodle Router.
@@ -187,8 +188,9 @@ class router {
         $this->app->add(di::get(uri_normalisation_middleware::class));
 
         // Add the Error Handling Middleware and configure it to show Moodle Errors for HTML pages.
-        $errormiddleware = $this->app->addErrorMiddleware(true, true, true);
+        $errormiddleware = $this->app->addErrorMiddleware(true, true, true, di::get(Logger::class));
         $errorhandler = $errormiddleware->getDefaultErrorHandler();
+        di::set(\Slim\Middleware\ErrorMiddleware::class, $errormiddleware);
         $errorhandler->registerErrorRenderer('text/html', routed_error_handler::class);
     }
 
