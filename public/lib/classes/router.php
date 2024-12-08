@@ -40,6 +40,7 @@ use Slim\App;
 use Slim\Exception\HttpForbiddenException;
 use Slim\Exception\HttpNotFoundException;
 use Slim\Interfaces\RouteGroupInterface;
+use Slim\Logger;
 use Slim\Middleware\ErrorMiddleware;
 
 /**
@@ -217,6 +218,7 @@ class router {
             displayErrorDetails: $displayerrordetails,
             logErrors: false,
             logErrorDetails: false,
+            logger: di::get(Logger::class),
         );
 
         // Set a custom error handler for the HttpNotFoundException and HttpForbiddenException.
@@ -238,6 +240,7 @@ class router {
 
         $errormiddleware->getDefaultErrorHandler()->registerErrorRenderer('text/html', router\error_renderer::class);
 
+        di::set(\Slim\Middleware\ErrorMiddleware::class, $errormiddleware);
         $this->app->add($errormiddleware);
     }
 
