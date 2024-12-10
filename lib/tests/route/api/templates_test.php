@@ -64,6 +64,11 @@ final class templates_test extends route_testcase {
                 ['core/modal'],
                 [],
             ],
+            'fetch template in nested directory' => [
+                'boost/core/local/modal/alert',
+                ['core/local/modal/alert'],
+                [],
+            ],
             'foo' => [
                 'boost/core/notification',
                 [
