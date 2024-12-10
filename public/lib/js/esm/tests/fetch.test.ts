@@ -469,6 +469,62 @@ describe('@moodle/lms/core/fetch', () => {
             await expect(second).rejects.toBe('Internal Server Error');
         });
 
+        it('includes a debugging prologue line for each queued request in the batch body', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+
+            batcher.performGet('mod_example', 'list');
+            batcher.performPost('mod_example', 'create', {body: {name: 'new'}});
+
+            mockFetch.mockImplementation(async(req: MockRequest) => {
+                const ids = getRequestIds(req.body);
+                return new MockResponse(
+                    buildBatchResponseBody('resp-boundary', [
+                        {id: ids[0], body: JSON.stringify({items: []})},
+                        {id: ids[1], status: 201, body: JSON.stringify({id: 1})},
+                    ]),
+                    {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+                );
+            });
+
+            await batcher.execute();
+
+            const batchRequest = mockFetch.mock.calls[0][0];
+            const requestBody = await batchRequest.text();
+            expect(requestBody).toMatch(
+                /# Requesting GET https:\/\/example\.com\/rest\/v2\/mod_example\/list\n/,
+            );
+            expect(requestBody).toMatch(
+                /# Requesting POST https:\/\/example\.com\/rest\/v2\/mod_example\/create\n/,
+            );
+        });
+
+        it('correctly parses a sub-response status line with a multi-word status text', async() => {
+            (globalThis as any).M.cfg.batchFetchRequests = true;
+            const batcher = new Fetch();
+
+            const first = batcher.performGet('mod_example', 'list');
+            const second = batcher.performGet('mod_example', 'other');
+
+            mockFetch.mockImplementation(async(req: MockRequest) => {
+                const ids = getRequestIds(req.body);
+                return new MockResponse(
+                    buildBatchResponseBody('resp-boundary', [
+                        {id: ids[0], status: 404, statusText: 'Not Found', body: JSON.stringify({error: 'missing'})},
+                        {id: ids[1], body: JSON.stringify({ok: true})},
+                    ]),
+                    {headers: {'Content-Type': 'multipart/mixed;boundary=resp-boundary'}},
+                );
+            });
+
+            await batcher.execute();
+
+            await expect(first).rejects.toBe('Not Found');
+
+            const secondResponse = await second;
+            expect(secondResponse.status).toBe(200);
+        });
+
         it('rejects a request with no matching Content-ID in the batch response', async() => {
             (globalThis as any).M.cfg.batchFetchRequests = true;
             const batcher = new Fetch();
