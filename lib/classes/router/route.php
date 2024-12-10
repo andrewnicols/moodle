@@ -16,6 +16,7 @@
 
 namespace core\router;
 
+use core\param;
 use core\exception\coding_exception;
 use core\router\schema\parameter;
 use core\router\schema\response\response;
@@ -123,6 +124,9 @@ class route {
         /** @var string[] The list of scopes required to access this page */
         public readonly ?array $scopes = null,
 
+        /** @var null|string Public cache lifetime if browser cacheable */
+        public readonly ?string $cachelifetime = null,
+
         // Note. We do not make use of these extras.
         // These allow us to add additional arguments in future versions, whilst allowing plugins to use this version.
         ...$extra,
@@ -182,6 +186,7 @@ class route {
         if (isset($this->parentroute)) {
             $path = $this->parentroute->get_path() . $path;
         }
+
         return $path;
     }
 
@@ -228,6 +233,10 @@ class route {
         }
         foreach ($this->pathtypes as $parameter) {
             $parameters[$parameter->get_name()] = $parameter;
+        }
+
+        if (isset($this->cachelifetime)) {
+            $parameters['cachekey'] = new \core\router\parameters\path_cachekey();
         }
 
         return $parameters;
