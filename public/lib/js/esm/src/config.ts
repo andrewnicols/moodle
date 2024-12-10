@@ -93,6 +93,9 @@ export interface MoodleConfig {
     behatsiterunning?: boolean;
     /** Whether requests made via a Fetch batcher should be sent as a single ODATA $batch request. */
     batchFetchRequests: boolean;
+
+    /** Whether to batch cacheable asset requests (those with a cache key, e.g. templates and strings). */
+    batchApiAssetRequests: boolean;
 }
 
 /**
