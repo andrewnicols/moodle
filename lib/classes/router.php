@@ -17,6 +17,7 @@
 namespace core;
 
 use core\output\routed_error_handler;
+use core\router\middleware\cache_control_middleware;
 use core\router\middleware\cors_middleware;
 use core\router\middleware\error_handling_middleware;
 use core\router\middleware\moodle_bootstrap_middleware;
@@ -217,7 +218,10 @@ class router {
             ->add(di::get(error_handling_middleware::class))
             // Add a Middleware to set the CORS headers for all REST Responses.
             ->add(di::get(cors_middleware::class))
-            ->add(di::get(validation_middleware::class));
+            ->add(di::get(validation_middleware::class))
+
+            // Add a Middleware to set the Cache-Control headers for all REST Responses.
+            ->add(di::get(cache_control_middleware::class));
     }
 
     /**
