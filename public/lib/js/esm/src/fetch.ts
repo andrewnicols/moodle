@@ -522,6 +522,9 @@ export default class Fetch {
     /**
      * Add a request to the batch queue.
      *
+     * Requests with a cache key (greater than 1) are cacheable assets and bypass the queue, unless
+     * the `batchApiAssetRequests` config value is enabled.
+     *
      * @param component The frankenstyle component name.
      * @param endpoint  The endpoint within the component to call.
      * @param options   Request options, including the optional batch request `id`.
@@ -697,7 +700,9 @@ export default class Fetch {
             ...[...requestMap.values()].map(({request}) => `# Requesting ${request.method} ${request.url}\r\n`),
             // Now add the actual request bodies.
             ...requestBodies.map((requestBody) => requestBody.join('')),
+            // The final boundary marker.
             getBoundaryMarker(true),
+            // No epilogue here. Our API does support one if we need to add one later.
         ];
 
         return new Request(
@@ -740,7 +745,8 @@ export default class Fetch {
 
         // Extract the status from the rest of the headers.
         const statusLine = headers.shift() ?? '';
-        const [, status, statusText] = statusLine.split(' ');
+        const matches = statusLine.match(/HTTP\/(?<protocol>[^ ]*) (?<status>\d{3}) (?<statusText>.*)$/);
+        const {status, statusText} = matches?.groups ?? {status: undefined, statusText: undefined};
 
         const headerList: Array<[string, string]> = headers
             .filter((header) => header.includes(':'))
