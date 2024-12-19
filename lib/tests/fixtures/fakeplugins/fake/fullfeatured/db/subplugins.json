@@ -1,11 +1,11 @@
 {
-  "plugintypes": {
-    "fullsubtype": "lib\/tests\/fixtures\/fakeplugins\/fake\/fullfeatured\/fullsubtype"
+  "subplugintypes": {
+    "fullsubtype": "fullsubtype"
   },
-  "deprecatedplugintypes": {
-    "fulldeprecatedsubtype": "lib\/tests\/fixtures\/fakeplugins\/fake\/fullfeatured\/fulldeprecatedsubtype"
+  "deprecatedsubplugintypes": {
+    "fulldeprecatedsubtype": "fulldeprecatedsubtype"
   },
-  "deletedplugintypes": {
-    "fulldeletedsubtype": "lib\/tests\/fixtures\/fakeplugins\/fake\/fullfeatured\/fulldeletedsubtype"
+  "deletedsubplugintypes": {
+    "fulldeletedsubtype": "fulldeletedsubtype"
   }
 }
