@@ -2048,14 +2048,19 @@ class assign {
                 }
             }
 
-            // Add penalty indicator.
+            // Add penalty indicator, icon only.
             $penaltyindicator = '';
             if ($deductedmark > 0) {
-                $usergrade = new \grade_grade();
-                $usergrade->deductedmark = $deductedmark;
-                $indicator = new \core_grades\output\penalty_indicator(2, $usergrade);
-                $renderer = $PAGE->get_renderer('core_grades');
-                $penaltyindicator = $renderer->render_penalty_indicator($indicator);
+                $gradeitem = $this->get_grade_item();
+                $ispenaltyapplied = $gradeitem && $gradeitem->get_grade($userid)->is_penalty_applied_to_final_grade();
+                // If the user is set, we need to check if the penalty is applied to overridden grade.
+                if ($userid == 0 || $ispenaltyapplied) {
+                    $usergrade = new \grade_grade();
+                    $usergrade->deductedmark = $deductedmark;
+                    $indicator = new \core_grades\output\penalty_indicator(2, $usergrade);
+                    $renderer = $PAGE->get_renderer('core_grades');
+                    $penaltyindicator = $renderer->render_penalty_indicator($indicator);
+                }
             }
 
             return $penaltyindicator . $o;
