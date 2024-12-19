@@ -862,7 +862,7 @@ abstract class advanced_testcase extends base_testcase {
     protected function deprecate_full_mocked_plugintype(
         string $plugintype,
     ): void {
-        $mockedcomponent = new \ReflectionClass(\core_component::class);
+        $mockedcomponent = new \ReflectionClass(\core\component::class);
         $componentsource = $mockedcomponent->getStaticPropertyValue('componentsource');
         $deprecatedkey = 'deprecatedplugintypes';
         $typeskey = 'plugintypes';
@@ -895,7 +895,8 @@ abstract class advanced_testcase extends base_testcase {
     protected function delete_full_mocked_plugintype(
         string $plugintype,
     ): void {
-        $mockedcomponent = new \ReflectionClass(\core_component::class);
+        \core\component::classloader(\core\component::class);
+        $mockedcomponent = new \ReflectionClass(\core\component::class);
         $componentsource = $mockedcomponent->getStaticPropertyValue('componentsource');
         $deletedkey = 'deletedplugintypes';
         $typeskey = 'plugintypes';
