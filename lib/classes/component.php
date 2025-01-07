@@ -607,13 +607,13 @@ $cache = ' . var_export($cache, true) . ';
         self::$subsystems = self::fetch_subsystems();
 
         [
-            self::$plugintypes,
-            self::$parents,
-            self::$subplugins,
-            self::$deprecatedplugintypes,
-            self::$deletedplugintypes,
-            self::$deprecatedsubplugins,
-            self::$deletedsubplugins
+            'plugintypes' => self::$plugintypes,
+            'parents' => self::$parents,
+            'subplugins' => self::$subplugins,
+            'deprecatedplugintypes' => self::$deprecatedplugintypes,
+            'deletedplugintypes' => self::$deletedplugintypes,
+            'deprecatedsubplugins' => self::$deprecatedsubplugins,
+            'deletedsubplugin' => self::$deletedsubplugins
         ] = self::fetch_plugintypes();
 
         self::$plugins = [];
@@ -822,9 +822,13 @@ $cache = ' . var_export($cache, true) . ';
         }
 
         return [
-            $plugintypesmap['plugintypes'], $parents, $subplugintypesmap['plugintypes'], $plugintypesmap['deprecatedplugintypes'],
-            $plugintypesmap['deletedplugintypes'], $subplugintypesmap['deprecatedplugintypes'],
-            $subplugintypesmap['deletedplugintypes'],
+            'plugintypes' => $plugintypesmap['plugintypes'],
+            'parents' => $parents,
+            'subplugins' => $subplugintypesmap['plugintypes'],
+            'deprecatedplugintypes' => $plugintypesmap['deprecatedplugintypes'],
+            'deletedplugintypes' => $plugintypesmap['deletedplugintypes'],
+            'deprecatedsubplugins' => $subplugintypesmap['deprecatedplugintypes'],
+            'deletedsubplugin' => $subplugintypesmap['deletedplugintypes'],
         ];
     }
 
@@ -865,6 +869,7 @@ $cache = ' . var_export($cache, true) . ';
             'deletedplugintypes' => [],
         ];
         if (file_exists("$ownerdir/db/subplugins.json")) {
+            $subpluginpathformatter = fn (string $value): string => "{$plugindir}/{$value}";
             $subpluginsjson = json_decode(file_get_contents("$ownerdir/db/subplugins.json"));
             if (json_last_error() === JSON_ERROR_NONE) {
                 $subplugins = [];
@@ -884,8 +889,16 @@ $cache = ' . var_export($cache, true) . ';
                 }
 
                 $subtypesregister['plugintypes'] = $subplugins;
-                $subtypesregister['deprecatedplugintypes'] = array_map($subpluginpathformatter, (array) $subpluginsjson->deprecatedplugintypes ?? []);
-                $subtypesregister['deletedplugintypes'] = array_map($subpluginpathformatter, (array) $subpluginsjson->deletedplugintypes ?? []);
+
+                // The deprecated and deleted subplugintypes are optional and are always relative to the plugin's root directory.
+                $subtypesregister['deprecatedplugintypes'] = array_map(
+                    $subpluginpathformatter,
+                    (array) ($subpluginsjson->deprecatedsubplugintypes ?? []),
+                );
+                $subtypesregister['deletedplugintypes'] = array_map(
+                    $subpluginpathformatter,
+                    (array) ($subpluginsjson->deletedsubplugintypes ?? []),
+                );
             } else {
                 $jsonerror = json_last_error_msg();
                 error_log("$ownerdir/db/subplugins.json is invalid ($jsonerror)");
