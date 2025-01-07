@@ -1441,7 +1441,9 @@ final class component_test extends \advanced_testcase {
         $subplugins = $rcm->invoke(null, $pluginroot->url());
 
         $this->assertEquals([
-            'exampleplugina' => $pluginroot->getChild('apples')->url(),
+            'plugintypes' => [
+                'exampleplugina' => $pluginroot->getChild('apples')->url(),
+            ],
         ], $subplugins);
     }
 
@@ -1479,7 +1481,9 @@ final class component_test extends \advanced_testcase {
         $subplugins = $rcm->invoke(null, $pluginroot->url());
 
         $this->assertEquals([
-            'exampleplugina' => $pluginroot->getChild('apples')->url(),
+            'plugintypes' => [
+                'exampleplugina' => $pluginroot->getChild('apples')->url(),
+            ],
         ], $subplugins);
 
         $warnings = file_get_contents($logfile);
