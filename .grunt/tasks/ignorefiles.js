@@ -78,7 +78,7 @@ module.exports = grunt => {
             '*/**/yui/src/*/meta/',
             '*/**/build/',
         ].concat(thirdPartyPaths);
-        grunt.file.write('.eslintignore', eslintIgnores.join('\n') + '\n');
+        grunt.file.write('.eslintignores', eslintIgnores.join('\n') + '\n');
 
         // Generate .stylelintignore.
         const stylelintIgnores = [

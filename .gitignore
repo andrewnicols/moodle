@@ -51,6 +51,7 @@ atlassian-ide-plugin.xml
 /.vscode/
 moodle-plugin-ci.phar
 .eslintignore
+.eslintignores
 .stylelintignore
 /jsdoc
 /admin/tool/componentlibrary/docs

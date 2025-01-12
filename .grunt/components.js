@@ -218,7 +218,7 @@ const getThirdPartyPaths = () => {
         const dirname = path.dirname(file);
 
         const xmlContent = fs.readFileSync(file, 'utf8');
-        const doc = new DOMParser().parseFromString(xmlContent);
+        const doc = new DOMParser().parseFromString(xmlContent, 'application/xml');
         const nodes = xpath.select("/libraries/library/location/text()", doc);
 
         nodes.forEach(function(node) {

@@ -202,23 +202,17 @@
       // Check AMD with some slightly stricter rules.
       rules: {
         'no-implicit-globals': 'error',
-        // Disable all of the rules that have babel versions.
-        'new-cap': 'off',
+        // Not using this rule for the time being because it isn't
+        // compatible with jQuery and ES6.
+        'quotes': 'off',
+        // Enable all of the babel version of these rules.
+        'new-cap': ['warn', { 'properties': false }],
         // Not using this rule for the time being because it isn't
         // compatible with jQuery and ES6.
         'no-invalid-this': 'off',
-        'object-curly-spacing': 'off',
-        'quotes': 'off',
-        'semi': 'off',
-        'no-unused-expressions': 'off',
-        // Enable all of the babel version of these rules.
-        '@babel/new-cap': ['warn', { 'properties': false }],
-        // Not using this rule for the time being because it isn't
-        // compatible with jQuery and ES6.
-        '@babel/no-invalid-this': 'off',
-        '@babel/object-curly-spacing': 'warn',
-        '@babel/semi': 'error',
-        '@babel/no-unused-expressions': 'error',
+        'object-curly-spacing': 'warn',
+        'semi': 'error',
+        'no-unused-expressions': 'error',
         // === Promises ===
         // We have Promise now that we're using ES6.
         'promise/no-native': 'off',
