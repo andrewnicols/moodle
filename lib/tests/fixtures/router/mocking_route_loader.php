@@ -19,6 +19,7 @@
  *
  * Note: This file has been deprecated and will be removed in Moodle 6.0.
  *
+ * @deprecated since Moodle 5.0. Will be removed in MDL-84189.
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later

@@ -25,7 +25,7 @@ use Slim\Routing\RouteCollectorProxy;
  * A route loader containing mocked routes.
  *
  * @package    core
- * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mocking_route_loader extends abstract_route_loader implements route_loader_interface {
