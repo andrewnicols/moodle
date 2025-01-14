@@ -26,7 +26,6 @@
 namespace core\event;
 
 defined('MOODLE_INTERNAL') || die();
-
 /**
  * Event to test that \advanced_testcase::assertEventContextNotUsed() passes ok when no context is used.
  */

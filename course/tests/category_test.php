@@ -26,6 +26,7 @@ use core_course_category;
  * @copyright  2013 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_course_category::class)]
 final class category_test extends \advanced_testcase {
 
     protected $roles;
@@ -1136,8 +1137,6 @@ final class category_test extends \advanced_testcase {
 
     /**
      * Test get_nearest_editable_subcategory() method.
-     *
-     * @covers \core_course_category::get_nearest_editable_subcategory
      */
     public function test_get_nearest_editable_subcategory(): void {
         global $DB;
@@ -1247,10 +1246,8 @@ final class category_test extends \advanced_testcase {
      * @param string $role  The role the user must have.
      * @param array $permissions An array of permissions we must check.
      * @param bool $result Whether the result should be the category or null.
-     *
-     * @dataProvider get_nearest_editable_subcategory_provider
-     * @covers \core_course_category::get_nearest_editable_subcategory
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_nearest_editable_subcategory_provider')]
     public function test_get_nearest_editable_subcategory_with_hidden_categories(
         int $visible = 0,
         bool $child = false,
@@ -1380,9 +1377,8 @@ final class category_test extends \advanced_testcase {
 
     /**
      * This test ensures that the filter context list is populated by the correct filter contexts from make_category_list.
-     *
-     * @coversNothing
      */
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
     public function test_make_category_list_context(): void {
         global $DB;
         // Ensure that the category list is empty.

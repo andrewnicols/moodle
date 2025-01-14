@@ -30,8 +30,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @package    core_grades
  * @category   external
  * @copyright  2023 Mihail Geshoski <mihail@moodle.com>
- * @covers     \core_grades\external\get_grade_tree
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_grades\external\get_grade_tree::class)]
 final class get_grade_tree_test extends \externallib_advanced_testcase {
 
     /**

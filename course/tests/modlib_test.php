@@ -26,6 +26,9 @@ use core_courseformat\formatactions;
  * @copyright  2016 Juan Leyva
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('prepare_new_moduleinfo_data')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('add_moduleinfo')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('can_add_moduleinfo')]
 final class modlib_test extends \advanced_testcase {
     /**
      * Setup to ensure that fixtures are loaded.
@@ -88,7 +91,6 @@ final class modlib_test extends \advanced_testcase {
 
     /**
      * Test prepare_new_moduleinfo_data with suffix (which is currently only used by the completion rules).
-     * @covers ::prepare_new_moduleinfo_data
      */
     public function test_prepare_new_moduleinfo_data_with_suffix(): void {
         global $DB;
@@ -213,8 +215,6 @@ final class modlib_test extends \advanced_testcase {
 
     /**
      * Test add_moduleinfo (only beforemod parameter for now).
-     *
-     * @covers \add_moduleinfo
      */
     public function test_add_moduleinfo(): void {
         global $DB;
@@ -284,8 +284,6 @@ final class modlib_test extends \advanced_testcase {
 
     /**
      * Test for can_add_moduleinfo on a non-existing module.
-     *
-     * @covers \can_add_moduleinfo
      */
     public function test_can_add_moduleinfo_invalid_module(): void {
         global $DB;
@@ -308,8 +306,6 @@ final class modlib_test extends \advanced_testcase {
 
     /**
      * Test for can_add_moduleinfo when the user does not have addinstance capability.
-     *
-     * @covers \can_add_moduleinfo
      */
     public function test_can_add_moduleinfo_deny_add_instance(): void {
         global $DB;
@@ -345,11 +341,10 @@ final class modlib_test extends \advanced_testcase {
     /**
      * Test for can_add_moduleinfo.
      *
-     * @dataProvider provider_can_add_moduleinfo
-     * @covers \can_add_moduleinfo
      * @param string $rolename
      * @param bool $hascapability
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_can_add_moduleinfo')]
     public function test_can_add_moduleinfo_capability(string $rolename, bool $hascapability): void {
         global $DB;
         $this->resetAfterTest(true);
@@ -385,11 +380,10 @@ final class modlib_test extends \advanced_testcase {
     /**
      * Test for can_add_moduleinfo returns true on a delegate section.
      *
-     * @dataProvider provider_can_add_moduleinfo
-     * @covers \can_add_moduleinfo
      * @param string $rolename
      * @param bool $hascapability
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_can_add_moduleinfo')]
     public function test_can_add_moduleinfo_delegate_section(string $rolename, bool $hascapability): void {
         global $DB;
         $this->resetAfterTest(true);

@@ -23,8 +23,8 @@ namespace core_external;
  * @category    test
  * @copyright   2022 Andrew Lyons <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @covers      \core_external\util
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_external\util::class)]
 final class util_test extends \advanced_testcase {
     /** @var \moodle_database The database connection */
     protected $db;
@@ -69,8 +69,6 @@ final class util_test extends \advanced_testcase {
 
     /**
      * Validate courses, but still return courses even if they fail validation.
-     *
-     * @covers \core_external\util::validate_courses
      */
     public function test_validate_courses_keepfails(): void {
         $this->resetAfterTest(true);
@@ -95,8 +93,6 @@ final class util_test extends \advanced_testcase {
 
     /**
      * Validate courses can re-use an array of prefetched courses.
-     *
-     * @covers \core_external\util::validate_courses
      */
     public function test_validate_courses_prefetch(): void {
         $this->resetAfterTest(true);
@@ -125,8 +121,6 @@ final class util_test extends \advanced_testcase {
 
     /**
      * Test the Validate courses standard functionality.
-     *
-     * @covers \core_external\util::validate_courses
      */
     public function test_validate_courses(): void {
         $this->resetAfterTest(true);
@@ -163,8 +157,6 @@ final class util_test extends \advanced_testcase {
 
     /**
      * Text util::get_area_files
-     *
-     * @covers \core_external\util::get_area_files
      */
     public function test_get_area_files(): void {
         global $CFG, $DB;
@@ -220,8 +212,6 @@ final class util_test extends \advanced_testcase {
 
     /**
      * Test default time for user created tokens.
-     *
-     * @covers \core_external\util::generate_token_for_current_user
      */
     public function test_user_created_tokens_duration(): void {
         global $CFG, $DB;
@@ -249,10 +239,8 @@ final class util_test extends \advanced_testcase {
 
     /**
      * Test the format_text function.
-     *
-     * @covers \core_external\util::format_text
-     * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_format_text(): void {
         $this->include_legacy_functions();
         $settings = external_settings::get_instance();
@@ -351,10 +339,8 @@ final class util_test extends \advanced_testcase {
     }
     /**
      * Teset the format_string function.
-     *
-     * @covers \core_external\util::format_string
-     * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_external_format_string(): void {
         $this->resetAfterTest();
         $this->include_legacy_functions();

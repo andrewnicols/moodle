@@ -23,13 +23,11 @@ namespace core_external;
  * @category    test
  * @copyright   2022 Andrew Lyons <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @covers      \core_external\external_api
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_external\external_api::class)]
 final class external_api_test extends \advanced_testcase {
     /**
      * Test the validate_parameters method.
-     *
-     * @covers \core_external\external_api::validate_parameters
      */
     public function test_validate_params(): void {
         $params = ['text' => 'aaa', 'someid' => '6'];
@@ -132,8 +130,6 @@ final class external_api_test extends \advanced_testcase {
 
     /**
      * Test for clean_returnvalue() for testing that returns the PHP type.
-     *
-     * @covers \core_external\external_api::clean_returnvalue
      */
     public function test_clean_returnvalue_return_php_type(): void {
         $returndesc = new external_single_structure([
@@ -152,8 +148,6 @@ final class external_api_test extends \advanced_testcase {
 
     /**
      * Test for clean_returnvalue().
-     *
-     * @covers \core_external\external_api::clean_returnvalue
      */
     public function test_clean_returnvalue(): void {
         // Build some return value decription.
@@ -262,8 +256,6 @@ final class external_api_test extends \advanced_testcase {
 
     /**
      * Test \core_external\external_api::get_context_from_params().
-     *
-     * @covers \core_external\external_api::get_context_from_params
      */
     public function test_get_context_from_params(): void {
         $this->resetAfterTest(true);
@@ -331,8 +323,6 @@ final class external_api_test extends \advanced_testcase {
 
     /**
      * Test \core_external\external_api::get_context()_from_params parameter validation.
-     *
-     * @covers \core_external\external_api::get_context_from_params
      */
     public function test_get_context_params(): void {
         global $USER;
@@ -344,8 +334,6 @@ final class external_api_test extends \advanced_testcase {
 
     /**
      * Test \core_external\external_api::get_context()_from_params parameter validation.
-     *
-     * @covers \core_external\external_api::get_context_from_params
      */
     public function test_get_context_params2(): void {
         global $USER;
@@ -357,7 +345,6 @@ final class external_api_test extends \advanced_testcase {
 
     /**
      * Test \core_external\external_api::get_context()_from_params parameter validation.
-     * @covers \core_external\external_api::get_context_from_params
      */
     public function test_get_context_params3(): void {
         global $USER;
@@ -391,11 +378,10 @@ final class external_api_test extends \advanced_testcase {
     /**
      * Test \core_external\external_api::external_function_info.
      *
-     * @runInSeparateProcess
-     * @dataProvider all_external_info_provider
-     * @covers \core_external\external_api::external_function_info
      * @param \stdClass $definition
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('all_external_info_provider')]
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_all_external_info(\stdClass $definition): void {
         $desc = external_api::external_function_info($definition);
         $this->assertNotEmpty($desc->name);
@@ -410,8 +396,6 @@ final class external_api_test extends \advanced_testcase {
 
     /**
      * Test the \core_external\external_api::call_external_function() function.
-     *
-     * @covers \core_external\external_api::call_external_function
      */
     public function test_call_external_function(): void {
         global $PAGE, $COURSE, $CFG;

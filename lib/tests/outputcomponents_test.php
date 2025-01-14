@@ -35,6 +35,8 @@ use core\output\user_picture;
  * @copyright 2011 David Mudrak <david@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\single_button::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\url_select::class)]
 final class outputcomponents_test extends \advanced_testcase {
     /**
      * Tests user_picture::fields.
@@ -582,7 +584,6 @@ EOF;
     }
     /**
      * Test for checking the template context data for the single_select element.
-     * @covers \single_button
      */
     public function test_single_button(): void {
         global $PAGE;
@@ -614,7 +615,6 @@ EOF;
 
     /**
      * Test for checking the template context data for the single_select element legacy API.
-     * @covers \single_button
      */
     public function test_single_button_deprecated(): void {
         global $PAGE;
@@ -746,8 +746,6 @@ EOF;
 
     /**
      * Test for checking the template context data for the url_select element.
-     * @covers \url_select::disable_option
-     * @covers \url_select::enable_option
      */
     public function test_url_select_disabled_options(): void {
         global $PAGE;
@@ -793,10 +791,10 @@ EOF;
     /**
      * Test block_contents is_fake() method.
      *
-     * @dataProvider block_contents_is_fake_provider
      * @param mixed $value Value for the data-block attribute
      * @param boolean $expected The expected result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('block_contents_is_fake_provider')]
     public function test_block_contents_is_fake($value, $expected): void {
         $bc = new block_contents(array());
         if ($value !== false) {

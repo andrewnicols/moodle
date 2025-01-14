@@ -25,9 +25,9 @@ use GuzzleHttp\Psr7\Utils;
  * @package    core_user
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core_user\route\api\preferences
- * @covers \core_user\route\responses\user_preferences_response
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_user\route\api\preferences::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_user\route\responses\user_preferences_response::class)]
 final class preferences_test extends route_testcase {
     /**
      * Ensure that preferences returned for a user without login are empty.

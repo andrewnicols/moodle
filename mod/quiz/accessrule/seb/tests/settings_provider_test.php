@@ -623,9 +623,8 @@ final class settings_provider_test extends \advanced_testcase {
      * Test SEB usage options.
      *
      * @param string $settingcapability Setting capability to check options against.
-     *
-     * @dataProvider settings_capability_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('settings_capability_data_provider')]
     public function test_get_requiresafeexambrowser_options($settingcapability): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -1135,9 +1134,8 @@ final class settings_provider_test extends \advanced_testcase {
      * Test that users can or can not Configure SEb manually
      *
      * @param string $settingcapability Setting capability to check manual option against.
-     *
-     * @dataProvider settings_capability_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('settings_capability_data_provider')]
     public function test_can_configure_manually($settingcapability): void {
         $this->resetAfterTest();
         $this->course = $this->getDataGenerator()->create_course();
@@ -1234,9 +1232,8 @@ final class settings_provider_test extends \advanced_testcase {
      * Test that we can check identify conflicting permissions if set to use own configure manually.
      *
      * @param string $settingcapability Setting capability to check manual option against.
-     *
-     * @dataProvider settings_capability_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('settings_capability_data_provider')]
     public function test_is_conflicting_permissions_for_configure_manually($settingcapability): void {
         $this->resetAfterTest();
         $this->setAdminUser();

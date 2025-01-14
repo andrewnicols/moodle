@@ -39,6 +39,7 @@ require_once(__DIR__ . '/fixtures/testable.php');
 /**
  * Test cases for the internal workshop api
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\workshop::class)]
 final class locallib_test extends \advanced_testcase {
 
     /** @var object */
@@ -778,8 +779,6 @@ final class locallib_test extends \advanced_testcase {
 
     /**
      * Test init_initial_bar function.
-     *
-     * @covers \workshop::init_initial_bar
      */
     public function test_init_initial_bar(): void {
         global $SESSION;
@@ -811,8 +810,6 @@ final class locallib_test extends \advanced_testcase {
 
     /**
      * Test empty init_initial_bar
-     *
-     * @covers \workshop::init_initial_bar
      */
     public function test_init_initial_bar_empty(): void {
         $this->resetAfterTest();
@@ -825,8 +822,6 @@ final class locallib_test extends \advanced_testcase {
 
     /**
      * Test get_initial_first function
-     *
-     * @covers \workshop::get_initial_first
      */
     public function test_get_initial_first(): void {
         $this->resetAfterTest();
@@ -840,8 +835,6 @@ final class locallib_test extends \advanced_testcase {
 
     /**
      * Test get_initial_last function
-     *
-     * @covers \workshop::get_initial_last
      */
     public function test_get_initial_last(): void {
         $this->resetAfterTest();
@@ -856,9 +849,9 @@ final class locallib_test extends \advanced_testcase {
     /**
      * Get the protected propertyinitialbarprefs from workshop class.
      *
-     * @coversNothing
      * @return array initialbarspref property. eg ['i_first' => 'A', 'i_last' => 'B']
      */
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
     private function get_initial_bar_prefs_property(): array {
 
         $reflector = new \ReflectionObject($this->workshop);

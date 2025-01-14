@@ -243,9 +243,8 @@ final class myprofilelib_test extends \advanced_testcase {
      * @param string $usertimezone Timezone identifier or '99' (Use server default)
      * @param string|null $expectresult
      * @return bool
-     *
-     * @dataProvider core_myprofile_navigation_contact_timezone_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('core_myprofile_navigation_contact_timezone_provider')]
     public function test_core_myprofile_navigation_contact_timezone(string $hiddenuserfields, string $forcetimezone,
             string $usertimezone, ?string $expectresult = null): void {
 

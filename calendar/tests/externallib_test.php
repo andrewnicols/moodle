@@ -35,6 +35,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.5
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_calendar_external::class)]
 final class externallib_test extends externallib_advanced_testcase {
 
     /**
@@ -2811,8 +2812,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Prevent user from reading other user's event.
      *
-     * @covers \core_calendar_external::get_calendar_event_by_id
-     * @dataProvider get_calendar_event_by_id_prevent_read_other_users_events_data_provider
      *
      * @param bool          $isadminevent      Is admin's event
      * @param bool          $isadmin           Is current user admin user
@@ -2820,6 +2819,7 @@ final class externallib_test extends externallib_advanced_testcase {
      * @param null|string   $readerrolename    Role name
      * @param bool          $expectexception   Should the test throw exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_calendar_event_by_id_prevent_read_other_users_events_data_provider')]
     public function test_get_calendar_event_by_id_prevent_read_other_users_events(
             bool $isadminevent, bool $isadmin, ?\stdClass $readerrolecontext,
             ?string $readerrolename, bool $expectexception): void {
@@ -2882,14 +2882,13 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the behavior of deleting other users' user events.
      *
-     * @dataProvider edit_or_delete_other_users_events_data_provider
-     * @covers \core_calendar_external::delete_calendar_events
      * @param bool          $isadmin Whether the current user is admin.
      * @param bool          $isadminevent Whether it's an admin event or not.
      * @param stdClass|null $writerrolecontext The reader role context.
      * @param string|null   $writerrolename The role name.
      * @param bool          $expectexception Whether the test should throw an exception or not.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('edit_or_delete_other_users_events_data_provider')]
     public function test_delete_other_users_events(bool $isadmin, bool $isadminevent,
             ?\stdClass $writerrolecontext, ?string $writerrolename, bool $expectexception): void {
         global $DB, $USER;
@@ -2929,14 +2928,13 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the behavior of editing other users' user events
      *
-     * @dataProvider edit_or_delete_other_users_events_data_provider
-     * @covers \core_calendar_external::submit_create_update_form
      * @param bool          $isadmin Whether the current user is admin.
      * @param bool          $isadminevent Whether it's an admin event or not.
      * @param stdClass|null $writerrolecontext The reader role context.
      * @param string|null   $writerrolename The role name.
      * @param bool          $expectexception Whether the test should throw an exception or not.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('edit_or_delete_other_users_events_data_provider')]
     public function test_edit_other_users_events(bool $isadmin, bool $isadminevent,
             ?\stdClass $writerrolecontext, ?string $writerrolename, bool $expectexception): void {
         global $DB, $USER;
@@ -3261,8 +3259,6 @@ final class externallib_test extends externallib_advanced_testcase {
 
     /**
      * Test for checking if we receive the correct icon branding.
-     *
-     * @covers \core_calendar_external::get_calendar_action_events_by_timesort
      */
     public function test_get_calendar_event_branded(): void {
 

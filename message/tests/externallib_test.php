@@ -5502,7 +5502,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the get_conversation_counts() function.
      *
-     * @dataProvider get_conversation_counts_test_cases
      * @param array $conversationconfigs Conversations to create
      * @param int $deletemessagesuser The user who is deleting the messages
      * @param array $deletemessages The list of messages to delete (by index)
@@ -5511,6 +5510,7 @@ final class externallib_test extends externallib_advanced_testcase {
      * @param array $expectedunreadcounts the expected unread conversation counts
      * @param array $deletedusers the array of users to soft delete.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_conversation_counts_test_cases')]
     public function test_get_conversation_counts(
         $conversationconfigs,
         $deletemessagesuser,
@@ -5599,7 +5599,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the get_unread_conversation_counts() function.
      *
-     * @dataProvider get_conversation_counts_test_cases
      * @param array $conversationconfigs Conversations to create
      * @param int $deletemessagesuser The user who is deleting the messages
      * @param array $deletemessages The list of messages to delete (by index)
@@ -5608,6 +5607,7 @@ final class externallib_test extends externallib_advanced_testcase {
      * @param array $expectedunreadcounts the expected unread conversation counts
      * @param array $deletedusers the list of users to soft-delete.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_conversation_counts_test_cases')]
     public function test_get_unread_conversation_counts(
         $conversationconfigs,
         $deletemessagesuser,

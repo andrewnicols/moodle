@@ -314,13 +314,13 @@ final class report_test extends \advanced_testcase {
     /**
      * Testing the search functionality on get_users() and get_users_count() and their inner methods.
      *
-     * @dataProvider get_users_with_profile_fields_provider
      *
      * @param string $showuseridentity, list of user identities to be shown.
      * @param string $searchstring, the string to be searched.
      * @param array $expectedusernames, a list of expected usernames.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_users_with_profile_fields_provider')]
     public function test_get_users_with_profile_fields(string $showuseridentity, string $searchstring,
             array $expectedusernames): void {
         global $CFG, $DB;
@@ -412,12 +412,12 @@ final class report_test extends \advanced_testcase {
     /**
      * Test for helper::get_users() with course group mode set.
      *
-     * @dataProvider get_users_provider
      * @param $groupmode
      * @param $teacherrole
      * @param $teachergroups
      * @param $expectedusers
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_users_provider')]
     public function test_get_users_with_groups($groupmode, $teacherrole, $teachergroups, $expectedusers): void {
         global $DB;
         $this->resetAfterTest();

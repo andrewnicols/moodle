@@ -36,6 +36,10 @@ use Exception;
  * @copyright  2012 Andrew Davis
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('rebuild_course_cache')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\cm_info::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\course_modinfo::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\section_info::class)]
 final class modinfolib_test extends advanced_testcase {
     /**
      * Setup to ensure that fixtures are loaded.
@@ -350,8 +354,6 @@ final class modinfolib_test extends advanced_testcase {
      * existing course object with old cacherev might be reused within the same request after
      * clearing the cache. In that case, we need to check that the new data is loaded and it
      * does not reuse the old cached data with old cacherev.
-     *
-     * @covers ::rebuild_course_cache()
      */
     public function test_cache_clear_wrong_cacherev(): void {
         global $DB;
@@ -376,8 +378,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * When cacherev is updated for a course, it is supposed to update in the $COURSE and $SITE
      * globals automatically. Check this is working.
-     *
-     * @covers ::rebuild_course_cache()
      */
     public function test_cacherev_update_in_globals(): void {
         global $DB, $COURSE, $SITE;
@@ -713,8 +713,6 @@ final class modinfolib_test extends advanced_testcase {
 
     /**
      * Tests for function cm_info::get_activitybadge().
-     *
-     * @covers \cm_info::get_activitybadge
      */
     public function test_cm_info_get_activitybadge(): void {
         global $PAGE;
@@ -1096,8 +1094,6 @@ final class modinfolib_test extends advanced_testcase {
 
     /**
      * Test for get_listed_section_info_all method.
-     * @covers \course_modinfo::get_listed_section_info_all
-     * @covers \course_modinfo::get_section_info_all
      */
     public function test_get_listed_section_info_all(): void {
         $this->resetAfterTest();
@@ -1126,14 +1122,13 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test test_get_section_info_by_id method
      *
-     * @dataProvider get_section_info_by_id_provider
-     * @covers \course_modinfo::get_section_info_by_id
      *
      * @param int $sectionnum the section number
      * @param int $strictness the search strict mode
      * @param bool $expectnull if the function will return a null
      * @param bool $expectexception if the function will throw an exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_section_info_by_id_provider')]
     public function test_get_section_info_by_id(
         int $sectionnum,
         int $strictness = IGNORE_MISSING,
@@ -1208,8 +1203,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test get_section_info_by_component method
      *
-     * @covers \course_modinfo::get_section_info_by_component
-     * @dataProvider get_section_info_by_component_provider
      *
      * @param string $component the component name
      * @param int $itemid the section number
@@ -1217,6 +1210,7 @@ final class modinfolib_test extends advanced_testcase {
      * @param bool $expectnull if the function will return a null
      * @param bool $expectexception if the function will throw an exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_section_info_by_component_provider')]
     public function test_get_section_info_by_component(
         string $component,
         int $itemid,
@@ -1306,8 +1300,6 @@ final class modinfolib_test extends advanced_testcase {
 
     /**
      * Test has_delegated_sections method
-     *
-     * @covers \course_modinfo::has_delegated_sections
      */
     public function test_has_delegated_sections(): void {
         $this->resetAfterTest();
@@ -1325,7 +1317,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test purge_section_cache_by_id method
      *
-     * @covers \course_modinfo::purge_course_section_cache_by_id
      * @return void
      */
     public function test_purge_section_cache_by_id(): void {
@@ -1376,7 +1367,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test purge_section_cache_by_number method
      *
-     * @covers \course_modinfo::purge_course_section_cache_by_number
      * @return void
      */
     public function test_section_cache_by_number(): void {
@@ -1425,7 +1415,6 @@ final class modinfolib_test extends advanced_testcase {
      * Purge a single course module from the cache.
      *
      * @return void
-     * @covers \course_modinfo::purge_course_module_cache
      */
     public function test_purge_course_module(): void {
         $this->resetAfterTest();
@@ -1466,7 +1455,6 @@ final class modinfolib_test extends advanced_testcase {
      * Purge a multiple course modules from the cache.
      *
      * @return void
-     * @covers \course_modinfo::purge_course_modules_cache
      */
     public function test_purge_multiple_course_modules(): void {
         $this->resetAfterTest();
@@ -1506,7 +1494,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test get_cm() method to output course module id in the exception text.
      *
-     * @covers \course_modinfo::get_cm
      * @return void
      */
     public function test_invalid_course_module_id(): void {
@@ -1546,8 +1533,6 @@ final class modinfolib_test extends advanced_testcase {
      * request that calls get_fast_modinfo and uses the read-only database will rebuild the course
      * cache. Since these will then create a still-newer version, future requests for the next
      * 100ms will also rebuild it again... etc.
-     *
-     * @covers \course_modinfo
      */
     public function test_get_modinfo_with_newer_version(): void {
         global $DB;
@@ -1580,7 +1565,6 @@ final class modinfolib_test extends advanced_testcase {
 
     /**
      * Test for get_component_instance.
-     * @covers \section_info::get_component_instance
      */
     public function test_get_component_instance(): void {
         global $DB;
@@ -1612,7 +1596,6 @@ final class modinfolib_test extends advanced_testcase {
 
     /**
      * Test for section_info is_delegated.
-     * @covers \section_info::is_delegated
      */
     public function test_is_delegated(): void {
         $this->resetAfterTest();
@@ -1633,8 +1616,6 @@ final class modinfolib_test extends advanced_testcase {
      * one-course array, a two-course array, and an empty array, and ensure
      * that only the courses specified have their course cache version
      * incremented (or all course caches if none specified).
-     *
-     * @covers \course_modinfo
      */
     public function test_multiple_modinfo_cache_purge(): void {
         global $DB;
@@ -1790,8 +1771,6 @@ final class modinfolib_test extends advanced_testcase {
 
     /**
      * Test get_sections_delegated_by_cm method
-     *
-     * @covers \course_modinfo::get_sections_delegated_by_cm
      */
     public function test_get_sections_delegated_by_cm(): void {
         $this->resetAfterTest();
@@ -1819,8 +1798,6 @@ final class modinfolib_test extends advanced_testcase {
 
     /**
      * Test get_sections_delegated_by_cm method
-     *
-     * @covers \cm_info::get_delegated_section_info
      */
     public function test_get_delegated_section_info(): void {
         $this->resetAfterTest();
@@ -1845,14 +1822,13 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test get_uservisible method when the section is delegated.
      *
-     * @covers \section_info::get_uservisible
-     * @dataProvider data_provider_get_uservisible_delegate
      * @param string $role The role to assign to the user.
      * @param bool $parentvisible The visibility of the parent section.
      * @param bool $delegatedvisible The visibility of the delegated section.
      * @param bool $expected The expected visibility of the delegated section.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_provider_get_uservisible_delegate')]
     public function test_get_uservisible_delegate(
         string $role,
         bool $parentvisible,
@@ -1948,13 +1924,12 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test get_uservisible method when the section is delegated and depending on if the plugin is enabled.
      *
-     * @covers \section_info::get_uservisible
-     * @dataProvider provider_test_get_uservisible_delegate_enabled
      * @param string $role The role to assign to the user.
      * @param bool $enabled Whether the plugin is enabled.
      * @param bool $expected The expected visibility of the delegated section.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_uservisible_delegate_enabled')]
     public function test_get_uservisible_delegate_enabled(
         string $role,
         bool $enabled,
@@ -2018,9 +1993,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test get_available method when the section is delegated.
      *
-     * @covers \section_info::get_available
-     * @covers \section_info::get_uservisible
-     * @dataProvider data_provider_get_available_delegated
      * @param string $role The role to assign to the user.
      * @param bool $parentavailable The parent section is available.
      * @param bool $delegatedavailable The delegated section is available..
@@ -2028,6 +2000,7 @@ final class modinfolib_test extends advanced_testcase {
      * @param bool $expecteduservisible The expected uservisibility of the delegated section.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_provider_get_available_delegated')]
     public function test_get_available_delegated(
         string $role,
         bool $parentavailable,
@@ -2155,7 +2128,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test when a section is considered orphan.
      *
-     * @covers \section_info::is_orphan
      * @return void
      */
     public function test_is_orphan(): void {
@@ -2210,7 +2182,6 @@ final class modinfolib_test extends advanced_testcase {
     /**
      * Test for section_info::get_sequence_cm_infos
      *
-     * @covers \section_info::get_sequence_cm_infos
      * @return void
      */
     public function test_section_get_sequence_cm_infos(): void {

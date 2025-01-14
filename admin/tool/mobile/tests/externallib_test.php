@@ -35,6 +35,7 @@ require_once($CFG->dirroot . '/webservice/lib.php');
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since       Moodle 3.1
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\tool_mobile\external::class)]
 final class externallib_test extends externallib_advanced_testcase {
 
     /**
@@ -183,8 +184,6 @@ final class externallib_test extends externallib_advanced_testcase {
 
     /**
      * Test get_config
-     *
-     * @covers \tool_mobile\external::get_config
      */
     public function test_get_config(): void {
         global $CFG, $SITE;

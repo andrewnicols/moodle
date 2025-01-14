@@ -22,8 +22,8 @@ namespace core\hub;
  * @package    core
  * @copyright  2023 Matt Porritt <matt.porritt@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\hub\registration
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hub\registration::class)]
 final class registration_test extends \advanced_testcase {
 
     /**

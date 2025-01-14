@@ -44,7 +44,7 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
 
     // }}}
     // {{{ constructor
-        
+
     /**
      * Class constructor
      * 
@@ -86,7 +86,7 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
     {
         $this->updateAttributes(array('name'=>$name));
     } //end func setName
-    
+
     // }}}
     // {{{ getName()
 
@@ -117,7 +117,7 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
     {
         $this->_value = $value;
     } //end func setValue
-    
+
     // }}}
     // {{{ getValue()
 
@@ -148,7 +148,7 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
     {
         $this->updateAttributes(array('wrap' => $wrap));
     } //end func setWrap
-    
+
     // }}}
     // {{{ setRows()
 
@@ -203,7 +203,7 @@ class HTML_QuickForm_textarea extends HTML_QuickForm_element
                    '</textarea>';
         }
     } //end func toHtml
-    
+
     // }}}
     // {{{ getFrozenHtml()
 

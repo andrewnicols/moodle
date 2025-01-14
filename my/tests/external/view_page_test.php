@@ -32,8 +32,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright 2023 Rodrigo Mady <rodrigo.mady@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since     Moodle 4.3
- * @covers \core_my\external\view_page
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_my\external\view_page::class)]
 final class view_page_test extends externallib_advanced_testcase {
 
     /**

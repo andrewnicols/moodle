@@ -27,12 +27,16 @@ use ReflectionClass;
  * @author     2023 David Woloszyn <david.woloszyn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\feedback_item_info::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\feedback_item_multichoice::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\feedback_item_multichoicerated::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\feedback_item_numeric::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\feedback_item_textarea::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\feedback_item_textfield::class)]
 final class item_test extends advanced_testcase {
 
     /**
      * Test that get_analysed() for textarea item returns correctly formatted data for exporting to Excel.
-     *
-     * @covers ::get_analysed
      */
     public function test_get_analysed_textarea_for_excel_export(): void {
         global $DB;

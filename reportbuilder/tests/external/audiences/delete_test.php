@@ -35,10 +35,10 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * Unit tests of external class for deleting report audiences
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\external\audiences\delete
  * @copyright   2021 David Matamoros <davidmc@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\external\audiences\delete::class)]
 final class delete_test extends externallib_advanced_testcase {
 
     /**

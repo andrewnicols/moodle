@@ -31,10 +31,10 @@ use core_user\reportbuilder\datasource\users;
  * Unit tests for the schedule helper class
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\local\helpers\schedule
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\local\helpers\schedule::class)]
 final class schedule_test extends advanced_testcase {
 
     /** @var clock $clock */
@@ -286,9 +286,8 @@ final class schedule_test extends advanced_testcase {
      * Test getting schedule report exported file, in each supported format
      *
      * @param string $format
-     *
-     * @dataProvider get_schedule_report_file_format
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_schedule_report_file_format')]
     public function test_get_schedule_report_file(string $format): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -342,9 +341,8 @@ final class schedule_test extends advanced_testcase {
      * @param string|null $timelastsent Relative time suitable for passing to {@see strtotime}, or null to ignore
      * @param string|null $timenextsend Relative time suitable for passing to {@see strtotime}, or null to ignore
      * @param bool $expected
-     *
-     * @dataProvider should_send_schedule_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('should_send_schedule_provider')]
     public function test_should_send_schedule(
         int $recurrence,
         string $timescheduled,
@@ -436,9 +434,8 @@ final class schedule_test extends advanced_testcase {
      * @param int $recurrence
      * @param string $timescheduled Absolute time suitable for passing to {@see strtotime}
      * @param string $expected Absolute time suitable for passing to {@see strtotime}
-     *
-     * @dataProvider calculate_next_send_time_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('calculate_next_send_time_provider')]
     public function test_calculate_next_send_time(int $recurrence, string $timescheduled, string $expected): void {
         $this->resetAfterTest();
 

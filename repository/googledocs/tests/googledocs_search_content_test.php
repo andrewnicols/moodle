@@ -34,7 +34,6 @@ final class googledocs_search_content_test extends \googledocs_content_testcase 
     /**
      * Test get_content_nodes().
      *
-     * @dataProvider get_content_nodes_provider
      * @param string $query The query string
      * @param bool $sortcontent Whether the contents should be sorted in alphabetical order
      * @param array $filterextensions The array containing file extensions that should be disallowed (filtered)
@@ -42,6 +41,7 @@ final class googledocs_search_content_test extends \googledocs_content_testcase 
      * @param array $searccontents The array containing the fetched google drive contents that match the search criteria
      * @param array $expected The expected array which contains the generated repository content nodes
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_content_nodes_provider')]
     public function test_get_content_nodes(string $query, bool $sortcontent, array $filterextensions,
             array $shareddrives, array $searccontents, array $expected): void {
 

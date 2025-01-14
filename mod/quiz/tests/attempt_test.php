@@ -34,8 +34,11 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @category  test
  * @copyright 2014 Tim Hunt
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\quiz_attempt
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\quiz_attempt::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\quiz_attempt::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('quiz_start_new_attempt')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('quiz_start_attempt_built_on_last')]
 final class attempt_test extends \advanced_testcase {
 
     /**
@@ -418,7 +421,6 @@ final class attempt_test extends \advanced_testcase {
 
     /**
      * Test check_page_access function
-     * @covers \quiz_attempt::check_page_access
      */
     public function test_check_page_access(): void {
         $timenow = time();
@@ -473,7 +475,6 @@ final class attempt_test extends \advanced_testcase {
     /**
      * Starting a new attempt with a question in draft status should throw an exception.
      *
-     * @covers ::quiz_start_new_attempt()
      * @return void
      */
     public function test_start_new_attempt_with_draft(): void {
@@ -506,7 +507,6 @@ final class attempt_test extends \advanced_testcase {
     /**
      * Starting a new attempt built on last with a question in draft status should throw an exception.
      *
-     * @covers ::quiz_start_attempt_built_on_last()
      * @return void
      */
     public function test_quiz_start_attempt_built_on_last_with_draft(): void {

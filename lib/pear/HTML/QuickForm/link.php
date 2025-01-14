@@ -43,7 +43,7 @@ class HTML_QuickForm_link extends HTML_QuickForm_static
 
     // }}}
     // {{{ constructor
-    
+
     /**
      * Class constructor
      * 
@@ -92,7 +92,7 @@ class HTML_QuickForm_link extends HTML_QuickForm_static
     {
         $this->updateAttributes(array('name'=>$name));
     } //end func setName
-    
+
     // }}}
     // {{{ getName()
 
@@ -125,7 +125,7 @@ class HTML_QuickForm_link extends HTML_QuickForm_static
     {
         return;
     } //end func setValue
-    
+
     // }}}
     // {{{ getValue()
 
@@ -142,7 +142,7 @@ class HTML_QuickForm_link extends HTML_QuickForm_static
         return;
     } // end func getValue
 
-    
+
     // }}}
     // {{{ setHref()
 
@@ -179,7 +179,7 @@ class HTML_QuickForm_link extends HTML_QuickForm_static
         $html .= "</a>";
         return $html;
     } //end func toHtml
-    
+
     // }}}
     // {{{ getFrozenHtml()
 

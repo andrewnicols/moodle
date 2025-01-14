@@ -33,11 +33,11 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Unit tests for xAPI post state webservice.
  *
  * @package    core_xapi
- * @covers     \core_xapi\external\post_state
  * @since      Moodle 4.2
  * @copyright  2023 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_xapi\external\post_state::class)]
 final class post_state_test extends externallib_advanced_testcase {
 
     /**
@@ -52,10 +52,10 @@ final class post_state_test extends externallib_advanced_testcase {
     /**
      * Testing different component names on valid states.
      *
-     * @dataProvider components_provider
      * @param string $component component name
      * @param string|null $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('components_provider')]
     public function test_component_names(string $component, ?string $expected): void {
 
         $this->resetAfterTest();
@@ -112,11 +112,11 @@ final class post_state_test extends externallib_advanced_testcase {
     /**
      * Testing valid/invalid state.
      *
-     * @dataProvider states_provider
      * @param string $stateid The xAPI state id.
      * @param string|null $expected Expected results.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('states_provider')]
     public function test_post_state(string $stateid, ?string $expected): void {
         $this->resetAfterTest();
 

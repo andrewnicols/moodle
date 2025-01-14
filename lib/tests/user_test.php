@@ -19,11 +19,11 @@ namespace core;
 /**
  * Test core_user class.
  *
- * @covers \core_user
  * @package    core
  * @copyright  2013 Rajesh Taneja <rajesh@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_user::class)]
 final class user_test extends \advanced_testcase {
 
     /**
@@ -848,8 +848,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Test for function to get user details.
-     *
-     * @covers \core_user::get_fullname
      */
     public function test_display_name(): void {
         $this->resetAfterTest();
@@ -878,8 +876,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Test for function to get user details.
-     *
-     * @covers \core_user::get_profile_url
      */
     public function test_display_profile_url(): void {
         $this->resetAfterTest();
@@ -905,8 +901,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Test for function to get user details.
-     *
-     * @covers \core_user::get_profile_picture
      */
     public function test_display_profile_picture(): void {
         global $OUTPUT, $CFG;
@@ -947,9 +941,8 @@ final class user_test extends \advanced_testcase {
      * @param string $fullnameconfig
      * @param string $expected
      * @return void
-     * @covers       \core_user::get_initials
-     * @dataProvider user_name_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('user_name_provider')]
     public function test_get_initials(array $userdata, string $fullnameconfig, string $expected): void {
         $this->resetAfterTest();
         // Create a user.

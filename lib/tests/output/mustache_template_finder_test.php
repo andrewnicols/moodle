@@ -78,11 +78,11 @@ final class mustache_template_finder_test extends \advanced_testcase {
     /**
      * Tests for get_template_directories_for_component.
      *
-     * @dataProvider valid_template_directories_provider
      * @param   string $component
      * @param   string $theme
      * @param   array $paths
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('valid_template_directories_provider')]
     public function test_get_template_directories_for_component(string $component, string $theme, array $paths): void {
         global $CFG;
 
@@ -172,11 +172,11 @@ final class mustache_template_finder_test extends \advanced_testcase {
     /**
      * Tests for get_template_filepath.
      *
-     * @dataProvider valid_template_filepath_provider
      * @param   string $template
      * @param   string $theme
      * @param   string $location
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('valid_template_filepath_provider')]
     public function test_get_template_filepath(string $template, string $theme, string $location): void {
         global $CFG;
 

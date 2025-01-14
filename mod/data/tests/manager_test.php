@@ -28,16 +28,12 @@ use stdClass;
  * @category   test
  * @copyright  2022 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \mod_data\manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_data\manager::class)]
 final class manager_test extends \advanced_testcase {
 
     /**
      * Test for static create methods.
-     *
-     * @covers ::create_from_instance
-     * @covers ::create_from_coursemodule
-     * @covers ::create_from_data_record
      */
     public function test_create(): void {
 
@@ -85,7 +81,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test set_module_viewed
-     * @covers ::set_module_viewed
      */
     public function test_set_module_viewed(): void {
         global $CFG;
@@ -131,7 +126,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test set_template_viewed
-     * @covers ::set_template_viewed
      */
     public function test_set_template_viewed(): void {
         $this->resetAfterTest();
@@ -166,8 +160,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test for has_records().
-     *
-     * @covers ::has_records
      */
     public function test_has_records(): void {
         global $DB;
@@ -193,8 +185,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test for has_fields().
-     *
-     * @covers ::has_fields
      */
     public function test_has_fields(): void {
         $this->resetAfterTest();
@@ -219,8 +209,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test for get_available_presets().
-     *
-     * @covers ::get_available_presets
      */
     public function test_get_available_presets(): void {
         global $DB;
@@ -320,8 +308,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test for get_available_plugin_presets().
-     *
-     * @covers ::get_available_plugin_presets
      */
     public function test_get_available_plugin_presets(): void {
         $this->resetAfterTest();
@@ -366,8 +352,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test for get_available_saved_presets().
-     *
-     * @covers ::get_available_saved_presets
      */
     public function test_get_available_saved_presets(): void {
         global $DB;
@@ -431,14 +415,13 @@ final class manager_test extends \advanced_testcase {
     /**
      * Test for can_view_preset().
      *
-     * @covers ::can_view_preset
-     * @dataProvider can_view_preset_provider
      * @param string $rolename the user role name
      * @param bool $ownpreset if the preset belongs to the user
      * @param bool|null $useridparam if the method should be called with a user id param
      * @param bool $plugin if the preset is a plugin or not
      * @param bool $expected the expected result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('can_view_preset_provider')]
     public function test_can_view_preset(string $rolename, bool $ownpreset, ?bool $useridparam, bool $plugin, bool $expected): void {
 
         $this->resetAfterTest();
@@ -575,8 +558,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test for can_export_entries().
-     *
-     * @covers ::can_export_entries
      */
     public function test_can_export_entries(): void {
         global $DB;
@@ -684,11 +665,10 @@ final class manager_test extends \advanced_testcase {
     /**
      * Test reset_template.
      *
-     * @covers ::reset_template
-     * @dataProvider reset_template_provider
      * @param string $templatetoreset the template to reset
      * @param string[] $expected the expected templates to be reset
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('reset_template_provider')]
     public function test_reset_template(string $templatetoreset, array $expected): void {
         global $DB;
 

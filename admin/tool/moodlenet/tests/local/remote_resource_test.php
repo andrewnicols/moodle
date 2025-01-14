@@ -32,11 +32,11 @@ final class remote_resource_test extends \advanced_testcase {
     /**
      * Test getters.
      *
-     * @dataProvider remote_resource_data_provider
      * @param string $url the url of the resource.
      * @param string $metadata the resource metadata like name, description, etc.
      * @param string $expectedextension the extension we expect to find when querying the remote resource.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('remote_resource_data_provider')]
     public function test_getters($url, $metadata, $expectedextension): void {
         $this->resetAfterTest();
 

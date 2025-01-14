@@ -39,9 +39,9 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @category   test
  * @copyright  Julien Rädler
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \restore_questions_parser_processor
- * @covers \restore_create_categories_and_questions
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_questions_parser_processor::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_create_categories_and_questions::class)]
 final class repeated_restore_test extends advanced_testcase {
     use quiz_question_helper_test_trait;
 

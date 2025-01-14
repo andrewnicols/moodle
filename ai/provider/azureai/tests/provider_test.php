@@ -22,8 +22,8 @@ namespace aiprovider_azureai;
  * @package    aiprovider_azureai
  * @copyright  2024 Matt Porritt <matt.porritt@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core_ai\provider\azureai
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_ai\provider\azureai::class)]
 final class provider_test extends \advanced_testcase {
 
     /**

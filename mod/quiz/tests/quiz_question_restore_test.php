@@ -35,6 +35,10 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @author     Safat Shahin <safatshahin@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\question\bank\qbank_helper::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_quiz_activity_structure_step::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\backup_quiz_activity_structure_step::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_question_set_reference_data_trait::class)]
 final class quiz_question_restore_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
 
@@ -55,10 +59,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
         $this->user = $USER;
     }
 
-    /**
-     *
-     * @covers \mod_quiz\question\bank\qbank_helper::get_question_structure
-     */
     public function test_quiz_restore_in_a_different_course_using_question_bank(): void {
         $this->resetAfterTest();
 
@@ -96,8 +96,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test a quiz backup and restore in a different course without attempts for quiz question bank.
-     *
-     * @covers \mod_quiz\question\bank\qbank_helper::get_question_structure
      */
     public function test_quiz_restore_in_a_different_course_using_quiz_question_bank(): void {
         $this->resetAfterTest();
@@ -152,8 +150,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test if a duplicate does not duplicate questions from a shared question bank.
-     *
-     * @covers ::duplicate_module
      */
     public function test_quiz_duplicate_does_not_duplicate_questions_from_shared_banks(): void {
         $this->resetAfterTest();
@@ -175,8 +171,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test quiz duplicate for quiz question bank.
-     *
-     * @covers ::duplicate_module
      */
     public function test_quiz_duplicate_for_quiz_question_bank_questions(): void {
         $this->resetAfterTest();
@@ -197,8 +191,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test quiz restore with attempts.
-     *
-     * @covers \mod_quiz\question\bank\qbank_helper::get_question_structure
      */
     public function test_quiz_restore_with_attempts(): void {
         $this->resetAfterTest();
@@ -238,8 +230,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
      * Test pre 4.0 quiz restore for regular questions.
      *
      * Also, for efficiency, tests restore of the review options.
-     *
-     * @covers \restore_quiz_activity_structure_step::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_regular_questions(): void {
         global $USER, $DB;
@@ -286,8 +276,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.0 quiz restore for random questions.
-     *
-     * @covers \restore_quiz_activity_structure_step::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_random_questions(): void {
         global $USER, $DB;
@@ -345,8 +333,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.0 quiz restore for random question tags.
-     *
-     * @covers \restore_quiz_activity_structure_step::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_for_random_question_tags(): void {
         global $USER, $DB;
@@ -402,8 +388,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.0 quiz restore for random question used on multiple quizzes.
-     *
-     * @covers \restore_quiz_activity_structure_step::process_quiz_question_legacy_instance
      */
     public function test_pre_4_quiz_restore_shared_random_question(): void {
         global $USER, $DB;
@@ -463,7 +447,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
     /**
      * Ensure that question slots are correctly backed up and restored with all properties.
      *
-     * @covers \backup_quiz_activity_structure_step::define_structure()
      * @return void
      */
     public function test_backup_restore_question_slots(): void {
@@ -538,8 +521,6 @@ final class quiz_question_restore_test extends \advanced_testcase {
 
     /**
      * Test pre 4.3 quiz restore for random question filter conditions.
-     *
-     * @covers \restore_question_set_reference_data_trait::process_question_set_reference
      */
     public function test_pre_43_quiz_restore_for_random_question_filtercondition(): void {
         global $USER, $DB;

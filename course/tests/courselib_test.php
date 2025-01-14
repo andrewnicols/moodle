@@ -64,6 +64,16 @@ require_once($CFG->dirroot . '/course/lib.php');
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('course_add_cm_to_section')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('move_section_to')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('moveto_module')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('set_coursemodule_visible')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('duplicate_module')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('duplicate_module')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('course_get_courseimage')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('course_get_communication_instance_data')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('course_section_view')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_sorted_course_formats')]
 final class courselib_test extends advanced_testcase {
 
     /**
@@ -823,11 +833,11 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test create_course by attempting to change the relative dates mode.
      *
-     * @dataProvider create_course_relative_dates_provider
      * @param int $setting The value for the 'enablecourserelativedates' admin setting.
      * @param int $mode The value for the course's 'relativedatesmode' field.
      * @param int $expectedvalue The expected value of the 'relativedatesmode' field after course creation.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('create_course_relative_dates_provider')]
     public function test_relative_dates_mode_for_course_creation($setting, $mode, $expectedvalue): void {
         global $DB;
 
@@ -922,7 +932,6 @@ final class courselib_test extends advanced_testcase {
      * Module types that have FEATURE_CAN_DISPLAY flag set to false cannot be in any section other than 0.
      *
      * @return void
-     * @covers ::course_add_cm_to_section()
      */
     public function test_add_non_display_types_to_cm_section(): void {
         global $DB;
@@ -1098,7 +1107,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test move_section_to method with caching
      *
-     * @covers ::move_section_to
      * @return void
      */
     public function test_move_section_with_section_cache(): void {
@@ -1146,7 +1154,6 @@ final class courselib_test extends advanced_testcase {
      * Test move_section_to method.
      * Make sure that we only update the moving sections, not all the sections in the current course.
      *
-     * @covers ::move_section_to
      * @return void
      */
     public function test_move_section_to(): void {
@@ -1367,7 +1374,6 @@ final class courselib_test extends advanced_testcase {
      * Ensure that qbank module which has feature flag FEATURE_CAN_DISPLAY set to false cannot be moved from section 0.
      *
      * @return void
-     * @covers ::moveto_module()
      */
     public function test_move_feature_cannot_display(): void {
         $this->resetAfterTest(true);
@@ -1423,7 +1429,6 @@ final class courselib_test extends advanced_testcase {
      * the original visibility until we trigger a rebuild.
      *
      * @return void
-     * @covers ::set_coursemodule_visible
      */
     public function test_module_visibility_no_rebuild(): void {
         $this->setAdminUser();
@@ -1862,8 +1867,8 @@ final class courselib_test extends advanced_testcase {
      *
      * @param string $type The type of module for the test
      * @param array $options The options for the module creation
-     * @dataProvider provider_course_delete_module
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_course_delete_module')]
     public function test_course_delete_module($type, $options): void {
         global $DB;
 
@@ -3134,7 +3139,6 @@ final class courselib_test extends advanced_testcase {
 
     /**
      * Test that permissions are duplicated correctly after duplicate_module().
-     * @covers ::duplicate_module
      * @return void
      */
     public function test_duplicate_module_permissions(): void {
@@ -3171,7 +3175,6 @@ final class courselib_test extends advanced_testcase {
 
     /**
      * Test that locally assigned roles are duplicated correctly after duplicate_module().
-     * @covers ::duplicate_module
      * @return void
      */
     public function test_duplicate_module_role_assignments(): void {
@@ -3209,7 +3212,6 @@ final class courselib_test extends advanced_testcase {
 
     /**
      * Ensure that modules with the feature flag FEATURE_CAN_DISPLAY set to false cannot be duplicated into a section other than 0.
-     * @covers ::duplicate_module()
      */
     public function test_duplicate_cannot_display_mods(): void {
         self::setAdminUser();
@@ -3616,11 +3618,11 @@ final class courselib_test extends advanced_testcase {
     /**
      * test_course_enddate
      *
-     * @dataProvider course_enddate_provider
      * @param int $startdate
      * @param int $enddate
      * @param string $errorcode
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('course_enddate_provider')]
     public function test_course_enddate($startdate, $enddate, $errorcode): void {
 
         $this->resetAfterTest(true);
@@ -3677,7 +3679,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * test_course_dates_reset
      *
-     * @dataProvider course_dates_reset_provider
      * @param int $startdate
      * @param int $enddate
      * @param int $resetstartdate
@@ -3685,6 +3686,7 @@ final class courselib_test extends advanced_testcase {
      * @param int $resultingstartdate
      * @param int $resultingenddate
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('course_dates_reset_provider')]
     public function test_course_dates_reset($startdate, $enddate, $resetstartdate, $resetenddate, $resultingstartdate, $resultingenddate): void {
         global $CFG, $DB;
 
@@ -4744,10 +4746,10 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test the course_classify_courses_for_timeline function.
      *
-     * @dataProvider get_course_classify_courses_for_timeline_test_cases
      * @param array $coursesdata Courses to create
      * @param array $expected Expected test results.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_course_classify_courses_for_timeline_test_cases')]
     public function test_course_classify_courses_for_timeline($coursesdata, $expected): void {
         $this->resetAfterTest();
         $generator = $this->getDataGenerator();
@@ -4874,7 +4876,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test the course_get_enrolled_courses_for_logged_in_user function.
      *
-     * @dataProvider get_course_get_enrolled_courses_for_logged_in_user_test_cases
      * @param int $dbquerylimit Number of records to load per DB request
      * @param int $totalcourses Number of courses to create
      * @param int $limit Maximum number of results to get.
@@ -4882,6 +4883,7 @@ final class courselib_test extends advanced_testcase {
      * @param int $expecteddbqueries The number of DB queries expected during the test.
      * @param array $expectedresult Expected test results.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_course_get_enrolled_courses_for_logged_in_user_test_cases')]
     public function test_course_get_enrolled_courses_for_logged_in_user(
         $dbquerylimit,
         $totalcourses,
@@ -5172,7 +5174,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test the course_filter_courses_by_timeline_classification function.
      *
-     * @dataProvider get_course_filter_courses_by_timeline_classification_test_cases
      * @param array $coursedata Course test data to create.
      * @param string $classification Timeline classification.
      * @param int $limit Maximum number of results to return.
@@ -5180,6 +5181,7 @@ final class courselib_test extends advanced_testcase {
      * @param string[] $expectedcourses Expected courses in results.
      * @param int $expectedprocessedcount Expected number of course records to be processed.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_course_filter_courses_by_timeline_classification_test_cases')]
     public function test_course_filter_courses_by_timeline_classification(
         $coursedata,
         $classification,
@@ -5391,7 +5393,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test the course_filter_courses_by_customfield function.
      *
-     * @dataProvider get_course_filter_courses_by_customfield_test_cases
      * @param array $coursedata Course test data to create.
      * @param string $customfield Shortname of the customfield.
      * @param string $customfieldvalue the value to filter by.
@@ -5400,6 +5401,7 @@ final class courselib_test extends advanced_testcase {
      * @param string[] $expectedcourses Expected courses in results.
      * @param int $expectedprocessedcount Expected number of course records to be processed.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_course_filter_courses_by_customfield_test_cases')]
     public function test_course_filter_courses_by_customfield(
         $coursedata,
         $customfield,
@@ -5636,7 +5638,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test the course_filter_courses_by_timeline_classification function hidden courses.
      *
-     * @dataProvider get_course_filter_courses_by_timeline_classification_hidden_courses_test_cases
      * @param array $coursedata Course test data to create.
      * @param string $classification Timeline classification.
      * @param int $limit Maximum number of results to return.
@@ -5645,6 +5646,7 @@ final class courselib_test extends advanced_testcase {
      * @param int $expectedprocessedcount Expected number of course records to be processed.
      * @param int $hiddencourse The course to hide as part of this process
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_course_filter_courses_by_timeline_classification_hidden_courses_test_cases')]
     public function test_course_filter_courses_by_timeline_classification_with_hidden_courses(
         $coursedata,
         $classification,
@@ -5825,10 +5827,10 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test the validation of the sort value in course_get_recent_courses().
      *
-     * @dataProvider course_get_recent_courses_sort_validation_provider
      * @param string $sort The sort value
      * @param string $expectedexceptionmsg The expected exception message
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('course_get_recent_courses_sort_validation_provider')]
     public function test_course_get_recent_courses_sort_validation(string $sort, string $expectedexceptionmsg): void {
         $this->resetAfterTest();
 
@@ -7134,7 +7136,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * Test the course_get_course_dates_for_user_ids function.
      *
-     * @dataProvider get_course_get_course_dates_for_user_ids_test_cases
      * @param bool $relativedatemode Set the course to relative dates mode
      * @param int $coursestart Course start date
      * @param int $usercount Number of users to create
@@ -7142,6 +7143,7 @@ final class courselib_test extends advanced_testcase {
      * @param array $enrolled Enrolment config for to set for the users
      * @param array $expected Expected output
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_course_get_course_dates_for_user_ids_test_cases')]
     public function test_course_get_course_dates_for_user_ids(
         $relativedatemode,
         $coursestart,
@@ -7247,8 +7249,8 @@ final class courselib_test extends advanced_testcase {
      * @param int $indextodelete The index of the module in the $modules array that we want to test with
      * @param bool $gradable The value to pass to the gradable argument of the course_modules_pending_deletion function
      * @param bool $expected The expected result
-     * @dataProvider provider_course_modules_pending_deletion
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_course_modules_pending_deletion')]
     public function test_course_modules_pending_deletion(array $modules, int $indextodelete, bool $gradable, bool $expected): void {
         $this->resetAfterTest();
 
@@ -7498,8 +7500,6 @@ final class courselib_test extends advanced_testcase {
 
     /**
      * Test for course_get_courseimage.
-     *
-     * @covers ::course_get_courseimage
      */
     public function test_course_get_courseimage(): void {
         global $CFG;
@@ -7530,8 +7530,6 @@ final class courselib_test extends advanced_testcase {
 
     /**
      * Test the course_get_communication_instance_data() function.
-     *
-     * @covers ::course_get_communication_instance_data
      */
     public function test_course_get_communication_instance_data(): void {
         $this->resetAfterTest();
@@ -7564,8 +7562,6 @@ final class courselib_test extends advanced_testcase {
 
     /**
      * Test course_section_view() function
-     *
-     * @covers ::course_section_view
      */
     public function test_course_section_view(): void {
 
@@ -7596,8 +7592,6 @@ final class courselib_test extends advanced_testcase {
     /**
      * Tests get_sorted_course_formats returns plugins in cases where plugins are
      * installed previously but no longer exist, or not installed yet.
-     *
-     * @covers ::get_sorted_course_formats()
      */
     public function test_get_sorted_course_formats_installed_or_not(): void {
         global $DB;

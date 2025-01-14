@@ -43,8 +43,9 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2017 Juan Leyva
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.4
- * @covers \core_filters\external\get_available_in_context
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_filters\external\get_available_in_context::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_filters\external\get_all_states::class)]
 final class get_available_in_context_test extends externallib_advanced_testcase {
     /**
      * Test execute
@@ -204,7 +205,6 @@ final class get_available_in_context_test extends externallib_advanced_testcase 
 
     /**
      * Test get_all_states
-     * @covers \core_filters\external\get_all_states::execute
      */
     public function test_get_all_states(): void {
         $this->resetAfterTest(true);

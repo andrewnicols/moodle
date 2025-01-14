@@ -34,13 +34,12 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category   test
  * @copyright  2023 Huong Nguyen <huongnv13@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\external\moodlenet_get_share_info_activity
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\external\moodlenet_get_share_info_activity::class)]
 final class moodlenet_get_share_info_activity_test extends externallib_advanced_testcase {
 
     /**
      * Test the behaviour of moodlenet_get_share_info_activity().
-     * @covers ::execute
      */
     public function test_moodlenet_get_share_info_activity(): void {
         global $CFG;

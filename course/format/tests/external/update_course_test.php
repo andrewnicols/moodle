@@ -31,8 +31,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category   test
  * @copyright  2021 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\external\update_course
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\external\update_course::class)]
 final class update_course_test extends \externallib_advanced_testcase {
 
     /**
@@ -49,8 +49,6 @@ final class update_course_test extends \externallib_advanced_testcase {
     /**
      * Test the webservice can execute a core state action (cm_state).
      *
-     * @dataProvider execute_course_state_provider
-     * @covers ::execute
      *
      * @param string $format the course format
      * @param string $action the state action name
@@ -58,6 +56,7 @@ final class update_course_test extends \externallib_advanced_testcase {
      * @param bool $expectexception if an exception should happen.
      * @param bool $assertdebug if an debug message should happen.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_course_state_provider')]
     public function test_execute_course_state(
         string $format,
         string $action,
@@ -181,7 +180,6 @@ final class update_course_test extends \externallib_advanced_testcase {
     /**
      * Test a wrong course id.
      *
-     * @covers ::execute
      *
      */
     public function test_execute_wrong_courseid(): void {
@@ -203,8 +201,6 @@ final class update_course_test extends \externallib_advanced_testcase {
 
     /**
      * Test target params are passed to the state actions.
-     *
-     * @covers ::execute
      */
     public function test_execute_target_params(): void {
 

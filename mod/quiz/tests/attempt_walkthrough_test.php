@@ -29,8 +29,8 @@ use mod_quiz\tests\question_helper_test_trait;
  * @copyright 2013 The Open University
  * @author    Jamie Pratt <me@jamiep.org>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\quiz_attempt
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\quiz_attempt::class)]
 final class attempt_walkthrough_test extends \advanced_testcase {
     use question_helper_test_trait;
 
@@ -453,9 +453,8 @@ final class attempt_walkthrough_test extends \advanced_testcase {
 
     /**
      * Create a quiz with a single question with variants and walk through quiz attempts.
-     *
-     * @dataProvider get_correct_response_for_variants
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_correct_response_for_variants')]
     public function test_quiz_with_question_with_variants_attempt_walkthrough($variantno, $correctresponse, $done = false): void {
         global $SITE;
 

@@ -34,11 +34,11 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Unit tests for xAPI delete states webservice.
  *
  * @package    core_xapi
- * @covers     \core_xapi\external\delete_states
  * @since      Moodle 4.3
  * @copyright  2023 Laurent David <laurent.david@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_xapi\external\delete_states::class)]
 final class delete_states_test extends externallib_advanced_testcase {
 
     /**
@@ -53,10 +53,10 @@ final class delete_states_test extends externallib_advanced_testcase {
     /**
      * Testing different component names on valid states.
      *
-     * @dataProvider components_provider
      * @param string $component component name
      * @param object|null $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('components_provider')]
     public function test_component_names(string $component, ?object $expected): void {
         global $DB, $USER;
         $this->resetAfterTest();
@@ -181,7 +181,6 @@ final class delete_states_test extends externallib_advanced_testcase {
     /**
      * Testing deleting states
      *
-     * @dataProvider states_provider
      * @param string $testedusername
      * @param string $testedcomponent
      * @param string $testedactivityname
@@ -189,6 +188,7 @@ final class delete_states_test extends externallib_advanced_testcase {
      * @param array $expectedstates
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('states_provider')]
     public function test_delete_states(
         string $testedusername,
         string $testedcomponent,

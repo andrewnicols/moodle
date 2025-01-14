@@ -40,10 +40,10 @@ defined('MOODLE_INTERNAL') || die();
  * Unit tests for base datasource
  *
  * @package     core_reportbuilder
- * @coversDefaultClass \core_reportbuilder\datasource
  * @copyright   2023 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\datasource::class)]
 final class datasource_test extends advanced_testcase {
 
     /**
@@ -78,10 +78,9 @@ final class datasource_test extends advanced_testcase {
      * @param string[] $exclude
      * @param int $expectedcount
      *
-     * @covers ::add_columns_from_entity
      *
-     * @dataProvider add_columns_from_entity_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('add_columns_from_entity_provider')]
     public function test_add_columns_from_entity(
         array $include,
         array $exclude,
@@ -134,10 +133,9 @@ final class datasource_test extends advanced_testcase {
      * @param string[] $exclude
      * @param int $expectedcount
      *
-     * @covers ::add_filters_from_entity
      *
-     * @dataProvider add_filters_from_entity_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('add_filters_from_entity_provider')]
     public function test_add_filters_from_entity(
         array $include,
         array $exclude,
@@ -190,10 +188,9 @@ final class datasource_test extends advanced_testcase {
      * @param string[] $exclude
      * @param int $expectedcount
      *
-     * @covers ::add_conditions_from_entity
      *
-     * @dataProvider add_conditions_from_entity_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('add_conditions_from_entity_provider')]
     public function test_add_conditions_from_entity(
         array $include,
         array $exclude,
@@ -216,8 +213,6 @@ final class datasource_test extends advanced_testcase {
 
     /**
      * Test adding all from entity
-     *
-     * @covers ::add_all_from_entity
      */
     public function test_add_all_from_entity(): void {
         $instance = $this->get_datasource_test_source();
@@ -268,10 +263,9 @@ final class datasource_test extends advanced_testcase {
      * @param int $expectedcountfilters
      * @param int $expectedcountconditions
      *
-     * @covers ::add_all_from_entities
      *
-     * @dataProvider add_all_from_entities_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('add_all_from_entities_provider')]
     public function test_add_all_from_entities(
         array $entitynames,
         int $expectedcountcolumns,
@@ -290,8 +284,6 @@ final class datasource_test extends advanced_testcase {
 
     /**
      * Test getting active conditions
-     *
-     * @covers ::get_active_conditions
      */
     public function test_get_active_conditions(): void {
         $instance = $this->get_datasource_test_source();

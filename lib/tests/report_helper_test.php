@@ -19,12 +19,12 @@ namespace core;
 /**
  * Tests the report_helper class.
  *
- * @covers \core\report_helper
  * @package core
  * @category test
  * @copyright 2024 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\report_helper::class)]
 final class report_helper_test extends \advanced_testcase {
     /** @var int[] Array of created user ids */
     protected array $userids;

@@ -28,8 +28,8 @@ use core_question\local\bank\question_edit_contexts;
  * @copyright 2024 onwards Catalyst IT EU {@link https://catalyst-eu.net}
  * @author    Mark Johnson <mark.johnson@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core_question\category_manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_question\category_manager::class)]
 final class category_manager_test extends \advanced_testcase {
 
     /**

@@ -34,8 +34,8 @@ require_once($CFG->libdir . '/badgeslib.php');
  * @copyright  2024 Sara Arjona <sara@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 4.5
- * @covers     \core_badges\external\disable_badges
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_badges\external\disable_badges::class)]
 final class disable_badges_test extends externallib_advanced_testcase {
 
     /**

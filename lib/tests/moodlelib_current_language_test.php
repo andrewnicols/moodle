@@ -34,8 +34,8 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @copyright 2022 The Open University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    ::current_language
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('current_language')]
 final class moodlelib_current_language_test extends \advanced_testcase {
 
     public function test_current_language_site_default(): void {

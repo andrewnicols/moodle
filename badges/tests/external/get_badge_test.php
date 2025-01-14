@@ -34,8 +34,8 @@ require_once($CFG->libdir . '/badgeslib.php');
  * @copyright  2024 Daniel Ureña <durenadev@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 4.5
- * @coversDefaultClass \core_badges\external\get_badge
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_badges\external\get_badge::class)]
 final class get_badge_test extends externallib_advanced_testcase {
     /**
      * Prepare the test.
@@ -93,7 +93,6 @@ final class get_badge_test extends externallib_advanced_testcase {
 
     /**
      * Test get badge by id without enablebadges active in moodle.
-     * @covers ::execute
      */
     public function test_get_badge_without_enablebadges(): void {
         $data = $this->prepare_test_data();
@@ -107,7 +106,6 @@ final class get_badge_test extends externallib_advanced_testcase {
 
     /**
      * Test get badge by id.
-     * @covers ::execute
      */
     public function test_get_badge(): void {
         $data = $this->prepare_test_data();
@@ -121,7 +119,6 @@ final class get_badge_test extends externallib_advanced_testcase {
 
     /**
      * Test get badge by id with an invalid badge id.
-     * @covers ::execute
      */
     public function test_get_badge_with_invalid_badge_id(): void {
         $data = $this->prepare_test_data();

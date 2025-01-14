@@ -36,12 +36,12 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test the generate_mnet_endpoint function
      *
-     * @dataProvider get_endpoints_provider
      * @param string $profileurl
      * @param int $course
      * @param int $section
      * @param string $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_endpoints_provider')]
     public function test_generate_mnet_endpoint($profileurl, $course, $section, $expected): void {
         $endpoint = generate_mnet_endpoint($profileurl, $course, $section);
         $this->assertEquals($expected, $endpoint);

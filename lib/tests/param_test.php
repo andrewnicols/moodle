@@ -22,16 +22,16 @@ namespace core;
  * @package   core
  * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \core\param
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\param::class)]
 final class param_test extends \advanced_testcase {
     /**
      * Test that the Moodle `from_type` method provides canonicalised parameter values.
      *
-     * @dataProvider valid_param_provider
      * @param string $type
      * @param param $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('valid_param_provider')]
     public function test_from_type(string $type, param $expected): void {
         $this->assertEquals($expected, param::from_type($type));
     }
@@ -71,10 +71,10 @@ final class param_test extends \advanced_testcase {
     /**
      * Test that deprecated parameters are marked as such.
      *
-     * @dataProvider is_deprecated_provider
      * @param param $param
      * @param bool $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('is_deprecated_provider')]
     public function test_is_deprecated(param $param, bool $expected): void {
         $this->assertEquals(
             $expected,
@@ -105,9 +105,9 @@ final class param_test extends \advanced_testcase {
     /**
      * Test that finally deprecated params throw an exception when cleaning.
      *
-     * @dataProvider deprecated_param_provider
      * @param param $params
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('deprecated_param_provider')]
     public function test_deprecated_params_except(param $param): void {
         $this->expectException(\coding_exception::class);
         $param->clean('foo');

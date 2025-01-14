@@ -31,12 +31,12 @@ final class url_test extends \advanced_testcase {
     /**
      * Test the parsing to host + path components.
      *
-     * @dataProvider url_provider
      * @param string $url The full URL string
      * @param string $host the expected host component of the URL.
      * @param string $path the expected path component of the URL.
      * @param bool $exception whether or not an exception is expected during construction.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('url_provider')]
     public function test_parsing($urlstring, $host, $path, $exception): void {
         if ($exception) {
             $this->expectException(\coding_exception::class);

@@ -24,17 +24,11 @@ namespace tool_mfa;
  * @copyright   Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\tool_mfa\plugininfo::class)]
 final class plugininfo_factor_test extends \advanced_testcase {
 
     /**
      * Tests getting next user factor
-     *
-     * @covers ::get_next_user_login_factor
-     * @covers ::setup_user_factor
-     * @covers ::get_enabled_factors
-     * @covers ::is_enabled
-     * @covers ::has_setup
-     * @covers ::get_active_user_factor_types
      */
     public function test_get_next_user_login_factor(): void {
 
@@ -81,8 +75,6 @@ final class plugininfo_factor_test extends \advanced_testcase {
 
     /**
      * Tests if a user has more than one active factor.
-     *
-     * @covers ::user_has_more_than_one_active_factors
      */
     public function test_user_has_more_than_one_active_factors(): void {
         global $DB;

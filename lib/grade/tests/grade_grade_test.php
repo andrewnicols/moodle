@@ -28,6 +28,7 @@ require_once(__DIR__.'/fixtures/lib.php');
  * @copyright  nicolas@moodle.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\grade_grade::class)]
 final class grade_grade_test extends \grade_base_testcase {
 
     public function test_grade_grade(): void {
@@ -128,8 +129,6 @@ final class grade_grade_test extends \grade_base_testcase {
 
     /**
      * Tests grade_grade::set_locked()
-     *
-     * @covers \grade_grade::set_locked
      */
     public function test_grade_grade_set_locked(): void {
         // Skip this test because set_locked() arguments have been modified, rendering these tests
@@ -203,8 +202,6 @@ final class grade_grade_test extends \grade_base_testcase {
 
     /**
      * Test \grade_grade::flatten_dependencies_array()
-     *
-     * @covers \grade_grade::flatten_dependencies_array()
      */
     public function test_flatten_dependencies(): void {
         // First test a simple normal case.

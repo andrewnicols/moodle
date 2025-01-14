@@ -25,8 +25,8 @@ use core\di;
  * @author    Petr Skoda
  * @copyright 2022 Open LMS
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\hook\manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\manager::class)]
 final class manager_test extends \advanced_testcase {
     /**
      * Test public factory method to get hook manager.
@@ -319,9 +319,8 @@ final class manager_test extends \advanced_testcase {
      * Call a plugin callback that has been replaced by a hook, but has no hook callback.
      *
      * The original callback should be called, but a debugging message should be output.
-     *
-     * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_migrated_callback(): void {
         $this->resetAfterTest(true);
         // Include plugin hook discovery agent, and the hook that replaces the callback.
@@ -367,9 +366,8 @@ final class manager_test extends \advanced_testcase {
      * Call a plugin callback that has been replaced by a hook, and has a hook callback.
      *
      * The original callback should not be called, and no debugging should be output.
-     *
-     * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_migrated_callback_with_replacement(): void {
         $this->resetAfterTest(true);
         // Include plugin hook discovery agent, and the hook that replaces the callback, and a hook callback for the hook.
@@ -399,9 +397,8 @@ final class manager_test extends \advanced_testcase {
      * Call a plugin class callback that has been replaced by a hook, but has no hook callback.
      *
      * The original class callback should be called, but a debugging message should be output.
-     *
-     * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_migrated_class_callback(): void {
         $this->resetAfterTest(true);
         // Include plugin hook discovery agent, the class containing callbacks, and the hook that replaces the class callback.
@@ -448,9 +445,8 @@ final class manager_test extends \advanced_testcase {
      * Call a plugin class callback that has been replaced by a hook, and has a hook callback.
      *
      * The original callback should not be called, and no debugging should be output.
-     *
-     * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_migrated_class_callback_with_replacement(): void {
         $this->resetAfterTest(true);
         // Include plugin hook discovery agent, the class containing callbacks, the hook that replaces the class callback,

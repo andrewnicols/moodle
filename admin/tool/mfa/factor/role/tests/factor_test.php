@@ -19,18 +19,15 @@ namespace factor_role;
 /**
  * Tests for role factor.
  *
- * @covers      \factor_role\factor
  * @package     factor_role
  * @copyright   2023 Stevani Andolo <stevani@hotmail.com.au>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(factor::class)]
 final class factor_test extends \advanced_testcase {
 
     /**
      * Tests getting the summary condition
-     *
-     * @covers ::get_summary_condition
-     * @covers ::get_roles
      */
     public function test_get_summary_condition(): void {
         global $DB;

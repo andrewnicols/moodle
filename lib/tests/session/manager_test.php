@@ -25,8 +25,9 @@ use core\tests\session\mock_handler;
  * @category   test
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core\session\manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\session\manager::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\session\manager::class)]
 final class manager_test extends \advanced_testcase {
 
     /** @var mock_handler $mockhandler Dedicated testing handler. */
@@ -883,10 +884,10 @@ final class manager_test extends \advanced_testcase {
     /**
      * Test to get locked page at a speficic timestamp.
      *
-     * @dataProvider sessionlocks_info_provider
      * @param array $url Session lock page url.
      * @param array $time Session lock time.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('sessionlocks_info_provider')]
     public function test_get_locked_page_at($url, $time): void {
         global $CFG, $SESSION;
 
@@ -978,12 +979,11 @@ final class manager_test extends \advanced_testcase {
     /**
      * Tests array diff method in various situations.
      *
-     * @dataProvider array_session_diff_provider
-     * @covers \core\session\manager::array_session_diff
      * @param array $a first value.
      * @param array $b second value to compare to $a.
      * @param array $expected the expected difference.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('array_session_diff_provider')]
     public function test_array_session_diff(array $a, array $b, array $expected): void {
         $class = new \ReflectionClass('\core\session\manager');
         $method = $class->getMethod('array_session_diff');

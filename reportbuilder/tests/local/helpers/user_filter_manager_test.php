@@ -27,10 +27,10 @@ use core_user\reportbuilder\datasource\users;
  * Unit tests for the user filter helper
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\local\helpers\user_filter_manager
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\local\helpers\user_filter_manager::class)]
 final class user_filter_manager_test extends advanced_testcase {
     /**
      * Helper method to return all user preferences for filters - based on the current storage backend using the same
@@ -60,9 +60,8 @@ final class user_filter_manager_test extends advanced_testcase {
      * Test getting filter values
      *
      * @param string $value
-     *
-     * @dataProvider get_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_provider')]
     public function test_get(string $value): void {
         $this->resetAfterTest();
 
@@ -109,9 +108,8 @@ final class user_filter_manager_test extends advanced_testcase {
      * Test resetting all filter values
      *
      * @param string $value
-     *
-     * @dataProvider reset_all_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('reset_all_provider')]
     public function test_reset_all(string $value): void {
         $this->resetAfterTest();
 

@@ -32,8 +32,8 @@ use core\tests\route_testcase;
  * @package   core
  * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \core\router\route
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\router\route::class)]
 final class route_test extends route_testcase {
     /**
      * Test that the Attribute is configured correctly.
@@ -154,9 +154,9 @@ final class route_test extends route_testcase {
     /**
      * Ensure that pathtypes and queryparams do not accept the wrong type of parameter.
      *
-     * @dataProvider invalid_constructor_param_types
      * @param array $args
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_constructor_param_types')]
     public function test_params_not_params(array $args): void {
         $this->expectException(\coding_exception::class);
         new route(...$args);

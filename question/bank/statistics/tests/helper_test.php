@@ -35,6 +35,7 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @author     Nathan Nguyen <nathannguyen@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(helper::class)]
 final class helper_test extends \advanced_testcase {
 
     use \quiz_question_helper_test_trait;
@@ -42,7 +43,6 @@ final class helper_test extends \advanced_testcase {
     /**
      * Test quizzes that contain a specified question.
      *
-     * @covers ::get_all_places_where_questions_were_attempted
      * @deprecated since Moodle 4.3 please use the method from statistics_bulk_loader.
      * @todo MDL-78090 Final deprecation in Moodle 4.7
      */
@@ -314,7 +314,6 @@ final class helper_test extends \advanced_testcase {
     /**
      * Test question facility
      *
-     * @dataProvider load_question_facility_provider
      *
      * @param array $quiz1attempts quiz 1 attempts
      * @param array $expectedquiz1facilities expected quiz 1 facilities
@@ -324,6 +323,7 @@ final class helper_test extends \advanced_testcase {
      * @deprecated since Moodle 4.3 please use the method from statistics_bulk_loader.
      * @todo MDL-78090 Final deprecation in Moodle 4.7
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_question_facility_provider')]
     public function test_load_question_facility(
         array $quiz1attempts,
         array $expectedquiz1facilities,
@@ -416,7 +416,6 @@ final class helper_test extends \advanced_testcase {
     /**
      * Test discriminative efficiency
      *
-     * @dataProvider load_question_discriminative_efficiency_provider
      *
      * @param array $quiz1attempts quiz 1 attempts
      * @param array $expectedquiz1discriminativeefficiency expected quiz 1 discriminative efficiency
@@ -426,6 +425,7 @@ final class helper_test extends \advanced_testcase {
      * @deprecated since Moodle 4.3 please use the method from statistics_bulk_loader.
      * @todo MDL-78090 Final deprecation in Moodle 4.7
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_question_discriminative_efficiency_provider')]
     public function test_load_question_discriminative_efficiency(
         array $quiz1attempts,
         array $expectedquiz1discriminativeefficiency,
@@ -542,7 +542,6 @@ final class helper_test extends \advanced_testcase {
     /**
      * Test discrimination index
      *
-     * @dataProvider load_question_discrimination_index_provider
      *
      * @param array $quiz1attempts quiz 1 attempts
      * @param array $expectedquiz1discriminationindex expected quiz 1 discrimination index
@@ -552,6 +551,7 @@ final class helper_test extends \advanced_testcase {
      * @deprecated since Moodle 4.3 please use the method from statistics_bulk_loader.
      * @todo MDL-78090 Final deprecation in Moodle 4.7
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_question_discrimination_index_provider')]
     public function test_load_question_discrimination_index(
         array $quiz1attempts,
         array $expectedquiz1discriminationindex,

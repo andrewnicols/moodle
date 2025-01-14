@@ -13,7 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
 /**
  * Weblib tests.
  *
@@ -23,10 +22,33 @@
  * @author     T.J.Hunt@open.ac.uk
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('s')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('format_string')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('format_text_email')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('obfuscate_email')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('obfuscate_text')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('highlight')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('replace_ampersands_not_followed_by_entity')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('strip_links')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('wikify_links')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('clean_text')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('trusttext_active')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('trusttext_trusted')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('trusttext_pre_edit')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('trusttext_strip')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('format_text')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('qualified_me')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('set_debugging')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('strip_pluginfile_content')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\purify_html::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('content_to_text')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('validate_email')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_file_argument')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('extract_draft_file_urls_from_text')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('print_password_policy')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_html_lang_attribute_value')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('strip_querystring')]
 final class weblib_test extends advanced_testcase {
-    /**
-     * @covers ::s
-     */
     public function test_s(): void {
         // Special cases.
         $this->assertSame('0', s(0));
@@ -79,10 +101,8 @@ final class weblib_test extends advanced_testcase {
 
     /**
      * Test the format_string illegal options handling.
-     *
-     * @covers ::format_string
-     * @dataProvider format_string_illegal_options_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('format_string_illegal_options_provider')]
     public function test_format_string_illegal_options(
         string $input,
         string $result,
@@ -131,8 +151,6 @@ final class weblib_test extends advanced_testcase {
 
     /**
      * Ensure that if format_string is called with a context as the third param, that a debugging notice is emitted.
-     *
-     * @covers ::format_string
      */
     public function test_format_string_context(): void {
         global $CFG;
@@ -184,9 +202,6 @@ final class weblib_test extends advanced_testcase {
         );
     }
 
-    /**
-     * @covers ::format_text_email
-     */
     public function test_format_text_email(): void {
         $this->assertSame("This is a TEST\n",
             format_text_email('<p>This is a <strong>test</strong></p>', FORMAT_HTML));
@@ -200,9 +215,6 @@ final class weblib_test extends advanced_testcase {
             format_text_email('&#x7fd2;&#x7FD2;', FORMAT_HTML));
     }
 
-    /**
-     * @covers ::obfuscate_email
-     */
     public function test_obfuscate_email(): void {
         $email = 'some.user@example.com';
         $obfuscated = obfuscate_email($email);
@@ -211,9 +223,6 @@ final class weblib_test extends advanced_testcase {
         $this->assertSame($email, $back);
     }
 
-    /**
-     * @covers ::obfuscate_text
-     */
     public function test_obfuscate_text(): void {
         $text = 'Žluťoučký koníček 32131';
         $obfuscated = obfuscate_text($text);
@@ -222,9 +231,6 @@ final class weblib_test extends advanced_testcase {
         $this->assertSame($text, $back);
     }
 
-    /**
-     * @covers ::highlight
-     */
     public function test_highlight(): void {
         $this->assertSame('This is <span class="highlight">good</span>',
                 highlight('good', 'This is good'));
@@ -263,31 +269,19 @@ final class weblib_test extends advanced_testcase {
                     highlight('test -1', '<p>test 1</p><p>1</p>', false, '<b>', '</b>'));
     }
 
-    /**
-     * @covers ::replace_ampersands_not_followed_by_entity
-     */
     public function test_replace_ampersands(): void {
         $this->assertSame("This &amp; that &nbsp;", replace_ampersands_not_followed_by_entity("This & that &nbsp;"));
         $this->assertSame("This &amp;nbsp that &nbsp;", replace_ampersands_not_followed_by_entity("This &nbsp that &nbsp;"));
     }
 
-    /**
-     * @covers ::strip_links
-     */
     public function test_strip_links(): void {
         $this->assertSame('this is a link', strip_links('this is a <a href="http://someaddress.com/query">link</a>'));
     }
 
-    /**
-     * @covers ::wikify_links
-     */
     public function test_wikify_links(): void {
         $this->assertSame('this is a link [ http://someaddress.com/query ]', wikify_links('this is a <a href="http://someaddress.com/query">link</a>'));
     }
 
-    /**
-     * @covers ::clean_text
-     */
     public function test_clean_text(): void {
         $text = "lala <applet>xx</applet>";
         $this->assertSame($text, clean_text($text, FORMAT_PLAIN));
@@ -298,8 +292,6 @@ final class weblib_test extends advanced_testcase {
 
     /**
      * Test trusttext enabling.
-     *
-     * @covers ::trusttext_active
      */
     public function test_trusttext_active(): void {
         global $CFG;
@@ -312,8 +304,6 @@ final class weblib_test extends advanced_testcase {
 
     /**
      * Test trusttext detection.
-     *
-     * @covers ::trusttext_trusted
      */
     public function test_trusttext_trusted(): void {
         global $CFG;
@@ -387,8 +377,6 @@ final class weblib_test extends advanced_testcase {
     /**
      * Test text cleaning before editing.
      *
-     * @dataProvider trusttext_pre_edit_provider
-     * @covers ::trusttext_pre_edit
      *
      * @param bool $expectedsanitised
      * @param int $enabled
@@ -396,6 +384,7 @@ final class weblib_test extends advanced_testcase {
      * @param string $format
      * @param int $trust
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('trusttext_pre_edit_provider')]
     public function test_trusttext_pre_edit(bool $expectedsanitised, int $enabled, string $rolename,
                                             string $format, int $trust): void {
         global $CFG, $DB;
@@ -431,7 +420,6 @@ final class weblib_test extends advanced_testcase {
 
     /**
      * Test removal of legacy trusttext flag.
-     * @covers ::trusttext_strip
      */
     public function test_trusttext_strip(): void {
         $this->assertSame('abc', trusttext_strip('abc'));
@@ -440,7 +428,6 @@ final class weblib_test extends advanced_testcase {
 
     /**
      * Test trust option of format_text().
-     * @covers ::format_text
      */
     public function test_format_text_trusted(): void {
         global $CFG;
@@ -494,9 +481,6 @@ final class weblib_test extends advanced_testcase {
             format_text($text, FORMAT_MARKDOWN, ['trusted' => false, 'noclean' => true]));
     }
 
-    /**
-     * @covers ::qualified_me
-     */
     public function test_qualified_me(): void {
         global $PAGE, $FULLME, $CFG;
         $this->resetAfterTest();
@@ -510,9 +494,6 @@ final class weblib_test extends advanced_testcase {
         $this->assertSame($CFG->wwwroot.'/course/view.php?id=1', qualified_me());
     }
 
-    /**
-     * @covers ::set_debugging
-     */
     public function test_set_debugging(): void {
         global $CFG;
 
@@ -553,9 +534,6 @@ final class weblib_test extends advanced_testcase {
         $this->assertFalse($CFG->debugdeveloper);
     }
 
-    /**
-     * @covers ::strip_pluginfile_content
-     */
     public function test_strip_pluginfile_content(): void {
         $source = <<<SOURCE
 Hello!
@@ -594,9 +572,6 @@ EXPECTED;
         $this->assertSame($expected, strip_pluginfile_content($source));
     }
 
-    /**
-     * @covers \purify_html
-     */
     public function test_purify_html_ruby(): void {
 
         $this->resetAfterTest();
@@ -618,9 +593,8 @@ EXPECTED;
      * @param string    $content   The content
      * @param int|false $format    The content format
      * @param string    $expected  Expected value
-     * @dataProvider provider_content_to_text
-     * @covers ::content_to_text
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_content_to_text')]
     public function test_content_to_text($content, $format, $expected): void {
         $content = content_to_text($content, $format);
         $this->assertEquals($expected, $content);
@@ -809,9 +783,8 @@ EXPECTED;
      *
      * @param string $email the email address to test
      * @param boolean $result Expected result (true or false)
-     * @dataProvider    data_validate_email
-     * @covers ::validate_email
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_validate_email')]
     public function test_validate_email($email, $result): void {
         if ($result) {
             $this->assertTrue(validate_email($email));
@@ -934,9 +907,8 @@ EXPECTED;
      * @param array $server mockup for $_SERVER.
      * @param string $cfgslasharguments slasharguments setting.
      * @param string|false $expected Expected value.
-     * @dataProvider provider_get_file_argument
-     * @covers ::get_file_argument
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_get_file_argument')]
     public function test_get_file_argument($server, $cfgslasharguments, $expected): void {
         global $CFG;
 
@@ -980,8 +952,6 @@ EXPECTED;
 
     /**
      * Tests for extract_draft_file_urls_from_text() function.
-     *
-     * @covers ::extract_draft_file_urls_from_text
      */
     public function test_extract_draft_file_urls_from_text(): void {
         global $CFG;
@@ -1028,9 +998,6 @@ EXPECTED;
         $this->assertEquals($draftareas, $extracteddraftareas);
     }
 
-    /**
-     * @covers ::print_password_policy
-     */
     public function test_print_password_policy(): void {
         $this->resetAfterTest(true);
         global $CFG;
@@ -1083,12 +1050,11 @@ EXPECTED;
     /**
      * Test for get_html_lang_attribute_value().
      *
-     * @covers ::get_html_lang_attribute_value()
-     * @dataProvider get_html_lang_attribute_value_provider
      * @param string $langcode The language code to convert.
      * @param string $expected The expected converted value.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_html_lang_attribute_value_provider')]
     public function test_get_html_lang_attribute_value(string $langcode, string $expected): void {
         $this->assertEquals($expected, get_html_lang_attribute_value($langcode));
     }
@@ -1112,11 +1078,10 @@ EXPECTED;
     /**
      * Test the strip_querystring function with various exampels.
      *
-     * @dataProvider strip_querystring_provider
      * @param mixed $value
      * @param mixed $expected
-     * @covers ::strip_querystring
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('strip_querystring_provider')]
     public function test_strip_querystring($value, $expected): void {
         $this->assertEquals($expected, strip_querystring($value));
     }

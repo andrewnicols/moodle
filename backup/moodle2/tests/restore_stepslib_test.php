@@ -25,6 +25,7 @@ use backup;
  * @copyright 2023 Ferran Recio <ferran@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_section_structure_step::class)]
 final class restore_stepslib_test extends \advanced_testcase {
     /**
      * Setup to include all libraries.
@@ -104,8 +105,6 @@ final class restore_stepslib_test extends \advanced_testcase {
 
     /**
      * Test for delegate section behaviour.
-     *
-     * @covers \restore_section_structure_step::process_section
      */
     public function test_restore_section_structure_step(): void {
         global $DB;

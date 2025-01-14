@@ -28,8 +28,8 @@ use Psr\Http\Message\ResponseInterface;
  * @category   test
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\router\middleware\cors_middleware
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\router\middleware\cors_middleware::class)]
 final class cors_middleware_test extends route_testcase {
     /**
      * Standard CORS headers are added.

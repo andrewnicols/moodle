@@ -84,8 +84,8 @@ class testable_mod_quiz_external extends mod_quiz_external {
  * @copyright  2016 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.1
- * @covers \mod_quiz_external
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz_external::class)]
 final class external_test extends externallib_advanced_testcase {
 
     use \quiz_question_helper_test_trait;
@@ -883,10 +883,6 @@ final class external_test extends externallib_advanced_testcase {
 
     /**
      * Test get_combined_review_options when the user has an override.
-     *
-     * @covers ::get_combined_review_options
-     * @covers ::get_combined_review_options_parameters
-     * @covers ::get_combined_review_options_returns
      */
     public function test_get_combined_review_options_with_overrides(): void {
         global $DB;

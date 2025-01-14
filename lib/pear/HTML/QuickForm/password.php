@@ -60,7 +60,7 @@ class HTML_QuickForm_password extends HTML_QuickForm_input
         debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
         self::__construct($elementName, $elementLabel, $attributes);
     }
-    
+
     // }}}
     // {{{ setSize()
 
@@ -92,7 +92,7 @@ class HTML_QuickForm_password extends HTML_QuickForm_input
     {
         $this->updateAttributes(array('maxlength'=>$maxlength));
     } //end func setMaxlength
-        
+
     // }}}
     // {{{ getFrozenHtml()
 

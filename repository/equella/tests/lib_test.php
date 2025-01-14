@@ -38,10 +38,11 @@ require_once($CFG->libdir . '/webdavlib.php');
 /**
  * Class repository_equella_lib_testcase
  *
- * @group repository_equella
  * @copyright  Catalyst IT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\repository_equella::class)]
+#[\PHPUnit\Framework\Attributes\Group('repository_equella')]
 final class lib_test extends \advanced_testcase {
 
     /** @var null|\repository_equella the repository_equella object, which the tests are run on. */
@@ -84,7 +85,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test that environment is created.
-     * @covers \repository_equella::get_repository_by_id
      * @return void
      */
     public function test_repository_is_created(): void {
@@ -111,7 +111,6 @@ final class lib_test extends \advanced_testcase {
      * Data provider for get_userfield_value.
      *
      * @return array
-     * @covers ::get_userfield_value
      */
     public static function get_userfield_value_provider(): array {
         return [
@@ -146,14 +145,13 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test method get_userfield_value.
      *
-     * @dataProvider get_userfield_value_provider
      *
      * @param array $input
      * @param array $expected
-     * @covers ::get_userfield_value
      *
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_userfield_value_provider')]
     public function test_get_userfield_value($input, $expected): void {
         global $USER;
         $this->initialise_repository();
@@ -168,7 +166,6 @@ final class lib_test extends \advanced_testcase {
      * Data provider for get_listing.
      *
      * @return array
-     * @covers ::get_listing
      */
     public static function get_listing_provider(): array {
         return [
@@ -206,14 +203,13 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test that the method get_listing return the correct array.
      *
-     * @dataProvider get_listing_provider
      *
      * @param array $input
      * @param array $expected
-     * @covers ::get_listing
      *
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_listing_provider')]
     public function test_get_listing($input, $expected): void {
         global $USER;
         $this->initialise_repository();

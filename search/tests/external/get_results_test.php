@@ -30,8 +30,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category   test
  * @copyright  2023 Juan Leyva (juan@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_search\external\get_results
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_search\external\get_results::class)]
 final class get_results_test extends \externallib_advanced_testcase {
 
     public function setUp(): void {
@@ -41,7 +41,6 @@ final class get_results_test extends \externallib_advanced_testcase {
 
     /**
      * test external api
-     * @covers ::execute
      * @return void
      */
     public function test_external_get_results(): void {

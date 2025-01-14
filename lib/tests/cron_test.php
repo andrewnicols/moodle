@@ -22,8 +22,8 @@ namespace core;
  * @package     core
  * @copyright   2023 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core\cron
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\cron::class)]
 final class cron_test extends \advanced_testcase {
     /**
      * Reset relevant caches between tests.

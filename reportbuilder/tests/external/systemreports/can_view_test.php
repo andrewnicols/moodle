@@ -32,10 +32,10 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * Unit tests of external class for validating access to a system report
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\external\systemreports\can_view
  * @copyright   2023 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\external\systemreports\can_view::class)]
 final class can_view_test extends externallib_advanced_testcase {
 
     /**

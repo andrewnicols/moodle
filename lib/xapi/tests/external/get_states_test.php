@@ -34,11 +34,11 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Unit tests for xAPI get states webservice.
  *
  * @package    core_xapi
- * @covers     \core_xapi\external\get_states
  * @since      Moodle 4.2
  * @copyright  2023 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_xapi\external\get_states::class)]
 final class get_states_test extends externallib_advanced_testcase {
 
     /**
@@ -116,10 +116,10 @@ final class get_states_test extends externallib_advanced_testcase {
     /**
      * Testing different component names on valid states.
      *
-     * @dataProvider components_provider
      * @param string $component component name
      * @param string|null $exception expect exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('components_provider')]
     public function test_component_names(string $component, ?bool $exception): void {
         $this->resetAfterTest();
 
@@ -166,11 +166,11 @@ final class get_states_test extends externallib_advanced_testcase {
     /**
      * Testing different since date formats.
      *
-     * @dataProvider since_formats_provider
      * @param string|null $since the formatted timestamps
      * @param string[]|null $expected expected results
      * @param bool $exception expect exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('since_formats_provider')]
     public function test_since_formats(?string $since, ?array $expected, bool $exception = false): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -223,10 +223,10 @@ final class get_states_test extends externallib_advanced_testcase {
     /**
      * Testing different activity IRI values.
      *
-     * @dataProvider activity_iri_provider
      * @param string|null $activityiri
      * @param string[]|null $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('activity_iri_provider')]
     public function test_activity_iri(?string $activityiri, ?array $expected): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -263,11 +263,11 @@ final class get_states_test extends externallib_advanced_testcase {
     /**
      * Testing different agent values.
      *
-     * @dataProvider agent_values_provider
      * @param string|null $agentreference the used agent reference
      * @param string[]|null $expected expected results
      * @param bool $exception expect exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('agent_values_provider')]
     public function test_agent_values(?string $agentreference, ?array $expected, bool $exception = false): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -313,10 +313,10 @@ final class get_states_test extends externallib_advanced_testcase {
     /**
      * Testing different registration values.
      *
-     * @dataProvider registration_values_provider
      * @param string|null $registration
      * @param string[]|null $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('registration_values_provider')]
     public function test_registration_values(?string $registration, ?array $expected): void {
         $this->resetAfterTest();
         $this->setAdminUser();

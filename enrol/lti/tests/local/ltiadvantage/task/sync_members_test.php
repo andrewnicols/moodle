@@ -31,8 +31,8 @@ require_once(__DIR__ . '/../lti_advantage_testcase.php');
  * @package enrol_lti
  * @copyright 2021 Jake Dallimore <jrhdallimore@gmail.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \enrol_lti\local\ltiadvantage\task\sync_members
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\enrol_lti\local\ltiadvantage\task\sync_members::class)]
 final class sync_members_test extends \lti_advantage_testcase {
 
     /**
@@ -219,8 +219,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test confirming task name.
-     *
-     * @covers ::get_name
      */
     public function test_get_name(): void {
         $this->assertEquals(get_string('tasksyncmembers', 'enrol_lti'), (new sync_members())->get_name());
@@ -228,8 +226,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test a resource-link-level membership sync, confirming that all relevant domain objects are updated properly.
-     *
-     * @covers ::execute
      */
     public function test_resource_link_level_sync(): void {
         $this->resetAfterTest();
@@ -258,8 +254,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test a resource-link-level membership sync when there are more than one resource links for the resource.
-     *
-     * @covers ::execute
      */
     public function test_resource_link_level_sync_multiple_resource_links(): void {
         $this->resetAfterTest();
@@ -304,8 +298,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Verify the task will update users' profile pictures if the 'picture' member field is provided.
-     *
-     * @covers ::execute
      */
     public function test_user_profile_image_sync(): void {
         $this->resetAfterTest();
@@ -335,8 +327,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test a context-level membership sync, confirming that all relevant domain objects are updated properly.
-     *
-     * @covers ::execute
      */
     public function test_context_level_sync(): void {
         $this->resetAfterTest();
@@ -363,8 +353,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test verifying the sync task handles the omission/inclusion of PII information for users.
-     *
-     * @covers ::execute
      */
     public function test_sync_user_data(): void {
         $this->resetAfterTest();
@@ -428,8 +416,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test verifying the task won't sync members for shared resources having member sync disabled.
-     *
-     * @covers ::execute
      */
     public function test_membership_sync_disabled(): void {
         $this->resetAfterTest();
@@ -459,8 +445,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test verifying the sync task for resources configured as 'helper::MEMBER_SYNC_ENROL_AND_UNENROL'.
-     *
-     * @covers ::execute
      */
     public function test_sync_mode_enrol_and_unenrol(): void {
         $this->resetAfterTest();
@@ -507,8 +491,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Confirm the sync task operation for resources configured as 'helper::MEMBER_SYNC_UNENROL_MISSING'.
-     *
-     * @covers ::execute
      */
     public function test_sync_mode_unenrol_missing(): void {
         $this->resetAfterTest();
@@ -536,8 +518,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Confirm the sync task operation for resources configured as 'helper::MEMBER_SYNC_ENROL_NEW'.
-     *
-     * @covers ::execute
      */
     public function test_sync_mode_enrol_new(): void {
         $this->resetAfterTest();
@@ -566,8 +546,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test confirming that no changes take place if the auth_lti plugin is not enabled.
-     *
-     * @covers ::execute
      */
     public function test_sync_auth_disabled(): void {
         $this->resetAfterTest();
@@ -592,8 +570,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test confirming that no sync takes place when the enrol_lti plugin is not enabled.
-     *
-     * @covers ::execute
      */
     public function test_sync_enrol_disabled(): void {
         $this->resetAfterTest();
@@ -618,8 +594,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test syncing members when the enrolment instance is disabled.
-     *
-     * @covers ::execute
      */
     public function test_sync_members_disabled_instance(): void {
         $this->resetAfterTest();
@@ -650,8 +624,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test syncing members for a membersync-enabled resource when the launch omits the NRPS service endpoints.
-     *
-     * @covers ::execute
      */
     public function test_sync_no_nrps_support(): void {
         $this->resetAfterTest();
@@ -683,8 +655,6 @@ final class sync_members_test extends \lti_advantage_testcase {
 
     /**
      * Test confirming that preexisting, non-lti user accounts do not have their profiles or pictures updated during sync.
-     *
-     * @covers ::execute
      */
     public function test_sync_non_lti_linked_user(): void {
         $this->resetAfterTest();
@@ -724,14 +694,13 @@ final class sync_members_test extends \lti_advantage_testcase {
     /**
      * Test the member sync for a range of scenarios including migrated tools, unlaunched tools, provisioning methods.
      *
-     * @dataProvider member_sync_data_provider
      * @param array|null $legacydata array detailing what legacy information to create, or null if not required.
      * @param array|null $resourceconfig array detailing config values to be used when creating the test enrol_lti instances.
      * @param array $launchdata array containing details of the launch, including user and migration claim.
      * @param array|null $syncmembers the members to use in the mock sync.
      * @param array $expected the array detailing expectations.
-     * @covers ::execute
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('member_sync_data_provider')]
     public function test_sync_enrolments_and_migration(?array $legacydata, ?array $resourceconfig, array $launchdata,
             ?array $syncmembers, array $expected): void {
 

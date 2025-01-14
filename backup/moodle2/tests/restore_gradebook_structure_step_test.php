@@ -60,10 +60,10 @@ final class restore_gradebook_structure_step_test extends \advanced_testcase {
     }
 
     /**
-     * @dataProvider rewrite_step_backup_file_for_legacy_freeze_provider
      * @param   string  $source     The source file to test
      * @param   string  $expected   The expected result of the transformation
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('rewrite_step_backup_file_for_legacy_freeze_provider')]
     public function test_rewrite_step_backup_file_for_legacy_freeze($source, $expected): void {
         $restore = $this->getMockBuilder('\restore_gradebook_structure_step')
             ->onlyMethods([])

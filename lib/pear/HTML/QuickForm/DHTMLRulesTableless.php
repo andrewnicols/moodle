@@ -134,7 +134,7 @@ function qf_errorHandler(element, _qfMsg) {
     while (errorDiv.firstChild) {
       errorDiv.removeChild(errorDiv.firstChild);
     }
-    
+
     errorDiv.insertBefore(br, errorDiv.firstChild);
     errorDiv.insertBefore(span, errorDiv.firstChild);
     element.parentNode.insertBefore(errorDiv, element.parentNode.firstChild);

@@ -30,8 +30,8 @@ use core\tests\route_testcase;
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core\router\schema\specification
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\router\schema\specification::class)]
 final class specification_test extends route_testcase {
     public function test_basics(): void {
         global $CFG;
@@ -73,11 +73,11 @@ final class specification_test extends route_testcase {
     /**
      * Test the add_path method.
      *
-     * @dataProvider add_path_provider
      * @param string $component
      * @param string $path
      * @param string $expectedpath
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('add_path_provider')]
     public function test_add_path(
         string $component,
         string $path,

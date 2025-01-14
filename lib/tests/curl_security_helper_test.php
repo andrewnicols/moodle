@@ -35,8 +35,8 @@ final class curl_security_helper_test extends \advanced_testcase {
      * @param string $blockedhosts the list of blocked hosts.
      * @param string $allowedports the list of allowed ports.
      * @param bool $expected the expected result.
-     * @dataProvider curl_security_url_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('curl_security_url_data_provider')]
     public function test_curl_security_helper_url_is_blocked($dns, $url, $blockedhosts, $allowedports, $expected): void {
         $this->resetAfterTest(true);
         $helper = $this->getMockBuilder('\core\files\curl_security_helper')
@@ -165,8 +165,8 @@ final class curl_security_helper_test extends \advanced_testcase {
      * @param string $blockedhosts the list of blocked hosts.
      * @param string $allowedports the list of allowed ports.
      * @param bool $expected the expected result.
-     * @dataProvider curl_security_settings_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('curl_security_settings_data_provider')]
     public function test_curl_security_helper_is_enabled($blockedhosts, $allowedports, $expected): void {
         $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();
@@ -197,8 +197,8 @@ final class curl_security_helper_test extends \advanced_testcase {
      * @param string $host the host to validate.
      * @param string $blockedhosts the list of blocked hosts.
      * @param bool $expected the expected result.
-     * @dataProvider curl_security_host_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('curl_security_host_data_provider')]
     public function test_curl_security_helper_host_is_blocked($host, $blockedhosts, $expected): void {
         $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();
@@ -251,8 +251,8 @@ final class curl_security_helper_test extends \advanced_testcase {
      * @param int|string $port the port to validate.
      * @param string $allowedports the list of allowed ports.
      * @param bool $expected the expected result.
-     * @dataProvider curl_security_port_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('curl_security_port_data_provider')]
     public function test_curl_security_helper_port_is_blocked($port, $allowedports, $expected): void {
         $this->resetAfterTest(true);
         $helper = new \core\files\curl_security_helper();

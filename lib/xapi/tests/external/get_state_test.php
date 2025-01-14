@@ -34,11 +34,11 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Unit tests for xAPI get state webservice.
  *
  * @package    core_xapi
- * @covers     \core_xapi\external\get_state
  * @since      Moodle 4.2
  * @copyright  2023 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_xapi\external\get_state::class)]
 final class get_state_test extends externallib_advanced_testcase {
 
     /**
@@ -53,10 +53,10 @@ final class get_state_test extends externallib_advanced_testcase {
     /**
      * Testing different component names on valid states.
      *
-     * @dataProvider components_provider
      * @param string $component component name
      * @param string|null $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('components_provider')]
     public function test_component_names(string $component, ?string $expected): void {
         $this->resetAfterTest();
 
@@ -114,10 +114,10 @@ final class get_state_test extends externallib_advanced_testcase {
     /**
      * Testing valid/invalid state.
      *
-     * @dataProvider states_provider
      * @param array $info The xAPI state information (to override default values).
      * @param string $expected Expected results.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('states_provider')]
     public function test_get_state(array $info, string $expected): void {
         $this->resetAfterTest();
 

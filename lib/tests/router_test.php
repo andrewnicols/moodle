@@ -25,9 +25,9 @@ use Slim\App;
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core\router
- * @covers     \core\router\response_handler
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\router::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\router\response_handler::class)]
 final class router_test extends route_testcase {
     public function test_get_app(): void {
         $router = $this->get_router('/example');

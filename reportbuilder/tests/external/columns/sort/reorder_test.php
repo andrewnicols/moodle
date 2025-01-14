@@ -34,10 +34,10 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * Unit tests of external class for re-ordering report column sorting
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\external\columns\sort\reorder
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\external\columns\sort\reorder::class)]
 final class reorder_test extends externallib_advanced_testcase {
 
     /**

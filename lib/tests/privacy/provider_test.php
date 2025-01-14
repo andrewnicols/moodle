@@ -29,14 +29,12 @@ use core\moodlenet\share_recorder;
  * @category   test
  * @copyright  2023 David Woloszyn <david.woloszyn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\privacy\provider
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\privacy\provider::class)]
 final class provider_test extends provider_testcase {
 
     /**
      * Check that a user context is returned if there is any user data for this user.
-     *
-     * @covers ::get_contexts_for_userid
      */
     public function test_get_contexts_for_userid(): void {
         $this->resetAfterTest();
@@ -59,8 +57,6 @@ final class provider_test extends provider_testcase {
 
     /**
      * Test that only users within a user context are fetched.
-     *
-     * @covers ::get_users_in_context
      */
     public function test_get_users_in_context(): void {
         $this->resetAfterTest();
@@ -98,8 +94,6 @@ final class provider_test extends provider_testcase {
 
     /**
      * Test that user data is exported correctly.
-     *
-     * @covers ::export_user_data
      */
     public function test_export_user_data(): void {
         global $DB;
@@ -144,8 +138,6 @@ final class provider_test extends provider_testcase {
 
     /**
      * Test deleting all user data for a specific context.
-     *
-     * @covers ::delete_data_for_all_users_in_context
      */
     public function test_delete_data_for_all_users_in_context(): void {
         global $DB;
@@ -175,8 +167,6 @@ final class provider_test extends provider_testcase {
 
     /**
      * Test deleting a user's data for a specific context.
-     *
-     * @covers ::delete_data_for_user
      */
     public function test_delete_data_for_user(): void {
         global $DB;
@@ -207,8 +197,6 @@ final class provider_test extends provider_testcase {
 
     /**
      * Test that data for users in an approved userlist is deleted.
-     *
-     * @covers ::delete_data_for_users
      */
     public function test_delete_data_for_users(): void {
         global $DB;

@@ -29,8 +29,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @package    core_sms
  * @copyright  2024 Safat Shahin <safat.shahin@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core_sms\external\sms_gateway_status::execute
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\core_sms\external\sms_gateway_status::class, 'execute')]
 final class sms_gateway_status_test extends \externallib_advanced_testcase {
 
     public function test_execute(): void {

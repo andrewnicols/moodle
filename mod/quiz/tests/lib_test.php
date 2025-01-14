@@ -38,6 +38,7 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @copyright  2008 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('mod_quiz_inplace_editable')]
 final class lib_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
 
@@ -929,11 +930,10 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test customised and automated question numbering for a given slot number and customised value.
      *
-     * @dataProvider mod_quiz_inplace_editable_provider
      * @param int $slotnumber
      * @param string $newvalue
-     * @covers ::mod_quiz_inplace_editable
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('mod_quiz_inplace_editable_provider')]
     public function test_mod_quiz_inplace_editable(int $slotnumber, string $newvalue): void {
         global $CFG;
         require_once($CFG->dirroot . '/lib/external/externallib.php');

@@ -167,10 +167,10 @@ final class post_statement_test extends externallib_advanced_testcase {
     /**
      * Testing different component names on valid statements.
      *
-     * @dataProvider components_provider
      * @param string $component component name
      * @param array $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('components_provider')]
     public function test_component_names(string $component, array $expected): void {
 
         $this->resetAfterTest();
@@ -207,9 +207,9 @@ final class post_statement_test extends externallib_advanced_testcase {
      *
      * This test is used for wrong json format and empty structures.
      *
-     * @dataProvider invalid_json_provider
      * @param string $json json string to send
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_json_provider')]
     public function test_invalid_json(string $json): void {
 
         $this->resetAfterTest();
@@ -267,12 +267,12 @@ final class post_statement_test extends externallib_advanced_testcase {
      * verb on one statement just reject that specific statement
      * That is the expected behaviour.
      *
-     * @dataProvider statement_provider
      * @param bool $multiple if send multiple statements (adds one valid statement)
      * @param bool $validactor if the actor used is valid
      * @param bool $validverb if the verb used is valid
      * @param array $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('statement_provider')]
     public function test_statements_agent(bool $multiple, bool $validactor, bool $validverb, array $expected): void {
         global $USER;
 
@@ -320,12 +320,12 @@ final class post_statement_test extends externallib_advanced_testcase {
      * verb on one statement just reject that specific statement
      * That is the expected behaviour.
      *
-     * @dataProvider statement_provider
      * @param bool $multiple if send multiple statements (adds one valid statement)
      * @param bool $validactor if the actor used is valid
      * @param bool $validverb if the verb used is valid
      * @param array $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('statement_provider')]
     public function test_statements_group(bool $multiple, bool $validactor, bool $validverb, array $expected): void {
         global $USER, $CFG;
 
@@ -414,11 +414,11 @@ final class post_statement_test extends externallib_advanced_testcase {
      * Try to use group statement in components that not support this feature
      * causes a full statements batch rejection.
      *
-     * @dataProvider group_statement_provider
      * @param bool $usegroup1 if the 1st statement must be groupal
      * @param bool $usegroup2 if the 2nd statement must be groupal
      * @param array $expected expected results
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('group_statement_provider')]
     public function test_group_disabled(bool $usegroup1, bool $usegroup2, array $expected): void {
         global $USER;
 

@@ -24,6 +24,9 @@ namespace core_courseformat\output\local\state;
  * @copyright  2021 Ilya Tregubov <ilya@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\output\local\state\course::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\output\local\state\section::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\output\local\state\cm::class)]
 final class state_test extends \advanced_testcase {
 
     /**
@@ -40,13 +43,10 @@ final class state_test extends \advanced_testcase {
     /**
      * Test the behaviour of state::export_for_template().
      *
-     * @dataProvider state_provider
-     * @covers \core_courseformat\output\local\state\course
-     * @covers \core_courseformat\output\local\state\section
-     * @covers \core_courseformat\output\local\state\cm
      *
      * @param string $format The course format of the course where the method will be executed.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('state_provider')]
     public function test_state(string $format = 'topics'): void {
         global $PAGE;
 

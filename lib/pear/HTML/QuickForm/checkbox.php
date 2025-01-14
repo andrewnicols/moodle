@@ -109,7 +109,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
     {
         return (bool)$this->getAttribute('checked');
     } //end func getChecked
-    
+
     // }}}
     // {{{ toHtml()
 
@@ -132,7 +132,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
         }
         return HTML_QuickForm_input::toHtml() . $label;
     } //end func toHtml
-    
+
     // }}}
     // {{{ getFrozenHtml()
 
@@ -271,7 +271,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
         }
         return $this->_prepareValue($value, $assoc);
     }
-    
+
     // }}}
 } //end class HTML_QuickForm_checkbox
 ?>

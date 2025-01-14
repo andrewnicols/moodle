@@ -61,7 +61,7 @@ class HTML_QuickForm_button extends HTML_QuickForm_input
         debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
         self::__construct($elementName, $value, $attributes);
     }
-    
+
     // }}}
     // {{{ freeze()
 
@@ -77,6 +77,6 @@ class HTML_QuickForm_button extends HTML_QuickForm_input
     } //end func freeze
 
     // }}}
- 
+
 } //end class HTML_QuickForm_button
 ?>

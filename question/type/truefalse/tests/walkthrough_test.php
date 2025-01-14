@@ -30,8 +30,9 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @package    qtype_truefalse
  * @copyright  2011 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \qtype_truefalse_question
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\qtype_truefalse_question::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\qtype_truefalse_renderer::class)]
 final class walkthrough_test extends \qbehaviour_walkthrough_test_base {
     public function test_false_right_does_not_show_feedback_when_not_answered(): void {
 
@@ -125,9 +126,6 @@ final class walkthrough_test extends \qbehaviour_walkthrough_test_base {
         $this->assertEquals(1, $newqa->get_mark());
     }
 
-    /**
-     * @covers \qtype_truefalse_renderer::formulation_and_controls
-     */
     public function test_deferredfeedback_feedback_multichoice_single_showstandardinstruction_yes(): void {
 
         // Create a true-false question with correct answer false.
@@ -142,9 +140,6 @@ final class walkthrough_test extends \qbehaviour_walkthrough_test_base {
         $this->assertStringContainsString($standardinstruction, $this->currentoutput);
     }
 
-    /**
-     * @covers \qtype_truefalse_renderer::formulation_and_controls
-     */
     public function test_deferredfeedback_feedback_multichoice_single_showstandardinstruction_no(): void {
 
         // Create a true-false question with correct answer false.

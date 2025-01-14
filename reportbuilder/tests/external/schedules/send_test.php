@@ -34,10 +34,10 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * Unit tests of external class for sending report schedules
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\external\schedules\send
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\external\schedules\send::class)]
 final class send_test extends externallib_advanced_testcase {
 
     /**

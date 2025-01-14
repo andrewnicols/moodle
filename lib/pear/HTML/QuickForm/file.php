@@ -90,7 +90,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
     {
         $this->updateAttributes(array('size' => $size));
     } //end func setSize
-    
+
     // }}}
     // {{{ getSize()
 
@@ -140,7 +140,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
     {
         return null;
     } //end func setValue
-    
+
     // }}}
     // {{{ getValue()
 
@@ -214,7 +214,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
             return false;
         }
     } // end func moveUploadedFile
-    
+
     // }}}
     // {{{ isUploadedFile()
 
@@ -248,7 +248,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
             return false;
         }
     } // end func _ruleIsUploadedFile
-    
+
     // }}}
     // {{{ _ruleCheckMaxFileSize()
 
@@ -312,7 +312,7 @@ class HTML_QuickForm_file extends HTML_QuickForm_input
         }
         return preg_match($regex, $elementValue['name']);
     } // end func _ruleCheckFileName
-    
+
     // }}}
     // {{{ _findValue()
 
