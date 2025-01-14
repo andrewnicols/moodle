@@ -56,10 +56,10 @@ final class lib_test extends advanced_testcase {
     /**
      * Tests for filter_tex_sanitize_formula() function.
      *
-     * @dataProvider filter_tex_sanitize_formula_provider
      * @param $formula The formula to test
      * @param $expected The sanitized version of the formula we expect to get
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('filter_tex_sanitize_formula_provider')]
     public function test_filter_tex_sanitize_formula(string $formula, string $expected): void {
         $this->assertEquals($expected, filter_tex_sanitize_formula($formula));
     }

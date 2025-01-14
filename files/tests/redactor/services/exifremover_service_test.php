@@ -27,9 +27,8 @@ namespace core_files\redactor\services;
  * @package   core_files
  * @copyright Meirza <meirza.arson@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @covers \core_files\redactor\services\exifremover_service
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_files\redactor\services\exifremover_service::class)]
 final class exifremover_service_test extends \advanced_testcase {
     /**
      * Tests the `exifremover_service` functionality using PHP GD.

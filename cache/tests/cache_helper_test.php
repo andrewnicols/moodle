@@ -23,16 +23,16 @@ namespace core_cache;
  * @category   cache
  * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core_cache\helper
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_cache\helper::class)]
 final class cache_helper_test extends \advanced_testcase {
     /**
      * Test the result_found method.
      *
      * @param mixed $value
      * @param bool $expected
-     * @dataProvider result_found_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('result_found_provider')]
     public function test_result_found($value, bool $expected): void {
         $this->assertEquals($expected, helper::result_found($value));
     }

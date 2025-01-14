@@ -26,6 +26,14 @@ use core_group\visibility;
  * @author     Andrew Nicols
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('groups_get_groups_members')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\groups_get_all_groups::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\groups_get_my_groups::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\groups_get_user_groups::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\groups_is_member::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('groups_get_members')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\groups_get_groups_members::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\groups_get_activity_allowed_groups::class)]
 final class grouplib_test extends \advanced_testcase {
 
     public function test_groups_get_group_by_idnumber(): void {
@@ -1755,8 +1763,6 @@ final class grouplib_test extends \advanced_testcase {
 
     /**
      * Tests for groups_get_groups_members() method.
-     *
-     * @covers ::groups_get_groups_members
      */
     public function test_groups_get_groups_members(): void {
         $this->resetAfterTest(true);
@@ -1960,8 +1966,6 @@ final class grouplib_test extends \advanced_testcase {
      * Tests getting groups and group members based on visibility settings.
      *
      * This also covers the groupdata cache, since calls without $withmembers = true use the cache.
-     *
-     * @covers \groups_get_all_groups()
      */
     public function test_get_all_groups_with_visibility(): void {
         list($users, $groups, $course) = $this->create_groups_with_visibilty();
@@ -2047,8 +2051,6 @@ final class grouplib_test extends \advanced_testcase {
 
     /**
      * Tests getting groups the current user is a member of, with visibility settings applied.
-     *
-     * @covers \groups_get_my_groups()
      */
     public function test_get_my_groups_with_visibility(): void {
         list($users, $groups) = $this->create_groups_with_visibilty();
@@ -2088,8 +2090,6 @@ final class grouplib_test extends \advanced_testcase {
 
     /**
      * Tests getting groups a user is a member of, with visibility settings applied.
-     *
-     * @covers \groups_get_user_groups()
      */
     public function test_get_user_groups_with_visibility(): void {
         list($users, $groups, $course) = $this->create_groups_with_visibilty();
@@ -2146,8 +2146,6 @@ final class grouplib_test extends \advanced_testcase {
 
     /**
      * Test groups_is_member() using groups with different visibility settings.
-     *
-     * @covers \groups_is_member()
      */
     public function test_groups_is_member_with_visibility(): void {
         list($users, $groups) = $this->create_groups_with_visibilty();
@@ -2194,8 +2192,6 @@ final class grouplib_test extends \advanced_testcase {
 
     /**
      * Test groups_get_members
-     *
-     * @covers ::groups_get_members
      */
     public function test_groups_get_members(): void {
         $this->resetAfterTest();
@@ -2218,8 +2214,6 @@ final class grouplib_test extends \advanced_testcase {
 
     /**
      * Test groups_get_members() using groups with different visibility settings.
-     *
-     * @covers ::groups_get_members
      */
     public function test_groups_get_members_with_visibility(): void {
         list($users, $groups) = $this->create_groups_with_visibilty();
@@ -2263,8 +2257,6 @@ final class grouplib_test extends \advanced_testcase {
 
     /**
      * Test groups_get_groups_members() using groups with different visibility settings.
-     *
-     * @covers \groups_get_groups_members()
      */
     public function test_groups_get_groups_members_with_visibility(): void {
         list($users, $groups) = $this->create_groups_with_visibilty();
@@ -2306,7 +2298,6 @@ final class grouplib_test extends \advanced_testcase {
     /**
      * Only groups with participation == true should be returned for an activity.
      *
-     * @covers \groups_get_activity_allowed_groups()
      * @return void
      * @throws \coding_exception
      */

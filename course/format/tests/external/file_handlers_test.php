@@ -32,8 +32,8 @@ use dndupload_handler;
  * @category   test
  * @copyright  2022 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\external\file_handlers
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\external\file_handlers::class)]
 final class file_handlers_test extends \externallib_advanced_testcase {
 
     /**
@@ -47,8 +47,6 @@ final class file_handlers_test extends \externallib_advanced_testcase {
 
     /**
      * Test the behaviour of get_state::execute().
-     *
-     * @covers ::execute
      */
     public function test_execute(): void {
         $this->resetAfterTest();
@@ -70,8 +68,6 @@ final class file_handlers_test extends \externallib_advanced_testcase {
 
     /**
      * Test the behaviour of get_state::execute() in a wrong course.
-     *
-     * @covers ::execute
      */
     public function test_execute_wrong_course(): void {
         $this->resetAfterTest();

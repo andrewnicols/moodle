@@ -128,7 +128,7 @@ class HTML_QuickForm_Renderer_Default extends HTML_QuickForm_Renderer
     * @access   private
     */
     var $_groupTemplate = '';
-    
+
    /**
     * Collected HTML of the hidden fields
     * @var      string
@@ -167,7 +167,7 @@ class HTML_QuickForm_Renderer_Default extends HTML_QuickForm_Renderer
         // finishForm() was not called (e.g. group::toHtml(), bug #3511)
         return $this->_hiddenHtml . $this->_html;
     } // end func toHtml
-    
+
    /**
     * Called when visiting a form, before processing any form elements
     *
@@ -209,7 +209,7 @@ class HTML_QuickForm_Renderer_Default extends HTML_QuickForm_Renderer
             $this->_html = $script . "\n" . $this->_html;
         }
     } // end func finishForm
-      
+
    /**
     * Called when visiting a header element
     *
@@ -307,7 +307,7 @@ class HTML_QuickForm_Renderer_Default extends HTML_QuickForm_Renderer
             $this->_groupElements[] = $element->toHtml();
         }
     } // end func renderElement
-   
+
    /**
     * Renders an hidden element
     * Called when visiting a hidden element

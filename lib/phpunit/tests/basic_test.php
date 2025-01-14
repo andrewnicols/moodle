@@ -27,6 +27,7 @@ use phpunit_util;
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\phpunit_util::class)]
 final class basic_test extends \basic_testcase {
     protected $testassertexecuted = false;
 
@@ -154,8 +155,8 @@ STRING;
      * @param string $expected
      * @param string $actual
      * @param bool $expectationvalid
-     * @dataProvider equals_ignoring_whitespace_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('equals_ignoring_whitespace_provider')]
     public function test_assertEqualsIgnoringWhitespace( // phpcs:ignore
         string $expected,
         string $actual,
@@ -230,7 +231,6 @@ STRING;
      * Test that a database modification is detected.
      *
      * @runInSeparateProcess
-     * @covers \phpunit_util
      */
     public function test_db_modification(): void {
         global $DB;
@@ -245,7 +245,6 @@ STRING;
      * Test that a $CFG modification is detected.
      *
      * @runInSeparateProcess
-     * @covers \phpunit_util
      */
     public function test_cfg_modification(): void {
         global $CFG;
@@ -262,7 +261,6 @@ STRING;
      * Test that a $USER modification is detected.
      *
      * @runInSeparateProcess
-     * @covers \phpunit_util
      */
     public function test_user_modification(): void {
         global $USER;
@@ -277,7 +275,6 @@ STRING;
      * Test that a $COURSE modification is detected.
      *
      * @runInSeparateProcess
-     * @covers \phpunit_util
      */
     public function test_course_modification(): void {
         global $COURSE;
@@ -292,7 +289,6 @@ STRING;
      * Test that all modifications are detected together.
      *
      * @runInSeparateProcess
-     * @covers \phpunit_util
      */
     public function test_all_modifications(): void {
         global $DB, $CFG, $USER, $COURSE;
@@ -312,7 +308,6 @@ STRING;
      * Test that an open transaction are managed ok by the reset code (silently rolled back).
      *
      * @runInSeparateProcess
-     * @covers \phpunit_util
      */
     public function test_transaction_problem(): void {
         global $DB, $COURSE;

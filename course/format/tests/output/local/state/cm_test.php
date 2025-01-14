@@ -26,8 +26,8 @@ use stdClass;
  * @package    core_courseformat
  * @copyright  2022 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\output\local\state\cm
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\output\local\state\cm::class)]
 final class cm_test extends \advanced_testcase {
 
     /**
@@ -43,8 +43,6 @@ final class cm_test extends \advanced_testcase {
     /**
      * Test the behaviour of state\cm hasavailability attribute.
      *
-     * @dataProvider hasrestrictions_state_provider
-     * @covers ::export_for_template
      *
      * @param string $format the course format
      * @param string $rolename the user role name (editingteacher or student)
@@ -52,6 +50,7 @@ final class cm_test extends \advanced_testcase {
      * @param bool $available if the activity availability condition is available or not to the user
      * @param bool $expected the expected result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasrestrictions_state_provider')]
     public function test_cm_hasrestrictions_state(
         string $format = 'topics',
         string $rolename = 'editingteacher',

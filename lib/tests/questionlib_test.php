@@ -38,6 +38,19 @@ require_once($CFG->dirroot . '/backup/util/includes/restore_includes.php');
  * @copyright  2006 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('question_delete_context')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('question_save_from_deletion')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_question_options')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('question_move_question_tags_to_new_context')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('question_categorylist')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('question_categorylist_parents')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('question_move_questions_to_category')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('idnumber_exist_in_question_category')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('is_latest')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('delete_question_bank_entry')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_question_bank_entry')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_question_version')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_next_version')]
 final class questionlib_test extends \advanced_testcase {
 
     /**
@@ -390,8 +403,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * This function tests the question_delete_context function.
-     *
-     * @covers ::question_delete_context()
      */
     public function test_question_delete_context(): void {
         global $DB;
@@ -414,8 +425,6 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * This function tests the question_save_from_deletion function when it is supposed to make a new category and
      * move question categories to that new category.
-     *
-     * @covers ::question_save_from_deletion()
      */
     public function test_question_save_from_deletion(): void {
         global $DB;
@@ -440,8 +449,6 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * This function tests the question_save_from_deletion function when it is supposed to make a new category and
      * move question categories to that new category when quiz name is very long but less than 256 characters.
-     *
-     * @covers ::question_save_from_deletion()
      */
     public function test_question_save_from_deletion_quiz_with_long_name(): void {
         global $DB;
@@ -473,8 +480,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * get_question_options should add the category object to the given question.
-     *
-     * @covers ::get_question_options()
      */
     public function test_get_question_options_includes_category_object_single_question(): void {
         [$category, $course, $quiz, $qcat, $questions] = $this->setup_quiz_and_questions();
@@ -488,8 +493,6 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * get_question_options should add the category object to all of the questions in
      * the given list.
-     *
-     * @covers ::get_question_options()
      */
     public function test_get_question_options_includes_category_object_multiple_questions(): void {
         [$category, $course, $quiz, $qcat, $questions] = $this->setup_quiz_and_questions();
@@ -503,8 +506,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * get_question_options includes the tags for all questions in the list.
-     *
-     * @covers ::get_question_options()
      */
     public function test_get_question_options_includes_question_tags(): void {
         [$category, $course, $quiz, $qcat, $questions] = $this->setup_quiz_and_questions();
@@ -542,8 +543,6 @@ final class questionlib_test extends \advanced_testcase {
      * get_question_options should update the context id to the question category
      * context id for any non-course context tag that isn't in the question category
      * context.
-     *
-     * @covers ::get_question_options()
      */
     public function test_get_question_options_normalises_question_tags(): void {
         list($category, $course, $quiz, $qcat, $questions) = $this->setup_quiz_and_questions();
@@ -585,8 +584,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * When moving all tags from one activity context into another activity context.
-     *
-     * @covers ::question_move_question_tags_to_new_context()
      */
     public function test_question_move_question_tags_to_new_context_activity_to_activity_qtags(): void {
         [$category, $course, $quiz, $qcat, $questions] = $this->setup_quiz_and_questions();
@@ -807,12 +804,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when passing a stdClass as parameter.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_stdClass($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -851,12 +848,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when using question definition.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question_definition($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -897,12 +894,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when using a real question id.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question_id($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -943,12 +940,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the deprecated question_has_capability_on function when using a string as question id.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question_string_id($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -989,12 +986,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the question_has_capability_on function when using a moved question.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_moved_question($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -1046,12 +1043,12 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Tests for the question_has_capability_on function when using a real question.
      *
-     * @dataProvider question_capability_on_question_provider
      * @param   array   $capabilities The capability assignments to set.
      * @param   string  $capability The capability to test
      * @param   bool    $isowner Whether the user to create the question should be the owner or not.
      * @param   bool    $expect The expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('question_capability_on_question_provider')]
     public function test_question_has_capability_on_using_question($capabilities, $capability, $isowner, $expect): void {
         $this->resetAfterTest();
 
@@ -1164,8 +1161,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Test of question_categorylist function.
-     *
-     * @covers ::question_categorylist()
      */
     public function test_question_categorylist(): void {
         $this->resetAfterTest();
@@ -1199,8 +1194,6 @@ final class questionlib_test extends \advanced_testcase {
      *
      * This is a situation that should never arise (parents and their children should always belong to the same context)
      * but it does, because bugs, so the code should be robust to it.
-     *
-     * @covers ::question_categorylist()
      */
     public function test_question_categorylist_bad_data(): void {
         $this->resetAfterTest();
@@ -1229,8 +1222,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Test of question_categorylist_parents function.
-     *
-     * @covers ::question_categorylist_parents()
      */
     public function test_question_categorylist_parents(): void {
         $this->resetAfterTest();
@@ -1253,8 +1244,6 @@ final class questionlib_test extends \advanced_testcase {
      *
      * This is a situation that should never arise (parents and their children should always belong to the same context)
      * but it does, because bugs, so the code should be robust to it.
-     *
-     * @covers ::question_categorylist_parents()
      */
     public function test_question_categorylist_parents_bad_data(): void {
         $this->resetAfterTest();
@@ -1307,10 +1296,10 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Test core_question_find_next_unused_idnumber in the case when there are no other questions.
      *
-     * @dataProvider find_next_unused_idnumber_cases
      * @param string|null $oldidnumber value to pass to core_question_find_next_unused_idnumber.
      * @param string|null $expectednewidnumber expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('find_next_unused_idnumber_cases')]
     public function test_core_question_find_next_unused_idnumber(?string $oldidnumber, ?string $expectednewidnumber): void {
         $this->assertSame($expectednewidnumber, core_question_find_next_unused_idnumber($oldidnumber, 0));
     }
@@ -1333,8 +1322,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Tests for the question_move_questions_to_category function.
-     *
-     * @covers ::question_move_questions_to_category
      */
     public function test_question_move_questions_to_category(): void {
         $this->resetAfterTest();
@@ -1357,8 +1344,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Tests for the idnumber_exist_in_question_category function.
-     *
-     * @covers ::idnumber_exist_in_question_category
      */
     public function test_idnumber_exist_in_question_category(): void {
         global $DB;
@@ -1402,7 +1387,6 @@ final class questionlib_test extends \advanced_testcase {
     /**
      * Test method is_latest().
      *
-     * @covers ::is_latest
      *
      */
     public function test_is_latest(): void {
@@ -1421,8 +1405,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Test question bank entry deletion.
-     *
-     * @covers ::delete_question_bank_entry
      */
     public function test_delete_question_bank_entry(): void {
         global $DB;
@@ -1458,8 +1440,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Test question bank entry object.
-     *
-     * @covers ::get_question_bank_entry
      */
     public function test_get_question_bank_entry(): void {
         global $DB;
@@ -1488,8 +1468,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Test the version objects for a question.
-     *
-     * @covers ::get_question_version
      */
     public function test_get_question_version(): void {
         global $DB;
@@ -1519,8 +1497,6 @@ final class questionlib_test extends \advanced_testcase {
 
     /**
      * Test get next version of a question.
-     *
-     * @covers ::get_next_version
      */
     public function test_get_next_version(): void {
         global $DB;

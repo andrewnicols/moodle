@@ -33,6 +33,13 @@ require_once($CFG->dirroot . '/calendar/tests/helpers.php');
 /**
  * Tests various classes and functions in upgradelib.php library.
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('check_mod_assignment')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('check_oracle_usage')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('upgrade_add_item_to_usermenu')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('moodle_needs_upgrading')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('upgrade_started')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('upgrade_set_timeout')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('upgrade_change_binary_column_to_int')]
 final class upgradelib_test extends advanced_testcase {
 
     /**
@@ -777,11 +784,11 @@ final class upgradelib_test extends advanced_testcase {
     /**
      * Test that objects in serialized strings will be changed over to stdClass.
      *
-     * @dataProvider serialized_strings_dataprovider
      * @param string $initialstring The initial serialized setting.
      * @param bool $expectededited If the string is expected to be edited.
      * @param string $expectedresult The expected serialized setting to be returned.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('serialized_strings_dataprovider')]
     public function test_upgrade_fix_serialized_objects($initialstring, $expectededited, $expectedresult): void {
         list($edited, $resultstring) = upgrade_fix_serialized_objects($initialstring);
         $this->assertEquals($expectededited, $edited);
@@ -1357,7 +1364,6 @@ final class upgradelib_test extends advanced_testcase {
     /**
      * Test the check_mod_assignment check if mod_assignment is still used.
      *
-     * @covers ::check_mod_assignment
      * @return void
      */
     public function test_check_mod_assignment_is_used(): void {
@@ -1392,8 +1398,6 @@ final class upgradelib_test extends advanced_testcase {
 
     /**
      * Test the check_oracle_usage check when the Moodle instance is not using Oracle as a database architecture.
-     *
-     * @covers ::check_oracle_usage
      */
     public function test_check_oracle_usage_is_not_used(): void {
         global $CFG;
@@ -1407,8 +1411,6 @@ final class upgradelib_test extends advanced_testcase {
 
     /**
      * Test the check_oracle_usage check when the Moodle instance is using Oracle as a database architecture.
-     *
-     * @covers ::check_oracle_usage
      */
     public function test_check_oracle_usage_is_used(): void {
         global $CFG;
@@ -1456,10 +1458,8 @@ calendar,core_calendar|/calendar/view.php?view=month',
 
     /**
      * Test the functionality of the {@link upgrade_add_item_to_usermenu()} function.
-     *
-     * @covers ::upgrade_add_item_to_usermenu
-     * @dataProvider usermenu_items_dataprovider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('usermenu_items_dataprovider')]
     public function test_upgrade_add_item_to_usermenu(string $initialmenu, string $newmenuitem, string $expectedmenu): void {
         global $CFG;
 
@@ -1539,8 +1539,6 @@ calendar,core_calendar|/calendar/view.php?view=month',
 
     /**
      * Test the upgrade status check alongside the outageless flags.
-     *
-     * @covers ::moodle_needs_upgrading
      */
     public function test_moodle_upgrade_check_outageless(): void {
         global $CFG;
@@ -1562,8 +1560,6 @@ calendar,core_calendar|/calendar/view.php?view=month',
 
     /**
      * Test the upgrade status check alongside the outageless flags.
-     *
-     * @covers ::upgrade_started
      */
     public function test_moodle_start_upgrade_outageless(): void {
         global $CFG;
@@ -1586,8 +1582,6 @@ calendar,core_calendar|/calendar/view.php?view=month',
 
     /**
      * Test the upgrade timeout setter alongside the outageless flags.
-     *
-     * @covers ::upgrade_set_timeout
      */
     public function test_moodle_set_upgrade_timeout_outageless(): void {
         global $CFG;
@@ -1610,10 +1604,6 @@ calendar,core_calendar|/calendar/view.php?view=month',
 
     /**
      * Test the components of the upgrade process being run outageless.
-     *
-     * @covers ::moodle_needs_upgrading
-     * @covers ::upgrade_started
-     * @covers ::upgrade_set_timeout
      */
     public function test_upgrade_components_with_outageless(): void {
         global $CFG;
@@ -1672,14 +1662,13 @@ calendar,core_calendar|/calendar/view.php?view=month',
     /**
      * Unit test for {@see upgrade_change_binary_column_to_int()}.
      *
-     * @dataProvider upgrade_change_binary_column_to_int_provider
-     * @covers ::upgrade_change_binary_column_to_int()
      * @param int $type The field type.
      * @param string|null $length The field length.
      * @param bool $expectedresult Whether the conversion succeeded.
      * @param bool $expecexception Whether to expect an exception.
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('upgrade_change_binary_column_to_int_provider')]
     public function test_upgrade_change_binary_column_to_int(
         int $type,
         ?string $length,
@@ -1738,8 +1727,6 @@ calendar,core_calendar|/calendar/view.php?view=month',
 
     /**
      * Test for upgrade script replacing full urls with relative urls in defaulthomepage setting
-     *
-     * @covers ::upgrade_change_binary_column_to_int()
      */
     public function test_upgrade_store_relative_url_sitehomepage(): void {
         global $CFG;

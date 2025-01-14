@@ -21,19 +21,15 @@ use core\context\user;
 /**
  * Unit tests for {@see activity_packager}.
  *
- * @coversDefaultClass \core\moodlenet\activity_packager
  * @package core
  * @copyright 2023 Michael Hawkins <michaelh@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\moodlenet\activity_packager::class)]
 final class activity_packager_test extends \advanced_testcase {
 
     /**
      * Test fetching and overriding a backup task setting.
-     *
-     * @covers ::override_task_setting
-     * @covers ::get_all_task_settings
-     * @covers ::get_backup_controller
      */
     public function test_override_task_setting(): void {
         global $USER;
@@ -99,9 +95,6 @@ final class activity_packager_test extends \advanced_testcase {
 
     /**
      * Test overriding a backup task setting.
-     *
-     * @covers ::get_package
-     * @covers ::package
      */
     public function test_get_package(): void {
         global $USER;

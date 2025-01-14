@@ -36,6 +36,8 @@ require_once($CFG->libdir . '/completionlib.php');
  * @copyright 2014 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\backup_xapistate_structure_step::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\restore_xapistate_structure_step::class)]
 final class moodle2_test extends \advanced_testcase {
 
     /**
@@ -1126,9 +1128,6 @@ final class moodle2_test extends \advanced_testcase {
 
     /**
      * Test the xAPI state through a backup and restore.
-     *
-     * @covers \backup_xapistate_structure_step
-     * @covers \restore_xapistate_structure_step
      */
     public function test_xapistate_backup(): void {
         global $DB;

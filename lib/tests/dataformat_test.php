@@ -24,10 +24,10 @@ use core_component;
  * Tests for the dataformat plugins
  *
  * @package    core
- * @covers     \core\dataformat
  * @copyright  2020 Paul Holden <paulh@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\dataformat::class)]
 final class dataformat_test extends \advanced_testcase {
 
     /**
@@ -68,9 +68,8 @@ final class dataformat_test extends \advanced_testcase {
      *
      * @param string $dataformat
      * @return void
-     *
-     * @dataProvider write_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('write_data_provider')]
     public function test_write_data(string $dataformat): void {
         $columns = ['fruit', 'colour', 'animal'];
         $rows = [
@@ -90,9 +89,8 @@ final class dataformat_test extends \advanced_testcase {
      *
      * @param string $dataformat
      * @return void
-     *
-     * @dataProvider write_data_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('write_data_provider')]
     public function test_write_data_to_filearea(string $dataformat): void {
         $this->resetAfterTest();
 

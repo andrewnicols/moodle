@@ -28,9 +28,9 @@ use context_system;
  * @package    customfield_textarea
  * @copyright  2019 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \customfield_textarea\field_controller
- * @covers     \customfield_textarea\data_controller
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\customfield_textarea\field_controller::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\customfield_textarea\data_controller::class)]
 final class plugin_test extends \advanced_testcase {
 
     /** @var \stdClass[] */
@@ -204,9 +204,6 @@ final class plugin_test extends \advanced_testcase {
 
     /**
      * Test embedded file backup and restore.
-     *
-     * @covers \customfield_textarea\data_controller::backup_define_structure
-     * @covers \customfield_textarea\data_controller::backup_restore_structure
      */
     public function test_embedded_file_backup_and_restore(): void {
         global $CFG, $USER, $DB;

@@ -24,15 +24,12 @@ use core\moodlenet\share_recorder;
  * @package   core
  * @copyright 2023 David Woloszyn <david.woloszyn@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\moodlenet\share_recorder
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\moodlenet\share_recorder::class)]
 final class share_recorder_test extends \advanced_testcase {
 
     /**
      * Test inserting and updating an activity share progress to MoodleNet.
-     *
-     * @covers ::insert_share_progress
-     * @covers ::update_share_progress
      */
     public function test_activity_share_progress(): void {
         global $DB, $USER;
@@ -67,9 +64,6 @@ final class share_recorder_test extends \advanced_testcase {
     /**
      * Test inserting and updating a course share progress to MoodleNet.
      * We will also force an error status and test that too.
-     *
-     * @covers ::insert_share_progress
-     * @covers ::update_share_progress
      */
     public function test_course_share_progress(): void {
         global $DB, $USER;
@@ -100,8 +94,6 @@ final class share_recorder_test extends \advanced_testcase {
 
     /**
      * Tests the share type is one of the allowed values.
-     *
-     * @covers ::get_allowed_share_types
      */
     public function test_invalid_share_type(): void {
         global $USER;
@@ -116,8 +108,6 @@ final class share_recorder_test extends \advanced_testcase {
 
     /**
      * Tests the share status is one of the allowed values.
-     *
-     * @covers ::get_allowed_share_statuses
      */
     public function test_invalid_share_status(): void {
         global $USER;

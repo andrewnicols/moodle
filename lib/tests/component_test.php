@@ -30,7 +30,9 @@ use ReflectionProperty;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @covers \core\component
+ * @covers \core\component
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\component::class)]
 final class component_test extends \advanced_testcase {
     #[\Override]
     public function tearDown(): void {
@@ -241,11 +243,10 @@ final class component_test extends \advanced_testcase {
     /**
      * Test that the get_plugin_list_with_file() function returns the correct list of plugins.
      *
-     * @covers \core\component::is_valid_plugin_name
-     * @dataProvider is_valid_plugin_name_provider
      * @param array $arguments
      * @param bool $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('is_valid_plugin_name_provider')]
     public function test_is_valid_plugin_name(array $arguments, bool $expected): void {
         $this->assertEquals($expected, component::is_valid_plugin_name(...$arguments));
     }
@@ -339,10 +340,10 @@ final class component_test extends \advanced_testcase {
     /**
      * Test \core_component::normalize_component function.
      *
-     * @dataProvider normalise_component_provider
      * @param array $expected
      * @param string $args
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('normalise_component_provider')]
     public function test_normalize_component(array $expected, string $args): void {
         $this->assertSame(
             $expected,
@@ -353,10 +354,10 @@ final class component_test extends \advanced_testcase {
     /**
      * Test the deprecated normalize_component function.
      *
-     * @dataProvider normalise_component_provider
      * @param array $expected
      * @param string $args
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('normalise_component_provider')]
     public function test_deprecated_normalize_component(array $expected, string $args): void {
         $this->assertSame(
             $expected,
@@ -433,11 +434,10 @@ final class component_test extends \advanced_testcase {
     /**
      * Unit tests for get_component_from_classname.
      *
-     * @dataProvider get_component_from_classname_provider
      * @param string $classname The class name to test
      * @param string|null $expected The expected component
-     * @covers \core\component::get_component_from_classname
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_component_from_classname_provider')]
     public function test_get_component_from_classname(
         string $classname,
         string|null $expected,
@@ -621,10 +621,10 @@ final class component_test extends \advanced_testcase {
     /**
      * Test that the get_component_classes_in_namespace() function returns classes in the correct namespace.
      *
-     * @dataProvider get_component_classes_in_namespace_provider
      * @param array $methodargs
      * @param string $expectedclassnameformat
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_component_classes_in_namespace_provider')]
     public function test_get_component_classes_in_namespace_provider(
         array $methodargs,
         string $expectedclassnameformat,
@@ -807,13 +807,13 @@ final class component_test extends \advanced_testcase {
     /**
      * Test the classloader.
      *
-     * @dataProvider classloader_provider
      * @param array $psr0 The PSR-0 namespaces to be used in the test.
      * @param array $psr4 The PSR-4 namespaces to be used in the test.
      * @param string $classname The name of the class to attempt to load.
      * @param string $includedfiles The file expected to be loaded.
      * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('classloader_provider')]
     public function test_classloader($psr0, $psr4, $classname, $includedfiles): void {
         $psr0namespaces = new ReflectionProperty(component::class, 'psr0namespaces');
         $psr0namespaces->setValue(null, $psr0);
@@ -998,13 +998,13 @@ final class component_test extends \advanced_testcase {
     /**
      * Test the PSR classloader.
      *
-     * @dataProvider psr_classloader_provider
      * @param array $psr0 The PSR-0 namespaces to be used in the test.
      * @param array $psr4 The PSR-4 namespaces to be used in the test.
      * @param string $classname The name of the class to attempt to load.
      * @param string|bool $file The expected file corresponding to the class or false for nonexistant.
      * @runInSeparateProcess
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('psr_classloader_provider')]
     public function test_psr_classloader($psr0, $psr4, $classname, $file): void {
         return;
         $psr0namespaces = new ReflectionProperty(component::class, 'psr0namespaces');
@@ -1065,13 +1065,13 @@ final class component_test extends \advanced_testcase {
     /**
      * Test the PSR classloader.
      *
-     * @dataProvider get_class_file_provider
      * @param string $classname the name of the class.
      * @param string $prefix The namespace prefix used to identify the base directory of the source files.
      * @param string $path The relative path to the base directory of the source files.
      * @param string[] $separators The characters that should be used for separating.
      * @param string|bool $result The expected result to be returned from get_class_file.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_class_file_provider')]
     public function test_get_class_file($classname, $prefix, $path, $separators, $result): void {
         $component = new ReflectionClass(component::class);
         $psrclassloader = $component->getMethod('get_class_file');
@@ -1109,10 +1109,10 @@ final class component_test extends \advanced_testcase {
     /**
      * Test the get_component_names() method.
      *
-     * @dataProvider get_component_names_provider
      * @param bool $includecore Whether to include core in the list.
      * @param bool $coreexpected Whether core is expected to be in the list.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_component_names_provider')]
     public function test_get_component_names(
         bool $includecore,
         bool $coreexpected,
@@ -1311,11 +1311,11 @@ final class component_test extends \advanced_testcase {
     /**
      * Summary of test_composer_files
      *
-     * @dataProvider core_thirdparty_libs_with_composer_provider
      * @param string $name
      * @param string $fullpath
      * @param string $relativepath
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('core_thirdparty_libs_with_composer_provider')]
     public function test_composer_files(
         string $name,
         string $fullpath,
@@ -1489,10 +1489,10 @@ final class component_test extends \advanced_testcase {
     /**
      * Ensure that invalid JSON in the subplugins.json file warns appropriately.
      *
-     * @dataProvider invalid_subplugins_json_provider
      * @param string[] $expectedwarnings Errors to expect in the exception message
      * @param array[] $json The contents of the subplugins.json file
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalid_subplugins_json_provider')]
     public function test_fetch_subtypes_json_invalid_values(
         array $expectedwarnings,
         array $json,

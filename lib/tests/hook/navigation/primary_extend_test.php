@@ -19,17 +19,17 @@ namespace core\hook\navigation;
 /**
  * Test hook for primary navigation.
  *
- * @coversDefaultClass \core\hook\navigation\primary_extend
  *
  * @package   core
  * @author    Petr Skoda
  * @copyright 2023 Open LMS
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\navigation\primary_extend::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\navigation\views\primary::class)]
 final class primary_extend_test extends \advanced_testcase {
     /**
      * Test stoppable_trait.
-     * @covers ::stop_propagation
      */
     public function test_stop_propagation(): void {
         global $PAGE;
@@ -49,7 +49,6 @@ final class primary_extend_test extends \advanced_testcase {
 
     /**
      * Test hook is triggered when initialising primary navigation menu.
-     * @covers \core\navigation\views\primary::initialise
      */
     public function test_trigggering(): void {
         global $PAGE;
@@ -77,7 +76,6 @@ final class primary_extend_test extends \advanced_testcase {
 
     /**
      * Verify that nothing except this hook modifies the primary menu.
-     * @covers \core\navigation\views\primary::initialise
      */
     public function test_unsupported_hacks(): void {
         global $PAGE;
@@ -105,7 +103,6 @@ final class primary_extend_test extends \advanced_testcase {
 
     /**
      * Test adding of primary menu items via hook.
-     * @covers \core\navigation\views\primary::initialise
      */
     public function test_primary_menu_extending(): void {
         global $PAGE;
@@ -135,7 +132,6 @@ final class primary_extend_test extends \advanced_testcase {
 
     /**
      * Test replacing of the whole primary menu.
-     * @covers \core\navigation\views\primary::initialise
      */
     public function test_primary_menu_replacing(): void {
         global $PAGE;

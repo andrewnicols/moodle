@@ -23,8 +23,8 @@ namespace mod_quiz;
  * @category   test
  * @copyright  2024 David Woloszyn <david.woloszyn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\notification_helper
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\notification_helper::class)]
 final class notification_helper_test extends \advanced_testcase {
     /**
      * Run all the tasks related to the notifications.

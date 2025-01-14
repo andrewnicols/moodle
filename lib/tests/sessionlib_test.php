@@ -25,11 +25,9 @@ namespace core;
  * @copyright 2014 Totara Learning Solutions Ltd {@link http://www.totaralms.com/}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('cron_setup_user')]
 final class sessionlib_test extends \advanced_testcase {
 
-    /**
-     * @covers ::cron_setup_user
-     */
     public function test_cron_setup_user(): void {
         // This function uses the $GLOBALS super global. Disable the VariableNameLowerCase sniff for this function.
         // phpcs:disable moodle.NamingConventions.ValidVariableName.VariableNameLowerCase
@@ -240,11 +238,11 @@ final class sessionlib_test extends \advanced_testcase {
     /**
      * Test for secure cookie
      *
-     * @dataProvider moodle_cookie_secure_provider
      *
      * @param array $config Array of key value config settings
      * @param bool $secure Wether cookies should be secure or not
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('moodle_cookie_secure_provider')]
     public function test_is_moodle_cookie_secure($config, $secure): void {
         global $CFG;
         $this->resetAfterTest();

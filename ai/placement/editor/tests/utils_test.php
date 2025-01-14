@@ -25,8 +25,8 @@ use core_ai\aiactions\generate_text;
  * @package    aiplacement_editor
  * @copyright  2024 Huong Nguyen <huongnv13@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \aiplacement_courseassist\utils
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\aiplacement_courseassist\utils::class)]
 final class utils_test extends \advanced_testcase {
     /** @var array List of users. */
     private array $users;
@@ -56,8 +56,8 @@ final class utils_test extends \advanced_testcase {
      *
      * @param string $actionname Action name.
      * @param string $actionclass Action class.
-     * @dataProvider html_editor_placement_action_available_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('html_editor_placement_action_available_provider')]
     public function test_is_html_editor_placement_action_available(
         string $actionname,
         string $actionclass,

@@ -25,8 +25,10 @@ use core\url;
  * @category test
  * @copyright 2013 Damyon Wiese
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\task\manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\task\manager::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\task\adhoc_task::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\task\failed_task_callbacks::class)]
 final class adhoc_task_test extends \advanced_testcase {
     public static function setUpBeforeClass(): void {
         parent::setUpBeforeClass();
@@ -36,8 +38,6 @@ final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test getting name of task that implements it's own get_name method
-     *
-     * @covers \core\task\adhoc_task
      */
     public function test_get_name(): void {
         $task = new \core\task\adhoc_test_task();
@@ -46,8 +46,6 @@ final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test getting name of task that uses the default implementation of get_name
-     *
-     * @covers \core\task\adhoc_task
      */
     public function test_get_name_default(): void {
         $task = new \mod_fake\task\adhoc_component_task();
@@ -140,8 +138,6 @@ final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test that failed tasks eventually hit the maximum delay.
-     *
-     * @covers \core\task\adhoc_task
      */
     public function test_get_next_adhoc_task_maximum_fail_delay(): void {
         $this->resetAfterTest(true);
@@ -687,7 +683,6 @@ final class adhoc_task_test extends \advanced_testcase {
     /**
      * Test that when no userid is specified, it returns empty from the DB
      * too.
-     * @covers \core\task\adhoc_task
      */
     public function test_adhoc_task_user_empty(): void {
         $this->resetAfterTest(true);
@@ -707,8 +702,6 @@ final class adhoc_task_test extends \advanced_testcase {
     /**
      * Test that when a userid is specified, that userid is subsequently
      * returned.
-     *
-     * @covers \core\task\adhoc_task
      */
     public function test_adhoc_task_user_set(): void {
         $this->resetAfterTest(true);
@@ -792,8 +785,6 @@ final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test get_concurrency_limit() method to return 0 by default.
-     *
-     * @covers \core\task\adhoc_task
      */
     public function test_get_concurrency_limit(): void {
         $this->resetAfterTest(true);
@@ -804,7 +795,6 @@ final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test get_concurrency_limit() method to return a default value set in config.
-     * @covers \core\task\adhoc_task
      */
     public function test_get_concurrency_limit_default(): void {
         $this->resetAfterTest(true);
@@ -816,7 +806,6 @@ final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test get_concurrency_limit() method to return a value for specific task class.
-     * @covers \core\task\adhoc_task
      */
     public function test_get_concurrency_limit_for_task(): void {
         global $CFG;
@@ -922,8 +911,6 @@ final class adhoc_task_test extends \advanced_testcase {
 
     /**
      * Test send messages when adhoc task reaches the max fail delay time.
-     *
-     * @covers \core\task\failed_task_callbacks::send_failed_task_max_delay_message
      */
     public function test_adhoc_message_max_fail_delay(): void {
         $this->resetAfterTest();

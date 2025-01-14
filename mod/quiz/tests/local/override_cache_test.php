@@ -22,8 +22,8 @@ namespace mod_quiz\local;
  * @package   mod_quiz
  * @copyright 2024 Matthew Hilton <matthewhilton@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \mod_quiz\local\override_cache
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\local\override_cache::class)]
 final class override_cache_test extends \advanced_testcase {
     /**
      * Tests CRUD functions of the override_cache

@@ -36,8 +36,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category   external
  * @copyright  2024 Ilya Tregubov <ilya.tregubov@proton.me>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \customfield_number\external\recalculate
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\customfield_number\external\recalculate::class)]
 final class recalculate_test extends \externallib_advanced_testcase {
 
     /**

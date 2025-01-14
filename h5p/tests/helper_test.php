@@ -27,8 +27,8 @@ use core_h5p\local\library\autoloader;
  * @category   test
  * @copyright  2019 Sara Arjona <sara@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core_h5p\helper
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_h5p\helper::class)]
 final class helper_test extends \advanced_testcase {
 
     /**
@@ -42,13 +42,13 @@ final class helper_test extends \advanced_testcase {
     /**
      * Test the behaviour of get_display_options().
      *
-     * @dataProvider display_options_provider
      * @param  bool   $frame     Whether the frame should be displayed or not
      * @param  bool   $export    Whether the export action button should be displayed or not
      * @param  bool   $embed     Whether the embed action button should be displayed or not
      * @param  bool   $copyright Whether the copyright action button should be displayed or not
      * @param  int    $expected The expectation with the displayoptions value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('display_options_provider')]
     public function test_display_options(bool $frame, bool $export, bool $embed, bool $copyright, int $expected): void {
         $this->setRunTestInSeparateProcess(true);
         $this->resetAfterTest();
@@ -455,10 +455,10 @@ final class helper_test extends \advanced_testcase {
     /**
      * Test the parse_js_array function with a range of content.
      *
-     * @dataProvider parse_js_array_provider
      * @param string $content
      * @param array $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parse_js_array_provider')]
     public function test_parse_js_array(string $content, array $expected): void {
         $this->assertEquals($expected, helper::parse_js_array($content));
     }

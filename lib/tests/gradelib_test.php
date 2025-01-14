@@ -29,6 +29,7 @@ require_once($CFG->libdir . '/gradelib.php');
  * @copyright 2012 Andrew Davis
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\grade_get_grades::class)]
 final class gradelib_test extends \advanced_testcase {
 
     public function test_grade_update_mod_grades(): void {
@@ -174,11 +175,11 @@ final class gradelib_test extends \advanced_testcase {
     /**
      * Tests for the grade_get_date_for_user_grade function.
      *
-     * @dataProvider grade_get_date_for_user_grade_provider
      * @param \stdClass $grade
      * @param \stdClass $user
      * @param int $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('grade_get_date_for_user_grade_provider')]
     public function test_grade_get_date_for_user_grade(\stdClass $grade, \stdClass $user, ?int $expected): void {
         $this->assertEquals($expected, grade_get_date_for_user_grade($grade, $user));
     }
@@ -306,7 +307,6 @@ final class gradelib_test extends \advanced_testcase {
     /**
      * When getting a calculated grade containing an error, we mark grading finished and don't keep trying to regrade.
      *
-     * @covers \grade_get_grades()
      * @return void
      */
     public function test_grade_get_grades_errors(): void {

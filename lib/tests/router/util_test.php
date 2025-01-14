@@ -27,8 +27,8 @@ use Slim\Middleware\RoutingMiddleware;
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core\router\util
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\router\util::class)]
 final class util_test extends route_testcase {
     /**
      * Ensure that no error is thrown when getting a route instance for a callable.

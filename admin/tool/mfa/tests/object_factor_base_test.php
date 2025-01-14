@@ -24,6 +24,8 @@ namespace tool_mfa;
  * @copyright   2023 Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('setup_user_factor')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('replace_user_factor')]
 final class object_factor_base_test extends \advanced_testcase {
 
     use \tool_mfa\tests\mfa_settings_trait;
@@ -31,7 +33,6 @@ final class object_factor_base_test extends \advanced_testcase {
     /**
      * Test deleting user's configured factors
      *
-     * @covers ::setup_user_factor
      * @return void
      */
     public function test_revoke_user_factor(): void {
@@ -81,9 +82,6 @@ final class object_factor_base_test extends \advanced_testcase {
 
     /**
      * Tests the replacement of a factor.
-     *
-     * @covers ::setup_user_factor
-     * @covers ::replace_user_factor
      */
     public function test_replace_user_factor(): void {
         $this->resetAfterTest();

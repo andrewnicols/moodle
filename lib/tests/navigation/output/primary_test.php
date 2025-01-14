@@ -26,6 +26,7 @@ use ReflectionMethod;
  * @copyright   2021 onwards Peter Dias
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\navigation\output\primary::class)]
 final class primary_test extends \advanced_testcase {
     /**
      * Basic setup to make sure the nav objects gets generated without any issues.
@@ -48,13 +49,13 @@ final class primary_test extends \advanced_testcase {
     /**
      * Test the primary export to confirm we are getting the nodes
      *
-     * @dataProvider primary_export_provider
      * @param bool $withcustom Setup with custom menu
      * @param bool $withlang Setup with langs
      * @param string $userloggedin The type of user ('admin' or 'guest') if creating setup with logged in user,
      *                             otherwise consider the user as non-logged in
      * @param array $expecteditems An array of nodes expected with content in them.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('primary_export_provider')]
     public function test_primary_export(bool $withcustom, bool $withlang, string $userloggedin, array $expecteditems): void {
         global $PAGE, $CFG;
         if ($withcustom) {
@@ -149,10 +150,10 @@ final class primary_test extends \advanced_testcase {
     /**
      * Test the custom menu getter to confirm the nodes gets generated and are returned correctly.
      *
-     * @dataProvider custom_menu_provider
      * @param string $config
      * @param array $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('custom_menu_provider')]
     public function test_get_custom_menu(string $config, array $expected): void {
         $actual = $this->get_custom_menu($config);
         $this->assertEquals($expected, $actual);
@@ -316,8 +317,6 @@ final class primary_test extends \advanced_testcase {
      * Test the merge_primary_and_custom and the eval_is_active method. Merge  primary and custom menu with different
      * page urls and check that the correct nodes are active and open, depending on the data for each menu.
      *
-     * @covers \core\navigation\output\primary::merge_primary_and_custom
-     * @covers \core\navigation\output\primary::flag_active_nodes
      * @return void
      * @throws \ReflectionException
      * @throws \moodle_exception

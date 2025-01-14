@@ -26,8 +26,10 @@ use core\context, core\context_helper;
  * @package   core
  * @copyright Petr Skoda
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\context\user
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\context\user::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\context::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\context_helper::class)]
 final class user_test extends \advanced_testcase {
     /**
      * Tests legacy class.
@@ -42,8 +44,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered methods.
-     * @covers ::instance
-     * @covers \core\context::instance_by_id
      */
     public function test_factory_methods(): void {
         $admin = get_admin();
@@ -58,7 +58,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_short_name
      */
     public function test_get_short_name(): void {
         $this->assertSame('user', user::get_short_name());
@@ -75,7 +74,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_level_name
      */
     public function test_get_level_name(): void {
         $this->assertSame('User', user::get_level_name());
@@ -83,7 +81,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_context_name
      */
     public function test_get_context_name(): void {
         $admin = get_admin();
@@ -97,7 +94,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_url
      */
     public function test_get_url(): void {
         $admin = get_admin();
@@ -110,9 +106,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered methods.
-     * @covers ::get_instance_table()
-     * @covers ::get_behat_reference_columns()
-     * @covers \core\context_helper::resolve_behat_reference
      */
     public function test_resolve_behat_reference(): void {
         $this->resetAfterTest();
@@ -138,7 +131,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_compatible_role_archetypes
      */
     public function test_get_compatible_role_archetypes(): void {
         global $DB;
@@ -152,7 +144,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_possible_parent_levels
      */
     public function test_get_possible_parent_levels(): void {
         $this->assertSame([system::LEVEL], user::get_possible_parent_levels());
@@ -160,7 +151,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_capabilities
      */
     public function test_get_capabilities(): void {
         $admin = get_admin();
@@ -178,7 +168,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::create_level_instances
      */
     public function test_create_level_instances(): void {
         global $DB;
@@ -194,7 +183,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_child_contexts
      */
     public function test_get_child_contexts(): void {
         $admin = get_admin();
@@ -206,7 +194,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::get_cleanup_sql
      */
     public function test_get_cleanup_sql(): void {
         global $DB;
@@ -223,7 +210,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::build_paths
      */
     public function test_build_paths(): void {
         global $DB;
@@ -245,7 +231,6 @@ final class user_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::set_locked
      */
     public function test_set_locked(): void {
         global $DB;

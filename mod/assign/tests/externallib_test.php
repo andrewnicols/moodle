@@ -39,6 +39,9 @@ require_once(__DIR__ . '/fixtures/testable_assign.php');
  * @copyright 2012 Paul Charsley
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_assign_external::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_participant')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('list_participants')]
 final class externallib_test extends \mod_assign\externallib_advanced_testcase {
 
     /**
@@ -387,8 +390,6 @@ final class externallib_test extends \mod_assign\externallib_advanced_testcase {
 
     /**
      * Test that get_assignments does not return intro attachments if submissionattachments enabled and there is no open submission.
-     *
-     * @covers \mod_assign_external::get_assignments
      */
     public function test_get_assignments_when_submissionattachments_is_enabled(): void {
         global $DB;
@@ -2420,8 +2421,6 @@ final class externallib_test extends \mod_assign\externallib_advanced_testcase {
 
     /**
      * Test get_submission_status with time limit for student.
-     *
-     * @covers \mod_assign_external::get_submission_status
      */
     public function test_get_submission_status_with_time_limit_enabled(): void {
         $this->resetAfterTest();
@@ -2735,12 +2734,12 @@ final class externallib_test extends \mod_assign\externallib_advanced_testcase {
     /**
      * Test get_participant() when relative dates mode is enabled on the course.
      *
-     * @dataProvider get_participant_relative_dates_provider
      * @param array $courseconfig the config to use when creating the course.
      * @param array $assignconfig the config to use when creating the assignment.
      * @param array $enrolconfig the enrolement to create.
      * @param array $expectedproperties array of expected assign properties.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_participant_relative_dates_provider')]
     public function test_get_participant_relative_dates(array $courseconfig, array $assignconfig, array $enrolconfig,
             array $expectedproperties): void {
         $this->resetAfterTest();
@@ -2880,8 +2879,6 @@ final class externallib_test extends \mod_assign\externallib_advanced_testcase {
 
     /**
      * Test for WS returning group.
-     * @covers ::get_participant
-     * @covers ::list_participants
      */
     public function test_participants_info_with_groups(): void {
         global $CFG;

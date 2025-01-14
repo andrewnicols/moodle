@@ -42,6 +42,7 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2015 Costantino Cito <ccito@cvaconsulting.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_glossary_external::class)]
 final class external_test extends externallib_advanced_testcase {
 
     /**
@@ -969,7 +970,6 @@ final class external_test extends externallib_advanced_testcase {
     /**
      * Test get_entries_by_multilingual_term.
      *
-     * @covers \mod_glossary_external::get_entries_by_term
      * @return void
      * @throws \coding_exception
      * @throws \invalid_response_exception

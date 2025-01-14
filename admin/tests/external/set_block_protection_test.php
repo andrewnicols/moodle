@@ -27,10 +27,10 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Unit tests to test block protection changes.
  *
  * @package     core
- * @covers      \core_admin\external\set_block_protection
  * @copyright   2023 Andrew Lyons <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_admin\external\set_block_protection::class)]
 final class set_block_protection_test extends \externallib_advanced_testcase {
     /**
      * Test execute method with no login.
@@ -54,11 +54,11 @@ final class set_block_protection_test extends \externallib_advanced_testcase {
     /**
      * Test the execute function with a range of parameters.
      *
-     * @dataProvider execute_provider
      * @param string $block
      * @param int $targetstate
      * @param bool $isundeletable
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_provider')]
     public function test_execute(
         string $block,
         int $targetstate,

@@ -62,9 +62,9 @@ final class environment_test extends \advanced_testcase {
     /**
      * Test the environment.
      *
-     * @dataProvider environment_provider
      * @param environment_results $result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('environment_provider')]
     public function test_environment($result): void {
         $sslmessages = ['ssl/tls configuration not supported', 'invalid ssl/tls configuration'];
 

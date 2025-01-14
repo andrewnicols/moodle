@@ -43,6 +43,8 @@ require_once($CFG->dirroot . '/repository/lib.php');
  * @copyright 2009 Jerome Mouneyrac
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('file_get_all_files_in_draftarea')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('file_prepare_standard_editor')]
 final class filelib_test extends \advanced_testcase {
     public function test_format_postdata_for_curlcall(): void {
 
@@ -1828,7 +1830,6 @@ EOF;
 
     /**
      * Test that zip files in the draftarea are returned.
-     * @covers ::file_get_all_files_in_draftarea
      */
     public function test_file_get_all_files_in_draftarea_zip_files(): void {
         $this->resetAfterTest();
@@ -1964,8 +1965,6 @@ EOF;
 
     /**
      * Test text cleaning when preparing text editor data.
-     *
-     * @covers ::file_prepare_standard_editor
      */
     public function test_file_prepare_standard_editor_clean_text(): void {
         $text = "lala <object>xx</object>";
@@ -2044,10 +2043,10 @@ EOF;
     /**
      * Tests for file_get_typegroup to check that both arrays, and string values are accepted.
      *
-     * @dataProvider file_get_typegroup_provider
      * @param string|array $group
      * @param string $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('file_get_typegroup_provider')]
     public function test_file_get_typegroup(
         string|array $group,
         string $expected,

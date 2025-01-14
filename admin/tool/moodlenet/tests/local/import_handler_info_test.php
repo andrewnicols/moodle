@@ -33,11 +33,11 @@ final class import_handler_info_test extends \advanced_testcase {
     /**
      * Test init and the getters.
      *
-     * @dataProvider handler_info_data_provider
      * @param string $modname the name of the mod.
      * @param string $description description of the mod.
      * @param bool $expectexception whether we expect an exception during init or not.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('handler_info_data_provider')]
     public function test_initialisation($modname, $description, $expectexception): void {
         $this->resetAfterTest();
         // Skip those cases we cannot init.

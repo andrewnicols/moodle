@@ -26,6 +26,7 @@ use core_user;
  * @copyright  2024 onwards Laurent David <laurent.david@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\report_log_renderable::class)]
 final class table_log_test extends advanced_testcase {
     /**
      * @var int The course with separate groups.
@@ -288,10 +289,9 @@ final class table_log_test extends advanced_testcase {
      * @param int $courseindex
      * @param string $username
      * @param array $expectedusers
-     * @covers       \report_log_renderable::get_user_list
-     * @dataProvider get_report_logs_provider
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_report_logs_provider')]
     public function test_get_table_logs(int $courseindex, string $username, array $expectedusers): void {
         $manager = get_log_manager();
         $stores = $manager->get_readers();

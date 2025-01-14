@@ -32,8 +32,8 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @package    mod_quiz
  * @copyright  2008 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\quiz_settings
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\quiz_settings::class)]
 final class quizobj_test extends basic_testcase {
     /**
      * Test cases for {@see test_cannot_review_message()}.
@@ -70,7 +70,6 @@ final class quizobj_test extends basic_testcase {
     /**
      * Unit test for {@see quiz_settings::cannot_review_message()}.
      *
-     * @dataProvider cannot_review_message_testcases
      * @param bool $reviewlater whether the quiz allows reivew 'later while the quiz is still open'.
      * @param bool $reviewafterclose whether the quiz allows rievew 'after the quiz is closed'.
      * @param int|null $quizcloseoffset quiz close date, relative to now. Null means not set.
@@ -79,6 +78,7 @@ final class quizobj_test extends basic_testcase {
      * @param string|int $expectation expected result: '' means '', 'noreview' means noreview lang string,
      *      int means noreviewuntil with that time relative to now.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cannot_review_message_testcases')]
     public function test_cannot_review_message(
         bool $reviewlater,
         bool $reviewafterclose,

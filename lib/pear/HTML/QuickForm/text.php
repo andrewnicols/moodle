@@ -32,7 +32,7 @@ require_once("HTML/QuickForm/input.php");
  */
 class HTML_QuickForm_text extends HTML_QuickForm_input
 {
-                
+
     // {{{ constructor
 
     /**
@@ -61,7 +61,7 @@ class HTML_QuickForm_text extends HTML_QuickForm_input
         debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
         self::__construct($elementName, $elementLabel, $attributes);
     }
-        
+
     // }}}
     // {{{ setSize()
 
@@ -95,6 +95,6 @@ class HTML_QuickForm_text extends HTML_QuickForm_input
     } //end func setMaxlength
 
     // }}}
-    
+
 } //end class HTML_QuickForm_text
 ?>

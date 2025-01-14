@@ -30,18 +30,18 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @package    core_grades
  * @category   external
  * @copyright  2023 Ilya Tregubov <ilya.a.tregubov@gmail.com>
- * @covers     \core_grades\external\get_gradable_users
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_grades\external\get_gradable_users::class)]
 final class get_gradable_users_test extends \externallib_advanced_testcase {
 
     /**
      * Test the behaviour of get_gradable_users.
      *
-     * @dataProvider execute_data
      * @param bool $onlyactiveenrol if we should only return active enrolments
      * @param bool $grouprestricted if we should only return users within a group
      * @param array $expected expected users
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_data')]
     public function test_execute(bool $onlyactiveenrol, bool $grouprestricted, array $expected): void {
         global $DB;
 

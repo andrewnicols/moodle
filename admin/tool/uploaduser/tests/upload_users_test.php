@@ -31,6 +31,7 @@ use tool_uploaduser\local\text_progress_tracker;
  * @copyright  2020 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\tool_uploadusers::class)]
 final class upload_users_test extends advanced_testcase {
 
     /**
@@ -45,7 +46,6 @@ final class upload_users_test extends advanced_testcase {
 
     /**
      * Test upload users, enrol and role assignation
-     * @covers \tool_uploadusers::process
      */
     public function test_user_can_upload_with_course_enrolment(): void {
 
@@ -107,7 +107,6 @@ EOF;
 
     /**
      * Test upload users, enrol and assign default role from manual enrol plugin.
-     * @covers \tool_uploadusers::process
      */
     public function test_user_can_upload_with_course_enrolment_default_role(): void {
 

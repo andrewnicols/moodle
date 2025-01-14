@@ -40,8 +40,8 @@ require_once($CFG->libdir . '/blocklib.php');
  * @category  test
  * @copyright 2009 Tim Hunt
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \moodle_page
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\moodle_page::class)]
 final class moodle_page_test extends \advanced_testcase {
 
     /**
@@ -357,14 +357,13 @@ final class moodle_page_test extends \advanced_testcase {
     /**
      * Test for set_title
      *
-     * @dataProvider set_title_provider
      * @param string|null $config The config value for $CFG->sitenameintitle.
      * @param bool $appendsitename The $appendsitename parameter
      * @param string $expected The expected site name to be appended to the title.
      * @param bool $sitenameset To simulate the absence of the site name being set in the site.
      * @return void
-     * @covers ::set_title
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('set_title_provider')]
     public function test_set_title(?string $config, bool $appendsitename, string $expected, bool $sitenameset = true): void {
         global $CFG, $SITE;
 
@@ -731,9 +730,8 @@ final class moodle_page_test extends \advanced_testcase {
 
     /**
      * Validate the theme value depending on the user theme and cohorts.
-     *
-     * @dataProvider get_user_theme_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_user_theme_provider')]
     public function test_cohort_get_user_theme($usertheme, $sitetheme, $cohortthemes, $expected): void {
         global $DB, $PAGE, $USER;
 
@@ -837,7 +835,6 @@ final class moodle_page_test extends \advanced_testcase {
 
     /**
      * Tests user_can_edit_blocks() returns the expected response.
-     * @covers ::user_can_edit_blocks()
      */
     public function test_user_can_edit_blocks(): void {
         global $DB;
@@ -862,7 +859,6 @@ final class moodle_page_test extends \advanced_testcase {
 
     /**
      * Tests that calling force_lock_all_blocks() will cause user_can_edit_blocks() to return false, regardless of capabilities.
-     * @covers ::force_lock_all_blocks()
      */
     public function test_force_lock_all_blocks(): void {
         $this->testpage->set_context(\context_system::instance());
@@ -879,8 +875,6 @@ final class moodle_page_test extends \advanced_testcase {
     /**
      * Test the method to set and retrieve the show_course_index property.
      *
-     * @covers ::set_show_course_index
-     * @covers ::get_show_course_index
      * @return void
      */
     public function test_show_course_index(): void {

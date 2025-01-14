@@ -26,8 +26,8 @@ use stdClass;
  * @category   test
  * @copyright  2021 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_adminpresets\manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_adminpresets\manager::class)]
 final class manager_test extends \advanced_testcase {
     /**
      * Include required libraries.
@@ -40,9 +40,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of protected get_site_settings method.
-     *
-     * @covers ::get_site_settings
-     * @covers ::get_settings
      */
     public function test_manager_get_site_settings(): void {
         global $DB;
@@ -109,9 +106,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of protected get_setting method.
-     *
-     * @covers ::get_setting
-     * @covers ::get_settings_class
      */
     public function test_manager_get_setting(): void {
         $this->resetAfterTest();
@@ -156,8 +150,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of apply_preset() method when the given presetid doesn't exist.
-     *
-     * @covers ::apply_preset
      */
     public function test_apply_preset_unexisting_preset(): void {
         $this->resetAfterTest();
@@ -177,8 +169,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of apply_preset() method.
-     *
-     * @covers ::apply_preset
      */
     public function test_apply_preset(): void {
         global $DB;
@@ -260,12 +250,11 @@ final class manager_test extends \advanced_testcase {
     /**
      * Test the behaviour of export_preset() method.
      *
-     * @covers ::export_preset
-     * @dataProvider export_preset_provider
      *
      * @param bool $includesensible Whether the sensible settings should be exported too or not.
      * @param string $presetname Preset name.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('export_preset_provider')]
     public function test_export_preset(bool $includesensible = false, string $presetname = 'Export 1'): void {
         global $DB;
 
@@ -389,8 +378,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of download_preset() method, when the given presetid doesn't exist.
-     *
-     * @covers ::download_preset
      */
     public function test_download_unexisting_preset(): void {
         $this->resetAfterTest();
@@ -412,8 +399,6 @@ final class manager_test extends \advanced_testcase {
     /**
      * Test the behaviour of import_preset() method.
      *
-     * @dataProvider import_preset_provider
-     * @covers ::import_preset
      *
      * @param string $filecontents File content to import.
      * @param bool $expectedpreset Whether the preset should be created or not.
@@ -423,6 +408,7 @@ final class manager_test extends \advanced_testcase {
      * @param string|null $expectedexception Expected exception class (if that's the case).
      * @param string|null $expectedpresetname Expected preset name.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('import_preset_provider')]
     public function test_import_preset(string $filecontents, bool $expectedpreset, bool $expectedsettings = false,
             bool $expectedplugins = false, bool $expecteddebugging = false, ?string $expectedexception = null,
             string $expectedpresetname = 'Imported preset'): void {
@@ -605,8 +591,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of delete_preset() method when the preset id doesn't exist.
-     *
-     * @covers ::delete_preset
      */
     public function test_delete_preset_unexisting_preset(): void {
 
@@ -629,8 +613,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test trying to delete the core/pre-defined presets
-     *
-     * @covers ::delete_preset
      */
     public function test_delete_preset_core(): void {
         global $DB;
@@ -646,8 +628,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of delete_preset() method.
-     *
-     * @covers ::delete_preset
      */
     public function test_delete_preset(): void {
         global $DB;
@@ -700,8 +680,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of revert_preset() method when the preset applied id doesn't exist.
-     *
-     * @covers ::revert_preset
      */
     public function test_revert_preset_unexisting_presetapp(): void {
         global $DB;
@@ -724,8 +702,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of revert_preset() method.
-     *
-     * @covers ::revert_preset
      */
     public function test_revert_preset(): void {
         global $DB;

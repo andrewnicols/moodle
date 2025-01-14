@@ -21,19 +21,15 @@ use backup_activity_task;
 /**
  * Unit tests for {@see \core\moodlenet\course_partial_packager}.
  *
- * @coversDefaultClass \core\moodlenet\course_partial_packager
  * @package    core
  * @copyright  2023 Huong Nguyen <huongnv13@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\moodlenet\course_partial_packager::class)]
 final class course_partial_packager_test extends \advanced_testcase {
 
     /**
      * Test fetching task settings.
-     *
-     * @covers ::remove_unselected_activities
-     * @covers ::get_all_activity_tasks
-     * @covers ::get_backup_controller
      */
     public function test_remove_unselected_activities(): void {
         global $USER;

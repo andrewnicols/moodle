@@ -27,6 +27,12 @@ use core_phpunit\exception\test_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \advanced_testcase
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('assertEventContextNotUsed')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('runAdhocTasks')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('mock_clock_with_incrementing')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\incrementing_clock::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('mock_clock_with_frozen')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\frozen_clock::class)]
 final class advanced_test extends \advanced_testcase {
     public static function setUpBeforeClass(): void {
         global $CFG;
@@ -364,9 +370,8 @@ final class advanced_test extends \advanced_testcase {
      * @param bool $phpwarn Whether a PHP warning is expected.
      *
      * @runInSeparateProcess
-     * @dataProvider assert_event_context_not_used_provider
-     * @covers ::assertEventContextNotUsed
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('assert_event_context_not_used_provider')]
     public function test_assert_event_context_not_used($fixture, $phpwarn): void {
         require(__DIR__ . '/fixtures/event_fixtures.php');
         // Create an event that uses the event context in its get_url() and get_description() methods.
@@ -550,9 +555,7 @@ final class advanced_test extends \advanced_testcase {
         return $sink;
     }
 
-    /**
-     * @depends test_message_redirection
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('test_message_redirection')]
     public function test_message_redirection_noreset(\phpunit_message_sink $sink): void {
         if ($this->isInIsolation()) {
             $this->markTestSkipped('State cannot be carried over between tests in isolated tests');
@@ -581,9 +584,7 @@ final class advanced_test extends \advanced_testcase {
         $this->assertEquals(2, $sink->count());
     }
 
-    /**
-     * @depends test_message_redirection_noreset
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('test_message_redirection_noreset')]
     public function test_message_redirection_reset(): void {
         $this->assertFalse(\phpunit_util::is_redirecting_messages(), 'Test reset must stop message redirection.');
     }
@@ -696,17 +697,11 @@ final class advanced_test extends \advanced_testcase {
         self::assertFalse(\core_useragent::get_user_agent_string(), 'It should not be set again, data was reset.');
     }
 
-    /**
-     * @covers ::runAdhocTasks
-     */
     public function test_runadhoctasks_no_tasks_queued(): void {
         $this->runAdhocTasks();
         $this->expectOutputRegex('/^$/');
     }
 
-    /**
-     * @covers ::runAdhocTasks
-     */
     public function test_runadhoctasks_tasks_queued(): void {
         $this->resetAfterTest(true);
         $admin = get_admin();
@@ -715,9 +710,6 @@ final class advanced_test extends \advanced_testcase {
         $this->expectOutputRegex("/Task was run as {$admin->id}/");
     }
 
-    /**
-     * @covers ::runAdhocTasks
-     */
     public function test_runadhoctasks_with_existing_user_change(): void {
         $this->resetAfterTest(true);
         $admin = get_admin();
@@ -728,9 +720,6 @@ final class advanced_test extends \advanced_testcase {
         $this->expectOutputRegex("/Task was run as {$admin->id}/");
     }
 
-    /**
-     * @covers ::runAdhocTasks
-     */
     public function test_runadhoctasks_with_existing_user_change_and_specified(): void {
         global $USER;
 
@@ -747,9 +736,6 @@ final class advanced_test extends \advanced_testcase {
 
     /**
      * Test the incrementing mock clock.
-     *
-     * @covers ::mock_clock_with_incrementing
-     * @covers \incrementing_clock
      */
     public function test_mock_clock_with_incrementing(): void {
         $standard = \core\di::get(\core\clock::class);
@@ -780,9 +766,6 @@ final class advanced_test extends \advanced_testcase {
 
     /**
      * Test the incrementing mock clock.
-     *
-     * @covers ::mock_clock_with_frozen
-     * @covers \frozen_clock
      */
     public function test_mock_clock_with_frozen(): void {
         $standard = \core\di::get(\core\clock::class);

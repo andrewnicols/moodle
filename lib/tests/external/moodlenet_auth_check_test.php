@@ -34,14 +34,12 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category   test
  * @copyright  2023 Huong Nguyen <huongnv13@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\external\moodlenet_auth_check
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\external\moodlenet_auth_check::class)]
 final class moodlenet_auth_check_test extends externallib_advanced_testcase {
 
     /**
      * Test the behaviour of moodlenet_auth_check().
-     *
-     * @covers ::execute
      */
     public function test_moodlenet_auth_check(): void {
         global $CFG;

@@ -46,9 +46,9 @@ final class geoip_test extends \advanced_testcase {
     /**
      * Test the format of data returned in the iplookup_find_location function.
      *
-     * @dataProvider ip_provider
      * @param   string  $ip The IP to test
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('ip_provider')]
     public function test_ip($ip): void {
         $this->resetAfterTest();
 

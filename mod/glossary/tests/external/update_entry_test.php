@@ -33,11 +33,11 @@ use core_external\util as external_util;
  *
  * @package    mod_glossary
  * @category   external
- * @covers     \mod_glossary\external\update_entry
  * @since      Moodle 3.10
  * @copyright  2020 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_glossary\external\update_entry::class)]
 final class update_entry_test extends externallib_advanced_testcase {
 
     /**

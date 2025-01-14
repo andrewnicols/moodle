@@ -27,10 +27,11 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \mod_data_generator
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('create_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('create_field')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('create_entry')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('create_preset')]
 final class generator_test extends \advanced_testcase {
-    /**
-     * @covers ::create_instance
-     */
     public function test_generator(): void {
         global $DB;
 
@@ -72,9 +73,6 @@ final class generator_test extends \advanced_testcase {
         $this->assertEquals(GRADE_TYPE_VALUE, $gitem->gradetype);
     }
 
-    /**
-     * @covers ::create_field
-     */
     public function test_create_field(): void {
         global $DB;
 
@@ -122,9 +120,6 @@ final class generator_test extends \advanced_testcase {
         $this->assertEquals(count($fieldtypes), $DB->count_records('data_fields', ['dataid' => $data->id]));
     }
 
-    /**
-     * @covers ::create_entry
-     */
     public function test_create_entry(): void {
         global $DB;
 
@@ -243,10 +238,9 @@ final class generator_test extends \advanced_testcase {
     /**
      * Test for create_preset().
      *
-     * @dataProvider create_preset_provider
-     * @covers ::create_preset
      * @param stdClass|null $record data for the preset that will be created (like name or description)
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('create_preset_provider')]
     public function test_create_preset(?stdClass $record): void {
         global $USER;
 

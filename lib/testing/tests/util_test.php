@@ -50,8 +50,8 @@ final class util_test extends \advanced_testcase {
 
     /**
      * @coversNothing
-     * @depends test_increment_reset_part_one
      */
+    #[\PHPUnit\Framework\Attributes\Depends('test_increment_reset_part_one')]
     public function test_increment_reset_part_two(): int {
         global $DB;
 
@@ -63,9 +63,7 @@ final class util_test extends \advanced_testcase {
         ]);
     }
 
-    /**
-     * @depends test_increment_reset_part_two
-     */
+    #[\PHPUnit\Framework\Attributes\Depends('test_increment_reset_part_two')]
     public function test_increment_reset_part_three(int $previousid): void {
         global $DB;
 

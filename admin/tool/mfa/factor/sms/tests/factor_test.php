@@ -20,11 +20,15 @@ namespace factor_sms;
 /**
  * Tests for sms factor.
  *
- * @covers      \factor_sms\factor
  * @package     factor_sms
  * @copyright   2023 Raquel Ortega <raquel.ortega@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\factor_sms\factor::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\factor_sms\helper::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('setup_user_factor')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('check_verification_code')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('revoke_user_factor')]
 final class factor_test extends \advanced_testcase {
 
     /**
@@ -67,13 +71,12 @@ final class factor_test extends \advanced_testcase {
 
     /**
      * Test format number with different phones and different country codes
-     * @covers \factor_sms\helper::format_number
-     * @dataProvider format_number_provider
      *
      * @param string $phonenumber Phone number.
      * @param string $expected Expected value.
      * @param string|null $countrycode Country code.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('format_number_provider')]
     public function test_format_number(string $phonenumber, string $expected, ?string $countrycode = null): void {
 
         $this->resetAfterTest(true);
@@ -104,12 +107,11 @@ final class factor_test extends \advanced_testcase {
 
     /**
      * Test is valid phone number in E.164 format (https://en.wikipedia.org/wiki/E.164)
-     * @covers \factor_sms\helper::is_valid_phonenumber
-     * @dataProvider is_valid_phonenumber_provider
      *
      * @param string $phonenumber
      * @param bool $valid True if the given phone number is valid, false if is invalid
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('is_valid_phonenumber_provider')]
     public function test_is_valid_phonenumber(string $phonenumber, bool $valid): void {
         $this->resetAfterTest(true);
         if ($valid) {
@@ -121,9 +123,6 @@ final class factor_test extends \advanced_testcase {
 
     /**
      * Test set up user factor and verification code with a random phone number
-     * @covers ::setup_user_factor
-     * @covers ::check_verification_code
-     * @covers ::revoke_user_factor
      */
     public function test_check_verification_code(): void {
         global $SESSION;

@@ -40,6 +40,9 @@ require_once($CFG->dirroot . '/mod/assign/locallib.php');
  * @copyright 2014 Adrian Greeve <adrian@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_assign\event\submission_removed::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\assign::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_assign\event\submission_status_updated::class)]
 final class events_test extends \advanced_testcase {
     // Use the generator helper.
     use mod_assign_test_generator;
@@ -193,8 +196,6 @@ final class events_test extends \advanced_testcase {
 
     /**
      * Test submission_removed event.
-     *
-     * @covers \mod_assign\event\submission_removed
      */
     public function test_submission_removed(): void {
         $this->resetAfterTest();
@@ -226,8 +227,6 @@ final class events_test extends \advanced_testcase {
 
     /**
      * Test submission_removed event when a team submission is removed.
-     *
-     * @covers \mod_assign\event\submission_removed
      */
     public function test_team_submission_removed(): void {
         $this->resetAfterTest();
@@ -267,8 +266,6 @@ final class events_test extends \advanced_testcase {
 
     /**
      * Test event creation for save_user_extension().
-     *
-     * @covers \assign::save_user_extension
      */
     public function test_extension_granted(): void {
         global $DB, $CFG;
@@ -408,8 +405,6 @@ final class events_test extends \advanced_testcase {
 
     /**
      * Test submission_status_updated event when a submission is updated.
-     *
-     * @covers \mod_assign\event\submission_status_updated
      */
     public function test_submission_status_updated_on_update(): void {
         $this->resetAfterTest();
@@ -441,8 +436,6 @@ final class events_test extends \advanced_testcase {
 
     /**
      * Test submission_status_updated event when a submission is removed.
-     *
-     * @covers \mod_assign\event\submission_status_updated
      */
     public function test_submission_status_updated_on_remove(): void {
         $this->resetAfterTest();
@@ -472,8 +465,6 @@ final class events_test extends \advanced_testcase {
 
     /**
      * Test submission_status_updated event when a team submission is removed.
-     *
-     * @covers \mod_assign\event\submission_status_updated
      */
     public function test_team_submission_status_updated_on_remove(): void {
         $this->resetAfterTest();

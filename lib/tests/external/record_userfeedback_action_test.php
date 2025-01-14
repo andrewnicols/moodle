@@ -39,8 +39,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  *
  * @copyright  2020 Shamim Rezaie <shamim@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\external\record_userfeedback_action
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\external\record_userfeedback_action::class)]
 final class record_userfeedback_action_test extends externallib_advanced_testcase {
 
     /**
@@ -58,11 +58,10 @@ final class record_userfeedback_action_test extends externallib_advanced_testcas
     /**
      * Test the behaviour of record_userfeedback_action().
      *
-     * @dataProvider record_userfeedback_action_provider
      * @param string $action The action taken by the user
      *
-     * @covers ::execute
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('record_userfeedback_action_provider')]
     public function test_record_userfeedback_action(string $action): void {
         $this->resetAfterTest();
 

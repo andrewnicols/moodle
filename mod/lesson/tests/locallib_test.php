@@ -273,11 +273,11 @@ final class locallib_test extends \advanced_testcase {
     /**
      * Test the get_last_attempt() method.
      *
-     * @dataProvider get_last_attempt_dataprovider
      * @param int $maxattempts Lesson setting.
      * @param array $attempts The list of student attempts.
      * @param object $expected Expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_last_attempt_dataprovider')]
     public function test_get_last_attempt($maxattempts, $attempts, $expected): void {
         $this->resetAfterTest();
         $this->setAdminUser();

@@ -206,10 +206,10 @@ final class manager_test extends \advanced_testcase {
     /**
      * Tests for the exceptions thrown by {@link \core_analytics\manager::validate_models_declaration()}.
      *
-     * @dataProvider validate_models_declaration_exceptions_provider
      * @param array $models Models declaration.
      * @param string $exception Expected coding exception message.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('validate_models_declaration_exceptions_provider')]
     public function test_validate_models_declaration_exceptions(array $models, string $exception): void {
         $this->resetAfterTest();
 

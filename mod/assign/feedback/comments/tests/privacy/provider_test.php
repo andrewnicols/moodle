@@ -24,8 +24,8 @@ use mod_assign\tests\provider_testcase;
  * @package    assignfeedback_comments
  * @copyright  2018 Adrian Greeve <adrian@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \assignfeedback_comments\privacy\provider
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\assignfeedback_comments\privacy\provider::class)]
 final class provider_test extends provider_testcase {
     /**
      * Convenience function for creating feedback data.

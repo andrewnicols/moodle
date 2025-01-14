@@ -31,8 +31,8 @@ require_once(__DIR__ . '/../fixtures/task_fixtures.php');
  * @category  test
  * @copyright 2019 Brendan Heywood <brendan@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\task\manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\task\manager::class)]
 final class manager_test extends \advanced_testcase {
     /**
      * Data provider for test_get_candidate_adhoc_tasks.
@@ -210,7 +210,6 @@ final class manager_test extends \advanced_testcase {
     /**
      * Test that the candidate adhoc tasks are returned in the right order.
      *
-     * @dataProvider get_candidate_adhoc_tasks_provider
      *
      * @param int $concurrencylimit The max number of runners each task can consume
      * @param int $limit SQL limit
@@ -218,6 +217,7 @@ final class manager_test extends \advanced_testcase {
      * @param array $tasks Array of tasks to put in DB and retrieve
      * @param array $expected Array of expected classnames
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_candidate_adhoc_tasks_provider')]
     public function test_get_candidate_adhoc_tasks(
         int $concurrencylimit,
         int $limit,

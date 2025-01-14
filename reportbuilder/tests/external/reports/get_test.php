@@ -34,10 +34,10 @@ require_once("{$CFG->dirroot}/webservice/tests/helpers.php");
  * Unit tests of external class for getting reports
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\external\reports\get
  * @copyright   2021 David Matamoros <davidmc@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\external\reports\get::class)]
 final class get_test extends externallib_advanced_testcase {
 
     /**

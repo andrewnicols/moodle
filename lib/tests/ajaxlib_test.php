@@ -23,9 +23,9 @@ namespace core;
  * @category   test
  * @copyright  2013 Andrew Nicols
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @covers ::ajax_capture_output
- * @covers ::ajax_check_captured_output
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('ajax_capture_output')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('ajax_check_captured_output')]
 final class ajaxlib_test extends \advanced_testcase {
     /** @var string Original error log */
     protected $oldlog;

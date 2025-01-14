@@ -49,10 +49,10 @@ final class locale_test extends \advanced_testcase {
      * the original locale after every test (ugly, from a purist unit test
      * point of view, but needed).
      *
-     * @dataProvider set_locale_provider
      * @param string $set locale string to be set.
      * @param string $ret expected results returned after setting the locale.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('set_locale_provider')]
     public function test_set_locale(string $set, string $ret): void {
         // Capture current locale for later restore (funnily, using the set_locale() method itself.
         $originallocale = locale::set_locale(LC_ALL, 0);

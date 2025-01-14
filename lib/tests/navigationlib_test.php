@@ -39,6 +39,7 @@ require_once($CFG->libdir . '/navigationlib.php');
  * @copyright 2009 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later (5)
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\navigation_node::class)]
 final class navigationlib_test extends \advanced_testcase {
     /**
      * @var navigation_node
@@ -154,7 +155,6 @@ final class navigationlib_test extends \advanced_testcase {
 
     /**
      * Test the add_attribute method.
-     * @covers \navigation_node::add_attribute
      */
     public function test_node_add_attribute(): void {
         $this->setup_node();
@@ -399,9 +399,9 @@ final class navigationlib_test extends \advanced_testcase {
     }
 
     /**
-     * @depends test_navbar_prepend_and_add
      * @param $node
      */
+    #[\PHPUnit\Framework\Attributes\Depends('test_navbar_prepend_and_add')]
     public function test_navbar_has_items(\moodle_page $page): void {
         $this->resetAfterTest();
 
@@ -466,10 +466,10 @@ final class navigationlib_test extends \advanced_testcase {
     }
 
     /**
-     * @depends test_setting___construct
      * @param mixed $node
      * @return mixed
      */
+    #[\PHPUnit\Framework\Attributes\Depends('test_setting___construct')]
     public function test_setting__initialise($node): settings_navigation {
         $this->resetAfterTest(false);
 
@@ -519,10 +519,10 @@ final class navigationlib_test extends \advanced_testcase {
     }
 
     /**
-     * @depends test_setting__initialise
      * @param mixed $node
      * @return mixed
      */
+    #[\PHPUnit\Framework\Attributes\Depends('test_setting__initialise')]
     public function test_setting_in_alternative_role($node): void {
         $this->resetAfterTest();
 
@@ -577,8 +577,8 @@ final class navigationlib_test extends \advanced_testcase {
      *
      * @param bool $haschildren       Whether the navigation node has children nodes
      * @param bool $forceintomoremenu Whether to force the navigation node and its children into the "more" menu
-     * @dataProvider set_force_into_more_menu_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('set_force_into_more_menu_provider')]
     public function test_set_force_into_more_menu(bool $haschildren, bool $forceintomoremenu): void {
         // Create a navigation node.
         $node = new navigation_node(['text' => 'Navigation node', 'key' => 'navnode']);
@@ -629,9 +629,8 @@ final class navigationlib_test extends \advanced_testcase {
      *
      * @param navigation_node $node The sample navigation node
      * @param bool $expected Whether the navigation node contains an action link
-     * @dataProvider is_action_link_provider
-     * @covers navigation_node::is_action_link
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('is_action_link_provider')]
     public function test_is_action_link(navigation_node $node, bool $expected): void {
         $this->assertEquals($node->is_action_link(), $expected);
     }
@@ -662,9 +661,8 @@ final class navigationlib_test extends \advanced_testcase {
      * Test the action_link_actions method.
      *
      * @param navigation_node $node The sample navigation node
-     * @dataProvider action_link_actions_provider
-     * @covers navigation_node::action_link_actions
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('action_link_actions_provider')]
     public function test_action_link_actions(navigation_node $node): void {
         // Get the formatted array of action link actions.
         $data = $node->action_link_actions();

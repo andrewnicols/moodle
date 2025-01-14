@@ -28,7 +28,7 @@ require_once("HTML/QuickForm/element.php");
  * @access       public
  */
 class HTML_QuickForm_static extends HTML_QuickForm_element {
-    
+
     // {{{ properties
 
     /**
@@ -40,7 +40,7 @@ class HTML_QuickForm_static extends HTML_QuickForm_element {
 
     // }}}
     // {{{ constructor
-    
+
     /**
      * Class constructor
      * 
@@ -80,7 +80,7 @@ class HTML_QuickForm_static extends HTML_QuickForm_element {
     {
         $this->updateAttributes(array('name'=>$name));
     } //end func setName
-    
+
     // }}}
     // {{{ getName()
 
@@ -138,7 +138,7 @@ class HTML_QuickForm_static extends HTML_QuickForm_element {
     {
         return $this->_getTabs() . $this->_text;
     } //end func toHtml
-    
+
     // }}}
     // {{{ getFrozenHtml()
 
@@ -196,7 +196,7 @@ class HTML_QuickForm_static extends HTML_QuickForm_element {
     {
         return null;
     }
-    
+
     // }}}
 } //end class HTML_QuickForm_static
 ?>

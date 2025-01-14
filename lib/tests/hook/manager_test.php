@@ -25,8 +25,8 @@ use core\di;
  * @author    Petr Skoda
  * @copyright 2022 Open LMS
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\hook\manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\manager::class)]
 final class manager_test extends \advanced_testcase {
     /**
      * Test public factory method to get hook manager.

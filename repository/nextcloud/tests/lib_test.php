@@ -34,10 +34,10 @@ require_once($CFG->libdir . '/webdavlib.php');
 
 /**
  * Class repository_nextcloud_lib_testcase
- * @group repository_nextcloud
  * @copyright  2017 Project seminar (Learnweb, University of Münster)
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\Group('repository_nextcloud')]
 final class lib_test extends \advanced_testcase {
 
     /** @var null|\repository_nextcloud the repository_nextcloud object, which the tests are run on. */
@@ -946,12 +946,12 @@ XML;
     /**
      * Testing sync_reference
      *
-     * @dataProvider sync_reference_provider
      * @param array $storedfileargs
      * @param array $mockfunctions
      * @param bool $expectedresult
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('sync_reference_provider')]
     public function test_sync_reference(array $storedfileargs, $mockfunctions, bool $expectedresult): void {
         $this->resetAfterTest(true);
 

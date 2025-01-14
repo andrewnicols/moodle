@@ -33,8 +33,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category   test
  * @copyright  2024 Mikel Martín <mikel@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\external\create_module
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\external\create_module::class)]
 final class create_module_test extends \externallib_advanced_testcase {
 
     /**
@@ -50,8 +50,6 @@ final class create_module_test extends \externallib_advanced_testcase {
 
     /**
      * Test the webservice can execute the create_module action.
-     *
-     * @covers ::execute
      */
     public function test_execute(): void {
         $this->resetAfterTest();
@@ -79,8 +77,6 @@ final class create_module_test extends \externallib_advanced_testcase {
 
     /**
      * Test the webservice can execute the create_module action with a format override.
-     *
-     * @covers ::execute
      */
     public function test_execute_with_format_override(): void {
         $this->resetAfterTest();
@@ -104,8 +100,6 @@ final class create_module_test extends \externallib_advanced_testcase {
 
     /**
      * Test the webservice can execute the create_module action with an invalid module.
-     *
-     * @covers ::execute
      */
     public function test_execute_with_invalid_module(): void {
         $this->resetAfterTest();

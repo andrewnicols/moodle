@@ -43,7 +43,14 @@ require_once(__DIR__ . '/../lib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @coversDefaultClass \cachestore_redis
+ * @coversDefaultClass \cachestore_redis
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('is_ready')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('new_redis')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('set')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('set_many')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_many')]
 final class cachestore_cluster_redis_test extends \advanced_testcase {
     /**
      * Create a cache store for testing the Redis cluster.
@@ -103,8 +110,6 @@ final class cachestore_cluster_redis_test extends \advanced_testcase {
 
     /**
      * Test if the cache store can be created successfully.
-     *
-     * @covers ::is_ready
      */
     public function test_it_can_create(): void {
         $store = $this->create_store();
@@ -114,8 +119,6 @@ final class cachestore_cluster_redis_test extends \advanced_testcase {
 
     /**
      * Test if the cache store trims server names correctly.
-     *
-     * @covers ::new_redis
      */
     public function test_it_trims_server_names(): void {
         // Add a time before and spaces after the first server. Also adds a blank line before second server.
@@ -130,9 +133,6 @@ final class cachestore_cluster_redis_test extends \advanced_testcase {
 
     /**
      * Test if the cache store can successfully set and get a value.
-     *
-     * @covers ::set
-     * @covers ::get
      */
     public function test_it_can_setget(): void {
         $store = $this->create_store();
@@ -144,9 +144,6 @@ final class cachestore_cluster_redis_test extends \advanced_testcase {
 
     /**
      * Test if the cache store can successfully set and get multiple values.
-     *
-     * @covers ::set_many
-     * @covers ::get_many
      */
     public function test_it_can_setget_many(): void {
         $store = $this->create_store();
@@ -173,8 +170,6 @@ final class cachestore_cluster_redis_test extends \advanced_testcase {
 
     /**
      * Test if the cache store is marked as not ready if it fails to connect.
-     *
-     * @covers ::is_ready
      */
     public function test_it_is_marked_not_ready_if_failed_to_connect(): void {
         global $DB;

@@ -22,8 +22,8 @@ namespace aiplacement_courseassist;
  * @package    aiplacement_courseassist
  * @copyright  2024 Huong Nguyen <huongnv13@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \aiplacement_courseassist\utils
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\aiplacement_courseassist\utils::class)]
 final class utils_test extends \advanced_testcase {
 
     /**

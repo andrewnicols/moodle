@@ -33,6 +33,12 @@ require_once("$CFG->dirroot/cohort/lib.php");
  * @copyright  2012 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('cohort_get_cohort')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('cohort_get_cohorts')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('cohort_get_all_cohorts')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('cohort_get_available_cohorts')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('cohort_get_user_cohorts')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('cohort_get_custom_fields_data')]
 final class lib_test extends \advanced_testcase {
 
     /**
@@ -692,12 +698,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test that all get functions return custom fields data.
-     *
-     * @covers ::cohort_get_cohort
-     * @covers ::cohort_get_cohorts
-     * @covers ::cohort_get_all_cohorts
-     * @covers ::cohort_get_available_cohorts
-     * @covers ::cohort_get_user_cohorts
      */
     public function test_get_functions_return_custom_fields(): void {
         $this->resetAfterTest();
@@ -914,8 +914,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test that lib function returns custom field data for a cohorts.
-     *
-     * @covers ::cohort_get_custom_fields_data
      */
     public function test_cohort_get_custom_fields_data(): void {
         $this->resetAfterTest();
@@ -945,8 +943,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of cohort_get_cohort().
-     *
-     * @covers ::cohort_get_cohort
      */
     public function test_cohort_get_cohort(): void {
         $this->resetAfterTest();

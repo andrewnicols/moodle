@@ -33,10 +33,10 @@ use core_user\reportbuilder\datasource\users;
  * Unit tests for ad-hoc task for sending report schedule
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\task\send_schedule
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\task\send_schedule::class)]
 final class send_schedule_test extends advanced_testcase {
 
     /**
@@ -59,9 +59,8 @@ final class send_schedule_test extends advanced_testcase {
      * @param string|null $viewasusername
      * @param string $useronesees
      * @param string $usertwosees
-     *
-     * @dataProvider execute_report_viewas_user_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_report_viewas_user_provider')]
     public function test_execute_report_viewas_user(
         ?int $viewasuser,
         ?string $viewasusername,

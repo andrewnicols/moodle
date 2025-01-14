@@ -39,6 +39,8 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @copyright  2012 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('get_course_contents')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_course_external::class)]
 final class externallib_test extends externallib_advanced_testcase {
 
     /**
@@ -634,9 +636,8 @@ final class externallib_test extends externallib_advanced_testcase {
      *
      * @param array $course
      * @param string $expectedemptyfield
-     *
-     * @dataProvider course_empty_field_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('course_empty_field_provider')]
     public function test_create_courses_empty_field(array $course, string $expectedemptyfield): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -654,9 +655,8 @@ final class externallib_test extends externallib_advanced_testcase {
      *
      * @param array $course
      * @param string $expectedemptyfield
-     *
-     * @dataProvider course_empty_field_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('course_empty_field_provider')]
     public function test_update_courses_empty_field(array $course, string $expectedemptyfield): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -1897,8 +1897,6 @@ final class externallib_test extends externallib_advanced_testcase {
 
     /**
      * Test get_course_contents for courses with sub-sections.
-     *
-     * @covers ::get_course_contents
      */
     public function test_get_course_contents_subsections(): void {
         global $DB, $PAGE;
@@ -3223,7 +3221,6 @@ final class externallib_test extends externallib_advanced_testcase {
 
     /**
      * Test retrieving courses by field returning communication tools.
-     * @covers \core_course_external::get_courses_by_field
      */
     public function test_get_courses_by_field_communication(): void {
         $this->resetAfterTest();
@@ -3817,7 +3814,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the get_enrolled_courses_by_timeline_classification function.
      *
-     * @dataProvider get_get_enrolled_courses_by_timeline_classification_test_cases
      * @param array $coursedata Courses to create
      * @param string $classification Timeline classification
      * @param int $limit Maximum number of results
@@ -3828,6 +3824,7 @@ final class externallib_test extends externallib_advanced_testcase {
      * @param string|null $expectedexception Expected exception string
      * @param string|null $searchvalue If we are searching, what do we need to look for?
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_get_enrolled_courses_by_timeline_classification_test_cases')]
     public function test_get_enrolled_courses_by_timeline_classification(
         $coursedata,
         $classification,

@@ -28,6 +28,7 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @copyright 2023 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\qbank_deletequestion\helper::class)]
 final class helper_test extends \advanced_testcase {
 
     /**
@@ -67,8 +68,6 @@ final class helper_test extends \advanced_testcase {
 
     /**
      * Test get a confirmation message when deleting the question in the (question bank/history) page.
-     *
-     * @covers \qbank_deletequestion\helper::get_delete_confirmation_message
      */
     public function test_get_delete_confirmation_message(): void {
         $qcategory = $this->qgenerator->create_question_category(['contextid' => $this->context->id]);
@@ -140,8 +139,6 @@ final class helper_test extends \advanced_testcase {
 
     /**
      * Test delete questions have single/multiple version.
-     *
-     * @covers \qbank_deletequestion\helper::delete_questions
      */
     public function test_delete_question_has_multiple_version(): void {
         global $DB;

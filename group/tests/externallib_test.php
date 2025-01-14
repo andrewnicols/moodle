@@ -39,8 +39,8 @@ require_once($CFG->dirroot . '/group/lib.php');
  * @copyright  2012 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since Moodle 2.4
- * @covers \core_group_external
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_group_external::class)]
 final class externallib_test extends externallib_advanced_testcase {
 
     /**
@@ -206,7 +206,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test that creating a group with an invalid visibility value throws an exception.
      *
-     * @covers \core_group_external::create_groups
      * @return void
      */
     public function test_create_group_invalid_visibility(): void {
@@ -346,7 +345,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test an exception is thrown when an invalid visibility value is passed in an update.
      *
-     * @covers \core_group_external::update_groups
      * @return void
      */
     public function test_update_groups_invalid_visibility(): void {
@@ -377,7 +375,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Attempting to change the visibility of a group with members should throw an exception.
      *
-     * @covers \core_group_external::update_groups
      * @return void
      */
     public function test_update_groups_visibility_with_members(): void {
@@ -410,7 +407,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Attempting to change the participation field of a group with members should throw an exception.
      *
-     * @covers \core_group_external::update_groups
      * @return void
      */
     public function test_update_groups_participation_with_members(): void {

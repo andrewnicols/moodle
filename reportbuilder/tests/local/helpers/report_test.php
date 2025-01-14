@@ -30,10 +30,10 @@ use core_user\reportbuilder\datasource\users;
  * Unit tests for the report helper class
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\local\helpers\report
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_reportbuilder\local\helpers\report::class)]
 final class report_test extends advanced_testcase {
 
     /**

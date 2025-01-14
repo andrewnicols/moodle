@@ -172,11 +172,11 @@ final class html2text_test extends \basic_testcase {
     /**
      * Test html2text with various examples.
      *
-     * @dataProvider examples_provider
      * @param string $expected
      * @param array $options
      * @param string $html
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('examples_provider')]
     public function test_runner(
         string $expected,
         array $options,

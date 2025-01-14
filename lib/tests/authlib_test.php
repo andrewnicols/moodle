@@ -26,6 +26,7 @@ namespace core;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \auth_plugin_base
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('login_lock_account')]
 final class authlib_test extends \advanced_testcase {
     public function test_lockout(): void {
         global $CFG;
@@ -551,8 +552,6 @@ final class authlib_test extends \advanced_testcase {
 
     /**
      * Test case for checking the email greetings in account lockout notification emails.
-     *
-     * @covers ::login_lock_account()
      */
     public function test_email_greetings(): void {
         $this->resetAfterTest();

@@ -34,6 +34,12 @@ require_once($CFG->dirroot.'/enrol/self/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \enrol_self_plugin
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('send_expiry_notifications')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('is_self_enrol_available')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('edit_instance_validation')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('find_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('validate_enrol_plugin_data')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('update_enrol_plugin_data')]
 final class self_test extends \advanced_testcase {
 
     public function test_basics(): void {
@@ -210,8 +216,6 @@ final class self_test extends \advanced_testcase {
      *
      * Having enrolment duration (timeend) set to 0, the notifications about enrol expiration are not sent
      *
-     * @dataProvider longtimenosee_notifications_provider
-     * @covers ::send_expiry_notifications
      * @param   int         $expirynotify       Whether enrolment expiry notification messages are sent
      * @param   int         $notifyall          Whether teachers and students are notified or only teachers
      * @param   int         $expirythreshold    How long before expiry are users notified (seconds)
@@ -220,6 +224,7 @@ final class self_test extends \advanced_testcase {
      * @param   bool        $progresstrace      Progress tracing object
      * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('longtimenosee_notifications_provider')]
     public function test_longtimenosee_notifications(
         int $expirynotify,
         int $notifyall,
@@ -782,8 +787,6 @@ final class self_test extends \advanced_testcase {
 
     /**
      * Test is_self_enrol_available function behavior.
-     *
-     * @covers ::is_self_enrol_available
      */
     public function test_is_self_enrol_available(): void {
         global $DB, $CFG;
@@ -913,8 +916,6 @@ final class self_test extends \advanced_testcase {
 
     /**
      * Test custom validation of instance data for group enrolment key
-     *
-     * @covers ::edit_instance_validation
      */
     public function test_edit_instance_validation_group_enrolment_key(): void {
         global $DB;
@@ -1118,8 +1119,6 @@ final class self_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of find_instance().
-     *
-     * @covers ::find_instance
      */
     public function test_find_instance(): void {
         global $DB;
@@ -1145,8 +1144,6 @@ final class self_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of validate_enrol_plugin_data().
-     *
-     * @covers ::validate_enrol_plugin_data
      */
     public function test_validate_enrol_plugin_data(): void {
         global $CFG;
@@ -1198,8 +1195,6 @@ final class self_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of update_enrol_plugin_data().
-     *
-     * @covers ::update_enrol_plugin_data
      */
     public function test_update_enrol_plugin_data(): void {
         global $DB;

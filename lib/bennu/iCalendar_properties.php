@@ -102,7 +102,7 @@ class iCalendar_property {
             else {
                 $this->value = rfc2445_do_value_formatting($value, $this->val_type);
             }
-            
+
             return true;
         }
         return false;
@@ -1080,30 +1080,30 @@ class iCalendar_property_rrule extends iCalendar_property {
 class iCalendar_property_action extends iCalendar_property {
 	var $name      = 'ACTION';
     var $val_type   = RFC2445_TYPE_TEXT;
-    
+
     function __construct() {
         parent::__construct();
         $this->valid_parameters = array(
             RFC2445_XNAME => RFC2445_OPTIONAL
         );
     }
-    
+
     function is_valid_value($value) {
         if(!parent::is_valid_value($value)) {
             return false;
         }
-        
+
         // Value must be one of the following, or an x-name.
         $valid_values = array('ACTION', 'DISPLAY', 'EMAIL', 'PROCEDURE');
         return(in_array($value, $valid_values) || rfc2445_is_xname($value));        
-        
+
     }
 }
 
 class iCalendar_property_repeat extends iCalendar_property {
     var $name      = 'REPEAT';
     var $val_type   = RFC2445_TYPE_INTEGER;
-    
+
     function __construct() {
         parent::__construct();
         $this->valid_parameters = array(
@@ -1115,7 +1115,7 @@ class iCalendar_property_repeat extends iCalendar_property {
 class iCalendar_property_trigger extends iCalendar_property {
     var $name      = 'TRIGGER';
     var $val_type   = RFC2445_TYPE_TEXT;
-    
+
     function __construct() {
         parent::__construct();
         $this->valid_parameters = array(
@@ -1124,7 +1124,7 @@ class iCalendar_property_trigger extends iCalendar_property {
             RFC2445_XNAME => RFC2445_OPTIONAL
         );
     }
-    
+
     function is_valid_value($value) {        
     	if(!parent::is_valid_value($value)) {
             return false;

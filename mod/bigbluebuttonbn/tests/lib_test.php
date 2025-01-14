@@ -46,13 +46,29 @@ require_once($CFG->dirroot . '/mod/bigbluebuttonbn/lib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @author    Laurent David (laurent@call-learning.fr)
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_supports')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_add_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_update_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_delete_instance')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_user_outline')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_user_complete')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_get_recent_mod_activity')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_print_recent_mod_activity')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_print_recent_activity')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_get_extra_capabilities')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_reset_course_form_definition')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_reset_course_form_defaults')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_reset_userdata')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_get_coursemodule_info')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_check_updates_since')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('mod_bigbluebuttonbn_core_calendar_provide_event_action')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('bigbluebuttonbn_extend_settings_navigation')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('mod_bigbluebuttonbn_core_calendar_is_event_visible')]
 final class lib_test extends \advanced_testcase {
     use testcase_helper_trait;
 
     /**
      * Check support
-     *
-     * @covers ::bigbluebuttonbn_supports
      */
     public function test_bigbluebuttonbn_supports(): void {
         $this->resetAfterTest();
@@ -63,8 +79,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check add instance
-     *
-     * @covers ::bigbluebuttonbn_add_instance
      */
     public function test_bigbluebuttonbn_add_instance(): void {
         $this->resetAfterTest();
@@ -76,8 +90,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check update instance
-     *
-     * @covers ::bigbluebuttonbn_update_instance
      */
     public function test_bigbluebuttonbn_update_instance(): void {
         $this->resetAfterTest();
@@ -89,8 +101,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check delete instance
-     *
-     * @covers ::bigbluebuttonbn_delete_instance
      */
     public function test_bigbluebuttonbn_delete_instance(): void {
         $this->resetAfterTest();
@@ -102,8 +112,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check delete instance
-     *
-     * @covers ::bigbluebuttonbn_delete_instance
      */
     public function test_bigbluebuttonbn_delete_instance_with_running_meeting(): void {
         $this->resetAfterTest();
@@ -127,8 +135,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check delete instance
-     *
-     * @covers ::bigbluebuttonbn_delete_instance
      */
     public function test_bigbluebuttonbn_delete_instance_with_running_group_meetings(): void {
         $this->resetAfterTest();
@@ -175,8 +181,6 @@ final class lib_test extends \advanced_testcase {
     }
     /**
      * Check user outline page
-     *
-     * @covers ::bigbluebuttonbn_user_outline
      */
     public function test_bigbluebuttonbn_user_outline(): void {
         $this->resetAfterTest();
@@ -197,8 +201,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check user completion
-     *
-     * @covers ::bigbluebuttonbn_user_complete
      */
     public function test_bigbluebuttonbn_user_complete(): void {
         $this->initialise_mock_server();
@@ -221,8 +223,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check get recent activity
-     *
-     * @covers ::bigbluebuttonbn_get_recent_mod_activity
      */
     public function test_bigbluebuttonbn_get_recent_mod_activity(): void {
         $this->initialise_mock_server();
@@ -324,8 +324,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check user recent activity
-     *
-     * @covers ::bigbluebuttonbn_print_recent_mod_activity
      */
     public function test_bigbluebuttonbn_print_recent_mod_activity(): void {
         $this->initialise_mock_server();
@@ -353,8 +351,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check recent activity for the course
-     *
-     * @covers ::bigbluebuttonbn_print_recent_activity
      */
     public function test_bigbluebuttonbn_print_recent_activity(): void {
         global $CFG;
@@ -402,8 +398,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check extra capabilities return value
-     *
-     * @covers ::bigbluebuttonbn_get_extra_capabilities
      */
     public function test_bigbluebuttonbn_get_extra_capabilities(): void {
         $this->resetAfterTest();
@@ -412,8 +406,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check form definition
-     *
-     * @covers ::bigbluebuttonbn_reset_course_form_definition
      */
     public function test_bigbluebuttonbn_reset_course_form_definition(): void {
         global $CFG, $PAGE;
@@ -441,8 +433,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check defaults for form
-     *
-     * @covers ::bigbluebuttonbn_reset_course_form_defaults
      */
     public function test_bigbluebuttonbn_reset_course_form_defaults(): void {
         global $CFG;
@@ -458,8 +448,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Reset user data
-     *
-     * @covers ::bigbluebuttonbn_reset_userdata
      */
     public function test_bigbluebuttonbn_reset_userdata(): void {
         global $DB;
@@ -491,8 +479,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Reset user data in a course and checks it does not delete logs elsewhere
-     *
-     * @covers ::bigbluebuttonbn_reset_userdata
      */
     public function test_bigbluebuttonbn_reset_userdata_in_a_course(): void {
         global $DB;
@@ -524,8 +510,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Reset user data in a course but do not delete logs
-     *
-     * @covers ::bigbluebuttonbn_reset_userdata
      */
     public function test_bigbluebuttonbn_reset_userdata_logs_not_deleted(): void {
         global $DB;
@@ -549,8 +533,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check course module
-     *
-     * @covers ::bigbluebuttonbn_get_coursemodule_info
      */
     public function test_bigbluebuttonbn_get_coursemodule_info(): void {
         $this->resetAfterTest();
@@ -561,8 +543,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check update since
-     *
-     * @covers ::bigbluebuttonbn_check_updates_since
      */
     public function test_bigbluebuttonbn_check_updates_since(): void {
         $this->resetAfterTest();
@@ -577,8 +557,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check event action (calendar)
-     *
-     * @covers ::mod_bigbluebuttonbn_core_calendar_provide_event_action
      */
     public function test_mod_bigbluebuttonbn_core_calendar_provide_event_action(): void {
         global $DB;
@@ -629,8 +607,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test setting navigation admin menu
-     *
-     * @covers ::bigbluebuttonbn_extend_settings_navigation
      */
     public function test_bigbluebuttonbn_extend_settings_navigation_admin(): void {
         global $PAGE, $CFG;
@@ -651,8 +627,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check additional setting menu
-     *
-     * @covers ::bigbluebuttonbn_extend_settings_navigation
      */
     public function test_bigbluebuttonbn_extend_settings_navigation_user(): void {
         global $PAGE, $CFG;
@@ -678,7 +652,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Check the visibility on calendar
-     * @covers ::mod_bigbluebuttonbn_core_calendar_is_event_visible
      */
     public function test_mod_bigbluebuttonbn_core_calendar_is_event_visible(): void {
         global $DB;

@@ -40,8 +40,9 @@ require_once(__DIR__ . '/helpers.php');
  * @category  test
  * @copyright 2014 The Open University
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \question_engine_data_mapper
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\question_engine_data_mapper::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\question_file_saver::class)]
 final class datalib_test extends \qbehaviour_walkthrough_test_base {
 
     /**
@@ -296,12 +297,11 @@ final class datalib_test extends \qbehaviour_walkthrough_test_base {
     /**
      * Test get_file_area_name.
      *
-     * @covers \question_file_saver::clean_file_area_name
-     * @dataProvider get_file_area_name_cases
      *
      * @param string $uncleanedfilearea
      * @param string $expectedfilearea
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_file_area_name_cases')]
     public function test_clean_file_area_name(string $uncleanedfilearea, string $expectedfilearea): void {
         $this->assertEquals($expectedfilearea, \question_file_saver::clean_file_area_name($uncleanedfilearea));
     }

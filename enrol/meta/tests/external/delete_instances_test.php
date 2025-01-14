@@ -26,11 +26,11 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * Tests for delete_instances external class
  *
  * @package    enrol_meta
- * @group      enrol_meta
  * @category   test
  * @copyright  2021 WKS KV Bildung
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\Group('enrol_meta')]
 final class delete_instances_test extends \externallib_advanced_testcase {
 
     /**

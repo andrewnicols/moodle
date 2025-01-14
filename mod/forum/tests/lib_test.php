@@ -32,6 +32,11 @@ require_once($CFG->dirroot . '/rating/lib.php');
  * @copyright  2013 Frédéric Massart
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('forum_tp_get_course_unread_posts')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('forum_tp_count_forum_unread_posts')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('forum_get_user_posted_mailnow')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('forum_check_throttling')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('forum_count_discussions')]
 final class lib_test extends \advanced_testcase {
 
     public function setUp(): void {
@@ -515,8 +520,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test the logic in the forum_tp_get_course_unread_posts() function when private replies are present.
-     *
-     * @covers ::forum_tp_get_course_unread_posts
      */
     public function test_forum_tp_get_course_unread_posts_with_private_replies(): void {
         global $DB;
@@ -642,8 +645,6 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test the logic in the forum_tp_count_forum_unread_posts() function when private replies are present but without
      * separate group mode. This should yield the same results returned by forum_tp_get_course_unread_posts().
-     *
-     * @covers ::forum_tp_count_forum_unread_posts
      */
     public function test_forum_tp_count_forum_unread_posts_with_private_replies(): void {
         global $DB;
@@ -769,8 +770,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test the logic in the forum_tp_count_forum_unread_posts() function when private replies are present and group modes are set.
-     *
-     * @covers ::forum_tp_count_forum_unread_posts
      */
     public function test_forum_tp_count_forum_unread_posts_with_private_replies_and_separate_groups(): void {
         $this->resetAfterTest();
@@ -2817,8 +2816,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test the logic for forum_get_user_posted_mailnow where the user can select if qanda forum post should be sent without delay
-     *
-     * @covers ::forum_get_user_posted_mailnow
      */
     public function test_forum_get_user_posted_mailnow(): void {
         $this->resetAfterTest();
@@ -3241,11 +3238,11 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test the forum_discussion_is_locked function.
      *
-     * @dataProvider forum_discussion_is_locked_provider
      * @param   \stdClass $forum
      * @param   \stdClass $discussion
      * @param   bool        $expect
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('forum_discussion_is_locked_provider')]
     public function test_forum_discussion_is_locked($forum, $discussion, $expect): void {
         $this->resetAfterTest();
 
@@ -3304,10 +3301,10 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test the forum_is_cutoff_date_reached function.
      *
-     * @dataProvider forum_is_cutoff_date_reached_provider
      * @param   array   $forum
      * @param   bool    $expect
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('forum_is_cutoff_date_reached_provider')]
     public function test_forum_is_cutoff_date_reached($forum, $expect): void {
         $this->resetAfterTest();
 
@@ -3350,10 +3347,10 @@ final class lib_test extends \advanced_testcase {
     /**
      * Test the forum_is_due_date_reached function.
      *
-     * @dataProvider forum_is_due_date_reached_provider
      * @param   \stdClass $forum
      * @param   bool        $expect
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('forum_is_due_date_reached_provider')]
     public function test_forum_is_due_date_reached($forum, $expect): void {
         $this->resetAfterTest();
 
@@ -4130,10 +4127,9 @@ final class lib_test extends \advanced_testcase {
     /**
      * Tests the early return scenarios of forum_check_throttling.
      *
-     * @dataProvider forum_check_throttling_early_returns_provider
-     * @covers ::forum_check_throttling
      * @param \stdClass $forum The forum data.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('forum_check_throttling_early_returns_provider')]
     public function test_forum_check_throttling_early_returns(\stdClass $forum): void {
         $this->assertFalse(forum_check_throttling($forum));
     }
@@ -4154,10 +4150,9 @@ final class lib_test extends \advanced_testcase {
     /**
      * Tests the early exception scenarios of forum_check_throttling.
      *
-     * @dataProvider forum_check_throttling_early_exceptions_provider
-     * @covers ::forum_check_throttling
      * @param mixed $forum The forum data.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('forum_check_throttling_early_exceptions_provider')]
     public function test_forum_check_throttling_early_exceptions($forum): void {
         $this->expectException(\coding_exception::class);
         $this->assertFalse(forum_check_throttling($forum));
@@ -4165,8 +4160,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Tests forum_check_throttling when a non-existent numeric ID is passed for its forum parameter.
-     *
-     * @covers ::forum_check_throttling
      */
     public function test_forum_check_throttling_nonexistent_numeric_id(): void {
         $this->resetAfterTest();
@@ -4177,8 +4170,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Tests forum_check_throttling when a non-existent forum record is passed for its forum parameter.
-     *
-     * @covers ::forum_check_throttling
      */
     public function test_forum_check_throttling_nonexistent_forum_cm(): void {
         $this->resetAfterTest();
@@ -4195,8 +4186,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Tests forum_check_throttling when a user with the 'mod/forum:postwithoutthrottling' capability.
-     *
-     * @covers ::forum_check_throttling
      */
     public function test_forum_check_throttling_teacher(): void {
         $this->resetAfterTest();
@@ -4237,8 +4226,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Tests forum_check_throttling for students.
-     *
-     * @covers ::forum_check_throttling
      */
     public function test_forum_check_throttling_student(): void {
         $this->resetAfterTest();
@@ -4293,8 +4280,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Tests forum_count_discussions.
-     *
-     * @covers ::forum_count_discussions
      */
     public function test_forum_count_discussions(): void {
         $this->resetAfterTest();

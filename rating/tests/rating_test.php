@@ -342,9 +342,8 @@ final class rating_test extends \advanced_testcase {
 
     /**
      * Test the value returned by get_aggregate_string().
-     *
-     * @dataProvider get_aggregate_string_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_aggregate_string_provider')]
     public function test_get_aggregate_string($method, $aggregate, $isnumeric, $scaleitems, $expectation): void {
         $options = new \stdClass();
         $options->aggregate = $aggregate;

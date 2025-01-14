@@ -39,11 +39,12 @@ require_once($CFG->dirroot . '/lib/tests/moodlenet/helpers.php');
 /**
  * Unit tests for {@see \core\moodlenet\course_partial_sender}.
  *
- * @coversDefaultClass \core\moodlenet\course_partial_sender
  * @package    core
  * @copyright  2023 Huong Nguyen <huongnv13@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\moodlenet\course_partial_sender::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\moodlenet\moodlenet_client::class)]
 final class course_partial_sender_test extends \advanced_testcase {
 
     /** @var testing_data_generator Data generator. */
@@ -86,8 +87,6 @@ final class course_partial_sender_test extends \advanced_testcase {
 
     /**
      * Test prepare_share_contents method.
-     *
-     * @covers ::prepare_share_contents
      */
     public function test_prepare_share_contents(): void {
         global $USER;
@@ -130,8 +129,6 @@ final class course_partial_sender_test extends \advanced_testcase {
 
     /**
      * Test get_resource_description method.
-     *
-     * @covers ::get_resource_description
      */
     public function test_get_resource_description(): void {
         global $USER;
@@ -175,14 +172,10 @@ The last word of this sentence is in bold', $processeddescription);
     /**
      * Test share_resource() method.
      *
-     * @dataProvider share_resource_provider
-     * @covers ::share_resource
-     * @covers ::log_event
-     * @covers \core\moodlenet\moodlenet_client::create_resource_from_stored_file
-     * @covers \core\moodlenet\moodlenet_client::prepare_file_share_request_data
      * @param ResponseInterface $httpresponse
      * @param array $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('share_resource_provider')]
     public function test_share_resource(ResponseInterface $httpresponse, array $expected): void {
         global $CFG, $USER;
         $this->setAdminUser();

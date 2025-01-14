@@ -36,8 +36,8 @@ use RedisClusterException;
  * @package   core
  * @copyright 2024 Meirza <meirza.arson@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass    \core\session\redis
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\session\redis::class)]
 final class session_redis_cluster_test extends \advanced_testcase {
 
     /**
@@ -70,8 +70,6 @@ final class session_redis_cluster_test extends \advanced_testcase {
      * It covers the behavior of session read and write operations under different compression configurations.
      *
      * @runInSeparateProcess
-     * @covers ::read
-     * @covers ::write
      */
     public function test_read_and_write(): void {
         $rediscluster = new redis_session();
@@ -88,7 +86,6 @@ final class session_redis_cluster_test extends \advanced_testcase {
      * checks if the expected exception message is received.
      *
      * @runInSeparateProcess
-     * @covers ::init
      */
     public function test_exception_when_connection_attempts_exceeded(): void {
         global $CFG;

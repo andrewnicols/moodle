@@ -23,11 +23,11 @@ use testing_data_generator;
 /**
  * Unit tests for {@see utilities}.
  *
- * @coversDefaultClass \core\moodlenet\utilities
  * @package core
  * @copyright 2023 Huong Nguyen <huongnv13@gmail.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\moodlenet\utilities::class)]
 final class utilities_test extends \advanced_testcase {
 
     /** @var testing_data_generator Data generator. */
@@ -54,7 +54,6 @@ final class utilities_test extends \advanced_testcase {
     /**
      * Test is_valid_instance method.
      *
-     * @covers ::is_valid_instance
      * @return void
      */
     public function test_is_valid_instance(): void {
@@ -94,7 +93,6 @@ final class utilities_test extends \advanced_testcase {
     /**
      * Test can_user_share method.
      *
-     * @covers ::can_user_share
      * @return void
      */
     public function test_can_user_share(): void {
@@ -154,7 +152,6 @@ final class utilities_test extends \advanced_testcase {
     /**
      * Test does_user_have_capability_in_any_course method.
      *
-     * @covers ::does_user_have_capability_in_any_course
      * @return void
      */
     public function test_does_user_have_capability_in_any_course(): void {

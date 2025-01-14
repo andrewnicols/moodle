@@ -70,10 +70,10 @@ class HTML_QuickForm_element extends HTML_Common
      * @access    private
      */
     var $_persistantFreeze = false;
-    
+
     // }}}
     // {{{ constructor
-    
+
     /**
      * Class constructor
      * 
@@ -103,7 +103,7 @@ class HTML_QuickForm_element extends HTML_Common
         debugging('Use of class name as constructor is deprecated', DEBUG_DEVELOPER);
         self::__construct($elementName, $elementLabel, $attributes);
     }
-    
+
     // }}}
     // {{{ apiVersion()
 
@@ -149,7 +149,7 @@ class HTML_QuickForm_element extends HTML_Common
     {
         // interface method
     } //end func setName
-    
+
     // }}}
     // {{{ getName()
 
@@ -164,7 +164,7 @@ class HTML_QuickForm_element extends HTML_Common
     {
         // interface method
     } //end func getName
-    
+
     // }}}
     // {{{ setValue()
 
@@ -196,7 +196,7 @@ class HTML_QuickForm_element extends HTML_Common
         // interface
         return null;
     } // end func getValue
-    
+
     // }}}
     // {{{ freeze()
 
@@ -242,7 +242,7 @@ class HTML_QuickForm_element extends HTML_Common
         return ('' != $value? htmlspecialchars($value): '&nbsp;') .
                $this->_getPersistantData();
     } //end func getFrozenHtml
-    
+
     // }}}
     // {{{ _getPersistantData()
 
@@ -474,7 +474,7 @@ class HTML_QuickForm_element extends HTML_Common
         }
         return $this->_prepareValue($value, $assoc);
     }
-    
+
     // }}}
     // {{{ _prepareValue()
 
@@ -506,7 +506,7 @@ class HTML_QuickForm_element extends HTML_Common
             }
         }
     }
-    
+
     // }}}
 } // end class HTML_QuickForm_element
 ?>

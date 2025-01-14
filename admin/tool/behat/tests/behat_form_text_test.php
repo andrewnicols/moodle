@@ -68,8 +68,8 @@ final class behat_form_text_test extends \basic_testcase {
      *
      * @param mixed $value value to be set.
      * @param mixed $expectation value to be checked.
-     * @dataProvider provider_test_set_get_value
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_set_get_value')]
     public function test_set_get_value($value, $expectation): void {
         $session = $this->createMock(Session::class);
         $node = $this->createMock(NodeElement::class);
@@ -113,8 +113,8 @@ final class behat_form_text_test extends \basic_testcase {
      * @param mixed $value value to be set.
      * @param mixed $match value to be matched.
      * @param bool  $result expected return status of the function.
-     * @dataProvider provider_test_matches
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_matches')]
     public function test_matches($decsep, $value, $match, $result): void {
         global $CFG;
 

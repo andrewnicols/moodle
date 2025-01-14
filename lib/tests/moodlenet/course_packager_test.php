@@ -24,16 +24,12 @@ use core\context\user;
  * @package   core
  * @copyright 2023 Safat Shahin <safat.shahin@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\moodlenet\course_packager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\moodlenet\course_packager::class)]
 final class course_packager_test extends \advanced_testcase {
 
     /**
      * Test fetching and overriding a backup task setting.
-     *
-     * @covers ::override_task_setting
-     * @covers ::get_all_task_settings
-     * @covers ::get_backup_controller
      */
     public function test_override_task_setting(): void {
         global $USER;
@@ -94,9 +90,6 @@ final class course_packager_test extends \advanced_testcase {
 
     /**
      * Test the course package file.
-     *
-     * @covers ::get_package
-     * @covers ::package
      */
     public function test_get_package(): void {
         global $USER;

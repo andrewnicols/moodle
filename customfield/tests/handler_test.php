@@ -26,10 +26,10 @@ use moodle_exception;
  * Unit tests for the abstract custom fields handler
  *
  * @package     core_customfield
- * @covers      \core_customfield\handler
  * @copyright   2023 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_customfield\handler::class)]
 final class handler_test extends advanced_testcase {
 
     /**

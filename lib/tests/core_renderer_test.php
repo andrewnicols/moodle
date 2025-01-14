@@ -26,12 +26,14 @@ use moodle_page;
  * @category  test
  * @copyright 2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core_renderer
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_renderer::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\output\before_standard_top_of_body_html_generation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\output\before_footer_html_generation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\output\before_standard_footer_html_generation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\output\after_standard_main_region_html_generation::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\hook\output\before_html_attributes::class)]
 final class core_renderer_test extends \advanced_testcase {
-    /**
-     * @covers \core\hook\output\before_standard_top_of_body_html_generation
-     */
     public function test_standard_top_of_body_html(): void {
         $page = new moodle_page();
         $renderer = new core_renderer($page, RENDERER_TARGET_GENERAL);
@@ -41,9 +43,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringNotContainsString('A heading can be added to the top of the body HTML', $html);
     }
 
-    /**
-     * @covers \core\hook\output\before_standard_top_of_body_html_generation
-     */
     public function test_before_standard_top_of_body_html_generation_hooked(): void {
         require_once(__DIR__ . '/fixtures/core_renderer/before_standard_top_of_body_html_generation_callbacks.php');
 
@@ -62,9 +61,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringContainsString('A heading can be added to the top of the body HTML', $html);
     }
 
-    /**
-     * @covers \core\hook\output\before_footer_html_generation
-     */
     public function test_before_footer_html_generation(): void {
         $this->resetAfterTest();
         $page = new moodle_page();
@@ -78,9 +74,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringNotContainsString('A heading can be added', $html);
     }
 
-    /**
-     * @covers \core\hook\output\before_footer_html_generation
-     */
     public function test_before_footer_html_generation_hooked(): void {
         $this->resetAfterTest();
         require_once(__DIR__ . '/fixtures/core_renderer/before_footer_html_generation_callbacks.php');
@@ -103,9 +96,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringContainsString('A heading can be added', $html);
     }
 
-    /**
-     * @covers \core\hook\output\before_standard_footer_html_generation
-     */
     public function before_standard_footer_html_generation(): void {
         $page = new moodle_page();
         $renderer = new core_renderer($page, RENDERER_TARGET_GENERAL);
@@ -115,9 +105,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringNotContainsString('A heading can be added', $html);
     }
 
-    /**
-     * @covers \core\hook\output\before_standard_footer_html_generation
-     */
     public function test_before_standard_footer_html_generation_hooked(): void {
         require_once(__DIR__ . '/fixtures/core_renderer/before_standard_footer_html_generation_callbacks.php');
 
@@ -136,9 +123,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringContainsString('A heading can be added', $html);
     }
 
-    /**
-     * @covers \core\hook\output\after_standard_main_region_html_generation
-     */
     public function test_after_standard_main_region_html_generation(): void {
         $page = new moodle_page();
         $renderer = new core_renderer($page, RENDERER_TARGET_GENERAL);
@@ -148,9 +132,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringNotContainsString('A heading can be added', $html);
     }
 
-    /**
-     * @covers \core\hook\output\after_standard_main_region_html_generation
-     */
     public function test_after_standard_main_region_html_generation_hooked(): void {
         require_once(__DIR__ . '/fixtures/core_renderer/after_standard_main_region_html_generation_callbacks.php');
 
@@ -169,9 +150,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringContainsString('A heading can be added', $html);
     }
 
-    /**
-     * @covers \core\hook\output\before_html_attributes
-     */
     public function test_htmlattributes(): void {
         $page = new moodle_page();
         $renderer = new core_renderer($page, RENDERER_TARGET_GENERAL);
@@ -181,9 +159,6 @@ final class core_renderer_test extends \advanced_testcase {
         $this->assertStringNotContainsString('data-test="test"', $attributes);
     }
 
-    /**
-     * @covers \core\hook\output\before_html_attributes
-     */
     public function test_htmlattributes_hooked(): void {
         require_once(__DIR__ . '/fixtures/core_renderer/htmlattributes_callbacks.php');
 

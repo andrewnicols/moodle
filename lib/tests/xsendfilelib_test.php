@@ -25,8 +25,8 @@ namespace core;
  * @category   test
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers ::xsendfile
  */
+#[\PHPUnit\Framework\Attributes\CoversFunction('xsendfile')]
 final class xsendfilelib_test extends \advanced_testcase {
     public static function setUpBeforeClass(): void {
         global $CFG;

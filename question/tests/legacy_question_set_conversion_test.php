@@ -25,11 +25,11 @@ namespace core_question;
  * @author     Conn Warwicker <conn.warwicker@catalyst-eu.net>
  * @covers     \core_question\question_reference_manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_question\question_reference_manager::class)]
 final class legacy_question_set_conversion_test extends \advanced_testcase {
 
     /**
      * Test the conversion of the old formatted `filtercondition` value to the newer format.
-     * @covers \core_question\question_reference_manager::convert_legacy_set_reference_filter_condition
      * @return void
      */
     public function test_legacy_question_set_conversion(): void {

@@ -120,7 +120,7 @@ class iCalendar_component {
         }
 
         return true;        
-        
+
     }
 
     function add_component($component) {
@@ -177,7 +177,7 @@ class iCalendar_component {
 
         return true;
     }
-    
+
     function serialize() {
         // Check for validity of the object
         if(!$this->is_valid()) {
@@ -218,7 +218,7 @@ class iCalendar_component {
 
         return $string;
     }
-    
+
     /**
     * unserialize()
     *
@@ -229,11 +229,11 @@ class iCalendar_component {
     * @param string $string the iCalendar object to load in to this iCalendar_component
     * @return bool true if the file parsed with no errors. False if there were errors.
     */
-    
+
     function unserialize($string) {
         $string = rfc2445_unfold($string); // Unfold any long lines
         $lines = preg_split("<".RFC2445_CRLF."|\n|\r>", $string, 0, PREG_SPLIT_NO_EMPTY); // Create an array of lines.
-        
+
         $components = array(); // Initialise a stack of components
         $this->clear_errors();
         foreach ($lines as $key => $line) {
@@ -297,7 +297,7 @@ class iCalendar_component {
                 }
                 unset($parent_component, $component);
             } else {
-                
+
                 $component = array_pop($components); // Get the component off the stack so we can add properties to it
                 if ($component == null) { // If there's nothing on the stack
                     $component = $this; // use the iCalendar
@@ -326,7 +326,7 @@ class iCalendar_component {
             }
 
         }
-        
+
     }
 
     function clear_errors() {
@@ -363,9 +363,9 @@ class iCalendar_event extends iCalendar_component {
 
     var $name       = 'VEVENT';
     var $properties;
-    
+
     function __construct() {
-        
+
         $this->valid_components = array('VALARM');
 
         $this->valid_properties = array(
@@ -418,7 +418,7 @@ class iCalendar_event extends iCalendar_component {
             return false;
         }
 
-        
+
         if(isset($this->properties['DTEND']) && isset($this->properties['DTSTART'])) {
             // DTEND must be later than DTSTART
             // The standard is not clear on how to hande different value types though
@@ -443,7 +443,7 @@ class iCalendar_todo extends iCalendar_component {
     var $properties;
 
     function __construct() {
-        
+
         $this->valid_components = array('VALARM');
 
         $this->valid_properties = array(
@@ -484,14 +484,14 @@ class iCalendar_todo extends iCalendar_component {
 
         parent::__construct();
     }
-    
+
     function invariant_holds() {
         // DTEND and DURATION must not appear together
         if(isset($this->properties['DTEND']) && isset($this->properties['DURATION'])) {
             return false;
         }
 
-        
+
         if(isset($this->properties['DTEND']) && isset($this->properties['DTSTART'])) {
             // DTEND must be later than DTSTART
             // The standard is not clear on how to hande different value types though
@@ -506,24 +506,24 @@ class iCalendar_todo extends iCalendar_component {
             }
 
         }
-        
+
         if(isset($this->properties['DUE']) && isset($this->properties['DTSTART'])) {
             if($this->properties['DUE'][0]->value <= $this->properties['DTSTART'][0]->value) {
                 return false;
             }   
         }
-        
+
         return true;
     }
-    
+
 }
 
 class iCalendar_journal extends iCalendar_component {
     var $name = 'VJOURNAL';
     var $properties;
-    
+
     function __construct() {
-    	
+
         $this->valid_properties = array(
             'CLASS'         => RFC2445_OPTIONAL | RFC2445_ONCE,
             'CREATED'       => RFC2445_OPTIONAL | RFC2445_ONCE,
@@ -550,9 +550,9 @@ class iCalendar_journal extends iCalendar_component {
             'RRULE'         => RFC2445_OPTIONAL,
             RFC2445_XNAME   => RFC2445_OPTIONAL            
         );
-        
+
          parent::__construct();
-        
+
     }
 }
 
@@ -578,17 +578,17 @@ class iCalendar_freebusy extends iCalendar_component {
             'RSTATUS'       => RFC2445_OPTIONAL,
             RFC2445_XNAME   => RFC2445_OPTIONAL
         );
-        
+
         parent::__construct();
     }
-    
+
     function invariant_holds() {
         // DTEND and DURATION must not appear together
         if(isset($this->properties['DTEND']) && isset($this->properties['DURATION'])) {
             return false;
         }
 
-        
+
         if(isset($this->properties['DTEND']) && isset($this->properties['DTSTART'])) {
             // DTEND must be later than DTSTART
             // The standard is not clear on how to hande different value types though
@@ -628,10 +628,10 @@ class iCalendar_alarm extends iCalendar_component {
             'ATTENDEE'  => RFC2445_OPTIONAL,
             RFC2445_XNAME   => RFC2445_OPTIONAL
         );
-     
+
         parent::__construct();
     }
-        
+
     function invariant_holds() {
         // DTEND and DURATION must not appear together
         if(isset($this->properties['ACTION'])) {
@@ -660,8 +660,8 @@ class iCalendar_alarm extends iCalendar_component {
         }
         return true;
     }
-        
-        
+
+
 }
 
 class iCalendar_timezone extends iCalendar_component {
@@ -678,7 +678,7 @@ class iCalendar_timezone extends iCalendar_component {
             'TZURL'       => RFC2445_OPTIONAL | RFC2445_ONCE,
             RFC2445_XNAME => RFC2445_OPTIONAL
         );
-        
+
         parent::__construct();
     }
 
@@ -687,7 +687,7 @@ class iCalendar_timezone extends iCalendar_component {
 class iCalendar_standard extends iCalendar_component {
     var $name       = 'STANDARD';
     var $properties;
-    
+
     function __construct() {
         $this->valid_components = array();
         $this->valid_properties = array(

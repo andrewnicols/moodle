@@ -48,7 +48,6 @@ final class get_results_test extends externallib_advanced_testcase {
     /**
      * Test the behaviour of get_results.
      *
-     * @dataProvider execute_data
      * @param int $enabletracking the activity tracking enable
      * @param int $reviewmode the activity review mode
      * @param string $loginuser the user which calls the webservice
@@ -56,6 +55,7 @@ final class get_results_test extends externallib_advanced_testcase {
      * @param bool $createattempts if the student user has attempts created
      * @param int|null $count the expected number of attempts returned (null for exception)
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_data')]
     public function test_execute(int $enabletracking, int $reviewmode, string $loginuser,
             ?string $participant, bool $createattempts, ?int $count): void {
 
@@ -184,13 +184,13 @@ final class get_results_test extends externallib_advanced_testcase {
     /**
      * Test the behaviour of get_results.
      *
-     * @dataProvider execute_multipleattempts_data
      * @param string $loginuser the user which calls the webservice
      * @param array $getattempts the attempts to get the data
      * @param array $warnings warnigns expected
      * @param array $reports data expected
      *
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_multipleattempts_data')]
     public function test_execute_multipleattempts(string $loginuser,
             array $getattempts, array $warnings, array $reports): void {
 
@@ -308,13 +308,13 @@ final class get_results_test extends externallib_advanced_testcase {
     /**
      * Test the behaviour of get_results using mixed activityid.
      *
-     * @dataProvider execute_mixactivities_data
      * @param string $activityname the activity name to use
      * @param string $attemptname the attempt name to use
      * @param string $expectedwarnings expected warning attempt
      * @param string $expectedattempt expected result attempt
      *
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_mixactivities_data')]
     public function test_execute_mixactivities(string $activityname, string $attemptname,
             string $expectedwarnings, string $expectedattempt): void {
 

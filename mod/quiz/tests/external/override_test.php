@@ -26,10 +26,10 @@ require_once(__DIR__ . '/../../../../webservice/tests/helpers.php');
  * @package   mod_quiz
  * @copyright 2024 Matthew Hilton <matthewhilton@catalyst-au.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\external\get_overrides
- * @covers \mod_quiz\external\save_overrides
- * @covers \mod_quiz\external\delete_overrides
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\external\get_overrides::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\external\save_overrides::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\external\delete_overrides::class)]
 final class override_test extends \externallib_advanced_testcase {
     /**
      * Creates a quiz for testing.
@@ -63,8 +63,8 @@ final class override_test extends \externallib_advanced_testcase {
      *
      * @param int|string $quizid
      * @param string $expectedexception
-     * @dataProvider get_override_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_override_provider')]
     public function test_get_overrides(int|string $quizid, string $expectedexception = ''): void {
         global $DB;
 
@@ -126,10 +126,10 @@ final class override_test extends \externallib_advanced_testcase {
     /**
      * Tests save_overrides
      *
-     * @dataProvider save_overrides_provider
      * @param array $data
      * @param string $expectedexception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('save_overrides_provider')]
     public function test_save_overrides(array $data, string $expectedexception = ''): void {
         global $DB;
 
@@ -189,10 +189,10 @@ final class override_test extends \externallib_advanced_testcase {
     /**
      * Tests delete_overrides
      *
-     * @dataProvider delete_overrides_provider
      * @param int|string $id
      * @param string $expectedexception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('delete_overrides_provider')]
     public function test_delete_overrides(int|string $id, string $expectedexception = ''): void {
         global $DB;
 
