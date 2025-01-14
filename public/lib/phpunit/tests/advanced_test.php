@@ -16,6 +16,7 @@
 
 namespace core;
 
+use PHPUnit\Framework\Attributes\Test;
 use core_phpunit\exception\test_exception;
 
 /**
@@ -70,10 +71,9 @@ final class advanced_test extends \advanced_testcase {
     }
 
     /**
-     * @test
-     *
-     * Annotations are a valid PHPUnit method for running tests.  Debugging needs to support them.
+     * Attributes are a valid PHPUnit method for running tests.  Debugging needs to support them.
      */
+    #[Test]
     public function debugging_called_with_annotation() {
         debugging('pokus', DEBUG_MINIMAL);
         $this->assertDebuggingCalled('pokus', DEBUG_MINIMAL);

@@ -28,6 +28,7 @@
         }
     },
     "scripts": {
+        "rector": "vendor-bin/rector/vendor/bin/rector"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
