@@ -1,0 +1,43 @@
+name: Static Analysis
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - MOODLE_[0-9]+_STABLE
+    tags-ignore:
+      - v[0-9]+.[0-9]+.[0-9]+*
+  workflow_dispatch:
+
+jobs:
+  rector:
+    name: Rector
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v7
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: '.nvmrc'
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          coverage: none
+
+      - uses: ramsey/composer-install@v4
+
+      - name: Rector Cache
+        uses: actions/cache@v6
+        with:
+          path: /tmp/rector
+          key: ${{ runner.os }}-rector-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-rector-
+
+      - run: mkdir -p /tmp/rector
+
+      # Full Rector run.
+      # The `--dry-run` arg will make Rector fail if any changes are needed, without actually applying them.
+      - run: ./vendor-bin/rector/vendor/rector/rector/bin/rector --ansi --dry-run
