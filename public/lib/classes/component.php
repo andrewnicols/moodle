@@ -238,7 +238,8 @@ class component {
         if (isset(self::$classmaprenames[$classname]) && isset(self::$classmap[self::$classmaprenames[$classname]])) {
             $newclassname = self::$classmaprenames[$classname];
             $debugging = "Class '%s' has been renamed for the autoloader and is now deprecated. Please use '%s' instead.";
-            debugging(sprintf($debugging, $classname, $newclassname), DEBUG_DEVELOPER);
+            self::debugging(sprintf($debugging, $classname, $newclassname));
+
             if (preg_match('#\\\null(\\\|$)#', $classname)) {
                 throw new coding_exception("Cannot alias $classname to $newclassname");
             }
@@ -752,8 +753,10 @@ $cache = ' . var_export($cache, true) . ';
         foreach (['deprecatedplugintypes', 'deletedplugintypes'] as $key) {
             $illegaltypes = array_intersect(self::$supportsubplugins, array_keys($plugintypesmap[$key]));
             if (!empty($illegaltypes)) {
-                debugging("Deprecation of a plugin type which supports subplugins is not supported. These plugin types will ".
-                    "continue to be treated as active.", DEBUG_DEVELOPER);
+                self::debugging(
+                    "Deprecation of a plugin type which supports subplugins is not supported. These plugin types will " .
+                        "continue to be treated as active."
+                );
                 foreach ($illegaltypes as $plugintype) {
                     $plugintypesmap['plugintypes'][$plugintype] = $plugintypesmap[$key][$plugintype];
                     unset($plugintypesmap[$key][$plugintype]);
@@ -934,7 +937,7 @@ $cache = ' . var_export($cache, true) . ';
                 error_log("$ownerdir/db/subplugins.json is invalid ($jsonerror)");
             }
 
-            if (function_exists('debugging') && debugging()) {
+            if (eslf::debugging('')) {
                 if (property_exists($subpluginsjson, 'subplugintypes') && property_exists($subpluginsjson, 'plugintypes')) {
                     $subplugintypes = (array) $subpluginsjson->subplugintypes;
                     $plugintypes = (array) $subpluginsjson->plugintypes;
@@ -2071,6 +2074,25 @@ $cache = ' . var_export($cache, true) . ';
         }
 
         return rtrim($root, '/') . '/' . ltrim($path, '/');
+    }
+
+    /**
+     * Emit debugging notice.
+     *
+     * Note: This class can be used before the debugging function is available.
+     *
+     * @param string $message
+     * @return bool Whether a debugging message was emitted.
+     */
+    private static function debugging(
+        string $message,
+    ): bool {
+        if (function_exists('debugging') && debugging()) {
+            return debugging($message, DEBUG_DEVELOPER);
+        } else {
+            error_log($message);
+            return true;
+        }
     }
 }
 
