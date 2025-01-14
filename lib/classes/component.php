@@ -226,7 +226,11 @@ class component {
         if (isset(self::$classmaprenames[$classname]) && isset(self::$classmap[self::$classmaprenames[$classname]])) {
             $newclassname = self::$classmaprenames[$classname];
             $debugging = "Class '%s' has been renamed for the autoloader and is now deprecated. Please use '%s' instead.";
-            debugging(sprintf($debugging, $classname, $newclassname), DEBUG_DEVELOPER);
+            if (function_exists('debugging') && debugging()) {
+                debugging(sprintf($debugging, $classname, $newclassname), DEBUG_DEVELOPER);
+            } else {
+                error_log(sprintf($debugging, $classname, $newclassname));
+            }
             if (PHP_VERSION_ID >= 70000 && preg_match('#\\\null(\\\|$)#', $classname)) {
                 throw new coding_exception("Cannot alias $classname to $newclassname");
             }
