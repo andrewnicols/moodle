@@ -1397,9 +1397,6 @@ final class completionlib_test extends advanced_testcase {
             completion_info::internal_get_grade_state($item, $grade, true));
     }
 
-    /**
-     * @test ::get_activities
-     */
     public function test_get_activities(): void {
         global $CFG;
         $this->resetAfterTest();
@@ -1441,9 +1438,6 @@ final class completionlib_test extends advanced_testcase {
         $this->assertFalse(isset($activities[$data2->cmid]));
     }
 
-    /**
-     * @test ::has_activities
-     */
     public function test_has_activities(): void {
         global $CFG;
         $this->resetAfterTest();

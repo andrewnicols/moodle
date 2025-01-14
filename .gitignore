@@ -61,3 +61,6 @@ phpcs.xml
 jsconfig.json
 UPGRADING-CURRENT.md
 .phpunit.cache
+
+# Ignore automatically generated Rector files.
+.rector/ignore.php

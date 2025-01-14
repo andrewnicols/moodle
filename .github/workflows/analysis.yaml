@@ -1,0 +1,56 @@
+name: Static Analysis
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - MOODLE_[0-9]+_STABLE
+    tags-ignore:
+      - v[0-9]+.[0-9]+.[0-9]+*
+  workflow_dispatch:
+
+jobs:
+  rector:
+    name: Rector
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v4
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running grunt
+        run: npx grunt ignorefiles
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          coverage: none
+
+      - uses: "ramsey/composer-install@v3"
+
+      - name: Rector Cache
+        uses: actions/cache@v4
+        with:
+          path: /tmp/rector
+          key: ${{ runner.os }}-rector-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-rector-
+
+      - run: mkdir -p /tmp/rector
+
+      - run: composer rector --ansi
+
+      - name: Looking for uncommitted changes
+          # Add all files to the git index and then run diff --cached to see all changes.
+          # This ensures that we get the status of all files, including new files.
+          # We ignore npm-shrinkwrap.json to make the tasks immune to npm changes.
+        run: |
+          git add .
+          git reset -- npm-shrinkwrap.json
+          git diff --cached --exit-code > /dev/null
