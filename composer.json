@@ -26,6 +26,12 @@
     "extra": {
         "haspublicdir": true
     },
+    "scripts": {
+        "rector": "./vendor-bin/rector/vendor/rector/rector/bin/rector",
+        "post-install-cmd": [
+            "@php -r \"if (getenv('COMPOSER_DEV_MODE') === '1') { \\$b = getenv('COMPOSER_BINARY'); passthru((substr(\\$b, -5) === '.phar' ? escapeshellarg(PHP_BINARY) . ' ' : '') . escapeshellarg(\\$b) . ' bin rector install --ansi', \\$rc); exit(\\$rc); }\""
+        ]
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {

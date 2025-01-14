@@ -24,6 +24,7 @@
  */
 
 use core_external\external_api;
+use core_external\external_description;
 use core_external\external_multiple_structure;
 use core_external\external_settings;
 use core_external\external_single_structure;
