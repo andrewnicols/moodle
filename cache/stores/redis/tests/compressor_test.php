@@ -234,6 +234,7 @@ final class compressor_test extends \advanced_testcase {
      * Test we can use get and set with all combinations.
      *
      * @dataProvider provider_for_tests_setget
+     * @requires extension Redis
      * @param string $name
      * @param int $serializer
      * @param int $compressor
@@ -258,6 +259,7 @@ final class compressor_test extends \advanced_testcase {
      * Test we can use get and set many with all combinations.
      *
      * @dataProvider provider_for_tests_setget
+     * @requires extension Redis
      * @param string $name
      * @param int $serializer
      * @param int $compressor
