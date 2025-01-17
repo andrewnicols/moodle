@@ -50,7 +50,8 @@
     "stylelint": "^15.11.0",
     "stylelint-csstree-validator": "^3.0.0",
     "winston": "^3.13.0",
-    "xpath": "0.0.32"
+    "xpath": "0.0.32",
+    "yaml": "^2.7.0"
   },
   "engines": {
     "node": ">=20.11.0 <21"

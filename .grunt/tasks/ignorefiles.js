@@ -15,13 +15,15 @@
 /* jshint node: true, browser: false */
 /* eslint-env node */
 
+const { config } = require('process');
+const fs = require('fs');
+
 /**
  * @copyright  2021 Andrew Nicols
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 module.exports = grunt => {
-
     /**
      * Generate the PHPCS configuration.
      *
@@ -56,6 +58,36 @@ module.exports = grunt => {
             header: true,
             indent: '  ',
         }) + "\n");
+    };
+
+    /**
+     * Generate the PHPCS configuration.
+     *
+     * @param {Object} thirdPartyPaths
+     */
+    const phpstanConfig = (thirdPartyPaths) => {
+        const { stringify } = require('yaml');
+
+        const thirdPartyIgnoredDirectories = thirdPartyPaths.filter((item) => {
+            try {
+                return !fs.statSync(item).isFile();
+            } catch {
+                return false;
+            }
+        });
+
+        const automatedFiles = {
+            parameters: {
+                scanDirectories: thirdPartyIgnoredDirectories,
+                excludePaths: {
+                    analyse: [
+                        ...thirdPartyIgnoredDirectories,
+                        '**/tests/*',
+                    ],
+                },
+            },
+        };
+        grunt.file.write('.phpstanignore.neon', stringify(automatedFiles) + "\n");
     };
 
     /**
@@ -106,7 +138,7 @@ module.exports = grunt => {
         );
         grunt.file.write('.rector/ignore.php', rectorIgnores.join('\n') + '\n');
 
-
+        phpstanConfig(thirdPartyPaths);
     };
 
     grunt.registerTask('ignorefiles', 'Generate ignore files for linters', handler);

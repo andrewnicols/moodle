@@ -1,0 +1,37 @@
+parameters:
+  paths:
+    - .
+  level: 1
+  bootstrapFiles:
+    - .phpstan/aliases.php
+  tmpDir: .phpstan/cache
+  phpVersion: 80100
+  ignoreErrors:
+    - "#Variable \\$ADMIN might not be defined.#"
+    - "#Variable \\$DB might not be defined.#"
+    - "#Variable \\$CFG might not be defined.#"
+    - "#Variable \\$COURSE might not be defined.#"
+    - "#Variable \\$FULLME might not be defined.#"
+    - "#Variable \\$ME might not be defined.#"
+    - "#Variable \\$OUTPUT might not be defined.#"
+    - "#Variable \\$PAGE might not be defined.#"
+    - "#Variable \\$SESSION might not be defined.#"
+    - "#Variable \\$SITE might not be defined.#"
+    - "#Variable \\$THEME might not be defined.#"
+    - "#Variable \\$USER might not be defined.#"
+    - message: "#Variable \\$hassiteconfig might not be defined.#"
+      identifier: variable.undefined
+      path: "*/settings.php"
+    - message: "#Variable \\$hassiteconfig might not be defined.#"
+      identifier: variable.undefined
+      path: admin/settings/*.php
+    - message: "#Variable \\$settings might not be defined.#"
+      identifier: variable.undefined
+      path: "*/settings.php"
+    - message: "#Variable \\$plugin might not be defined.#"
+      identifier: variable.undefined
+      path: "*/version.php"
+    - identifier: closure.unusedUse
+includes:
+  - .phpstanignore.neon
+  - .phpstan-baseline.neon
