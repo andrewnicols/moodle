@@ -3,3 +3,6 @@
 **.js.map -diff
 **-min.js -diff
 **.min.js -diff
+# Hide diffs for composer lock files.
+/composer.lock binary
+/vendor-bin/**/composer.lock binary
