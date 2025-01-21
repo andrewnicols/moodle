@@ -4,3 +4,6 @@ lib/dml/oci_native_moodle_package.sql text eol=lf
 **.js.map -diff
 **-min.js -diff
 **.min.js -diff
+# Hide diffs for composer lock files.
+/composer.lock binary
+/vendor-bin/**/composer.lock binary
