@@ -63,7 +63,7 @@ class deprecation {
             return self::from([$reference]);
         }
 
-        if (is_array($reference) && count($reference)) {
+        if (count($reference)) {
             if (is_object($reference[0])) {
                 $rc = new \ReflectionObject($reference[0]);
 
@@ -200,7 +200,6 @@ class deprecation {
      * Get a string describing the deprecation.
      *
      * @param deprecated $attribute
-     * @param string $owner
      * @return string
      */
     public static function get_deprecation_string(

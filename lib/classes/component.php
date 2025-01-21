@@ -371,6 +371,7 @@ class component {
                     // Verify the cache state only on upgrade pages.
                     $content = self::get_cache_content();
                     if (sha1_file($cachefile) !== sha1($content)) {
+                        xdebug_break();
                         die('Outdated component cache file defined in $CFG->alternative_component_cache, can not continue');
                     }
                     return;

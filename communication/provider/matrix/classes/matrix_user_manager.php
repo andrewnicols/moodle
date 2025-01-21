@@ -171,8 +171,9 @@ class matrix_user_manager {
 
             $profileclass->define_save($data);
             set_config('matrixuserid_field', 'matrixuserid', 'communication_matrix');
-            return 'matrixuserid';
         }
+
+        return 'matrixuserid';
     }
 
     /**

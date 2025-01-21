@@ -488,6 +488,9 @@ function h5pactivity_pluginfile($course, $cm, context $context,
         return false;
     }
     send_stored_file($file, $lifetime, 0, false, $options);
+
+    // Note: This is never reached.
+    return true;
 }
 
 /**

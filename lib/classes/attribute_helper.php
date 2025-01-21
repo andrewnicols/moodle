@@ -187,6 +187,8 @@ class attribute_helper {
             // The reference is an array, but it's not an object or a class that currently exists.
             return null;
         }
+
+        return null;
     }
 
     /**

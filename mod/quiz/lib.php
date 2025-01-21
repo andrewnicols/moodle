@@ -1099,9 +1099,9 @@ function quiz_review_option_form_to_db($fromform, $field) {
  * @param string $itemtype slotdisplarnumber
  * @param int $itemid the id of the slot in the quiz_slots table
  * @param string $newvalue the new value for displaynumber field for a given slot in the quiz_slots table
- * @return \core\output\inplace_editable|void
+ * @return \core\output\inplace_editable|null
  */
-function mod_quiz_inplace_editable(string $itemtype, int $itemid, string $newvalue): \core\output\inplace_editable {
+function mod_quiz_inplace_editable(string $itemtype, int $itemid, string $newvalue):?\core\output\inplace_editable {
     global $DB;
 
     if ($itemtype === 'slotdisplaynumber') {
@@ -1121,6 +1121,8 @@ function mod_quiz_inplace_editable(string $itemtype, int $itemid, string $newval
         // Prepare the element for the output.
         return $structure->make_slot_display_number_in_place_editable($itemid, $context);
     }
+
+    return null;
 }
 
 /**

@@ -4044,9 +4044,9 @@ function calendar_get_export_import_link_params(): array {
  * @param string $itemtype Type of the inplace editable element
  * @param int $itemid Id of the item to edit
  * @param int $newvalue New value of the item
- * @return \core\output\inplace_editable
+ * @return null|\core\output\inplace_editable
  */
-function calendar_inplace_editable(string $itemtype, int $itemid, int $newvalue): \core\output\inplace_editable {
+function calendar_inplace_editable(string $itemtype, int $itemid, int $newvalue): ?\core\output\inplace_editable {
     global $OUTPUT;
 
     if ($itemtype === 'refreshinterval') {
@@ -4069,4 +4069,6 @@ function calendar_inplace_editable(string $itemtype, int $itemid, int $newvalue)
     }
 
     external_api::validate_context(context_system::instance());
+
+    return null;
 }

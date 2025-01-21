@@ -128,5 +128,7 @@ class move_questions extends external_api {
             $returnurl->param('filter', $returnfilters);
             return $returnurl->out(false);
         }
+
+        return null;
     }
 }

@@ -104,12 +104,7 @@ class core_role_view_role_definition_table extends core_role_define_role_table_a
         return implode(' ', $risks);
     }
 
-    /**
-     * Returns true if the row should be skipped.
-     *
-     * @param string $capability
-     * @return bool
-     */
+    #[\Override]
     protected function skip_row($capability) {
         $perm = $this->permissions[$capability->name];
         if ($perm == CAP_INHERIT) {
@@ -117,7 +112,7 @@ class core_role_view_role_definition_table extends core_role_define_role_table_a
             // if they want to see the list of all capabilities they can go to edit role page.
             return true;
         }
-        parent::skip_row($capability);
+        return parent::skip_row($capability);
     }
 
     protected function add_permission_cells($capability) {

@@ -24,18 +24,6 @@
  */
 
 use core_external\external_api;
-use core_external\external_description;
-use core_external\external_files;
-use core_external\external_format_value;
-use core_external\external_function_parameters;
-use core_external\external_multiple_structure;
-use core_external\external_settings;
-use core_external\external_single_structure;
-use core_external\external_value;
-use core_external\external_warnings;
-use core_external\restricted_context_exception;
-use core_external\util;
-use core_external\util as external_util;
 
 /**
  * In place editing callback for question name.
@@ -43,9 +31,9 @@ use core_external\util as external_util;
  * @param string $itemtype type of the item, questionname for this instance
  * @param int $itemid question id to change the title
  * @param string $newvalue the changed question title
- * @return \core\output\inplace_editable
+ * @return ?\core\output\inplace_editable
  */
-function qbank_viewquestionname_inplace_editable ($itemtype, $itemid, $newvalue): \core\output\inplace_editable {
+function qbank_viewquestionname_inplace_editable ($itemtype, $itemid, $newvalue): ?\core\output\inplace_editable {
     if ($itemtype === 'questionname') {
         global $CFG, $DB;
         require_once($CFG->libdir . '/questionlib.php');
@@ -71,4 +59,6 @@ function qbank_viewquestionname_inplace_editable ($itemtype, $itemid, $newvalue)
         // Prepare the element for the output.
         return new \qbank_viewquestionname\output\questionname($record);
     }
+
+    return null;
 }
