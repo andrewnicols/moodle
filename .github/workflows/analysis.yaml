@@ -54,3 +54,41 @@ jobs:
           git add .
           git reset -- npm-shrinkwrap.json
           git diff --cached --exit-code > /dev/null
+
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v4
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          coverage: none
+
+      - uses: "ramsey/composer-install@v3"
+
+      - run: |
+          cp .github/workflows/config-template.php config.php
+          mkdir ../moodledata
+
+      - name: Running grunt
+        run: npx grunt ignorefiles
+
+      - name: PHPStan Cache
+        uses: actions/cache@v4
+        with:
+          path: .phpstan/cache
+          key: ${{ runner.os }}-phpstan-${{ github.run_id }}
+          restore-keys: ${{ runner.os }}-phpstan-
+
+      - run: composer phpstan analyze -vv
