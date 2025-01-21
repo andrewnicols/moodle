@@ -29,7 +29,8 @@
     },
     "scripts": {
         "rector": "vendor-bin/rector/vendor/bin/rector",
-        "phpstan": "vendor-bin/phpstan/vendor/phpstan/phpstan/phpstan"
+        "phpstan": "vendor-bin/phpstan/vendor/phpstan/phpstan/phpstan",
+        "phpstan-baseline": "vendor-bin/phpstan/vendor/phpstan/phpstan/phpstan --generate-baseline"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,

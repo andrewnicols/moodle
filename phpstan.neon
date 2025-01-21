@@ -34,4 +34,4 @@ parameters:
     - identifier: closure.unusedUse
 includes:
   - .phpstanignore.neon
-  - .phpstan-baseline.neon
+  - phpstan-baseline.neon
