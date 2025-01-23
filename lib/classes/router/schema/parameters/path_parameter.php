@@ -103,11 +103,21 @@ class path_parameter extends parameter {
     public function is_required(route $route): bool {
         $path = $route->get_path();
 
-        // Find the position of the parameter in the path.
-        $paramposition = strpos($path, '{' . $this->name . '}');
+        // Find the parameter in the path.
+        // Search for `{value` with an optoinal : followed by anything except a closing `}`, and then a closing `}`.
+        $matchesfound = preg_match(
+            "~^(?<match>.*\{{$this->name}(?:\:[^}]*)?\}\}?)~",
+            $path,
+            $matches,
+        );
+
+        if ($matchesfound === 0) {
+            // Parameter not found in the path.
+            return false;
+        }
 
         // If _any_ part of the path before the parameter contains a '[' character, then this _must_ be optional.
         // A required parameter cannot follow an optional parameter.
-        return !str_contains(substr($path, 0, $paramposition), '[');
+        return str_contains($matches['match'], '[') === false;
     }
 }
