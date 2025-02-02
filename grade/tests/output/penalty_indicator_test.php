@@ -35,7 +35,7 @@ final class penalty_indicator_test extends advanced_testcase {
         return [
             // Default icon, with final grade and max grade.
             [
-                'html' => <<<EOD
+                'expectedhtml' => <<<EOD
 <span class="penalty-indicator-icon" title="Late penalty applied -10.00 marks">
         <i class="icon fa fa-triangle-exclamation text-danger fa-fw " aria-hidden="true"  ></i>
     </span>
@@ -48,11 +48,11 @@ EOD,
                 'finalgrade' => 90,
                 'grademax' => 100,
                 'showfinalgrade' => true,
-                'showmaxgrade' => true,
+                'showgrademax' => true,
             ],
             // Custom icon, without max grade.
             [
-                'html' => <<<EOD
+                'expectedhtml' => <<<EOD
 <span class="penalty-indicator-icon" title="Late penalty applied -10.00 marks">
         <i class="icon fa fa-flag fa-fw " aria-hidden="true"  ></i>
     </span>
@@ -65,11 +65,11 @@ EOD,
                 'finalgrade' => 90,
                 'grademax' => 100,
                 'showfinalgrade' => true,
-                'showmaxgrade' => false,
+                'showgrademax' => false,
             ],
             // Icon only.
             [
-                'html' => <<<EOD
+                'expectedhtml' => <<<EOD
 <span class="penalty-indicator-icon" title="Late penalty applied -10.00 marks">
         <i class="icon fa fa-triangle-exclamation text-danger fa-fw " aria-hidden="true"  ></i>
     </span>
@@ -79,7 +79,7 @@ EOD,
                 'finalgrade' => 90,
                 'grademax' => 100,
                 'showfinalgrade' => false,
-                'showmaxgrade' => false,
+                'showgrademax' => false,
             ],
 
         ];
