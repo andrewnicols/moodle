@@ -207,6 +207,7 @@ class router {
                 route_loader_interface::ROUTE_GROUP_API => $this->configure_api_route($collection),
                 route_loader_interface::ROUTE_GROUP_PAGE => array_walk($collection, [$this, 'configure_standard_route']),
                 route_loader_interface::ROUTE_GROUP_SHIM => array_walk($collection, [$this, 'configure_shim_route']),
+                route_loader_interface::ROUTE_GROUP_SHORTLINK => array_walk($collection, [$this, 'configure_shortlink_route']),
                 default => null,
             };
         }
@@ -234,7 +235,6 @@ class router {
      */
     protected function configure_standard_route(RouteInterface $group): void {
         $group
-            ->add(di::get(error_handling_middleware::class))
             ->add(di::get(moodle_authentication_middleware::class))
             ->add(di::get(validation_middleware::class));
     }
@@ -249,6 +249,18 @@ class router {
             ->add(di::get(shim_middleware::class))
             ->add(di::get(validation_middleware::class));
     }
+
+    /**
+     * Configure the Short link Route Middleware.
+     *
+     * @param RouteGroupInterface $group
+     */
+    protected function configure_shortlink_route($group): void {
+        $group
+            ->add(di::get(moodle_authentication_middleware::class))
+            ->add(di::get(validation_middleware::class));
+    }
+
 
     /**
      * Configure caching for the routes.

@@ -31,11 +31,14 @@ interface route_loader_interface {
     /** @var string The route path prefix to use for API calls */
     public const ROUTE_GROUP_API = '/api/rest/v2';
 
-    /** @var string The route path prefix to use for API calls */
+    /** @var string The route path prefix to use for shims */
     public const ROUTE_GROUP_SHIM = 'shim';
 
-    /** @var string The route path prefix to use for API calls */
+    /** @var string The route path prefix to use for page calls */
     public const ROUTE_GROUP_PAGE = '/';
+
+    /** @var string The route path prefi xto use for short links */
+    public const ROUTE_GROUP_SHORTLINK = '/s/';
 
     /**
      * Configure all routes for the Application.

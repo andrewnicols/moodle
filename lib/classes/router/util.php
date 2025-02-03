@@ -102,14 +102,18 @@ class util {
      *
      * @param ServerRequestInterface $request
      * @param ResponseInterface $response
+     * @param string|null $message
+     * @param \Throwable|null $previous
      * @return ResponseInterface
      * @throws \Slim\Exception\HttpNotFoundException
      */
     public static function throw_page_not_found(
         ServerRequestInterface $request,
         ResponseInterface $response,
+        ?string $message = null,
+        ?\Throwable $previous = null,
     ): ResponseInterface {
-        throw new \Slim\Exception\HttpNotFoundException($request);
+        throw new \Slim\Exception\HttpNotFoundException($request, $message, $previous);
     }
 
     /**
@@ -159,8 +163,8 @@ class util {
      */
     public static function get_path_for_callable(
         string|array|callable $callable,
-        array $params,
-        array $queryparams,
+        array $params = [],
+        array $queryparams = [],
     ): moodle_url {
         global $CFG;
 
