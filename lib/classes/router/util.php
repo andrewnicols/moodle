@@ -18,6 +18,7 @@ namespace core\router;
 
 use moodle_url;
 use GuzzleHttp\Psr7\Uri;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Routing\RouteContext;
 
@@ -31,7 +32,7 @@ use Slim\Routing\RouteContext;
  * - helpers to fetch the \core\router\route instance
  *
  * @package    core
- * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class util {
@@ -51,31 +52,82 @@ class util {
             $path,
             $params,
         );
-        $url->remove_params($excludeparams);
+        $url->remove_params(...$excludeparams);
 
         redirect($url);
     }
 
     /**
-     * Redirect to the route at the callable supplied.
+     * Redirect to the requested callable.
      *
-     * @param callable|array|string $callable
-     * @param array $params Any parameters to include in the path
-     * @codeCoverageIgnore
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param array|callable|string $callable
+     * @param null|array $pathparams
+     * @param null|array $queryparams
+     * @param null|array $excludeparams A list of any parameters to remove the URI during the redirect
+     * @return ResponseInterface
      */
     public static function redirect_to_callable(
-        callable|array|string $callable,
-        array $params = [],
-    ): never {
-        $params = array_merge(
-            $_GET,
-            $params,
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        array|callable|string $callable,
+        ?array $pathparams = null,
+        ?array $queryparams = null,
+        ?array $excludeparams = null,
+    ): ResponseInterface {
+        // Provide defaults for the path and query params if not specified.
+        if ($pathparams === null) {
+            $pathparams = $request->getQueryParams();
+        }
+        if ($queryparams === null) {
+            $queryparams = $request->getQueryParams();
+        }
+
+        // Generate a URI from the callable and the parameters.
+        $url = self::get_path_for_callable(
+            $callable,
+            $pathparams ?? [],
+            $queryparams ?? [],
         );
 
-        $url = self::get_path_for_callable($callable, $params, $params);
+        // Remove any params.
+        $url->remove_params($excludeparams);
 
-        redirect($url);
+        return self::redirect($response, $url);
     }
+
+    /**
+     * Generate a Page Not Found result.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @return ResponseInterface
+     * @throws \Slim\Exception\HttpNotFoundException
+     */
+    public static function throw_page_not_found(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+    ): ResponseInterface {
+        throw new \Slim\Exception\HttpNotFoundException($request);
+    }
+
+    /**
+     * Redirect to a URL.
+     *
+     * @param ResponseInterface $response
+     * @param string|moodle_url $url
+     * @return ResponseInterface
+     */
+    public static function redirect(
+        ResponseInterface $response,
+        string|moodle_url $url,
+    ): ResponseInterface {
+        return $response
+            ->withStatus(302)
+            ->withHeader('Location', (string) $url);
+    }
+
 
     /**
      * Get the route name for the specified callable.
