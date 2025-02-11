@@ -29,19 +29,13 @@ use core_external\tests\external_testcase;
  */
 #[\PHPunit\Framework\Attributes\CoversClass(update_inplace_editable::class)]
 final class update_inplace_editable_test extends external_testcase {
-    /**
-     * Test update_inplace_editable()
-     */
+    public function test_update_inplace_editable_without_implementation(): void {
+        $this->expectException(\core\exception\coding_exception::class);
+        update_inplace_editable::execute('tool_log', 'itemtype', 1, 'newvalue');
+    }
+
     public function test_update_inplace_editable(): void {
         $this->resetAfterTest(true);
-
-        // Call service for component that does not have inplace_editable callback.
-        try {
-            update_inplace_editable::execute('tool_log', 'itemtype', 1, 'newvalue');
-            $this->fail('Exception expected');
-        } catch (\moodle_exception $e) {
-            $this->assertEquals('Error calling update processor', $e->getMessage());
-        }
 
         // This is a very basic test for the return value of the external function.
         // More detailed test for tag updating can be found in core_tag component.
@@ -53,9 +47,6 @@ final class update_inplace_editable_test extends external_testcase {
         $this->assertEquals('new tag name', $res['value']);
     }
 
-    /**
-     * Test update_inplace_editable with mathjax.
-     */
     public function test_update_inplace_editable_with_mathjax(): void {
         $this->resetAfterTest(true);
         $this->setAdminUser();
