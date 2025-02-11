@@ -99,6 +99,7 @@ class bulk_route {
             // Get the ServerRequest from a multipart request part, and pass it through the Router.
             $request = self::get_request_from_part($requestpart);
             $requestresponse = $router->handle_request($request);
+            $requestresponse = $requestresponse->withHeader('Content-ID', $request->getHeaderLine('Content-ID'));
 
             // Write the response to the body of the combined response.
             // Note: The response is written within an application/http and may have its own headers and status.
@@ -150,7 +151,7 @@ class bulk_route {
         // Each part is split into:
         // - Headers to describe the request
         // - Two new-lines.
-        // - The request headeer.
+        // - The request header.
         // - Two new-lines.
         // - The request body.
         $parts = explode("\n\n", $requestpart);
