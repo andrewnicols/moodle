@@ -22,33 +22,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core_external\external_api;
-
-defined('MOODLE_INTERNAL') || die;
-
-/**
- * Edit customfield elements inplace
- *
- * @param string $itemtype
- * @param int    $itemid
- * @param string $newvalue
- * @return \core\output\inplace_editable
- */
-function core_customfield_inplace_editable($itemtype, $itemid, $newvalue) {
-    if ($itemtype === 'category') {
-        $category = core_customfield\category_controller::create($itemid);
-        $handler = $category->get_handler();
-        external_api::validate_context($handler->get_configuration_context());
-        if (!$handler->can_configure()) {
-            throw new moodle_exception('nopermissionconfigure', 'core_customfield');
-        }
-        $newvalue = clean_param($newvalue, PARAM_TEXT);
-        $newvalue = core_text::substr($newvalue, 0, 1333);
-        $handler->rename_category($category, $newvalue);
-        return \core_customfield\api::get_category_inplace_editable($category, true);
-    }
-}
-
 /**
  * Serve the files from the core_customfield file areas
  *

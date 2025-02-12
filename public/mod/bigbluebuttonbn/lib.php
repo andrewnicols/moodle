@@ -594,22 +594,6 @@ function bigbluebuttonbn_extend_settings_navigation(settings_navigation $setting
 }
 
 /**
- * In place editable for the recording table
- *
- * @param string $itemtype
- * @param string $itemid
- * @param mixed $newvalue
- * @return mixed|null
- */
-function bigbluebuttonbn_inplace_editable($itemtype, $itemid, $newvalue) {
-    $editableclass = "\\mod_bigbluebuttonbn\\output\\recording_{$itemtype}_editable";
-    if (class_exists($editableclass)) {
-        return call_user_func([$editableclass, 'update'], $itemid, $newvalue);
-    }
-    return null; // Will raise an exception in core update_inplace_editable method.
-}
-
-/**
  * Returns all events since a given time in specified bigbluebutton activity.
  * We focus here on the two events: play and join.
  *

@@ -130,35 +130,3 @@ function core_reportbuilder_get_tagged_reports(
     return new tagindex($tag, 'core_reportbuilder', 'reportbuilder_report', $content, $exclusivemode, $fromcontextid,
         $contextid, $recurse, $page, $pagecount);
 }
-
-/**
- * Plugin inplace editable implementation
- *
- * @param string $itemtype
- * @param int $itemid
- * @param string $newvalue
- * @return inplace_editable|null
- */
-function core_reportbuilder_inplace_editable(string $itemtype, int $itemid, string $newvalue): ?inplace_editable {
-    switch ($itemtype) {
-        case 'reportname':
-            return \core_reportbuilder\output\report_name_editable::update($itemid, $newvalue);
-
-        case 'columnheading':
-            return \core_reportbuilder\output\column_heading_editable::update($itemid, $newvalue);
-
-        case 'columnaggregation':
-            return \core_reportbuilder\output\column_aggregation_editable::update($itemid, $newvalue);
-
-        case 'filterheading':
-            return \core_reportbuilder\output\filter_heading_editable::update($itemid, $newvalue);
-
-        case 'audienceheading':
-            return \core_reportbuilder\output\audience_heading_editable::update($itemid, $newvalue);
-
-        case 'schedulename':
-            return \core_reportbuilder\output\schedule_name_editable::update($itemid, $newvalue);
-    }
-
-    return null;
-}

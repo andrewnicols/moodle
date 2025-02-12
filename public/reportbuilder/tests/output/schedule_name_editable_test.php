@@ -19,6 +19,8 @@ declare(strict_types=1);
 namespace core_reportbuilder\output;
 
 use advanced_testcase;
+use core\callback_manager;
+use core\callbacks\output\inplace_editable_object;
 use core_reportbuilder_generator;
 use core_reportbuilder\exception\report_access_exception;
 use core_user\reportbuilder\datasource\users;
@@ -27,10 +29,11 @@ use core_user\reportbuilder\datasource\users;
  * Unit tests for the schedule name editable class
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\output\schedule_name_editable
- * @copyright   2022 Paul Holden <paulh@moodle.com>
+ * @copyright   Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(schedule_name_editable::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(inplace_editable_callback::class)]
 final class schedule_name_editable_test extends advanced_testcase {
 
     /**
@@ -78,8 +81,6 @@ final class schedule_name_editable_test extends advanced_testcase {
 
     /**
      * Test update method via component callback
-     *
-     * @covers ::core_reportbuilder_inplace_editable
      */
     public function test_update_callback(): void {
         $this->resetAfterTest();
@@ -91,8 +92,12 @@ final class schedule_name_editable_test extends advanced_testcase {
         $report = $generator->create_report(['name' => 'My report', 'source' => users::class]);
         $schedule = $generator->create_schedule(['reportid' => $report->get('id'), 'name' => 'My schedule']);
 
-        $params = ['schedulename', $schedule->get('id'), 'New name'];
-        $editable = component_callback('core_reportbuilder', 'inplace_editable', $params);
+        // Ensure that the value is updated.
+        $callback = new inplace_editable_object('schedulename', $schedule->get('id'), 'New name');
+
+        \core\di::get(callback_manager::class)->dispatch('core_reportbuilder', $callback);
+
+        $editable = $callback->get_renderable();
         $this->assertInstanceOf(schedule_name_editable::class, $editable);
 
         // Reload persistent, assert update.

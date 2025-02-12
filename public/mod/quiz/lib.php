@@ -1096,39 +1096,6 @@ function quiz_review_option_form_to_db($fromform, $field) {
 }
 
 /**
- * In place editable callback for slot displaynumber.
- *
- * @param string $itemtype slotdisplarnumber
- * @param int $itemid the id of the slot in the quiz_slots table
- * @param string $newvalue the new value for displaynumber field for a given slot in the quiz_slots table
- * @return \core\output\inplace_editable|void
- */
-function mod_quiz_inplace_editable(string $itemtype, int $itemid, string $newvalue): \core\output\inplace_editable {
-    global $DB;
-
-    if ($itemtype === 'slotdisplaynumber') {
-        // Work out which quiz and slot this is.
-        $slot = $DB->get_record('quiz_slots', ['id' => $itemid], '*', MUST_EXIST);
-        $quizobj = quiz_settings::create($slot->quizid);
-
-        // Validate the context, and check the required capability.
-        $context = $quizobj->get_context();
-        \core_external\external_api::validate_context($context);
-        require_capability('mod/quiz:manage', $context);
-
-        // Validate capability to customise question numbers.
-        require_capability('mod/quiz:customisequestionnumbers', $context);
-
-        // Update the value - truncating the size of the DB column.
-        $structure = $quizobj->get_structure();
-        $structure->update_slot_display_number($itemid, core_text::substr($newvalue, 0, 16));
-
-        // Prepare the element for the output.
-        return $structure->make_slot_display_number_in_place_editable($itemid, $context);
-    }
-}
-
-/**
  * This function is called at the end of quiz_add_instance
  * and quiz_update_instance, to do the common processing.
  *

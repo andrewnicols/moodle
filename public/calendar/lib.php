@@ -3421,36 +3421,3 @@ function calendar_get_export_import_link_params(): array {
 
     return $params;
 }
-
-/**
- * Implements the inplace editable feature.
- *
- * @param string $itemtype Type of the inplace editable element
- * @param int $itemid Id of the item to edit
- * @param int $newvalue New value of the item
- * @return \core\output\inplace_editable
- */
-function calendar_inplace_editable(string $itemtype, int $itemid, int $newvalue): \core\output\inplace_editable {
-    global $OUTPUT;
-
-    if ($itemtype === 'refreshinterval') {
-
-        $subscription = calendar_get_subscription($itemid);
-        $context = calendar_get_calendar_context($subscription);
-        external_api::validate_context($context);
-
-        $updateresult = \core_calendar\output\refreshintervalcollection::update($itemid, $newvalue);
-
-        $refreshresults = calendar_update_subscription_events($itemid);
-        \core\notification::add($OUTPUT->render_from_template(
-            'core_calendar/subscription_update_result',
-            array_merge($refreshresults, [
-                'subscriptionname' => s($subscription->name),
-            ])
-        ), \core\notification::INFO);
-
-        return $updateresult;
-    }
-
-    external_api::validate_context(context_system::instance());
-}

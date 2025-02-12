@@ -19,6 +19,8 @@ declare(strict_types=1);
 namespace core_reportbuilder\output;
 
 use advanced_testcase;
+use core\callback_manager;
+use core\callbacks\output\inplace_editable_object;
 use core_reportbuilder_generator;
 use core_reportbuilder\exception\report_access_exception;
 use core_reportbuilder\local\aggregation\count;
@@ -28,12 +30,12 @@ use core_user\reportbuilder\datasource\users;
  * Unit tests for the column aggregation editable class
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\output\column_aggregation_editable
- * @copyright   2022 Paul Holden <paulh@moodle.com>
+ * @copyright   Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(column_aggregation_editable::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(inplace_editable_callback::class)]
 final class column_aggregation_editable_test extends advanced_testcase {
-
     /**
      * Test update method
      */
@@ -78,9 +80,7 @@ final class column_aggregation_editable_test extends advanced_testcase {
     }
 
     /**
-     * Test update method via component callback
-     *
-     * @covers ::core_reportbuilder_inplace_editable
+     * Test update method via component callback.
      */
     public function test_update_callback(): void {
         $this->resetAfterTest();
@@ -92,8 +92,11 @@ final class column_aggregation_editable_test extends advanced_testcase {
         $report = $generator->create_report(['name' => 'My report', 'source' => users::class]);
         $column = $generator->create_column(['reportid' => $report->get('id'), 'uniqueidentifier' => 'user:lastname']);
 
-        $params = ['columnaggregation', $column->get('id'), count::get_class_name()];
-        $editable = component_callback('core_reportbuilder', 'inplace_editable', $params);
+        // Ensure that the value is updated.
+        $callback = new inplace_editable_object('columnaggregation', $column->get('id'), count::get_class_name());
+        \core\di::get(callback_manager::class)->dispatch('core_reportbuilder', $callback);
+
+        $editable = $callback->get_renderable();
         $this->assertInstanceOf(column_aggregation_editable::class, $editable);
 
         // Reload persistent, assert update.

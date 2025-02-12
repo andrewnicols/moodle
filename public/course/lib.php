@@ -2784,20 +2784,6 @@ function course_get_tagged_courses($tag, $exclusivemode = false, $fromctx = 0, $
 }
 
 /**
- * Implements callback inplace_editable() allowing to edit values in-place
- *
- * @param string $itemtype
- * @param int $itemid
- * @param mixed $newvalue
- * @return \core\output\inplace_editable|null
- */
-function core_course_inplace_editable($itemtype, $itemid, $newvalue) {
-    if ($itemtype === 'activityname') {
-        return \core_courseformat\output\local\content\cm\title::update($itemid, $newvalue);
-    }
-}
-
-/**
  * This function calculates the minimum and maximum cutoff values for the timestart of
  * the given event.
  *
