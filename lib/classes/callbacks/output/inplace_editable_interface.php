@@ -14,23 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\callbacks;
+namespace core\callbacks\output;
+
+use core\callbacks\callback_interface;
 
 /**
- * The base class for all callbacks.
+ * Inplace editable callback interface.
  *
  * @package    core
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class abstract_callback {
+interface inplace_editable_interface extends callback_interface {
     /**
-     * Method to return the possible interfaces that this callback is a part of.
+     * Implement the component part of an inplace editable form field.
      *
-     * Note: In most cases this will be a single value, but multiple values may be allowed to allow
-     * for future deprecation of an interface and migration to a new version.
-     *
-     * @return string[] The interface name.
+     * @param inplace_editable_object $callback The callback data to extend.
      */
-    abstract public function get_implementing_interface_names(): array;
+    public function execute_inplace_editable(inplace_editable_object $callback): void;
 }

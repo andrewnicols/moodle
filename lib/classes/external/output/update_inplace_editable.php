@@ -68,19 +68,10 @@ class update_inplace_editable extends external_api {
             'value' => $value,
         ]);
 
-        $tmpl = component_callback(
-            $component,
-            'inplace_editable',
-            [
-                $itemtype,
-                $itemid,
-                $value,
-            ]
-        );
-        if (!$tmpl || !($tmpl instanceof \core\output\inplace_editable)) {
-            throw new \core\exception\moodle_exception('inplaceeditableerror');
-        }
-        return $tmpl->export_for_template($PAGE->get_renderer('core'));
+        $callback = new \core\callbacks\output\inplace_editable_object($itemtype, $itemid, $value);
+        \core\di::get(\core\callback_manager::class)->dispatch($component, $callback);
+
+        return $callback->get_renderable()->export_for_template($PAGE->get_renderer('core'));
     }
 
     /**

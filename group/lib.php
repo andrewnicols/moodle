@@ -1240,20 +1240,6 @@ function groups_sync_with_enrolment($enrolname, $courseid = 0, $gidfield = 'cust
 }
 
 /**
- * Callback for inplace editable API.
- *
- * @param string $itemtype - Only user_groups is supported.
- * @param string $itemid - Userid and groupid separated by a :
- * @param string $newvalue - json encoded list of groupids.
- * @return \core\output\inplace_editable
- */
-function core_group_inplace_editable($itemtype, $itemid, $newvalue) {
-    if ($itemtype === 'user_groups') {
-        return \core_group\output\user_groups_editable::update($itemid, $newvalue);
-    }
-}
-
-/**
  * Updates group messaging to enable/disable in bulk.
  *
  * @param array $groupids array of group id numbers.

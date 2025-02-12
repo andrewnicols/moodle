@@ -19,6 +19,8 @@ declare(strict_types=1);
 namespace core_reportbuilder\output;
 
 use advanced_testcase;
+use core\callback_manager;
+use core\callbacks\output\inplace_editable_object;
 use core_reportbuilder_generator;
 use core_reportbuilder\exception\report_access_exception;
 use core_user\reportbuilder\datasource\users;
@@ -27,12 +29,12 @@ use core_user\reportbuilder\datasource\users;
  * Unit tests for the audience heading editable class
  *
  * @package     core_reportbuilder
- * @covers      \core_reportbuilder\output\audience_heading_editable
- * @copyright   2022 Paul Holden <paulh@moodle.com>
+ * @copyright   Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(audience_heading_editable::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(inplace_editable_callback::class)]
 final class audience_heading_editable_test extends advanced_testcase {
-
     /**
      * Test update method
      */
@@ -80,8 +82,6 @@ final class audience_heading_editable_test extends advanced_testcase {
 
     /**
      * Test update method via component callback
-     *
-     * @covers ::core_reportbuilder_inplace_editable
      */
     public function test_update_callback(): void {
         $this->resetAfterTest();
@@ -95,9 +95,13 @@ final class audience_heading_editable_test extends advanced_testcase {
 
         $persistent = $audience->get_persistent();
 
-        $params = ['audienceheading', $persistent->get('id'), 'New name'];
-        $editable = component_callback('core_reportbuilder', 'inplace_editable', $params);
-        $this->assertInstanceOf(audience_heading_editable::class, $editable);
+        // Ensure that the value is updated.
+        $callback = new inplace_editable_object('audienceheading', $persistent->get('id'), 'New name');
+
+        \core\di::get(callback_manager::class)->dispatch('core_reportbuilder', $callback);
+
+        $renderable = $callback->get_renderable();
+        $this->assertInstanceOf(audience_heading_editable::class, $renderable);
 
         // Reload persistent, assert update.
         $this->assertEquals('New name', $persistent->read()->get('heading'));
