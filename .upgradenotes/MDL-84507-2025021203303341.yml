@@ -1,0 +1,11 @@
+issueNumber: MDL-84507
+notes:
+  core_external:
+    - message: >
+        The `update_inplace_editable` webservice implementation has been moved
+        to `\core\external\output\update_inplace_editable`. Normal usage should
+        not be impacted and a backwards compatibility layer has been provided.
+
+
+        From Moodle 6.0 all uses must be updated to use the new location.
+      type: changed
