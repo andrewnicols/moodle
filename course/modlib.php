@@ -1,4 +1,8 @@
 <?php
+
+use core\callback_manager;
+use core_course\callbacks\activity\create_instance_object;
+use core_course\callbacks\activity\update_instance_object;
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -138,31 +142,15 @@ function add_moduleinfo($moduleinfo, $course, $mform = null) {
         $moduleinfo->introformat = $introeditor['format'];
     }
 
-    $addinstancefunction    = $moduleinfo->modulename."_add_instance";
-    try {
-        $returnfromfunc = $addinstancefunction($moduleinfo, $mform);
-    } catch (moodle_exception $e) {
-        $returnfromfunc = $e;
-    }
-    if (!$returnfromfunc or !is_number($returnfromfunc)) {
-        // Undo everything we can. This is not necessary for databases which
-        // support transactions, but improves consistency for other databases.
-        context_helper::delete_instance(CONTEXT_MODULE, $moduleinfo->coursemodule);
-        $DB->delete_records('course_modules', array('id'=>$moduleinfo->coursemodule));
+    $callback = new create_instance_object($course, $moduleinfo, $mform);
+    di::get(callback_manager::class)->dispatch("mod_{$moduleinfo->modulename}", $callback);
+    $moduleinfo = $callback->get_moduleinfo();
 
-        if ($returnfromfunc instanceof moodle_exception) {
-            throw $returnfromfunc;
-        } else if (!is_number($returnfromfunc)) {
-            throw new \moodle_exception('invalidfunction', '', course_get_url($course, $moduleinfo->section));
-        } else {
-            throw new \moodle_exception('cannotaddnewmodule', '', course_get_url($course, $moduleinfo->section),
-                $moduleinfo->modulename);
-        }
-    }
+    $moduleinfo->instance = $callback->get_instanceid();
 
-    $moduleinfo->instance = $returnfromfunc;
-
-    $DB->set_field('course_modules', 'instance', $returnfromfunc, array('id'=>$moduleinfo->coursemodule));
+    $DB->set_field('course_modules', 'instance', $moduleinfo->instance, [
+        'id' => $moduleinfo->coursemodule,
+    ]);
 
     // Update embedded links and save files.
     $modcontext = context_module::instance($moduleinfo->coursemodule);
@@ -682,10 +670,9 @@ function update_moduleinfo($cm, $moduleinfo, $course, $mform = null) {
                                                 'courseid' => $moduleinfo->course));
     }
 
-    $updateinstancefunction = $moduleinfo->modulename."_update_instance";
-    if (!$updateinstancefunction($moduleinfo, $mform)) {
-        throw new \moodle_exception('cannotupdatemod', '', course_get_url($course, $cm->section), $moduleinfo->modulename);
-    }
+
+    $callback = new update_instance_object($course, $moduleinfo, $mform);
+    di::get(callback_manager::class)->dispatch("mod_{$moduleinfo->modulename}", $callback);
 
     // This needs to happen AFTER the grademin/grademax have already been updated.
     if (!empty($data->grade_rescalegrades) && $data->grade_rescalegrades == 'yes') {

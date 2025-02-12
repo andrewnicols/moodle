@@ -4,6 +4,11 @@
         "allowedlevel2": true,
         "allowedspread": false
     },
+    "activity": {
+        "component": "core_course",
+        "allowedlevel2": true,
+        "allowedspread": true
+    },
     "admin": {
         "component": "core_admin",
         "allowedlevel2": false,
