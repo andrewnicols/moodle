@@ -1887,8 +1887,7 @@ $functions = array(
         'services' => array(MOODLE_OFFICIAL_MOBILE_SERVICE),
     ),
     'core_update_inplace_editable' => array(
-        'classname' => 'core_external',
-        'methodname' => 'update_inplace_editable',
+        'classname' => \core\external\output\update_inplace_editable::class,
         'classpath' => 'lib/external/externallib.php',
         'description' => 'Generic service to update title',
         'type' => 'write',
