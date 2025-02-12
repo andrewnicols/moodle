@@ -1,0 +1,11 @@
+issueNumber: MDL-84507
+notes:
+  core_external:
+    - message: >
+        The `\externallib_advanced_testcase` has been moved to
+        `\core_external\tests\external_testcase` where it can now be autoloaded.
+
+
+        A deprecation layer has been left in place in the webservice helpers.php
+        file for plugins.
+      type: changed
