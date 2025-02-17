@@ -95,24 +95,13 @@ const registerEventListeners = () => {
  */
 const deleteRule = target => {
     // Get all form data.
-    let params = buildFormParams();
-
-    // Get the rule number.
-    let rulenumber = target.dataset.rulenumber;
-
-    // If the rule number is undefined, find the number on its parent.
-    if (rulenumber === undefined) {
-        rulenumber = target.parentElement.dataset.rulenumber;
-    }
-
-    // Convert to integer.
-    rulenumber = parseInt(rulenumber);
+    const params = buildFormParams();
+    const rulenumber = getRuleNumber(target);
 
     // Remove the penalty rule.
-    let penaltyRules = JSON.parse(params.penaltyrules);
+    const penaltyRules = JSON.parse(params.penaltyrules);
     penaltyRules.splice(rulenumber, 1);
-    penaltyRules = JSON.stringify(penaltyRules);
-    params.penaltyrules = penaltyRules;
+    params.penaltyrules = JSON.stringify(penaltyRules);
 
     loadPenaltyRuleForm(params.contextid, params);
 };
@@ -124,25 +113,13 @@ const deleteRule = target => {
  */
 const insertRule = target => {
     // Get all form data.
-    let params = buildFormParams();
-
-    // Get the rule number.
-    let rulenumber = target.dataset.rulenumber;
-
-    // If the rule number is undefined, find the number on its parent.
-    if (rulenumber === undefined) {
-        rulenumber = target.parentElement.dataset.rulenumber;
-    }
-
-    // Convert to integer.
-    rulenumber = parseInt(rulenumber);
+    const params = buildFormParams();
+    const ruleNumber = getRuleNumber(target);
 
     // Insert a new penalty rule.
-    let penaltyRule = new PenaltyRule();
-    let penaltyRules = JSON.parse(params.penaltyrules);
-    penaltyRules.splice(rulenumber + 1, 0, penaltyRule);
-    penaltyRules = JSON.stringify(penaltyRules);
-    params.penaltyrules = penaltyRules;
+    const penaltyRules = JSON.parse(params.penaltyrules);
+    penaltyRules.splice(ruleNumber + 1, 0, new PenaltyRule());
+    params.penaltyrules = JSON.stringify(penaltyRules);
 
     loadPenaltyRuleForm(params.contextid, params);
 };
@@ -152,16 +129,32 @@ const insertRule = target => {
  */
 const addRule = () => {
     // Get all form data.
-    let params = buildFormParams();
+    const params = buildFormParams();
 
     // Add a new penalty rule.
-    let penaltyRule = new PenaltyRule();
-    let penaltyRules = JSON.parse(params.penaltyrules);
-    penaltyRules.push(penaltyRule);
-    penaltyRules = JSON.stringify(penaltyRules);
-    params.penaltyrules = penaltyRules;
+    const penaltyRules = JSON.parse(params.penaltyrules);
+    penaltyRules.push(new PenaltyRule());
+    params.penaltyrules = JSON.stringify(penaltyRules);
 
     loadPenaltyRuleForm(params.contextid, params);
+};
+
+/**
+ * Get the rule number from the target.
+ *
+ * @param {Object} target
+ * @return {integer} rule number
+ */
+const getRuleNumber = target => {
+    if (target.dataset.rulenumber !== undefined) {
+        return parseInt(target.dataset.rulenumber);
+    }
+
+    if (target.parentElement) {
+        return getRuleNumber(target.parentElement);
+    }
+
+    throw new Error('Rule number not found on target', target);
 };
 
 /**
@@ -171,24 +164,24 @@ const addRule = () => {
  */
 const buildFormParams = () => {
     // Get the penalty rule form in its container.
-    let container = document.querySelector(SELECTORS.FORM_CONTAINER);
-    let form = container.querySelector('form');
+    const container = document.querySelector(SELECTORS.FORM_CONTAINER);
+    const form = container.querySelector('form');
 
     // Get all form data
-    let formData = new FormData(form);
+    const formData = new FormData(form);
 
     // Get context id.
-    let contextid = formData.get('contextid');
+    const contextid = formData.get('contextid');
 
     // Get group count.
-    let groupCount = formData.get('rulegroupcount');
+    const groupCount = formData.get('rulegroupcount');
 
     // Create list of penalty rules.
     let penaltyRules = [];
 
     // Current penalty rules.
     for (let i = 0; i < groupCount; i++) {
-        let penaltyRule = new PenaltyRule();
+        const penaltyRule = new PenaltyRule();
         penaltyRule.overdueby = formData.get(`overdueby[${i}][number]`) * formData.get(`overdueby[${i}][timeunit]`);
         penaltyRule.penalty = formData.get(`penalty[${i}]`);
         penaltyRules.push(penaltyRule);
@@ -209,11 +202,10 @@ const buildFormParams = () => {
  */
 const loadPenaltyRuleForm = (contextid, params) => {
     Fragment.loadFragment('gradepenalty_duedate', 'penalty_rule_form', contextid, params)
-        .done((html, js) => {
+        .then((html, js) => {
             // Replace the form with the new form.
-            let formContainer = document.querySelector(SELECTORS.FORM_CONTAINER);
-            Templates.replaceNodeContents(formContainer, html, js);
-        }).fail(notification.exception);
+            Templates.replaceNodeContents(document.querySelector(SELECTORS.FORM_CONTAINER), html, js);
+        }).catch(notification.exception);
 };
 
 /**
