@@ -31,5 +31,5 @@ use Psr\EventDispatcher\StoppableEventInterface;
 #[\core\attribute\label('Allow plugins to perform further action after penalty is applied.')]
 #[\core\attribute\tags('grade')]
 class after_penalty_applied implements StoppableEventInterface {
-    use grade_penalty_handler;
+    use grade_penalty_handler_trait;
 }

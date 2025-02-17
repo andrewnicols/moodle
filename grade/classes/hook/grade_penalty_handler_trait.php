@@ -26,7 +26,7 @@ use grade_item;
  * @copyright 2024 Catalyst IT Australia Pty Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-trait grade_penalty_handler {
+trait grade_penalty_handler_trait {
     use stoppable_trait;
 
     /**

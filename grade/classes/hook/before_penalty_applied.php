@@ -32,7 +32,7 @@ use Psr\EventDispatcher\StoppableEventInterface;
 #[\core\attribute\label('Allow plugins to do penalty calculations.')]
 #[\core\attribute\tags('grade')]
 class before_penalty_applied implements StoppableEventInterface {
-    use grade_penalty_handler;
+    use grade_penalty_handler_trait;
 
     /**
      * Set deducted grade.
