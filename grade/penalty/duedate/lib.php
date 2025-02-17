@@ -24,7 +24,7 @@
 
 /** Minimum late for value */
 
-use core_grades\local\penalty\manager;
+use core_grades\penalty_manager;
 
 define('GRADEPENALTY_DUEDATE_OVERDUEBY_MIN', 1);
 
@@ -81,7 +81,7 @@ function gradepenalty_duedate_extend_navigation_module(navigation_node $navigati
     }
 
     // Return if the module is not enabled.
-    if (!manager::is_penalty_enabled_for_module($cm->modname)) {
+    if (!penalty_manager::is_penalty_enabled_for_module($cm->modname)) {
         return;
     }
 

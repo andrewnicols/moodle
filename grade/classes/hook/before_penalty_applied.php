@@ -49,7 +49,7 @@ class before_penalty_applied implements StoppableEventInterface {
 
             // Update the final grade.
             $this->gradeafterpenalty = $this->gradebeforepenalty - $this->deductedgrade;
-            // Cannot be negative.
+            // Cannot be less than the minimum grade.
             $this->gradeafterpenalty = max($this->gradeitem->grademin, $this->gradeafterpenalty);
             // Cannot be greater than the maximum grade.
             $this->gradeafterpenalty = min($this->gradeafterpenalty, $this->gradeitem->grademax);

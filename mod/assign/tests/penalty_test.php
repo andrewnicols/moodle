@@ -16,7 +16,7 @@
 
 namespace mod_assign;
 
-use core_grades\local\penalty\manager;
+use core_grades\penalty_manager;
 use grade_item;
 use mod_assign_test_generator;
 use mod_assign_testable_assign;
@@ -81,16 +81,16 @@ final class penalty_test extends \advanced_testcase {
         set_config('gradepenalty_enabled', 1);
 
         // Assign should be in the supported list.
-        $this->assertTrue(in_array('assign', manager::get_supported_modules()));
+        $this->assertTrue(in_array('assign', penalty_manager::get_supported_modules()));
 
         // Penalty is not enabled for any modules by default.
-        $this->assertFalse(manager::is_penalty_enabled_for_module('assign'));
+        $this->assertFalse(penalty_manager::is_penalty_enabled_for_module('assign'));
 
         // Enable penalty for assign.
         set_config('gradepenalty_supportedplugins', 'assign');
 
         // Assign should be enabled by now.
-        $this->assertTrue(manager::is_penalty_enabled_for_module('assign'));
+        $this->assertTrue(penalty_manager::is_penalty_enabled_for_module('assign'));
 
     }
 

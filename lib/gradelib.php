@@ -22,7 +22,7 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core_grades\local\penalty\manager as penalty_manager;
+use core_grades\penalty_manager;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -1691,7 +1691,10 @@ function grade_get_date_for_user_grade(\stdClass $grade, \stdClass $user): ?int 
 }
 
 /**
- * Apply penalty to user.
+ * Apply grade penalties to a user.
+ *
+ * Grade penalties are determined by the enabled penalty plugin.
+ * This function should be called each time a module creates or updates a grade item for a user.
  *
  * @param int $userid The user ID
  * @param grade_item $gradeitem grade item
@@ -1700,8 +1703,14 @@ function grade_get_date_for_user_grade(\stdClass $grade, \stdClass $user): ?int 
  * @param bool $previewonly do not update the grade if true, only return the penalty
  * @return float deducted penalty percentage
  */
-function apply_grade_penalty_to_user(int $userid, grade_item $gradeitem,
-                                     int $submissiondate, int $duedate, bool $previewonly = false): float {
+function apply_grade_penalty_to_user(
+    int $userid,
+    grade_item $gradeitem,
+    int $submissiondate,
+    int $duedate,
+    bool $previewonly = false
+): float {
+
     try {
         $deductedpercentage = penalty_manager::apply_penalty($userid, $gradeitem, $submissiondate, $duedate, $previewonly);
     } catch (\core\exception\moodle_exception $e) {

@@ -32,9 +32,7 @@ final class plugin3_hook_listener {
      * @param after_penalty_applied $hook
      * @return void
      */
-    public static function show_debugging(
-        \core_grades\hook\after_penalty_applied $hook
-    ): void {
+    public static function show_debugging(after_penalty_applied $hook): void {
         debugging('Grade before: ' . $hook->get_grade_before_penalty());
         debugging('Grade after: ' . $hook->get_grade_after_penalty());
         debugging('Deducted percentage: ' . $hook->get_deducted_percentage());

@@ -262,7 +262,7 @@ class mod_assign_mod_form extends moodleform_mod {
         $mform->hideIf('markinganonymous', 'blindmarking', 'eq', 0);
 
         // Add Penalty settings if the module supports it.
-        if (\core_grades\local\penalty\manager::is_penalty_enabled_for_module('assign')) {
+        if (\core_grades\penalty_manager::is_penalty_enabled_for_module('assign')) {
             // Show the message if we need to change the penalty settings.
             if (!empty($penaltysettingmessage)) {
                 $mform->addElement('html', $penaltysettingmessage);

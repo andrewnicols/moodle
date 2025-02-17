@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core_grades\local\penalty;
+namespace core_grades;
 
 use grade_item;
 use stdClass;
@@ -178,7 +178,7 @@ final class penalty_test extends \advanced_testcase {
      *
      * @dataProvider apply_penalty_provider
      *
-     * @covers       \core_grades\local\penalty\manager::apply_penalty
+     * @covers       \core_grades\penalty_manager::apply_penalty
      * @covers       \core_grades\hook\before_penalty_applied
      * @covers       \core_grades\hook\after_penalty_applied
      *
@@ -253,7 +253,7 @@ final class penalty_test extends \advanced_testcase {
      * Test with no grade.
      * The penalty should be only applied on existing grade.
      *
-     * @covers       \core_grades\local\penalty\manager::apply_penalty
+     * @covers       \core_grades\penalty_manager::apply_penalty
      * @covers       \core_grades\hook\before_penalty_applied
      * @covers       \core_grades\hook\after_penalty_applied
      */
@@ -276,7 +276,7 @@ final class penalty_test extends \advanced_testcase {
     /**
      * Test when penalty is should not be applied
      *
-     * @covers       \core_grades\local\penalty\manager::apply_penalty
+     * @covers       \core_grades\penalty_manager::apply_penalty
      */
     public function test_no_penalty(): void {
         global $DB;

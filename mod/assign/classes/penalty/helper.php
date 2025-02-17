@@ -39,7 +39,7 @@ class helper {
      */
     public static function is_penalty_enabled(int $assignid): bool {
         // Check if the penalty feature is enabled.
-        if (!\core_grades\local\penalty\manager::is_penalty_enabled()) {
+        if (!\core_grades\penalty_manager::is_penalty_enabled()) {
             return false;
         }
 

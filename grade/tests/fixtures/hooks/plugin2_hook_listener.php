@@ -32,9 +32,7 @@ final class plugin2_hook_listener {
      * @param before_penalty_applied $hook
      * @return void
      */
-    public static function apply_penalty(
-        \core_grades\hook\before_penalty_applied $hook
-    ): void {
+    public static function apply_penalty(before_penalty_applied $hook): void {
         // Apply bonus grade.
         debugging('fake_bonus: a fixed bonus grade of 10');
         $hook->apply_penalty('fake_bonus', -10);

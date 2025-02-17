@@ -233,7 +233,7 @@ if (has_capability('moodle/grade:manage', $systemcontext)
         $ADMIN->add('grades', new admin_category('gradepenalty', new lang_string('gradepenalty', 'grades')));
 
         // Supported modules.
-        $modules = core_grades\local\penalty\manager::get_supported_modules();
+        $modules = core_grades\penalty_manager::get_supported_modules();
         if (!empty($modules)) {
             $temp = new admin_settingpage('supportedplugins', new lang_string('gradepenalty_supportedplugins', 'grades'),
                 'moodle/grade:manage');

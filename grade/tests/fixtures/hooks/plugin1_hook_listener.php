@@ -32,9 +32,7 @@ final class plugin1_hook_listener {
      * @param before_penalty_applied $hook
      * @return void
      */
-    public static function apply_penalty(
-        \core_grades\hook\before_penalty_applied $hook
-    ): void {
+    public static function apply_penalty(before_penalty_applied $hook): void {
         // Dates are available in the hook.
         debugging('Submission date: ' . $hook->submissiondate);
         debugging('Due date: ' . $hook->duedate);

@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core_grades\local\penalty;
+namespace core_grades;
 
 use core\di;
 use core\hook;
@@ -29,7 +29,7 @@ use grade_item;
  * @copyright 2024 Catalyst IT Australia Pty Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class manager {
+class penalty_manager {
     /**
      * Lists of modules which support grade penalty feature.
      *
@@ -77,7 +77,10 @@ class manager {
     }
 
     /**
-     * This function should be run after a raw grade is updated/created for a user.
+     * Fetch the penalty for a user based on the submission date and due date and deduct marks from the grade item accordingly.
+     * 
+     * This function is called by apply_grade_penalty_to_user() which itself should be called
+     * after a module creates or updates a grade item for a user.
      *
      * @param int $userid ID of user
      * @param grade_item $gradeitem the grade item object
@@ -86,8 +89,13 @@ class manager {
      * @param bool $previewonly do not update the grade if true
      * @return float returns the deducted percentage.
      */
-    public static function apply_penalty(int $userid, grade_item $gradeitem,
-                                         int $submissiondate, int $duedate, bool $previewonly = false): float {
+    public static function apply_penalty(
+        int $userid,
+        grade_item $gradeitem,
+        int $submissiondate,
+        int $duedate,
+        bool $previewonly = false
+    ): float {
         // If the grade item belong to a supported module.
         if (!self::is_penalty_enabled_for_module($gradeitem->itemmodule)) {
             return 0;
@@ -118,7 +126,11 @@ class manager {
             $gradeitem->update_deducted_mark($userid, $beforepenaltyhook->get_deducted_grade());
 
             // Hook for plugins to process further after the penalty is applied to the grade.
-            $afterpenaltyhook = new after_penalty_applied($userid, $gradeitem, $submissiondate, $duedate,
+            $afterpenaltyhook = new after_penalty_applied(
+                $userid,
+                $gradeitem,
+                $submissiondate,
+                $duedate,
                 $beforepenaltyhook->get_grade_before_penalty(),
                 $beforepenaltyhook->get_deducted_percentage(),
                 $beforepenaltyhook->get_deducted_grade(),
@@ -127,10 +139,14 @@ class manager {
             di::get(hook\manager::class)->dispatch($afterpenaltyhook);
         }
 
-        // Clamp the deducted percentage between 0% and 100%.
         $deductedpercentage = $beforepenaltyhook->get_deducted_percentage();
-        $deductedpercentage = max(0, $deductedpercentage);
-        $deductedpercentage = min(100, $deductedpercentage);
+        if ($deductedpercentage < 0) {
+            throw new \coding_exception('The deducted percentage cannot be less than 0%.');
+        }
+
+        if ($deductedpercentage > 100) {
+            throw new \coding_exception('The deducted percentage cannot be greater than 100%.');
+        }
 
         return $deductedpercentage;
     }
