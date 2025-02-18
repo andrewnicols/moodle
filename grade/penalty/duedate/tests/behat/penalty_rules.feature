@@ -1,4 +1,4 @@
-@core @core_grades @gradepenalty_duedate @penalty_rule @javascript
+@gradepenalty @gradepenalty_duedate @penalty_rule
 Feature: As an administrator
   I need to add new penalty rule
   I need to edit penalty rule
@@ -17,6 +17,7 @@ Feature: As an administrator
     And I click on "Enable Late submission penalties" "checkbox"
     And I reload the page
 
+  @javascript
   Scenario: Edit, add, and delete and insert penalty rules
     When I navigate to "Grades > Grade penalties > Late submission penalties > Penalty rules" in site administration
     # Add 5 penalty rules.
@@ -57,6 +58,7 @@ Feature: As an administrator
     Then I should see "50%" in the "≤ 5 days" "table_row"
     Then I should see "100%" in the "> 5 days" "table_row"
 
+  @javascript
   Scenario: Override penalty rules at a course context
     When I navigate to "Grades > Grade penalties > Late submission penalties > Penalty rules" in site administration
     And I click on "Edit" "button"
