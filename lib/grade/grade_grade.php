@@ -219,10 +219,10 @@ class grade_grade extends grade_object {
     public $label;
 
     /** @var float $deductedmark mark deducted from final grade */
-    public $deductedmark = 0;
+    public float $deductedmark = 0;
 
     /** @var float $overriddenmark mark overridden by teacher */
-    public $overriddenmark = 0;
+    public float $overriddenmark = 0;
 
     /**
      * Returns array of grades for given grade_item+users
