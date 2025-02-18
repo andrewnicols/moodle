@@ -16,11 +16,6 @@
 
 namespace mod_assign\task;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->dirroot . '/mod/assign/lib.php');
-require_once($CFG->dirroot.'/course/lib.php');
-
 use core\exception\moodle_exception;
 use core\task\adhoc_task;
 
@@ -37,16 +32,16 @@ class recalculate_penalties extends adhoc_task {
      * Execute the task.
      */
     public function execute(): void {
-        global $DB;
-        try {
-            $assignid = $this->get_custom_data()->assignid;
-            $assign = $DB->get_record('assign', ['id' => $assignid], '*', MUST_EXIST);
-            $cm = get_coursemodule_from_instance('assign', $assignid, 0, false, MUST_EXIST);
-            $assign->cmidnumber = $cm->idnumber;
-            assign_update_grades($assign);
-        } catch (moodle_exception $e) {
-            debugging($e->getMessage(), DEBUG_DEVELOPER);
-        }
+        global $CFG, $DB;
+
+        require_once($CFG->dirroot . '/mod/assign/lib.php');
+        require_once($CFG->dirroot . '/course/lib.php');
+
+        $assignid = $this->get_custom_data()->assignid;
+        $assign = $DB->get_record('assign', ['id' => $assignid], '*', MUST_EXIST);
+        $cm = get_coursemodule_from_instance('assign', $assignid, 0, false, MUST_EXIST);
+        $assign->cmidnumber = $cm->idnumber;
+        assign_update_grades($assign);
     }
 
     /**
@@ -57,7 +52,7 @@ class recalculate_penalties extends adhoc_task {
      */
     public static function queue(int $assignid, int $usermodified): void {
         $task = new self();
-        $task->set_custom_data((object)[
+        $task->set_custom_data((object) [
             'assignid' => $assignid,
             'usermodified' => $usermodified,
         ]);
