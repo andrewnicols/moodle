@@ -27,7 +27,7 @@ use gradepenalty_duedate\penalty_rule;
 /**
  * Create a default 0% penalty rule.
  */
-function xmldb_gradepenalty_duedate_install() {
+function xmldb_gradepenalty_duedate_install(): void {
     // Default penalty rule.
     $rule = new penalty_rule();
     $rule->set('contextid', context_system::instance()->id);
