@@ -18,7 +18,7 @@ namespace gradepenalty_duedate\table;
 
 use context;
 use context_system;
-use table_sql;
+use core_table\sql_table;
 
 /**
  * Table for penalty rule.
@@ -27,10 +27,10 @@ use table_sql;
  * @copyright 2024 Catalyst IT Australia Pty Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class penalty_rule_table extends table_sql {
+class penalty_rule_table extends sql_table {
 
     /** @var context context */
-    protected $context = null;
+    protected context $context;
 
     /**
      * Sets up the table_log parameters.
@@ -68,7 +68,7 @@ class penalty_rule_table extends table_sql {
      * @param int $pagesize size of page for paginated displayed table.
      * @param bool $useinitialsbar do you want to use the initials bar.
      */
-    public function query_db($pagesize, $useinitialsbar = true) {
+    public function query_db($pagesize, $useinitialsbar = true): void {
         global $DB;
         // Contexts to find the penalty rules.
         $contextlevel = $this->context->contextlevel;
@@ -109,7 +109,7 @@ class penalty_rule_table extends table_sql {
      * @param bool $count When true, return the count SQL.
      * @return string the SQL query.
      */
-    protected function get_sql($count = false) {
+    protected function get_sql($count = false): string {
         if ($count) {
             $select = "COUNT(1)";
             $order = "";
@@ -130,7 +130,7 @@ class penalty_rule_table extends table_sql {
      *
      * @param object $row row object.
      */
-    public function col_overdueby($row) {
+    public function col_overdueby($row): string {
         // If this is the last rule, show the last row.
         if (count($this->rawdata) === ($row->sortorder + 1)) {
             // Find the previous rule.
@@ -152,7 +152,7 @@ class penalty_rule_table extends table_sql {
      *
      * @param object $row row object.
      */
-    public function col_penalty($row) {
+    public function col_penalty($row): string {
         return get_string('percents', 'moodle', format_float($row->penalty, -1));
     }
 }
