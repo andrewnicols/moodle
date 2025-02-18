@@ -16,10 +16,6 @@
 
 namespace mod_assign\penalty;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->dirroot . '/mod/assign/locallib.php');
-
 use assign;
 use context_module;
 use grade_item;
@@ -56,7 +52,7 @@ class helper {
         }
 
         // Check if the grade type is set to GRADE_TYPE_VALUE (grade 1 to 100).
-        if ($assign->get_instance()->grade <= 0) {
+        if ($assign->get_instance()->grade < GRADE_TYPE_VALUE) {
             return false;
         }
 
@@ -75,7 +71,9 @@ class helper {
      * @param int $userid The user id.
      */
     public static function apply_penalty_to_user(int $assignid, int $userid): void {
-        global $DB;
+        global $CFG, $DB;
+
+        require_once($CFG->dirroot . '/mod/assign/locallib.php');
 
         // Check if penalty is enabled for this assignment.
         if (!self::is_penalty_enabled($assignid)) {
@@ -143,7 +141,10 @@ class helper {
         $deductedpercentage = apply_grade_penalty_to_user($userid, $gradeitem, $submissiondate, $duedate);
 
         // Store the assign grade penalty.
-        $DB->set_field_select('assign_grades', 'penalty', $deductedpercentage,
+        $DB->set_field_select(
+            'assign_grades',
+            'penalty',
+            $deductedpercentage,
             'assignment = :assignid AND userid = :userid AND attemptnumber = :attemptnumber',
             ['assignid' => $assignid, 'userid' => $userid, 'attemptnumber' => $assigngrade->attemptnumber]);
     }
