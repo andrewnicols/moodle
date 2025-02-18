@@ -35,14 +35,16 @@ final class penalty_indicator_test extends advanced_testcase {
         return [
             // Default icon, with final grade and max grade.
             [
-                'expectedhtml' => <<<EOD
-<span class="penalty-indicator-icon" title="Late penalty applied -10.00 marks">
-        <i class="icon fa fa-triangle-exclamation text-danger fa-fw " aria-hidden="true"  ></i>
-    </span>
-    <span class="penalty-indicator-value">
-            90.00 / 100.00
-    </span>
-EOD,
+                'expectedexport' => [
+                    'penalty' => '10.00',
+                    'finalgrade' => '90.00',
+                    'icon' => [
+                        'name' => 'i/risk_xss',
+                        'component' => 'core',
+                    ],
+                    'info' => 'Late penalty applied -10.00 marks',
+                    'grademax' => '100.00',
+                ],
                 'icon' => [],
                 'penalty' => 10,
                 'finalgrade' => 90,
@@ -52,14 +54,16 @@ EOD,
             ],
             // Custom icon, without max grade.
             [
-                'expectedhtml' => <<<EOD
-<span class="penalty-indicator-icon" title="Late penalty applied -10.00 marks">
-        <i class="icon fa fa-flag fa-fw " aria-hidden="true"  ></i>
-    </span>
-    <span class="penalty-indicator-value">
-            90.00
-    </span>
-EOD,
+                'expectedexport' => [
+                    'penalty' => '10.00',
+                    'finalgrade' => '90.00',
+                    'icon' => [
+                        'name' => 'i/flagged',
+                        'component' => 'core',
+                    ],
+                    'info' => 'Late penalty applied -10.00 marks',
+                    'grademax' => null,
+                ],
                 'icon' => ['name' => 'i/flagged', 'component' => 'core'],
                 'penalty' => 10,
                 'finalgrade' => 90,
@@ -69,11 +73,16 @@ EOD,
             ],
             // Icon only.
             [
-                'expectedhtml' => <<<EOD
-<span class="penalty-indicator-icon" title="Late penalty applied -10.00 marks">
-        <i class="icon fa fa-triangle-exclamation text-danger fa-fw " aria-hidden="true"  ></i>
-    </span>
-EOD,
+                'expectedexport' => [
+                    'penalty' => '10.00',
+                    'icon' => [
+                        'name' => 'i/risk_xss',
+                        'component' => 'core',
+                    ],
+                    'info' => 'Late penalty applied -10.00 marks',
+                    'grademax' => null,
+                    'finalgrade' => null,
+                ],
                 'icon' => [],
                 'penalty' => 10,
                 'finalgrade' => 90,
@@ -92,7 +101,7 @@ EOD,
      *
      * @covers \core_grades\output\penalty_indicator
      *
-     * @param string $expectedhtml The expected html
+     * @param array $expectedexport The expected export data
      * @param array $icon icon to display before the penalty
      * @param float $penalty The penalty
      * @param float $finalgrade The final grade
@@ -100,9 +109,15 @@ EOD,
      * @param bool $showfinalgrade Whether to show the final grade
      * @param bool $showgrademax Whether to show the max grade
      */
-    public function test_export_for_template(string $expectedhtml, array $icon, float $penalty,
-                                             float $finalgrade, float $grademax,
-                                             bool $showfinalgrade, bool $showgrademax): void {
+    public function test_export_for_template(
+        array $expectedexport,
+        array $icon,
+        float $penalty,
+        float $finalgrade,
+        float $grademax,
+        bool $showfinalgrade,
+        bool $showgrademax
+    ): void {
         global $PAGE, $DB;
 
         $this->resetAfterTest();
@@ -132,8 +147,8 @@ EOD,
 
         $indicator = new \core_grades\output\penalty_indicator(2, $grade, $showfinalgrade, $showgrademax, $icon);
         $renderer = $PAGE->get_renderer('core_grades');
-        $html = $renderer->render_penalty_indicator($indicator);
+        $data = $indicator->export_for_template($renderer);
 
-        $this->assertEquals($expectedhtml, $html);
+        $this->assertEquals($expectedexport, $data);
     }
 }
