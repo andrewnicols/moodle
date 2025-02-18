@@ -37,7 +37,7 @@ require_once($CFG->dirroot . '/grade/penalty/duedate/lib.php');
  * @copyright 2024 Catalyst IT Australia Pty Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class hook_listener_test extends penalty_test_base {
+final class hook_listener_test extends penalty_testcase {
     /**
      * Data provider for test_calculate_penalty.
      */

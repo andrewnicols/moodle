@@ -14,9 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace gradepenalty_duedate;
+namespace gradepenalty_duedate\tests;
 
 use advanced_testcase;
+use context_system;
 
 /**
  * Base test.
@@ -25,15 +26,27 @@ use advanced_testcase;
  * @copyright 2024 Catalyst IT Australia Pty Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class penalty_test_base extends advanced_testcase {
+abstract class penalty_testcase extends advanced_testcase {
+    /**
+     * Reset after test.
+     *
+     * @return void
+     */
+    public function setUp(): void {
+        parent::setUp();
+        $this->resetAfterTest();
+    }
 
     /**
      * Create sample rules.
      *
-     * @param int $contextid The context id.
+     * @param int|null $contextid The context id.
      */
-    public function create_sample_rules(int $contextid = 1): void {
+    public function create_sample_rules(?int $contextid = null): void {
         global $DB;
+
+        // Use system context by default.
+        $contextid ??= context_system::instance()->id;
 
         // Remove initial rule.
         $DB->delete_records('gradepenalty_duedate_rule', ['contextid' => $contextid]);

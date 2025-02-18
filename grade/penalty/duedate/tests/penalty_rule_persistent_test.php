@@ -25,7 +25,7 @@ use context_course;
  * @copyright 2024 Catalyst IT Australia Pty Ltd
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class penalty_rule_persistent_test extends penalty_test_base {
+final class penalty_rule_persistent_test extends penalty_testcase {
     /**
      * Test get rules.
      *
