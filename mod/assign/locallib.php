@@ -2009,7 +2009,7 @@ class assign {
      * @param float $deductedmark The deducted mark if penalty is applied
      * @return string User-friendly representation of grade
      */
-    public function display_grade($grade, $editing, $userid=0, $modified=0, $deductedmark = 0) {
+    public function display_grade($grade, $editing, $userid = 0, $modified = 0, float $deductedmark = 0) {
         global $DB, $PAGE;
 
         static $scalegrades = array();
