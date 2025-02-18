@@ -756,7 +756,7 @@ class assign_grading_table extends table_sql implements renderable {
      * @param float $deductedmark The deducted mark if penalty is applied
      * @return string The formatted grade
      */
-    public function display_grade($grade, $editable, $userid, $modified, $deductedmark = 0) {
+    public function display_grade($grade, $editable, $userid, $modified, float $deductedmark = 0) {
         if ($this->is_downloading()) {
             if ($this->assignment->get_instance()->grade >= 0) {
                 if ($grade == -1 || $grade === null) {
@@ -1032,7 +1032,6 @@ class assign_grading_table extends table_sql implements renderable {
      * @return string
      */
     public function col_finalgrade(stdClass $row) {
-        global $PAGE;
         $o = '';
 
         $grade = $this->get_gradebook_data_for_user($row->userid);
