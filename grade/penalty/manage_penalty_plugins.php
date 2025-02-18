@@ -22,8 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core\notification;
 use core_grades\table\gradepenalty_management_table;
+use core\notification;
+use core\url;
 
 require_once('../../config.php');
 require_once('../../course/lib.php');
@@ -56,7 +57,7 @@ if (!empty($action) && !empty($plugin) && confirm_sesskey()) {
     }
 
     // Redirect back to the settings page.
-    redirect(new moodle_url('/grade/penalty/manage_penalty_plugins.php'));
+    redirect(new url('/grade/penalty/manage_penalty_plugins.php'));
 }
 
 echo $OUTPUT->header();

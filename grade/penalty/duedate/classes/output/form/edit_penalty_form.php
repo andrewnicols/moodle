@@ -25,8 +25,8 @@ use action_menu_link;
 use core\output\action_menu;
 use core\output\html_writer;
 use core\output\pix_icon;
+use core\url;
 use gradepenalty_duedate\penalty_rule;
-use moodle_url;
 use moodleform;
 
 /**
@@ -115,7 +115,7 @@ class edit_penalty_form extends moodleform {
         $menu->set_kebab_trigger();
         // Add insert item.
         $menu->add(new action_menu_link(
-            new \moodle_url('#'),
+            new url('#'),
             new pix_icon('t/add', ''),
             get_string('insertrule', 'gradepenalty_duedate'),
             false,
@@ -123,7 +123,7 @@ class edit_penalty_form extends moodleform {
         ));
         // Add delete item.
         $menu->add(new action_menu_link(
-            new \moodle_url('#'),
+            new url('#'),
             new pix_icon('i/trash', ''),
             get_string('delete'),
             false,

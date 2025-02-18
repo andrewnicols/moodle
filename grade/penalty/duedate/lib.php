@@ -25,6 +25,7 @@
 /** Minimum late for value */
 
 use core_grades\penalty_manager;
+use core\url;
 
 define('GRADEPENALTY_DUEDATE_OVERDUEBY_MIN', 1);
 
@@ -55,7 +56,7 @@ function gradepenalty_duedate_extend_navigation_course(navigation_node $navigati
     }
 
     if (has_capability('gradepenalty/duedate:manage', $context)) {
-        $url = new moodle_url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $context->id]);
+        $url = new url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $context->id]);
 
         $settingsnode = navigation_node::create(get_string('penaltyrule', 'gradepenalty_duedate'),
             $url, navigation_node::TYPE_SETTING,
@@ -88,7 +89,7 @@ function gradepenalty_duedate_extend_navigation_module(navigation_node $navigati
     $context = context_module::instance($cm->id);
 
     if (has_capability('gradepenalty/duedate:manage', $context)) {
-        $url = new moodle_url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $context->id]);
+        $url = new url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $context->id]);
 
         $settingsnode = navigation_node::create(get_string('penaltyrule', 'gradepenalty_duedate'),
             $url, navigation_node::TYPE_SETTING,
@@ -108,7 +109,7 @@ function gradepenalty_duedate_output_fragment_penalty_rule_form(array $args) {
 
     $params = [
         'contextid' => $context->id,
-        'action' => new moodle_url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $context->id]),
+        'action' => new url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $context->id]),
         'penaltyrules' => json_decode($args['penaltyrules'], true),
         'finalpenaltyrule' => $args['finalpenaltyrule'],
     ];

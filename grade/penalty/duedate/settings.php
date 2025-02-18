@@ -22,6 +22,8 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\url;
+
 defined('MOODLE_INTERNAL') || die();
 
 if ($hassiteconfig) {
@@ -32,7 +34,7 @@ if ($hassiteconfig) {
     $temp = new admin_externalpage(
         'duedaterule',
         get_string('duedaterule', 'gradepenalty_duedate'),
-        new moodle_url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => context_system::instance()->id]),
+        new url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => context_system::instance()->id]),
         'gradepenalty/duedate:manage'
     );
 

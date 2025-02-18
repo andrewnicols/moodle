@@ -20,7 +20,7 @@ use core\output\notification;
 use core\output\single_button;
 use core_grades\output\action_bar;
 use gradepenalty_duedate\penalty_rule;
-use moodle_url;
+use core\url;
 
 /**
  * Renderable class for the action bar elements in the penalty rule page.
@@ -54,7 +54,7 @@ class edit_penalty_rule_action_bar extends view_penalty_rule_action_bar {
         $data['title'] = $output->heading($this->title);
 
         // Delete all rules button.
-        $deleteallruleurl = new moodle_url($this->url->out(), [
+        $deleteallruleurl = new url($this->url->out(), [
             'contextid' => $contextid,
             'deleteallrules' => 1,
         ]);

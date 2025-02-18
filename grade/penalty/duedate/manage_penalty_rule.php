@@ -22,11 +22,12 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use core\output\notification;
 use core_grades\hook\before_penalty_recalculation;
+use core\output\notification;
+use core\url;
+use gradepenalty_duedate\output\edit_penalty_rule_action_bar;
 use gradepenalty_duedate\output\form\edit_penalty_form;
 use gradepenalty_duedate\output\view_penalty_rule_action_bar;
-use gradepenalty_duedate\output\edit_penalty_rule_action_bar;
 use gradepenalty_duedate\penalty_rule;
 use gradepenalty_duedate\table\penalty_rule_table;
 
@@ -51,7 +52,7 @@ if ($context->contextlevel == CONTEXT_SYSTEM) {
 }
 
 $PAGE->set_context($context);
-$url = new moodle_url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $contextid]);
+$url = new url('/grade/penalty/duedate/manage_penalty_rule.php', ['contextid' => $contextid]);
 $PAGE->set_url($url);
 
 // Return to this page without edit mode.
@@ -85,7 +86,7 @@ $PAGE->activityheader->disable();
 // If reset button is clicked, reset the penalty rules.
 if ($reset || $deleteeall) {
     // Show message for user confirmation.
-    $confirmurl = new moodle_url($url->out(), [
+    $confirmurl = new url($url->out(), [
         'contextid' => $contextid,
         'resetconfirm' => 1,
     ]);
@@ -101,7 +102,7 @@ if ($reset || $deleteeall) {
 // Check if the recalculate button is clicked.
 if ($recalculate) {
     // Show message for user confirmation.
-    $confirmurl = new moodle_url($url->out(), [
+    $confirmurl = new url($url->out(), [
         'contextid' => $contextid,
         'recalculateconfirm' => 1,
         'sesskey' => sesskey(),

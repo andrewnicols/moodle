@@ -17,7 +17,7 @@
 namespace core_grades\table;
 
 use core_admin\table\plugin_management_table;
-use moodle_url;
+use core\url;
 
 /**
  * Table to manage grade penalty plugin.
@@ -41,9 +41,9 @@ class gradepenalty_management_table extends plugin_management_table {
      * Get the URL to manage the penalty plugin.
      *
      * @param array $params
-     * @return moodle_url
+     * @return url
      */
-    protected function get_action_url(array $params = []): moodle_url {
-        return new moodle_url('/grade/penalty/manage_penalty_plugins.php', $params);
+    protected function get_action_url(array $params = []): url {
+        return new url('/grade/penalty/manage_penalty_plugins.php', $params);
     }
 }

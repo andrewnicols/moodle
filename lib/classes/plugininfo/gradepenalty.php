@@ -23,8 +23,7 @@
  */
 namespace core\plugininfo;
 
-use core_component;
-use moodle_url;
+use core\url;
 
 /**
  * Class for admin tool plugins.
@@ -44,10 +43,10 @@ class gradepenalty extends base {
     /**
      * Get the URL to manage the penalty plugin.
      *
-     * @return moodle_url
+     * @return url
      */
     public static function get_manage_url() {
-        return new moodle_url('/grade/penalty/manage_penalty_plugins.php');
+        return new url('/grade/penalty/manage_penalty_plugins.php');
     }
 
     /**

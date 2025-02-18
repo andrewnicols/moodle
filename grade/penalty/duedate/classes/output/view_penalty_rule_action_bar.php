@@ -16,11 +16,11 @@
 
 namespace gradepenalty_duedate\output;
 
+use core_grades\output\action_bar;
 use core\output\notification;
 use core\output\single_button;
-use core_grades\output\action_bar;
+use core\url;
 use gradepenalty_duedate\penalty_rule;
-use moodle_url;
 
 /**
  * Renderable class for the action bar elements in the penalty rule page.
@@ -33,17 +33,17 @@ class view_penalty_rule_action_bar extends action_bar {
     /** @var string $title The title of the page. */
     protected string $title;
 
-    /** @var moodle_url $url The URL of the page. */
-    protected moodle_url $url;
+    /** @var url $url The URL of the page. */
+    protected url $url;
 
     /**
      * Constructor.
      *
      * @param \context $context The context object.
      * @param string $title The title of the page.
-     * @param moodle_url $url The URL of the page.
+     * @param url $url The URL of the page.
      */
-    public function __construct(\context $context, string $title, moodle_url $url) {
+    public function __construct(\context $context, string $title, url $url) {
         parent::__construct($context);
         $this->title = $title;
         $this->url = $url;
@@ -80,7 +80,7 @@ class view_penalty_rule_action_bar extends action_bar {
             $data['info'] = $info->export_for_template($output);
 
             // Reset button.
-            $reseturl = new moodle_url($this->url->out(), [
+            $reseturl = new url($this->url->out(), [
                 'contextid' => $contextid,
                 'reset' => 1,
             ]);
@@ -101,7 +101,7 @@ class view_penalty_rule_action_bar extends action_bar {
         }
 
         // Edit button.
-        $editurl = new moodle_url($this->url->out(), [
+        $editurl = new url($this->url->out(), [
             'contextid' => $contextid,
             'edit' => 1,
         ]);
