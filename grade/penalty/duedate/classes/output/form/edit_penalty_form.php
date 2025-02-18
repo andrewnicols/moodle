@@ -38,14 +38,14 @@ use moodleform;
  */
 class edit_penalty_form extends moodleform {
     /** @var int contextid context id where the penalty rules are edited */
-    protected $contextid = 0;
+    protected int $contextid = 0;
 
     /**
      * Define the form.
      *
      * @return void
      */
-    public function definition() {
+    public function definition(): void {
         global $PAGE;
         $mform = $this->_form;
 
@@ -173,7 +173,7 @@ class edit_penalty_form extends moodleform {
      * @param array $files form files
      * @return array of errors
      */
-    public function validation($data, $files) {
+    public function validation($data, $files): array {
         $errors = parent::validation($data, $files);
 
         // Skip if there is no data.
@@ -264,7 +264,7 @@ class edit_penalty_form extends moodleform {
      * @param object $data form data
      * @return void
      */
-    public function save_data($data) {
+    public function save_data($data): void {
         // Get penalty rules.
         $rules = penalty_rule::get_records(['contextid' => $this->contextid], 'sortorder', 'ASC');
 
