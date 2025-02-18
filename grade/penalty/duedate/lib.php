@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gradepenalty_duedate', language 'en'.
+ * The gradepenalty_duedate lib file.
  *
  * @package   gradepenalty_duedate
  * @copyright 2024 Catalyst IT Australia Pty Ltd
@@ -26,17 +26,6 @@
 
 use core_grades\penalty_manager;
 use core\url;
-
-define('GRADEPENALTY_DUEDATE_OVERDUEBY_MIN', 1);
-
-/** Maximum late for value */
-define('GRADEPENALTY_DUEDATE_OVERDUEBY_MAX', YEARSECS);
-
-/** Minimum penalty value */
-define('GRADEPENALTY_DUEDATE_PENALTY_MIN', 0);
-
-/** Maximum penalty value */
-define('GRADEPENALTY_DUEDATE_PENALTY_MAX', 100);
 
 /**
  * Extend the course navigation with a penalty rule settings.

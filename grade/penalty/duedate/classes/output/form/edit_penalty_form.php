@@ -26,6 +26,7 @@ use core\output\action_menu;
 use core\output\html_writer;
 use core\output\pix_icon;
 use core\url;
+use gradepenalty_duedate\constants;
 use gradepenalty_duedate\penalty_rule;
 use moodleform;
 
@@ -182,26 +183,26 @@ class edit_penalty_form extends moodleform {
         }
 
         // The late for and penalty values must be in ascending order.
-        $overduebylowerbound = GRADEPENALTY_DUEDATE_OVERDUEBY_MIN - 1;
-        $overduebyupperbound = GRADEPENALTY_DUEDATE_OVERDUEBY_MAX + 1;
-        $penaltylowerbound = GRADEPENALTY_DUEDATE_PENALTY_MIN - 1;
-        $penaltyupperbound = GRADEPENALTY_DUEDATE_PENALTY_MAX + 1;
+        $overduebylowerbound = constants::OVERDUEBY_MIN - 1;
+        $overduebyupperbound = constants::OVERDUEBY_MAX + 1;
+        $penaltylowerbound = constants::PENALTY_MIN - 1;
+        $penaltyupperbound = constants::PENALTY_MAX + 1;
 
         // Go to each group.
         foreach ($data['overdueby'] as $rulenumber => $overdueby) {
             $rulegroupid = 'rulegroup[' . $rulenumber . ']';
 
             // Skip validation if user did not change default overdue value. We will remove those rules later.
-            if ($overdueby < GRADEPENALTY_DUEDATE_OVERDUEBY_MIN) {
+            if ($overdueby < constants::OVERDUEBY_MIN) {
                 continue;
             }
 
             // Validate overdue field.
             if ($overdueby <= $overduebylowerbound) {
-                if ($overduebylowerbound == GRADEPENALTY_DUEDATE_OVERDUEBY_MIN - 1) {
+                if ($overduebylowerbound == constants::OVERDUEBY_MIN - 1) {
                     // Minimum value of overdue field.
                     $errormessage = get_string('error_overdueby_minvalue', 'gradepenalty_duedate',
-                        format_time(GRADEPENALTY_DUEDATE_OVERDUEBY_MIN));
+                        format_time(constants::OVERDUEBY_MIN));
                 } else {
                     // Must be greater than the previous overdue value.
                     $errormessage = get_string('error_overdueby_abovevalue', 'gradepenalty_duedate',
@@ -211,7 +212,7 @@ class edit_penalty_form extends moodleform {
             } else if ($overdueby >= $overduebyupperbound) {
                 // Validate max value of overdue.
                 $errors[$rulegroupid] = get_string('error_overdueby_maxvalue', 'gradepenalty_duedate',
-                    format_time(GRADEPENALTY_DUEDATE_OVERDUEBY_MAX));
+                    format_time(constants::OVERDUEBY_MAX));
             } else {
                 $overduebylowerbound = $overdueby;
             }
@@ -219,10 +220,10 @@ class edit_penalty_form extends moodleform {
             // Validate penalty.
             $penalty = $data['penalty'][$rulenumber];
             if ($penalty <= $penaltylowerbound) {
-                if ($penaltylowerbound == GRADEPENALTY_DUEDATE_PENALTY_MIN - 1) {
+                if ($penaltylowerbound == constants::PENALTY_MIN - 1) {
                     // Minimum value a penalty can have.
                     $errormessage = get_string('error_penalty_minvalue', 'gradepenalty_duedate',
-                        format_float(GRADEPENALTY_DUEDATE_PENALTY_MIN));
+                        format_float(constants::PENALTY_MIN));
                 } else {
                     // Must be greater than the previous penalty.
                     $errormessage = get_string('error_penalty_abovevalue', 'gradepenalty_duedate',
@@ -239,7 +240,7 @@ class edit_penalty_form extends moodleform {
             } else if ($penalty >= $penaltyupperbound) {
                 // Validate max value of penalty.
                 $errors[$rulegroupid] = get_string('error_penalty_maxvalue', 'gradepenalty_duedate',
-                    format_float(GRADEPENALTY_DUEDATE_PENALTY_MAX));
+                    format_float(constants::PENALTY_MAX));
             } else {
                 $penaltylowerbound = $penalty;
             }
@@ -252,7 +253,7 @@ class edit_penalty_form extends moodleform {
                 format_float($penaltylowerbound));
         } else if ($finalpenalty >= $penaltyupperbound) {
             $errors['finalpenaltyrule'] = get_string('error_penalty_maxvalue', 'gradepenalty_duedate',
-                format_float(GRADEPENALTY_DUEDATE_PENALTY_MAX));
+                format_float(constants::PENALTY_MAX));
         }
 
         return $errors;
@@ -273,7 +274,7 @@ class edit_penalty_form extends moodleform {
         if (isset($data->overdueby)) {
             foreach ($data->overdueby as $rulenumber => $overdueby) {
                 // Remove the invalid default rule that we skipped validating.
-                if ($overdueby >= GRADEPENALTY_DUEDATE_OVERDUEBY_MIN) {
+                if ($overdueby >= constants::OVERDUEBY_MIN) {
                     $newdata[$overdueby] = $data->penalty[$rulenumber];
                 }
             }
@@ -308,7 +309,7 @@ class edit_penalty_form extends moodleform {
             // We can set to any date/time that greater than the last rule in the repeater.
             $finalrule->set('overdueby', end($overdueby) + DAYSECS);
         } else {
-            $finalrule->set('overdueby', GRADEPENALTY_DUEDATE_OVERDUEBY_MIN);
+            $finalrule->set('overdueby', constants::OVERDUEBY_MIN);
         }
         $finalrule->set('penalty', $data->finalpenaltyrule);
         $finalrule->save();

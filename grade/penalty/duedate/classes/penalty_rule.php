@@ -39,7 +39,7 @@ class penalty_rule extends persistent {
     /**
      * Return the definition of the properties of this model.
      */
-    protected static function define_properties() {
+    protected static function define_properties(): array {
         return [
             'contextid' => [
                 'type' => PARAM_INT,
@@ -67,9 +67,9 @@ class penalty_rule extends persistent {
      * @param int $value overdueby value.
      * @return true|lang_string error message if overdueby is invalid.
      */
-    protected function validate_overdueby($value) {
-        if ($value < GRADEPENALTY_DUEDATE_OVERDUEBY_MIN) {
-            return new lang_string('error_overdueby_minvalue', 'gradepenalty_duedate', GRADEPENALTY_DUEDATE_OVERDUEBY_MIN);
+    protected function validate_overdueby($value): bool|lang_string {
+        if ($value < constants::OVERDUEBY_MIN) {
+            return new lang_string('error_overdueby_minvalue', 'gradepenalty_duedate', constants::OVERDUEBY_MIN);
         }
         return true;
     }
@@ -80,11 +80,11 @@ class penalty_rule extends persistent {
      * @param int $value penalty value.
      * @return true|lang_string error message if penalty is invalid.
      */
-    protected function validate_penalty($value) {
-        if ($value < GRADEPENALTY_DUEDATE_PENALTY_MIN) {
-            return new lang_string('error_penalty_minvalue', 'gradepenalty_duedate', GRADEPENALTY_DUEDATE_PENALTY_MIN);
-        } else if ($value > GRADEPENALTY_DUEDATE_PENALTY_MAX) {
-            return new lang_string('error_penalty_maxvalue', 'gradepenalty_duedate', GRADEPENALTY_DUEDATE_PENALTY_MAX);
+    protected function validate_penalty($value): bool|lang_string {
+        if ($value < constants::PENALTY_MIN) {
+            return new lang_string('error_penalty_minvalue', 'gradepenalty_duedate', constants::PENALTY_MIN);
+        } else if ($value > constants::PENALTY_MAX) {
+            return new lang_string('error_penalty_maxvalue', 'gradepenalty_duedate', constants::PENALTY_MAX);
         }
         return true;
     }
