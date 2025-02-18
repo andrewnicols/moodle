@@ -59,7 +59,7 @@ class provider implements
      *
      * @param approved_contextlist $contextlist The approved contexts to export information for.
      */
-    public static function export_user_data(approved_contextlist $contextlist) {
+    public static function export_user_data(approved_contextlist $contextlist): void {
         global $DB;
 
         $user = $contextlist->get_user();
@@ -80,7 +80,7 @@ class provider implements
      *
      * @param context $context The specific context to delete data for.
      */
-    public static function delete_data_for_all_users_in_context(context $context) {
+    public static function delete_data_for_all_users_in_context(context $context): void {
         if ($context->contextlevel != CONTEXT_USER) {
             return;
         }
@@ -92,7 +92,7 @@ class provider implements
      *
      * @param approved_contextlist $contextlist the list of contexts.
      */
-    public static function delete_data_for_user(approved_contextlist $contextlist) {
+    public static function delete_data_for_user(approved_contextlist $contextlist): void {
         if (empty($contextlist->count())) {
             return;
         }
@@ -112,7 +112,7 @@ class provider implements
      *
      * @param userlist $userlist The userlist containing the list of users who have data in this context/plugin combination.
      */
-    public static function get_users_in_context(userlist $userlist) {
+    public static function get_users_in_context(userlist $userlist): void {
         $context = $userlist->get_context();
 
         if (!$context instanceof \context_user) {
@@ -132,7 +132,7 @@ class provider implements
      *
      * @param approved_userlist $userlist The approved context and user information to delete information for.
      */
-    public static function delete_data_for_users(approved_userlist $userlist) {
+    public static function delete_data_for_users(approved_userlist $userlist): void {
         $context = $userlist->get_context();
 
         if ($context instanceof \context_user) {
@@ -162,7 +162,7 @@ class provider implements
      *
      * @param  int $userid The id of the user.
      */
-    protected static function delete_user_data(int $userid) {
+    protected static function delete_user_data(int $userid): void {
         global $DB;
 
         // Set the usermodified to 0.

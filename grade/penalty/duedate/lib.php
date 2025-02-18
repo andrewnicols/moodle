@@ -46,7 +46,7 @@ define('GRADEPENALTY_DUEDATE_PENALTY_MAX', 100);
  * @param context $context Course context
  * @return void
  */
-function gradepenalty_duedate_extend_navigation_course(navigation_node $navigation, stdClass $course, context $context) {
+function gradepenalty_duedate_extend_navigation_course(navigation_node $navigation, stdClass $course, context $context): void {
     // Get plugin info of this plugin.
     $penaltyplugins = core_plugin_manager::instance()->get_plugins_of_type('gradepenalty');
 
@@ -72,7 +72,7 @@ function gradepenalty_duedate_extend_navigation_course(navigation_node $navigati
  * @param cm_info $cm The course module
  * @return void
  */
-function gradepenalty_duedate_extend_navigation_module(navigation_node $navigation, cm_info $cm) {
+function gradepenalty_duedate_extend_navigation_module(navigation_node $navigation, cm_info $cm): void {
     // Get plugin info of this plugin.
     $penaltyplugins = core_plugin_manager::instance()->get_plugins_of_type('gradepenalty');
 
@@ -104,7 +104,7 @@ function gradepenalty_duedate_extend_navigation_module(navigation_node $navigati
  * @param array $args parameters to load the form
  * @return string html and js of the form
  */
-function gradepenalty_duedate_output_fragment_penalty_rule_form(array $args) {
+function gradepenalty_duedate_output_fragment_penalty_rule_form(array $args): string {
     $context = $args['context'];
 
     $params = [

@@ -36,7 +36,7 @@ class gradepenalty extends base {
      *
      * @return true
      */
-    public function is_uninstall_allowed() {
+    public function is_uninstall_allowed(): bool {
         return true;
     }
 
@@ -45,7 +45,7 @@ class gradepenalty extends base {
      *
      * @return url
      */
-    public static function get_manage_url() {
+    public static function get_manage_url(): url {
         return new url('/grade/penalty/manage_penalty_plugins.php');
     }
 
@@ -63,7 +63,7 @@ class gradepenalty extends base {
      *
      * @return array
      */
-    public static function get_enabled_plugins() {
+    public static function get_enabled_plugins(): array {
         // List of enabled plugins, string delimited.
         $plugins = get_config('core_grades', 'gradepenalty_enabled_plugins');
 
@@ -123,7 +123,7 @@ class gradepenalty extends base {
      *
      * @return string
      */
-    public function get_settings_section_name() {
+    public function get_settings_section_name(): string {
         return $this->component;
     }
 }

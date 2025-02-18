@@ -110,7 +110,7 @@ final class hook_callbacks {
         $penaltyrules = penalty_rule::get_records_select($select, $contextids, 'sortorder');
 
         // Filter the penalty rules based on the context hierarchy.
-        $modulerules = array_filter($penaltyrules, function ($penaltyrule) use ($modulecontext) {
+        $modulerules = array_filter($penaltyrules, function ($penaltyrule) use ($modulecontext): bool {
             return (int)$penaltyrule->get('contextid') === (int)$modulecontext->id;
         });
 
@@ -118,7 +118,7 @@ final class hook_callbacks {
             return $modulerules;
         }
 
-        $courserules = array_filter($penaltyrules, function ($penaltyrule) use ($coursecontext) {
+        $courserules = array_filter($penaltyrules, function ($penaltyrule) use ($coursecontext): bool {
             return (int)$penaltyrule->get('contextid') === (int)$coursecontext->id;
         });
 
@@ -126,7 +126,7 @@ final class hook_callbacks {
             return $courserules;
         }
 
-        $systemrules = array_filter($penaltyrules, function ($penaltyrule) use ($systemcontext) {
+        $systemrules = array_filter($penaltyrules, function ($penaltyrule) use ($systemcontext): bool {
             return (int)$penaltyrule->get('contextid') === (int)$systemcontext->id;
         });
 

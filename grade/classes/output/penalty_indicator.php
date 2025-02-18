@@ -77,7 +77,7 @@ class penalty_indicator implements templatable, renderable {
      * @param \renderer_base $output renderer to be used to render the penalty indicator.
      * @return array
      */
-    public function export_for_template(renderer_base $output) {
+    public function export_for_template(renderer_base $output): array {
         $penalty = format_float($this->grade->deductedmark, $this->decimals);
         $finalgrade = $this->showfinalgrade ? format_float($this->grade->finalgrade , $this->decimals) : null;
         $grademax = $this->showgrademax ? format_float($this->grade->get_grade_max(), $this->decimals) : null;
