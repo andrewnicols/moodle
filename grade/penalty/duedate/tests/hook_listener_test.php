@@ -21,14 +21,12 @@ use context_module;
 use context_system;
 use core\plugininfo\gradepenalty;
 use grade_item;
-use gradepenalty_duedate\hook\hook_callbacks;
+use gradepenalty_duedate\hook_callbacks;
+use gradepenalty_duedate\tests\penalty_testcase;
 
 defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
-
-require_once($CFG->dirroot . '/grade/penalty/duedate/tests/penalty_test_base.php');
-require_once($CFG->dirroot . '/grade/penalty/duedate/lib.php');
 
 /**
  * Test hook callbacks.
@@ -80,7 +78,7 @@ final class hook_listener_test extends penalty_testcase {
      * @param int $duedate The due date.
      * @param int $expectedgrade The expected grade.
      */
-    public function test_apply_penalty($submissiondate, $duedate, $expectedgrade): void {
+    public function test_apply_penalty(int $submissiondate, int $duedate, int $expectedgrade): void {
         $this->resetAfterTest();
 
         // Create a course and an assignment.
