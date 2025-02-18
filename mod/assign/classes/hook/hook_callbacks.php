@@ -19,10 +19,6 @@ namespace mod_assign\hook;
 use core_grades\hook\before_penalty_recalculation;
 use mod_assign\task\recalculate_penalties;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->dirroot . '/mod/assign/locallib.php');
-
 /**
  * Hook callbacks.
  *
@@ -39,7 +35,9 @@ class hook_callbacks {
      * @return void
      */
     public static function extend_penalty_recalculation(before_penalty_recalculation $hook): void {
-        global $DB;
+        global $CFG, $DB;
+
+        require_once($CFG->dirroot . '/mod/assign/locallib.php');
 
         switch ($hook->context->contextlevel) {
             case CONTEXT_MODULE:
