@@ -17,7 +17,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 use core\output\comboboxsearch;
-use \core_grades\output\action_bar;
+use core_grades\output\action_bar;
 use core_grades\output\penalty_indicator;
 use core_message\helper;
 use core_message\api;
