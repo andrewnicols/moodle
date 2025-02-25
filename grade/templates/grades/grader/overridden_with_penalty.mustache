@@ -27,7 +27,7 @@
         "exemptionlabel": "Exempt penalty",
         "exemptiontooltip": "Exempt penalty",
         "exemptionname": "exemption[3][2]",
-        "penaltyexempted": "true",
+        "penaltyexempt": "true",
         "id": "grade_313_624",
         "label": "grade_313_624",
         "name": "grade[313][624]"
@@ -36,19 +36,19 @@
 
 <div class="container">
     <div class="row">
-        <div class="mr-0">Original grade: </div>
+        <div class="mr-0">{{#str}}originalgrade, core_grades{{/str}}: </div>
         {{>core_grades/grades/grader/input}}
     </div>
 
     <div class="row">
-        <div class="mr-0">Current grade: {{{effectivegrade}}}</div>
+        <div class="mr-0">{{#str}}currentgrade, core_grades{{/str}}: {{{effectivegrade}}}</div>
     </div>
 
     <div class="row">
-        <div class="mr-0" title="{{exemptiontooltip}}">Exempt penalty:</div>
+        <div class="mr-0" title="{{exemptiontooltip}}">{{#str}}exemptpenalty, core_grades{{/str}}:</div>
         <label for="{{exemptionid}}" class="accesshide">{{{exemptionlabel}}}</label>
         <input type="checkbox" name="{{exemptionname}}"
                value="{{deductedmark}}" id="{{exemptionid}}"
-               {{#penaltyexempted}}checked{{/penaltyexempted}}>
+               {{#penaltyexempt}}checked{{/penaltyexempt}}>
     </div>
 </div>

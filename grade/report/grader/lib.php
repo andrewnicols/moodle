@@ -1190,7 +1190,7 @@ class grade_report_grader extends grade_report {
                                 // Current grade.
                                 $context->effectivegrade = $value;
                                 $context->deductedmark = format_float($grade->deductedmark, $decimalpoints);
-                                $context->penaltyexempted = !$grade->is_penalty_applied_to_final_grade();
+                                $context->penaltyexempt = !$grade->is_penalty_applied_to_final_grade();
                                 $context->exemptionid = 'exemption' . $userid . '_' . $item->id;
                                 $context->exemptionname = 'exemption[' . $userid . '][' . $item->id .']';
                                 $context->exemptionlabel = $gradelabel . ' ' .
