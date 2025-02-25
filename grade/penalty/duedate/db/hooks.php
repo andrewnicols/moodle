@@ -29,6 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 $callbacks = [
     [
         'hook' => before_penalty_applied::class,
-        'callback' => [gradepenalty_duedate\hook_callbacks::class, 'apply_penalty'],
+        'callback' => [gradepenalty_duedate\hook_callbacks::class, 'calculate_penalty'],
     ],
 ];

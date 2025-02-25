@@ -35,13 +35,13 @@ class before_penalty_applied implements StoppableEventInterface {
     use grade_penalty_handler_trait;
 
     /**
-     * Set deducted grade.
-     * We restrict the hook to be used by grade penalty plugins only.
+     * Aggregate the deducted grade.
+     * Each penalty plugin should call this method with their calculated deducted grade.
      *
      * @param string $pluginname the plugin name
      * @param float $deductedgrade The deducted grade
      */
-    public function apply_penalty(string $pluginname, float $deductedgrade): void {
+    final public function aggregate_penalty(string $pluginname, float $deductedgrade): void {
         // Check if the plugin is enabled.
         if (gradepenalty::is_plugin_enabled($pluginname)) {
             // Aggregate the deducted grade.

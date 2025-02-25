@@ -32,17 +32,18 @@ use stdClass;
  */
 final class hook_callbacks {
     /**
-     * Apply penalty.
+     * Calculate the penalty and update the hook object.
+     * The hook dispatcher is responsible for applying the penalty to the grade.
      *
      * @param before_penalty_applied $hook
      * @return void
      */
-    public static function apply_penalty(before_penalty_applied $hook): void {
+    public static function calculate_penalty(before_penalty_applied $hook): void {
         // Calculate the deducted grade based on the max grade.
         $cm = get_coursemodule_from_instance($hook->gradeitem->itemmodule, $hook->gradeitem->iteminstance);
         $deductedpercentage = self::get_penalty_from_rules($cm, $hook->submissiondate, $hook->duedate);
         $deductedgrade = $hook->gradeitem->grademax * $deductedpercentage / 100;
-        $hook->apply_penalty('duedate', $deductedgrade);
+        $hook->aggregate_penalty('duedate', $deductedgrade);
     }
 
     /**

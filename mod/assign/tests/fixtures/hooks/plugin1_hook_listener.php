@@ -42,7 +42,7 @@ final class plugin1_hook_listener {
         // Deduct 10% of the maximum grade for all late submission.
         if ($hook->submissiondate > $hook->duedate) {
             $deductedgrade = $hook->gradeitem->grademax * 0.1;
-            $hook->apply_penalty('fake_deduction', $deductedgrade);
+            $hook->aggregate_penalty('fake_deduction', $deductedgrade);
         }
     }
 }

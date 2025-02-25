@@ -41,6 +41,6 @@ final class plugin1_hook_listener {
         $deductedgrade = $hook->gradeitem->grademax * 0.2;
         $grademax = format_float($hook->gradeitem->grademax);
         debugging("fake_deduction: Deducting 20% of the maximum grade");
-        $hook->apply_penalty('fake_deduction', $deductedgrade);
+        $hook->aggregate_penalty('fake_deduction', $deductedgrade);
     }
 }
