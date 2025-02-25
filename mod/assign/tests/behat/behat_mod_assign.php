@@ -75,9 +75,9 @@ class behat_mod_assign extends behat_base {
     /**
      * Enable grade penalty.
      *
-     * @Given I enable grade penalty for assignment
+     * @Given I enable grade penalties for assignment
      */
-    public function i_enable_grade_penalty_for_assignment(): void {
+    public function i_enable_grade_penalties_for_assignment(): void {
         global $DB;
 
         set_config('gradepenalty_enabled', 1);

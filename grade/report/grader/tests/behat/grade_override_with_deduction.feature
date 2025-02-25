@@ -5,7 +5,7 @@ Feature: As a teacher, I want to override a grade with a deduction and check the
     Given the following "courses" exist:
       | fullname | shortname | format |
       | Course 1 | C1        | topics |
-    And I enable penalty for overridden grade
+    And I enable grade penalties for overridden grades
     And the following "users" exist:
       | username | firstname | lastname | email                |
       | teacher1 | Teacher   | 1        | teacher1@example.com |

@@ -87,7 +87,7 @@ Feature: Check that the assignment grade can be updated correctly
     And the following "groups" exist:
       | name     | course  | idnumber  |
       | Group 1  | C1      | G1        |
-    And I enable grade penalty for assignment
+    And I enable grade penalties for assignment
     And the following "activity" exists:
       | activity                             | assign                      |
       | course                               | C1                          |

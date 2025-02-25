@@ -148,9 +148,9 @@ class behat_gradereport_grader extends behat_base {
     /**
      * Enable penalty for overridden grade.
      *
-     * @Given I enable penalty for overridden grade
+     * @Given I enable grade penalties for overridden grades
      */
-    public function i_enable_penalty_for_overridden_grade(): void {
+    public function i_enable_grade_penalties_for_overridden_grades(): void {
         set_config('gradepenalty_enabled', 1);
         set_config('gradepenalty_overriddengrade', 1);
     }
