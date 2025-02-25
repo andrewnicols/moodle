@@ -17,8 +17,8 @@
 namespace core_grades\output;
 
 use core\output\renderer_base;
-use templatable;
-use renderable;
+use core\output\templatable;
+use core\output\renderable;
 
 /**
  * The base class for the action bar in the gradebook pages.
@@ -28,21 +28,6 @@ use renderable;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class penalty_indicator implements templatable, renderable {
-    /** @var int $decimals the decimal places */
-    protected int $decimals;
-
-    /** @var \grade_grade $grade user grade */
-    protected \grade_grade $grade;
-
-    /** @var bool $showfinalgrade whether to show the final grade */
-    protected bool $showfinalgrade;
-
-    /** @var bool $showgrademax whether to show the max grade */
-    protected bool $showgrademax;
-
-    /** @var array|null $penaltyicon icon to show if penalty is applied */
-    protected ?array $penaltyicon;
-
     /**
      * The class constructor.
      *
@@ -52,14 +37,13 @@ class penalty_indicator implements templatable, renderable {
      * @param bool $showgrademax whether to show the max grade
      * @param array|null $penaltyicon icon to show if penalty is applied
      */
-    public function __construct(int $decimals, \grade_grade $grade,
-                                bool $showfinalgrade = false, bool $showgrademax = false,
-                                ?array $penaltyicon = null) {
-        $this->decimals = $decimals;
-        $this->grade = $grade;
-        $this->showfinalgrade = $showfinalgrade;
-        $this->showgrademax = $showgrademax;
-        $this->penaltyicon = $penaltyicon;
+    public function __construct(
+        protected int $decimals,
+        protected \grade_grade $grade,
+        protected bool $showfinalgrade = false,
+        protected bool $showgrademax = false,
+        protected ?array $penaltyicon = null
+    ) {
     }
 
     /**
