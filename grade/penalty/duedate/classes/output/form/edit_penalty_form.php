@@ -162,9 +162,6 @@ class edit_penalty_form extends moodleform {
 
         // Add submit and cancel buttons.
         $this->add_action_buttons();
-
-        // Add javascript to handle the repeater.
-        $PAGE->requires->js_call_amd('gradepenalty_duedate/edit_penalty_form', 'init');
     }
 
     /**

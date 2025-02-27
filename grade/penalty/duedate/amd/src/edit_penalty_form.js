@@ -29,9 +29,12 @@ import Templates from 'core/templates';
  * Rule js class.
  */
 class PenaltyRule {
-    constructor() {
-        this.overdueby = 0;
-        this.penalty = 0;
+    constructor(
+        overdueby = 0,
+        penalty = 0,
+    ) {
+        this.overdueby = overdueby;
+        this.penalty = penalty;
     }
 }
 
@@ -51,110 +54,98 @@ const SELECTORS = {
  */
 const registerEventListeners = () => {
     // Find all action menus in penalty rule form.
-    let container = document.querySelector(SELECTORS.FORM_CONTAINER);
-    const actionMenus = container.querySelectorAll(SELECTORS.ACTION_MENU);
-
-    // Find delete and insert buttons in each action menu.
-    let rulenumber = 0;
-    actionMenus.forEach(actionMenu => {
-        const deleteButton = actionMenu.querySelector(SELECTORS.DELETE_BUTTON);
-        const insertButton = actionMenu.querySelector(SELECTORS.INSERT_BUTTON);
-
-        // Add rule number to the buttons.
-        deleteButton.dataset.rulenumber = rulenumber;
-        // Add event listener to delete button.
-        deleteButton.addEventListener('click', e => {
+    const container = document.querySelector(SELECTORS.FORM_CONTAINER);
+    container.addEventListener('click', (e) => {
+        if (e.target.closest(SELECTORS.DELETE_BUTTON)) {
             e.preventDefault();
             deleteRule(e.target);
-        });
 
-        // Add rule number to the buttons.
-        insertButton.dataset.rulenumber = rulenumber;
-        // Add event listener to insert button.
-        insertButton.addEventListener('click', e => {
+            return;
+        }
+
+        if (e.target.closest(SELECTORS.INSERT_BUTTON)) {
             e.preventDefault();
             insertRule(e.target);
-        });
 
-        // Increment rule number.
-        rulenumber++;
+            return;
+        }
     });
 
-    // Find the add rule button and add event listener.
-    const addButton = document.querySelector(SELECTORS.ADD_BUTTON);
-    addButton.addEventListener('click', e => {
+    document.querySelector(SELECTORS.ADD_BUTTON).addEventListener('click', (e) => {
         e.preventDefault();
-        addRule();
+        insertRuleAtIndex(container.querySelectorAll(SELECTORS.ACTION_MENU).length);
+
+        return;
     });
 };
 
 /**
- * Delete a rule group.
+ * Delete a rule group represented by thenode.
  *
- * @param {Object} target
+ * @param {NodeElement} target
  */
-const deleteRule = target => {
+const deleteRule = (target) => {
     // Get all form data.
-    const params = buildFormParams();
-    const rulenumber = getRuleNumber(target);
+    const {contextid, penaltyRules, finalPenaltyRule} = buildFormParams();
+    const ruleNumber = getRuleNumber(target);
 
     // Remove the penalty rule.
-    const penaltyRules = JSON.parse(params.penaltyrules);
-    penaltyRules.splice(rulenumber, 1);
-    params.penaltyrules = JSON.stringify(penaltyRules);
+    const updatedPenaltyRules = penaltyRules.filter((rule, index) => index !== ruleNumber);
 
-    loadPenaltyRuleForm(params.contextid, params);
+    loadPenaltyRuleForm(
+        contextid,
+        updatedPenaltyRules,
+        finalPenaltyRule,
+    );
 };
 
 /**
  * Insert a rule group below the clicked button.
  *
- * @param {Object} target
+ * @param {NodeElement} target
  */
-const insertRule = target => {
-    // Get all form data.
-    const params = buildFormParams();
-    const ruleNumber = getRuleNumber(target);
-
-    // Insert a new penalty rule.
-    const penaltyRules = JSON.parse(params.penaltyrules);
-    penaltyRules.splice(ruleNumber + 1, 0, new PenaltyRule());
-    params.penaltyrules = JSON.stringify(penaltyRules);
-
-    loadPenaltyRuleForm(params.contextid, params);
-};
+const insertRule = (target) => insertRuleAtIndex(getRuleNumber(target) + 1);
 
 /**
- * Add a new rule group.
+ * Add a new rule group at the specified index.
+ *
+ * @param {Number} ruleNumber
  */
-const addRule = () => {
+const insertRuleAtIndex = (ruleNumber) => {
     // Get all form data.
-    const params = buildFormParams();
+    const {contextid, penaltyRules, finalPenaltyRule} = buildFormParams();
 
-    // Add a new penalty rule.
-    const penaltyRules = JSON.parse(params.penaltyrules);
-    penaltyRules.push(new PenaltyRule());
-    params.penaltyrules = JSON.stringify(penaltyRules);
+    // Insert a new penalty rule.
+    penaltyRules.splice(ruleNumber, 0, new PenaltyRule());
 
-    loadPenaltyRuleForm(params.contextid, params);
+    loadPenaltyRuleForm(
+        contextid,
+        penaltyRules,
+        finalPenaltyRule,
+    );
 };
 
 /**
  * Get the rule number from the target.
  *
  * @param {Object} target
- * @return {integer} rule number
+ * @return {Number} rule number
  */
-const getRuleNumber = target => {
-    if (target.dataset.rulenumber !== undefined) {
-        return parseInt(target.dataset.rulenumber);
+const getRuleNumber = (target) => {
+    const allRules = target
+        .closest(SELECTORS.FORM_CONTAINER)
+        .querySelectorAll(SELECTORS.ACTION_MENU);
+
+    const foundIndex = Array.prototype.findIndex.call(
+        allRules,
+        (element) => element.contains(target),
+    );
+
+    if (foundIndex === -1) {
+        throw new Error('Rule number not found on target', target);
     }
 
-    if (target.parentElement) {
-        return getRuleNumber(target.parentElement);
-    }
-
-    throw new Error('Rule number not found on target', target);
+    return foundIndex;
 };
 
 /**
@@ -177,36 +168,47 @@ const buildFormParams = () => {
     const groupCount = formData.get('rulegroupcount');
 
     // Create list of penalty rules.
-    let penaltyRules = [];
+    const penaltyRules = [];
 
     // Current penalty rules.
+
     for (let i = 0; i < groupCount; i++) {
-        const penaltyRule = new PenaltyRule();
-        penaltyRule.overdueby = formData.get(`overdueby[${i}][number]`) * formData.get(`overdueby[${i}][timeunit]`);
-        penaltyRule.penalty = formData.get(`penalty[${i}]`);
-        penaltyRules.push(penaltyRule);
+        penaltyRules.push(new PenaltyRule(
+            formData.get(`overdueby[${i}][number]`) * formData.get(`overdueby[${i}][timeunit]`),
+            formData.get(`penalty[${i}]`)
+        ));
     }
 
     return {
-        contextid: contextid,
-        penaltyrules: JSON.stringify(penaltyRules),
-        finalpenaltyrule: formData.get('finalpenaltyrule'),
+        contextid,
+        penaltyRules,
+        finalPenaltyRule: formData.get('finalpenaltyrule'),
     };
 };
 
 /**
  * Load the penalty rule form.
  *
- * @param {integer} contextid
- * @param {object} params
+ * @param {Number} contextId
+ * @param {Array} penaltyRules
+ * @param {Number} finalPenaltyRule
  */
-const loadPenaltyRuleForm = (contextid, params) => {
-    Fragment.loadFragment('gradepenalty_duedate', 'penalty_rule_form', contextid, params)
-        .then((html, js) => {
-            // Replace the form with the new form.
-            Templates.replaceNodeContents(document.querySelector(SELECTORS.FORM_CONTAINER), html, js);
-        }).catch(notification.exception);
-};
+const loadPenaltyRuleForm = (
+    contextId,
+    penaltyRules,
+    finalPenaltyRule,
+) => Fragment.loadFragment(
+    'gradepenalty_duedate',
+    'penalty_rule_form',
+    contextId,
+    {
+        penaltyrules: JSON.stringify(penaltyRules),
+        finalpenaltyrule: finalPenaltyRule,
+    },
+)
+// Replace the form with the new form.
+.then((html, js) => Templates.replaceNodeContents(document.querySelector(SELECTORS.FORM_CONTAINER), html, js))
+.catch(notification.exception);
 
 /**
  * Initialize the js.

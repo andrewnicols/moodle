@@ -138,6 +138,10 @@ if ($edit) {
     }
 }
 
+
+// Add javascript to handle the repeater.
+$PAGE->requires->js_call_amd('gradepenalty_duedate/edit_penalty_form', 'init');
+
 // Start output.
 echo $OUTPUT->header();
 
