@@ -1412,8 +1412,7 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2025013100.01);
     }
 
-    if ($oldversion < 2025020600.01) {
-
+    if ($oldversion < 2025022700.00) {
         // Define field penalty to be added to grade_grades.
         $table = new xmldb_table('grade_grades');
         $field = new xmldb_field('deductedmark', XMLDB_TYPE_NUMBER, '10, 5', null,
@@ -1425,11 +1424,10 @@ function xmldb_main_upgrade($oldversion) {
         }
 
         // Main savepoint reached.
-        upgrade_main_savepoint(true, 2025020600.01);
+        upgrade_main_savepoint(true, 2025022700.00);
     }
 
-    if ($oldversion < 2025020600.02) {
-
+    if ($oldversion < 2025022700.01) {
         // Define field overriddenmark to be added to grade_grades.
         $table = new xmldb_table('grade_grades');
         $field = new xmldb_field('overriddenmark', XMLDB_TYPE_NUMBER, '10, 5', null,
@@ -1441,7 +1439,7 @@ function xmldb_main_upgrade($oldversion) {
         }
 
         // Main savepoint reached.
-        upgrade_main_savepoint(true, 2025020600.02);
+        upgrade_main_savepoint(true, 2025022700.01);
     }
 
     return true;
