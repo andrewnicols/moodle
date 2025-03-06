@@ -54,7 +54,6 @@ class mustache_engine extends \Mustache_Engine {
      * @param array $options [description]
      */
     public function __construct(array $options = []) {
-
         if (isset($options['blacklistednestedhelpers'])) {
             debugging('blacklistednestedhelpers option is deprecated. Use disallowednestedhelpers instead.', DEBUG_DEVELOPER);
             $this->disallowednestedhelpers = $options['blacklistednestedhelpers'];
@@ -63,6 +62,9 @@ class mustache_engine extends \Mustache_Engine {
         if (isset($options['disallowednestedhelpers'])) {
             $this->disallowednestedhelpers = $options['disallowednestedhelpers'];
         }
+
+        // Set the cache to use the Moodle cache.
+        $options['cache'] = new mustache_cache();
 
         parent::__construct($options);
     }

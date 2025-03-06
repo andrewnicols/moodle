@@ -655,4 +655,12 @@ $definitions = array(
         'simpledata' => true,
         'ttl' => 1800,
     ],
+
+    // Cache to store Mustache Templates.
+    // This can exist on individual nodes of a cluster.
+    'mustache' => [
+        'mode' => \core_cache\store::MODE_APPLICATION,
+        'simpledata' => true,
+        'canuselocalstore' => true,
+    ],
 );
