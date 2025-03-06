@@ -71,8 +71,25 @@ class Mustache_Cache_FilesystemCache extends Mustache_Cache_AbstractCache
             array('fileName' => $fileName)
         );
 
-        $this->writeFile($fileName, $value);
-        $this->load($key);
+        // Start Moodle Hack.
+        // $this->writeFile($fileName, $value);
+        // $this->load($key);
+        try {
+            $this->writeFile($fileName, $value);
+            $this->load($key);
+        } catch (Mustache_Exception_RuntimeException $e) {
+            $this->log(
+                Mustache_Logger::ERROR,
+                'Failed to write cache file: "{fileName}"',
+                array('fileName' => $fileName)
+            );
+
+            // We still need to load the class if caching failed.
+            // Yes, this is evil.
+            // But realistically it is no more evil than writing the same content to the filesystem and loading it.
+            eval('?>' . $value); // phpcs:ignore moodle.PHP.ForbiddenTokens.Found
+        }
+        // End Moodle Hack.
     }
 
     /**
