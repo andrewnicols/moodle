@@ -16,6 +16,7 @@
 
 namespace core_course\route\controller;
 
+use core\exception\moodle_exception;
 use core\router\parameters\query_returnurl;
 use core\router\route;
 use core\router\require_login;
@@ -64,7 +65,12 @@ class tags_controller {
         \stdClass $course,
         \core\context\course $coursecontext,
     ): ResponseInterface {
-        global $PAGE, $OUTPUT;
+        global $CFG, $OUTPUT, $PAGE;
+
+        if (!$course->visible && !has_capability('moodle/course:viewhiddencourses', $coursecontext)) {
+            throw new moodle_exception('coursehidden', '', $CFG->wwwroot .'/');
+        }
+        require_capability('moodle/course:tag', $coursecontext);
 
         $PAGE->set_course($course);
         $PAGE->set_pagelayout('incourse');
