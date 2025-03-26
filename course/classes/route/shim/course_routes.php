@@ -44,7 +44,7 @@ final class course_routes {
         path: '/admin.php',
         queryparams: [
             new query_parameter(
-                name: 'id',
+                name: 'courseid',
                 type: param::INT,
                 description: 'The course ID',
                 required: true,
@@ -60,8 +60,8 @@ final class course_routes {
             $request,
             $response,
             [\core_course\route\controller\course_management::class, 'administer_course'],
-            pathparams: $params + ['course' => $params['id']],
-            excludeparams: ['id'],
+            pathparams: $params + ['course' => $params['courseid']],
+            excludeparams: ['courseid'],
         );
     }
 
