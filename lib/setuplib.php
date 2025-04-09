@@ -1232,19 +1232,7 @@ function upgrade_ensure_not_running($warningonly = false) {
  * @return boolean true if directory exists or created, false otherwise
  */
 function check_dir_exists($dir, $create = true, $recursive = true) {
-    global $CFG;
-
-    umask($CFG->umaskpermissions);
-
-    if (is_dir($dir)) {
-        return true;
-    }
-
-    if (!$create) {
-        return false;
-    }
-
-    return mkdir($dir, $CFG->directorypermissions, $recursive);
+    return \core_files\util::check_dir_exists($dir, $create, $recursive);
 }
 
 /**
@@ -1256,40 +1244,7 @@ function check_dir_exists($dir, $create = true, $recursive = true) {
  * @throws invalid_dataroot_permissions
  */
 function make_unique_writable_directory($basedir, $exceptiononerror = true) {
-    if (!is_dir($basedir) || !is_writable($basedir)) {
-        // The basedir is not writable. We will not be able to create the child directory.
-        if ($exceptiononerror) {
-            throw new invalid_dataroot_permissions($basedir . ' is not writable. Unable to create a unique directory within it.');
-        } else {
-            return false;
-        }
-    }
-
-    do {
-        // Let's use uniqid() because it's "unique enough" (microtime based). The loop does handle repetitions.
-        // Windows and old PHP don't like very long paths, so try to keep this shorter. See MDL-69975.
-        $uniquedir = $basedir . DIRECTORY_SEPARATOR . uniqid();
-    } while (
-            // Ensure that basedir is still writable - if we do not check, we could get stuck in a loop here.
-            is_writable($basedir) &&
-
-            // Make the new unique directory. If the directory already exists, it will return false.
-            !make_writable_directory($uniquedir, $exceptiononerror) &&
-
-            // Ensure that the directory now exists
-            file_exists($uniquedir) && is_dir($uniquedir)
-        );
-
-    // Check that the directory was correctly created.
-    if (!file_exists($uniquedir) || !is_dir($uniquedir) || !is_writable($uniquedir)) {
-        if ($exceptiononerror) {
-            throw new invalid_dataroot_permissions('Unique directory creation failed.');
-        } else {
-            return false;
-        }
-    }
-
-    return $uniquedir;
+    return \core_files\util::make_unique_writable_directory($basedir, $exceptiononerror);
 }
 
 /**
@@ -1301,42 +1256,7 @@ function make_unique_writable_directory($basedir, $exceptiononerror = true) {
  * @return string|false Returns full path to directory if successful, false if not; may throw exception
  */
 function make_writable_directory($dir, $exceptiononerror = true) {
-    global $CFG;
-
-    if (file_exists($dir) and !is_dir($dir)) {
-        if ($exceptiononerror) {
-            throw new coding_exception($dir.' directory can not be created, file with the same name already exists.');
-        } else {
-            return false;
-        }
-    }
-
-    umask($CFG->umaskpermissions);
-
-    if (!file_exists($dir)) {
-        if (!@mkdir($dir, $CFG->directorypermissions, true)) {
-            clearstatcache();
-            // There might be a race condition when creating directory.
-            if (!is_dir($dir)) {
-                if ($exceptiononerror) {
-                    throw new invalid_dataroot_permissions($dir.' can not be created, check permissions.');
-                } else {
-                    debugging('Can not create directory: '.$dir, DEBUG_DEVELOPER);
-                    return false;
-                }
-            }
-        }
-    }
-
-    if (!is_writable($dir)) {
-        if ($exceptiononerror) {
-            throw new invalid_dataroot_permissions($dir.' is not writable, check permissions.');
-        } else {
-            return false;
-        }
-    }
-
-    return $dir;
+    return \core_files\util::make_writable_directory($dir, $exceptiononerror);
 }
 
 /**
@@ -1346,11 +1266,20 @@ function make_writable_directory($dir, $exceptiononerror = true) {
  * @private
  * @param string $dir  the full path of the directory to be protected
  */
+#[\core\attribute\deprecated(
+    null,
+    '5.1',
+    'This was an internal method not expected to be called directly',
+    'MDL-85148'
+)]
 function protect_directory($dir) {
     global $CFG;
-    // Make sure a .htaccess file is here, JUST IN CASE the files area is in the open and .htaccess is supported
+
+    \core\deprecation::emit_deprecation_if_present(__FUNCTION__);
+
+    // Make sure a .htaccess file is here, JUST IN CASE the files area is in the open and .htaccess is supported.
     if (!file_exists("$dir/.htaccess")) {
-        if ($handle = fopen("$dir/.htaccess", 'w')) {   // For safety
+        if ($handle = fopen("$dir/.htaccess", 'w')) { // For safety,
             @fwrite($handle, "deny from all\r\nAllowOverride None\r\nNote: this file is broken intentionally, we do not want anybody to undo it in subdirectory!\r\n");
             @fclose($handle);
             @chmod("$dir/.htaccess", $CFG->filepermissions);
@@ -1367,20 +1296,7 @@ function protect_directory($dir) {
  * @return string|false Returns full path to directory if successful, false if not; may throw exception
  */
 function make_upload_directory($directory, $exceptiononerror = true) {
-    global $CFG;
-
-    if (strpos($directory, 'temp/') === 0 or $directory === 'temp') {
-        debugging('Use make_temp_directory() for creation of temporary directory and $CFG->tempdir to get the location.');
-
-    } else if (strpos($directory, 'cache/') === 0 or $directory === 'cache') {
-        debugging('Use make_cache_directory() for creation of cache directory and $CFG->cachedir to get the location.');
-
-    } else if (strpos($directory, 'localcache/') === 0 or $directory === 'localcache') {
-        debugging('Use make_localcache_directory() for creation of local cache directory and $CFG->localcachedir to get the location.');
-    }
-
-    protect_directory($CFG->dataroot);
-    return make_writable_directory("$CFG->dataroot/$directory", $exceptiononerror);
+    return \core_files\util::make_upload_directory($directory, $exceptiononerror);
 }
 
 /**
@@ -1393,35 +1309,7 @@ function make_upload_directory($directory, $exceptiononerror = true) {
  * @return  string  Returns full path to directory if successful, false if not; may throw exception
  */
 function get_request_storage_directory($exceptiononerror = true, bool $forcecreate = false) {
-    global $CFG;
-
-    static $requestdir = null;
-
-    $writabledirectoryexists = (null !== $requestdir);
-    $writabledirectoryexists = $writabledirectoryexists && file_exists($requestdir);
-    $writabledirectoryexists = $writabledirectoryexists && is_dir($requestdir);
-    $writabledirectoryexists = $writabledirectoryexists && is_writable($requestdir);
-    $createnewdirectory = $forcecreate || !$writabledirectoryexists;
-
-    if ($createnewdirectory) {
-
-        // Let's add the first chars of siteidentifier only. This is to help separate
-        // paths on systems which host multiple moodles. We don't use the full id
-        // as Windows and old PHP don't like very long paths. See MDL-69975.
-        $basedir = $CFG->localrequestdir . '/' . substr($CFG->siteidentifier, 0, 4);
-
-        make_writable_directory($basedir);
-        protect_directory($basedir);
-
-        if ($dir = make_unique_writable_directory($basedir, $exceptiononerror)) {
-            // Register a shutdown handler to remove the directory.
-            \core_shutdown_manager::register_function('remove_dir', [$dir]);
-        }
-
-        $requestdir = $dir;
-    }
-
-    return $requestdir;
+    return \core_files\util::get_request_storage_directory($exceptiononerror, $forcecreate);
 }
 
 /**
@@ -1440,8 +1328,7 @@ function get_request_storage_directory($exceptiononerror = true, bool $forcecrea
  * @return  string  The full path to directory if successful, false if not; may throw exception
  */
 function make_request_directory(bool $exceptiononerror = true, bool $forcecreate = false) {
-    $basedir = get_request_storage_directory($exceptiononerror, $forcecreate);
-    return make_unique_writable_directory($basedir, $exceptiononerror);
+    return \core_files\util::make_request_directory($exceptiononerror, $forcecreate);
 }
 
 /**
@@ -1451,11 +1338,7 @@ function make_request_directory(bool $exceptiononerror = true, bool $forcecreate
  * @return string|false Returns full path to directory given a valid string; otherwise, false.
  */
 function get_backup_temp_directory($directory) {
-    global $CFG;
-    if (($directory === null) || ($directory === false)) {
-        return false;
-    }
-    return "$CFG->backuptempdir/$directory";
+    return \core_files\util::get_backup_temp_directory($directory);
 }
 
 /**
@@ -1470,14 +1353,7 @@ function get_backup_temp_directory($directory) {
  * @return string|false Returns full path to directory if successful, false if not; may throw exception
  */
 function make_backup_temp_directory($directory, $exceptiononerror = true) {
-    global $CFG;
-    if ($CFG->backuptempdir !== "$CFG->tempdir/backup") {
-        check_dir_exists($CFG->backuptempdir, true, true);
-        protect_directory($CFG->backuptempdir);
-    } else {
-        protect_directory($CFG->tempdir);
-    }
-    return make_writable_directory("$CFG->backuptempdir/$directory", $exceptiononerror);
+    return \core_files\util::make_backup_temp_directory($directory, $exceptiononerror);
 }
 
 /**
@@ -1497,14 +1373,7 @@ function make_backup_temp_directory($directory, $exceptiononerror = true) {
  * @return string|false Returns full path to directory if successful, false if not; may throw exception
  */
 function make_temp_directory($directory, $exceptiononerror = true) {
-    global $CFG;
-    if ($CFG->tempdir !== "$CFG->dataroot/temp") {
-        check_dir_exists($CFG->tempdir, true, true);
-        protect_directory($CFG->tempdir);
-    } else {
-        protect_directory($CFG->dataroot);
-    }
-    return make_writable_directory("$CFG->tempdir/$directory", $exceptiononerror);
+    return \core_files\util::make_temp_directory($directory, $exceptiononerror);
 }
 
 /**
@@ -1517,14 +1386,7 @@ function make_temp_directory($directory, $exceptiononerror = true) {
  * @return string|false Returns full path to directory if successful, false if not; may throw exception
  */
 function make_cache_directory($directory, $exceptiononerror = true) {
-    global $CFG;
-    if ($CFG->cachedir !== "$CFG->dataroot/cache") {
-        check_dir_exists($CFG->cachedir, true, true);
-        protect_directory($CFG->cachedir);
-    } else {
-        protect_directory($CFG->dataroot);
-    }
-    return make_writable_directory("$CFG->cachedir/$directory", $exceptiononerror);
+    return \core_files\util::make_cache_directory($directory, $exceptiononerror);
 }
 
 /**
@@ -1542,44 +1404,7 @@ function make_cache_directory($directory, $exceptiononerror = true) {
  * @return string|false Returns full path to directory if successful, false if not; may throw exception
  */
 function make_localcache_directory($directory, $exceptiononerror = true) {
-    global $CFG;
-
-    make_writable_directory($CFG->localcachedir, $exceptiononerror);
-
-    if ($CFG->localcachedir !== "$CFG->dataroot/localcache") {
-        protect_directory($CFG->localcachedir);
-    } else {
-        protect_directory($CFG->dataroot);
-    }
-
-    if (!isset($CFG->localcachedirpurged)) {
-        $CFG->localcachedirpurged = 0;
-    }
-    $timestampfile = "$CFG->localcachedir/.lastpurged";
-
-    if (!file_exists($timestampfile)) {
-        touch($timestampfile);
-        @chmod($timestampfile, $CFG->filepermissions);
-
-    } else if (filemtime($timestampfile) <  $CFG->localcachedirpurged) {
-        // This means our local cached dir was not purged yet.
-        remove_dir($CFG->localcachedir, true);
-        if ($CFG->localcachedir !== "$CFG->dataroot/localcache") {
-            protect_directory($CFG->localcachedir);
-        }
-        touch($timestampfile);
-        @chmod($timestampfile, $CFG->filepermissions);
-        clearstatcache();
-
-        // Then prewarm the local boostrap.php file as well.
-        initialise_local_config_cache();
-    }
-
-    if ($directory === '') {
-        return $CFG->localcachedir;
-    }
-
-    return make_writable_directory("$CFG->localcachedir/$directory", $exceptiononerror);
+    return \core_files\util::make_localcache_directory($directory, $exceptiononerror);
 }
 
 /**
