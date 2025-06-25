@@ -61,126 +61,18 @@ if ($unrecognized) {
     cli_error(get_string('cliunknowoption', 'admin', $unrecognized));
 }
 
-if ($options['help']) {
-    $help =
-    "Execute periodic cron actions.
+$args = [];
 
-Options:
--h, --help               Print out this help
--s, --stop               Notify all other running cron processes to stop after the current task
--l, --list               Show the list of currently running tasks and how long they have been running
--f, --force              Execute task even if cron is disabled
--e, --enable             Enable cron
--d, --disable            Disable cron
--w, --disable-wait=600   Disable cron and wait until all tasks finished or fail after N seconds (optional param)
--k, --keep-alive=N       Keep this script alive for N seconds and poll for new tasks
-                         The default value can be set by administrators in:
-                         Site administration > Server > Tasks > Task processing > Keep alive time
-
-Example:
-\$sudo -u www-data /usr/bin/php admin/cli/cron.php
-";
-
-    echo $help;
-    die;
-}
-
-if ($options['stop']) {
-    // By clearing the caches this signals to other running processes
-    // to exit after finishing the current task.
-    \core\task\manager::clear_static_caches();
-    die;
-}
-
-if ($options['enable']) {
-    set_config('cron_enabled', 1);
-    mtrace('Cron has been enabled for the site.');
-    exit(0);
-}
-
-if ($options['disable']) {
-    set_config('cron_enabled', 0);
-    \core\task\manager::clear_static_caches();
-    mtrace('Cron has been disabled for the site.');
-    exit(0);
-}
-
-if ($options['list']) {
-    $tasks = \core\task\manager::get_running_tasks();
-    mtrace('The list of currently running tasks:');
-    $format = "%7s %-12s %-9s %-20s %-52s\n";
-    printf(
-        $format,
-        'PID',
-        'HOST',
-        'TYPE',
-        'TIME',
-        'CLASSNAME'
-    );
-    foreach ($tasks as $task) {
-        printf(
-            $format,
-            $task->pid,
-            substr($task->hostname, 0, 12),
-            $task->type,
-            format_time(time() - $task->timestarted),
-            substr($task->classname, 0, 52)
-        );
-    }
-    exit(0);
-}
-
-if ($wait = $options['disable-wait']) {
-    $started = time();
-    if (true === $wait) {
-        // Default waiting time.
-        $waitsec = 600;
-    } else {
-        $waitsec = $wait;
-        $wait = true;
-    }
-
-    set_config('cron_enabled', 0);
-    \core\task\manager::clear_static_caches();
-    mtrace('Cron has been disabled for the site.');
-    mtrace('Allocating ' . format_time($waitsec) . ' for the tasks to finish.');
-
-    $lastcount = 0;
-    while ($wait) {
-        $tasks = \core\task\manager::get_running_tasks();
-
-        if (count($tasks) == 0) {
-            mtrace('');
-            mtrace('All scheduled and adhoc tasks finished.');
-            exit(0);
-        }
-
-        if (time() - $started >= $waitsec) {
-            mtrace('');
-            mtrace('Wait time (' . format_time($waitsec) . ') elapsed, but ' . count($tasks) . ' task(s) still running.');
-            mtrace('Exiting with code 1.');
-            exit(1);
-        }
-
-        if (count($tasks) !== $lastcount) {
-            mtrace('');
-            mtrace(count($tasks) . " tasks currently running.", '');
-            $lastcount = count($tasks);
-        } else {
-            mtrace('.', '');
-        }
-
-        sleep(1);
+// In this case all options here match the options in the new command.
+foreach ($options as $key => $value) {
+    if ($value === true) {
+        $args["--{$key}"] = null; // Boolean options.
+    } else if ($value !== false) {
+        $args["--{$key}"] = $value; // Options with values.
     }
 }
 
-if (!get_config('core', 'cron_enabled') && !$options['force']) {
-    mtrace('Cron is disabled. Use --force to override.');
-    exit(1);
-}
-
-\core\local\cli\shutdown::script_supports_graceful_exit();
-
-
-$keepalive = $options['keep-alive'];
-\core\cron::run_main_process($keepalive);
+// TODO: Add a deprecation notice for this script.
+\core\di::get(\core\cli\application::class)->run(
+    \core\cli\application::get_input_for_command('admin:cron', $args),
+);
