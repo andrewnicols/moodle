@@ -14,27 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Manager class for antivirus integration.
- *
- * @package    core_antivirus
- * @copyright  2015 Ruslan Kabalin, Lancaster University.
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace core\antivirus;
 
-defined('MOODLE_INTERNAL') || die();
+use core\attribute_helper;
+use core\attribute\name;
+use core\component;
+use core\di;
 
 /**
  * Class used for various antivirus related stuff.
  *
  * @package    core_antivirus
- * @copyright  2015 Ruslan Kabalin, Lancaster University.
+ * @copyright  Ruslan Kabalin, Lancaster University.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class manager {
-
     /**
      * Returns list of enabled antiviruses.
      *
@@ -43,7 +37,7 @@ class manager {
     private static function get_enabled() {
         global $CFG;
 
-        $active = array();
+        $active = [];
         if (empty($CFG->antiviruses)) {
             return $active;
         }
@@ -256,14 +250,18 @@ class manager {
      * @param string $antivirusname name of antivirus.
      * @return object|bool antivirus instance or false if does not exist.
      */
-    public static function get_antivirus($antivirusname) {
-        global $CFG;
-
-        $classname = '\\antivirus_' . $antivirusname . '\\scanner';
-        if (!class_exists($classname)) {
-            return false;
+    public static function get_antivirus($antivirusname): \core\feature\antivirus_feature|\core\antivirus\scanner|false {
+        if (str_starts_with($antivirusname, 'plugin_')) {
+            // This is a new feature.
+            return di::get($antivirusname);
         }
-        return new $classname();
+
+        $classname = "\antivirus_{$antivirusname}\scanner";
+        if (class_exists($classname)) {
+            return di::get($classname);
+        }
+
+        return false;
     }
 
     /**
@@ -272,8 +270,13 @@ class manager {
      * @return array Array ('antivirusname'=>'localised antivirus name').
      */
     public static function get_available() {
-        $antiviruses = array();
-        foreach (\core_component::get_plugin_list('antivirus') as $antivirusname => $dir) {
+        $antiviruses = [];
+
+        foreach (array_keys(component::get_feature_list('antivirus')) as $featureclass) {
+            $antiviruses[$featureclass] = attribute_helper::instance($featureclass, name::class);
+        }
+
+        foreach (component::get_plugin_list('antivirus') as $antivirusname => $dir) {
             $antiviruses[$antivirusname] = get_string('pluginname', 'antivirus_'.$antivirusname);
         }
         return $antiviruses;

@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'antivirus_clamav', language 'en'.
+ * Strings for component 'plugin_clamav', language 'en'.
  *
- * @package    antivirus_clamav
- * @copyright  2015 Ruslan Kabalin, Lancaster University.
+ * @package    plugin_clamav
+ * @copyright  Ruslan Kabalin, Lancaster University.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

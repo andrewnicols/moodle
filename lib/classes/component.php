@@ -1261,6 +1261,17 @@ $cache = ' . var_export($cache, true) . ';
         return self::$plugins[$plugintype];
     }
 
+    public static function get_feature_list(string $feature): array {
+        self::init();
+
+        $features = [];
+        foreach (self::$plugins['plugin'] as $pluginname => $fulldir) {
+            $features[] = self::load_classes("plugin_{$pluginname}", $fulldir, "feature\{$feature}");
+        }
+
+        return $features;
+    }
+
     /**
      * Get list of deprecated plugins of a given type.
      *
