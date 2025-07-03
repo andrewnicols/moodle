@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for a mock testing plugin.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package core
- * @copyright  2024 Jake Dallimore <jrhdallimore@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   fake_fullfeatured
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$string['fullfeatured:fakecapability'] = 'Fullfeatured capability description';
-$string['pluginname'] = 'Fake full featured plugin';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/fake_fullfeatured.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

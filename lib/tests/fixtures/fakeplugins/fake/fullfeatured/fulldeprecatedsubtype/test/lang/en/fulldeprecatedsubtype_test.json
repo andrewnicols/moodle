@@ -1,0 +1,7 @@
+{
+    "strings": {
+        "pluginname": "Full deprecated subtype test",
+        "unittest": "Unit test"
+    },
+    "deprecatedkeys": []
+}

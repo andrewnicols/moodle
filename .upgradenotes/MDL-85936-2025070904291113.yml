@@ -1,0 +1,20 @@
+issueNumber: MDL-85936
+notes:
+  core:
+    - message: >
+        Language strings can now be stored in `json` format instead of a php
+        array.
+
+
+        The new language files also move deprecated strings into the same file.
+
+
+        Legacy php and `deprecated.txt` files will be supported until Moodle
+        6.0.
+
+
+        If maintaining a plugin it is possible to use a basic deprecation layer
+        to read the new format from within your legacy file for backwards
+        compatibility, but any `deprecated.txt` file will need to be maintained
+        in tandem for the crossover period.
+      type: improved

@@ -24,7 +24,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-
 /**
  * Standard string_manager implementation
  *
@@ -51,6 +50,9 @@ class core_string_manager_standard implements core_string_manager {
     protected $menucache;
     /** @var array list of cached deprecated strings */
     protected $cacheddeprecated;
+
+    /** @var array A list of deprecated components trings organised by component */
+    protected array $deprecatedcomponentstrings = [];
 
     /**
      * Create new instance of string manager
@@ -107,22 +109,18 @@ class core_string_manager_standard implements core_string_manager {
      * @param string $lang
      * @param bool $disablecache Do not use caches, force fetching the strings from sources
      * @param bool $disablelocal Do not use customized strings in xx_local language packs
-     * @return array of all string for given component and lang
+     * @return string[] of all string for given component and lang
      */
-    public function load_component_strings($component, $lang, $disablecache = false, $disablelocal = false) {
+    public function load_component_strings($component, $lang, $disablecache = false, $disablelocal = false): array {
         global $CFG;
 
-        list($plugintype, $pluginname) = core_component::normalize_component($component);
-        if ($plugintype === 'core' and is_null($pluginname)) {
-            $component = 'core';
-        } else {
-            $component = $plugintype . '_' . $pluginname;
-        }
+        [$plugintype, $pluginname] = core_component::normalize_component($component);
+        $component = \core\component::normalize_componentname($component);
 
-        $cachekey = $lang.'_'.$component.'_'.$this->get_key_suffix();
+        $cachekey = "{$lang}_{$component}_" . $this->get_key_suffix();
 
         $cachedstring = $this->cache->get($cachekey);
-        if (!$disablecache and !$disablelocal) {
+        if (!$disablecache && !$disablelocal) {
             if ($cachedstring !== false) {
                 return $cachedstring;
             }
@@ -130,72 +128,86 @@ class core_string_manager_standard implements core_string_manager {
 
         // No cache found - let us merge all possible sources of the strings.
         if ($plugintype === 'core') {
-            $file = $pluginname;
-            if ($file === null) {
-                $file = 'moodle';
-            }
-            $string = array();
-            // First load english pack.
-            if (!file_exists("$CFG->dirroot/lang/en/$file.php")) {
-                return array();
-            }
-            include("$CFG->dirroot/lang/en/$file.php");
-            $enstring = $string;
-
-            // And then corresponding local if present and allowed.
-            if (!$disablelocal and file_exists("$this->localroot/en_local/$file.php")) {
-                include("$this->localroot/en_local/$file.php");
-            }
-            // Now loop through all langs in correct order.
-            $deps = $this->get_language_dependencies($lang);
-            foreach ($deps as $dep) {
-                // The main lang string location.
-                if (file_exists("$this->otherroot/$dep/$file.php")) {
-                    include("$this->otherroot/$dep/$file.php");
-                }
-                if (!$disablelocal and file_exists("$this->localroot/{$dep}_local/$file.php")) {
-                    include("$this->localroot/{$dep}_local/$file.php");
-                }
-            }
-
+            $location = $CFG->dirroot;
         } else {
-            if (!$location = core_component::get_plugin_directory($plugintype, $pluginname) or !is_dir($location)) {
-                return array();
+            $location = core_component::get_plugin_directory($plugintype, $pluginname);
+            if (!$location || !is_dir($location)) {
+                // Plugin does not exist, return empty array.
+                return [];
             }
-            if ($plugintype === 'mod') {
-                // Bloody mod hack.
-                $file = $pluginname;
-            } else {
-                $file = $plugintype . '_' . $pluginname;
-            }
-            $string = array();
-            // First load English pack.
-            if (!file_exists("$location/lang/en/$file.php")) {
-                // English pack does not exist, so do not try to load anything else.
-                return array();
-            }
-            include("$location/lang/en/$file.php");
-            $enstring = $string;
-            // And then corresponding local english if present.
-            if (!$disablelocal and file_exists("$this->localroot/en_local/$file.php")) {
-                include("$this->localroot/en_local/$file.php");
+        }
+
+        // First load the English language pack.
+        // This must exist.
+        $string = $this->load_component_strings_from_file(
+            $location,
+            'en',
+            $component,
+            $plugintype,
+            $pluginname,
+        );
+        if ($string === null) {
+            // English pack does not exist, so do not try to load anything else.
+            return [];
+        }
+
+        $enstring = $string;
+
+        // Now load the corresponding local english if present.
+        if (!$disablelocal) {
+            $string = array_merge(
+                $string,
+                $this->load_component_strings_from_file(
+                    $this->localroot,
+                    'en_local',
+                    $component,
+                    $plugintype,
+                    $pluginname,
+                ) ?? [],
+            );
+        }
+
+        // Now loop through all langs in correct order.
+        $deps = $this->get_language_dependencies($lang);
+        foreach ($deps as $dep) {
+            if ($plugintype !== 'core') {
+                // For contrib plugins we allow non-en language files to be included.
+                $string = array_merge(
+                    $string,
+                    $this->load_component_strings_from_file(
+                        $location,
+                        $dep,
+                        $component,
+                        $plugintype,
+                        $pluginname,
+                    ) ?? [],
+                );
             }
 
-            // Now loop through all langs in correct order.
-            $deps = $this->get_language_dependencies($lang);
-            foreach ($deps as $dep) {
-                // Legacy location - used by contrib only.
-                if (file_exists("$location/lang/$dep/$file.php")) {
-                    include("$location/lang/$dep/$file.php");
-                }
-                // The main lang string location.
-                if (file_exists("$this->otherroot/$dep/$file.php")) {
-                    include("$this->otherroot/$dep/$file.php");
-                }
-                // Local customisations.
-                if (!$disablelocal and file_exists("$this->localroot/{$dep}_local/$file.php")) {
-                    include("$this->localroot/{$dep}_local/$file.php");
-                }
+            // The main lang string location.
+            $string = array_merge(
+                $string,
+                $this->load_component_strings_from_file(
+                    $this->otherroot,
+                    $dep,
+                    $component,
+                    $plugintype,
+                    $pluginname,
+                ) ?? [],
+            );
+
+            // Local customisations.
+            if (!$disablelocal) {
+                $string = array_merge(
+                    $string,
+                    $this->load_component_strings_from_file(
+                        $this->localroot,
+                        "{$dep}_local",
+                        $component,
+                        $plugintype,
+                        $pluginname,
+                    ) ?? [],
+                );
             }
         }
 
@@ -257,7 +269,16 @@ class core_string_manager_standard implements core_string_manager {
      * @param string $component The module the string is associated with
      * @return bool true if deprecated
      */
-    public function string_deprecated($identifier, $component) {
+    public function string_deprecated($identifier, $component): bool {
+        // First check the deprecatedcomponentstrings array.
+        // This should be filled if the strings were loaded from JSON.
+        // If the strings were not loaded from JSON then this array key will note exist.
+        if (array_key_exists($component, $this->deprecatedcomponentstrings)) {
+            // This is a quick check for the component strings.
+            return array_key_exists($identifier, $this->deprecatedcomponentstrings[$component]);
+        }
+
+         // The string must have been loaded from the legacy files.
         $deprecated = $this->load_deprecated_strings();
         list($plugintype, $pluginname) = core_component::normalize_component($component);
         $normcomponent = $pluginname ? ($plugintype . '_' . $pluginname) : $plugintype;
@@ -343,15 +364,8 @@ class core_string_manager_standard implements core_string_manager {
             if (!isset($string[$identifier])) {
                 // The string is still missing - should be fixed by developer.
                 if ($CFG->debugdeveloper) {
-                    list($plugintype, $pluginname) = core_component::normalize_component($component);
-                    if ($plugintype === 'core') {
-                        $file = "lang/en/{$component}.php";
-                    } else if ($plugintype == 'mod') {
-                        $file = "mod/{$pluginname}/lang/en/{$pluginname}.php";
-                    } else {
-                        $path = core_component::get_plugin_directory($plugintype, $pluginname);
-                        $file = "{$path}/lang/en/{$plugintype}_{$pluginname}.php";
-                    }
+                    $component = core_component::normalize_componentname($component);
+                    $file = $this->get_json_filename('', 'en', $component);
                     debugging("Invalid get_string() identifier: '{$identifier}' or component '{$component}'. " .
                     "Perhaps you are missing \$string['{$identifier}'] = ''; in {$file}?", DEBUG_DEVELOPER);
                 }
@@ -388,9 +402,9 @@ class core_string_manager_standard implements core_string_manager {
         }
 
         if ($CFG->debugdeveloper) {
+            list($plugintype, $pluginname) = core_component::normalize_component($component);
             // Display a debugging message if sting exists but was deprecated.
             if ($this->string_deprecated($identifier, $component)) {
-                list($plugintype, $pluginname) = core_component::normalize_component($component);
                 $normcomponent = $pluginname ? ($plugintype . '_' . $pluginname) : $plugintype;
                 debugging("String [{$identifier},{$normcomponent}] is deprecated. ".
                     'Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. '.
@@ -686,7 +700,7 @@ class core_string_manager_standard implements core_string_manager {
      * @param array $stack list of parent languages already populated in previous recursive calls
      * @return array list of all parents of the given language with the $lang itself added as the last element
      */
-    protected function populate_parent_languages($lang, array $stack = array()) {
+    protected function populate_parent_languages($lang, array $stack = []) {
 
         // English does not have a parent language.
         if ($lang === 'en') {
@@ -699,18 +713,149 @@ class core_string_manager_standard implements core_string_manager {
         }
 
         // Load language configuration and look for the explicit parent language.
-        if (!file_exists("$this->otherroot/$lang/langconfig.php")) {
+        $string = $this->load_strings($CFG->dirroot, $lang, 'langconfig');
+        if ($string === null) {
             return $stack;
         }
-        $string = array();
-        include("$this->otherroot/$lang/langconfig.php");
 
-        if (empty($string['parentlanguage']) or $string['parentlanguage'] === 'en') {
-            return array_merge(array($lang), $stack);
+        if (empty($string['parentlanguage']) || $string['parentlanguage'] === 'en') {
+            return array_merge([$lang], $stack);
 
         }
 
         $parentlang = $string['parentlanguage'];
-        return $this->populate_parent_languages($parentlang, array_merge(array($lang), $stack));
+        return $this->populate_parent_languages($parentlang, array_merge([$lang], $stack));
+    }
+
+    /**
+     * Load strings from the relevant locations.
+     *
+     * This method will attempt to load strings from the JSON string location first.
+     *
+     * If the strings are not found in the JSON file, then the legacy PHP file will be attempted instead.
+     *
+     * @param string $rootpath
+     * @param string $language
+     * @param string $component
+     * @param string $plugintype
+     * @param string $pluginname
+     * @return array|null
+     */
+    protected function load_component_strings_from_file(
+        string $rootpath,
+        string $language,
+        string $component,
+        string $plugintype,
+        ?string $pluginname,
+    ): ?array {
+        $strings = $this->load_strings(
+            $rootpath,
+            $language,
+            $component,
+        );
+
+        if ($strings === null) {
+            // If the strings were not found in the JSON file, try to load legacy strings.
+            if ($plugintype === 'core') {
+                if ($pluginname === null || $pluginname === 'core') {
+                    $filename = 'moodle';
+                } else {
+                    $filename = $pluginname;
+                }
+            } else if ($plugintype === 'mod') {
+                // For modules, we use the plugin name as the filename.
+                // This hack is finally going away with the conversion to json files.
+                $filename = $pluginname;
+            } else {
+                $filename = "{$plugintype}_{$pluginname}";
+            }
+            // Try to load legacy strings.
+            $strings = $this->load_legacy_strings(
+                $rootpath,
+                $language,
+                $filename,
+            );
+        }
+
+        return $strings;
+    }
+
+    /**
+     * Get the JSON filename for the given language and component.
+     *
+     * @param string $rootpath
+     * @param string $language
+     * @param string $component
+     * @return string
+     */
+    protected function get_json_filename(
+        string $rootpath,
+        string $language,
+        string $component,
+    ): string {
+        return "{$rootpath}/lang/{$language}/{$component}.json";
+    }
+
+    /**
+     * Load strings from the given file.
+     *
+     * @param string $rootpath
+     * @param string $language
+     * @param string $component
+     */
+    protected function load_strings(
+        string $rootpath,
+        string $language,
+        string $component,
+    ): ?array {
+        $jsonpath = $this->get_json_filename($rootpath, $language, $component);
+        if (file_exists($jsonpath)) {
+            $jsoncontent = file_get_contents($jsonpath);
+            $data = json_decode(
+                $jsoncontent,
+                true,
+                flags: JSON_OBJECT_AS_ARRAY,
+            );
+
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $error = json_last_error_msg();
+                debugging(
+                    "Invalid JSON in {$jsonpath}: {$error}",
+                    DEBUG_DEVELOPER,
+                );
+                return [];
+            }
+
+            $this->deprecatedcomponentstrings[$component] = array_merge(
+                $this->deprecatedcomponentstrings[$component] ?? [],
+                array_keys($data['deprecatedkeys']) ?? [],
+            );
+
+            return $data['strings'] ?? [];
+        }
+
+        return null;
+    }
+
+    /**
+     * Load strings from the given legacy file.
+     *
+     * @param string $rootpath
+     * @param string $language
+     * @param string $component
+     */
+    protected function load_legacy_strings(
+        string $rootpath,
+        string $language,
+        string $component,
+    ): ?array {
+        // Load strings from PHP file.
+        $phpfile = "{$rootpath}/lang/{$language}/{$component}.php";
+        if (file_exists($phpfile)) {
+            include($phpfile);
+            return $string;
+        }
+
+        return null;
     }
 }

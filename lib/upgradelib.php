@@ -853,7 +853,7 @@ function upgrade_plugins_modules($startcallback, $endcallback, $verbose) {
         }
 
         // all modules must have en lang pack
-        if (!is_readable("$fullmod/lang/en/$mod.php")) {
+        if (!is_readable("$fullmod/lang/en/$mod.php") && !is_readable("$fullmod/lang/en/mod_$mod.json")) {
             throw new plugin_defective_exception($component, 'Missing mandatory en language pack.');
         }
 

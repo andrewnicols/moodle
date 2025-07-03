@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://moodle.org/lang.schema.json",
+    "title": "APIs",
+    "description": "Moodle Language strings",
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+        "strings": {
+            "description": "The list of language strings used in Moodle",
+            "type": "object",
+            "patternProperties": {
+                "^[a-zA-Z][a-zA-Z0-9\\.:/_-]*$": {
+                    "description": "The string identifiers for the language strings",
+                    "type": "string"
+                }
+            },
+            "additionalProperties": false
+        },
+        "deprecatedkeys": {
+            "description": "The list of deprecated language strings",
+            "type": "object",
+            "patternProperties": {
+                "^[a-zA-Z][a-zA-Z0-9\\.:/_-]*$": {
+                    "description": "The string identifiers for the deprecated language strings",
+                    "type": "number"
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}

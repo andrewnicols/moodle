@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for a mock plugin.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package core
- * @copyright  2024 Jake Dallimore <jrhdallimore@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   fulldeletedsubtype_demo
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$string['pluginname'] = 'Full deleted subtype demo';
-$string['unittest'] = 'Unit test';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/fulldeletedsubtype_demo.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

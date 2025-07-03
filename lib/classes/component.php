@@ -1588,7 +1588,7 @@ $cache = ' . var_export($cache, true) . ';
 
         if ($type === 'core') {
             if ($plugin === null) {
-                return $path = $CFG->libdir;
+                return $CFG->libdir;
             }
             return self::get_subsystem_directory($plugin);
         }
