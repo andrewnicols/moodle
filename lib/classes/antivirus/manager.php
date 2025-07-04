@@ -272,7 +272,7 @@ class manager {
     public static function get_available() {
         $antiviruses = [];
 
-        foreach (array_keys(component::get_feature_list('antivirus')) as $featureclass) {
+        foreach (component::get_feature_list('antivirus') as $featureclass) {
             $antiviruses[$featureclass] = attribute_helper::instance($featureclass, name::class);
         }
 

@@ -22,12 +22,15 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\di;
+
 require_once('../config.php');
 require_once($CFG->libdir.'/adminlib.php');
 require_once($CFG->libdir.'/tablelib.php');
 
 $action  = required_param('action', PARAM_ALPHANUMEXT);
 $antivirus  = required_param('antivirus', PARAM_PLUGIN);
+// $antivirus  = required_param('antivirus', PARAM_RAW);
 $confirm = optional_param('confirm', 0, PARAM_BOOL);
 
 $PAGE->set_url('/admin/antiviruses.php', array('action' => $action, 'antivirus' => $antivirus));
@@ -55,6 +58,7 @@ if (!confirm_sesskey()) {
 }
 
 $needsupdate = false;
+
 switch ($action) {
     case 'disable':
         // Remove from enabled list.
@@ -65,6 +69,11 @@ switch ($action) {
     case 'enable':
         // Add to enabled list.
         if (!in_array($antivirus, $activeantiviruses)) {
+            // if (str_starts_with($antivirus, 'plugin_')) {
+            //     // If the plugin name starts with 'plugin_', we need to remove that prefix.
+            //     di::get($antivirus)->enable_plugin();
+            //     $class = \core_plugin_manager::resolve_plugininfo_class('antivirus');
+            // }
             $class = \core_plugin_manager::resolve_plugininfo_class('antivirus');
             $class::enable_plugin($antivirus, true);
         }

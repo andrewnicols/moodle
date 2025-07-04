@@ -1265,8 +1265,9 @@ $cache = ' . var_export($cache, true) . ';
         self::init();
 
         $features = [];
+        $namespace = "\\features\\{$feature}";
         foreach (self::$plugins['plugin'] as $pluginname => $fulldir) {
-            $features[] = self::load_classes("plugin_{$pluginname}", $fulldir, "feature\{$feature}");
+            $features += array_keys(self::get_component_classes_in_namespace("plugin_{$pluginname}", $namespace));
         }
 
         return $features;

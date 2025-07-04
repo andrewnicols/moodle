@@ -938,10 +938,16 @@ enum param: string {
      */
     protected function clean_param_value_area(mixed $param): string {
         // We do not want any guessing here, either the name is correct or not.
-        if (!is_valid_plugin_name($param)) {
-            return '';
+        if (str_starts_with($param, 'plugin_') && str_contains($param, '\\features\\')) {
+            $plugin = explode('\\', $param, 2)[0];
+            if (is_valid_plugin_name($plugin)) {
+                return $param;
+            }
+        } else if (is_valid_plugin_name($param)) {
+            return $param;
         }
-        return $param;
+
+        return '';
     }
 
     /**

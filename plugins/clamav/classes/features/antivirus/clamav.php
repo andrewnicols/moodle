@@ -16,6 +16,8 @@
 
 namespace plugin_clamav\features\antivirus;
 
+use core\attribute\name;
+
 /**
  * ClamAV Antivirus Functionality for Moodle.
  *
@@ -23,6 +25,7 @@ namespace plugin_clamav\features\antivirus;
  * @copyright  Ruslan Kabalin, Lancaster University.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[name('pluginname', 'plugin_clamav')]
 class clamav extends \core\feature\antivirus_feature {
     /** @var int Default socket timeout */
     private const SOCKET_TIMEOUT = 10;
