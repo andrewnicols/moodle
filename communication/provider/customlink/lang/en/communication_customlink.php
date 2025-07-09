@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component communication_customlink, language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    communication_customlink
- * @copyright  2023 Michael Hawkins <michaelh@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   communication_customlink
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['cachedef_customlink'] = 'Custom link data';
-$string['customlinkurl'] = 'Custom link URL';
-$string['customlinkurl_help'] = 'Provide a link to an existing room from any communication service you would like to make available to participants - such as Microsoft Teams, Slack or Matrix.';
-$string['customlinkurlinfo'] = 'The URL of an existing room already set up for this course.';
-$string['pluginname'] = 'Custom link';
-$string['privacy:metadata'] = 'Custom link communication plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/communication_customlink.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

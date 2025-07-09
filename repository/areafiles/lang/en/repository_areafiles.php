@@ -15,15 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_areafiles'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_areafiles
- * @copyright 2013 Marina Glancy
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['areafiles:view'] = 'View repository Embedded files';
-$string['configplugin'] = 'Configuration for repository Embedded files';
-$string['pluginname_help'] = 'Files embedded in the current text editor';
-$string['pluginname'] = 'Embedded files';
-$string['privacy:metadata'] = 'The Embedded files repository plugin does not store or transmit any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_areafiles.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

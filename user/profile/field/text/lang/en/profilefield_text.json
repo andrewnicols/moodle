@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "pluginname": "Text input",
+        "privacy:metadata:profilefield_text:data": "Text input user profile field user data",
+        "privacy:metadata:profilefield_text:dataformat": "The format of Text input user profile field user data",
+        "privacy:metadata:profilefield_text:fieldid": "The ID of the profile field",
+        "privacy:metadata:profilefield_text:tableexplanation": "Additional profile data",
+        "privacy:metadata:profilefield_text:userid": "The ID of the user whose data is stored by the Text input user profile field"
+    },
+    "deprecatedkeys": []
+}

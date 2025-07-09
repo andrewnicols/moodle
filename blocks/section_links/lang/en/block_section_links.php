@@ -15,25 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_section_links', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    block_section_links
- * @copyright  Jason Hardin
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_section_links
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['incby1'] = 'Increase by';
-$string['incby1_help'] = 'This is the value the section is incremented each time a section link is displayed starting at 1.';
-$string['incby2'] = 'Alternative increase by';
-$string['incby2_help'] = 'This is the value the section is incremented each time a section link is displayed starting at 1.';
-$string['jumptocurrenttopic'] = 'Jump to highlighted section';
-$string['jumptocurrentweek'] = 'Jump to current week';
-$string['numsections1'] = 'Number of sections';
-$string['numsections1_help'] = 'Once the number of sections in the course reaches this number then the increment by value is used.';
-$string['numsections2'] = 'Alternative number of sections';
-$string['numsections2_help'] = 'Once the number of sections in the course reaches this number then the Alternative increment by value is used.';
-$string['pluginname'] = 'Section links';
-$string['section_links:addinstance'] = 'Add a new section links block';
-$string['showsectionname'] = 'Display section name';
-$string['showsectionname_help'] = 'If set to Yes, section names are used as links. Otherwise, numbers are used.';
-$string['privacy:metadata'] = 'The Section links block only shows data stored in other locations.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_section_links.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

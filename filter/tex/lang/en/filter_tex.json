@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "configconvertformat": "If <i>latex</i> and <i>dvips</i> are present in addition to <i>convert</i> or <i>dvisvgm</i>, select the preferred image type (<i>convert</i> produces GIF or PNG; <i>dvisvgm</i> produces SVG). Otherwise <i>mimeTeX</i> will be used to to create GIF images.",
+        "convertformat": "Output image format",
+        "filtername": "TeX notation",
+        "latexpreamble": "LaTeX preamble",
+        "latexsettings": "LaTeX renderer Settings",
+        "pathconvert": "Path of <i>convert</i> binary",
+        "pathdvips": "Path of <i>dvips</i> binary",
+        "pathdvisvgm": "Path of <i>dvisvgm</i> binary",
+        "pathlatex": "Path of <i>latex</i> binary",
+        "pathmimetex": "Path of <i>mimetex</i> binary",
+        "pathmimetexdesc": "Moodle will use its own mimetex binary unless another valid path is specified.",
+        "privacy:metadata": "The TeX notation plugin does not store any personal data.",
+        "source": "TeX source"
+    },
+    "deprecatedkeys": []
+}

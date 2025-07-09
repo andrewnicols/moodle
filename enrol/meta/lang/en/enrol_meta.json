@@ -1,0 +1,28 @@
+{
+    "strings": {
+        "addgroup": "Add to group",
+        "coursesort": "Source course list order",
+        "coursesort_help": "When linking the source course to the target course, how should source courses be ordered?",
+        "creategroup": "Create new group",
+        "defaultgroupnametext": "{$a->name} course {$a->increment}",
+        "enrolmetasynctask": "Meta enrolment sync task",
+        "linkedcourse": "Link course",
+        "meta:config": "Configure meta enrol instances",
+        "meta:selectaslinked": "Select course as meta linked",
+        "meta:unenrol": "Unenrol suspended users",
+        "nosyncroleids": "Roles that are not synchronised",
+        "nosyncroleids_desc": "Select any roles that should not be synchronised between the source course to the target course.",
+        "pluginname": "Course meta link",
+        "pluginname_desc": "The course meta link synchronises enrolments and roles from the source course to the target course.",
+        "privacy:metadata:core_group": "The course meta link enrolment plugin can create a new group or use an existing group to add participants from the source course.",
+        "samemetacourse": "You can't add a meta link to the same course.",
+        "syncall": "Synchronise all enrolled users",
+        "syncall_desc": "If enabled, all enrolled users are synchronised from the source course even if they have no role in it. Otherwise, only users that have at least one role are enrolled in the target course.",
+        "unknownmetacourse": "Unknown meta course shortname",
+        "wscannotcreategroup": "No permission to create group in linked course id = {$a}.",
+        "wsinvalidcourse": "Course ID = {$a} doesn't exist or you don't have permission to add a course meta link.",
+        "wsinvalidmetacourse": "Meta course ID = {$a} doesn't exist or you don't have permission to add an enrolment instance.",
+        "wsnoinstancesspecified": "No instances specified"
+    },
+    "deprecatedkeys": []
+}

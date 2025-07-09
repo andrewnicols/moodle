@@ -15,22 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for filter_displayh5p
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    filter_displayh5p
- * @copyright  2019 Victor Deniz <victor@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   filter_displayh5p
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$string['allowedsourceslist'] = 'Allowed sources';
-$string['allowedsourceslistdesc'] = 'A list of URLs from which users can embed H5P content. If none are specified, all URLs will remain as links and not be displayed as embedded H5P content.
-
-\'[id]\' is a placeholder for the H5P content ID in the external source.
-For example:
-
-- H5P.com: https://[xxxxxx].h5p.com/content/[id]
-- Wordpress: http://myserver/wp-admin/admin-ajax.php?action=h5p_embed&id=[id]';
-$string['filtername'] = 'Display H5P';
-$string['privacy:metadata'] = 'The display H5P filter does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/filter_displayh5p.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

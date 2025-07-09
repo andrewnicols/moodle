@@ -15,22 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Block LP language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    block_lp
- * @copyright  2016 Frédéric Massart - FMCorz.net
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_lp
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['competenciestoreview'] = 'Competencies to review';
-$string['lp:addinstance'] = 'Add a new learning plans block';
-$string['lp:myaddinstance'] = 'Add a new learning plans block to Dashboard';
-$string['myplans'] = 'My plans';
-$string['noactiveplans'] = 'No active plans at the moment.';
-$string['planstoreview'] = 'Plans to review';
-$string['pluginname'] = 'Learning plans';
-$string['viewmore'] = 'View more...';
-$string['viewotherplans'] = 'View other plans...';
-$string['privacy:metadata'] = 'The Learning plans block only shows data stored in other locations.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_lp.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

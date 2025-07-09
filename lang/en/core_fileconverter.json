@@ -1,0 +1,6 @@
+{
+    "strings": {
+        "privacy:metadata:plugintypefileconverter": "The fileconverter subsystem acts as a channel, passing requests from plugins to the various fileconverter plugins."
+    },
+    "deprecatedkeys": []
+}

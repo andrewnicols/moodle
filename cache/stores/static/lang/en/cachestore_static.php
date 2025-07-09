@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The library file for the static cache store.
+ * Backwards compatibility helper for the lang file migration.
  *
- * This file is part of the static cache store, it contains the API for interacting with an instance of the store.
- * This is used as a default cache store within the Cache API. It should never be deleted.
- *
- * @package    cachestore_static
- * @category   cache
- * @copyright  2012 Sam Hemelryk
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   cachestore_static
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['pluginname'] = 'Static request cache';
-$string['privacy:metadata'] = 'The Static request cachestore plugin stores some data, but this is only present for the lifetime of a single HTTP request.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/cachestore_static.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

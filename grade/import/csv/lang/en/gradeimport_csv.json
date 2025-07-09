@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "csv:view": "Import grades from CSV",
+        "gradepenalties": "Grade penalties will not be applied to imported grades.",
+        "pluginname": "CSV file",
+        "privacy:metadata": "The import grades from CSV plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

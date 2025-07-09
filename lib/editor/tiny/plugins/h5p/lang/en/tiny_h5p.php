@@ -15,33 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tiny_h5p', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    tiny_h5p
- * @copyright  2022 Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tiny_h5p
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['modaltitle'] = 'Insert H5P content';
-$string['buttontitle'] = 'Insert H5P content';
-$string['insert'] = 'Insert H5P content';
-$string['pluginname'] = 'Insert H5P';
-$string['browserepositories'] = 'Browse repositories...';
-$string['copyrightbutton'] = 'Copyright button';
-$string['displayoptions'] = 'Display options';
-$string['downloadbutton'] = 'Allow download';
-$string['embedbutton'] = 'Embed button';
-$string['h5p:addembed'] = 'Add embedded H5P';
-$string['h5p:use'] = 'Use TinyMCE H5P';
-$string['h5pfile'] = 'H5P file upload';
-$string['h5pfileorurl'] = 'H5P URL or file upload';
-$string['h5poptions'] = 'H5P options';
-$string['h5purl'] = 'H5P URL';
-$string['invalidh5purl'] = 'Invalid URL';
-$string['instructions'] = 'You can insert H5P content by <strong>either</strong> entering a URL <strong>or</strong> by uploading an H5P file.';
-$string['mobileappautoplay'] = 'Auto-play in the mobile app';
-$string['noh5pcontent'] = 'No H5P content added';
-$string['privacy:metadata'] = 'The H5P plugin for TinyMCE does not store any personal data.';
-
-// Deprecated since Moodle 4.5.
-$string['helplinktext'] = 'H5P helper';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/tiny_h5p.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

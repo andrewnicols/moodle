@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "clicktomarkusercomplete": "Click to mark user complete",
+        "completion:view": "View course completion report",
+        "completiondate": "Completion date",
+        "eventreportviewed": "Completion report viewed",
+        "eventuserreportviewed": "Completion user report viewed",
+        "id": "ID",
+        "name": "Name",
+        "nocapability": "Can not access user completion report",
+        "page-report-completion-index": "Course completion report",
+        "page-report-completion-user": "User course completion report",
+        "page-report-completion-x": "Any completion report",
+        "pluginname": "Course completion",
+        "privacy:metadata": "The Course completion report only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

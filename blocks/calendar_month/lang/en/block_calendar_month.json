@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "calendar_month:addinstance": "Add a new calendar block",
+        "calendar_month:myaddinstance": "Add a new calendar block to Dashboard",
+        "pluginname": "Calendar",
+        "privacy:metadata": "The Calendar block only displays existing calendar data."
+    },
+    "deprecatedkeys": []
+}

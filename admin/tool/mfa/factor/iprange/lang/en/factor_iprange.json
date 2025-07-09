@@ -1,0 +1,15 @@
+{
+    "strings": {
+        "allowedipsempty": "Nobody will currently pass this factor! You can add your own IP address (<i>{$a->ip}</i>)",
+        "allowedipshasmyip": "Your IP (<i>{$a->ip}</i>) is in the list and you will pass this factor.",
+        "allowedipshasntmyip": "Your IP (<i>{$a->ip}</i>) is not in the list and you will not pass this factor.",
+        "pluginname": "IP range",
+        "privacy:metadata": "The IP range factor plugin does not store any personal data.",
+        "settings:description": "Enable automatic user verification using IP addresses. This doesn't require user setup and can provide a secure, seamless login on trusted networks.",
+        "settings:safeips": "Safe IP ranges",
+        "settings:safeips_help": "Enter a list of IP addresses or subnets to be counted as a pass in factor. If empty nobody will pass this factor. {$a->info} {$a->syntax}",
+        "settings:shortdescription": "Use IP addresses to automatically verify users' identity.",
+        "summarycondition": "is on a secured network"
+    },
+    "deprecatedkeys": []
+}

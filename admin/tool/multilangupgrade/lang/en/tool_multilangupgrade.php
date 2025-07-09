@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tool_multilangupgrade', language 'en', branch 'MOODLE_22_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    tool
- * @subpackage multilangupgrade
- * @copyright  2011 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tool_multilangupgrade
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['multilangupgradeinfo'] = '<p>The multilang filter syntax was changed in 1.8 and so the &lt;lang&gt; tag is not supported any more.</p>
-<p>Example: &lt;span lang="en" class="multilang"&gt;Hello!&lt;/span&gt;&lt;span lang="es" class="multilang"&gt;Hola!&lt;/span&gt;</p>
-<p>Do you want to upgrade the syntax in all existing texts now?</p>';
-$string['pluginname'] = 'Multilang upgrade';
-$string['privacy:metadata'] = 'The Multilang upgrade plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/tool_multilangupgrade.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

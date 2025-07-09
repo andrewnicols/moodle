@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "defaultdisplaymode": "Default display mode",
+        "manageplugins": "Manage restrictions",
+        "pluginname": "Availability condition management",
+        "privacy:metadata": "The Availability condition management plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

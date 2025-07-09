@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'datapreset_resources', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   datapreset_resources
- * @copyright 2022 Sara Arjona <sara@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['modulename'] = 'Resources';
-$string['modulename_help'] = 'Collect resources such as web links or book reviews in a table, with links to the detailed view.';
-$string['pluginname'] = 'Resources';
-$string['privacy:metadata'] = 'The Resources plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/datapreset_resources.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

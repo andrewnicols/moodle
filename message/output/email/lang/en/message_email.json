@@ -1,0 +1,28 @@
+{
+    "strings": {
+        "email": "Send email notifications to",
+        "emaildigestunreadmessages": "Unread messages",
+        "emaildigestviewallmessages": "View all messages",
+        "emailonlyfromnoreplyaddress": "Always send email from the no-reply address?",
+        "ifemailleftempty": "Leave empty to send notifications to {$a}",
+        "messagedigestemailsubject": "{$a}: Messages digest",
+        "pluginname": "Email",
+        "privacy:metadata:attachment": "A file on the filesystem.",
+        "privacy:metadata:attachname": "The name of the attached file (extension indicates MIME).",
+        "privacy:metadata:externalpurpose": "This information is sent to an external SMTP server to be ultimately delivered as an email to the recipient.",
+        "privacy:metadata:fullmessage": "The full message in a given format.",
+        "privacy:metadata:fullmessagehtml": "The full version of the message.",
+        "privacy:metadata:message_email_messages": "The list of users enrolled via an LTI provider",
+        "privacy:metadata:message_email_messages:conversationid": "The ID of the conversation being sent to",
+        "privacy:metadata:message_email_messages:messageid": "The ID of the message being sent",
+        "privacy:metadata:message_email_messages:useridto": "The ID of the user receiving the message",
+        "privacy:metadata:recipient": "The recipient of the message.",
+        "privacy:metadata:replyto": "The email address to reply to.",
+        "privacy:metadata:replytoname": "Name of reply to recipient.",
+        "privacy:metadata:subject": "The subject line of the message.",
+        "privacy:metadata:userfrom": "The user sending the message.",
+        "privacy:preference:email": "Preferred email notification address",
+        "tasksendemail": "Messages digest mailings"
+    },
+    "deprecatedkeys": []
+}

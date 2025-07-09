@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "activity_modules:addinstance": "Add a new activities block",
+        "pluginname": "Activities",
+        "privacy:metadata": "The Activities block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

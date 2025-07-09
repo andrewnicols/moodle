@@ -15,17 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for plugin 'media_youtube'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   media_youtube
- * @copyright 2016 Marina Glancy
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'YouTube';
-$string['pluginname_help'] = 'The video-sharing website youtube.com. Video and playlist links are supported.';
-$string['privacy:metadata'] = 'The Youtube media plugin does not store any personal data.';
-$string['supportsvideo'] = 'YouTube videos';
-$string['supportsplaylist'] = 'YouTube playlists';
-$string['nocookie'] = 'Use no cookie domain';
-$string['nocookie_desc'] = 'Use youtube-nocookie.com domain for embedding videos. This reduces the number of third party cookies used in embedding. This domain is also not blocked by some adblockers.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/media_youtube.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

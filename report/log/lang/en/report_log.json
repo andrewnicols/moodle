@@ -1,0 +1,31 @@
+{
+    "strings": {
+        "allsources": "All sources",
+        "cli": "CLI",
+        "eventcomponent": "Component",
+        "eventcontext": "Event context",
+        "eventloggedas": "{$a->realusername} as {$a->asusername}",
+        "eventorigin": "Origin",
+        "eventrelatedfullnameuser": "Affected user",
+        "eventreportviewed": "Log report viewed",
+        "eventuserreportviewed": "User log report viewed",
+        "log:view": "View course logs",
+        "log:viewtoday": "View today's logs",
+        "logsformat": "Logs format",
+        "nocapability": "Can not access user log report",
+        "nologreaderenabled": "No log reader enabled",
+        "origin": "Source",
+        "other": "Other",
+        "page": "Page {$a}",
+        "page-report-log-index": "Course log report",
+        "page-report-log-user": "User course log report",
+        "page-report-log-x": "Any log report",
+        "pluginname": "Logs",
+        "privacy:metadata": "The Logs plugin does not store any personal data.",
+        "restore": "Restore",
+        "selectlogreader": "Select log reader",
+        "web": "Web",
+        "ws": "Web service"
+    },
+    "deprecatedkeys": []
+}

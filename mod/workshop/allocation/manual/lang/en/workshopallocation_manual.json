@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "addreviewee": "Add reviewee",
+        "addreviewer": "Add reviewer",
+        "allocationadded": "The submission has been successfully allocated",
+        "allocationexists": "The allocation already exists",
+        "areyousuretodeallocate": "Are you sure you want to deallocate the selected assessment?",
+        "areyousuretodeallocategraded": "You are going to remove the assessment that has already been graded. Are you really sure you want to do it?",
+        "pluginname": "Manual allocation",
+        "privacy:metadata:preference:perpage": "Number of allocated assessments the user prefers to see on one page.",
+        "showallparticipants": "Show all participants"
+    },
+    "deprecatedkeys": []
+}

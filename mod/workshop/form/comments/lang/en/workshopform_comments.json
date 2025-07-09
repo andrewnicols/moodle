@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "addmoredimensions": "Blanks for {$a} more aspects",
+        "dimensioncommentfor": "Comment for {$a}",
+        "dimensiondescription": "Description",
+        "dimensionnumber": "Aspect {$a}",
+        "pluginname": "Comments",
+        "privacy:metadata": "The Comments grading plugin only stores the details of the assessment form. Actual personal data of how the form has been filled are stored by the Workshop module itself and are attached to exported assessments."
+    },
+    "deprecatedkeys": []
+}

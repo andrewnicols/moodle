@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "incby1": "Increase by",
+        "incby1_help": "This is the value the section is incremented each time a section link is displayed starting at 1.",
+        "incby2": "Alternative increase by",
+        "incby2_help": "This is the value the section is incremented each time a section link is displayed starting at 1.",
+        "jumptocurrenttopic": "Jump to highlighted section",
+        "jumptocurrentweek": "Jump to current week",
+        "numsections1": "Number of sections",
+        "numsections1_help": "Once the number of sections in the course reaches this number then the increment by value is used.",
+        "numsections2": "Alternative number of sections",
+        "numsections2_help": "Once the number of sections in the course reaches this number then the Alternative increment by value is used.",
+        "pluginname": "Section links",
+        "privacy:metadata": "The Section links block only shows data stored in other locations.",
+        "section_links:addinstance": "Add a new section links block",
+        "showsectionname": "Display section name",
+        "showsectionname_help": "If set to Yes, section names are used as links. Otherwise, numbers are used."
+    },
+    "deprecatedkeys": []
+}

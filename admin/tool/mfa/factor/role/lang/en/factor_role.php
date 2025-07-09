@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package     factor_role
- * @author      Peter Burnett <peterburnett@catalyst-au.net>
- * @copyright   Catalyst IT
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   factor_role
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Roles';
-$string['privacy:metadata'] = 'The Roles factor plugin does not store any personal data.';
-$string['settings:description'] = 'Select the roles that must use additional factors to authenticate. If this factor is not turned on, all roles will be required to use an additional factor.';
-$string['settings:roles'] = 'Non-passing roles';
-$string['settings:roles_help'] = 'Select the roles that will not pass this factor. This allows you to force these roles to use other factors to authenticate.';
-$string['settings:shortdescription'] = 'Specify which users must use other factors to authenticate, based on their role. Must be combined with other factors.';
-$string['summarycondition'] = 'does NOT have any of the following roles assigned in any context: {$a}';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/factor_role.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

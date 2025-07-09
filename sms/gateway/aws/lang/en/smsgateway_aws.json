@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "api_key": "Access key",
+        "api_region": "Amazon API gateway region",
+        "api_secret": "Secret access key",
+        "aws_information": "Complete the following fields using the information provided by AWS",
+        "aws_sns": "AWS SNS",
+        "gateway": "AWS service",
+        "pluginname": "AWS",
+        "privacy:metadata": "The AWS SMS gateway plugin does not store any personal data.",
+        "usecredchain": "Find AWS credentials using the default provider chain"
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "JavaScript security quiz access rule",
+        "popupwithjavascriptsupport": "Full screen pop-up with some JavaScript security",
+        "privacy:metadata": "The JavaScript security quiz access rule plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

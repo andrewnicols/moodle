@@ -15,32 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'mlbackend_python'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   mlbackend_python
- * @copyright 2017 David Monllao {@link http://www.davidmonllao.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['errornoconfigdata'] = 'The server configuration is not complete.';
-$string['errorserver'] = 'Server error {$a}';
-$string['host'] = 'Host';
-$string['hostdesc'] = 'Host';
-$string['packageinstalledshouldbe'] = 'The moodlemlbackend Python package should be updated. The required version is "{$a->required}" and the installed version is "{$a->installed}".';
-$string['packageinstalledtoohigh'] = 'The moodlemlbackend Python package is not compatible with this version of Moodle. The required version is "{$a->required}" or higher as long as it is API-compatible. The installed version "{$a->installed}" is too high.';
-$string['pluginname'] = 'Python machine learning backend';
-$string['port'] = 'Port';
-$string['portdesc'] = 'Port';
-$string['privacy:metadata'] = 'The Python machine learning backend plugin does not store any personal data.';
-$string['pythonpackagenotinstalled'] = 'The moodlemlbackend Python package is not installed or there is a problem with it. Please execute "{$a}" from command line interface for more info.';
-$string['pythonpathnotdefined'] = 'The path to your executable Python binary has not been defined. Please visit "{$a}" to set it.';
-$string['serversettingsinfo'] = 'If \'Use a server\' is enabled, the server settings will be displayed.';
-$string['username'] = 'Username';
-$string['usernamedesc'] = 'String of characters used as a username to communicate between the Moodle server and the Python server.';
-$string['password'] = 'Password';
-$string['passworddesc'] = 'String of characters used as a password to communicate between the Moodle server and the Python server.';
-$string['secure'] = 'Use HTTPS';
-$string['securedesc'] = 'Whether to use HTTP or HTTPS.';
-$string['useserver'] = 'Use a server';
-$string['useserverdesc'] = 'The machine learning backend Python package is not installed on the web server but on a different server.';
-$string['tensorboardinfo'] = 'Launch TensorBoard from command line by typing tensorboard --logdir=\'{$a}\' in your web server.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/mlbackend_python.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

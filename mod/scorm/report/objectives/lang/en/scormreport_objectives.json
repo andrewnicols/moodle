@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "objectivescore": "Show objective score",
+        "objectivex": "Objective {$a}",
+        "pluginname": "Objectives report",
+        "privacy:metadata:preference:scorm_report_objectives_score": "Whether to display the objective score in the SCORM report",
+        "privacy:metadata:preference:scorm_report_pagesize": "Number of users to display in the SCORM reports",
+        "score": "score",
+        "status": "status"
+    },
+    "deprecatedkeys": []
+}

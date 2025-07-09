@@ -1,0 +1,17 @@
+{
+    "strings": {
+        "additionaldelimiters": "Additional equation delimiters",
+        "additionaldelimiters_help": "MathJax filter parses text for equations contained within delimiter characters.\n\nThe list of recognised delimiter characters can be added to here (e.g. AsciiMath uses `). Delimiters can contain multiple characters and multiple delimiters can be separated with commas.",
+        "filtername": "MathJax",
+        "httpsurl": "MathJax URL",
+        "httpsurl_help": "Full URL to MathJax library.",
+        "localinstall": "Local MathJax installation",
+        "localinstall_help": "The default MathJax configuration uses the CDN version of MathJax, but MathJax can be installed locally if required.\n\nThis can be useful to save on bandwidth or because of local proxy restrictions.\n\nTo use a local installation of MathJax, first download the full MathJax library from https://www.mathjax.org/. Then install it on a web server. Finally update the MathJax filter settings httpurl and/or httpsurl to point to the local MathJax.js URL.",
+        "mathjaxsettings": "MathJax configuration",
+        "mathjaxsettings_desc": "The default MathJax configuration should be appropriate for most users, but MathJax is highly configurable and any of the standard MathJax configuration options can be added here as JSON. This field must be empty or contain a valid JSON object! For example, to enable AsciiMath and the zoom feature, set this field to:\n<pre>\n{\n  \"loader\": {\"load\": [\"input/asciimath\"]},\n  \"options\": {\"menuOptions\": {\"settings\": {\"zoom\": \"DoubleClick\"}}}\n}\n</pre>",
+        "privacy:metadata": "The MathJax plugin does not store any personal data.",
+        "texfiltercompatibility": "TeX filter compatibility",
+        "texfiltercompatibility_help": "The MathJax filter can be used as a replacement for the TeX notation filter.\n\nTo support all the delimiters supported by the TeX notation filter, MathJax will be configured to display all equations \"inline\" with the text."
+    },
+    "deprecatedkeys": []
+}

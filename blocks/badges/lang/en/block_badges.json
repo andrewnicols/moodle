@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "badges:addinstance": "Add a new Latest badges block",
+        "badges:myaddinstance": "Add a new Latest badges block to Dashboard",
+        "nothingtodisplay": "You have no badges to display",
+        "numbadgestodisplay": "Number of latest badges to display",
+        "pluginname": "Latest badges",
+        "privacy:metadata": "The Latest badges block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

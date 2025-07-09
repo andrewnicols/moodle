@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for the quizaccess_numattempts plugin.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    quizaccess
- * @subpackage numattempts
- * @copyright  2011 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   quizaccess_numattempts
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
-defined('MOODLE_INTERNAL') || die();
-
-
-$string['attemptsallowedn'] = 'Attempts allowed: {$a}';
-$string['pluginname'] = 'Number of attempts quiz access rule';
-$string['privacy:metadata'] = 'The Number of attempts quiz access rule plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/quizaccess_numattempts.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

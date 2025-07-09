@@ -1,0 +1,17 @@
+{
+    "strings": {
+        "audioextensions": "Audio: {$a}",
+        "defaultheight": "Default height",
+        "defaultheightdesc": "Media player height if a height is not specified and the actual media file height cannot be determined by the player.",
+        "defaultwidth": "Default width",
+        "defaultwidthdesc": "Media player width if a width is not specified and the actual media file width cannot be determined by the player.",
+        "extensions": "Extensions: {$a}",
+        "managemediaplayers": "Manage media players",
+        "mediaformats": "Available players",
+        "mediaformats_desc": "When players are enabled, media files can be embedded using the multimedia plugins filter (if enabled) or using a file or URL resource. When not enabled, these formats are not embedded and users can download or follow links to these resources.\n\nWhere two players support the same format, enabling both increases compatibility across different devices such as mobile phones. It is possible to increase compatibility further by providing multiple files in different formats for a single audio or video clip.",
+        "privacy:metadata": "Media embedding does not store any personal data.",
+        "supports": "Supports",
+        "videoextensions": "Video: {$a}"
+    },
+    "deprecatedkeys": []
+}

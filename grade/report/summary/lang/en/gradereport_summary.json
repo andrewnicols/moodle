@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "Grade summary",
+        "privacy:metadata": "The Grade summary report only shows data stored in other locations.",
+        "summary:view": "View grade summary report"
+    },
+    "deprecatedkeys": []
+}

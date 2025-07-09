@@ -15,13 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'calendartype_gregorian', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package calendartype_gregorian
- * @copyright 2008 onwards Foodle Group {@link http://foodle.org}
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   calendartype_gregorian
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['name'] = 'Gregorian';
-$string['pluginname'] = 'Gregorian calendar type';
-$string['privacy:metadata'] = 'The Gregorian calendar format plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/calendartype_gregorian.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

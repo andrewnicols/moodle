@@ -1,0 +1,33 @@
+{
+    "strings": {
+        "acohortroleassignmentssaved": "{$a} cohort role assignments were saved.",
+        "assign": "Assign",
+        "assignroletocohort": "Assign user-context roles to all cohort members",
+        "backgroundsync": "Note: New cohort role assignments will not take effect immediately. Role assignment changes will be made by a scheduled task.",
+        "cohortroleassignmentnotremoved": "The cohort role assignment was not removed.",
+        "cohortroleassignmentremoved": "The cohort role assignment was removed.",
+        "cohortroles": "Cohort roles",
+        "existingcohortroles": "Existing cohort role assignments",
+        "managecohortroles": "Assign user roles to cohort",
+        "noassignableroles": "There are currently no roles that can be assigned in the user context. <a href=\"../../roles/manage.php\">Manage roles</a>",
+        "nocohortroleassignmentssaved": "No cohort role assignments were saved.",
+        "onecohortroleassignmentsaved": "One cohort role assignment was saved.",
+        "pluginname": "Cohort roles management",
+        "privacy:metadata:tool_cohortroles": "The Cohort roles management plugin stores user cohort role mappings.",
+        "privacy:metadata:tool_cohortroles:cohortid": "The ID of the cohort",
+        "privacy:metadata:tool_cohortroles:id": "The ID of the cohort role mapping record",
+        "privacy:metadata:tool_cohortroles:roleid": "The ID of the role",
+        "privacy:metadata:tool_cohortroles:timecreated": "The time when the cohort role mapping was created",
+        "privacy:metadata:tool_cohortroles:timemodified": "The time when the cohort role mapping was modified",
+        "privacy:metadata:tool_cohortroles:userid": "The ID of the user",
+        "privacy:metadata:tool_cohortroles:usermodified": "The ID of the user who last modified the cohort role mapping",
+        "removecohortroleassignment": "Remove cohort role assignment",
+        "removecohortroleassignmentconfirm": "Are you sure you want to remove this cohort role assignment? This role will be removed for this user in all other user contexts.",
+        "selectcohorts": "Select cohorts",
+        "selectrole": "Select role",
+        "selectusers": "Select users to assign role",
+        "taskname": "Sync cohort role assignments",
+        "thisuserroles": "Roles assigned relative to this user"
+    },
+    "deprecatedkeys": []
+}

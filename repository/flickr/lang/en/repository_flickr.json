@@ -1,0 +1,24 @@
+{
+    "strings": {
+        "apikey": "API key",
+        "callbackurl": "Callback URL",
+        "callbackurltext": "<ol>\n<li>Visit <a href=\"http://www.flickr.com/services/api/keys/\">Flickr API Keys</a> again.</li>\n<li>Make sure you set the callback URL for this Flickr key as <strong>{$a}</strong></li></ol>",
+        "callbackwarning": "<ol>\n<li>Get a <a href=\"http://www.flickr.com/services/api/keys/\">Flickr API Key and Secret</a> from Flickr for this Moodle site.</li>\n<li>Enter those details here, then click Save and then Settings to come back to this page.  You will see that Moodle has generated a callback URL for you.</li>\n<li>Edit your <a href=\"http://www.flickr.com/services/api/keys/\">Flickr</a> key details again and set the callback URL.</li></ol>",
+        "configplugin": "Flickr configuration",
+        "emailaddress": "Email address",
+        "flickr:view": "View Flickr repository",
+        "invalidemail": "Invalid email address for flickr",
+        "notitle": "notitle",
+        "nullphotolist": "There are no photos in this account",
+        "pluginname": "Flickr",
+        "pluginname_help": "Repository on flickr.com",
+        "privacy:metadata:repository_flickr": "The Flickr repository plugin does store user preferences, and transmits user data from Moodle to the remote system.",
+        "privacy:metadata:repository_flickr:preference:repository_flickr_access_token": "The Flickr repository OAuth token preference.",
+        "privacy:metadata:repository_flickr:preference:repository_flickr_access_token_secret": "The Flickr repository OAuth secret preference; this is excluded from privacy data exports.",
+        "privacy:metadata:repository_flickr:text": "The Flickr repository user search text query.",
+        "remember": "Remember me",
+        "secret": "Secret",
+        "username": "Flickr account email"
+    },
+    "deprecatedkeys": []
+}

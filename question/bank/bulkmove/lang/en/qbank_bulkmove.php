@@ -15,20 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component qbank_bulkmove, language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbank_bulkmove
- * @copyright  2021 Catalyst IT Australia Pty Ltd
- * @author     Safat Shahin <safatshahin@catalyst-au.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbank_bulkmove
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['bulkmoveheader'] = 'Move the selected questions to...';
-$string['close'] = 'Close';
-$string['confirmmove'] = 'Are you sure you want to move these questions?';
-$string['movequestions'] = 'Move questions';
-$string['movetobulkaction'] = 'Move to...';
-$string['pluginname'] = 'Bulk move questions';
-$string['privacy:metadata'] = 'The Bulk move questions question bank plugin does not store any personal data.';
-$string['questionsmoved'] = 'Questions successfully moved';
-$string['warning'] = 'You must select a question bank before you can select a category.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_bulkmove.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

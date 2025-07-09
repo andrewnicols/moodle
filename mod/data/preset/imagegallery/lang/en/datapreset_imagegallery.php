@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'datapreset_imagegallery', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   datapreset_imagegallery
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['modulename'] = 'Image gallery';
-$string['modulename_help'] = 'Use this preset to collect images.';
-$string['pluginname'] = 'Image gallery';
-$string['privacy:metadata'] = 'The Image gallery plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/datapreset_imagegallery.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

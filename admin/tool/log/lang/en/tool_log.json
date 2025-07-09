@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "actlogshdr": "Available log stores",
+        "configlogplugins": "Please enable all required plugins and arrange them in appropriate order.",
+        "exportlog": "Include logs when exporting",
+        "exportlogdetail": "Include logs that relate to the user when exporting.",
+        "logging": "Logging",
+        "managelogging": "Manage log stores",
+        "pluginname": "Log store manager",
+        "privacy:metadata:logstore": "The log stores",
+        "privacy:path:logs": "Logs",
+        "privacy:request:origin:cli": "Command line tool",
+        "privacy:request:origin:restore": "Backup being restored",
+        "privacy:request:origin:web": "Standard web request",
+        "privacy:request:origin:ws": "Mobile app or web service",
+        "reportssupported": "Reports supported",
+        "subplugintype_logstore": "Log store",
+        "subplugintype_logstore_plural": "Log stores"
+    },
+    "deprecatedkeys": []
+}

@@ -15,21 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Book module language strings
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    booktool_print
- * @copyright  2011 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   booktool_print
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$string['eventbookprinted'] = 'Book printed';
-$string['eventchapterprinted'] = 'Chapter printed';
-$string['pluginname'] = 'Book printing';
-$string['printbook'] = 'Print book';
-$string['printchapter'] = 'Print this chapter';
-$string['printdate'] = 'Date';
-$string['printedby'] = 'Printed by';
-$string['print:print'] = 'Print book';
-$string['privacy:metadata'] = 'The Book printing plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/booktool_print.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,27 @@
+{
+    "strings": {
+        "addcolumn": "Add column '{$a}'",
+        "addcolumns": "Add columns",
+        "auto": "Auto",
+        "columnwidth": "Column width (pixels)",
+        "invalidwidth": "Width must be at least {$a}.",
+        "movecolumn": "Move column '{$a}'",
+        "pluginname": "Column sort order",
+        "privacy:metadata:preference:colsize": "The Column sort order question bank plugin saves user preference of column sizes.",
+        "privacy:metadata:preference:enabledcol": "The Column sort order question bank plugin saves user preference of column orders.",
+        "privacy:metadata:preference:hiddencols": "The Column sort order question bank plugin saves user preference of hidden columns.",
+        "qbankcolumnname": "{$a}",
+        "qbankcolumnsdisabled": "Currently disabled question bank plugins:",
+        "qbankcolumnsortorder": "Column sort order",
+        "qbankgotocolumnsort": "You can change the order of the columns in the question bank on the page {$a}.",
+        "qbankgotomanageqbanks": "You can remove a column by disabling the plugin in <a href='{$a}'>Manage question bank plugins</a>.",
+        "qbanksortdescription": "The order in which plugins are listed below determines the order of the columns in the question bank.",
+        "removecolumn": "Remove column '{$a}'",
+        "resetcolumns": "Reset columns",
+        "resize": "Resize",
+        "resizecolumn": "Resize column {$a}",
+        "showhidecolumn": "Show/hide column",
+        "width": "Width of '{$a}' in pixels"
+    },
+    "deprecatedkeys": []
+}

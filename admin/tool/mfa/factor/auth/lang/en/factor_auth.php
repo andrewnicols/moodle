@@ -15,19 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package     factor_auth
- * @author      Mikhail Golenkov <golenkovm@gmail.com>
- * @copyright   Catalyst IT
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   factor_auth
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['info'] = 'Check the type of authentication used to log in as an MFA factor.';
-$string['pluginname'] = 'Authentication type';
-$string['privacy:metadata'] = 'The Authentication type factor plugin does not store any personal data.';
-$string['settings:description'] = 'Automatically verify users based on their authentication type.';
-$string['settings:goodauth'] = 'Factor authentication types';
-$string['settings:goodauth_help'] = 'Select all authentication types to use as a factor for MFA. Any types not selected will not be treated as a FAIL in MFA.';
-$string['settings:shortdescription'] = 'Allow users to bypass extra authentication steps based on their authentication type.';
-$string['summarycondition'] = 'has an authentication type of {$a}';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/factor_auth.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

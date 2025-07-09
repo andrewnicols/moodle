@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "checkingsourcetables": "Checking source table structure",
+        "copyingtable": "Copying table {$a}",
+        "copyingtables": "Copying table contents",
+        "creatingtargettables": "Creating the tables in the target database",
+        "dbexport": "Database export",
+        "dbtransfer": "Database transfer",
+        "differenttableexception": "Table {$a} structure does not match.",
+        "done": "Done",
+        "exportschemaexception": "Current database structure does not match all install.xml files. <br /> {$a}",
+        "importschemaexception": "Current database structure does not match all install.xml files. <br /> {$a}",
+        "importversionmismatchexception": "Current version {$a->currentver} does not match exported version {$a->schemaver}.",
+        "malformedxmlexception": "Malformed XML found, can not continue.",
+        "tablex": "Table {$a}:",
+        "unknowntableexception": "Unknown table {$a} found in export file."
+    },
+    "deprecatedkeys": []
+}

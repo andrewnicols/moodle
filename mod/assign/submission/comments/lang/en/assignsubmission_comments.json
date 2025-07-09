@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "blindmarkingname": "Participant {$a}",
+        "blindmarkingviewfullname": "Participant {$a->participantnumber} ({$a->participantfullname})",
+        "default": "Enabled by default",
+        "default_help": "If set, this submission method will be enabled by default for all new assignments.",
+        "enabled": "Submission comments",
+        "enabled_help": "If enabled, students can leave comments on their own submission. For example, this can be used for students to specify which is the master file when submitting inter-linked files.",
+        "pluginname": "Submission comments",
+        "privacy:metadata:commentpurpose": "Comments between the student and teacher about a submission."
+    },
+    "deprecatedkeys": []
+}

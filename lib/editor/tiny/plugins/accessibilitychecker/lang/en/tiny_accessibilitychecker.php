@@ -15,27 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tiny_accessibilitychecker', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    tiny_accessibilitychecker
- * @copyright  2022, Stevani Andolo <stevani@hotmail.com.au>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tiny_accessibilitychecker
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['accessibilitychecker:use'] = 'Use TinyMCE accessibility checker';
-$string['emptytext'] = 'Empty text';
-$string['entiredocument'] = 'Entire document';
-$string['imagesmissingalt'] = 'Images require alternative text. To fix this warning, add an alt attribute to your img tags. An empty alt attribute may be used, but only when the image is purely decorative and carries no information.';
-$string['needsmorecontrast'] = 'The colours of the foreground and background text do not have enough contrast. To fix this warning, change either foreground or background colour of the text so that it is easier to read.';
-$string['needsmoreheadings'] = 'There is a lot of text with no headings. Headings allow screen reader users to navigate through the page easily and make the page more usable for everyone.';
-$string['nowarnings'] = 'Congratulations, no accessibility issues found!';
-$string['pluginname'] = 'Accessibility checker';
-$string['report'] = 'Accessibility report:';
-$string['tablesmissingcaption'] = 'A table caption is not required, but is generally helpful.';
-$string['tablesmissingheaders'] = 'Tables should use row and/or column headers.';
-$string['tableswithmergedcells'] = 'Tables should not contain merged cells, as screen readers may not support them.';
-$string['privacy:metadata'] = 'The accessibility checker for TinyMCE does not store any personal data.';
-$string['viewissue'] = 'View';
-
-// Deprecated since Moodle 4.5.
-$string['helplinktext'] = 'Accessibility helper';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/tiny_accessibilitychecker.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

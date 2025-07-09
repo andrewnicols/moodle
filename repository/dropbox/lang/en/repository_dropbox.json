@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "cachelimit": "Cache limit",
+        "cachelimit_info": "Enter the maximum size of files (in bytes) to be cached on server for Dropbox aliases/shortcuts. Cached files will be served when the source is no longer available. Empty value or zero mean caching of all files regardless of size.",
+        "configplugin": "Dropbox configuration",
+        "crontask": "Background processing for Dropbox repository",
+        "dropbox": "Dropbox",
+        "dropbox:view": "View a Dropbox folder",
+        "issuer": "OAuth 2 service",
+        "issuer_help": "Select the OAuth 2 service that is configured to talk to the Dropbox API. If the service doesn't exist yet, you will need to create it.",
+        "logoutdesc": "(Logout when you finish using Dropbox)",
+        "notitle": "notitle",
+        "oauth2redirecturi": "OAuth 2 Redirect URI",
+        "pluginname": "Dropbox",
+        "privacy:metadata:repository_dropbox": "The Dropbox repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.",
+        "privacy:metadata:repository_dropbox:query": "The Dropbox repository user search text query.",
+        "remember": "Remember me"
+    },
+    "deprecatedkeys": []
+}

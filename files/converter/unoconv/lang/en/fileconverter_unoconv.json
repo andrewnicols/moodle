@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "pathtounoconv": "Path to unoconv document converter",
+        "pathtounoconv_help": "Path to unoconv document converter. This is an executable that is capable of converting between document formats supported by LibreOffice. This is optional, but if specified, Moodle will use it to automatically convert between document formats. This is used to support a wider range of input files for the assignment annotate PDF feature.",
+        "pluginname": "Unoconv",
+        "privacy:metadata": "The Unoconv document converter plugin does not store any personal data.",
+        "test_unoconv": "Test unoconv path",
+        "test_unoconvdoesnotexist": "The unoconv path does not point to the unoconv program. Please review your path settings.",
+        "test_unoconvdownload": "Download the converted pdf test file.",
+        "test_unoconvempty": "The unoconv path is not set. Please review your path settings.",
+        "test_unoconvisdir": "The unoconv path points to a folder, please include the unoconv program in the path you specify",
+        "test_unoconvnotestfile": "The test document to be converted to PDF is missing.",
+        "test_unoconvnotexecutable": "The unoconv path points to a file that is not executable",
+        "test_unoconvok": "The unoconv path appears to be properly configured.",
+        "test_unoconvversionnotsupported": "The version of unoconv you have installed is not supported."
+    },
+    "deprecatedkeys": []
+}

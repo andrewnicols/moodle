@@ -1,0 +1,22 @@
+{
+    "strings": {
+        "addsection": "Add week",
+        "automaticenddate": "Calculate the end date from the number of sections",
+        "automaticenddate_help": "If enabled, the end date for the course will be automatically calculated from the number of sections and the course start date.",
+        "currentsection": "Current week",
+        "hidefromothers": "Hide",
+        "indentation": "Allow indentation on course page",
+        "indentation_help": "Allow teachers, and other users with the manage activities capability, to indent items on the course page.",
+        "maxinitialsections": "Maximum number of weeks at course creation",
+        "maxinitialsections_help": "Sets the maximum number of weeks that can be assigned to a course at the time of creation. This limit helps prevent accidental creation of overly long courses. It does not restrict teachers from adding more weeks later during course editing.",
+        "page-course-view-weeks": "Any course main page in weekly sections format",
+        "page-course-view-weeks-x": "Any course page in weekly sections format",
+        "plugin_description": "The course is divided into sections corresponding to each week, beginning from the course start date.",
+        "pluginname": "Weekly sections",
+        "privacy:metadata": "The Weekly sections format plugin does not store any personal data.",
+        "section0name": "General",
+        "sectionname": "Week",
+        "showfromothers": "Show"
+    },
+    "deprecatedkeys": []
+}

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,21 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'workshopeval_best', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    workshopeval
- * @subpackage best
- * @copyright  2009 David Mudrak <david@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   workshopeval_best
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['comparison'] = 'Comparison of assessments';
-$string['comparison_help'] = 'This setting specifies how strict the comparison of assessments should be. The stricter the comparison, the more similar the assessments need to be in order for a high grade to be obtained.';
-$string['comparisonlevel1'] = 'very strict';
-$string['comparisonlevel3'] = 'strict';
-$string['comparisonlevel5'] = 'fair';
-$string['comparisonlevel7'] = 'lax';
-$string['comparisonlevel9'] = 'very lax';
-$string['configcomparison'] = 'Default value of the factor that influence the grading evaluation.';
-$string['pluginname'] = 'Comparison with the best assessment';
-$string['privacy:metadata'] = 'The Comparison with the best assessment plugin does not store any personal data. Actual personal data user\'s grades are stored by the Workshop module itself and are attached to the exported submissions and assessments data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/workshopeval_best.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

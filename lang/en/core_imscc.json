@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "cc2moodle_checking_schema": "CC format! Checking schema...",
+        "cc2moodle_invalid_schema": "The schema is not valid.",
+        "cc2moodle_manifest_dont_load": "Cannot load the XML manifest.",
+        "cc2moodle_req_auth": "ERROR: The Common Cartridge package requires authorization.",
+        "cc2moodle_valid_schema": "Schema valid!",
+        "cc_import_req_dom": "ERROR: The Common Cartridge import requires DOM extension.",
+        "cc_import_req_libxml": "ERROR: The Common Cartridge import requires LIBXML extension.",
+        "cc_import_req_libxmlminversion": "ERROR: The Common Cartridge import requires LIBXML version 2.6.30 or newer.",
+        "cc_import_req_php5": "ERROR: The Common Cartridge import requires PHP 5 or higher.",
+        "cc_import_req_xsl": "ERROR: The Common Cartridge import requires XSL.",
+        "checkingforimscc": "Checking for IMS-CC...",
+        "enable_cc_import": "Enable CC import",
+        "enable_cc_import_description": "This setting enables the import of Common Cartridge (IMS-CC) packages using the standard restore functionality. Note it requires PHP5, DOM, XSL and LIBXML (2.6.30 or newer) extensions to be installed in the server."
+    },
+    "deprecatedkeys": {
+        "cc_import_req_php5": 5
+    }
+}

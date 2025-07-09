@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "pluginname": "Drop-down menu",
+        "privacy:metadata:profilefield_menu:data": "Drop-down menu user profile field user data",
+        "privacy:metadata:profilefield_menu:dataformat": "The format of the drop-down menu user profile field user data",
+        "privacy:metadata:profilefield_menu:fieldid": "The ID of the profile field",
+        "privacy:metadata:profilefield_menu:tableexplanation": "Additional profile data",
+        "privacy:metadata:profilefield_menu:userid": "The ID of the user whose data is stored by the drop-down menu user profile field"
+    },
+    "deprecatedkeys": []
+}

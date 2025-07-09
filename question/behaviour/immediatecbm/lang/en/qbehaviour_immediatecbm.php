@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'qbehaviour_immediatecbm', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbehaviour
- * @subpackage immediatecbm
- * @copyright  2009 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbehaviour_immediatecbm
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pleaseselectacertainty'] = 'Please select a certainty.';
-$string['pluginname'] = 'Immediate feedback with CBM';
-$string['privacy:metadata'] = 'The Immediate feedback with CBM question behaviour plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbehaviour_immediatecbm.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

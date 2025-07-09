@@ -1,0 +1,15 @@
+{
+    "strings": {
+        "logoutothersessions": "Log out all other browser sessions",
+        "logoutothersessions_help": "Log out of all browser sessions, except for this one. This does not affect web apps.",
+        "logoutothersessionssuccess": "You are logged out of all your other sessions.",
+        "logoutsinglesessionsuccess": "You are logged out of the session at {$a}.",
+        "mysessions": "My active browser sessions",
+        "navigationlink": "Browser sessions",
+        "pluginname": "User sessions report",
+        "privacy:metadata": "The User sessions report plugin does not store any personal data.",
+        "thissession": "Current session",
+        "usersessions:manageownsessions": "Manage own browser sessions"
+    },
+    "deprecatedkeys": []
+}

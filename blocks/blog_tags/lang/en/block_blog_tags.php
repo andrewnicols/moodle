@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_blog_tags', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   block_blog_tags
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['blog_tags:addinstance'] = 'Add a new blog tags block';
-$string['pluginname'] = 'Blog tags';
-$string['configtitle'] = 'Blog tags block title';
-$string['privacy:metadata'] = 'The Blog tags block only shows data stored in other locations.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_blog_tags.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

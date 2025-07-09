@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,20 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_wikimedia', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_wikimedia
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['keyword'] = 'Search for';
-$string['pluginname'] = 'Wikimedia';
-$string['wikimedia:view'] = 'View wikimedia repository';
-$string['configplugin'] = 'Wikimedia repository type configuration';
-$string['maxwidth'] = 'Max image width (px)';
-$string['maxheight'] = 'Max image height (px)';
-$string['privacy:metadata:repository_wikimedia'] = 'The Wikimedia repository plugin does store user preferences, and transmits user data from Moodle to the remote system.';
-$string['privacy:metadata:repository_wikimedia:search_text'] = 'The Wikimedia repository user search text query.';
-$string['privacy:metadata:repository_wikimedia:preference:maxwidth'] = 'The user preference max width configured for the Wikimedia repository';
-$string['privacy:metadata:repository_wikimedia:preference:maxheight'] = 'The user preference Max Height configured for the Wikimedia repository.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_wikimedia.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "View question text",
+        "privacy:metadata": "The View question text question bank plugin does not store any personal data.",
+        "questiontext_condition": "Question text and general feedback"
+    },
+    "deprecatedkeys": []
+}

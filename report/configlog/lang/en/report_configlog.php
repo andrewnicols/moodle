@@ -15,27 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'report_configlog', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package   report
- * @subplugin configlog
- * @copyright 2009 petr Skoda
+ * @package   report_configlog
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['configlog'] = 'Config changes';
-$string['datefrom'] = 'Date from';
-$string['dateto'] = 'Date to';
-$string['entityconfigchange'] = 'Config change';
-$string['plugin'] = 'Plugin';
-$string['pluginname'] = 'Config changes';
-$string['setting'] = 'Setting';
-$string['timemodified'] = 'Date';
-$string['user'] = 'User';
-$string['usernone'] = 'CLI or install';
-$string['user_help'] = 'Search by user first name or last name';
-$string['value'] = 'Value';
-$string['value_help'] = 'Search by new or original value of the configuration';
-$string['valuenew'] = 'New value';
-$string['valueold'] = 'Original value';
-$string['privacy:metadata'] = 'The Config changes plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/report_configlog.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

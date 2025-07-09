@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "dataformat": "OpenDocument (.ods)",
+        "privacy:metadata": "The OpenDocument data format plugin does not store any personal data.",
+        "shortname": "OpenDocument"
+    },
+    "deprecatedkeys": []
+}

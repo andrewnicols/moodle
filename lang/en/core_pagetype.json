@@ -1,0 +1,24 @@
+{
+    "strings": {
+        "page-admin-current": "The current site administration page",
+        "page-admin-x": "Any site administration page",
+        "page-course-index": "Top category view page",
+        "page-course-index-category": "The current category view page",
+        "page-course-index-x": "Any category view page",
+        "page-course-report-x": "Any course report",
+        "page-course-search": "Courses search page",
+        "page-course-view-x": "Any type of course main page",
+        "page-course-x": "Any course page",
+        "page-mod-x": "Any activity module page",
+        "page-mod-x-view": "Any main activity module page",
+        "page-my-index": "Dashboard page",
+        "page-report-x": "Any report page",
+        "page-site-index": "The site home only",
+        "page-site-x": "Any top-level site page",
+        "page-user-profile": "Only user profile pages",
+        "page-user-view": "Only user profile pages",
+        "page-user-x": "All user pages",
+        "page-x": "Any page"
+    },
+    "deprecatedkeys": []
+}

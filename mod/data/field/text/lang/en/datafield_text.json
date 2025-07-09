@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "fieldtypelabel": "Short text",
+        "pluginname": "Short text",
+        "privacy:metadata": "The Short text field component doesn't store any personal data; it uses tables defined in mod_data.",
+        "sample": "This is a short text"
+    },
+    "deprecatedkeys": []
+}

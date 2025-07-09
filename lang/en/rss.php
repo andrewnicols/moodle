@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * RSS language file.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    core_rss
- * @copyright  2018 Sara Arjona <sara@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   core_rss
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['privacy:metadata:core_userkey'] = 'User\'s keys used to access RSS from a URL';
-$string['rss'] = 'RSS';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_rss.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

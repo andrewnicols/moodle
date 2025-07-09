@@ -15,13 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'auth_nologin', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   auth_nologin
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['auth_nologindescription'] = 'Auxiliary plugin that prevents user to login into system and also discards any mail sent to the user. Can be used to <em>suspend</em> user accounts.';
-$string['pluginname'] = 'No login';
-$string['privacy:metadata'] = 'The No login authentication plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/auth_nologin.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

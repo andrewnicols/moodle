@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "comments:addinstance": "Add a new comments block",
+        "comments:myaddinstance": "Add a new comments block to Dashboard",
+        "pluginname": "Comments",
+        "privacy:metadata:core_comment": "A record of comments added."
+    },
+    "deprecatedkeys": []
+}

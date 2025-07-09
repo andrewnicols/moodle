@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_completionstatus', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   block_completionstatus
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['completionprogressdetails'] = 'Completion progress details';
-$string['completionstatus:addinstance'] = 'Add a new course completion status block';
-$string['criteriagroup'] = 'Criteria group';
-$string['firstofsecond'] = '{$a->first} of {$a->second}';
-$string['pluginname'] = 'Course completion status';
-$string['requirement'] = 'Requirement';
-$string['returntocourse'] = 'Return to course';
-$string['privacy:metadata'] = 'The Course completion status block only shows information about course completion and does not store any data of its own.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_completionstatus.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

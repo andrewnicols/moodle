@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "allow": "Use this service to accept grades from the tool",
+        "ltiservice_basicoutcomes": "Basic Outcomes",
+        "ltiservice_basicoutcomes_help": "Allow the tool to save and retrieve its grades to a gradebook column associated with each link.",
+        "notallow": "Do not use this service",
+        "pluginname": "Basic Outcomes Service",
+        "privacy:metadata:externalpurpose": "This information is sent to an external LTI provider.",
+        "privacy:metadata:grade": "The tool's grades of the user using the LTI consumer.",
+        "privacy:metadata:userid": "The ID of the user using the LTI consumer."
+    },
+    "deprecatedkeys": []
+}

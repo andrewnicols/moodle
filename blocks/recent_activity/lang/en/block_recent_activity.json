@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "cleanuptask": "Cleanup task for recent activity block",
+        "pluginname": "Recent activity",
+        "privacy:metadata": "The recent activity block contains a cache of data stored elsewhere in Moodle.",
+        "privacy:metadata:block_recent_activity": "Temporary log of recent teacher activity. Removed after two days",
+        "privacy:metadata:block_recent_activity:action": "Action: created, updated or deleted",
+        "privacy:metadata:block_recent_activity:cmid": "Course activity ID",
+        "privacy:metadata:block_recent_activity:courseid": "Course ID",
+        "privacy:metadata:block_recent_activity:modname": "Module type name (for delete action)",
+        "privacy:metadata:block_recent_activity:timecreated": "Time when action was performed",
+        "privacy:metadata:block_recent_activity:userid": "User performing the action",
+        "recent_activity:addinstance": "Add a new recent activity block",
+        "recent_activity:viewaddupdatemodule": "View added and updated modules in recent activity block",
+        "recent_activity:viewdeletemodule": "View deleted modules in recent activity block"
+    },
+    "deprecatedkeys": []
+}

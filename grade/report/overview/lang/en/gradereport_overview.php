@@ -15,15 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gradereport_overview', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   gradereport_overview
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['eventgradereportviewed'] = 'Grade overview report viewed';
-$string['gradesoverview'] = 'Grades overview';
-$string['pluginname'] = 'Overview report';
-$string['privacy:metadata'] = 'The Grade overview report only shows data stored in other locations.';
-$string['overview:view'] = 'View overview report';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/gradereport_overview.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

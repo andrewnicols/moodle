@@ -13,16 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Strings for the Recently accessed courses block.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    block_recentlyaccessedcourses
- * @copyright  2018 Victor Deniz <victor@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_recentlyaccessedcourses
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['displaycategories'] = 'Display categories';
-$string['displaycategories_help'] = 'Display the course category on the recently accessed courses block items.';
-$string['pluginname'] = 'Recently accessed courses';
-$string['privacy:metadata'] = 'The Recently accessed courses block does not store any personal data.';
-$string['recentlyaccessedcourses:myaddinstance'] = 'Add a new recently accessed courses block to Dashboard';
-$string['nocourses'] = 'No recent courses';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_recentlyaccessedcourses.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

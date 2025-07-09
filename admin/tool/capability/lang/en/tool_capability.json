@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "capabilitylabel": "Capability:",
+        "capabilityreport": "Capability overview",
+        "changeoverrides": "Change overrides in this context",
+        "changeroles": "Change role definitions",
+        "eventreportviewed": "Report viewed",
+        "filters": "Filter results",
+        "forroles": "For roles {$a}",
+        "getreport": "Get the overview",
+        "intro": "This report shows, for a particular capability, what permission that capability has in the definition of every role (or a selection of roles), and everywhere in the site where that capability is overridden.",
+        "nodifferences": "There are no differences to show between selected roles in this context",
+        "onlydiff": "Show differences only",
+        "pluginname": "Capability overview",
+        "privacy:metadata": "The Capability overview plugin does not store any personal data.",
+        "reportforcapability": "Report for capability '{$a}'",
+        "reportsettings": "Report settings",
+        "roleslabel": "Roles:"
+    },
+    "deprecatedkeys": []
+}

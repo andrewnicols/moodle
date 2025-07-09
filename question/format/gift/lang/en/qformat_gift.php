@@ -15,23 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'qformat_gift', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qformat_gift
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qformat_gift
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['braceerror'] = 'Could not find {...} around answers';
-$string['giftleftbraceerror'] = 'Could not find a {';
-$string['giftmatchingformat'] = 'Matching question answers are improperly formatted';
-$string['giftnonumericalanswers'] = 'No answers found for numerical question';
-$string['giftnovalidquestion'] = 'No valid question found';
-$string['giftqtypenotset'] = 'Question type is not set';
-$string['giftrightbraceerror'] = 'Could not find a }';
-$string['importminerror'] = 'There is an error in the question. There are not enough answers for this question type';
-$string['nohandler'] = 'No handler for question type {$a}';
-$string['pluginname'] = 'GIFT format';
-$string['pluginname_help'] = 'GIFT format enables multiple choice, true/false, short answer, matching, missing word, numerical and essay questions to be imported or exported via text file.';
-$string['pluginname_link'] = 'qformat/gift';
-$string['privacy:metadata'] = 'The GIFT question format plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qformat_gift.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

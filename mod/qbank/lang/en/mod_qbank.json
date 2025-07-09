@@ -1,0 +1,26 @@
+{
+    "strings": {
+        "addanotherbank": "Add question bank",
+        "coursecategory": "Shared teaching resources for category: {$a}",
+        "courserestore": "Course restore",
+        "modulename": "Question bank",
+        "modulename_help": "This activity allows a teacher to create, preview, and edit questions in a database of question categories.\n\nQuestions are then used in a quiz or other activity.\n\nAfter a question is used, version control and statistics are available.",
+        "modulenameplural": "Question banks",
+        "noqbankinstances": "There are no question banks in this course.",
+        "pluginadministration": "Question bank administration",
+        "pluginname": "Question bank",
+        "privacy:metadata": "The Question bank plugin does not store any personal data, core_question automatically tracks all sorts of data for questions.",
+        "qbank:addinstance": "Add a new question bank",
+        "qbank:view": "View question bank",
+        "qbankname": "Question bank name",
+        "qbankname_help": "Enter the question bank name.",
+        "saveanddisplay": "Save and display",
+        "saveandreturn": "Save and return to question bank list",
+        "sharedbank": "{$a} shared question bank",
+        "showdescription": "Display description on manage question banks page",
+        "showdescription_help": "If enabled, the description above will be displayed on the manage question bank page just below the link to the bank.",
+        "transfernotfinished": "Adhoc task \\mod_qbank\\task\\transfer_question_categories has not yet completed or has failed. Some of your pre-installed question banks may not be transferred to mod_qbank instances yet. Any question categories they contained can't be shared or managed until the task has completed.",
+        "unknownbanktype": "Unknown question bank type {$a}"
+    },
+    "deprecatedkeys": []
+}

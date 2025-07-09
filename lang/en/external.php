@@ -15,28 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'webservice', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package   core_webservice
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @package   core_external
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['privacy:metadata:serviceusers'] = 'A list of users who can use a certain external service';
-$string['privacy:metadata:serviceusers:iprestriction'] = 'IP restricted to use the service';
-$string['privacy:metadata:serviceusers:timecreated'] = 'The date when the record was created';
-$string['privacy:metadata:serviceusers:userid'] = 'The ID of the user';
-$string['privacy:metadata:serviceusers:validuntil'] = 'The date that the authorisation is valid until';
-$string['privacy:metadata:tokens'] = 'A record of tokens for interacting with Moodle through web services or Mobile applications.';
-$string['privacy:metadata:tokens:creatorid'] = 'The ID of the user who created the token';
-$string['privacy:metadata:tokens:iprestriction'] = 'IP restricted to use this token';
-$string['privacy:metadata:tokens:lastaccess'] = 'The date when the token was last used';
-$string['privacy:metadata:tokens:name'] = 'The token name';
-$string['privacy:metadata:tokens:privatetoken'] = 'A more private token occasionally used to validate certain operations, such as SSO';
-$string['privacy:metadata:tokens:timecreated'] = 'The date when the token was created';
-$string['privacy:metadata:tokens:token'] = 'The user\'s token';
-$string['privacy:metadata:tokens:tokentype'] = 'The type of token';
-$string['privacy:metadata:tokens:userid'] = 'The ID of the user whose token it is';
-$string['privacy:metadata:tokens:validuntil'] = 'The date that the token is valid until';
-$string['privacy:request:notexportedsecurity'] = 'Not exported for security reasons';
-$string['services'] = 'External services';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_external.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,24 @@
+{
+    "strings": {
+        "communication": "Communication",
+        "communicationdisabled": "Communication is disabled.",
+        "communicationgrouproomnameformat": "{$a->groupname} ({$a->baseroomname})",
+        "communicationprovidernotfound": "The '{$a}' communication provider doesn't exist or is not recognised.",
+        "communicationroomname": "Room name",
+        "communicationroomnameinfo": "If the field is left blank, the course name is used as the room name.",
+        "communicationroompending": "Your {$a} room will be ready soon.",
+        "communicationroomready": "Your {$a} room is ready.",
+        "managecommunicationproviders": "Manage communication providers",
+        "nocommunicationinstance": "No communication instance found.",
+        "nocommunicationprovider": "No communication provider found.",
+        "nocommunicationselected": "None",
+        "privacy:metadata:communication_user": "The communication user table stores the user ID and communication ID for communication provider mapping.",
+        "privacy:metadata:communication_user:commid": "The communication ID for user mapping",
+        "privacy:metadata:communication_user:synced": "The user is synced with the provider or not",
+        "privacy:metadata:communication_user:userid": "The user ID for communication provider mapping for users",
+        "selectcommunicationprovider": "Provider",
+        "selectcommunicationprovider_help": "The tool available for chat and related communication methods.",
+        "synchroniseproviders": "Synchronise communication providers"
+    },
+    "deprecatedkeys": []
+}

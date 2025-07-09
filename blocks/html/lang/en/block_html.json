@@ -1,0 +1,17 @@
+{
+    "strings": {
+        "allowadditionalcssclasses": "Allow additional CSS classes",
+        "configallowadditionalcssclasses": "Adds a configuration option to Text block instances allowing additional CSS classes to be set.",
+        "configclasses": "Additional CSS classes",
+        "configclasses_help": "The purpose of this configuration is to aid with theming by helping distinguish text blocks from each other. Any CSS classes entered here (space delimited) will be appended to the block's default classes.",
+        "configcontent": "Content",
+        "configtitle": "Text block title",
+        "html:addinstance": "Add a new text block",
+        "html:myaddinstance": "Add a new text block to Dashboard",
+        "newhtmlblock": "(new text block)",
+        "pluginname": "Text",
+        "privacy:metadata:block": "The Text block stores all of its data within the block subsystem.",
+        "search:content": "Text block content"
+    },
+    "deprecatedkeys": []
+}

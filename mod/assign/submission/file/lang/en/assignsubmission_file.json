@@ -1,0 +1,28 @@
+{
+    "strings": {
+        "acceptedfiletypes": "Accepted file types",
+        "acceptedfiletypes_help": "Accepted file types can be restricted by entering a list of file extensions. If the field is left empty, then all file types are allowed.",
+        "configmaxbytes": "Maximum file size",
+        "countfiles": "{$a} files",
+        "default": "Enabled by default",
+        "default_help": "If set, this submission method will be enabled by default for all new assignments.",
+        "defaultacceptedfiletypes": "Default accepted file types",
+        "enabled": "File submissions",
+        "enabled_help": "If enabled, students are able to upload one or more files as their submission.",
+        "eventassessableuploaded": "A file has been uploaded.",
+        "file": "File submissions",
+        "filewithsize": "{$a->filename} ({$a->size})",
+        "maxbytes": "Maximum file size",
+        "maxfiles": "Maximum files per submission",
+        "maxfiles_help": "If file submissions are enabled, each assignment can be set to accept up to this number of files for their submission.",
+        "maxfilessubmission": "Maximum number of uploaded files",
+        "maxfilessubmission_help": "If file submissions are enabled, each student will be able to upload up to this number of files for their submission.",
+        "maximumsubmissionsize": "Maximum submission size",
+        "maximumsubmissionsize_help": "Files uploaded by students may be up to this size.",
+        "pluginname": "File submissions",
+        "privacy:metadata:filepurpose": "The files loaded for this assignment submission",
+        "siteuploadlimit": "Site upload limit",
+        "submissionfilearea": "Uploaded submission files"
+    },
+    "deprecatedkeys": []
+}

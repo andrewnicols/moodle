@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "hidefromothers": "Hide",
+        "numberdiscussions": "Number of discussions",
+        "numberdiscussions_help": "This setting specifies how many discussions should be displayed.",
+        "plugin_description": "The course is centred around a main forum on the course page. Additional activities and resources can be added using the Social activities block.",
+        "pluginname": "Social",
+        "privacy:metadata": "The Social format plugin does not store any personal data.",
+        "sectionname": "section",
+        "showfromothers": "Show",
+        "socialactivities": "Social activities"
+    },
+    "deprecatedkeys": []
+}

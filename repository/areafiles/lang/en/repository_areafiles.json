@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "areafiles:view": "View repository Embedded files",
+        "configplugin": "Configuration for repository Embedded files",
+        "pluginname": "Embedded files",
+        "pluginname_help": "Files embedded in the current text editor",
+        "privacy:metadata": "The Embedded files repository plugin does not store or transmit any personal data."
+    },
+    "deprecatedkeys": []
+}

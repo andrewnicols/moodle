@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "modulename": "Journal",
+        "modulename_help": "Use this preset for a journal, diary, reflections tool or research log.",
+        "pluginname": "Journal",
+        "privacy:metadata": "The Journal plugin doesn't store any personal data."
+    },
+    "deprecatedkeys": []
+}

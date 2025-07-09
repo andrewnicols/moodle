@@ -1,0 +1,24 @@
+{
+    "strings": {
+        "clidriverlist": "Available database drivers for migration",
+        "cliheading": "Database migration - make sure nobody is accessing the server during migration!",
+        "climigrationnotice": "Database migration in progress, please wait until the migration completes and server administrator updates configuration and deletes the $CFG->dataroot/climaintenance.html file.",
+        "convertinglogdisplay": "Converting log display actions",
+        "dbexport": "Database export",
+        "dbtransfer": "Database migration",
+        "enablemaintenance": "Enable maintenance mode",
+        "enablemaintenance_help": "This option enables maintanance mode during and after the database migration, it prevents access of all users until the migration is completed. Please note that administrator has to manually delete $CFG->dataroot/climaintenance.html file after updating config.php settings to resume normal operation.",
+        "exportdata": "Export data",
+        "notargetconectexception": "Can not connect target database, sorry.",
+        "options": "Options",
+        "pluginname": "Database transfer",
+        "privacy:metadata": "The Database transfer plugin does not store any personal data.",
+        "targetdatabase": "Target database",
+        "targetdatabasenotempty": "Target database must not contain any tables with given prefix!",
+        "transferdata": "Transfer data",
+        "transferdbintro": "This script will transfer the entire contents of this database to another database server. It is often used for migration of data to different database type.",
+        "transferdbtoserver": "Transfer this Moodle database to another server",
+        "transferringdbto": "Transferring this {$a->dbtypefrom} database to {$a->dbtype} database \"{$a->dbname}\" on \"{$a->dbhost}\""
+    },
+    "deprecatedkeys": []
+}

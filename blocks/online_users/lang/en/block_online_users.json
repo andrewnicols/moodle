@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "configtimetosee": "Number of minutes determining the period of inactivity after which a user is no longer considered to be online.",
+        "nouser": "No online users",
+        "numuser": "{$a} online user",
+        "numusers": "{$a} online users",
+        "online_status:hide": "Hide my online status from other users",
+        "online_status:show": "Show my online status to other users",
+        "online_users:addinstance": "Add a new online users block",
+        "online_users:myaddinstance": "Add a new online users block to Dashboard",
+        "online_users:viewlist": "View list of online users",
+        "onlinestatushiding": "Online status hiding",
+        "onlinestatushiding_desc": "If enabled, users have the option to hide their online status from other users.",
+        "otherusers": "Other users ({$a})",
+        "periodnminutes": "last {$a} minutes",
+        "pluginname": "Online users",
+        "privacy:metadata:preference:uservisibility": "Online status visible to other users in the Online users block.",
+        "timetosee": "Remove after inactivity (minutes)"
+    },
+    "deprecatedkeys": []
+}

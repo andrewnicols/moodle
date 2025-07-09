@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Customfield checkbox plugin
+ * Backwards compatibility helper for the lang file migration.
+ *
  * @package   customfield_checkbox
- * @copyright 2018 Toni Barbera <toni@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['checkedbydefault'] = 'Checked by default';
-$string['errorconfigunique'] = 'The checkbox field cannot be defined as unique.';
-$string['pluginname'] = 'Checkbox';
-$string['privacy:metadata'] = 'The Checkbox field type plugin doesn\'t store any personal data; it uses tables defined in core.';
-$string['specificsettings'] = 'Checkbox field settings';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/customfield_checkbox.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

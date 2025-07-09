@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "description": "H5P interactive content",
+        "h5p:access": "Access H5P content in the content bank",
+        "h5p:upload": "Upload new H5P content",
+        "h5p:useeditor": "Create or edit content using the H5P editor",
+        "pluginname": "H5P",
+        "pluginname_help": "Content bank to upload and share H5P content",
+        "privacy:metadata": "The H5P content bank plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

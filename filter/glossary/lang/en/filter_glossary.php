@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for filter_glossary
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    filter
- * @subpackage glossary
- * @copyright  2011 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   filter_glossary
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['glossarycategory'] = '{$a->glossary}: Category {$a->category}';
-$string['glossaryconcept'] = '{$a->glossary}: {$a->concept}';
-$string['filtername'] = 'Glossary auto-linking';
-$string['privacy:metadata'] = 'The Glossary auto-linking plugin does not store any personal data.';
-$string['attachments'] = 'Attachments';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/filter_glossary.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -15,28 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language file.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   theme_classic
- * @copyright 2018 Bas Brands
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-// This line protects the file from being accessed by a URL directly.
-defined('MOODLE_INTERNAL') || die();
-
-// Raw SCSS setting.
-$string['choosereadme'] = 'Classic is a highly-customisable theme, based on Boost, with an alternative navigation layout. This theme is intended to be used directly, or as a parent theme when creating or updating custom themes to utilise Bootstrap 4.';
-$string['configtitle'] = 'Classic';
-$string['navbardark'] = 'Use a dark style navbar';
-$string['navbardarkdesc'] = 'Swaps text and background colours for the navbar at the top of the page between dark and light.';
-$string['pluginname'] = 'Classic';
-$string['presetfiles'] = 'Additional theme preset files';
-$string['presetfiles_desc'] = 'Preset files can be used to dramatically alter the appearance of a theme.';
-$string['preset'] = 'Theme preset';
-$string['preset_desc'] = 'Pick a preset to broadly change the look of the theme.';
-$string['privacy:metadata'] = 'The Classic theme does not store any personal data.';
-$string['region-side-post'] = 'Right';
-$string['region-side-pre'] = 'Left';
-$string['sitetitle'] = 'Site title';
-$string['totop'] = 'Go to top';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/theme_classic.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

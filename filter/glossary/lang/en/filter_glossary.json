@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "attachments": "Attachments",
+        "filtername": "Glossary auto-linking",
+        "glossarycategory": "{$a->glossary}: Category {$a->category}",
+        "glossaryconcept": "{$a->glossary}: {$a->concept}",
+        "privacy:metadata": "The Glossary auto-linking plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

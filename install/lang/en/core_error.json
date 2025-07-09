@@ -1,0 +1,23 @@
+{
+    "strings": {
+        "cannotcreatedboninstall": "<p>Cannot create the database.</p>\n<p>The specified database does not exist and the given user does not have permission to create the database.</p>\n<p>The site administrator should verify database configuration.</p>",
+        "cannotcreatelangdir": "Cannot create lang directory",
+        "cannotcreatetempdir": "Cannot create temp directory",
+        "cannotdownloadcomponents": "Cannot download components",
+        "cannotdownloadzipfile": "Cannot download ZIP file",
+        "cannotfindcomponent": "Cannot find component",
+        "cannotsavemd5file": "Cannot save md5 file",
+        "cannotsavezipfile": "Cannot save ZIP file",
+        "cannotunzipfile": "Cannot unzip file",
+        "componentisuptodate": "Component is up-to-date",
+        "dmlexceptiononinstall": "<p>A database error has occurred [{$a->errorcode}].<br />{$a->debuginfo}</p>",
+        "downloadedfilecheckfailed": "Downloaded file check failed",
+        "invalidmd5": "The check variable was wrong - try again",
+        "missingrequiredfield": "Some required field is missing",
+        "remotedownloaderror": "<p>The download of the component to your server failed. Please verify proxy settings; the PHP cURL extension is highly recommended.</p>\n<p>You must download the <a href=\"{$a->url}\">{$a->url}</a> file manually, copy it to \"{$a->dest}\" in your server and unzip it there.</p>",
+        "wrongdestpath": "Wrong destination path",
+        "wrongsourcebase": "Wrong source URL base",
+        "wrongzipfilename": "Wrong ZIP file name"
+    },
+    "deprecatedkeys": []
+}

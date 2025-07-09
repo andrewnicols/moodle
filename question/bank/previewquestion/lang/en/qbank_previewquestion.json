@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "alwayslatest": "Always latest",
+        "newerversion": "This preview is using an older version of the question. {$a->restartbutton}",
+        "pluginname": "Preview question",
+        "previewoptions": "Preview options",
+        "privacy:metadata": "The Preview question question bank plugin does not store any personal data.",
+        "questionversion": "Question version",
+        "restartnow": "Use latest version",
+        "tagclosebutton": "Close",
+        "tagerror": "No question was found with following tags: {$a}. Please change or remove tags filtering.",
+        "tagsnotfound": "Tags not found",
+        "theoptionsyouselectonlyaffectthepreview": "These settings are for testing the question. The options you select only affect the preview.",
+        "versiontitle": "Version {$a}",
+        "versiontitlelatest": "Version {$a} (latest)"
+    },
+    "deprecatedkeys": []
+}

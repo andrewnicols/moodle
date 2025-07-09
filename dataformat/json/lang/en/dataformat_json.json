@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "dataformat": "Javascript Object Notation (.json)",
+        "privacy:metadata": "The JavaScript Object Notation (JSON) data format plugin does not store any personal data.",
+        "shortname": "JavaScript Object Notation (JSON)"
+    },
+    "deprecatedkeys": []
+}

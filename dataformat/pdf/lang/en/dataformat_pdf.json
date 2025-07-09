@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "dataformat": "Portable Document Format (.pdf)",
+        "privacy:metadata": "The PDF data format plugin does not store any personal data.",
+        "shortname": "PDF"
+    },
+    "deprecatedkeys": []
+}

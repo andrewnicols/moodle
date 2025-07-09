@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "backupofcourselogs": "Backup logs of {$a}",
+        "logsofbackupexecutedon": "Logs of the backup executed on {$a}",
+        "nobackupsfound": "There were no backups found.",
+        "nologsfound": "There were no logs found for this backup.",
+        "pluginname": "Backups report",
+        "privacy:metadata": "The Backups reports plugin does not store any personal data.",
+        "strftimetime": "%I:%M:%S %p",
+        "viewlogs": "View logs"
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "eventgradeexported": "OpenDocument grade exported",
+        "ods:publish": "Publish ODS grade export",
+        "ods:view": "Use OpenDocument grade export",
+        "pluginname": "OpenDocument spreadsheet",
+        "privacy:metadata": "The OpenDocument spreadsheet grade export plugin does not store any personal data.",
+        "timeexported": "Last downloaded from this course"
+    },
+    "deprecatedkeys": []
+}

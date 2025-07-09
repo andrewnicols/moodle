@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "disabled": "Disabled",
+        "issuer": "OAuth 2 service",
+        "issuer_help": "The OAuth 2 service used to access Google Drive.",
+        "pluginname": "Google Drive",
+        "privacy:metadata:fileconverter_googledrive:externalpurpose": "This information is sent to Google Drive API in order the file to be converted to an alternative format. The file is temporarily kept on Google Drive and gets deleted after the conversion is done.",
+        "privacy:metadata:fileconverter_googledrive:filecontent": "The content of the file.",
+        "privacy:metadata:fileconverter_googledrive:filemimetype": "The MIME type of the file.",
+        "privacy:metadata:fileconverter_googledrive:params": "The query parameters passed to Google Drive API.",
+        "test_conversion": "Test document conversion",
+        "test_conversionnotready": "This document converter is not configured properly.",
+        "test_conversionready": "This document converter is configured properly.",
+        "test_converter": "Test this converter is working properly.",
+        "test_issuerinvalid": "The OAuth service in the document converter settings is set to an invalid value.",
+        "test_issuernotconnected": "The OAuth service set in the document converter settings does not have a system account connected.",
+        "test_issuernotenabled": "The OAuth service set in the document converter settings is not enabled.",
+        "test_issuernotset": "The OAuth service needs to be set in the document converter settings."
+    },
+    "deprecatedkeys": []
+}

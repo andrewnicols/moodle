@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "audiocssclass": "CSS class for audio",
+        "audioextensions": "Audio file extensions",
+        "configaudiocssclass": "A CSS class that will be added to the &lt;audio&gt; element.",
+        "configaudioextensions": "A comma-separated list of supported audio file extensions. VideoJS will try to use the browser's native video player when available or native VideoJS functionality.",
+        "configlimitsize": "If enabled, and width and height are not specified, the video will display with default width and height. Otherwise it will stretch to the maximum possible width.",
+        "configvideocssclass": "A CSS class that will be added to the &lt;video&gt; element. For example, the CSS class \"vjs-big-play-centered\" will place the play button in the middle. For details, including how to set a custom skin, see docs.videojs.com.",
+        "configvideoextensions": "A comma-separated list of supported video file extensions. VideoJS will try to use the browser's native video player when available.",
+        "configyoutube": "Use VideoJS to play YouTube videos. Note that YouTube playlists are not yet supported by VideoJS.",
+        "limitsize": "Limit size",
+        "pluginname": "VideoJS player",
+        "pluginname_help": "A JavaScript wrapper for video files played by the browser's native video player. (Format support depends on the browser.)",
+        "privacy:metadata": "The VideoJS player media plugin does not store any personal data.",
+        "videocssclass": "CSS class for video",
+        "videoextensions": "Video file extensions",
+        "youtube": "YouTube videos"
+    },
+    "deprecatedkeys": []
+}

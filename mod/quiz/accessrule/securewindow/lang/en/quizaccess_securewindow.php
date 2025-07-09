@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for the quizaccess_securewindow plugin.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    quizaccess
- * @subpackage securewindow
- * @copyright  2011 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   quizaccess_securewindow
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
-defined('MOODLE_INTERNAL') || die();
-
-
-$string['pluginname'] = 'JavaScript security quiz access rule';
-$string['popupwithjavascriptsupport'] = 'Full screen pop-up with some JavaScript security';
-$string['privacy:metadata'] = 'The JavaScript security quiz access rule plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/quizaccess_securewindow.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

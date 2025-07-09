@@ -14,16 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
- * Strings for component 'webservice_rest', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    webservice_rest
- * @category   string
- * @copyright  2009 Petr Skodak
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   webservice_rest
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'REST protocol';
-$string['privacy:metadata'] = 'The REST protocol plugin does not store any personal data.';
-$string['rest:use'] = 'Use REST protocol';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/webservice_rest.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

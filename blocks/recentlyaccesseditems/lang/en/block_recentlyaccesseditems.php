@@ -13,20 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Strings for the Recently accessed items block.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    block_recentlyaccesseditems
- * @copyright  2018 Victor Deniz <victor@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_recentlyaccesseditems
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['moreitems'] = 'Show more items';
-$string['noitems'] = 'No recent items';
-$string['pluginname'] = 'Recently accessed items';
-$string['privacy:metadata:cmid'] = 'The ID of the activity or resource';
-$string['privacy:metadata:courseid'] = 'Course the item belongs to';
-$string['privacy:metadata:block_recentlyaccesseditemstablesummary'] = 'The Recently accessed items block stores information about items that the user accessed recently';
-$string['privacy:metadata:timeaccess'] = 'The time when the user last accessed the item';
-$string['privacy:metadata:userid'] = 'The ID of the user who accessed the item';
-$string['privacy:recentlyaccesseditemspath'] = 'Recently accessed items';
-$string['recentlyaccesseditems:myaddinstance'] = 'Add a new recently accessed items block to Dashboard';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_recentlyaccesseditems.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

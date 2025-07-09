@@ -15,28 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'scorm_interactions' report plugin
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package   scormreport
- * @subpackage interactions
- * @author    Dan Marsden and Ankit Kumar Agarwal
+ * @package   scormreport_interactions
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['pluginname'] = 'Interactions report';
-$string['privacy:metadata:preference:scorm_report_interactions_qtext'] = 'Whether to display the summary of questions in the SCORM interactions report';
-$string['privacy:metadata:preference:scorm_report_interactions_resp'] = 'Whether to display the summary of responses in the SCORM interactions report';
-$string['privacy:metadata:preference:scorm_report_interactions_result'] = 'Whether to display the summary of results in the SCORM interactions report';
-$string['privacy:metadata:preference:scorm_report_interactions_right'] = 'Whether to display the summary of right anwers in the SCORM interactions report';
-$string['privacy:metadata:preference:scorm_report_pagesize'] = 'Number of users to display in the SCORM reports';
-$string['questionx'] = 'Question {$a}';
-$string['responsex'] = 'Response {$a}';
-$string['rightanswerx'] = 'Right answer {$a}';
-$string['resultx'] = 'Result {$a}';
-$string['summaryofquestiontext'] = 'Summary of question';
-$string['summaryofresponse'] = 'Summary of responses';
-$string['summaryofrightanswer'] = 'Summary of right answer';
-$string['summaryofresult'] = 'Summary of result';
-
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/scormreport_interactions.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

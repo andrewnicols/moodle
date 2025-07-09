@@ -1,0 +1,32 @@
+{
+    "strings": {
+        "conditiontitle": "User profile field",
+        "description": "Control access based on fields within the student's profile.",
+        "error_selectfield": "You must select a profile field.",
+        "error_setvalue": "You must type a value.",
+        "label_operator": "Method of comparison",
+        "label_value": "Value to compare against",
+        "missing": "(Missing field: {$a})",
+        "op_contains": "contains",
+        "op_doesnotcontain": "doesn't contain",
+        "op_endswith": "ends with",
+        "op_isempty": "is empty",
+        "op_isequalto": "is equal to",
+        "op_isnotempty": "is not empty",
+        "op_startswith": "starts with",
+        "pluginname": "Restriction by profile",
+        "privacy:metadata": "The Restriction by profile plugin does not store any personal data.",
+        "requires_contains": "Your <strong>{$a->field}</strong> contains <strong>{$a->value}</strong>",
+        "requires_doesnotcontain": "Your <strong>{$a->field}</strong> does not contain <strong>{$a->value}</strong>",
+        "requires_endswith": "Your <strong>{$a->field}</strong> ends with <strong>{$a->value}</strong>",
+        "requires_isempty": "Your <strong>{$a->field}</strong> is empty",
+        "requires_isequalto": "Your <strong>{$a->field}</strong> is <strong>{$a->value}</strong>",
+        "requires_isnotempty": "Your <strong>{$a->field}</strong> is not empty",
+        "requires_notendswith": "Your <strong>{$a->field}</strong> does not end with <strong>{$a->value}</strong>",
+        "requires_notisequalto": "Your <strong>{$a->field}</strong> is not <strong>{$a->value}</strong>",
+        "requires_notstartswith": "Your <strong>{$a->field}</strong> does not start with <strong>{$a->value}</strong>",
+        "requires_startswith": "Your <strong>{$a->field}</strong> starts with <strong>{$a->value}</strong>",
+        "title": "User profile"
+    },
+    "deprecatedkeys": []
+}

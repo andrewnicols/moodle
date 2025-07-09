@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "aimid": "AIM ID",
+        "icqnumber": "ICQ number",
+        "invalidnetwork": "Invalid social network",
+        "msnid": "MSN ID",
+        "networkinuse": "Social network has already been added",
+        "networktype": "Network type",
+        "pluginname": "Social",
+        "privacy:metadata:profile_field_social:data": "Text area user profile field user data",
+        "privacy:metadata:profile_field_social:dataformat": "The format of Text area user profile field user data",
+        "privacy:metadata:profile_field_social:fieldid": "The ID of the profile field",
+        "privacy:metadata:profile_field_social:tableexplanation": "Additional profile data",
+        "privacy:metadata:profile_field_social:userid": "The ID of the user whose data is stored by the social user profile field",
+        "skypeid": "Skype ID",
+        "webpage": "Web page",
+        "yahooid": "Yahoo ID"
+    },
+    "deprecatedkeys": []
+}

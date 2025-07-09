@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "displaycategories": "Display categories",
+        "displaycategories_help": "Display the course category on the recently accessed courses block items.",
+        "nocourses": "No recent courses",
+        "pluginname": "Recently accessed courses",
+        "privacy:metadata": "The Recently accessed courses block does not store any personal data.",
+        "recentlyaccessedcourses:myaddinstance": "Add a new recently accessed courses block to Dashboard"
+    },
+    "deprecatedkeys": []
+}

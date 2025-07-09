@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "eventgradeexported": "TXT grade exported",
+        "pluginname": "Plain text file",
+        "privacy:metadata": "The Plain text file grade export plugin does not store any personal data.",
+        "timeexported": "Last downloaded from this course",
+        "txt:publish": "Publish TXT grade export",
+        "txt:view": "Use text grade export"
+    },
+    "deprecatedkeys": []
+}

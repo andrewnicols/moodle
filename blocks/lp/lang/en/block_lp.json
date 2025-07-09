@@ -1,0 +1,15 @@
+{
+    "strings": {
+        "competenciestoreview": "Competencies to review",
+        "lp:addinstance": "Add a new learning plans block",
+        "lp:myaddinstance": "Add a new learning plans block to Dashboard",
+        "myplans": "My plans",
+        "noactiveplans": "No active plans at the moment.",
+        "planstoreview": "Plans to review",
+        "pluginname": "Learning plans",
+        "privacy:metadata": "The Learning plans block only shows data stored in other locations.",
+        "viewmore": "View more...",
+        "viewotherplans": "View other plans..."
+    },
+    "deprecatedkeys": []
+}

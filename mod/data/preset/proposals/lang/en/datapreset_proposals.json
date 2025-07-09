@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "modulename": "Proposals",
+        "modulename_help": "Use this preset to collect proposals for topics, research, projects, etc. Fields include status such as approved, declined, revise or pending.",
+        "pluginname": "Proposals",
+        "privacy:metadata": "The Proposals plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

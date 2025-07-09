@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Starred courses block language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   block_starredcourses
- * @copyright 2018 Simey Lameze <simey@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['displaycategories'] = 'Display categories';
-$string['displaycategories_help'] = 'Display the course category on the starred courses block items.';
-$string['pluginname'] = 'Starred courses';
-$string['privacy:metadata'] = 'The starred courses block does not store any personal data.';
-$string['starredcourses:myaddinstance'] = 'Add a new starred courses block to Dashboard';
-$string['nocourses'] = 'No starred courses';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_starredcourses.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

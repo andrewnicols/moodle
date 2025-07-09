@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "modulename": "Subsection",
+        "modulenameplural": "Subsections",
+        "pluginadministration": "Subsection administration",
+        "pluginname": "Subsection",
+        "privacy:metadata": "Subsection does not store any personal data",
+        "quickcreatename": "New subsection",
+        "subsection:addinstance": "Add subsection",
+        "subsection:view": "View subsection",
+        "subsectionname": "Name"
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "fieldtypelabel": "Coordinates",
+        "pluginname": "Coordinates",
+        "privacy:metadata": "The Coordinates field component doesn't store any personal data; it uses tables defined in mod_data."
+    },
+    "deprecatedkeys": []
+}

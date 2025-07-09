@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "errormaxdate": "Please enter a date no later than {$a}.",
+        "errormindate": "Please enter a date on or after {$a}.",
+        "includetime": "Include time",
+        "maxdate": "Maximum value",
+        "mindate": "Minimum value",
+        "mindateaftermax": "The minimum value cannot be bigger than the maximum value.",
+        "pluginname": "Date and time",
+        "privacy:metadata": "The Date and time field type plugin doesn't store any personal data; it uses tables defined in core.",
+        "specificsettings": "Date and time field settings"
+    },
+    "deprecatedkeys": []
+}

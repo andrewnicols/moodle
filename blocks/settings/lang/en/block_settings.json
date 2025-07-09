@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "enabledock": "Allow the user to dock this block",
+        "pluginname": "Administration",
+        "privacy:metadata": "The Administration block only shows data stored in other locations.",
+        "settings:addinstance": "Add a new administration block",
+        "settings:myaddinstance": "Add a new administration block to Dashboard"
+    },
+    "deprecatedkeys": []
+}

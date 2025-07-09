@@ -15,15 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_private_files', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   block_private_files
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Private files';
-$string['privatefiles'] = 'Private files';
-$string['private_files:addinstance'] = 'Add a new private files block';
-$string['private_files:myaddinstance'] = 'Add a new private files block to Dashboard';
-$string['privacy:metadata'] = 'The Private files block only provides a view of, and a link to, the user\'s private files.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_private_files.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

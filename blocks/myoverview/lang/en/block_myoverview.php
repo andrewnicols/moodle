@@ -15,82 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for the My overview block.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    block_myoverview
- * @copyright  Mark Nelson <markn@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_myoverview
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['allincludinghidden'] = 'All (including removed from view)';
-$string['all'] = 'All';
-$string['addtofavourites'] = 'Star this course';
-$string['aria:addtofavourites'] = 'Star for';
-$string['aria:allcoursesincludinghidden'] = 'Show all courses';
-$string['aria:allcourses'] = 'Show all courses except courses removed from view';
-$string['aria:card'] = 'Switch to card view';
-$string['aria:controls'] = 'Course overview controls';
-$string['aria:courseactions'] = 'Actions for course';
-$string['aria:coursesummary'] = 'Course summary text:';
-$string['aria:courseprogress'] = 'Course progress:';
-$string['aria:customfield'] = 'Show {$a} courses';
-$string['aria:displaydropdown'] = 'Display drop-down menu';
-$string['aria:favourites'] = 'Show starred courses only';
-$string['aria:future'] = 'Show future courses';
-$string['aria:groupingdropdown'] = 'Grouping drop-down menu';
-$string['aria:inprogress'] = 'Show courses in progress';
-$string['aria:list'] = 'Switch to list view';
-$string['aria:past'] = 'Show past courses';
-$string['aria:removefromfavourites'] = 'Remove star for';
-$string['aria:summary'] = 'Switch to summary view';
-$string['aria:sortingdropdown'] = 'Sorting drop-down menu';
-$string['availablegroupings'] = 'Available filters';
-$string['availablegroupings_desc'] = 'Course filters which are available for selection by users. If none are selected, all courses will be displayed.';
-$string['card'] = 'Card';
-$string['cards'] = 'Cards';
-$string['courseprogress'] = 'Course progress:';
-$string['completepercent'] = '{$a}% complete';
-$string['createcourse'] = 'Create course';
-$string['customfield'] = 'Custom field';
-$string['customfiltergrouping'] = 'Field to use';
-$string['customfiltergrouping_nofields'] = 'This option requires a course custom field to be set up and visible to everyone.';
-$string['displaycategories'] = 'Display categories';
-$string['displaycategories_help'] = 'Display the course category on dashboard course items including cards, list items and summary items.';
-$string['favourites'] = 'Starred';
-$string['future'] = 'Future';
-$string['inprogress'] = 'In progress';
-$string['lastaccessed'] = 'Last accessed';
-$string['layouts'] = 'Available layouts';
-$string['layouts_help'] = 'Course overview layouts which are available for selection by users. If none are selected, the card layout will be used.';
-$string['list'] = 'List';
-$string['myoverview:myaddinstance'] = 'Add a new course overview block to Dashboard';
-$string['nocustomvalue'] = 'No {$a}';
-$string['past'] = 'Past';
-$string['pluginname'] = 'Course overview';
-$string['privacy:metadata:overviewsortpreference'] = 'The Course overview block sort preference.';
-$string['privacy:metadata:overviewviewpreference'] = 'The Course overview block view preference.';
-$string['privacy:metadata:overviewgroupingpreference'] = 'The Course overview block grouping preference.';
-$string['privacy:metadata:overviewpagingpreference'] = 'The Course overview block paging preference.';
-$string['removefromfavourites'] = 'Unstar this course';
-$string['searchcourses'] = "Search courses";
-$string['shortname'] = 'Short name';
-$string['summary'] = 'Summary';
-$string['title'] = 'Course name';
-$string['aria:hidecourse'] = 'Remove {$a} from view';
-$string['aria:showcourse'] = 'Restore {$a} to view';
-$string['aria:hiddencourses'] = 'Show courses removed from view';
-$string['hidden'] = 'Courses removed from view';
-$string['hidecourse'] = 'Remove from view';
-$string['hiddencourses'] = 'Removed from view';
-$string['show'] = 'Restore to view';
-$string['sortbytitle'] = 'Sort by course name';
-$string['sortbylastaccessed'] = 'Sort by last accessed';
-$string['sortbyshortname'] = 'Sort by short name';
-$string['privacy:request:preference:set'] = 'The value of the setting \'{$a->name}\' was \'{$a->value}\'';
-$string['viewquickstart'] = 'View Quickstart guide';
-$string['zero_default_title'] = 'You\'re not enrolled in any courses.';
-$string['zero_default_intro'] = 'Once you\'re enrolled in a course, it will appear here.';
-$string['zero_nocourses_intro'] = 'Need help getting started? Check out the <a href="{$a->dochref}" title="{$a->doctitle}" target="{$a->doctarget}">Moodle documentation</a>.';
-$string['zero_nocourses_title'] = 'Create your first course';
-$string['zero_request_title'] = 'Request your first course';
-$string['zero_request_intro'] = 'Need help getting started? Check out the <a href="{$a->dochref}" title="{$a->doctitle}" target="{$a->doctarget}">Moodle documentation</a> or take your first steps with our <a href="{$a->quickhref}" title="{$a->quicktitle}" target="{$a->quicktarget}">Quickstart guide</a>.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_myoverview.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

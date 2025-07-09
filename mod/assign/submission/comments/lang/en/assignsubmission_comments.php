@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'submission_comments', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   assignsubmission_comments
- * @copyright 2012 NetSpot {@link http://www.netspot.com.au}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['blindmarkingname'] = 'Participant {$a}';
-$string['blindmarkingviewfullname'] = 'Participant {$a->participantnumber} ({$a->participantfullname})';
-$string['privacy:metadata:commentpurpose'] = 'Comments between the student and teacher about a submission.';
-$string['default'] = 'Enabled by default';
-$string['default_help'] = 'If set, this submission method will be enabled by default for all new assignments.';
-$string['enabled'] = 'Submission comments';
-$string['enabled_help'] = 'If enabled, students can leave comments on their own submission. For example, this can be used for students to specify which is the master file when submitting inter-linked files.';
-$string['pluginname'] = 'Submission comments';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/assignsubmission_comments.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

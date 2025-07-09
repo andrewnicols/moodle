@@ -1,0 +1,16 @@
+{
+    "strings": {
+        "clientid": "Client ID",
+        "noauthtoken": "An authentication token has not been received from Google. Please ensure you are allowing Moodle to access your Google account",
+        "nooauthcredentials": "OAuth credentials required.",
+        "nooauthcredentials_help": "To use the Google Drive portfolio plugin you must configure OAuth credentials in the portfolio settings.",
+        "nosessiontoken": "A session token does not exist preventing export to google.",
+        "oauthinfo": "<p>To use this plugin, you must register your site with Google, as described in the documentation <a href=\"{$a->docsurl}\">Google OAuth 2.0 setup</a>.</p><p>As part of the registration process, you will need to enter the following URL as 'Authorized Redirect URIs':</p><p>{$a->callbackurl}</p><p>Once registered, you will be provided with a client ID and secret which can be used to configure all Google Drive plugins.</p>",
+        "pluginname": "Google Drive",
+        "privacy:metadata": "This plugin sends data externally to a linked Google account. It does not store data locally.",
+        "privacy:metadata:data": "Personal data passed through from the portfolio subsystem.",
+        "secret": "Secret",
+        "sendfailed": "The file {$a} failed to transfer to google"
+    },
+    "deprecatedkeys": []
+}

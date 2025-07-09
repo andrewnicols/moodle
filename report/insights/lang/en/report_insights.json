@@ -1,0 +1,29 @@
+{
+    "strings": {
+        "actionsaved": "Your feedback of '{$a}' has been saved.",
+        "confirmbulkaction": "Are you sure you want to flag the {$a->nitems} selected predictions as {$a->action}?",
+        "disabledmodel": "This model has been disabled by an administrator.",
+        "indicators": "Indicators",
+        "insight": "Insight",
+        "insights": "Insights",
+        "justpredictions": "Please note that the following insights are only predictions. It is not possible to predict the future with any certainty. The insights are provided so that action can be taken as necessary to prevent any negative predictions becoming reality.",
+        "nodetailsavailable": "No prediction details are relevant.",
+        "outcome": "Outcome",
+        "outcomenegative": "Negative outcome",
+        "outcomeneutral": "Neutral outcome",
+        "outcomeok": "OK outcome",
+        "outcomepositive": "Positive outcome",
+        "outcomeverynegative": "Very negative outcome",
+        "outcomeverypositive": "Very positive outcome",
+        "pluginname": "Insights",
+        "prediction": "Prediction",
+        "predictiondetails": "Prediction details",
+        "privacy:metadata": "The Insights plugin does not store any personal data.",
+        "selectotherinsights": "Select other insights...",
+        "selectprediction": "Select {$a} for bulk action",
+        "timecreated": "Time predicted",
+        "timerange": "Analysis interval",
+        "timerangewithdata": "{$a->timestart} to {$a->timeend}"
+    },
+    "deprecatedkeys": []
+}

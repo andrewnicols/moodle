@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'profilefield_textarea', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   profilefield_textarea
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Text area';
-$string['privacy:metadata:profile_field_textarea:userid'] = 'The ID of the user whose data is stored by the Text area user profile field';
-$string['privacy:metadata:profile_field_textarea:fieldid'] = 'The ID of the profile field';
-$string['privacy:metadata:profile_field_textarea:data'] = 'Text area user profile field user data';
-$string['privacy:metadata:profile_field_textarea:dataformat'] = 'The format of Text area user profile field user data';
-$string['privacy:metadata:profile_field_textarea:tableexplanation'] = 'Additional profile data';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/profilefield_textarea.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

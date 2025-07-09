@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "configplugin": "Configuration for content bank repository",
+        "contentbank:accesscoursecategorycontent": "Access course category content bank files",
+        "contentbank:accesscoursecontent": "Access course content bank files",
+        "contentbank:accessgeneralcontent": "Access system content bank files",
+        "contentbank:view": "View content bank repository",
+        "emptyfilelist": "There are no files to show",
+        "pluginname": "Content bank",
+        "pluginname_help": "Files in content bank",
+        "privacy:metadata": "The Content bank repository plugin does not store or transmit any personal data."
+    },
+    "deprecatedkeys": []
+}

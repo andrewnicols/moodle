@@ -1,0 +1,23 @@
+{
+    "strings": {
+        "ajaxerror": "Error contacting server to convert times",
+        "description": "Prevent access until (or from) a specified date and time.",
+        "direction_before": "Date",
+        "direction_from": "from",
+        "direction_label": "Direction",
+        "direction_until": "until",
+        "error_dateconflict": "Conflicts with other date restrictions",
+        "full_from": "It is after <strong>{$a}</strong>",
+        "full_from_date": "It is on or after <strong>{$a}</strong>",
+        "full_until": "It is before <strong>{$a}</strong>",
+        "full_until_date": "It is before end of <strong>{$a}</strong>",
+        "pluginname": "Restriction by date",
+        "privacy:metadata": "The Restriction by date plugin does not store any personal data.",
+        "short_from": "Available from <strong>{$a}</strong>",
+        "short_from_date": "Available from <strong>{$a}</strong>",
+        "short_until": "Available until <strong>{$a}</strong>",
+        "short_until_date": "Available until end of <strong>{$a}</strong>",
+        "title": "Date"
+    },
+    "deprecatedkeys": []
+}

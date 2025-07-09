@@ -1,0 +1,25 @@
+{
+    "strings": {
+        "contentsettings": "Display settings for content region",
+        "display_address": "Display address",
+        "display_city": "Display city",
+        "display_country": "Display country",
+        "display_currentlogin": "Display current login",
+        "display_email": "Display email",
+        "display_firstaccess": "Display first access",
+        "display_idnumber": "Display ID number",
+        "display_institution": "Display institution",
+        "display_lastaccess": "Display last access",
+        "display_lastip": "Display last IP",
+        "display_lastlogin": "Display last login",
+        "display_phone1": "Display phone",
+        "display_phone2": "Display mobile phone",
+        "display_picture": "Display picture",
+        "myprofile:addinstance": "Add a new logged in user block",
+        "myprofile:myaddinstance": "Add a new logged in user block to Dashboard",
+        "myprofile_settings": "Visible user information",
+        "pluginname": "Logged in user",
+        "privacy:metadata": "The Logged in user block only shows information about the logged in user and does not store data itself."
+    },
+    "deprecatedkeys": []
+}

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_s3', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_s3
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['access_key'] = 'Access key';
-$string['configplugin'] = 'Amazon S3 settings';
-$string['endpoint'] = 'Amazon S3 endpoint';
-$string['needaccesskey'] = 'Access key must be provided';
-$string['pluginname'] = 'Amazon S3';
-$string['secret_key'] = 'Secret key';
-$string['s3:view'] = 'View amazon s3 repository';
-$string['privacy:metadata'] = 'The Amazon S3 repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_s3.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,17 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'datafield_textarea', language 'en', branch 'master'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    datafield
- * @subpackage textarea
- * @copyright  2011 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   datafield_textarea
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['maxbytes'] = 'Maximum embedded file size (bytes)';
-$string['maxbytes_desc'] = 'If set to zero will be unlimited by default';
-$string['pluginname'] = 'Text area';
-$string['fieldtypelabel'] = 'Text area';
-$string['privacy:metadata'] = 'The Text area field component doesn\'t store any personal data; it uses tables defined in mod_data.';
-$string['sample'] = '<p>This is a text area. It lets users enter long form text which spans over multiple lines.</p><p>You can choose the size of your text areas in rows and columns.</p><p>The text in a text area can be formatted, for example in <strong>bold</strong>, and also include <a href="#">links</a> or images.</p>';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/datafield_textarea.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * exportimscp booktool language strings
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    booktool_exportimscp
- * @copyright  2011 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   booktool_exportimscp
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$string['eventbookexported'] = 'Book exported';
-$string['exportimscp:export'] = 'Export book as IMS content package';
-$string['generateimscp'] = 'Download IMS CP';
-$string['nochapters'] = 'No book chapters found, so unable to export to IMS CP.';
-$string['pluginname'] = 'Book IMS CP export';
-$string['privacy:metadata'] = 'The Book IMS CP export plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/booktool_exportimscp.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

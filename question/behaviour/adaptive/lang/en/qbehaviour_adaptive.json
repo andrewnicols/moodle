@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "disregardedwithoutpenalty": "The submission was invalid, and has been disregarded without penalty.",
+        "gradingdetails": "Marks for this submission: {$a->raw}/{$a->max}.",
+        "gradingdetailsadjustment": "Accounting for previous tries, this gives <strong>{$a->cur}/{$a->max}</strong>.",
+        "gradingdetailspenalty": "This submission attracted a penalty of {$a}.",
+        "gradingdetailspenaltytotal": "Total penalties so far: {$a}.",
+        "gradingdetailswithadjustment": "Marks for this submission: {$a->raw}/{$a->max}. Accounting for previous tries, this gives <strong>{$a->cur}/{$a->max}</strong>.",
+        "gradingdetailswithadjustmentpenalty": "Marks for this submission: {$a->raw}/{$a->max}. Accounting for previous tries, this gives <strong>{$a->cur}/{$a->max}</strong>. This submission attracted a penalty of {$a->penalty}.",
+        "gradingdetailswithadjustmenttotalpenalty": "Marks for this submission: {$a->raw}/{$a->max}. Accounting for previous tries, this gives <strong>{$a->cur}/{$a->max}</strong>. This submission attracted a penalty of {$a->penalty}. Total penalties so far: {$a->totalpenalty}.",
+        "gradingdetailswithpenalty": "Marks for this submission: {$a->raw}/{$a->max}. This submission attracted a penalty of {$a->penalty}.",
+        "gradingdetailswithtotalpenalty": "Marks for this submission: {$a->raw}/{$a->max}. This submission attracted a penalty of {$a->penalty}. Total penalties so far: {$a->totalpenalty}.",
+        "notcomplete": "Not complete",
+        "pluginname": "Adaptive mode",
+        "privacy:metadata": "The Adaptive mode question behaviour plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

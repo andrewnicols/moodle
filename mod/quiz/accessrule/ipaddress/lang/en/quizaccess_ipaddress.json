@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "IP address quiz access rule",
+        "privacy:metadata": "The IP address quiz access rule plugin does not store any personal data.",
+        "subnetwrong": "This quiz is only accessible from certain locations, and this computer is not on the allowed list."
+    },
+    "deprecatedkeys": []
+}

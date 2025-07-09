@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'qformat_multianswer', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qformat_multianswer
- * @copyright  2010 Helen Foster
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qformat_multianswer
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Embedded answers (Cloze)';
-$string['pluginname_help'] = 'Embedded answers (Cloze) format enables the import of a passage of text with questions such as multiple-choice and short answer embedded within it.';
-$string['pluginname_link'] = 'question/type/multianswer';
-$string['privacy:metadata'] = 'The Embedded answers question plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qformat_multianswer.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

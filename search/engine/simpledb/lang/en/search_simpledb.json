@@ -1,0 +1,22 @@
+{
+    "strings": {
+        "pluginname": "Simple search",
+        "privacy:metadata:index": "Indexed contents",
+        "privacy:metadata:index:areaid": "Search area ID",
+        "privacy:metadata:index:content": "Contents",
+        "privacy:metadata:index:contextid": "Document context ID",
+        "privacy:metadata:index:courseid": "Course ID",
+        "privacy:metadata:index:description1": "Extra description field",
+        "privacy:metadata:index:description2": "Extra description field",
+        "privacy:metadata:index:docid": "Document ID (unique)",
+        "privacy:metadata:index:itemid": "Item identifier (in search area scope)",
+        "privacy:metadata:index:modified": "Last modification time",
+        "privacy:metadata:index:owneruserid": "Document owner user ID",
+        "privacy:metadata:index:title": "Title",
+        "privacy:metadata:index:type": "Document type",
+        "privacy:metadata:index:userid": "Document user ID",
+        "searchinfo": "Search queries",
+        "searchinfo_help": "Enter the search query."
+    },
+    "deprecatedkeys": []
+}

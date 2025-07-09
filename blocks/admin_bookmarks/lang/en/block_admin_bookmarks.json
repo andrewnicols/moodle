@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "admin_bookmarks:addinstance": "Add a new admin bookmarks block",
+        "admin_bookmarks:myaddinstance": "Add a new admin bookmarks block to Dashboard",
+        "pluginname": "Admin bookmarks",
+        "privacy:metadata": "The Admin bookmarks block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

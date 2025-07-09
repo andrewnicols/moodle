@@ -1,0 +1,30 @@
+{
+    "strings": {
+        "confirmimport": "Confirm grades import",
+        "default": "Enabled by default",
+        "default_help": "If set, offline grading with worksheets will be enabled by default for all new assignments.",
+        "downloadgrades": "Download grading worksheet",
+        "enabled": "Offline grading worksheet",
+        "enabled_help": "If enabled, the teacher will be able to download and upload a worksheet with student grades when marking the assignments.",
+        "feedbackupdate": "Set field \"{$a->field}\" for \"{$a->student}\" to \"{$a->text}\"",
+        "gradelockedingradebook": "The grade has been locked in the gradebook for {$a}",
+        "graderecentlymodified": "The grade has been modified in Moodle more recently than in the grading worksheet for {$a}",
+        "gradesfile": "Grading worksheet (csv format)",
+        "gradesfile_help": "Grading worksheet with modified grades. This file must be a CSV file with UTF-8 encoding that has been downloaded from the assignment, with columns for student grade and identifier.",
+        "gradeupdate": "Set grade for {$a->student} to {$a->grade}",
+        "ignoremodified": "Allow updating records that have been modified more recently in Moodle than in the spreadsheet.",
+        "ignoremodified_help": "When the grading worksheet is downloaded from Moodle it contains the last modified date for each of the grades. If any of the grades are updated in Moodle after this worksheet is downloaded, by default Moodle will refuse to overwrite this updated information when importing the grades. By selecting this option Moodle will disable this safety check and it may be possible for multiple markers to overwrite each others grades.",
+        "importgrades": "Confirm changes in grading worksheet",
+        "invalidgradeimport": "Moodle could not read the uploaded worksheet. Make sure it is saved in comma separated value format (.csv) and try again.",
+        "nochanges": "No modified grades found in uploaded worksheet",
+        "offlinegradingworksheet": "Grades",
+        "pluginname": "Offline grading worksheet",
+        "privacy:nullproviderreason": "This plugin has no database to store user information. It only uses APIs in mod_assign to help with displaying the grading interface.",
+        "processgrades": "Import grades",
+        "skiprecord": "Skip record",
+        "updatedgrades": "Updated <strong>{$a->gradeupdatescount}</strong> grades and <strong>{$a->feedbackupdatescount}</strong> feedback instances.",
+        "updaterecord": "Update record",
+        "uploadgrades": "Upload grading worksheet"
+    },
+    "deprecatedkeys": []
+}

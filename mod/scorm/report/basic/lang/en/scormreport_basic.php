@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'scorm_basic' report plugin
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    scormreport
- * @subpackage basic
- * @author     Ankit Kumar Agarwal
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   scormreport_basic
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Basic report';
-$string['privacy:metadata:preference:scorm_report_detailed'] = 'Whether to track details in the SCORM basic report';
-$string['privacy:metadata:preference:scorm_report_pagesize'] = 'Number of users to display in the SCORM reports';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/scormreport_basic.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

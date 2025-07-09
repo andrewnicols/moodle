@@ -1,0 +1,28 @@
+{
+    "strings": {
+        "configselectmanualquestions": "Can the random question type select a manually graded question when it is making its random choice of a question from a category?",
+        "includingsubcategories": "Including subcategories",
+        "pluginname": "Random",
+        "pluginname_help": "A random question is not a question type as such, but is a way of inserting a randomly-chosen question from a specified category into an activity.",
+        "pluginnameediting": "Editing a random question",
+        "privacy:metadata": "The Random question type plugin does not store any personal data.",
+        "randomqname": "Random ({$a})",
+        "randomqnamefromtop": "Faulty random question! Please delete this question.",
+        "randomqnamefromtoptags": "Faulty random question! Please delete this question.",
+        "randomqnametags": "Random ({$a->category}, tags: {$a->tags})",
+        "randomqplusname": "Random ({$a} and subcategories)",
+        "randomqplusnamecourse": "Random (Any category in this course)",
+        "randomqplusnamecoursecat": "Random (Any category inside course category {$a})",
+        "randomqplusnamecoursecattags": "Random (Any category inside course category {$a->category}, tags: {$a->tags})",
+        "randomqplusnamecoursetags": "Random (Any category in this course, tags: {$a->tags})",
+        "randomqplusnamemodule": "Random (Any category of this quiz)",
+        "randomqplusnamemoduletags": "Random (Any category of this quiz, tags: {$a->tags})",
+        "randomqplusnamesystem": "Random (Any system-level category)",
+        "randomqplusnamesystemtags": "Random (Any system-level category, tags: {$a->tags})",
+        "randomqplusnametags": "Random ({$a->category} and subcategories, tags: {$a->tags})",
+        "selectedby": "{$a->questionname} selected by {$a->randomname}",
+        "selectmanualquestions": "Random questions can use manually graded questions",
+        "taskunusedrandomscleanup": "Remove unused random questions"
+    },
+    "deprecatedkeys": []
+}

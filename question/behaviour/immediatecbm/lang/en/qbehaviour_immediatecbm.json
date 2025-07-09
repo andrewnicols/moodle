@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pleaseselectacertainty": "Please select a certainty.",
+        "pluginname": "Immediate feedback with CBM",
+        "privacy:metadata": "The Immediate feedback with CBM question behaviour plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

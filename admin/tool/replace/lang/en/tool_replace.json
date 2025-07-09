@@ -1,0 +1,24 @@
+{
+    "strings": {
+        "additionalskiptables": "Additional skip tables",
+        "additionalskiptables_desc": "A list of tables (separated by commas) which should be skipped when running the database search and replace.",
+        "cannotfit": "The replacement is longer than the original and shortening is not allowed; cannot continue.",
+        "disclaimer": "I understand the risks of this operation",
+        "doit": "Yes, do it!",
+        "excludedtables": "Several tables are not updated as part of the text replacement. These include configuration, log, events, and session tables.",
+        "invalidcharacter": "Invalid characters were found in the search or replace text.",
+        "notifyfinished": "...finished",
+        "notifyrebuilding": "Rebuilding course cache...",
+        "notimplemented": "Sorry, this feature is not implemented in your database driver.",
+        "notsupported": "This script should be considered experimental. Changes made cannot be reverted, thus a complete backup should be made before running the script!",
+        "pageheader": "Search and replace text throughout the whole database",
+        "pluginname": "DB search and replace",
+        "privacy:metadata": "The DB search and replace plugin does not store any personal data.",
+        "replacewith": "Replace with this string",
+        "replacewithhelp": "usually new server URL",
+        "searchwholedb": "Search whole database for",
+        "searchwholedbhelp": "usually previous server URL",
+        "shortenoversized": "Shorten result if necessary"
+    },
+    "deprecatedkeys": []
+}

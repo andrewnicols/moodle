@@ -15,22 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_html', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   block_html
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['allowadditionalcssclasses'] = 'Allow additional CSS classes';
-$string['configallowadditionalcssclasses'] = 'Adds a configuration option to Text block instances allowing additional CSS classes to be set.';
-$string['configclasses'] = 'Additional CSS classes';
-$string['configclasses_help'] = 'The purpose of this configuration is to aid with theming by helping distinguish text blocks from each other. Any CSS classes entered here (space delimited) will be appended to the block\'s default classes.';
-$string['configcontent'] = 'Content';
-$string['configtitle'] = 'Text block title';
-$string['html:addinstance'] = 'Add a new text block';
-$string['html:myaddinstance'] = 'Add a new text block to Dashboard';
-$string['newhtmlblock'] = '(new text block)';
-$string['pluginname'] = 'Text';
-$string['search:content'] = 'Text block content';
-$string['privacy:metadata:block'] = 'The Text block stores all of its data within the block subsystem.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_html.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

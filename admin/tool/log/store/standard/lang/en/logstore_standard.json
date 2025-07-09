@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "buffersize": "Write buffer size",
+        "jsonformat": "JSON format",
+        "jsonformat_desc": "Use standard JSON format instead of PHP serialised data in the 'other' database field.",
+        "pluginname": "Standard log",
+        "pluginname_desc": "A log plugin stores log entries in a Moodle database table.",
+        "privacy:metadata:log": "A collection of past events",
+        "privacy:metadata:log:anonymous": "Whether the event was flagged as anonymous",
+        "privacy:metadata:log:eventname": "The event name",
+        "privacy:metadata:log:ip": "The IP address used at the time of the event",
+        "privacy:metadata:log:origin": "The origin of the event",
+        "privacy:metadata:log:other": "Additional information about the event",
+        "privacy:metadata:log:realuserid": "The ID of the real user behind the event, when masquerading a user.",
+        "privacy:metadata:log:relateduserid": "The ID of a user related to this event",
+        "privacy:metadata:log:timecreated": "The time when the event occurred",
+        "privacy:metadata:log:userid": "The ID of the user who triggered this event",
+        "taskcleanup": "Log table cleanup"
+    },
+    "deprecatedkeys": []
+}

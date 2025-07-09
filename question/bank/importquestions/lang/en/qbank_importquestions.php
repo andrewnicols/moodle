@@ -12,16 +12,14 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'qbank_importquestions', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   qbank_importquestions
- * @copyright 2021 Catalyst IT Australia Pty Ltd
- * @author    Marc-Alexandre Ghaly <marc-alexandreghaly@catalyst-ca.net>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Import questions';
-$string['privacy:metadata'] = 'The Import questions question bank plugin imports questions from a file according to the selected file format.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_importquestions.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

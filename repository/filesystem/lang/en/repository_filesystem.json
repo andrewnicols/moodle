@@ -1,0 +1,23 @@
+{
+    "strings": {
+        "blockedpath": "Blocked root path",
+        "configplugin": "Configuration for file system repository",
+        "crontask": "Background processing for file system repository",
+        "donotusesysdir": "Don't use system directory as repository, including",
+        "enablecourseinstances": "Allow admins to add a file system repository instance to a course (configurable only by admins)",
+        "enableuserinstances": "Allow admins to add a file system repository instance for personal use (configurable only by admins)",
+        "filesystem:view": "View file system repository",
+        "information": "These folders are within the <b>{$a}</b> directory.",
+        "invalidpath": "Invalid root path",
+        "nosubdir": "You need to create at least one folder inside the <b>{$a}</b> directory so you can select it here.",
+        "path": "Select a subdirectory",
+        "pluginname": "File system",
+        "pluginname_help": "Create repository from local directory",
+        "privacy:metadata": "The File system repository plugin does not store or transmit any personal data.",
+        "relativefiles": "Allow relative files",
+        "relativefiles_desc": "This allows all files in the repository to be accessible using relative links.",
+        "root": "Root",
+        "searchresults": "Search results"
+    },
+    "deprecatedkeys": []
+}

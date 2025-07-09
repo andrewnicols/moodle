@@ -15,27 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for plugin 'media_videojs'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   media_videojs
- * @copyright 2016 Marina Glancy
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['audiocssclass'] = 'CSS class for audio';
-$string['audioextensions'] = 'Audio file extensions';
-$string['configaudiocssclass'] = 'A CSS class that will be added to the &lt;audio&gt; element.';
-$string['configaudioextensions'] = 'A comma-separated list of supported audio file extensions. VideoJS will try to use the browser\'s native video player when available or native VideoJS functionality.';
-$string['configlimitsize'] = 'If enabled, and width and height are not specified, the video will display with default width and height. Otherwise it will stretch to the maximum possible width.';
-$string['configvideocssclass'] = 'A CSS class that will be added to the &lt;video&gt; element. For example, the CSS class "vjs-big-play-centered" will place the play button in the middle. For details, including how to set a custom skin, see docs.videojs.com.';
-$string['configvideoextensions'] = 'A comma-separated list of supported video file extensions. VideoJS will try to use the browser\'s native video player when available.';
-$string['configyoutube'] = 'Use VideoJS to play YouTube videos. Note that YouTube playlists are not yet supported by VideoJS.';
-$string['limitsize'] = 'Limit size';
-$string['pluginname'] = 'VideoJS player';
-$string['pluginname_help'] = 'A JavaScript wrapper for video files played by the browser\'s native video player. (Format support depends on the browser.)';
-$string['privacy:metadata'] = 'The VideoJS player media plugin does not store any personal data.';
-$string['videoextensions'] = 'Video file extensions';
-$string['videocssclass'] = 'CSS class for video';
-$string['youtube'] = 'YouTube videos';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/media_videojs.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

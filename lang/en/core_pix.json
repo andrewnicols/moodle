@@ -1,0 +1,28 @@
+{
+    "strings": {
+        "angry": "angry",
+        "approve": "approve",
+        "biggrin": "big grin",
+        "blackeye": "black eye",
+        "blush": "blush",
+        "clown": "clown",
+        "cool": "cool",
+        "dead": "dead",
+        "egg": "egg",
+        "evil": "evil",
+        "heart": "heart",
+        "kiss": "kiss",
+        "martin": "martin",
+        "mixed": "mixed",
+        "sad": "sad",
+        "shy": "shy",
+        "sleepy": "sleepy",
+        "smiley": "smile",
+        "surprise": "surprise",
+        "thoughtful": "thoughtful",
+        "tongueout": "tongueout",
+        "wideeyes": "wide eyes",
+        "wink": "wink"
+    },
+    "deprecatedkeys": []
+}

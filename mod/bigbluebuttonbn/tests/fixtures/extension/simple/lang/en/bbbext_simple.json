@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "completionextraisehandtwice": "Raise hand twice",
+        "completionextraisehandtwice_desc": "Raise hand twice in a meeting.",
+        "completionextraisehandtwice_help": "Raise hand twice in a meeting.",
+        "config_extension": "Sample config extension setting",
+        "newfield": "New field",
+        "newfielderror": "New field cannot be empty",
+        "pluginname": "Simple BigBlueButtonPlugin"
+    },
+    "deprecatedkeys": []
+}

@@ -15,24 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for xapi library, language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   core_xapi
- * @copyright 2020 Ferran Recio
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['eventxapipost'] = 'Post xAPI statement';
-$string['privacy:metadata:component'] = 'The component name in frankenstyle';
-$string['privacy:metadata:itemid'] = 'The item ID of the state';
-$string['privacy:metadata:registration'] = 'The xAPI registration UUID';
-$string['privacy:metadata:statedata'] = 'JSON object with the state data';
-$string['privacy:metadata:stateid'] = 'The xAPI state ID';
-$string['privacy:metadata:timecreated'] = 'The time when the state element was created';
-$string['privacy:metadata:timemodified'] = 'The last time state was updated';
-$string['privacy:metadata:userid'] = 'The ID of the user who belongs the state ';
-$string['privacy:metadata:xapi_states'] = 'The stored xAPI states';
-$string['privacy:xapistate'] = 'xAPI state';
-$string['xapicleanup'] = 'Stored xAPI states clean up';
-$string['xapicleanupperiod'] = 'Clean up xAPI states';
-$string['xapicleanupperiod_help'] = 'Remove any stored xAPI which is not updaded in the selected period';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_xapi.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -15,12 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tool_phpunit'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    tool_phpunit
- * @copyright  2012 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tool_phpunit
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'PHPUnit tests';
-$string['privacy:metadata'] = 'The PHPUnit tests plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/tool_phpunit.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

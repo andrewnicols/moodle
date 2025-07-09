@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "configtitle": "Title",
+        "pluginname": "Additional activities",
+        "privacy:metadata": "The Additional activities block only shows data stored in other locations.",
+        "site_main_menu:addinstance": "Add a new Additional activities block"
+    },
+    "deprecatedkeys": []
+}

@@ -15,19 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'format_singleactivity'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    format_singleactivity
- * @copyright  2012 Marina Glancy
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   format_singleactivity
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['activitytype'] = 'Type of activity';
-$string['activitytype_help'] = 'Choose the type of activity or resource to use in this course';
-$string['defactivitytype'] = 'Default type of activity';
-$string['defactivitytypedesc'] = 'Specify the activity type that will be selected by default when creating a new course';
-$string['erroractivitytype'] = 'Type of activity is not set up in Course settings';
-$string['plugin_description'] = 'The course displays only one activity on the course page. You can add more activities in the Additional activities block';
-$string['pluginname'] = 'Single activity';
-$string['sectionname'] = '';
-$string['privacy:metadata'] = 'The Single activity format plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/format_singleactivity.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

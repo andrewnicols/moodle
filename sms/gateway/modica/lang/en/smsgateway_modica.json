@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "modica_application_name": "Modica application name",
+        "modica_application_password": "Modica application password",
+        "modica_information": "Complete the following fields using the information provided by Modica",
+        "modica_url": "Modica API URL",
+        "pluginname": "Modica",
+        "privacy:metadata": "The Modica SMS gateway plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

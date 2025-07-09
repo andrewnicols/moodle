@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "access_key": "Access key",
+        "configplugin": "Amazon S3 settings",
+        "endpoint": "Amazon S3 endpoint",
+        "needaccesskey": "Access key must be provided",
+        "pluginname": "Amazon S3",
+        "privacy:metadata": "The Amazon S3 repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.",
+        "s3:view": "View amazon s3 repository",
+        "secret_key": "Secret key"
+    },
+    "deprecatedkeys": []
+}

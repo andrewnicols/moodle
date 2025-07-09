@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "filtername": "Display emoticons as images",
+        "privacy:metadata": "The Display emoticons as images plugin does not store any personal data.",
+        "settingformats": "Apply to formats",
+        "settingformats_desc": "The filter will be applied only if the original text was inserted in one of the selected formats."
+    },
+    "deprecatedkeys": []
+}

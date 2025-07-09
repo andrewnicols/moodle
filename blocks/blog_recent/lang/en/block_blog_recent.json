@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "blog_recent:addinstance": "Add a new recent blog entries block",
+        "norecentblogentries": "No recent entries",
+        "numentriestodisplay": "Number of recent entries to display",
+        "pluginname": "Recent blog entries",
+        "privacy:metadata": "The Recent blog entries block only shows data stored in other locations.",
+        "recentinterval": "Interval of time considered \"recent\""
+    },
+    "deprecatedkeys": []
+}

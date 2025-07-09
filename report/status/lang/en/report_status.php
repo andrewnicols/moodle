@@ -15,13 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tool_task', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    report_status
- * @copyright  2020 Brendan Heywood (brendan@catalyst-au.net)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   report_status
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'System status';
-$string['status:view'] = 'View system status';
-$string['privacy:metadata'] = 'This plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/report_status.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

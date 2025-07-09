@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_news_items', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   block_news_items
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['news_items:addinstance'] = 'Add a new latest announcements block';
-$string['news_items:myaddinstance'] = 'Add a new latest announcements block to Dashboard';
-$string['pluginname'] = 'Latest announcements';
-$string['privacy:metadata'] = 'The Latest announcements block only shows data stored in the forum and does not store data itself.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_news_items.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

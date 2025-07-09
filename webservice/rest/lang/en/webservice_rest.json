@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "REST protocol",
+        "privacy:metadata": "The REST protocol plugin does not store any personal data.",
+        "rest:use": "Use REST protocol"
+    },
+    "deprecatedkeys": []
+}

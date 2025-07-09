@@ -15,23 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Lang strings for theme usage report.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    report_themeusage
- * @copyright  2023 David Woloszyn <david.woloszyn@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   report_themeusage
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['getreport'] = 'Get report';
-$string['invalidparametertheme'] = 'Invalid parameter set for theme.';
-$string['pluginname'] = 'Theme usage';
-$string['privacy:metadata'] = 'The theme report plugin does not store any personal data.';
-$string['themename'] = 'Theme name';
-$string['themeusage'] = 'Theme usage';
-$string['themeusagereport'] = 'Theme usage report';
-$string['themeusagereportall'] = 'All uses of {$a}';
-$string['themeusagereportcategory'] = 'Categories using {$a}';
-$string['themeusagereportcohort'] = 'Cohorts using {$a}';
-$string['themeusagereportcourse'] = 'Courses using {$a}';
-$string['themeusagereportuser'] = 'Users using {$a}';
-$string['usagetype'] = 'Usage type';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/report_themeusage.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

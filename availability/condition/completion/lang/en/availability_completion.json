@@ -1,0 +1,32 @@
+{
+    "strings": {
+        "cachedef_previous_cache": "Previous activity dependency information",
+        "description": "Require students to complete (or not complete) another activity.",
+        "error_selectcmid": "You must select an activity for the completion condition.",
+        "error_selectcmidpassfail": "You must select an activity with \"Require grade\" completion condition set.",
+        "label_cm": "Activity or resource",
+        "label_completion": "Required completion status",
+        "missing": "(Missing activity)",
+        "option_complete": "must be marked complete",
+        "option_fail": "must be complete with fail grade",
+        "option_incomplete": "must not be marked complete",
+        "option_pass": "must be complete with pass grade",
+        "option_previous": "Previous activity with completion",
+        "pluginname": "Restriction by activity completion",
+        "privacy:metadata": "The Restriction by activity completion plugin does not store any personal data.",
+        "requires_complete": "The activity <strong>{$a}</strong> is marked complete",
+        "requires_complete_fail": "The activity <strong>{$a}</strong> is complete and failed",
+        "requires_complete_pass": "The activity <strong>{$a}</strong> is complete and passed",
+        "requires_incomplete": "The activity <strong>{$a}</strong> is incomplete",
+        "requires_not_complete_fail": "The activity <strong>{$a}</strong> is not complete and failed",
+        "requires_not_complete_pass": "The activity <strong>{$a}</strong> is not complete and passed",
+        "requires_previous_complete": "The <strong>previous activity with completion</strong> is marked complete",
+        "requires_previous_complete_fail": "The <strong>previous activity with completion</strong> is complete and failed",
+        "requires_previous_complete_pass": "The <strong>previous activity with completion</strong> is complete and passed",
+        "requires_previous_incomplete": "The <strong>previous activity with completion</strong> is incomplete",
+        "requires_previous_not_complete_fail": "The <strong>previous activity with completion</strong> is not complete and failed",
+        "requires_previous_not_complete_pass": "The <strong>previous activity with completion</strong> is not complete and passed",
+        "title": "Activity completion"
+    },
+    "deprecatedkeys": []
+}

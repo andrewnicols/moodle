@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,17 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_user', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_user
- * @copyright 2010 Dongsheng Cai
- * @author    Dongsheng Cai <dongsheng@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['configplugin'] = 'Configuration for user private files repository';
-$string['pluginname_help'] = 'Files in user private area';
-$string['pluginname'] = 'Private files';
-$string['emptyfilelist'] = 'There are no files to show';
-$string['user:view'] = 'View user private files';
-$string['privacy:metadata'] = 'The Private files repository plugin does not store or transmit any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_user.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

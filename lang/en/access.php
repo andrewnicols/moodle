@@ -15,29 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'access', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   core_access
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['access'] = 'Accessibility';
-$string['accesshelp'] = 'Accessibility help';
-$string['accesskey'] = 'Access key, {$a}';
-$string['accessstatement'] = 'Accessibility statement';
-$string['activitynext'] = 'Next activity';
-$string['activityprev'] = 'Previous activity';
-$string['breadcrumb'] = 'Navigation bar';
-$string['eventcontextlocked'] = 'Context frozen';
-$string['eventcontextunlocked'] = 'Context unfrozen';
-$string['hideblocka'] = 'Hide {$a} block';
-$string['showblocka'] = 'Show {$a} block';
-$string['sitemap'] = 'Site map';
-$string['skipa'] = 'Skip {$a}';
-$string['skipblock'] = 'Skip block';
-$string['skipnavigation'] = 'Skip navigation';
-$string['skipto'] = 'Skip to {$a}';
-$string['tocontent'] = 'Skip to main content';
-$string['tonavigation'] = 'Go to navigation';
-$string['youarehere'] = 'You are here';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_access.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

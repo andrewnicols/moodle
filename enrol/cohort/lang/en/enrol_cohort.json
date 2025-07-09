@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "addgroup": "Add to group",
+        "assignrole": "Assign role",
+        "cohort:config": "Configure cohort instances",
+        "cohort:unenrol": "Unenrol suspended users",
+        "creategroup": "Create new group",
+        "defaultgroupnametext": "{$a->name} cohort {$a->increment}",
+        "enrolcohortsynctask": "Cohort enrolment sync task",
+        "instanceexists": "Cohort is already synchronised with selected role",
+        "plugindisabled": "Cohort sync plugin is disabled",
+        "pluginname": "Cohort sync",
+        "pluginname_desc": "Cohort enrolment plugin synchronises cohort members with course participants.",
+        "privacy:metadata:core_group": "Enrol cohort plugin can create a new group or use an existing group to add all the members of the cohort.",
+        "status": "Active"
+    },
+    "deprecatedkeys": {
+        "plugindisabled": 4.5
+    }
+}

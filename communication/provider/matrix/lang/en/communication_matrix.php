@@ -15,24 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component communication_matrix, language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    communication_matrix
- * @copyright  2023 Safat Shahin <safat.shahin@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   communication_matrix
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['cachedef_serverversions'] = 'Matrix server version information for running servers';
-$string['matrixhomeservername'] = 'Homeserver name';
-$string['matrixhomeservername_desc'] = 'The part after <code>@user:</code> in your Matrix ID (e.g. <code>example.com</code> in <code>@user:example.com</code>)';
-$string['matrixhomeserverurl'] = 'Homeserver URL';
-$string['matrixhomeserverurl_desc'] = 'Server URL for connecting and creating accounts e.g. https://matrix.example.com.';
-$string['matrixaccesstoken'] = 'Access token';
-$string['matrixaccesstoken_desc'] = 'Access token for the account which will perform actions on the homeserver.';
-$string['matrixelementurl'] = 'Element web URL';
-$string['matrixroomtopic'] = 'Room topic';
-$string['matrixroomtopic_help'] = 'A short description of what this room is for.';
-$string['matrixuserid'] = 'Matrix user ID';
-$string['matrix:moderator'] = 'Matrix moderator';
-$string['pluginname'] = 'Matrix';
-$string['privacy:metadata'] = 'The Matrix communication plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/communication_matrix.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

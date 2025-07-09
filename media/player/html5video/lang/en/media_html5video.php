@@ -15,13 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for plugin 'media_html5video'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   media_html5video
- * @copyright 2016 Marina Glancy
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'HTML5 video';
-$string['pluginname_help'] = 'Video files played by the browser\'s native audio player. (Format support depends on the browser.)';
-$string['privacy:metadata'] = 'The HTML5 video media plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/media_html5video.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

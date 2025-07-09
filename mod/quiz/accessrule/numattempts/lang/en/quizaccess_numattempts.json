@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "attemptsallowedn": "Attempts allowed: {$a}",
+        "pluginname": "Number of attempts quiz access rule",
+        "privacy:metadata": "The Number of attempts quiz access rule plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

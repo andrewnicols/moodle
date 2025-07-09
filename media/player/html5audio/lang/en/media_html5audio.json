@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "HTML5 audio",
+        "pluginname_help": "Audio files played by the browser's native audio player. (Format support depends on the browser.)",
+        "privacy:metadata": "The HTML5 audio media plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

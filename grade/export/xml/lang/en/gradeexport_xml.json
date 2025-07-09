@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "eventgradeexported": "XML grade exported",
+        "pluginname": "XML file",
+        "privacy:metadata": "The XML file grade export plugin does not store any personal data.",
+        "xml:publish": "Publish XML grade export",
+        "xml:view": "Use XML grade export"
+    },
+    "deprecatedkeys": []
+}

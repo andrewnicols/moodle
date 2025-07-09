@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "eventcomponent": "Component",
+        "eventcontext": "Event context",
+        "eventloggedas": "{$a->realusername} as {$a->asusername}",
+        "eventorigin": "Origin",
+        "eventrelatedfullnameuser": "Affected user",
+        "eventreportviewed": "Live log report viewed",
+        "livelogs": "Live logs from the past hour",
+        "livelogswithupdate": "Live logs from the past hour ({$a})",
+        "loglive:view": "View live logs",
+        "nologreaderenabled": "No log reader enabled",
+        "pause": "Pause live updates",
+        "pluginname": "Live logs",
+        "privacy:metadata": "The Live logs plugin does not store any personal data.",
+        "resume": "Resume live updates",
+        "selectlogreader": "Select log reader"
+    },
+    "deprecatedkeys": []
+}

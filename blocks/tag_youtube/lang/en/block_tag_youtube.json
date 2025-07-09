@@ -1,0 +1,33 @@
+{
+    "strings": {
+        "anycategory": "Any category",
+        "apierror": "The YouTube API key is not set. Contact your administrator.",
+        "apikey": "API key",
+        "apikeyinfo": "Get a <a href=\"https://developers.google.com/youtube/v3/getting-started\">Google API key</a> for your Moodle site.",
+        "autosvehicles": "Autos & Vehicles",
+        "category": "Category",
+        "categoryerror": "Failed to obtain the list of categories. <br> {$a}",
+        "comedy": "Comedy",
+        "configtitle": "YouTube block title",
+        "education": "Education",
+        "entertainment": "Entertainment",
+        "filmsanimation": "Films & Animation",
+        "gadgetsgames": "Gadgets & Games",
+        "howtodiy": "How-to & DIY",
+        "includeonlyvideosfromplaylist": "Include only videos from the playlist with id",
+        "music": "Music",
+        "newspolitics": "News & Politics",
+        "nonprofitactivism": "Nonprofits & Activism",
+        "numberofvideos": "Number of videos",
+        "peopleblogs": "People & Blogs",
+        "petsanimals": "Pets & Animals",
+        "pluginname": "YouTube",
+        "privacy:metadata": "The YouTube block only shows data stored in other locations.",
+        "requesterror": "Data could not be obtained from the server. Contact your administrator if the problem persists.",
+        "scienceandtech": "Science & Tech",
+        "sports": "Sports",
+        "tag_youtube:addinstance": "Add a new YouTube block",
+        "travel": "Travel & Places"
+    },
+    "deprecatedkeys": []
+}

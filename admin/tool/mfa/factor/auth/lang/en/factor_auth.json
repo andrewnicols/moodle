@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "info": "Check the type of authentication used to log in as an MFA factor.",
+        "pluginname": "Authentication type",
+        "privacy:metadata": "The Authentication type factor plugin does not store any personal data.",
+        "settings:description": "Automatically verify users based on their authentication type.",
+        "settings:goodauth": "Factor authentication types",
+        "settings:goodauth_help": "Select all authentication types to use as a factor for MFA. Any types not selected will not be treated as a FAIL in MFA.",
+        "settings:shortdescription": "Allow users to bypass extra authentication steps based on their authentication type.",
+        "summarycondition": "has an authentication type of {$a}"
+    },
+    "deprecatedkeys": []
+}

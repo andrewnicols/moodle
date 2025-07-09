@@ -1,0 +1,28 @@
+{
+    "strings": {
+        "addpage": "Add page",
+        "alldashboardswerereset": "All Dashboard pages have been reset to default.",
+        "allprofileswerereset": "All profile pages have been reset to default.",
+        "coursemanagementoptions": "Course management options",
+        "defaultpage": "Default My Moodle page",
+        "defaultprofilepage": "Default profile page",
+        "delpage": "Delete page",
+        "error:dashboardisdisabled": "The Dashboard has been disabled by an administrator.",
+        "managepages": "Manage pages",
+        "mymoodle": "Dashboard",
+        "nocourses": "No course information to show.",
+        "noguest": "The Dashboard page is not available to guest users",
+        "pinblocks": "Configure pinned blocks for my moodle",
+        "pinblocksexplan": "Any block settings you configure here will be visible (and non-editable) for any user of moodle on their 'My Moodle' overview page.",
+        "privacy:metadata:core_my:preference:user_home_page_preference": "The user home page preference.",
+        "reseterror": "There was an error resetting your page",
+        "reseteveryonesdashboard": "Reset Dashboard for all users",
+        "reseteveryonesprofile": "Reset profile for all users",
+        "resetpage": "Reset page to default",
+        "resetpageconfirm": "Are you sure you want to reset the page to default?",
+        "resettingdashboards": "Resetting user dashboards to default..."
+    },
+    "deprecatedkeys": {
+        "coursemanagementoptions": 4.5
+    }
+}

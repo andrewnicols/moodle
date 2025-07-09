@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * pdf dataformat lang strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    dataformat_pdf
- * @copyright  2019 Shamim Rezaie <shamim@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   dataformat_pdf
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['dataformat'] = 'Portable Document Format (.pdf)';
-$string['privacy:metadata'] = 'The PDF data format plugin does not store any personal data.';
-$string['shortname'] = 'PDF';
-
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/dataformat_pdf.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,39 @@
+{
+    "strings": {
+        "configdndmedia": "Offer to create a Text and media area when media files are dragged and dropped onto a course.",
+        "configdndresizeheight": "When a Text and media area is created from a dragged and dropped media file, resize it if it is higher than this many pixels. If set to zero, the media file will not be resized.",
+        "configdndresizewidth": "When a Text and media area is created from a dragged and dropped media file, resize it if it is wider than this many pixels. If set to zero, the media file will not be resized.",
+        "dndmedia": "Media drag and drop",
+        "dndresizeheight": "Resize drag and drop height",
+        "dndresizewidth": "Resize drag and drop width",
+        "dnduploadlabel": "Add media to course page",
+        "dnduploadlabeltext": "Add a Text and media area to the course page",
+        "indicator:cognitivedepth": "Text and media area cognitive",
+        "indicator:cognitivedepth_help": "This indicator is based on the cognitive depth reached by the student in a Text and media area resource.",
+        "indicator:cognitivedepthdef": "Text and media area cognitive",
+        "indicator:cognitivedepthdef_help": "The participant has reached this percentage of the cognitive engagement offered by the Text and media area resources during this analysis interval (Levels = No view, View)",
+        "indicator:cognitivedepthdef_link": "Learning_analytics_indicators#Cognitive_depth",
+        "indicator:socialbreadth": "Text and media area social",
+        "indicator:socialbreadth_help": "This indicator is based on the social breadth reached by the student in a Text and media area resource.",
+        "indicator:socialbreadthdef": "Text and media area social",
+        "indicator:socialbreadthdef_help": "The participant has reached this percentage of the social engagement offered by the Text and media area resources during this analysis interval (Levels = No participation, Participant alone)",
+        "indicator:socialbreadthdef_link": "Learning_analytics_indicators#Social_breadth",
+        "label:addinstance": "Add a new Text and media area",
+        "label:view": "View Text and media area",
+        "labelname": "Title in course index",
+        "labelname_help": "The title is only used to identify the Text and media area in the course index and for activity completion. If you leave it empty,  a title will be automatically generated using the first characters of the text.",
+        "labeltext": "Text",
+        "modulename": "Text and media area",
+        "modulename_help": "The Text and media area enables you to display text and multimedia on the course page.\n\nYou can use a Text and media area to:\n\n* Split up a long list of course activities with a subheading or an image\n* Display an embedded video directly on the course page\n* Add a short description to a course section",
+        "modulename_link": "mod/label/view",
+        "modulenameplural": "Text and media areas",
+        "pluginadministration": "Text and media area administration",
+        "pluginname": "Text and media area",
+        "privacy:metadata": "The Text and media area plugin does not store any personal data.",
+        "search:activity": "Text and media area"
+    },
+    "deprecatedkeys": {
+        "configdndmedia": 5.1,
+        "dndmedia": 5.1
+    }
+}

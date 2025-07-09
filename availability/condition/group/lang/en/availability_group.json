@@ -1,0 +1,16 @@
+{
+    "strings": {
+        "anygroup": "(Any group)",
+        "description": "Allow only students who belong to a specified group, or all groups.",
+        "error_selectgroup": "You must select a group.",
+        "missing": "(Missing group)",
+        "pluginname": "Restriction by group",
+        "privacy:metadata": "The Restriction by group plugin does not store any personal data.",
+        "requires_anygroup": "You belong to any group",
+        "requires_group": "You belong to <strong>{$a}</strong>",
+        "requires_notanygroup": "You do not belong to any group",
+        "requires_notgroup": "You do not belong to <strong>{$a}</strong>",
+        "title": "Group"
+    },
+    "deprecatedkeys": []
+}

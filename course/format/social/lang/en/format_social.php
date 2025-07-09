@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,19 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'format_social', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   format_social
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['hidefromothers'] = 'Hide';
-$string['numberdiscussions'] = 'Number of discussions';
-$string['numberdiscussions_help'] = 'This setting specifies how many discussions should be displayed.';
-$string['pluginname'] = 'Social';
-$string['plugin_description'] = 'The course is centred around a main forum on the course page. Additional activities and resources can be added using the Social activities block.';
-$string['privacy:metadata'] = 'The Social format plugin does not store any personal data.';
-$string['sectionname'] = 'section';
-$string['showfromothers'] = 'Show';
-$string['socialactivities'] = 'Social activities';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/format_social.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

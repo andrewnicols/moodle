@@ -15,27 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'mathslib', language 'en', branch 'MOODLE_19_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package   core
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @package   core_mathslib
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['anunexpectederroroccured'] = 'an unexpected error occurred';
-$string['cannotassigntoconstant'] = 'cannot assign to constant \'{$a}\'';
-$string['cannotredefinebuiltinfunction'] = 'cannot redefine built-in function \'{$a}()\'';
-$string['divisionbyzero'] = 'division by zero';
-$string['expectingaclosingbracket'] = 'expecting a closing bracket';
-$string['illegalcharactergeneral'] = 'illegal character \'{$a}\'';
-$string['illegalcharacterunderscore'] = 'illegal character \'_\'';
-$string['implicitmultiplicationnotallowed'] = 'expecting operator, implicit multiplication not allowed.';
-$string['internalerror'] = 'internal error';
-$string['operatorlacksoperand'] = 'operator \'{$a}\' lacks operand';
-$string['undefinedvariable'] = 'undefined variable \'{$a}\'';
-$string['undefinedvariableinfunctiondefinition'] = 'undefined variable \'{$a}\' in function definition';
-$string['unexpectedclosingbracket'] = 'unexpected closing bracket';
-$string['unexpectedcomma'] = 'unexpected comma';
-$string['unexpectedoperator'] = 'unexpected operator \'{$a}\'';
-$string['wrongnumberofarguments'] = 'wrong number of arguments ({$a->given} given, {$a->expected} expected)';
-
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_mathslib.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

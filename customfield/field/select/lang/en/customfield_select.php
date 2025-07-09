@@ -15,19 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Customfield text field plugin strings
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   customfield_select
- * @copyright 2018 Toni Barbera <toni@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['errordefaultvaluenotinlist'] = 'The default value must be one of the options from the list above.';
-$string['errornotenoughoptions'] = 'Please provide at least two options, with each on a new line.';
-$string['invalidoption'] = 'Invalid option selected';
-$string['menuoptions'] = 'Menu options (one per line)';
-$string['pluginname'] = 'Dropdown menu';
-$string['privacy:metadata'] = 'The Dropdown menu field type plugin doesn\'t store any personal data; it uses tables defined in core.';
-$string['specificsettings'] = 'Dropdown menu field settings';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/customfield_select.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

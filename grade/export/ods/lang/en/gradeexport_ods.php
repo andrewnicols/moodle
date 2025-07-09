@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gradeexport_ods', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   gradeexport_ods
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['eventgradeexported'] = 'OpenDocument grade exported';
-$string['pluginname'] = 'OpenDocument spreadsheet';
-$string['ods:publish'] = 'Publish ODS grade export';
-$string['ods:view'] = 'Use OpenDocument grade export';
-$string['privacy:metadata'] = 'The OpenDocument spreadsheet grade export plugin does not store any personal data.';
-$string['timeexported'] = 'Last downloaded from this course';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/gradeexport_ods.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

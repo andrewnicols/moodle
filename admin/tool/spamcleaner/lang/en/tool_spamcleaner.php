@@ -15,32 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tool_spamcleaner', language 'en', branch 'MOODLE_22_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    tool
- * @subpackage spamcleaner
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tool_spamcleaner
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Spam cleaner';
-$string['spamauto'] = 'Autodetect common spam patterns';
-$string['spamcannotdelete'] = 'Cannot delete this user';
-$string['spamcannotfinduser'] = 'No users matching your search';
-$string['spamcleanerintro'] = '<p>This script allows you to search all user profiles for certain strings and then delete those accounts which are obviously created by spammers. You can search for multiple keywords using commas (e.g. casino, porn).</p>
-<p>For further information, see the documentation <a href="https://docs.moodle.org/en/Reducing_spam_in_Moodle">Reducing spam in Moodle</a>.</p>';
-$string['spamdeleteall'] = 'Delete all these user accounts';
-$string['spamdeleteallconfirm'] = 'Are you sure you want to delete all these user accounts?  You can not undo this.';
-$string['spamdeleteconfirm'] = 'Are you sure you want to delete this entry?  You can not undo this.';
-$string['spamdesc'] = 'Description';
-$string['spameg'] = 'eg:  casino, porn, xxx';
-$string['spamfromblog'] = 'From blog post:';
-$string['spamfromcomments'] = 'From comments:';
-$string['spamfrommessages'] = 'From messages:';
-$string['spamfromforumpost'] = 'From forum post:';
-$string['spaminvalidresult'] = 'Unknown but invalid result';
-$string['spamkeyword'] = 'Keyword';
-$string['spamoperation'] = 'Operation';
-$string['spamresult'] = 'Results of searching user profiles containing:';
-$string['spamsearch'] = 'Search for these keywords';
-$string['privacy:metadata'] = 'The Spam cleaner plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/tool_spamcleaner.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

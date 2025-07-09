@@ -15,28 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component aiplacement_courseassist, language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    aiplacement_courseassist
- * @copyright  2024 Matt Porritt <matt.porritt@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   aiplacement_courseassist
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['aidrawerlabel'] = 'AI-generated content drawer';
-$string['aiexplain'] = 'AI explain';
-$string['aifeatures'] = 'AI features';
-$string['aisummary'] = 'AI summary';
-$string['courseassist:explain_text'] = 'Explain text';
-$string['courseassist:summarise_text'] = 'Summarise text';
-$string['copy'] = 'Copy';
-$string['explain'] = 'Explain';
-$string['explain_tooltips'] = 'Create an AI-generated explanation of the page content';
-$string['generatefailtitle'] = 'Something went wrong';
-$string['generating'] = 'Generating your response';
-$string['nocourseassist'] = 'An AI-generated summary is not available for this context.';
-$string['pluginname'] = 'Course assistance placement';
-$string['privacy:metadata'] = 'The Course assistance placement plugin does not store any personal data.';
-$string['regenerate'] = 'Regenerate';
-$string['summarise'] = 'Summarise';
-$string['summarise_tooltips'] = 'Create an AI-generated summary of the page content';
-$string['tryagain'] = 'Try again';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/aiplacement_courseassist.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

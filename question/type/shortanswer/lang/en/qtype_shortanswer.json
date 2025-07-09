@@ -1,0 +1,27 @@
+{
+    "strings": {
+        "addmoreanswerblanks": "Blanks for {no} More Answers",
+        "answer": "Answer: {$a}",
+        "answermustbegiven": "You must enter an answer if there is a grade or feedback.",
+        "answerno": "Answer {$a}",
+        "caseno": "No, case is unimportant",
+        "casesensitive": "Case sensitivity",
+        "caseyes": "Yes, case must match",
+        "correctansweris": "The correct answer is: {$a}",
+        "correctanswers": "Correct answers",
+        "filloutoneanswer": "You must provide at least one possible answer. Answers left blank will not be used. '*' can be used as a wildcard to match any characters. The first matching answer will be used to determine the score and feedback.",
+        "notenoughanswers": "This type of question requires at least {$a} answers",
+        "pleaseenterananswer": "Please enter an answer.",
+        "pluginname": "Short answer",
+        "pluginname_help": "In response to a question (that may include an image) the respondent types a word or short phrase. There may be several possible correct answers, each with a different grade. If the \"Case sensitive\" option is selected, then you can have different scores for \"Word\" or \"word\".",
+        "pluginname_link": "question/type/shortanswer",
+        "pluginnameadding": "Adding a short answer question",
+        "pluginnameediting": "Editing a Short answer question",
+        "pluginnamesummary": "Allows a response of one or a few words that is graded by comparing against various model answers, which may contain wildcards.",
+        "privacy:metadata": "Short answer question type plugin allows question authors to set default options as user preferences.",
+        "privacy:preference:defaultmark": "The default mark set for a given question.",
+        "privacy:preference:penalty": "The penalty for each incorrect try when questions are run using the 'Interactive with multiple tries' or 'Adaptive mode' behaviour.",
+        "privacy:preference:usecase": "Whether the answers should be case sensitive."
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "courseoverview:view": "View course overview report",
+        "pluginname": "Course overview",
+        "privacy:metadata": "The Course overview plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

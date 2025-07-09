@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "pluginname": "Interactive with multiple tries",
+        "privacy:metadata": "The Interactive with multiple tries question behaviour plugin does not store any personal data.",
+        "triesremaining": "Tries remaining: {$a}",
+        "tryagain": "Try again"
+    },
+    "deprecatedkeys": []
+}

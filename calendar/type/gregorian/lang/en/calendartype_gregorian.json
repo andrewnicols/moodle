@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "name": "Gregorian",
+        "pluginname": "Gregorian calendar type",
+        "privacy:metadata": "The Gregorian calendar format plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

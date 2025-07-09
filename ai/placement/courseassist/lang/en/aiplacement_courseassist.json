@@ -1,0 +1,23 @@
+{
+    "strings": {
+        "aidrawerlabel": "AI-generated content drawer",
+        "aiexplain": "AI explain",
+        "aifeatures": "AI features",
+        "aisummary": "AI summary",
+        "copy": "Copy",
+        "courseassist:explain_text": "Explain text",
+        "courseassist:summarise_text": "Summarise text",
+        "explain": "Explain",
+        "explain_tooltips": "Create an AI-generated explanation of the page content",
+        "generatefailtitle": "Something went wrong",
+        "generating": "Generating your response",
+        "nocourseassist": "An AI-generated summary is not available for this context.",
+        "pluginname": "Course assistance placement",
+        "privacy:metadata": "The Course assistance placement plugin does not store any personal data.",
+        "regenerate": "Regenerate",
+        "summarise": "Summarise",
+        "summarise_tooltips": "Create an AI-generated summary of the page content",
+        "tryagain": "Try again"
+    },
+    "deprecatedkeys": []
+}

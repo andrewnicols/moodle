@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "beginanswernotfound": "Could not find a required \"{\" character in imported file content.",
+        "endanswernotfound": "Could not find a required \"}\" character in imported file content.",
+        "noanswerfound": "No answers found in question",
+        "pluginname": "Missing word format",
+        "pluginname_help": "Missing word format enables questions to be imported via text file.",
+        "pluginname_link": "qformat/missingword",
+        "privacy:metadata": "The Missing word question format plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

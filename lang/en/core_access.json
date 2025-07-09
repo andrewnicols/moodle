@@ -1,0 +1,24 @@
+{
+    "strings": {
+        "access": "Accessibility",
+        "accesshelp": "Accessibility help",
+        "accesskey": "Access key, {$a}",
+        "accessstatement": "Accessibility statement",
+        "activitynext": "Next activity",
+        "activityprev": "Previous activity",
+        "breadcrumb": "Navigation bar",
+        "eventcontextlocked": "Context frozen",
+        "eventcontextunlocked": "Context unfrozen",
+        "hideblocka": "Hide {$a} block",
+        "showblocka": "Show {$a} block",
+        "sitemap": "Site map",
+        "skipa": "Skip {$a}",
+        "skipblock": "Skip block",
+        "skipnavigation": "Skip navigation",
+        "skipto": "Skip to {$a}",
+        "tocontent": "Skip to main content",
+        "tonavigation": "Go to navigation",
+        "youarehere": "You are here"
+    },
+    "deprecatedkeys": []
+}

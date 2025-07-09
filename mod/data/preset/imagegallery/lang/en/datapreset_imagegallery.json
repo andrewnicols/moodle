@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "modulename": "Image gallery",
+        "modulename_help": "Use this preset to collect images.",
+        "pluginname": "Image gallery",
+        "privacy:metadata": "The Image gallery plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

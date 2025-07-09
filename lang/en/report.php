@@ -15,12 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'report', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   core_report
- * @copyright 2024 Amaia Anabitarte <amaia@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['privacy:metadata'] = 'The Report system does not store any personal data.';
-
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_report.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

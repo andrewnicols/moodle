@@ -15,81 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'form', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    core
- * @subpackage form
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   core_form
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['addfields'] = 'Add {$a} field(s) to form';
-$string['close'] = 'Close';
-$string['custom'] = 'Custom';
-$string['day'] = 'Day';
-$string['default'] = 'Default';
-$string['display'] = 'Display';
-$string['err_alphanumeric'] = 'You must enter only letters or numbers here.';
-$string['err_email'] = 'You must enter a valid email address here.';
-$string['err_lettersonly'] = 'You must enter only letters here.';
-$string['err_maxfiles'] = 'You must not attach more than {$a} files here.';
-$string['err_maxlength'] = 'You must enter no more than {$a->format} characters here.';
-$string['err_minlength'] = 'You must enter at least {$a->format} characters here.';
-$string['err_nonzero'] = 'You must enter a number not starting with a 0 here.';
-$string['err_nopunctuation'] = 'You must enter no punctuation characters here.';
-$string['err_numeric'] = 'You must enter a number here.';
-$string['err_positiveduration'] = 'This duration cannot be negative.';
-$string['err_positiveint'] = 'You must enter a whole number that is greater than 0.';
-$string['err_rangelength'] = 'You must enter between {$a->format[0]} and {$a->format[1]} characters here.';
-$string['err_required'] = 'You must supply a value here.';
-$string['err_wrappingwhitespace'] = 'The value must not start or end with whitespace.';
-$string['err_wrongfileextension'] = 'Some files ({$a->wrongfiles}) cannot be uploaded. Only file types {$a->allowlist} are allowed.';
-$string['filesofthesetypes'] = 'Accepted file types:';
-$string['filetypesany'] = 'All file types';
-$string['filetypesnotall'] = 'It is not allowed to select \'All file types\' here';
-$string['filetypesnotallowed'] = 'These file types are not allowed here: {$a}';
-$string['filetypesothers'] = 'Other files';
-$string['filetypesunknown'] = 'Unknown file types: {$a}';
-$string['formactions'] = 'Form actions';
-$string['general'] = 'General';
-$string['hideadvanced'] = 'Hide advanced';
-$string['hour'] = 'Hour';
-$string['minute'] = 'Minute';
-$string['miscellaneoussettings'] = 'Miscellaneous settings';
-$string['modstandardels'] = 'Common module settings';
-$string['month'] = 'Month';
-$string['mustbeoverriden'] = 'Abstract form_definition() method in class {$a} must be overridden, please fix the code.';
-$string['newvaluefor'] = 'New value for {$a}';
-$string['nomethodforaddinghelpbutton'] = 'There is no method for adding a help button to form element {$a->name} (class {$a->classname})';
-$string['nonexistentformelements'] = 'Trying to add help buttons to non-existent form elements : {$a}';
-$string['nopermissionform'] = 'You don\'t have permission to access this form.';
-$string['noselection'] = 'No selection';
-$string['nosuggestions'] = 'No suggestions';
-$string['novalue'] = 'Nothing entered';
-$string['novalueclicktoset'] = 'Click to enter text';
-$string['optional'] = 'Optional';
-$string['othersettings'] = 'Other settings';
-$string['passwordunmaskedithint'] = 'Edit password';
-$string['passwordunmaskrevealhint'] = 'Reveal';
-$string['passwordunmaskinstructions'] = 'Press enter to save changes';
-$string['privacy:metadata:preference:filemanager_recentviewmode'] = 'Recently selected view mode of the file picker element.';
-$string['privacy:preference:filemanager_recentviewmode'] = 'Your preferred way of displaying files in the file picker is: {$a}';
-$string['requiredelement'] = 'Required field';
-$string['security'] = 'Security';
-$string['selectallornone'] = 'Select all/none';
-$string['selected'] = 'Selected';
-$string['selecteditems'] = 'Selected items:';
-$string['showadvanced'] = 'Show advanced';
-$string['showless'] = 'Show less...';
-$string['showmore'] = 'Show more...';
-$string['somefieldsrequired'] = '{$a} Required';
-$string['suggestions'] = 'Suggestions';
-$string['time'] = 'Time';
-$string['timeunit'] = 'Time unit';
-$string['timing'] = 'Timing';
-$string['togglesensitive'] = 'Toggle sensitive';
-$string['unmaskpassword'] = 'Unmask';
-$string['year'] = 'Year';
-
-// Deprecated since Moodle 5.0.
-$string['advancedelement'] = 'Advanced element';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_form.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

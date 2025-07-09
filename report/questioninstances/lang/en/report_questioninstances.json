@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "editquestionshere": "Edit questions in this context",
+        "eventreportviewed": "Report viewed",
+        "getreport": "Get the report",
+        "hiddenquestions": "Hidden",
+        "intro": "This report lists all the contexts in the system where there are questions of a particular type.",
+        "pluginname": "Question instances",
+        "privacy:metadata": "The Question instances plugin does not store any personal data.",
+        "questioninstances:view": "View question instances report",
+        "reportforallqtypes": "Report for all question types",
+        "reportformissingqtypes": "Report for question of unknown types",
+        "reportforqtype": "Report for question type '{$a}'",
+        "reportsettings": "Report settings",
+        "totalquestions": "Total",
+        "visiblequestions": "Visible"
+    },
+    "deprecatedkeys": []
+}

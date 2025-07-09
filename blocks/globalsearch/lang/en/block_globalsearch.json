@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "globalsearch:addinstance": "Add a new global search block",
+        "globalsearch:myaddinstance": "Add a new global search block to Dashboard",
+        "pluginname": "Global search",
+        "privacy:metadata": "The Global search block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

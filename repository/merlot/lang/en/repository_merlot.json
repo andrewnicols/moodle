@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "configplugin": "Merlot.org configuration",
+        "licensekey": "Licence key",
+        "merlot:view": "View the Merlot repository",
+        "pluginname": "Merlot.org",
+        "pluginname_help": "Merlot.org",
+        "privacy:metadata:repository_merlot": "The Merlot.org repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.",
+        "privacy:metadata:repository_merlot:author": "The Merlot.org repository content author.",
+        "privacy:metadata:repository_merlot:keywords": "The Merlot.org repository user search text query.",
+        "privacy:metadata:repository_merlot:licencekey": "The Merlot.org repository licence key."
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "eventactivityreportviewed": "Activity report viewed",
+        "eventoutlinereportviewed": "Outline report viewed",
+        "neverseen": "Never seen",
+        "nocapability": "Can not access user outline report",
+        "nologreaderenabled": "No log reader enabled",
+        "numviews": "{$a->numviews} views by {$a->distinctusers} users",
+        "outline:view": "View activity report",
+        "outline:viewuserreport": "View user activity report",
+        "page-report-outline-index": "Course outline report",
+        "page-report-outline-user": "User course outline report",
+        "page-report-outline-x": "Any outline report",
+        "pluginname": "Activity report",
+        "privacy:metadata": "The Activity report plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

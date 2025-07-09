@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'profilefield_text', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   profilefield_text
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Text input';
-$string['privacy:metadata:profilefield_text:userid'] = 'The ID of the user whose data is stored by the Text input user profile field';
-$string['privacy:metadata:profilefield_text:fieldid'] = 'The ID of the profile field';
-$string['privacy:metadata:profilefield_text:data'] = 'Text input user profile field user data';
-$string['privacy:metadata:profilefield_text:dataformat'] = 'The format of Text input user profile field user data';
-$string['privacy:metadata:profilefield_text:tableexplanation'] = 'Additional profile data';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/profilefield_text.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

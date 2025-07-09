@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "configplugin": "Configuration for upload plugin",
+        "pluginname": "Upload a file",
+        "pluginname_help": "Upload a file to Moodle",
+        "privacy:metadata": "The Upload a file repository plugin does not store or transmit any personal data.",
+        "upload:view": "Use uploading in file picker",
+        "upload_error_cant_write": "Failed to write file to disk.",
+        "upload_error_extension": "A PHP extension stopped the file upload.",
+        "upload_error_form_size": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.",
+        "upload_error_ini_size": "The file is larger than the maximum size allowed.",
+        "upload_error_invalid_file": "The file '{$a}' is either empty or a folder. To upload folders zip them first.",
+        "upload_error_no_file": "No file was uploaded.",
+        "upload_error_no_tmp_dir": "PHP is missing a temporary folder.",
+        "upload_error_partial": "The uploaded file was only partially uploaded."
+    },
+    "deprecatedkeys": []
+}

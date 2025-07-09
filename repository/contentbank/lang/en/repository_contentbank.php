@@ -15,20 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_contentbank', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_contentbank
- * @copyright 2020 Mihail Geshoski
- * @author    Mihail Geshoski <mihail@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['configplugin'] = 'Configuration for content bank repository';
-$string['pluginname_help'] = 'Files in content bank';
-$string['pluginname'] = 'Content bank';
-$string['emptyfilelist'] = 'There are no files to show';
-$string['contentbank:view'] = 'View content bank repository';
-$string['contentbank:accesscoursecontent'] = 'Access course content bank files';
-$string['contentbank:accesscoursecategorycontent'] = 'Access course category content bank files';
-$string['contentbank:accessgeneralcontent'] = 'Access system content bank files';
-$string['privacy:metadata'] = 'The Content bank repository plugin does not store or transmit any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_contentbank.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

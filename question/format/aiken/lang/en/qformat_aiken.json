@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "pluginname": "Aiken format",
+        "pluginname_help": "This is a simple format for importing multiple choice questions from a text file.",
+        "pluginname_link": "qformat/aiken",
+        "privacy:metadata": "The Aiken question format plugin does not store any personal data.",
+        "questionmissinganswers": "Question must have at least 2 answers on line {$a}",
+        "questionnotcomplete": "Question not completed before next question start on line {$a}",
+        "questionnotstarted": "Question not started on line {$a}"
+    },
+    "deprecatedkeys": []
+}

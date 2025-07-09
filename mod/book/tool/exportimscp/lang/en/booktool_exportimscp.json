@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "eventbookexported": "Book exported",
+        "exportimscp:export": "Export book as IMS content package",
+        "generateimscp": "Download IMS CP",
+        "nochapters": "No book chapters found, so unable to export to IMS CP.",
+        "pluginname": "Book IMS CP export",
+        "privacy:metadata": "The Book IMS CP export plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

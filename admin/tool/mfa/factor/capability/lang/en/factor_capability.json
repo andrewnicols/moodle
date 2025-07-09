@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "capability:cannotpassfactor": "Must use other factor in MFA to authenticate",
+        "pluginname": "User capability",
+        "privacy:metadata": "The User capability factor plugin does not store any personal data.",
+        "settings:adminpasses": "Site admins can pass this factor",
+        "settings:adminpasses_help": "By default admins pass all capability checks, including this one which uses 'factor/capability:cannotpassfactor', which means they will fail this factor.\n    If checked then all site admins will pass this factor if they do not have this capability from another role.\n    If unchecked site admins will fail this factor.",
+        "settings:description": "<p>Use the capability factor/capability:cannotpassfactor to specify which users must use another factor to authenticate.</p>\n<p>Allow this capability for selected roles in <a href=\"roles/manage.php\">Define roles</a>.</p>",
+        "settings:shortdescription": "Specify which users must use other factors to authenticate. Must be combined with other factors.",
+        "summarycondition": "does NOT have the 'factor/capability:cannotpassfactor' capability in any role including site administrator."
+    },
+    "deprecatedkeys": []
+}

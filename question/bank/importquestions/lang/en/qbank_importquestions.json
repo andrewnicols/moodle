@@ -1,0 +1,7 @@
+{
+    "strings": {
+        "pluginname": "Import questions",
+        "privacy:metadata": "The Import questions question bank plugin imports questions from a file according to the selected file format."
+    },
+    "deprecatedkeys": []
+}

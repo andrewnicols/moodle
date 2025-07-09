@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "anunexpectederroroccured": "an unexpected error occurred",
+        "cannotassigntoconstant": "cannot assign to constant '{$a}'",
+        "cannotredefinebuiltinfunction": "cannot redefine built-in function '{$a}()'",
+        "divisionbyzero": "division by zero",
+        "expectingaclosingbracket": "expecting a closing bracket",
+        "illegalcharactergeneral": "illegal character '{$a}'",
+        "illegalcharacterunderscore": "illegal character '_'",
+        "implicitmultiplicationnotallowed": "expecting operator, implicit multiplication not allowed.",
+        "internalerror": "internal error",
+        "operatorlacksoperand": "operator '{$a}' lacks operand",
+        "undefinedvariable": "undefined variable '{$a}'",
+        "undefinedvariableinfunctiondefinition": "undefined variable '{$a}' in function definition",
+        "unexpectedclosingbracket": "unexpected closing bracket",
+        "unexpectedcomma": "unexpected comma",
+        "unexpectedoperator": "unexpected operator '{$a}'",
+        "wrongnumberofarguments": "wrong number of arguments ({$a->given} given, {$a->expected} expected)"
+    },
+    "deprecatedkeys": []
+}

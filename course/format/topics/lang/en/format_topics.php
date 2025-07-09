@@ -15,26 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component Custom sections course format.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   format_topics
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['currentsection'] = 'Current section';
-$string['hidefromothers'] = 'Hide';
-$string['legacysectionname'] = 'Topic';
-$string['newsection'] = 'New section';
-$string['page-course-view-topics'] = 'Any course main page in custom sections format';
-$string['page-course-view-topics-x'] = 'Any course page in custom sections format';
-$string['pluginname'] = 'Custom sections';
-$string['plugin_description'] = 'The course is divided into customisable sections.';
-$string['privacy:metadata'] = 'The Custom sections format plugin does not store any personal data.';
-$string['indentation'] = 'Allow indentation on course page';
-$string['indentation_help'] = 'Allow teachers, and other users with the manage activities capability, to indent items on the course page.';
-$string['section_highlight_feedback'] = 'Section {$a->name} highlighted.';
-$string['section_unhighlight_feedback'] = 'Highlighting removed from section {$a->name}.';
-$string['section0name'] = 'General';
-$string['sectionname'] = 'Section';
-$string['showfromothers'] = 'Show';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/format_topics.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

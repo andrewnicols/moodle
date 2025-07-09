@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "filtername": "Multi-language content",
+        "forceoldsyntax": "Force old syntax",
+        "forceoldsyntax_desc": "Force old multi-language syntax: &lt;span&gt; without the class=\"multilang\" and &lt;lang&gt;.",
+        "privacy:metadata": "The Multi-language content plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

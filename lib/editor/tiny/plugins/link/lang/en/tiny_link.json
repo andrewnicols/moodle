@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "browserepositories": "Browse repositories...",
+        "createlink": "Create link",
+        "enterurl": "Enter a URL",
+        "helplinktext": "Link",
+        "link": "Link",
+        "link:use": "Use TinyMCE link",
+        "openinnewwindow": "Open in new window",
+        "pluginname": "Link",
+        "privacy:metadata": "The link plugin for TinyMCE does not store any personal data.",
+        "texttodisplay": "Text to display",
+        "unlink": "Unlink",
+        "updatelink": "Update link"
+    },
+    "deprecatedkeys": {
+        "helplinktext": 4.5
+    }
+}

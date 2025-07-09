@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "nocookie": "Use no cookie domain",
+        "nocookie_desc": "Use youtube-nocookie.com domain for embedding videos. This reduces the number of third party cookies used in embedding. This domain is also not blocked by some adblockers.",
+        "pluginname": "YouTube",
+        "pluginname_help": "The video-sharing website youtube.com. Video and playlist links are supported.",
+        "privacy:metadata": "The Youtube media plugin does not store any personal data.",
+        "supportsplaylist": "YouTube playlists",
+        "supportsvideo": "YouTube videos"
+    },
+    "deprecatedkeys": []
+}

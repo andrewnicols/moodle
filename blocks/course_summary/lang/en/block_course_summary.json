@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "course_summary:addinstance": "Add a new course/site summary block",
+        "coursesummary": "Course summary",
+        "pluginname": "Course/site summary",
+        "privacy:metadata": "The Course/site summary block only shows information about courses and does not store data itself."
+    },
+    "deprecatedkeys": []
+}

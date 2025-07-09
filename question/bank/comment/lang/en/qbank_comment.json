@@ -1,0 +1,15 @@
+{
+    "strings": {
+        "addcomment": "Add comment",
+        "close": "Close",
+        "comment": "Comment",
+        "comment_added": "The user with ID '{$a->userid}' added the comment with ID '{$a->objectid}'\n to the '{$a->component}' for the question with ID '{$a->itemid}'.",
+        "comment_removed": "The user with ID '{$a->userid}' deleted the comment with ID '{$a->objectid}'\n from the '{$a->component}' for the question with ID '{$a->itemid}'.",
+        "commentdisabled": "Comments are currently disabled on this site. Please contact your site administrator.",
+        "commentheader": "Question comments",
+        "commentplural": "Comments",
+        "pluginname": "Question comments",
+        "privacy:metadata:core_comment": "The Question comments question bank plugin enables users to comment on questions."
+    },
+    "deprecatedkeys": []
+}

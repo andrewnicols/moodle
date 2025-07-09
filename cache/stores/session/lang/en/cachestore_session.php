@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The library file for the session cache store.
+ * Backwards compatibility helper for the lang file migration.
  *
- * This file is part of the session cache store, it contains the API for interacting with an instance of the store.
- * This is used as a default cache store within the Cache API. It should never be deleted.
- *
- * @package    cachestore_session
- * @category   cache
- * @copyright  2012 Sam Hemelryk
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   cachestore_session
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['pluginname'] = 'Session cache';
-$string['privacy:metadata:core_user'] = 'The Session cachestore plugin stores data briefly as part of its caching functionality. This data is stored in the short-lived user session.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/cachestore_session.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

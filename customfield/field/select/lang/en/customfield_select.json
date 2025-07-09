@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "errordefaultvaluenotinlist": "The default value must be one of the options from the list above.",
+        "errornotenoughoptions": "Please provide at least two options, with each on a new line.",
+        "invalidoption": "Invalid option selected",
+        "menuoptions": "Menu options (one per line)",
+        "pluginname": "Dropdown menu",
+        "privacy:metadata": "The Dropdown menu field type plugin doesn't store any personal data; it uses tables defined in core.",
+        "specificsettings": "Dropdown menu field settings"
+    },
+    "deprecatedkeys": []
+}

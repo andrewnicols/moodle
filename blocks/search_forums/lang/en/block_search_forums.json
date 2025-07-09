@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "advancedsearch": "Advanced search",
+        "pluginname": "Search forums",
+        "privacy:metadata": "The Search forums block only shows data stored in other locations.",
+        "search_forums:addinstance": "Add a new search forums block"
+    },
+    "deprecatedkeys": []
+}

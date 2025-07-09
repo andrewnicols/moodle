@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "configplugin": "Configuration for legacy course files repository",
+        "coursefiles:view": "Use course files repository plugin",
+        "emptyfilelist": "There are no files to show",
+        "notitle": "notitle",
+        "pluginname": "Legacy course files",
+        "pluginname_help": "Legacy course files",
+        "privacy:metadata": "The Legacy course files repository plugin does not store or transmit any personal data.",
+        "remember": "Remember me"
+    },
+    "deprecatedkeys": []
+}

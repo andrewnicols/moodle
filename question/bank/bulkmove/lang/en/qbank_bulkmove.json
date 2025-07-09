@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "bulkmoveheader": "Move the selected questions to...",
+        "close": "Close",
+        "confirmmove": "Are you sure you want to move these questions?",
+        "movequestions": "Move questions",
+        "movetobulkaction": "Move to...",
+        "pluginname": "Bulk move questions",
+        "privacy:metadata": "The Bulk move questions question bank plugin does not store any personal data.",
+        "questionsmoved": "Questions successfully moved",
+        "warning": "You must select a question bank before you can select a category."
+    },
+    "deprecatedkeys": []
+}

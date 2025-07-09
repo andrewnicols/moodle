@@ -15,13 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'auth_webservice', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   auth_webservice
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['auth_webservicedescription'] = 'This authentication method should be used for accounts that are exclusively for use by web service clients.';
-$string['pluginname'] = 'Web services authentication';
-$string['privacy:metadata'] = 'The Web services authentication plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/auth_webservice.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "apierror": "{$a}",
+        "apikey": "API key",
+        "configplugin": "YouTube repository type configuration",
+        "information": "Get a <a href=\"https://developers.google.com/youtube/v3/getting-started\">Google API key</a> for your Moodle site.",
+        "pluginname": "YouTube videos",
+        "privacy:metadata:repository_youtube": "The YouTube videos repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.",
+        "privacy:metadata:repository_youtube:searchtext": "The YouTube videos repository user search text query",
+        "search": "Search videos",
+        "sortby": "Sort By",
+        "sortpublished": "Date Published",
+        "sortrating": "Rating",
+        "sortrelevance": "Relevance",
+        "sortviewcount": "View Count",
+        "youtube:view": "Use YouTube in file picker"
+    },
+    "deprecatedkeys": []
+}

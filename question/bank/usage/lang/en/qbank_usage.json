@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "attempts": "Attempts",
+        "coursename": "Course name",
+        "modulename": "Activity name",
+        "notused": "Never",
+        "pluginname": "Question usage",
+        "privacy:metadata": "The Question usage question bank plugin does not store any personal data.",
+        "questionlastused": "Last used",
+        "questionlastused_help": "The date when the question was last attempted.",
+        "questionusage": "Usage",
+        "questionusage_help": "The number of quizzes in which the question is used, with a link to open a window listing the quizzes and the number of attempts.",
+        "questionusageversion": "v{$a}",
+        "state": "State",
+        "usageheader": "Question usage",
+        "versions": "Version"
+    },
+    "deprecatedkeys": []
+}

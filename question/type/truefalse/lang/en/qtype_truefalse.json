@@ -1,0 +1,23 @@
+{
+    "strings": {
+        "correctanswer": "Correct answer",
+        "correctanswerfalse": "The correct answer is 'False'.",
+        "correctanswertrue": "The correct answer is 'True'.",
+        "false": "False",
+        "feedbackfalse": "Feedback for the response 'False'.",
+        "feedbacktrue": "Feedback for the response 'True'.",
+        "pleaseselectananswer": "Please select an answer.",
+        "pluginname": "True/False",
+        "pluginname_help": "In response to a question (that may include an image) the respondent chooses from true or false.",
+        "pluginname_link": "question/type/truefalse",
+        "pluginnameadding": "Adding a True/False question",
+        "pluginnameediting": "Editing a True/False question",
+        "pluginnamesummary": "A simple form of multiple choice question with just the two choices 'True' and 'False'.",
+        "privacy:preference:showstandardinstruction": "Whether showing standard instruction.",
+        "selectone": "Select one:",
+        "showstandardinstruction": "Show standard instructions",
+        "showstandardinstruction_help": "Whether to show the instructions \"Select one:\" before true/false answers.",
+        "true": "True"
+    },
+    "deprecatedkeys": []
+}

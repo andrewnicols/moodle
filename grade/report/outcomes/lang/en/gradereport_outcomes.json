@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "addoutcome": "Add an outcome",
+        "courseoutcomes": "Course outcomes",
+        "coursespecoutcome": "Course outcomes",
+        "eventgradereportviewed": "Grade outcomes report viewed",
+        "outcomes:view": "View outcomes report",
+        "pluginname": "Outcomes report",
+        "privacy:metadata": "The Grade outcomes report only shows data stored in other locations.",
+        "usedgradeitem": "Number of grade items"
+    },
+    "deprecatedkeys": []
+}

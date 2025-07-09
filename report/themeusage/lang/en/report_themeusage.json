@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "getreport": "Get report",
+        "invalidparametertheme": "Invalid parameter set for theme.",
+        "pluginname": "Theme usage",
+        "privacy:metadata": "The theme report plugin does not store any personal data.",
+        "themename": "Theme name",
+        "themeusage": "Theme usage",
+        "themeusagereport": "Theme usage report",
+        "themeusagereportall": "All uses of {$a}",
+        "themeusagereportcategory": "Categories using {$a}",
+        "themeusagereportcohort": "Cohorts using {$a}",
+        "themeusagereportcourse": "Courses using {$a}",
+        "themeusagereportuser": "Users using {$a}",
+        "usagetype": "Usage type"
+    },
+    "deprecatedkeys": []
+}

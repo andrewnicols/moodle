@@ -15,27 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'format_weeks', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   format_weeks
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['addsection'] = 'Add week';
-$string['automaticenddate'] = 'Calculate the end date from the number of sections';
-$string['automaticenddate_help'] = 'If enabled, the end date for the course will be automatically calculated from the number of sections and the course start date.';
-$string['currentsection'] = 'Current week';
-$string['hidefromothers'] = 'Hide';
-$string['maxinitialsections'] = 'Maximum number of weeks at course creation';
-$string['maxinitialsections_help'] = 'Sets the maximum number of weeks that can be assigned to a course at the time of creation. This limit helps prevent accidental creation of overly long courses. It does not restrict teachers from adding more weeks later during course editing.';
-$string['page-course-view-weeks'] = 'Any course main page in weekly sections format';
-$string['page-course-view-weeks-x'] = 'Any course page in weekly sections format';
-$string['pluginname'] = 'Weekly sections';
-$string['plugin_description'] = 'The course is divided into sections corresponding to each week, beginning from the course start date.';
-$string['privacy:metadata'] = 'The Weekly sections format plugin does not store any personal data.';
-$string['indentation'] = 'Allow indentation on course page';
-$string['indentation_help'] = 'Allow teachers, and other users with the manage activities capability, to indent items on the course page.';
-$string['section0name'] = 'General';
-$string['sectionname'] = 'Week';
-$string['showfromothers'] = 'Show';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/format_weeks.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

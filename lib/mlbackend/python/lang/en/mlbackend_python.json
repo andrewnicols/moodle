@@ -1,0 +1,27 @@
+{
+    "strings": {
+        "errornoconfigdata": "The server configuration is not complete.",
+        "errorserver": "Server error {$a}",
+        "host": "Host",
+        "hostdesc": "Host",
+        "packageinstalledshouldbe": "The moodlemlbackend Python package should be updated. The required version is \"{$a->required}\" and the installed version is \"{$a->installed}\".",
+        "packageinstalledtoohigh": "The moodlemlbackend Python package is not compatible with this version of Moodle. The required version is \"{$a->required}\" or higher as long as it is API-compatible. The installed version \"{$a->installed}\" is too high.",
+        "password": "Password",
+        "passworddesc": "String of characters used as a password to communicate between the Moodle server and the Python server.",
+        "pluginname": "Python machine learning backend",
+        "port": "Port",
+        "portdesc": "Port",
+        "privacy:metadata": "The Python machine learning backend plugin does not store any personal data.",
+        "pythonpackagenotinstalled": "The moodlemlbackend Python package is not installed or there is a problem with it. Please execute \"{$a}\" from command line interface for more info.",
+        "pythonpathnotdefined": "The path to your executable Python binary has not been defined. Please visit \"{$a}\" to set it.",
+        "secure": "Use HTTPS",
+        "securedesc": "Whether to use HTTP or HTTPS.",
+        "serversettingsinfo": "If 'Use a server' is enabled, the server settings will be displayed.",
+        "tensorboardinfo": "Launch TensorBoard from command line by typing tensorboard --logdir='{$a}' in your web server.",
+        "username": "Username",
+        "usernamedesc": "String of characters used as a username to communicate between the Moodle server and the Python server.",
+        "useserver": "Use a server",
+        "useserverdesc": "The machine learning backend Python package is not installed on the web server but on a different server."
+    },
+    "deprecatedkeys": []
+}

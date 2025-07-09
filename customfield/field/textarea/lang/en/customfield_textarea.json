@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "Text area",
+        "privacy:metadata": "The Text area field type plugin doesn't store any personal data; it uses tables defined in core.",
+        "specificsettings": "Text area field settings"
+    },
+    "deprecatedkeys": []
+}

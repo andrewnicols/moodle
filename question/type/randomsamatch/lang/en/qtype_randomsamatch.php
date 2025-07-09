@@ -15,26 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'qtype_randomsamatch', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qtype
- * @subpackage randomsamatch
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qtype_randomsamatch
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['insufficientoptions'] = 'Insufficient selection options are available for this question, therefore it is not available in  this quiz. Please inform your teacher.';
-$string['nosaincategory'] = 'There are no short answer questions in the category that you chose \'{$a->catname}\'. Choose a different category, make some questions in this category.';
-$string['notenoughsaincategory'] = 'There is/are only {$a->nosaquestions} short answer questions in the category that you chose \'{$a->catname}\'. Choose a different category, make some more questions in this category or reduce the amount of questions you\'ve selected.';
-$string['pluginname'] = 'Random short-answer matching';
-$string['pluginname_help'] = 'From the student perspective, this looks just like a matching question. The difference is that the list of names or statements (questions) for matching are drawn randomly from the short answer questions in the current category. There should be sufficient unused short answer questions in the category, otherwise an error message will be displayed.';
-$string['pluginname_link'] = 'question/type/randomsamatch';
-$string['pluginnameadding'] = 'Adding a Random short-answer matching question';
-$string['pluginnameediting'] = 'Editing a Random short-answer matching question';
-$string['pluginnamesummary'] = 'Like a Matching question, but created randomly from the short answer questions in a particular category.';
-$string['privacy:metadata'] = 'The Random short-answer matching question type plugin does not store any personal data.';
-$string['randomsamatchnumber'] = 'Number of questions to select';
-$string['randomsamatch'] = 'Random short-answer matching';
-$string['randomsamatchintro'] = 'For each of the following questions, select the matching answer from the menu.';
-$string['subcats'] = 'Include subcategories';
-$string['subcats_help'] = 'If checked, questions will be choosen from subcategories too.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qtype_randomsamatch.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

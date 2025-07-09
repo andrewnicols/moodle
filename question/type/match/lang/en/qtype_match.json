@@ -1,0 +1,31 @@
+{
+    "strings": {
+        "answer": "Answer {$a}",
+        "availablechoices": "Available choices",
+        "blanksforxmorequestions": "Blanks for {no} more questions",
+        "correctansweris": "The correct answer is: {$a}",
+        "deletedchoice": "[Deleted choice]",
+        "deletedsubquestion": "This part of the question was deleted after the attempt was started.",
+        "filloutthreeqsandtwoas": "You must provide at least two questions and three answers. You can provide extra wrong answers by giving an answer with a blank question. Entries where both the question and the answer are blank will be ignored.",
+        "nomatchinganswer": "You must specify an answer matching the question '{$a}'.",
+        "nomatchinganswerforq": "You must specify an answer for this question.",
+        "notenoughqsandas": "You must supply at least {$a->q} questions and {$a->a} answers.",
+        "notenoughquestions": "You must supply at least {$a} question and answer pairs.",
+        "pleaseananswerallparts": "Please answer all parts of the question.",
+        "pluginname": "Matching",
+        "pluginname_help": "Matching questions require the respondent to correctly match a list of names or statements (questions) to another list of names or statements (answers).",
+        "pluginname_link": "question/type/match",
+        "pluginnameadding": "Adding a Matching question",
+        "pluginnameediting": "Editing a Matching question",
+        "pluginnamesummary": "The answer to each of a number of sub-question must be selected from a list of possibilities.",
+        "privacy:metadata": "Matching question type plugin allows question authors to set default options as user preferences.",
+        "privacy:preference:defaultmark": "The default mark set for a given question.",
+        "privacy:preference:penalty": "The penalty for each incorrect try when questions are run using the 'Interactive with multiple tries' or 'Adaptive mode' behaviour.",
+        "privacy:preference:shuffleanswers": "Whether the answers should be automatically shuffled.",
+        "regradeissuenumchoiceschanged": "The number of choices has changed.",
+        "regradeissuenumstemschanged": "The number of sub-questions has changed.",
+        "shuffle": "Shuffle",
+        "shuffle_help": "If enabled, the order of the questions is randomly shuffled for each attempt, provided that \"Shuffle within questions\" in the activity settings is also enabled. In a matching question, only the questions are affected by this parameter. The answer choices will always be shuffled."
+    },
+    "deprecatedkeys": []
+}

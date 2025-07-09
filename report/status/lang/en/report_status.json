@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "System status",
+        "privacy:metadata": "This plugin does not store any personal data.",
+        "status:view": "View system status"
+    },
+    "deprecatedkeys": []
+}

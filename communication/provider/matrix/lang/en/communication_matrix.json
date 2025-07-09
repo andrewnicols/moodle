@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "cachedef_serverversions": "Matrix server version information for running servers",
+        "matrix:moderator": "Matrix moderator",
+        "matrixaccesstoken": "Access token",
+        "matrixaccesstoken_desc": "Access token for the account which will perform actions on the homeserver.",
+        "matrixelementurl": "Element web URL",
+        "matrixhomeservername": "Homeserver name",
+        "matrixhomeservername_desc": "The part after <code>@user:</code> in your Matrix ID (e.g. <code>example.com</code> in <code>@user:example.com</code>)",
+        "matrixhomeserverurl": "Homeserver URL",
+        "matrixhomeserverurl_desc": "Server URL for connecting and creating accounts e.g. https://matrix.example.com.",
+        "matrixroomtopic": "Room topic",
+        "matrixroomtopic_help": "A short description of what this room is for.",
+        "matrixuserid": "Matrix user ID",
+        "pluginname": "Matrix",
+        "privacy:metadata": "The Matrix communication plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

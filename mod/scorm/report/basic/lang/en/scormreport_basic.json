@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "Basic report",
+        "privacy:metadata:preference:scorm_report_detailed": "Whether to track details in the SCORM basic report",
+        "privacy:metadata:preference:scorm_report_pagesize": "Number of users to display in the SCORM reports"
+    },
+    "deprecatedkeys": []
+}

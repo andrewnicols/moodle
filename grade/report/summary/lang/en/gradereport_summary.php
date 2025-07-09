@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for Summary view
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   gradereport_summary
- * @copyright  2022 Ilya Tregubov <ilya@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-// General Strings.
-$string['pluginname'] = 'Grade summary';
-$string['summary:view'] = 'View grade summary report';
-$string['privacy:metadata'] = 'The Grade summary report only shows data stored in other locations.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/gradereport_summary.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

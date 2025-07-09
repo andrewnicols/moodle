@@ -15,28 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component qbank_editquestion, language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbank_editquestion
- * @copyright  2021 Catalyst IT Australia Pty Ltd
- * @author     Safat Shahin <safatshahin@catalyst-au.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbank_editquestion
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['filter:status'] = 'Status of latest version';
-$string['filter:invalidstatus'] = 'Invalid value "{$a}" for status filter.';
-
-$string['pluginname'] = 'Edit questions';
-$string['privacy:metadata'] = 'The Edit questions question bank plugin does not store any personal data.';
-
-// Question status.
-$string['questionstatus'] = 'Status';
-$string['questionstatusready'] = 'Ready';
-$string['questionstatushidden'] = 'Hidden';
-$string['questionstatusdraft'] = 'Draft';
-$string['questionstatusheader'] = 'Change question status';
-$string['unrecognizedstatus'] = 'Unrecognised status';
-
-// Edit form.
-$string['versioninfo'] = 'Version';
-$string['status'] = 'Question status';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_editquestion.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

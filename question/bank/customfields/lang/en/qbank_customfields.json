@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "customfield": "Question custom fields",
+        "customfield_islocked": "Locked",
+        "customfield_islocked_help": "If the field is locked, only users with the capability to change locked custom fields will be able to change it in the question settings.",
+        "customfield_notvisible": "Nobody",
+        "customfield_visibility": "Visible to",
+        "customfield_visibility_help": "This setting determines who can view the custom field name and value.",
+        "customfield_visibletoall": "Everyone",
+        "customfield_visibletoteachers": "Teachers",
+        "customfields:changelockedcustomfields": "Change locked custom fields",
+        "customfields:configurecustomfields": "Configure custom fields",
+        "customfields:viewhiddencustomfields": "View hidden custom fields",
+        "customfieldsettings": "Common question custom fields settings",
+        "pluginname": "Question custom fields",
+        "privacy:metadata": "The Question custom fields question bank plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

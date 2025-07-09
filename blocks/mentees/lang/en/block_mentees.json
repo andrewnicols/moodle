@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "configtitle": "Mentees block title",
+        "configtitleblankhides": "Mentees block title (no title if blank)",
+        "mentees:addinstance": "Add a new mentees block",
+        "mentees:myaddinstance": "Add a new mentees block to Dashboard",
+        "newmenteesblock": "(new Mentees block)",
+        "pluginname": "Mentees",
+        "privacy:metadata": "The Mentees block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component smsgateway_modica, language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    smsgateway_modica
- * @copyright  2025 Safat Shahin <safat.shahin@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   smsgateway_modica
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['modica_application_name'] = 'Modica application name';
-$string['modica_application_password'] = 'Modica application password';
-$string['modica_information'] = 'Complete the following fields using the information provided by Modica';
-$string['modica_url'] = 'Modica API URL';
-$string['pluginname'] = 'Modica';
-$string['privacy:metadata'] = 'The Modica SMS gateway plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/smsgateway_modica.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

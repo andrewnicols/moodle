@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component qbank_deletequestion, language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbank_deletequestion
- * @copyright  2021 Catalyst IT Australia Pty Ltd
- * @author     Safat Shahin <safatshahin@catalyst-au.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbank_deletequestion
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Delete question';
-$string['privacy:metadata'] = 'The Delete question question bank plugin does not store any personal data.';
-$string['deletequestion'] = 'Delete selected question';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_deletequestion.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

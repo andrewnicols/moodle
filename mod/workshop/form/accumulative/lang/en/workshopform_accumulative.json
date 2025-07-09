@@ -1,0 +1,30 @@
+{
+    "strings": {
+        "absent": "Absent",
+        "addmoredimensions": "Blanks for {$a} more aspects",
+        "correct": "Correct",
+        "dimensioncommentfor": "Comment for {$a}",
+        "dimensiondescription": "Description",
+        "dimensiongradefor": "Grade for {$a}",
+        "dimensionmaxgrade": "Best possible grade / Scale to use",
+        "dimensionnumber": "Aspect {$a}",
+        "dimensionweight": "Weight",
+        "excellent": "Excellent",
+        "good": "Good",
+        "incorrect": "Incorrect",
+        "mustchoosegrade": "You have to select a grade for this aspect",
+        "pluginname": "Accumulative grading",
+        "poor": "Poor",
+        "present": "Present",
+        "privacy:metadata": "The Accumulative grading plugin only stores the details of the assessment form. Actual personal data of how the form has been filled are stored by the Workshop module itself and are attached to exported assessments.",
+        "scalename0": "Yes/No (2 point)",
+        "scalename1": "Present/Absent (2 point)",
+        "scalename2": "Correct/Incorrect (2 point)",
+        "scalename3": "Good/Poor (3 point)",
+        "scalename4": "Excellent/Very poor (4 point)",
+        "scalename5": "Excellent/Very poor (5 point)",
+        "scalename6": "Excellent/Very poor (7 point)",
+        "verypoor": "Very poor"
+    },
+    "deprecatedkeys": []
+}

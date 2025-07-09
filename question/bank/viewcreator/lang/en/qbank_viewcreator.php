@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component qbank_viewcreator, language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbank_viewcreator
- * @copyright  2021 Catalyst IT Australia Pty Ltd
- * @author     Ghaly Marc-Alexandre <marc-alexandreghaly@catalyst-ca.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbank_viewcreator
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['history'] = 'History';
-$string['modifiedby'] = 'Modified by';
-$string['timemodified'] = 'Time modified';
-$string['pluginname'] = 'View creator';
-$string['privacy:metadata'] = 'The View creator question bank plugin does not store any personal data.';
-
-// Deprecated since Moodle 4.5.
-$string['version'] = 'Version {$a}';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_viewcreator.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

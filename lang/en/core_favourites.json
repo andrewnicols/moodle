@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "privacy:metadata:favourite": "Stores references to items which have been starred.",
+        "privacy:metadata:favourite:component": "The component which the starred item belongs to e.g. core_user",
+        "privacy:metadata:favourite:itemid": "The identifier for the item being starred",
+        "privacy:metadata:favourite:itemtype": "The starred item type e.g. course",
+        "privacy:metadata:favourite:ordering": "A number used to order starred items of the same type",
+        "privacy:metadata:favourite:timecreated": "The time when the item was starred",
+        "privacy:metadata:favourite:timemodified": "The time when the starred item was last modified",
+        "privacy:metadata:favourite:userid": "The ID of the user who starred the item"
+    },
+    "deprecatedkeys": []
+}

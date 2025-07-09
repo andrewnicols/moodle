@@ -1,0 +1,18 @@
+{
+    "strings": {
+        "activityorder": "Activity order",
+        "activitysection": "Section",
+        "allactivitiesandresources": "All activities and resources",
+        "alphabetical": "Alphabetical ",
+        "include": "Include",
+        "no_filter_by_section": "Do not filter by section",
+        "orderincourse": "Order in course",
+        "page-report-progress-index": "Activity completion report",
+        "page-report-progress-user": "User activity completion report",
+        "page-report-progress-x": "Any activity completion report",
+        "pluginname": "Activity completion",
+        "privacy:metadata": "The Activity completion report only shows data stored in other locations.",
+        "progress:view": "View activity completion reports"
+    },
+    "deprecatedkeys": []
+}

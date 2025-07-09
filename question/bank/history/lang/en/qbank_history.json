@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "allquestionversionsdeleted": "All versions of this question have been deleted.",
+        "close_history": "Close",
+        "history_action": "History",
+        "history_header": "Question history",
+        "pluginname": "Question history",
+        "privacy:metadata": "The Question history question bank plugin does not store any personal data.",
+        "questionversiondata": "v{$a}",
+        "questionversionnumber": "Version"
+    },
+    "deprecatedkeys": []
+}

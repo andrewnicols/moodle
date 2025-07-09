@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "cachedef_customlink": "Custom link data",
+        "customlinkurl": "Custom link URL",
+        "customlinkurl_help": "Provide a link to an existing room from any communication service you would like to make available to participants - such as Microsoft Teams, Slack or Matrix.",
+        "customlinkurlinfo": "The URL of an existing room already set up for this course.",
+        "pluginname": "Custom link",
+        "privacy:metadata": "Custom link communication plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

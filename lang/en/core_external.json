@@ -1,0 +1,23 @@
+{
+    "strings": {
+        "privacy:metadata:serviceusers": "A list of users who can use a certain external service",
+        "privacy:metadata:serviceusers:iprestriction": "IP restricted to use the service",
+        "privacy:metadata:serviceusers:timecreated": "The date when the record was created",
+        "privacy:metadata:serviceusers:userid": "The ID of the user",
+        "privacy:metadata:serviceusers:validuntil": "The date that the authorisation is valid until",
+        "privacy:metadata:tokens": "A record of tokens for interacting with Moodle through web services or Mobile applications.",
+        "privacy:metadata:tokens:creatorid": "The ID of the user who created the token",
+        "privacy:metadata:tokens:iprestriction": "IP restricted to use this token",
+        "privacy:metadata:tokens:lastaccess": "The date when the token was last used",
+        "privacy:metadata:tokens:name": "The token name",
+        "privacy:metadata:tokens:privatetoken": "A more private token occasionally used to validate certain operations, such as SSO",
+        "privacy:metadata:tokens:timecreated": "The date when the token was created",
+        "privacy:metadata:tokens:token": "The user's token",
+        "privacy:metadata:tokens:tokentype": "The type of token",
+        "privacy:metadata:tokens:userid": "The ID of the user whose token it is",
+        "privacy:metadata:tokens:validuntil": "The date that the token is valid until",
+        "privacy:request:notexportedsecurity": "Not exported for security reasons",
+        "services": "External services"
+    },
+    "deprecatedkeys": []
+}

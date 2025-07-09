@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "currentdatedefault": "Check to use current date as default",
+        "defaultdate": "Default date",
+        "endyear": "End year",
+        "notset": "Not set",
+        "pluginname": "Date/Time",
+        "privacy:metadata:profilefield_datetime:data": "Date/time user profile field user data",
+        "privacy:metadata:profilefield_datetime:dataformat": "The format of Date/time user profile field user data",
+        "privacy:metadata:profilefield_datetime:fieldid": "The ID of the profile field",
+        "privacy:metadata:profilefield_datetime:tableexplanation": "Additional profile data",
+        "privacy:metadata:profilefield_datetime:userid": "The ID of the user whose data is stored by the Date/time user profile field",
+        "specifydatedefault": "or specify a date",
+        "startyear": "Start year",
+        "startyearafterend": "The start year can't occur after the end year",
+        "wanttime": "Include time?"
+    },
+    "deprecatedkeys": []
+}

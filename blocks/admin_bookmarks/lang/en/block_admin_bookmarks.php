@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_admin_bookmarks', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   block_admin_bookmarks
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['admin_bookmarks:addinstance'] = 'Add a new admin bookmarks block';
-$string['admin_bookmarks:myaddinstance'] = 'Add a new admin bookmarks block to Dashboard';
-$string['pluginname'] = 'Admin bookmarks';
-$string['privacy:metadata'] = 'The Admin bookmarks block only shows data stored in other locations.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_admin_bookmarks.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

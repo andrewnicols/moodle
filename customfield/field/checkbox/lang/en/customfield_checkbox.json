@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "checkedbydefault": "Checked by default",
+        "errorconfigunique": "The checkbox field cannot be defined as unique.",
+        "pluginname": "Checkbox",
+        "privacy:metadata": "The Checkbox field type plugin doesn't store any personal data; it uses tables defined in core.",
+        "specificsettings": "Checkbox field settings"
+    },
+    "deprecatedkeys": []
+}

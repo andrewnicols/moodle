@@ -1,0 +1,16 @@
+{
+    "strings": {
+        "clianswerno": "n",
+        "cliansweryes": "y",
+        "cliincorrectvalueerror": "Error, incorrect value \"{$a->value}\" for \"{$a->option}\"",
+        "cliincorrectvalueretry": "Incorrect value, please retry",
+        "clitypevalue": "type value",
+        "clitypevaluedefault": "type value, press Enter to use default value ({$a})",
+        "cliunknowoption": "Unrecognised options:\n  {$a}\nPlease use --help option.",
+        "cliyesnoprompt": "type y (means yes) or n (means no)",
+        "environmentrequireinstall": "must be installed and enabled",
+        "environmentrequireversion": "version {$a->needed} is required and you are running {$a->current}",
+        "upgradekeyset": "Upgrade key (leave empty to not set it)"
+    },
+    "deprecatedkeys": []
+}

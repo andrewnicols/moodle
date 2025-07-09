@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "Social activities",
+        "privacy:metadata": "The Social activities block only shows data stored in other locations.",
+        "social_activities:addinstance": "Add a new social activities block"
+    },
+    "deprecatedkeys": []
+}

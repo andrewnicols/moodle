@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "eventxapipost": "Post xAPI statement",
+        "privacy:metadata:component": "The component name in frankenstyle",
+        "privacy:metadata:itemid": "The item ID of the state",
+        "privacy:metadata:registration": "The xAPI registration UUID",
+        "privacy:metadata:statedata": "JSON object with the state data",
+        "privacy:metadata:stateid": "The xAPI state ID",
+        "privacy:metadata:timecreated": "The time when the state element was created",
+        "privacy:metadata:timemodified": "The last time state was updated",
+        "privacy:metadata:userid": "The ID of the user who belongs the state ",
+        "privacy:metadata:xapi_states": "The stored xAPI states",
+        "privacy:xapistate": "xAPI state",
+        "xapicleanup": "Stored xAPI states clean up",
+        "xapicleanupperiod": "Clean up xAPI states",
+        "xapicleanupperiod_help": "Remove any stored xAPI which is not updaded in the selected period"
+    },
+    "deprecatedkeys": []
+}

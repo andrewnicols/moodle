@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "blog_menu:addinstance": "Add a new blog menu block",
+        "pluginname": "Blog menu",
+        "privacy:metadata": "The Blog menu block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

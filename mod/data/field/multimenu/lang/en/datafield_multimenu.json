@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "fieldtypelabel": "Multi-select list",
+        "pluginname": "Multi-select list",
+        "privacy:metadata": "The Multi-select list field component doesn't store any personal data, it uses tables defined in mod_data"
+    },
+    "deprecatedkeys": []
+}

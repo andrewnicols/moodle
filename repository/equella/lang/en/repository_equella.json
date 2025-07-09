@@ -1,0 +1,30 @@
+{
+    "strings": {
+        "breadcrumb": "EQUELLA",
+        "configplugin": "Configuration for EQUELLA repository",
+        "equella:view": "View EQUELLA repository",
+        "equellaaction": "EQUELLA action",
+        "equellaoptions": "EQUELLA options",
+        "equellaurl": "EQUELLA URL",
+        "equellauserfield": "EQUELLA user field",
+        "equellauserfield_help": "Choose the user field to be used for matching the EQUELLA user. (Only user fields of type short text are listed.)",
+        "equellausername": "Username",
+        "group": "{$a} role settings",
+        "groupdefault": "Default",
+        "pluginname": "EQUELLA repository",
+        "privacy:metadata": "The EQUELLA repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.",
+        "restrictionattachmentsonly": "Attached resource only",
+        "restrictionitemsonly": "Item summary only",
+        "restrictionnone": "No restriction",
+        "search": "Search EQUELLA",
+        "selectrestriction": "Restrict selection",
+        "selectrestriction.desc": "Choose whether course editors should only be able to select an item summary, an attached resources or either",
+        "sharedid": "Shared secret ID",
+        "sharedidtitle": "Shared secret ID",
+        "sharedsecrets": "Shared secret",
+        "sharedsecretsheading": "Shared Secret Settings",
+        "sharedsecretshelp": "<p>Below you can set a default EQUELLA shared secret for single signing-on users.  You can configure different shared secrets for general (read) usage, and a specialised role based shared secret for each <em>write</em> role in your Moodle site.  If a shared secret ID is not configured for a role then the default shared secret ID and shared secret are used.</p><p>All shared secret IDs and shared secrets must also be configured within EQUELLA and the shared secret module enabled.  This configuration is found in the EQUELLA Administration Console under User Management > Shared Secrets.</p>",
+        "sharedsecrettitle": "Shared secret"
+    },
+    "deprecatedkeys": []
+}

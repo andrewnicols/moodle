@@ -1,0 +1,15 @@
+{
+    "strings": {
+        "configplugin": "Configuration for recent files repository",
+        "emptyfilelist": "There are no files to show",
+        "notitle": "notitle",
+        "pluginname": "Recent files",
+        "pluginname_help": "Files recently used by current user",
+        "privacy:metadata": "The Recent files repository plugin does not store or transmit any personal data.",
+        "recent:view": "View recent files repository plugin",
+        "recentfilesnumber": "Number of recent files",
+        "timelimit": "Time limit",
+        "timelimit_help": "Only retrieve recent files within the time limit"
+    },
+    "deprecatedkeys": []
+}

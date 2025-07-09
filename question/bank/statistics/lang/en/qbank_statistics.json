@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "discrimination_index": "Needs checking?",
+        "discrimination_index_help": "A question is indicated as likely to need checking based on question statistics. For example, if students obtain a low score on the question but a high score on the whole quiz, or a high score on the question but a low score on the whole quiz, then there may be a problem with the question such as the wrong answer being set as correct. Statistics are not infallible though; this is just a hint that the question should be checked.",
+        "discriminative_efficiency": "Discriminative efficiency",
+        "discriminative_efficiency_help": "Discriminative efficiency is a statistical estimate of how well the question assesses students, with a higher value being better. A particularly low value may indicate a problem with the question. A very difficult or easy question (with facility index close to 0% or 100%) can also lead to a low value.",
+        "discriminative_efficiency_link": "mod/quiz/statistics",
+        "emptyvalue": "-",
+        "facility_index": "Facility index",
+        "facility_index_help": "The facility index gives the average mark (as a percentage) obtained on the question (all versions) in all quizzes where the question has been attempted. A higher value normally indicates an easier question.",
+        "likely": "Likely",
+        "na": "N/A",
+        "pluginname": "Question statistics",
+        "privacy:metadata": "The Question statistics question bank plugin does not store any personal data.",
+        "unlikely": "Unlikely",
+        "verylikely": "Very likely"
+    },
+    "deprecatedkeys": []
+}

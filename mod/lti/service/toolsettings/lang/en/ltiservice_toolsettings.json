@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "allow": "Use this service",
+        "ltiservice_toolsettings": "Tool Settings",
+        "ltiservice_toolsettings_help": "Allow the tool to save and retrieve setting values.",
+        "notallow": "Do not use this service",
+        "pluginname": "Tool Settings Service",
+        "privacy:metadata": "The Tool Settings Service plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

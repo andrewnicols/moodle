@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component qbank_viewquestionname, language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbank_viewquestionname
- * @copyright  2021 Catalyst IT Australia Pty Ltd
- * @author     Safat Shahin <safatshahin@catalyst-au.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbank_viewquestionname
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'View question name';
-$string['privacy:metadata'] = 'The View question name question bank plugin does not store any personal data.';
-$string['questionidnumbercondition'] = 'Question ID number';
-$string['questionnamecondition'] = 'Question name';
-// In place editing.
-$string['edit_question_name_hint'] = 'Edit question name';
-$string['edit_question_name_label'] = 'New value for {$a->name}';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_viewquestionname.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

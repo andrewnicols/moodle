@@ -1,0 +1,17 @@
+{
+    "strings": {
+        "event:token_created": "MFA token created.",
+        "form:trust": "Trust this device for {$a}.",
+        "pluginname": "Trust this device",
+        "privacy:metadata": "The Trust this device factor plugin does not store any personal data.",
+        "settings:description": "Allow users to bypass extra authentication on devices marked as trusted after the first authentication.",
+        "settings:expireovernight": "Expire trust overnight",
+        "settings:expireovernight_help": "This forces tokens to expire overnight, preventing midday interruptions for users. Instead they will be asked to multi-factor authenticate at the start of a day after expiry.",
+        "settings:expiry": "Trust duration",
+        "settings:expiry_help": "The duration a device is trusted before requiring a new multi-factor authentication.",
+        "settings:shortdescription": "Allow users to bypass authentication on devices marked as trusted. Needs to be combined with other factors.",
+        "summarycondition": "the user has previously trusted this device",
+        "tokenstoredindevice": "The user with ID {$a->userid} has a multi-factor authentication token stored on their device. <br> Information: {$a->string}."
+    },
+    "deprecatedkeys": []
+}

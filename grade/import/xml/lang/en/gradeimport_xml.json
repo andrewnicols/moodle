@@ -1,0 +1,22 @@
+{
+    "strings": {
+        "errbadxmlformat": "Error - bad XML format",
+        "errduplicategradeidnumber": "Error - there are two grade items with idnumber '{$a}' in this course. This should be impossible.",
+        "errduplicateidnumber": "Error - duplicate idnumber",
+        "errincorrectgradeidnumber": "Error - idnumber '{$a}' from the import file does not match any grade item.",
+        "errincorrectidnumber": "Error - incorrect idnumber",
+        "errincorrectuseridnumber": "Error - idnumber '{$a}' from the import file does not match any user.",
+        "error": "Errors occur",
+        "errorduringimport": "An error occurred when trying to import: {$a}",
+        "fileurl": "Remote file URL",
+        "fileurl_help": "The remote file URL field is for fetching data from a remote server, such as a student information system.",
+        "importxml": "XML import",
+        "importxml_help": "Grades can be imported via an XML file containing user ID numbers and activity ID numbers. To obtain the correct format, first export some grades to XML file then view the file.",
+        "importxml_link": "grade/import/xml/index",
+        "pluginname": "XML file",
+        "privacy:metadata": "The import grades from XML plugin does not store any personal data.",
+        "xml:publish": "Publish import grades from XML",
+        "xml:view": "Import grades from XML"
+    },
+    "deprecatedkeys": []
+}

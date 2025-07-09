@@ -15,17 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'ltiservice_toolsettings', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    ltiservice_toolsettings
- * @copyright  2014 Vital Source Technologies http://vitalsource.com
- * @author     Stephen Vickers
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   ltiservice_toolsettings
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['allow'] = 'Use this service';
-$string['ltiservice_toolsettings'] = 'Tool Settings';
-$string['ltiservice_toolsettings_help'] = 'Allow the tool to save and retrieve setting values.';
-$string['notallow'] = 'Do not use this service';
-$string['pluginname'] = 'Tool Settings Service';
-$string['privacy:metadata'] = 'The Tool Settings Service plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/ltiservice_toolsettings.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

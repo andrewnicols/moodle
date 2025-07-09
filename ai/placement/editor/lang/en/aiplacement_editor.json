@@ -1,0 +1,17 @@
+{
+    "strings": {
+        "editor:generate_image": "Generate AI images in text editor",
+        "editor:generate_text": "Generate AI text in text editor",
+        "generatecontent": "Generate AI content",
+        "generateimage": "AI generate image",
+        "generateimagesetting": "Enable generate image",
+        "generateimagesetting_desc": "Enable or disable the generation of images from a text prompt.",
+        "generatetext": "AI generate text",
+        "generatetextsetting": "Enable generate text",
+        "generatetextsetting_desc": "Enable or disable the generation of text from a text prompt.",
+        "noeditor": "Text editor placement is not available for this context.",
+        "pluginname": "Text editor placement",
+        "privacy:metadata": "The Text editor placement plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "comment": "Comment",
+        "commenter": "Commenter",
+        "comments": "Comments",
+        "commentsubcontext": "Comments",
+        "privacy:metadata:comment": "Stores comments of users.",
+        "privacy:metadata:comment:content": "Stores the text of the comment.",
+        "privacy:metadata:comment:timecreated": "Time a comment was created.",
+        "privacy:metadata:comment:userid": "The user who made the comment."
+    },
+    "deprecatedkeys": []
+}

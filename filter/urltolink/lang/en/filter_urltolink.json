@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "embedimages": "Embed images",
+        "embedimages_desc": "Replace image urls with images in selected text formats.",
+        "filtername": "Convert URLs into links and images",
+        "privacy:metadata": "The Convert URLs into links and images plugin does not store any personal data.",
+        "settingformats": "Apply to formats",
+        "settingformats_desc": "The filter will be applied only if the original text was inserted in one of the selected formats."
+    },
+    "deprecatedkeys": []
+}

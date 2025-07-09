@@ -15,29 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'qtype_truefalse', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qtype
- * @subpackage truefalse
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qtype_truefalse
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['correctanswer'] = 'Correct answer';
-$string['correctanswerfalse'] = 'The correct answer is \'False\'.';
-$string['correctanswertrue'] = 'The correct answer is \'True\'.';
-$string['false'] = 'False';
-$string['feedbackfalse'] = 'Feedback for the response \'False\'.';
-$string['feedbacktrue'] = 'Feedback for the response \'True\'.';
-$string['pleaseselectananswer'] = 'Please select an answer.';
-$string['selectone'] = 'Select one:';
-$string['true'] = 'True';
-$string['pluginname'] = 'True/False';
-$string['pluginname_help'] = 'In response to a question (that may include an image) the respondent chooses from true or false.';
-$string['pluginname_link'] = 'question/type/truefalse';
-$string['pluginnameadding'] = 'Adding a True/False question';
-$string['pluginnameediting'] = 'Editing a True/False question';
-$string['pluginnamesummary'] = 'A simple form of multiple choice question with just the two choices \'True\' and \'False\'.';
-$string['privacy:preference:showstandardinstruction'] = 'Whether showing standard instruction.';
-$string['showstandardinstruction'] = 'Show standard instructions';
-$string['showstandardinstruction_help'] = 'Whether to show the instructions "Select one:" before true/false answers.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qtype_truefalse.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

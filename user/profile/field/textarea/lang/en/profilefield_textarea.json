@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "pluginname": "Text area",
+        "privacy:metadata:profile_field_textarea:data": "Text area user profile field user data",
+        "privacy:metadata:profile_field_textarea:dataformat": "The format of Text area user profile field user data",
+        "privacy:metadata:profile_field_textarea:fieldid": "The ID of the profile field",
+        "privacy:metadata:profile_field_textarea:tableexplanation": "Additional profile data",
+        "privacy:metadata:profile_field_textarea:userid": "The ID of the user whose data is stored by the Text area user profile field"
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "blog_tags:addinstance": "Add a new blog tags block",
+        "configtitle": "Blog tags block title",
+        "pluginname": "Blog tags",
+        "privacy:metadata": "The Blog tags block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

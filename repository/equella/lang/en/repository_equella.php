@@ -15,35 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for equella repository.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_equella
- * @copyright 2012 Dongsheng Cai {@link http://dongsheng.org}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['breadcrumb'] = 'EQUELLA';
-$string['configplugin'] = 'Configuration for EQUELLA repository';
-$string['equella:view'] = 'View EQUELLA repository';
-$string['equellaaction'] = 'EQUELLA action';
-$string['equellaoptions'] = 'EQUELLA options';
-$string['equellaurl'] = 'EQUELLA URL';
-$string['equellauserfield'] = 'EQUELLA user field';
-$string['equellauserfield_help'] = 'Choose the user field to be used for matching the EQUELLA user. (Only user fields of type short text are listed.)';
-$string['equellausername'] = 'Username';
-$string['group'] = '{$a} role settings';
-$string['groupdefault'] = 'Default';
-$string['pluginname'] = 'EQUELLA repository';
-$string['privacy:metadata'] = 'The EQUELLA repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.';
-$string['restrictionattachmentsonly'] = 'Attached resource only';
-$string['restrictionitemsonly'] = 'Item summary only';
-$string['restrictionnone'] = 'No restriction';
-$string['search'] = 'Search EQUELLA';
-$string['selectrestriction'] = 'Restrict selection';
-$string['selectrestriction.desc'] = 'Choose whether course editors should only be able to select an item summary, an attached resources or either';
-$string['sharedid'] = 'Shared secret ID';
-$string['sharedidtitle'] = 'Shared secret ID';
-$string['sharedsecrets'] = 'Shared secret';
-$string['sharedsecretsheading'] = 'Shared Secret Settings';
-$string['sharedsecretshelp'] =  '<p>Below you can set a default EQUELLA shared secret for single signing-on users.  You can configure different shared secrets for general (read) usage, and a specialised role based shared secret for each <em>write</em> role in your Moodle site.  If a shared secret ID is not configured for a role then the default shared secret ID and shared secret are used.</p><p>All shared secret IDs and shared secrets must also be configured within EQUELLA and the shared secret module enabled.  This configuration is found in the EQUELLA Administration Console under User Management > Shared Secrets.</p>';
-$string['sharedsecrettitle'] = 'Shared secret';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_equella.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

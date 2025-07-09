@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,15 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gradeexport_xml', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   gradeexport_xml
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['eventgradeexported'] = 'XML grade exported';
-$string['pluginname'] = 'XML file';
-$string['privacy:metadata'] = 'The XML file grade export plugin does not store any personal data.';
-$string['xml:publish'] = 'Publish XML grade export';
-$string['xml:view'] = 'Use XML grade export';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/gradeexport_xml.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

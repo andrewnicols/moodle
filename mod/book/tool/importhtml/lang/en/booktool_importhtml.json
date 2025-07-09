@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "doimport": "Import",
+        "errornochapters": "Cannot find chapters in selected file",
+        "import": "Import chapter",
+        "importhtml:import": "Import chapters",
+        "importing": "Importing",
+        "importingchapters": "Importing chapters into book",
+        "pluginname": "Book chapter import",
+        "privacy:metadata": "The Book chapter import plugin does not store any personal data.",
+        "relinking": "Relinking",
+        "type": "Type",
+        "typeonefile": "One HTML file with headings as chapters",
+        "typezipdirs": "Each folder represents one chapter",
+        "typezipfiles": "Each HTML file represents one chapter",
+        "ziparchive": "Zip file",
+        "ziparchive_help": "Select a zip file containing HTML files and optional multimedia files and folders. To upload subchapters, add \"_sub\" to the end of HTML file or folder names."
+    },
+    "deprecatedkeys": []
+}

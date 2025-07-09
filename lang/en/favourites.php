@@ -13,18 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Strings for component 'favourites', language 'en', branch 'master'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   core_favourites
- * @copyright 2018 Jake Dallimore <jrhdallimore@gmail.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['privacy:metadata:favourite'] = 'Stores references to items which have been starred.';
-$string['privacy:metadata:favourite:component'] = 'The component which the starred item belongs to e.g. core_user';
-$string['privacy:metadata:favourite:itemid'] = 'The identifier for the item being starred';
-$string['privacy:metadata:favourite:itemtype'] = 'The starred item type e.g. course';
-$string['privacy:metadata:favourite:ordering'] = 'A number used to order starred items of the same type';
-$string['privacy:metadata:favourite:timecreated'] = 'The time when the item was starred';
-$string['privacy:metadata:favourite:timemodified'] = 'The time when the starred item was last modified';
-$string['privacy:metadata:favourite:userid'] = 'The ID of the user who starred the item';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_favourites.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'moodle', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package   core
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @package   core_comment
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['comment'] = 'Comment';
-$string['commenter'] = 'Commenter';
-$string['comments'] = 'Comments';
-$string['commentsubcontext'] = 'Comments';
-$string['privacy:metadata:comment'] = 'Stores comments of users.';
-$string['privacy:metadata:comment:content'] = 'Stores the text of the comment.';
-$string['privacy:metadata:comment:timecreated'] = 'Time a comment was created.';
-$string['privacy:metadata:comment:userid'] = 'The user who made the comment.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_comment.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

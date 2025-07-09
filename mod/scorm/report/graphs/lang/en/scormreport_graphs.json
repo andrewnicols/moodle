@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "invaliddata": "Not enough data",
+        "participants": "Number of participants",
+        "percent": "Percent(%) secured",
+        "pluginname": "Graph report",
+        "privacy:metadata": "The Graph report only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

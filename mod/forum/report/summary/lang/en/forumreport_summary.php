@@ -15,41 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for the Forum report subplugin.
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   forumreport_summary
- * @copyright 2019 Michael Hawkins <michaelh@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['attachmentcount'] = 'Number of attachments';
-$string['charcount'] = 'Character count';
-$string['viewcount'] = 'Number of views';
-$string['earliestpost'] = 'Earliest post';
-$string['eventreportdownloaded'] = 'Forum summary report downloaded';
-$string['eventreportviewed'] = 'Forum summary report viewed';
-$string['filter:datesbuttonlabel'] = 'Open the dates filter';
-$string['filter:datesname'] = 'Dates';
-$string['filter:datesfrom'] = 'From {$a}';
-$string['filter:datesfromto'] = '{$a->datefrom} - {$a->dateto}';
-$string['filter:datesorderwarning'] = 'The from date can\'t be earlier than the to date.';
-$string['filter:datesto'] = 'To {$a}';
-$string['filter:groupsbuttonlabel'] = 'Open the groups filter';
-$string['filter:groupsname'] = 'Groups';
-$string['filter:groupscountall'] = 'Groups (all)';
-$string['filter:groupscountnumber'] = 'Groups ({$a})';
-$string['forumselectlabel'] = 'Forum selected';
-$string['forumselectcourseoption'] = 'All forums in course';
-$string['latestpost'] = 'Most recent post';
-$string['exportposts'] = 'Export posts';
-$string['exportpostslabel'] = 'Export posts for {$a}';
-$string['nodetitle'] = 'Forum summary report';
-$string['pluginname'] = 'Forum summary report';
-$string['postcount'] = 'Number of discussions posted';
-$string['privacy:metadata'] = 'The Forum summary report plugin does not store any personal data.';
-$string['replycount'] = 'Number of replies posted';
-$string['summary:viewall'] = 'Access summary report data for each user within a given forum or forums';
-$string['summary:view'] = 'Access summary report within a given forum or forums';
-$string['summarytitle'] = 'Forum summary report - {$a}';
-$string['viewsdisclaimer'] = 'Number of views column is not filtered by group';
-$string['wordcount'] = 'Word count';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/forumreport_summary.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

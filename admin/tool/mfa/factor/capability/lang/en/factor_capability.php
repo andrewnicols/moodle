@@ -15,22 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package     factor_capability
- * @author      Peter Burnett <peterburnett@catalyst-au.net>
- * @copyright   Catalyst IT
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   factor_capability
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['capability:cannotpassfactor'] = 'Must use other factor in MFA to authenticate';
-$string['pluginname'] = 'User capability';
-$string['privacy:metadata'] = 'The User capability factor plugin does not store any personal data.';
-$string['settings:adminpasses'] = 'Site admins can pass this factor';
-$string['settings:adminpasses_help'] = 'By default admins pass all capability checks, including this one which uses \'factor/capability:cannotpassfactor\', which means they will fail this factor.
-    If checked then all site admins will pass this factor if they do not have this capability from another role.
-    If unchecked site admins will fail this factor.';
-$string['settings:description'] = '<p>Use the capability factor/capability:cannotpassfactor to specify which users must use another factor to authenticate.</p>
-<p>Allow this capability for selected roles in <a href="roles/manage.php">Define roles</a>.</p>';
-$string['settings:shortdescription'] = 'Specify which users must use other factors to authenticate. Must be combined with other factors.';
-$string['summarycondition'] = 'does NOT have the \'factor/capability:cannotpassfactor\' capability in any role including site administrator.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/factor_capability.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

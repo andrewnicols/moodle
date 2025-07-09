@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "downloadfile": "Download your portfolio export file",
+        "downloading": "Downloading ...",
+        "pluginname": "File download",
+        "privacy:metadata": "This plugin does not store personal data, nor does it export personal data to an external location."
+    },
+    "deprecatedkeys": []
+}

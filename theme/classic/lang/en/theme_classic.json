@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "choosereadme": "Classic is a highly-customisable theme, based on Boost, with an alternative navigation layout. This theme is intended to be used directly, or as a parent theme when creating or updating custom themes to utilise Bootstrap 4.",
+        "configtitle": "Classic",
+        "navbardark": "Use a dark style navbar",
+        "navbardarkdesc": "Swaps text and background colours for the navbar at the top of the page between dark and light.",
+        "pluginname": "Classic",
+        "preset": "Theme preset",
+        "preset_desc": "Pick a preset to broadly change the look of the theme.",
+        "presetfiles": "Additional theme preset files",
+        "presetfiles_desc": "Preset files can be used to dramatically alter the appearance of a theme.",
+        "privacy:metadata": "The Classic theme does not store any personal data.",
+        "region-side-post": "Right",
+        "region-side-pre": "Left",
+        "sitetitle": "Site title",
+        "totop": "Go to top"
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "notcomplete": "Not complete",
+        "pluginname": "Immediate feedback",
+        "privacy:metadata": "The Immediate feedback question behaviour plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

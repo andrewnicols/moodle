@@ -1,0 +1,19 @@
+{
+    "strings": {
+        "pluginname": "Interactions report",
+        "privacy:metadata:preference:scorm_report_interactions_qtext": "Whether to display the summary of questions in the SCORM interactions report",
+        "privacy:metadata:preference:scorm_report_interactions_resp": "Whether to display the summary of responses in the SCORM interactions report",
+        "privacy:metadata:preference:scorm_report_interactions_result": "Whether to display the summary of results in the SCORM interactions report",
+        "privacy:metadata:preference:scorm_report_interactions_right": "Whether to display the summary of right anwers in the SCORM interactions report",
+        "privacy:metadata:preference:scorm_report_pagesize": "Number of users to display in the SCORM reports",
+        "questionx": "Question {$a}",
+        "responsex": "Response {$a}",
+        "resultx": "Result {$a}",
+        "rightanswerx": "Right answer {$a}",
+        "summaryofquestiontext": "Summary of question",
+        "summaryofresponse": "Summary of responses",
+        "summaryofresult": "Summary of result",
+        "summaryofrightanswer": "Summary of right answer"
+    },
+    "deprecatedkeys": []
+}

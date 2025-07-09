@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gradereport_outcomes', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   gradereport_outcomes
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['addoutcome'] = 'Add an outcome';
-$string['courseoutcomes'] = 'Course outcomes';
-$string['coursespecoutcome'] = 'Course outcomes';
-$string['eventgradereportviewed'] = 'Grade outcomes report viewed';
-$string['pluginname'] = 'Outcomes report';
-$string['privacy:metadata'] = 'The Grade outcomes report only shows data stored in other locations.';
-$string['outcomes:view'] = 'View outcomes report';
-$string['usedgradeitem'] = 'Number of grade items';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/gradereport_outcomes.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

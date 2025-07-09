@@ -1,0 +1,23 @@
+{
+    "strings": {
+        "displaysize": "Form input size",
+        "errorconfigdisplaysize": "The form input size must be between 1 and 200 characters.",
+        "errorconfiglinkplaceholder": "The link must contain a placeholder $$.",
+        "errorconfiglinksyntax": "The link must be a valid URL starting with either http:// or https://.",
+        "errorconfigmaxlen": "The maximum number of characters allowed must be between 1 and 1333.",
+        "errormaxlength": "The maximum number of characters allowed in this field is {$a}.",
+        "islink": "Link field",
+        "islink_help": "To transform the text into a link, enter a URL containing $$ as a placeholder, where $$ will be replaced with the text. For example, to transform a Twitter ID to a link, enter https://twitter.com/$$.",
+        "ispassword": "Password field",
+        "linktarget": "Link target",
+        "maxlength": "Maximum number of characters",
+        "newwindow": "New window",
+        "none": "None",
+        "pluginname": "Short text",
+        "privacy:metadata": "The Short text field type plugin doesn't store any personal data; it uses tables defined in core.",
+        "sameframe": "Same frame",
+        "samewindow": "Same window",
+        "specificsettings": "Short text field settings"
+    },
+    "deprecatedkeys": []
+}

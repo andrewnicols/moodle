@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "View question type",
+        "privacy:metadata": "The View question type question bank plugin does not store any personal data.",
+        "typefilter": "Type"
+    },
+    "deprecatedkeys": []
+}

@@ -15,30 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package availability_grade
- * @copyright 2014 The Open University
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   availability_grade
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['cachedef_items'] = 'Grade items cached for evaluating conditional availability';
-$string['cachedef_scores'] = 'User grades cached for evaluating conditional availability';
-$string['description'] = 'Require students to achieve a specified grade.';
-$string['error_backwardrange'] = 'When specifying a grade range, the minimum must be lower than the maximum.';
-$string['error_invalidnumber'] = 'Grade ranges must be specified with valid percentages.';
-$string['error_selectgradeid'] = 'You must select a grade item for the grade condition.';
-$string['label_min'] = 'Minimum grade percentage (inclusive)';
-$string['label_max'] = 'Maximum grade percentage (exclusive)';
-$string['option_min'] = 'must be &#x2265;';
-$string['option_max'] = 'must be <';
-$string['pluginname'] = 'Restriction by grades';
-$string['requires_any'] = 'You have a grade in <strong>{$a}</strong>';
-$string['requires_max'] = 'You achieve lower than a certain score in <strong>{$a}</strong>';
-$string['requires_min'] = 'You achieve higher than a certain score in <strong>{$a}</strong>';
-$string['requires_notany'] = 'You do not have a grade in <strong>{$a}</strong>';
-$string['requires_notgeneral'] = 'You do not get certain scores in <strong>{$a}</strong>';
-$string['requires_range'] = 'You achieve a score within a certain range in <strong>{$a}</strong>';
-$string['missing'] = '(missing activity)';
-$string['title'] = 'Grade';
-$string['privacy:metadata'] = 'The Restriction by grades plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/availability_grade.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

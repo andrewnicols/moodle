@@ -15,31 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_myprofile', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    block_myprofile
- * @copyright  2010 Remote-Learner.net
- * @author     Olav Jordan <olav.jordan@remote-learner.ca>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_myprofile
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['contentsettings'] = 'Display settings for content region';
-$string['display_picture'] = 'Display picture';
-$string['display_country'] = 'Display country';
-$string['display_city'] = 'Display city';
-$string['display_email'] = 'Display email';
-$string['display_phone1'] = 'Display phone';
-$string['display_phone2'] = 'Display mobile phone';
-$string['display_idnumber'] = 'Display ID number';
-$string['display_institution'] = 'Display institution';
-$string['display_address'] = 'Display address';
-$string['display_firstaccess'] = 'Display first access';
-$string['display_lastaccess'] = 'Display last access';
-$string['display_currentlogin'] = 'Display current login';
-$string['display_lastip'] = 'Display last IP';
-$string['display_lastlogin'] = 'Display last login';
-$string['myprofile:addinstance'] = 'Add a new logged in user block';
-$string['myprofile:myaddinstance'] = 'Add a new logged in user block to Dashboard';
-$string['myprofile_settings'] = 'Visible user information';
-$string['pluginname'] = 'Logged in user';
-$string['privacy:metadata'] = 'The Logged in user block only shows information about the logged in user and does not store data itself.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_myprofile.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

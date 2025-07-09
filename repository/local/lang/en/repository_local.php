@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,19 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_local', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_local
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['configplugin'] = 'Configuration for server file repository';
-$string['currentusefiles'] = 'Currently used files';
-$string['emptyfilelist'] = 'There are no files to show';
-$string['local:view'] = 'View server repository';
-$string['notitle'] = 'notitle';
-$string['remember'] = 'Remember me';
-$string['pluginname_help'] = 'Files previously uploaded to the Moodle server';
-$string['pluginname'] = 'Server files';
-$string['privacy:metadata'] = 'The Server files repository plugin does not store or transmit any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_local.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

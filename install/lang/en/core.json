@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "language": "Language",
+        "moodlelogo": "Moodle logo",
+        "next": "Next",
+        "previous": "Previous",
+        "reload": "Reload"
+    },
+    "deprecatedkeys": []
+}

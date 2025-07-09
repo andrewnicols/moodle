@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "eventgradeexported": "XLS grade exported",
+        "pluginname": "Excel spreadsheet",
+        "privacy:metadata": "The Excel spreadsheet grade export plugin does not store any personal data.",
+        "timeexported": "Last downloaded from this course",
+        "xls:publish": "Publish XLS grade export",
+        "xls:view": "Use Excel grade export"
+    },
+    "deprecatedkeys": []
+}

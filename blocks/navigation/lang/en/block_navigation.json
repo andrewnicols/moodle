@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "courseactivities": "Categories, courses, and course activities",
+        "courses": "Categories and courses",
+        "coursestructures": "Categories, courses, and course structures",
+        "enabledockdesc": "Allow the user to dock this block",
+        "everything": "Everything",
+        "expansionlimit": "Generate navigation for the following",
+        "linkcategoriesdesc": "Display categories as links",
+        "navigation:addinstance": "Add a new navigation block",
+        "navigation:myaddinstance": "Add a new navigation block to Dashboard",
+        "pluginname": "Navigation",
+        "privacy:metadata": "The Navigation block only shows data stored in other locations.",
+        "trimlength": "How many characters to trim to",
+        "trimmode": "Trim mode",
+        "trimmodecenter": "Trim characters from the center",
+        "trimmodeleft": "Trim characters from the left",
+        "trimmoderight": "Trim characters from the right"
+    },
+    "deprecatedkeys": []
+}

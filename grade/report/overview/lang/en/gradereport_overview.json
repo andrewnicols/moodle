@@ -1,0 +1,10 @@
+{
+    "strings": {
+        "eventgradereportviewed": "Grade overview report viewed",
+        "gradesoverview": "Grades overview",
+        "overview:view": "View overview report",
+        "pluginname": "Overview report",
+        "privacy:metadata": "The Grade overview report only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

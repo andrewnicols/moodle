@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "commentinline": "Comment inline",
+        "commentinline_help": "If enabled, the submission text will be copied into the feedback comment field during grading, making it easier to comment inline (using a different colour, perhaps) or to edit the original text.",
+        "commentinlinedefault": "Comment inline by default",
+        "commentinlinedefault_help": "If set, this comment inline functionality will be enabled by default for all new assignments.",
+        "default": "Enabled by default",
+        "default_help": "If set, this feedback method will be enabled by default for all new assignments.",
+        "enabled": "Feedback comments",
+        "enabled_help": "If enabled, the marker can leave feedback comments for each submission. ",
+        "pluginname": "Feedback comments",
+        "privacy:commentpath": "Feedback comments",
+        "privacy:metadata:assignmentid": "Assignment ID",
+        "privacy:metadata:commentpurpose": "The comment text.",
+        "privacy:metadata:filepurpose": "Feedback files from the teacher for the student.",
+        "privacy:metadata:gradepurpose": "The grade ID associated with the comment.",
+        "privacy:metadata:tablesummary": "This stores comments made by the graders as feedback for the student on their submission."
+    },
+    "deprecatedkeys": []
+}

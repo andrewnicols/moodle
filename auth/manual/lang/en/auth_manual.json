@@ -1,0 +1,15 @@
+{
+    "strings": {
+        "auth_manualdescription": "This method removes any way for users to create their own accounts.  All accounts must be manually created by the admin user.",
+        "expiration": "Enable password expiry",
+        "expiration_desc": "Allow passwords to expire after a specified time.",
+        "expiration_warning": "Notification threshold",
+        "expiration_warning_desc": "Number of days before password expiry that a notification is issued.",
+        "passwdexpire_settings": "Password expiry settings",
+        "passwdexpiretime": "Password duration",
+        "passwdexpiretime_desc": "Length of time for which a password is valid.",
+        "pluginname": "Manual accounts",
+        "privacy:metadata:preference:passwordupdatetime": "The date of the last password change."
+    },
+    "deprecatedkeys": []
+}

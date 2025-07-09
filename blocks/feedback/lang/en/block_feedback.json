@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "feedback": "Feedback",
+        "feedback:addinstance": "Add a new feedback block",
+        "pluginname": "Feedback",
+        "privacy:metadata": "The Feedback block only shows data stored in other locations."
+    },
+    "deprecatedkeys": []
+}

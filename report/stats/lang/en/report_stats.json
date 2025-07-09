@@ -1,0 +1,25 @@
+{
+    "strings": {
+        "eventreportviewed": "Statistics report viewed",
+        "eventuserreportviewed": "User statistics report viewed",
+        "nocapability": "Can not access user statistics report",
+        "page-report-stats-index": "Course statistics report",
+        "page-report-stats-user": "User course statistics report",
+        "page-report-stats-x": "Any statistics report",
+        "pluginname": "Statistics",
+        "privacy:dailypath": "Stats daily",
+        "privacy:metadata": "The Statistics plugin does not store any personal data.",
+        "privacy:metadata:courseid": "An identifier for a course",
+        "privacy:metadata:roleid": "The role ID of the user.",
+        "privacy:metadata:statsreads": "Views of content",
+        "privacy:metadata:statssummary": "Records basic statistics about user interaction in courses.",
+        "privacy:metadata:statswrites": "Content made in the course.",
+        "privacy:metadata:stattype": "The type of stat being recorded",
+        "privacy:metadata:timeend": "End time of logs view",
+        "privacy:metadata:userid": "The user ID linked to this table.",
+        "privacy:monthlypath": "Stats monthly",
+        "privacy:weeklypath": "Stats weekly",
+        "stats:view": "View course statistics report"
+    },
+    "deprecatedkeys": []
+}

@@ -1,0 +1,17 @@
+{
+    "strings": {
+        "filter:invalidstatus": "Invalid value \"{$a}\" for status filter.",
+        "filter:status": "Status of latest version",
+        "pluginname": "Edit questions",
+        "privacy:metadata": "The Edit questions question bank plugin does not store any personal data.",
+        "questionstatus": "Status",
+        "questionstatusdraft": "Draft",
+        "questionstatusheader": "Change question status",
+        "questionstatushidden": "Hidden",
+        "questionstatusready": "Ready",
+        "status": "Question status",
+        "unrecognizedstatus": "Unrecognised status",
+        "versioninfo": "Version"
+    },
+    "deprecatedkeys": []
+}

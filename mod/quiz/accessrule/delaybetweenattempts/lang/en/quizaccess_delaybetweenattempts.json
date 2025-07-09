@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "pluginname": "Delay between attempts quiz access rule",
+        "privacy:metadata": "The Delay between attempts quiz access rule plugin does not store any personal data.",
+        "youcannotwait": "This quiz closes before you will be allowed to start another attempt.",
+        "youmustwait": "You must wait before you may re-attempt this quiz. You will be allowed to start another attempt after {$a}."
+    },
+    "deprecatedkeys": []
+}

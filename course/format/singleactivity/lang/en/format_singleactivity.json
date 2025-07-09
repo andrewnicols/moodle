@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "activitytype": "Type of activity",
+        "activitytype_help": "Choose the type of activity or resource to use in this course",
+        "defactivitytype": "Default type of activity",
+        "defactivitytypedesc": "Specify the activity type that will be selected by default when creating a new course",
+        "erroractivitytype": "Type of activity is not set up in Course settings",
+        "plugin_description": "The course displays only one activity on the course page. You can add more activities in the Additional activities block",
+        "pluginname": "Single activity",
+        "privacy:metadata": "The Single activity format plugin does not store any personal data.",
+        "sectionname": ""
+    },
+    "deprecatedkeys": []
+}

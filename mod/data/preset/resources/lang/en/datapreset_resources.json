@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "modulename": "Resources",
+        "modulename_help": "Collect resources such as web links or book reviews in a table, with links to the detailed view.",
+        "pluginname": "Resources",
+        "privacy:metadata": "The Resources plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

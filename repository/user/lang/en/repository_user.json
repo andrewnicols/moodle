@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "configplugin": "Configuration for user private files repository",
+        "emptyfilelist": "There are no files to show",
+        "pluginname": "Private files",
+        "pluginname_help": "Files in user private area",
+        "privacy:metadata": "The Private files repository plugin does not store or transmit any personal data.",
+        "user:view": "View user private files"
+    },
+    "deprecatedkeys": []
+}

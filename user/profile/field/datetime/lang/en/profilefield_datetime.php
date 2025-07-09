@@ -15,24 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * The english language pack used in this profile field type.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package profilefield_datetime
- * @copyright 2010 Mark Nelson <markn@moodle.com>
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ * @package   profilefield_datetime
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['currentdatedefault'] = 'Check to use current date as default';
-$string['defaultdate'] = 'Default date';
-$string['endyear'] = 'End year';
-$string['notset'] = 'Not set';
-$string['pluginname'] = 'Date/Time';
-$string['privacy:metadata:profilefield_datetime:userid'] = 'The ID of the user whose data is stored by the Date/time user profile field';
-$string['privacy:metadata:profilefield_datetime:fieldid'] = 'The ID of the profile field';
-$string['privacy:metadata:profilefield_datetime:data'] = 'Date/time user profile field user data';
-$string['privacy:metadata:profilefield_datetime:dataformat'] = 'The format of Date/time user profile field user data';
-$string['privacy:metadata:profilefield_datetime:tableexplanation'] = 'Additional profile data';
-$string['specifydatedefault'] = 'or specify a date';
-$string['startyearafterend'] = 'The start year can\'t occur after the end year';
-$string['startyear'] = 'Start year';
-$string['wanttime'] = 'Include time?';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/profilefield_datetime.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,12 @@
+{
+    "strings": {
+        "eventreportviewed": "Participation report viewed",
+        "nologreaderenabled": "No log reader enabled",
+        "page-report-participation-index": "Course participation report",
+        "page-report-participation-x": "Any participation report",
+        "participation:view": "View course participation report",
+        "pluginname": "Course participation",
+        "privacy:metadata": "The Course participation plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

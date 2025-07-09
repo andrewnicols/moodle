@@ -15,23 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package     factor_token
- * @author      Peter Burnett <peterburnett@catalyst-au.net>
- * @copyright   Catalyst IT
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   factor_token
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['event:token_created'] = 'MFA token created.';
-$string['form:trust'] = 'Trust this device for {$a}.';
-$string['pluginname'] = 'Trust this device';
-$string['privacy:metadata'] = 'The Trust this device factor plugin does not store any personal data.';
-$string['settings:description'] = 'Allow users to bypass extra authentication on devices marked as trusted after the first authentication.';
-$string['settings:expireovernight'] = 'Expire trust overnight';
-$string['settings:expireovernight_help'] = 'This forces tokens to expire overnight, preventing midday interruptions for users. Instead they will be asked to multi-factor authenticate at the start of a day after expiry.';
-$string['settings:expiry'] = 'Trust duration';
-$string['settings:expiry_help'] = 'The duration a device is trusted before requiring a new multi-factor authentication.';
-$string['settings:shortdescription'] = 'Allow users to bypass authentication on devices marked as trusted. Needs to be combined with other factors.';
-$string['summarycondition'] = 'the user has previously trusted this device';
-$string['tokenstoredindevice'] = 'The user with ID {$a->userid} has a multi-factor authentication token stored on their device. <br> Information: {$a->string}.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/factor_token.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

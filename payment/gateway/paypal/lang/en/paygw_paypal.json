@@ -1,0 +1,26 @@
+{
+    "strings": {
+        "amountmismatch": "The amount you attempted to pay does not match the required fee. Your account has not been debited.",
+        "authorising": "Authorising the payment. Please wait...",
+        "brandname": "Brand name",
+        "brandname_help": "An optional label that overrides the business name for the PayPal account on the PayPal site.",
+        "cannotfetchorderdatails": "Could not fetch payment details from PayPal. Your account has not been debited.",
+        "clientid": "Client ID",
+        "clientid_help": "The client ID that PayPal generated for your application.",
+        "environment": "Environment",
+        "environment_help": "You can set this to Sandbox if you are using sandbox accounts (for testing purpose only).",
+        "gatewaydescription": "PayPal is an authorised payment gateway provider for processing credit card transactions.",
+        "gatewayname": "PayPal",
+        "internalerror": "An internal error has occurred. Please contact us.",
+        "live": "Live",
+        "paymentnotcleared": "payment not cleared by PayPal.",
+        "pluginname": "PayPal",
+        "pluginname_desc": "The PayPal plugin allows you to receive payments via PayPal.",
+        "privacy:metadata": "The PayPal plugin does not store any personal data.",
+        "repeatedorder": "This order has already been processed earlier.",
+        "sandbox": "Sandbox",
+        "secret": "Secret",
+        "secret_help": "The secret that PayPal generated for your application."
+    },
+    "deprecatedkeys": []
+}

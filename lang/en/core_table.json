@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "downloadas": "Download table data as",
+        "missingrequiredfields": "One or more required filters were missing ({$a})",
+        "privacy:metadata": "The Table API does not currently store any user data"
+    },
+    "deprecatedkeys": []
+}

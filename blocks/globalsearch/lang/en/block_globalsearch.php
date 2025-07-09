@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'block_globalsearch'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    block_globalsearch
- * @copyright  Prateek Sachan {@link http://prateeksachan.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   block_globalsearch
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['globalsearch:addinstance'] = 'Add a new global search block';
-$string['globalsearch:myaddinstance'] = 'Add a new global search block to Dashboard';
-$string['pluginname'] = 'Global search';
-$string['privacy:metadata'] = 'The Global search block only shows data stored in other locations.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/block_globalsearch.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "author": "Author",
+        "confirmdelete": "Are you sure you want to delete this file?",
+        "confirmdeleteall": "Are you sure you want to delete all files?",
+        "confirmdownload": "Are you sure you want to download this file?",
+        "confirmdownloadall": "Are you sure you want to download all files?",
+        "filename": "File name",
+        "infectedfiles": "Antivirus failures",
+        "pluginname": "Infected files",
+        "privacy:metadata:infected_files": "This table stores information on antivirus failures detected by the system.",
+        "privacy:metadata:infected_files:filename": "The name of the infected file uploaded by the user.",
+        "privacy:metadata:infected_files:timecreated": "The timestamp of when a user uploaded an infected file.",
+        "privacy:metadata:infected_files:userid": "The user ID of the user who uploaded an infected file.",
+        "privacy:metadata:infected_files_subcontext": "Antivirus failures",
+        "quarantinedfile": "Quarantined file",
+        "reason": "Failure reason",
+        "timecreated": "Time created"
+    },
+    "deprecatedkeys": []
+}

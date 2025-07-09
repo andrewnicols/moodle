@@ -15,25 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'profilefield_social'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   profilefield_social
- * @copyright 2020 Bas Brands <bas@moodle.com>
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['invalidnetwork'] = 'Invalid social network';
-$string['networkinuse'] = 'Social network has already been added';
-$string['pluginname'] = 'Social';
-$string['networktype'] = 'Network type';
-$string['privacy:metadata:profile_field_social:data'] = 'Text area user profile field user data';
-$string['privacy:metadata:profile_field_social:dataformat'] = 'The format of Text area user profile field user data';
-$string['privacy:metadata:profile_field_social:fieldid'] = 'The ID of the profile field';
-$string['privacy:metadata:profile_field_social:tableexplanation'] = 'Additional profile data';
-$string['privacy:metadata:profile_field_social:userid'] = 'The ID of the user whose data is stored by the social user profile field';
-$string['aimid'] = 'AIM ID';
-$string['yahooid'] = 'Yahoo ID';
-$string['skypeid'] = 'Skype ID';
-$string['icqnumber'] = 'ICQ number';
-$string['msnid'] = 'MSN ID';
-$string['webpage'] = 'Web page';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/profilefield_social.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

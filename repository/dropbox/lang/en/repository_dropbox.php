@@ -15,25 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_dropbox', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   repository_dropbox
- * @copyright 2010 Dongsheng Cai
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['configplugin'] = 'Dropbox configuration';
-$string['crontask'] = 'Background processing for Dropbox repository';
-$string['notitle'] = 'notitle';
-$string['remember'] = 'Remember me';
-$string['pluginname'] = 'Dropbox';
-$string['dropbox'] = 'Dropbox';
-$string['issuer'] = 'OAuth 2 service';
-$string['issuer_help'] = 'Select the OAuth 2 service that is configured to talk to the Dropbox API. If the service doesn\'t exist yet, you will need to create it.';
-$string['cachelimit'] = 'Cache limit';
-$string['cachelimit_info'] = 'Enter the maximum size of files (in bytes) to be cached on server for Dropbox aliases/shortcuts. Cached files will be served when the source is no longer available. Empty value or zero mean caching of all files regardless of size.';
-$string['dropbox:view'] = 'View a Dropbox folder';
-$string['logoutdesc'] = '(Logout when you finish using Dropbox)';
-$string['oauth2redirecturi'] = 'OAuth 2 Redirect URI';
-$string['privacy:metadata:repository_dropbox'] = 'The Dropbox repository plugin does not store any personal data, but does transmit user data from Moodle to the remote system.';
-$string['privacy:metadata:repository_dropbox:query'] = 'The Dropbox repository user search text query.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_dropbox.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

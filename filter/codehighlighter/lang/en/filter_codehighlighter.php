@@ -15,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for filter_codehighlighter
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    filter_codehighlighter
- * @copyright  2023 Meirza <meirza.arson@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   filter_codehighlighter
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['filtername'] = 'Code highlighter';
-$string['privacy:metadata'] = 'The code highlighter plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/filter_codehighlighter.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

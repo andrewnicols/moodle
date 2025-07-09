@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "displaycategories": "Display categories",
+        "displaycategories_help": "Display the course category on the starred courses block items.",
+        "nocourses": "No starred courses",
+        "pluginname": "Starred courses",
+        "privacy:metadata": "The starred courses block does not store any personal data.",
+        "starredcourses:myaddinstance": "Add a new starred courses block to Dashboard"
+    },
+    "deprecatedkeys": []
+}

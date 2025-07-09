@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for the quizaccess_ipaddress plugin.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    quizaccess
- * @subpackage ipaddress
- * @copyright  2011 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   quizaccess_ipaddress
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
-defined('MOODLE_INTERNAL') || die();
-
-
-$string['pluginname'] = 'IP address quiz access rule';
-$string['privacy:metadata'] = 'The IP address quiz access rule plugin does not store any personal data.';
-$string['subnetwrong'] = 'This quiz is only accessible from certain locations, and this computer is not on the allowed list.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/quizaccess_ipaddress.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

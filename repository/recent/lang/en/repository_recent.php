@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,20 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'repository_recent', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package   moodlecore
- * @copyright 2010 Dongsheng Cai <dongsheng@moodle.com>
+ * @package   repository_recent
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['configplugin'] = 'Configuration for recent files repository';
-$string['recentfilesnumber'] = 'Number of recent files';
-$string['emptyfilelist'] = 'There are no files to show';
-$string['notitle'] = 'notitle';
-$string['recent:view'] = 'View recent files repository plugin';
-$string['pluginname_help'] = 'Files recently used by current user';
-$string['pluginname'] = 'Recent files';
-$string['privacy:metadata'] = 'The Recent files repository plugin does not store or transmit any personal data.';
-$string['timelimit'] = 'Time limit';
-$string['timelimit_help'] = 'Only retrieve recent files within the time limit';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/repository_recent.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

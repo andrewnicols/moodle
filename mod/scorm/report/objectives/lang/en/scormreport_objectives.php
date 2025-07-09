@@ -15,20 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'scorm_objectives' report plugin
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   scormreport_objectives
- * @author    Dan Marsden <dan@danmarsden.com>
- * @copyright 2013 Dan Marsden
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-$string['pluginname'] = 'Objectives report';
-$string['privacy:metadata:preference:scorm_report_objectives_score'] = 'Whether to display the objective score in the SCORM report';
-$string['privacy:metadata:preference:scorm_report_pagesize'] = 'Number of users to display in the SCORM reports';
-$string['objectivex'] = 'Objective {$a}';
-$string['objectivescore'] = 'Show objective score';
-$string['score'] = 'score';
-$string['status'] = 'status';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/scormreport_objectives.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

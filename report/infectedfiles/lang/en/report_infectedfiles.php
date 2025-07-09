@@ -15,26 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Infected file report
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    report_infectedfiles
- * @author     Nathan Nguyen <nathannguyen@catalyst-au.net>
- * @copyright  Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   report_infectedfiles
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$string['author'] = 'Author';
-$string['confirmdelete'] = 'Are you sure you want to delete this file?';
-$string['confirmdeleteall'] = 'Are you sure you want to delete all files?';
-$string['confirmdownload'] = 'Are you sure you want to download this file?';
-$string['confirmdownloadall'] = 'Are you sure you want to download all files?';
-$string['filename'] = 'File name';
-$string['infectedfiles'] = 'Antivirus failures';
-$string['privacy:metadata:infected_files'] = 'This table stores information on antivirus failures detected by the system.';
-$string['privacy:metadata:infected_files:filename'] = 'The name of the infected file uploaded by the user.';
-$string['privacy:metadata:infected_files:timecreated'] = 'The timestamp of when a user uploaded an infected file.';
-$string['privacy:metadata:infected_files:userid'] = 'The user ID of the user who uploaded an infected file.';
-$string['privacy:metadata:infected_files_subcontext'] = 'Antivirus failures';
-$string['pluginname'] = 'Infected files';
-$string['quarantinedfile'] = 'Quarantined file';
-$string['reason'] = 'Failure reason';
-$string['timecreated'] = 'Time created';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/report_infectedfiles.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

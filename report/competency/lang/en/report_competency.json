@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "competency": "Competency",
+        "coursecompetencybreakdownsummary": "A report of all the students in the course, and their progress towards the course competencies",
+        "filtermodule": "Competencies linked to \"{$a}\"",
+        "notrated": "Not rated",
+        "pluginname": "Competency breakdown",
+        "privacy:metadata": "The Competency breakdown plugin does not store any personal data.",
+        "rating": "Rating",
+        "usercompetencysummary": "User competency summary"
+    },
+    "deprecatedkeys": []
+}

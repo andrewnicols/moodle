@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "edit_question_name_hint": "Edit question name",
+        "edit_question_name_label": "New value for {$a->name}",
+        "pluginname": "View question name",
+        "privacy:metadata": "The View question name question bank plugin does not store any personal data.",
+        "questionidnumbercondition": "Question ID number",
+        "questionnamecondition": "Question name"
+    },
+    "deprecatedkeys": []
+}

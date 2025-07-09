@@ -1,0 +1,13 @@
+{
+    "strings": {
+        "availableplugins": "Available plugins",
+        "configenableplagiarism": "This will allow administrators to configure plagiarism plugins (if installed)",
+        "configplagiarismplugins": "Please choose the plagiarism plugin you would like to configure",
+        "enableplagiarism": "Enable plagiarism plugins",
+        "manageplagiarism": "Manage plagiarism plugins",
+        "nopluginsinstalled": "No plagiarism plugins are installed.",
+        "plagiarism": "Plagiarism",
+        "privacy:metadata:plagiarism": "The plagiarism subsystem acts as a channel, passing requests from plugins to the various plagiarism plugins."
+    },
+    "deprecatedkeys": []
+}

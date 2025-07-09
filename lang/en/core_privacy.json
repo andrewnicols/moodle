@@ -1,0 +1,25 @@
+{
+    "strings": {
+        "broughtbymoodle": "This data export is provided by Moodle.",
+        "exportfrom": "Exported from {$a}",
+        "exporttime": "Exported on {$a}",
+        "exportuser": "Data for {$a}",
+        "navigation": "Navigation",
+        "privacy:metadata": "The privacy subsystem does not store any data of its own and is designed to act as a channel between components and the interface used to describe, export, and remove their data.",
+        "privacy:subsystem:empty": "This subsystem does not store any data.",
+        "trace:deletingapproved": "Performing removal of {$a->total} approved contexts ({$a->datetime})",
+        "trace:deletingapprovedusers": "Performing removal of users in {$a->total} approved components for context {$a->contextid} ({$a->datetime}).",
+        "trace:deletingcontext": "Performing removal of context from {$a->total} components ({$a->datetime})",
+        "trace:deletinguser": "Performing removal of user from {$a->total} components ({$a->datetime})",
+        "trace:done": "Complete",
+        "trace:exportcomplete": "Export complete",
+        "trace:exportingapproved": "Performing primary export for {$a->total} components ({$a->datetime})",
+        "trace:exportingrelated": "Performing related export for {$a->total} components ({$a->datetime})",
+        "trace:fetchcomponents": "Fetching data from {$a->total} components ({$a->datetime})",
+        "trace:finalisingexport": "Finalising export",
+        "trace:preprocessingcomponent": "Pre-processing {$a->component} ({$a->progress}/{$a->total}) ({$a->datetime})",
+        "trace:processingcomponent": "Processing {$a->component} ({$a->progress}/{$a->total}) ({$a->datetime})",
+        "viewdata": "Click on a link in the navigation to view data."
+    },
+    "deprecatedkeys": []
+}

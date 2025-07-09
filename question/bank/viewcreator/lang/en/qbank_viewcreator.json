@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "history": "History",
+        "modifiedby": "Modified by",
+        "pluginname": "View creator",
+        "privacy:metadata": "The View creator question bank plugin does not store any personal data.",
+        "timemodified": "Time modified",
+        "version": "Version {$a}"
+    },
+    "deprecatedkeys": []
+}

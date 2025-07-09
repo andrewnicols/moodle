@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "fieldtypelabel": "URL",
+        "openlinkinnewwindow": "Open link in new window",
+        "pluginname": "URL",
+        "privacy:metadata": "The URL field component doesn't store any personal data; it uses tables defined in mod_data."
+    },
+    "deprecatedkeys": []
+}

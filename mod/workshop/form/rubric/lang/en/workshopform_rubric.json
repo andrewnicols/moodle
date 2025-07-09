@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "addmoredimensions": "Blanks for {$a} more criteria",
+        "configuration": "Rubric configuration",
+        "criteria": "Criteria",
+        "dimensiondescription": "Description",
+        "dimensionnumber": "Criterion {$a}",
+        "layout": "Rubric layout",
+        "layoutgrid": "Grid",
+        "layoutlist": "List",
+        "levelgroup": "Level grade and definition",
+        "levels": "Levels",
+        "mustbeunique": "Level grades must be unique within a criterion",
+        "mustchooseone": "You have to select one of these items",
+        "mustdefinelevel": "At least one level is required",
+        "pluginname": "Rubric",
+        "privacy:metadata": "The Rubric plugin only stores the details of the assessment form. Actual personal data of how the form has been filled are stored by the Workshop module itself and are attached to exported assessments."
+    },
+    "deprecatedkeys": []
+}

@@ -15,25 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tool_templatelibrary', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    tool_templatelibrary
- * @copyright  2015 Damyon Wiese
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tool_templatelibrary
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['all'] = 'All components';
-$string['component'] = 'Component';
-$string['core'] = 'Core';
-$string['coresubsystem'] = 'Subsystem ({$a})';
-$string['documentation'] = 'Documentation';
-$string['example'] = 'Example';
-$string['noresults'] = 'No results';
-$string['notemplateselected'] = 'No template selected';
-$string['pluginname'] = 'Template library';
-$string['search'] = 'Search';
-$string['searchtemplates'] = 'Search templates';
-$string['templatehasnoexample'] = 'This template has no example context, so it cannot be rendered here. To add an example context to this template, insert in a Mustache comment "Example context (json):", followed by the json encoded sample context for the template.';
-$string['templates'] = 'Templates';
-$string['templateselected'] = 'Template: {$a}';
-$string['privacy:metadata'] = 'The Template library plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/tool_templatelibrary.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

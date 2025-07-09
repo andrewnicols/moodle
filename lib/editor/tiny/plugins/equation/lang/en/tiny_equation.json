@@ -1,0 +1,26 @@
+{
+    "strings": {
+        "buttontitle": "Equation editor",
+        "cursorinfo": "An arrow indicates the position that new elements from the element library will be inserted.",
+        "editequation": "Edit equation using <a href=\"{$a}\" target=\"_blank\">TeX</a>",
+        "equation:use": "Use TinyMCE equation editor",
+        "helplinktext": "Equation helper",
+        "librarygroup1": "Operators",
+        "librarygroup1_desc": "TeX commands listed on the operators tab.",
+        "librarygroup2": "Arrows",
+        "librarygroup2_desc": "TeX commands listed on the arrows tab.",
+        "librarygroup3": "Greek symbols",
+        "librarygroup3_desc": "TeX commands listed on the Greek symbols tab.",
+        "librarygroup4": "Advanced",
+        "librarygroup4_desc": "TeX commands listed on the advanced tab.",
+        "modaltitle": "Equation editor",
+        "pluginname": "Equation editor",
+        "preview": "Equation preview",
+        "privacy:metadata": "The equation editor for TinyMCE does not store any personal data.",
+        "saveequation": "Save equation",
+        "settings": "Equation editor settings"
+    },
+    "deprecatedkeys": {
+        "helplinktext": 4.5
+    }
+}

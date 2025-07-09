@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "configplugin": "URL repository type configuration",
+        "download": "Download",
+        "pluginname": "URL downloader",
+        "privacy:metadata": "The URL downloader repository plugin does not store or transmit any personal data.",
+        "rename": "Name",
+        "url": "URL",
+        "url:view": "Use URL downloader in file picker",
+        "validfiletype": "You must provide a URL to an image file or a page containing images.",
+        "validname": "You must provide a valid file name"
+    },
+    "deprecatedkeys": []
+}

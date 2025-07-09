@@ -15,45 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'tiny_aiplacement', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    tiny_aiplacement
- * @copyright  2024 Matt Porritt <matt.porritt@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   tiny_aiplacement
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['aiplacement:generateimage'] = 'Generate image using AI';
-$string['aiplacement:generatetext'] = 'Generate text using AI';
-$string['aspectlandscape'] = 'Landscape';
-$string['aspectportrait'] = 'Portrait';
-$string['aspectratio'] = 'Image shape';
-$string['aspectsquare'] = 'Square';
-$string['back'] = 'Go back';
-$string['buttontitle'] = 'tester';
-$string['definitionhigh'] = 'High';
-$string['definitionstandard'] = 'Standard';
-$string['errorgeneral'] = 'Try again later';
-$string['generate'] = 'Generate';
-$string['generatefailtitle'] = 'Something went wrong';
-$string['generateimage'] = 'Generate image';
-$string['generatetext'] = 'Generate text';
-$string['generating'] = 'Generating';
-$string['imagemodaltitle'] = 'Generate an image using AI';
-$string['imageprompt_label'] = 'Describe the image you want AI to create';
-$string['imageprompt_placeholder'] = 'Try \'Mountain landscape\'';
-$string['imagequality'] = 'Image quality';
-$string['imagestyle'] = 'Image style';
-$string['insert'] = 'Insert';
-$string['loading'] = 'Loading...';
-$string['loading_almostdone'] = 'Almost done...';
-$string['loading_applying'] = 'Applying the finishing touches...';
-$string['loading_generating'] = 'Generating the response...';
-$string['loading_processing'] = 'Processing your request...';
-$string['next'] = 'Next';
-$string['pluginname'] = 'AI placement';
-$string['privacy:metadata'] = 'The AI placement plugin does not store any personal data.';
-$string['regenerate'] = 'Regenerate';
-$string['textmodaltitle'] = 'Generate text using AI';
-$string['textprompt_label'] = 'Describe the text you want AI to create. You can include details like topic, length, audience, or tone.';
-$string['textresponse_label'] = 'AI-generated text';
-$string['textresponse_placeholder'] = 'Generated text will appear here, and can be edited before inserting into the editor.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/tiny_aiplacement.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

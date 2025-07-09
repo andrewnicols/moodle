@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "SOAP protocol",
+        "privacy:metadata": "The SOAP protocol plugin does not store any personal data.",
+        "soap:use": "Use SOAP protocol"
+    },
+    "deprecatedkeys": []
+}

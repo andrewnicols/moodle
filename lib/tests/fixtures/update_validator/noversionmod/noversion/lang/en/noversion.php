@@ -17,9 +17,9 @@
 /**
  * Backwards compatibility helper for the lang file migration.
  *
- * @package   noversion
+ * @package   mod_noversion
  * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-$stringvalues = json_decode(file_get_contents(__DIR__ . "/noversion.json"), true, 512, JSON_THROW_ON_ERROR);
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/mod_noversion.json"), true, 512, JSON_THROW_ON_ERROR);
 $string = $stringvalues['strings'] ?? [];

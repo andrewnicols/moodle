@@ -1,0 +1,9 @@
+{
+    "strings": {
+        "news_items:addinstance": "Add a new latest announcements block",
+        "news_items:myaddinstance": "Add a new latest announcements block to Dashboard",
+        "pluginname": "Latest announcements",
+        "privacy:metadata": "The Latest announcements block only shows data stored in the forum and does not store data itself."
+    },
+    "deprecatedkeys": []
+}

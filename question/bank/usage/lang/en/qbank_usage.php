@@ -15,27 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component qbank_usage, language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbank_usage
- * @copyright  2021 Catalyst IT Australia Pty Ltd
- * @author     Safat Shahin <safatshahin@catalyst-au.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbank_usage
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['pluginname'] = 'Question usage';
-$string['notused'] = 'Never';
-$string['privacy:metadata'] = 'The Question usage question bank plugin does not store any personal data.';
-$string['questionusage'] = 'Usage';
-$string['questionusage_help'] = 'The number of quizzes in which the question is used, with a link to open a window listing the quizzes and the number of attempts.';
-$string['questionlastused'] = 'Last used';
-$string['questionlastused_help'] = 'The date when the question was last attempted.';
-$string['usageheader'] = 'Question usage';
-
-// Table.
-$string['modulename'] = 'Activity name';
-$string['coursename'] = 'Course name';
-$string['versions'] = 'Version';
-$string['state'] = 'State';
-$string['attempts'] = 'Attempts';
-$string['questionusageversion'] = 'v{$a}';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_usage.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

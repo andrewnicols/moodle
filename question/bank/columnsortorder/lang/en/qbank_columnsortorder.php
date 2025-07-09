@@ -15,33 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component qbank_columnsortorder, language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qbank_columnsortorder
- * @copyright  2021 Catalyst IT Australia Pty Ltd
- * @author     Ghaly Marc-Alexandre <marc-alexandreghaly@catalyst-ca.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qbank_columnsortorder
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['addcolumn'] = 'Add column \'{$a}\'';
-$string['addcolumns'] = 'Add columns';
-$string['auto'] = 'Auto';
-$string['columnwidth'] = 'Column width (pixels)';
-$string['invalidwidth'] = 'Width must be at least {$a}.';
-$string['movecolumn'] = 'Move column \'{$a}\'';
-$string['pluginname'] = 'Column sort order';
-$string['privacy:metadata:preference:enabledcol'] = 'The Column sort order question bank plugin saves user preference of column orders.';
-$string['privacy:metadata:preference:hiddencols'] = 'The Column sort order question bank plugin saves user preference of hidden columns.';
-$string['privacy:metadata:preference:colsize'] = 'The Column sort order question bank plugin saves user preference of column sizes.';
-$string['qbankcolumnsortorder'] = 'Column sort order';
-$string['qbankgotocolumnsort'] = 'You can change the order of the columns in the question bank on the page {$a}.';
-$string['qbankcolumnsdisabled'] = 'Currently disabled question bank plugins:';
-$string['qbankgotomanageqbanks'] = 'You can remove a column by disabling the plugin in <a href=\'{$a}\'>Manage question bank plugins</a>.';
-$string['qbankcolumnname'] = '{$a}';
-$string['qbanksortdescription'] = 'The order in which plugins are listed below determines the order of the columns in the question bank.';
-$string['resetcolumns'] = 'Reset columns';
-$string['resize'] = 'Resize';
-$string['resizecolumn'] = 'Resize column {$a}';
-$string['removecolumn'] = 'Remove column \'{$a}\'';
-$string['showhidecolumn'] = 'Show/hide column';
-$string['width'] = 'Width of \'{$a}\' in pixels';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qbank_columnsortorder.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

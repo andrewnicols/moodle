@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "pluginname": "Behaviour for information items",
+        "privacy:metadata": "The Information items question behaviour plugin does not store any personal data.",
+        "seen": "Seen"
+    },
+    "deprecatedkeys": []
+}

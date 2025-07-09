@@ -1,0 +1,8 @@
+{
+    "strings": {
+        "fieldtypelabel": "Number",
+        "pluginname": "Number",
+        "privacy:metadata": "The Number field component doesn't store any personal data; it uses tables defined in mod_data."
+    },
+    "deprecatedkeys": []
+}

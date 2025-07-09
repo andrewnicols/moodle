@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'report_competency', language 'en'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    report_competency
- * @copyright  2015 Damyon Wiese
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   report_competency
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['competency'] = 'Competency';
-$string['coursecompetencybreakdownsummary'] = 'A report of all the students in the course, and their progress towards the course competencies';
-$string['notrated'] = 'Not rated';
-$string['pluginname'] = 'Competency breakdown';
-$string['rating'] = 'Rating';
-$string['filtermodule'] = 'Competencies linked to "{$a}"';
-$string['usercompetencysummary'] = 'User competency summary';
-$string['privacy:metadata'] = 'The Competency breakdown plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/report_competency.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

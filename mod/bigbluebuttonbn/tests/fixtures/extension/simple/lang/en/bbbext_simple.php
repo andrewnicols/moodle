@@ -13,20 +13,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-/**
- * Language File.
- *
- * @package   mod_bigbluebuttonbn
- * @copyright 2023 onwards, Blindside Networks Inc
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @author    Laurent David (laurent@call-learning.fr)
- */
 
-defined('MOODLE_INTERNAL') || die();
-$string['config_extension'] = 'Sample config extension setting';
-$string['newfield'] = 'New field';
-$string['newfielderror'] = 'New field cannot be empty';
-$string['pluginname'] = 'Simple BigBlueButtonPlugin';
-$string['completionextraisehandtwice'] = 'Raise hand twice';
-$string['completionextraisehandtwice_desc'] = 'Raise hand twice in a meeting.';
-$string['completionextraisehandtwice_help'] = 'Raise hand twice in a meeting.';
+/**
+ * Backwards compatibility helper for the lang file migration.
+ *
+ * @package   bbbext_simple
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/bbbext_simple.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

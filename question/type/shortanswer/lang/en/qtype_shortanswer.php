@@ -15,33 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'qtype_shortanswer', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    qtype
- * @subpackage shortanswer
- * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   qtype_shortanswer
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['addmoreanswerblanks'] = 'Blanks for {no} More Answers';
-$string['answer'] = 'Answer: {$a}';
-$string['answermustbegiven'] = 'You must enter an answer if there is a grade or feedback.';
-$string['answerno'] = 'Answer {$a}';
-$string['caseno'] = 'No, case is unimportant';
-$string['casesensitive'] = 'Case sensitivity';
-$string['caseyes'] = 'Yes, case must match';
-$string['correctansweris'] = 'The correct answer is: {$a}';
-$string['correctanswers'] = 'Correct answers';
-$string['filloutoneanswer'] = 'You must provide at least one possible answer. Answers left blank will not be used. \'*\' can be used as a wildcard to match any characters. The first matching answer will be used to determine the score and feedback.';
-$string['notenoughanswers'] = 'This type of question requires at least {$a} answers';
-$string['pleaseenterananswer'] = 'Please enter an answer.';
-$string['pluginname'] = 'Short answer';
-$string['pluginname_help'] = 'In response to a question (that may include an image) the respondent types a word or short phrase. There may be several possible correct answers, each with a different grade. If the "Case sensitive" option is selected, then you can have different scores for "Word" or "word".';
-$string['pluginname_link'] = 'question/type/shortanswer';
-$string['pluginnameadding'] = 'Adding a short answer question';
-$string['pluginnameediting'] = 'Editing a Short answer question';
-$string['pluginnamesummary'] = 'Allows a response of one or a few words that is graded by comparing against various model answers, which may contain wildcards.';
-$string['privacy:metadata'] = 'Short answer question type plugin allows question authors to set default options as user preferences.';
-$string['privacy:preference:defaultmark'] = 'The default mark set for a given question.';
-$string['privacy:preference:penalty'] = 'The penalty for each incorrect try when questions are run using the \'Interactive with multiple tries\' or \'Adaptive mode\' behaviour.';
-$string['privacy:preference:usecase'] = 'Whether the answers should be case sensitive.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/qtype_shortanswer.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

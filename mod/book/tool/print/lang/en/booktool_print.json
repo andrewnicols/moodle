@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "eventbookprinted": "Book printed",
+        "eventchapterprinted": "Chapter printed",
+        "pluginname": "Book printing",
+        "print:print": "Print book",
+        "printbook": "Print book",
+        "printchapter": "Print this chapter",
+        "printdate": "Date",
+        "printedby": "Printed by",
+        "privacy:metadata": "The Book printing plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

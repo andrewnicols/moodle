@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "alreadyselfcompleted": "You have already marked yourself as complete in this course",
+        "completecourse": "Complete course",
+        "pluginname": "Self completion",
+        "privacy:metadata": "The Self completion block only shows data stored in other locations.",
+        "selfcompletion:addinstance": "Add a new self completion block",
+        "selfcompletionnotenabled": "The self completion criteria has not been enabled for this course"
+    },
+    "deprecatedkeys": []
+}

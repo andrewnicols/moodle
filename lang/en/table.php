@@ -15,13 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'table', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package   core
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @package   core_table
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['downloadas'] = 'Download table data as';
-$string['missingrequiredfields'] = 'One or more required filters were missing ({$a})';
-$string['privacy:metadata'] = 'The Table API does not currently store any user data';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/core_table.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,17 @@
+{
+    "strings": {
+        "buttontitle": "No auto-link",
+        "errorinvalidurl": "The selected content is not a URL. Please try again.",
+        "helplinktext": "No auto-link helper",
+        "infoaddsuccess": "Auto-link prevention added.",
+        "infoemptyselection": "Select text and try again.",
+        "inforemovesuccess": "Auto-link prevention removed.",
+        "noautolink:use": "Use TinyMCE no auto-link",
+        "pluginname": "No auto-link",
+        "privacy:metadata": "The tiny_noautolink plugin does not store any personal data."
+    },
+    "deprecatedkeys": {
+        "helplinktext": 4.5,
+        "errorinvalidurl": 4.5
+    }
+}

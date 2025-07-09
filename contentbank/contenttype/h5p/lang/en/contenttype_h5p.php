@@ -15,17 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for plugin 'contenttype_h5p'
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    contenttype_h5p
- * @copyright  2020 Amaia Anabitarte <amaia@moodle.com>
+ * @package   contenttype_h5p
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['description'] = 'H5P interactive content';
-$string['pluginname'] = 'H5P';
-$string['pluginname_help'] = 'Content bank to upload and share H5P content';
-$string['privacy:metadata'] = 'The H5P content bank plugin does not store any personal data.';
-$string['h5p:access'] = 'Access H5P content in the content bank';
-$string['h5p:upload'] = 'Upload new H5P content';
-$string['h5p:useeditor'] = 'Create or edit content using the H5P editor';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/contenttype_h5p.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

@@ -1,0 +1,14 @@
+{
+    "strings": {
+        "configplugin": "Configuration for server file repository",
+        "currentusefiles": "Currently used files",
+        "emptyfilelist": "There are no files to show",
+        "local:view": "View server repository",
+        "notitle": "notitle",
+        "pluginname": "Server files",
+        "pluginname_help": "Files previously uploaded to the Moodle server",
+        "privacy:metadata": "The Server files repository plugin does not store or transmit any personal data.",
+        "remember": "Remember me"
+    },
+    "deprecatedkeys": []
+}

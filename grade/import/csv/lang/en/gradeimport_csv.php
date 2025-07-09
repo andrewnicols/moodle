@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -16,14 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'gradeimport_csv', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   gradeimport_csv
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['csv:view'] = 'Import grades from CSV';
-$string['gradepenalties'] = 'Grade penalties will not be applied to imported grades.';
-$string['pluginname'] = 'CSV file';
-$string['privacy:metadata'] = 'The import grades from CSV plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/gradeimport_csv.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

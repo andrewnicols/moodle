@@ -15,18 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Language strings.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package     factor_nosetup
- * @author      Peter Burnett <peterburnett@catalyst-au.net>
- * @copyright   Catalyst IT
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   factor_nosetup
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['deleteunusablefactors'] = 'Delete unusable Optional MFA factors';
-$string['info'] = 'This factor passes if the user has no other factors set up.';
-$string['pluginname'] = 'Optional MFA';
-$string['privacy:metadata'] = 'The Optional MFA plugin does not store any personal data';
-$string['settings:description'] = 'Allow users who haven\'t set up any other authentication factors to bypass MFA until another factor is added.';
-$string['settings:shortdescription'] = 'Allow users to bypass MFA if they have not set up any other authentication factor.';
-$string['summarycondition'] = 'has no other factors set up';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/factor_nosetup.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

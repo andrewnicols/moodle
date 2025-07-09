@@ -1,0 +1,22 @@
+{
+    "strings": {
+        "accessibilitychecker:use": "Use TinyMCE accessibility checker",
+        "emptytext": "Empty text",
+        "entiredocument": "Entire document",
+        "helplinktext": "Accessibility helper",
+        "imagesmissingalt": "Images require alternative text. To fix this warning, add an alt attribute to your img tags. An empty alt attribute may be used, but only when the image is purely decorative and carries no information.",
+        "needsmorecontrast": "The colours of the foreground and background text do not have enough contrast. To fix this warning, change either foreground or background colour of the text so that it is easier to read.",
+        "needsmoreheadings": "There is a lot of text with no headings. Headings allow screen reader users to navigate through the page easily and make the page more usable for everyone.",
+        "nowarnings": "Congratulations, no accessibility issues found!",
+        "pluginname": "Accessibility checker",
+        "privacy:metadata": "The accessibility checker for TinyMCE does not store any personal data.",
+        "report": "Accessibility report:",
+        "tablesmissingcaption": "A table caption is not required, but is generally helpful.",
+        "tablesmissingheaders": "Tables should use row and/or column headers.",
+        "tableswithmergedcells": "Tables should not contain merged cells, as screen readers may not support them.",
+        "viewissue": "View"
+    },
+    "deprecatedkeys": {
+        "helplinktext": 4.5
+    }
+}

@@ -15,16 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'enrol_category', language 'en'.
+ * Backwards compatibility helper for the lang file migration.
  *
- * @package    enrol_category
- * @copyright  2010 Petr Skoda  {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package   enrol_category
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['category:config'] = 'Configure category enrol instances';
-$string['category:synchronised'] = 'Role assignments synchronised to course enrolment';
-$string['enrolcategorysynctask'] = 'Category enrolment sync task';
-$string['pluginname'] = 'Category enrolments';
-$string['pluginname_desc'] = 'The category enrolments plugin synchronises any role assignments in the category context for roles with the capability enrol/category:synchronised allowed.';
-$string['privacy:metadata'] = 'The Category enrolments plugin does not store any personal data.';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/enrol_category.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];

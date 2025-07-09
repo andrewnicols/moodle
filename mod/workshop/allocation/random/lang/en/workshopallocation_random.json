@@ -1,0 +1,32 @@
+{
+    "strings": {
+        "addselfassessment": "Add self-assessments",
+        "allocationaddeddetail": "New assessment to be done: <strong>{$a->reviewername}</strong> is reviewer of <strong>{$a->authorname}</strong>",
+        "allocationdeallocategraded": "Unable to deallocate already graded assessment: reviewer <strong>{$a->reviewername}</strong>, submission author <strong>{$a->authorname}</strong>",
+        "allocationreuseddetail": "Reused assessment: <strong>{$a->reviewername}</strong> kept as reviewer of <strong>{$a->authorname}</strong>",
+        "allocationsettings": "Allocation settings",
+        "assessmentdeleteddetail": "Assessment deallocated: <strong>{$a->reviewername}</strong> is no longer reviewer of <strong>{$a->authorname}</strong>",
+        "assesswosubmission": "Participants can assess without having submitted anything",
+        "confignumofreviews": "Default number of submissions to be randomly allocated",
+        "excludesamegroup": "Prevent reviews by peers from the same group",
+        "noallocationtoadd": "No allocations to add",
+        "nogroupusers": "<p>Warning: If the workshop is in 'visible groups' mode or 'separate groups' mode, then users MUST be part of at least one group to have peer-assessments allocated to them by this tool. Non-grouped users can still be given new self-assessments or have existing assessments removed.</p>\n<p>These users are currently not in a group: {$a}</p>",
+        "numofdeallocatedassessment": "Deallocating {$a} assessment(s)",
+        "numofrandomlyallocatedsubmissions": "Randomly assigning {$a} allocations",
+        "numofreviews": "Number of reviews",
+        "numofselfallocatedsubmissions": "Self-allocating {$a} submission(s)",
+        "numperauthor": "per submission",
+        "numperreviewer": "per reviewer",
+        "pluginname": "Random allocation",
+        "privacy:metadata": "The Random allocation plugin does not store any personal data. Actual personal data about who is going to assess whom are stored by the Workshop module itself and they form basis for exporting the assessments details.",
+        "randomallocationdone": "Random allocation done",
+        "removecurrentallocations": "Remove current allocations",
+        "resultnomorepeers": "No more peers available",
+        "resultnomorepeersingroup": "No more peers available in this separate group",
+        "resultnotenoughpeers": "Not enough peers available",
+        "resultnumperauthor": "Trying to allocate {$a} review(s) per author",
+        "resultnumperreviewer": "Trying to allocate {$a} review(s) per reviewer",
+        "stats": "Current allocation statistics"
+    },
+    "deprecatedkeys": []
+}

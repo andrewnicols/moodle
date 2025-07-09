@@ -1,0 +1,20 @@
+{
+    "strings": {
+        "all": "All components",
+        "component": "Component",
+        "core": "Core",
+        "coresubsystem": "Subsystem ({$a})",
+        "documentation": "Documentation",
+        "example": "Example",
+        "noresults": "No results",
+        "notemplateselected": "No template selected",
+        "pluginname": "Template library",
+        "privacy:metadata": "The Template library plugin does not store any personal data.",
+        "search": "Search",
+        "searchtemplates": "Search templates",
+        "templatehasnoexample": "This template has no example context, so it cannot be rendered here. To add an example context to this template, insert in a Mustache comment \"Example context (json):\", followed by the json encoded sample context for the template.",
+        "templates": "Templates",
+        "templateselected": "Template: {$a}"
+    },
+    "deprecatedkeys": []
+}

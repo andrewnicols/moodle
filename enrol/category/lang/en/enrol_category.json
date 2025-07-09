@@ -1,0 +1,11 @@
+{
+    "strings": {
+        "category:config": "Configure category enrol instances",
+        "category:synchronised": "Role assignments synchronised to course enrolment",
+        "enrolcategorysynctask": "Category enrolment sync task",
+        "pluginname": "Category enrolments",
+        "pluginname_desc": "The category enrolments plugin synchronises any role assignments in the category context for roles with the capability enrol/category:synchronised allowed.",
+        "privacy:metadata": "The Category enrolments plugin does not store any personal data."
+    },
+    "deprecatedkeys": []
+}

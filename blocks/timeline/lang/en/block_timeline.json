@@ -1,0 +1,31 @@
+{
+    "strings": {
+        "all": "All",
+        "ariadayfilter": "Filter timeline by date",
+        "ariadayfilteroption": "{$a} filter option",
+        "ariaeventlistitem": "{$a->name} activity in {$a->course} is due on {$a->date}",
+        "ariaviewselector": "Sort timeline items",
+        "ariaviewselectoroption": "{$a} sort option",
+        "duedate": "Due date",
+        "moreactivities": "Show more activities",
+        "morecourses": "Show more courses",
+        "next30days": "Next 30 days",
+        "next3months": "Next 3 months",
+        "next6months": "Next 6 months",
+        "next7days": "Next 7 days",
+        "nocoursesinprogress": "No in-progress courses",
+        "noevents": "No activities require action",
+        "overdue": "Overdue",
+        "pluginname": "Timeline",
+        "privacy:metadata:timelinefilterpreference": "The user day filter preference for the timeline block.",
+        "privacy:metadata:timelinelimitpreference": "The user page limit preference for the timeline block.",
+        "privacy:metadata:timelinesortpreference": "The user sort preference for the timeline block.",
+        "searchevents": "Search by activity type or name",
+        "sortbycourses": "Sort by courses",
+        "sortbydates": "Sort by dates",
+        "timeline": "Timeline",
+        "timeline:myaddinstance": "Add a new timeline block to Dashboard",
+        "viewcourse": "View course"
+    },
+    "deprecatedkeys": []
+}

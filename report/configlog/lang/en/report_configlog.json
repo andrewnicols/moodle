@@ -1,0 +1,21 @@
+{
+    "strings": {
+        "configlog": "Config changes",
+        "datefrom": "Date from",
+        "dateto": "Date to",
+        "entityconfigchange": "Config change",
+        "plugin": "Plugin",
+        "pluginname": "Config changes",
+        "privacy:metadata": "The Config changes plugin does not store any personal data.",
+        "setting": "Setting",
+        "timemodified": "Date",
+        "user": "User",
+        "user_help": "Search by user first name or last name",
+        "usernone": "CLI or install",
+        "value": "Value",
+        "value_help": "Search by new or original value of the configuration",
+        "valuenew": "New value",
+        "valueold": "Original value"
+    },
+    "deprecatedkeys": []
+}

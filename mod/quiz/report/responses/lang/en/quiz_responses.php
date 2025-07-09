@@ -15,39 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'quiz_responses', language 'en', branch 'MOODLE_20_STABLE'
+ * Backwards compatibility helper for the lang file migration.
  *
  * @package   quiz_responses
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-$string['cannotloadoptions'] = 'Could not load question options';
-$string['include'] = 'Include the';
-$string['mustselectcols'] = 'You must include something.';
-$string['pagesize'] = 'Page size';
-$string['pluginname'] = 'Responses';
-$string['privacy:preference:qtext'] = 'Whether to show the question text columns.';
-$string['privacy:preference:resp'] = 'Whether to show the students\' response columns.';
-$string['privacy:preference:right'] = 'Whether to show the correct response columns.';
-$string['privacy:preference:which_tries'] = 'Which tries to show responses from.';
-$string['privacy:preference:which_tries:first'] = 'The first try at a question during an attempt by a user.';
-$string['privacy:preference:which_tries:last'] = 'The last try at a question during an attempt by a user.';
-$string['privacy:preference:which_tries:all'] = 'All tries at a question during an attempt by a user.';
-$string['questiontext'] = 'question text';
-$string['reportresponses'] = 'Responses';
-$string['response'] = 'response';
-$string['responses'] = 'Responses';
-$string['responsesdownload'] = 'Responses download';
-$string['responsesfilename'] = 'responses';
-$string['responsesoptions'] = 'Responses options';
-$string['responsesreport'] = 'Responses report';
-$string['responsestitle'] = 'Responses';
-$string['responsex'] = 'Response {$a}';
-$string['rightanswer'] = 'right answer';
-$string['rightanswerx'] = 'Right answer {$a}';
-$string['showattempts'] = 'Only show / download attempts';
-$string['showthe'] = 'Show the';
-$string['summaryofquestiontext'] = 'Summary of the question';
-$string['summaryofresponse'] = 'Summary of the response given';
-$string['summaryofrightanswer'] = 'Summary of the right answer';
+$stringvalues = json_decode(file_get_contents(__DIR__ . "/quiz_responses.json"), true, 512, JSON_THROW_ON_ERROR);
+$string = $stringvalues['strings'] ?? [];
