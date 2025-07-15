@@ -120,7 +120,8 @@ class di {
             },
 
             // The string manager.
-            \core_string_manager::class => fn() => get_string_manager(),
+            \core_string_manager::class => \DI\get(\core\string_manager::class),
+            \core\string_manager::class => fn(): string_manager => self::get_string_manager(),
 
             // The Moodle Clock implementation, which itself is an extension of PSR-20.
             // Alias the PSR-20 clock interface to the Moodle clock. They are compatible.
@@ -145,5 +146,62 @@ class di {
 
         // Build the container and return.
         return $builder->build();
+    }
+
+    /**
+     * Get the string manager.
+     *
+     * @return string_manager
+     */
+    protected static function get_string_manager(): string_manager {
+        global $CFG;
+
+        if (empty($CFG->early_install_lang)) {
+            $transaliases = [];
+            if (empty($CFG->langlist)) {
+                $translist = [];
+            } else {
+                $translist = explode(',', $CFG->langlist);
+                $translist = array_map('trim', $translist);
+                // Each language in the $CFG->langlist can has an "alias" that would substitute the default language name.
+                foreach ($translist as $i => $value) {
+                    $parts = preg_split('/\s*\|\s*/', $value, 2);
+                    if (count($parts) == 2) {
+                        $transaliases[$parts[0]] = $parts[1];
+                        $translist[$i] = $parts[0];
+                    }
+                }
+            }
+
+            if (!empty($CFG->config_php_settings['customstringmanager'])) {
+                $classname = $CFG->config_php_settings['customstringmanager'];
+
+                if (class_exists($classname)) {
+                    $implements = class_implements($classname);
+
+                    if (isset($implements['core_string_manager'])) {
+                        return $classname($CFG->langotherroot, $CFG->langlocalroot, $translist, $transaliases);
+                    }
+
+                    debugging(
+                        "Unable to instantiate custom string manager: " .
+                            "class {$classname} does not implement the core_string_manager interface.",
+                    );
+                }
+
+                debugging("Unable to instantiate custom string manager: class {$classname} can not be found.");
+            }
+
+            if (!class_exists(\core\standard_string_manager::class)) {
+                require_once("{$CFG->libdir}/classes/standard_string_manager.php");
+            }
+
+            return new standard_string_manager($CFG->langotherroot, $CFG->langlocalroot, $translist, $transaliases);
+        }
+
+        if (!class_exists(\core\installation_string_manager::class)) {
+            require_once("{$CFG->libdir}/classes/installation_string_manager.php");
+        }
+        return new installation_string_manager();
     }
 }

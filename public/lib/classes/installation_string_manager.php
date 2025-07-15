@@ -14,16 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Installation time string manager.
- *
- * @package    core
- * @copyright  2010 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
+namespace core;
 
 /**
  * Fetches minimum strings for installation
@@ -36,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2010 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_string_manager_install implements core_string_manager {
+class installation_string_manager implements string_manager {
     /** @var string location of pre-install packs for all langs */
     protected $installroot;
 
@@ -71,7 +62,7 @@ class core_string_manager_install implements core_string_manager {
      *
      * @param string $identifier The identifier of the string to search for
      * @param string $component The module the string is associated with
-     * @return boot true if exists
+     * @return bool true if exists
      */
     public function string_exists($identifier, $component) {
         // Simple old style hack ;).
@@ -259,3 +250,5 @@ class core_string_manager_install implements core_string_manager {
         return -1;
     }
 }
+
+class_alias(installation_string_manager::class, \core_string_manager_install::class);

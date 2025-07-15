@@ -322,4 +322,9 @@ $legacyclasses = [
         'core_filters',
         'form/local_settings_form.php',
     ],
+
+    \core\strings::class => 'strings.php',
+    \core_string_manager::class => 'string_manager.php',
+    \core_string_manager_install::class => 'installation_string_manager.php',
+    \core_string_manager_standard::class => 'standard_string_manager.php',
 ];

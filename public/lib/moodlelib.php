@@ -6814,61 +6814,13 @@ function force_current_language($language) {
  * @param bool $forcereload shall the singleton be released and new instance created instead?
  * @return core_string_manager
  */
-function get_string_manager($forcereload=false) {
-    global $CFG;
-
-    static $singleton = null;
-
+function get_string_manager($forcereload = false): \core\string_manager {
     if ($forcereload) {
-        $singleton = null;
-    }
-    if ($singleton === null) {
-        if (empty($CFG->early_install_lang)) {
-
-            $transaliases = array();
-            if (empty($CFG->langlist)) {
-                 $translist = array();
-            } else {
-                $translist = explode(',', $CFG->langlist);
-                $translist = array_map('trim', $translist);
-                // Each language in the $CFG->langlist can has an "alias" that would substitute the default language name.
-                foreach ($translist as $i => $value) {
-                    $parts = preg_split('/\s*\|\s*/', $value, 2);
-                    if (count($parts) == 2) {
-                        $transaliases[$parts[0]] = $parts[1];
-                        $translist[$i] = $parts[0];
-                    }
-                }
-            }
-
-            if (!empty($CFG->config_php_settings['customstringmanager'])) {
-                $classname = $CFG->config_php_settings['customstringmanager'];
-
-                if (class_exists($classname)) {
-                    $implements = class_implements($classname);
-
-                    if (isset($implements['core_string_manager'])) {
-                        $singleton = new $classname($CFG->langotherroot, $CFG->langlocalroot, $translist, $transaliases);
-                        return $singleton;
-
-                    } else {
-                        debugging('Unable to instantiate custom string manager: class '.$classname.
-                            ' does not implement the core_string_manager interface.');
-                    }
-
-                } else {
-                    debugging('Unable to instantiate custom string manager: class '.$classname.' can not be found.');
-                }
-            }
-
-            $singleton = new core_string_manager_standard($CFG->langotherroot, $CFG->langlocalroot, $translist, $transaliases);
-
-        } else {
-            $singleton = new core_string_manager_install();
-        }
+        // The only way to handle this is to reset the entire container. Yuck.
+        \core\di::reset_container();
     }
 
-    return $singleton;
+    return \core\di::get(\core\string_manager::class);
 }
 
 /**
@@ -6944,58 +6896,14 @@ function get_string_manager($forcereload=false) {
  * @throws coding_exception
  */
 function get_string($identifier, $component = '', $a = null, $lazyload = false) {
-    global $CFG;
+    require_once(__DIR__ . '/classes/strings.php');
 
-    // If the lazy load argument has been supplied return a lang_string object
-    // instead.
-    // We need to make sure it is true (and a bool) as you will see below there
-    // used to be a forth argument at one point.
-    if ($lazyload === true) {
-        return new lang_string($identifier, $component, $a);
-    }
-
-    if ($CFG->debugdeveloper && clean_param($identifier, PARAM_STRINGID) === '') {
-        throw new coding_exception('Invalid string identifier. The identifier cannot be empty. Please fix your get_string() call.', DEBUG_DEVELOPER);
-    }
-
-    // There is now a forth argument again, this time it is a boolean however so
-    // we can still check for the old extralocations parameter.
-    if (!is_bool($lazyload) && !empty($lazyload)) {
-        debugging('extralocations parameter in get_string() is not supported any more, please use standard lang locations only.');
-    }
-
-    if (strpos((string)$component, '/') !== false) {
-        debugging('The module name you passed to get_string is the deprecated format ' .
-                'like mod/mymod or block/myblock. The correct form looks like mymod, or block_myblock.' , DEBUG_DEVELOPER);
-        $componentpath = explode('/', $component);
-
-        switch ($componentpath[0]) {
-            case 'mod':
-                $component = $componentpath[1];
-                break;
-            case 'blocks':
-            case 'block':
-                $component = 'block_'.$componentpath[1];
-                break;
-            case 'enrol':
-                $component = 'enrol_'.$componentpath[1];
-                break;
-            case 'format':
-                $component = 'format_'.$componentpath[1];
-                break;
-            case 'grade':
-                $component = 'grade'.$componentpath[1].'_'.$componentpath[2];
-                break;
-        }
-    }
-
-    $result = get_string_manager()->get_string($identifier, $component, $a);
-
-    // Debugging feature lets you display string identifier and component.
-    if (isset($CFG->debugstringids) && $CFG->debugstringids && optional_param('strings', 0, PARAM_INT)) {
-        $result .= ' {' . $identifier . '/' . $component . '}';
-    }
-    return $result;
+    return \core\di::get(\core\strings::class)->get(
+        $identifier,
+        $component ?? '',
+        $a,
+        $lazyload,
+    );
 }
 
 /**

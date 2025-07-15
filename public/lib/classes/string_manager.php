@@ -14,15 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * String manager interface.
- *
- * @package    core
- * @copyright  2010 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
+namespace core;
 
 /**
  * Interface for string manager
@@ -34,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface core_string_manager {
+interface string_manager {
     /**
      * Get String returns a requested string
      *
@@ -138,3 +130,4 @@ interface core_string_manager {
     public function get_revision();
 }
 
+class_alias(string_manager::class, \core_string_manager::class);

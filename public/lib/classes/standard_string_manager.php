@@ -14,16 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Standard string manager.
- *
- * @package    core
- * @copyright  2010 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core;
 
-defined('MOODLE_INTERNAL') || die();
-
+use core_cache\cache;
+use core_cache\store as cache_store;
+use core_collator;
 
 /**
  * Standard string_manager implementation
@@ -34,7 +29,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2010 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class core_string_manager_standard implements core_string_manager {
+class standard_string_manager implements string_manager {
     /** @var string location of all packs except 'en' */
     protected $otherroot;
     /** @var string location of all lang pack local modifications */
@@ -112,7 +107,7 @@ class core_string_manager_standard implements core_string_manager {
     public function load_component_strings($component, $lang, $disablecache = false, $disablelocal = false) {
         global $CFG;
 
-        list($plugintype, $pluginname) = core_component::normalize_component($component);
+        list($plugintype, $pluginname) = component::normalize_component($component);
         if ($plugintype === 'core' and is_null($pluginname)) {
             $component = 'core';
         } else {
@@ -159,7 +154,7 @@ class core_string_manager_standard implements core_string_manager {
             }
 
         } else {
-            if (!$location = core_component::get_plugin_directory($plugintype, $pluginname) or !is_dir($location)) {
+            if (!$location = component::get_plugin_directory($plugintype, $pluginname) or !is_dir($location)) {
                 return array();
             }
             if ($plugintype === 'mod') {
@@ -233,8 +228,8 @@ class core_string_manager_standard implements core_string_manager {
         if (file_exists($filename)) {
             $content .= file_get_contents($filename);
         }
-        foreach (core_component::get_plugin_types() as $plugintype => $plugintypedir) {
-            foreach (core_component::get_plugin_list($plugintype) as $pluginname => $plugindir) {
+        foreach (component::get_plugin_types() as $plugintype => $plugintypedir) {
+            foreach (component::get_plugin_list($plugintype) as $pluginname => $plugindir) {
                 $filename = $plugindir.'/lang/en/deprecated.txt';
                 if (file_exists($filename)) {
                     $content .= "\n". file_get_contents($filename);
@@ -259,7 +254,7 @@ class core_string_manager_standard implements core_string_manager {
      */
     public function string_deprecated($identifier, $component) {
         $deprecated = $this->load_deprecated_strings();
-        list($plugintype, $pluginname) = core_component::normalize_component($component);
+        list($plugintype, $pluginname) = component::normalize_component($component);
         $normcomponent = $pluginname ? ($plugintype . '_' . $pluginname) : $plugintype;
         return isset($deprecated[$identifier . ',' . $normcomponent]);
     }
@@ -343,13 +338,13 @@ class core_string_manager_standard implements core_string_manager {
             if (!isset($string[$identifier])) {
                 // The string is still missing - should be fixed by developer.
                 if ($CFG->debugdeveloper) {
-                    list($plugintype, $pluginname) = core_component::normalize_component($component);
+                    list($plugintype, $pluginname) = component::normalize_component($component);
                     if ($plugintype === 'core') {
                         $file = "lang/en/{$component}.php";
                     } else if ($plugintype == 'mod') {
                         $file = "mod/{$pluginname}/lang/en/{$pluginname}.php";
                     } else {
-                        $path = core_component::get_plugin_directory($plugintype, $pluginname);
+                        $path = component::get_plugin_directory($plugintype, $pluginname);
                         $file = "{$path}/lang/en/{$plugintype}_{$pluginname}.php";
                     }
                     debugging("Invalid get_string() identifier: '{$identifier}' or component '{$component}'. " .
@@ -390,7 +385,7 @@ class core_string_manager_standard implements core_string_manager {
         if ($CFG->debugdeveloper) {
             // Display a debugging message if sting exists but was deprecated.
             if ($this->string_deprecated($identifier, $component)) {
-                list($plugintype, $pluginname) = core_component::normalize_component($component);
+                list($plugintype, $pluginname) = component::normalize_component($component);
                 $normcomponent = $pluginname ? ($plugintype . '_' . $pluginname) : $plugintype;
                 debugging("String [{$identifier},{$normcomponent}] is deprecated. ".
                     'Either you should no longer be using that string, or the string has been incorrectly deprecated, in which case you should report this as a bug. '.
@@ -714,3 +709,5 @@ class core_string_manager_standard implements core_string_manager {
         return $this->populate_parent_languages($parentlang, array_merge(array($lang), $stack));
     }
 }
+
+class_alias(standard_string_manager::class, \core_string_manager_standard::class);
