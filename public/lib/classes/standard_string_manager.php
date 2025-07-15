@@ -30,22 +30,20 @@ use core_collator;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class standard_string_manager implements string_manager {
-    /** @var string location of all packs except 'en' */
-    protected $otherroot;
-    /** @var string location of all lang pack local modifications */
-    protected $localroot;
     /** @var cache lang string cache - it will be optimised more later */
-    protected $cache;
+    protected ?cache $cache = null;
+
     /** @var int get_string() counter */
-    protected $countgetstring = 0;
+    protected int $countgetstring = 0;
+
     /** @var array use disk cache */
-    protected $translist;
-    /** @var array language aliases to use in the language selector */
-    protected $transaliases = [];
+    protected array $translist = [];
+
     /** @var cache stores list of available translations */
-    protected $menucache;
+    protected ?cache $menucache = null;
+
     /** @var array list of cached deprecated strings */
-    protected $cacheddeprecated;
+    protected ?array $cacheddeprecated = null;
 
     /**
      * Create new instance of string manager
@@ -55,14 +53,19 @@ class standard_string_manager implements string_manager {
      * @param array $translist limit list of visible translations
      * @param array $transaliases aliases to use for the languages in the language selector
      */
-    public function __construct($otherroot, $localroot, $translist, $transaliases = []) {
+    public function __construct(
+        /** @var string location of all packs except 'en' */
+        protected string $otherroot,
+        /** @var string location of all lang pack local modifications */
+        protected string $localroot,
+        $translist,
+        /** @var array language aliases to use in the language selector */
+        protected array $transaliases = [],
+    ) {
         $this->otherroot    = $otherroot;
         $this->localroot    = $localroot;
         if ($translist) {
             $this->translist = array_combine($translist, $translist);
-            $this->transaliases = $transaliases;
-        } else {
-            $this->translist = array();
         }
 
         if ($this->get_revision() > 0) {
@@ -71,12 +74,12 @@ class standard_string_manager implements string_manager {
             $this->menucache = cache::make('core', 'langmenu');
         } else {
             // We only want a cache for the length of the request, create a static cache.
-            $options = array(
+            $options = [
                 'simplekeys' => true,
                 'simpledata' => true
-            );
-            $this->cache = cache::make_from_params(cache_store::MODE_REQUEST, 'core', 'string', array(), $options);
-            $this->menucache = cache::make_from_params(cache_store::MODE_REQUEST, 'core', 'langmenu', array(), $options);
+            ];
+            $this->cache = cache::make_from_params(cache_store::MODE_REQUEST, 'core', 'string', [], $options);
+            $this->menucache = cache::make_from_params(cache_store::MODE_REQUEST, 'core', 'langmenu', [], $options);
         }
     }
 
@@ -645,16 +648,12 @@ class standard_string_manager implements string_manager {
      * Returns cache key suffix, this enables us to store string + lang menu
      * caches in local caches on cluster nodes. We can not use prefix because
      * it would cause problems when creating subdirs in cache file store.
+     *
      * @return string
      */
-    protected function get_key_suffix() {
-        $rev = $this->get_revision();
-        if ($rev < 0) {
-            // Simple keys do not like minus char.
-            $rev = 0;
-        }
-
-        return $rev;
+    protected function get_key_suffix(): int {
+        // Simple keys do not like minus char.
+        return max($this->get_revision(), 0);
     }
 
     /**
@@ -663,6 +662,7 @@ class standard_string_manager implements string_manager {
      */
     public function get_revision() {
         global $CFG;
+
         if (empty($CFG->langstringcache)) {
             return -1;
         }
@@ -682,7 +682,6 @@ class standard_string_manager implements string_manager {
      * @return array list of all parents of the given language with the $lang itself added as the last element
      */
     protected function populate_parent_languages($lang, array $stack = array()) {
-
         // English does not have a parent language.
         if ($lang === 'en') {
             return $stack;
@@ -697,12 +696,12 @@ class standard_string_manager implements string_manager {
         if (!file_exists("$this->otherroot/$lang/langconfig.php")) {
             return $stack;
         }
+
         $string = array();
         include("$this->otherroot/$lang/langconfig.php");
 
         if (empty($string['parentlanguage']) or $string['parentlanguage'] === 'en') {
             return array_merge(array($lang), $stack);
-
         }
 
         $parentlang = $string['parentlanguage'];
