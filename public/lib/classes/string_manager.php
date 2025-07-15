@@ -32,7 +32,7 @@ interface string_manager {
      *
      * @param string $identifier The identifier of the string to search for
      * @param string $component The module the string is associated with
-     * @param null|string|\stdClass|int|float $a An object, string or number that can be used
+     * @param mixed $a An object, string or number that can be used
      *      within translation strings
      * @param string $lang moodle translation language, null means use current
      * @return string The String !
@@ -40,7 +40,7 @@ interface string_manager {
     public function get_string(
         string $identifier,
         ?string $component = '',
-        null|string|\stdClass|int|float $a = null,
+        mixed $a = null,
         ?string $lang = null,
     );
 
