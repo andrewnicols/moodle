@@ -99,7 +99,7 @@ class strings {
      *      usually expressed as the filename in the language pack without the
      *      .php on the end but can also be written as mod/forum or grade/export/xls.
      *      If none is specified then moodle.php is used.
-     * @param string|object|array|int $a An object, string or number that can be used
+     * @param null|string|\stdClass|int|float $a An object, string or number that can be used
      *      within translation strings
      * @param bool $lazyload If set to true a string object is returned instead of
      *      the string itself. The string then isn't calculated until it is first used.
@@ -109,7 +109,7 @@ class strings {
     public function get(
         string $identifier,
         ?string $component = null,
-        null|string|array|\stdClass|int $a = null,
+        null|string|\stdClass|int|float $a = null,
         bool $lazyload = false,
     ): lang_string|string {
         global $CFG;

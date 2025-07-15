@@ -32,12 +32,17 @@ interface string_manager {
      *
      * @param string $identifier The identifier of the string to search for
      * @param string $component The module the string is associated with
-     * @param string|object|array $a An object, string or number that can be used
+     * @param null|string|\stdClass|int|float $a An object, string or number that can be used
      *      within translation strings
      * @param string $lang moodle translation language, null means use current
      * @return string The String !
      */
-    public function get_string($identifier, $component = '', $a = null, $lang = null);
+    public function get_string(
+        string $identifier,
+        ?string $component = '',
+        null|string|\stdClass|int|float $a = null,
+        ?string $lang = null,
+    );
 
     /**
      * Does the string actually exist?
@@ -51,7 +56,10 @@ interface string_manager {
      * @param string $component The module the string is associated with
      * @return bool true if exists
      */
-    public function string_exists($identifier, $component);
+    public function string_exists(
+        string $identifier,
+        ?string $component,
+    );
 
     /**
      * Has string been deprecated?
@@ -62,7 +70,10 @@ interface string_manager {
      * @param string $component The module the string is associated with
      * @return bool true if deprecated
      */
-    public function string_deprecated($identifier, $component);
+    public function string_deprecated(
+        string $identifier,
+        ?string $component,
+    );
 
     /**
      * Returns a localised list of all country names, sorted by country keys.
@@ -70,7 +81,7 @@ interface string_manager {
      * @param string $lang moodle translation language, null means use current
      * @return array two-letter country code => translated name.
      */
-    public function get_list_of_countries($returnall = false, $lang = null);
+    public function get_list_of_countries(bool $returnall = false, ?string $lang = null);
 
     /**
      * Returns a localised list of languages, sorted by code keys.
@@ -80,7 +91,7 @@ interface string_manager {
      *                     iso6392: three-letter language code (ISO 639-2/T) => translated name.
      * @return array language code => translated name
      */
-    public function get_list_of_languages($lang = null, $standard = 'iso6392');
+    public function get_list_of_languages(bool $lang = null, string $standard = 'iso6392');
 
     /**
      * Checks if the translation exists for the language
@@ -89,14 +100,14 @@ interface string_manager {
      * @param bool $includeall include also disabled translations
      * @return bool true if exists
      */
-    public function translation_exists($lang, $includeall = true);
+    public function translation_exists(string $lang, bool $includeall = true);
 
     /**
      * Returns localised list of installed translations
      * @param bool $returnall return all or just enabled
      * @return array moodle translation code => localised translation name
      */
-    public function get_list_of_translations($returnall = false);
+    public function get_list_of_translations(bool $returnall = false);
 
     /**
      * Returns localised list of currencies.
@@ -104,7 +115,7 @@ interface string_manager {
      * @param string $lang moodle translation language, null means use current
      * @return array currency code => localised currency name
      */
-    public function get_list_of_currencies($lang = null);
+    public function get_list_of_currencies(?string $lang = null);
 
     /**
      * Load all strings for one component
@@ -114,13 +125,18 @@ interface string_manager {
      * @param bool $disablelocal Do not use customized strings in xx_local language packs
      * @return array of all string for given component and lang
      */
-    public function load_component_strings($component, $lang, $disablecache=false, $disablelocal=false);
+    public function load_component_strings(
+        string $component,
+        string $lang,
+        bool $disablecache = false,
+        bool $disablelocal = false,
+    );
 
     /**
      * Invalidates all caches, should the implementation use any
      * @param bool $phpunitreset true means called from our PHPUnit integration test reset
      */
-    public function reset_caches($phpunitreset = false);
+    public function reset_caches(bool $phpunitreset = false);
 
     /**
      * Returns string revision counter, this is incremented after any
