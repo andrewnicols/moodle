@@ -25,7 +25,7 @@ namespace core\tests;
  */
 class mocking_string_manager extends \core_string_manager_standard {
     /** @var array<string, string> The list of strings */
-    private $strings = [];
+    private array $strings = [];
 
     #[\Override]
     public function get_string($identifier, $component = '', $a = null, $lang = null) {

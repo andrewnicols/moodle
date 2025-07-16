@@ -26,7 +26,7 @@ namespace tool_behat;
 use behat_form_text;
 use Behat\Mink\Session;
 use Behat\Mink\Element\NodeElement;
-use core_string_manager_standard;
+use tool_behat\tests\phpunit_string_manager;
 
 defined('MOODLE_INTERNAL') || die;
 
@@ -47,7 +47,6 @@ require_once($CFG->libdir . '/behat/form_field/behat_form_text.php');
  * @covers \behat_form_field
  */
 final class behat_form_text_test extends \basic_testcase {
-
     /**
      * Data provider for the test_set_get_value() method.
      *
@@ -119,10 +118,10 @@ final class behat_form_text_test extends \basic_testcase {
         global $CFG;
 
         // Switch of string manager to avoid having to (slow) customise the lang file.
-        $origcustom = $CFG->config_php_settings['customstringmanager'] ?? null;
-        $CFG->config_php_settings['customstringmanager'] = '\tool_behat\phpunit_string_manager';
-        $manager = get_string_manager(true);
+        $manager = new phpunit_string_manager();
         $manager->set_string('decsep', 'langconfig', $decsep);
+
+        \core\di::set(\core\string_manager::class, $manager);
 
         $session = $this->createMock(Session::class);
         $node = $this->createMock(NodeElement::class);
@@ -133,59 +132,6 @@ final class behat_form_text_test extends \basic_testcase {
         $field->set_value($value);
         $this->assertSame($result, $field->matches($match));
 
-        // Switch back to the original string manager.
-        if (is_null($origcustom)) {
-            unset($CFG->config_php_settings['customstringmanager']);
-        } else {
-            $CFG->config_php_settings['customstringmanager'] = $origcustom;
-        }
         $manager = get_string_manager(true);
-    }
-}
-
-/**
- * Customised values that will be used instead of standard manager one.
- *
- * If an existing component/identifier is found, return it instead of the real
- * one from language files. Note this doesn't support place holders or another niceties.
- *
- * @package    tool_behat
- * @category   test
- * @copyright  2022 onwards Eloy Lafuente (stronk7) {@link https://stronk7.com}
- * @license    https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class phpunit_string_manager extends core_string_manager_standard {
-
-    /** @var array language customisations provided by the manager without asking for real contents */
-    protected $customstrings = [];
-
-    /**
-     * Get String returns a requested string
-     *
-     * @param string $identifier The identifier of the string to search for
-     * @param string $component The module the string is associated with
-     * @param string|object|array $a An object, string or number that can be used
-     *      within translation strings
-     * @param string $lang moodle translation language, null means use current
-     * @return string The String !
-     */
-    public function get_string($identifier, $component = '', $a = null, $lang = null) {
-        $key = trim($component) . '/' . trim($identifier);
-        if (isset($this->customstrings[$key])) {
-            return $this->customstrings[$key];
-        }
-        return parent::get_string($identifier, $component, $a, $lang);
-    }
-
-    /**
-     * Sets a custom string to be returned by the string manager instead of the language file one.
-     *
-     * @param string $identifier The identifier of the string to search for
-     * @param string $component The module the string is associated with
-     * @param string $value the contents of the language string to be returned by get_string()
-     */
-    public function set_string($identifier, $component, $value) {
-        $key = trim($component) . '/' . trim($identifier);
-        $this->customstrings[$key] = $value;
     }
 }

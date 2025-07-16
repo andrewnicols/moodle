@@ -881,11 +881,10 @@ abstract class advanced_testcase extends base_testcase {
      * @return \core\tests\mocking_string_manager
      */
     protected function get_mocked_string_manager(): \core\tests\mocking_string_manager {
-        global $CFG;
+        $stringmanager = new \core\tests\mocking_string_manager();
 
-        $this->resetAfterTest();
-        $CFG->config_php_settings['customstringmanager'] = \core\tests\mocking_string_manager::class;
+        di::set(\core\string_manager::class, $stringmanager);
 
-        return get_string_manager(true);
+        return $stringmanager;
     }
 }

@@ -29,13 +29,14 @@ namespace core;
  */
 class installation_string_manager implements string_manager {
     /** @var string location of pre-install packs for all langs */
-    protected $installroot;
+    protected string $installroot;
 
     /**
      * Crate new instance of install string manager
      */
     public function __construct() {
         global $CFG;
+
         $this->installroot = "$CFG->dirroot/install/lang";
     }
 

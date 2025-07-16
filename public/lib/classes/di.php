@@ -156,52 +156,32 @@ class di {
     protected static function get_string_manager(): string_manager {
         global $CFG;
 
-        if (empty($CFG->early_install_lang)) {
-            $transaliases = [];
-            if (empty($CFG->langlist)) {
-                $translist = [];
+        // TODO Remove in 6.0.
+        require_once("{$CFG->libdir}/classes/string_manager.php");
+        require_once("{$CFG->libdir}/classes/installation_string_manager.php");
+        require_once("{$CFG->libdir}/classes/standard_string_manager.php");
+
+        if (!empty($CFG->early_install_lang)) {
+            return new installation_string_manager();
+        }
+
+        if (!empty($CFG->config_php_settings['customstringmanager'])) {
+            $classname = (string) $CFG->config_php_settings['customstringmanager'];
+
+            if (class_exists($classname)) {
+                if (is_a($classname, \core\string_manager::class, true)) {
+                    return new $classname();
+                }
+
+                debugging(
+                    "Unable to instantiate custom string manager: " .
+                        "class {$classname} does not implement the string_manager interface.",
+                );
             } else {
-                $translist = explode(',', $CFG->langlist);
-                $translist = array_map('trim', $translist);
-                // Each language in the $CFG->langlist can has an "alias" that would substitute the default language name.
-                foreach ($translist as $i => $value) {
-                    $parts = preg_split('/\s*\|\s*/', $value, 2);
-                    if (count($parts) == 2) {
-                        $transaliases[$parts[0]] = $parts[1];
-                        $translist[$i] = $parts[0];
-                    }
-                }
-            }
-
-            if (!empty($CFG->config_php_settings['customstringmanager'])) {
-                $classname = $CFG->config_php_settings['customstringmanager'];
-
-                if (class_exists($classname)) {
-                    $implements = class_implements($classname);
-
-                    if (isset($implements['core_string_manager'])) {
-                        return $classname($CFG->langotherroot, $CFG->langlocalroot, $translist, $transaliases);
-                    }
-
-                    debugging(
-                        "Unable to instantiate custom string manager: " .
-                            "class {$classname} does not implement the core_string_manager interface.",
-                    );
-                }
-
                 debugging("Unable to instantiate custom string manager: class {$classname} can not be found.");
             }
-
-            if (!class_exists(\core\standard_string_manager::class)) {
-                require_once("{$CFG->libdir}/classes/standard_string_manager.php");
-            }
-
-            return new standard_string_manager($CFG->langotherroot, $CFG->langlocalroot, $translist, $transaliases);
         }
 
-        if (!class_exists(\core\installation_string_manager::class)) {
-            require_once("{$CFG->libdir}/classes/installation_string_manager.php");
-        }
-        return new installation_string_manager();
+        return new standard_string_manager();
     }
 }

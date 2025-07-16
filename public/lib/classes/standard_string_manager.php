@@ -45,28 +45,30 @@ class standard_string_manager implements string_manager {
     /** @var array list of cached deprecated strings */
     protected ?array $cacheddeprecated = null;
 
+    /** @var string location of all packs except 'en' */
+    protected string $otherroot;
+
+    /** @var string location of all lang pack local modifications */
+    protected string $localroot;
+
+    /** @var array language aliases to use in the language selector */
+    protected array $transaliases = [];
+
     /**
      * Create new instance of string manager
-     *
-     * @param string $otherroot location of downloaded lang packs - usually $CFG->dataroot/lang
-     * @param string $localroot usually the same as $otherroot
-     * @param array $translist limit list of visible translations
-     * @param array $transaliases aliases to use for the languages in the language selector
      */
-    public function __construct(
-        /** @var string location of all packs except 'en' */
-        protected string $otherroot,
-        /** @var string location of all lang pack local modifications */
-        protected string $localroot,
-        $translist,
-        /** @var array language aliases to use in the language selector */
-        protected array $transaliases = [],
-    ) {
-        $this->otherroot    = $otherroot;
-        $this->localroot    = $localroot;
-        if ($translist) {
-            $this->translist = array_combine($translist, $translist);
-        }
+    public function __construct() {
+        global $CFG;
+
+        [
+            'translations' => $translist,
+            'aliases' => $transaliases,
+        ] = self::get_translations();
+
+        $this->translist = $translist;
+        $this->transaliases = $transaliases;
+        $this->otherroot = $CFG->langotherroot;
+        $this->localroot = $CFG->langlocalroot;
 
         if ($this->get_revision() > 0) {
             // We can use a proper cache, establish the cache using the 'String cache' definition.
@@ -76,11 +78,40 @@ class standard_string_manager implements string_manager {
             // We only want a cache for the length of the request, create a static cache.
             $options = [
                 'simplekeys' => true,
-                'simpledata' => true
+                'simpledata' => true,
             ];
             $this->cache = cache::make_from_params(cache_store::MODE_REQUEST, 'core', 'string', [], $options);
             $this->menucache = cache::make_from_params(cache_store::MODE_REQUEST, 'core', 'langmenu', [], $options);
         }
+    }
+
+    /**
+     * Returns the list of translations and their aliases.
+     *
+     * @return array
+     */
+    protected static function get_translations(): array {
+        global $CFG;
+
+        $aliases = [];
+        $translations = [];
+        if (!empty($CFG->langlist)) {
+            $translations = explode(',', $CFG->langlist);
+            $translations = array_map('trim', $translations);
+            // Each language in the $CFG->langlist can has an "alias" that would substitute the default language name.
+            foreach ($translations as $i => $value) {
+                $parts = preg_split('/\s*\|\s*/', $value, 2);
+                if (count($parts) == 2) {
+                    $aliases[$parts[0]] = $parts[1];
+                    $translations[$i] = $parts[0];
+                }
+            }
+        }
+
+        return [
+            'translations' => $translations,
+            'aliases' => $aliases,
+        ];
     }
 
     /**
