@@ -82,6 +82,7 @@ if ($options['run']) {
 
 define('PHPUNIT_UTIL', true);
 
+testing_pre_composer_init();
 require(__DIR__.'/../../../../../vendor/autoload.php');
 require(__DIR__ . '/../../../../lib/phpunit/bootstrap.php');
 

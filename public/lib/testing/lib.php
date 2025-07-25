@@ -305,3 +305,16 @@ function testing_cli_fix_directory_separator($path) {
 
     return $path;
 }
+
+/**
+ * Prepare Moodle to load the Composer autoloader.
+ */
+function testing_pre_composer_init(): void {
+    if (extension_loaded('opentelemetry') === false) {
+        // Note: This is a bit of a hack.
+        // Disable OpenTelemetry auto-instrumentation if the extension is not loaded.
+        // If we do not do this, and the extension is not loaded, then some OpenTelemetry instrumentation will trigger a user error.
+        // This must be done before we register the autoloader.
+        $_SERVER["OTEL_PHP_DISABLED_INSTRUMENTATIONS"] = "all";
+    }
+}

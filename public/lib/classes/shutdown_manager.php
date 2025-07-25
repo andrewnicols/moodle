@@ -231,6 +231,9 @@ class shutdown_manager {
             }
         }
 
+        // End the telemetry.
+        \core\telemetry::shutdown();
+
         // NOTE: do not dispose $DB and MUC here, they might be used from legacy shutdown functions.
     }
 
