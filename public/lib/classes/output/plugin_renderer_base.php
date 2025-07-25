@@ -75,17 +75,20 @@ class plugin_renderer_base extends renderer_base {
         if (method_exists($this, $rendermethod)) {
             // Call the render_[widget_name] function.
             // Note: This has a higher priority than the named_templatable to allow the theme to override the template.
-            return $this->$rendermethod($widget);
+            $renderresult = $this->$rendermethod($widget);
+            return $renderresult;
         }
 
         if ($widget instanceof named_templatable) {
             // This is a named templatable.
             // Fetch the template name from the get_template_name function instead.
             // Note: This has higher priority than the deprecated method which is not overridable by themes anyway.
-            return $this->render_from_template(
+            $renderresult = $this->render_from_template(
                 $widget->get_template_name($this),
                 $widget->export_for_template($this)
             );
+
+            return $renderresult;
         }
 
         if ($rendermethod !== $deprecatedmethod && method_exists($this, $deprecatedmethod)) {
@@ -106,12 +109,16 @@ class plugin_renderer_base extends renderer_base {
                 ), DEBUG_DEVELOPER);
                 $debugged[$deprecatedmethod] = true;
             }
-            return $this->$deprecatedmethod($widget);
+
+            $renderresult = $this->$deprecatedmethod($widget);
+
+            return $renderresult;
         }
 
         // Pass to core renderer if method not found here.
         // Note: this is not a parent. This is _new_ renderer which respects the requested format, and output type.
-        return $this->output->render($widget);
+        $renderresult = $this->output->render($widget);
+        return $renderresult;
     }
 
     /**

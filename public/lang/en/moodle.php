@@ -2214,6 +2214,7 @@ $string['targetrole'] = 'Target role';
 $string['teacheronly'] = 'for the {$a} only';
 $string['teacherroles'] = '{$a} roles';
 $string['teachers'] = 'Teachers';
+$string['telemetrytraceid'] = 'Trace: {$a}';
 $string['textcopiedtoclipboard'] = 'Text copied to clipboard';
 $string['textediting'] = 'Text editor';
 $string['textediting_help'] = 'If an HTML editor such as Atto or TinyMCE is selected, text input areas will have a toolbar with buttons for easily adding content.

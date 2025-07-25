@@ -136,6 +136,14 @@ function get_whoops(): ?\Whoops\Run {
 function default_exception_handler(Throwable $ex): void {
     global $CFG, $DB, $OUTPUT, $USER, $FULLME, $SESSION, $PAGE;
 
+    try {
+        \core\telemetry::get_page_span()->recordException(
+            $ex,
+        );
+    } catch (\Throwable $e) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
+        // If we cannot add the event, we just ignore it.
+    }
+
     // detect active db transactions, rollback and log as error
     abort_all_db_transactions();
 

@@ -47,6 +47,7 @@ use moodleform;
 use moodle_page;
 use moodle_url;
 use navigation_node;
+use Psr\Log\LogLevel;
 use rating;
 use rating_manager;
 use stdClass;
@@ -1001,6 +1002,14 @@ class core_renderer extends renderer_base {
                 } else {
                     $perf = get_performance_info();
                     $performanceinfo = $perf['html'];
+
+                    \core\di::get(\core\logger::class)->info(
+                        message: 'Performance info',
+                        context: array_filter($perf, function ($key) {
+                            return $key !== 'txt' && $key !== 'html';
+                        }, ARRAY_FILTER_USE_KEY),
+                        channel: 'performance',
+                    );
                 }
             }
         }

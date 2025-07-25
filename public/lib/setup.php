@@ -595,6 +595,9 @@ ini_set('include_path', $CFG->libdir . '/pear' . PATH_SEPARATOR . ini_get('inclu
 // Register our shutdown manager, do NOT use register_shutdown_function().
 core_shutdown_manager::initialize();
 
+// Initialise telemetry page span as early as possible.
+\core\telemetry::initialise_page_span();
+
 // Early profiling start, based exclusively on config.php $CFG settings.
 if (!empty($CFG->earlyprofilingenabled) && !defined('ABORT_AFTER_CONFIG_CANCEL')) {
     require_once($CFG->libdir . '/xhprof/xhprof_moodle.php');

@@ -9004,7 +9004,11 @@ function array_is_nested($array) {
 function get_performance_info() {
     global $CFG, $PERF, $DB, $PAGE;
 
-    $info = array();
+    $info = [
+        'data' => [
+            'themedesignermode' => !empty($CFG->themedesignermode),
+        ],
+    ];
     $info['txt']  = me() . ' '; // Holds log-friendly representation.
 
     $info['html'] = '';

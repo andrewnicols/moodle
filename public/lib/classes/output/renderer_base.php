@@ -239,7 +239,9 @@ class renderer_base {
             if (method_exists($this, $rendermethod)) {
                 // Call the render_[widget_name] function.
                 // Note: This has a higher priority than the named_templatable to allow the theme to override the template.
-                return $this->$rendermethod($widget);
+                $renderresult = $this->$rendermethod($widget);
+
+                return $renderresult;
             }
         }
 
@@ -247,10 +249,12 @@ class renderer_base {
             // This is a named templatable.
             // Fetch the template name from the get_template_name function instead.
             // Note: This has higher priority than the guessed template name.
-            return $this->render_from_template(
+            $renderresult = $this->render_from_template(
                 $widget->get_template_name($this),
                 $widget->export_for_template($this)
             );
+
+            return $renderresult;
         }
 
         if ($widget instanceof templatable) {
@@ -262,10 +266,13 @@ class renderer_base {
             }
             $template = $component . '/' . $classname;
             $context = $widget->export_for_template($this);
-            return $this->render_from_template($template, $context);
+            $renderresult = $this->render_from_template($template, $context);
+
+            return $renderresult;
         }
 
         $rendermethod = reset($rendermethods);
+
         throw new coding_exception("Can not render widget, renderer method ('{$rendermethod}') not found.");
     }
 

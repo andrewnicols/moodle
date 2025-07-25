@@ -118,6 +118,10 @@ $callbacks = [
         'callback' => \core_userfeedback::class . '::before_standard_footer_html_generation',
     ],
     [
+        'hook' => \core\hook\output\before_standard_footer_html_generation::class,
+        'callback' => [\core\telemetry::class, 'before_standard_footer_html_generation'],
+    ],
+    [
         'hook' => \core\hook\output\after_standard_main_region_html_generation::class,
         'callback' => \core_message\hook_callbacks::class . '::add_messaging_widget',
         'priority' => 0,

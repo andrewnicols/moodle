@@ -96,7 +96,7 @@ class di {
         // Automatic attribute injection is a php-di specific feature.
         $builder->useAutowiring(true);
 
-        if (!$CFG->debugdeveloper) {
+        if (!$CFG->debugdeveloper && function_exists('make_localcache_directory')) {
             // Enable compilation of the container and write proxies to disk in production.
             // See https://php-di.org/doc/performances.html for information.
             $cachedir = make_localcache_directory('di');

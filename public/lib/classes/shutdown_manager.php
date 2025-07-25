@@ -21,16 +21,6 @@
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Shutdown management class.
- *
- * @package    core
- * @copyright  2013 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class core_shutdown_manager {
     /** @var array list of custom callbacks */
     protected static $callbacks = [];
@@ -49,10 +39,11 @@ class core_shutdown_manager {
      */
     public static function initialize() {
         if (self::$registered) {
-            debugging('Shutdown manager is already initialised!');
+            self::log('Shutdown manager is already initialised!');
             return;
         }
         self::$registered = true;
+
         register_shutdown_function(array('core_shutdown_manager', 'shutdown_handler'));
 
         // Signal handlers are recommended for the best possible shutdown handling.
@@ -171,38 +162,50 @@ class core_shutdown_manager {
     public static function shutdown_handler() {
         global $DB;
 
-        // In case we caught an out of memory shutdown we increase memory limit to unlimited, so we can gracefully shut down.
-        raise_memory_limit(MEMORY_UNLIMITED);
+        if (function_exists('raise_memory_limit')) {
+            // In case we caught an out of memory shutdown we increase memory limit to unlimited,
+            // so we can gracefully shut down.
+            raise_memory_limit(MEMORY_UNLIMITED);
+        }
 
-        // Always ensure we know who the user is in access logs even if they
-        // were logged in a weird way midway through the request.
-        set_access_log_user();
+        if (function_exists('set_access_log_user')) {
+            // Always ensure we know who the user is in access logs even if they
+            // were logged in a weird way midway through the request.
+            set_access_log_user();
+        }
 
         // Custom stuff first.
         foreach (self::$callbacks as $data) {
-            list($callback, $params) = $data;
+            [$callback, $params] = $data;
             try {
                 call_user_func_array($callback, $params);
             } catch (Throwable $e) {
                 // phpcs:ignore
-                error_log('Exception ignored in shutdown function '.get_callable_name($callback).': '.$e->getMessage());
+                if (function_exists('get_callable_name')) {
+                    error_log('Exception ignored in shutdown function ' . get_callable_name($callback) . ': ' . $e->getMessage());
+                } else {
+                    // Fallback for older PHP versions.
+                    error_log('Exception ignored in shutdown function: ' . $e->getMessage());
+                }
             }
         }
 
-        // Handle DB transactions, session need to be written afterwards
-        // in order to maintain consistency in all session handlers.
-        if ($DB->is_transaction_started()) {
-            if (!defined('PHPUNIT_TEST') or !PHPUNIT_TEST) {
-                // This should not happen, it usually indicates wrong catching of exceptions,
-                // because all transactions should be finished manually or in default exception handler.
-                $backtrace = $DB->get_transaction_start_backtrace();
-                error_log('Potential coding error - active database transaction detected during request shutdown:'."\n".format_backtrace($backtrace, true));
+        if ($DB) {
+            // Handle DB transactions, session need to be written afterwards
+            // in order to maintain consistency in all session handlers.
+            if ($DB->is_transaction_started()) {
+                if (!defined('PHPUNIT_TEST') || !PHPUNIT_TEST) {
+                    // This should not happen, it usually indicates wrong catching of exceptions,
+                    // because all transactions should be finished manually or in default exception handler.
+                    $backtrace = $DB->get_transaction_start_backtrace();
+                    error_log('Potential coding error - active database transaction detected during request shutdown:'."\n".format_backtrace($backtrace, true));
+                }
+                $DB->force_transaction_rollback();
             }
-            $DB->force_transaction_rollback();
-        }
 
-        // Close sessions - do it here to make it consistent for all session handlers.
-        \core\session\manager::write_close();
+            // Close sessions - do it here to make it consistent for all session handlers.
+            \core\session\manager::write_close();
+        }
 
         // Other cleanup.
         self::request_shutdown();
@@ -214,6 +217,8 @@ class core_shutdown_manager {
             }
         }
 
+        // End the telemetry.
+        \core\telemetry::end_request_span();
         // NOTE: do not dispose $DB and MUC here, they might be used from legacy shutdown functions.
     }
 
@@ -236,16 +241,24 @@ class core_shutdown_manager {
         // Deal with perf logging.
         if (MDL_PERF || (!empty($CFG->perfdebug) && $CFG->perfdebug > 7)) {
             if ($apachereleasemem) {
-                error_log('Mem usage over '.$apachereleasemem.': marking Apache child for reaping.');
+                error_log('Mem usage over ' . $apachereleasemem . ': marking Apache child for reaping.');
             }
-            if (MDL_PERFTOLOG) {
+
+            $logperformance = MDL_PERFTOLOG;
+            $logperformance = $logperformance || !empty($PERF->perfdebugdeferred);
+            $logperformance = $logperformance && function_exists('get_performance_info');
+
+            if ($logperformance) {
                 $perf = get_performance_info();
-                error_log("PERF: " . $perf['txt']);
+
+                if (MDL_PERFTOLOG) {
+                    error_log("PERF: " . $perf['txt']);
+                }
+                if (!empty($PERF->perfdebugdeferred)) {
+                    echo $OUTPUT->select_element_for_replace('#perfdebugfooter', $perf['html']);
+                }
             }
-            if (!empty($PERF->perfdebugdeferred)) {
-                $perf = get_performance_info();
-                echo $OUTPUT->select_element_for_replace('#perfdebugfooter', $perf['html']);
-            }
+
             if (MDL_PERFINC) {
                 $inc = get_included_files();
                 $ts  = 0;
@@ -266,14 +279,27 @@ class core_shutdown_manager {
             }
         }
 
-        // Close the current streaming element if any.
-        if ($OUTPUT->has_started()) {
-            echo $OUTPUT->close_element_for_append();
+        if ($OUTPUT) {
+            // Close the current streaming element if any.
+            if ($OUTPUT->has_started()) {
+                echo $OUTPUT->close_element_for_append();
+            }
         }
 
         // Print any closing buffered tags.
         if (!empty($CFG->closingtags)) {
             echo $CFG->closingtags;
+        }
+    }
+
+    protected static function log(string $value): void {
+        if (function_exists('debugging')) {
+            // Use Moodle's debugging function if available.
+            debugging($value, DEBUG_DEVELOPER);
+        } else {
+            // Fallback to error_log if debugging is not available.
+            // This is useful for older PHP versions or when debugging is not set up.
+            error_log($value);
         }
     }
 }
