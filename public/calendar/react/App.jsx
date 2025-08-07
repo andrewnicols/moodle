@@ -1,5 +1,5 @@
 import React from 'react';
 
-export default function App() {
-  return <div>Hello from React!</div>;
+export default function App({ welcomeMessage }) {
+  return <div>{welcomeMessage || 'Hello from React!'}</div>;
 }

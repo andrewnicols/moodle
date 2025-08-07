@@ -2,11 +2,11 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App.jsx';
 
-function init(selector) {
+function init(selector, props) {
     const container = document.querySelector(selector);
     if (container) {
         const root = createRoot(container);
-        root.render(<App />);
+        root.render(<App {...props} />);
     }
 }
 

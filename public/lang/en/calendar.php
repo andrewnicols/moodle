@@ -280,6 +280,8 @@ $string['yesterday'] = 'Yesterday';
 $string['youcandeleteallrepeats'] = 'This event is part of a repeating event series. You can delete this event only, or all {$a} events in the series at once.';
 $string['yoursubscriptions'] = 'Imported calendars';
 
+$string['reacttest'] = 'Welcome to the react calendar';
+
 // Deprecated since Moodle 4.5.
 $string['importcalendarexternal'] = 'Import an external calendar?';
 $string['nocalendarsubscriptions'] = 'No calendar subscriptions yet. Do you want to {$a}';
