@@ -156,6 +156,12 @@ $renderer = $PAGE->get_renderer('core_calendar');
 $calendar->add_sidecalendar_blocks($renderer, true, $view);
 
 echo $OUTPUT->header();
+echo 'Hi';
+echo '<div id="react-root"></div>';
+$PAGE->requires->js('/calendar/build/app.iife.js');
+$PAGE->requires->js_call_amd('core_calendar/shim', 'init', ['#react-root']);
+
+
 echo $renderer->start_layout();
 echo html_writer::start_tag('div', ['class' => 'heightcontainer', 'data-calendar-type' => 'main-block']);
 
