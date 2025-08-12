@@ -56,7 +56,6 @@ final class overview_test extends \advanced_testcase {
      * Test get_due_date_overview.
      *
      * @param int|null $timeincrement the time increment in seconds to add to the current time for the deadline.
-     * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_due_date_overview')]
     public function test_get_due_date_overview(?int $timeincrement): void {
@@ -108,7 +107,6 @@ final class overview_test extends \advanced_testcase {
      *
      * @param string $role
      * @param array|null $expected
-     * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_actions_overview')]
     public function test_get_actions_overview(
@@ -120,7 +118,7 @@ final class overview_test extends \advanced_testcase {
 
         $course = $this->getDataGenerator()->create_course();
         $currentuser = $this->getDataGenerator()->create_and_enrol($course, $role);
-        $lesson = $this->getDataGenerator()->create_module( 'lesson', ['course' => $course->id]);
+        $lesson = $this->getDataGenerator()->create_module('lesson', ['course' => $course->id]);
 
         $this->setUser($currentuser);
 
@@ -166,7 +164,6 @@ final class overview_test extends \advanced_testcase {
      * @param bool $hasentries
      * @param bool $hasretakes
      * @param array|null $expected
-     * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_extra_totalattempts_overview')]
     public function test_get_extra_totalattempts_overview(
@@ -272,7 +269,6 @@ final class overview_test extends \advanced_testcase {
      * @param string $role
      * @param bool $hasentries
      * @param array|null $expected
-     * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_extra_attemptedstudents_overview')]
     public function test_get_extra_attemptedstudents_overview(

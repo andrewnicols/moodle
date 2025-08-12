@@ -28,7 +28,6 @@ use core_courseformat\local\overview\overviewfactory;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(overview::class)]
 final class overview_test extends \advanced_testcase {
-
     /**
      * Test get_extra_status_for_user method.
      *
@@ -135,7 +134,6 @@ final class overview_test extends \advanced_testcase {
      *
      * @param string $username The username of the user to test.
      * @param int|null $expectedcount the expected count of users who responded
-     *
      * @dataProvider provider_test_get_actions_overview
      */
     public function test_get_actions_overview(string $username, ?int $expectedcount = null): void {
@@ -273,7 +271,6 @@ final class overview_test extends \advanced_testcase {
      * Setup users and activity for the tests.
      *
      * @param bool $withanswers whether to create answers for the users.
-     *
      * @return array
      */
     private function setup_users_and_activity(

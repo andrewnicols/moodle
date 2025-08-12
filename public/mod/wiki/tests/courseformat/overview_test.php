@@ -29,7 +29,6 @@ use core_courseformat\local\overview\overviewfactory;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(overview::class)]
 final class overview_test extends \advanced_testcase {
-
     /**
      * Data provider for wiki modes.
      *
@@ -232,7 +231,6 @@ final class overview_test extends \advanced_testcase {
 
     /**
      * Test get_extra_entries method.
-     *
      */
     public function test_get_actions_overview(): void {
         $this->resetAfterTest();

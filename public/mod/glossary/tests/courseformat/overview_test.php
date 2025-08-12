@@ -35,7 +35,6 @@ final class overview_test extends \advanced_testcase {
      * @param bool $requireapproval
      * @param bool $hasentries
      * @param array|null $expected
-     * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_actions_overview')]
     public function test_get_actions_overview(
@@ -482,7 +481,6 @@ final class overview_test extends \advanced_testcase {
      * @param bool $requireapproval
      * @param bool $hasentries
      * @param array|null $expected
-     * @return void
      */
     #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_extra_myentries_overview')]
     public function test_get_extra_myentries_overview(
