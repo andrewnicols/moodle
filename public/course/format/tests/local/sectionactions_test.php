@@ -24,26 +24,25 @@ use stdClass;
  * @package    core_courseformat
  * @copyright  2023 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\local\sectionactions
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(sectionactions::class)]
 final class sectionactions_test extends \advanced_testcase {
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
+    #[\Override]
     public static function setUpBeforeClass(): void {
         global $CFG;
+
         require_once($CFG->dirroot . '/course/lib.php');
         parent::setUpBeforeClass();
     }
 
     /**
      * Test for create_delegated method.
-     * @covers ::create_delegated
-     * @dataProvider create_delegated_provider
+     *
      * @param string $component the name of the plugin
      * @param int|null $itemid the id of the delegated section
      * @param stdClass|null $fields the fields to set on the section
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('create_delegated_provider')]
     public function test_create_delegated(string $component, ?int $itemid, ?stdClass $fields): void {
         global $DB;
         $this->resetAfterTest();
@@ -64,6 +63,7 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Data provider for test_create_delegated.
+     *
      * @return array
      */
     public static function create_delegated_provider(): array {
@@ -123,13 +123,13 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test for create method.
-     * @covers ::create
-     * @dataProvider create_provider
+     *
      * @param int $sectionnum the name of the plugin
      * @param bool $skip if the validation should be skipped
      * @param bool $expectexception if the method should throw an exception
      * @param int $expected the expected section number
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('create_provider')]
     public function test_create(int $sectionnum, bool $skip, bool $expectexception, int $expected): void {
         global $DB;
         $this->resetAfterTest();
@@ -148,6 +148,7 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Data provider for test_create_delegated.
+     *
      * @return array
      */
     public static function create_provider(): array {
@@ -199,8 +200,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test create sections when there are sections with comonent (delegated sections) in the course.
-     * @covers ::create
-     * @covers ::create_delegated
      */
     public function test_create_with_delegated_sections(): void {
         global $DB;
@@ -238,11 +237,11 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test for create_if_missing method.
-     * @covers ::create_if_missing
-     * @dataProvider create_if_missing_provider
+     *
      * @param array $sectionnums the section numbers to create
      * @param bool $expected the expected result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('create_if_missing_provider')]
     public function test_create_if_missing(array $sectionnums, bool $expected): void {
         global $DB;
         $this->resetAfterTest();
@@ -263,6 +262,7 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Data provider for test_create_delegated.
+     *
      * @return array
      */
     public static function create_if_missing_provider(): array {
@@ -296,8 +296,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test create if missing when the course has delegated sections.
-     * @covers ::create_if_missing
-     * @covers ::create_delegated
      */
     public function test_create_if_missing_with_delegated_sections(): void {
         global $DB;
@@ -341,7 +339,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test for delete method.
-     * @covers ::delete
      */
     public function test_delete(): void {
         global $DB;
@@ -410,7 +407,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test that triggering a course_section_deleted event works as expected.
-     * @covers ::delete
      */
     public function test_section_deleted_event(): void {
         global $USER, $DB;
@@ -448,7 +444,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test async section deletion hook.
-     * @covers ::delete
      */
     public function test_async_section_deletion_hook_implemented(): void {
         // Async section deletion (provided section contains modules), depends on the 'true' being returned by at least one plugin
@@ -546,13 +541,12 @@ final class sectionactions_test extends \advanced_testcase {
     /**
      * Test section update method.
      *
-     * @covers ::update
-     * @dataProvider update_provider
      * @param string $fieldname the name of the field to update
      * @param int|string $value the value to set
      * @param int|string $expected the expected value after the update ('=' to specify the same value as original field)
      * @param bool $expectexception if the method should throw an exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('update_provider')]
     public function test_update(
         string $fieldname,
         int|string $value,
@@ -592,6 +586,7 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Data provider for test_update.
+     *
      * @return array
      */
     public static function update_provider(): array {
@@ -655,8 +650,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test section update method updating several values at once.
-     *
-     * @covers ::update
      */
     public function test_update_multiple_fields(): void {
         global $DB;
@@ -686,8 +679,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test updating a section trigger a course section update log event.
-     *
-     * @covers ::update
      */
     public function test_course_section_updated_event(): void {
         $this->resetAfterTest();
@@ -715,8 +706,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test section update change the modified date.
-     *
-     * @covers ::update
      */
     public function test_update_time_modified(): void {
         global $DB;
@@ -752,8 +741,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test section updating visibility will hide or show section activities.
-     *
-     * @covers ::update
      */
     public function test_update_hide_section_activities(): void {
         global $DB;
@@ -866,9 +853,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test that the preprocess_section_name method can alter the section rename value.
-     *
-     * @covers ::update
-     * @covers ::preprocess_delegated_section_fields
      */
     public function test_preprocess_section_name(): void {
         global $DB, $CFG;
@@ -905,8 +889,6 @@ final class sectionactions_test extends \advanced_testcase {
 
     /**
      * Test that the position of a new section in a course with deleghated sections.
-     * @covers ::create
-     * @covers ::create_delegated
      */
     public function test_create_position(): void {
         global $DB, $CFG;

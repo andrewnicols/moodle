@@ -26,15 +26,14 @@ use stdClass;
  * @package    core_courseformat
  * @copyright  2022 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\output\local\state\cm
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(cm::class)]
 final class cm_test extends \advanced_testcase {
-
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
         global $CFG;
+
+        parent::setUpBeforeClass();
         require_once($CFG->dirroot . '/course/lib.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_output_course_format_state.php');
@@ -43,15 +42,13 @@ final class cm_test extends \advanced_testcase {
     /**
      * Test the behaviour of state\cm hasavailability attribute.
      *
-     * @dataProvider hasrestrictions_state_provider
-     * @covers ::export_for_template
-     *
      * @param string $format the course format
      * @param string $rolename the user role name (editingteacher or student)
      * @param bool $hasavailability if the activity|section has availability
      * @param bool $available if the activity availability condition is available or not to the user
      * @param bool $expected the expected result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('hasrestrictions_state_provider')]
     public function test_cm_hasrestrictions_state(
         string $format = 'topics',
         string $rolename = 'editingteacher',

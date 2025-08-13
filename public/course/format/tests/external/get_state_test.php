@@ -30,30 +30,26 @@ use core_external\external_api;
  * @category   test
  * @copyright  2021 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\external\get_state
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(get_state::class)]
 final class get_state_test extends \externallib_advanced_testcase {
-
     /** @var array Sections in the testing course. */
     private $sections;
 
     /** @var array Activities in the testing course. */
     private $activities;
 
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
         global $CFG;
 
+        parent::setUpBeforeClass();
         require_once($CFG->dirroot . '/course/lib.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_output_course_format_state.php');
     }
 
-    /**
-     * Setup testcase.
-     */
+    #[\Override]
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -62,9 +58,7 @@ final class get_state_test extends \externallib_advanced_testcase {
         $this->activities = [];
     }
 
-    /**
-     * Test tearDown.
-     */
+    #[\Override]
     public function tearDown(): void {
         unset($this->sections);
         unset($this->activities);
@@ -74,13 +68,11 @@ final class get_state_test extends \externallib_advanced_testcase {
     /**
      * Test the behaviour of get_state::execute().
      *
-     * @dataProvider get_state_provider
-     * @covers ::execute
-     *
      * @param string $role The role of the user that will execute the method.
      * @param string $format The course format of the course where the method will be executed.
      * @param string|null $expectedexception If this call will raise an exception, this is its name.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_state_provider')]
     public function test_get_state(string $role, string $format = 'topics', ?string $expectedexception = null): void {
         $this->resetAfterTest();
 

@@ -20,15 +20,11 @@
  * @package    core_course
  * @copyright  2014 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \core_courseformat\base
- * @coversDefaultClass \core_courseformat\base
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_courseformat\base::class)]
 final class base_test extends advanced_testcase {
-
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
         global $CFG;
         require_once($CFG->dirroot . '/course/lib.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest.php');
@@ -38,8 +34,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Tests the save and load functionality.
-     *
-     * @author Jason den Dulk
      */
     public function test_courseformat_saveandload(): void {
         $this->resetAfterTest();
@@ -200,8 +194,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test for get_view_url().
-     *
-     * @covers ::get_view_url
      */
     public function test_get_view_url(): void {
         global $CFG;
@@ -257,11 +249,11 @@ final class base_test extends advanced_testcase {
     /**
      * Test for get_output_classname method.
      *
-     * @dataProvider get_output_classname_provider
      * @param string $find the class to find
      * @param string $result the expected result classname
      * @param bool $exception if the method will raise an exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_output_classname_provider')]
     public function test_get_output_classname($find, $result, $exception): void {
         $this->resetAfterTest();
 
@@ -303,8 +295,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test for the default delete format data behaviour.
-     *
-     * @covers ::get_sections_preferences
      */
     public function test_get_sections_preferences(): void {
         $this->resetAfterTest();
@@ -337,8 +327,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test for the default delete format data behaviour.
-     *
-     * @covers ::set_sections_preference
      */
     public function test_set_sections_preference(): void {
         $this->resetAfterTest();
@@ -367,8 +355,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test add_section_preference_ids() method.
-     *
-     * @covers \core_courseformat\base::persist_to_user_preference
      */
     public function test_add_section_preference_ids(): void {
         $this->resetAfterTest();
@@ -398,8 +384,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test remove_section_preference_ids() method.
-     *
-     * @covers \core_courseformat\base::persist_to_user_preference
      */
     public function test_remove_section_preference_ids(): void {
         $this->resetAfterTest();
@@ -434,8 +418,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test that retrieving last section number for a course
-     *
-     * @covers ::get_last_section_number
      */
     public function test_get_last_section_number(): void {
         global $DB;
@@ -461,10 +443,9 @@ final class base_test extends advanced_testcase {
     /**
      * Test for the default delete format data behaviour.
      *
-     * @covers ::delete_format_data
-     * @dataProvider delete_format_data_provider
      * @param bool $usehook if it should use course_delete to trigger $format->delete_format_data as a hook
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('delete_format_data_provider')]
     public function test_delete_format_data(bool $usehook): void {
         global $DB;
 
@@ -529,7 +510,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test duplicate_section()
-     * @covers ::duplicate_section
      */
     public function test_duplicate_section(): void {
         global $DB;
@@ -572,7 +552,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test duplicate_section() with delegated section
-     * @covers     ::duplicate_section
      */
     public function test_duplicate_section_with_delegated_sections(): void {
         global $DB;
@@ -612,13 +591,12 @@ final class base_test extends advanced_testcase {
     /**
      * Test for the default delete format data behaviour.
      *
-     * @covers ::get_format_string
-     * @dataProvider get_format_string_provider
      * @param string $key the string key
      * @param string|null $data any string data
      * @param array|null $expectedstring the expected string (null for exception)
      * @param string $courseformat the course format
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_format_string_provider')]
     public function test_get_format_string(
         string $key,
         ?string $data,
@@ -681,12 +659,11 @@ final class base_test extends advanced_testcase {
     /**
      * Test for the move_section_after method.
      *
-     * @covers ::move_section_after
-     * @dataProvider move_section_after_provider
      * @param string $movesection the reference of the section to move
      * @param string $destination the reference of the destination section
      * @param string[] $order the references of the final section order
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('move_section_after_provider')]
     public function test_move_section_after(string $movesection, string $destination, array $order): void {
         global $DB;
 
@@ -806,12 +783,11 @@ final class base_test extends advanced_testcase {
     /**
      * Test for the get_non_ajax_cm_action_url method.
      *
-     * @covers ::get_non_ajax_cm_action_url
-     * @dataProvider get_non_ajax_cm_action_url_provider
      * @param string $action the ajax action name
      * @param string $expectedparam the expected param to check
      * @param string $exception if an exception is expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_non_ajax_cm_action_url_provider')]
     public function test_get_non_ajax_cm_action_url(string $action, string $expectedparam, bool $exception): void {
         global $DB;
 
@@ -877,8 +853,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test get_required_jsfiles().
-     *
-     * @covers ::get_required_jsfiles
      */
     public function test_get_required_jsfiles(): void {
         $this->resetAfterTest();
@@ -892,10 +866,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test set_sectionid().
-     *
-     * @covers ::set_sectionid
-     * @covers ::get_sectionid
-     * @covers ::get_sectionnum
      */
     public function test_set_sectionid(): void {
         $this->resetAfterTest();
@@ -930,12 +900,11 @@ final class base_test extends advanced_testcase {
     /**
      * Test set_sectionnum().
      *
-     * @dataProvider set_sectionnum_provider
-     * @covers ::set_sectionnum
      * @param int|null $sectionnum The section number
      * @param bool $nullexpected If null is expected
      * @param bool $exceptionexpected If an exception is expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('set_sectionnum_provider')]
     public function test_set_sectionnum(?int $sectionnum, bool $nullexpected = false, bool $exceptionexpected = false): void {
         $this->resetAfterTest();
 
@@ -994,8 +963,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test can_sections_be_removed_from_navigation().
-     *
-     * @covers ::can_sections_be_removed_from_navigation
      */
     public function test_can_sections_be_removed_from_navigation(): void {
         $this->resetAfterTest();
@@ -1045,8 +1012,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test for the get_generic_section_name method.
-     *
-     * @covers ::get_generic_section_name
      */
     public function test_get_generic_section_name(): void {
         $this->resetAfterTest();
@@ -1070,11 +1035,6 @@ final class base_test extends advanced_testcase {
 
     /**
      * Test can_sections_be_removed_from_navigation().
-     *
-     * @covers ::session_cache
-     * @covers ::session_cache_reset
-     * @covers ::session_cache_reset_all
-     * @covers ::invalidate_all_session_caches_for_course
      */
     public function test_session_caches_methods(): void {
         global $DB;

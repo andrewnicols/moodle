@@ -24,8 +24,8 @@ use core_courseformat\hook\after_cm_name_edited;
  * @package    core_courseformat
  * @copyright  2024 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\local\cmactions
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(cmactions::class)]
 final class cmactions_test extends \advanced_testcase {
     /**
      * Setup to ensure that fixtures are loaded.
@@ -39,12 +39,11 @@ final class cmactions_test extends \advanced_testcase {
     /**
      * Test renaming a course module.
      *
-     * @dataProvider provider_test_rename
-     * @covers ::rename
      * @param string $newname The new name for the course module.
      * @param bool $expected Whether the course module was renamed.
      * @param bool $expectexception Whether an exception is expected.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_rename')]
     public function test_rename(string $newname, bool $expected, bool $expectexception): void {
         global $DB;
         $this->resetAfterTest();
@@ -98,8 +97,6 @@ final class cmactions_test extends \advanced_testcase {
 
     /**
      * Test rename an activity also rename the calendar events.
-     *
-     * @covers ::rename
      */
     public function test_rename_calendar_events(): void {
         global $DB;
@@ -168,8 +165,6 @@ final class cmactions_test extends \advanced_testcase {
 
     /**
      * Test renaming an activity trigger a course update log event.
-     *
-     * @covers ::rename
      */
     public function test_rename_course_module_updated_event(): void {
         global $DB;
@@ -197,7 +192,6 @@ final class cmactions_test extends \advanced_testcase {
 
     /**
      * Test renaming an activity triggers the after_cm_name_edited hook.
-     * @covers ::rename
      */
     public function test_rename_after_cm_name_edited_hook(): void {
         $this->resetAfterTest();
