@@ -17,7 +17,7 @@
 namespace core\output;
 
 /**
- * Unit tests for lib/classes/output/mustache_template_finder.php
+ * Unit tests for mustache_template_finder.
  *
  * Unit tests for the Mustache template finder class (contains logic about
  * resolving mustache template locations.
@@ -27,8 +27,8 @@ namespace core\output;
  * @copyright 2015 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(mustache_template_finder::class)]
 final class mustache_template_finder_test extends \advanced_testcase {
-
     /**
      * Data provider which reutrns a set of valid template directories to be used when testing
      * get_template_directories_for_component.
@@ -42,7 +42,7 @@ final class mustache_template_finder_test extends \advanced_testcase {
                 'theme' => '',
                 'paths' => [
                     'theme/boost/templates/mod_assign/',
-                    'mod/assign/templates/'
+                    'mod/assign/templates/',
                 ],
             ],
             'plugin: mod_assign with classic' => [
@@ -51,7 +51,7 @@ final class mustache_template_finder_test extends \advanced_testcase {
                 'paths' => [
                     'theme/classic/templates/mod_assign/',
                     'theme/boost/templates/mod_assign/',
-                    'mod/assign/templates/'
+                    'mod/assign/templates/',
                 ],
             ],
             'subsystem: core_user' => [
@@ -60,7 +60,7 @@ final class mustache_template_finder_test extends \advanced_testcase {
                 'paths' => [
                     'theme/classic/templates/core_user/',
                     'theme/boost/templates/core_user/',
-                    'user/templates/'
+                    'user/templates/',
                 ],
             ],
             'core' => [
@@ -69,7 +69,7 @@ final class mustache_template_finder_test extends \advanced_testcase {
                 'paths' => [
                     'theme/classic/templates/core/',
                     'theme/boost/templates/core/',
-                    'lib/templates/'
+                    'lib/templates/',
                 ],
             ],
         ];
@@ -78,18 +78,18 @@ final class mustache_template_finder_test extends \advanced_testcase {
     /**
      * Tests for get_template_directories_for_component.
      *
-     * @dataProvider valid_template_directories_provider
      * @param   string $component
      * @param   string $theme
      * @param   array $paths
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('valid_template_directories_provider')]
     public function test_get_template_directories_for_component(string $component, string $theme, array $paths): void {
         global $CFG;
 
         // Test a plugin.
         $dirs = mustache_template_finder::get_template_directories_for_component($component, $theme, $paths);
 
-        $correct = array_map(function($path) use ($CFG) {
+        $correct = array_map(function ($path) use ($CFG) {
             return implode('/', [$CFG->dirroot, $path]);
         }, $paths);
 
@@ -172,11 +172,11 @@ final class mustache_template_finder_test extends \advanced_testcase {
     /**
      * Tests for get_template_filepath.
      *
-     * @dataProvider valid_template_filepath_provider
      * @param   string $template
      * @param   string $theme
      * @param   string $location
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('valid_template_filepath_provider')]
     public function test_get_template_filepath(string $template, string $theme, string $location): void {
         global $CFG;
 

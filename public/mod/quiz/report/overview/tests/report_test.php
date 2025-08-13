@@ -343,8 +343,6 @@ final class report_test extends \advanced_testcase {
 
     /**
      * Test question regrade for selected versions.
-     *
-     * @covers ::regrade_question
      */
     public function test_regrade_question(): void {
         global $DB;

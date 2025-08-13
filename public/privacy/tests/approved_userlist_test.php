@@ -14,35 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Unit Tests for the approved userlist Class
- *
- * @package     core_privacy
- * @category    test
- * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core_privacy\local\request;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\local\request\userlist;
+use core\context\system as context_system;
 
 /**
  * Tests for the \core_privacy API's approved userlist functionality.
  *
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_privacy\local\request\approved_userlist
  */
-final class approved_userlist_test extends advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(approved_userlist::class)]
+final class approved_userlist_test extends \advanced_testcase {
     /**
      * The approved userlist should not be modifiable once set.
-     *
-     * @covers ::__construct
-     * @covers \core_privacy\local\request\approved_userlist<extended>
      */
     public function test_default_values_set(): void {
         $this->resetAfterTest();
@@ -52,7 +37,7 @@ final class approved_userlist_test extends advanced_testcase {
         $u3 = $this->getDataGenerator()->create_user();
         $u4 = $this->getDataGenerator()->create_user();
 
-        $context = \context_system::instance();
+        $context = context_system::instance();
         $component = 'core_privacy';
 
         $uut = new approved_userlist($context, $component, [$u1->id, $u2->id]);
@@ -72,10 +57,6 @@ final class approved_userlist_test extends advanced_testcase {
         $this->assertEquals($expected, $result);
     }
 
-    /**
-     * @covers ::create_from_userlist
-     * @covers \core_privacy\local\request\approved_userlist<extended>
-     */
     public function test_create_from_userlist(): void {
         $this->resetAfterTest();
 
@@ -84,7 +65,7 @@ final class approved_userlist_test extends advanced_testcase {
         $u3 = $this->getDataGenerator()->create_user();
         $u4 = $this->getDataGenerator()->create_user();
 
-        $context = \context_system::instance();
+        $context = context_system::instance();
         $component = 'core_privacy';
 
         $sourcelist = new userlist($context, $component);

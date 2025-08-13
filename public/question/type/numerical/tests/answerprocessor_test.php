@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Unit tests for the numerical questions answers processor.
- *
- * @package    qtype_numerical
- * @category   test
- * @copyright  2008 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace qtype_numerical;
 
 use qtype_numerical_answer_processor;
@@ -34,12 +25,10 @@ use qtype_numerical_answer_processor;
  * @category   test
  * @copyright  2008 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \qtype_numerical_answer_processor
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(qtype_numerical_answer_processor::class)]
 final class answerprocessor_test extends \advanced_testcase {
-    /**
-     * Test setup.
-     */
+    #[\Override]
     public function setUp(): void {
         global $CFG;
 
@@ -50,11 +39,10 @@ final class answerprocessor_test extends \advanced_testcase {
     /**
      * Test the parse_response function.
      *
-     * @covers ::parse_response
-     * @dataProvider parse_response_provider
      * @param array $expected
      * @param mixed $args
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('parse_response_provider')]
     public function test_parse_response(array $expected, $args): void {
         $ap = new qtype_numerical_answer_processor([
             'm' => 1,
@@ -153,13 +141,12 @@ final class answerprocessor_test extends \advanced_testcase {
     /**
      * Test the apply_units function with various parameters.
      *
-     * @covers \qtype_numerical_answer_processor::apply_units
-     * @dataProvider apply_units_provider
      * @param mixed $expectedvalue
      * @param string|null $expectedunit
      * @param float|int|null $expectedmultiplier
      * @param string|null $input
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('apply_units_provider')]
     public function test_apply_units(
         $expectedvalue,
         $expectedunit,
@@ -209,14 +196,13 @@ final class answerprocessor_test extends \advanced_testcase {
     /**
      * Test the apply_units function with various parameters and different units.
      *
-     * @covers \qtype_numerical_answer_processor::apply_units
-     * @dataProvider apply_units_provider_with_units
      * @param mixed $expectedvalue
      * @param string|null $expectedunit
      * @param float|int|null $expectedmultiplier
      * @param string|null $input
      * @param string $units
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('apply_units_provider_with_units')]
     public function test_apply_units_with_unit(
         $expectedvalue,
         $expectedunit,
@@ -265,11 +251,10 @@ final class answerprocessor_test extends \advanced_testcase {
     /**
      * Test apply_units with a comma float unit.
      *
-     * @covers \qtype_numerical_answer_processor::apply_units
-     * @dataProvider euro_provider
      * @param array $expected
      * @param string $params
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('euro_provider')]
     public function test_euro_style(array $expected, string $params): void {
         $ap = new qtype_numerical_answer_processor([], false, ',', ' ');
         $this->assertEquals($expected, $ap->apply_units($params));
@@ -290,11 +275,10 @@ final class answerprocessor_test extends \advanced_testcase {
     /**
      * Test apply_units with percentage values.
      *
-     * @covers \qtype_numerical_answer_processor::apply_units
-     * @dataProvider percent_provider
      * @param array $expected
      * @param string $params
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('percent_provider')]
     public function test_percent(array $expected, string $params): void {
         $ap = new qtype_numerical_answer_processor(['%' => 100], false, '.', ',');
         $this->assertEquals($expected, $ap->apply_units($params));
@@ -316,11 +300,10 @@ final class answerprocessor_test extends \advanced_testcase {
     /**
      * Test apply_units with currency values.
      *
-     * @covers \qtype_numerical_answer_processor::apply_units
-     * @dataProvider currency_provider
      * @param array $expected
      * @param string $params
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('currency_provider')]
     public function test_currency(array $expected, string $params): void {
         $ap = new qtype_numerical_answer_processor([
             '$' => 1,

@@ -16,8 +16,6 @@
 
 namespace core\output;
 
-// phpcs:disable moodle.PHPUnit.TestCaseProvider.dataProviderSyntaxMethodNotFound
-
 /**
  * Detect common problems in plugin output and them related code.
  *
@@ -30,14 +28,13 @@ final class plugin_checks_test extends \core\tests\plugin_checks_testcase {
     /**
      * Verify plugin defines FA icon fallbacks.
      *
-     * @dataProvider all_plugins_provider
-     * @coversNothing
-     *
      * @param string $component
      * @param string $plugintype
      * @param string $pluginname
      * @param string $dir
      */
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
+    #[\PHPUnit\Framework\Attributes\DataProviderExternal(\core\tests\plugin_checks_testcase::class, 'all_plugins_provider')]
     public function test_get_fontawesome_icon_map(string $component, string $plugintype, string $pluginname, string $dir): void {
         $iconmap = component_callback($component, 'get_fontawesome_icon_map');
         if (!$iconmap) {
@@ -46,11 +43,14 @@ final class plugin_checks_test extends \core\tests\plugin_checks_testcase {
         }
 
         foreach ($iconmap as $componenticon => $fa) {
-            list($iconcomponent, $iconname) = explode(':', $componenticon, 2);
+            [$iconcomponent, $iconname] = explode(':', $componenticon, 2);
             $svgfile = "$dir/pix/$iconname.svg";
             $this->assertFileExists($svgfile, "No SVG equivalent found for icon '$componenticon'");
-            $this->assertSame($component, $iconcomponent,
-                "Unexpected icon component found in {$component}_get_fontawesome_icon_map() function");
+            $this->assertSame(
+                $component,
+                $iconcomponent,
+                "Unexpected icon component found in {$component}_get_fontawesome_icon_map() function",
+            );
         }
     }
 }

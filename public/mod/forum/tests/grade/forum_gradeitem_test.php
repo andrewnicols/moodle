@@ -25,10 +25,8 @@
 namespace mod_forum\grade;
 
 use core_grades\component_gradeitem;
-use mod_forum\grades\forum_gradeitem as gradeitem;
-use mod_forum\local\entities\forum as forum_entity;
-use gradingform_controller;
 use mod_forum\grades\forum_gradeitem;
+use mod_forum\local\entities\forum as forum_entity;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -41,6 +39,7 @@ require_once(__DIR__ . '/../generator_trait.php');
  * @copyright Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(forum_gradeitem::class)]
 final class forum_gradeitem_test extends \advanced_testcase {
     use \mod_forum_tests_generator_trait;
 
@@ -174,13 +173,12 @@ final class forum_gradeitem_test extends \advanced_testcase {
     /**
      * Test the logic in the should_grade_only_active_users() method.
      *
-     * @covers ::should_grade_only_active_users
-     * @dataProvider should_grade_only_active_users_provider
      * @param bool $showonlyactiveenrolconfig Whether the 'grade_report_showonlyactiveenrol' is enabled or not.
      * @param bool $showonlyactiveenrolpreference Whether the 'grade_report_showonlyactiveenrol' preference is enabled or not.
      * @param bool $viewsuspendeduserscapability Whether the 'moodle/course:viewsuspendedusers' capability is allowed or not.
      * @param bool $expected The expected result.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('should_grade_only_active_users_provider')]
     public function test_should_grade_only_active_users(bool $showonlyactiveenrolconfig, bool $showonlyactiveenrolpreference,
             bool $viewsuspendeduserscapability, bool $expected): void {
         global $DB;

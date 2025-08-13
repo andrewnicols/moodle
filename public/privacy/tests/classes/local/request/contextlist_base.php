@@ -14,29 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\output\progress_trace;
+namespace core_privacy\tests\local\request;
+
+// phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
 
 /**
- * Tests for \core\output\progress_trace\text_progress_trace.
+ * Testable core\privacy\contextlist_base class.
  *
- * @package    core
- * @category   test
- * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
+ * @package    core_privacy
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(text_progress_trace::class)]
-final class text_progress_trace_test extends \advanced_testcase {
-    /**
-     * Tests for the trace.
-     */
-    public function test_trace(): void {
-        $this->resetAfterTest(false);
-
-        $trace = new text_progress_trace();
-        $trace->output('do');
-        $trace->output('re', 1);
-        $trace->output('mi', 2);
-        $trace->finished();
-        $this->expectOutputString("do\n  re\n    mi\n");
+class contextlist_base extends \core_privacy\local\request\contextlist_base {
+    #[\Override]
+    public function set_contextids(array $contextids) {
+        parent::set_contextids($contextids);
     }
 }

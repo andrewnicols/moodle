@@ -14,34 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Unit Tests for the approved contextlist Class
- *
- * @package     core_privacy
- * @category    test
- * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-use \core_privacy\local\request\contextlist;
+namespace core_privacy\local\request;
 
 /**
  * Tests for the \core_privacy API's approved contextlist functionality.
  *
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_privacy\local\request\contextlist
  */
-final class contextlist_test extends advanced_testcase {
-
+#[\PHPUnit\Framework\Attributes\CoversClass(contextlist::class)]
+final class contextlist_test extends \advanced_testcase {
     /**
      * Ensure that valid SQL results in the relevant contexts being added.
-     *
-     * @covers ::add_from_sql
      */
     public function test_add_from_sql(): void {
         global $DB;
@@ -58,8 +42,6 @@ final class contextlist_test extends advanced_testcase {
 
     /**
      * Ensure that valid system context id is added.
-     *
-     * @covers ::add_system_context
      */
     public function test_add_system_context(): void {
         $cl = new contextlist();
@@ -74,8 +56,6 @@ final class contextlist_test extends advanced_testcase {
 
     /**
      * Ensure that a valid user context id is added.
-     *
-     * @covers ::add_user_context
      */
     public function test_add_user_context(): void {
         $this->resetAfterTest();
@@ -95,8 +75,6 @@ final class contextlist_test extends advanced_testcase {
 
     /**
      * Ensure that valid user contexts are added.
-     *
-     * @covers ::add_user_contexts
      */
     public function test_add_user_contexts(): void {
         $this->resetAfterTest();
@@ -118,18 +96,17 @@ final class contextlist_test extends advanced_testcase {
     /**
      * Test {@link \core_privacy\local\request\contextlist::test_guess_id_field_from_sql()} implementation.
      *
-     * @dataProvider data_guess_id_field_from_sql
      * @param string $sql Input SQL we try to extract the context id field name from.
      * @param string $expected Expected detected value.
-     * @covers ::guess_id_field_from_sql
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_guess_id_field_from_sql')]
     public function test_guess_id_field_from_sql($sql, $expected): void {
 
         $rc = new \ReflectionClass(contextlist::class);
         $rcm = $rc->getMethod('guess_id_field_from_sql');
         $actual = $rcm->invoke(new contextlist(), $sql);
 
-        $this->assertEquals($expected, $actual, 'Unable to guess context id field in: '.$sql);
+        $this->assertEquals($expected, $actual, 'Unable to guess context id field in: ' . $sql);
     }
 
     /**
@@ -192,19 +169,19 @@ final class contextlist_test extends advanced_testcase {
                      SELECT y FROM (
                          SELECT y FROM ytable
                          JOIN ztable ON (z = y)))',
-                'id'
+                'id',
             ],
             'invalid_union_with_first_being_column_name' => [
                 'SELECT id FROM table UNION SELECT 1 FROM table',
-                ''
+                '',
             ],
             'invalid_union_with_first_being_numeric' => [
                 'SELECT 1 FROM table UNION SELECT id FROM table',
-                ''
+                '',
             ],
             'invalid_union_without_from' => [
                 'SELECT 1 UNION SELECT id FROM table',
-                ''
+                '',
             ],
             'invalid_1' => [
                 'SELECT 1+1',

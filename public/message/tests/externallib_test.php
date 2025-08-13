@@ -36,6 +36,7 @@ require_once($CFG->dirroot . '/message/externallib.php');
  * @copyright  2012 Jerome Mouneyrac
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core_message_external::class)]
 final class externallib_test extends externallib_advanced_testcase {
 
     /**
@@ -5502,7 +5503,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the get_conversation_counts() function.
      *
-     * @dataProvider get_conversation_counts_test_cases
      * @param array $conversationconfigs Conversations to create
      * @param int $deletemessagesuser The user who is deleting the messages
      * @param array $deletemessages The list of messages to delete (by index)
@@ -5511,6 +5511,7 @@ final class externallib_test extends externallib_advanced_testcase {
      * @param array $expectedunreadcounts the expected unread conversation counts
      * @param array $deletedusers the array of users to soft delete.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_conversation_counts_test_cases')]
     public function test_get_conversation_counts(
         $conversationconfigs,
         $deletemessagesuser,
@@ -5599,7 +5600,6 @@ final class externallib_test extends externallib_advanced_testcase {
     /**
      * Test the get_unread_conversation_counts() function.
      *
-     * @dataProvider get_conversation_counts_test_cases
      * @param array $conversationconfigs Conversations to create
      * @param int $deletemessagesuser The user who is deleting the messages
      * @param array $deletemessages The list of messages to delete (by index)
@@ -5608,6 +5608,7 @@ final class externallib_test extends externallib_advanced_testcase {
      * @param array $expectedunreadcounts the expected unread conversation counts
      * @param array $deletedusers the list of users to soft-delete.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_conversation_counts_test_cases')]
     public function test_get_unread_conversation_counts(
         $conversationconfigs,
         $deletemessagesuser,
@@ -5890,8 +5891,6 @@ final class externallib_test extends externallib_advanced_testcase {
 
     /**
      * Test the getting and setting of unsent messages.
-     *
-     * @covers ::get_unsent_message
      */
     public function test_get_unsent_message(): void {
         $this->resetAfterTest();
@@ -5923,8 +5922,6 @@ final class externallib_test extends externallib_advanced_testcase {
 
     /**
      * Tests conversation messaging is restricted by each user’s messaging permission.
-     *
-     * @covers ::get_conversation
      */
     public function test_get_conversation_send_message_permission(): void {
         $this->resetAfterTest();

@@ -16,6 +16,7 @@
 
 namespace qtype_truefalse;
 
+use qtype_truefalse_question;
 use question_state;
 use question_display_options;
 
@@ -31,8 +32,8 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @package    qtype_truefalse
  * @copyright  2011 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \qtype_truefalse_question
  */
+#[\PHPUnit\Framework\Attributes\Covers(qtype_truefalse_question::class)]
 final class walkthrough_test extends \qbehaviour_walkthrough_test_base {
     public function test_false_right_does_not_show_feedback_when_not_answered(): void {
 
@@ -164,8 +165,6 @@ final class walkthrough_test extends \qbehaviour_walkthrough_test_base {
 
     /**
      * Tests that the general feedback box is not displayed when it is empty for a false answer.
-     *
-     * @covers ::format_generalfeedback
      */
     public function test_false_right_does_not_show_empty_general_feedback_when_answer(): void {
         $tf = \test_question_maker::make_question('truefalse', 'false');

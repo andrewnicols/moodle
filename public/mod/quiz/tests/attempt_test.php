@@ -34,10 +34,11 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
  * @category  test
  * @copyright 2014 Tim Hunt
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\quiz_attempt
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\quiz_attempt::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('quiz_start_new_attempt')]
+#[\PHPUnit\Framework\Attributes\CoversFunction('quiz_start_attempt_built_on_last')]
 final class attempt_test extends \advanced_testcase {
-
     /**
      * Create quiz and attempt data with layout.
      *
@@ -418,7 +419,6 @@ final class attempt_test extends \advanced_testcase {
 
     /**
      * Test check_page_access function
-     * @covers \quiz_attempt::check_page_access
      */
     public function test_check_page_access(): void {
         $timenow = time();
@@ -472,9 +472,6 @@ final class attempt_test extends \advanced_testcase {
 
     /**
      * Starting a new attempt with a question in draft status should throw an exception.
-     *
-     * @covers ::quiz_start_new_attempt()
-     * @return void
      */
     public function test_start_new_attempt_with_draft(): void {
         $this->resetAfterTest();
@@ -505,9 +502,6 @@ final class attempt_test extends \advanced_testcase {
 
     /**
      * Starting a new attempt built on last with a question in draft status should throw an exception.
-     *
-     * @covers ::quiz_start_attempt_built_on_last()
-     * @return void
      */
     public function test_quiz_start_attempt_built_on_last_with_draft(): void {
         global $DB;
@@ -576,10 +570,6 @@ final class attempt_test extends \advanced_testcase {
      * When creating a new quiz attempt, question attempts should be created with the first step's timecreated set to null.
      *
      * When the question attempt is rendered, it should be set to the current time.
-     *
-     * @return void
-     * @throws \coding_exception
-     * @covers ::quiz_start_new_attempt
      */
     public function test_step_timecreated_unset_when_starting_quiz_attempt(): void {
         $attempt = $this->create_quiz_and_attempt_with_layout('1');

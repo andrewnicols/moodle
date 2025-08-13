@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 namespace core\output;
+
 use ReflectionMethod;
 
 /**
@@ -25,22 +26,22 @@ use ReflectionMethod;
  * @copyright   2021 onwards Peter Dias
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(participants_action_bar::class)]
 final class participants_action_bar_test extends \advanced_testcase {
-
     /**
      * Test the get_content_for_select function
      *
-     * @dataProvider get_content_for_select_provider
      * @param string $type Whether we are checking content in the course/module
      * @param int    $expectedcount Expected number of 1st level tertiary items
      * @param array  $expecteditems Expected keys of the 1st level tertiary items.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_content_for_select_provider')]
     public function test_get_content_for_select($type, $expectedcount, $expecteditems): void {
         global $PAGE;
         $this->resetAfterTest();
         $course = $this->getDataGenerator()->create_course();
         $module = $this->getDataGenerator()->create_module('assign', [
-            'course' => $course->id
+            'course' => $course->id,
         ]);
         if ($type == 'course') {
             $context = \context_course::instance($course->id);
@@ -65,17 +66,18 @@ final class participants_action_bar_test extends \advanced_testcase {
     }
 
     /**
-     * Provider for test_get_content_for_select
+     * Provider for test_get_content_for_select.
+     *
      * @return array[]
      */
     public static function get_content_for_select_provider(): array {
         return [
             'Get dropdown content when in a course context' => [
-                'course', 3, ['Enrolments', 'Groups', 'Permissions']
+                'course', 3, ['Enrolments', 'Groups', 'Permissions'],
             ],
             'Get dropdown content when in a module context' => [
-                'module', 1, ['Permissions']
-            ]
+                'module', 1, ['Permissions'],
+            ],
         ];
     }
 }

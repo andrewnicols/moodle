@@ -304,7 +304,6 @@ final class preset_importer_test extends \advanced_testcase {
     ): void {
         global $USER;
 
-        // xdebug_break();
         $this->resetAfterTest();
         $this->setAdminUser();
         $plugingenerator = $this->getDataGenerator()->get_plugin_generator('mod_data');

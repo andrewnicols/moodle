@@ -22,8 +22,8 @@ namespace core\output;
  * @package core
  * @copyright 2024 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\output\user_picture
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(user_picture::class)]
 final class user_picture_test extends \advanced_testcase {
     /**
      * Tests {@see user_picture::allow_view()} for a not-logged-in request.
@@ -73,8 +73,13 @@ final class user_picture_test extends \advanced_testcase {
 
         // But would not be allowed if we change guest role to remove capability.
         $guestroleid = $DB->get_field('role', 'id', ['shortname' => 'guest'], MUST_EXIST);
-        assign_capability('moodle/user:viewprofilepictures', CAP_INHERIT, $guestroleid,
-            \context_system::instance()->id, true);
+        assign_capability(
+            'moodle/user:viewprofilepictures',
+            CAP_INHERIT,
+            $guestroleid,
+            \context_system::instance()->id,
+            true
+        );
         $this->assertFalse(user_picture::allow_view($adminid));
     }
 
@@ -106,8 +111,13 @@ final class user_picture_test extends \advanced_testcase {
 
         // But would not be allowed if we change user role to remove capability.
         $userroleid = $DB->get_field('role', 'id', ['shortname' => 'user'], MUST_EXIST);
-        assign_capability('moodle/user:viewprofilepictures', CAP_INHERIT, $userroleid,
-            \context_system::instance()->id, true);
+        assign_capability(
+            'moodle/user:viewprofilepictures',
+            CAP_INHERIT,
+            $userroleid,
+            \context_system::instance()->id,
+            true
+        );
         $this->assertFalse(user_picture::allow_view($adminid));
 
         // Except you are still allowed to view your own user picture.

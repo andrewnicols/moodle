@@ -23,12 +23,9 @@ namespace core\output\progress_trace;
  * @category   test
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\progress_trace\null_progress_trace
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(null_progress_trace::class)]
 final class null_progress_trace_test extends \advanced_testcase {
-    /**
-     * Tests for the trace.
-     */
     public function test_trace(): void {
         $trace = new null_progress_trace();
         $trace->output('do');

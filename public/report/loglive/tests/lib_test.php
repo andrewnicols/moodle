@@ -14,16 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Tests for report library functions.
- *
- * @package    report_loglive
- * @copyright  2014 onwards Ankit agarwal <ankit.agrr@gmail.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
- */
 namespace report_loglive;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class report_loglive_lib_testcase
@@ -32,8 +23,9 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2014 onwards Ankit agarwal <ankit.agrr@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\report_loglive_table_log::class)]
+#[\PHPUnit\Framework\Attributes\CoversFunction('report_loglive_supports_logstore')]
 final class lib_test extends \advanced_testcase {
-
     /**
      * Test report_log_supports_logstore.
      */
@@ -56,8 +48,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test the latest record timestamp of the report data set.
-     *
-     * @covers ::get_until()
      */
     public function test_report_get_until(): void {
         global $DB;

@@ -20,19 +20,18 @@ namespace core\output;
  * Unit tests for the FontAwesome icon system.
  *
  * @package     core
- * @copyright   2023 Andrew Nicols <andrew@nicols.co.uk>
+ * @copyright   Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\output\icon_system_fontawesome
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(icon_system_fontawesome::class)]
 final class icon_system_fontawesome_test extends \advanced_testcase {
-
     /**
      * Test that the specified icon has an SVG fallback.
      */
     public function test_svg_fallback(): void {
         // This can't be tested using data provider because it initializes the theme system when running filtered tests.
         $instance = icon_system::instance(icon_system::FONTAWESOME);
-        $icons = array_map(function($key) {
+        $icons = array_map(function ($key) {
             global $CFG;
             [$component, $file] = explode(':', $key);
 
@@ -53,7 +52,8 @@ final class icon_system_fontawesome_test extends \advanced_testcase {
 
         foreach ($icons as $icon) {
             $this->assertTrue(
-                file_exists("{$icon['path']}/pix/{$icon['filename']}.svg"), "No SVG equivalent found for '{$icon['key']}'",
+                file_exists("{$icon['path']}/pix/{$icon['filename']}.svg"),
+                "No SVG equivalent found for '{$icon['key']}'",
             );
         }
     }

@@ -36,6 +36,7 @@ require_once($CFG->dirroot . '/mod/assign/tests/generator.php');
  * @copyright  2024 Catalyst IT Australia Pty Ltd
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_assign\penalty\helper::class)]
 final class penalty_test extends \advanced_testcase {
     // Use the generator helper.
     use mod_assign_test_generator;
@@ -72,8 +73,6 @@ final class penalty_test extends \advanced_testcase {
 
     /**
      * Test penalty support.
-     *
-     * @covers ::assign_supports
      */
     public function test_penalty_support(): void {
         $this->resetAfterTest();
@@ -124,10 +123,6 @@ final class penalty_test extends \advanced_testcase {
     /**
      * Test for hook_listener class.
      *
-     * @dataProvider apply_penalty_provider
-     *
-     * @covers \mod_assign\penalty\helper::apply_penalty_to_submission
-     *
      * @param float $usergrade the grade given to user.
      * @param int $submissiondate The submission date.
      * @param int $duedate The due date.
@@ -136,8 +131,8 @@ final class penalty_test extends \advanced_testcase {
      * @param int $extensionduedate The extension due date.
      * @param array $expectedmessages The expected debug messages.
      * @param float $expectedgrade The expected final grade.
-     *
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('apply_penalty_provider')]
     public function test_apply_penalty(
         $usergrade,
         $submissiondate,
@@ -217,9 +212,6 @@ final class penalty_test extends \advanced_testcase {
 
     /**
      * Test recalculation.
-     *
-     * @covers \mod_assign\penalty\helper::apply_penalty_to_submission
-     *
      */
     public function test_recalculate_penalty(): void {
         global $DB;

@@ -21,25 +21,22 @@ use core_courseformat\local\overview\overviewfactory;
 /**
  * Tests for Database activity overview
  *
- * @covers     \mod_data\courseformat\overview
  * @package    mod_data
  * @category   test
  * @copyright  2025 Amaia Anabitarte <amaia@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_data\courseformat\overview::class)]
 final class overview_test extends \advanced_testcase {
     /**
      * Test get_actions_overview.
-     *
-     * @covers ::get_actions_overview
-     * @dataProvider provider_test_get_actions_overview
      *
      * @param string $role
      * @param bool $needsapproval
      * @param array $entries
      * @param array|null $expected
-     * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_actions_overview')]
     public function test_get_actions_overview(
             string $role,
             bool $needsapproval,
@@ -145,16 +142,13 @@ final class overview_test extends \advanced_testcase {
     /**
      * Test get_extra_overview_items.
      *
-     * @covers ::get_extra_overview_items
-     * @dataProvider provider_test_get_entries_overview
-     *
      * @param string $role
      * @param bool $needsapproval
      * @param array $entries
      * @param array $myentries
      * @param array $expected
-     * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_entries_overview')]
     public function test_get_extra_entries_overview(
             string $role,
             bool $needsapproval,
@@ -291,15 +285,12 @@ final class overview_test extends \advanced_testcase {
     /**
      * Test get_extra_comments_overview.
      *
-     * @covers ::get_extra_comments_overview
-     * @dataProvider provider_test_get_comments_overview
-     *
      * @param string $role
      * @param bool $needsapproval
      * @param array $entries
      * @param int $expected
-     * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_comments_overview')]
     public function test_get_extra_comments_overview(
             string $role,
             bool $needsapproval,

@@ -28,20 +28,16 @@ use core_table\output\html_table_row;
  * @package core
  * @copyright 2010 Tim Hunt
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\output\html_writer
- * @coversDefaultClass \\core\output\html_writer
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(html_writer::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(html_table::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(html_table_cell::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(html_table_row::class)]
 final class html_writer_test extends \basic_testcase {
-    /**
-     * @covers ::start_tag
-     */
     public function test_start_tag(): void {
         $this->assertSame('<div>', html_writer::start_tag('div'));
     }
 
-    /**
-     * @covers ::start_tag
-     */
     public function test_start_tag_with_attr(): void {
         $this->assertSame(
             '<div class="frog">',
@@ -49,9 +45,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::start_tag
-     */
     public function test_start_tag_with_attrs(): void {
         $this->assertSame(
             '<div class="frog" id="mydiv">',
@@ -59,23 +52,14 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::end_tag
-     */
     public function test_end_tag(): void {
         $this->assertSame('</div>', html_writer::end_tag('div'));
     }
 
-    /**
-     * @covers ::empty_Tag
-     */
     public function test_empty_tag(): void {
         $this->assertSame('<br />', html_writer::empty_tag('br'));
     }
 
-    /**
-     * @covers ::empty_Tag
-     */
     public function test_empty_tag_with_attrs(): void {
         $this->assertSame(
             '<input type="submit" value="frog" />',
@@ -83,9 +67,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::nonempty_tag
-     */
     public function test_nonempty_tag_with_content(): void {
         $this->assertSame(
             '<div>Hello world!</div>',
@@ -93,9 +74,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::nonempty_tag
-     */
     public function test_nonempty_tag_empty(): void {
         $this->assertSame(
             '',
@@ -103,9 +81,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::nonempty_tag
-     */
     public function test_nonempty_tag_null(): void {
         $this->assertSame(
             '',
@@ -113,9 +88,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::nonempty_tag
-     */
     public function test_nonempty_tag_zero(): void {
         $this->assertSame(
             '<div class="score">0</div>',
@@ -123,9 +95,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::nonempty_tag
-     */
     public function test_nonempty_tag_zero_string(): void {
         $this->assertSame(
             '<div class="score">0</div>',
@@ -133,9 +102,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::div
-     */
     public function test_div(): void {
         // All options.
         $this->assertSame(
@@ -164,9 +130,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::start_div
-     */
     public function test_start_div(): void {
         // All options.
         $this->assertSame(
@@ -195,16 +158,10 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::end_div
-     */
     public function test_end_div(): void {
         $this->assertSame('</div>', html_writer::end_div());
     }
 
-    /**
-     * @covers ::span
-     */
     public function test_span(): void {
         // All options.
         $this->assertSame(
@@ -233,9 +190,6 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::start_span
-     */
     public function test_start_span(): void {
         // All options.
         $this->assertSame(
@@ -264,19 +218,10 @@ final class html_writer_test extends \basic_testcase {
         );
     }
 
-    /**
-     * @covers ::end_span
-     */
     public function test_end_span(): void {
         $this->assertSame('</span>', html_writer::end_span());
     }
 
-    /**
-     * @covers ::table
-     * @covers \core_table\output\html_table_row
-     * @covers \core_table\output\html_table_cell
-     * @covers \core_table\output\html_table
-     */
     public function test_table(): void {
         $row = new html_table_row();
 
@@ -326,9 +271,6 @@ EOF;
         $this->assertSame($expected, $output);
     }
 
-    /**
-     * @covers ::table
-     */
     public function test_table_hidden_caption(): void {
 
         $table = new html_table();
