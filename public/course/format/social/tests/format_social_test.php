@@ -25,7 +25,6 @@ namespace format_social;
  * @covers     \format_social
  */
 final class format_social_test extends \advanced_testcase {
-
     /**
      * Test for get_view_url().
      *

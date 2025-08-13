@@ -51,7 +51,7 @@ final class stateactions_test extends \advanced_testcase {
             ['course' => $courseid],
             [
                 'section' => $section,
-                'visible' => $visible
+                'visible' => $visible,
             ]
         );
         return $activity->cmid;
@@ -352,7 +352,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => 'admin',
                 'method' => 'course_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => ['course'],
@@ -366,7 +366,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => 'editingteacher',
                 'method' => 'course_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => ['course'],
@@ -380,7 +380,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => 'student',
                 'method' => 'course_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => ['course'],
@@ -425,7 +425,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -435,7 +435,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section0'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section0'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -449,7 +449,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section1'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section1'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -463,7 +463,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section2'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section2'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -477,7 +477,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section1', 'section3'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section1', 'section3'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -491,7 +491,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['invalidsection'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['invalidsection'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -501,7 +501,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section1'], 'targetsectionid' => 'section3', 'targetcmid' => null
+                    'ids' => ['section1'], 'targetsectionid' => 'section3', 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -559,7 +559,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -569,7 +569,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => ['cm0'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['cm0'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -583,7 +583,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => ['cm1'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['cm1'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -639,7 +639,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => ['invalidcm'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['invalidcm'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -1452,10 +1452,12 @@ final class stateactions_test extends \advanced_testcase {
         $course = $this->create_course('topics', 4, []);
 
         $subsection1 = $this->getDataGenerator()->create_module(
-            'subsection', ['course' => $course, 'section' => 1, 'name' => 'subsection1']
+            'subsection',
+            ['course' => $course, 'section' => 1, 'name' => 'subsection1']
         );
         $subsection2 = $this->getDataGenerator()->create_module(
-            'subsection', ['course' => $course, 'section' => 1, 'name' => 'subsection2']
+            'subsection',
+            ['course' => $course, 'section' => 1, 'name' => 'subsection2']
         );
         $modinfo = get_fast_modinfo($course);
         $subsection1info = $modinfo->get_section_info_by_component('mod_subsection', $subsection1->id);
@@ -1540,7 +1542,6 @@ final class stateactions_test extends \advanced_testcase {
                 foreach ($delegatedcmids as $dcmid) {
                     $coursetree[$sectionkey][$delegatedsectionkey][] = $cmidstoref[$dcmid];
                 }
-
             }
         }
         return $coursetree;

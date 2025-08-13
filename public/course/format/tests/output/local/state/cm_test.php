@@ -108,7 +108,7 @@ final class cm_test extends \advanced_testcase {
         // Create an activity.
         $activity = $this->getDataGenerator()->create_module('page', ['course' => $course->id], [
             'section' => 1,
-            'visible' => 1
+            'visible' => 1,
         ]);
 
         // Set up the availability settings.

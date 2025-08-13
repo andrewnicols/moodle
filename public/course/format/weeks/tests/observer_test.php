@@ -23,11 +23,9 @@ namespace format_weeks;
  * @copyright 2017 Mark Nelson <markn@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\format_weeks_observer::class)]
 final class observer_test extends \advanced_testcase {
-
-    /**
-     * Test setup.
-     */
+    #[\Override]
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -42,18 +40,18 @@ final class observer_test extends \advanced_testcase {
         // Generate a course with some sections.
         $numsections = 6;
         $startdate = time();
-        $course = $this->getDataGenerator()->create_course(array(
+        $course = $this->getDataGenerator()->create_course([
             'numsections' => $numsections,
             'format' => 'weeks',
             'startdate' => $startdate,
-            'automaticenddate' => 1));
+            'automaticenddate' => 1]);
 
         // Ok, let's update the course start date.
         $newstartdate = $startdate + WEEKSECS;
         update_course((object)['id' => $course->id, 'startdate' => $newstartdate]);
 
         // Get the updated course end date.
-        $enddate = $DB->get_field('course', 'enddate', array('id' => $course->id));
+        $enddate = $DB->get_field('course', 'enddate', ['id' => $course->id]);
 
         $format = course_get_format($course->id);
         $this->assertEquals($numsections, $format->get_last_section_number());
@@ -69,20 +67,20 @@ final class observer_test extends \advanced_testcase {
         global $DB;
 
         // Generate a course with some sections.
-        $course = $this->getDataGenerator()->create_course(array(
+        $course = $this->getDataGenerator()->create_course([
             'numsections' => 6,
             'format' => 'weeks',
             'startdate' => time(),
-            'automaticenddate' => 1));
+            'automaticenddate' => 1]);
 
         // Get the end date from the DB as the results will have changed from $course above after observer processing.
-        $createenddate = $DB->get_field('course', 'enddate', array('id' => $course->id));
+        $createenddate = $DB->get_field('course', 'enddate', ['id' => $course->id]);
 
         // Ok, let's update the course - but actually not change anything.
         update_course((object)['id' => $course->id]);
 
         // Get the updated course end date.
-        $updateenddate = $DB->get_field('course', 'enddate', array('id' => $course->id));
+        $updateenddate = $DB->get_field('course', 'enddate', ['id' => $course->id]);
 
         // Confirm nothing changed.
         $this->assertEquals($createenddate, $updateenddate);
@@ -97,19 +95,19 @@ final class observer_test extends \advanced_testcase {
         // Generate a course with some sections.
         $startdate = time();
         $enddate = $startdate + WEEKSECS;
-        $course = $this->getDataGenerator()->create_course(array(
+        $course = $this->getDataGenerator()->create_course([
             'numsections' => 6,
             'format' => 'weeks',
             'startdate' => $startdate,
             'enddate' => $enddate,
-            'automaticenddate' => 0));
+            'automaticenddate' => 0]);
 
         // Ok, let's update the course start date.
         $newstartdate = $startdate + WEEKSECS;
         update_course((object)['id' => $course->id, 'startdate' => $newstartdate]);
 
         // Get the updated course end date.
-        $updateenddate = $DB->get_field('course', 'enddate', array('id' => $course->id));
+        $updateenddate = $DB->get_field('course', 'enddate', ['id' => $course->id]);
 
         // Confirm nothing changed.
         $this->assertEquals($enddate, $updateenddate);
@@ -122,17 +120,17 @@ final class observer_test extends \advanced_testcase {
         global $DB;
 
         $numsections = 6;
-        $course = $this->getDataGenerator()->create_course(array(
+        $course = $this->getDataGenerator()->create_course([
             'numsections' => $numsections,
             'format' => 'weeks',
             'startdate' => time(),
-            'automaticenddate' => 1));
+            'automaticenddate' => 1]);
 
         // Add a section to the course.
         course_create_section($course->id);
 
         // Get the updated course end date.
-        $enddate = $DB->get_field('course', 'enddate', array('id' => $course->id));
+        $enddate = $DB->get_field('course', 'enddate', ['id' => $course->id]);
 
         $format = course_get_format($course->id);
         $dates = $format->get_section_dates($numsections + 1);
@@ -150,12 +148,12 @@ final class observer_test extends \advanced_testcase {
         // Generate a course with some sections.
         $startdate = time();
         $enddate = $startdate + WEEKSECS;
-        $course = $this->getDataGenerator()->create_course(array(
+        $course = $this->getDataGenerator()->create_course([
             'numsections' => 6,
             'format' => 'weeks',
             'startdate' => $startdate,
             'enddate' => $enddate,
-            'automaticenddate' => 0));
+            'automaticenddate' => 0]);
 
         // Delete automatic end date from the database.
         $DB->delete_records('course_format_options', ['courseid' => $course->id, 'name' => 'automaticenddate']);
@@ -164,7 +162,7 @@ final class observer_test extends \advanced_testcase {
         course_create_section($course->id, 0);
 
         // Get the updated course end date.
-        $updateenddate = $DB->get_field('course', 'enddate', array('id' => $course->id));
+        $updateenddate = $DB->get_field('course', 'enddate', ['id' => $course->id]);
 
         // Confirm enddate is automatic now - since automatic end date is not set it is assumed default (which is '1').
         $format = course_get_format($course->id);
@@ -181,17 +179,17 @@ final class observer_test extends \advanced_testcase {
 
         // Generate a course with some sections.
         $numsections = 6;
-        $course = $this->getDataGenerator()->create_course(array(
+        $course = $this->getDataGenerator()->create_course([
             'numsections' => $numsections,
             'format' => 'weeks',
             'startdate' => time(),
-            'automaticenddate' => 1));
+            'automaticenddate' => 1]);
 
         // Add a section to the course.
         course_delete_section($course, $numsections);
 
         // Get the updated course end date.
-        $enddate = $DB->get_field('course', 'enddate', array('id' => $course->id));
+        $enddate = $DB->get_field('course', 'enddate', ['id' => $course->id]);
 
         $format = course_get_format($course->id);
         $dates = $format->get_section_dates($numsections - 1);

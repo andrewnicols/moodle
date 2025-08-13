@@ -274,7 +274,7 @@ final class get_state_test extends \externallib_advanced_testcase {
             ['section' => $section, 'visible' => $visible]
         );
 
-        list(, $activitycm) = get_course_and_cm_from_instance($activity->id, $type);
+        [, $activitycm] = get_course_and_cm_from_instance($activity->id, $type);
 
         if (($visible || $canedit) && $activitycm->is_of_type_that_can_display()) {
             $this->activities[$activitycm->id] = $activitycm;

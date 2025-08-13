@@ -28,7 +28,6 @@ use stdClass;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(stateupdates::class)]
 final class stateupdates_test extends \advanced_testcase {
-
     /**
      * Test for add_course_put.
      *

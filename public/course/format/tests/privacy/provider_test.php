@@ -47,7 +47,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $preferencestring = get_string("preference:$prefix", 'courseformat', $course->fullname);
 
         // Add a user home page preference for the User.
-        set_user_preference($preference , $value, $user);
+        set_user_preference($preference, $value, $user);
 
         // Test the user preferences export contains 1 user preference record for the User.
         provider::export_user_preferences($user->id);

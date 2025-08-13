@@ -25,7 +25,6 @@ namespace format_singleactivity;
  * @covers     \format_singleactivity
  */
 final class format_singleactivity_test extends \advanced_testcase {
-
     /**
      * Test for get_view_url().
      *

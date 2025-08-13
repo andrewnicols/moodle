@@ -26,10 +26,17 @@ final class base_test extends advanced_testcase {
     #[\Override]
     public static function setUpBeforeClass(): void {
         global $CFG;
+
+        // This is a hack to allow us to autoload and instantiate course formats for tests.
+        class_alias(\core_courseformat\tests\testable_legacy_format::class, \format_testlegacy::class);
+        class_alias(\core_courseformat\tests\testable_formatsections_format::class, \format_testformatsections::class);
+        class_alias(\core_courseformat\tests\testable_test_format::class, \format_testformat::class);
+
         require_once($CFG->dirroot . '/course/lib.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_output_course_format_state.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_output_course_format_invalidoutput.php');
+        parent::setUpBeforeClass();
     }
 
     /**
@@ -42,13 +49,13 @@ final class base_test extends advanced_testcase {
             "hideoddsections" => 1,
             'summary_editor' => [
                 'text' => '<p>Somewhere over the rainbow</p><p>The <b>quick</b> brown fox jumpos over the lazy dog.</p>',
-                'format' => 1
-            ]
+                'format' => 1,
+            ],
         ];
         $generator = $this->getDataGenerator();
-        $course1 = $generator->create_course(array('format' => 'theunittest'));
+        $course1 = $generator->create_course(['format' => 'theunittest']);
         $this->assertEquals('theunittest', $course1->format);
-        course_create_sections_if_missing($course1, array(0, 1));
+        course_create_sections_if_missing($course1, [0, 1]);
 
         $courseformat = course_get_format($course1);
         $courseformat->update_course_format_options($courseformatoptiondata);
@@ -64,15 +71,15 @@ final class base_test extends advanced_testcase {
 
         // Generate a course with two sections (0 and 1) and two modules. Course format is set to 'theunittest'.
         $generator = $this->getDataGenerator();
-        $course1 = $generator->create_course(array('format' => 'theunittest'));
+        $course1 = $generator->create_course(['format' => 'theunittest']);
         $this->assertEquals('theunittest', $course1->format);
-        course_create_sections_if_missing($course1, array(0, 1));
-        $assign0 = $generator->create_module('assign', array('course' => $course1, 'section' => 0));
-        $assign1 = $generator->create_module('assign', array('course' => $course1, 'section' => 1));
-        $assign2 = $generator->create_module('assign', array('course' => $course1, 'section' => 0, 'visible' => 0));
+        course_create_sections_if_missing($course1, [0, 1]);
+        $assign0 = $generator->create_module('assign', ['course' => $course1, 'section' => 0]);
+        $assign1 = $generator->create_module('assign', ['course' => $course1, 'section' => 1]);
+        $assign2 = $generator->create_module('assign', ['course' => $course1, 'section' => 0, 'visible' => 0]);
 
         // Create a courseoverview role based on the student role.
-        $roleattr = array('name' => 'courseoverview', 'shortname' => 'courseoverview', 'archetype' => 'student');
+        $roleattr = ['name' => 'courseoverview', 'shortname' => 'courseoverview', 'archetype' => 'student'];
         $generator->create_role($roleattr);
 
         // Create user student, editingteacher, teacher and courseoverview.
@@ -89,12 +96,20 @@ final class base_test extends advanced_testcase {
         $generator->enrol_user($courseoverviewuser->id, $course1->id, $roleids['courseoverview']);
 
         // Remove the ignoreavailabilityrestrictions from the teacher role.
-        role_change_permission($roleids['teacher'], context_system::instance(0),
-                'moodle/course:ignoreavailabilityrestrictions', CAP_PREVENT);
+        role_change_permission(
+            $roleids['teacher'],
+            context_system::instance(0),
+            'moodle/course:ignoreavailabilityrestrictions',
+            CAP_PREVENT
+        );
 
         // Allow the courseoverview role to ingore available restriction.
-        role_change_permission($roleids['courseoverview'], context_system::instance(0),
-                'moodle/course:ignoreavailabilityrestrictions', CAP_ALLOW);
+        role_change_permission(
+            $roleids['courseoverview'],
+            context_system::instance(0),
+            'moodle/course:ignoreavailabilityrestrictions',
+            CAP_ALLOW
+        );
 
         // Make sure that initially both sections and both modules are available and visible for a student.
         $modinfostudent = get_fast_modinfo($course1, $student->id);
@@ -107,7 +122,7 @@ final class base_test extends advanced_testcase {
 
         // Set 'hideoddsections' for the course to 1.
         // Section1 and assign1 will be unavailable, uservisible will be false for student and true for teacher.
-        $data = (object)array('id' => $course1->id, 'hideoddsections' => 1);
+        $data = (object)['id' => $course1->id, 'hideoddsections' => 1];
         course_get_format($course1)->update_course_format_options($data);
         $modinfostudent = get_fast_modinfo($course1, $student->id);
         $this->assertFalse($modinfostudent->get_section_info(1)->available);
@@ -153,7 +168,7 @@ final class base_test extends advanced_testcase {
         // Set 'hideoddsections' for the course to 2.
         // Section1 and assign1 will be unavailable, uservisible will be false for student and true for teacher.
         // Property availableinfo will be not empty.
-        $data = (object)array('id' => $course1->id, 'hideoddsections' => 2);
+        $data = (object)['id' => $course1->id, 'hideoddsections' => 2];
         course_get_format($course1)->update_course_format_options($data);
         $modinfostudent = get_fast_modinfo($course1, $student->id);
         $this->assertFalse($modinfostudent->get_section_info(1)->available);
@@ -179,6 +194,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_supports_news(): void {
         $this->resetAfterTest();
+
         $format = course_get_format((object)['format' => 'testformat']);
         $this->assertFalse($format->supports_news());
     }
@@ -188,6 +204,7 @@ final class base_test extends advanced_testcase {
      */
     public function test_supports_news_legacy(): void {
         $this->resetAfterTest();
+
         $format = course_get_format((object)['format' => 'testlegacy']);
         $this->assertTrue($format->supports_news());
     }
@@ -202,8 +219,8 @@ final class base_test extends advanced_testcase {
         // Generate a course with two sections (0 and 1) and two modules. Course format is set to 'testformat'.
         // This will allow us to test the default implementation of get_view_url.
         $generator = $this->getDataGenerator();
-        $course1 = $generator->create_course(array('format' => 'testformat'));
-        course_create_sections_if_missing($course1, array(0, 1));
+        $course1 = $generator->create_course(['format' => 'testformat']);
+        course_create_sections_if_missing($course1, [0, 1]);
 
         $data = (object)['id' => $course1->id];
         $format = course_get_format($course1);
@@ -304,7 +321,7 @@ final class base_test extends advanced_testcase {
 
         // Create fake preferences generated by the frontend js module.
         $data = (object)[
-            'pref1' => [1,2],
+            'pref1' => [1, 2],
             'pref2' => [1],
         ];
         set_user_preference('coursesectionspreferences_' . $course->id, json_encode($data), $user->id);
@@ -500,11 +517,11 @@ final class base_test extends advanced_testcase {
     public static function delete_format_data_provider(): array {
         return [
             'direct call' => [
-                'usehook' => false
+                'usehook' => false,
             ],
             'use hook' => [
                 'usehook' => true,
-            ]
+            ],
         ];
     }
 
@@ -563,9 +580,13 @@ final class base_test extends advanced_testcase {
         $manager::enable_plugin('subsection', 1);
         $course = $this->getDataGenerator()->create_course(['format' => 'topics', 'numsections' => 1]);
         $subsection1 = $this->getDataGenerator()->create_module(
-            'subsection', ['course' => $course, 'section' => 1, 'name' => 'subsection1']);
+            'subsection',
+            ['course' => $course, 'section' => 1, 'name' => 'subsection1']
+        );
         $subsection2 = $this->getDataGenerator()->create_module(
-            'subsection', ['course' => $course, 'section' => 1, 'name' => 'subsection2']);
+            'subsection',
+            ['course' => $course, 'section' => 1, 'name' => 'subsection2']
+        );
         $format = course_get_format($course);
 
         $modinfo = get_fast_modinfo($course);
@@ -573,10 +594,12 @@ final class base_test extends advanced_testcase {
         $originalsectioncount = $DB->count_records('course_sections', ['course' => $course->id]);
         $this->assertEquals(4, $originalsectioncount);
 
-        $originalsection = $DB->get_record('course_sections',
+        $originalsection = $DB->get_record(
+            'course_sections',
             ['course' => $course->id, 'section' => 0],
             '*',
-            MUST_EXIST);
+            MUST_EXIST
+        );
         $newsection = $format->duplicate_section($sectioninfo);
         foreach ($originalsection as $prop => $value) {
             if ($prop == 'id' || $prop == 'sequence' || $prop == 'section' || $prop == 'timemodified') {
@@ -795,7 +818,7 @@ final class base_test extends advanced_testcase {
 
         $generator = $this->getDataGenerator();
         $course = $generator->create_course();
-        $assign0 = $generator->create_module('assign', array('course' => $course, 'section' => 0));
+        $assign0 = $generator->create_module('assign', ['course' => $course, 'section' => 0]);
 
         $format = course_get_format($course);
         $modinfo = $format->get_modinfo();
@@ -1104,85 +1127,5 @@ final class base_test extends advanced_testcase {
 
         $invalidate2cachekey = \core_courseformat\base::session_cache($course2);
         $this->assertEquals($course2cachekey, $invalidate2cachekey);
-    }
-}
-
-/**
- * Class format_testformat.
- *
- * A test class that simulates a course format that doesn't define 'news_items' in default blocks.
- *
- * @copyright 2016 Jun Pataleta <jun@moodle.com>
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class format_testformat extends core_courseformat\base {
-    /**
-     * Returns the list of blocks to be automatically added for the newly created course.
-     *
-     * @return array
-     */
-    public function get_default_blocks() {
-        return [
-            BLOCK_POS_RIGHT => [],
-            BLOCK_POS_LEFT => []
-        ];
-    }
-}
-
-/**
- * Class format_testformatsections.
- *
- * A test class that simulates a course format with sections.
- *
- * @package   core_courseformat
- * @copyright 2023 ISB Bayern
- * @author    Philipp Memmel
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class format_testformatsections extends core_courseformat\base {
-    /**
-     * @var int|null $forcemaxsections The maximum number of sections.
-     */
-    public ?int $forcemaxsections = null;
-    /**
-     * Returns if this course format uses sections.
-     *
-     * @return true
-     */
-    public function uses_sections() {
-        return true;
-    }
-
-    public function can_sections_be_removed_from_navigation(): bool {
-        return true;
-    }
-
-    public function get_last_section_number(): int {
-        if ($this->forcemaxsections !== null) {
-            return $this->forcemaxsections;
-        }
-        return parent::get_last_section_number();
-    }
-}
-
-/**
- * Class format_testlegacy.
- *
- * A test class that simulates old course formats that define 'news_items' in default blocks.
- *
- * @copyright 2016 Jun Pataleta <jun@moodle.com>
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class format_testlegacy extends core_courseformat\base {
-    /**
-     * Returns the list of blocks to be automatically added for the newly created course.
-     *
-     * @return array
-     */
-    public function get_default_blocks() {
-        return [
-            BLOCK_POS_RIGHT => ['news_items'],
-            BLOCK_POS_LEFT => []
-        ];
     }
 }

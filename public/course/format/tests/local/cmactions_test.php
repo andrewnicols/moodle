@@ -204,7 +204,7 @@ final class cmactions_test extends \advanced_testcase {
 
         $executedhook = null;
 
-        $testcallback = function(after_cm_name_edited $hook) use (&$executedhook): void {
+        $testcallback = function (after_cm_name_edited $hook) use (&$executedhook): void {
             $executedhook = $hook;
         };
         $this->redirectHook(after_cm_name_edited::class, $testcallback);

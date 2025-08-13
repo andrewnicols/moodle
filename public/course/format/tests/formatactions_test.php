@@ -25,7 +25,6 @@ namespace core_courseformat;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(formatactions::class)]
 final class formatactions_test extends \advanced_testcase {
-
     /**
      * Setup to ensure that fixtures are loaded.
      */
