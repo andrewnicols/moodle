@@ -27,8 +27,8 @@ use stdClass;
  * @copyright  2022 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(stateactions::class)]
 final class stateactions_test extends \advanced_testcase {
-
     /**
      * Enrol a user into a course and login as this user.
      *
@@ -51,11 +51,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Tests for section_highlight method.
      *
-     * @dataProvider basic_role_provider
-     * @covers ::section_highlight
      * @param string $rolename The role of the user that will execute the method.
      * @param bool $expectedexception If this call will raise an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_section_highlight(string $rolename, bool $expectedexception = false): void {
         global $DB;
         $this->resetAfterTest(true);
@@ -119,11 +118,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Tests for section_unhighlight method.
      *
-     * @dataProvider basic_role_provider
-     * @covers ::section_unhighlight
      * @param string $rolename The role of the user that will execute the method.
      * @param bool $expectedexception If this call will raise an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_section_unhighlight(string $rolename, bool $expectedexception = false): void {
         global $DB;
         $this->resetAfterTest(true);

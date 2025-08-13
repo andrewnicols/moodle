@@ -18,25 +18,26 @@ namespace format_topics;
 
 use core_external\external_api;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/course/lib.php');
-
 /**
  * Topics course format related unit tests.
  *
  * @package    format_topics
  * @copyright  2015 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \format_topics
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\format_topics::class)]
 final class format_topics_test extends \advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+
+        require_once($CFG->dirroot . '/course//lib.php');
+    }
 
     /**
      * Tests for format_topics::get_section_name method with default section names.
-     *
-     * @return void
      */
     public function test_get_section_name(): void {
         global $DB;
@@ -234,8 +235,6 @@ final class format_topics_test extends \advanced_testcase {
 
     /**
      * Test for get_view_url().
-     *
-     * @covers ::get_view_url
      */
     public function test_get_view_url(): void {
         global $CFG;
@@ -269,8 +268,6 @@ final class format_topics_test extends \advanced_testcase {
 
     /**
      * Test get_required_jsfiles().
-     *
-     * @covers ::get_required_jsfiles
      */
     public function test_get_required_jsfiles(): void {
         $this->resetAfterTest();
