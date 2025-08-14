@@ -54,5 +54,6 @@
     "undef":        true,
     "unused":       true,
     "white":        false,
-    "yui":          true
+    "yui":          true,
+    "esversion":    6 // Allow ES6 syntax for JSX quick hack for IDE.
 }

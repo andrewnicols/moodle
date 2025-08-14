@@ -151,16 +151,18 @@ if ($iscoursecalendar) {
     $headingstr = "{$headingstr}: {$linkcourse}";
 }
 $PAGE->set_heading($headingstr, false);
-
 $renderer = $PAGE->get_renderer('core_calendar');
 $calendar->add_sidecalendar_blocks($renderer, true, $view);
 
+$PAGE->requires->css('/calendar/build/app.css');
 echo $OUTPUT->header();
-echo 'Hi';
+echo html_writer::tag('h3', "React component", ['class' => 'calendar-title']);
 echo '<div id="react-root"></div>';
 $PAGE->requires->js('/calendar/build/app.iife.js');
 $PAGE->requires->js_call_amd('core_calendar/shim', 'init', ['#react-root']);
 
+echo html_writer::div('<hr/>', 'calendar-separator');
+echo html_writer::tag('h3', "Moodle calendar", ['class' => 'calendar-title']);
 
 echo $renderer->start_layout();
 echo html_writer::start_tag('div', ['class' => 'heightcontainer', 'data-calendar-type' => 'main-block']);
