@@ -26,7 +26,7 @@ use test_output_factory;
  * @copyright 2014 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class outputfactories_test extends \advanced_testcase {
+final class outputfactories_test extends \basic_testcase {
     #[\Override]
     public static function setUpBeforeClass(): void {
         global $CFG;

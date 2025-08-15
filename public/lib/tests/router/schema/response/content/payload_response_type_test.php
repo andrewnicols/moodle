@@ -28,7 +28,7 @@ use GuzzleHttp\Psr7\ServerRequest;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\router\schema\response\content\payload_response_type
  */
-final class payload_response_type_test extends \advanced_testcase {
+final class payload_response_type_test extends \basic_testcase {
     /**
      * Test supported types.
      */

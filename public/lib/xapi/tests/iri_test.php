@@ -23,7 +23,7 @@
  */
 namespace core_xapi;
 
-use advanced_testcase;
+use basic_testcase;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Ferran Recio
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class iri_test extends advanced_testcase {
+final class iri_test extends basic_testcase {
 
     /**
      * Setup to ensure that fixtures are loaded.

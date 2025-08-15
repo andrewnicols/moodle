@@ -25,7 +25,7 @@ namespace mod_bigbluebuttonbn\local\bigbluebutton\recordings;
  * @author    Jesus Federico  (jesus [at] blindsidenetworks [dt] com)
  * @coversDefaultClass \mod_bigbluebuttonbn\local\bigbluebutton\recordings\recording_data
  */
-final class recording_data_test extends \advanced_testcase {
+final class recording_data_test extends \basic_testcase {
 
     /**
      * Test for the type_text provider.

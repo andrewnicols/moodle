@@ -26,7 +26,7 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\local\helpers;
 
-use advanced_testcase;
+use basic_testcase;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -38,7 +38,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright   2024 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class join_trait_test extends advanced_testcase {
+final class join_trait_test extends basic_testcase {
 
     /**
      * Test adding single join

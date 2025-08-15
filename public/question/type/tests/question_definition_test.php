@@ -29,7 +29,7 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \question_definition
  */
-final class question_definition_test extends \advanced_testcase {
+final class question_definition_test extends \basic_testcase {
     public function test_make_html_inline(): void {
         // Base class is abstract, so we need to pick one qusetion type to test this method.
         $mc = \test_question_maker::make_a_multichoice_single_question();

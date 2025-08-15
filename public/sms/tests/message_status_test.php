@@ -27,7 +27,7 @@ namespace core_sms;
  * @covers \core_sms\message_status
  * @covers \core_sms\status
  */
-final class message_status_test extends \advanced_testcase {
+final class message_status_test extends \basic_testcase {
     public function test_meta_status(): void {
         $sent = [
             message_status::GATEWAY_SENT,

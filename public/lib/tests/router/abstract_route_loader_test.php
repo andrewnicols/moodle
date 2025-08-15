@@ -28,7 +28,7 @@ namespace core\router;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\router\abstract_route_loader
  */
-final class abstract_route_loader_test extends \advanced_testcase {
+final class abstract_route_loader_test extends \basic_testcase {
     /**
      * Ensure that the abstract loader does not implement the interface. That would defeat the point.
      */

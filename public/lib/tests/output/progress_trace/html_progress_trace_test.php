@@ -25,7 +25,7 @@ namespace core\output\progress_trace;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\progress_trace\html_progress_trace
  */
-final class html_progress_trace_test extends \advanced_testcase {
+final class html_progress_trace_test extends \basic_testcase {
     /**
      * Tests for the trace.
      */

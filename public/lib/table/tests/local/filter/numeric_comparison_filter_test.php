@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace core_table\local\filter;
 
-use advanced_testcase;
+use basic_testcase;
 use InvalidArgumentException;
 use TypeError;
 
@@ -39,7 +39,7 @@ use TypeError;
  * @copyright 2020 Andrew Nicols <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class numeric_comparison_filter_test extends advanced_testcase {
+final class numeric_comparison_filter_test extends basic_testcase {
     /**
      * Ensure that the add_filter_value function works as expected with valid values.
      */

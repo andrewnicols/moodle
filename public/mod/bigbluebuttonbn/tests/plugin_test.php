@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 namespace mod_bigbluebuttonbn;
 
-use advanced_testcase;
+use basic_testcase;
 use moodle_exception;
 
 /**
@@ -26,7 +26,7 @@ use moodle_exception;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \mod_bigbluebuttonbn\plugin
  */
-final class plugin_test extends advanced_testcase {
+final class plugin_test extends basic_testcase {
 
     /**
      * Test html2text

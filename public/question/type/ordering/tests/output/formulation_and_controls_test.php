@@ -16,7 +16,7 @@
 
 namespace qtype_ordering\output;
 
-use advanced_testcase;
+use basic_testcase;
 use question_display_options;
 use test_question_maker;
 use qtype_ordering_question;
@@ -37,7 +37,7 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @covers    \qtype_ordering\output\formulation_and_controls
  * @covers    \qtype_ordering_renderer::feedback_image
  */
-final class formulation_and_controls_test extends advanced_testcase {
+final class formulation_and_controls_test extends basic_testcase {
     /**
      * Test the exported data for the template that renders the formulation and controls for a given question.
      *

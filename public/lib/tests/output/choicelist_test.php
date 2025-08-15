@@ -25,14 +25,14 @@
 
 namespace core\output;
 
-use advanced_testcase;
+use basic_testcase;
 
 /**
  * Unit tests for the `icon_system` class.
  *
  * @coversDefaultClass \core\output\choicelist
  */
-final class choicelist_test extends advanced_testcase {
+final class choicelist_test extends basic_testcase {
     /**
      * Test for a choice without options.
      *

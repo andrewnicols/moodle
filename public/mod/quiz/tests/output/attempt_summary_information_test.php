@@ -16,7 +16,7 @@
 
 namespace mod_quiz\output;
 
-use advanced_testcase;
+use basic_testcase;
 
 /**
  * Tests for {@see attempt_summary_information}.
@@ -26,7 +26,7 @@ use advanced_testcase;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \mod_quiz\output\attempt_summary_information
  */
-final class attempt_summary_information_test extends advanced_testcase {
+final class attempt_summary_information_test extends basic_testcase {
 
     public function test_add_item(): void {
         global $PAGE;

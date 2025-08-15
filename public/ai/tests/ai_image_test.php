@@ -24,7 +24,7 @@ namespace core_ai;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core_ai\ai_image
  */
-final class ai_image_test extends \advanced_testcase {
+final class ai_image_test extends \basic_testcase {
 
     /**
      * Test get_predominant_color.

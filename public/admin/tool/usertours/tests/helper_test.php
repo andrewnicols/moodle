@@ -27,7 +27,7 @@ namespace tool_usertours;
  * @covers \tool_usertours\hook\before_serverside_filter_fetch
  * @covers \tool_usertours\hook\before_clientside_filter_fetch
  */
-final class helper_test extends \advanced_testcase {
+final class helper_test extends \basic_testcase {
     /**
      * Data Provider for get_string_from_input.
      *

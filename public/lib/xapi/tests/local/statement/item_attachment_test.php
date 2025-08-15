@@ -24,7 +24,7 @@
 
 namespace core_xapi\local\statement;
 
-use advanced_testcase;
+use basic_testcase;
 use core_xapi\iri;
 use core_xapi\xapi_exception;
 
@@ -36,7 +36,7 @@ use core_xapi\xapi_exception;
  * @copyright  2020 Ferran Recio
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class item_attachment_test extends advanced_testcase {
+final class item_attachment_test extends basic_testcase {
 
     /**
      * Test item creation.

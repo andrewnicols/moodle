@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\local\helpers;
 
-use advanced_testcase;
+use basic_testcase;
 use stdClass;
 
 /**
@@ -29,7 +29,7 @@ use stdClass;
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class format_test extends advanced_testcase {
+final class format_test extends basic_testcase {
 
     /**
      * Test userdate method

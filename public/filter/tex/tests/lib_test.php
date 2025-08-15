@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace filter_tex;
 
-use advanced_testcase;
+use basic_testcase;
 
 global $CFG;
 require_once($CFG->dirroot . '/filter/tex/lib.php');
@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/filter/tex/lib.php');
  * @copyright 2021 Shamim Rezaie <shamim@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class lib_test extends advanced_testcase {
+final class lib_test extends basic_testcase {
     /**
      * Data provider for test_filter_tex_sanitize_formula.
      *

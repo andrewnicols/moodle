@@ -25,7 +25,7 @@
 
 namespace core_h5p\local\library;
 
-use advanced_testcase;
+use basic_testcase;
 
 /**
  * Test class covering the H5P library handler.
@@ -34,7 +34,7 @@ use advanced_testcase;
  * @copyright  2020 Sara Arjona <sara@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class handler_test extends advanced_testcase {
+final class handler_test extends basic_testcase {
 
     /**
      * Test the behaviour of get_h5p_string().

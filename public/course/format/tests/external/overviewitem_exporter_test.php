@@ -28,7 +28,7 @@ use core_courseformat\local\overview\overviewitem;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core_courseformat\external\overviewitem_exporter
  */
-final class overviewitem_exporter_test extends \advanced_testcase {
+final class overviewitem_exporter_test extends \basic_testcase {
     /**
      * Test export with basic content.
      */

@@ -27,7 +27,7 @@ use core_courseformat\output\local\overview\overviewdialog;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core_courseformat\external\overviewdialog_exporter
  */
-final class overviewdialog_exporter_test extends \advanced_testcase {
+final class overviewdialog_exporter_test extends \basic_testcase {
     /**
      * Test export method.
      */

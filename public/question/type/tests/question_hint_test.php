@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/question/type/questiontypebase.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \question_hint
  */
-final class question_hint_test extends \advanced_testcase {
+final class question_hint_test extends \basic_testcase {
     public function test_basic(): void {
         $row = new \stdClass();
         $row->id = 123;

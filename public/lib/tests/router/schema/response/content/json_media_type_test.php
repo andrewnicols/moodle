@@ -30,7 +30,7 @@ use core\router\schema\specification;
  * @covers     \core\router\schema\response\content\json_media_type
  * @covers     \core\router\schema\response\content\media_type
  */
-final class json_media_type_test extends \advanced_testcase {
+final class json_media_type_test extends \basic_testcase {
     public function test_basics(): void {
         $this->assertEquals(
             'application/json',

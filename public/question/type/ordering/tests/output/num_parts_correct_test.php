@@ -16,7 +16,7 @@
 
 namespace qtype_ordering\output;
 
-use advanced_testcase;
+use basic_testcase;
 use test_question_maker;
 use qtype_ordering_question;
 
@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @covers    \qtype_ordering\output\renderable_base
  * @covers    \qtype_ordering\output\num_parts_correct
  */
-final class num_parts_correct_test extends advanced_testcase {
+final class num_parts_correct_test extends basic_testcase {
     /**
      * Test the exported data for the template that renders the specific grade detail feedback test to a given question attempt.
      *

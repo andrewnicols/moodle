@@ -18,7 +18,7 @@ declare(strict_types = 1);
 
 namespace mod_choice;
 
-use advanced_testcase;
+use basic_testcase;
 use cm_info;
 use coding_exception;
 use mod_choice\completion\custom_completion;
@@ -36,7 +36,7 @@ require_once($CFG->libdir . '/completionlib.php');
  * @copyright 2021 Jun Pataleta <jun@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class custom_completion_test extends advanced_testcase {
+final class custom_completion_test extends basic_testcase {
 
     /**
      * Data provider for get_state().

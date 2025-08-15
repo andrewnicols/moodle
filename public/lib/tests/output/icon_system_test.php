@@ -25,7 +25,7 @@
 
 namespace core\output;
 
-use advanced_testcase;
+use basic_testcase;
 use coding_exception;
 
 /**
@@ -33,7 +33,7 @@ use coding_exception;
  *
  * @coversDefaultClass \core\output\icon_system
  */
-final class icon_system_test extends advanced_testcase {
+final class icon_system_test extends basic_testcase {
     /**
      * Check whether the supplied classes are valid icon subsystems of the supplied one.
      *

@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\external;
 
-use advanced_testcase;
+use basic_testcase;
 use core\output\pix_icon;
 use core_reportbuilder\output\report_action;
 
@@ -30,7 +30,7 @@ use core_reportbuilder\output\report_action;
  * @copyright   2025 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class report_action_exporter_test extends advanced_testcase {
+final class report_action_exporter_test extends basic_testcase {
 
     /**
      * Test exported data/structure

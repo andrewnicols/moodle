@@ -16,7 +16,7 @@
 
 namespace core_privacy;
 
-use advanced_testcase;
+use basic_testcase;
 use \core_privacy\local\request\userlist_collection;
 use \core_privacy\local\request\userlist;
 use \core_privacy\local\request\approved_userlist;
@@ -30,7 +30,7 @@ use \core_privacy\local\request\approved_userlist;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_privacy\local\request\userlist_collection
  */
-final class userlist_collection_test extends advanced_testcase {
+final class userlist_collection_test extends basic_testcase {
 
     /**
      * A userlist_collection should support the userlist type.

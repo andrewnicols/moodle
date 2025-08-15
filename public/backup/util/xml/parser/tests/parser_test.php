@@ -48,7 +48,7 @@ require_once($CFG->dirroot . '/backup/util/xml/parser/processors/grouped_parser_
  * @copyright 2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class parser_test extends \advanced_testcase {
+final class parser_test extends \basic_testcase {
 
     /*
      * test progressive_parser public methods
@@ -802,7 +802,7 @@ final class parser_test extends \advanced_testcase {
  *        - equal to "value" attribute of the tag (if present)
  *        - else, equal to tag name
  *
- * We pass the whole advanced_testcase object to the processor in order to be
+ * We pass the whole basic_testcase object to the processor in order to be
  * able to perform the tests in the straight in the process
  */
 class mock_auto_parser_processor extends progressive_parser_processor {

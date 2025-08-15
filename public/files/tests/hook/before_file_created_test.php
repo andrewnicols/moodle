@@ -26,7 +26,7 @@ use coding_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core_files\hook\before_file_created
  */
-final class before_file_created_test extends \advanced_testcase {
+final class before_file_created_test extends \basic_testcase {
     public function test_init_with_file_and_content_throws_exception(): void {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Only one of $filepath or $filecontent can be set');

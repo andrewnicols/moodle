@@ -28,7 +28,7 @@ use ReflectionClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core_ai\aiactions\base
  */
-final class base_test extends \advanced_testcase {
+final class base_test extends \basic_testcase {
     /**
      * Test get_basename.
      */

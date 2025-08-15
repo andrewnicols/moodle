@@ -28,7 +28,7 @@ use Invoker\Exception\NotCallableException;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\router\callable_resolver
  */
-final class callable_resolver_test extends \advanced_testcase {
+final class callable_resolver_test extends \basic_testcase {
     public function test_can_resolve_slim_notation(): void {
         $resolver = di::get(callable_resolver::class);
 

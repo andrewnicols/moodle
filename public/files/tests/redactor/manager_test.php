@@ -24,7 +24,7 @@ namespace core_files\redactor;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core_files\redactor\manager
  */
-final class manager_test extends \advanced_testcase {
+final class manager_test extends \basic_testcase {
     /**
      * Helper to get a manager with a dummy file service.
      *

@@ -26,7 +26,7 @@ use incrementing_clock;
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class clock_test extends \advanced_testcase {
+final class clock_test extends \basic_testcase {
     /**
      * Test the incrementing mock clock.
      *

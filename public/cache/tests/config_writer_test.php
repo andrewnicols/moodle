@@ -27,7 +27,7 @@ use cache_config_testing;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core_cache\config_writer
  */
-final class config_writer_test extends \advanced_testcase {
+final class config_writer_test extends \basic_testcase {
     /**
      * Load required libraries and fixtures.
      */

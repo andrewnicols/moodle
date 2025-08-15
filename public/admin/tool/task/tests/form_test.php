@@ -23,7 +23,7 @@ namespace tool_task;
  * @copyright  2014 onwards Ankit Agarwal <ankit.agrr@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
  */
-final class form_test extends \advanced_testcase {
+final class form_test extends \basic_testcase {
 
     /**
      * Test validations for minute field.

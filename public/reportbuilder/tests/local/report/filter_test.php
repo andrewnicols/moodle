@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\local\report;
 
-use advanced_testcase;
+use basic_testcase;
 use lang_string;
 use moodle_exception;
 use core_reportbuilder\local\filters\text;
@@ -31,7 +31,7 @@ use core_reportbuilder\local\filters\text;
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class filter_test extends advanced_testcase {
+final class filter_test extends basic_testcase {
 
     /**
      * Test getting filter class
