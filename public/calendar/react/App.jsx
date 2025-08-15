@@ -8,6 +8,13 @@ import startOfWeek from 'date-fns/startOfWeek';
 import getDay from 'date-fns/getDay';
 import enUS from 'date-fns/locale/en-US';
 
+// Event management imports.
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+
+// Import Bootstrap CSS. This would be abstracted elsewhere down the line.
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 // Import the CSS for react-big-calendar
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -26,19 +33,35 @@ const localizer = dateFnsLocalizer({
 
 export default function App({ events }) {
     const [myEvents, setEvents] = useState(events);
+    const [modalShow, setModalShow] = useState(false);
+    const [title, setTitle] = React.useState("New Event");
+    // Maybe swap to useCallback??
+    const [body, setBody] = React.useState("");
 
     const handleSelectSlot = useCallback(
-        ({ start, end }) => {
-            const title = window.prompt('New Event name');
-            if (title) {
-                setEvents((prev) => [...prev, { start, end, title }]);
-            }
-        }, [setEvents]
+        ({ start }) => {
+            setTitle("New Event");
+            setBody(
+                <>
+                    <p>Form content goes here</p>
+                    <small>Form date: {start.toString()}</small>
+                </>
+            );
+            setModalShow(true);
+        }, [setEvents, setModalShow]
     );
 
     const handleSelectEvent = useCallback(
-        (event) => window.alert(event.title),
-        []
+        (event) => {
+            setTitle(event.title);
+            setBody(
+                <>
+                    <p>Start time: {event.start.toString()}</p>
+                    <p>End time: {event.end.toString()}</p>
+            </>
+            );
+            setModalShow(true);
+        }, [setModalShow, setTitle]
     );
 
     const { scrollToTime } = useMemo(
@@ -48,17 +71,61 @@ export default function App({ events }) {
         []
     );
 
-    return <Fragment>
-               <Calendar
-                   localizer={localizer}
-                   events={myEvents}
-                   startAccessor="start"
-                   endAccessor="end"
-                   style={{ height: 500 }}
-                   onSelectEvent={handleSelectEvent}
-                   onSelectSlot={handleSelectSlot}
-                   selectable
-                   scrollToTime={scrollToTime}
-               />
-        </Fragment>;
+    return (
+        <>
+            <Button variant="primary" onClick={() => {
+                setTitle("New Event");
+                setBody(
+                    <>
+                        <p>Form content goes here</p>
+                    </>
+                );
+                setModalShow(true)
+            }}>
+                New event
+            </Button>
+            <EventModal
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                title={title}
+                body={body}
+            />
+            <Fragment>
+                <Calendar
+                    localizer={localizer}
+                    events={myEvents}
+                    startAccessor="start"
+                    endAccessor="end"
+                    style={{ height: 500 }}
+                    onSelectEvent={handleSelectEvent}
+                    onSelectSlot={handleSelectSlot}
+                    selectable
+                    scrollToTime={scrollToTime}
+                />
+            </Fragment>
+        </>
+    );
+}
+
+function EventModal(props) {
+    return (
+        <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-vcenter">
+                    {props.title}
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {props.body}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button onClick={props.onHide}>Save</Button>
+            </Modal.Footer>
+        </Modal>
+    );
 }
