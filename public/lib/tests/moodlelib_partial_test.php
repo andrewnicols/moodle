@@ -25,7 +25,7 @@ namespace core;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers ::partial
  */
-final class moodlelib_partial_test extends \advanced_testcase {
+final class moodlelib_partial_test extends \basic_testcase {
     /**
      * Test that arguments to partial can be passed as anticipated.
      *

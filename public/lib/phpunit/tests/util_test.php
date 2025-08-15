@@ -24,7 +24,7 @@ namespace core;
  * @copyright  2015 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class util_test extends \advanced_testcase {
+final class util_test extends \basic_testcase {
     /**
      * @dataProvider set_table_modified_by_sql_provider
      */

@@ -25,7 +25,7 @@ namespace core\external;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\external\action_link_exporter
  */
-final class action_link_exporter_test extends \advanced_testcase {
+final class action_link_exporter_test extends \basic_testcase {
     /**
      * Test the export returns the right structure when the content is a string.
      */

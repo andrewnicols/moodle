@@ -27,7 +27,7 @@ declare(strict_types=1);
 
 namespace core_table\local\filter;
 
-use advanced_testcase;
+use basic_testcase;
 use TypeError;
 
 /**
@@ -38,7 +38,7 @@ use TypeError;
  * @copyright 2020 Simey Lameze <simey@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class string_filter_test extends advanced_testcase {
+final class string_filter_test extends basic_testcase {
     /**
      * Ensure that the add_filter_value function works as expected with valid values.
      */

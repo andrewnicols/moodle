@@ -25,7 +25,7 @@ namespace core\external;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\external\pix_icon_exporter
  */
-final class pix_icon_exporter_test extends \advanced_testcase {
+final class pix_icon_exporter_test extends \basic_testcase {
     /**
      * Test export method.
      */

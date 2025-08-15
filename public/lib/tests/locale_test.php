@@ -25,7 +25,7 @@ namespace core;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\locale
  */
-final class locale_test extends \advanced_testcase {
+final class locale_test extends \basic_testcase {
     /** @var string Locale */
     protected string $locale;
 

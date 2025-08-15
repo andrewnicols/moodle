@@ -25,7 +25,7 @@ namespace core\output;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\output\action_link
  */
-final class action_link_test extends \advanced_testcase {
+final class action_link_test extends \basic_testcase {
     /**
      * Test the exportable interface implementation.
      */
