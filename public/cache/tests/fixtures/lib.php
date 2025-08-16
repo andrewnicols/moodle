@@ -41,6 +41,15 @@ use core_cache\store;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cache_config_testing extends cache_config_writer {
+    #[\Override]
+    public function get_stores_for_definition(\core_cache\definition $definition) {
+        xdebug_break();
+
+        // This function is overridden to allow us to use the cache_config_testing class
+        // in unit tests without having to mock the cache_factory.
+        return parent::get_stores_for_definition($definition);
+    }
+
     /**
      * Creates the default configuration and saves it.
      *
@@ -588,6 +597,11 @@ class cache_phpunit_factory extends cache_factory {
      */
     public static function phpunit_disable() {
         parent::disable();
+    }
+
+    #[\Override]
+    public function stores_disabled() {
+        return true;
     }
 }
 

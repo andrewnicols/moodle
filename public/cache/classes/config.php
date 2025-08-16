@@ -486,7 +486,7 @@ class config {
         $stores = [];
         $id = $definition->get_id();
 
-        // Now get any mappings and give them priority.
+        // Now get any mappings and give them priority. 
         foreach ($this->configdefinitionmappings as $mapping) {
             if ($mapping['definition'] !== $id) {
                 continue;

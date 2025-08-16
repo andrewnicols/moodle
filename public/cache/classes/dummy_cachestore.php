@@ -274,6 +274,30 @@ class dummy_cachestore extends store {
     public function my_name() {
         return $this->name;
     }
+
+    /**
+     * Finds all of the keys being stored in the cache store instance.
+     *
+     * @return array
+     */
+    public function find_all() {
+        return array_keys($this->store);
+    }
+
+    /**
+     * Finds all of the keys whose keys start with the given prefix.
+     *
+     * @param string $prefix
+     */
+    public function find_by_prefix($prefix) {
+        $return = array();
+        foreach ($this->find_all() as $key) {
+            if (strpos($key, $prefix) === 0) {
+                $return[] = $key;
+            }
+        }
+        return $return;
+    }
 }
 
 // Alias this class to the old name.
