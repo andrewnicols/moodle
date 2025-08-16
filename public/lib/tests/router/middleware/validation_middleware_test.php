@@ -33,7 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\router\middleware\validation_middleware
  */
-final class validation_middleware_test extends \advanced_testcase {
+final class validation_middleware_test extends \basic_testcase {
     /**
      * If a request fails request validation, the next middleware will not be called.
      */

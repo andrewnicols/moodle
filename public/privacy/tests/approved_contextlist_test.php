@@ -23,7 +23,7 @@ namespace core_privacy\local\request;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(approved_contextlist::class)]
-final class approved_contextlist_test extends \advanced_testcase {
+final class approved_contextlist_test extends \basic_testcase {
     /**
      * The approved contextlist should not be modifiable once set.
      */

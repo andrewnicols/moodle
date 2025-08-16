@@ -29,7 +29,7 @@ use Psr\Http\Message\ResponseInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\router\response_validator
  */
-final class response_validator_test extends \advanced_testcase {
+final class response_validator_test extends \basic_testcase {
     public function test_validate_response_without_moodle_route(): void {
         $validator = new response_validator();
 

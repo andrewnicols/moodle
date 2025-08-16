@@ -24,7 +24,7 @@ namespace core\output;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(mustache_helper_collection::class)]
-final class mustache_helper_collection_test extends \advanced_testcase {
+final class mustache_helper_collection_test extends \basic_testcase {
     /**
      * Test cases to confirm that disallowed helpers are stripped from the source
      * text by the helper before being passed to other another helper. This prevents

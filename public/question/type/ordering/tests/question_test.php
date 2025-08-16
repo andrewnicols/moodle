@@ -38,7 +38,7 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @covers    \qtype_ordering
  * @covers    \qtype_ordering_question
  */
-final class question_test extends \advanced_testcase {
+final class question_test extends \basic_testcase {
     /**
      * Array of draggable items in correct order.
      */

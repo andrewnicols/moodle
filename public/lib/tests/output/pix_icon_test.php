@@ -24,7 +24,7 @@ namespace core\output;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(pix_icon::class)]
-final class pix_icon_test extends \advanced_testcase {
+final class pix_icon_test extends \basic_testcase {
     /**
      * Test the exportable interface implementation.
      */

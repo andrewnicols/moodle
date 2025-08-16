@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\local\report;
 
-use advanced_testcase;
+use basic_testcase;
 use core\exception\coding_exception;
 use core\lang_string;
 use core_reportbuilder\local\aggregation\{count, groupconcat};
@@ -33,7 +33,7 @@ use stdClass;
  * @copyright   2020 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class column_test extends advanced_testcase {
+final class column_test extends basic_testcase {
 
     /**
      * Test column name getter/setter

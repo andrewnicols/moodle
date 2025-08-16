@@ -27,7 +27,7 @@ use Psr\Http\Message\ResponseInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core\router\apidocs
  */
-final class apidocs_test extends \advanced_testcase {
+final class apidocs_test extends \basic_testcase {
     public function test_openapi_docs(): void {
         $apidocs = new apidocs();
 

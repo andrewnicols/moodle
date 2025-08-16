@@ -25,7 +25,7 @@ namespace core_courseformat\output\local\overview;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \core_courseformat\output\local\overview\overviewdialog
  */
-final class overviewdialog_test extends \advanced_testcase {
+final class overviewdialog_test extends \basic_testcase {
     /**
      * Test the exportable interface implementation.
      */

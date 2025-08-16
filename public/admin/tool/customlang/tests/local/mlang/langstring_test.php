@@ -26,7 +26,7 @@
 
 namespace tool_customlang\local\mlang;
 
-use advanced_testcase;
+use basic_testcase;
 use moodle_exception;
 
 /**
@@ -36,7 +36,7 @@ use moodle_exception;
  * @copyright  2020 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class langstring_test extends advanced_testcase {
+final class langstring_test extends basic_testcase {
 
     /**
      * Sanity 1.x string

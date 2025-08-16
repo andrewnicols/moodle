@@ -24,7 +24,7 @@ namespace core;
  * @author     Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class editorlib_test extends \advanced_testcase {
+final class editorlib_test extends \basic_testcase {
 
     /**
      * Tests the installation of event handlers from file

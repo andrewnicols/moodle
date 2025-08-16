@@ -27,7 +27,7 @@ use core\context\system as context_system;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \filter_mathjaxloader\text_filter
  */
-final class filtermath_test extends \advanced_testcase {
+final class filtermath_test extends \basic_testcase {
     /**
      * Test the functionality of {@see text_filter::filter()}.
      *

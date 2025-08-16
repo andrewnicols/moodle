@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_customfield;
 
-use advanced_testcase;
+use basic_testcase;
 use core_course\customfield\course_handler;
 use moodle_exception;
 
@@ -30,7 +30,7 @@ use moodle_exception;
  * @copyright   2023 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class handler_test extends advanced_testcase {
+final class handler_test extends basic_testcase {
 
     /**
      * Test retrieving handler for given component/area

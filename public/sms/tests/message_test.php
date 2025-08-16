@@ -27,7 +27,7 @@ use ValueError;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core_sms\message
  */
-final class message_test extends \advanced_testcase {
+final class message_test extends \basic_testcase {
     public function test_create(): void {
         $message = new message(
             recipientnumber: '1234567890',

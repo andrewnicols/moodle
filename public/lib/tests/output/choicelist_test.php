@@ -16,6 +16,8 @@
 
 namespace core\output;
 
+use basic_testcase;
+
 /**
  * Unit tests for \core\output\choicelist class.
  *
@@ -25,7 +27,7 @@ namespace core\output;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(choicelist::class)]
-final class choicelist_test extends \advanced_testcase {
+final class choicelist_test extends basic_testcase {
     /**
      * Test for a choice without options.
      */

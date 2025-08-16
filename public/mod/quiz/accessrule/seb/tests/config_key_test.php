@@ -25,7 +25,7 @@ namespace quizaccess_seb;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \quizaccess_seb\config_key
  */
-final class config_key_test extends \advanced_testcase {
+final class config_key_test extends \basic_testcase {
 
     /**
      * Test that trying to generate the hash key with bad xml will result in an error.

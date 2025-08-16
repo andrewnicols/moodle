@@ -16,7 +16,7 @@
 
 namespace qtype_ordering\output;
 
-use advanced_testcase;
+use basic_testcase;
 use test_question_maker;
 use qtype_ordering_question;
 use qtype_ordering_test_helper;
@@ -35,7 +35,7 @@ require_once($CFG->dirroot . '/question/engine/tests/helpers.php');
  * @covers    \qtype_ordering\output\renderable_base
  * @covers    \qtype_ordering\output\correct_response
  */
-final class correct_response_test extends advanced_testcase {
+final class correct_response_test extends basic_testcase {
     /**
      * Test the exported data for the template that renders the correct response to a given question attempt.
      *

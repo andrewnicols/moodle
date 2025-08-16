@@ -25,7 +25,7 @@ use core_calendar\local\event\value_objects\event_times;
  * @copyright 2017 Cameron Ball <cameron@cameron1729.xyz>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class event_times_test extends \advanced_testcase {
+final class event_times_test extends \basic_testcase {
     /**
      * Test event times class getters.
      *

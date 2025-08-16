@@ -28,7 +28,7 @@ namespace core\output;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(mustache_template_finder::class)]
-final class mustache_template_finder_test extends \advanced_testcase {
+final class mustache_template_finder_test extends \basic_testcase {
     /**
      * Data provider which reutrns a set of valid template directories to be used when testing
      * get_template_directories_for_component.

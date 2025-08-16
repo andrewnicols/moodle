@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\local\report;
 
-use advanced_testcase;
+use basic_testcase;
 use lang_string;
 use moodle_url;
 use pix_icon;
@@ -32,7 +32,7 @@ use stdClass;
  * @copyright   2021 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class action_test extends advanced_testcase {
+final class action_test extends basic_testcase {
 
     /**
      * Test adding a callback that returns true

@@ -26,7 +26,7 @@ declare(strict_types = 1);
 
 namespace core_completion;
 
-use advanced_testcase;
+use basic_testcase;
 use cm_info;
 use completion_info;
 
@@ -43,7 +43,7 @@ require_once($CFG->libdir . '/completionlib.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \core_completion\cm_completion_details
  */
-final class cm_completion_details_test extends advanced_testcase {
+final class cm_completion_details_test extends basic_testcase {
 
     /** @var completion_info A completion object. */
     protected $completioninfo = null;

@@ -32,7 +32,7 @@ require_once($CFG->libdir . '/form/select.php');
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \MoodleQuickForm_select
  */
-final class select_test extends \advanced_testcase {
+final class select_test extends \basic_testcase {
 
     /**
      * Testcase to check generated timestamp

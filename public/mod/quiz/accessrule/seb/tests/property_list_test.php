@@ -24,7 +24,7 @@ namespace quizaccess_seb;
  * @copyright 2020 Catalyst IT
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class property_list_test extends \advanced_testcase {
+final class property_list_test extends \basic_testcase {
 
     /**
      * Test that an empty PList with a root dictionary is created.

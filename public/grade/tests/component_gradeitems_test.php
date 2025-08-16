@@ -27,7 +27,7 @@ declare(strict_types = 1);
 
 namespace core_grades {
 
-    use advanced_testcase;
+    use basic_testcase;
     use core_grades\component_gradeitems;
     use coding_exception;
 
@@ -39,7 +39,7 @@ namespace core_grades {
      * @copyright 2019 Andrew Nicols <andrew@nicols.co.uk>
      * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
-    final class component_gradeitems_test extends advanced_testcase {
+    final class component_gradeitems_test extends basic_testcase {
 
         /**
          * Ensure that a component which does not implement the mapping class excepts.

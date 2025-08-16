@@ -25,7 +25,7 @@ use core\exception\moodle_exception;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(contextlist_collection::class)]
-final class contextlist_collection_test extends \advanced_testcase {
+final class contextlist_collection_test extends \basic_testcase {
     /**
      * A contextlist_collection should support the contextlist type.
      */

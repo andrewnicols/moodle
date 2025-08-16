@@ -34,7 +34,7 @@ use GuzzleHttp\Psr7\ServerRequest;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\router\response_handler
  */
-final class response_handler_test extends \advanced_testcase {
+final class response_handler_test extends \basic_testcase {
     public function test_standardise_response_from_response(): void {
         $response = new Response();
 

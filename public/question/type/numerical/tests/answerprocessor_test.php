@@ -27,7 +27,7 @@ use qtype_numerical_answer_processor;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(qtype_numerical_answer_processor::class)]
-final class answerprocessor_test extends \advanced_testcase {
+final class answerprocessor_test extends \basic_testcase {
     #[\Override]
     public function setUp(): void {
         global $CFG;

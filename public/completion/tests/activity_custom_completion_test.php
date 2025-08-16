@@ -18,7 +18,7 @@ declare(strict_types = 1);
 
 namespace core_completion;
 
-use advanced_testcase;
+use basic_testcase;
 use coding_exception;
 use moodle_exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,7 +30,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @copyright 2021 Jun Pataleta <jun@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class activity_custom_completion_test extends advanced_testcase {
+final class activity_custom_completion_test extends basic_testcase {
 
     /**
      * Fetches a mocked activity_custom_completion instance.

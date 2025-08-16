@@ -25,7 +25,7 @@
 
 namespace core_question;
 
-use advanced_testcase;
+use basic_testcase;
 use moodle_exception;
 use question_engine;
 
@@ -36,7 +36,7 @@ use question_engine;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @coversDefaultClass \question_engine
  */
-final class question_engine_test extends advanced_testcase {
+final class question_engine_test extends basic_testcase {
 
     /**
      * Load required libraries.

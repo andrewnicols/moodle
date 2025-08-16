@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_reportbuilder\local\helpers;
 
-use advanced_testcase;
+use basic_testcase;
 use coding_exception;
 use core_user;
 
@@ -30,7 +30,7 @@ use core_user;
  * @copyright   2020 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class database_test extends advanced_testcase {
+final class database_test extends basic_testcase {
 
     /**
      * Test generating alias

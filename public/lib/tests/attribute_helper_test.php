@@ -25,7 +25,7 @@ namespace core;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\attribute_helper
  */
-final class attribute_helper_test extends \advanced_testcase {
+final class attribute_helper_test extends \basic_testcase {
     public static function setUpBeforeClass(): void {
         require_once(__DIR__ . '/fixtures/attribute_helper_example.php');
         parent::setUpBeforeClass();

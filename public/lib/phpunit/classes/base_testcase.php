@@ -24,6 +24,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\di;
+use core\hook;
+use core\http_client;
+use GuzzleHttp\Handler\MockHandler;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\TestCase;
 
@@ -39,6 +45,9 @@ use PHPUnit\Framework\TestCase;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class base_testcase extends PHPUnit\Framework\TestCase {
+    /** @var int timestamp used for current time asserts */
+    private $currenttimestart;
+
     // phpcs:disable
     // Following code is legacy code from phpunit to support assertTag
     // and assertNotTag.
@@ -706,5 +715,370 @@ abstract class base_testcase extends PHPUnit\Framework\TestCase {
         $rcp = $rc->getProperty('inIsolation');
 
         return $rcp->getValue($this);
+    }
+
+    /**
+     * Convenience method to get the path to a fixture.
+     *
+     * @param string $component
+     * @param string $path
+     * @throws coding_exception
+     */
+    protected static function get_fixture_path(
+        string $component,
+        string $path,
+    ): string {
+        return sprintf(
+            "%s/tests/fixtures/%s",
+            \core_component::get_component_directory($component),
+            $path,
+        );
+    }
+
+    /**
+     * Convenience method to load a fixture from a component's fixture directory.
+     *
+     * @param string $component
+     * @param string $path
+     * @throws coding_exception
+     */
+    protected static function load_fixture(
+        string $component,
+        string $path,
+    ): void {
+        global $ADMIN;
+        global $CFG;
+        global $DB;
+        global $SITE;
+        global $USER;
+        global $OUTPUT;
+        global $PAGE;
+        global $SESSION;
+        global $COURSE;
+        global $SITE;
+
+        $fullpath = static::get_fixture_path($component, $path);
+
+        if (!file_exists($fullpath)) {
+            throw new \coding_exception("Fixture file not found: $fullpath");
+        }
+
+        require_once($fullpath);
+    }
+
+    /**
+     * Return debugging messages from the current test.
+     * @return array with instances having 'message', 'level' and 'stacktrace' property.
+     */
+    public function getDebuggingMessages() {
+        return phpunit_util::get_debugging_messages();
+    }
+
+    /**
+     * Clear all previous debugging messages in current test
+     * and revert to default DEVELOPER_DEBUG level.
+     */
+    public function resetDebugging() {
+        phpunit_util::reset_debugging();
+    }
+
+    /**
+     * Assert that exactly debugging was just called once.
+     *
+     * Discards the debugging message if successful.
+     *
+     * @param null|string $debugmessage null means any
+     * @param null|string $debuglevel null means any
+     * @param string $message
+     */
+    public function assertDebuggingCalled($debugmessage = null, $debuglevel = null, $message = '') {
+        $debugging = $this->getDebuggingMessages();
+        $debugdisplaymessage = "\n" . phpunit_util::display_debugging_messages(true);
+        $this->resetDebugging();
+
+        $count = count($debugging);
+
+        if ($count == 0) {
+            if ($message === '') {
+                $message = 'Expectation failed, debugging() not triggered.';
+            }
+            $this->fail($message);
+        }
+        if ($count > 1) {
+            if ($message === '') {
+                $message = 'Expectation failed, debugging() triggered ' . $count . ' times.' . $debugdisplaymessage;
+            }
+            $this->fail($message);
+        }
+        $this->assertEquals(1, $count);
+
+        $message .= $debugdisplaymessage;
+        $debug = reset($debugging);
+        if ($debugmessage !== null) {
+            $this->assertSame($debugmessage, $debug->message, $message);
+        }
+        if ($debuglevel !== null) {
+            $this->assertSame($debuglevel, $debug->level, $message);
+        }
+    }
+
+    /**
+     * Asserts how many times debugging has been called.
+     *
+     * @param int $expectedcount The expected number of times
+     * @param array $debugmessages Expected debugging messages, one for each expected message.
+     * @param array $debuglevels Expected debugging levels, one for each expected message.
+     * @param string $message
+     * @return void
+     */
+    public function assertdebuggingcalledcount($expectedcount, $debugmessages = [], $debuglevels = [], $message = '') {
+        if (!is_int($expectedcount)) {
+            throw new coding_exception('assertDebuggingCalledCount $expectedcount argument should be an integer.');
+        }
+
+        $debugging = $this->getDebuggingMessages();
+        $message .= "\n" . phpunit_util::display_debugging_messages(true);
+        $this->resetDebugging();
+
+        $this->assertEquals($expectedcount, count($debugging), $message);
+
+        if ($debugmessages) {
+            if (!is_array($debugmessages) || count($debugmessages) != $expectedcount) {
+                throw new coding_exception(
+                    'assertDebuggingCalledCount $debugmessages should contain ' . $expectedcount . ' messages',
+                );
+            }
+            foreach ($debugmessages as $key => $debugmessage) {
+                $this->assertSame($debugmessage, $debugging[$key]->message, $message);
+            }
+        }
+
+        if ($debuglevels) {
+            if (!is_array($debuglevels) || count($debuglevels) != $expectedcount) {
+                throw new coding_exception(
+                    'assertDebuggingCalledCount $debuglevels should contain ' . $expectedcount . ' messages',
+                );
+            }
+            foreach ($debuglevels as $key => $debuglevel) {
+                $this->assertSame($debuglevel, $debugging[$key]->level, $message);
+            }
+        }
+    }
+
+    /**
+     * Call when no debugging() messages expected.
+     * @param string $message
+     */
+    public function assertDebuggingNotCalled($message = '') {
+        $debugging = $this->getDebuggingMessages();
+        $count = count($debugging);
+
+        if ($message === '') {
+            $message = 'Expectation failed, debugging() was triggered.';
+        }
+        $message .= "\n".phpunit_util::display_debugging_messages(true);
+        $this->resetDebugging();
+        $this->assertEquals(0, $count, $message);
+    }
+
+    /**
+     * Returns UTL of the external test file.
+     *
+     * The result depends on the value of following constants:
+     *  - TEST_EXTERNAL_FILES_HTTP_URL
+     *  - TEST_EXTERNAL_FILES_HTTPS_URL
+     *
+     * They should point to standard external test files repository,
+     * it defaults to 'http://download.moodle.org/unittest'.
+     *
+     * False value means skip tests that require external files.
+     *
+     * @param string $path
+     * @param bool $https true if https required
+     * @return string url
+     */
+    public static function getExternalTestFileUrl(
+        string $path,
+        bool $https = false,
+    ): string {
+        $path = ltrim($path, '/');
+        if ($path) {
+            $path = "/{$path}";
+        }
+        if ($https) {
+            if (defined('TEST_EXTERNAL_FILES_HTTPS_URL')) {
+                if (!TEST_EXTERNAL_FILES_HTTPS_URL) {
+                    self::markTestSkipped('Tests using external https test files are disabled');
+                }
+                return TEST_EXTERNAL_FILES_HTTPS_URL . $path;
+            }
+            return "https://download.moodle.org/unittest{$path}";
+        }
+
+        if (defined('TEST_EXTERNAL_FILES_HTTP_URL')) {
+            if (!TEST_EXTERNAL_FILES_HTTP_URL) {
+                self::markTestSkipped('Tests using external http test files are disabled');
+            }
+            return TEST_EXTERNAL_FILES_HTTP_URL . $path;
+        }
+        return "http://download.moodle.org/unittest{$path}";
+    }
+
+    /**
+     * Stores current time as the base for assertTimeCurrent().
+     *
+     * Note: this is called automatically before calling individual test methods.
+     * @return int current time
+     */
+    public function setCurrentTimeStart() {
+        $this->currenttimestart = time();
+        return $this->currenttimestart;
+    }
+
+    /**
+     * Assert that: start < $time < time()
+     * @param int $time
+     * @param string $message
+     * @return void
+     */
+    public function assertTimeCurrent($time, $message = '') {
+        $msg = ($message === '') ? 'Time is lower that allowed start value' : $message;
+        $this->assertGreaterThanOrEqual($this->currenttimestart, $time, $msg);
+        $msg = ($message === '') ? 'Time is in the future' : $message;
+        $this->assertLessThanOrEqual(time(), $time, $msg);
+    }
+
+    /**
+     * Starts message redirection.
+     *
+     * You can verify if messages were sent or not by inspecting the messages
+     * array in the returned messaging sink instance. The redirection
+     * can be stopped by calling $sink->close();
+     *
+     * @return phpunit_message_sink
+     */
+    public function redirectMessages() {
+        return phpunit_util::start_message_redirection();
+    }
+
+    /**
+     * Starts email redirection.
+     *
+     * You can verify if email were sent or not by inspecting the email
+     * array in the returned phpmailer sink instance. The redirection
+     * can be stopped by calling $sink->close();
+     *
+     * @return phpunit_message_sink
+     */
+    public function redirectEmails() {
+        return phpunit_util::start_phpmailer_redirection();
+    }
+
+    /**
+     * Starts event redirection.
+     *
+     * You can verify if events were triggered or not by inspecting the events
+     * array in the returned event sink instance. The redirection
+     * can be stopped by calling $sink->close();
+     *
+     * @return phpunit_event_sink
+     */
+    public function redirectEvents() {
+        return phpunit_util::start_event_redirection();
+    }
+
+    /**
+     * Override hook callbacks.
+     *
+     * @param string $hookname
+     * @param callable $callback
+     * @return void
+     */
+    public function redirectHook(string $hookname, callable $callback): void {
+        di::get(hook\manager::class)->phpunit_redirect_hook($hookname, $callback);
+    }
+
+    /**
+     * Remove all hook overrides.
+     *
+     * @return void
+     */
+    public function stopHookRedirections(): void {
+        di::get(hook\manager::class)->phpunit_stop_redirections();
+    }
+
+    /**
+     * Mock the clock with an incrementing clock.
+     *
+     * @param null|int $starttime
+     * @return \incrementing_clock
+     */
+    public function mock_clock_with_incrementing(
+        ?int $starttime = null,
+    ): \incrementing_clock {
+        require_once(dirname(__DIR__, 2) . '/testing/classes/incrementing_clock.php');
+        $clock = new \incrementing_clock($starttime);
+
+        \core\di::set(\core\clock::class, $clock);
+
+        return $clock;
+    }
+
+    /**
+     * Mock the clock with a frozen clock.
+     *
+     * @param null|int $time
+     * @return \frozen_clock
+     */
+    public function mock_clock_with_frozen(
+        ?int $time = null,
+    ): \frozen_clock {
+        require_once(dirname(__DIR__, 2) . '/testing/classes/frozen_clock.php');
+        $clock = new \frozen_clock($time);
+
+        \core\di::set(\core\clock::class, $clock);
+
+        return $clock;
+    }
+
+    /**
+     * Get a mocked HTTP Client, inserting it into the Dependency Injector.
+     *
+     * @param array|null $history An array which will contain the Request/Response history of the HTTP client
+     * @return array Containing the client, the mock, and the history
+     */
+    protected function get_mocked_http_client(
+        ?array &$history = null,
+    ): array {
+        $mock = new MockHandler([]);
+        $handlerstack = HandlerStack::create($mock);
+
+        if ($history !== null) {
+            $historymiddleware = Middleware::history($history);
+            $handlerstack->push($historymiddleware);
+        }
+        $client = new http_client(['handler' => $handlerstack]);
+
+        di::set(http_client::class, $client);
+
+        return [
+            'client' => $client,
+            'mock' => $mock,
+            'handlerstack' => $handlerstack,
+        ];
+    }
+
+    /**
+     * Get a copy of the mocked string manager.
+     *
+     * @return \core\tests\mocking_string_manager
+     */
+    protected function get_mocked_string_manager(): \core\tests\mocking_string_manager {
+        global $CFG;
+
+        $this->resetAfterTest();
+        $CFG->config_php_settings['customstringmanager'] = \core\tests\mocking_string_manager::class;
+
+        return get_string_manager(true);
     }
 }

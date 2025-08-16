@@ -25,7 +25,7 @@ namespace tool_langimport;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(controller::class)]
-final class controller_test extends \advanced_testcase {
+final class controller_test extends \basic_testcase {
     /**
      * Test uninstall of language with invalid values.
      *

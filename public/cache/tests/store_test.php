@@ -24,7 +24,7 @@ namespace core_cache;
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core_cache\store
  */
-final class store_test extends \advanced_testcase {
+final class store_test extends \basic_testcase {
     /**
      * Tests the default implementation of cache_size_details, which does some
      * complicated statistics.

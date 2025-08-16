@@ -26,7 +26,7 @@ namespace core\output;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(mustache_template_source_loader::class)]
-final class mustache_template_source_loader_test extends \advanced_testcase {
+final class mustache_template_source_loader_test extends \basic_testcase {
     /**
      * Ensure that stripping comments from templates does not mutilate the template body.
      */

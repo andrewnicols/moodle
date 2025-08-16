@@ -25,7 +25,7 @@ namespace filter_mathjaxloader;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \filter_mathjaxloader\text_filter
  */
-final class text_filter_test extends \advanced_testcase {
+final class text_filter_test extends \basic_testcase {
     /**
      * Test the functionality of {@see text_filter::map_language_code()}.
      *

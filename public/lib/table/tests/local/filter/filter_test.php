@@ -18,7 +18,7 @@ declare(strict_types=1);
 
 namespace core_table\local\filter;
 
-use advanced_testcase;
+use basic_testcase;
 use InvalidArgumentException;
 
 /**
@@ -30,7 +30,7 @@ use InvalidArgumentException;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \core_table\local\filter\filter
  */
-final class filter_test extends advanced_testcase {
+final class filter_test extends basic_testcase {
     /**
      * Test that the constructor correctly handles a number of conditions.
      *

@@ -25,7 +25,7 @@ namespace mlbackend_python;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \mlbackend_python\processor
  */
-final class processor_test extends \advanced_testcase {
+final class processor_test extends \basic_testcase {
     /**
      * Test implementation of the {@link \mlbackend_python\processor::check_pip_package_version()} method.
      *

@@ -25,7 +25,7 @@ namespace core_privacy\local\metadata;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(collection::class)]
-final class collection_test extends \advanced_testcase {
+final class collection_test extends \basic_testcase {
     /**
      * Test that adding an unknown type causes the type to be added to the collection.
      */

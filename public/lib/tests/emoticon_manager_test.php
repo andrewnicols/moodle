@@ -16,7 +16,7 @@
 
 namespace core;
 
-use advanced_testcase;
+use basic_testcase;
 use stdClass;
 use ReflectionMethod;
 
@@ -28,7 +28,7 @@ use ReflectionMethod;
  * @copyright   2024 Paul Holden <paulh@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class emoticon_manager_test extends advanced_testcase {
+final class emoticon_manager_test extends basic_testcase {
 
     /**
      * Data provider for {@see test_get_emoticons}

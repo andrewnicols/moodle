@@ -27,7 +27,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers \core\router\middleware\uri_normalisation_middleware
  */
-final class uri_normalisation_middleware_test extends \advanced_testcase {
+final class uri_normalisation_middleware_test extends \basic_testcase {
     /**
      * Test the normalisation of URIs.
      *

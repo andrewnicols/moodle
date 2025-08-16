@@ -27,7 +27,7 @@ use core\exception\coding_exception;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(icon_system::class)]
-final class icon_system_test extends \advanced_testcase {
+final class icon_system_test extends \basic_testcase {
     /**
      * Check whether the supplied classes are valid icon subsystems of the supplied one.
      *

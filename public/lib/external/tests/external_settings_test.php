@@ -25,7 +25,7 @@ namespace core_external;
  * @license     http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @covers      \core_external\external_settings
  */
-final class external_settings_test extends \advanced_testcase {
+final class external_settings_test extends \basic_testcase {
     /**
      * Reset the singleton between tests.
      */

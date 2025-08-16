@@ -25,7 +25,7 @@ namespace core\hook;
  * @copyright  2024 Jacob Viertel
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class before_course_viewed_test extends \advanced_testcase {
+final class before_course_viewed_test extends \basic_testcase {
     /**
      * Test hook description.
      * @covers ::get_hook_description

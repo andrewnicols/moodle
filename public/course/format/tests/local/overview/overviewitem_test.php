@@ -27,7 +27,7 @@ use core\output\local\properties\text_align;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \core_courseformat\local\overview\overviewitem
  */
-final class overviewitem_test extends \advanced_testcase {
+final class overviewitem_test extends \basic_testcase {
     /**
      * Tests the constructor.
      *

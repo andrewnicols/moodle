@@ -24,7 +24,7 @@ namespace mod_quiz\local;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers    \mod_quiz\local\override_cache
  */
-final class override_cache_test extends \advanced_testcase {
+final class override_cache_test extends \basic_testcase {
     /**
      * Tests CRUD functions of the override_cache
      */
