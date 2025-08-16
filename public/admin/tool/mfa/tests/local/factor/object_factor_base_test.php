@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_mfa;
+namespace tool_mfa\local\factor;
 
 /**
  * Tests for base factor implementation methods.
@@ -24,15 +24,12 @@ namespace tool_mfa;
  * @copyright   2023 Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(object_factor_base::class)]
 final class object_factor_base_test extends \advanced_testcase {
-
     use \tool_mfa\tests\mfa_settings_trait;
 
     /**
      * Test deleting user's configured factors
-     *
-     * @covers ::setup_user_factor
-     * @return void
      */
     public function test_revoke_user_factor(): void {
         $this->resetAfterTest();
@@ -81,9 +78,6 @@ final class object_factor_base_test extends \advanced_testcase {
 
     /**
      * Tests the replacement of a factor.
-     *
-     * @covers ::setup_user_factor
-     * @covers ::replace_user_factor
      */
     public function test_replace_user_factor(): void {
         $this->resetAfterTest();

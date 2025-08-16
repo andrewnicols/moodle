@@ -29,14 +29,12 @@ require_once(__DIR__ . '/../test_helper_trait.php');
  * @author     Andrew Madden <andrewmadden@catalyst-au.net>
  * @copyright  2021 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \quizaccess_seb\external\validate_quiz_access
  */
-final class validate_quiz_access_test extends \advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(validate_quiz_keys::class)]
+final class validate_quiz_keys_test extends \advanced_testcase {
     use \quizaccess_seb_test_helper_trait;
 
-    /**
-     * This method runs before every test.
-     */
+    #[\Override]
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();

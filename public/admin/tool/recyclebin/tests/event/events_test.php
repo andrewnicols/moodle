@@ -14,15 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Events tests.
- *
- * @package tool_recyclebin
- * @category test
- * @copyright 2016 Mark Nelson <markn@moodle.com>
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_recyclebin\event;
 
 /**
@@ -33,6 +24,12 @@ namespace tool_recyclebin\event;
  * @copyright 2016 Mark Nelson <markn@moodle.com>
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(category_bin_item_created::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(category_bin_item_deleted::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(category_bin_item_restored::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(course_bin_item_created::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(course_bin_item_deleted::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(course_bin_item_restored::class)]
 final class events_test extends \advanced_testcase {
 
     /**
@@ -70,7 +67,7 @@ final class events_test extends \advanced_testcase {
         $item = reset($items);
 
         // Check that the event contains the expected values.
-        $this->assertInstanceOf('\tooL_recyclebin\event\category_bin_item_created', $event);
+        $this->assertInstanceOf(category_bin_item_created::class, $event);
         $this->assertEquals(\context_coursecat::instance($course->category), $event->get_context());
         $this->assertEquals($item->id, $event->objectid);
         $this->assertEventContextNotUsed($event);
@@ -99,7 +96,7 @@ final class events_test extends \advanced_testcase {
         $event = reset($events);
 
         // Check that the event contains the expected values.
-        $this->assertInstanceOf('\tooL_recyclebin\event\category_bin_item_deleted', $event);
+        $this->assertInstanceOf(category_bin_item_deleted::class, $event);
         $this->assertEquals(\context_coursecat::instance($course->category), $event->get_context());
         $this->assertEquals($item->id, $event->objectid);
         $this->assertEventContextNotUsed($event);
@@ -127,7 +124,7 @@ final class events_test extends \advanced_testcase {
         $event = $events[count($events) - 2];
 
         // Check that the event contains the expected values.
-        $this->assertInstanceOf('\tooL_recyclebin\event\category_bin_item_restored', $event);
+        $this->assertInstanceOf(category_bin_item_restored::class, $event);
         $this->assertEquals(\context_coursecat::instance($course->category), $event->get_context());
         $this->assertEquals($item->id, $event->objectid);
         $this->assertEventContextNotUsed($event);
@@ -156,7 +153,7 @@ final class events_test extends \advanced_testcase {
         $item = reset($items);
 
         // Check that the event contains the expected values.
-        $this->assertInstanceOf('\tooL_recyclebin\event\course_bin_item_created', $event);
+        $this->assertInstanceOf(course_bin_item_created::class, $event);
         $this->assertEquals(\context_course::instance($course->id), $event->get_context());
         $this->assertEquals($item->id, $event->objectid);
         $this->assertEventContextNotUsed($event);
@@ -189,7 +186,7 @@ final class events_test extends \advanced_testcase {
         $event = reset($events);
 
         // Check that the event contains the expected values.
-        $this->assertInstanceOf('\tooL_recyclebin\event\course_bin_item_deleted', $event);
+        $this->assertInstanceOf(course_bin_item_deleted::class, $event);
         $this->assertEquals(\context_course::instance($course->id), $event->get_context());
         $this->assertEquals($item->id, $event->objectid);
         $this->assertEventContextNotUsed($event);
@@ -220,7 +217,7 @@ final class events_test extends \advanced_testcase {
         $eventscount = 0;
 
         foreach ($events as $event) {
-            if ($event instanceof \tooL_recyclebin\event\course_bin_item_restored) {
+            if ($event instanceof course_bin_item_restored) {
                 // Check that the event contains the expected values.
                 $this->assertEquals(\context_course::instance($course->id), $event->get_context());
                 $this->assertEquals($item->id, $event->objectid);

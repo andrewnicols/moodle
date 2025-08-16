@@ -26,6 +26,7 @@ use ReflectionMethod;
  * @copyright   2021 onwards Peter Dias
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(language_menu::class)]
 final class language_menu_test extends \advanced_testcase {
     /**
      * Basic setup to make sure the nav objects gets generated without any issues.
@@ -39,11 +40,11 @@ final class language_menu_test extends \advanced_testcase {
     /**
      * Test the get_lang_menu
      *
-     * @dataProvider get_lang_menu_provider
      * @param bool $withadditionallangs
      * @param string $language
      * @param array $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_lang_menu_provider')]
     public function test_get_lang_menu(bool $withadditionallangs, string $language, array $expected): void {
         global $CFG, $PAGE;
 
@@ -82,7 +83,7 @@ final class language_menu_test extends \advanced_testcase {
                     // When the language menu item is not the current language, it will contain the lang attribute.
                     $expecteditem['attributes'][] = [
                         'key' => 'lang',
-                        'value' => $lang
+                        'value' => $lang,
                     ];
                 }
                 // The lang value is only used to generate the url, so this key can be removed.
@@ -104,7 +105,7 @@ final class language_menu_test extends \advanced_testcase {
     public static function get_lang_menu_provider(): array {
         return [
             'Lang menu with only the current language' => [
-                false, 'en', []
+                false, 'en', [],
             ],
             'Lang menu with only multiple languages installed' => [
                 true, 'en', [
@@ -115,14 +116,14 @@ final class language_menu_test extends \advanced_testcase {
                             'text' => 'English ‎(en)‎',
                             'link' => true,
                             'isactive' => true,
-                            'lang' => 'en'
+                            'lang' => 'en',
                         ],
                         [
                             'title' => 'English ‎(de)‎',
                             'text' => 'English ‎(de)‎',
                             'link' => true,
                             'isactive' => false,
-                            'lang' => 'de'
+                            'lang' => 'de',
                         ],
 
                         [
@@ -130,7 +131,7 @@ final class language_menu_test extends \advanced_testcase {
                             'text' => 'English ‎(fr)‎',
                             'link' => true,
                             'isactive' => false,
-                            'lang' => 'fr'
+                            'lang' => 'fr',
                         ],
                     ],
                 ],
@@ -144,21 +145,21 @@ final class language_menu_test extends \advanced_testcase {
                             'text' => 'English ‎(en)‎',
                             'link' => true,
                             'isactive' => false,
-                            'lang' => 'en'
+                            'lang' => 'en',
                         ],
                         [
                             'title' => 'English ‎(de)‎',
                             'text' => 'English ‎(de)‎',
                             'link' => true,
                             'isactive' => true,
-                            'lang' => 'de'
+                            'lang' => 'de',
                         ],
                         [
                             'title' => 'English ‎(fr)‎',
                             'text' => 'English ‎(fr)‎',
                             'link' => true,
                             'isactive' => false,
-                            'lang' => 'fr'
+                            'lang' => 'fr',
                         ],
                     ],
                 ],

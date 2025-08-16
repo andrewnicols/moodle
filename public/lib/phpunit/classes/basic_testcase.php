@@ -40,7 +40,7 @@ abstract class basic_testcase extends base_testcase {
     }
 
     #[After]
-    final public function test_teardown(): void {
+    final public function after_test_teardown(): void {
         global $DB;
 
         if ($DB->is_transaction_started()) {

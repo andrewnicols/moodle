@@ -17,6 +17,7 @@
 namespace core_question;
 
 use question_bank;
+use question_engine_unit_of_work;
 use question_hint;
 use question_test_recordset;
 use question_usage_by_activity;
@@ -36,6 +37,8 @@ require_once(__DIR__ . '/helpers.php');
  * @copyright  2012 The Open University
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(question_engine_unit_of_work::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(question_usage_by_activity::class, 'add_question_in_place_of_other')]
 final class unitofwork_test extends \data_loading_method_test_base {
     /** @var question_usage_by_activity the test question usage. */
     protected $quba;
@@ -512,8 +515,6 @@ final class unitofwork_test extends \data_loading_method_test_base {
 
     /**
      * Test add_question_in_place_of_other function.
-     *
-     * @covers ::add_question_in_place_of_other
      */
     public function test_replace_old_attempt(): void {
         // Create a new question.

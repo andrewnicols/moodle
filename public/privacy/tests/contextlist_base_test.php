@@ -14,38 +14,27 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Unit Tests for the abstract contextlist Class
- *
- * @package     core_privacy
- * @category    test
- * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core_privacy\local\request;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-
-use \core_privacy\local\request\contextlist_base;
+use core\context_helper;
+use core_privacy\tests\local\request\contextlist_base as test_contextlist_base;
 
 /**
  * Tests for the \core_privacy API's contextlist base functionality.
  *
  * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_privacy\local\request\contextlist_base
  */
-final class contextlist_base_test extends advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(contextlist_base::class)]
+final class contextlist_base_test extends \advanced_testcase {
     /**
      * Ensure that get_contextids returns the list of unique contextids.
      *
-     * @dataProvider    get_contextids_provider
      * @param   array   $input List of context IDs
      * @param   array   $expected list of contextids
      * @param   int     $count Expected count
-     * @covers ::get_contextids
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_contextids_provider')]
     public function test_get_contextids($input, $expected, $count): void {
         $uit = new test_contextlist_base();
         $uit->set_contextids($input);
@@ -86,8 +75,6 @@ final class contextlist_base_test extends advanced_testcase {
 
     /**
      * Ensure that get_contexts returns the correct list of contexts.
-     *
-     * @covers ::get_contexts
      */
     public function test_get_contexts(): void {
         global $DB;
@@ -114,12 +101,11 @@ final class contextlist_base_test extends advanced_testcase {
     /**
      * Ensure that the contextlist_base is countable.
      *
-     * @dataProvider    get_contextids_provider
      * @param   array   $input List of context IDs
      * @param   array   $expected list of contextids
      * @param   int     $count Expected count
-     * @covers ::count
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_contextids_provider')]
     public function test_countable($input, $expected, $count): void {
         $uit = new test_contextlist_base();
         $uit->set_contextids($input);
@@ -129,12 +115,6 @@ final class contextlist_base_test extends advanced_testcase {
 
     /**
      * Ensure that the contextlist_base iterates over the set of contexts.
-     *
-     * @covers ::current
-     * @covers ::key
-     * @covers ::next
-     * @covers ::rewind
-     * @covers ::valid
      */
     public function test_context_iteration(): void {
         global $DB;
@@ -155,8 +135,6 @@ final class contextlist_base_test extends advanced_testcase {
 
     /**
      * Test that deleting a context results in current returning nothing.
-     *
-     * @covers ::current
      */
     public function test_current_context_one_context(): void {
         global $DB;
@@ -167,7 +145,7 @@ final class contextlist_base_test extends advanced_testcase {
             'contextlevel' => CONTEXT_BLOCK,
             'instanceid' => 45,
             'path' => '1/5/67/107',
-            'depth' => 4
+            'depth' => 4,
         ];
 
         $contextid = $DB->insert_record('context', $data);
@@ -184,8 +162,6 @@ final class contextlist_base_test extends advanced_testcase {
 
     /**
      * Test that deleting a context results in the next record being returned.
-     *
-     * @covers ::current
      */
     public function test_current_context_two_contexts(): void {
         global $DB;
@@ -196,7 +172,7 @@ final class contextlist_base_test extends advanced_testcase {
             'contextlevel' => CONTEXT_BLOCK,
             'instanceid' => 45,
             'path' => '1/5/67/107',
-            'depth' => 4
+            'depth' => 4,
         ];
 
         $contextid1 = $DB->insert_record('context', $data);
@@ -205,7 +181,7 @@ final class contextlist_base_test extends advanced_testcase {
             'contextlevel' => CONTEXT_BLOCK,
             'instanceid' => 47,
             'path' => '1/5/54/213',
-            'depth' => 4
+            'depth' => 4,
         ];
 
         $contextid2 = $DB->insert_record('context', $data);
@@ -221,8 +197,6 @@ final class contextlist_base_test extends advanced_testcase {
 
     /**
      * Test that if there are no non-deleted contexts that nothing is returned.
-     *
-     * @covers ::get_contexts
      */
     public function test_get_contexts_all_deleted(): void {
         global $DB;
@@ -233,7 +207,7 @@ final class contextlist_base_test extends advanced_testcase {
             'contextlevel' => CONTEXT_BLOCK,
             'instanceid' => 45,
             'path' => '1/5/67/107',
-            'depth' => 4
+            'depth' => 4,
         ];
 
         $contextid = $DB->insert_record('context', $data);
@@ -248,8 +222,6 @@ final class contextlist_base_test extends advanced_testcase {
 
     /**
      * Test that get_contexts() returns only active contexts.
-     *
-     * @covers ::get_contexts
      */
     public function test_get_contexts_one_deleted(): void {
         global $DB;
@@ -260,7 +232,7 @@ final class contextlist_base_test extends advanced_testcase {
             'contextlevel' => CONTEXT_BLOCK,
             'instanceid' => 45,
             'path' => '1/5/67/107',
-            'depth' => 4
+            'depth' => 4,
         ];
 
         $contextid1 = $DB->insert_record('context', $data);
@@ -269,7 +241,7 @@ final class contextlist_base_test extends advanced_testcase {
             'contextlevel' => CONTEXT_BLOCK,
             'instanceid' => 47,
             'path' => '1/5/54/213',
-            'depth' => 4
+            'depth' => 4,
         ];
 
         $contextid2 = $DB->insert_record('context', $data);
@@ -283,23 +255,5 @@ final class contextlist_base_test extends advanced_testcase {
         $this->assertCount(1, $contexts);
         $context = array_shift($contexts);
         $this->assertEquals($contextid2, $context->id);
-    }
-}
-
-/**
- * A test class extending the contextlist_base allowing setting of the
- * contextids.
- *
- * @copyright   2018 Andrew Nicols <andrew@nicols.co.uk>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class test_contextlist_base extends contextlist_base {
-    /**
-     * Set the contextids for the test class.
-     *
-     * @param   int[]   $contexids  The list of contextids to use.
-     */
-    public function set_contextids(array $contextids) {
-        parent::set_contextids($contextids);
     }
 }

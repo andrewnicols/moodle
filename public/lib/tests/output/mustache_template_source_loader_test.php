@@ -25,12 +25,12 @@ namespace core\output;
  * @copyright 2018 Ryan Wyllie <ryan@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(mustache_template_source_loader::class)]
 final class mustache_template_source_loader_test extends \advanced_testcase {
     /**
      * Ensure that stripping comments from templates does not mutilate the template body.
      */
     public function test_strip_template_comments(): void {
-
         $templatebody = <<<'TBD'
         <h1>{{# str }} pluginname, mod_lemmings {{/ str }}</h1>
         <div>{{test}}</div>
@@ -137,8 +137,8 @@ TBC;
     public static function load_test_cases(): array {
         $cache = [
             'core' => [
-                'test' => '{{! a comment }}The rest of the template'
-            ]
+                'test' => '{{! a comment }}The rest of the template',
+            ],
         ];
         $loader = self::build_loader_from_static_cache($cache);
 
@@ -148,14 +148,14 @@ TBC;
                 'component' => 'core',
                 'name' => 'test',
                 'includecomments' => true,
-                'expected' => '{{! a comment }}The rest of the template'
+                'expected' => '{{! a comment }}The rest of the template',
             ],
             'without comments' => [
                 'loader' => $loader,
                 'component' => 'core',
                 'name' => 'test',
                 'includecomments' => false,
-                'expected' => 'The rest of the template'
+                'expected' => 'The rest of the template',
             ],
         ];
     }
@@ -163,13 +163,13 @@ TBC;
     /**
      * Test the load function.
      *
-     * @dataProvider load_test_cases
      * @param mustache_template_source_loader $loader The loader
      * @param string $component The moodle component
      * @param string $name The template name
      * @param bool $includecomments Whether to strip comments
      * @param string $expected The expected output
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_test_cases')]
     public function test_load($loader, $component, $name, $includecomments, $expected): void {
         $this->assertEquals($expected, $loader->load($component, $name, 'boost', $includecomments));
     }
@@ -202,8 +202,8 @@ TBC;
             'test' => [
                 'foo' => $foo2,
                 'bop' => $bop,
-                'bim' => $bim
-            ]
+                'bim' => $bim,
+            ],
         ];
         $loader = self::build_loader_from_static_cache($cache);
 
@@ -216,11 +216,11 @@ TBC;
                 'expected' => [
                     'templates' => [
                         'test' => [
-                            'foo' => $foo2
-                        ]
+                            'foo' => $foo2,
+                        ],
                     ],
-                    'strings' => []
-                ]
+                    'strings' => [],
+                ],
             ],
             'no template includes w/o comments' => [
                 'loader' => $loader,
@@ -230,11 +230,11 @@ TBC;
                 'expected' => [
                     'templates' => [
                         'test' => [
-                            'foo' => $foo2nocomment
-                        ]
+                            'foo' => $foo2nocomment,
+                        ],
                     ],
-                    'strings' => []
-                ]
+                    'strings' => [],
+                ],
             ],
             'no template includes with string w comments' => [
                 'loader' => $loader,
@@ -244,15 +244,15 @@ TBC;
                 'expected' => [
                     'templates' => [
                         'core' => [
-                            'baz' => $baz
-                        ]
+                            'baz' => $baz,
+                        ],
                     ],
                     'strings' => [
                         'core' => [
-                            'hide' => 'Hide'
-                        ]
-                    ]
-                ]
+                            'hide' => 'Hide',
+                        ],
+                    ],
+                ],
             ],
             'no template includes with string w/o comments' => [
                 'loader' => $loader,
@@ -262,15 +262,15 @@ TBC;
                 'expected' => [
                     'templates' => [
                         'core' => [
-                            'baz' => $baznocomment
-                        ]
+                            'baz' => $baznocomment,
+                        ],
                     ],
                     'strings' => [
                         'core' => [
-                            'hide' => 'Hide'
-                        ]
-                    ]
-                ]
+                            'hide' => 'Hide',
+                        ],
+                    ],
+                ],
             ],
             'full with comments' => [
                 'loader' => $loader,
@@ -282,21 +282,21 @@ TBC;
                         'core' => [
                             'foo' => $foo,
                             'bar' => $bar,
-                            'baz' => $baz
+                            'baz' => $baz,
                         ],
                         'test' => [
                             'foo' => $foo2,
                             'bop' => $bop,
-                            'bim' => $bim
-                        ]
+                            'bim' => $bim,
+                        ],
                     ],
                     'strings' => [
                         'core' => [
                             'help' => 'Help',
-                            'hide' => 'Hide'
-                        ]
-                    ]
-                ]
+                            'hide' => 'Hide',
+                        ],
+                    ],
+                ],
             ],
             'full without comments' => [
                 'loader' => $loader,
@@ -308,35 +308,35 @@ TBC;
                         'core' => [
                             'foo' => $foonocomment,
                             'bar' => $barnocomment,
-                            'baz' => $baznocomment
+                            'baz' => $baznocomment,
                         ],
                         'test' => [
                             'foo' => $foo2nocomment,
                             'bop' => $bopnocomment,
-                            'bim' => $bimnocomment
-                        ]
+                            'bim' => $bimnocomment,
+                        ],
                     ],
                     'strings' => [
                         'core' => [
                             'help' => 'Help',
-                            'hide' => 'Hide'
-                        ]
-                    ]
-                ]
-            ]
+                            'hide' => 'Hide',
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
     /**
      * Test the load_with_dependencies function.
      *
-     * @dataProvider load_with_dependencies_test_cases
      * @param mustache_template_source_loader $loader The loader
      * @param string $component The moodle component
      * @param string $name The template name
      * @param bool $includecomments Whether to strip comments
      * @param string $expected The expected output
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_with_dependencies_test_cases')]
     public function test_load_with_dependencies($loader, $component, $name, $includecomments, $expected): void {
         $actual = $loader->load_with_dependencies($component, $name, 'boost', $includecomments);
         $this->assertEquals($expected, $actual);
@@ -386,7 +386,7 @@ TEMPLATE;
                 'multiline3' => $multiline3,
                 'multiline4' => $multiline4,
                 'multiline5' => $multiline5,
-            ]
+            ],
         ];
         $loader = self::build_loader_from_static_cache($cache);
 
@@ -396,10 +396,10 @@ TEMPLATE;
                 'source' => $bar,
                 'expected' => [
                     'templates' => [
-                        'core' => ['baz']
+                        'core' => ['baz'],
                     ],
-                    'strings' => []
-                ]
+                    'strings' => [],
+                ],
             ],
             'single string include' => [
                 'loader' => $loader,
@@ -407,17 +407,17 @@ TEMPLATE;
                 'expected' => [
                     'templates' => [],
                     'strings' => [
-                        'core' => ['hide']
-                    ]
-                ]
+                        'core' => ['hide'],
+                    ],
+                ],
             ],
             'no include' => [
                 'loader' => $loader,
                 'source' => $bop,
                 'expected' => [
                     'templates' => [],
-                    'strings' => []
-                ]
+                    'strings' => [],
+                ],
             ],
             'all include' => [
                 'loader' => $loader,
@@ -425,12 +425,12 @@ TEMPLATE;
                 'expected' => [
                     'templates' => [
                         'core' => ['bar'],
-                        'test' => ['bop']
+                        'test' => ['bop'],
                     ],
                     'strings' => [
-                        'core' => ['help']
-                    ]
-                ]
+                        'core' => ['help'],
+                    ],
+                ],
             ],
             'string: component on new line' => [
                 'loader' => $loader,
@@ -438,9 +438,9 @@ TEMPLATE;
                 'expected' => [
                     'templates' => [],
                     'strings' => [
-                        'mod_forum' => ['authorreplyingprivatelytoauthor']
-                    ]
-                ]
+                        'mod_forum' => ['authorreplyingprivatelytoauthor'],
+                    ],
+                ],
             ],
             'string: identifier on own line' => [
                 'loader' => $loader,
@@ -448,9 +448,9 @@ TEMPLATE;
                 'expected' => [
                     'templates' => [],
                     'strings' => [
-                        'mod_forum' => ['authorreplyingprivatelytoauthor']
-                    ]
-                ]
+                        'mod_forum' => ['authorreplyingprivatelytoauthor'],
+                    ],
+                ],
             ],
             'string: all parts on new lines' => [
                 'loader' => $loader,
@@ -458,9 +458,9 @@ TEMPLATE;
                 'expected' => [
                     'templates' => [],
                     'strings' => [
-                        'mod_forum' => ['authorreplyingprivatelytoauthor']
-                    ]
-                ]
+                        'mod_forum' => ['authorreplyingprivatelytoauthor'],
+                    ],
+                ],
             ],
             'string: id and component on own line' => [
                 'loader' => $loader,
@@ -468,9 +468,9 @@ TEMPLATE;
                 'expected' => [
                     'templates' => [],
                     'strings' => [
-                        'mod_forum' => ['authorreplyingprivatelytoauthor']
-                    ]
-                ]
+                        'mod_forum' => ['authorreplyingprivatelytoauthor'],
+                    ],
+                ],
             ],
             'string: no component' => [
                 'loader' => $loader,
@@ -478,9 +478,9 @@ TEMPLATE;
                 'expected' => [
                     'templates' => [],
                     'strings' => [
-                        'core' => ['hide']
-                    ]
-                ]
+                        'core' => ['hide'],
+                    ],
+                ],
             ],
         ];
     }
@@ -488,11 +488,11 @@ TEMPLATE;
     /**
      * Test the scan_template_source_for_dependencies function.
      *
-     * @dataProvider scan_template_source_for_dependencies_test_cases
      * @param mustache_template_source_loader $loader The loader
      * @param string $source The template to test
      * @param string $expected The expected output
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('scan_template_source_for_dependencies_test_cases')]
     public function test_scan_template_source_for_dependencies($loader, $source, $expected): void {
         $actual = \phpunit_util::call_internal_method(
             $loader,
@@ -511,7 +511,7 @@ TEMPLATE;
      * @return mustache_template_source_loader
      */
     private static function build_loader_from_static_cache(array $cache): mustache_template_source_loader {
-        return new mustache_template_source_loader(function($component, $name, $themename) use ($cache) {
+        return new mustache_template_source_loader(function ($component, $name, $themename) use ($cache) {
             return $cache[$component][$name];
         });
     }

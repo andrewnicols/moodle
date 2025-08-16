@@ -84,8 +84,8 @@ class testable_mod_quiz_external extends mod_quiz_external {
  * @copyright  2016 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      Moodle 3.1
- * @covers \mod_quiz_external
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(mod_quiz_external::class)]
 final class external_test extends externallib_advanced_testcase {
 
     use \quiz_question_helper_test_trait;
@@ -623,7 +623,6 @@ final class external_test extends externallib_advanced_testcase {
      * Test get_user_attempts when the attempt is in 'submitted' state.
      *
      * @todo Remove in Moodle 6.0 as part of MDL-80956 final deprecations.
-     * @covers \mod_quiz_external::get_user_attempts
      */
     public function test_get_user_attempts_submitted(): void {
 
@@ -654,7 +653,6 @@ final class external_test extends externallib_advanced_testcase {
      * Test get_user_attempts when the attempt is in 'notstarted' state. The attempt should not be returned.
      *
      * @todo Remove in Moodle 6.0 as part of MDL-80956 final deprecations.
-     * @covers \mod_quiz_external::get_user_attempts
      */
     public function test_get_user_attempts_notstarted(): void {
         // Create a quiz.
@@ -679,8 +677,6 @@ final class external_test extends externallib_advanced_testcase {
 
     /**
      * Test get_quiz_user_attempts
-     *
-     * @covers \mod_quiz_external::get_user_quiz_attempts
      */
     public function test_get_user_quiz_attempts(): void {
 
@@ -804,8 +800,6 @@ final class external_test extends externallib_advanced_testcase {
 
     /**
      * Test get_user_quiz_attempts with marks hidden
-     *
-     * @covers \mod_quiz_external::get_user_quiz_attempts
      */
     public function test_get_user_quiz_attempts_with_marks_hidden(): void {
         // Create quiz with one attempt finished and hide the mark.
@@ -842,8 +836,6 @@ final class external_test extends externallib_advanced_testcase {
 
     /**
      * Test get_user_quiz_attempts when the attempt is in 'submitted' state.
-     *
-     * @covers \mod_quiz_external::get_user_quiz_attempts
      */
     public function test_get_user_quiz_attempts_submitted(): void {
 
@@ -871,8 +863,6 @@ final class external_test extends externallib_advanced_testcase {
 
     /**
      * Test get_user_quiz_attempts when the attempt is in 'notstarted' state.
-     *
-     * @covers \mod_quiz_external::get_user_quiz_attempts
      */
     public function test_get_user_quiz_attempts_notstarted(): void {
         // Create a quiz.
@@ -1210,10 +1200,6 @@ final class external_test extends externallib_advanced_testcase {
 
     /**
      * Test get_combined_review_options when the user has an override.
-     *
-     * @covers ::get_combined_review_options
-     * @covers ::get_combined_review_options_parameters
-     * @covers ::get_combined_review_options_returns
      */
     public function test_get_combined_review_options_with_overrides(): void {
         global $DB;

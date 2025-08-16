@@ -14,22 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace enrol_guest;
+
 /**
  * Guest enrolment tests.
  *
  * @package    enrol_guest
- * @category   phpunit
+ * @category   test
  * @copyright  2023 Ilya Tregubov <ilya.a.tregubov@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace enrol_guest;
-
+#[\PHPUnit\Framework\Attributes\CoversClass(\enrol_guest_plugin::class)]
 final class lib_test extends \advanced_testcase {
-
     /**
      * Test the behaviour of validate_enrol_plugin_data().
-     *
-     * @covers ::validate_enrol_plugin_data
      */
     public function test_validate_enrol_plugin_data(): void {
         global $CFG;
@@ -61,7 +59,10 @@ final class lib_test extends \advanced_testcase {
         $this->assertEquals(get_string('errorminpasswordlength', 'auth', $CFG->minpasswordlength), $errors['enrol_guest0']);
         $this->assertEquals(get_string('errorminpassworddigits', 'auth', $CFG->minpassworddigits), $errors['enrol_guest1']);
         $this->assertEquals(get_string('errorminpasswordupper', 'auth', $CFG->minpasswordupper), $errors['enrol_guest2']);
-        $this->assertEquals(get_string('errorminpasswordnonalphanum', 'auth', $CFG->minpasswordnonalphanum), $errors['enrol_guest3']);
+        $this->assertEquals(
+            get_string('errorminpasswordnonalphanum', 'auth', $CFG->minpasswordnonalphanum),
+            $errors['enrol_guest3'],
+        );
 
         $enrolmentdata = ['password' => 'Testingtest123@'];
         $errors = $guestplugin->validate_enrol_plugin_data($enrolmentdata);
@@ -70,8 +71,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of update_enrol_plugin_data().
-     *
-     * @covers ::update_enrol_plugin_data
      */
     public function test_update_enrol_plugin_data(): void {
         global $DB;
@@ -99,8 +98,6 @@ final class lib_test extends \advanced_testcase {
 
     /**
      * Test the behaviour of find_instance().
-     *
-     * @covers ::find_instance
      */
     public function test_find_instance(): void {
         global $DB;
@@ -126,5 +123,4 @@ final class lib_test extends \advanced_testcase {
         $actual = $guestplugin->find_instance($enrolmentdata, $course->id);
         $this->assertEquals($expected->id, $actual->id);
     }
-
 }

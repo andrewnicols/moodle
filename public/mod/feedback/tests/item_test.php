@@ -28,11 +28,8 @@ use ReflectionClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 final class item_test extends advanced_testcase {
-
     /**
      * Test that get_analysed() for textarea item returns correctly formatted data for exporting to Excel.
-     *
-     * @covers ::get_analysed
      */
     public function test_get_analysed_textarea_for_excel_export(): void {
         global $DB;

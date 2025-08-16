@@ -33,8 +33,8 @@ use mod_forum\subscriptions;
  * @category   test
  * @copyright  2025 Sara Arjona <sara@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \mod_forum\external\set_forum_subscription
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(set_forum_subscription::class)]
 final class set_forum_subscription_test extends \externallib_advanced_testcase {
 
     #[\Override]
@@ -56,14 +56,12 @@ final class set_forum_subscription_test extends \externallib_advanced_testcase {
     /**
      * Test execute method.
      *
-     * @dataProvider execute_provider
-     * @covers ::execute
-     *
      * @param bool|null $initialstate Initialise subscription state, null means no initial state.
      * @param bool $targetstate Expected target state of the subscription.
      * @param int $subscriptionmode Subscription mode for the forum.
      * @param bool $expectedexception Whether an exception is expected.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('execute_provider')]
     public function test_execute(
         ?bool $initialstate,
         bool $targetstate,
@@ -151,8 +149,6 @@ final class set_forum_subscription_test extends \externallib_advanced_testcase {
 
     /**
      * Test execute method when forum is not subscribable.
-     *
-     * @covers ::execute
      */
     public function test_execute_not_subscribable(): void {
 
@@ -199,8 +195,6 @@ final class set_forum_subscription_test extends \externallib_advanced_testcase {
 
     /**
      * Test execute method when forum does not exist.
-     *
-     * @covers ::execute
      */
     public function test_execute_unexisting_forum(): void {
 
@@ -216,8 +210,6 @@ final class set_forum_subscription_test extends \externallib_advanced_testcase {
 
     /**
      * Test execute method when user is not enrolled in the course of the forum.
-     *
-     * @covers ::execute
      */
     public function test_execute_unenrolled_user(): void {
 

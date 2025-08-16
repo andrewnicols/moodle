@@ -17,7 +17,6 @@
 namespace mod_quiz;
 
 use core\exception\coding_exception;
-use question_bank;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -31,8 +30,8 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
  * @category  test
  * @copyright 2013 Adrian Greeve
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \mod_quiz\structure
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\mod_quiz\structure::class)]
 final class structure_test extends \advanced_testcase {
 
     use \quiz_question_helper_test_trait;
@@ -1014,8 +1013,6 @@ final class structure_test extends \advanced_testcase {
 
     /**
      * Test to get the version information for a question to show in the version selection dropdown.
-     *
-     * @covers ::get_question_version_info
      */
     public function test_get_version_choices_for_slot(): void {
         $this->resetAfterTest();
@@ -1047,8 +1044,6 @@ final class structure_test extends \advanced_testcase {
 
     /**
      * Test the current user have '...use' capability over the question(s) in a given slot.
-     *
-     * @covers ::has_use_capability
      */
     public function test_has_use_capability(): void {
         $this->resetAfterTest();

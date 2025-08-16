@@ -13,6 +13,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 namespace quiz_statistics;
 
 defined('MOODLE_INTERNAL') || die();
@@ -22,7 +23,6 @@ require_once($CFG->dirroot . '/mod/quiz/tests/quiz_question_helper_test_trait.ph
 
 use core\progress\none;
 use mod_quiz\grade_calculator;
-use mod_quiz\quiz_settings;
 
 /**
  * Unit tests for quiz_statistics\event\observer\slots_updated
@@ -31,8 +31,9 @@ use mod_quiz\quiz_settings;
  * @copyright 2023 onwards Catalyst IT EU {@link https://catalyst-eu.net}
  * @author    Mark Johnson <mark.johnson@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \quiz_statistics\quiz_structure_modified
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(hook_callbacks::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\quiz_statistics_report::class)]
 final class quiz_structure_modified_test extends \advanced_testcase {
     use \quiz_question_helper_test_trait;
 
@@ -41,8 +42,6 @@ final class quiz_structure_modified_test extends \advanced_testcase {
      *
      * When recompute_quiz_sumgrades() is called, it should trigger this plugin's quiz_structure_modified callback
      * which clears the statistics cache for the quiz.
-     *
-     * @return void
      */
     public function test_clear_cache_on_structure_modified(): void {
         global $DB;

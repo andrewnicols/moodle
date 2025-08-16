@@ -25,8 +25,8 @@ namespace factor_token;
  * @copyright   Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(factor::class)]
 final class factor_test extends \advanced_testcase {
-
     /**
      * Holds specific requested factor, which is token factor.
      *
@@ -36,17 +36,16 @@ final class factor_test extends \advanced_testcase {
 
     public function setUp(): void {
         parent::setUp();
-        $this->resetAfterTest();
+
         $this->factor = new \factor_token\factor('token');
     }
 
     /**
      * Test calculating expiry time in general
-     *
-     * @covers ::calculate_expiry_time
-     * @return void
      */
     public function test_calculate_expiry_time_in_general(): void {
+        $this->resetAfterTest();
+
         $timestamp = 1642213800; // 1230 UTC.
 
         set_config('expireovernight', 0, 'factor_token');
@@ -87,12 +86,11 @@ final class factor_test extends \advanced_testcase {
      * 0 <= x < 2am, which in that case it should just expire using the raw
      * value, provided it never goes past raw value expiry time, and when it
      * needs to be 2am, it's 2am on the following morning.
-     *
-     * @covers ::calculate_expiry_time
-     * @param int $timestamp
-     * @dataProvider timestamp_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('timestamp_provider')]
     public function test_calculate_expiry_time_for_overnight_expiry_with_one_day_expiry($timestamp): void {
+        $this->resetAfterTest();
+
         // Setup configuration.
         $method = new \ReflectionMethod($this->factor, 'calculate_expiry_time');
         set_config('expireovernight', 1, 'factor_token');
@@ -100,7 +98,7 @@ final class factor_test extends \advanced_testcase {
 
         // All the results here, should be for 2am the following morning from the timestamp provided.
         $expiry = $method->invoke($this->factor, $timestamp);
-        list($expiresat, $secondstillexpiry) = $expiry;
+        [$expiresat, $secondstillexpiry] = $expiry;
 
         // Calculate the expected raw expiry if not considering 'overnight'.
         $timezone = \core_date::get_user_timezone_object();
@@ -136,11 +134,12 @@ final class factor_test extends \advanced_testcase {
      * value, provided it never goes past raw value expiry time, and when it
      * needs to be 2am, it's 2am on the morning after tomorrow.
      *
-     * @covers ::calculate_expiry_time
      * @param int $timestamp
-     * @dataProvider timestamp_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('timestamp_provider')]
     public function test_calculate_expiry_time_for_overnight_expiry_with_two_day_expiry($timestamp): void {
+        $this->resetAfterTest();
+
         // Setup configuration.
         $method = new \ReflectionMethod($this->factor, 'calculate_expiry_time');
         set_config('expireovernight', 1, 'factor_token');
@@ -148,7 +147,7 @@ final class factor_test extends \advanced_testcase {
 
         // All the results here, should be for 2am the following morning from the timestamp provided.
         $expiry = $method->invoke($this->factor, $timestamp);
-        list($expiresat, $secondstillexpiry) = $expiry;
+        [$expiresat, $secondstillexpiry] = $expiry;
 
         // Calculate the expected raw expiry if not considering 'overnight'.
         $timezone = \core_date::get_user_timezone_object();
@@ -186,11 +185,12 @@ final class factor_test extends \advanced_testcase {
     /**
      * This should check if the 3am expiry is pushed back to 2am as expected, but everything else appears as expected
      *
-     * @covers ::calculate_expiry_time
      * @param int $timestamp
-     * @dataProvider timestamp_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('timestamp_provider')]
     public function test_calculate_expiry_time_for_overnight_expiry_with_three_hour_expiry($timestamp): void {
+        $this->resetAfterTest();
+
         // Setup configuration.
         $method = new \ReflectionMethod($this->factor, 'calculate_expiry_time');
         set_config('expireovernight', 1, 'factor_token');
@@ -198,7 +198,7 @@ final class factor_test extends \advanced_testcase {
 
         // All the results here, should be for 2am the following morning from the timestamp provided.
         $expiry = $method->invoke($this->factor, $timestamp);
-        list($expiresat, $secondstillexpiry) = $expiry;
+        [$expiresat, $secondstillexpiry] = $expiry;
 
         // Calculate the expected raw expiry if not considering 'overnight'.
         $timezone = \core_date::get_user_timezone_object();
@@ -230,11 +230,12 @@ final class factor_test extends \advanced_testcase {
     /**
      * Only relevant based on the hour padding used, which is currently set to 2 hours (2am).
      *
-     * @covers ::calculate_expiry_time
      * @param int $timestamp
-     * @dataProvider timestamp_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('timestamp_provider')]
     public function test_calculate_expiry_time_for_overnight_expiry_with_an_hour_expiry($timestamp): void {
+        $this->resetAfterTest();
+
         // Setup configuration.
         $method = new \ReflectionMethod($this->factor, 'calculate_expiry_time');
         set_config('expireovernight', 1, 'factor_token');
@@ -242,7 +243,7 @@ final class factor_test extends \advanced_testcase {
 
         // All the results here, should be for 2am the following morning from the timestamp provided.
         $expiry = $method->invoke($this->factor, $timestamp);
-        list($expiresat, $secondstillexpiry) = $expiry;
+        [$expiresat, $secondstillexpiry] = $expiry;
 
         // Calculate the expected raw expiry if not considering 'overnight'.
         $timezone = \core_date::get_user_timezone_object();
@@ -276,12 +277,12 @@ final class factor_test extends \advanced_testcase {
      * Increments by 30 minutes to cover half hour and hour cases.
      * Starting timestamp: 2022-01-15 07:30:00 Australia/Melbourne time.
      */
-    public static function timestamp_provider(): array {
+    public static function timestamp_provider(): \Generator {
         $starttimestamp = 1642192200;
+
         foreach (range(0, 23) as $i) {
-            $timestamps[] = [$starttimestamp + ($i * HOURSECS)];
-            $timestamps[] = [$starttimestamp + ($i * HOURSECS) + (30 * MINSECS)];
+            yield [$starttimestamp + ($i * HOURSECS)];
+            yield [$starttimestamp + ($i * HOURSECS) + (30 * MINSECS)];
         }
-        return $timestamps;
     }
 }

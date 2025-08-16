@@ -33,11 +33,9 @@ namespace report_loglive\event;
  * @copyright  2014 Rajesh Taneja <rajesh@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(report_viewed::class)]
 final class events_test extends \advanced_testcase {
-
-    /**
-     * Setup testcase.
-     */
+    #[\Override]
     public function setUp(): void {
         parent::setUp();
         $this->setAdminUser();

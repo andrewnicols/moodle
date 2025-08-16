@@ -22,10 +22,9 @@ namespace core\output;
  * @package   core
  * @copyright 2019 Ryan Wyllie <ryan@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \core\output\mustache_helper_collection
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(mustache_helper_collection::class)]
 final class mustache_helper_collection_test extends \advanced_testcase {
-
     /**
      * Test cases to confirm that disallowed helpers are stripped from the source
      * text by the helper before being passed to other another helper. This prevents
@@ -36,98 +35,99 @@ final class mustache_helper_collection_test extends \advanced_testcase {
             'no disallowed' => [
                 'disallowed' => [],
                 'input' => 'core, move, {{#js}} some nasty JS {{/js}}',
-                'expected' => 'core, move, {{#js}} some nasty JS {{/js}}'
+                'expected' => 'core, move, {{#js}} some nasty JS {{/js}}',
             ],
             'disallowed no match' => [
                 'disallowed' => ['foo'],
                 'input' => 'core, move, {{#js}} some nasty JS {{/js}}',
-                'expected' => 'core, move, {{#js}} some nasty JS {{/js}}'
+                'expected' => 'core, move, {{#js}} some nasty JS {{/js}}',
             ],
             'disallowed partial match 1' => [
                 'disallowed' => ['js'],
                 'input' => 'core, move, {{#json}} some nasty JS {{/json}}',
-                'expected' => 'core, move, {{#json}} some nasty JS {{/json}}'
+                'expected' => 'core, move, {{#json}} some nasty JS {{/json}}',
             ],
             'disallowed partial match 2' => [
                 'disallowed' => ['js'],
                 'input' => 'core, move, {{#onjs}} some nasty JS {{/onjs}}',
-                'expected' => 'core, move, {{#onjs}} some nasty JS {{/onjs}}'
+                'expected' => 'core, move, {{#onjs}} some nasty JS {{/onjs}}',
             ],
             'single disallowed 1' => [
                 'disallowed' => ['js'],
                 'input' => 'core, move, {{#js}} some nasty JS {{/js}}',
-                'expected' => 'core, move, {{}}'
+                'expected' => 'core, move, {{}}',
             ],
             'single disallowed 2' => [
                 'disallowed' => ['js'],
                 'input' => 'core, move, {{ # js }} some nasty JS {{ /  js }}',
-                'expected' => 'core, move, {{}}'
+                'expected' => 'core, move, {{}}',
             ],
             'single disallowed 3' => [
                 'disallowed' => ['js'],
                 'input' => 'core, {{#js}} some nasty JS {{/js}}, test',
-                'expected' => 'core, {{}}, test'
+                'expected' => 'core, {{}}, test',
             ],
             'single disallowed 4' => [
                 'disallowed' => ['js'],
                 'input' => 'core, {{#ok}} this is ok {{/ok}}, {{#js}} some nasty JS {{/js}}',
-                'expected' => 'core, {{#ok}} this is ok {{/ok}}, {{}}'
+                'expected' => 'core, {{#ok}} this is ok {{/ok}}, {{}}',
             ],
             'single disallowed multiple matches 1' => [
                 'disallowed' => ['js'],
                 'input' => 'core, {{#js}} some nasty JS {{/js}}, {{#js}} some nasty JS {{/js}}',
-                'expected' => 'core, {{}}'
+                'expected' => 'core, {{}}',
             ],
             'single disallowed multiple matches 2' => [
                 'disallowed' => ['js'],
                 'input' => 'core, {{ # js }} some nasty JS {{ /  js }}, {{ # js }} some nasty JS {{ /  js }}',
-                'expected' => 'core, {{}}'
+                'expected' => 'core, {{}}',
             ],
             'single disallowed multiple matches nested 1' => [
                 'disallowed' => ['js'],
                 'input' => 'core, move, {{#js}} some nasty JS {{#js}} some nasty JS {{/js}} {{/js}}',
-                'expected' => 'core, move, {{}}'
+                'expected' => 'core, move, {{}}',
             ],
             'single disallowed multiple matches nested 2' => [
                 'disallowed' => ['js'],
                 'input' => 'core, move, {{ # js }} some nasty JS {{ # js }} some nasty JS {{ /  js }}{{ /  js }}',
-                'expected' => 'core, move, {{}}'
+                'expected' => 'core, move, {{}}',
             ],
             'multiple disallowed 1' => [
                 'disallowed' => ['js', 'foo'],
                 'input' => 'core, move, {{#js}} some nasty JS {{/js}}',
-                'expected' => 'core, move, {{}}'
+                'expected' => 'core, move, {{}}',
             ],
             'multiple disallowed 2' => [
                 'disallowed' => ['js', 'foo'],
                 'input' => 'core, {{#foo}} blah {{/foo}}, {{#js}} js {{/js}}',
-                'expected' => 'core, {{}}, {{}}'
+                'expected' => 'core, {{}}, {{}}',
             ],
             'multiple disallowed 3' => [
                 'disallowed' => ['js', 'foo'],
                 'input' => '{{#foo}} blah {{/foo}}, {{#foo}} blah {{/foo}}, {{#js}} js {{/js}}',
-                'expected' => '{{}}, {{}}'
+                'expected' => '{{}}, {{}}',
             ],
             'multiple disallowed 4' => [
                 'disallowed' => ['js', 'foo'],
                 'input' => '{{#foo}} blah {{/foo}}, {{#js}} js {{/js}}, {{#foo}} blah {{/foo}}',
-                'expected' => '{{}}'
+                'expected' => '{{}}',
             ],
             'multiple disallowed 5' => [
                 'disallowed' => ['js', 'foo'],
                 'input' => 'core, move, {{#js}} JS {{#foo}} blah {{/foo}} {{/js}}',
-                'expected' => 'core, move, {{}}'
+                'expected' => 'core, move, {{}}',
             ],
         ];
     }
 
     /**
      * Test that the mustache_helper_collection class correctly strips
-     * @dataProvider get_strip_disallowed_helpers_testcases
+     *
      * @param string[] $disallowed The list of helpers to strip
      * @param string $input The input string for the helper
      * @param string $expected The expected output of the string after disallowed strip
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_strip_disallowed_helpers_testcases')]
     public function test_strip_disallowed_helpers($disallowed, $input, $expected): void {
         $collection = new mustache_helper_collection(null, $disallowed);
         $this->assertEquals($expected, $collection->strip_disallowed_helpers($disallowed, $input));
@@ -149,16 +149,16 @@ final class mustache_helper_collection_test extends \advanced_testcase {
         $badcalled = false;
         $goodcalled = false;
 
-        $badhelper = function() use (&$badcalled) {
+        $badhelper = function () use (&$badcalled) {
             $badcalled = true;
             return '';
         };
-        $goodhelper = function() use (&$goodcalled) {
+        $goodhelper = function () use (&$goodcalled) {
             $goodcalled = true;
             return '';
         };
         // A test helper that just returns the text without modifying it.
-        $testhelper = function($text, $lambda) use ($collection) {
+        $testhelper = function ($text, $lambda) use ($collection) {
             $collection->get('good')($text, $lambda);
             $collection->get('bad')($text, $lambda);
             return $text;

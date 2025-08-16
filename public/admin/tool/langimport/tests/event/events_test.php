@@ -14,14 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Tests for langimport events.
- *
- * @package    tool_langimport
- * @copyright  2014 Dan Poltawski
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
- */
-
 namespace tool_langimport\event;
 
 /**
@@ -31,11 +23,11 @@ namespace tool_langimport\event;
  * @copyright  2014 Dan Poltawski
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later.
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(langpack_imported::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(langpack_updated::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(langpack_removed::class)]
 final class events_test extends \advanced_testcase {
-
-    /**
-     * Setup testcase.
-     */
+    #[\Override]
     public function setUp(): void {
         parent::setUp();
         $this->setAdminUser();

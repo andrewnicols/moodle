@@ -24,15 +24,12 @@ namespace tool_mfa;
  * @copyright   Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(manager::class)]
 final class manager_test extends \advanced_testcase {
-
     use \tool_mfa\tests\mfa_settings_trait;
 
     /**
      * Tests getting the factor total weight
-     *
-     * @covers ::get_total_weight
-     * @covers ::setup_user_factor
      */
     public function test_get_total_weight(): void {
         $this->resetAfterTest(true);
@@ -76,8 +73,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests getting the factor status
-     *
-     * @covers ::get_status
      */
     public function test_get_status(): void {
         $this->resetAfterTest(true);
@@ -117,8 +112,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests checking if passed enough factors
-     *
-     * @covers ::passed_enough_factors
      */
     public function test_passed_enough_factors(): void {
         $this->resetAfterTest(true);
@@ -178,13 +171,12 @@ final class manager_test extends \advanced_testcase {
     /**
      * Tests whether it should require mfa
      *
-     * @covers ::should_require_mfa
      * @param string $urlstring
      * @param string $webroot
      * @param bool $status
      * @param array|null $params
-     * @dataProvider should_redirect_urls_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('should_redirect_urls_provider')]
     public function test_should_require_mfa_urls($urlstring, $webroot, $status, $params = null): void {
         $this->resetAfterTest(true);
         global $CFG;
@@ -197,8 +189,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests whether it should require the mfa checks
-     *
-     * @covers ::should_require_mfa
      */
     public function test_should_require_mfa_checks(): void {
         // Setup test and user.
@@ -285,8 +275,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests should require the mfa redirection loop
-     *
-     * @covers ::should_require_mfa
      */
     public function test_should_require_mfa_redirection_loop(): void {
         // Setup test and user.
@@ -341,9 +329,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests checking for possible setup factor
-     *
-     * @covers ::possible_factor_setup
-     * @covers ::setup_user_factor
      */
     public function test_possible_factor_setup(): void {
         // Setup test and user.
@@ -377,8 +362,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests checking if a factor is ready
-     *
-     * @covers ::is_ready
      */
     public function test_is_ready(): void {
         // Setup test and user.
@@ -419,9 +402,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests core hooks
-     *
-     * @covers ::mfa_config_hook_test
-     * @covers ::mfa_login_hook_test
      */
     public function test_core_hooks(): void {
         // Setup test and user.
@@ -439,8 +419,6 @@ final class manager_test extends \advanced_testcase {
 
     /**
      * Tests circular redirect auth
-     *
-     * @covers ::should_require_mfa
      */
     public function test_circular_redirect_auth(): void {
         // Setup test and user.

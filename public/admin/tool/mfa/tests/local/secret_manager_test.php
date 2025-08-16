@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace tool_mfa;
+namespace tool_mfa\local;
 
 /**
  * Tests for MFA secret manager class.
@@ -24,12 +24,10 @@ namespace tool_mfa;
  * @copyright   Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\tool_mfa\local\secret_manager::class)]
 final class secret_manager_test extends \advanced_testcase {
-
     /**
      * Tests create factor's secret
-     *
-     * @covers ::create_secret
      */
     public function test_create_secret(): void {
         global $DB;
@@ -81,9 +79,6 @@ final class secret_manager_test extends \advanced_testcase {
 
     /**
      * Tests add factor's secret to database
-     *
-     * @covers ::get_record
-     * @covers ::delete_records
      */
     public function test_add_secret_to_db(): void {
         global $DB, $USER;
@@ -118,9 +113,6 @@ final class secret_manager_test extends \advanced_testcase {
 
     /**
      * Tests validating factor's secret
-     *
-     * @covers ::validate_secret
-     * @covers ::create_secret
      */
     public function test_validate_secret(): void {
         global $DB;
@@ -177,10 +169,6 @@ final class secret_manager_test extends \advanced_testcase {
 
     /**
      * Tests revoking factor's secret
-     *
-     * @covers ::validate_secret
-     * @covers ::create_secret
-     * @covers ::revoke_secret
      */
     public function test_revoke_secret(): void {
         global $DB, $SESSION;
@@ -209,9 +197,6 @@ final class secret_manager_test extends \advanced_testcase {
 
     /**
      * Tests checking if factor has an active secret
-     *
-     * @covers ::create_secret
-     * @covers ::revoke_secret
      */
     public function test_has_active_secret(): void {
         global $DB;
@@ -260,8 +245,6 @@ final class secret_manager_test extends \advanced_testcase {
 
     /**
      * Tests with cleanup temporal secrets
-     *
-     * @covers ::cleanup_temp_secrets
      */
     public function test_cleanup_temp_secrets(): void {
         global $DB;

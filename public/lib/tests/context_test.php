@@ -16,6 +16,9 @@
 
 namespace core;
 
+use core\context\module as context_module;
+use core\context_helper;
+
 /**
  * Unit tests for base context class.
  *
@@ -24,13 +27,13 @@ namespace core;
  * @package   core
  * @copyright Petr Skoda
  * @license   https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass  \core\context
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(context::class)]
 final class context_test extends \advanced_testcase {
     /**
      * Tests legacy class name.
-     * @coversNothing
      */
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
     public function test_legacy_classname(): void {
         $this->assertSame('core\context', context::class);
 
@@ -41,18 +44,12 @@ final class context_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::instance_by_id
      */
     public function test_factory_methods(): void {
         $context = context::instance_by_id(SYSCONTEXTID);
         $this->assertSame('core\\context\\system', get_class($context));
     }
 
-    /**
-     * Tests covered methods.
-     * @covers ::__set
-     * @covers ::__unset
-     */
     public function test_propery_change_protection(): void {
         $context = context\system::instance();
 
@@ -77,7 +74,6 @@ final class context_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::__get
      */
     public function test_incorrect_property(): void {
         $context = context\system::instance();
@@ -88,7 +84,6 @@ final class context_test extends \advanced_testcase {
 
     /**
      * Tests covered method.
-     * @covers ::getIterator
      */
     public function test_iterator(): void {
         $context = context\system::instance();
@@ -102,5 +97,46 @@ final class context_test extends \advanced_testcase {
             'locked' => false,
         ];
         $this->assertSame($expected, $array);
+    }
+
+    /**
+     * Ensure that the get_parent_contexts() function limits the number of queries it performs.
+     */
+    public function test_get_parent_contexts_preload(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        /*
+         * Given the following data structure:
+         * System
+         * - Category
+         * --- Category
+         * ----- Category
+         * ------- Category
+         * --------- Course
+         * ----------- Activity (Forum)
+         */
+
+        $contexts = [];
+
+        $cat1 = $this->getDataGenerator()->create_category();
+        $cat2 = $this->getDataGenerator()->create_category(['parent' => $cat1->id]);
+        $cat3 = $this->getDataGenerator()->create_category(['parent' => $cat2->id]);
+        $cat4 = $this->getDataGenerator()->create_category(['parent' => $cat3->id]);
+        $course = $this->getDataGenerator()->create_course(['category' => $cat4->id]);
+        $forum = $this->getDataGenerator()->create_module('forum', ['course' => $course->id]);
+
+        $modcontext = context_module::instance($forum->cmid);
+
+        context_helper::reset_caches();
+
+        // There should only be a single DB query.
+        $predbqueries = $DB->perf_get_reads();
+
+        $parents = $modcontext->get_parent_contexts();
+        // Note: For some databases There is one read, plus one FETCH, plus one CLOSE.
+        // These all show as reads, when there has actually only been a single query.
+        $this->assertLessThanOrEqual(3, $DB->perf_get_reads() - $predbqueries);
     }
 }

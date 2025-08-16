@@ -32,14 +32,13 @@ require_once(__DIR__.'/../extlib/ParagonIE/ConstantTime/Base32.php');
 /**
  * Tests for TOTP factor.
  *
- * @covers      \factor_totp\factor
  * @package     factor_totp
  * @author      Peter Burnett <peterburnett@catalyst-au.net>
  * @copyright   Catalyst IT
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(factor::class)]
 final class factor_test extends \advanced_testcase {
-
     /**
      * Test code validation of the TOTP factor
      */
@@ -114,8 +113,6 @@ final class factor_test extends \advanced_testcase {
 
     /**
      * Do not store the TOTP secret + user combination more than once
-     *
-     * @covers ::setup_user_factor
      */
     public function test_wont_store_same_secret_twice(): void {
         global $DB;

@@ -25,20 +25,17 @@ namespace core\output;
  * @category  test
  * @copyright 2022 TU Berlin
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core\output\mustache_quote_helper
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(mustache_quote_helper::class)]
 final class mustache_quote_helper_test extends \basic_testcase {
-
     /**
-     * Tests the quote helper
-     *
-     * @covers ::quote
+     * Tests the quote helper.
      */
     public function test_quote(): void {
         $engine = new \Mustache_Engine();
         $context = new \Mustache_Context([
             'world' => '{{planet}}',
-            'planet' => '<earth>'
+            'planet' => '<earth>',
         ]);
         $lambdahelper = new \Mustache_LambdaHelper($engine, $context);
 
