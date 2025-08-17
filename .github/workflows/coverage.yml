@@ -88,7 +88,7 @@ jobs:
               vendor/bin/phpunit $phpunit_options \
               --coverage-cobertura coverage/cobertura.xml \
               --coverage-clover coverage/clover.xml \
-              --coverage-text coverage/clover.txt \
+              --coverage-text=coverage/clover.txt \
               ${{ inputs.phpunit_extra_options }}
 
       - name: Upload Coverage artifacts
