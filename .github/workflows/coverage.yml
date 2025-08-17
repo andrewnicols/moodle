@@ -99,5 +99,5 @@ jobs:
       - name: Coveralls
         if: ${{ env.COVERALLS_REPO_TOKEN }}
         uses: coverallsapp/github-action@v2
-        files:
-          coverage/clover.xml
+        with:
+          file: coverage/clover.xml
