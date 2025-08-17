@@ -17,23 +17,20 @@
 namespace mod_choice\courseformat;
 
 use core_courseformat\local\overview\overviewfactory;
-use core_courseformat\output\local\overview\overviewdialog;
 
 /**
  * Tests for Choice integration.
  *
- * @covers \mod_choice\courseformat\overview
  * @package    mod_choice
  * @category   test
  * @copyright  2025 Laurent David <laurent.david@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(overview::class)]
 final class overview_test extends \advanced_testcase {
-
     /**
      * Test get_extra_status_for_user method.
      *
-     * @covers ::get_extra_status_for_user
      * @dataProvider data_provider_get_extra_status_for_user
      * @param string $user
      * @param bool|null $answered
@@ -82,10 +79,8 @@ final class overview_test extends \advanced_testcase {
      * Test get_extra_status_for_user method.
      *
      * @param int|null $timeincrement
-     *
-     * @covers ::get_due_date_overview
-     * @dataProvider data_provider_get_due_date_overview
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_provider_get_due_date_overview')]
     public function test_get_due_date_overview(?int $timeincrement = null): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -139,8 +134,6 @@ final class overview_test extends \advanced_testcase {
      *
      * @param string $username The username of the user to test.
      * @param int|null $expectedcount the expected count of users who responded
-     *
-     * @covers ::get_actions_overview
      * @dataProvider provider_test_get_actions_overview
      */
     public function test_get_actions_overview(string $username, ?int $expectedcount = null): void {
@@ -187,7 +180,6 @@ final class overview_test extends \advanced_testcase {
      * @param bool $withanswers whether the choice will be created with answers
      * @param int|null $expectedcount the expected count of users who responded
      *
-     * @covers ::get_actions_overview
      * @dataProvider provider_get_student_responded_count
      */
     public function test_get_students_who_responded(
@@ -279,7 +271,6 @@ final class overview_test extends \advanced_testcase {
      * Setup users and activity for the tests.
      *
      * @param bool $withanswers whether to create answers for the users.
-     *
      * @return array
      */
     private function setup_users_and_activity(

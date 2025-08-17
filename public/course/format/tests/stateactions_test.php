@@ -28,8 +28,8 @@ use stdClass;
  * @category   test
  * @copyright  2021 Sara Arjona (sara@moodle.com)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\stateactions
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(stateactions::class)]
 final class stateactions_test extends \advanced_testcase {
     /**
      * Helper method to create an activity into a section and add it to the $sections and $activities arrays.
@@ -51,7 +51,7 @@ final class stateactions_test extends \advanced_testcase {
             ['course' => $courseid],
             [
                 'section' => $section,
-                'visible' => $visible
+                'visible' => $visible,
             ]
         );
         return $activity->cmid;
@@ -189,11 +189,6 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test the behaviour course_state.
      *
-     * @dataProvider get_state_provider
-     * @covers ::course_state
-     * @covers ::section_state
-     * @covers ::cm_state
-     *
      * @param string $format The course will be created with this course format.
      * @param string $role The role of the user that will execute the method.
      * @param string $method the method to call
@@ -201,6 +196,7 @@ final class stateactions_test extends \advanced_testcase {
      * @param array $expectedresults List of the course module names expected after calling the method.
      * @param bool $expectedexception If this call will raise an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_state_provider')]
     public function test_get_state(
         string $format,
         string $role,
@@ -356,7 +352,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => 'admin',
                 'method' => 'course_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => ['course'],
@@ -370,7 +366,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => 'editingteacher',
                 'method' => 'course_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => ['course'],
@@ -384,7 +380,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => 'student',
                 'method' => 'course_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => ['course'],
@@ -429,7 +425,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -439,7 +435,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section0'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section0'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -453,7 +449,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section1'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section1'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -467,7 +463,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section2'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section2'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -481,7 +477,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section1', 'section3'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['section1', 'section3'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -495,7 +491,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['invalidsection'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['invalidsection'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -505,7 +501,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'section_state',
                 'params' => [
-                    'ids' => ['section1'], 'targetsectionid' => 'section3', 'targetcmid' => null
+                    'ids' => ['section1'], 'targetsectionid' => 'section3', 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -563,7 +559,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => [], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -573,7 +569,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => ['cm0'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['cm0'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -587,7 +583,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => ['cm1'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['cm1'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [
                     'course' => [],
@@ -643,7 +639,7 @@ final class stateactions_test extends \advanced_testcase {
                 'role' => $role,
                 'method' => 'cm_state',
                 'params' => [
-                    'ids' => ['invalidcm'], 'targetsectionid' => null, 'targetcmid' => null
+                    'ids' => ['invalidcm'], 'targetsectionid' => null, 'targetcmid' => null,
                 ],
                 'expectedresults' => [],
                 'expectedexception' => true,
@@ -755,11 +751,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for section_hide
      *
-     * @covers ::section_hide
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_section_hide(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -782,11 +777,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for section_hide
      *
-     * @covers ::section_show
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_section_show(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -809,11 +803,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_show
      *
-     * @covers ::cm_show
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_show(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -836,11 +829,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_hide
      *
-     * @covers ::cm_hide
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_hide(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -863,11 +855,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_stealth
      *
-     * @covers ::cm_stealth
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_stealth(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -947,13 +938,12 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Duplicate course module method.
      *
-     * @covers ::cm_duplicate
-     * @dataProvider cm_duplicate_provider
      * @param string $targetsection the target section (empty for none)
      * @param bool $validcms if uses valid cms
      * @param string $role the current user role name
      * @param bool $expectedexception if the test will raise an exception
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cm_duplicate_provider')]
     public function test_cm_duplicate(
         string $targetsection = '',
         bool $validcms = true,
@@ -1096,11 +1086,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_delete
      *
-     * @covers ::cm_delete
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_delete(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -1148,11 +1137,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_moveright
      *
-     * @covers ::cm_moveright
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_moveright(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -1175,11 +1163,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_moveleft
      *
-     * @covers ::cm_moveleft
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_moveleft(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -1202,11 +1189,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_nogroups
      *
-     * @covers ::cm_nogroups
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_nogroups(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -1229,11 +1215,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_visiblegroups
      *
-     * @covers ::cm_visiblegroups
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_visiblegroups(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -1256,11 +1241,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for cm_separategroups
      *
-     * @covers ::cm_separategroups
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_cm_separategroups(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -1283,14 +1267,13 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for section_move_after
      *
-     * @covers ::section_move_after
-     * @dataProvider section_move_after_provider
      * @param string[] $sectiontomove the sections to move
      * @param string $targetsection the target section reference
      * @param string[] $finalorder the final sections order
      * @param string[] $updatedcms the list of cms in the state updates
      * @param int $totalputs the total amount of put updates
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('section_move_after_provider')]
     public function test_section_move_after(
         array $sectiontomove,
         string $targetsection,
@@ -1453,13 +1436,12 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test course module move and subsection move.
      *
-     * @covers ::cm_move
-     * @dataProvider cm_move_provider
      * @param string[] $cmtomove the sections to move
      * @param string $targetsection
      * @param string[] $expectedcoursetree expected course tree
      * @param string|null $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('cm_move_provider')]
     public function test_cm_move(
         array $cmtomove,
         string $targetsection,
@@ -1470,10 +1452,12 @@ final class stateactions_test extends \advanced_testcase {
         $course = $this->create_course('topics', 4, []);
 
         $subsection1 = $this->getDataGenerator()->create_module(
-            'subsection', ['course' => $course, 'section' => 1, 'name' => 'subsection1']
+            'subsection',
+            ['course' => $course, 'section' => 1, 'name' => 'subsection1']
         );
         $subsection2 = $this->getDataGenerator()->create_module(
-            'subsection', ['course' => $course, 'section' => 1, 'name' => 'subsection2']
+            'subsection',
+            ['course' => $course, 'section' => 1, 'name' => 'subsection2']
         );
         $modinfo = get_fast_modinfo($course);
         $subsection1info = $modinfo->get_section_info_by_component('mod_subsection', $subsection1->id);
@@ -1558,7 +1542,6 @@ final class stateactions_test extends \advanced_testcase {
                 foreach ($delegatedcmids as $dcmid) {
                     $coursetree[$sectionkey][$delegatedsectionkey][] = $cmidstoref[$dcmid];
                 }
-
             }
         }
         return $coursetree;
@@ -1615,11 +1598,10 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for section_move_after capability checks.
      *
-     * @covers ::section_move_after
-     * @dataProvider basic_role_provider
      * @param string $role the user role
      * @param bool $expectedexception if it will expect an exception.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('basic_role_provider')]
     public function test_section_move_after_capabilities(
         string $role = 'editingteacher',
         bool $expectedexception = false
@@ -1647,7 +1629,6 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test that set_cm_indentation on activities with a delegated section.
      *
-     * @covers ::set_cm_indentation
      */
     public function test_set_cm_indentation_delegated_section(): void {
         global $DB;
@@ -1728,7 +1709,6 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for filter_cms_with_section_delegate protected method.
      *
-     * @covers ::filter_cms_with_section_delegate
      */
     public function test_filter_cms_with_section_delegate(): void {
         $this->resetAfterTest();
@@ -1759,7 +1739,6 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for create_module public method.
      *
-     * @covers ::create_module
      */
     public function test_create_module(): void {
         $this->resetAfterTest();
@@ -1796,7 +1775,6 @@ final class stateactions_test extends \advanced_testcase {
     /**
      * Test for create_module public method with no capabilities.
      *
-     * @covers ::create_module
      */
     public function test_create_module_no_capabilities(): void {
         $this->resetAfterTest();
@@ -1835,8 +1813,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test for create_module public method with targetcmid parameter.
-     *
-     * @covers ::create_module
      */
     public function test_create_module_with_targetcmid(): void {
         $this->resetAfterTest();
@@ -1886,8 +1862,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test for new_module public method.
-     *
-     * @covers ::new_module
      */
     public function test_new_module(): void {
         $this->resetAfterTest();
@@ -1920,8 +1894,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test for new_module public method with no capabilities.
-     *
-     * @covers ::new_module
      */
     public function test_new_module_no_capabilities(): void {
         $this->resetAfterTest();
@@ -1953,8 +1925,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test for new_module public method with targetcmid parameter.
-     *
-     * @covers ::new_module
      */
     public function test_new_module_with_targetcmid(): void {
         $this->resetAfterTest();
@@ -2001,8 +1971,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test for section_duplicate public method.
-     *
-     * @covers ::section_duplicate
      */
     public function test_section_duplicate(): void {
         $this->resetAfterTest();
@@ -2056,8 +2024,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test duplicating multiple sections.
-     *
-     * @covers ::section_duplicate
      */
     public function test_section_duplicate_multiple(): void {
         $this->resetAfterTest();
@@ -2125,8 +2091,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test for section_duplicate public method with no capabilities.
-     *
-     * @covers ::section_duplicate
      */
     public function test_section_duplicate_no_capabilities(): void {
         $this->resetAfterTest();
@@ -2152,8 +2116,6 @@ final class stateactions_test extends \advanced_testcase {
 
     /**
      * Test for section_duplicate on a delegated section (subsection).
-     *
-     * @covers ::section_duplicate
      */
     public function test_section_duplicate_delegated_section(): void {
         global $DB;

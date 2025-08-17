@@ -33,16 +33,14 @@ require_once($CFG->dirroot . '/webservice/tests/helpers.php');
  * @category   test
  * @copyright  2024 Mikel Martín <mikel@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_courseformat\external\new_module
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(new_module::class)]
 final class new_module_test extends \externallib_advanced_testcase {
-
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void { // phpcs:ignore
+    #[\Override]
+    public static function setUpBeforeClass(): void {
         global $CFG;
 
+        parent::setUpBeforeClass();
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_output_course_format_state.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_stateactions.php');
@@ -50,8 +48,6 @@ final class new_module_test extends \externallib_advanced_testcase {
 
     /**
      * Test the webservice can execute the new_module action.
-     *
-     * @covers ::execute
      */
     public function test_execute(): void {
         $this->resetAfterTest();
@@ -82,8 +78,6 @@ final class new_module_test extends \externallib_advanced_testcase {
 
     /**
      * Test the webservice can execute the new_module action with a format override.
-     *
-     * @covers ::execute
      */
     public function test_execute_with_format_override(): void {
         $this->resetAfterTest();
@@ -112,8 +106,6 @@ final class new_module_test extends \externallib_advanced_testcase {
 
     /**
      * Test the webservice can execute the new_module action with an invalid module.
-     *
-     * @covers ::execute
      */
     public function test_execute_with_invalid_module(): void {
         $this->resetAfterTest();
@@ -146,7 +138,6 @@ final class new_module_test extends \externallib_advanced_testcase {
         string $action,
         string $name,
         string $fieldname,
-
     ): ?stdClass {
         foreach ($updatelist as $update) {
             if ($update->action != $action || $update->name != $name) {

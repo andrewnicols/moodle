@@ -18,25 +18,26 @@ namespace format_topics;
 
 use core_external\external_api;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/course/lib.php');
-
 /**
  * Topics course format related unit tests.
  *
  * @package    format_topics
  * @copyright  2015 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \format_topics
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\format_topics::class)]
 final class format_topics_test extends \advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+
+        require_once($CFG->dirroot . '/course//lib.php');
+    }
 
     /**
      * Tests for format_topics::get_section_name method with default section names.
-     *
-     * @return void
      */
     public function test_get_section_name(): void {
         global $DB;
@@ -45,8 +46,10 @@ final class format_topics_test extends \advanced_testcase {
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
         $numsections = 5;
-        $course = $generator->create_course(['numsections' => $numsections, 'format' => 'topics'],
-            ['createsections' => true]);
+        $course = $generator->create_course(
+            ['numsections' => $numsections, 'format' => 'topics'],
+            ['createsections' => true]
+        );
 
         // Get section names for course.
         $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
@@ -71,8 +74,10 @@ final class format_topics_test extends \advanced_testcase {
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
         $numsections = 5;
-        $course = $generator->create_course(['numsections' => $numsections, 'format' => 'topics'],
-            ['createsections' => true]);
+        $course = $generator->create_course(
+            ['numsections' => $numsections, 'format' => 'topics'],
+            ['createsections' => true]
+        );
 
         // Get section names for course.
         $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
@@ -105,8 +110,10 @@ final class format_topics_test extends \advanced_testcase {
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
         $numsections = 5;
-        $course = $generator->create_course(['numsections' => $numsections, 'format' => 'topics'],
-            ['createsections' => true]);
+        $course = $generator->create_course(
+            ['numsections' => $numsections, 'format' => 'topics'],
+            ['createsections' => true]
+        );
 
         // Get section names for course.
         $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
@@ -136,8 +143,10 @@ final class format_topics_test extends \advanced_testcase {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
-        $course = $this->getDataGenerator()->create_course(['numsections' => 5, 'format' => 'topics'],
-            ['createsections' => true]);
+        $course = $this->getDataGenerator()->create_course(
+            ['numsections' => 5, 'format' => 'topics'],
+            ['createsections' => true]
+        );
         $section = $DB->get_record('course_sections', ['course' => $course->id, 'section' => 2]);
 
         // Call webservice without necessary permissions.
@@ -145,8 +154,10 @@ final class format_topics_test extends \advanced_testcase {
             \core_external::update_inplace_editable('format_topics', 'sectionname', $section->id, 'New section name');
             $this->fail('Exception expected');
         } catch (\moodle_exception $e) {
-            $this->assertEquals('Course or activity not accessible. (Not enrolled)',
-                    $e->getMessage());
+            $this->assertEquals(
+                'Course or activity not accessible. (Not enrolled)',
+                $e->getMessage()
+            );
         }
 
         // Change to teacher and make sure that section name can be updated using web service update_inplace_editable().
@@ -169,8 +180,10 @@ final class format_topics_test extends \advanced_testcase {
 
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $course = $this->getDataGenerator()->create_course(['numsections' => 5, 'format' => 'topics'],
-            ['createsections' => true]);
+        $course = $this->getDataGenerator()->create_course(
+            ['numsections' => 5, 'format' => 'topics'],
+            ['createsections' => true]
+        );
         $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher']);
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $teacherrole->id);
         $this->setUser($user);
@@ -216,7 +229,7 @@ final class format_topics_test extends \advanced_testcase {
             'category' => $category,
             'editoroptions' => [
                 'context' => \context_course::instance($course->id),
-                'subdirs' => 0
+                'subdirs' => 0,
             ],
             'returnto' => new \moodle_url('/'),
             'returnurl' => new \moodle_url('/'),
@@ -229,13 +242,10 @@ final class format_topics_test extends \advanced_testcase {
 
         $weeksformat = course_get_format($course->id);
         $this->assertEquals($enddate, $weeksformat->get_default_course_enddate($courseform->get_quick_form()));
-
     }
 
     /**
      * Test for get_view_url().
-     *
-     * @covers ::get_view_url
      */
     public function test_get_view_url(): void {
         global $CFG;
@@ -269,8 +279,6 @@ final class format_topics_test extends \advanced_testcase {
 
     /**
      * Test get_required_jsfiles().
-     *
-     * @covers ::get_required_jsfiles
      */
     public function test_get_required_jsfiles(): void {
         $this->resetAfterTest();

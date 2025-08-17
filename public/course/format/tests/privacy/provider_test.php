@@ -27,8 +27,8 @@ use core_privacy\local\request\writer;
  * @copyright  2021 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(provider::class)]
 final class provider_test extends \core_privacy\tests\provider_testcase {
-
     /**
      * Test for provider::test_export_user_preferences().
      */
@@ -47,7 +47,7 @@ final class provider_test extends \core_privacy\tests\provider_testcase {
         $preferencestring = get_string("preference:$prefix", 'courseformat', $course->fullname);
 
         // Add a user home page preference for the User.
-        set_user_preference($preference , $value, $user);
+        set_user_preference($preference, $value, $user);
 
         // Test the user preferences export contains 1 user preference record for the User.
         provider::export_user_preferences($user->id);

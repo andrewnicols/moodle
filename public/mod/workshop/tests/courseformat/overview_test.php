@@ -16,34 +16,36 @@
 
 namespace mod_workshop\courseformat;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/mod/workshop/locallib.php');
-
 use core_courseformat\local\overview\overviewfactory;
 
 /**
  * Tests for Workshop overview integration.
  *
- * @covers \mod_workshop\course\overview
  * @package    mod_workshop
  * @category   test
  * @copyright  2025 Ferran Recio <ferran@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(overview::class)]
 final class overview_test extends \advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+
+        require_once($CFG->dirroot . '/mod/workshop/locallib.php');
+    }
 
     /**
      * Test get_grade_item_names method.
      *
-     * @dataProvider data_provider_get_grade_item_names
-     * @covers ::get_grade_item_names
      * @param string $user
      * @param bool $expectempty
      * @param bool $hassubmission
      * @param bool $hasassesment
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_provider_get_grade_item_names')]
     public function test_get_grade_item_names(
         string $user,
         bool $expectempty,
@@ -169,11 +171,10 @@ final class overview_test extends \advanced_testcase {
     /**
      * Test get_extra_phase_overview method.
      *
-     * @covers ::get_extra_phase_overview
-     * @dataProvider data_provider_get_extra_phase_overview
      * @param string $user
      * @param int $currentphase
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_provider_get_extra_phase_overview')]
     public function test_get_extra_phase_overview(string $user, int $currentphase): void {
         $this->resetAfterTest();
         $this->setAdminUser();
@@ -257,14 +258,13 @@ final class overview_test extends \advanced_testcase {
     /**
      * Test get_extra_deadline_overview method.
      *
-     * @covers ::get_extra_deadline_overview
-     * @dataProvider data_provider_get_extra_deadline_overview
      * @param string $user
      * @param int $currentphase
      * @param int $submissionend
      * @param int $assessmentend
      * @param int|null $expectedincrement null if the item should be null.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_provider_get_extra_deadline_overview')]
     public function test_get_extra_deadline_overview(
         string $user,
         int $currentphase,
@@ -398,14 +398,12 @@ final class overview_test extends \advanced_testcase {
     /**
      * Test get_extra_submissions_overview and get_extra_assessments_overview methods.
      *
-     * @covers ::get_extra_submissions_overview
-     * @covers ::get_extra_assessments_overview
-     * @dataProvider data_provider_get_extra_submissions_overview
      * @param string $user
      * @param int $currentphase
      * @param bool $hasstudentactivity
      * @param bool $expectnull
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('data_provider_get_extra_submissions_overview')]
     public function test_get_extra_submissions_overview(
         string $user,
         int $currentphase,
@@ -636,12 +634,10 @@ final class overview_test extends \advanced_testcase {
     /**
      * Test get_actions_overview.
      *
-     * @covers ::get_actions_overview
-     * @dataProvider provider_test_get_actions_overview
-     *
      * @param string $role
      * @param array|null $expected
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('provider_test_get_actions_overview')]
     public function test_get_actions_overview(
         string $role,
         ?array $expected

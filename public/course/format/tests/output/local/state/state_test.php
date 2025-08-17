@@ -24,14 +24,15 @@ namespace core_courseformat\output\local\state;
  * @copyright  2021 Ilya Tregubov <ilya@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(course::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(section::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(cm::class)]
 final class state_test extends \advanced_testcase {
-
-    /**
-     * Setup to ensure that fixtures are loaded.
-     */
-    public static function setupBeforeClass(): void {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
         global $CFG;
 
+        parent::setUpBeforeClass();
         require_once($CFG->dirroot . '/course/lib.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest.php');
         require_once($CFG->dirroot . '/course/format/tests/fixtures/format_theunittest_output_course_format_state.php');
@@ -40,13 +41,9 @@ final class state_test extends \advanced_testcase {
     /**
      * Test the behaviour of state::export_for_template().
      *
-     * @dataProvider state_provider
-     * @covers \core_courseformat\output\local\state\course
-     * @covers \core_courseformat\output\local\state\section
-     * @covers \core_courseformat\output\local\state\cm
-     *
      * @param string $format The course format of the course where the method will be executed.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('state_provider')]
     public function test_state(string $format = 'topics'): void {
         global $PAGE;
 

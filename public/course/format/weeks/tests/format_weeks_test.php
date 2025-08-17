@@ -18,20 +18,23 @@ namespace format_weeks;
 
 use core_external\external_api;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot . '/course/lib.php');
-
 /**
  * format_weeks related unit tests
  *
  * @package    format_weeks
  * @copyright  2015 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \format_weeks
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\format_weeks::class)]
 final class format_weeks_test extends \advanced_testcase {
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        global $CFG;
+
+        parent::setUpBeforeClass();
+
+        require_once($CFG->dirroot . '/course//lib.php');
+    }
 
     /**
      * Tests for format_weeks::get_section_name method with default section names.
@@ -43,11 +46,13 @@ final class format_weeks_test extends \advanced_testcase {
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
         $numsections = 5;
-        $course = $generator->create_course(array('numsections' => $numsections, 'format' => 'weeks'),
-            array('createsections' => true));
+        $course = $generator->create_course(
+            ['numsections' => $numsections, 'format' => 'weeks'],
+            ['createsections' => true]
+        );
 
         // Get section names for course.
-        $coursesections = $DB->get_records('course_sections', array('course' => $course->id));
+        $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
 
         // Test get_section_name with default section names.
         $courseformat = course_get_format($course);
@@ -67,11 +72,13 @@ final class format_weeks_test extends \advanced_testcase {
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
         $numsections = 5;
-        $course = $generator->create_course(array('numsections' => $numsections, 'format' => 'weeks'),
-            array('createsections' => true));
+        $course = $generator->create_course(
+            ['numsections' => $numsections, 'format' => 'weeks'],
+            ['createsections' => true]
+        );
 
         // Get section names for course.
-        $coursesections = $DB->get_records('course_sections', array('course' => $course->id));
+        $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
 
         // Modify section names.
         $customname = "Custom Section";
@@ -81,7 +88,7 @@ final class format_weeks_test extends \advanced_testcase {
         }
 
         // Requery updated section names then test get_section_name.
-        $coursesections = $DB->get_records('course_sections', array('course' => $course->id));
+        $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
         $courseformat = course_get_format($course);
         foreach ($coursesections as $section) {
             // Assert that with modified section names, get_section_name returns the modified section name.
@@ -99,11 +106,13 @@ final class format_weeks_test extends \advanced_testcase {
         // Generate a course with 5 sections.
         $generator = $this->getDataGenerator();
         $numsections = 5;
-        $course = $generator->create_course(array('numsections' => $numsections, 'format' => 'weeks'),
-            array('createsections' => true));
+        $course = $generator->create_course(
+            ['numsections' => $numsections, 'format' => 'weeks'],
+            ['createsections' => true]
+        );
 
         // Get section names for course.
-        $coursesections = $DB->get_records('course_sections', array('course' => $course->id));
+        $coursesections = $DB->get_records('course_sections', ['course' => $course->id]);
 
         // Test get_default_section_name with default section names.
         $courseformat = course_get_format($course);
@@ -117,7 +126,7 @@ final class format_weeks_test extends \advanced_testcase {
                 $dateformat = get_string('strftimedateshort');
                 $weekday = userdate($dates->start, $dateformat);
                 $endweekday = userdate($dates->end, $dateformat);
-                $sectionname = $weekday.' - '.$endweekday;
+                $sectionname = $weekday . ' - ' . $endweekday;
 
                 $this->assertEquals($sectionname, $courseformat->get_default_section_name($section));
             }
@@ -134,27 +143,31 @@ final class format_weeks_test extends \advanced_testcase {
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
         $this->setUser($user);
-        $course = $this->getDataGenerator()->create_course(array('numsections' => 5, 'format' => 'weeks'),
-            array('createsections' => true));
-        $section = $DB->get_record('course_sections', array('course' => $course->id, 'section' => 2));
+        $course = $this->getDataGenerator()->create_course(
+            ['numsections' => 5, 'format' => 'weeks'],
+            ['createsections' => true]
+        );
+        $section = $DB->get_record('course_sections', ['course' => $course->id, 'section' => 2]);
 
         // Call webservice without necessary permissions.
         try {
             \core_external::update_inplace_editable('format_weeks', 'sectionname', $section->id, 'New section name');
             $this->fail('Exception expected');
         } catch (\moodle_exception $e) {
-            $this->assertEquals('Course or activity not accessible. (Not enrolled)',
-                    $e->getMessage());
+            $this->assertEquals(
+                'Course or activity not accessible. (Not enrolled)',
+                $e->getMessage()
+            );
         }
 
         // Change to teacher and make sure that section name can be updated using web service update_inplace_editable().
-        $teacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher']);
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $teacherrole->id);
 
         $res = \core_external::update_inplace_editable('format_weeks', 'sectionname', $section->id, 'New section name');
         $res = external_api::clean_returnvalue(\core_external::update_inplace_editable_returns(), $res);
         $this->assertEquals('New section name', $res['value']);
-        $this->assertEquals('New section name', $DB->get_field('course_sections', 'name', array('id' => $section->id)));
+        $this->assertEquals('New section name', $DB->get_field('course_sections', 'name', ['id' => $section->id]));
     }
 
     /**
@@ -165,24 +178,26 @@ final class format_weeks_test extends \advanced_testcase {
 
         $this->resetAfterTest();
         $user = $this->getDataGenerator()->create_user();
-        $course = $this->getDataGenerator()->create_course(array('numsections' => 5, 'format' => 'weeks'),
-            array('createsections' => true));
-        $teacherrole = $DB->get_record('role', array('shortname' => 'editingteacher'));
+        $course = $this->getDataGenerator()->create_course(
+            ['numsections' => 5, 'format' => 'weeks'],
+            ['createsections' => true]
+        );
+        $teacherrole = $DB->get_record('role', ['shortname' => 'editingteacher']);
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $teacherrole->id);
         $this->setUser($user);
 
-        $section = $DB->get_record('course_sections', array('course' => $course->id, 'section' => 2));
+        $section = $DB->get_record('course_sections', ['course' => $course->id, 'section' => 2]);
 
         // Call callback format_weeks_inplace_editable() directly.
-        $tmpl = component_callback('format_weeks', 'inplace_editable', array('sectionname', $section->id, 'Rename me again'));
+        $tmpl = component_callback('format_weeks', 'inplace_editable', ['sectionname', $section->id, 'Rename me again']);
         $this->assertInstanceOf('core\output\inplace_editable', $tmpl);
         $res = $tmpl->export_for_template($PAGE->get_renderer('core'));
         $this->assertEquals('Rename me again', $res['value']);
-        $this->assertEquals('Rename me again', $DB->get_field('course_sections', 'name', array('id' => $section->id)));
+        $this->assertEquals('Rename me again', $DB->get_field('course_sections', 'name', ['id' => $section->id]));
 
         // Try updating using callback from mismatching course format.
         try {
-            $tmpl = component_callback('format_topics', 'inplace_editable', array('sectionname', $section->id, 'New name'));
+            $tmpl = component_callback('format_topics', 'inplace_editable', ['sectionname', $section->id, 'New name']);
             $this->fail('Exception expected');
         } catch (\moodle_exception $e) {
             $this->assertEquals(1, preg_match('/^Can\'t find data record in database/', $e->getMessage()));
@@ -203,16 +218,16 @@ final class format_weeks_test extends \advanced_testcase {
 
         $this->setTimezone('UTC');
 
-        $params = array('format' => 'weeks', 'numsections' => 5, 'startdate' => 1445644800);
+        $params = ['format' => 'weeks', 'numsections' => 5, 'startdate' => 1445644800];
         $course = $this->getDataGenerator()->create_course($params);
-        $category = $DB->get_record('course_categories', array('id' => $course->category));
+        $category = $DB->get_record('course_categories', ['id' => $course->category]);
 
         $args = [
             'course' => $course,
             'category' => $category,
             'editoroptions' => [
                 'context' => \context_course::instance($course->id),
-                'subdirs' => 0
+                'subdirs' => 0,
             ],
             'returnto' => new \moodle_url('/'),
             'returnurl' => new \moodle_url('/'),
@@ -231,8 +246,6 @@ final class format_weeks_test extends \advanced_testcase {
 
     /**
      * Test for get_view_url().
-     *
-     * @covers ::get_view_url
      */
     public function test_get_view_url(): void {
         global $CFG;
@@ -240,8 +253,8 @@ final class format_weeks_test extends \advanced_testcase {
 
         // Generate a course with two sections (0 and 1) and two modules.
         $generator = $this->getDataGenerator();
-        $course1 = $generator->create_course(array('format' => 'weeks'));
-        course_create_sections_if_missing($course1, array(0, 1));
+        $course1 = $generator->create_course(['format' => 'weeks']);
+        course_create_sections_if_missing($course1, [0, 1]);
 
         $data = (object)['id' => $course1->id];
         $format = course_get_format($course1);
@@ -266,8 +279,6 @@ final class format_weeks_test extends \advanced_testcase {
 
     /**
      * Test get_required_jsfiles().
-     *
-     * @covers ::get_required_jsfiles
      */
     public function test_get_required_jsfiles(): void {
         $this->resetAfterTest();
