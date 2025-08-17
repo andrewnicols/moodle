@@ -28,7 +28,7 @@ use stdClass;
  * @copyright  2024 Mikel Martín <mikel@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(sectiondelegatemodule::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(sectiondelegate::class)]
 final class sectiondelegatemodule_test extends \advanced_testcase {
     /**
      * Test get_parent_section.
