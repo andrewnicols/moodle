@@ -15,18 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Mysqli specific recordset.
- *
- * @package    core_dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_recordset.php');
-
-/**
  * Mysqli specific moodle recordset class
  *
  * @package    core

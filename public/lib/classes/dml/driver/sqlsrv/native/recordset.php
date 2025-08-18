@@ -21,11 +21,6 @@
  * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_recordset.php');
-
 class sqlsrv_native_moodle_recordset extends moodle_recordset {
 
     protected $rsrc;

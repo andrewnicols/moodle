@@ -15,20 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * sqlsrv specific temptables store. Needed because temporary tables
- * are named differently than normal tables. Also used to be able to retrieve
- * temp table names included in the get_tables() method of the DB.
- *
- * @package    core_dml
- * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_temptables.php');
-
-/**
  * This class is not specific to the SQL Server Native Driver but rather
  * to the family of Microsoft SQL Servers.
  *

@@ -22,20 +22,6 @@
  * @copyright 2017 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot.'/lib/dml/pgsql_native_moodle_database.php');
-
-/**
- * Test specific features of the Postgres dml support relating to recordsets.
- *
- * @package core
- * @category test
- * @copyright 2017 The Open University
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 final class pgsql_native_recordset_test extends basic_testcase {
 
     /** @var pgsql_native_moodle_database Special database connection */

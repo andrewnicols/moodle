@@ -22,24 +22,6 @@
  * @copyright  2017 John Okely
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-namespace core;
-
-use sqlsrv_native_moodle_database;
-
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once($CFG->dirroot.'/lib/dml/sqlsrv_native_moodle_database.php');
-
-/**
- * Test case for sqlsrv dml support.
- *
- * @package    core
- * @category   test
- * @copyright  2017 John Okely
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 final class sqlsrv_native_moodle_database_test extends \advanced_testcase {
     public function setUp(): void {
         parent::setUp();

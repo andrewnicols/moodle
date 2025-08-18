@@ -21,19 +21,6 @@
  * @copyright  2008 Andrei Bautu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_database.php');
-require_once(__DIR__.'/pdo_moodle_recordset.php');
-
-/**
- * Experimental pdo database class
- *
- * @package    core_dml
- * @copyright  2008 Andrei Bautu
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 abstract class pdo_moodle_database extends moodle_database {
 
     protected $pdb;

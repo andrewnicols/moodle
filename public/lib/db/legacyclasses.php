@@ -346,4 +346,33 @@ $legacyclasses = [
         'core_comment',
         'comment_exception.php',
     ],
+
+    // DML.
+    \dml_connection_exception::class => 'dml/exception/connection_exception.php',
+    \dml_exception::class => 'dml/exception/exception.php',
+    \dml_missing_record_exception::class => 'dml/exception/missing_record_exception.php',
+    \dml_multiple_records_exception::class => 'dml/exception/multiple_records_exception.php',
+    \dml_read_exception::class => 'dml/exception/read_exception.php',
+    \dml_sessionwait_exception::class => 'dml/exception/sessionwait_exception.php',
+    \dml_transaction_exception::class => 'dml/exception/transaction_exception.php',
+    \dml_write_exception::class => 'dml/exception/write_exception.php',
+    \database_column_info::class => 'dml/database_column_info.php',
+    \moodle_database::class => 'dml/database.php',
+    \moodle_read_replica_trait::class => 'dml/read_replica_trait.php',
+    \moodle_recordset::class => 'dml/recordset.php',
+    \moodle_temptables::class => 'dml/temptables.php',
+    \moodle_transaction::class => 'dml/transaction.php',
+
+    // DML Drivers.
+    \auroramysql_native_moodle_database::class => 'dml/driver/auroramysql/native/database.php',
+    \mariadb_native_moodle_database::class => 'dml/driver/mariadb/native/database.php',
+    \mysqli_native_moodle_database::class => 'dml/driver/mysqli/native/database.php',
+    \mysqli_native_moodle_recordset::class => 'dml/driver/mysqli/native/recordset.php',
+    \mysqli_native_moodle_temptables::class => 'dml/driver/mysqli/native/temptables.php',
+    \pgsql_native_moodle_database::class => 'dml/driver/pgsql/native/database.php',
+    \pgsql_native_moodle_recordset::class => 'dml/driver/pgsql/native/recordset.php',
+    \pgsql_native_moodle_temptables::class => 'dml/driver/pgsql/native/temptables.php',
+    \sqlsrv_native_moodle_database::class => 'dml/driver/sqlsrv/native/database.php',
+    \sqlsrv_native_moodle_recordset::class => 'dml/driver/sqlsrv/native/recordset.php',
+    \sqlsrv_native_moodle_temptables::class => 'dml/driver/sqlsrv/native/temptables.php',
 ];

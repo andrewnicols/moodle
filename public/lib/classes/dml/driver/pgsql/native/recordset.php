@@ -15,18 +15,6 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Native postgresql recordset.
- *
- * @package    core_dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_recordset.php');
-
-/**
  * pgsql specific moodle recordset class
  *
  * @package    core_dml

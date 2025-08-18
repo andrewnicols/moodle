@@ -21,21 +21,6 @@
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_database.php');
-require_once(__DIR__.'/mysqli_native_moodle_database.php');
-require_once(__DIR__.'/mysqli_native_moodle_recordset.php');
-require_once(__DIR__.'/mysqli_native_moodle_temptables.php');
-
-/**
- * Native MariaDB class representing moodle database interface.
- *
- * @package    core_dml
- * @copyright  2013 Petr Skoda {@link http://skodak.org}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class mariadb_native_moodle_database extends mysqli_native_moodle_database {
 
     /**

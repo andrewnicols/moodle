@@ -549,6 +549,7 @@ class component {
         $keyclasses = [
             \core\exception\moodle_exception::class,
             \core_course\section_info::class,
+            \moodle_database::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {

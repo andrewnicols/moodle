@@ -21,18 +21,6 @@
  * @copyright  2008 Andrei Bautu
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_recordset.php');
-
-/**
- * Experimental pdo recordset
- *
- * @package    core_dml
- * @copyright  2008 Andrei Bautu
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class pdo_moodle_recordset extends moodle_recordset {
 
     private $sth;

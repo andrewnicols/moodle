@@ -22,12 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/database_column_info.php');
-require_once(__DIR__.'/moodle_recordset.php');
-require_once(__DIR__.'/moodle_transaction.php');
-
 /** SQL_PARAMS_NAMED - Bitmask, indicates :name type parameters are supported by db backend. */
 define('SQL_PARAMS_NAMED', 1);
 
@@ -194,16 +188,11 @@ abstract class moodle_database {
      * @return ?moodle_database driver object or null if error, for example of driver object see {@see mysqli_native_moodle_database}
      */
     public static function get_driver_instance($type, $library, $external = false) {
-        global $CFG;
-
-        $classname = $type.'_'.$library.'_moodle_database';
-        $libfile   = "$CFG->libdir/dml/$classname.php";
-
-        if (!file_exists($libfile)) {
+        $classname = "\\core\\dml\\{$type}\\{$library}\\database";
+        if (!class_exists($classname)) {
             return null;
         }
 
-        require_once($libfile);
         return new $classname($external);
     }
 

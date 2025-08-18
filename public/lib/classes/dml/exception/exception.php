@@ -15,19 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * MYSQL specific temptables store. Needed because temporary tables
- * are named differently than normal tables. Also used to be able to retrieve
- * temp table names included in the get_tables() method of the DB.
+ * DML exception class, use instead of throw new \moodle_exception() in dml code.
  *
- * @package    core_dml
- * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @package    core
+ * @category   dml
+ * @subpackage dml
+ * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_temptables.php');
-
-class mysqli_native_moodle_temptables extends moodle_temptables {
-    // I love these classes :-P
+class dml_exception extends moodle_exception {
+    /**
+     * @param string $errorcode The name of the string from error.php to print.
+     * @param mixed  $a Extra words and phrases that might be required in the error string.
+     * @param string $debuginfo Optional debugging information.
+     */
+    function __construct($errorcode, $a=NULL, $debuginfo=null) {
+        parent::__construct($errorcode, '', '', $a, $debuginfo);
+    }
 }

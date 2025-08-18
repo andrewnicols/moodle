@@ -21,20 +21,6 @@
  * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_database.php');
-require_once(__DIR__.'/sqlsrv_native_moodle_recordset.php');
-require_once(__DIR__.'/sqlsrv_native_moodle_temptables.php');
-
-/**
- * Native sqlsrv class representing moodle database interface.
- *
- * @package    core_dml
- * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
- */
 class sqlsrv_native_moodle_database extends moodle_database {
 
     protected $sqlsrv = null;

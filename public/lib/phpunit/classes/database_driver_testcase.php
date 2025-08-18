@@ -88,7 +88,6 @@ abstract class database_driver_testcase extends base_testcase {
         $dboptions = empty($CFG->phpunit_extra_drivers[PHPUNIT_TEST_DRIVER]['dboptions']) ? array() : $CFG->phpunit_extra_drivers[PHPUNIT_TEST_DRIVER]['dboptions'];
 
         $classname = "{$dbtype}_{$dblibrary}_moodle_database";
-        require_once("$CFG->libdir/dml/$classname.php");
         $d = new $classname();
         if (!$d->driver_installed()) {
             throw new exception('Database driver for '.$classname.' is not installed');

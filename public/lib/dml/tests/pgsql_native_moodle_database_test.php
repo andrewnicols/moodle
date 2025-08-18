@@ -41,16 +41,6 @@ use PHPUnit\Framework\Attributes\WithoutErrorHandler;
  * @covers  \pgsql_native_moodle_database
  */
 final class pgsql_native_moodle_database_test extends \advanced_testcase {
-
-    /**
-     * Setup before class.
-     */
-    public static function setUpBeforeClass(): void {
-        global $CFG;
-        require_once($CFG->libdir.'/dml/pgsql_native_moodle_database.php');
-        parent::setUpBeforeClass();
-    }
-
     /**
      * Set up.
      */

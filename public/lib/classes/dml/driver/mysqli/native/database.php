@@ -21,21 +21,6 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/moodle_database.php');
-require_once(__DIR__.'/moodle_read_replica_trait.php');
-require_once(__DIR__.'/mysqli_native_moodle_recordset.php');
-require_once(__DIR__.'/mysqli_native_moodle_temptables.php');
-
-/**
- * Native mysqli class representing moodle database interface.
- *
- * @package    core_dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
 class mysqli_native_moodle_database extends moodle_database {
     use moodle_read_replica_trait {
         can_use_readonly as read_replica_can_use_readonly;
