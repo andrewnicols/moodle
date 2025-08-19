@@ -36,7 +36,7 @@ final class recordset_walk_test extends \advanced_testcase {
         global $DB;
 
         $recordset = $DB->get_recordset('assign');
-        $walker = new \core\dml\recordset_walk($recordset, array($this, 'simple_callback'));
+        $walker = new \core\dml\recordset_walk($recordset, [$this, 'simple_callback']);
         $this->assertFalse($walker->valid());
 
         $count = 0;
@@ -53,14 +53,14 @@ final class recordset_walk_test extends \advanced_testcase {
 
         /** @var \mod_assign_generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
-        $courses = array();
+        $courses = [];
         for ($i = 0; $i < 10; $i++) {
-            $courses[$i] = $generator->create_instance(array('course' => SITEID));
+            $courses[$i] = $generator->create_instance(['course' => SITEID]);
         }
 
         // Simple iteration.
         $recordset = $DB->get_recordset('assign');
-        $walker = new \core\dml\recordset_walk($recordset, array($this, 'simple_callback'));
+        $walker = new \core\dml\recordset_walk($recordset, [$this, 'simple_callback']);
 
         $count = 0;
         foreach ($walker as $data) {
@@ -78,9 +78,9 @@ final class recordset_walk_test extends \advanced_testcase {
 
         /** @var \mod_assign_generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
-        $courses = array();
+        $courses = [];
         for ($i = 0; $i < 10; $i++) {
-            $courses[$i] = $generator->create_instance(array('course' => SITEID));
+            $courses[$i] = $generator->create_instance(['course' => SITEID]);
         }
 
         // Iteration with extra callback arguments.
@@ -88,8 +88,8 @@ final class recordset_walk_test extends \advanced_testcase {
 
         $walker = new \core\dml\recordset_walk(
             $recordset,
-            array($this, 'extra_callback'),
-            array('brown' => 'onions')
+            [$this, 'extra_callback'],
+            ['brown' => 'onions']
         );
 
         $count = 0;

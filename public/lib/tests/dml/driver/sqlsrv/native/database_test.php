@@ -37,59 +37,59 @@ final class database_test extends \basic_testcase {
         return [
             "Basic temp table, nothing following" => [
                 'input' => 'SELECT * FROM {table_temp}',
-                'expected' => 'SELECT * FROM {table_temp} WITH (NOLOCK)'
+                'expected' => 'SELECT * FROM {table_temp} WITH (NOLOCK)',
             ],
             "Basic temp table, with capitalised alias" => [
                 'input' => 'SELECT * FROM {table_temp} MYTABLE',
-                'expected' => 'SELECT * FROM {table_temp} MYTABLE WITH (NOLOCK)'
+                'expected' => 'SELECT * FROM {table_temp} MYTABLE WITH (NOLOCK)',
             ],
             "Temp table with alias, and another non-temp table" => [
                 'input' => 'SELECT * FROM {table_temp} x WHERE y in (SELECT y from {table2})',
-                'expected' => 'SELECT * FROM {table_temp} x WITH (NOLOCK) WHERE y in (SELECT y from {table2})'
+                'expected' => 'SELECT * FROM {table_temp} x WITH (NOLOCK) WHERE y in (SELECT y from {table2})',
             ],
             "Temp table with reserve word following, no alias" => [
                 'input' => 'SELECT DISTINCT * FROM {table_temp} WHERE y in (SELECT y from {table2} nottemp)',
-                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) WHERE y in (SELECT y from {table2} nottemp)'
+                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) WHERE y in (SELECT y from {table2} nottemp)',
             ],
             "Temp table with reserve word, lower case" => [
                 'input' => 'SELECT DISTINCT * FROM {table_temp} where y in (SELECT y from {table2} nottemp)',
-                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) where y in (SELECT y from {table2} nottemp)'
+                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) where y in (SELECT y from {table2} nottemp)',
             ],
             "Another reserve word test" => [
                 'input' => 'SELECT DISTINCT * FROM {table_temp} PIVOT y in (SELECT y from {table2} nottemp)',
-                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) PIVOT y in (SELECT y from {table2} nottemp)'
+                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) PIVOT y in (SELECT y from {table2} nottemp)',
             ],
             "Another reserve word test should fail" => [
                 'input' => 'SELECT DISTINCT * FROM {table_temp} PIVOT y in (SELECT y from {table2} nottemp)',
-                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) PIVOT y in (SELECT y from {table2} nottemp)'
+                'expected' => 'SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) PIVOT y in (SELECT y from {table2} nottemp)',
             ],
             "Temp table with an alias starting with a keyword" => [
                 'input' => 'SELECT * FROM {table_temp} asx',
-                'expected' => 'SELECT * FROM {table_temp} asx WITH (NOLOCK)'
+                'expected' => 'SELECT * FROM {table_temp} asx WITH (NOLOCK)',
             ],
             "Keep alias with underscore" => [
                 'input' => 'SELECT * FROM {table_temp} alias_for_table',
-                'expected' => 'SELECT * FROM {table_temp} alias_for_table WITH (NOLOCK)'
+                'expected' => 'SELECT * FROM {table_temp} alias_for_table WITH (NOLOCK)',
             ],
             "Alias with number" => [
                 'input' => 'SELECT * FROM {table_temp} a5 WHERE y',
-                'expected' => 'SELECT * FROM {table_temp} a5 WITH (NOLOCK) WHERE y'
+                'expected' => 'SELECT * FROM {table_temp} a5 WITH (NOLOCK) WHERE y',
             ],
             "Alias with number and underscore" => [
                 'input' => 'SELECT * FROM {table_temp} a_5 WHERE y',
-                'expected' => 'SELECT * FROM {table_temp} a_5 WITH (NOLOCK) WHERE y'
+                'expected' => 'SELECT * FROM {table_temp} a_5 WITH (NOLOCK) WHERE y',
             ],
             "Temp table in subquery" => [
                 'input' => 'select * FROM (SELECT DISTINCT * FROM {table_temp})',
-                'expected' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK))'
+                'expected' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK))',
             ],
             "Temp table in subquery, with following commands" => [
                 'input' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} ) WHERE y',
-                'expected' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) ) WHERE y'
+                'expected' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} WITH (NOLOCK) ) WHERE y',
             ],
             "Temp table in subquery, with alias" => [
                 'input' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} x) WHERE y',
-                'expected' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} x WITH (NOLOCK)) WHERE y'
+                'expected' => 'select * FROM (SELECT DISTINCT * FROM {table_temp} x WITH (NOLOCK)) WHERE y',
             ],
         ];
     }
@@ -139,7 +139,7 @@ SELECT username, lang
   FROM prefix_user
 EOT
                 ,
-                'expectedresult' => false
+                'expectedresult' => false,
             ],
             'List Users with extra info (email) in current course => FALSE' => [
                 'sql' => <<<EOT
@@ -158,7 +158,7 @@ SELECT u.firstname, u.lastname, u.email
   JOIN prefix_user AS u ON u.id = ra.userid
 EOT
                 ,
-                'expectedresult' => false
+                'expectedresult' => false,
             ],
             'ROW_NUMBER() OVER (ORDER BY ...) => FALSE (https://github.com/jleyva/moodle-block_configurablereports/issues/120)' => [
                 'sql' => <<<EOT
@@ -175,7 +175,7 @@ SELECT COUNT() AS 'Users who have logged in today'
   FROM () AS Logins
 EOT
                 ,
-                'expectedresult' => false
+                'expectedresult' => false,
             ],
             'CONTRIB-7725 workaround) => TRUE' => [
                 'sql' => <<<EOT
@@ -192,7 +192,7 @@ SELECT COUNT() AS 'Users who have logged in today'
   FROM () AS Logins ORDER BY 1
 EOT
                 ,
-                'expectedresult' => true
+                'expectedresult' => true,
             ],
             'Enrolment count in each Course => TRUE' => [
                 'sql' => <<<EOT
@@ -213,7 +213,7 @@ GROUP BY c.id
 ORDER BY c.fullname
 EOT
                 ,
-                'expectedresult' => true
+                'expectedresult' => true,
             ],
         ];
     }

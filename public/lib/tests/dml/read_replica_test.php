@@ -40,7 +40,7 @@ use moodle_read_replica_trait;
 #[\PHPUnit\Framework\Attributes\CoversClass(moodle_read_replica_trait::class)]
 final class read_replica_test extends \database_driver_testcase {
     /** @var float */
-    static private $dbreadonlylatency = 0.8;
+    private static $dbreadonlylatency = 0.8;
 
     #[\Override]
     public static function setUpBeforeClass(): void {
@@ -130,7 +130,7 @@ final class read_replica_test extends \database_driver_testcase {
                     'user_enrolments',
                     'enrol',
                     'role_assignments',
-                ]
+                ],
             ],
         ];
     }
@@ -171,7 +171,7 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertNull($DB->get_dbhwrite());
 
         $now = microtime(true);
-        $handle = $DB->insert_record_raw('table', array('name' => 'blah'));
+        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
         $this->assertEquals('test_rw::test:test', $handle);
 
         if (microtime(true) - $now < self::$dbreadonlylatency) {
@@ -202,10 +202,10 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertGreaterThan(0, $readsreplica);
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->insert_record_raw('table', array('name' => 'blah'));
+        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
         $this->assertEquals('test_rw::test:test', $handle);
 
-        $handle = $DB->update_record_raw('table', array('id' => 1, 'name' => 'blah2'));
+        $handle = $DB->update_record_raw('table', ['id' => 1, 'name' => 'blah2']);
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals($readsreplica, $DB->perf_get_reads_replica());
     }
@@ -219,7 +219,7 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->insert_record_raw('table', array('name' => 'blah'));
+        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals(0, $DB->perf_get_reads_replica());
 
@@ -294,7 +294,7 @@ final class read_replica_test extends \database_driver_testcase {
         // Use rw handle during transaction.
         $this->assertEquals('test_rw::test:test', $handle);
 
-        $handle = $DB->insert_record_raw('table', array('name' => 'blah'));
+        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
         // Introduce delay so we can check that table write timestamps
         // are adjusted properly.
         sleep(1);
@@ -333,7 +333,7 @@ final class read_replica_test extends \database_driver_testcase {
 
         $skip = false;
 
-        list($sql, $params, $ptype) = $DB->fix_sql_params("UPDATE {table} SET a = 1 WHERE id = 1");
+        [$sql, $params, $ptype] = $DB->fix_sql_params("UPDATE {table} SET a = 1 WHERE id = 1");
         $DB->with_query_start_end($sql, $params, SQL_QUERY_UPDATE, function ($dbh) use (&$now) {
             sleep(1);
             $now = microtime(true);
@@ -374,8 +374,8 @@ final class read_replica_test extends \database_driver_testcase {
                 'config_plugins' => [
                     'columns' => [
                         'plugin' => (object)['meta_type' => ''],
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
             $this->assertNull($DB->get_dbhwrite());
@@ -417,13 +417,13 @@ final class read_replica_test extends \database_driver_testcase {
             // Use rw handle during transaction.
             $this->assertEquals('test_rw::test:test', $handle);
 
-            $handle = $DB->insert_record_raw('table', array('name' => 'blah'));
+            $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
             // Introduce delay so we can check that table write timestamps
             // are adjusted properly.
             sleep(1);
             $event = \core_tests\event\unittest_executed::create([
                 'context' => \context_system::instance(),
-                'other' => ['sample' => 1]
+                'other' => ['sample' => 1],
             ]);
             $event->trigger();
             $transaction->allow_commit();
@@ -496,8 +496,7 @@ final class read_replica_test extends \database_driver_testcase {
         $dbsave = $DB;
         try {
             $test();
-        }
-        finally {
+        } finally {
             $DB = $dbsave;
         }
     }
@@ -515,8 +514,8 @@ final class read_replica_test extends \database_driver_testcase {
                     'columns' => [
                         'resourcekey' => (object)['meta_type' => ''],
                         'owner' => (object)['meta_type' => ''],
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
             $this->assertEquals(0, $DB->perf_get_reads_replica());
@@ -547,8 +546,8 @@ final class read_replica_test extends \database_driver_testcase {
                 'sessions' => [
                     'columns' => [
                         'sid' => (object)['meta_type' => ''],
-                    ]
-                ]
+                    ],
+                ],
             ]);
 
             $this->assertEquals(0, $DB->perf_get_reads_replica());

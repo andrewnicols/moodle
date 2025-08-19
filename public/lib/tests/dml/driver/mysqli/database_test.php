@@ -123,7 +123,7 @@ final class database_test extends \advanced_testcase {
             $mysqli = $this->new_connection(false, 'verify-full');
             // Either connect ...
             $this->assertNotNull($mysqli);
-        } catch (moodle_exception $e) {
+        } catch (moodle_exception $e) { // phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedCatch
             // ... or fail with invalid cert.
             // Same as above, but we cannot really expect properly signed cert, so ignore.
         }

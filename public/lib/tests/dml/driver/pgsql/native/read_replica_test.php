@@ -36,16 +36,16 @@ final class read_replica_test extends \advanced_testcase {
         $DB = new read_replica_moodle_database_mock_pgsql();
 
         // Declare a cursor on a table that has not been written to.
-        list($sql, $params, $type) = $DB->fix_sql_params("SELECT * FROM {table}");
+        [$sql, $params, $type] = $DB->fix_sql_params("SELECT * FROM {table}");
         $sql = "DECLARE crs1 NO SCROLL CURSOR WITH HOLD FOR $sql";
         $DB->query_start($sql, null, SQL_QUERY_SELECT);
         $DB->query_end(null);
 
         // Declare a cursor on a table that has been written to.
-        list($sql, $params, $type) = $DB->fix_sql_params("INSERT INTO {table2} (name) VALUES ('blah')");
+        [$sql, $params, $type] = $DB->fix_sql_params("INSERT INTO {table2} (name) VALUES ('blah')");
         $DB->query_start($sql, null, SQL_QUERY_INSERT);
         $DB->query_end(null);
-        list($sql, $params, $type) = $DB->fix_sql_params("SELECT * FROM {table2}");
+        [$sql, $params, $type] = $DB->fix_sql_params("SELECT * FROM {table2}");
         $sql = "DECLARE crs2 NO SCROLL CURSOR WITH HOLD FOR $sql";
         $DB->query_start($sql, null, SQL_QUERY_SELECT);
         $DB->query_end(null);
@@ -124,7 +124,7 @@ final class read_replica_test extends \advanced_testcase {
         }
         if (!isset($cfg->dboptions['readonly'])) {
             $cfg->dboptions['readonly'] = [
-                'instance' => [$cfg->dbhost]
+                'instance' => [$cfg->dbhost],
             ];
         }
 
@@ -162,7 +162,7 @@ final class read_replica_test extends \advanced_testcase {
         $tablename = 'test_table';
         $table = new xmldb_table($tablename);
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $dbman = $db2->get_manager();
         $dbman->create_table($table);
         $db2->get_columns($tablename);
@@ -191,7 +191,7 @@ final class read_replica_test extends \advanced_testcase {
         }
         if (!isset($cfg->dboptions['readonly'])) {
             $cfg->dboptions['readonly'] = [
-                'instance' => [$cfg->dbhost]
+                'instance' => [$cfg->dbhost],
             ];
         }
 
@@ -247,11 +247,11 @@ final class read_replica_test extends \advanced_testcase {
         // Open second connection.
         $cfg = $DB->export_dbconfig();
         if (!isset($cfg->dboptions)) {
-            $cfg->dboptions = array();
+            $cfg->dboptions = [];
         }
         $cfg->dboptions['readonly'] = [
             'instance' => [$invalidhost],
-            'connecttimeout' => 1
+            'connecttimeout' => 1,
         ];
 
         $this->resetDebugging();

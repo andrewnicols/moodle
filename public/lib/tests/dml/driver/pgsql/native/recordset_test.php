@@ -57,8 +57,14 @@ final class recordset_test extends \basic_testcase {
         $this->specialdb = \core\dml\database::get_driver_instance('pgsql', 'native', true);
         $dboptions = $CFG->dboptions;
         $dboptions['fetchbuffersize'] = $fetchbuffersize;
-        $this->specialdb->connect($CFG->dbhost, $CFG->dbuser, $CFG->dbpass, $CFG->dbname,
-                $DB->get_prefix(), $dboptions);
+        $this->specialdb->connect(
+            $CFG->dbhost,
+            $CFG->dbuser,
+            $CFG->dbpass,
+            $CFG->dbname,
+            $DB->get_prefix(),
+            $dboptions
+        );
 
         // Create a temp table.
         $dbman = $this->specialdb->get_manager();
@@ -122,7 +128,9 @@ final class recordset_test extends \basic_testcase {
         $before = $this->specialdb->perf_get_queries();
         ob_start();
         $rs = $this->specialdb->get_recordset_sql(
-                'SELECT * FROM {silly_test_table} WHERE id <= ? ORDER BY id', [3]);
+            'SELECT * FROM {silly_test_table} WHERE id <= ? ORDER BY id',
+            [3]
+        );
         $index = 0;
         foreach ($rs as $rec) {
             $index++;
@@ -293,7 +301,6 @@ final class recordset_test extends \basic_testcase {
         } catch (transaction_exception $e) {
             $this->assertStringContainsString('rollback please', $e->getMessage());
         } finally {
-
             // Rollback should not kill our recordset.
             $read = [];
             foreach ($rs as $rec) {
@@ -326,7 +333,11 @@ final class recordset_test extends \basic_testcase {
         $before = $this->specialdb->perf_get_queries();
         ob_start();
         $rs = $this->specialdb->get_recordset_sql(
-                'SELECT * FROM {silly_test_table} ORDER BY id', [], 0, 100);
+            'SELECT * FROM {silly_test_table} ORDER BY id',
+            [],
+            0,
+            100
+        );
         $index = 0;
         foreach ($rs as $rec) {
             $index++;
@@ -416,5 +427,4 @@ final class recordset_test extends \basic_testcase {
             $this->fail('Fewer queries than expected');
         }
     }
-
 }

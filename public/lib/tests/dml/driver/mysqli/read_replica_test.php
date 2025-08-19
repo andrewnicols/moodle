@@ -63,7 +63,7 @@ final class read_replica_test extends \database_driver_testcase {
             $cfg->dboptions = [];
         }
         $cfg->dboptions['readonly'] = [
-            'instance' => [$cfg->dbhost]
+            'instance' => [$cfg->dbhost],
         ];
         $cfg->dboptions['dbengine'] = null;
         $cfg->dboptions['bulkinsertsize'] = null;
@@ -132,7 +132,7 @@ final class read_replica_test extends \database_driver_testcase {
         }
         $cfg->dboptions['readonly'] = [
             'instance' => [$invalidhost],
-            'connecttimeout' => 1
+            'connecttimeout' => 1,
         ];
 
         $this->resetDebugging();

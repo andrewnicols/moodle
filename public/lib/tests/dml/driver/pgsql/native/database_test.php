@@ -78,8 +78,8 @@ final class database_test extends \database_driver_testcase {
         global $DB;
         // Just less than 65535 values, expect fallback to parent method.
         $invalues = range(1, 65533);
-        list($usql, $params) = $DB->get_in_or_equal($invalues);
-        $this->assertSame('IN ('.implode(',', array_fill(0, count($invalues), '?')).')', $usql);
+        [$usql, $params] = $DB->get_in_or_equal($invalues);
+        $this->assertSame('IN (' . implode(',', array_fill(0, count($invalues), '?')) . ')', $usql);
         $this->assertEquals(count($invalues), count($params));
         foreach ($params as $key => $value) {
             $this->assertSame($invalues[$key], $value);
@@ -89,8 +89,8 @@ final class database_test extends \database_driver_testcase {
     public function test_get_in_or_equal_single_array_value(): void {
         global $DB;
         // Single value (in an array), expect fallback to parent method.
-        $invalues = array('value1');
-        list($usql, $params) = $DB->get_in_or_equal($invalues);
+        $invalues = ['value1'];
+        [$usql, $params] = $DB->get_in_or_equal($invalues);
         $this->assertEquals("= ?", $usql);
         $this->assertCount(1, $params);
         $this->assertEquals($invalues[0], $params[0]);
@@ -100,7 +100,7 @@ final class database_test extends \database_driver_testcase {
         global $DB;
         // Single value (scalar), expect fallback to parent method.
         $invalue = 'value1';
-        list($usql, $params) = $DB->get_in_or_equal($invalue);
+        [$usql, $params] = $DB->get_in_or_equal($invalue);
         $this->assertEquals("= ?", $usql);
         $this->assertCount(1, $params);
         $this->assertEquals($invalue, $params[0]);
@@ -110,8 +110,8 @@ final class database_test extends \database_driver_testcase {
         global $DB;
         // 65535 values, int.
         $invalues = range(1, 65535);
-        list($usql, $params) = $DB->get_in_or_equal($invalues);
-        $this->assertSame('IN (VALUES ('.implode('),(', array_fill(0, count($invalues), '?::bigint')).'))', $usql);
+        [$usql, $params] = $DB->get_in_or_equal($invalues);
+        $this->assertSame('IN (VALUES (' . implode('),(', array_fill(0, count($invalues), '?::bigint')) . '))', $usql);
         $this->assertEquals($params, $invalues);
     }
 
@@ -119,8 +119,8 @@ final class database_test extends \database_driver_testcase {
         global $DB;
         // 65535 values, not equal, int.
         $invalues = range(1, 65535);
-        list($usql, $params) = $DB->get_in_or_equal($invalues, SQL_PARAMS_QM, 'param', false);
-        $this->assertSame('NOT IN (VALUES ('.implode('),(', array_fill(0, count($invalues), '?::bigint')).'))', $usql);
+        [$usql, $params] = $DB->get_in_or_equal($invalues, SQL_PARAMS_QM, 'param', false);
+        $this->assertSame('NOT IN (VALUES (' . implode('),(', array_fill(0, count($invalues), '?::bigint')) . '))', $usql);
         $this->assertEquals($params, $invalues);
     }
 
@@ -129,9 +129,12 @@ final class database_test extends \database_driver_testcase {
         // 65535 values, int, SQL_PARAMS_NAMED.
         $index = $this->get_current_index();
         $invalues = range(1, 65535);
-        list($usql, $params) = $DB->get_in_or_equal($invalues, SQL_PARAMS_NAMED);
-        $regex = '/^'.
-            preg_quote('IN (VALUES (:param'.$index.'::bigint),(:param'.++$index.'::bigint),(:param'.++$index.'::bigint)').'/';
+        [$usql, $params] = $DB->get_in_or_equal($invalues, SQL_PARAMS_NAMED);
+        $regex = '/^'
+            . preg_quote(
+                'IN (VALUES (:param' . $index . '::bigint),(:param' . ++$index . '::bigint),(:param' . ++$index . '::bigint)'
+            )
+            . '/';
         $this->assertMatchesRegularExpression($regex, $usql);
         foreach ($params as $value) {
             $this->assertEquals(current($invalues), $value);
@@ -144,10 +147,13 @@ final class database_test extends \database_driver_testcase {
         // 65535 values, int, SQL_PARAMS_NAMED, define param name.
         $index = $this->get_current_index();
         $invalues = range(1, 65535);
-        list($usql, $params) = $DB->get_in_or_equal($invalues, SQL_PARAMS_NAMED, 'ppp');
+        [$usql, $params] = $DB->get_in_or_equal($invalues, SQL_PARAMS_NAMED, 'ppp');
         // We are in same DBI instance, expect uniqie param indexes.
-        $regex = '/^'.
-            preg_quote('IN (VALUES (:ppp'.$index.'::bigint),(:ppp'.++$index.'::bigint),(:ppp'.++$index.'::bigint)').'/';
+        $regex = '/^'
+            . preg_quote(
+                'IN (VALUES (:ppp' . $index . '::bigint),(:ppp' . ++$index . '::bigint),(:ppp' . ++$index . '::bigint)'
+            )
+            . '/';
         $this->assertMatchesRegularExpression($regex, $usql);
         foreach ($params as $value) {
             $this->assertEquals(current($invalues), $value);
@@ -159,7 +165,7 @@ final class database_test extends \database_driver_testcase {
         global $DB;
         // 65535 values, string.
         $invalues = array_fill(1, 65535, 'abc');
-        list($usql, $params) = $DB->get_in_or_equal($invalues);
+        [$usql, $params] = $DB->get_in_or_equal($invalues);
         $this->assertMatchesRegularExpression('/^' . preg_quote('IN (VALUES (?::text),(?::text),(?::text)') . '/', $usql);
         foreach ($params as $value) {
             $this->assertEquals(current($invalues), $value);
@@ -178,7 +184,7 @@ final class database_test extends \database_driver_testcase {
         $table->add_field('course', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, '0');
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, null, null, null);
         $table->add_field('content', XMLDB_TYPE_TEXT, 'big', null, XMLDB_NOTNULL);
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $dbman->create_table($table);
 
         $rec1 = ['course' => 3, 'content' => 'hello', 'name' => 'xyz'];
@@ -194,7 +200,7 @@ final class database_test extends \database_driver_testcase {
 
         // Getting all 4.
         $values = range(1, 65535);
-        list($insql, $inparams) = $DB->get_in_or_equal($values);
+        [$insql, $inparams] = $DB->get_in_or_equal($values);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE id $insql
@@ -203,7 +209,7 @@ final class database_test extends \database_driver_testcase {
 
         // Getting 'hello' records (text).
         $values = array_fill(1, 65535, 'hello');
-        list($insql, $inparams) = $DB->get_in_or_equal($values);
+        [$insql, $inparams] = $DB->get_in_or_equal($values);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE content $insql
@@ -214,7 +220,7 @@ final class database_test extends \database_driver_testcase {
 
         // Getting NOT 'hello' records (text).
         $values = array_fill(1, 65535, 'hello');
-        list($insql, $inparams) = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
+        [$insql, $inparams] = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE content $insql
@@ -225,7 +231,7 @@ final class database_test extends \database_driver_testcase {
 
         // Getting 'xyz' records (char and NULL mix).
         $values = array_fill(1, 65535, 'xyz');
-        list($insql, $inparams) = $DB->get_in_or_equal($values);
+        [$insql, $inparams] = $DB->get_in_or_equal($values);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE name $insql
@@ -236,7 +242,7 @@ final class database_test extends \database_driver_testcase {
 
         // Getting NOT 'xyz' records (char and NULL mix).
         $values = array_fill(1, 65535, 'xyz');
-        list($insql, $inparams) = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
+        [$insql, $inparams] = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE name $insql
@@ -248,7 +254,7 @@ final class database_test extends \database_driver_testcase {
 
         // Getting numbeic records.
         $values = array_fill(1, 65535, 3);
-        list($insql, $inparams) = $DB->get_in_or_equal($values);
+        [$insql, $inparams] = $DB->get_in_or_equal($values);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE course $insql
@@ -259,7 +265,7 @@ final class database_test extends \database_driver_testcase {
 
         // Getting numbeic records with NOT condition.
         $values = array_fill(1, 65535, 3);
-        list($insql, $inparams) = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
+        [$insql, $inparams] = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE course $insql
@@ -307,7 +313,7 @@ final class database_test extends \database_driver_testcase {
 
         // Check we can fetch all.
         $values = range(1, 65535);
-        list($insql, $inparams) = $DB->get_in_or_equal($values);
+        [$insql, $inparams] = $DB->get_in_or_equal($values);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE oneint $insql
@@ -321,7 +327,7 @@ final class database_test extends \database_driver_testcase {
 
         // Check we can fetch all, SQL_PARAMS_NAMED.
         $values = range(1, 65535);
-        list($insql, $inparams) = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED);
+        [$insql, $inparams] = $DB->get_in_or_equal($values, SQL_PARAMS_NAMED);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE oneint $insql
@@ -334,7 +340,7 @@ final class database_test extends \database_driver_testcase {
         $this->assertEquals($values, $oneint);
 
         // Check we can fetch one using NOT IN.
-        list($insql, $inparams) = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
+        [$insql, $inparams] = $DB->get_in_or_equal($values, SQL_PARAMS_QM, 'param', false);
         $sql = "SELECT *
                   FROM {{$tablename}}
                  WHERE oneint $insql
