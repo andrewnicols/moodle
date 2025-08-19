@@ -1,0 +1,23 @@
+issueNumber: MDL-81934
+notes:
+  core:
+    - message: >
+        The following classes have been removed without deprecation:
+
+
+        - `\moodle_read_slave_trait`
+
+        - `\pdo_moodle_database`
+
+        - `\pdo_moodle_recordset`
+
+
+        The PDO classes were marked as experimental, included no testing, and
+        are not in
+
+        use.
+
+
+        The read slave trait is not a public API and not subject to the
+        deprecation process.
+      type: removed
