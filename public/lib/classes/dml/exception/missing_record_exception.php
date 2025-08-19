@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\exception;
+
 use core\exception\response_aware_exception;
 use core\router\response\not_found_response;
 
@@ -26,7 +28,7 @@ use core\router\response\not_found_response;
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dml_missing_record_exception extends dml_exception implements response_aware_exception {
+class missing_record_exception extends exception implements response_aware_exception {
     /** @var string A table's name.*/
     public $tablename;
     /** @var string An SQL query.*/
@@ -75,3 +77,8 @@ class dml_missing_record_exception extends dml_exception implements response_awa
         return not_found_response::class;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(missing_record_exception::class, \dml_missing_record_exception::class);

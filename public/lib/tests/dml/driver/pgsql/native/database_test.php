@@ -14,22 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Test specific features of the Postgres dml.
- *
- * @package core
- * @category test
- * @copyright 2020 Ruslan Kabalin
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core\dml\driver\pgsql\native;
 
-namespace core;
-
-use stdClass, ReflectionClass;
-use moodle_database, pgsql_native_moodle_database;
+use core\dml\exception\connection_exception;
+use core\exception\moodle_exception;
+use stdClass;
 use xmldb_table;
-use moodle_exception;
 use PHPUnit\Framework\Attributes\WithoutErrorHandler;
+use ReflectionClass;
 
 /**
  * Test specific features of the Postgres dml.
@@ -38,9 +30,9 @@ use PHPUnit\Framework\Attributes\WithoutErrorHandler;
  * @category test
  * @copyright 2020 Ruslan Kabalin
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers  \pgsql_native_moodle_database
  */
-final class pgsql_native_moodle_database_test extends \advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
+final class database_test extends \database_driver_testcase {
     /**
      * Set up.
      */
@@ -48,7 +40,7 @@ final class pgsql_native_moodle_database_test extends \advanced_testcase {
         global $DB;
         parent::setUp();
         // Skip tests if not using Postgres.
-        if (!($DB instanceof pgsql_native_moodle_database)) {
+        if (!($DB instanceof database)) {
             $this->markTestSkipped('Postgres-only test');
         }
     }
@@ -179,7 +171,7 @@ final class pgsql_native_moodle_database_test extends \advanced_testcase {
 
     public function test_get_in_or_equal_query_use(): void {
         global $DB;
-        $this->resetAfterTest();
+
         $dbman = $DB->get_manager();
         $table = $this->get_test_table();
         $tablename = $table->getName();
@@ -281,7 +273,7 @@ final class pgsql_native_moodle_database_test extends \advanced_testcase {
 
     public function test_get_in_or_equal_big_table_query(): void {
         global $DB;
-        $this->resetAfterTest();
+
         $dbman = $DB->get_manager();
 
         $table = $this->get_test_table();
@@ -376,7 +368,7 @@ final class pgsql_native_moodle_database_test extends \advanced_testcase {
         $cfg->dboptions['ssl'] = $ssl;
 
         // Get a separate disposable db connection handle with guaranteed 'readonly' config.
-        $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->raw_connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
         $reflector = new ReflectionClass($db2);

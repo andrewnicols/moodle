@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\auroramysql\native;
+
 /**
  * Native Aurora MySQL class representing moodle database interface.
  *
@@ -21,8 +23,7 @@
  * @copyright  2020 Lafayette College ITS
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auroramysql_native_moodle_database extends mysqli_native_moodle_database {
-
+class database extends \core\dml\driver\mysqli\native\database {
     /** @var bool is compressed row format supported cache */
     protected $compressedrowformatsupported = false;
 
@@ -82,3 +83,8 @@ class auroramysql_native_moodle_database extends mysqli_native_moodle_database {
 
 
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(database::class, \auroramysql_native_moodle_database::class);

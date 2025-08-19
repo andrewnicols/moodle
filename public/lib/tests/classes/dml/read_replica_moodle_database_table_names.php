@@ -14,30 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Database driver test class for testing pgsql_native_moodle_database with moodle_read_replica_trait
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/../../pgsql_native_moodle_database.php');
-require_once(__DIR__.'/test_moodle_read_replica_trait.php');
+namespace core\tests\dml;
 
 /**
- * Database driver mock test class that exposes some methods
+ * Database driver test class that exposes table_names()
  *
  * @package    core
  * @category   dml
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class read_replica_moodle_database_mock_pgsql extends \pgsql_native_moodle_database {
-    use test_moodle_read_replica_trait;
+class read_replica_moodle_database_table_names extends read_replica_moodle_database {
+    /**
+     * @var string
+     */
+    protected $prefix = 't_';
+
+    /**
+     * Upgrade to public
+     * @param string $sql
+     * @return array
+     */
+    public function table_names(string $sql): array {
+        return parent::table_names($sql);
+    }
 }

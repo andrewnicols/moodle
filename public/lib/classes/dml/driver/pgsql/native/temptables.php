@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\pgsql\native;
+
 /**
  * PGSQL specific temptables store. Needed because temporary tables
  * are named differently than normal tables. Also used to be able to retrieve
@@ -23,7 +25,7 @@
  * @copyright  2010 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class pgsql_native_moodle_temptables extends moodle_temptables {
+class temptables extends \core\dml\temptables {
     /**
      * Analyze the data in temporary tables to force statistics collection after bulk data loads.
      * PostgreSQL does not natively support automatic temporary table stats collection, so we do it.
@@ -37,3 +39,8 @@ class pgsql_native_moodle_temptables extends moodle_temptables {
         }
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(temptables::class, \pgsql_native_moodle_temptables::class);

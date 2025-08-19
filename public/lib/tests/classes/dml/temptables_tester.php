@@ -14,26 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\dml\exception;
+namespace core\tests\dml;
 
 /**
- * DML db session wait exception - triggered when session lock request times out.
+ * Test class for testing temptables
  *
- * @package    core
- * @category   dml
- * @subpackage dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
+ * @copyright  2017 John Okely
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class sessionwait_exception extends exception {
+class temptables_tester {
     /**
-     * Constructor
+     * Returns if one table, based in the information present in the store, is a temp table
+     *
+     * For easy testing, anything with the word 'temp' in it is considered temporary.
+     *
+     * @param string $tablename name without prefix of the table we are asking about
+     * @return bool true if the table is a temp table (based in the store info), false if not
      */
-    function __construct() {
-        parent::__construct('sessionwaiterr');
+    public function is_temptable($tablename) {
+        if (strpos($tablename, 'temp') === false) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    /**
+     * Dispose the temptables
+     *
+     * @return void
+     */
+    public function dispose() {
     }
 }
-// Alias this class to the old name.
-// This file will be autoloaded by the legacyclasses autoload system.
-// In future all uses of this class will be corrected and the legacy references will be removed.
-class_alias(sessionwait_exception::class, \dml_sessionwait_exception::class);

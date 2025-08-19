@@ -14,22 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\dml\driver\mysqli\native;
+namespace core\tests\dml;
 
 /**
- * MYSQL specific temptables store. Needed because temporary tables
- * are named differently than normal tables. Also used to be able to retrieve
- * temp table names included in the get_tables() method of the DB.
+ * Database driver mock test class that exposes some methods
  *
- * @package    core_dml
- * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @package    core
+ * @category   dmlk
+ * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class temptables extends \core\dml\temptables {
-    // I love these classes :-P
+class read_replica_moodle_database_mock_pgsql extends \core\dml\driver\pgsql\native\database {
+    use read_replica_trait;
 }
-
-// Alias this class to the old name.
-// This file will be autoloaded by the legacyclasses autoload system.
-// In future all uses of this class will be corrected and the legacy references will be removed.
-class_alias(temptables::class, \mysqli_native_moodle_temptables::class);

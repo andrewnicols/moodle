@@ -549,7 +549,11 @@ class component {
         $keyclasses = [
             \core\exception\moodle_exception::class,
             \core_course\section_info::class,
-            \moodle_database::class,
+            \core\dml\database::class,
+            \core\dml\driver\mariadb\native\database::class,
+            \core\dml\driver\mysqli\native\database::class,
+            \core\dml\driver\pgsql\native\database::class,
+            \core\dml\driver\sqlsrv\native\database::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {

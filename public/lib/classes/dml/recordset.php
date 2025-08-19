@@ -14,15 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Abstract recordset.
- *
- * @package    core_dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
+namespace core\dml;
 
 /**
  * Abstract class for resultsets returned from database functions.
@@ -34,7 +26,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * Do not forget to close all recordsets when they are not needed anymore!
  */
-abstract class moodle_recordset implements Iterator {
+abstract class recordset implements \Iterator {
 
     /**
      * Returns current record - fields as object properties, lowercase
@@ -75,3 +67,8 @@ abstract class moodle_recordset implements Iterator {
      */
     abstract public function close();
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(recordset::class, \moodle_recordset::class);

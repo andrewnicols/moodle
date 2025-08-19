@@ -14,6 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\pgsql\native;
+
+use core\exception\coding_exception;
+use PgSql;
+use stdClass;
+
 /**
  * pgsql specific moodle recordset class
  *
@@ -21,7 +27,7 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class pgsql_native_moodle_recordset extends moodle_recordset {
+class recordset extends \core\dml\recordset {
 
     /** @var PgSql\Result|resource|null */
     protected $result;
@@ -32,7 +38,7 @@ class pgsql_native_moodle_recordset extends moodle_recordset {
     /** @var string Name of cursor or '' if none */
     protected $cursorname;
 
-    /** @var pgsql_native_moodle_database Postgres database resource */
+    /** @var database Postgres database resource */
     protected $db;
 
     /** @var bool True if there are no more rows to fetch from the cursor */
@@ -44,10 +50,10 @@ class pgsql_native_moodle_recordset extends moodle_recordset {
      * When using cursors, $result will be null initially.
      *
      * @param resource|PgSql\Result|null $result A pg_query() result object to create a recordset from.
-     * @param pgsql_native_moodle_database $db Database object (only required when using cursors)
+     * @param database $db Database object (only required when using cursors)
      * @param string $cursorname Name of cursor or '' if none
      */
-    public function __construct($result, ?pgsql_native_moodle_database $db = null, $cursorname = '') {
+    public function __construct($result, ?database $db = null, $cursorname = '') {
         if ($cursorname && !$db) {
             throw new coding_exception('When specifying a cursor, $db is required');
         }
@@ -159,3 +165,8 @@ class pgsql_native_moodle_recordset extends moodle_recordset {
         }
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(recordset::class, \pgsql_native_moodle_recordset::class);

@@ -16,7 +16,7 @@
 
 namespace core;
 
-use database_column_info;
+use core\dml\database_column_info;
 use moodle_database;
 use sql_generator;
 use xmldb_field;

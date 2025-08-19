@@ -14,41 +14,48 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Database driver test class for testing moodle_read_replica_trait
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/read_replica_moodle_database.php');
+namespace core\tests\dml;
 
 /**
- * Database driver test class that exposes table_names()
+ * Database recordset mock test class
  *
  * @package    core
  * @category   dml
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class read_replica_moodle_database_table_names extends read_replica_moodle_database {
+class read_replica_moodle_recordset_special extends \core\dml\recordset {
     /**
-     * @var string
+     * Iterator interface
+     * @return void
      */
-    protected $prefix = 't_';
-
+    public function close() {
+    }
     /**
-     * Upgrade to public
-     * @param string $sql
-     * @return array
+     * Iterator interface
+     * @return stdClass
      */
-    public function table_names(string $sql): array {
-        return parent::table_names($sql);
+    public function current(): stdClass {
+        return new stdClass();
+    }
+    /**
+     * Iterator interface
+     * @return void
+     */
+    public function next(): void {
+    }
+    /**
+     * Iterator interface
+     * @return mixed
+     */
+    #[\ReturnTypeWillChange]
+    public function key() {
+    }
+    /**
+     * Iterator interface
+     * @return bool
+     */
+    public function valid(): bool {
+        return false;
     }
 }

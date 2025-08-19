@@ -14,25 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Abstract database driver test class providing some moodle database interface
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core\tests\dml;
 
-namespace core;
-
+use core\dml\temptables;
+use core\dml\database_column_info;
+use database_manager;
+use stdClass;
 use Exception;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/../../moodle_database.php');
-require_once(__DIR__.'/../../moodle_temptables.php');
-require_once(__DIR__.'/../../../ddl/database_manager.php');
-require_once(__DIR__.'/test_sql_generator.php');
 
 /**
  * Abstract database driver test class
@@ -42,8 +30,7 @@ require_once(__DIR__.'/test_sql_generator.php');
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class test_moodle_database extends \moodle_database {
-
+abstract class database extends \core\dml\database {
     /** @var string */
     private $error;
 
@@ -57,7 +44,7 @@ abstract class test_moodle_database extends \moodle_database {
     public function __construct($external = false) {
         parent::__construct($external);
 
-        $this->temptables = new \moodle_temptables($this);
+        $this->temptables = new temptables($this);
     }
 
     /**
@@ -196,7 +183,7 @@ abstract class test_moodle_database extends \moodle_database {
      * @throws Exception
      */
     public function execute($sql, ?array $params = null) {
-        throw new Exception("execute() not implemented");
+            throw new Exception("execute() not implemented");
     }
 
     /**
@@ -266,7 +253,7 @@ abstract class test_moodle_database extends \moodle_database {
     /**
      * Default implementation, throws Exception
      * @param string $table
-     * @param StdObject $dataobject
+     * @param stdClass $dataobject
      * @return bool true
      * @throws Exception
      */
@@ -392,7 +379,7 @@ abstract class test_moodle_database extends \moodle_database {
      */
     public function get_manager() {
         if (!$this->database_manager) {
-            $generator = new test_sql_generator($this, $this->temptables);
+            $generator = new sql_generator($this, $this->temptables);
 
             $this->database_manager = new database_manager($this, $generator);
         }

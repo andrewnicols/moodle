@@ -14,23 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * DML read/read-write database handle tests for pgsql_native_moodle_database
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core\dml\driver\pgsql\native;
 
-namespace core;
-
-use moodle_database;
+use core\tests\dml\read_replica_moodle_database_mock_pgsql;
 use xmldb_table;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/fixtures/read_replica_moodle_database_mock_pgsql.php');
 
 /**
  * DML pgsql_native_moodle_database read replica specific tests
@@ -39,9 +26,9 @@ require_once(__DIR__.'/fixtures/read_replica_moodle_database_mock_pgsql.php');
  * @category   dml
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \pgsql_native_moodle_database
  */
-final class dml_pgsql_read_replica_test extends \advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
+final class read_replica_test extends \advanced_testcase {
     /**
      * Test correct database handles are used for cursors
      *
@@ -150,7 +137,7 @@ final class dml_pgsql_read_replica_test extends \advanced_testcase {
         }
 
         // Get a separate disposable db connection handle with guaranteed 'readonly' config.
-        $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
         $reads = $db2->perf_get_reads();
@@ -219,7 +206,7 @@ final class dml_pgsql_read_replica_test extends \advanced_testcase {
         }
 
         // Get a separate disposable db connection handle with guaranteed 'readonly' config.
-        $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
         $dbman = $db2->get_manager();
@@ -283,7 +270,7 @@ final class dml_pgsql_read_replica_test extends \advanced_testcase {
         set_error_handler(function ($errno, $errstr) {
             $this->assertStringContainsString('could not connect to server', $errstr);
         }, E_ALL);
-        $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
         $this->assertNotEmpty($db2->get_records('user'));
 

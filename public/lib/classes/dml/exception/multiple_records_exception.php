@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\exception;
+
 /**
  * Caused by multiple records found in get_record() call.
  *
@@ -23,7 +25,7 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dml_multiple_records_exception extends dml_exception {
+class multiple_records_exception extends exception {
     /** @var string The SQL that ran just before this read error.*/
     public $sql;
     /** @var array The SQL's related parameters.*/
@@ -39,3 +41,8 @@ class dml_multiple_records_exception extends dml_exception {
         parent::__construct('multiplerecordsfound', null, $errorinfo);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(multiple_records_exception::class, \dml_multiple_records_exception::class);

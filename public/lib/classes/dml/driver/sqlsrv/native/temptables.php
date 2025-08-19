@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\sqlsrv\native;
+
 /**
  * This class is not specific to the SQL Server Native Driver but rather
  * to the family of Microsoft SQL Servers.
@@ -22,8 +24,7 @@
  * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
-class sqlsrv_native_moodle_temptables extends moodle_temptables {
-
+class temptables extends \core\dml\temptables {
     /**
      * Add one temptable to the store.
      *
@@ -43,3 +44,8 @@ class sqlsrv_native_moodle_temptables extends moodle_temptables {
         $this->temptables[$tablename] = '#' . $this->prefix . $tablename;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(temptables::class, \sqlsrv_native_moodle_temptables::class);

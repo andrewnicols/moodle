@@ -14,6 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\mysqli\native;
+
+use core\dml\database_column_info;
+use core\dml\exception\exception as dml_exception;
+use core\dml\exception\connection_exception;
+use core\dml\exception\read_exception;
+use core\dml\exception\sessionwait_exception;
+use core\dml\exception\write_exception;
+use core\dml\read_replica_trait;
+use core\exception\coding_exception;
+use core\exception\moodle_exception;
+use mysqli;
+use stdClass;
+use Traversable;
+
 /**
  * Native mysqli class representing moodle database interface.
  *
@@ -21,8 +36,8 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mysqli_native_moodle_database extends moodle_database {
-    use moodle_read_replica_trait {
+class database extends \core\dml\database {
+    use read_replica_trait {
         can_use_readonly as read_replica_can_use_readonly;
     }
 
@@ -79,7 +94,7 @@ class mysqli_native_moodle_database extends moodle_database {
         $errorno = @$conn->connect_errno;
 
         if ($errorno !== 0) {
-            throw new dml_connection_exception($dberr);
+            throw new connection_exception($dberr);
         }
 
         // Normally a check would be done before setting utf8mb4, but the database can be created
@@ -495,7 +510,7 @@ class mysqli_native_moodle_database extends moodle_database {
      * @param array $dboptions driver specific options
      * @return bool success
      * @throws moodle_exception
-     * @throws dml_connection_exception if error
+     * @throws connection_exception if error
      */
     public function raw_connect(string $dbhost, string $dbuser, string $dbpass, string $dbname, $prefix, ?array $dboptions=null): bool {
         $driverstatus = $this->driver_installed();
@@ -562,7 +577,7 @@ class mysqli_native_moodle_database extends moodle_database {
         if (!$conn) {
             $dberr = $dberr ?: "{$this->mysqli->connect_error} ({$this->mysqli->connect_errno})";
             $this->mysqli = null;
-            throw new dml_connection_exception($dberr);
+            throw new connection_exception($dberr);
         }
 
         // Disable logging until we are fully setup.
@@ -593,7 +608,7 @@ class mysqli_native_moodle_database extends moodle_database {
         $this->query_log_allow();
 
         // Connection stabilised and configured, going to instantiate the temptables controller
-        $this->temptables = new mysqli_native_moodle_temptables($this);
+        $this->temptables = new temptables($this);
 
         return true;
     }
@@ -660,7 +675,7 @@ class mysqli_native_moodle_database extends moodle_database {
      * Returns the version of the MySQL server, as reported by 'SELECT VERSION()' query.
      *
      * @return string A string that indicates the MySQL server version.
-     * @throws dml_read_exception If the execution of 'SELECT VERSION()' query will fail.
+     * @throws read_exception If the execution of 'SELECT VERSION()' query will fail.
      */
     protected function get_version_from_db(): string {
         $version = null;
@@ -677,11 +692,11 @@ class mysqli_native_moodle_database extends moodle_database {
             }
         } catch (\Throwable $e) { // Exceptions in case of MYSQLI_REPORT_STRICT.
             // It looks like we've an issue out of the expected boolean 'false' result above.
-            throw new dml_read_exception($e->getMessage(), $sql);
+            throw new read_exception($e->getMessage(), $sql);
         }
         if (empty($version)) {
-            // Exception dml_read_exception usually reports raw mysqli errors i.e. not localised by Moodle.
-            throw new dml_read_exception("Unable to read the DB server version.", $sql);
+            // Exception read_exception usually reports raw mysqli errors i.e. not localised by Moodle.
+            throw new read_exception("Unable to read the DB server version.", $sql);
         }
 
         return $version;
@@ -703,7 +718,7 @@ class mysqli_native_moodle_database extends moodle_database {
     /**
      * Returns database server info array.
      * @return array Array containing 'description' and 'version' info.
-     * @throws dml_read_exception If the execution of 'SELECT VERSION()' query will fail.
+     * @throws read_exception If the execution of 'SELECT VERSION()' query will fail.
      */
     public function get_server_info() {
         $version = $this->serverversion;
@@ -1312,7 +1327,7 @@ class mysqli_native_moodle_database extends moodle_database {
     }
 
     protected function create_recordset($result) {
-        return new mysqli_native_moodle_recordset($result);
+        return new recordset($result);
     }
 
     /**
@@ -1433,7 +1448,7 @@ class mysqli_native_moodle_database extends moodle_database {
         $this->query_end($result);
 
         if (!$customsequence and !$id) {
-            throw new dml_write_exception('unknown error fetching inserted id');
+            throw new write_exception('unknown error fetching inserted id');
         }
 
         if (!$returnid) {
@@ -2072,7 +2087,7 @@ class mysqli_native_moodle_database extends moodle_database {
             if (reset($arr) == 1) {
                 return;
             } else {
-                throw new dml_sessionwait_exception();
+                throw new sessionwait_exception();
             }
         }
     }
@@ -2224,3 +2239,8 @@ class mysqli_native_moodle_database extends moodle_database {
         return $this->get_manager()->generator->getEncQuoted($prefixedtablename);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(database::class, \mysqli_native_moodle_database::class);

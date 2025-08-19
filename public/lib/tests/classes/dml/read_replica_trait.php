@@ -14,16 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Read replica helper that exposes selected moodle_read_replica_trait mehtods.
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core;
+namespace core\tests\dml;
 
 use ReflectionProperty;
 
@@ -35,7 +26,7 @@ use ReflectionProperty;
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-trait test_moodle_read_replica_trait {
+trait read_replica_trait {
     /**
      * Constructs a mock db driver
      *

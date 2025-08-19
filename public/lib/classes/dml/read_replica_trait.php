@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml;
+
+use core\dml\exception\connection_exception;
+use core\dml\exception\transaction_exception;
+
 /**
  * Trait that adds read-only replica connection capability.
  *
@@ -76,7 +81,7 @@
  * @copyright  2024 David Woloszyn <david.woloszyn@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-trait moodle_read_replica_trait {
+trait read_replica_trait {
 
     /** @var resource Primary write database handle. */
     protected $dbhwrite;
@@ -146,7 +151,7 @@ trait moodle_read_replica_trait {
      * @param mixed $prefix String means moodle db prefix, false used for external databases where prefix not used.
      * @param array|null $dboptions Driver specific options.
      * @return bool
-     * @throws dml_connection_exception
+     * @throws connection_exception
      */
     abstract protected function raw_connect(
         string $dbhost,
@@ -170,7 +175,8 @@ trait moodle_read_replica_trait {
      * @param mixed $prefix String means moodle db prefix, false used for external databases where prefix not used.
      * @param array|null $dboptions Driver specific options.
      * @return bool
-     * @throws dml_connection_exception
+     * @throws connection_exception;
+     * @throws coding_exception;
      */
     public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null) {
         $this->pdbhost = $dbhost;
@@ -197,7 +203,7 @@ trait moodle_read_replica_trait {
                 if (isset($dboptionsro['exclude_tables'])) {
                     $this->readexclude = $dboptionsro['exclude_tables'];
                     if (!is_array($this->readexclude)) {
-                        throw new configuration_exception('exclude_tables must be an array');
+                        throw new coding_exception('exclude_tables must be an array');
                     }
                 }
                 $dbport = isset($dboptions['dbport']) ? $dboptions['dbport'] : null;
@@ -235,7 +241,7 @@ trait moodle_read_replica_trait {
                             );
                         }
                         break;
-                    } catch (dml_connection_exception $e) {
+                    } catch (connection_exception $e) {
                         debugging(
                             "Readonly db connection failed for host {$rodb['dbhost']}: {$e->debuginfo}"
                         );
@@ -253,7 +259,7 @@ trait moodle_read_replica_trait {
         if (!$this->dbhreadonly) {
             try {
                 $this->set_dbhwrite();
-            } catch (dml_connection_exception $e) {
+            } catch (connection_exception $e) {
                 debugging(
                     "Readwrite db connection failed for host {$this->pdbhost}: {$e->debuginfo}"
                 );
@@ -434,10 +440,10 @@ trait moodle_read_replica_trait {
      *
      * Set written times after outermost transaction finished.
      *
-     * @param moodle_transaction $transaction The transaction to commit.
-     * @throws dml_transaction_exception Creates and throws transaction related exceptions.
+     * @param transaction $transaction The transaction to commit.
+     * @throws transaction_exception Creates and throws transaction related exceptions.
      */
-    public function commit_delegated_transaction(moodle_transaction $transaction) {
+    public function commit_delegated_transaction(transaction $transaction) {
         if ($this->written) {
             // Adjust the written time.
             $now = microtime(true);
@@ -460,3 +466,8 @@ trait moodle_read_replica_trait {
         return $match[1];
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(read_replica_trait::class, \moodle_read_replica_trait::class);

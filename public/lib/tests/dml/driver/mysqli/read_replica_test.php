@@ -14,22 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * DML read/read-write database handle tests for mysqli_native_moodle_database
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core;
-
-use moodle_database;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/fixtures/read_replica_moodle_database_mock_mysqli.php');
+namespace core\dml\driver\mysqli\native;
 
 /**
  * DML mysqli_native_moodle_database read replica specific tests
@@ -38,9 +23,9 @@ require_once(__DIR__.'/fixtures/read_replica_moodle_database_mock_mysqli.php');
  * @category   dml
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \mysqli_native_moodle_database
  */
-final class dml_mysqli_read_replica_test extends \database_driver_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
+final class read_replica_test extends \database_driver_testcase {
     /**
      * Test readonly handle is not used for reading from special pg_*() call queries,
      * pg_try_advisory_lock and pg_advisory_unlock.
@@ -48,7 +33,7 @@ final class dml_mysqli_read_replica_test extends \database_driver_testcase {
      * @return void
      */
     public function test_lock(): void {
-        $DB = new read_replica_moodle_database_mock_mysqli();
+        $DB = new \core\tests\dml\read_replica_moodle_database_mock_mysqli();
 
         $this->assertEquals(0, $DB->perf_get_reads_replica());
 
@@ -87,7 +72,7 @@ final class dml_mysqli_read_replica_test extends \database_driver_testcase {
         $cfg->dboptions['bulkinsertsize'] = null;
 
         // Get a separate disposable db connection handle with guaranteed 'readonly' config.
-        $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
         $reads = $db2->perf_get_reads();
@@ -114,7 +99,7 @@ final class dml_mysqli_read_replica_test extends \database_driver_testcase {
         // Readwrite handle queries.
 
         if (PHP_INT_SIZE !== 4) {
-            $rc = new \ReflectionClass(\mysqli_native_moodle_database::class);
+            $rc = new \ReflectionClass(database::class);
             $rcm = $rc->getMethod('insert_chunk_size');
 
             $rcm->invoke($db2);
@@ -156,7 +141,7 @@ final class dml_mysqli_read_replica_test extends \database_driver_testcase {
         ];
 
         $this->resetDebugging();
-        $db2 = \moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
         $this->assertNotEmpty($db2->get_records('user'));
 
@@ -202,7 +187,7 @@ final class dml_mysqli_read_replica_test extends \database_driver_testcase {
         ];
 
         $this->resetDebugging();
-        $db2 = \moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         try {
             $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
         } catch (\dml_connection_exception $e) {  // phpcs:ignore

@@ -14,20 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Database driver test class for testing moodle_read_replica_trait
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core;
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/read_replica_moodle_database.php');
+namespace core\tests\dml;
 
 /**
  * Database driver mock test class that uses read_replica_moodle_recordset_special

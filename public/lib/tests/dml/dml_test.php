@@ -14,26 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * DML layer tests.
- *
- * @package    core
- * @category   test
- * @copyright  2008 Nicolas Connault
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core;
+namespace core\dml;
 
 use dml_exception;
 use dml_missing_record_exception;
 use dml_multiple_records_exception;
-use moodle_database;
+use core\dml\database;
 use moodle_transaction;
 use xmldb_key;
 use xmldb_table;
-
-defined('MOODLE_INTERNAL') || die();
+use core\tests\dml\sql_debugging_fixture;
 
 /**
  * DML layer tests.
@@ -42,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  * @category   test
  * @copyright  2008 Nicolas Connault
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \moodle_database
+ * @covers database
  */
 final class dml_test extends \database_driver_testcase {
 
@@ -306,7 +296,7 @@ final class dml_test extends \database_driver_testcase {
     }
 
     public function test_fix_table_names(): void {
-        $DB = new moodle_database_for_testing();
+        $DB = new \core\tests\dml\database_for_testing();
         $prefix = $DB->get_prefix();
 
         // Simple placeholder.
@@ -486,9 +476,8 @@ final class dml_test extends \database_driver_testcase {
         global $CFG;
         $DB = $this->tdb;
 
-        require_once($CFG->dirroot . '/lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php');
-        $databasemock = $this->getMockBuilder(\moodle_database::class)->getMock();
-        $fixture = new \test_dml_sql_debugging_fixture($databasemock);
+        $databasemock = $this->getMockBuilder(database::class)->getMock();
+        $fixture = new sql_debugging_fixture($databasemock);
 
         $sql = "SELECT * FROM {users}";
 
@@ -499,9 +488,12 @@ final class dml_test extends \database_driver_testcase {
 
         $CFG->debugsqltrace = 1;
         $out = $fixture->four($sql);
+
+        $classname = preg_quote(sql_debugging_fixture::class);
+
         $expected = <<<EOD
 SELECT \* FROM {users}
--- line \d+ of /lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php: call to ReflectionMethod->invoke\(\)
+-- line \d+ of /lib/tests/classes/dml/sql_debugging_fixture.php: call to ReflectionMethod->invoke\(\)
 EOD;
         $this->assertMatchesRegularExpression('@' . $this->unix_to_os_dirsep($expected) . '@', $out);
 
@@ -509,20 +501,22 @@ EOD;
         $out = $fixture->four($sql);
         $expected = <<<EOD
 SELECT \* FROM {users}
--- line \d+ of /lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php: call to ReflectionMethod->invoke\(\)
--- line \d+ of /lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php: call to test_dml_sql_debugging_fixture->one\(\)
+-- line \d+ of /lib/tests/classes/dml/sql_debugging_fixture.php: call to ReflectionMethod->invoke\(\)
+-- line \d+ of /lib/tests/classes/dml/sql_debugging_fixture.php: call to {$classname}->one\(\)
 EOD;
         $this->assertMatchesRegularExpression('@' . $this->unix_to_os_dirsep($expected) . '@', $out);
 
         $CFG->debugsqltrace = 5;
         $out = $fixture->four($sql);
+
+        $classname = preg_quote(sql_debugging_fixture::class);
         $expected = <<<EOD
 SELECT \* FROM {users}
--- line \d+ of /lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php: call to ReflectionMethod->invoke\(\)
--- line \d+ of /lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php: call to test_dml_sql_debugging_fixture->one\(\)
--- line \d+ of /lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php: call to test_dml_sql_debugging_fixture->two\(\)
--- line \d+ of /lib/dml/tests/fixtures/test_dml_sql_debugging_fixture.php: call to test_dml_sql_debugging_fixture->three\(\)
--- line \d+ of /lib/dml/tests/dml_test.php: call to test_dml_sql_debugging_fixture->four\(\)
+-- line \d+ of /lib/tests/classes/dml/sql_debugging_fixture.php: call to ReflectionMethod->invoke\(\)
+-- line \d+ of /lib/tests/classes/dml/sql_debugging_fixture.php: call to {$classname}->one\(\)
+-- line \d+ of /lib/tests/classes/dml/sql_debugging_fixture.php: call to {$classname}->two\(\)
+-- line \d+ of /lib/tests/classes/dml/sql_debugging_fixture.php: call to {$classname}->three\(\)
+-- line \d+ of /lib/tests/dml/dml_test.php: call to {$classname}->four\(\)
 EOD;
         $this->assertMatchesRegularExpression('@' . $this->unix_to_os_dirsep($expected) . '@', $out);
 
@@ -958,7 +952,7 @@ EOD;
 
         // Insert a TEXT with raw SQL, binding TEXT params.
         $course = 9999;
-        $onetext = file_get_contents(__DIR__ . '/fixtures/clob.txt');
+        $onetext = file_get_contents(self::get_fixture_path('core', 'dml/clob.txt'));
         $sql = "INSERT INTO {{$tablename2}} (course, onetext)
                 VALUES (:course, :onetext)";
         $DB->execute($sql, array('course' => $course, 'onetext' => $onetext));
@@ -969,7 +963,7 @@ EOD;
 
         // Update a TEXT with raw SQL, binding TEXT params.
         $newcourse = 10000;
-        $newonetext = file_get_contents(__DIR__ . '/fixtures/clob.txt') . '- updated';
+        $newonetext = file_get_contents(self::get_fixture_path('core', 'dml/clob.txt')) . '- updated';
         $sql = "UPDATE {{$tablename2}} SET course = :newcourse, onetext = :newonetext
                 WHERE course = :oldcourse";
         $DB->execute($sql, array('oldcourse' => $course, 'newcourse' => $newcourse, 'newonetext' => $newonetext));
@@ -2250,8 +2244,8 @@ EOD;
         }
 
         // Check LOBs in text/binary columns.
-        $clob = file_get_contents(__DIR__ . '/fixtures/clob.txt');
-        $blob = file_get_contents(__DIR__ . '/fixtures/randombinary');
+        $clob = file_get_contents(self::get_fixture_path('core', 'dml/clob.txt'));
+        $blob = file_get_contents(self::get_fixture_path('core', 'dml/randombinary'));
         $record = new \stdClass();
         $record->onetext = $clob;
         $record->onebinary = $blob;
@@ -2673,7 +2667,7 @@ EOD;
         }
 
         // Check LOBs in text/binary columns.
-        $clob = file_get_contents(__DIR__ . '/fixtures/clob.txt');
+        $clob = file_get_contents(self::get_fixture_path('core', 'dml/clob.txt'));
         $record = new \stdClass();
         $record->id = 70;
         $record->onetext = $clob;
@@ -2684,7 +2678,7 @@ EOD;
         $rs->close();
         $this->assertEquals($clob, $record->onetext, 'Test CLOB insert (full contents output disabled)');
 
-        $blob = file_get_contents(__DIR__ . '/fixtures/randombinary');
+        $blob = file_get_contents(self::get_fixture_path('core', 'dml/randombinary'));
         $record = new \stdClass();
         $record->id = 71;
         $record->onetext = '';
@@ -2896,8 +2890,8 @@ EOD;
         }
 
         // Check LOBs in text/binary columns.
-        $clob = file_get_contents(__DIR__ . '/fixtures/clob.txt');
-        $blob = file_get_contents(__DIR__ . '/fixtures/randombinary');
+        $clob = file_get_contents(self::get_fixture_path('core', 'dml/clob.txt'));
+        $blob = file_get_contents(self::get_fixture_path('core', 'dml/randombinary'));
         $record->onetext = $clob;
         $record->onebinary = $blob;
         $DB->update_record($tablename, $record);
@@ -3158,8 +3152,8 @@ EOD;
         }
 
         // Check LOBs in text/binary columns.
-        $clob = file_get_contents(__DIR__ . '/fixtures/clob.txt');
-        $blob = file_get_contents(__DIR__ . '/fixtures/randombinary');
+        $clob = file_get_contents(self::get_fixture_path('core', 'dml/clob.txt'));
+        $blob = file_get_contents(self::get_fixture_path('core', 'dml/randombinary'));
         $DB->set_field_select($tablename, 'onetext', $clob, 'id = ?', array(1));
         $DB->set_field_select($tablename, 'onebinary', $blob, 'id = ?', array(1));
         $this->assertEquals($clob, $DB->get_field($tablename, 'onetext', array('id' => 1)), 'Test CLOB set_field (full contents output disabled)');
@@ -3976,7 +3970,7 @@ EOD;
         }
 
         // Now test the function with really big content and params.
-        $clob = file_get_contents(__DIR__ . '/fixtures/clob.txt');
+        $clob = file_get_contents(self::get_fixture_path('core', 'dml/clob.txt'));
         $DB->insert_record($tablename, array('name' => 'zzzz', 'description' => $clob));
         $sql = "SELECT * FROM {{$tablename}}
                  WHERE " . $DB->sql_compare_text('description') . " = " . $DB->sql_compare_text(':clob');
@@ -4056,7 +4050,6 @@ EOD;
         $sql = "SELECT * FROM {{$tablename}} WHERE " . $DB->sql_equal('name', 'name2', true, true, false);
         $records = $DB->get_records_sql($sql);
         $this->assertCount(2, $records);
-
         // Case insensitive and accent sensitive (equal and not equal).
         $sql = "SELECT * FROM {{$tablename}} WHERE " . $DB->sql_equal('name', '?', false, true, false);
         $records = $DB->get_records_sql($sql, array('one'));
@@ -5171,6 +5164,7 @@ EOD;
 
     public function test_transaction_ignore_error_trouble(): void {
         $DB = $this->tdb;
+
         $dbman = $DB->get_manager();
 
         $table = $this->get_test_table();
@@ -5574,7 +5568,7 @@ EOD;
                 unset($cfg->dboptions['readonly']);
             }
         }
-        $DB2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $DB2 = database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $DB2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
         // Second instance should not see pending inserts.
@@ -5621,7 +5615,7 @@ EOD;
         if (!isset($cfg->dboptions)) {
             $cfg->dboptions = array();
         }
-        $DB2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $DB2 = database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $DB2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
         // Testing that acquiring a lock effectively locks.
@@ -6122,7 +6116,7 @@ EOD;
     }
 
     /**
-     * Mock the methods used by {@see \mysqli_native_moodle_database::get_server_info()}.
+     * Mock the methods used by {@see \mysqli_native_database::get_server_info()}.
      *
      * Mocking allows to test it without the need of an actual MySQL-ish running DB server.
      *
@@ -6130,8 +6124,8 @@ EOD;
      * @param string $versionfromdb A string representing the result of VERSION function.
      * @param bool $cfgversionfromdb A boolean representing !empty($CFG->dboptions['versionfromdb']).
      * @param string $expecteddbversion A string representing the expected DB version.
-     * @see \mysqli_native_moodle_database::get_server_info()
-     * @covers \mysqli_native_moodle_database::get_server_info
+     * @see \mysqli_native_database::get_server_info()
+     * @covers \mysqli_native_database::get_server_info
      * @dataProvider get_server_info_mysql_provider
      */
     public function test_get_server_info_mysql(
@@ -6148,7 +6142,7 @@ EOD;
             'get_version_from_db',
             'should_db_version_be_read_from_db',
         ];
-        $mysqlinativemoodledatabase = $this->getMockBuilder('\mysqli_native_moodle_database')
+        $mysqlinativemoodledatabase = $this->getMockBuilder('\mysqli_native_database')
             ->onlyMethods($methods)
             ->getMock();
         $mysqlinativemoodledatabase->method('get_mysqli_server_info')->willReturn($mysqliserverinfo);
@@ -6294,9 +6288,9 @@ EOD;
     /**
      * Test the COUNT() window function with the actual DB Server.
      *
-     * @covers \moodle_database::get_counted_recordset_sql()
-     * @covers \moodle_database::get_counted_records_sql()
-     * @covers \moodle_database::generate_fullcount_sql()
+     * @covers database::get_counted_recordset_sql()
+     * @covers database::get_counted_records_sql()
+     * @covers database::generate_fullcount_sql()
      * @return void
      */
     public function test_count_window_function(): void {
@@ -6347,60 +6341,6 @@ EOD;
         $this->assertEquals(2, count($rs));
     }
 }
-
-/**
- * This class is not a proper subclass of moodle_database. It is
- * intended to be used only in unit tests, in order to gain access to the
- * protected methods of moodle_database, and unit test them.
- */
-class moodle_database_for_testing extends moodle_database {
-    protected $prefix = 'mdl_';
-
-    public function public_fix_table_names($sql) {
-        return $this->fix_table_names($sql);
-    }
-
-    public function driver_installed() {}
-    public function get_dbfamily() {}
-    protected function get_dbtype() {}
-    protected function get_dblibrary() {}
-    public function get_name() {}
-    public function get_configuration_help() {}
-    public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions=null) {}
-    public function get_server_info() {}
-    protected function allowed_param_types() {}
-    public function get_last_error() {}
-    public function get_tables($usecache=true) {}
-    public function get_indexes($table) {}
-    protected function fetch_columns(string $table): array {
-        return [];
-    }
-    protected function normalise_value($column, $value) {}
-    public function set_debug($state) {}
-    public function get_debug() {}
-    public function change_database_structure($sql, $tablenames = null) {}
-    public function execute($sql, ?array $params=null) {}
-    public function get_recordset_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0) {}
-    public function get_records_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0) {}
-    public function get_fieldset_sql($sql, ?array $params=null) {}
-    public function insert_record_raw($table, $params, $returnid=true, $bulk=false, $customsequence=false) {}
-    public function insert_record($table, $dataobject, $returnid=true, $bulk=false) {}
-    public function import_record($table, $dataobject) {}
-    public function update_record_raw($table, $params, $bulk=false) {}
-    public function update_record($table, $dataobject, $bulk=false) {}
-    public function set_field_select($table, $newfield, $newvalue, $select, ?array $params=null) {}
-    public function delete_records_select($table, $select, ?array $params=null) {}
-    public function sql_concat(...$arr) {}
-    public function sql_concat_join($separator="' '", $elements=array()) {}
-    public function sql_group_concat(string $field, string $separator = ', ', string $sort = ''): string {
-        return '';
-    }
-    public function sql_substr($expr, $start, $length=false) {}
-    public function begin_transaction() {}
-    public function commit_transaction() {}
-    public function rollback_transaction() {}
-}
-
 
 /**
  * Dumb test class with toString() returning 1.

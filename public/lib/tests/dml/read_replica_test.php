@@ -23,13 +23,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace core;
+namespace core\dml;
 
-defined('MOODLE_INTERNAL') || die();
+use core\tests\dml\read_replica_moodle_database;
+use core\tests\dml\read_replica_moodle_database_special;
 
-require_once(__DIR__.'/fixtures/read_replica_moodle_database_table_names.php');
-require_once(__DIR__.'/fixtures/read_replica_moodle_database_special.php');
-require_once(__DIR__.'/../../tests/fixtures/event_fixtures.php');
+// defined('MOODLE_INTERNAL') || die();
+//
+// require_once(__DIR__.'/fixtures/read_replica_moodle_database_table_names.php');
+// require_once(__DIR__.'/fixtures/read_replica_moodle_database_special.php');
+// require_once(__DIR__.'/../../tests/fixtures/event_fixtures.php');
 
 /**
  * DML read/read-write database handle use tests
@@ -40,10 +43,17 @@ require_once(__DIR__.'/../../tests/fixtures/event_fixtures.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @covers     \moodle_read_replica_trait
  */
-final class dml_read_replica_test extends \database_driver_testcase {
+final class read_replica_test extends \database_driver_testcase {
 
     /** @var float */
     static private $dbreadonlylatency = 0.8;
+
+    #[\Override]
+    public static function setUpBeforeClass(): void {
+        parent::setUpBeforeClass();
+
+        self::load_fixture('core', 'event_fixtures.php');
+    }
 
     /**
      * Instantiates a test database interface object.
@@ -141,7 +151,7 @@ final class dml_read_replica_test extends \database_driver_testcase {
      * @dataProvider table_names_provider
      */
     public function test_table_names($sql, $tables): void {
-        $db = new read_replica_moodle_database_table_names();
+        $db = new \core\tests\dml\read_replica_moodle_database_table_names();
 
         $this->assertEquals($tables, $db->table_names($db->fix_sql_params($sql)[0]));
     }
@@ -400,8 +410,8 @@ final class dml_read_replica_test extends \database_driver_testcase {
 
             $observers = [
                 [
-                    'eventname'   => '\core_tests\event\unittest_executed',
-                    'callback'    => function (\core_tests\event\unittest_executed $event) use ($DB, $now, &$called) {
+                    'eventname'   => \core_tests\eventnittest_executed::class,
+                    'callback'    => function (\core_tests\eventnittest_executed $event) use ($DB, $now, &$called) {
                         $called = true;
                         $this->assertFalse($DB->is_transaction_started());
 

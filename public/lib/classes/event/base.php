@@ -138,8 +138,13 @@ abstract class base implements \IteratorAggregate {
         $this->data = array_fill_keys(self::$fields, null);
 
         // Define some basic details.
-        $classname = get_called_class();
-        $parts = explode('\\', $classname);
+        $classname = $explodingclassname = get_called_class();
+
+        if (defined('PHPUNIT_TEST') && PHPUNIT_TEST) {
+            $explodingclassname = str_replace('\\tests\\', '\\', $classname);
+        }
+
+        $parts = explode('\\', $explodingclassname);
         if (count($parts) !== 3 or $parts[1] !== 'event') {
             throw new \coding_exception("Invalid event class name '$classname', it must be defined in component\\event\\
                     namespace");

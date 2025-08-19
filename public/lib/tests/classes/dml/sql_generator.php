@@ -14,16 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Test SQL code generator class
- *
- * @package    core
- * @category   dml
- * @copyright  2018 Srdjan Janković, Catalyst IT
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core;
+namespace core\tests\dml;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -41,7 +32,7 @@ use xmldb_field;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  */
-class test_sql_generator extends \sql_generator {
+class sql_generator extends \sql_generator {
     // phpcs:disable moodle.NamingConventions.ValidFunctionName.LowercaseMethod
 
     /**

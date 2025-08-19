@@ -14,6 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\sqlsrv\native;
+
+use core\dml\database_column_info;
+use core\dml\exception\exception as dml_exception;
+use core\dml\exception\connection_exception;
+use core\dml\exception\sessionwait_exception;
+use core\exception\coding_exception;
+use ddl_change_structure_exception;
+use stdClass;
+
 /**
  * Native sqlsrv class representing moodle database interface.
  *
@@ -21,7 +31,7 @@
  * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
-class sqlsrv_native_moodle_database extends moodle_database {
+class database extends \core\dml\database {
 
     protected $sqlsrv = null;
     protected $last_error_reporting; // To handle SQL*Server-Native driver default verbosity
@@ -171,7 +181,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
      * @param mixed $prefix string|bool The moodle db table name's prefix. false is used for external databases where prefix not used
      * @param array $dboptions driver specific options
      * @return bool true
-     * @throws dml_connection_exception if error
+     * @throws connection_exception if error
      */
     public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions=null) {
         if ($prefix == '' and !$this->external) {
@@ -221,7 +231,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
             $this->sqlsrv = null;
             $dberr = $this->get_last_error();
 
-            throw new dml_connection_exception($dberr);
+            throw new connection_exception($dberr);
         }
 
         // Disable logging until we are fully setup.
@@ -277,7 +287,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
         $this->query_log_allow();
 
         // Connection established and configured, going to instantiate the temptables controller
-        $this->temptables = new sqlsrv_native_moodle_temptables($this);
+        $this->temptables = new temptables($this);
 
         return true;
     }
@@ -854,7 +864,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
      * @param array $params array of sql parameters
      * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return moodle_recordset instance
+     * @return \core\dml\recordset instance
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
@@ -932,10 +942,10 @@ class sqlsrv_native_moodle_database extends moodle_database {
      * Create a record set and initialize with first row
      *
      * @param mixed $result
-     * @return sqlsrv_native_moodle_recordset
+     * @return \core\dml\recordset
      */
     protected function create_recordset($result) {
-        $rs = new sqlsrv_native_moodle_recordset($result, $this);
+        $rs = new recordset($result, $this);
         $this->recordsets[] = $rs;
         return $rs;
     }
@@ -943,9 +953,9 @@ class sqlsrv_native_moodle_database extends moodle_database {
     /**
      * Do not use outside of recordset class.
      * @internal
-     * @param sqlsrv_native_moodle_recordset $rs
+     * @param \core\dml\recordset $rs
      */
-    public function recordset_closed(sqlsrv_native_moodle_recordset $rs) {
+    public function recordset_closed(recordset $rs) {
         if ($key = array_search($rs, $this->recordsets, true)) {
             unset($this->recordsets[$key]);
         }
@@ -1565,7 +1575,7 @@ class sqlsrv_native_moodle_database extends moodle_database {
         if ($result) {
             $row = sqlsrv_fetch_array($result);
             if ($row[0] < 0) {
-                throw new dml_sessionwait_exception();
+                throw new sessionwait_exception();
             }
         }
 
@@ -1651,3 +1661,8 @@ class sqlsrv_native_moodle_database extends moodle_database {
         return !empty($property);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(database::class, \sqlsrv_native_moodle_database::class);

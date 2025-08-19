@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\exception;
+
 /**
  * DML write exception - triggered by some SQL syntax errors, etc.
  *
@@ -23,7 +25,7 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dml_write_exception extends dml_exception {
+class write_exception extends exception {
     /** @var string The name of the string from error.php to print.*/
     public $error;
     /** @var string The SQL that ran just before this write error.*/
@@ -45,3 +47,8 @@ class dml_write_exception extends dml_exception {
         parent::__construct('dmlwriteexception', NULL, $errorinfo);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(write_exception::class, \dml_write_exception::class);

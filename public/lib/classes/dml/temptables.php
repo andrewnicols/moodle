@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml;
+
+use xmldb_table;
+
 /**
  * Generic temptables object store
  *
@@ -36,10 +40,7 @@
  * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-class moodle_temptables {
+class temptables {
 
     /** @var circular reference, to be able to use DB facilities here if needed */
     protected $mdb;
@@ -49,8 +50,8 @@ class moodle_temptables {
     protected $temptables;
 
     /**
-     * Creates new moodle_temptables instance
-     * @param moodle_database $mdb An instance of moodle_database.
+     * Creates new temptables instance
+     * @param database $mdb An instance of database.
      */
     public function __construct($mdb) {
         $this->mdb        = $mdb;
@@ -143,3 +144,8 @@ class moodle_temptables {
         $this->mdb = null;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(temptables::class, \moodle_temptables::class);

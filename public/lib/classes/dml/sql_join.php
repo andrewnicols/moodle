@@ -14,19 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * An object that contains sql join fragments.
- *
- * @since      Moodle 3.1
- * @package    core
- * @category   dml
- * @copyright  2016 The Open University
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace core\dml;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * An object that contains sql join fragments.

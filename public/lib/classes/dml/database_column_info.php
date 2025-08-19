@@ -14,15 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Database column information.
- *
- * @package    core_dml
- * @copyright  2008 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core\dml;
 
-defined('MOODLE_INTERNAL') || die();
+use core\exception\coding_exception;
 
 /**
  * Detailed database field information.
@@ -141,3 +135,8 @@ class database_column_info {
         }
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(database_column_info::class, \database_column_info::class);

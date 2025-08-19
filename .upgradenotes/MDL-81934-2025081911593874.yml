@@ -1,0 +1,35 @@
+issueNumber: MDL-81934
+notes:
+  core:
+    - message: >
+        The following classes have been moved to autoloaded and namespaced
+        equivalents:
+
+         | Old class name                        | New class name                                   |
+         | ---                                   | ---                                              |
+         | `\database_column_info`               | `\core\dml\database_column_info`                 |
+         | `\dml_connection_exception`           | `\core\dml\exception\connection_exception`       |
+         | `\dml_exception`                      | `\core\dml\exception\exception`                  |
+         | `\dml_missing_record_exception`       | `\core\dml\exception\missing_record_exception`   |
+         | `\dml_multiple_records_exception`     | `\core\dml\exception\multiple_records_exception` |
+         | `\dml_read_exception`                 | `\core\dml\exception\read_exception`             |
+         | `\dml_sessionwait_exception`          | `\core\dml\exception\sessionwait_exception`      |
+         | `\dml_transaction_exception`          | `\core\dml\exception\transaction_exception`      |
+         | `\dml_write_exception`                | `\core\dml\exception\write_exception`            |
+         | `\moodle_database`                    | `\core\dml\database`                             |
+         | `\moodle_read_replica_trait`          | `\core\dml\read_replica_trait`                   |
+         | `\moodle_recordset`                   | `\core\dml\recordset`                            |
+         | `\moodle_temptables`                  | `\core\dml\temptables`                           |
+         | `\moodle_transaction`                 | `\core\dml\transaction`                          |
+         | `\auroramysql_native_moodle_database` | `\core\dml\driver\auroramysql\native\database`   |
+         | `\mariadb_native_moodle_database`     | `\core\dml\driver\mariadb\native\database`       |
+         | `\mysqli_native_moodle_database`      | `\core\dml\driver\mysqli\native\database`        |
+         | `\mysqli_native_moodle_recordset`     | `\core\dml\driver\mysqli\native\recordset`       |
+         | `\mysqli_native_moodle_temptables`    | `\core\dml\driver\mysqli\native\temptables`      |
+         | `\pgsql_native_moodle_database`       | `\core\dml\driver\pgsql\native\database`         |
+         | `\pgsql_native_moodle_recordset`      | `\core\dml\driver\pgsql\native\recordset`        |
+         | `\pgsql_native_moodle_temptables`     | `\core\dml\driver\pgsql\native\temptables`       |
+         | `\sqlsrv_native_moodle_database`      | `\core\dml\driver\sqlsrv\native\database`        |
+         | `\sqlsrv_native_moodle_recordset`     | `\core\dml\driver\sqlsrv\native\recordset`       |
+         | `\sqlsrv_native_moodle_temptables`    | `\core\dml\driver\sqlsrv\native\temptables`      |
+      type: improved

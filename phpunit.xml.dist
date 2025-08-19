@@ -48,11 +48,6 @@
       <exclude>public/lib/ddl/tests/classes</exclude>
       <exclude>public/lib/ddl/tests/fixtures</exclude>
     </testsuite>
-    <testsuite name="core_dml_testsuite">
-      <directory suffix="_test.php">public/lib/dml/tests</directory>
-      <exclude>public/lib/dml/tests/classes</exclude>
-      <exclude>public/lib/dml/tests/fixtures</exclude>
-    </testsuite>
     <testsuite name="core_testsuite">
       <directory suffix="_test.php">public/lib/tests</directory>
       <exclude>public/lib/tests/classes</exclude>

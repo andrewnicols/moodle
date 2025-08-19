@@ -14,25 +14,17 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+
+namespace core\dml;
+
+use stdClass;
+
 /**
  * Helpers and methods relating to DML tables.
  *
  * @since      Moodle 3.7
  * @package    core
  * @category   dml
- * @copyright  2019 Andrew Nicols <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core\dml;
-
-use stdClass;
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Helpers and methods relating to DML tables.
- *
  * @copyright  2019 Andrew Nicols <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

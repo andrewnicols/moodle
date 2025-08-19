@@ -14,16 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Test SQL debugging fixture
- *
- * @package    core
- * @category   dml
- * @copyright  2020 Brendan Heywood <brendan@catalyst-au.net>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-defined('MOODLE_INTERNAL') || die();
+namespace core\tests\dml;
 
 /**
  * Test SQL debugging fixture
@@ -33,7 +24,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2020 Brendan Heywood <brendan@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class test_dml_sql_debugging_fixture {
+class sql_debugging_fixture {
     /**
      * Constructor
      * @param \moodle_database $db The database handle to use for this fixture

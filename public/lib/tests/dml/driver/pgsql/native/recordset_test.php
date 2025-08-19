@@ -14,6 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\pgsql\native;
+
+use xmldb_table;
+use core\dml\exception\transaction_exception;
+
 /**
  * Test specific features of the Postgres dml support relating to recordsets.
  *
@@ -22,9 +27,10 @@
  * @copyright 2017 The Open University
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class pgsql_native_recordset_test extends basic_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(recordset::class)]
+final class recordset_test extends \basic_testcase {
 
-    /** @var pgsql_native_moodle_database Special database connection */
+    /** @var database Special database connection */
     protected $specialdb;
 
     /**
@@ -36,7 +42,7 @@ final class pgsql_native_recordset_test extends basic_testcase {
         parent::setUp();
 
         // Skip tests if not using Postgres.
-        if (!($DB instanceof pgsql_native_moodle_database)) {
+        if (!($DB instanceof database)) {
             $this->markTestSkipped('Postgres-only test');
         }
     }
@@ -50,7 +56,7 @@ final class pgsql_native_recordset_test extends basic_testcase {
 
         // To make testing easier, create a database with the same dboptions as the real one,
         // but a low number for the cursor size.
-        $this->specialdb = \moodle_database::get_driver_instance('pgsql', 'native', true);
+        $this->specialdb = \core\dml\database::get_driver_instance('pgsql', 'native', true);
         $dboptions = $CFG->dboptions;
         $dboptions['fetchbuffersize'] = $fetchbuffersize;
         $this->specialdb->connect($CFG->dbhost, $CFG->dbuser, $CFG->dbpass, $CFG->dbname,
@@ -287,9 +293,9 @@ final class pgsql_native_recordset_test extends basic_testcase {
             $rs = $this->specialdb->get_recordset('silly_test_table', null, 'id');
             $transaction = $this->specialdb->start_delegated_transaction();
             $this->specialdb->delete_records('silly_test_table', ['id' => 5]);
-            $transaction->rollback(new dml_transaction_exception('rollback please'));
+            $transaction->rollback(new transaction_exception('rollback please'));
             $this->fail('should not get here');
-        } catch (dml_transaction_exception $e) {
+        } catch (transaction_exception $e) {
             $this->assertStringContainsString('rollback please', $e->getMessage());
         } finally {
 

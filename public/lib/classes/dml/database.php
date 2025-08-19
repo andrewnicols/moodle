@@ -14,6 +14,26 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml;
+
+use core_cache\cache;
+use core_cache\application_cache;
+use core_text;
+use core\dml\exception\exception as dml_exception;
+use core\dml\exception\connection_exception;
+use core\dml\exception\missing_record_exception;
+use core\dml\exception\multiple_records_exception;
+use core\dml\exception\read_exception;
+use core\dml\exception\transaction_exception;
+use core\dml\exception\write_exception;
+use core\exception\coding_exception;
+use database_manager;
+use ddl_change_structure_exception;
+use stdClass;
+use testing_util;
+use xmldb_field;
+use Traversable;
+
 /**
  * Abstract database driver class.
  *
@@ -61,11 +81,11 @@ define('SQL_QUERY_AUX_READONLY', 6);
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class moodle_database {
+abstract class database {
 
     /** @var database_manager db manager which allows db structure modifications. */
     protected $database_manager;
-    /** @var moodle_temptables temptables manager to provide cross-db support for temp tables. */
+    /** @var temptables temptables manager to provide cross-db support for temp tables. */
     protected $temptables;
     /** @var array Cache of table info. */
     protected $tables  = null;
@@ -180,20 +200,20 @@ abstract class moodle_database {
     /**
      * Loads and returns a database instance with the specified type and library.
      *
-     * The loaded class is within lib/dml directory and of the form: $type.'_'.$library.'_moodle_database'
-     *
      * @param string $type Database driver's type. (eg: mysqli, pgsql, mssql, sqldrv, etc.)
      * @param string $library Database driver's library (native, pdo, etc.)
      * @param bool $external True if this is an external database.
-     * @return ?moodle_database driver object or null if error, for example of driver object see {@see mysqli_native_moodle_database}
+     * @return ?database driver object or null if error, for example of driver see {@see \core\dml\driver\mysqli\native\database}
      */
     public static function get_driver_instance($type, $library, $external = false) {
-        $classname = "\\core\\dml\\{$type}\\{$library}\\database";
-        if (!class_exists($classname)) {
-            return null;
+        global $CFG;
+
+        $classname = "\\core\\dml\\driver\\{$type}\\{$library}\\database";
+        if (class_exists($classname)) {
+            return new $classname($external);
         }
 
-        return new $classname($external);
+        return null;
     }
 
     /**
@@ -291,7 +311,7 @@ abstract class moodle_database {
      * @param mixed $prefix string means moodle db prefix, false used for external databases where prefix not used
      * @param array $dboptions driver specific options
      * @return bool true
-     * @throws dml_connection_exception if error
+     * @throws connection_exception if error
      */
     abstract public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions=null);
 
@@ -331,7 +351,7 @@ abstract class moodle_database {
     /**
      * Handle the creation and caching of the databasemeta information for all databases.
      *
-     * @return cache_application The databasemeta cachestore to complete operations on.
+     * @return application_cache The databasemeta cachestore to complete operations on.
      */
     protected function get_metacache() {
         if (!isset($this->metacache)) {
@@ -344,7 +364,7 @@ abstract class moodle_database {
     /**
      * Handle the creation and caching of the temporary tables.
      *
-     * @return cache_application The temp_tables cachestore to complete operations on.
+     * @return application_cache The temp_tables cachestore to complete operations on.
      */
     protected function get_temp_tables_cache() {
         if (!isset($this->metacachetemp)) {
@@ -419,6 +439,8 @@ abstract class moodle_database {
      * @return void
      */
     protected function query_start($sql, ?array $params, $type, $extrainfo=null) {
+        global $CFG;
+
         if ($this->loggingquery) {
             return;
         }
@@ -443,7 +465,7 @@ abstract class moodle_database {
                     defined('BEHAT_SITE_RUNNING')) {
 
                     // Set list of tables that are updated.
-                    require_once(__DIR__.'/../testing/classes/util.php');
+                    require_once("{$CFG->libdir}/testing/classes/util.php");
                     testing_util::set_table_modified_by_sql($sql);
                 }
         }
@@ -455,7 +477,7 @@ abstract class moodle_database {
      * This should be called immediately after each db query. It does a clean up of resources.
      * It also throws exceptions if the sql that ran produced errors.
      * @param mixed $result The db specific result obtained from running a query.
-     * @throws dml_read_exception | dml_write_exception | ddl_change_structure_exception
+     * @throws read_exception | write_exception | ddl_change_structure_exception
      * @return void
      */
     protected function query_end($result) {
@@ -483,10 +505,10 @@ abstract class moodle_database {
             case SQL_QUERY_SELECT:
             case SQL_QUERY_AUX:
             case SQL_QUERY_AUX_READONLY:
-                throw new dml_read_exception($error, $sql, $params);
+                throw new read_exception($error, $sql, $params);
             case SQL_QUERY_INSERT:
             case SQL_QUERY_UPDATE:
-                throw new dml_write_exception($error, $sql, $params);
+                throw new write_exception($error, $sql, $params);
             case SQL_QUERY_STRUCTURE:
                 $this->get_manager(); // includes ddl exceptions classes ;-)
                 throw new ddl_change_structure_exception($error, $sql);
@@ -768,7 +790,7 @@ abstract class moodle_database {
 
         // default behavior, throw exception on empty array
         if (is_array($items) and empty($items) and $onemptyitems === false) {
-            throw new coding_exception('moodle_database::get_in_or_equal() does not accept empty arrays');
+            throw new coding_exception(__METHOD__ . '() does not accept empty arrays');
         }
         // handle $onemptyitems on empty array of items
         if (is_array($items) and empty($items)) {
@@ -1045,7 +1067,6 @@ abstract class moodle_database {
      */
     protected function add_sql_debugging(string $sql): string {
         global $CFG;
-
         if (!property_exists($CFG, 'debugsqltrace')) {
             return $sql;
         }
@@ -1059,8 +1080,12 @@ abstract class moodle_database {
         $callers = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
         // Ignore moodle_database internals.
+// TODO
+// !!!
+// !!!
+// !!!
         $callers = array_filter($callers, function($caller) {
-            return empty($caller['class']) || $caller['class'] != 'moodle_database';
+            return empty($caller['class']) || $caller['class'] != \core\dml\database::class;
         });
 
         $callers = array_slice($callers, 0, $level);
@@ -1300,7 +1325,7 @@ abstract class moodle_database {
     abstract public function execute($sql, ?array $params=null);
 
     /**
-     * Get a number of records as a moodle_recordset where all the given conditions met.
+     * Get a number of records as a recordset where all the given conditions met.
      *
      * Selects records from the table $table.
      *
@@ -1321,7 +1346,7 @@ abstract class moodle_database {
      * order) and then return the next $limitnum records. If either of $limitfrom
      * or $limitnum is specified, both must be present.
      *
-     * The return value is a moodle_recordset
+     * The return value is a recordset
      * if the query succeeds. If an error occurs, false is returned.
      *
      * @param string $table the table to query.
@@ -1330,7 +1355,7 @@ abstract class moodle_database {
      * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
      * @param int $limitfrom return a subset of records, starting at this point (optional).
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return moodle_recordset A moodle_recordset instance
+     * @return recordset A recordset instance
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function get_recordset($table, ?array $conditions=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
@@ -1339,7 +1364,7 @@ abstract class moodle_database {
     }
 
     /**
-     * Get a number of records as a moodle_recordset where one field match one list of values.
+     * Get a number of records as a recordset where one field match one list of values.
      *
      * Only records where $field takes one of the values $values are returned.
      * $values must be an array of values.
@@ -1353,7 +1378,7 @@ abstract class moodle_database {
      * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
      * @param int $limitfrom return a subset of records, starting at this point (optional).
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return moodle_recordset A moodle_recordset instance.
+     * @return recordset A recordset instance.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function get_recordset_list($table, $field, array $values, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
@@ -1362,7 +1387,7 @@ abstract class moodle_database {
     }
 
     /**
-     * Get a number of records as a moodle_recordset which match a particular WHERE clause.
+     * Get a number of records as a recordset which match a particular WHERE clause.
      *
      * If given, $select is used as the SELECT parameter in the SQL query,
      * otherwise all records from the table are returned.
@@ -1376,7 +1401,7 @@ abstract class moodle_database {
      * @param string $fields a comma separated list of fields to return (optional, by default all fields are returned).
      * @param int $limitfrom return a subset of records, starting at this point (optional).
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return moodle_recordset A moodle_recordset instance.
+     * @return recordset A recordset instance.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function get_recordset_select($table, $select, ?array $params=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
@@ -1391,7 +1416,7 @@ abstract class moodle_database {
     }
 
     /**
-     * Get a number of records as a moodle_recordset using a SQL statement.
+     * Get a number of records as a recordset using a SQL statement.
      *
      * Since this method is a little less readable, use of it should be restricted to
      * code where it's possible there might be large datasets being returned.  For known
@@ -1403,7 +1428,7 @@ abstract class moodle_database {
      * @param array $params array of sql parameters
      * @param int $limitfrom return a subset of records, starting at this point (optional).
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return moodle_recordset A moodle_recordset instance.
+     * @return recordset A recordset instance.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     abstract public function get_recordset_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0);
@@ -1415,7 +1440,7 @@ abstract class moodle_database {
      * this method may block access to table until the recordset is closed.
      *
      * @param string $table Name of database table.
-     * @return moodle_recordset A moodle_recordset instance {@link function get_recordset}.
+     * @return recordset A recordset instance {@link function get_recordset}.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function export_table_recordset($table) {
@@ -1637,9 +1662,9 @@ abstract class moodle_database {
         }
         try {
             return $this->get_record_sql("SELECT $fields FROM {" . $table . "} $select", $params, $strictness);
-        } catch (dml_missing_record_exception $e) {
+        } catch (missing_record_exception $e) {
             // create new exception which will contain correct table name
-            throw new dml_missing_record_exception($table, $e->sql, $e->params);
+            throw new missing_record_exception($table, $e->sql, $e->params);
         }
     }
 
@@ -1667,14 +1692,14 @@ abstract class moodle_database {
         if (!$records = $this->get_records_sql($sql, $params, 0, $count)) {
             // not found
             if ($strictness == MUST_EXIST) {
-                throw new dml_missing_record_exception('', $sql, $params);
+                throw new missing_record_exception('', $sql, $params);
             }
             return false;
         }
 
         if (count($records) > 1) {
             if ($strictness == MUST_EXIST) {
-                throw new dml_multiple_records_exception($sql, $params);
+                throw new multiple_records_exception($sql, $params);
             }
             debugging('Error: mdb->get_record() found more than one record!');
         }
@@ -1719,9 +1744,9 @@ abstract class moodle_database {
         }
         try {
             return $this->get_field_sql("SELECT $return FROM {" . $table . "} $select", $params, $strictness);
-        } catch (dml_missing_record_exception $e) {
+        } catch (missing_record_exception $e) {
             // create new exception which will contain correct table name
-            throw new dml_missing_record_exception($table, $e->sql, $e->params);
+            throw new missing_record_exception($table, $e->sql, $e->params);
         }
     }
 
@@ -2390,7 +2415,7 @@ abstract class moodle_database {
      */
     public function sql_substr($expr, $start, $length=false) {
         if (count(func_get_args()) < 2) {
-            throw new coding_exception('moodle_database::sql_substr() requires at least two parameters', 'Originally this function was only returning name of SQL substring function, it now requires all parameters.');
+            throw new coding_exception(__METHOD__ . '() requires at least two parameters', 'Originally this function was only returning name of SQL substring function, it now requires all parameters.');
         }
         if ($length === false) {
             return "SUBSTR($expr, $start)";
@@ -2652,11 +2677,11 @@ abstract class moodle_database {
      * This is a test that throws an exception if transaction in progress.
      * This test does not force rollback of active transactions.
      * @return void
-     * @throws dml_transaction_exception if stansaction active
+     * @throws transaction_exception if stansaction active
      */
     public function transactions_forbidden() {
         if ($this->is_transaction_started()) {
-            throw new dml_transaction_exception('This code can not be excecuted in transaction');
+            throw new transaction_exception('This code can not be excecuted in transaction');
         }
     }
 
@@ -2675,10 +2700,10 @@ abstract class moodle_database {
      * successfully. If any part of the transaction rolls back then the whole
      * thing is rolled back.
      *
-     * @return moodle_transaction
+     * @return transaction
      */
     public function start_delegated_transaction() {
-        $transaction = new moodle_transaction($this);
+        $transaction = new transaction($this);
         $this->transactions[] = $transaction;
         if (count($this->transactions) == 1) {
             $this->begin_transaction();
@@ -2697,29 +2722,29 @@ abstract class moodle_database {
      * Indicates delegated transaction finished successfully.
      * The real database transaction is committed only if
      * all delegated transactions committed.
-     * @param moodle_transaction $transaction The transaction to commit
+     * @param transaction $transaction The transaction to commit
      * @return void
-     * @throws dml_transaction_exception Creates and throws transaction related exceptions.
+     * @throws transaction_exception Creates and throws transaction related exceptions.
      */
-    public function commit_delegated_transaction(moodle_transaction $transaction) {
+    public function commit_delegated_transaction(transaction $transaction) {
         if ($transaction->is_disposed()) {
-            throw new dml_transaction_exception('Transactions already disposed', $transaction);
+            throw new transaction_exception('Transactions already disposed', $transaction);
         }
         // mark as disposed so that it can not be used again
         $transaction->dispose();
 
         if (empty($this->transactions)) {
-            throw new dml_transaction_exception('Transaction not started', $transaction);
+            throw new transaction_exception('Transaction not started', $transaction);
         }
 
         if ($this->force_rollback) {
-            throw new dml_transaction_exception('Tried to commit transaction after lower level rollback', $transaction);
+            throw new transaction_exception('Tried to commit transaction after lower level rollback', $transaction);
         }
 
         if ($transaction !== $this->transactions[count($this->transactions) - 1]) {
             // one incorrect commit at any level rollbacks everything
             $this->force_rollback = true;
-            throw new dml_transaction_exception('Invalid transaction commit attempt', $transaction);
+            throw new transaction_exception('Invalid transaction commit attempt', $transaction);
         }
 
         if (count($this->transactions) == 1) {
@@ -2749,17 +2774,17 @@ abstract class moodle_database {
      * because all open delegated transactions are rolled back
      * automatically if exceptions not caught.
      *
-     * @param moodle_transaction $transaction An instance of a moodle_transaction.
-     * @param Exception|Throwable $e The related exception/throwable to this transaction rollback.
+     * @param transaction $transaction An instance of a transaction.
+     * @param \Exception|\Throwable $e The related exception/throwable to this transaction rollback.
      * @return void This does not return, instead the exception passed in will be rethrown.
      */
-    public function rollback_delegated_transaction(moodle_transaction $transaction, $e) {
-        if (!($e instanceof Exception) && !($e instanceof Throwable)) {
+    public function rollback_delegated_transaction(transaction $transaction, $e) {
+        if (!($e instanceof \Exception) && !($e instanceof \Throwable)) {
             // PHP7 - we catch Throwables in phpunit but can't use that as the type hint in PHP5.
-            $e = new \coding_exception("Must be given an Exception or Throwable object!");
+            $e = new coding_exception("Must be given an Exception or Throwable object!");
         }
         if ($transaction->is_disposed()) {
-            throw new dml_transaction_exception('Transactions already disposed', $transaction);
+            throw new transaction_exception('Transactions already disposed', $transaction);
         }
         // mark as disposed so that it can not be used again
         $transaction->dispose();
@@ -2999,7 +3024,7 @@ abstract class moodle_database {
      * @param array|null $params (Optional) Parameters to bind with the query.
      * @param int $limitfrom (Optional) Offset for pagination.
      * @param int $limitnum (Optional) Limit for pagination.
-     * @return moodle_recordset A moodle_recordset instance..
+     * @return recordset A recordset instance..
      */
     public function get_counted_recordset_sql(
         string $sql,
@@ -3008,7 +3033,7 @@ abstract class moodle_database {
         ?array $params = null,
         int $limitfrom = 0,
         int $limitnum = 0,
-    ): moodle_recordset {
+    ): recordset {
         $fullcountsql = $this->generate_fullcount_sql($sql, $params, $fullcountcolumn);
         if ($sort) {
             // Remove "ORDER BY" with any extra spaces from $sort.
@@ -3039,3 +3064,8 @@ abstract class moodle_database {
         return "SELECT results.*, $fullcountvalue AS $fullcountcolumn FROM ($sql) results";
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(database::class, \moodle_database::class);

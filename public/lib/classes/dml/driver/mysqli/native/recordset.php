@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\mysqli\native;
+
+use stdClass;
+
 /**
  * Mysqli specific moodle recordset class
  *
@@ -22,7 +26,7 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class mysqli_native_moodle_recordset extends moodle_recordset {
+class recordset extends \core\dml\recordset {
 
     protected $result;
     protected $current;
@@ -80,3 +84,8 @@ class mysqli_native_moodle_recordset extends moodle_recordset {
         $this->current = null;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(recordset::class, \mysqli_native_moodle_recordset::class);

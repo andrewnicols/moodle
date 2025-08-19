@@ -14,12 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core;
+namespace core\dml\driver\mysqli\native;
 
-use ReflectionClass;
+use core\exception\moodle_exception;
 use mysqli;
-use moodle_database, mysqli_native_moodle_database;
-use moodle_exception;
+use ReflectionClass;
 
 /**
  * Test specific features of the MySql dml.
@@ -28,9 +27,9 @@ use moodle_exception;
  * @category test
  * @copyright 2023 Catalyst IT
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers  \mysqli_native_moodle_database
  */
-final class mysqli_native_moodle_database_test extends \advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
+final class database_test extends \advanced_testcase {
 
     /**
      * Set up.
@@ -39,7 +38,7 @@ final class mysqli_native_moodle_database_test extends \advanced_testcase {
         global $DB;
         parent::setUp();
         // Skip tests if not using Postgres.
-        if (!($DB instanceof mysqli_native_moodle_database)) {
+        if (!($DB instanceof database)) {
             $this->markTestSkipped('MySql-only test');
         }
     }
@@ -65,7 +64,7 @@ final class mysqli_native_moodle_database_test extends \advanced_testcase {
         $cfg->dboptions['ssl'] = $ssl;
 
         // Get a separate disposable db connection handle with guaranteed 'readonly' config.
-        $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = \core\dml\database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->raw_connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
 
         $reflector = new ReflectionClass($db2);

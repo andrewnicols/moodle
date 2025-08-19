@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\sqlsrv\native;
+
+use core\tests\dml\temptables_tester;
+
 /**
  * Test case for sqlsrv dml support.
  *
@@ -22,7 +26,8 @@
  * @copyright  2017 John Okely
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-final class sqlsrv_native_moodle_database_test extends \advanced_testcase {
+#[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
+final class database_test extends \advanced_testcase {
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();
@@ -101,7 +106,7 @@ final class sqlsrv_native_moodle_database_test extends \advanced_testcase {
      * @dataProvider add_no_lock_to_temp_tables_provider
      */
     public function test_add_no_lock_to_temp_tables($input, $expected): void {
-        $sqlsrv = new sqlsrv_native_moodle_database();
+        $sqlsrv = new database();
 
         $reflector = new \ReflectionObject($sqlsrv);
 
@@ -230,39 +235,8 @@ EOT
         $this->assertSame($expectedmainquery, $mainquery);
 
         // The has_query_order_by static method is protected. Use Reflection to call the method.
-        $method = new \ReflectionMethod('sqlsrv_native_moodle_database', 'has_query_order_by');
+        $method = new \ReflectionMethod(database::class, 'has_query_order_by');
         $result = $method->invoke(null, $sql);
         $this->assertSame($expectedresult, $result);
-    }
-}
-
-/**
- * Test class for testing temptables
- *
- * @copyright  2017 John Okely
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class temptables_tester {
-    /**
-     * Returns if one table, based in the information present in the store, is a temp table
-     *
-     * For easy testing, anything with the word 'temp' in it is considered temporary.
-     *
-     * @param string $tablename name without prefix of the table we are asking about
-     * @return bool true if the table is a temp table (based in the store info), false if not
-     */
-    public function is_temptable($tablename) {
-        if (strpos($tablename, 'temp') === false) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    /**
-     * Dispose the temptables
-     *
-     * @return void
-     */
-    public function dispose() {
     }
 }

@@ -14,6 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\sqlsrv\native;
+
+use stdClass;
+
 /**
  * sqlsrv specific recordset.
  *
@@ -21,7 +25,7 @@
  * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
-class sqlsrv_native_moodle_recordset extends moodle_recordset {
+class recordset extends \core\dml\recordset {
 
     protected $rsrc;
     protected $current;
@@ -29,10 +33,10 @@ class sqlsrv_native_moodle_recordset extends moodle_recordset {
     /** @var array recordset buffer */
     protected $buffer = null;
 
-    /** @var sqlsrv_native_moodle_database */
+    /** @var database */
     protected $db;
 
-    public function __construct($rsrc, sqlsrv_native_moodle_database $db) {
+    public function __construct($rsrc, database $db) {
         $this->rsrc    = $rsrc;
         $this->current = $this->fetch_next();
         $this->db      = $db;
@@ -142,3 +146,8 @@ class sqlsrv_native_moodle_recordset extends moodle_recordset {
         $this->unregister();
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(recordset::class, \sqlsrv_native_moodle_recordset::class);

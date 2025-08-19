@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\exception;
+
 /**
  * DML db connection exception - triggered if database not accessible.
  *
@@ -23,13 +25,17 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class dml_connection_exception extends dml_exception {
+class connection_exception extends exception {
     /**
      * Constructor
      * @param string $error Optional debugging information.
      */
-    function __construct($error) {
-        $errorinfo = $error;
+    function __construct($errorinfo) {
         parent::__construct('dbconnectionfailed', NULL, $errorinfo);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(connection_exception::class, \dml_connection_exception::class);

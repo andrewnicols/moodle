@@ -14,15 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Delegated database transaction support.
- *
- * @package    core_dml
- * @copyright  2009 Petr Skoda (http://skodak.org)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+namespace core\dml;
 
-defined('MOODLE_INTERNAL') || die();
+use core\dml\exception\transaction_exception;
 
 /**
  * Delegated transaction class.
@@ -31,17 +25,17 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2009 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class moodle_transaction {
+class transaction {
     /** @var array The debug_backtrace() returned array.*/
     private $start_backtrace;
-    /**@var moodle_database The moodle_database instance.*/
+    /**@var database The moodle_database instance.*/
     private $database = null;
 
     /**
      * Delegated transaction constructor,
      * can be called only from moodle_database class.
      * Unfortunately PHP's protected keyword is useless.
-     * @param moodle_database $database
+     * @param database $database
      */
     public function __construct($database) {
         $this->database = $database;
@@ -68,7 +62,7 @@ class moodle_transaction {
     /**
      * Mark transaction as disposed, no more
      * commits and rollbacks allowed.
-     * To be used only from moodle_database class
+     * To be used only from database class
      * @return null
      */
     public function dispose() {
@@ -87,7 +81,7 @@ class moodle_transaction {
      */
     public function allow_commit() {
         if ($this->is_disposed()) {
-            throw new dml_transaction_exception('Transactions already disposed', $this);
+            throw new transaction_exception('Transactions already disposed', $this);
         }
         $this->database->commit_delegated_transaction($this);
     }
@@ -100,8 +94,13 @@ class moodle_transaction {
      */
     public function rollback($e) {
         if ($this->is_disposed()) {
-            throw new dml_transaction_exception('Transactions already disposed', $this);
+            throw new transaction_exception('Transactions already disposed', $this);
         }
         $this->database->rollback_delegated_transaction($this, $e);
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(transaction::class, \moodle_transaction::class);

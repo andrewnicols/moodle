@@ -14,6 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\dml\driver\pgsql\native;
+
+use core\dml\database_column_info;
+use core\dml\exception\exception as dml_exception;
+use core\dml\exception\connection_exception;
+use core\dml\exception\sessionwait_exception;
+use core\dml\read_replica_trait;
+use core\exception\coding_exception;
+use core\exception\moodle_exception;
+use ddl_change_structure_exception;
+use PgSql;
+use stdClass;
+use Traversable;
+
 /**
  * Native pgsql class representing moodle database interface.
  *
@@ -21,8 +35,8 @@
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class pgsql_native_moodle_database extends moodle_database {
-    use moodle_read_replica_trait {
+class database extends \core\dml\database {
+    use read_replica_trait {
         select_db_handle as read_replica_select_db_handle;
         can_use_readonly as read_replica_can_use_readonly;
         query_start as read_replica_query_start;
@@ -124,7 +138,7 @@ class pgsql_native_moodle_database extends moodle_database {
      * @param array $dboptions driver specific options
      * @return bool true
      * @throws moodle_exception
-     * @throws dml_connection_exception if error
+     * @throws connection_exception if error
      */
     public function raw_connect(string $dbhost, string $dbuser, string $dbpass, string $dbname, $prefix, ?array $dboptions=null): bool {
         if ($prefix == '' and !$this->external) {
@@ -210,7 +224,7 @@ class pgsql_native_moodle_database extends moodle_database {
 
         if ($status === false or $status === PGSQL_CONNECTION_BAD) {
             $this->pgsql = null;
-            throw new dml_connection_exception($dberr);
+            throw new connection_exception($dberr);
         }
 
         if (!empty($this->dboptions['dbpersist'])) {
@@ -229,18 +243,18 @@ class pgsql_native_moodle_database extends moodle_database {
              * These functions do not talk to the server, they use the client library knowledge to determine state.
              */
             if (!empty($this->dboptions['dbschema'])) {
-                throw new dml_connection_exception('You cannot specify a schema with dbhandlesoptions, use the database to set it.');
+                throw new connection_exception('You cannot specify a schema with dbhandlesoptions, use the database to set it.');
             }
             if (pg_client_encoding($this->pgsql) != 'UTF8') {
-                throw new dml_connection_exception('client_encoding = UTF8 not set, it is: ' . pg_client_encoding($this->pgsql));
+                throw new connection_exception('client_encoding = UTF8 not set, it is: ' . pg_client_encoding($this->pgsql));
             }
             if (pg_escape_string($this->pgsql, '\\') != '\\') {
-                throw new dml_connection_exception('standard_conforming_strings = on, must be set at the database.');
+                throw new connection_exception('standard_conforming_strings = on, must be set at the database.');
             }
         }
 
         // Connection stabilised and configured, going to instantiate the temptables controller
-        $this->temptables = new pgsql_native_moodle_temptables($this);
+        $this->temptables = new temptables($this);
 
         return true;
     }
@@ -352,7 +366,7 @@ class pgsql_native_moodle_database extends moodle_database {
                     pg_free_result($res);
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             if ($this->savepointpresent) {
                 $res = @pg_query($this->pgsql, "ROLLBACK TO SAVEPOINT moodle_pg_savepoint; SAVEPOINT moodle_pg_savepoint");
                 if ($res) {
@@ -865,7 +879,7 @@ class pgsql_native_moodle_database extends moodle_database {
      * @param array $params array of sql parameters
      * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return moodle_recordset instance
+     * @return recordset instance
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function get_recordset_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0) {
@@ -907,7 +921,7 @@ class pgsql_native_moodle_database extends moodle_database {
             $result = null;
         }
 
-        return new pgsql_native_moodle_recordset($result, $this, $cursorname);
+        return new recordset($result, $this, $cursorname);
     }
 
     /**
@@ -1602,7 +1616,7 @@ class pgsql_native_moodle_database extends moodle_database {
             $this->query_end($result);
         } catch (dml_exception $ex) {
             if ($end - $start >= $timeout) {
-                throw new dml_sessionwait_exception();
+                throw new sessionwait_exception();
             } else {
                 throw $ex;
             }
@@ -1717,3 +1731,8 @@ class pgsql_native_moodle_database extends moodle_database {
         return true;
     }
 }
+
+// Alias this class to the old name.
+// This file will be autoloaded by the legacyclasses autoload system.
+// In future all uses of this class will be corrected and the legacy references will be removed.
+class_alias(database::class, \pgsql_native_moodle_database::class);

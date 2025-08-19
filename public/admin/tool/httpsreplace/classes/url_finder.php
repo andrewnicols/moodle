@@ -14,20 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * url_finder class definition.
- *
- * @package    tool_httpsreplace
- * @copyright Copyright (c) 2016 Blackboard Inc. (http://www.blackboard.com)
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace tool_httpsreplace;
 
-use database_column_info;
+use core\dml\database_column_info;
 use progress_bar;
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Examines DB for non-https src or data links
