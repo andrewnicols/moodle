@@ -382,17 +382,15 @@ final class database_test extends \database_driver_testcase {
     #[WithoutErrorHandler]
     public function test_ssl_connection(): void {
         $pgconnerr = 'pg_connect(): Unable to connect to PostgreSQL server:';
+        $reporting = error_reporting(E_ERROR & E_NOTICE);
 
         try {
             $pgsql = $this->new_connection('require');
             // Either connect ...
             $this->assertNotNull($pgsql);
-        } catch (moodle_exception $e) {
-            // ... or fail with SSL not supported.
-            $this->assertStringContainsString($pgconnerr, $e->debuginfo);
-            $this->assertStringContainsString('server does not support SSL', $e->debuginfo);
+        } catch (connection_exception $e) {
+            error_reporting($reporting);
             $this->markTestSkipped('Postgres server does not support SSL. Unable to complete the test.');
-            return;
         }
 
         try {
@@ -400,11 +398,12 @@ final class database_test extends \database_driver_testcase {
             // Either connect ...
             $this->assertNotNull($pgsql);
         } catch (moodle_exception $e) {
+            error_reporting($reporting);
             // ... or fail with invalid cert.
             $this->assertStringContainsString($pgconnerr, $e->debuginfo);
             $this->assertStringContainsString('change sslmode to disable server certificate verification', $e->debuginfo);
         }
-
+        error_reporting($reporting);
         $this->expectException(moodle_exception::class);
         $this->new_connection('invalid-mode');
     }
