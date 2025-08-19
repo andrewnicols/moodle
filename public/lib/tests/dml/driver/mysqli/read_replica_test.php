@@ -17,7 +17,7 @@
 namespace core\dml\driver\mysqli\native;
 
 /**
- * DML mysqli_native_moodle_database read replica specific tests
+ * Tests for mysqli read replication.
  *
  * @package    core
  * @category   dml
@@ -25,12 +25,11 @@ namespace core\dml\driver\mysqli\native;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\dml\read_replica_trait::class)]
 final class read_replica_test extends \database_driver_testcase {
     /**
      * Test readonly handle is not used for reading from special pg_*() call queries,
      * pg_try_advisory_lock and pg_advisory_unlock.
-     *
-     * @return void
      */
     public function test_lock(): void {
         $DB = new \core\tests\dml\read_replica_moodle_database_mock_mysqli();
@@ -50,8 +49,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test readonly handle is used for SQL_QUERY_AUX_READONLY queries.
-     *
-     * @return void
      */
     public function test_aux_readonly(): void {
         global $DB;
@@ -118,8 +115,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test readonly connection failure with real mysqli connection
-     *
-     * @return void
      */
     public function test_real_readreplica_connect_fail_host(): void {
         global $DB;
@@ -163,8 +158,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test connection failure
-     *
-     * @return void
      */
     public function test_real_readreplica_connect_fail_dbname(): void {
         global $DB;

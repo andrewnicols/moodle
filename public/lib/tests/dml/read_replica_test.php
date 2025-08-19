@@ -27,12 +27,7 @@ namespace core\dml;
 
 use core\tests\dml\read_replica_moodle_database;
 use core\tests\dml\read_replica_moodle_database_special;
-
-// defined('MOODLE_INTERNAL') || die();
-//
-// require_once(__DIR__.'/fixtures/read_replica_moodle_database_table_names.php');
-// require_once(__DIR__.'/fixtures/read_replica_moodle_database_special.php');
-// require_once(__DIR__.'/../../tests/fixtures/event_fixtures.php');
+use moodle_read_replica_trait;
 
 /**
  * DML read/read-write database handle use tests
@@ -41,10 +36,9 @@ use core\tests\dml\read_replica_moodle_database_special;
  * @category   dml
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers     \moodle_read_replica_trait
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(moodle_read_replica_trait::class)]
 final class read_replica_test extends \database_driver_testcase {
-
     /** @var float */
     static private $dbreadonlylatency = 0.8;
 
@@ -92,7 +86,6 @@ final class read_replica_test extends \database_driver_testcase {
      * is a readonly replica handle.
      *
      * @param string $handle
-     * @return void
      */
     private function assert_readonly_handle($handle): void {
         $this->assertMatchesRegularExpression('/^test_ro\d:\d:test\d:test\d$/', $handle);
@@ -102,8 +95,8 @@ final class read_replica_test extends \database_driver_testcase {
      * moodle_read_replica_trait::table_names() test data provider
      *
      * @return array
-     * @dataProvider table_names_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('table_names_provider')]
     public static function table_names_provider(): array {
         return [
             [
@@ -147,9 +140,8 @@ final class read_replica_test extends \database_driver_testcase {
      *
      * @param string $sql
      * @param array $tables
-     * @return void
-     * @dataProvider table_names_provider
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('table_names_provider')]
     public function test_table_names($sql, $tables): void {
         $db = new \core\tests\dml\read_replica_moodle_database_table_names();
 
@@ -159,8 +151,6 @@ final class read_replica_test extends \database_driver_testcase {
     /**
      * Test correct database handles are used in a read-read-write-read scenario.
      * Test lazy creation of the write handle.
-     *
-     * @return void
      */
     public function test_read_read_write_read(): void {
         $DB = $this->new_db(true);
@@ -199,8 +189,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test correct database handles are used in a read-write-write scenario.
-     *
-     * @return void
      */
     public function test_read_write_write(): void {
         $DB = $this->new_db();
@@ -224,8 +212,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test correct database handles are used in a write-read-read scenario.
-     *
-     * @return void
      */
     public function test_write_read_read(): void {
         $DB = $this->new_db();
@@ -262,8 +248,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test readonly handle is not used for reading from temptables.
-     *
-     * @return void
      */
     public function test_read_temptable(): void {
         $DB = $this->new_db();
@@ -281,8 +265,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test readonly handle is not used for reading from excluded tables.
-     *
-     * @return void
      */
     public function test_read_excluded_tables(): void {
         $DB = $this->new_db();
@@ -299,8 +281,6 @@ final class read_replica_test extends \database_driver_testcase {
      * Test readonly handle is not used during transactions.
      * Test last written time is adjusted post-transaction,
      * so the latency parameter is applied properly.
-     *
-     * @return void
      */
     public function test_transaction(): void {
         $DB = $this->new_db(true);
@@ -345,8 +325,6 @@ final class read_replica_test extends \database_driver_testcase {
      * Test readonly handle is not used immediately after update
      * Test last written time is adjusted post-write,
      * so the latency parameter is applied properly.
-     *
-     * @return void
      */
     public function test_long_update(): void {
         $DB = $this->new_db(true);
@@ -386,8 +364,6 @@ final class read_replica_test extends \database_driver_testcase {
     /**
      * Test readonly handle is not used with events
      * when the latency parameter is applied properly.
-     *
-     * @return void
      */
     public function test_transaction_with_events(): void {
         $this->with_global_db(function () {
@@ -458,8 +434,6 @@ final class read_replica_test extends \database_driver_testcase {
 
     /**
      * Test failed readonly connection falls back to write connection.
-     *
-     * @return void
      */
     public function test_read_only_conn_fail(): void {
         $this->resetDebugging();
@@ -487,8 +461,6 @@ final class read_replica_test extends \database_driver_testcase {
     /**
      * In multiple replicas scenario, test failed readonly connection falls back to
      * another readonly connection.
-     *
-     * @return void
      */
     public function test_read_only_conn_first_fail(): void {
         $this->resetDebugging();
@@ -517,9 +489,8 @@ final class read_replica_test extends \database_driver_testcase {
      * Helper to restore global $DB
      *
      * @param callable $test
-     * @return void
      */
-    private function with_global_db($test) {
+    private function with_global_db($test): void {
         global $DB;
 
         $dbsave = $DB;
@@ -532,9 +503,7 @@ final class read_replica_test extends \database_driver_testcase {
     }
 
     /**
-     * Test lock_db table exclusion
-     *
-     * @return void
+     * Test lock_db table exclusion.
      */
     public function test_lock_db(): void {
         $this->with_global_db(function () {
@@ -566,9 +535,7 @@ final class read_replica_test extends \database_driver_testcase {
     }
 
     /**
-     * Test sessions table exclusion
-     *
-     * @return void
+     * Test sessions table exclusion.
      */
     public function test_sessions(): void {
         $this->with_global_db(function () {

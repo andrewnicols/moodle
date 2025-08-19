@@ -31,8 +31,6 @@ use xmldb_table;
 final class read_replica_test extends \advanced_testcase {
     /**
      * Test correct database handles are used for cursors
-     *
-     * @return void
      */
     public function test_cursors(): void {
         $DB = new read_replica_moodle_database_mock_pgsql();
@@ -79,8 +77,6 @@ final class read_replica_test extends \advanced_testcase {
 
     /**
      * Test readonly handle is used for reading from random pg_*() call queries.
-     *
-     * @return void
      */
     public function test_read_pg_table(): void {
         $DB = new read_replica_moodle_database_mock_pgsql();
@@ -96,8 +92,6 @@ final class read_replica_test extends \advanced_testcase {
     /**
      * Test readonly handle is not used for reading from special pg_*() call queries,
      * pg_try_advisory_lock and pg_advisory_unlock.
-     *
-     * @return void
      */
     public function test_read_pg_lock_table(): void {
         $DB = new read_replica_moodle_database_mock_pgsql();
@@ -114,8 +108,6 @@ final class read_replica_test extends \advanced_testcase {
 
     /**
      * Test readonly handle is used for SQL_QUERY_AUX_READONLY queries.
-     *
-     * @return void
      */
     public function test_aux_readonly(): void {
         global $DB;
@@ -179,13 +171,11 @@ final class read_replica_test extends \advanced_testcase {
     }
 
     /**
-     * Test readonly handle is not used for reading from temptables
-     * and getting temptables metadata.
+     * Test readonly handle is not used for reading from temptables and getting temptables metadata.
+     *
      * This test is only possible because of no pg_query error reporting.
      * It may need to be removed in the future if we decide to handle null
      * results in pgsql_native_moodle_database differently.
-     *
-     * @return void
      */
     public function test_temp_table(): void {
         global $DB;
@@ -243,9 +233,7 @@ final class read_replica_test extends \advanced_testcase {
     }
 
     /**
-     * Test readonly connection failure with real pgsql connection
-     *
-     * @return void
+     * Test readonly connection failure with real pgsql connection.
      */
     public function test_real_readreplica_connect_fail(): void {
         global $DB;

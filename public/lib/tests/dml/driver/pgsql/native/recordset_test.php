@@ -29,13 +29,10 @@ use core\dml\exception\transaction_exception;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(recordset::class)]
 final class recordset_test extends \basic_testcase {
-
     /** @var database Special database connection */
     protected $specialdb;
 
-    /**
-     * Creates a second db connection and a temp table with values in for testing.
-     */
+    #[\Override]
     protected function setUp(): void {
         global $DB;
 
@@ -48,10 +45,11 @@ final class recordset_test extends \basic_testcase {
     }
 
     /**
-     * Initialises database connection with given fetch buffer size
+     * Initialises database connection with given fetch buffer size.
+     *
      * @param int $fetchbuffersize Size of fetch buffer
      */
-    protected function init_db($fetchbuffersize) {
+    protected function init_db($fetchbuffersize): void {
         global $CFG, $DB;
 
         // To make testing easier, create a database with the same dboptions as the real one,
@@ -76,9 +74,7 @@ final class recordset_test extends \basic_testcase {
         }
     }
 
-    /**
-     * Gets rid of the second db connection.
-     */
+    #[\Override]
     protected function tearDown(): void {
         if ($this->specialdb) {
             $table = new xmldb_table('silly_test_table');
@@ -90,8 +86,7 @@ final class recordset_test extends \basic_testcase {
     }
 
     /**
-     * Tests that get_recordset_sql works when using cursors, which it does when no limit is
-     * specified.
+     * Tests that get_recordset_sql works when using cursors, which it does when no limit is specified.
      */
     public function test_recordset_cursors(): void {
         $this->init_db(3);
@@ -386,7 +381,7 @@ final class recordset_test extends \basic_testcase {
      * @param string[] $expected Expected regular expressions
      * @param string $debugging Debugging text from the database
      */
-    protected function assert_query_regexps(array $expected, $debugging) {
+    protected function assert_query_regexps(array $expected, $debugging): void {
         $lines = explode("\n", $debugging);
         $index = 0;
         $params = false;

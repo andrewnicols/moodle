@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core;
+namespace core\dml;
 
 /**
  * Test case for recordset_walk.
@@ -24,8 +24,9 @@ namespace core;
  * @copyright  2015 David Monllao
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(recordset_walk::class)]
 final class recordset_walk_test extends \advanced_testcase {
-
+    #[\Override]
     public function setUp(): void {
         parent::setUp();
         $this->resetAfterTest();

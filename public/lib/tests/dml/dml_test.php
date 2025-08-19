@@ -20,7 +20,7 @@ use dml_exception;
 use dml_missing_record_exception;
 use dml_multiple_records_exception;
 use core\dml\database;
-use moodle_transaction;
+use core\dml\transaction;
 use xmldb_key;
 use xmldb_table;
 use core\tests\dml\sql_debugging_fixture;
@@ -32,10 +32,10 @@ use core\tests\dml\sql_debugging_fixture;
  * @category   test
  * @copyright  2008 Nicolas Connault
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers database
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
 final class dml_test extends \database_driver_testcase {
-
+    #[\Override]
     protected function setUp(): void {
         parent::setUp();
         $dbman = $this->tdb->get_manager(); // Loads DDL libs.
@@ -3565,7 +3565,7 @@ EOD;
         }
 
         // Objects with __toString() forbidden everywhere since 2.3.
-        $o = new dml_test_object_one();
+        $o = new \core\tests\dml\test_object_one();
         try {
             $DB->fix_sql_params("SELECT {{$tablename}} WHERE course = ? ", array($o));
             $this->fail('coding_exception expected');
@@ -4372,12 +4372,12 @@ EOD;
     }
 
     /**
-     * @dataProvider sql_concat_join_provider
      * @param string $concat The string to use when concatanating.
      * @param array $fields The fields to concatanate
      * @param array $params Any parameters to provide to the query
      * @param @string $expected The expected result
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('sql_concat_join_provider')]
     public function test_concat_join($concat, $fields, $params, $expected): void {
         $DB = $this->tdb;
         $sql = "SELECT " . $DB->sql_concat_join($concat, $fields) . " AS result" . $DB->sql_null_from_clause();
@@ -5514,7 +5514,7 @@ EOD;
         $transaction1 = $DB->start_delegated_transaction();
         $data = (object)array('course'=>3);
         $DB->insert_record($tablename, $data);
-        $transaction2 = new moodle_transaction($DB);
+        $transaction2 = new transaction($DB);
         try {
             $transaction2->allow_commit();
             $this->fail('foreign transaction must fail');
@@ -6116,7 +6116,7 @@ EOD;
     }
 
     /**
-     * Mock the methods used by {@see \mysqli_native_database::get_server_info()}.
+     * Mock the methods used by {@see \core\dml\driver\mysqli\native\database::get_server_info()}.
      *
      * Mocking allows to test it without the need of an actual MySQL-ish running DB server.
      *
@@ -6124,10 +6124,9 @@ EOD;
      * @param string $versionfromdb A string representing the result of VERSION function.
      * @param bool $cfgversionfromdb A boolean representing !empty($CFG->dboptions['versionfromdb']).
      * @param string $expecteddbversion A string representing the expected DB version.
-     * @see \mysqli_native_database::get_server_info()
-     * @covers \mysqli_native_database::get_server_info
-     * @dataProvider get_server_info_mysql_provider
+     * @see database::get_server_info()
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_server_info_mysql_provider')]
     public function test_get_server_info_mysql(
         string $mysqliserverinfo, string $versionfromdb, bool $cfgversionfromdb, string $expecteddbversion): void {
         // Avoid to run MySQL-ish related tests when running tests on other DB families.
@@ -6142,7 +6141,7 @@ EOD;
             'get_version_from_db',
             'should_db_version_be_read_from_db',
         ];
-        $mysqlinativemoodledatabase = $this->getMockBuilder('\mysqli_native_database')
+        $mysqlinativemoodledatabase = $this->getMockBuilder(\core\dml\driver\mysqli\native\database::class)
             ->onlyMethods($methods)
             ->getMock();
         $mysqlinativemoodledatabase->method('get_mysqli_server_info')->willReturn($mysqliserverinfo);
@@ -6155,7 +6154,7 @@ EOD;
     }
 
     /**
-     * Data provider to test {@see \mysqli_native_moodle_database::get_server_info} when mocking
+     * Data provider to test {@see \core\dml\driver\mysqli\native\database::get_server_info} when mocking
      * the results of a connection to the DB server.
      *
      * The set of the data is represented by the following array items:
@@ -6165,7 +6164,6 @@ EOD;
      * - a string representing the expected DB version
      *
      * @return array[]
-     * @see \mysqli_native_moodle_database::get_server_info
      */
     public static function get_server_info_mysql_provider(): array {
         return [
@@ -6239,9 +6237,8 @@ EOD;
     }
 
     /**
-     * Test {@see \mysqli_native_moodle_database::get_server_info()} with the actual DB Server.
-     * @see \mysqli_native_moodle_database::get_server_info
-     * @covers \mysqli_native_moodle_database::get_server_info
+     * Test {@see \core\dml\driver\mysqli\native\database::get_server_info()} with the actual DB Server.
+     * @see database::get_server_info
      */
     public function test_get_server_info_dbfamily_mysql(): void {
         $DB = $this->tdb;
@@ -6255,7 +6252,7 @@ EOD;
         }
         // By default, DB Server version is read from the PHP client.
         $this->assertTrue(empty($cfg->dboptions['versionfromdb']));
-        $rc = new \ReflectionClass(\mysqli_native_moodle_database::class);
+        $rc = new \ReflectionClass(\core\dml\driver\mysqli\native\database::class);
         $rcm = $rc->getMethod('should_db_version_be_read_from_db');
         $this->assertFalse($rcm->invokeArgs($DB, []));
 
@@ -6270,7 +6267,7 @@ EOD;
         // Alter the DB options to force the read from DB and check for the same assertions above.
         $cfg->dboptions['versionfromdb'] = true;
         // Open a new DB connection with the forced setting.
-        $db2 = moodle_database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $db2 = database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
         $db2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
         $cfg2 = $db2->export_dbconfig();
         $cfg = null;
@@ -6287,11 +6284,6 @@ EOD;
 
     /**
      * Test the COUNT() window function with the actual DB Server.
-     *
-     * @covers database::get_counted_recordset_sql()
-     * @covers database::get_counted_records_sql()
-     * @covers database::generate_fullcount_sql()
-     * @return void
      */
     public function test_count_window_function(): void {
         $DB = $this->tdb;
@@ -6339,14 +6331,5 @@ EOD;
         $this->assertEquals(2, $resetrs->course);
         // Check whether the 'limitnum' works properly.
         $this->assertEquals(2, count($rs));
-    }
-}
-
-/**
- * Dumb test class with toString() returning 1.
- */
-class dml_test_object_one {
-    public function __toString() {
-        return 1;
     }
 }

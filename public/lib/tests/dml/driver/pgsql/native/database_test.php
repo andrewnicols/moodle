@@ -33,9 +33,7 @@ use ReflectionClass;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
 final class database_test extends \database_driver_testcase {
-    /**
-     * Set up.
-     */
+    #[\Override]
     public function setUp(): void {
         global $DB;
         parent::setUp();
@@ -353,7 +351,7 @@ final class database_test extends \database_driver_testcase {
      * SSL connection helper.
      *
      * @param mixed $ssl
-     * @return resource|PgSql\Connection
+     * @return resource|\PgSql\Connection
      * @throws moodle_exception
      */
     public function new_connection($ssl) {

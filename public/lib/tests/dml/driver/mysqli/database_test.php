@@ -30,10 +30,7 @@ use ReflectionClass;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
 final class database_test extends \advanced_testcase {
-
-    /**
-     * Set up.
-     */
+    #[\Override]
     public function setUp(): void {
         global $DB;
         parent::setUp();
@@ -90,8 +87,6 @@ final class database_test extends \advanced_testcase {
 
     /**
      * Test client compression.
-     *
-     * @return void
      */
     public function test_client_compression(): void {
         $mysqli = $this->new_connection();
@@ -111,7 +106,6 @@ final class database_test extends \advanced_testcase {
      * Test SSL connection.
      *
      * Well as much as we can, mysqli does not reliably report connect errors.
-     * @return void
      */
     public function test_ssl_connection(): void {
         try {
