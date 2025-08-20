@@ -42,7 +42,7 @@ class missing_record_exception extends exception implements response_aware_excep
      * @param string $sql Optional SQL query.
      * @param array $params Optional SQL query's parameters.
      */
-    function __construct($tablename, $sql='', ?array $params=null) {
+    function __construct($tablename, $sql = '', ?array $params = null) {
         // If the debug is disabled the database information should not be displayed.
         if (empty($tablename) || !debugging()) {
             $tablename = null;
@@ -68,7 +68,7 @@ class missing_record_exception extends exception implements response_aware_excep
                 $errcode = 'invalidrecord';
                 break;
         }
-        $errorinfo = $sql."\n[".var_export($params, true).']';
+        $errorinfo = $sql . "\n[" . var_export($params, true) . ']';
         parent::__construct($errcode, $tablename, $errorinfo);
     }
 

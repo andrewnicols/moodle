@@ -61,7 +61,6 @@ use core\exception\coding_exception;
  * @property-read string $meta_type Standardised one character column type, uppercased and enumerated: R,I,N,C,X,B,L,T,D
  */
 class database_column_info {
-
     /**
      * @var array The internal storage of column data.
      */
@@ -90,7 +89,7 @@ class database_column_info {
         if (isset($this->data[$variablename]) || array_key_exists($variablename, $this->data)) {
             return $this->data[$variablename];
         }
-        throw new coding_exception('Asked for a variable that is not available . ('.$variablename.').');
+        throw new coding_exception('Asked for a variable that is not available . (' . $variablename . ').');
     }
 
     /**
@@ -110,9 +109,9 @@ class database_column_info {
      */
     public function __construct($data) {
         // Initialize all the allowed variables to null so the array key exists.
-        $validelements = array('name', 'type', 'max_length', 'scale', 'not_null', 'primary_key',
-                               'auto_increment', 'binary', 'has_default',  'default_value',
-                               'unique', 'meta_type');
+        $validelements = ['name', 'type', 'max_length', 'scale', 'not_null', 'primary_key',
+                               'auto_increment', 'binary', 'has_default', 'default_value',
+                               'unique', 'meta_type'];
         foreach ($validelements as $element) {
             if (isset($data->$element)) {
                 $this->data[$element] = $data->$element;

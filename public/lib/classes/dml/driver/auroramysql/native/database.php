@@ -80,8 +80,6 @@ class database extends \core\dml\driver\mysqli\native\database {
         }
         return true;
     }
-
-
 }
 
 // Alias this class to the old name.

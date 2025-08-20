@@ -3,7 +3,7 @@
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
+// the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
 // Moodle is distributed in the hope that it will be useful,
@@ -32,7 +32,6 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
 class database extends \core\dml\database {
-
     protected $sqlsrv = null;
     protected $last_error_reporting; // To handle SQL*Server-Native driver default verbosity
     protected $temptables; // Control existing temptables (sqlsrv_moodle_temptables object)
@@ -44,7 +43,7 @@ class database extends \core\dml\database {
     protected $supportsoffsetfetch;
 
     /** @var array list of open recordsets */
-    protected $recordsets = array();
+    protected $recordsets = [];
 
     /** @var array list of reserve words in MSSQL / Transact from http://msdn2.microsoft.com/en-us/library/ms189822.aspx */
     protected $reservewords = [
@@ -68,7 +67,7 @@ class database extends \core\dml\database {
         "system_user", "table", "tablesample", "tape", "temp", "temporary", "textsize", "then", "to", "top", "tran",
         "transaction", "trigger", "truncate", "try_convert", "tsequal", "uncommitted", "union", "unique", "unpivot", "update",
         "updatetext", "use", "user", "values", "varying", "view", "waitfor", "when", "where", "while", "with", "within group",
-        "work", "writetext"
+        "work", "writetext",
     ];
 
     /**
@@ -76,7 +75,7 @@ class database extends \core\dml\database {
      *              note this has effect to decide if prefix checks must be performed or no
      * @param bool true means external database used
      */
-    public function __construct($external=false) {
+    public function __construct($external = false) {
         parent::__construct($external);
     }
 
@@ -183,7 +182,7 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws connection_exception if error
      */
-    public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions=null) {
+    public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null) {
         if ($prefix == '' and !$this->external) {
             // Enforce prefixes for everybody but mysql.
             throw new dml_exception('prefixcannotbeempty', $this->get_dbfamily());
@@ -198,7 +197,7 @@ class database extends \core\dml\database {
         /*
          * Log all Errors.
          */
-        sqlsrv_configure("WarningsReturnAsErrors", FALSE);
+        sqlsrv_configure("WarningsReturnAsErrors", false);
         sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_OFF);
         sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ERROR);
 
@@ -273,7 +272,7 @@ class database extends \core\dml\database {
         // prevents dirty reads when using transactions +
         // is the default isolation level of sqlsrv
         $sql = "SET TRANSACTION ISOLATION LEVEL READ COMMITTED";
-        $this->query_start($sql, NULL, SQL_QUERY_AUX);
+        $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
         $this->query_end($result);
 
@@ -361,7 +360,7 @@ class database extends \core\dml\database {
                 if ($this->temptables->is_temptable($name)) {
                     $sql = str_replace($match, $this->temptables->get_correct_name($name), $sql);
                 } else {
-                    $sql = str_replace($match, $this->prefix.$name, $sql);
+                    $sql = str_replace($match, $this->prefix . $name, $sql);
                 }
             }
         }
@@ -388,9 +387,9 @@ class database extends \core\dml\database {
             $errorMessage = '';
 
             foreach ($retErrors as $arrError) {
-                $errorMessage .= "SQLState: ".$arrError['SQLSTATE']."<br>\n";
-                $errorMessage .= "Error Code: ".$arrError['code']."<br>\n";
-                $errorMessage .= "Message: ".$arrError['message']."<br>\n";
+                $errorMessage .= "SQLState: " . $arrError['SQLSTATE'] . "<br>\n";
+                $errorMessage .= "Error Code: " . $arrError['code'] . "<br>\n";
+                $errorMessage .= "Message: " . $arrError['message'] . "<br>\n";
             }
         }
 
@@ -408,7 +407,7 @@ class database extends \core\dml\database {
      * @return resource|bool result
      */
     private function do_query($sql, $params, $sql_query_type, $free_result = true, $scrollable = false) {
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
 
         /*
          * Bound variables *are* supported. Until I can get it to work, emulate the bindings
@@ -423,7 +422,7 @@ class database extends \core\dml\database {
         if (!$scrollable) { // Only supporting next row
             $result = sqlsrv_query($this->sqlsrv, $sql);
         } else { // Supporting absolute/relative rows
-            $result = sqlsrv_query($this->sqlsrv, $sql, array(), array('Scrollable' => SQLSRV_CURSOR_STATIC));
+            $result = sqlsrv_query($this->sqlsrv, $sql, [], ['Scrollable' => SQLSRV_CURSOR_STATIC]);
         }
 
         if ($result === false) {
@@ -449,7 +448,7 @@ class database extends \core\dml\database {
         if ($usecache and $this->tables !== null) {
             return $this->tables;
         }
-        $this->tables = array ();
+        $this->tables = [];
         $prefix = str_replace('_', '\\_', $this->prefix);
         $sql = "SELECT table_name
                   FROM INFORMATION_SCHEMA.TABLES
@@ -484,8 +483,8 @@ class database extends \core\dml\database {
      * @return array of arrays
      */
     public function get_indexes($table) {
-        $indexes = array ();
-        $tablename = $this->prefix.$table;
+        $indexes = [];
+        $tablename = $this->prefix . $table;
 
         // Indexes aren't covered by information_schema metatables, so we need to
         // go to sys ones. Skipping primary key indexes on purpose.
@@ -504,19 +503,18 @@ class database extends \core\dml\database {
         if ($result) {
             $lastindex = '';
             $unique = false;
-            $columns = array ();
+            $columns = [];
 
             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-                if ($lastindex and $lastindex != $row['index_name'])
-                    { // Save lastindex to $indexes and reset info
-                    $indexes[$lastindex] = array
-                     (
+                if ($lastindex and $lastindex != $row['index_name']) { // Save lastindex to $indexes and reset info
+                    $indexes[$lastindex] =
+                     [
                       'unique' => $unique,
-                      'columns' => $columns
-                     );
+                      'columns' => $columns,
+                     ];
 
                     $unique = false;
-                    $columns = array ();
+                    $columns = [];
                 }
                 $lastindex = $row['index_name'];
                 $unique = empty($row['is_unique']) ? false : true;
@@ -524,11 +522,11 @@ class database extends \core\dml\database {
             }
 
             if ($lastindex) { // Add the last one if exists
-                $indexes[$lastindex] = array
-                 (
+                $indexes[$lastindex] =
+                 [
                   'unique' => $unique,
-                  'columns' => $columns
-                 );
+                  'columns' => $columns,
+                 ];
             }
 
             $this->free_result($result);
@@ -543,7 +541,7 @@ class database extends \core\dml\database {
      * @return array array of database_column_info objects indexed with column names
      */
     protected function fetch_columns(string $table): array {
-        $structure = array();
+        $structure = [];
 
         if (!$this->temptables->is_temptable($table)) { // normal table, get metadata from own schema
             $sql = "SELECT column_name AS name,
@@ -555,7 +553,7 @@ class database extends \core\dml\database {
                            columnproperty(object_id(quotename(table_schema) + '.' + quotename(table_name)), column_name, 'IsIdentity') AS auto_increment,
                            column_default AS default_value
                       FROM INFORMATION_SCHEMA.COLUMNS
-                     WHERE table_name = '{".$table."}'
+                     WHERE table_name = '{" . $table . "}'
                   ORDER BY ordinal_position";
         } else { // temp table, get metadata from tempdb schema
             $sql = "SELECT column_name AS name,
@@ -566,26 +564,25 @@ class database extends \core\dml\database {
                            is_nullable AS is_nullable,
                            columnproperty(object_id(quotename(table_schema) + '.' + quotename(table_name)), column_name, 'IsIdentity') AS auto_increment,
                            column_default AS default_value
-                      FROM tempdb.INFORMATION_SCHEMA.COLUMNS ".
+                      FROM tempdb.INFORMATION_SCHEMA.COLUMNS " .
             // check this statement
             // JOIN tempdb..sysobjects ON name = table_name
             // WHERE id = object_id('tempdb..{".$table."}')
-                    "WHERE table_name LIKE '{".$table."}__________%'
+                    "WHERE table_name LIKE '{" . $table . "}__________%'
                   ORDER BY ordinal_position";
         }
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, null);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, null);
 
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
         $this->query_end($result);
 
         if (!$result) {
-            return array ();
+            return  [];
         }
 
         while ($rawcolumn = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-
             $rawcolumn = (object)$rawcolumn;
 
             $info = new stdClass();
@@ -620,8 +617,8 @@ class database extends \core\dml\database {
 
             // Process defaults
             $info->has_default = !empty($rawcolumn->default_value);
-            if ($rawcolumn->default_value === NULL) {
-                $info->default_value = NULL;
+            if ($rawcolumn->default_value === null) {
+                $info->default_value = null;
             } else {
                 $info->default_value = preg_replace("/^[\(N]+[']?(.*?)[']?[\)]+$/", '\\1', $rawcolumn->default_value);
             }
@@ -650,18 +647,15 @@ class database extends \core\dml\database {
             $value = (int)$value;
         }                                                    // And continue processing because text columns with numeric info need special handling below
 
-        if ($column->meta_type == 'B')
-            { // BLOBs need to be properly "packed", but can be inserted directly if so.
+        if ($column->meta_type == 'B') { // BLOBs need to be properly "packed", but can be inserted directly if so.
             if (!is_null($value)) {               // If value not null, unpack it to unquoted hexadecimal byte-string format
                 $value = unpack('H*hex', $value); // we leave it as array, so emulate_bound_params() can detect it
             }                                                // easily and "bind" the param ok.
-
         } else if ($column->meta_type == 'X') {              // sqlsrv doesn't cast from int to text, so if text column
             if (is_numeric($value)) { // and is numeric value then cast to string
-                $value = array('numstr' => (string)$value);  // and put into array, so emulate_bound_params() will know how
+                $value = ['numstr' => (string)$value];  // and put into array, so emulate_bound_params() will know how
             }                                                // to "bind" the param ok, avoiding reverse conversion to number
         } else if ($value === '') {
-
             if ($column->meta_type == 'I' or $column->meta_type == 'F' or $column->meta_type == 'N') {
                 $value = 0; // prevent '' problems in numeric fields
             }
@@ -693,45 +687,45 @@ class database extends \core\dml\database {
         $type = null;
 
         switch (strtoupper($sqlsrv_type)) {
-          case 'BIT':
-           $type = 'L';
-           break;
+            case 'BIT':
+                $type = 'L';
+                break;
 
-          case 'INT':
-          case 'SMALLINT':
-          case 'INTEGER':
-          case 'BIGINT':
-           $type = 'I';
-           break;
+            case 'INT':
+            case 'SMALLINT':
+            case 'INTEGER':
+            case 'BIGINT':
+                $type = 'I';
+                break;
 
-          case 'DECIMAL':
-          case 'REAL':
-          case 'FLOAT':
-           $type = 'N';
-           break;
+            case 'DECIMAL':
+            case 'REAL':
+            case 'FLOAT':
+                $type = 'N';
+                break;
 
-          case 'VARCHAR':
-          case 'NVARCHAR':
-           $type = 'C';
-           break;
+            case 'VARCHAR':
+            case 'NVARCHAR':
+                $type = 'C';
+                break;
 
-          case 'TEXT':
-          case 'NTEXT':
-          case 'VARCHAR(MAX)':
-          case 'NVARCHAR(MAX)':
-           $type = 'X';
-           break;
+            case 'TEXT':
+            case 'NTEXT':
+            case 'VARCHAR(MAX)':
+            case 'NVARCHAR(MAX)':
+                $type = 'X';
+                break;
 
-          case 'IMAGE':
-          case 'VARBINARY':
-          case 'VARBINARY(MAX)':
-           $type = 'B';
-           break;
+            case 'IMAGE':
+            case 'VARBINARY':
+            case 'VARBINARY(MAX)':
+                $type = 'B';
+                break;
 
-          case 'DATETIME':
-           $type = 'D';
-           break;
-         }
+            case 'DATETIME':
+                $type = 'D';
+                break;
+        }
 
         if (!$type) {
             throw new dml_exception('invalidsqlsrvnativetype', $sqlsrv_type);
@@ -789,12 +783,11 @@ class database extends \core\dml\database {
             if (is_bool($param)) {
                 $return .= (int)$param;
             } else if (is_array($param) && isset($param['hex'])) { // detect hex binary, bind it specially
-                $return .= '0x'.$param['hex'];
+                $return .= '0x' . $param['hex'];
             } else if (is_array($param) && isset($param['numstr'])) { // detect numerical strings that *must not*
                 $return .= "N'{$param['numstr']}'";                   // be converted back to number params, but bound as strings
             } else if (is_null($param)) {
                 $return .= 'NULL';
-
             } else if (is_number($param)) { // we can not use is_numeric() because it eats leading zeros from strings like 0045646
                 $return .= "'$param'"; // this is a hack for MDL-23997, we intentionally use string because it is compatible with both nvarchar and int types
             } else if (is_float($param)) {
@@ -869,7 +862,7 @@ class database extends \core\dml\database {
      */
     public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
 
-        list($limitfrom, $limitnum) = $this->normalise_limit_from_num($limitfrom, $limitnum);
+        [$limitfrom, $limitnum] = $this->normalise_limit_from_num($limitfrom, $limitnum);
         $needscrollable = (bool)$limitfrom; // To determine if we'll need to perform scroll to $limitfrom.
 
         if ($limitfrom or $limitnum) {
@@ -879,8 +872,11 @@ class database extends \core\dml\database {
                     if (PHP_INT_MAX - $limitnum < $limitfrom) { // Check PHP_INT_MAX overflow.
                         $fetch = PHP_INT_MAX;
                     }
-                    $sql = preg_replace('/^([\s(])*SELECT([\s]+(DISTINCT|ALL))?(?!\s*TOP\s*\()/i',
-                                        "\\1SELECT\\2 TOP $fetch", $sql);
+                    $sql = preg_replace(
+                        '/^([\s(])*SELECT([\s]+(DISTINCT|ALL))?(?!\s*TOP\s*\()/i',
+                        "\\1SELECT\\2 TOP $fetch",
+                        $sql
+                    );
                 }
             } else {
                 $needscrollable = false; // Using supported fetch/offset, no need to scroll anymore.
@@ -891,10 +887,10 @@ class database extends \core\dml\database {
                     $sql .= " ORDER BY 1";
                 }
 
-                $sql .= " OFFSET ".$limitfrom." ROWS ";
+                $sql .= " OFFSET " . $limitfrom . " ROWS ";
 
                 if ($limitnum > 0) {
-                    $sql .= " FETCH NEXT ".$limitnum." ROWS ONLY";
+                    $sql .= " FETCH NEXT " . $limitnum . " ROWS ONLY";
                 }
             }
         }
@@ -917,7 +913,7 @@ class database extends \core\dml\database {
      * @return string The SQL, with WITH (NOLOCK) added to all temp tables
      */
     protected function add_no_lock_to_temp_tables($sql) {
-        return preg_replace_callback('/(\{([a-z][a-z0-9_]*)\})(\s+(\w+))?/', function($matches) {
+        return preg_replace_callback('/(\{([a-z][a-z0-9_]*)\})(\s+(\w+))?/', function ($matches) {
             $table = $matches[1]; // With the braces, so we can put it back in the query.
             $name = $matches[2]; // Without the braces, so we can check if it's a temptable.
             $tail = isset($matches[3]) ? $matches[3] : ''; // Catch the next word afterwards so that we can check if it's an alias.
@@ -980,7 +976,7 @@ class database extends \core\dml\database {
 
         $rs = $this->get_recordset_sql($sql, $params, $limitfrom, $limitnum);
 
-        $results = array();
+        $results = [];
 
         foreach ($rs as $row) {
             $rowarray = (array)$row;
@@ -1009,7 +1005,7 @@ class database extends \core\dml\database {
 
         $rs = $this->get_recordset_sql($sql, $params);
 
-        $results = array ();
+        $results = [];
 
         foreach ($rs as $row) {
             $rowarray = (array)$row;
@@ -1030,7 +1026,7 @@ class database extends \core\dml\database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function insert_record_raw($table, $params, $returnid=true, $bulk=false, $customsequence=false) {
+    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false) {
         if (!is_array($params)) {
             $params = (array)$params;
         }
@@ -1051,10 +1047,9 @@ class database extends \core\dml\database {
             // Disable IDENTITY column before inserting record with id, only if the
             // column is identity, from meta information.
             if ($isidentity) {
-                $sql = 'SET IDENTITY_INSERT {'.$table.'} ON'; // Yes, it' ON!!
+                $sql = 'SET IDENTITY_INSERT {' . $table . '} ON'; // Yes, it' ON!!
                 $this->do_query($sql, null, SQL_QUERY_AUX);
             }
-
         } else {
             unset($params['id']);
         }
@@ -1072,7 +1067,7 @@ class database extends \core\dml\database {
             // Enable IDENTITY column after inserting record with id, only if the
             // column is identity, from meta information.
             if ($isidentity) {
-                $sql = 'SET IDENTITY_INSERT {'.$table.'} OFF'; // Yes, it' OFF!!
+                $sql = 'SET IDENTITY_INSERT {' . $table . '} OFF'; // Yes, it' OFF!!
                 $this->do_query($sql, null, SQL_QUERY_AUX);
             }
         }
@@ -1113,7 +1108,7 @@ class database extends \core\dml\database {
         }
 
         foreach ($row as $key => $value) {
-            $row[$key] = ($value === ' ' || $value === NULL) ? '' : $value;
+            $row[$key] = ($value === ' ' || $value === null) ? '' : $value;
         }
         return $row;
     }
@@ -1138,7 +1133,7 @@ class database extends \core\dml\database {
             throw new dml_exception('ddltablenotexist', $table);
         }
 
-        $cleaned = array ();
+        $cleaned = [];
 
         foreach ($dataobject as $field => $value) {
             if ($field === 'id') {
@@ -1169,7 +1164,7 @@ class database extends \core\dml\database {
         }
 
         $columns = $this->get_columns($table);
-        $cleaned = array ();
+        $cleaned = [];
 
         foreach ($dataobject as $field => $value) {
             if (!isset($columns[$field])) {
@@ -1205,7 +1200,7 @@ class database extends \core\dml\database {
             throw new coding_exception('moodle_database::update_record_raw() no fields found.');
         }
 
-        $sets = array ();
+        $sets = [];
 
         foreach ($params as $field => $value) {
             $sets[] = "$field = ?";
@@ -1214,7 +1209,7 @@ class database extends \core\dml\database {
         $params[] = $id; // last ? in WHERE condition
 
         $sets = implode(',', $sets);
-        $sql = "UPDATE {".$table."} SET $sets WHERE id = ?";
+        $sql = "UPDATE {" . $table . "} SET $sets WHERE id = ?";
 
         $this->do_query($sql, $params, SQL_QUERY_UPDATE);
 
@@ -1239,7 +1234,7 @@ class database extends \core\dml\database {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
-        $cleaned = array ();
+        $cleaned = [];
 
         foreach ($dataobject as $field => $value) {
             if (!isset($columns[$field])) {
@@ -1269,11 +1264,11 @@ class database extends \core\dml\database {
         }
 
         if (is_null($params)) {
-            $params = array ();
+            $params = [];
         }
 
         // convert params to ? types
-        list($select, $params, $type) = $this->fix_sql_params($select, $params);
+        [$select, $params, $type] = $this->fix_sql_params($select, $params);
 
         // Get column metadata
         $columns = $this->get_columns($table);
@@ -1287,7 +1282,7 @@ class database extends \core\dml\database {
             $newfield = "$newfield = ?";
             array_unshift($params, $newvalue);
         }
-        $sql = "UPDATE {".$table."} SET $newfield $select";
+        $sql = "UPDATE {" . $table . "} SET $newfield $select";
 
         $this->do_query($sql, $params, SQL_QUERY_UPDATE);
 
@@ -1308,7 +1303,7 @@ class database extends \core\dml\database {
             $select = "WHERE $select";
         }
 
-        $sql = "DELETE FROM {".$table."} $select";
+        $sql = "DELETE FROM {" . $table . "} $select";
 
         // we use SQL_QUERY_UPDATE because we do not know what is in general SQL, delete constant would not be accurate
         $this->do_query($sql, $params, SQL_QUERY_UPDATE);
@@ -1335,7 +1330,7 @@ class database extends \core\dml\database {
         }
     }
 
-    public function sql_cast_char2real($fieldname, $text=false) {
+    public function sql_cast_char2real($fieldname, $text = false) {
         if (!$text) {
             return ' CAST(' . $fieldname . ' AS REAL) ';
         } else {
@@ -1344,7 +1339,7 @@ class database extends \core\dml\database {
     }
 
     public function sql_ceil($fieldname) {
-        return ' CEILING('.$fieldname.')';
+        return ' CEILING(' . $fieldname . ')';
     }
 
     protected function get_collation() {
@@ -1457,11 +1452,11 @@ class database extends \core\dml\database {
         return " $s ";
     }
 
-    public function sql_concat_join($separator = "' '", $elements = array ()) {
+    public function sql_concat_join($separator = "' '", $elements = []) {
         for ($n = count($elements) - 1; $n > 0; $n--) {
             array_splice($elements, $n, 0, $separator);
         }
-        return call_user_func_array(array($this, 'sql_concat'), array_values($elements));
+        return call_user_func_array([$this, 'sql_concat'], array_values($elements));
     }
 
     /**
@@ -1479,7 +1474,7 @@ class database extends \core\dml\database {
 
     public function sql_isempty($tablename, $fieldname, $nullablefield, $textfield) {
         if ($textfield) {
-            return ' ('.$this->sql_compare_text($fieldname)." = '') ";
+            return ' (' . $this->sql_compare_text($fieldname) . " = '') ";
         } else {
             return " ($fieldname = '') ";
         }
@@ -1491,7 +1486,7 @@ class database extends \core\dml\database {
      * @return string the piece of SQL code to be used in the statement.
      */
     public function sql_length($fieldname) {
-        return ' LEN('.$fieldname.')';
+        return ' LEN(' . $fieldname . ')';
     }
 
     public function sql_order_by_text($fieldname, $numchars = 32) {
@@ -1516,8 +1511,10 @@ class database extends \core\dml\database {
      */
     public function sql_substr($expr, $start, $length = false) {
         if (count(func_get_args()) < 2) {
-            throw new coding_exception('moodle_database::sql_substr() requires at least two parameters',
-                'Originally this function was only returning name of SQL substring function, it now requires all parameters.');
+            throw new coding_exception(
+                'moodle_database::sql_substr() requires at least two parameters',
+                'Originally this function was only returning name of SQL substring function, it now requires all parameters.'
+            );
         }
 
         if ($length === false) {
@@ -1555,7 +1552,7 @@ class database extends \core\dml\database {
 
         $timeoutmilli = $timeout * 1000;
 
-        $fullname = $this->dbname.'-'.$this->prefix.'-session-'.$rowid;
+        $fullname = $this->dbname . '-' . $this->prefix . '-session-' . $rowid;
         // While this may work using proper {call sp_...} calls + binding +
         // executing + consuming recordsets, the solution used for the mssql
         // driver is working perfectly, so 100% mimic-ing that code.
@@ -1592,7 +1589,7 @@ class database extends \core\dml\database {
 
         parent::release_session_lock($rowid);
 
-        $fullname = $this->dbname.'-'.$this->prefix.'-session-'.$rowid;
+        $fullname = $this->dbname . '-' . $this->prefix . '-session-' . $rowid;
         $sql = "sp_releaseapplock '$fullname', 'Session'";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
@@ -1612,7 +1609,7 @@ class database extends \core\dml\database {
             $rs->transaction_starts();
         }
 
-        $this->query_start('native sqlsrv_begin_transaction', NULL, SQL_QUERY_AUX);
+        $this->query_start('native sqlsrv_begin_transaction', null, SQL_QUERY_AUX);
         $result = sqlsrv_begin_transaction($this->sqlsrv);
         $this->query_end($result);
     }
@@ -1623,7 +1620,7 @@ class database extends \core\dml\database {
      * @return void
      */
     protected function commit_transaction() {
-        $this->query_start('native sqlsrv_commit', NULL, SQL_QUERY_AUX);
+        $this->query_start('native sqlsrv_commit', null, SQL_QUERY_AUX);
         $result = sqlsrv_commit($this->sqlsrv);
         $this->query_end($result);
     }
@@ -1634,7 +1631,7 @@ class database extends \core\dml\database {
      * @return void
      */
     protected function rollback_transaction() {
-        $this->query_start('native sqlsrv_rollback', NULL, SQL_QUERY_AUX);
+        $this->query_start('native sqlsrv_rollback', null, SQL_QUERY_AUX);
         $result = sqlsrv_rollback($this->sqlsrv);
         $this->query_end($result);
     }

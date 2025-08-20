@@ -28,12 +28,11 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class recordset extends \core\dml\recordset {
-
     /** @var PgSql\Result|resource|null */
     protected $result;
     /** @var current row as array.*/
     protected $current;
-    protected $blobs = array();
+    protected $blobs = [];
 
     /** @var string Name of cursor or '' if none */
     protected $cursorname;
@@ -87,7 +86,7 @@ class recordset extends \core\dml\recordset {
         if ($this->result) {
             throw new coding_exception('Unexpected non-empty result when fetching from cursor');
         }
-        list($this->result, $this->lastbatch) = $this->db->fetch_from_cursor($this->cursorname);
+        [$this->result, $this->lastbatch] = $this->db->fetch_from_cursor($this->cursorname);
         if (!$this->result) {
             throw new coding_exception('Unexpected failure when fetching from cursor');
         }

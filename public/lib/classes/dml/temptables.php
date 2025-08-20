@@ -41,7 +41,6 @@ use xmldb_table;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class temptables {
-
     /** @var circular reference, to be able to use DB facilities here if needed */
     protected $mdb;
     /** @var prefix to be used for all the DB objects */
@@ -56,7 +55,7 @@ class temptables {
     public function __construct($mdb) {
         $this->mdb        = $mdb;
         $this->prefix     = $mdb->get_prefix();
-        $this->temptables = array();
+        $this->temptables = [];
     }
 
     /**

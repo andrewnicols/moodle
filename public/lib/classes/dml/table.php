@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 namespace core\dml;
 
 use stdClass;
@@ -29,7 +28,6 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class table {
-
     /** @var string Name of the table that this class represents */
     protected $tablename;
 
@@ -94,7 +92,7 @@ class table {
     public function get_field_select(): string {
         $fieldlist = $this->get_fieldlist();
 
-        return implode(', ', array_map(function($fieldname, $fieldalias) {
+        return implode(', ', array_map(function ($fieldname, $fieldalias) {
             return "{$this->tablealias}.{$fieldname} AS {$fieldalias}";
         }, $fieldlist, array_keys($fieldlist)));
     }

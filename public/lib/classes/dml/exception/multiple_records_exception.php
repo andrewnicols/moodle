@@ -36,8 +36,8 @@ class multiple_records_exception extends exception {
      * @param string $sql The SQL that ran just before this read error.
      * @param array $params The SQL's related parameters.(optional)
      */
-    function __construct($sql='', ?array $params=null) {
-        $errorinfo = $sql."\n[".var_export($params, true).']';
+    function __construct($sql = '', ?array $params = null) {
+        $errorinfo = $sql . "\n[" . var_export($params, true) . ']';
         parent::__construct('multiplerecordsfound', null, $errorinfo);
     }
 }

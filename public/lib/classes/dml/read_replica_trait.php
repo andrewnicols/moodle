@@ -82,7 +82,6 @@ use core\dml\exception\transaction_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 trait read_replica_trait {
-
     /** @var resource Primary write database handle. */
     protected $dbhwrite;
 
@@ -462,7 +461,7 @@ trait read_replica_trait {
      * @return array
      */
     protected function table_names(string $sql): array {
-        preg_match_all('/\b'.$this->prefix.'([a-z][A-Za-z0-9_]*)/', $sql, $match);
+        preg_match_all('/\b' . $this->prefix . '([a-z][A-Za-z0-9_]*)/', $sql, $match);
         return $match[1];
     }
 }

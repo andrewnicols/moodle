@@ -27,24 +27,23 @@ namespace core\dml;
  * Do not forget to close all recordsets when they are not needed anymore!
  */
 abstract class recordset implements \Iterator {
-
     /**
      * Returns current record - fields as object properties, lowercase
      * @return object
      */
-    //public abstract function current();
+    // public abstract function current();
 
     /**
      * Returns the key of current row
      * @return int current row
      */
-    //public abstract function key();
+    // public abstract function key();
 
     /**
      * Moves forward to next row
      * @return void
      */
-    //public abstract function next();
+    // public abstract function next();
 
     /**
      * Rewinds are not supported!
@@ -59,7 +58,7 @@ abstract class recordset implements \Iterator {
      * Did we reach the end?
      * @return boolean
      */
-    //public abstract function valid();
+    // public abstract function valid();
 
     /**
      * Free resources and connections, recordset can not be used anymore.

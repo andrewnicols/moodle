@@ -38,9 +38,9 @@ class transaction_exception extends exception {
      * @param ?string $debuginfo Optional debugging information.
      * @param ?transaction $transaction The instance of the transaction.(Optional)
      */
-    function __construct($debuginfo=null, $transaction=null) {
+    function __construct($debuginfo = null, $transaction = null) {
         $this->transaction = $transaction; // TODO: MDL-20625 use the info from $transaction for debugging purposes
-        parent::__construct('dmltransactionexception', NULL, $debuginfo);
+        parent::__construct('dmltransactionexception', null, $debuginfo);
     }
 }
 

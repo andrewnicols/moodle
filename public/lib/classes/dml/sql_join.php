@@ -34,7 +34,6 @@ namespace core\dml;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class sql_join {
-
     /**
      * @var string joins.
      */
@@ -71,7 +70,7 @@ class sql_join {
      * @param array $params Any parameter values.
      * @param bool $cannotmatchanyrows If true, this join is guaranteed to match no rows. See comment on the field above.
      */
-    public function __construct($joins = '', $wheres = '', $params = array(), $cannotmatchanyrows = false) {
+    public function __construct($joins = '', $wheres = '', $params = [], $cannotmatchanyrows = false) {
         $this->joins = $joins;
         $this->wheres = $wheres;
         $this->params = $params;

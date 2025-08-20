@@ -31,7 +31,7 @@ class connection_exception extends exception {
      * @param string $error Optional debugging information.
      */
     function __construct($errorinfo) {
-        parent::__construct('dbconnectionfailed', NULL, $errorinfo);
+        parent::__construct('dbconnectionfailed', null, $errorinfo);
     }
 }
 

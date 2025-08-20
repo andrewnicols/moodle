@@ -33,7 +33,7 @@ class exception extends moodle_exception {
      * @param mixed  $a Extra words and phrases that might be required in the error string.
      * @param string $debuginfo Optional debugging information.
      */
-    function __construct($errorcode, $a=NULL, $debuginfo=null) {
+    function __construct($errorcode, $a = null, $debuginfo = null) {
         parent::__construct($errorcode, '', '', $a, $debuginfo);
     }
 }

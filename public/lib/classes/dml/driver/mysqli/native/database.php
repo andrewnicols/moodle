@@ -44,7 +44,7 @@ class database extends \core\dml\database {
     /** @var array $sslmodes */
     private static $sslmodes = [
         'require',
-        'verify-full'
+        'verify-full',
     ];
 
     /** @var mysqli $mysqli */
@@ -65,15 +65,17 @@ class database extends \core\dml\database {
      * @return bool success
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function create_database($dbhost, $dbuser, $dbpass, $dbname, ?array $dboptions=null) {
+    public function create_database($dbhost, $dbuser, $dbpass, $dbname, ?array $dboptions = null) {
         $driverstatus = $this->driver_installed();
 
         if ($driverstatus !== true) {
             throw new dml_exception('dbdriverproblem', $driverstatus);
         }
 
-        if (!empty($dboptions['dbsocket'])
-                and (strpos($dboptions['dbsocket'], '/') !== false or strpos($dboptions['dbsocket'], '\\') !== false)) {
+        if (
+            !empty($dboptions['dbsocket'])
+                and (strpos($dboptions['dbsocket'], '/') !== false or strpos($dboptions['dbsocket'], '\\') !== false)
+        ) {
             $dbsocket = $dboptions['dbsocket'];
         } else {
             $dbsocket = ini_get('mysqli.default_socket');
@@ -100,8 +102,10 @@ class database extends \core\dml\database {
         // Normally a check would be done before setting utf8mb4, but the database can be created
         // before the enviroment checks are done. We'll proceed with creating the database and then do checks next.
         $charset = 'utf8mb4';
-        if (isset($dboptions['dbcollation']) and (strpos($dboptions['dbcollation'], 'utf8_') === 0
-                || strpos($dboptions['dbcollation'], 'utf8mb4_') === 0)) {
+        if (
+            isset($dboptions['dbcollation']) and (strpos($dboptions['dbcollation'], 'utf8_') === 0
+                || strpos($dboptions['dbcollation'], 'utf8mb4_') === 0)
+        ) {
             $collation = $dboptions['dbcollation'];
             $collationinfo = explode('_', $dboptions['dbcollation']);
             $charset = reset($collationinfo);
@@ -109,7 +113,7 @@ class database extends \core\dml\database {
             $collation = 'utf8mb4_unicode_ci';
         }
 
-        $result = $conn->query("CREATE DATABASE $dbname DEFAULT CHARACTER SET $charset DEFAULT COLLATE ".$collation);
+        $result = $conn->query("CREATE DATABASE $dbname DEFAULT CHARACTER SET $charset DEFAULT COLLATE " . $collation);
 
         $conn->close();
 
@@ -216,7 +220,7 @@ class database extends \core\dml\database {
             $this->query_start($sql, null, SQL_QUERY_AUX);
             $result = $this->mysqli->query($sql);
             $this->query_end($result);
-            $engines = array();
+            $engines = [];
             while ($res = $result->fetch_assoc()) {
                 if ($res['Support'] === 'YES' or $res['Support'] === 'DEFAULT') {
                     $engines[$res['Engine']] = true;
@@ -273,7 +277,6 @@ class database extends \core\dml\database {
             $collation = $rec['collation_name'];
         }
         $result->close();
-
 
         if (!$collation) {
             // Get the default database collation, but only if using UTF-8.
@@ -347,7 +350,7 @@ class database extends \core\dml\database {
             if ($this->is_antelope_file_format_no_more_supported()) {
                 // Breaking change: Antelope file format support has been removed, only Barracuda.
                 $dbengine = $this->get_dbengine();
-                $supporteddbengines = array('InnoDB', 'XtraDB');
+                $supporteddbengines = ['InnoDB', 'XtraDB'];
                 if (in_array($dbengine, $supporteddbengines)) {
                     $rowformat = 'Barracuda';
                 }
@@ -393,21 +396,16 @@ class database extends \core\dml\database {
         if (version_compare($info['version'], '5.5.0') < 0) {
             // MySQL 5.1 is not supported here because we cannot read the file format.
             $this->compressedrowformatsupported = false;
-
         } else if ($engine !== 'innodb' and $engine !== 'xtradb') {
             // Other engines are not supported, most probably not compatible.
             $this->compressedrowformatsupported = false;
-
         } else if (!$this->is_file_per_table_enabled()) {
             $this->compressedrowformatsupported = false;
-
         } else if ($this->get_row_format() !== 'Barracuda') {
             $this->compressedrowformatsupported = false;
-
         } else if ($this->get_dbtype() === 'auroramysql') {
             // Aurora MySQL doesn't support COMPRESSED and falls back to COMPACT if you try to use it.
             $this->compressedrowformatsupported = false;
-
         } else {
             // All the tests passed, we can safely use ROW_FORMAT=Compressed in sql statements.
             $this->compressedrowformatsupported = true;
@@ -512,7 +510,7 @@ class database extends \core\dml\database {
      * @throws moodle_exception
      * @throws connection_exception if error
      */
-    public function raw_connect(string $dbhost, string $dbuser, string $dbpass, string $dbname, $prefix, ?array $dboptions=null): bool {
+    public function raw_connect(string $dbhost, string $dbuser, string $dbpass, string $dbname, $prefix, ?array $dboptions = null): bool {
         $driverstatus = $this->driver_installed();
 
         if ($driverstatus !== true) {
@@ -523,8 +521,10 @@ class database extends \core\dml\database {
 
         // The dbsocket option is used ONLY if host is null or 'localhost'.
         // You can not disable it because it is always tried if dbhost is 'localhost'.
-        if (!empty($this->dboptions['dbsocket'])
-                and (strpos($this->dboptions['dbsocket'], '/') !== false or strpos($this->dboptions['dbsocket'], '\\') !== false)) {
+        if (
+            !empty($this->dboptions['dbsocket'])
+                and (strpos($this->dboptions['dbsocket'], '/') !== false or strpos($this->dboptions['dbsocket'], '\\') !== false)
+        ) {
             $dbsocket = $this->dboptions['dbsocket'];
         } else {
             $dbsocket = ini_get('mysqli.default_socket');
@@ -755,7 +755,7 @@ class database extends \core\dml\database {
 
         return [
             'description' => $this->get_mysqli_server_info(),
-            'version' => $this->serverversion
+            'version' => $this->serverversion,
         ];
     }
 
@@ -780,11 +780,11 @@ class database extends \core\dml\database {
      * @param bool $usecache if true, returns list of cached tables.
      * @return array of table names in lowercase and without prefix
      */
-    public function get_tables($usecache=true) {
+    public function get_tables($usecache = true) {
         if ($usecache and $this->tables !== null) {
             return $this->tables;
         }
-        $this->tables = array();
+        $this->tables = [];
         $prefix = str_replace('_', '\\_', $this->prefix);
         $sql = "SHOW TABLES LIKE '$prefix%'";
         $this->query_start($sql, null, $usecache ? SQL_QUERY_AUX_READONLY : SQL_QUERY_AUX);
@@ -811,7 +811,7 @@ class database extends \core\dml\database {
      * @return array An associative array of indexes containing 'unique' flag and 'columns' being indexed
      */
     public function get_indexes($table) {
-        $indexes = array();
+        $indexes = [];
         $fixedtable = $this->fix_table_name($table);
         $sql = "SHOW INDEXES FROM $fixedtable";
         $this->query_start($sql, null, SQL_QUERY_AUX_READONLY);
@@ -827,9 +827,9 @@ class database extends \core\dml\database {
                     continue;
                 }
                 if (!isset($indexes[$res->Key_name])) {
-                    $indexes[$res->Key_name] = array('unique'=>empty($res->Non_unique), 'columns'=>array());
+                    $indexes[$res->Key_name] = ['unique' => empty($res->Non_unique), 'columns' => []];
                 }
-                $indexes[$res->Key_name]['columns'][$res->Seq_in_index-1] = $res->Column_name;
+                $indexes[$res->Key_name]['columns'][$res->Seq_in_index - 1] = $res->Column_name;
             }
             $result->close();
         }
@@ -843,12 +843,12 @@ class database extends \core\dml\database {
      * @return database_column_info[] array of database_column_info objects indexed with column names
      */
     protected function fetch_columns(string $table): array {
-        $structure = array();
+        $structure = [];
 
         $sql = "SELECT column_name, data_type, character_maximum_length, numeric_precision,
                        numeric_scale, is_nullable, column_type, column_default, column_key, extra
                   FROM information_schema.columns
-                 WHERE table_name = '" . $this->prefix.$table . "'
+                 WHERE table_name = '" . $this->prefix . $table . "'
                        AND table_schema = '" . $this->dbname . "'
               ORDER BY ordinal_position";
         $this->query_start($sql, null, SQL_QUERY_AUX_READONLY);
@@ -856,7 +856,7 @@ class database extends \core\dml\database {
         $this->query_end(true); // Don't want to throw anything here ever. MDL-30147
 
         if ($result === false) {
-            return array();
+            return [];
         }
 
         if ($result->num_rows > 0) {
@@ -868,7 +868,6 @@ class database extends \core\dml\database {
                 $structure[$info->name] = new database_column_info($info);
             }
             $result->close();
-
         } else {
             // temporary tables are not in information schema, let's try it the old way
             $result->close();
@@ -878,23 +877,27 @@ class database extends \core\dml\database {
             $result = $this->mysqli->query($sql);
             $this->query_end(true);
             if ($result === false) {
-                return array();
+                return [];
             }
             while ($rawcolumn = $result->fetch_assoc()) {
                 $rawcolumn = (object)array_change_key_case($rawcolumn, CASE_LOWER);
-                $rawcolumn->column_name              = $rawcolumn->field; unset($rawcolumn->field);
-                $rawcolumn->column_type              = $rawcolumn->type; unset($rawcolumn->type);
+                $rawcolumn->column_name              = $rawcolumn->field;
+                unset($rawcolumn->field);
+                $rawcolumn->column_type              = $rawcolumn->type;
+                unset($rawcolumn->type);
                 $rawcolumn->character_maximum_length = null;
                 $rawcolumn->numeric_precision        = null;
                 $rawcolumn->numeric_scale            = null;
-                $rawcolumn->is_nullable              = $rawcolumn->null; unset($rawcolumn->null);
-                $rawcolumn->column_default           = $rawcolumn->default; unset($rawcolumn->default);
-                $rawcolumn->column_key               = $rawcolumn->key; unset($rawcolumn->key);
+                $rawcolumn->is_nullable              = $rawcolumn->null;
+                unset($rawcolumn->null);
+                $rawcolumn->column_default           = $rawcolumn->default;
+                unset($rawcolumn->default);
+                $rawcolumn->column_key               = $rawcolumn->key;
+                unset($rawcolumn->key);
 
                 if (preg_match('/(enum|varchar)\((\d+)\)/i', $rawcolumn->column_type, $matches)) {
                     $rawcolumn->data_type = $matches[1];
                     $rawcolumn->character_maximum_length = $matches[2];
-
                 } else if (preg_match('/([a-z]*int[a-z]*)\((\d+)\)/i', $rawcolumn->column_type, $matches)) {
                     $rawcolumn->data_type = $matches[1];
                     $rawcolumn->numeric_precision = $matches[2];
@@ -918,24 +921,19 @@ class database extends \core\dml\database {
                     if ($maxlength < $rawcolumn->max_length) {
                         $rawcolumn->max_length = $maxlength;
                     }
-
                 } else if (preg_match('/(decimal)\((\d+),(\d+)\)/i', $rawcolumn->column_type, $matches)) {
                     $rawcolumn->data_type = $matches[1];
                     $rawcolumn->numeric_precision = $matches[2];
                     $rawcolumn->numeric_scale = $matches[3];
-
                 } else if (preg_match('/(double|float)(\((\d+),(\d+)\))?/i', $rawcolumn->column_type, $matches)) {
                     $rawcolumn->data_type = $matches[1];
                     $rawcolumn->numeric_precision = isset($matches[3]) ? $matches[3] : null;
                     $rawcolumn->numeric_scale = isset($matches[4]) ? $matches[4] : null;
-
                 } else if (preg_match('/([a-z]*text)/i', $rawcolumn->column_type, $matches)) {
                     $rawcolumn->data_type = $matches[1];
                     $rawcolumn->character_maximum_length = -1; // unknown
-
                 } else if (preg_match('/([a-z]*blob)/i', $rawcolumn->column_type, $matches)) {
                     $rawcolumn->data_type = $matches[1];
-
                 } else {
                     $rawcolumn->data_type = $rawcolumn->column_type;
                 }
@@ -995,7 +993,6 @@ class database extends \core\dml\database {
 
         if ($info->meta_type === 'C') {
             $info->max_length = $rawcolumn->character_maximum_length;
-
         } else if ($info->meta_type === 'I') {
             if ($info->primary_key) {
                 $info->meta_type = 'R';
@@ -1026,13 +1023,11 @@ class database extends \core\dml\database {
                 }
             }
             $info->unsigned      = (stripos($rawcolumn->column_type, 'unsigned') !== false);
-            $info->auto_increment= (strpos($rawcolumn->extra, 'auto_increment') !== false);
-
+            $info->auto_increment = (strpos($rawcolumn->extra, 'auto_increment') !== false);
         } else if ($info->meta_type === 'N') {
             $info->max_length    = $rawcolumn->numeric_precision;
             $info->scale         = $rawcolumn->numeric_scale;
             $info->unsigned      = (stripos($rawcolumn->column_type, 'unsigned') !== false);
-
         } else if ($info->meta_type === 'X') {
             if ("$rawcolumn->character_maximum_length" === '4294967295') { // watch out for PHP max int limits!
                 // means maximum moodle size for text column, in other drivers it may also mean unknown size
@@ -1041,7 +1036,6 @@ class database extends \core\dml\database {
                 $info->max_length = $rawcolumn->character_maximum_length;
             }
             $info->primary_key   = false;
-
         } else if ($info->meta_type === 'B') {
             $info->max_length    = -1;
             $info->primary_key   = false;
@@ -1060,7 +1054,7 @@ class database extends \core\dml\database {
     private function mysqltype2moodletype($mysql_type) {
         $type = null;
 
-        switch(strtoupper($mysql_type)) {
+        switch (strtoupper($mysql_type)) {
             case 'BIT':
                 $type = 'L';
                 break;
@@ -1130,13 +1124,12 @@ class database extends \core\dml\database {
 
         if (is_bool($value)) { // Always, convert boolean to int
             $value = (int)$value;
-
         } else if ($value === '') {
             if ($column->meta_type == 'I' or $column->meta_type == 'F' or $column->meta_type == 'N') {
                 $value = 0; // prevent '' problems in numeric fields
             }
-        // Any float value being stored in varchar or text field is converted to string to avoid
-        // any implicit conversion by MySQL
+            // Any float value being stored in varchar or text field is converted to string to avoid
+            // any implicit conversion by MySQL
         } else if (is_float($value) and ($column->meta_type == 'C' or $column->meta_type == 'X')) {
             $value = "$value";
         }
@@ -1211,7 +1204,7 @@ class database extends \core\dml\database {
      * Very ugly hack which emulates bound parameters in queries
      * because prepared statements do not use query cache.
      */
-    protected function emulate_bound_params($sql, ?array $params=null) {
+    protected function emulate_bound_params($sql, ?array $params = null) {
         if (empty($params)) {
             return $sql;
         }
@@ -1224,7 +1217,7 @@ class database extends \core\dml\database {
             } else if (is_null($param)) {
                 $return .= 'NULL';
             } else if (is_number($param)) {
-                $return .= "'".$param."'"; // we have to always use strings because mysql is using weird automatic int casting
+                $return .= "'" . $param . "'"; // we have to always use strings because mysql is using weird automatic int casting
             } else if (is_float($param)) {
                 $return .= $param;
             } else {
@@ -1244,8 +1237,8 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function execute($sql, ?array $params=null) {
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+    public function execute($sql, ?array $params = null) {
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
 
         if (strpos($sql, ';') !== false) {
             throw new coding_exception('moodle_database::execute() Multiple sql statements found or bound parameters not used properly in query!');
@@ -1259,7 +1252,6 @@ class database extends \core\dml\database {
 
         if ($result === true) {
             return true;
-
         } else {
             $result->close();
             return true;
@@ -1283,9 +1275,9 @@ class database extends \core\dml\database {
      * @return moodle_recordset instance
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_recordset_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0) {
+    public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
 
-        list($limitfrom, $limitnum) = $this->normalise_limit_from_num($limitfrom, $limitnum);
+        [$limitfrom, $limitnum] = $this->normalise_limit_from_num($limitfrom, $limitnum);
 
         if ($limitfrom or $limitnum) {
             if ($limitnum < 1) {
@@ -1294,7 +1286,7 @@ class database extends \core\dml\database {
             $sql .= " LIMIT $limitfrom, $limitnum";
         }
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $rawsql = $this->emulate_bound_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_SELECT);
@@ -1318,7 +1310,7 @@ class database extends \core\dml\database {
     public function export_table_recordset($table) {
         $sql = $this->fix_table_names("SELECT * FROM {{$table}}");
 
-        $this->query_start($sql, array(), SQL_QUERY_SELECT);
+        $this->query_start($sql, [], SQL_QUERY_SELECT);
         // MYSQLI_STORE_RESULT may eat all memory for large tables, unfortunately MYSQLI_USE_RESULT blocks other queries.
         $result = $this->mysqli->query($sql, MYSQLI_USE_RESULT);
         $this->query_end($result);
@@ -1345,9 +1337,9 @@ class database extends \core\dml\database {
      * @return array of objects, or empty array if no records were found
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_records_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0) {
+    public function get_records_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
 
-        list($limitfrom, $limitnum) = $this->normalise_limit_from_num($limitfrom, $limitnum);
+        [$limitfrom, $limitnum] = $this->normalise_limit_from_num($limitfrom, $limitnum);
 
         if ($limitfrom or $limitnum) {
             if ($limitnum < 1) {
@@ -1356,16 +1348,16 @@ class database extends \core\dml\database {
             $sql .= " LIMIT $limitfrom, $limitnum";
         }
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $rawsql = $this->emulate_bound_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_SELECT);
         $result = $this->mysqli->query($rawsql, MYSQLI_STORE_RESULT);
         $this->query_end($result);
 
-        $return = array();
+        $return = [];
 
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             $row = array_change_key_case($row, CASE_LOWER);
             $id  = reset($row);
             if (isset($return[$id])) {
@@ -1387,17 +1379,17 @@ class database extends \core\dml\database {
      * @return array of values
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_fieldset_sql($sql, ?array $params=null) {
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+    public function get_fieldset_sql($sql, ?array $params = null) {
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $rawsql = $this->emulate_bound_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_SELECT);
         $result = $this->mysqli->query($rawsql, MYSQLI_STORE_RESULT);
         $this->query_end($result);
 
-        $return = array();
+        $return = [];
 
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             $return[] = reset($row);
         }
         $result->close();
@@ -1415,7 +1407,7 @@ class database extends \core\dml\database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function insert_record_raw($table, $params, $returnid=true, $bulk=false, $customsequence=false) {
+    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false) {
         if (!is_array($params)) {
             $params = (array)$params;
         }
@@ -1439,7 +1431,7 @@ class database extends \core\dml\database {
         $fixedtable = $this->fix_table_name($table);
         $sql = "INSERT INTO $fixedtable ($fields) VALUES($qms)";
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $rawsql = $this->emulate_bound_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_INSERT);
@@ -1470,7 +1462,7 @@ class database extends \core\dml\database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function insert_record($table, $dataobject, $returnid=true, $bulk=false) {
+    public function insert_record($table, $dataobject, $returnid = true, $bulk = false) {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
@@ -1478,9 +1470,9 @@ class database extends \core\dml\database {
             throw new dml_exception('ddltablenotexist', $table);
         }
 
-        $cleaned = array();
+        $cleaned = [];
 
-        foreach ($dataobject as $field=>$value) {
+        foreach ($dataobject as $field => $value) {
             if ($field === 'id') {
                 continue;
             }
@@ -1506,7 +1498,6 @@ class database extends \core\dml\database {
         if ($chunksize === null) {
             if (!empty($this->dboptions['bulkinsertsize'])) {
                 $chunksize = (int)$this->dboptions['bulkinsertsize'];
-
             } else {
                 if (PHP_INT_SIZE === 4) {
                     // Bad luck for Windows, we cannot do any maths with large numbers.
@@ -1559,7 +1550,7 @@ class database extends \core\dml\database {
         $columns = $this->get_columns($table, true);
         $fields = null;
         $count = 0;
-        $chunk = array();
+        $chunk = [];
         foreach ($dataobjects as $dataobject) {
             if (!is_array($dataobject) and !is_object($dataobject)) {
                 throw new coding_exception('insert_records() passed invalid record object');
@@ -1578,7 +1569,7 @@ class database extends \core\dml\database {
 
             if ($count === $chunksize) {
                 $this->insert_chunk($table, $chunk, $columns);
-                $chunk = array();
+                $chunk = [];
                 $count = 0;
             }
         }
@@ -1598,12 +1589,12 @@ class database extends \core\dml\database {
      * @param database_column_info[] $columns
      */
     protected function insert_chunk($table, array $chunk, array $columns) {
-        $fieldssql = '('.implode(',', array_keys($columns)).')';
+        $fieldssql = '(' . implode(',', array_keys($columns)) . ')';
 
-        $valuessql = '('.implode(',', array_fill(0, count($columns), '?')).')';
+        $valuessql = '(' . implode(',', array_fill(0, count($columns), '?')) . ')';
         $valuessql = implode(',', array_fill(0, count($chunk), $valuessql));
 
-        $params = array();
+        $params = [];
         foreach ($chunk as $dataobject) {
             foreach ($columns as $field => $column) {
                 $params[] = $this->normalise_value($column, $dataobject[$field]);
@@ -1613,7 +1604,7 @@ class database extends \core\dml\database {
         $fixedtable = $this->fix_table_name($table);
         $sql = "INSERT INTO $fixedtable $fieldssql VALUES $valuessql";
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $rawsql = $this->emulate_bound_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_INSERT);
@@ -1634,9 +1625,9 @@ class database extends \core\dml\database {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
-        $cleaned = array();
+        $cleaned = [];
 
-        foreach ($dataobject as $field=>$value) {
+        foreach ($dataobject as $field => $value) {
             if (!isset($columns[$field])) {
                 continue;
             }
@@ -1654,7 +1645,7 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function update_record_raw($table, $params, $bulk=false) {
+    public function update_record_raw($table, $params, $bulk = false) {
         $params = (array)$params;
 
         if (!isset($params['id'])) {
@@ -1667,8 +1658,8 @@ class database extends \core\dml\database {
             throw new coding_exception('moodle_database::update_record_raw() no fields found.');
         }
 
-        $sets = array();
-        foreach ($params as $field=>$value) {
+        $sets = [];
+        foreach ($params as $field => $value) {
             $sets[] = "$field = ?";
         }
 
@@ -1678,7 +1669,7 @@ class database extends \core\dml\database {
         $fixedtable = $this->fix_table_name($table);
         $sql = "UPDATE $fixedtable SET $sets WHERE id=?";
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $rawsql = $this->emulate_bound_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_UPDATE);
@@ -1702,13 +1693,13 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function update_record($table, $dataobject, $bulk=false) {
+    public function update_record($table, $dataobject, $bulk = false) {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
-        $cleaned = array();
+        $cleaned = [];
 
-        foreach ($dataobject as $field=>$value) {
+        foreach ($dataobject as $field => $value) {
             if (!isset($columns[$field])) {
                 continue;
             }
@@ -1730,14 +1721,14 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function set_field_select($table, $newfield, $newvalue, $select, ?array $params=null) {
+    public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null) {
         if ($select) {
             $select = "WHERE $select";
         }
         if (is_null($params)) {
-            $params = array();
+            $params = [];
         }
-        list($select, $params, $type) = $this->fix_sql_params($select, $params);
+        [$select, $params, $type] = $this->fix_sql_params($select, $params);
 
         // Get column metadata
         $columns = $this->get_columns($table);
@@ -1771,14 +1762,14 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function delete_records_select($table, $select, ?array $params=null) {
+    public function delete_records_select($table, $select, ?array $params = null) {
         if ($select) {
             $select = "WHERE $select";
         }
         $fixedtable = $this->fix_table_name($table);
         $sql = "DELETE FROM $fixedtable $select";
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $rawsql = $this->emulate_bound_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_UPDATE);
@@ -1805,11 +1796,11 @@ class database extends \core\dml\database {
                 "($subquery) mysql_subquery ON mysql_subquery.$alias = mysql_deltable.$field", $params);
     }
 
-    public function sql_cast_char2int($fieldname, $text=false) {
+    public function sql_cast_char2int($fieldname, $text = false) {
         return ' CAST(' . $fieldname . ' AS SIGNED) ';
     }
 
-    public function sql_cast_char2real($fieldname, $text=false) {
+    public function sql_cast_char2real($fieldname, $text = false) {
         // Set to 65 (max mysql 5.5 precision) with 7 as scale
         // because we must ensure at least 6 decimal positions
         // per casting given that postgres is casting to that scale (::real::).
@@ -1869,11 +1860,9 @@ class database extends \core\dml\database {
         if ($casesensitive) {
             // Current MySQL versions do not support case sensitive and accent insensitive.
             return "$fieldname $LIKE $param COLLATE $bincollate ESCAPE '$escapechar'";
-
         } else if ($accentsensitive) {
             // Case insensitive and accent sensitive, we can force a binary comparison once all texts are using the same case.
             return "LOWER($fieldname) $LIKE LOWER($param) COLLATE $bincollate ESCAPE '$escapechar'";
-
         } else {
             // Case insensitive and accent insensitive.
             $collation = '';
@@ -1913,7 +1902,7 @@ class database extends \core\dml\database {
      * @param array $elements An array of items to concatenate
      * @return string The concat SQL
      */
-    public function sql_concat_join($separator="' '", $elements=array()) {
+    public function sql_concat_join($separator = "' '", $elements = []) {
         $s = implode(', ', $elements);
 
         if ($s === '') {
@@ -2033,19 +2022,21 @@ class database extends \core\dml\database {
         }
         $fields = preg_replace('/\s/', '', $fields);
         static $aliascnt = 0;
-        $falias = 'intsctal'.($aliascnt++);
-        $rv = "SELECT $falias.".
-            preg_replace('/,/', ','.$falias.'.', $fields).
+        $falias = 'intsctal' . ($aliascnt++);
+        $rv = "SELECT $falias." .
+            preg_replace('/,/', ',' . $falias . '.', $fields) .
             " FROM ($selects[0]) $falias";
         for ($i = 1; $i < count($selects); $i++) {
-            $alias = 'intsctal'.($aliascnt++);
-            $rv .= " JOIN (".$selects[$i].") $alias ON ".
-                join(' AND ',
+            $alias = 'intsctal' . ($aliascnt++);
+            $rv .= " JOIN (" . $selects[$i] . ") $alias ON " .
+                join(
+                    ' AND ',
                     array_map(
-                        function($a) use ($alias, $falias) {
-                            return $falias . '.' . $a .' = ' . $alias . '.' . $a;
+                        function ($a) use ($alias, $falias) {
+                            return $falias . '.' . $a . ' = ' . $alias . '.' . $a;
                         },
-                        preg_split('/,/', $fields))
+                        preg_split('/,/', $fields)
+                    )
                 );
         }
         return $rv;
@@ -2074,7 +2065,7 @@ class database extends \core\dml\database {
     public function get_session_lock($rowid, $timeout) {
         parent::get_session_lock($rowid, $timeout);
 
-        $fullname = $this->dbname.'-'.$this->prefix.'-session-'.$rowid;
+        $fullname = $this->dbname . '-' . $this->prefix . '-session-' . $rowid;
         $sql = "SELECT GET_LOCK('$fullname', $timeout)";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = $this->mysqli->query($sql);
@@ -2098,7 +2089,7 @@ class database extends \core\dml\database {
         }
 
         parent::release_session_lock($rowid);
-        $fullname = $this->dbname.'-'.$this->prefix.'-session-'.$rowid;
+        $fullname = $this->dbname . '-' . $this->prefix . '-session-' . $rowid;
         $sql = "SELECT RELEASE_LOCK('$fullname')";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = $this->mysqli->query($sql);
@@ -2136,7 +2127,7 @@ class database extends \core\dml\database {
         $engine = $this->get_dbengine();
 
         // Only will accept transactions if using compatible storage engine (more engines can be added easily BDB, Falcon...)
-        if (in_array($engine, array('InnoDB', 'INNOBASE', 'BDB', 'XtraDB', 'Aria', 'Falcon'))) {
+        if (in_array($engine, ['InnoDB', 'INNOBASE', 'BDB', 'XtraDB', 'Aria', 'Falcon'])) {
             $this->transactions_supported = true;
         }
 

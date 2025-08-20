@@ -82,7 +82,6 @@ define('SQL_QUERY_AUX_READONLY', 6);
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class database {
-
     /** @var database_manager db manager which allows db structure modifications. */
     protected $database_manager;
     /** @var temptables temptables manager to provide cross-db support for temp tables. */
@@ -135,7 +134,7 @@ abstract class database {
     protected $used_for_db_sessions = false;
 
     /** @var array Array containing open transactions. */
-    protected $transactions = array();
+    protected $transactions = [];
     /** @var bool Flag used to force rollback of all current transactions. */
     private $force_rollback = false;
 
@@ -161,7 +160,7 @@ abstract class database {
     protected $inorequaluniqueindex = 1;
 
     /**
-     * @var boolean variable use to temporarily disable logging.
+     * @var bool variable use to temporarily disable logging.
      */
     protected $skiplogging = false;
 
@@ -170,7 +169,7 @@ abstract class database {
      *              Note that this affects the decision of whether prefix checks must be performed or not.
      * @param bool $external True means that an external database is used.
      */
-    public function __construct($external=false) {
+    public function __construct($external = false) {
         $this->external  = $external;
     }
 
@@ -313,7 +312,7 @@ abstract class database {
      * @return bool true
      * @throws connection_exception if error
      */
-    abstract public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions=null);
+    abstract public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null);
 
     /**
      * Store various database settings
@@ -325,7 +324,7 @@ abstract class database {
      * @param array $dboptions driver specific options
      * @return void
      */
-    protected function store_settings($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions=null) {
+    protected function store_settings($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null) {
         $this->dbhost    = $dbhost;
         $this->dbuser    = $dbuser;
         $this->dbpass    = $dbpass;
@@ -355,7 +354,7 @@ abstract class database {
      */
     protected function get_metacache() {
         if (!isset($this->metacache)) {
-            $properties = array('dbfamily' => $this->get_dbfamily(), 'settings' => $this->get_settings_hash());
+            $properties = ['dbfamily' => $this->get_dbfamily(), 'settings' => $this->get_settings_hash()];
             $this->metacache = cache::make('core', 'databasemeta', $properties);
         }
         return $this->metacache;
@@ -369,7 +368,7 @@ abstract class database {
     protected function get_temp_tables_cache() {
         if (!isset($this->metacachetemp)) {
             // Using connection data to prevent collisions when using the same temp table name with different db connections.
-            $properties = array('dbfamily' => $this->get_dbfamily(), 'settings' => $this->get_settings_hash());
+            $properties = ['dbfamily' => $this->get_dbfamily(), 'settings' => $this->get_settings_hash()];
             $this->metacachetemp = cache::make('core', 'temp_tables', $properties);
         }
         return $this->metacachetemp;
@@ -385,7 +384,7 @@ abstract class database {
      *
      * @return bool success True for successful connection. False otherwise.
      */
-    public function create_database($dbhost, $dbuser, $dbpass, $dbname, ?array $dboptions=null) {
+    public function create_database($dbhost, $dbuser, $dbpass, $dbname, ?array $dboptions = null) {
         return false;
     }
 
@@ -438,7 +437,7 @@ abstract class database {
      * @param mixed $extrainfo This is here for any driver specific extra information.
      * @return void
      */
-    protected function query_start($sql, ?array $params, $type, $extrainfo=null) {
+    protected function query_start($sql, ?array $params, $type, $extrainfo = null) {
         global $CFG;
 
         if ($this->loggingquery) {
@@ -461,9 +460,10 @@ abstract class database {
             case SQL_QUERY_STRUCTURE:
                 $this->writes++;
             default:
-                if ((PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) ||
-                    defined('BEHAT_SITE_RUNNING')) {
-
+                if (
+                    (PHPUNIT_TEST) || (defined('BEHAT_TEST') && BEHAT_TEST) ||
+                    defined('BEHAT_SITE_RUNNING')
+                ) {
                     // Set list of tables that are updated.
                     require_once("{$CFG->libdir}/testing/classes/util.php");
                     testing_util::set_table_modified_by_sql($sql);
@@ -520,7 +520,7 @@ abstract class database {
      * @param string|bool $error or false if not error
      * @return void
      */
-    public function query_log($error=false) {
+    public function query_log($error = false) {
         // Logging disabled by the driver.
         if ($this->skiplogging) {
             return;
@@ -536,16 +536,16 @@ abstract class database {
         // Will be shown or not depending on MDL_PERF values rather than in dboptions['log*].
         $this->queriestime = $this->queriestime + $time;
 
-        if ($logall or ($logslow and ($logslow < ($time+0.00001))) or ($iserror and $logerrors)) {
+        if ($logall or ($logslow and ($logslow < ($time + 0.00001))) or ($iserror and $logerrors)) {
             $this->loggingquery = true;
             try {
                 $backtrace = debug_backtrace();
                 if ($backtrace) {
-                    //remove query_log()
+                    // remove query_log()
                     array_shift($backtrace);
                 }
                 if ($backtrace) {
-                    //remove query_end()
+                    // remove query_end()
                     array_shift($backtrace);
                 }
                 $log = new stdClass();
@@ -611,7 +611,7 @@ abstract class database {
      * @param mixed $obj The library specific object. (optional)
      * @return void
      */
-    protected function print_debug($sql, ?array $params=null, $obj=null) {
+    protected function print_debug($sql, ?array $params = null, $obj = null) {
         if (!$this->get_debug()) {
             return;
         }
@@ -672,12 +672,12 @@ abstract class database {
      * @return array An array list containing sql 'where' part and 'params'.
      * @throws dml_exception
      */
-    protected function where_clause($table, ?array $conditions=null) {
+    protected function where_clause($table, ?array $conditions = null) {
         // We accept nulls in conditions
-        $conditions = is_null($conditions) ? array() : $conditions;
+        $conditions = is_null($conditions) ? [] : $conditions;
 
         if (empty($conditions)) {
-            return array('', array());
+            return ['', []];
         }
 
         // Some checks performed under debugging only
@@ -687,7 +687,7 @@ abstract class database {
                 // no supported columns means most probably table does not exist
                 throw new dml_exception('ddltablenotexist', $table);
             }
-            foreach ($conditions as $key=>$value) {
+            foreach ($conditions as $key => $value) {
                 if (!isset($columns[$key])) {
                     $a = new stdClass();
                     $a->fieldname = $key;
@@ -696,17 +696,17 @@ abstract class database {
                 }
                 $column = $columns[$key];
                 if ($column->meta_type == 'X') {
-                    //ok so the column is a text column. sorry no text columns in the where clause conditions
+                    // ok so the column is a text column. sorry no text columns in the where clause conditions
                     throw new dml_exception('textconditionsnotallowed', $conditions);
                 }
             }
         }
 
         $allowed_types = $this->allowed_param_types();
-        $where = array();
-        $params = array();
+        $where = [];
+        $params = [];
 
-        foreach ($conditions as $key=>$value) {
+        foreach ($conditions as $key => $value) {
             if (is_int($key)) {
                 throw new dml_exception('invalidnumkey');
             }
@@ -729,7 +729,7 @@ abstract class database {
             }
         }
         $where = implode(" AND ", $where);
-        return array($where, $params);
+        return [$where, $params];
     }
 
     /**
@@ -741,12 +741,12 @@ abstract class database {
      */
     protected function where_clause_list($field, array $values) {
         if (empty($values)) {
-            return array("1 = 2", array()); // Fake condition, won't return rows ever. MDL-17645
+            return ["1 = 2", []]; // Fake condition, won't return rows ever. MDL-17645
         }
 
         // Note: Do not use get_in_or_equal() because it can not deal with bools and nulls.
 
-        $params = array();
+        $params = [];
         $select = "";
         $values = (array)$values;
         foreach ($values as $value) {
@@ -765,14 +765,14 @@ abstract class database {
             }
             $count = count($params);
             if ($count == 1) {
-                $select = $select."$field = ?";
+                $select = $select . "$field = ?";
             } else {
                 $qs = str_repeat(',?', $count);
                 $qs = ltrim($qs, ',');
-                $select = $select."$field IN ($qs)";
+                $select = $select . "$field IN ($qs)";
             }
         }
-        return array($select, $params);
+        return [$select, $params];
     }
 
     /**
@@ -786,7 +786,7 @@ abstract class database {
      * @throws coding_exception | dml_exception
      * @return array A list containing the constructed sql fragment and an array of parameters.
      */
-    public function get_in_or_equal($items, $type=SQL_PARAMS_QM, $prefix='param', $equal=true, $onemptyitems=false) {
+    public function get_in_or_equal($items, $type = SQL_PARAMS_QM, $prefix = 'param', $equal = true, $onemptyitems = false) {
 
         // default behavior, throw exception on empty array
         if (is_array($items) and empty($items) and $onemptyitems === false) {
@@ -796,9 +796,9 @@ abstract class database {
         if (is_array($items) and empty($items)) {
             if (is_null($onemptyitems)) {             // Special case, NULL value
                 $sql = $equal ? ' IS NULL' : ' IS NOT NULL';
-                return (array($sql, array()));
+                return ([$sql, []]);
             } else {
-                $items = array($onemptyitems);        // Rest of cases, prepare $items for std processing
+                $items = [$onemptyitems];        // Rest of cases, prepare $items for std processing
             }
         }
 
@@ -809,46 +809,44 @@ abstract class database {
                 $params = array_values($items);
             } else {
                 if ($equal) {
-                    $sql = 'IN ('.implode(',', array_fill(0, count($items), '?')).')';
+                    $sql = 'IN (' . implode(',', array_fill(0, count($items), '?')) . ')';
                 } else {
-                    $sql = 'NOT IN ('.implode(',', array_fill(0, count($items), '?')).')';
+                    $sql = 'NOT IN (' . implode(',', array_fill(0, count($items), '?')) . ')';
                 }
                 $params = array_values($items);
             }
-
         } else if ($type == SQL_PARAMS_NAMED) {
             if (empty($prefix)) {
                 $prefix = 'param';
             }
 
-            if (!is_array($items)){
-                $param = $prefix.$this->inorequaluniqueindex++;
+            if (!is_array($items)) {
+                $param = $prefix . $this->inorequaluniqueindex++;
                 $sql = $equal ? "= :$param" : "<> :$param";
-                $params = array($param=>$items);
+                $params = [$param => $items];
             } else if (count($items) == 1) {
-                $param = $prefix.$this->inorequaluniqueindex++;
+                $param = $prefix . $this->inorequaluniqueindex++;
                 $sql = $equal ? "= :$param" : "<> :$param";
                 $item = reset($items);
-                $params = array($param=>$item);
+                $params = [$param => $item];
             } else {
-                $params = array();
-                $sql = array();
+                $params = [];
+                $sql = [];
                 foreach ($items as $item) {
-                    $param = $prefix.$this->inorequaluniqueindex++;
+                    $param = $prefix . $this->inorequaluniqueindex++;
                     $params[$param] = $item;
-                    $sql[] = ':'.$param;
+                    $sql[] = ':' . $param;
                 }
                 if ($equal) {
-                    $sql = 'IN ('.implode(',', $sql).')';
+                    $sql = 'IN (' . implode(',', $sql) . ')';
                 } else {
-                    $sql = 'NOT IN ('.implode(',', $sql).')';
+                    $sql = 'NOT IN (' . implode(',', $sql) . ')';
                 }
             }
-
         } else {
             throw new dml_exception('typenotimplement');
         }
-        return array($sql, $params);
+        return [$sql, $params];
     }
 
     /**
@@ -859,7 +857,7 @@ abstract class database {
     protected function fix_table_names($sql) {
         return preg_replace_callback(
             '/\{([a-z][a-z0-9_]*)\}/',
-            function($matches) {
+            function ($matches) {
                 return $this->fix_table_name($matches[1]);
             },
             $sql
@@ -884,7 +882,7 @@ abstract class database {
      */
     private function _fix_sql_params_dollar_callback($match) {
         $this->fix_sql_params_i++;
-        return "\$".$this->fix_sql_params_i;
+        return "\$" . $this->fix_sql_params_i;
     }
 
     /**
@@ -895,7 +893,7 @@ abstract class database {
      */
     protected function detect_objects($value) {
         if (is_object($value)) {
-            throw new coding_exception('Invalid database query parameter value', 'Objects are are not allowed: '.get_class($value));
+            throw new coding_exception('Invalid database query parameter value', 'Objects are are not allowed: ' . get_class($value));
         }
     }
 
@@ -905,7 +903,7 @@ abstract class database {
      * @param array $params The query parameters.
      * @return array (sql, params, type of params)
      */
-    public function fix_sql_params($sql, ?array $params=null) {
+    public function fix_sql_params($sql, ?array $params = null) {
         global $CFG;
 
         require_once($CFG->libdir . '/ddllib.php');
@@ -935,7 +933,6 @@ abstract class database {
         if ($named_count) {
             $type = SQL_PARAMS_NAMED;
             $count = $named_count;
-
         }
         if ($dollar_count) {
             if ($count) {
@@ -943,7 +940,6 @@ abstract class database {
             }
             $type = SQL_PARAMS_DOLLAR;
             $count = $dollar_count;
-
         }
         if ($q_count) {
             if ($count) {
@@ -951,22 +947,21 @@ abstract class database {
             }
             $type = SQL_PARAMS_QM;
             $count = $q_count;
-
         }
 
         if (!$count) {
              // ignore params
             if ($allowed_types & SQL_PARAMS_NAMED) {
-                return array($sql, array(), SQL_PARAMS_NAMED);
+                return [$sql, [], SQL_PARAMS_NAMED];
             } else if ($allowed_types & SQL_PARAMS_QM) {
-                return array($sql, array(), SQL_PARAMS_QM);
+                return [$sql, [], SQL_PARAMS_QM];
             } else {
-                return array($sql, array(), SQL_PARAMS_DOLLAR);
+                return [$sql, [], SQL_PARAMS_DOLLAR];
             }
         }
 
         if ($count > count($params)) {
-            $a = new stdClass;
+            $a = new stdClass();
             $a->expected = $count;
             $a->actual = count($params);
             throw new dml_exception('invalidqueryparam', $a);
@@ -977,9 +972,9 @@ abstract class database {
         if ($type & $allowed_types) { // bitwise AND
             if ($count == count($params)) {
                 if ($type == SQL_PARAMS_QM) {
-                    return array($sql, array_values($params), SQL_PARAMS_QM); // 0-based array required
+                    return [$sql, array_values($params), SQL_PARAMS_QM]; // 0-based array required
                 } else {
-                    //better do the validation of names below
+                    // better do the validation of names below
                 }
             }
             // needs some fixing or validation - there might be more params than needed
@@ -987,7 +982,7 @@ abstract class database {
         }
 
         if ($type == SQL_PARAMS_NAMED) {
-            $finalparams = array();
+            $finalparams = [];
             foreach ($named_matches[0] as $key) {
                 $key = trim($key, ':');
                 if (!array_key_exists($key, $params)) {
@@ -995,8 +990,10 @@ abstract class database {
                 }
                 if (strlen($key) > xmldb_field::NAME_MAX_LENGTH) {
                     throw new coding_exception(
-                            "Placeholder names must be " . xmldb_field::NAME_MAX_LENGTH . " characters or shorter. '" .
-                            $key . "' is too long.", $sql);
+                        "Placeholder names must be " . xmldb_field::NAME_MAX_LENGTH . " characters or shorter. '" .
+                        $key . "' is too long.",
+                        $sql
+                    );
                 }
                 $finalparams[$key] = $params[$key];
             }
@@ -1006,56 +1003,54 @@ abstract class database {
 
             if ($target_type & SQL_PARAMS_QM) {
                 $sql = preg_replace('/(?<!:):[a-z][a-z0-9_]*/', '?', $sql);
-                return array($sql, array_values($finalparams), SQL_PARAMS_QM); // 0-based required
+                return [$sql, array_values($finalparams), SQL_PARAMS_QM]; // 0-based required
             } else if ($target_type & SQL_PARAMS_NAMED) {
-                return array($sql, $finalparams, SQL_PARAMS_NAMED);
+                return [$sql, $finalparams, SQL_PARAMS_NAMED];
             } else {  // $type & SQL_PARAMS_DOLLAR
-                //lambda-style functions eat memory - we use globals instead :-(
+                // lambda-style functions eat memory - we use globals instead :-(
                 $this->fix_sql_params_i = 0;
-                $sql = preg_replace_callback('/(?<!:):[a-z][a-z0-9_]*/', array($this, '_fix_sql_params_dollar_callback'), $sql);
-                return array($sql, array_values($finalparams), SQL_PARAMS_DOLLAR); // 0-based required
+                $sql = preg_replace_callback('/(?<!:):[a-z][a-z0-9_]*/', [$this, '_fix_sql_params_dollar_callback'], $sql);
+                return [$sql, array_values($finalparams), SQL_PARAMS_DOLLAR]; // 0-based required
             }
-
         } else if ($type == SQL_PARAMS_DOLLAR) {
             if ($target_type & SQL_PARAMS_DOLLAR) {
-                return array($sql, array_values($params), SQL_PARAMS_DOLLAR); // 0-based required
+                return [$sql, array_values($params), SQL_PARAMS_DOLLAR]; // 0-based required
             } else if ($target_type & SQL_PARAMS_QM) {
                 $sql = preg_replace('/\$[0-9]+/', '?', $sql);
-                return array($sql, array_values($params), SQL_PARAMS_QM); // 0-based required
-            } else { //$target_type & SQL_PARAMS_NAMED
+                return [$sql, array_values($params), SQL_PARAMS_QM]; // 0-based required
+            } else { // $target_type & SQL_PARAMS_NAMED
                 $sql = preg_replace('/\$([0-9]+)/', ':param\\1', $sql);
-                $finalparams = array();
-                foreach ($params as $key=>$param) {
+                $finalparams = [];
+                foreach ($params as $key => $param) {
                     $key++;
-                    $finalparams['param'.$key] = $param;
+                    $finalparams['param' . $key] = $param;
                 }
-                return array($sql, $finalparams, SQL_PARAMS_NAMED);
+                return [$sql, $finalparams, SQL_PARAMS_NAMED];
             }
-
         } else { // $type == SQL_PARAMS_QM
             if (count($params) != $count) {
                 $params = array_slice($params, 0, $count);
             }
 
             if ($target_type & SQL_PARAMS_QM) {
-                return array($sql, array_values($params), SQL_PARAMS_QM); // 0-based required
+                return [$sql, array_values($params), SQL_PARAMS_QM]; // 0-based required
             } else if ($target_type & SQL_PARAMS_NAMED) {
-                $finalparams = array();
+                $finalparams = [];
                 $pname = 'param0';
                 $parts = explode('?', $sql);
                 $sql = array_shift($parts);
                 foreach ($parts as $part) {
                     $param = array_shift($params);
                     $pname++;
-                    $sql .= ':'.$pname.$part;
+                    $sql .= ':' . $pname . $part;
                     $finalparams[$pname] = $param;
                 }
-                return array($sql, $finalparams, SQL_PARAMS_NAMED);
+                return [$sql, $finalparams, SQL_PARAMS_NAMED];
             } else {  // $type & SQL_PARAMS_DOLLAR
-                //lambda-style functions eat memory - we use globals instead :-(
+                // lambda-style functions eat memory - we use globals instead :-(
                 $this->fix_sql_params_i = 0;
-                $sql = preg_replace_callback('/\?/', array($this, '_fix_sql_params_dollar_callback'), $sql);
-                return array($sql, array_values($params), SQL_PARAMS_DOLLAR); // 0-based required
+                $sql = preg_replace_callback('/\?/', [$this, '_fix_sql_params_dollar_callback'], $sql);
+                return [$sql, array_values($params), SQL_PARAMS_DOLLAR]; // 0-based required
             }
         }
     }
@@ -1080,11 +1075,11 @@ abstract class database {
         $callers = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 
         // Ignore moodle_database internals.
-// TODO
-// !!!
-// !!!
-// !!!
-        $callers = array_filter($callers, function($caller) {
+        // TODO
+        // !!!
+        // !!!
+        // !!!
+        $callers = array_filter($callers, function ($caller) {
             return empty($caller['class']) || $caller['class'] != \core\dml\database::class;
         });
 
@@ -1130,20 +1125,28 @@ abstract class database {
         if ($CFG->debugdeveloper) {
             if (!is_numeric($limitfrom)) {
                 $strvalue = var_export($limitfrom, true);
-                debugging("Non-numeric limitfrom parameter detected: $strvalue, did you pass the correct arguments?",
-                    DEBUG_DEVELOPER);
+                debugging(
+                    "Non-numeric limitfrom parameter detected: $strvalue, did you pass the correct arguments?",
+                    DEBUG_DEVELOPER
+                );
             } else if ($limitfrom < 0) {
-                debugging("Negative limitfrom parameter detected: $limitfrom, did you pass the correct arguments?",
-                    DEBUG_DEVELOPER);
+                debugging(
+                    "Negative limitfrom parameter detected: $limitfrom, did you pass the correct arguments?",
+                    DEBUG_DEVELOPER
+                );
             }
 
             if (!is_numeric($limitnum)) {
                 $strvalue = var_export($limitnum, true);
-                debugging("Non-numeric limitnum parameter detected: $strvalue, did you pass the correct arguments?",
-                    DEBUG_DEVELOPER);
+                debugging(
+                    "Non-numeric limitnum parameter detected: $strvalue, did you pass the correct arguments?",
+                    DEBUG_DEVELOPER
+                );
             } else if ($limitnum < 0) {
-                debugging("Negative limitnum parameter detected: $limitnum, did you pass the correct arguments?",
-                    DEBUG_DEVELOPER);
+                debugging(
+                    "Negative limitnum parameter detected: $limitnum, did you pass the correct arguments?",
+                    DEBUG_DEVELOPER
+                );
             }
         }
 
@@ -1152,7 +1155,7 @@ abstract class database {
         $limitfrom = max(0, $limitfrom);
         $limitnum  = max(0, $limitnum);
 
-        return array($limitfrom, $limitnum);
+        return [$limitfrom, $limitnum];
     }
 
     /**
@@ -1160,7 +1163,7 @@ abstract class database {
      * @param bool $usecache if true, returns list of cached tables.
      * @return array of table names in lowercase and without prefix
      */
-    abstract public function get_tables($usecache=true);
+    abstract public function get_tables($usecache = true);
 
     /**
      * Return table indexes - everything lowercased.
@@ -1261,9 +1264,9 @@ abstract class database {
         global $CFG;
 
         if (!$this->database_manager) {
-            require_once($CFG->libdir.'/ddllib.php');
+            require_once($CFG->libdir . '/ddllib.php');
 
-            $classname = $this->get_dbfamily().'_sql_generator';
+            $classname = $this->get_dbfamily() . '_sql_generator';
             require_once("$CFG->libdir/ddl/$classname.php");
             $generator = new $classname($this, $this->temptables);
 
@@ -1322,7 +1325,7 @@ abstract class database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function execute($sql, ?array $params=null);
+    abstract public function execute($sql, ?array $params = null);
 
     /**
      * Get a number of records as a recordset where all the given conditions met.
@@ -1358,8 +1361,8 @@ abstract class database {
      * @return recordset A recordset instance
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_recordset($table, ?array $conditions=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
-        list($select, $params) = $this->where_clause($table, $conditions);
+    public function get_recordset($table, ?array $conditions = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->get_recordset_select($table, $select, $params, $sort, $fields, $limitfrom, $limitnum);
     }
 
@@ -1381,8 +1384,8 @@ abstract class database {
      * @return recordset A recordset instance.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_recordset_list($table, $field, array $values, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
-        list($select, $params) = $this->where_clause_list($field, $values);
+    public function get_recordset_list($table, $field, array $values, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+        [$select, $params] = $this->where_clause_list($field, $values);
         return $this->get_recordset_select($table, $select, $params, $sort, $fields, $limitfrom, $limitnum);
     }
 
@@ -1404,8 +1407,8 @@ abstract class database {
      * @return recordset A recordset instance.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_recordset_select($table, $select, ?array $params=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
-        $sql = "SELECT $fields FROM {".$table."}";
+    public function get_recordset_select($table, $select, ?array $params = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+        $sql = "SELECT $fields FROM {" . $table . "}";
         if ($select) {
             $sql .= " WHERE $select";
         }
@@ -1431,7 +1434,7 @@ abstract class database {
      * @return recordset A recordset instance.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function get_recordset_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0);
+    abstract public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0);
 
     /**
      * Get all records from a table.
@@ -1444,7 +1447,7 @@ abstract class database {
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function export_table_recordset($table) {
-        return $this->get_recordset($table, array());
+        return $this->get_recordset($table, []);
     }
 
     /**
@@ -1467,8 +1470,8 @@ abstract class database {
      * @return array An array of Objects indexed by first column.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_records($table, ?array $conditions=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
-        list($select, $params) = $this->where_clause($table, $conditions);
+    public function get_records($table, ?array $conditions = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->get_records_select($table, $select, $params, $sort, $fields, $limitfrom, $limitnum);
     }
 
@@ -1489,8 +1492,8 @@ abstract class database {
      * @return array An array of objects indexed by first column
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_records_list($table, $field, array $values, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
-        list($select, $params) = $this->where_clause_list($field, $values);
+    public function get_records_list($table, $field, array $values, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+        [$select, $params] = $this->where_clause_list($field, $values);
         return $this->get_records_select($table, $select, $params, $sort, $fields, $limitfrom, $limitnum);
     }
 
@@ -1511,7 +1514,7 @@ abstract class database {
      * @return array of objects indexed by first column
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_records_select($table, $select, ?array $params=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
+    public function get_records_select($table, $select, ?array $params = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -1535,7 +1538,7 @@ abstract class database {
      * @return array of objects indexed by first column
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function get_records_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0);
+    abstract public function get_records_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0);
 
     /**
      * Get the first two columns from a number of records as an associative array where all the given conditions met.
@@ -1556,8 +1559,8 @@ abstract class database {
      * @return array an associative array
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_records_menu($table, ?array $conditions=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
-        $menu = array();
+    public function get_records_menu($table, ?array $conditions = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+        $menu = [];
         if ($records = $this->get_records($table, $conditions, $sort, $fields, $limitfrom, $limitnum)) {
             foreach ($records as $record) {
                 $record = (array)$record;
@@ -1585,8 +1588,8 @@ abstract class database {
      * @return array an associative array
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_records_select_menu($table, $select, ?array $params=null, $sort='', $fields='*', $limitfrom=0, $limitnum=0) {
-        $menu = array();
+    public function get_records_select_menu($table, $select, ?array $params = null, $sort = '', $fields = '*', $limitfrom = 0, $limitnum = 0) {
+        $menu = [];
         if ($records = $this->get_records_select($table, $select, $params, $sort, $fields, $limitfrom, $limitnum)) {
             foreach ($records as $record) {
                 $record = (array)$record;
@@ -1611,8 +1614,8 @@ abstract class database {
      * @return array an associative array
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_records_sql_menu($sql, ?array $params=null, $limitfrom=0, $limitnum=0) {
-        $menu = array();
+    public function get_records_sql_menu($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
+        $menu = [];
         if ($records = $this->get_records_sql($sql, $params, $limitfrom, $limitnum)) {
             foreach ($records as $record) {
                 $record = (array)$record;
@@ -1638,8 +1641,8 @@ abstract class database {
      * @return mixed a fieldset object containing the first matching record, false or exception if error not found depending on mode
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_record($table, array $conditions, $fields='*', $strictness=IGNORE_MISSING) {
-        list($select, $params) = $this->where_clause($table, $conditions);
+    public function get_record($table, array $conditions, $fields = '*', $strictness = IGNORE_MISSING) {
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->get_record_select($table, $select, $params, $fields, $strictness);
     }
 
@@ -1656,7 +1659,7 @@ abstract class database {
      * @return stdClass|false a fieldset object containing the first matching record, false or exception if error not found depending on mode
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_record_select($table, $select, ?array $params=null, $fields='*', $strictness=IGNORE_MISSING) {
+    public function get_record_select($table, $select, ?array $params = null, $fields = '*', $strictness = IGNORE_MISSING) {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -1682,7 +1685,7 @@ abstract class database {
      * @return mixed a fieldset object containing the first matching record, false or exception if error not found depending on mode
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_record_sql($sql, ?array $params=null, $strictness=IGNORE_MISSING) {
+    public function get_record_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
         $strictness = (int)$strictness; // we support true/false for BC reasons too
         if ($strictness == IGNORE_MULTIPLE) {
             $count = 1;
@@ -1720,8 +1723,8 @@ abstract class database {
      * @return mixed the specified value false if not found
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_field($table, $return, array $conditions, $strictness=IGNORE_MISSING) {
-        list($select, $params) = $this->where_clause($table, $conditions);
+    public function get_field($table, $return, array $conditions, $strictness = IGNORE_MISSING) {
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->get_field_select($table, $return, $select, $params, $strictness);
     }
 
@@ -1738,7 +1741,7 @@ abstract class database {
      * @return mixed the specified value false if not found
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_field_select($table, $return, $select, ?array $params=null, $strictness=IGNORE_MISSING) {
+    public function get_field_select($table, $return, $select, ?array $params = null, $strictness = IGNORE_MISSING) {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -1761,7 +1764,7 @@ abstract class database {
      * @return mixed the specified value false if not found
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_field_sql($sql, ?array $params=null, $strictness=IGNORE_MISSING) {
+    public function get_field_sql($sql, ?array $params = null, $strictness = IGNORE_MISSING) {
         if (!$record = $this->get_record_sql($sql, $params, $strictness)) {
             return false;
         }
@@ -1794,7 +1797,7 @@ abstract class database {
      * @return array of values
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_fieldset_select($table, $return, $select, ?array $params=null) {
+    public function get_fieldset_select($table, $return, $select, ?array $params = null) {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -1809,7 +1812,7 @@ abstract class database {
      * @return array of values
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function get_fieldset_sql($sql, ?array $params=null);
+    abstract public function get_fieldset_sql($sql, ?array $params = null);
 
     /**
      * Insert new record into database, as fast as possible, no safety checks, lobs not supported.
@@ -1821,7 +1824,7 @@ abstract class database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function insert_record_raw($table, $params, $returnid=true, $bulk=false, $customsequence=false);
+    abstract public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false);
 
     /**
      * Insert a record into a table and return the "id" field if required.
@@ -1836,7 +1839,7 @@ abstract class database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function insert_record($table, $dataobject, $returnid=true, $bulk=false);
+    abstract public function insert_record($table, $dataobject, $returnid = true, $bulk = false);
 
     /**
      * Insert multiple records into database as fast as possible.
@@ -1896,7 +1899,7 @@ abstract class database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function update_record_raw($table, $params, $bulk=false);
+    abstract public function update_record_raw($table, $params, $bulk = false);
 
     /**
      * Update a record in a table
@@ -1912,7 +1915,7 @@ abstract class database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function update_record($table, $dataobject, $bulk=false);
+    abstract public function update_record($table, $dataobject, $bulk = false);
 
     /**
      * Set a single field in every table record where all the given conditions met.
@@ -1924,8 +1927,8 @@ abstract class database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function set_field($table, $newfield, $newvalue, ?array $conditions=null) {
-        list($select, $params) = $this->where_clause($table, $conditions);
+    public function set_field($table, $newfield, $newvalue, ?array $conditions = null) {
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->set_field_select($table, $newfield, $newvalue, $select, $params);
     }
 
@@ -1940,7 +1943,7 @@ abstract class database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function set_field_select($table, $newfield, $newvalue, $select, ?array $params=null);
+    abstract public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null);
 
 
     /**
@@ -1951,8 +1954,8 @@ abstract class database {
      * @return int The count of records returned from the specified criteria.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function count_records($table, ?array $conditions=null) {
-        list($select, $params) = $this->where_clause($table, $conditions);
+    public function count_records($table, ?array $conditions = null) {
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->count_records_select($table, $select, $params);
     }
 
@@ -1966,7 +1969,7 @@ abstract class database {
      * @return int The count of records returned from the specified criteria.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function count_records_select($table, $select, ?array $params=null, $countitem="COUNT('x')") {
+    public function count_records_select($table, $select, ?array $params = null, $countitem = "COUNT('x')") {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -1986,7 +1989,7 @@ abstract class database {
      * @return int the count
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function count_records_sql($sql, ?array $params=null) {
+    public function count_records_sql($sql, ?array $params = null) {
         $count = $this->get_field_sql($sql, $params);
         if ($count === false or !is_number($count) or $count < 0) {
             throw new coding_exception("count_records_sql() expects the first field to contain non-negative number from COUNT(), '$count' found instead.");
@@ -2003,7 +2006,7 @@ abstract class database {
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function record_exists($table, array $conditions) {
-        list($select, $params) = $this->where_clause($table, $conditions);
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->record_exists_select($table, $select, $params);
     }
 
@@ -2016,7 +2019,7 @@ abstract class database {
      * @return bool true if a matching record exists, else false.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function record_exists_select($table, $select, ?array $params=null) {
+    public function record_exists_select($table, $select, ?array $params = null) {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -2034,7 +2037,7 @@ abstract class database {
      * @return bool true if the SQL executes without errors and returns at least one record.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function record_exists_sql($sql, ?array $params=null) {
+    public function record_exists_sql($sql, ?array $params = null) {
         $mrs = $this->get_recordset_sql($sql, $params, 0, 1);
         $return = $mrs->valid();
         $mrs->close();
@@ -2050,13 +2053,13 @@ abstract class database {
      * @return bool true.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function delete_records($table, ?array $conditions=null) {
+    public function delete_records($table, ?array $conditions = null) {
         // truncate is drop/create (DDL), not transactional safe,
         // so we don't use the shortcut within them. MDL-29198
         if (is_null($conditions) && empty($this->transactions)) {
-            return $this->execute("TRUNCATE TABLE {".$table."}");
+            return $this->execute("TRUNCATE TABLE {" . $table . "}");
         }
-        list($select, $params) = $this->where_clause($table, $conditions);
+        [$select, $params] = $this->where_clause($table, $conditions);
         return $this->delete_records_select($table, $select, $params);
     }
 
@@ -2070,7 +2073,7 @@ abstract class database {
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function delete_records_list($table, $field, array $values) {
-        list($select, $params) = $this->where_clause_list($field, $values);
+        [$select, $params] = $this->where_clause_list($field, $values);
         return $this->delete_records_select($table, $select, $params);
     }
 
@@ -2092,8 +2095,13 @@ abstract class database {
      * @throws dml_exception If there is any error
      * @since Moodle 3.10
      */
-    public function delete_records_subquery(string $table, string $field, string $alias,
-            string $subquery, array $params = []): void {
+    public function delete_records_subquery(
+        string $table,
+        string $field,
+        string $alias,
+        string $subquery,
+        array $params = []
+    ): void {
         $this->delete_records_select($table, $field . ' IN (' . $subquery . ')', $params);
     }
 
@@ -2106,7 +2114,7 @@ abstract class database {
      * @return bool true.
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    abstract public function delete_records_select($table, $select, ?array $params=null);
+    abstract public function delete_records_select($table, $select, ?array $params = null);
 
     /**
      * Returns the FROM clause required by some DBs in all SELECT statements.
@@ -2219,7 +2227,7 @@ abstract class database {
      * @param bool $text Specifies if the original column is one TEXT (CLOB) column (true). Defaults to false.
      * @return string The piece of SQL code to be used in your statement.
      */
-    public function sql_cast_char2int($fieldname, $text=false) {
+    public function sql_cast_char2int($fieldname, $text = false) {
         return ' ' . $fieldname . ' ';
     }
 
@@ -2233,7 +2241,7 @@ abstract class database {
      * @param bool $text Specifies if the original column is one TEXT (CLOB) column (true). Defaults to false.
      * @return string The piece of SQL code to be used in your statement.
      */
-    public function sql_cast_char2real($fieldname, $text=false) {
+    public function sql_cast_char2real($fieldname, $text = false) {
         return ' ' . $fieldname . ' ';
     }
 
@@ -2260,7 +2268,7 @@ abstract class database {
      * @param int $numchars Number of chars to use for the ordering (defaults to 32).
      * @return string The piece of SQL code to be used in your statement.
      */
-    public function sql_compare_text($fieldname, $numchars=32) {
+    public function sql_compare_text($fieldname, $numchars = 32) {
         return $this->sql_order_by_text($fieldname, $numchars);
     }
 
@@ -2318,8 +2326,8 @@ abstract class database {
      * @return string The escaped sql LIKE string.
      */
     public function sql_like_escape($text, $escapechar = '\\') {
-        $text = str_replace('_', $escapechar.'_', $text);
-        $text = str_replace('%', $escapechar.'%', $text);
+        $text = str_replace('_', $escapechar . '_', $text);
+        $text = str_replace('%', $escapechar . '%', $text);
         return $text;
     }
 
@@ -2342,7 +2350,7 @@ abstract class database {
      * @param array  $elements The array of strings to be concatenated.
      * @return string The SQL to concatenate the strings.
      */
-    abstract public function sql_concat_join($separator="' '", $elements=array());
+    abstract public function sql_concat_join($separator = "' '", $elements = []);
 
     /**
      * Return SQL for performing group concatenation on given field/expression
@@ -2363,7 +2371,7 @@ abstract class database {
      * @param string $last User's last name (default:'lastname').
      * @return string The SQL to concatenate strings.
      */
-    function sql_fullname($first='firstname', $last='lastname') {
+    function sql_fullname($first = 'firstname', $last = 'lastname') {
         return $this->sql_concat($first, "' '", $last);
     }
 
@@ -2378,7 +2386,7 @@ abstract class database {
      * @param int $numchars The number of chars to use for the ordering (defaults to 32).
      * @return string The piece of SQL code to be used in your statement.
      */
-    public function sql_order_by_text($fieldname, $numchars=32) {
+    public function sql_order_by_text($fieldname, $numchars = 32) {
         return $fieldname;
     }
 
@@ -2413,7 +2421,7 @@ abstract class database {
      * @param mixed $length Optional integer or expression evaluating to integer.
      * @return string The sql substring extraction fragment.
      */
-    public function sql_substr($expr, $start, $length=false) {
+    public function sql_substr($expr, $start, $length = false) {
         if (count(func_get_args()) < 2) {
             throw new coding_exception(__METHOD__ . '() requires at least two parameters', 'Originally this function was only returning name of SQL substring function, it now requires all parameters.');
         }
@@ -2583,9 +2591,9 @@ abstract class database {
             return $selects[0];
         }
         static $aliascnt = 0;
-        $rv = '('.$selects[0].')';
+        $rv = '(' . $selects[0] . ')';
         for ($i = 1; $i < count($selects); $i++) {
-            $rv .= " INTERSECT (".$selects[$i].')';
+            $rv .= " INTERSECT (" . $selects[$i] . ')';
         }
         return $rv;
     }
@@ -2615,29 +2623,28 @@ abstract class database {
         }
 
         // NOTE: override this methods if following standard compliant SQL
-        //       does not work for your driver.
+        // does not work for your driver.
 
         // Enclose the column name by the proper quotes if it's a reserved word.
         $columnname = $this->get_manager()->generator->getEncQuoted($column->name);
 
         $searchsql = $this->sql_like($columnname, '?');
-        $searchparam = '%'.$this->sql_like_escape($search).'%';
+        $searchparam = '%' . $this->sql_like_escape($search) . '%';
 
-        $sql = "UPDATE {".$table."}
+        $sql = "UPDATE {" . $table . "}
                        SET $columnname = REPLACE($columnname, ?, ?)
                      WHERE $searchsql";
 
         if ($column->meta_type === 'X') {
-            $this->execute($sql, array($search, $replace, $searchparam));
-
+            $this->execute($sql, [$search, $replace, $searchparam]);
         } else if ($column->meta_type === 'C') {
             if (core_text::strlen($search) < core_text::strlen($replace)) {
                 $colsize = $column->max_length;
-                $sql = "UPDATE {".$table."}
+                $sql = "UPDATE {" . $table . "}
                        SET $columnname = " . $this->sql_substr("REPLACE(" . $columnname . ", ?, ?)", 1, $colsize) . "
                      WHERE $searchsql";
             }
-            $this->execute($sql, array($search, $replace, $searchparam));
+            $this->execute($sql, [$search, $replace, $searchparam]);
         }
     }
 
@@ -2838,7 +2845,7 @@ abstract class database {
         }
 
         // now enable transactions again
-        $this->transactions = array();
+        $this->transactions = [];
         $this->force_rollback = false;
 
         \core\event\manager::database_transaction_rolledback();

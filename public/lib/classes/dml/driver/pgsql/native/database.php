@@ -48,7 +48,7 @@ class database extends \core\dml\database {
         'disable',
         'prefer',
         'require',
-        'verify-full'
+        'verify-full',
     ];
 
     /** @var array $serverinfo cache */
@@ -140,9 +140,9 @@ class database extends \core\dml\database {
      * @throws moodle_exception
      * @throws connection_exception if error
      */
-    public function raw_connect(string $dbhost, string $dbuser, string $dbpass, string $dbname, $prefix, ?array $dboptions=null): bool {
+    public function raw_connect(string $dbhost, string $dbuser, string $dbpass, string $dbname, $prefix, ?array $dboptions = null): bool {
         if ($prefix == '' and !$this->external) {
-            //Enforce prefixes for everybody but mysql
+            // Enforce prefixes for everybody but mysql
             throw new dml_exception('prefixcannotbeempty', $this->get_dbfamily());
         }
 
@@ -161,11 +161,11 @@ class database extends \core\dml\database {
             $connection = "user='$this->dbuser' password='$pass' dbname='$this->dbname'";
             if (strpos($this->dboptions['dbsocket'], '/') !== false) {
                 // A directory was specified as the socket location.
-                $connection .= " host='".$this->dboptions['dbsocket']."'";
+                $connection .= " host='" . $this->dboptions['dbsocket'] . "'";
             }
             if (!empty($this->dboptions['dbport'])) {
                 // A port as specified, add it to the connection as it's used as part of the socket path.
-                $connection .= " port ='".$this->dboptions['dbport']."'";
+                $connection .= " port ='" . $this->dboptions['dbport'] . "'";
             }
         } else {
             $this->dboptions['dbsocket'] = '';
@@ -175,18 +175,18 @@ class database extends \core\dml\database {
             } else if (empty($this->dboptions['dbport'])) {
                 $port = "port ='5432'";
             } else {
-                $port = "port ='".$this->dboptions['dbport']."'";
+                $port = "port ='" . $this->dboptions['dbport'] . "'";
             }
             $connection = "host='$this->dbhost' $port user='$this->dbuser' password='$pass' dbname='$this->dbname'";
         }
 
         if (!empty($this->dboptions['connecttimeout'])) {
-            $connection .= " connect_timeout=".$this->dboptions['connecttimeout'];
+            $connection .= " connect_timeout=" . $this->dboptions['connecttimeout'];
         }
 
         if (empty($this->dboptions['dbhandlesoptions'])) {
             // ALTER USER and ALTER DATABASE are overridden by these settings.
-            $options = array('--client_encoding=utf8', '--standard_conforming_strings=on');
+            $options = ['--client_encoding=utf8', '--standard_conforming_strings=on'];
             // Select schema if specified, otherwise the first one wins.
             if (!empty($this->dboptions['dbschema'])) {
                 $options[] = "-c search_path=" . addcslashes($this->dboptions['dbschema'], "'\\");
@@ -328,7 +328,6 @@ class database extends \core\dml\database {
         }
 
         return $this->read_replica_can_use_readonly($type, $sql);
-
     }
 
     /**
@@ -339,7 +338,7 @@ class database extends \core\dml\database {
      * @param mixed $extrainfo driver specific extra information
      * @return void
      */
-    protected function query_start($sql, ?array $params, $type, $extrainfo=null) {
+    protected function query_start($sql, ?array $params, $type, $extrainfo = null) {
         $this->read_replica_query_start($sql, $params, $type, $extrainfo);
         // pgsql driver tends to send debug to output, we do not need that.
         $this->last_error_reporting = error_reporting(0);
@@ -355,12 +354,14 @@ class database extends \core\dml\database {
         error_reporting($this->last_error_reporting);
         try {
             $this->read_replica_query_end($result);
-            if ($this->savepointpresent &&
+            if (
+                $this->savepointpresent &&
                     !in_array(
                         $this->last_type,
                         [SQL_QUERY_AUX, SQL_QUERY_AUX_READONLY, SQL_QUERY_SELECT],
                         true
-                    )) {
+                    )
+            ) {
                 $res = @pg_query($this->pgsql, "RELEASE SAVEPOINT moodle_pg_savepoint; SAVEPOINT moodle_pg_savepoint");
                 if ($res) {
                     pg_free_result($res);
@@ -414,11 +415,11 @@ class database extends \core\dml\database {
      * @param bool $usecache if true, returns list of cached tables.
      * @return array of table names in lowercase and without prefix
      */
-    public function get_tables($usecache=true) {
+    public function get_tables($usecache = true) {
         if ($usecache and $this->tables !== null) {
             return $this->tables;
         }
-        $this->tables = array();
+        $this->tables = [];
         $prefix = str_replace('_', '|_', $this->prefix);
         $sql = "SELECT c.relname
                   FROM pg_catalog.pg_class c
@@ -461,10 +462,10 @@ class database extends \core\dml\database {
      * @throws coding_exception | dml_exception
      * @return array A list containing the constructed sql fragment and an array of parameters.
      */
-    public function get_in_or_equal($items, $type=SQL_PARAMS_QM, $prefix='param', $equal=true, $onemptyitems=false): array {
+    public function get_in_or_equal($items, $type = SQL_PARAMS_QM, $prefix = 'param', $equal = true, $onemptyitems = false): array {
         // We only interfere if number of items in expression exceeds 16 bit value.
         if (!is_array($items) || count($items) < 65535) {
-            return parent::get_in_or_equal($items, $type, $prefix,  $equal, $onemptyitems);
+            return parent::get_in_or_equal($items, $type, $prefix, $equal, $onemptyitems);
         }
 
         // Determine the type from the first value. We don't need to be very smart here,
@@ -476,9 +477,9 @@ class database extends \core\dml\database {
 
         if ($type == SQL_PARAMS_QM) {
             if ($equal) {
-                $sql = 'IN (VALUES ('.implode('),(', array_fill(0, count($items), '?'.$cast)).'))';
+                $sql = 'IN (VALUES (' . implode('),(', array_fill(0, count($items), '?' . $cast)) . '))';
             } else {
-                $sql = 'NOT IN (VALUES ('.implode('),(', array_fill(0, count($items), '?'.$cast)).'))';
+                $sql = 'NOT IN (VALUES (' . implode('),(', array_fill(0, count($items), '?' . $cast)) . '))';
             }
             $params = array_values($items);
         } else if ($type == SQL_PARAMS_NAMED) {
@@ -488,14 +489,14 @@ class database extends \core\dml\database {
             $params = [];
             $sql = [];
             foreach ($items as $item) {
-                $param = $prefix.$this->inorequaluniqueindex++;
+                $param = $prefix . $this->inorequaluniqueindex++;
                 $params[$param] = $item;
-                $sql[] = ':'.$param.$cast;
+                $sql[] = ':' . $param . $cast;
             }
             if ($equal) {
-                $sql = 'IN (VALUES ('.implode('),(', $sql).'))';
+                $sql = 'IN (VALUES (' . implode('),(', $sql) . '))';
             } else {
-                $sql = 'NOT IN (VALUES ('.implode('),(', $sql).'))';
+                $sql = 'NOT IN (VALUES (' . implode('),(', $sql) . '))';
             }
         } else {
             throw new dml_exception('typenotimplement');
@@ -509,8 +510,8 @@ class database extends \core\dml\database {
      * @return array of arrays
      */
     public function get_indexes($table) {
-        $indexes = array();
-        $tablename = $this->prefix.$table;
+        $indexes = [];
+        $tablename = $this->prefix . $table;
 
         $sql = "SELECT i.*
                   FROM pg_catalog.pg_indexes i
@@ -526,14 +527,14 @@ class database extends \core\dml\database {
             while ($row = pg_fetch_assoc($result)) {
                 // The index definition could be generated schema-qualifying the target table name
                 // for safety, depending on the pgsql version (CVE-2018-1058).
-                if (!preg_match('/CREATE (|UNIQUE )INDEX ([^\s]+) ON (|'.$row['schemaname'].'\.)'.$tablename.' USING ([^\s]+) \(([^\)]+)\)/i', $row['indexdef'], $matches)) {
+                if (!preg_match('/CREATE (|UNIQUE )INDEX ([^\s]+) ON (|' . $row['schemaname'] . '\.)' . $tablename . ' USING ([^\s]+) \(([^\)]+)\)/i', $row['indexdef'], $matches)) {
                     continue;
                 }
                 if ($matches[5] === 'id') {
                     continue;
                 }
                 $columns = explode(',', $matches[5]);
-                foreach ($columns as $k=>$column) {
+                foreach ($columns as $k => $column) {
                     $column = trim($column);
                     if ($pos = strpos($column, ' ')) {
                         // index type is separated by space
@@ -541,8 +542,8 @@ class database extends \core\dml\database {
                     }
                     $columns[$k] = $this->trim_quotes($column);
                 }
-                $indexes[$row['indexname']] = array('unique'=>!empty($matches[1]),
-                                              'columns'=>$columns);
+                $indexes[$row['indexname']] = ['unique' => !empty($matches[1]),
+                                              'columns' => $columns];
             }
             pg_free_result($result);
         }
@@ -556,9 +557,9 @@ class database extends \core\dml\database {
      * @return database_column_info[] array of database_column_info objects indexed with column names
      */
     protected function fetch_columns(string $table): array {
-        $structure = array();
+        $structure = [];
 
-        $tablename = $this->prefix.$table;
+        $tablename = $this->prefix . $table;
 
         $sql = "SELECT a.attnum, a.attname AS field, t.typname AS type, a.attlen, a.atttypmod, a.attnotnull, a.atthasdef,
                        CASE WHEN a.atthasdef THEN pg_catalog.pg_get_expr(d.adbin, d.adrelid) ELSE '' END AS adsrc
@@ -576,10 +577,9 @@ class database extends \core\dml\database {
         $this->query_end($result);
 
         if (!$result) {
-            return array();
+            return [];
         }
         while ($rawcolumn = pg_fetch_object($result)) {
-
             $info = new stdClass();
             $info->name = $rawcolumn->field;
             $matches = null;
@@ -605,22 +605,21 @@ class database extends \core\dml\database {
                 $info->primary_key   = false;
                 $info->binary        = false;
                 $info->unsigned      = null;
-                $info->auto_increment= false;
+                $info->auto_increment = false;
                 $info->unique        = null;
-
             } else if (preg_match('/int(\d)/i', $rawcolumn->type, $matches)) {
                 $info->type = 'int';
                 if (strpos($rawcolumn->adsrc ?? '', 'nextval') === 0) {
                     $info->primary_key   = true;
                     $info->meta_type     = 'R';
                     $info->unique        = true;
-                    $info->auto_increment= true;
+                    $info->auto_increment = true;
                     $info->has_default   = false;
                 } else {
                     $info->primary_key   = false;
                     $info->meta_type     = 'I';
                     $info->unique        = null;
-                    $info->auto_increment= false;
+                    $info->auto_increment = false;
                     $info->has_default   = ($rawcolumn->atthasdef === 't');
                 }
                 // Return number of decimals, not bytes here.
@@ -651,14 +650,13 @@ class database extends \core\dml\database {
                 }
                 $info->binary        = false;
                 $info->unsigned      = false;
-
             } else if ($rawcolumn->type === 'numeric') {
                 $info->type = $rawcolumn->type;
                 $info->meta_type     = 'N';
                 $info->primary_key   = false;
                 $info->binary        = false;
                 $info->unsigned      = null;
-                $info->auto_increment= false;
+                $info->auto_increment = false;
                 $info->unique        = null;
                 $info->not_null      = ($rawcolumn->attnotnull === 't');
                 $info->has_default   = ($rawcolumn->atthasdef === 't');
@@ -676,14 +674,13 @@ class database extends \core\dml\database {
                 }
                 $info->max_length    = $rawcolumn->atttypmod >> 16;
                 $info->scale         = ($rawcolumn->atttypmod & 0xFFFF) - 4;
-
             } else if (preg_match('/float(\d)/i', $rawcolumn->type, $matches)) {
                 $info->type = 'float';
                 $info->meta_type     = 'N';
                 $info->primary_key   = false;
                 $info->binary        = false;
                 $info->unsigned      = null;
-                $info->auto_increment= false;
+                $info->auto_increment = false;
                 $info->unique        = null;
                 $info->not_null      = ($rawcolumn->attnotnull === 't');
                 $info->has_default   = ($rawcolumn->atthasdef === 't');
@@ -709,7 +706,6 @@ class database extends \core\dml\database {
                     $info->max_length = 4;
                     $info->scale      = 2;
                 }
-
             } else if ($rawcolumn->type === 'text') {
                 $info->type          = $rawcolumn->type;
                 $info->meta_type     = 'X';
@@ -731,9 +727,8 @@ class database extends \core\dml\database {
                 $info->primary_key   = false;
                 $info->binary        = false;
                 $info->unsigned      = null;
-                $info->auto_increment= false;
+                $info->auto_increment = false;
                 $info->unique        = null;
-
             } else if ($rawcolumn->type === 'bytea') {
                 $info->type          = $rawcolumn->type;
                 $info->meta_type     = 'B';
@@ -745,9 +740,8 @@ class database extends \core\dml\database {
                 $info->primary_key   = false;
                 $info->binary        = true;
                 $info->unsigned      = null;
-                $info->auto_increment= false;
+                $info->auto_increment = false;
                 $info->unique        = null;
-
             }
 
             $structure[$info->name] = new database_column_info($info);
@@ -770,14 +764,12 @@ class database extends \core\dml\database {
 
         if (is_bool($value)) { // Always, convert boolean to int
             $value = (int)$value;
-
         } else if ($column->meta_type === 'B') {
             if (!is_null($value)) {
                 // standard_conforming_strings must be enabled, otherwise pg_escape_bytea() will double escape
                 // \ and produce data errors.  This is set on the connection.
                 $value = pg_escape_bytea($this->pgsql, $value);
             }
-
         } else if ($value === '') {
             if ($column->meta_type === 'I' or $column->meta_type === 'F' or $column->meta_type === 'N') {
                 $value = 0; // prevent '' problems in numeric fields
@@ -850,8 +842,8 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function execute($sql, ?array $params=null) {
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+    public function execute($sql, ?array $params = null) {
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
 
         if (strpos($sql, ';') !== false) {
             throw new coding_exception('moodle_database::execute() Multiple sql statements found or bound parameters not used properly in query!');
@@ -882,9 +874,9 @@ class database extends \core\dml\database {
      * @return recordset instance
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_recordset_sql($sql, ?array $params=null, $limitfrom=0, $limitnum=0) {
+    public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
 
-        list($limitfrom, $limitnum) = $this->normalise_limit_from_num($limitfrom, $limitnum);
+        [$limitfrom, $limitnum] = $this->normalise_limit_from_num($limitfrom, $limitnum);
 
         if ($limitnum) {
             $sql .= " LIMIT $limitnum";
@@ -893,7 +885,7 @@ class database extends \core\dml\database {
             $sql .= " OFFSET $limitfrom";
         }
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
 
         // For any query that doesn't explicitly specify a limit, we must use cursors to stop it
         // loading the entire thing (unless the config setting is turned off).
@@ -1028,7 +1020,7 @@ class database extends \core\dml\database {
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
     public function get_records_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
-        list($limitfrom, $limitnum) = $this->normalise_limit_from_num($limitfrom, $limitnum);
+        [$limitfrom, $limitnum] = $this->normalise_limit_from_num($limitfrom, $limitnum);
 
         if ($limitnum) {
             $sql .= " LIMIT $limitnum";
@@ -1037,14 +1029,14 @@ class database extends \core\dml\database {
             $sql .= " OFFSET $limitfrom";
         }
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
         $this->query_start($sql, $params, SQL_QUERY_SELECT);
         $result = pg_query_params($this->pgsql, $sql, $params);
         $this->query_end($result);
 
         // find out if there are any blobs
         $numfields = pg_num_fields($result);
-        $blobs = array();
+        $blobs = [];
         for ($i = 0; $i < $numfields; $i++) {
             $type = $this->pg_field_type($result, $i);
             if ($type == 'bytea') {
@@ -1078,8 +1070,8 @@ class database extends \core\dml\database {
      * @return array of values
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function get_fieldset_sql($sql, ?array $params=null) {
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+    public function get_fieldset_sql($sql, ?array $params = null) {
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_SELECT);
         $result = pg_query_params($this->pgsql, $sql, $params);
@@ -1108,7 +1100,7 @@ class database extends \core\dml\database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function insert_record_raw($table, $params, $returnid=true, $bulk=false, $customsequence=false) {
+    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false) {
         if (!is_array($params)) {
             $params = (array)$params;
         }
@@ -1134,11 +1126,11 @@ class database extends \core\dml\database {
         }
 
         $fields = implode(',', array_keys($params));
-        $values = array();
+        $values = [];
         $i = 1;
         foreach ($params as $value) {
             $this->detect_objects($value);
-            $values[] = "\$".$i++;
+            $values[] = "\$" . $i++;
         }
         $values = implode(',', $values);
 
@@ -1172,7 +1164,7 @@ class database extends \core\dml\database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function insert_record($table, $dataobject, $returnid=true, $bulk=false) {
+    public function insert_record($table, $dataobject, $returnid = true, $bulk = false) {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
@@ -1180,9 +1172,9 @@ class database extends \core\dml\database {
             throw new dml_exception('ddltablenotexist', $table);
         }
 
-        $cleaned = array();
+        $cleaned = [];
 
-        foreach ($dataobject as $field=>$value) {
+        foreach ($dataobject as $field => $value) {
             if ($field === 'id') {
                 continue;
             }
@@ -1194,7 +1186,6 @@ class database extends \core\dml\database {
         }
 
         return $this->insert_record_raw($table, $cleaned, $returnid, $bulk);
-
     }
 
     /**
@@ -1230,7 +1221,7 @@ class database extends \core\dml\database {
 
         $fields = null;
         $count = 0;
-        $chunk = array();
+        $chunk = [];
         foreach ($dataobjects as $dataobject) {
             if (!is_array($dataobject) and !is_object($dataobject)) {
                 throw new coding_exception('insert_records() passed invalid record object');
@@ -1249,7 +1240,7 @@ class database extends \core\dml\database {
 
             if ($count === $chunksize) {
                 $this->insert_chunk($table, $chunk, $columns);
-                $chunk = array();
+                $chunk = [];
                 $count = 0;
             }
         }
@@ -1270,18 +1261,18 @@ class database extends \core\dml\database {
      */
     protected function insert_chunk($table, array $chunk, array $columns) {
         $i = 1;
-        $params = array();
-        $values = array();
+        $params = [];
+        $values = [];
         foreach ($chunk as $dataobject) {
-            $vals = array();
+            $vals = [];
             foreach ($columns as $field => $column) {
                 $params[] = $this->normalise_value($column, $dataobject[$field]);
-                $vals[] = "\$".$i++;
+                $vals[] = "\$" . $i++;
             }
-            $values[] = '('.implode(',', $vals).')';
+            $values[] = '(' . implode(',', $vals) . ')';
         }
 
-        $fieldssql = '('.implode(',', array_keys($columns)).')';
+        $fieldssql = '(' . implode(',', array_keys($columns)) . ')';
         $valuessql = implode(',', $values);
 
         $sql = "INSERT INTO {$this->prefix}$table $fieldssql VALUES $valuessql";
@@ -1304,9 +1295,9 @@ class database extends \core\dml\database {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
-        $cleaned = array();
+        $cleaned = [];
 
-        foreach ($dataobject as $field=>$value) {
+        foreach ($dataobject as $field => $value) {
             $this->detect_objects($value);
             if (!isset($columns[$field])) {
                 continue;
@@ -1326,7 +1317,7 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function update_record_raw($table, $params, $bulk=false) {
+    public function update_record_raw($table, $params, $bulk = false) {
         $params = (array)$params;
 
         if (!isset($params['id'])) {
@@ -1341,16 +1332,16 @@ class database extends \core\dml\database {
 
         $i = 1;
 
-        $sets = array();
-        foreach ($params as $field=>$value) {
+        $sets = [];
+        foreach ($params as $field => $value) {
             $this->detect_objects($value);
-            $sets[] = "$field = \$".$i++;
+            $sets[] = "$field = \$" . $i++;
         }
 
         $params[] = $id; // last ? in WHERE condition
 
         $sets = implode(',', $sets);
-        $sql = "UPDATE {$this->prefix}$table SET $sets WHERE id=\$".$i;
+        $sql = "UPDATE {$this->prefix}$table SET $sets WHERE id=\$" . $i;
 
         $this->query_start($sql, $params, SQL_QUERY_UPDATE);
         $result = pg_query_params($this->pgsql, $sql, $params);
@@ -1374,13 +1365,13 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function update_record($table, $dataobject, $bulk=false) {
+    public function update_record($table, $dataobject, $bulk = false) {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
-        $cleaned = array();
+        $cleaned = [];
 
-        foreach ($dataobject as $field=>$value) {
+        foreach ($dataobject as $field => $value) {
             if (!isset($columns[$field])) {
                 continue;
             }
@@ -1404,16 +1395,16 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function set_field_select($table, $newfield, $newvalue, $select, ?array $params=null) {
+    public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null) {
 
         if ($select) {
             $select = "WHERE $select";
         }
         if (is_null($params)) {
-            $params = array();
+            $params = [];
         }
-        list($select, $params, $type) = $this->fix_sql_params($select, $params);
-        $i = count($params)+1;
+        [$select, $params, $type] = $this->fix_sql_params($select, $params);
+        $i = count($params) + 1;
 
         // Get column metadata
         $columns = $this->get_columns($table);
@@ -1443,13 +1434,13 @@ class database extends \core\dml\database {
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function delete_records_select($table, $select, ?array $params=null) {
+    public function delete_records_select($table, $select, ?array $params = null) {
         if ($select) {
             $select = "WHERE $select";
         }
         $sql = "DELETE FROM {$this->prefix}$table $select";
 
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
 
         $this->query_start($sql, $params, SQL_QUERY_UPDATE);
         $result = pg_query_params($this->pgsql, $sql, $params);
@@ -1499,11 +1490,11 @@ class database extends \core\dml\database {
         return "CAST({$field} AS VARCHAR)";
     }
 
-    public function sql_cast_char2int($fieldname, $text=false) {
+    public function sql_cast_char2int($fieldname, $text = false) {
         return ' CAST(' . $fieldname . ' AS INT) ';
     }
 
-    public function sql_cast_char2real($fieldname, $text=false) {
+    public function sql_cast_char2real($fieldname, $text = false) {
         return " $fieldname::real ";
     }
 
@@ -1517,8 +1508,8 @@ class database extends \core\dml\database {
         return " '' || $s ";
     }
 
-    public function sql_concat_join($separator="' '", $elements=array()) {
-        for ($n=count($elements)-1; $n > 0 ; $n--) {
+    public function sql_concat_join($separator = "' '", $elements = []) {
+        for ($n = count($elements) - 1; $n > 0; $n--) {
             array_splice($elements, $n, 0, $separator);
         }
         $s = implode(' || ', $elements);
@@ -1588,8 +1579,8 @@ class database extends \core\dml\database {
      */
     public function get_session_lock($rowid, $timeout) {
         // NOTE: there is a potential locking problem for database running
-        //       multiple instances of moodle, we could try to use pg_advisory_lock(int, int),
-        //       luckily there is not a big chance that they would collide
+        // multiple instances of moodle, we could try to use pg_advisory_lock(int, int),
+        // luckily there is not a big chance that they would collide
         if (!$this->session_lock_supported()) {
             return;
         }

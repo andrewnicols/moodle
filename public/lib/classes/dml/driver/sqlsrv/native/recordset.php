@@ -3,7 +3,7 @@
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
+// the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
 // Moodle is distributed in the hope that it will be useful,
@@ -26,7 +26,6 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
 class recordset extends \core\dml\recordset {
-
     protected $rsrc;
     protected $current;
 
@@ -58,9 +57,9 @@ class recordset extends \core\dml\recordset {
         }
         // This might eat memory pretty quickly...
         raise_memory_limit('2G');
-        $this->buffer = array();
+        $this->buffer = [];
 
-        while($next = $this->fetch_next()) {
+        while ($next = $this->fetch_next()) {
             $this->buffer[] = $next;
         }
     }
@@ -96,7 +95,7 @@ class recordset extends \core\dml\recordset {
         unset($row['sqlsrvrownumber']);
         $row = array_change_key_case($row, CASE_LOWER);
         // Moodle expects everything from DB as strings.
-        foreach ($row as $k=>$v) {
+        foreach ($row as $k => $v) {
             if (is_null($v)) {
                 continue;
             }

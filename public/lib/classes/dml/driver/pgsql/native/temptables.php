@@ -35,7 +35,7 @@ class temptables extends \core\dml\temptables {
     public function update_stats() {
         $temptables = $this->get_temptables();
         foreach ($temptables as $temptablename) {
-            $this->mdb->execute("ANALYZE {".$temptablename."}");
+            $this->mdb->execute("ANALYZE {" . $temptablename . "}");
         }
     }
 }
