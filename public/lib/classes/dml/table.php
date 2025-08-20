@@ -28,17 +28,8 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class table {
-    /** @var string Name of the table that this class represents */
-    protected $tablename;
-
-    /** @var string Table alias */
-    protected $tablealias;
-
-    /** @var string Prefix to place before each field */
-    protected $fieldprefix;
-
-    /** @var array List of fields */
-    protected $fields;
+    /** @var string[] List of fields */
+    protected ?array $fields = null;
 
     /**
      * Constructor for the table class.
@@ -47,10 +38,14 @@ class table {
      * @param   string  $tablealias The alias to use when selecting the table
      * @param   string  $fieldprefix The prefix to use when selecting fields.
      */
-    public function __construct(string $tablename, string $tablealias, string $fieldprefix) {
-        $this->tablename = $tablename;
-        $this->tablealias = $tablealias;
-        $this->fieldprefix = $fieldprefix;
+    public function __construct(
+        /** @var string Name of the table that this class represents */
+        protected readonly string $tablename,
+        /** @var string Table alias */
+        protected readonly string $tablealias,
+        /** @var string Prefix to place before each field */
+        protected readonly string $fieldprefix,
+    ) {
     }
 
     /**
@@ -65,7 +60,7 @@ class table {
     /**
      * Get the list of fields in a table for use in preloading fields.
      *
-     * @return  array       The list of columns in a table. The array key is the column name with an applied prefix.
+     * @return  array The list of columns in a table. The array key is the column name with an applied prefix.
      */
     protected function get_fieldlist(): array {
         global $DB;
@@ -87,14 +82,19 @@ class table {
      *
      * This function is intended to be used in combination with extract_from_result().
      *
-     * @return  string      The SQL to use in the SELECT
+     * @return string The SQL to use in the SELECT
      */
     public function get_field_select(): string {
         $fieldlist = $this->get_fieldlist();
 
-        return implode(', ', array_map(function ($fieldname, $fieldalias) {
-            return "{$this->tablealias}.{$fieldname} AS {$fieldalias}";
-        }, $fieldlist, array_keys($fieldlist)));
+        return implode(
+            ', ',
+            array_map(
+                fn ($fieldname, $fieldalias): string => "{$this->tablealias}.{$fieldname} AS {$fieldalias}",
+                $fieldlist,
+                array_keys($fieldlist)
+            ),
+        );
     }
 
     /**
@@ -102,8 +102,8 @@ class table {
      *
      * This function is intended to be used in combination with get_field_select().
      *
-     * @param   stdClass    $result The result retrieved from the database with fields to be extracted
-     * @return  stdClass    The extracted result
+     * @param   stdClass $result The result retrieved from the database with fields to be extracted
+     * @return  stdClass The extracted result
      */
     public function extract_from_result(stdClass $result): stdClass {
         $record = new stdClass();

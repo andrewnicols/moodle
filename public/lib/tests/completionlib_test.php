@@ -2237,7 +2237,7 @@ final class completionlib_test extends advanced_testcase {
     }
 }
 
-class core_completionlib_fake_recordset implements Iterator {
+class core_completionlib_fake_recordset extends \core\dml\recordset {
     protected $closed;
     protected $values, $index;
 

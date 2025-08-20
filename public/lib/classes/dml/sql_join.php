@@ -35,29 +35,6 @@ namespace core\dml;
  */
 class sql_join {
     /**
-     * @var string joins.
-     */
-    public $joins;
-
-    /**
-     * @var string wheres.
-     */
-    public $wheres;
-
-    /**
-     * @var array params.
-     */
-    public $params;
-
-    /**
-     * @var bool if true this join is guaranteed to never match any rows.
-     *      In this case, the calling code may be able to completely
-     *      skip doing the database query.
-     * @since Moodle 3.9/3.8.3/3.7.6.
-     */
-    public $cannotmatchanyrows;
-
-    /**
      * Create an object that contains sql join fragments.
      *
      * Note, even if you set $cannotmatchanyrows to true, it is
@@ -68,9 +45,19 @@ class sql_join {
      * @param string $joins The join sql fragment.
      * @param string $wheres The where sql fragment.
      * @param array $params Any parameter values.
-     * @param bool $cannotmatchanyrows If true, this join is guaranteed to match no rows. See comment on the field above.
+     * @param bool $cannotmatchanyrows If true, this join is guaranteed to match no rows.
+     *          In this case, the calling code may be able to completely skip doing the database query.
      */
-    public function __construct($joins = '', $wheres = '', $params = [], $cannotmatchanyrows = false) {
+    public function __construct(
+        /** @var string The JOIN SQL fragment */
+        public string $joins = '',
+        /** @var string The WHERE SQL fragment */
+        public string $wheres = '',
+        /** @var array Parameters for the join */
+        public array $params = [],
+        /** @var bool Whether a join is guaranteed to NOT match any rows */
+        public bool $cannotmatchanyrows = false,
+    ) {
         $this->joins = $joins;
         $this->wheres = $wheres;
         $this->params = $params;

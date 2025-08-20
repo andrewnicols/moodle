@@ -30,16 +30,17 @@ use core\dml\transaction;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class transaction_exception extends exception {
-    /** @var transaction An instance of a transaction.*/
-    public $transaction;
-
     /**
-     * Constructor
-     * @param ?string $debuginfo Optional debugging information.
-     * @param ?transaction $transaction The instance of the transaction.(Optional)
+     * Construct a new transaction exception.
+     *
+     * @param ?string $debuginfo Optional debugging information
+     * @param ?transaction $transaction The instance of the transaction
      */
-    function __construct($debuginfo = null, $transaction = null) {
-        $this->transaction = $transaction; // TODO: MDL-20625 use the info from $transaction for debugging purposes
+    public function __construct(
+        ?string $debuginfo = null,
+        /** @var transaction An instance of a transaction */
+        public readonly ?transaction $transaction = null,
+    ) {
         parent::__construct('dmltransactionexception', null, $debuginfo);
     }
 }

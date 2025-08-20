@@ -25,45 +25,25 @@ namespace core\dml\driver\auroramysql\native;
  */
 class database extends \core\dml\driver\mysqli\native\database {
     /** @var bool is compressed row format supported cache */
-    protected $compressedrowformatsupported = false;
+    protected ?bool $compressedrowformatsupported = false;
 
-    /**
-     * Returns localised database type name.
-     *
-     * Returns localised database type name. Can be used before connect().
-     * @return string
-     */
-    public function get_name(): ?string {
+    #[\Override]
+    public function get_name(): string {
         return get_string('nativeauroramysql', 'install');
     }
 
-    /**
-     * Returns localised database configuration help.
-     *
-     * Returns localised database configuration help. Can be used before connect().
-     * @return string
-     */
-    public function get_configuration_help(): ?string {
+    #[\Override]
+    public function get_configuration_help(): string {
         return get_string('nativeauroramysql', 'install');
     }
 
-    /**
-     * Returns the database vendor.
-     *
-     * Returns the database vendor. Can be used before connect().
-     * @return string The db vendor name, usually the same as db family name.
-     */
-    public function get_dbvendor(): ?string {
+    #[\Override]
+    public function get_dbvendor(): string {
         return 'auroramysql';
     }
 
-    /**
-     * Returns more specific database driver type
-     *
-     * Returns more specific database driver type. Can be used before connect().
-     * @return string db type mysqli, pgsql, mssql, sqlsrv
-     */
-    protected function get_dbtype(): ?string {
+    #[\Override]
+    protected function get_dbtype(): string {
         return 'auroramysql';
     }
 
@@ -74,7 +54,8 @@ class database extends \core\dml\driver\mysqli\native\database {
      *
      * @return bool
      */
-    protected function transactions_supported(): ?bool {
+    #[\Override]
+    protected function transactions_supported(): bool {
         if ($this->external) {
             return parent::transactions_supported();
         }

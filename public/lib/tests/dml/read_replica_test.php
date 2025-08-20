@@ -37,7 +37,7 @@ use moodle_read_replica_trait;
  * @copyright  2018 Catalyst IT
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\PHPUnit\Framework\Attributes\CoversClass(moodle_read_replica_trait::class)]
+#[\PHPUnit\Framework\Attributes\CoversClass(read_replica_trait::class)]
 final class read_replica_test extends \database_driver_testcase {
     /** @var float */
     private static $dbreadonlylatency = 0.8;
@@ -158,31 +158,36 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->get_records('table');
+        $DB->get_records('table');
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
         $readsreplica = $DB->perf_get_reads_replica();
         $this->assertGreaterThan(0, $readsreplica);
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->get_records('table2');
+        $DB->get_records('table2');
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
         $readsreplica = $DB->perf_get_reads_replica();
         $this->assertGreaterThan(1, $readsreplica);
         $this->assertNull($DB->get_dbhwrite());
 
         $now = microtime(true);
-        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
+        $DB->insert_record_raw('table', ['name' => 'blah']);
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
 
         if (microtime(true) - $now < self::$dbreadonlylatency) {
-            $handle = $DB->get_records('table');
+            $DB->get_records('table');
+            $handle = $DB->get_db_handle();
             $this->assertEquals('test_rw::test:test', $handle);
             $this->assertEquals($readsreplica, $DB->perf_get_reads_replica());
 
             sleep(1);
         }
 
-        $handle = $DB->get_records('table');
+        $DB->get_records('table');
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
         $this->assertEquals($readsreplica + 1, $DB->perf_get_reads_replica());
     }
@@ -196,16 +201,19 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->get_records('table');
+        $DB->get_records('table');
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
         $readsreplica = $DB->perf_get_reads_replica();
         $this->assertGreaterThan(0, $readsreplica);
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
+        $DB->insert_record_raw('table', ['name' => 'blah']);
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
 
-        $handle = $DB->update_record_raw('table', ['id' => 1, 'name' => 'blah2']);
+        $DB->update_record_raw('table', ['id' => 1, 'name' => 'blah2']);
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals($readsreplica, $DB->perf_get_reads_replica());
     }
@@ -219,29 +227,35 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
+        $DB->insert_record_raw('table', ['name' => 'blah']);
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals(0, $DB->perf_get_reads_replica());
 
-        $handle = $DB->get_records('table');
+        $DB->get_records('table');
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals(0, $DB->perf_get_reads_replica());
 
-        $handle = $DB->get_records_sql("SELECT * FROM {table2} JOIN {table}");
+        $DB->get_records_sql("SELECT * FROM {table2} JOIN {table}");
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals(0, $DB->perf_get_reads_replica());
 
         sleep(1);
 
-        $handle = $DB->get_records('table');
+        $DB->get_records('table');
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
         $this->assertEquals(1, $DB->perf_get_reads_replica());
 
-        $handle = $DB->get_records('table2');
+        $DB->get_records('table2');
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
         $this->assertEquals(2, $DB->perf_get_reads_replica());
 
-        $handle = $DB->get_records_sql("SELECT * FROM {table2} JOIN {table}");
+        $DB->get_records_sql("SELECT * FROM {table2} JOIN {table}");
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
         $this->assertEquals(3, $DB->perf_get_reads_replica());
     }
@@ -256,7 +270,8 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->get_records('temptable1');
+        $DB->get_records('temptable1');
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals(0, $DB->perf_get_reads_replica());
 
@@ -272,7 +287,8 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->get_records('exclude');
+        $DB->get_records('exclude');
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
         $this->assertEquals(0, $DB->perf_get_reads_replica());
     }
@@ -290,11 +306,13 @@ final class read_replica_test extends \database_driver_testcase {
         $skip = false;
         $transaction = $DB->start_delegated_transaction();
         $now = microtime(true);
-        $handle = $DB->get_records_sql("SELECT * FROM {table}");
+        $DB->get_records_sql("SELECT * FROM {table}");
+        $handle = $DB->get_db_handle();
         // Use rw handle during transaction.
         $this->assertEquals('test_rw::test:test', $handle);
 
-        $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
+        $DB->insert_record_raw('table', ['name' => 'blah']);
+        $handle = $DB->get_db_handle();
         // Introduce delay so we can check that table write timestamps
         // are adjusted properly.
         sleep(1);
@@ -303,7 +321,8 @@ final class read_replica_test extends \database_driver_testcase {
         // safeguard from an unaccounted delay that can break this test.
         if (microtime(true) - $now < 1 + self::$dbreadonlylatency) {
             // Not enough time passed, use rw handle.
-            $handle = $DB->get_records_sql("SELECT * FROM {table}");
+            $DB->get_records_sql("SELECT * FROM {table}");
+            $handle = $DB->get_db_handle();
             $this->assertEquals('test_rw::test:test', $handle);
 
             // Make sure enough time passes.
@@ -313,7 +332,8 @@ final class read_replica_test extends \database_driver_testcase {
         }
 
         // Exceeded latency time, use ro handle.
-        $handle = $DB->get_records_sql("SELECT * FROM {table}");
+        $DB->get_records_sql("SELECT * FROM {table}");
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
 
         if ($skip) {
@@ -343,7 +363,8 @@ final class read_replica_test extends \database_driver_testcase {
         // safeguard from an unaccounted delay that can break this test.
         if (microtime(true) - $now < self::$dbreadonlylatency) {
             // Not enough time passed, use rw handle.
-            $handle = $DB->get_records_sql("SELECT * FROM {table}");
+            $DB->get_records_sql("SELECT * FROM {table}");
+            $handle = $DB->get_db_handle();
             $this->assertEquals('test_rw::test:test', $handle);
 
             // Make sure enough time passes.
@@ -353,7 +374,8 @@ final class read_replica_test extends \database_driver_testcase {
         }
 
         // Exceeded latency time, use ro handle.
-        $handle = $DB->get_records_sql("SELECT * FROM {table}");
+        $DB->get_records_sql("SELECT * FROM {table}");
+        $handle = $DB->get_db_handle();
         $this->assert_readonly_handle($handle);
 
         if ($skip) {
@@ -386,8 +408,8 @@ final class read_replica_test extends \database_driver_testcase {
 
             $observers = [
                 [
-                    'eventname'   => \core_tests\eventnittest_executed::class,
-                    'callback'    => function (\core_tests\eventnittest_executed $event) use ($DB, $now, &$called) {
+                    'eventname'   => \core_tests\event\unittest_executed::class,
+                    'callback'    => function (\core_tests\event\unittest_executed $event) use ($DB, $now, &$called) {
                         $called = true;
                         $this->assertFalse($DB->is_transaction_started());
 
@@ -395,7 +417,8 @@ final class read_replica_test extends \database_driver_testcase {
                         // safeguard from an unaccounted delay that can break this test.
                         if (microtime(true) - $now < 1 + self::$dbreadonlylatency) {
                             // Not enough time passed, use rw handle.
-                            $handle = $DB->get_records_sql_p("SELECT * FROM {table}");
+                            $DB->get_records_sql_p("SELECT * FROM {table}");
+                            $handle = $DB->get_db_handle();
                             $this->assertEquals('test_rw::test:test', $handle);
 
                             // Make sure enough time passes.
@@ -405,7 +428,8 @@ final class read_replica_test extends \database_driver_testcase {
                         }
 
                         // Exceeded latency time, use ro handle.
-                        $handle = $DB->get_records_sql_p("SELECT * FROM {table}");
+                        $DB->get_records_sql_p("SELECT * FROM {table}");
+                        $handle = $DB->get_db_handle();
                         $this->assertEquals('test_ro::test:test', $handle);
                     },
                     'internal'    => 0,
@@ -413,11 +437,13 @@ final class read_replica_test extends \database_driver_testcase {
             ];
             \core\event\manager::phpunit_replace_observers($observers);
 
-            $handle = $DB->get_records_sql_p("SELECT * FROM {table}");
+            $DB->get_records_sql_p("SELECT * FROM {table}");
+            $handle = $DB->get_db_handle();
             // Use rw handle during transaction.
             $this->assertEquals('test_rw::test:test', $handle);
 
-            $handle = $DB->insert_record_raw('table', ['name' => 'blah']);
+            $DB->insert_record_raw('table', ['name' => 'blah']);
+            $handle = $DB->get_db_handle();
             // Introduce delay so we can check that table write timestamps
             // are adjusted properly.
             sleep(1);
@@ -443,7 +469,8 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNotNull($DB->get_dbhwrite());
 
-        $handle = $DB->get_records('table');
+        $DB->get_records('table');
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_rw::test:test', $handle);
         $readsreplica = $DB->perf_get_reads_replica();
         $this->assertEquals(0, $readsreplica);
@@ -470,7 +497,8 @@ final class read_replica_test extends \database_driver_testcase {
         $this->assertEquals(0, $DB->perf_get_reads_replica());
         $this->assertNull($DB->get_dbhwrite());
 
-        $handle = $DB->get_records('table');
+        $DB->get_records('table');
+        $handle = $DB->get_db_handle();
         $this->assertEquals('test_ro_ok::test:test', $handle);
         $readsreplica = $DB->perf_get_reads_replica();
         $this->assertEquals(1, $readsreplica);

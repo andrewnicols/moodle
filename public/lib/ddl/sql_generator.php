@@ -174,8 +174,8 @@ abstract class sql_generator {
 
     /**
      * Creates a new sql_generator.
-     * @param moodle_database $mdb The moodle_database object instance.
-     * @param moodle_temptables $temptables The optional moodle_temptables instance, null by default.
+     * @param \core\dml\database $mdb The moodle_database object instance.
+     * @param \core\dml\temptables $temptables The optional moodle_temptables instance, null by default.
      */
     public function __construct($mdb, $temptables = null) {
         $this->prefix         = $mdb->get_prefix();

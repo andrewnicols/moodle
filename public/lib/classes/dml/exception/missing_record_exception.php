@@ -29,27 +29,25 @@ use core\router\response\not_found_response;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class missing_record_exception extends exception implements response_aware_exception {
-    /** @var string A table's name.*/
-    public $tablename;
-    /** @var string An SQL query.*/
-    public $sql;
-    /** @var array The SQL's parameters.*/
-    public $params;
-
     /**
-     * Constructor
+     * Construct a new missing_record exception.
+     *
      * @param string $tablename The table name if known, '' if unknown.
-     * @param string $sql Optional SQL query.
-     * @param array $params Optional SQL query's parameters.
+     * @param ?string $sql Optional SQL query.
+     * @param ?array $params Optional SQL query's parameters.
      */
-    function __construct($tablename, $sql = '', ?array $params = null) {
+    public function __construct(
+        /** @var ?string A table's name */
+        public ?string $tablename,
+        /** @var ?string An SQL query */
+        public readonly string $sql,
+        /** @var ?array The SQL's parameters */
+        public readonly ?array $params,
+    ) {
         // If the debug is disabled the database information should not be displayed.
         if (empty($tablename) || !debugging()) {
             $tablename = null;
         }
-        $this->tablename = $tablename;
-        $this->sql       = $sql;
-        $this->params    = $params;
 
         switch ($tablename) {
             case null:

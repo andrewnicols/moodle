@@ -27,10 +27,11 @@ namespace core\dml\exception;
  */
 class connection_exception extends exception {
     /**
-     * Constructor
-     * @param string $error Optional debugging information.
+     * Construct a new connection exception.
+     *
+     * @param string $error Optional debugging information
      */
-    function __construct($errorinfo) {
+    public function __construct(?string $errorinfo) {
         parent::__construct('dbconnectionfailed', null, $errorinfo);
     }
 }

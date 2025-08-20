@@ -29,11 +29,16 @@ use core\exception\moodle_exception;
  */
 class exception extends moodle_exception {
     /**
+     * Construct a new DML exception.
      * @param string $errorcode The name of the string from error.php to print.
      * @param mixed  $a Extra words and phrases that might be required in the error string.
      * @param string $debuginfo Optional debugging information.
      */
-    function __construct($errorcode, $a = null, $debuginfo = null) {
+    public function __construct(
+        ?string $errorcode,
+        mixed $a = null,
+        ?string $debuginfo = null,
+    ) {
         parent::__construct($errorcode, '', '', $a, $debuginfo);
     }
 }

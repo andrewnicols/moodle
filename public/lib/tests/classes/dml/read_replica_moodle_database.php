@@ -16,6 +16,8 @@
 
 namespace core\tests\dml;
 
+use core\dml\recordset;
+
 /**
  * Database driver test class with moodle_read_replica_trait
  *
@@ -53,17 +55,15 @@ class read_replica_moodle_database extends database {
     }
 
     /**
-     * Begin database transaction
-     * @return void
+     * Begin database transaction.
      */
-    protected function begin_transaction() {
+    protected function begin_transaction(): void {
     }
 
     /**
-     * Commit database transaction
-     * @return void
+     * Commit database transaction.
      */
-    protected function commit_transaction() {
+    protected function commit_transaction(): void {
     }
 
     /**
@@ -99,9 +99,11 @@ class read_replica_moodle_database extends database {
      * @return bool true
      * @throws \Exception
      */
-    public function execute($sql, ?array $params = null) {
-        list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
-        return $this->with_query_start_end($sql, $params, SQL_QUERY_UPDATE);
+    public function execute($sql, ?array $params = null): bool {
+        [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
+        $this->with_query_start_end($sql, $params, SQL_QUERY_UPDATE);
+
+        return true;
     }
 
     /**
@@ -112,9 +114,15 @@ class read_replica_moodle_database extends database {
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
      * @return string $handle handle property
      */
-    public function get_records_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
+    public function get_records_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): array {
         list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
-        return $this->with_query_start_end($sql, $params, SQL_QUERY_SELECT);
+        $this->with_query_start_end($sql, $params, SQL_QUERY_SELECT);
+        return [];
     }
 
     /**
@@ -123,11 +131,18 @@ class read_replica_moodle_database extends database {
      * @param array $params
      * @param int $limitfrom
      * @param int $limitnum
-     * @return bool true
+     * @return recordset
      */
-    public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
+    public function get_recordset_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): recordset {
         list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
-        return $this->with_query_start_end($sql, $params, SQL_QUERY_SELECT);
+        $this->with_query_start_end($sql, $params, SQL_QUERY_SELECT);
+
+        return new read_replica_moodle_recordset_special();
     }
 
     /**
@@ -139,7 +154,7 @@ class read_replica_moodle_database extends database {
      * @param bool $customsequence
      * @return string $handle handle property
      */
-    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false) {
+    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false): bool|int {
         $fields = implode(',', array_keys($params));
         $i = 1;
         foreach ($params as $value) {
@@ -147,7 +162,8 @@ class read_replica_moodle_database extends database {
         }
         $values = implode(',', $values);
         $sql = "INSERT INTO {$this->prefix}$table ($fields) VALUES($values)";
-        return $this->with_query_start_end($sql, $params, SQL_QUERY_INSERT);
+        $this->with_query_start_end($sql, $params, SQL_QUERY_INSERT);
+        return true;
     }
 
     /**
@@ -168,14 +184,16 @@ class read_replica_moodle_database extends database {
         $params[] = $id;
         $sets = implode(',', $sets);
         $sql = "UPDATE {$this->prefix}$table SET $sets WHERE id=\$".$i;
-        return $this->with_query_start_end($sql, $params, SQL_QUERY_UPDATE);
+        $this->with_query_start_end($sql, $params, SQL_QUERY_UPDATE);
+
+        return true;
     }
 
     /**
      * Gets handle property
      * @return string $handle handle property
      */
-    protected function get_db_handle() {
+    public function get_db_handle(): mixed {
         return $this->handle;
     }
 
@@ -184,7 +202,7 @@ class read_replica_moodle_database extends database {
      * @param string $dbh
      * @return void
      */
-    protected function set_db_handle($dbh): void {
+    protected function set_db_handle(mixed $dbh): void {
         $this->handle = $dbh;
     }
 
@@ -210,7 +228,7 @@ class read_replica_moodle_database extends database {
      * Is session lock supported in this driver?
      * @return bool
      */
-    public function session_lock_supported() {
+    public function session_lock_supported(): bool {
         return true;
     }
 }

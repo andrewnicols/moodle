@@ -26,17 +26,20 @@ namespace core\dml\exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class multiple_records_exception extends exception {
-    /** @var string The SQL that ran just before this read error.*/
-    public $sql;
-    /** @var array The SQL's related parameters.*/
-    public $params;
-
     /**
-     * Constructor
+     * Construct a new multiple_records exception.
+     *
+     * This exception is thrown when multiple records are returned from a call which expected a single record.
+     *
      * @param string $sql The SQL that ran just before this read error.
      * @param array $params The SQL's related parameters.(optional)
      */
-    function __construct($sql = '', ?array $params = null) {
+    public function __construct(
+        /** @var string The SQL that ran just before this read error */
+        public readonly string $sql = '',
+        /** @var array The SQL's related parameters */
+        public readonly ?array $params = null,
+    ) {
         $errorinfo = $sql . "\n[" . var_export($params, true) . ']';
         parent::__construct('multiplerecordsfound', null, $errorinfo);
     }

@@ -14,21 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\dml\driver\mysqli\native;
+namespace core\tests\dml;
 
 /**
- * MYSQL specific temptables store. Needed because temporary tables
- * are named differently than normal tables. Also used to be able to retrieve
- * temp table names included in the get_tables() method of the DB.
+ * TODO describe file sample_database
  *
- * @package    core_dml
- * @copyright  2009 onwards Eloy Lafuente (stronk7) {@link http://stronk7.com}
+ * @package    core
+ * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class temptables extends \core\dml\temptables {
+class sample_database extends \core\dml\driver\pgsql\native\database {
+    /**
+     * Register the fake library.
+     * @return void
+     */
+    public static function register_fake_library(): void {
+        if (!class_exists(\core\dml\driver\pgsql\fake\database::class, false)) {
+            class_alias(sample_database::class, \core\dml\driver\pgsql\fake\database::class);
+        }
+    }
 }
-
-// Alias this class to the old name.
-// This file will be autoloaded by the legacyclasses autoload system.
-// In future all uses of this class will be corrected and the legacy references will be removed.
-class_alias(temptables::class, \mysqli_native_moodle_temptables::class);

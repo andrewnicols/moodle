@@ -25,7 +25,7 @@ namespace core\dml;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(database::class)]
-final class database_test extends \advanced_testcase {
+final class database_test extends \database_driver_testcase {
     #[\PHPUnit\Framework\Attributes\DataProvider('invalid_data_driver_provider')]
     public function test_get_driver_instance_invalid(
         string $type,
@@ -60,5 +60,56 @@ final class database_test extends \advanced_testcase {
         foreach ($drivers as $driver) {
             yield [$driver, 'native'];
         }
+    }
+
+    public function test_get_transaction_start_backtrace(): void {
+        $DB = $this->tdb;
+
+        // No transactions, no backtrace.
+        $this->assertNull($DB->get_transaction_start_backtrace());
+
+        // One transaction, only backtrace.
+        $transaction1 = $DB->start_delegated_transaction();
+
+        $this->assertEquals($transaction1->get_backtrace(), $DB->get_transaction_start_backtrace());
+
+        // Multiple transactions, final backtrace only.
+        $transaction2 = $DB->start_delegated_transaction();
+        $transaction3 = $DB->start_delegated_transaction();
+        $this->assertEquals($transaction3->get_backtrace(), $DB->get_transaction_start_backtrace());
+
+        $rollback = function ($transaction): void {
+            $newexception = new class extends \Exception {};
+
+            try {
+                $transaction->rollback($newexception);
+            } catch (\Throwable $e) {
+                $this->assertSame($newexception, $e);
+            }
+        };
+
+        $rollback($transaction3);
+        $rollback($transaction2);
+        $rollback($transaction1);
+    }
+
+    public function test_log_queries(): void {
+        $DB = $this->tdb;
+        $DB->get_manager();
+
+        // Open second connection.
+        $cfg = $DB->export_dbconfig();
+        if (!isset($cfg->dboptions)) {
+            $cfg->dboptions = [];
+        }
+
+        $cfg->dboptions['logall'] = true;
+        $DB2 = database::get_driver_instance($cfg->dbtype, $cfg->dblibrary);
+        $DB2->connect($cfg->dbhost, $cfg->dbuser, $cfg->dbpass, $cfg->dbname, $cfg->prefix, $cfg->dboptions);
+
+        $DB2->get_records('user');
+
+        $this->assertGreaterThan(0, $DB2->get_records('log_queries'));
+        $this->assertGreaterThan(0, $DB2->get_records('log_queries'));
     }
 }

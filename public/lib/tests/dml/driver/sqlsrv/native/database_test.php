@@ -109,7 +109,7 @@ final class database_test extends \basic_testcase {
         $method = $reflector->getMethod('add_no_lock_to_temp_tables');
 
         $temptablesproperty = $reflector->getProperty('temptables');
-        $temptables = new temptables_tester();
+        $temptables = new temptables_tester($sqlsrv);
 
         $temptablesproperty->setValue($sqlsrv, $temptables);
 

@@ -22,7 +22,7 @@ namespace core\tests\dml;
  * @copyright  2017 John Okely
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class temptables_tester {
+class temptables_tester extends \core\dml\temptables {
     /**
      * Returns if one table, based in the information present in the store, is a temp table
      *
@@ -31,18 +31,16 @@ class temptables_tester {
      * @param string $tablename name without prefix of the table we are asking about
      * @return bool true if the table is a temp table (based in the store info), false if not
      */
-    public function is_temptable($tablename) {
+    #[\Override]
+    public function is_temptable(string $tablename): bool {
         if (strpos($tablename, 'temp') === false) {
             return false;
         } else {
             return true;
         }
     }
-    /**
-     * Dispose the temptables
-     *
-     * @return void
-     */
-    public function dispose() {
+
+    #[\Override]
+    public function dispose(): void {
     }
 }

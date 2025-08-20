@@ -26,23 +26,21 @@ namespace core\dml\exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class read_exception extends exception {
-    /** @var string The name of the string from error.php to print.*/
-    public $error;
-    /** @var string The SQL that ran just before this read error.*/
-    public $sql;
-    /** @var array The SQL's related parameters.*/
-    public $params;
-
     /**
-     * Constructor
-     * @param string $error The name of the string from error.php to print.
-     * @param string $sql The SQL that ran just before this read error.
-     * @param array $params The SQL's related parameters.(optional)
+     * Construct a new read exception.
+     *
+     * @param ?string $error The name of the string from error.php to print.
+     * @param ?string $sql The SQL that ran just before this read error.
+     * @param ?array $params The SQL's related parameters.(optional)
      */
-    function __construct($error, $sql = null, ?array $params = null) {
-        $this->error  = $error;
-        $this->sql    = $sql;
-        $this->params = $params;
+    public function __construct(
+        /** @var string The name of the string from error.php to print */
+        public readonly ?string $error,
+        /** @var string The SQL that ran just before this read error */
+        public readonly ?string $sql = null,
+        /** @var string The SQL that ran just before this read error */
+        public readonly ?array $params = null,
+    ) {
         $errorinfo = $error . "\n" . $sql . "\n[" . var_export($params, true) . ']';
         parent::__construct('dmlreadexception', null, $errorinfo);
     }

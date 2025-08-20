@@ -16,6 +16,8 @@
 
 namespace core\tests\dml;
 
+use core\dml\recordset;
+
 /**
  * Database driver mock test class that uses read_replica_moodle_recordset_special
  *
@@ -25,15 +27,13 @@ namespace core\tests\dml;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class read_replica_moodle_database_special extends read_replica_moodle_database {
-    /**
-     * Returns empty array
-     * @param string $sql the SQL select query to execute.
-     * @param array $params array of sql parameters
-     * @param int $limitfrom return a subset of records, starting at this point (optional).
-     * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return string $handle handle property
-     */
-    public function get_records_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
+    #[\Override]
+    public function get_records_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): array {
         $dbhandle = parent::get_records_sql($sql, $params);
         return [];
     }
@@ -47,21 +47,23 @@ class read_replica_moodle_database_special extends read_replica_moodle_database 
      * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
      * @return string $handle handle property
      */
-    public function get_records_sql_p($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
+    public function get_records_sql_p(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): array {
         return parent::get_records_sql($sql, $params);
     }
 
-    /**
-     * Returns fake recordset
-     * @param string $sql
-     * @param array $params
-     * @param int $limitfrom
-     * @param int $limitnum
-     * @return bool true
-     */
-    public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
-        $dbhandle = parent::get_recordset_sql($sql, $params);
-        return new read_replica_moodle_recordset_special();
+    #[\Override]
+    public function get_recordset_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): recordset {
+        return parent::get_recordset_sql($sql, $params);
     }
 
     /**

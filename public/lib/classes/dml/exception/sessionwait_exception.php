@@ -27,9 +27,9 @@ namespace core\dml\exception;
  */
 class sessionwait_exception extends exception {
     /**
-     * Constructor
+     * Construct a new session_wait exception.
      */
-    function __construct() {
+    public function __construct() {
         parent::__construct('sessionwaiterr');
     }
 }

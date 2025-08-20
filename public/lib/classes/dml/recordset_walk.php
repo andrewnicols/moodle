@@ -14,16 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Applies the same callback to all recorset records.
- *
- * @since      Moodle 2.9
- * @package    core
- * @category   dml
- * @copyright  2015 David Monllao
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 namespace core\dml;
 
 /**
@@ -43,20 +33,8 @@ namespace core\dml;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class recordset_walk implements \Iterator {
-    /**
-     * @var recordset The recordset.
-     */
-    protected $recordset;
-
-    /**
-     * @var callable The callback.
-     */
-    protected $callback;
-
-    /**
-     * @var mixed|null Extra param for the callback.
-     */
-    protected $callbackextra;
+    /** @var \Closure The callback */
+    protected readonly \Closure $callback;
 
     /**
      * Create a new iterator applying the callback to each record.
@@ -65,16 +43,18 @@ class recordset_walk implements \Iterator {
      * @param callable $callback Apply this function to each record. If using a method, it should be public.
      * @param mixed $callbackextra An extra single parameter to pass to the callback. Use a container to pass multiple values.
      */
-    public function __construct(recordset $recordset, callable $callback, $callbackextra = null) {
-        $this->recordset = $recordset;
-        $this->callback = $callback;
-        $this->callbackextra = $callbackextra;
+    public function __construct(
+        /** @var recordset The recordset */
+        protected readonly recordset $recordset,
+        callable $callback,
+        /** @var mixed|null Extra param for the callback */
+        protected mixed $callbackextra = null,
+    ) {
+        $this->callback = \Closure::fromCallable($callback);
     }
 
     /**
      * Closes the recordset.
-     *
-     * @return void
      */
     public function __destruct() {
         $this->close();
@@ -86,40 +66,32 @@ class recordset_walk implements \Iterator {
      * @return mixed|bool The returned value type will depend on the callback.
      */
     #[\ReturnTypeWillChange]
-    public function current() {
-
+    #[\Override]
+    public function current(): mixed {
         if (!$this->recordset->valid()) {
             return false;
         }
 
         if (!$record = $this->recordset->current()) {
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         // Apply callback and return.
-        if (!is_null($this->callbackextra)) {
+        if ($this->callbackextra !== null) {
+            // If we have an extra parameter, pass it to the callback.
             return call_user_func($this->callback, $record, $this->callbackextra);
-        } else {
-            return call_user_func($this->callback, $record);
         }
+        return call_user_func($this->callback, $record);
     }
 
-    /**
-     * Moves the internal pointer to the next record.
-     *
-     * @return void
-     */
+    #[\Override]
     public function next(): void {
         $this->recordset->next();
     }
 
-    /**
-     * Returns current record key.
-     *
-     * @return int
-     */
     #[\ReturnTypeWillChange]
-    public function key() {
+    #[\Override]
+    public function key(): mixed {
         return $this->recordset->key();
     }
 
@@ -132,6 +104,7 @@ class recordset_walk implements \Iterator {
      *
      * @return bool
      */
+    #[\Override]
     public function valid(): bool {
         if (!$valid = $this->recordset->valid()) {
             $this->close();
@@ -141,9 +114,8 @@ class recordset_walk implements \Iterator {
 
     /**
      * Rewind is not supported.
-     *
-     * @return void
      */
+    #[\Override]
     public function rewind(): void {
         // No rewind as it is not implemented in moodle_recordset.
         return;
@@ -151,10 +123,8 @@ class recordset_walk implements \Iterator {
 
     /**
      * Closes the recordset.
-     *
-     * @return void
      */
-    public function close() {
+    public function close(): void {
         $this->recordset->close();
     }
 }

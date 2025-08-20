@@ -26,60 +26,59 @@ use core\dml\exception\transaction_exception;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class transaction {
-    /** @var array The debug_backtrace() returned array.*/
-    private $start_backtrace;
-    /**@var database The moodle_database instance.*/
-    private $database = null;
+    /** @var array The debug_backtrace() returned array */
+    private array $initialbacktrace;
 
     /**
-     * Delegated transaction constructor,
-     * can be called only from moodle_database class.
+     * Delegated transaction constructor, can be called only from moodle_database class.
+     *
      * Unfortunately PHP's protected keyword is useless.
+     *
      * @param database $database
      */
-    public function __construct($database) {
-        $this->database = $database;
-        $this->start_backtrace = debug_backtrace();
-        array_shift($this->start_backtrace);
+    public function __construct(
+        /** @var database The moodle_database instance */
+        private ?database $database,
+    ) {
+        $this->initialbacktrace = debug_backtrace();
+        array_shift($this->initialbacktrace);
     }
 
     /**
      * Returns backtrace of the code starting exception.
+     *
      * @return array
      */
-    public function get_backtrace() {
-        return $this->start_backtrace;
+    public function get_backtrace(): array {
+        return $this->initialbacktrace;
     }
 
     /**
-     * Is the delegated transaction already used?
+     * Whether the delegated transaction has been disposed already.
+     *
      * @return bool true if commit and rollback allowed, false if already done
      */
-    public function is_disposed() {
+    public function is_disposed(): bool {
         return empty($this->database);
     }
 
     /**
-     * Mark transaction as disposed, no more
-     * commits and rollbacks allowed.
-     * To be used only from database class
-     * @return null
+     * Mark transaction as disposed, no more commits and rollbacks allowed.
+     *
+     * Note: To be used only from database class
      */
-    public function dispose() {
-        return $this->database = null;
+    public function dispose(): void {
+        $this->database = null;
     }
 
     /**
-     * Commit delegated transaction.
-     * The real database commit SQL is executed
-     * only after committing all delegated transactions.
+     * Commit the delegated transaction.
      *
-     * Incorrect order of nested commits or rollback
-     * at any level is resulting in rollback of SQL transaction.
+     * The real database commit SQL is executed only after committing all delegated transactions.
      *
-     * @return void
+     * Incorrect order of nested commits or rollbacks at any level is resulting in rollback of SQL transaction.
      */
-    public function allow_commit() {
+    public function allow_commit(): void {
         if ($this->is_disposed()) {
             throw new transaction_exception('Transactions already disposed', $this);
         }
@@ -89,10 +88,9 @@ class transaction {
     /**
      * Rollback all current delegated transactions.
      *
-     * @param Exception|Throwable $e mandatory exception/throwable
-     * @return void
+     * @param \Throwable $e mandatory exception/throwable
      */
-    public function rollback($e) {
+    public function rollback(\Throwable $e): void {
         if ($this->is_disposed()) {
             throw new transaction_exception('Transactions already disposed', $this);
         }

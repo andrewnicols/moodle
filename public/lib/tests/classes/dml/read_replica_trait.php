@@ -84,26 +84,28 @@ trait read_replica_trait {
      * Upgrade to public
      * @return resource
      */
-    public function get_db_handle() {
+    public function get_db_handle(): mixed {
         return parent::get_db_handle();
     }
 
     /**
-     * Upgrade to public
+     * Upgrade to public.
+     *
      * @param string $sql
      * @param array|null $params
      * @param int $type
      * @param array $extrainfo
      */
-    public function query_start($sql, ?array $params, $type, $extrainfo = null) {
-        return parent::query_start($sql, $params, $type);
+    public function query_start(string $sql, ?array $params, $type, $extrainfo = null): void {
+        parent::query_start($sql, $params, $type);
     }
 
     /**
      * Upgrade to public
+     *
      * @param mixed $result
      */
-    public function query_end($result) {
+    public function query_end(mixed $result): void {
         parent::query_end($result);
         $this->set_db_handle($this->dbhwrite);
     }
@@ -111,6 +113,6 @@ trait read_replica_trait {
     /**
      * Upgrade to public
      */
-    public function dispose() {
+    public function dispose(): void {
     }
 }

@@ -26,13 +26,8 @@ namespace core\dml\driver\pgsql\native;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class temptables extends \core\dml\temptables {
-    /**
-     * Analyze the data in temporary tables to force statistics collection after bulk data loads.
-     * PostgreSQL does not natively support automatic temporary table stats collection, so we do it.
-     *
-     * @return void
-     */
-    public function update_stats() {
+    #[\Override]
+    public function update_stats(): void {
         $temptables = $this->get_temptables();
         foreach ($temptables as $temptablename) {
             $this->mdb->execute("ANALYZE {" . $temptablename . "}");

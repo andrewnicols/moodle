@@ -17,48 +17,46 @@
 namespace core\dml\driver\pgsql\native;
 
 use core\exception\coding_exception;
-use PgSql;
 use stdClass;
+use PgSql;
 
 /**
- * pgsql specific moodle recordset class
+ * Postgres implementation of the DML Recordset class.
  *
  * @package    core_dml
  * @copyright  2008 Petr Skoda (http://skodak.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class recordset extends \core\dml\recordset {
-    /** @var PgSql\Result|resource|null */
-    protected $result;
-    /** @var current row as array.*/
-    protected $current;
-    protected $blobs = [];
+    /** @var array|bool|null current row as array.*/
+    protected array|bool|null $current;
 
-    /** @var string Name of cursor or '' if none */
-    protected $cursorname;
-
-    /** @var database Postgres database resource */
-    protected $db;
+    /** @var array|null The list of bobs */
+    protected ?array $blobs = [];
 
     /** @var bool True if there are no more rows to fetch from the cursor */
-    protected $lastbatch;
+    protected bool $lastbatch;
 
     /**
      * Build a new recordset to iterate over.
      *
      * When using cursors, $result will be null initially.
      *
-     * @param resource|PgSql\Result|null $result A pg_query() result object to create a recordset from.
+     * @param PgSql\Result|null $result A pg_query() result object to create a recordset from.
      * @param database $db Database object (only required when using cursors)
      * @param string $cursorname Name of cursor or '' if none
      */
-    public function __construct($result, ?database $db = null, $cursorname = '') {
+    public function __construct(
+        /** @var PgSql\Result|null */
+        protected PgSql\Result|null $result,
+        /** @var database|null Postgres database resource */
+        protected ?database $db = null,
+        /** @var string|null Name of cursor or '' if none */
+        protected ?string $cursorname = '',
+    ) {
         if ($cursorname && !$db) {
             throw new coding_exception('When specifying a cursor, $db is required');
         }
-        $this->result = $result;
-        $this->db = $db;
-        $this->cursorname = $cursorname;
 
         // When there is a cursor, do the initial fetch.
         if ($cursorname) {
@@ -92,11 +90,19 @@ class recordset extends \core\dml\recordset {
         }
     }
 
+    /**
+     * Automatically close the recordset.
+     */
     public function __destruct() {
         $this->close();
     }
 
-    private function fetch_next() {
+    /**
+     * Fetch the next record.
+     *
+     * @return array|bool
+     */
+    private function fetch_next(): array|bool {
         if (!$this->result) {
             return false;
         }
@@ -127,13 +133,15 @@ class recordset extends \core\dml\recordset {
         return $row;
     }
 
+    #[\Override]
     public function current(): stdClass {
         return (object)$this->current;
     }
 
     #[\ReturnTypeWillChange]
-    public function key() {
-        // return first column value as key
+    #[\Override]
+    public function key(): mixed {
+        // Return first column value as key.
         if (!$this->current) {
             return false;
         }
@@ -141,14 +149,17 @@ class recordset extends \core\dml\recordset {
         return $key;
     }
 
+    #[\Override]
     public function next(): void {
         $this->current = $this->fetch_next();
     }
 
+    #[\Override]
     public function valid(): bool {
         return !empty($this->current);
     }
 
+    #[\Override]
     public function close() {
         if ($this->result) {
             pg_free_result($this->result);

@@ -25,15 +25,14 @@ namespace core\tests\dml;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class read_replica_moodle_database_table_names extends read_replica_moodle_database {
-    /**
-     * @var string
-     */
-    protected $prefix = 't_';
+    /** @var string */
+    protected ?string $prefix = 't_';
 
     /**
-     * Upgrade to public
+     * Upgrade to public.
+     *
      * @param string $sql
-     * @return array
+     * @return array: string
      */
     public function table_names(string $sql): array {
         return parent::table_names($sql);

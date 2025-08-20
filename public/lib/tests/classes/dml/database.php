@@ -19,7 +19,6 @@ namespace core\tests\dml;
 use core\dml\temptables;
 use core\dml\database_column_info;
 use database_manager;
-use stdClass;
 use Exception;
 
 /**
@@ -51,7 +50,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return boolean true
      */
-    public function driver_installed() {
+    public function driver_installed(): bool {
         return true;
     }
 
@@ -59,7 +58,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return string 'test'
      */
-    public function get_dbfamily() {
+    public function get_dbfamily(): string {
         return 'test';
     }
 
@@ -67,7 +66,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return string 'test'
      */
-    protected function get_dbtype() {
+    protected function get_dbtype(): string {
         return 'test';
     }
 
@@ -75,7 +74,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return string 'test'
      */
-    protected function get_dblibrary() {
+    protected function get_dblibrary(): string {
         return 'test';
     }
 
@@ -83,7 +82,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return string 'test'
      */
-    public function get_name() {
+    public function get_name(): string {
         return 'test';
     }
 
@@ -91,7 +90,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return string
      */
-    public function get_configuration_help() {
+    public function get_configuration_help(): string {
         return 'test database driver';
     }
 
@@ -99,7 +98,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return array
      */
-    public function get_server_info() {
+    public function get_server_info(): array {
         return ['description' => $this->name(), 'version' => '0'];
     }
 
@@ -107,7 +106,7 @@ abstract class database extends \core\dml\database {
      * Default implementation
      * @return int 0
      */
-    protected function allowed_param_types() {
+    protected function allowed_param_types(): int {
         return 0;
     }
 
@@ -115,7 +114,7 @@ abstract class database extends \core\dml\database {
      * Returns error property
      * @return string $error
      */
-    public function get_last_error() {
+    public function get_last_error(): string {
         return $this->error;
     }
 
@@ -128,255 +127,130 @@ abstract class database extends \core\dml\database {
         $this->_tables = $tables;
     }
 
-    /**
-     * Returns keys of tables property
-     * @param bool $usecache
-     * @return array $tablenames
-     */
-    public function get_tables($usecache = true) {
+    #[\Override]
+    public function get_tables($usecache = true): array {
         return array_keys($this->_tables);
     }
 
-    /**
-     * Return table indexes
-     * @param string $table
-     * @return array $indexes
-     */
-    public function get_indexes($table) {
+    #[\Override]
+    public function get_indexes(string $table): array {
         return isset($this->_tables[$table]['indexes']) ? $this->_tables[$table]['indexes'] : [];
     }
 
-    /**
-     * Return table columns
-     * @param string $table
-     * @return array database_column_info[] of database_column_info objects indexed with column names
-     */
-    public function fetch_columns($table): array {
+    #[\Override]
+    public function fetch_columns(string $table): array {
         return $this->_tables[$table]['columns'];
     }
 
-    /**
-     * Default implementation
-     * @param \stdClass $column metadata
-     * @param mixed $value
-     * @return mixed $value
-     */
-    protected function normalise_value($column, $value) {
+    #[\Override]
+    protected function normalise_value(database_column_info $column, mixed $value): mixed {
         return $value;
     }
 
-    /**
-     * Default implementation
-     * @param string|array $sql
-     * @param array|null $tablenames
-     * @return bool true
-     */
-    public function change_database_structure($sql, $tablenames = null) {
+    #[\Override]
+    public function change_database_structure(
+        string|array $sql,
+        ?array $tablenames = null,
+    ): bool {
         return true;
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $sql
-     * @param array $params
-     * @return bool true
-     * @throws Exception
-     */
-    public function execute($sql, ?array $params = null) {
+    #[\Override]
+    public function execute($sql, ?array $params = null): bool {
             throw new Exception("execute() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $sql
-     * @param array $params
-     * @param int $limitfrom
-     * @param int $limitnum
-     * @return bool true
-     * @throws Exception
-     */
-    public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
+    #[\Override]
+    public function get_recordset_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): \core\dml\recordset {
         throw new Exception("get_recordset_sql() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $sql
-     * @param array $params
-     * @param int $limitfrom
-     * @param int $limitnum
-     * @return bool true
-     * @throws Exception
-     */
-    public function get_records_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
+    #[\Override]
+    public function get_records_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0
+    ): array {
         throw new Exception("get_records_sql() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $sql
-     * @param array $params
-     * @return bool true
-     * @throws Exception
-     */
+    #[\Override]
     public function get_fieldset_sql($sql, ?array $params = null) {
         throw new Exception("get_fieldset_sql() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $table
-     * @param array $params
-     * @param bool $returnid
-     * @param bool $bulk
-     * @param bool $customsequence
-     * @return bool|int true or new id
-     * @throws Exception
-     */
-    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false) {
+    #[\Override]
+    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false): bool|int {
         throw new Exception("insert_record_raw() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $table
-     * @param object|array $dataobject
-     * @param bool $returnid
-     * @param bool $bulk
-     * @return bool|int true or new id
-     * @throws Exception
-     */
-    public function insert_record($table, $dataobject, $returnid = true, $bulk = false) {
+    #[\Override]
+    public function insert_record($table, $dataobject, $returnid = true, $bulk = false): bool|int {
         return $this->insert_record_raw($table, (array)$dataobject, $returnid, $bulk);
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $table
-     * @param stdClass $dataobject
-     * @return bool true
-     * @throws Exception
-     */
+    #[\Override]
     public function import_record($table, $dataobject) {
         throw new Exception("import_record() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $table
-     * @param array $params
-     * @param bool $bulk
-     * @return bool true
-     * @throws Exception
-     */
+    #[\Override]
     public function update_record_raw($table, $params, $bulk = false) {
         throw new Exception("update_record_raw() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $table
-     * @param StdObject $dataobject
-     * @param bool $bulk
-     * @return bool true
-     * @throws Exception
-     */
+    #[\Override]
     public function update_record($table, $dataobject, $bulk = false) {
         throw new Exception("update_record() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $table
-     * @param string $newfield
-     * @param string $newvalue
-     * @param string $select
-     * @param array $params
-     * @return bool true
-     * @throws Exception
-     */
+    #[\Override]
     public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null) {
         throw new Exception("set_field_select() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $table
-     * @param string $select
-     * @param array $params
-     * @return bool true
-     * @throws Exception
-     */
+    #[\Override]
     public function delete_records_select($table, $select, ?array $params = null) {
         throw new Exception("delete_records_select() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @return string $arr,...
-     * @throws Exception
-     */
+    #[\Override]
     public function sql_concat(...$arr) {
         throw new Exception("sql_concat() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @param string $separator
-     * @param array  $elements
-     * @return string $sql
-     * @throws Exception
-     */
+    #[\Override]
     public function sql_concat_join($separator = "' '", $elements = []) {
         throw new Exception("sql_concat_join() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     *
-     * @param string $field
-     * @param string $separator
-     * @param string $sort
-     * @return string
-     * @throws Exception
-     */
+    #[\Override]
     public function sql_group_concat(string $field, string $separator = ', ', string $sort = ''): string {
         throw new Exception('sql_group_concat() not implemented');
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @return void
-     * @throws Exception
-     */
-    protected function begin_transaction() {
+    #[\Override]
+    protected function begin_transaction(): void {
         throw new Exception("begin_transaction() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @return void
-     * @throws Exception
-     */
-    protected function commit_transaction() {
+    #[\Override]
+    protected function commit_transaction(): void {
         throw new Exception("commit_transaction() not implemented");
     }
 
-    /**
-     * Default implementation, throws Exception
-     * @return void
-     * @throws Exception
-     */
-    protected function rollback_transaction() {
+    #[\Override]
+    protected function rollback_transaction(): void {
         throw new Exception("rollback_transaction() not implemented");
     }
 
-    /**
-     * Returns the database manager used for db manipulation.
-     * Used mostly in upgrade.php scripts.
-     * @return database_manager The instance used to perform ddl operations.
-     * @see lib/ddl/database_manager.php
-     */
+    #[\Override]
     public function get_manager() {
         if (!$this->database_manager) {
             $generator = new sql_generator($this, $this->temptables);

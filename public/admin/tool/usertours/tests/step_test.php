@@ -119,19 +119,18 @@ final class step_test extends \advanced_testcase {
         $idretval = rand(1, 100);
         $DB = $this->mock_database();
         $DB->method('get_record')
-            ->willReturn($idretval);
+            ->willReturn((object) ['id' => $idretval]);
 
         $retval = rand(1, 100);
         $step->expects($this->once())
             ->method('reload_from_record')
-            ->with($this->equalTo($idretval))
-            ->wilLReturn($retval);
+            ->willReturn($retval);
 
         $rc = new \ReflectionClass(\tool_usertours\step::class);
         $rcm = $rc->getMethod('fetch');
 
         $id = rand(1, 100);
-        $this->assertEquals($retval, $rcm->invoke($step, 'fetch', $id));
+        $this->assertEquals($retval, $rcm->invoke($step, $id));
     }
 
     /**

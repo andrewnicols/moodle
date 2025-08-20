@@ -18,51 +18,32 @@ namespace core\dml;
 
 /**
  * Abstract class for resultsets returned from database functions.
- * This is a simple Iterator with needed recorset closing support.
+ *
+ * This is a simple Iterator with needed recordset closing support.
  *
  * The difference from old recorset is that the records are returned
  * as objects, not arrays. You should use "foreach ($recordset as $record) {}"
  * followed by "$recordset->close()".
  *
  * Do not forget to close all recordsets when they are not needed anymore!
+ *
+ * @package    core
+ * @copyright  Petr Skoda (http://skodak.org)
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class recordset implements \Iterator {
     /**
-     * Returns current record - fields as object properties, lowercase
-     * @return object
-     */
-    // public abstract function current();
-
-    /**
-     * Returns the key of current row
-     * @return int current row
-     */
-    // public abstract function key();
-
-    /**
-     * Moves forward to next row
-     * @return void
-     */
-    // public abstract function next();
-
-    /**
      * Rewinds are not supported!
-     * @return void
      */
+    #[\Override]
     public function rewind(): void {
-        // no seeking, sorry - let's ignore it ;-)
+        // Seeking not supported inside a recordset.
+        // Return and ignore the request.
         return;
     }
 
     /**
-     * Did we reach the end?
-     * @return boolean
-     */
-    // public abstract function valid();
-
-    /**
      * Free resources and connections, recordset can not be used anymore.
-     * @return void
      */
     abstract public function close();
 }

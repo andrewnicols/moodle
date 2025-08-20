@@ -97,7 +97,6 @@ class db_record_lock_factory implements lock_factory {
      * @return boolean - true if a lock was obtained.
      */
     public function get_lock($resource, $timeout, $maxlifetime = 86400) {
-
         $token = $this->generate_unique_token();
         $now = time();
         $giveuptime = $now + $timeout;

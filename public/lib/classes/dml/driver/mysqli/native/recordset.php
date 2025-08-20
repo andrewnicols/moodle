@@ -16,6 +16,7 @@
 
 namespace core\dml\driver\mysqli\native;
 
+use mysqli_result;
 use stdClass;
 
 /**
@@ -27,19 +28,34 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class recordset extends \core\dml\recordset {
-    protected $result;
-    protected $current;
+    /** @var array|bool|null The current record value */
+    protected array|bool|null $current;
 
-    public function __construct($result) {
-        $this->result  = $result;
+    /**
+     * Create a new instance of the MySQLi recordset.
+     *
+     * @param mysqli_result|null|bool $result The MySQLi result object.
+     */
+    public function __construct(
+        /** @var mysqli_result|bool|null The MySQLi Result */
+        protected mysqli_result|bool|null $result,
+    ) {
         $this->current = $this->fetch_next();
     }
 
+    /**
+     * Destructor to ensure the recordset is closed.
+     *
+     * This will free resources and connections, making the recordset unusable.
+     */
     public function __destruct() {
         $this->close();
     }
 
-    private function fetch_next() {
+    /**
+     * Fetch the next record.
+     */
+    private function fetch_next(): array|bool {
         if (!$this->result) {
             return false;
         }
@@ -53,13 +69,15 @@ class recordset extends \core\dml\recordset {
         return $row;
     }
 
+    #[\Override]
     public function current(): stdClass {
-        return (object)$this->current;
+        return (object) $this->current;
     }
 
     #[\ReturnTypeWillChange]
+    #[\Override]
     public function key() {
-        // return first column value as key
+        // Return first column value as key.
         if (!$this->current) {
             return false;
         }
@@ -67,14 +85,17 @@ class recordset extends \core\dml\recordset {
         return $key;
     }
 
+    #[\Override]
     public function next(): void {
         $this->current = $this->fetch_next();
     }
 
+    #[\Override]
     public function valid(): bool {
         return !empty($this->current);
     }
 
+    #[\Override]
     public function close() {
         if ($this->result) {
             $this->result->close();

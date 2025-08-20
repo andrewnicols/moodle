@@ -26,27 +26,38 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
 class recordset extends \core\dml\recordset {
+    /** @var \resource The SQL Server Result resource */
     protected $rsrc;
-    protected $current;
+
+    /** @var array The current record */
+    protected array|bool|null $current;
 
     /** @var array recordset buffer */
-    protected $buffer = null;
+    protected array|null $buffer = null;
 
-    /** @var database */
-    protected $db;
-
-    public function __construct($rsrc, database $db) {
+    /**
+     * Create a new instance of the SQLSRV recordset.
+     *
+     * Note: SQL Server has not yet been updated with first-class result objects.
+     *
+     * @param resource $rsrc The SQL Server Result resource
+     * @param database|null $db
+     */
+    public function __construct(
+        $rsrc,
+        /** @var database A reference to the database */
+        protected ?database $db,
+    ) {
         $this->rsrc    = $rsrc;
         $this->current = $this->fetch_next();
-        $this->db      = $db;
     }
 
     /**
-     * Inform existing open recordsets that transaction
-     * is starting, this works around MARS problem described
-     * in MDL-37734.
+     * Inform existing open recordsets that transaction is starting.
+     *
+     * This works around MARS problem described in MDL-37734.
      */
-    public function transaction_starts() {
+    public function transaction_starts(): void {
         if ($this->buffer !== null) {
             $this->unregister();
             return;
@@ -67,18 +78,26 @@ class recordset extends \core\dml\recordset {
     /**
      * Unregister recordset from the global list of open recordsets.
      */
-    private function unregister() {
+    private function unregister(): void {
         if ($this->db) {
             $this->db->recordset_closed($this);
             $this->db = null;
         }
     }
 
+    /**
+     * Destructor for the sqlsrv recordset.
+     */
     public function __destruct() {
         $this->close();
     }
 
-    private function fetch_next() {
+    /**
+     * Fetch the next record from the recordset.
+     *
+     * @return array|bool
+     */
+    private function fetch_next(): array|bool {
         if (!$this->rsrc) {
             return false;
         }
@@ -106,11 +125,13 @@ class recordset extends \core\dml\recordset {
         return $row;
     }
 
+    #[\Override]
     public function current(): stdClass {
-        return (object)$this->current;
+        return (object) $this->current;
     }
 
     #[\ReturnTypeWillChange]
+    #[\Override]
     public function key() {
         // return first column value as key
         if (!$this->current) {
@@ -120,6 +141,7 @@ class recordset extends \core\dml\recordset {
         return $key;
     }
 
+    #[\Override]
     public function next(): void {
         if ($this->buffer === null) {
             $this->current = $this->fetch_next();
@@ -128,11 +150,13 @@ class recordset extends \core\dml\recordset {
         }
     }
 
+    #[\Override]
     public function valid(): bool {
         return !empty($this->current);
     }
 
-    public function close() {
+    #[\Override]
+    public function close(): void {
         if ($this->rsrc) {
             if (is_resource($this->rsrc)) {
                 // We need to make sure that the statement resource is in the correct type before freeing it.

@@ -32,21 +32,20 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v2 or later
  */
 class database extends \core\dml\database {
+    /** @var ?resource The SQLSRV connection resource */
     protected $sqlsrv = null;
-    protected $last_error_reporting; // To handle SQL*Server-Native driver default verbosity
-    protected $temptables; // Control existing temptables (sqlsrv_moodle_temptables object)
-    protected $collation;  // current DB collation cache
-    /**
-     * Does the used db version support ANSI way of limiting (2012 and higher)
-     * @var bool
-     */
+
+    /** @var string current DB collation cache */
+    protected ?string $collation;
+
+    /** @var bool Whether the DB version supports the ANSI way of limiting (2012 and higher) */
     protected $supportsoffsetfetch;
 
-    /** @var array list of open recordsets */
-    protected $recordsets = [];
+    /** @var recordset[] list of open recordsets */
+    protected array $recordsets = [];
 
-    /** @var array list of reserve words in MSSQL / Transact from http://msdn2.microsoft.com/en-us/library/ms189822.aspx */
-    protected $reservewords = [
+    /** @var string[] list of reserve words in MSSQL / Transact from http://msdn2.microsoft.com/en-us/library/ms189822.aspx */
+    protected array $reservewords = [
         "add", "all", "alter", "and", "any", "as", "asc", "authorization", "avg", "backup", "begin", "between", "break",
         "browse", "bulk", "by", "cascade", "case", "check", "checkpoint", "close", "clustered", "coalesce", "collate", "column",
         "commit", "committed", "compute", "confirm", "constraint", "contains", "containstable", "continue", "controlrow",
@@ -70,22 +69,9 @@ class database extends \core\dml\database {
         "work", "writetext",
     ];
 
-    /**
-     * Constructor - instantiates the database, specifying if it's external (connect to other systems) or no (Moodle DB)
-     *              note this has effect to decide if prefix checks must be performed or no
-     * @param bool true means external database used
-     */
-    public function __construct($external = false) {
-        parent::__construct($external);
-    }
-
-    /**
-     * Detects if all needed PHP stuff installed.
-     * Note: can be used before connect()
-     * @return mixed true if ok, string if something
-     */
-    public function driver_installed() {
-        // use 'function_exists()' rather than 'extension_loaded()' because
+    #[\Override]
+    public function driver_installed(): bool|string {
+        // Note: Use 'function_exists()' rather than 'extension_loaded()' because
         // the name used by 'extension_loaded()' is case specific! The extension
         // therefore *could be* mixed case and hence not found.
         if (!function_exists('sqlsrv_num_rows')) {
@@ -94,58 +80,33 @@ class database extends \core\dml\database {
         return true;
     }
 
-    /**
-     * Returns database family type - describes SQL dialect
-     * Note: can be used before connect()
-     * @return string db family name (mysql, postgres, mssql, sqlsrv, etc.)
-     */
-    public function get_dbfamily() {
+    #[\Override]
+    public function get_dbfamily(): string {
         return 'mssql';
     }
 
-    /**
-     * Returns more specific database driver type
-     * Note: can be used before connect()
-     * @return string db type mysqli, pgsql, mssql, sqlsrv
-     */
-    protected function get_dbtype() {
+    #[\Override]
+    protected function get_dbtype(): string {
         return 'sqlsrv';
     }
 
-    /**
-     * Returns general database library name
-     * Note: can be used before connect()
-     * @return string db type pdo, native
-     */
-    protected function get_dblibrary() {
+    #[\Override]
+    protected function get_dblibrary(): string {
         return 'native';
     }
 
-    /**
-     * Returns localised database type name
-     * Note: can be used before connect()
-     * @return string
-     */
-    public function get_name() {
+    #[\Override]
+    public function get_name(): string {
         return get_string('nativesqlsrv', 'install');
     }
 
-    /**
-     * Returns localised database configuration help.
-     * Note: can be used before connect()
-     * @return string
-     */
-    public function get_configuration_help() {
+    #[\Override]
+    public function get_configuration_help(): string {
         return get_string('nativesqlsrvhelp', 'install');
     }
 
-    /**
-     * Diagnose database and tables, this function is used
-     * to verify database and driver settings, db engine types, etc.
-     *
-     * @return string null means everything ok, string means problem found.
-     */
-    public function diagnose() {
+    #[\Override]
+    public function diagnose(): ?string {
         // Verify the database is running with READ_COMMITTED_SNAPSHOT enabled.
         // (that's required to get snapshots/row versioning on READ_COMMITED mode).
         $correctrcsmode = false;
@@ -170,20 +131,9 @@ class database extends \core\dml\database {
         return null;
     }
 
-    /**
-     * Connect to db
-     * Must be called before most other methods. (you can call methods that return connection configuration parameters)
-     * @param string $dbhost The database host.
-     * @param string $dbuser The database username.
-     * @param string $dbpass The database username's password.
-     * @param string $dbname The name of the database being connected to.
-     * @param mixed $prefix string|bool The moodle db table name's prefix. false is used for external databases where prefix not used
-     * @param array $dboptions driver specific options
-     * @return bool true
-     * @throws connection_exception if error
-     */
-    public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null) {
-        if ($prefix == '' and !$this->external) {
+    #[\Override]
+    public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null): bool {
+        if ($prefix == '' && !$this->external) {
             // Enforce prefixes for everybody but mysql.
             throw new dml_exception('prefixcannotbeempty', $this->get_dbfamily());
         }
@@ -194,9 +144,7 @@ class database extends \core\dml\database {
             throw new dml_exception('dbdriverproblem', $driverstatus);
         }
 
-        /*
-         * Log all Errors.
-         */
+        // Log all Errors.
         sqlsrv_configure("WarningsReturnAsErrors", false);
         sqlsrv_configure("LogSubsystems", SQLSRV_LOG_SYSTEM_OFF);
         sqlsrv_configure("LogSeverity", SQLSRV_LOG_SEVERITY_ERROR);
@@ -236,7 +184,7 @@ class database extends \core\dml\database {
         // Disable logging until we are fully setup.
         $this->query_log_prevent();
 
-        // Allow quoted identifiers
+        // Allow quoted identifiers.
         $sql = "SET QUOTED_IDENTIFIER ON";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
@@ -245,7 +193,7 @@ class database extends \core\dml\database {
         $this->free_result($result);
 
         // Force ANSI nulls so the NULL check was done by IS NULL and NOT IS NULL
-        // instead of equal(=) and distinct(<>) symbols
+        // instead of equal(=) and distinct(<>) symbols.
         $sql = "SET ANSI_NULLS ON";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
@@ -254,13 +202,13 @@ class database extends \core\dml\database {
         $this->free_result($result);
 
         // Force ANSI warnings so arithmetic/string overflows will be
-        // returning error instead of transparently truncating data
+        // returning error instead of transparently truncating data.
         $sql = "SET ANSI_WARNINGS ON";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
         $this->query_end($result);
 
-        // Concatenating null with anything MUST return NULL
+        // Concatenating null with anything MUST return NULL.
         $sql = "SET CONCAT_NULL_YIELDS_NULL  ON";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
@@ -270,7 +218,7 @@ class database extends \core\dml\database {
 
         // Set transactions isolation level to READ_COMMITTED
         // prevents dirty reads when using transactions +
-        // is the default isolation level of sqlsrv
+        // is the default isolation level of sqlsrv.
         $sql = "SET TRANSACTION ISOLATION LEVEL READ COMMITTED";
         $this->query_start($sql, null, SQL_QUERY_AUX);
         $result = sqlsrv_query($this->sqlsrv, $sql);
@@ -285,19 +233,16 @@ class database extends \core\dml\database {
         // We can enable logging now.
         $this->query_log_allow();
 
-        // Connection established and configured, going to instantiate the temptables controller
+        // Connection established and configured, going to instantiate the temptables controller.
         $this->temptables = new temptables($this);
 
         return true;
     }
 
-    /**
-     * Close database connection and release all resources
-     * and memory (especially circular memory references).
-     * Do NOT use connect() again, create a new instance if needed.
-     */
-    public function dispose() {
-        parent::dispose(); // Call parent dispose to write/close session and other common stuff before closing connection
+    #[\Override]
+    public function dispose(): void {
+        // Call parent dispose to write/close session and other common stuff before closing connection.
+        parent::dispose();
 
         if ($this->sqlsrv) {
             sqlsrv_close($this->sqlsrv);
@@ -305,54 +250,36 @@ class database extends \core\dml\database {
         }
     }
 
-    /**
-     * Called before each db query.
-     * @param string $sql
-     * @param array|null $params An array of parameters.
-     * @param int $type type of query
-     * @param mixed $extrainfo driver specific extra information
-     * @return void
-     */
-    protected function query_start($sql, ?array $params, $type, $extrainfo = null) {
+    #[\Override]
+    // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
+    protected function query_start(string $sql, ?array $params, $type, $extrainfo = null): void {
         parent::query_start($sql, $params, $type, $extrainfo);
     }
 
-    /**
-     * Called immediately after each db query.
-     * @param mixed db specific result
-     * @return void
-     */
-    protected function query_end($result) {
+    #[\Override]
+    // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
+    protected function query_end(mixed $result): void {
         parent::query_end($result);
     }
 
-    /**
-     * Returns database server info array
-     * @return array Array containing 'description', 'version' and 'database' (current db) info
-     */
-    public function get_server_info() {
+    #[\Override]
+    public function get_server_info(): array {
         static $info;
 
         if (!$info) {
-            $server_info = sqlsrv_server_info($this->sqlsrv);
+            $serverinfo = sqlsrv_server_info($this->sqlsrv);
 
-            if ($server_info) {
-                $info['description'] = $server_info['SQLServerName'];
-                $info['version'] = $server_info['SQLServerVersion'];
-                $info['database'] = $server_info['CurrentDatabase'];
+            if ($serverinfo) {
+                $info['description'] = $serverinfo['SQLServerName'];
+                $info['version'] = $serverinfo['SQLServerVersion'];
+                $info['database'] = $serverinfo['CurrentDatabase'];
             }
         }
         return $info;
     }
 
-    /**
-     * Override: Converts short table name {tablename} to real table name
-     * supporting temp tables (#) if detected
-     *
-     * @param string sql
-     * @return string sql
-     */
-    protected function fix_table_names($sql) {
+    #[\Override]
+    protected function fix_table_names($sql): string {
         if (preg_match_all('/\{([a-z][a-z0-9_]*)\}/i', $sql, $matches)) {
             foreach ($matches[0] as $key => $match) {
                 $name = $matches[1][$key];
@@ -367,33 +294,27 @@ class database extends \core\dml\database {
         return $sql;
     }
 
-    /**
-     * Returns supported query parameter types
-     * @return int bitmask
-     */
-    protected function allowed_param_types() {
-        return SQL_PARAMS_QM;  // sqlsrv 1.1 can bind
+    #[\Override]
+    protected function allowed_param_types(): int {
+        return SQL_PARAMS_QM;  // SQLSrv 1.1 can bind.
     }
 
-    /**
-     * Returns last error reported by database engine.
-     * @return string error message
-     */
-    public function get_last_error() {
-        $retErrors = sqlsrv_errors(SQLSRV_ERR_ALL);
-        $errorMessage = 'No errors found';
+    #[\Override]
+    public function get_last_error(): string {
+        $reterrors = sqlsrv_errors(SQLSRV_ERR_ALL);
+        $errormessage = 'No errors found';
 
-        if ($retErrors != null) {
-            $errorMessage = '';
+        if ($reterrors != null) {
+            $errormessage = '';
 
-            foreach ($retErrors as $arrError) {
-                $errorMessage .= "SQLState: " . $arrError['SQLSTATE'] . "<br>\n";
-                $errorMessage .= "Error Code: " . $arrError['code'] . "<br>\n";
-                $errorMessage .= "Message: " . $arrError['message'] . "<br>\n";
+            foreach ($reterrors as $arrerror) {
+                $errormessage .= "SQLState: " . $arrerror['SQLSTATE'] . "<br>\n";
+                $errormessage .= "Error Code: " . $arrerror['code'] . "<br>\n";
+                $errormessage .= "Message: " . $arrerror['message'] . "<br>\n";
             }
         }
 
-        return $errorMessage;
+        return $errormessage;
     }
 
     /**
@@ -401,27 +322,33 @@ class database extends \core\dml\database {
      *
      * @param string $sql The sql statement
      * @param array $params array of params for binding. If NULL, they are ignored.
-     * @param int $sql_query_type - Type of operation
-     * @param bool $free_result - Default true, transaction query will be freed.
+     * @param int $sqlquerytype - Type of operation
+     * @param bool $freeresult - Default true, transaction query will be freed.
      * @param bool $scrollable - Default false, to use for quickly seeking to target records
      * @return resource|bool result
      */
-    private function do_query($sql, $params, $sql_query_type, $free_result = true, $scrollable = false) {
+    private function do_query(
+        string $sql,
+        ?array $params,
+        int $sqlquerytype,
+        bool $freeresult = true,
+        bool $scrollable = false,
+    ): mixed {
         [$sql, $params, $type] = $this->fix_sql_params($sql, $params);
 
-        /*
-         * Bound variables *are* supported. Until I can get it to work, emulate the bindings
-         * The challenge/problem/bug is that although they work, doing a SELECT SCOPE_IDENTITY()
-         * doesn't return a value (no result set)
-         *
-         * -- somebody from MS
-         */
+        // Bound variables *are* supported. Until I can get it to work, emulate the bindings
+        // The challenge/problem/bug is that although they work, doing a SELECT SCOPE_IDENTITY()
+        // doesn't return a value (no result set)
+        //
+        // -- somebody from MS.
 
         $sql = $this->emulate_bound_params($sql, $params);
-        $this->query_start($sql, $params, $sql_query_type);
-        if (!$scrollable) { // Only supporting next row
+        $this->query_start($sql, $params, $sqlquerytype);
+        if (!$scrollable) {
+            // Only supporting next row.
             $result = sqlsrv_query($this->sqlsrv, $sql);
-        } else { // Supporting absolute/relative rows
+        } else {
+            // Supporting absolute/relative rows.
             $result = sqlsrv_query($this->sqlsrv, $sql, [], ['Scrollable' => SQLSRV_CURSOR_STATIC]);
         }
 
@@ -432,20 +359,16 @@ class database extends \core\dml\database {
 
         $this->query_end($result);
 
-        if ($free_result) {
+        if ($freeresult) {
             $this->free_result($result);
             return true;
         }
         return $result;
     }
 
-    /**
-     * Return tables in database WITHOUT current prefix.
-     * @param bool $usecache if true, returns list of cached tables.
-     * @return array of table names in lowercase and without prefix
-     */
-    public function get_tables($usecache = true) {
-        if ($usecache and $this->tables !== null) {
+    #[\Override]
+    public function get_tables(bool $usecache = true): array {
+        if ($usecache && $this->tables !== null) {
             return $this->tables;
         }
         $this->tables = [];
@@ -472,17 +395,13 @@ class database extends \core\dml\database {
             $this->free_result($result);
         }
 
-        // Add the currently available temptables
+        // Add the currently available temptables.
         $this->tables = array_merge($this->tables, $this->temptables->get_temptables());
         return $this->tables;
     }
 
-    /**
-     * Return table indexes - everything lowercased.
-     * @param string $table The table we want to get indexes from.
-     * @return array of arrays
-     */
-    public function get_indexes($table) {
+    #[\Override]
+    public function get_indexes(string $table): array {
         $indexes = [];
         $tablename = $this->prefix . $table;
 
@@ -506,7 +425,8 @@ class database extends \core\dml\database {
             $columns = [];
 
             while ($row = sqlsrv_fetch_array($result, SQLSRV_FETCH_ASSOC)) {
-                if ($lastindex and $lastindex != $row['index_name']) { // Save lastindex to $indexes and reset info
+                if ($lastindex && $lastindex != $row['index_name']) {
+                    // Save lastindex to $indexes and reset info.
                     $indexes[$lastindex] =
                      [
                       'unique' => $unique,
@@ -521,7 +441,8 @@ class database extends \core\dml\database {
                 $columns[] = $row['column_name'];
             }
 
-            if ($lastindex) { // Add the last one if exists
+            if ($lastindex) {
+                // Add the last one if exists.
                 $indexes[$lastindex] =
                  [
                   'unique' => $unique,
@@ -534,40 +455,49 @@ class database extends \core\dml\database {
         return $indexes;
     }
 
-    /**
-     * Returns detailed information about columns in table.
-     *
-     * @param string $table name
-     * @return array array of database_column_info objects indexed with column names
-     */
+    #[\Override]
     protected function fetch_columns(string $table): array {
         $structure = [];
 
-        if (!$this->temptables->is_temptable($table)) { // normal table, get metadata from own schema
+        if (!$this->temptables->is_temptable($table)) {
+            // This is a normal table; get metadata from own schema.
             $sql = "SELECT column_name AS name,
                            data_type AS type,
                            numeric_precision AS max_length,
                            character_maximum_length AS char_max_length,
                            numeric_scale AS scale,
                            is_nullable AS is_nullable,
-                           columnproperty(object_id(quotename(table_schema) + '.' + quotename(table_name)), column_name, 'IsIdentity') AS auto_increment,
+                           columnproperty(
+                               object_id(
+                                   quotename(table_schema) + '.' + quotename(table_name)
+                               ),
+                               column_name,
+                               'IsIdentity'
+                           ) AS auto_increment,
                            column_default AS default_value
                       FROM INFORMATION_SCHEMA.COLUMNS
                      WHERE table_name = '{" . $table . "}'
                   ORDER BY ordinal_position";
-        } else { // temp table, get metadata from tempdb schema
+        } else {
+            // Temporary table, get metadata from tempdb schema.
             $sql = "SELECT column_name AS name,
                            data_type AS type,
                            numeric_precision AS max_length,
                            character_maximum_length AS char_max_length,
                            numeric_scale AS scale,
                            is_nullable AS is_nullable,
-                           columnproperty(object_id(quotename(table_schema) + '.' + quotename(table_name)), column_name, 'IsIdentity') AS auto_increment,
+                           columnproperty(
+                               object_id(
+                                   quotename(table_schema) + '.' + quotename(table_name)
+                               ),
+                               column_name,
+                               'IsIdentity'
+                           ) AS auto_increment,
                            column_default AS default_value
                       FROM tempdb.INFORMATION_SCHEMA.COLUMNS " .
-            // check this statement
+            // Check this statement
             // JOIN tempdb..sysobjects ON name = table_name
-            // WHERE id = object_id('tempdb..{".$table."}')
+            // WHERE id = object_id('tempdb..{".$table."}').
                     "WHERE table_name LIKE '{" . $table . "}__________%'
                   ORDER BY ordinal_position";
         }
@@ -590,32 +520,32 @@ class database extends \core\dml\database {
             $info->type = $rawcolumn->type;
             $info->meta_type = $this->sqlsrvtype2moodletype($info->type);
 
-            // Prepare auto_increment info
+            // Prepare auto_increment info.
             $info->auto_increment = $rawcolumn->auto_increment ? true : false;
 
-            // Define type for auto_increment columns
+            // Define type for auto_increment columns.
             $info->meta_type = ($info->auto_increment && $info->meta_type == 'I') ? 'R' : $info->meta_type;
 
-            // id columns being auto_incremnt are PK by definition
+            // The id columns being auto_incremnt are PK by definition.
             $info->primary_key = ($info->name == 'id' && $info->meta_type == 'R' && $info->auto_increment);
 
-            if ($info->meta_type === 'C' and $rawcolumn->char_max_length == -1) {
+            if ($info->meta_type === 'C' && $rawcolumn->char_max_length == -1) {
                 // This is NVARCHAR(MAX), not a normal NVARCHAR.
                 $info->max_length = -1;
                 $info->meta_type = 'X';
             } else {
-                // Put correct length for character and LOB types
+                // Put correct length for character and LOB types.
                 $info->max_length = $info->meta_type == 'C' ? $rawcolumn->char_max_length : $rawcolumn->max_length;
                 $info->max_length = ($info->meta_type == 'X' || $info->meta_type == 'B') ? -1 : $info->max_length;
             }
 
-            // Scale
+            // Scale.
             $info->scale = $rawcolumn->scale;
 
-            // Prepare not_null info
+            // Prepare not_null info.
             $info->not_null = $rawcolumn->is_nullable == 'NO' ? true : false;
 
-            // Process defaults
+            // Process defaults.
             $info->has_default = !empty($rawcolumn->default_value);
             if ($rawcolumn->default_value === null) {
                 $info->default_value = null;
@@ -623,7 +553,7 @@ class database extends \core\dml\database {
                 $info->default_value = preg_replace("/^[\(N]+[']?(.*?)[']?[\)]+$/", '\\1', $rawcolumn->default_value);
             }
 
-            // Process binary
+            // Process binary.
             $info->binary = $info->meta_type == 'B' ? true : false;
 
             $structure[$info->name] = new database_column_info($info);
@@ -633,31 +563,34 @@ class database extends \core\dml\database {
         return $structure;
     }
 
-    /**
-     * Normalise values based in RDBMS dependencies (booleans, LOBs...)
-     *
-     * @param database_column_info $column column metadata corresponding with the value we are going to normalise
-     * @param mixed $value value we are going to normalise
-     * @return mixed the normalised value
-     */
-    protected function normalise_value($column, $value) {
+    #[\Override]
+    protected function normalise_value(database_column_info $column, mixed $value): mixed {
         $this->detect_objects($value);
 
-        if (is_bool($value)) {                               // Always, convert boolean to int
-            $value = (int)$value;
-        }                                                    // And continue processing because text columns with numeric info need special handling below
+        if (is_bool($value)) {
+            // Always, convert boolean to int.
+            $value = (int) $value;
+            // And continue processing because text columns with numeric info need special handling below.
+        }
 
-        if ($column->meta_type == 'B') { // BLOBs need to be properly "packed", but can be inserted directly if so.
-            if (!is_null($value)) {               // If value not null, unpack it to unquoted hexadecimal byte-string format
-                $value = unpack('H*hex', $value); // we leave it as array, so emulate_bound_params() can detect it
-            }                                                // easily and "bind" the param ok.
-        } else if ($column->meta_type == 'X') {              // sqlsrv doesn't cast from int to text, so if text column
-            if (is_numeric($value)) { // and is numeric value then cast to string
-                $value = ['numstr' => (string)$value];  // and put into array, so emulate_bound_params() will know how
-            }                                                // to "bind" the param ok, avoiding reverse conversion to number
+        if ($column->meta_type == 'B') {
+            // BLOBs need to be properly "packed", but can be inserted directly if so.
+            if (!is_null($value)) {
+                // If value not null, unpack it to unquoted hexadecimal byte-string format
+                // we leave it as array, so emulate_bound_params() can detect it easily and "bind" the param ok.
+                $value = unpack('H*hex', $value);
+            }
+        } else if ($column->meta_type == 'X') {
+            // SQLSrv doesn't cast from int to text, so if text column and is numeric value then cast to string
+            // and put into array, so emulate_bound_params() will know how to "bind" the param ok,
+            // avoiding reverse conversion to number.
+            if (is_numeric($value)) {
+                $value = ['numstr' => (string) $value];
+            }
         } else if ($value === '') {
-            if ($column->meta_type == 'I' or $column->meta_type == 'F' or $column->meta_type == 'N') {
-                $value = 0; // prevent '' problems in numeric fields
+            if ($column->meta_type == 'I' || $column->meta_type == 'F' || $column->meta_type == 'N') {
+                // Prevent '' problems in numeric fields.
+                $value = 0;
             }
         }
         return $value;
@@ -666,10 +599,10 @@ class database extends \core\dml\database {
     /**
      * Selectively call sqlsrv_free_stmt(), avoiding some warnings without using the horrible @
      *
-     * @param sqlsrv_resource $resource resource to be freed if possible
+     * @param \sqlsrv_resource $resource resource to be freed if possible
      * @return bool
      */
-    private function free_result($resource) {
+    private function free_result($resource): bool {
         if (!is_bool($resource) && is_resource($resource)) {
             // We need to make sure that the statement resource is in the correct type before freeing it.
             return sqlsrv_free_stmt($resource);
@@ -683,65 +616,50 @@ class database extends \core\dml\database {
      * @param string $sqlsrv_type native sqlsrv data type
      * @return string 1-char database_column_info data type
      */
-    private function sqlsrvtype2moodletype($sqlsrv_type) {
-        $type = null;
-
-        switch (strtoupper($sqlsrv_type)) {
+    private function sqlsrvtype2moodletype(string $type): string {
+        switch (strtoupper($type)) {
             case 'BIT':
-                $type = 'L';
-                break;
+                return 'L';
 
             case 'INT':
             case 'SMALLINT':
             case 'INTEGER':
             case 'BIGINT':
-                $type = 'I';
-                break;
+                return 'I';
 
             case 'DECIMAL':
             case 'REAL':
             case 'FLOAT':
-                $type = 'N';
-                break;
+                return 'N';
 
             case 'VARCHAR':
             case 'NVARCHAR':
-                $type = 'C';
-                break;
+                return 'C';
 
             case 'TEXT':
             case 'NTEXT':
             case 'VARCHAR(MAX)':
             case 'NVARCHAR(MAX)':
-                $type = 'X';
-                break;
+                return 'X';
 
             case 'IMAGE':
             case 'VARBINARY':
             case 'VARBINARY(MAX)':
-                $type = 'B';
-                break;
+                return 'B';
 
             case 'DATETIME':
-                $type = 'D';
-                break;
+                return 'D';
         }
 
-        if (!$type) {
-            throw new dml_exception('invalidsqlsrvnativetype', $sqlsrv_type);
-        }
-        return $type;
+        throw new dml_exception('invalidsqlsrvnativetype', $type);
     }
 
-    /**
-     * Do NOT use in code, to be used by database_manager only!
-     * @param string|array $sql query
-     * @param array|null $tablenames an array of xmldb table names affected by this request.
-     * @return bool true
-     * @throws ddl_change_structure_exception A DDL specific exception is thrown for any errors.
-     */
-    public function change_database_structure($sql, $tablenames = null) {
-        $this->get_manager(); // Includes DDL exceptions classes ;-)
+    #[\Override]
+    public function change_database_structure(
+        string|array $sql,
+        ?array $tablenames = null,
+    ): bool {
+        $this->get_manager();
         $sqls = (array)$sql;
 
         try {
@@ -772,24 +690,29 @@ class database extends \core\dml\database {
      * consistent behavior.
      */
     protected function emulate_bound_params($sql, ?array $params = null) {
-
         if (empty($params)) {
             return $sql;
         }
-        // ok, we have verified sql statement with ? and correct number of params
+        // Ok, we have verified sql statement with ? and correct number of params.
         $parts = array_reverse(explode('?', $sql));
         $return = array_pop($parts);
         foreach ($params as $param) {
             if (is_bool($param)) {
                 $return .= (int)$param;
-            } else if (is_array($param) && isset($param['hex'])) { // detect hex binary, bind it specially
+            } else if (is_array($param) && isset($param['hex'])) {
+                // Detect hex binary, bind it specially.
                 $return .= '0x' . $param['hex'];
-            } else if (is_array($param) && isset($param['numstr'])) { // detect numerical strings that *must not*
-                $return .= "N'{$param['numstr']}'";                   // be converted back to number params, but bound as strings
+            } else if (is_array($param) && isset($param['numstr'])) {
+                // Detect numerical strings that *must not*
+                // be converted back to number params, but bound as strings.
+                $return .= "N'{$param['numstr']}'";
             } else if (is_null($param)) {
                 $return .= 'NULL';
-            } else if (is_number($param)) { // we can not use is_numeric() because it eats leading zeros from strings like 0045646
-                $return .= "'$param'"; // this is a hack for MDL-23997, we intentionally use string because it is compatible with both nvarchar and int types
+            } else if (is_number($param)) {
+                // We can not use is_numeric() because it eats leading zeros from strings like 0045646.
+                // This is a hack for MDL-23997, we intentionally use string because it is compatible with
+                // both nvarchar and int types.
+                $return .= "'$param'";
             } else if (is_float($param)) {
                 $return .= $param;
             } else {
@@ -803,17 +726,12 @@ class database extends \core\dml\database {
         return $return;
     }
 
-    /**
-     * Execute general sql query. Should be used only when no other method suitable.
-     * Do NOT use this to make changes in db structure, use database_manager methods instead!
-     * @param string $sql query
-     * @param array $params query parameters
-     * @return bool true
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
-    public function execute($sql, ?array $params = null) {
+    #[\Override]
+    public function execute($sql, ?array $params = null): bool {
         if (strpos($sql, ';') !== false) {
-            throw new coding_exception('moodle_database::execute() Multiple sql statements found or bound parameters not used properly in query!');
+            throw new coding_exception(
+                'moodle_database::execute() Multiple sql statements found or bound parameters not used properly in query!',
+            );
         }
         $this->do_query($sql, $params, SQL_QUERY_UPDATE);
         return true;
@@ -843,29 +761,17 @@ class database extends \core\dml\database {
         return false;
     }
 
-    /**
-     * Get a number of records as a moodle_recordset using a SQL statement.
-     *
-     * Since this method is a little less readable, use of it should be restricted to
-     * code where it's possible there might be large datasets being returned.  For known
-     * small datasets use get_records_sql - it leads to simpler code.
-     *
-     * The return type is like:
-     * @see function get_recordset.
-     *
-     * @param string $sql the SQL select query to execute.
-     * @param array $params array of sql parameters
-     * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
-     * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return \core\dml\recordset instance
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
-    public function get_recordset_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
-
+    #[\Override]
+    public function get_recordset_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): \core\dml\recordset {
         [$limitfrom, $limitnum] = $this->normalise_limit_from_num($limitfrom, $limitnum);
         $needscrollable = (bool)$limitfrom; // To determine if we'll need to perform scroll to $limitfrom.
 
-        if ($limitfrom or $limitnum) {
+        if ($limitfrom || $limitnum) {
             if (!$this->supportsoffsetfetch) {
                 if ($limitnum >= 1) { // Only apply TOP clause if we have any limitnum (limitfrom offset is handled later).
                     $fetch = $limitfrom + $limitnum;
@@ -940,7 +846,7 @@ class database extends \core\dml\database {
      * @param mixed $result
      * @return \core\dml\recordset
      */
-    protected function create_recordset($result) {
+    protected function create_recordset(mixed $result): \core\dml\recordset {
         $rs = new recordset($result, $this);
         $this->recordsets[] = $rs;
         return $rs;
@@ -948,32 +854,22 @@ class database extends \core\dml\database {
 
     /**
      * Do not use outside of recordset class.
-     * @internal
+     *
      * @param \core\dml\recordset $rs
      */
-    public function recordset_closed(recordset $rs) {
+    public function recordset_closed(recordset $rs): void {
         if ($key = array_search($rs, $this->recordsets, true)) {
             unset($this->recordsets[$key]);
         }
     }
 
-    /**
-     * Get a number of records as an array of objects using a SQL statement.
-     *
-     * Return value is like:
-     * @see function get_records.
-     *
-     * @param string $sql the SQL select query to execute. The first column of this SELECT statement
-     *   must be a unique value (usually the 'id' field), as it will be used as the key of the
-     *   returned array.
-     * @param array $params array of sql parameters
-     * @param int $limitfrom return a subset of records, starting at this point (optional, required if $limitnum is set).
-     * @param int $limitnum return a subset comprising this many records (optional, required if $limitfrom is set).
-     * @return array of objects, or empty array if no records were found
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
-    public function get_records_sql($sql, ?array $params = null, $limitfrom = 0, $limitnum = 0) {
-
+    #[\Override]
+    public function get_records_sql(
+        string $sql,
+        ?array $params = null,
+        string|int|null $limitfrom = 0,
+        string|int|null $limitnum = 0,
+    ): array {
         $rs = $this->get_recordset_sql($sql, $params, $limitfrom, $limitnum);
 
         $results = [];
@@ -984,7 +880,11 @@ class database extends \core\dml\database {
 
             if (isset($results[$id])) {
                 $colname = key($rowarray);
-                debugging("Did you remember to make the first column something unique in your call to get_records? Duplicate value '$id' found in column '$colname'.", DEBUG_DEVELOPER);
+                debugging(
+                    "Did you remember to make the first column something unique in your call to get_records? "
+                        . "Duplicate value '$id' found in column '$colname'.",
+                    DEBUG_DEVELOPER,
+                );
             }
             $results[$id] = (object)$row;
         }
@@ -993,14 +893,7 @@ class database extends \core\dml\database {
         return $results;
     }
 
-    /**
-     * Selects records and return values (first field) as an array using a SQL statement.
-     *
-     * @param string $sql The SQL query
-     * @param array $params array of sql parameters
-     * @return array of values
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
+    #[\Override]
     public function get_fieldset_sql($sql, ?array $params = null) {
 
         $rs = $this->get_recordset_sql($sql, $params);
@@ -1026,7 +919,8 @@ class database extends \core\dml\database {
      * @return bool|int true or new id
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false) {
+    #[\Override]
+    public function insert_record_raw($table, $params, $returnid = true, $bulk = false, $customsequence = false): bool|int {
         if (!is_array($params)) {
             $params = (array)$params;
         }
@@ -1035,12 +929,14 @@ class database extends \core\dml\database {
 
         if ($customsequence) {
             if (!isset($params['id'])) {
-                throw new coding_exception('moodle_database::insert_record_raw() id field must be specified if custom sequences used.');
+                throw new coding_exception(
+                    'moodle_database::insert_record_raw() id field must be specified if custom sequences used.',
+                );
             }
 
             $returnid = false;
             $columns = $this->get_columns($table);
-            if (isset($columns['id']) and $columns['id']->auto_increment) {
+            if (isset($columns['id']) && $columns['id']->auto_increment) {
                 $isidentity = true;
             }
 
@@ -1061,7 +957,7 @@ class database extends \core\dml\database {
         $qms = array_fill(0, count($params), '?');
         $qms = implode(',', $qms);
         $sql = "INSERT INTO {" . $table . "} ($fields) VALUES($qms)";
-        $query_id = $this->do_query($sql, $params, SQL_QUERY_INSERT);
+        $this->do_query($sql, $params, SQL_QUERY_INSERT);
 
         if ($customsequence) {
             // Enable IDENTITY column after inserting record with id, only if the
@@ -1083,25 +979,25 @@ class database extends \core\dml\database {
     /**
      * Get the ID of the current action
      *
-     * @return mixed ID
+     * @return bool|int ID
      */
-    private function sqlsrv_fetch_id() {
-        $query_id = sqlsrv_query($this->sqlsrv, 'SELECT SCOPE_IDENTITY()');
-        if ($query_id === false) {
+    private function sqlsrv_fetch_id(): bool|int {
+        $queryid = sqlsrv_query($this->sqlsrv, 'SELECT SCOPE_IDENTITY()');
+        if ($queryid === false) {
             $dberr = $this->get_last_error();
             return false;
         }
-        $row = $this->sqlsrv_fetchrow($query_id);
-        return (int)$row[0];
+        $row = $this->sqlsrv_fetchrow($queryid);
+        return (int) $row[0];
     }
 
     /**
      * Fetch a single row into an numbered array
      *
-     * @param mixed $query_id
+     * @param mixed $queryid
      */
-    private function sqlsrv_fetchrow($query_id) {
-        $row = sqlsrv_fetch_array($query_id, SQLSRV_FETCH_NUMERIC);
+    private function sqlsrv_fetchrow($queryid) {
+        $row = sqlsrv_fetch_array($queryid, SQLSRV_FETCH_NUMERIC);
         if ($row === false) {
             $dberr = $this->get_last_error();
             return false;
@@ -1113,19 +1009,8 @@ class database extends \core\dml\database {
         return $row;
     }
 
-    /**
-     * Insert a record into a table and return the "id" field if required.
-     *
-     * Some conversions and safety checks are carried out. Lobs are supported.
-     * If the return ID isn't required, then this just reports success as true/false.
-     * $data is an object containing needed data
-     * @param string $table The database table to be inserted into
-     * @param object|array $dataobject A data object with values for one or more fields in the record
-     * @param bool $returnid Should the id of the newly created record entry be returned? If this option is not requested then true/false is returned.
-     * @return bool|int true or new id
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
-    public function insert_record($table, $dataobject, $returnid = true, $bulk = false) {
+    #[\Override]
+    public function insert_record($table, $dataobject, $returnid = true, $bulk = false): bool|int {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
@@ -1149,15 +1034,7 @@ class database extends \core\dml\database {
         return $this->insert_record_raw($table, $cleaned, $returnid, $bulk);
     }
 
-    /**
-     * Import a record into a table, id field is required.
-     * Safety checks are NOT carried out. Lobs are supported.
-     *
-     * @param string $table name of database table to be inserted into
-     * @param object $dataobject A data object with values for one or more fields in the record
-     * @return bool true
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
+    #[\Override]
     public function import_record($table, $dataobject) {
         if (!is_object($dataobject)) {
             $dataobject = (object)$dataobject;
@@ -1181,13 +1058,15 @@ class database extends \core\dml\database {
 
     /**
      * Update record in database, as fast as possible, no safety checks, lobs not supported.
+     *
      * @param string $table name
      * @param stdClass|array $params data record as object or array
      * @param bool true means repeated updates expected
      * @return bool true
      * @throws dml_exception A DML specific exception is thrown for any errors.
      */
-    public function update_record_raw($table, $params, $bulk = false) {
+    #[\Override]
+    public function update_record_raw($table, $params, $bulk = false): bool {
         $params = (array)$params;
 
         if (!isset($params['id'])) {
@@ -1206,7 +1085,8 @@ class database extends \core\dml\database {
             $sets[] = "$field = ?";
         }
 
-        $params[] = $id; // last ? in WHERE condition
+        // The last ? in the WHERE condition.
+        $params[] = $id;
 
         $sets = implode(',', $sets);
         $sql = "UPDATE {" . $table . "} SET $sets WHERE id = ?";
@@ -1216,21 +1096,8 @@ class database extends \core\dml\database {
         return true;
     }
 
-    /**
-     * Update a record in a table
-     *
-     * $dataobject is an object containing needed data
-     * Relies on $dataobject having a variable "id" to
-     * specify the record to update
-     *
-     * @param string $table The database table to be checked against.
-     * @param stdClass|array $dataobject An object with contents equal to fieldname=>fieldvalue.
-     *        Must have an entry for 'id' to map to the table specified.
-     * @param bool true means repeated updates expected
-     * @return bool true
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
-    public function update_record($table, $dataobject, $bulk = false) {
+    #[\Override]
+    public function update_record($table, $dataobject, $bulk = false): bool {
         $dataobject = (array)$dataobject;
 
         $columns = $this->get_columns($table);
@@ -1247,18 +1114,8 @@ class database extends \core\dml\database {
         return $this->update_record_raw($table, $cleaned, $bulk);
     }
 
-    /**
-     * Set a single field in every table record which match a particular WHERE clause.
-     *
-     * @param string $table The database table to be checked against.
-     * @param string $newfield the field to set.
-     * @param string $newvalue the value to set the field to.
-     * @param string $select A fragment of SQL to be used in a where clause in the SQL call.
-     * @param array $params array of sql parameters
-     * @return bool true
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
-    public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null) {
+    #[\Override]
+    public function set_field_select($table, $newfield, $newvalue, $select, ?array $params = null): bool {
         if ($select) {
             $select = "WHERE $select";
         }
@@ -1267,10 +1124,10 @@ class database extends \core\dml\database {
             $params = [];
         }
 
-        // convert params to ? types
+        // Convert params to ? types.
         [$select, $params, $type] = $this->fix_sql_params($select, $params);
 
-        // Get column metadata
+        // Get column metadata.
         $columns = $this->get_columns($table);
         $column = $columns[$newfield];
 
@@ -1289,48 +1146,36 @@ class database extends \core\dml\database {
         return true;
     }
 
-    /**
-     * Delete one or more records from a table which match a particular WHERE clause.
-     *
-     * @param string $table The database table to be checked against.
-     * @param string $select A fragment of SQL to be used in a where clause in the SQL call (used to define the selection criteria).
-     * @param array $params array of sql parameters
-     * @return bool true
-     * @throws dml_exception A DML specific exception is thrown for any errors.
-     */
-    public function delete_records_select($table, $select, ?array $params = null) {
+    #[\Override]
+    public function delete_records_select($table, $select, ?array $params = null): bool {
         if ($select) {
             $select = "WHERE $select";
         }
 
         $sql = "DELETE FROM {" . $table . "} $select";
 
-        // we use SQL_QUERY_UPDATE because we do not know what is in general SQL, delete constant would not be accurate
+        // Use SQL_QUERY_UPDATE because we do not know what is in general SQL, delete constant would not be accurate.
         $this->do_query($sql, $params, SQL_QUERY_UPDATE);
 
         return true;
     }
 
-    /**
-     * Return SQL for casting to char of given field/expression
-     *
-     * @param string $field Table field or SQL expression to be cast
-     * @return string
-     */
+    #[\Override]
     public function sql_cast_to_char(string $field): string {
-        return "CAST({$field} AS NVARCHAR(MAX))";
+        return " CAST({$field} AS NVARCHAR(MAX)) ";
     }
 
-
-    public function sql_cast_char2int($fieldname, $text = false) {
+    #[\Override]
+    public function sql_cast_char2int(string $fieldname, bool $text = false): string {
         if (!$text) {
-            return ' CAST(' . $fieldname . ' AS INT) ';
+            return " CAST({$fieldname} AS INT) ";
         } else {
             return ' CAST(' . $this->sql_compare_text($fieldname) . ' AS INT) ';
         }
     }
 
-    public function sql_cast_char2real($fieldname, $text = false) {
+    #[\Override]
+    public function sql_cast_char2real(string $fieldname, bool $text = false): string {
         if (!$text) {
             return ' CAST(' . $fieldname . ' AS REAL) ';
         } else {
@@ -1338,21 +1183,28 @@ class database extends \core\dml\database {
         }
     }
 
-    public function sql_ceil($fieldname) {
-        return ' CEILING(' . $fieldname . ')';
+    #[\Override]
+    public function sql_ceil(string $fieldname): string {
+        return " CEILING({$fieldname})";
     }
 
-    protected function get_collation() {
+
+    /**
+     * Returns the current database collation.
+     *
+     * @return ?string or null MySQL collation name
+     */
+    protected function get_collation(): ?string {
         if (isset($this->collation)) {
             return $this->collation;
         }
         if (!empty($this->dboptions['dbcollation'])) {
-            // perf speedup
+            // Perf speedup.
             $this->collation = $this->dboptions['dbcollation'];
             return $this->collation;
         }
 
-        // make some default
+        // Make some default.
         $this->collation = 'Latin1_General_CI_AI';
 
         $sql = "SELECT CAST(DATABASEPROPERTYEX('$this->dbname', 'Collation') AS varchar(255)) AS SQLCollation";
@@ -1370,7 +1222,14 @@ class database extends \core\dml\database {
         return $this->collation;
     }
 
-    public function sql_equal($fieldname, $param, $casesensitive = true, $accentsensitive = true, $notequal = false) {
+    #[\Override]
+    public function sql_equal(
+        string $fieldname,
+        string $param,
+        bool $casesensitive = true,
+        bool $accentsensitive = true,
+        bool $notequal = false,
+    ): string {
         $equalop = $notequal ? '<>' : '=';
         $collation = $this->get_collation();
 
@@ -1388,24 +1247,21 @@ class database extends \core\dml\database {
         return "$fieldname COLLATE $collation $equalop $param";
     }
 
-    /**
-     * Returns 'LIKE' part of a query.
-     *
-     * @param string $fieldname usually name of the table column
-     * @param string $param usually bound query parameter (?, :named)
-     * @param bool $casesensitive use case sensitive search
-     * @param bool $accensensitive use accent sensitive search (not all databases support accent insensitive)
-     * @param bool $notlike true means "NOT LIKE"
-     * @param string $escapechar escape char for '%' and '_'
-     * @return string SQL code fragment
-     */
-    public function sql_like($fieldname, $param, $casesensitive = true, $accentsensitive = true, $notlike = false, $escapechar = '\\') {
+    #[\Override]
+    public function sql_like(
+        string $fieldname,
+        string $param,
+        bool $casesensitive = true,
+        bool $accentsensitive = true,
+        bool $notlike = false,
+        string $escapechar = '\\',
+    ): string {
         if (strpos($param, '%') !== false) {
             debugging('Potential SQL injection detected, sql_like() expects bound parameters (? or :named)');
         }
 
         $collation = $this->get_collation();
-        $LIKE = $notlike ? 'NOT LIKE' : 'LIKE';
+        $like = $notlike ? 'NOT LIKE' : 'LIKE';
 
         if ($casesensitive) {
             $collation = str_replace('_CI', '_CS', $collation);
@@ -1418,20 +1274,14 @@ class database extends \core\dml\database {
             $collation = str_replace('_AS', '_AI', $collation);
         }
 
-        return "$fieldname COLLATE $collation $LIKE $param ESCAPE '$escapechar'";
+        return "{$fieldname} COLLATE {$collation} {$like} {$param} ESCAPE '{$escapechar}'";
     }
 
-    /**
-     * Escape common SQL LIKE special characters like '_' or '%', plus '[' & ']' which are also supported in SQL Server
-     *
-     * Note that '^' and '-' also have meaning within a LIKE, but only when enclosed within square brackets. As this syntax
-     * is not supported on all databases and the brackets are always escaped, we don't need special handling of them
-     *
-     * @param string $text
-     * @param string $escapechar
-     * @return string
-     */
-    public function sql_like_escape($text, $escapechar = '\\') {
+    #[\Override]
+    public function sql_like_escape(
+        string $text,
+        string $escapechar = '\\',
+    ): string {
         $text = parent::sql_like_escape($text, $escapechar);
 
         $text = str_replace('[', $escapechar . '[', $text);
@@ -1440,7 +1290,8 @@ class database extends \core\dml\database {
         return $text;
     }
 
-    public function sql_concat(...$arr) {
+    #[\Override]
+    public function sql_concat(...$arr): string {
         foreach ($arr as $key => $ele) {
             $arr[$key] = $this->sql_cast_to_char($ele);
         }
@@ -1452,27 +1303,27 @@ class database extends \core\dml\database {
         return " $s ";
     }
 
-    public function sql_concat_join($separator = "' '", $elements = []) {
+    #[\Override]
+    public function sql_concat_join($separator = "' '", $elements = []): string {
         for ($n = count($elements) - 1; $n > 0; $n--) {
             array_splice($elements, $n, 0, $separator);
         }
         return call_user_func_array([$this, 'sql_concat'], array_values($elements));
     }
 
-    /**
-     * Return SQL for performing group concatenation on given field/expression
-     *
-     * @param string $field
-     * @param string $separator
-     * @param string $sort
-     * @return string
-     */
+    #[\Override]
     public function sql_group_concat(string $field, string $separator = ', ', string $sort = ''): string {
         $fieldsort = $sort ? "WITHIN GROUP (ORDER BY {$sort})" : '';
         return "STRING_AGG({$field}, '{$separator}') {$fieldsort}";
     }
 
-    public function sql_isempty($tablename, $fieldname, $nullablefield, $textfield) {
+    #[\Override]
+    public function sql_isempty(
+        string $tablename,
+        string $fieldname,
+        bool $nullablefield,
+        bool $textfield,
+    ): string {
         if ($textfield) {
             return ' (' . $this->sql_compare_text($fieldname) . " = '') ";
         } else {
@@ -1480,36 +1331,23 @@ class database extends \core\dml\database {
         }
     }
 
-    /**
-     * Returns the SQL text to be used to calculate the length in characters of one expression.
-     * @param string fieldname or expression to calculate its length in characters.
-     * @return string the piece of SQL code to be used in the statement.
-     */
-    public function sql_length($fieldname) {
-        return ' LEN(' . $fieldname . ')';
+    #[\Override]
+    public function sql_length(string $fieldname): string {
+        return " LEN({$fieldname})";
     }
 
-    public function sql_order_by_text($fieldname, $numchars = 32) {
+    #[\Override]
+    public function sql_order_by_text(string $fieldname, int $numchars = 32): string {
         return " CONVERT(varchar({$numchars}), {$fieldname})";
     }
 
-    /**
-     * Returns the SQL for returning searching one string for the location of another.
-     */
-    public function sql_position($needle, $haystack) {
+    #[\Override]
+    public function sql_position(string $needle, string $haystack): string {
         return "CHARINDEX(($needle), ($haystack))";
     }
 
-    /**
-     * Returns the proper substr() SQL text used to extract substrings from DB
-     * NOTE: this was originally returning only function name
-     *
-     * @param string $expr some string field, no aggregates
-     * @param mixed $start integer or expression evaluating to int
-     * @param mixed $length optional integer or expression evaluating to int
-     * @return string sql fragment
-     */
-    public function sql_substr($expr, $start, $length = false) {
+    #[\Override]
+    public function sql_substr(string $expr, $start, $length = false): string {
         if (count(func_get_args()) < 2) {
             throw new coding_exception(
                 'moodle_database::sql_substr() requires at least two parameters',
@@ -1524,27 +1362,18 @@ class database extends \core\dml\database {
         }
     }
 
-    /**
-     * Does this driver support tool_replace?
-     *
-     * @since Moodle 2.6.1
-     * @return bool
-     */
-    public function replace_all_text_supported() {
+    #[\Override]
+    public function replace_all_text_supported(): bool {
         return true;
     }
 
-    public function session_lock_supported() {
+    #[\Override]
+    public function session_lock_supported(): bool {
         return true;
     }
 
-    /**
-     * Obtain session lock
-     * @param int $rowid id of the row with session record
-     * @param int $timeout max allowed time to wait for the lock in seconds
-     * @return void
-     */
-    public function get_session_lock($rowid, $timeout) {
+    #[\Override]
+    public function get_session_lock($rowid, $timeout): void {
         if (!$this->session_lock_supported()) {
             return;
         }
@@ -1556,7 +1385,6 @@ class database extends \core\dml\database {
         // While this may work using proper {call sp_...} calls + binding +
         // executing + consuming recordsets, the solution used for the mssql
         // driver is working perfectly, so 100% mimic-ing that code.
-        // $sql = "sp_getapplock '$fullname', 'Exclusive', 'Session',  $timeoutmilli";
         $sql = "BEGIN
                     DECLARE @result INT
                     EXECUTE @result = sp_getapplock @Resource='$fullname',
@@ -1579,11 +1407,12 @@ class database extends \core\dml\database {
         $this->free_result($result);
     }
 
-    public function release_session_lock($rowid) {
+    #[\Override]
+    public function release_session_lock(int $rowid): void {
         if (!$this->session_lock_supported()) {
             return;
         }
-        if (!$this->used_for_db_sessions) {
+        if (!$this->is_used_for_db_sessions()) {
             return;
         }
 
@@ -1597,12 +1426,8 @@ class database extends \core\dml\database {
         $this->free_result($result);
     }
 
-    /**
-     * Driver specific start of real database transaction,
-     * this can not be used directly in code.
-     * @return void
-     */
-    protected function begin_transaction() {
+    #[\Override]
+    protected function begin_transaction(): void {
         // Recordsets do not work well with transactions in SQL Server,
         // let's prefetch the recordsets to memory to work around these problems.
         foreach ($this->recordsets as $rs) {
@@ -1614,34 +1439,22 @@ class database extends \core\dml\database {
         $this->query_end($result);
     }
 
-    /**
-     * Driver specific commit of real database transaction,
-     * this can not be used directly in code.
-     * @return void
-     */
-    protected function commit_transaction() {
+    #[\Override]
+    protected function commit_transaction(): void {
         $this->query_start('native sqlsrv_commit', null, SQL_QUERY_AUX);
         $result = sqlsrv_commit($this->sqlsrv);
         $this->query_end($result);
     }
 
-    /**
-     * Driver specific abort of real database transaction,
-     * this can not be used directly in code.
-     * @return void
-     */
-    protected function rollback_transaction() {
+    #[\Override]
+    protected function rollback_transaction(): void {
         $this->query_start('native sqlsrv_rollback', null, SQL_QUERY_AUX);
         $result = sqlsrv_rollback($this->sqlsrv);
         $this->query_end($result);
     }
 
-    /**
-     * Is fulltext search enabled?.
-     *
-     * @return bool
-     */
-    public function is_fulltext_search_supported() {
+    #[\Override]
+    public function is_fulltext_search_supported(): bool {
         global $CFG;
 
         $sql = "SELECT FULLTEXTSERVICEPROPERTY('IsFullTextInstalled')";

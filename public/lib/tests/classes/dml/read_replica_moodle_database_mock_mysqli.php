@@ -27,26 +27,19 @@ namespace core\tests\dml;
 class read_replica_moodle_database_mock_mysqli extends \core\dml\driver\mysqli\native\database {
     use read_replica_trait;
 
-    /**
-     * Return tables in database WITHOUT current prefix
-     * @param bool $usecache if true, returns list of cached tables.
-     * @return array of table names in lowercase and without prefix
-     */
-    public function get_tables($usecache = true) {
+    #[\Override]
+    public function get_tables(bool $usecache = true): array {
         if ($this->tables === null) {
             $this->tables = [];
         }
         return $this->tables;
     }
 
-    /**
-     * To be used by database_manager
-     * @param string|array $sql query
-     * @param array|null $tablenames an array of xmldb table names affected by this request.
-     * @return bool true
-     * @throws \ddl_change_structure_exception A DDL specific exception is thrown for any errors.
-     */
-    public function change_database_structure($sql, $tablenames = null) {
+    #[\Override]
+    public function change_database_structure(
+        string|array $sql,
+        ?array $tablenames = null,
+    ): bool {
         return true;
     }
 }

@@ -18,6 +18,7 @@ namespace core\dml;
 
 use core\dml\exception\connection_exception;
 use core\dml\exception\transaction_exception;
+use core\exception\coding_exception;
 
 /**
  * Trait that adds read-only replica connection capability.
@@ -129,14 +130,14 @@ trait read_replica_trait {
      *
      * @return resource
      */
-    abstract protected function get_db_handle();
+    abstract protected function get_db_handle(): mixed;
 
     /**
      * Sets db handle to be used with subsequent queries.
      *
      * @param resource $dbh
      */
-    abstract protected function set_db_handle($dbh): void;
+    abstract protected function set_db_handle(mixed $dbh): void;
 
     /**
      * Connect to db.
@@ -177,7 +178,7 @@ trait read_replica_trait {
      * @throws connection_exception;
      * @throws coding_exception;
      */
-    public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null) {
+    public function connect($dbhost, $dbuser, $dbpass, $dbname, $prefix, ?array $dboptions = null): bool {
         $this->pdbhost = $dbhost;
         $this->pdbuser = $dbuser;
         $this->pdbpass = $dbpass;
@@ -313,9 +314,9 @@ trait read_replica_trait {
     /**
      * On DBs that support it, switch to transaction mode and begin a transaction.
      *
-     * @return moodle_transaction
+     * @return transaction
      */
-    public function start_delegated_transaction() {
+    public function start_delegated_transaction(): transaction {
         $this->set_dbhwrite();
         return parent::start_delegated_transaction();
     }
@@ -328,7 +329,7 @@ trait read_replica_trait {
      * @param int $type type of query
      * @param mixed $extrainfo driver specific extra information
      */
-    protected function query_start($sql, ?array $params, $type, $extrainfo = null) {
+    protected function query_start(string $sql, ?array $params, $type, $extrainfo = null): void {
         parent::query_start($sql, $params, $type, $extrainfo);
         $this->select_db_handle($type, $sql);
     }
@@ -338,7 +339,7 @@ trait read_replica_trait {
      *
      * @param mixed $result The db specific result obtained from running a query.
      */
-    protected function query_end($result) {
+    protected function query_end(mixed $result): void {
         if ($this->written) {
             // Adjust the written time.
             array_walk($this->written, function (&$val) {
@@ -442,7 +443,7 @@ trait read_replica_trait {
      * @param transaction $transaction The transaction to commit.
      * @throws transaction_exception Creates and throws transaction related exceptions.
      */
-    public function commit_delegated_transaction(transaction $transaction) {
+    public function commit_delegated_transaction(transaction $transaction): void {
         if ($this->written) {
             // Adjust the written time.
             $now = microtime(true);

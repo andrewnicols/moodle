@@ -38,7 +38,6 @@ use core\exception\coding_exception;
  *  float - digits left from floating point
  *  boolean - 1
  * @property-read int    $max_length size of the database field, eg how much data can you put in there.
- *
  * @property-read int    $scale Scale of field, decimal points (float), null otherwise.
  * @property-read bool   $not_null true if the field is set to NOT NULL.
  * @property-read bool   $primary_key true if the field is the primary key. (usually 'id').
@@ -64,7 +63,7 @@ class database_column_info {
     /**
      * @var array The internal storage of column data.
      */
-    protected $data;
+    protected array $data;
 
     /**
      * Magic set function.  This is a read only object and you aren't allowed to write to any variables.
@@ -109,9 +108,20 @@ class database_column_info {
      */
     public function __construct($data) {
         // Initialize all the allowed variables to null so the array key exists.
-        $validelements = ['name', 'type', 'max_length', 'scale', 'not_null', 'primary_key',
-                               'auto_increment', 'binary', 'has_default', 'default_value',
-                               'unique', 'meta_type'];
+        $validelements = [
+            'name',
+            'type',
+            'max_length',
+            'scale',
+            'not_null',
+            'primary_key',
+            'auto_increment',
+            'binary',
+            'has_default',
+            'default_value',
+            'unique',
+            'meta_type',
+        ];
         foreach ($validelements as $element) {
             if (isset($data->$element)) {
                 $this->data[$element] = $data->$element;
@@ -121,7 +131,7 @@ class database_column_info {
         }
 
         switch ($this->data['meta_type']) {
-            case 'R': // normalise counters (usually 'id')
+            case 'R': // Normalise counters (usually 'id').
                 $this->data['binary']         = false;
                 $this->data['has_default']    = false;
                 $this->data['default_value']  = null;

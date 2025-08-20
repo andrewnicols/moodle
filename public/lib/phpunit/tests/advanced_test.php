@@ -335,8 +335,8 @@ final class advanced_test extends \advanced_testcase {
             $this->assertInstanceOf('dml_exception', $e);
         }
         $DB = $this->createMock(get_class($DB));
-        $this->assertNull($DB->get_record('pokus', array()));
-        // Rest continues after reset.
+        $this->assertFalse($DB->get_record('pokus', array()));
+    // Rest continues after reset.
     }
 
     public function test_database_mock2(): void {

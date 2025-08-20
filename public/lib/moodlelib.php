@@ -634,6 +634,15 @@ define('TOGGLE_SENSITIVE_ENABLED', 1);
  */
 define('TOGGLE_SENSITIVE_SMALL_SCREENS_ONLY', 2);
 
+/** Return false if record not found, show debug warning if multiple records found */
+define('IGNORE_MISSING', 0);
+
+/** Similar to IGNORE_MISSING but does not show debug warning if multiple records found, not recommended to be used */
+define('IGNORE_MULTIPLE', 1);
+
+/** Indicates exactly one record must exist */
+define('MUST_EXIST', 2);
+
 // PARAMETER HANDLING.
 
 /**

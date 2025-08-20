@@ -28,7 +28,7 @@ class temptables extends \core\dml\temptables {
     /**
      * Add one temptable to the store.
      *
-     * Overriden because SQLSRV requires to add # for local (session) temporary
+     * Overriden because SQLSRV must add `#` for local (session) temporary
      * tables before the prefix.
      *
      * Given one moodle temptable name (without prefix), add it to the store, with the
@@ -39,9 +39,10 @@ class temptables extends \core\dml\temptables {
      *
      * @param string $tablename name without prefix of the table created as temptable
      */
-    public function add_temptable($tablename) {
+    #[\Override]
+    public function add_temptable(string $tablename): void {
         // TODO: throw exception if exists: if ($this->is_temptable...
-        $this->temptables[$tablename] = '#' . $this->prefix . $tablename;
+        $this->temptables[$tablename] = "#{$this->prefix}{$tablename}";
     }
 }
 

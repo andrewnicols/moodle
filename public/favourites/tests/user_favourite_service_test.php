@@ -125,7 +125,7 @@ final class user_favourite_service_test extends \advanced_testcase {
                         return $fakerow;
                     }
                 }
-                throw new \dml_missing_record_exception("Item not found");
+                throw new \core\dml\exception\missing_record_exception('table', 'Item not found', []);
             })
         );
         $mockrepo->expects($this->any())

@@ -24,6 +24,7 @@ namespace core\dml;
  * @copyright  2015 David Monllao
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(recordset::class)]
 #[\PHPUnit\Framework\Attributes\CoversClass(recordset_walk::class)]
 final class recordset_walk_test extends \advanced_testcase {
     #[\Override]
@@ -38,6 +39,7 @@ final class recordset_walk_test extends \advanced_testcase {
         $recordset = $DB->get_recordset('assign');
         $walker = new \core\dml\recordset_walk($recordset, [$this, 'simple_callback']);
         $this->assertFalse($walker->valid());
+        $this->assertFalse($walker->current());
 
         $count = 0;
         foreach ($walker as $data) {
@@ -66,6 +68,7 @@ final class recordset_walk_test extends \advanced_testcase {
         foreach ($walker as $data) {
             // Checking that the callback is being executed on each iteration.
             $this->assertEquals($data->id . ' potatoes', $data->newfield);
+            $this->assertEquals($data->id, $walker->key());
             $count++;
         }
         $this->assertEquals(10, $count);
@@ -78,9 +81,8 @@ final class recordset_walk_test extends \advanced_testcase {
 
         /** @var \mod_assign_generator $generator */
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_assign');
-        $courses = [];
         for ($i = 0; $i < 10; $i++) {
-            $courses[$i] = $generator->create_instance(['course' => SITEID]);
+            $generator->create_instance(['course' => SITEID]);
         }
 
         // Iteration with extra callback arguments.

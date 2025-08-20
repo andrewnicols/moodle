@@ -16,6 +16,8 @@
 
 namespace core\tests\dml;
 
+use stdClass;
+
 /**
  * Database recordset mock test class
  *
@@ -25,36 +27,25 @@ namespace core\tests\dml;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class read_replica_moodle_recordset_special extends \core\dml\recordset {
-    /**
-     * Iterator interface
-     * @return void
-     */
+    #[\Override]
     public function close() {
     }
-    /**
-     * Iterator interface
-     * @return stdClass
-     */
+
+    #[\Override]
     public function current(): stdClass {
         return new stdClass();
     }
-    /**
-     * Iterator interface
-     * @return void
-     */
+
+    #[\Override]
     public function next(): void {
     }
-    /**
-     * Iterator interface
-     * @return mixed
-     */
+
+    #[\Override]
     #[\ReturnTypeWillChange]
     public function key() {
     }
-    /**
-     * Iterator interface
-     * @return bool
-     */
+
+    #[\Override]
     public function valid(): bool {
         return false;
     }
