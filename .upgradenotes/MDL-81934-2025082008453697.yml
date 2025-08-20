@@ -1,0 +1,10 @@
+issueNumber: MDL-81934
+notes:
+  core:
+    - message: |
+        The following methods of `\moodle_database` have been removed:
+
+        - `::get_configuration_hints()`
+        - `::sql_cast_2signed()`
+        - `::sql_empty()`
+      type: removed

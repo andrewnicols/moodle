@@ -1863,11 +1863,6 @@ class database extends \core\dml\database {
     }
 
     #[\Override]
-    public function sql_cast_2signed(string $fieldname): string {
-        return " CAST({$fieldname} AS SIGNED) ";
-    }
-
-    #[\Override]
     public function sql_intersect(array $selects, string $fields): string {
         if (count($selects) <= 1) {
             return parent::sql_intersect($selects, $fields);

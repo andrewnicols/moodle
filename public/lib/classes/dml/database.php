@@ -291,17 +291,6 @@ abstract class database {
     abstract public function get_configuration_help(): string;
 
     /**
-     * Returns the localised database description
-     * Note: can be used before connect()
-     * @deprecated since 2.6
-     * @return string
-     */
-    public function get_configuration_hints() {
-        debugging('$DB->get_configuration_hints() method is deprecated, use $DB->get_configuration_help() instead');
-        return $this->get_configuration_help();
-    }
-
-    /**
      * Returns the db related part of config.php
      *
      * @return stdClass
@@ -2453,20 +2442,6 @@ abstract class database {
     }
 
     /**
-     * Returns the SQL to be used in order to an UNSIGNED INTEGER column to SIGNED.
-     *
-     * (Only MySQL needs this. MySQL things that 1 * -1 = 18446744073709551615
-     * if the 1 comes from an unsigned column).
-     *
-     * @deprecated since 2.3
-     * @param string $fieldname The name of the field to be cast
-     * @return string The piece of SQL code to be used in your statement.
-     */
-    public function sql_cast_2signed(string $fieldname): string {
-        return " {$fieldname} ";
-    }
-
-    /**
      * Returns the SQL text to be used to compare one TEXT (clob) column with
      * one varchar column, because some RDBMS doesn't support such direct
      * comparisons.
@@ -2674,18 +2649,6 @@ abstract class database {
     public function sql_position(string $needle, string $haystack): string {
         // Implementation using standard SQL.
         return "POSITION(($needle) IN ($haystack))";
-    }
-
-    /**
-     * This used to return empty string replacement character.
-     *
-     * @deprecated use bound parameter with empty string instead
-     *
-     * @return string An empty string.
-     */
-    function sql_empty() {
-        debugging("sql_empty() is deprecated, please use empty string '' as sql parameter value instead", DEBUG_DEVELOPER);
-        return '';
     }
 
     /**
