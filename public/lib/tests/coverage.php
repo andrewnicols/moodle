@@ -56,7 +56,6 @@ return new class extends phpunit_coverage_info {
         'datalib.php',
         'ddllib.php',
         'deprecatedlib.php',
-        'dmllib.php',
         'dtllib.php',
         'editorlib.php',
         'enrollib.php',

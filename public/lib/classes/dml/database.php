@@ -73,6 +73,15 @@ define('SQL_QUERY_AUX', 5);
  * database parameters, table/index/column lists, if not within transaction/ddl. */
 define('SQL_QUERY_AUX_READONLY', 6);
 
+/** Return false if record not found, show debug warning if multiple records found */
+define('IGNORE_MISSING', 0);
+
+/** Similar to IGNORE_MISSING but does not show debug warning if multiple records found, not recommended to be used */
+define('IGNORE_MULTIPLE', 1);
+
+/** Indicates exactly one record must exist */
+define('MUST_EXIST', 2);
+
 /**
  * Abstract class representing moodle database interface.
  * @link https://moodledev.io/docs/apis/core/dml/ddl

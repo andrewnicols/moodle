@@ -625,7 +625,6 @@ require_once($CFG->libdir .'/filterlib.php');       // Functions for filtering t
 require_once($CFG->libdir .'/weblib.php');          // Functions relating to HTTP and content.
 require_once($CFG->libdir .'/outputlib.php');       // Functions for generating output.
 require_once($CFG->libdir .'/navigationlib.php');   // Class for generating Navigation structure.
-require_once($CFG->libdir .'/dmllib.php');          // Database access.
 require_once($CFG->libdir .'/datalib.php');         // Legacy lib with a big-mix of functions..
 require_once($CFG->libdir .'/accesslib.php');       // Access control functions.
 require_once($CFG->libdir .'/deprecatedlib.php');   // Deprecated functions included for backward compatibility.
@@ -683,8 +682,8 @@ core_date::store_default_php_timezone();
 // make sure PHP is not severly misconfigured
 setup_validate_php_configuration();
 
-// Connect to the database
-setup_DB();
+// Connect to the database.
+\core\setup::initialise_database();
 
 if (PHPUNIT_TEST and !PHPUNIT_UTIL) {
     // Make sure tests do not run in parallel.

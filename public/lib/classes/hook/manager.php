@@ -278,10 +278,9 @@ final class manager implements
      * @return object The Event that was passed, now modified by listeners.
      */
     public function dispatch(object $event): object {
-        // We can dispatch only after the lib/setup.php includes,
-        // that is right before the database connection is made,
-        // the MUC caches need to be working already.
-        if (!function_exists('setup_DB')) {
+        if (!\core\setup::is_db_initialised()) {
+            // If the database is not initialised, we cannot dispatch hooks.
+            // This is a safety check to prevent issues in early stages of Moodle setup.
             debugging('Hooks cannot be dispatched yet', DEBUG_DEVELOPER);
             return $event;
         }
