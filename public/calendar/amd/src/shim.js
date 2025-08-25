@@ -2,7 +2,6 @@ import * as CalendarRepository from 'core_calendar/repository';
 import Notification from 'core/notification';
 
 export const init = async (selector) => {
-    // window.console.log('shim init called with selector: ', selector);
     if (window.ReactApp && typeof window.ReactApp.init === 'function') {
         const events = await CalendarRepository.getCalendarUpcomingData(1, 1)
             .then((context) => {

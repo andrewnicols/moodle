@@ -1,0 +1,23 @@
+[data-theme="light"] {
+    --bg-color: white;
+    --text-color: black;
+}
+
+[data-theme="dark"] {
+    --bg-color: black;
+    --text-color: white;
+}
+
+[data-theme="high-contrast"] {
+    --bg-color: aqua;
+    --text-color: hotpink;
+}
+
+ /* Declarations of background and text colors using CSS variables would need to change. */
+body,
+#page.drawers .main-inner,
+#region-main,
+.rbc-toolbar button {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
