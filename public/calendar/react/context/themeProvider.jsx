@@ -9,21 +9,21 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-    const [darkMode, setDarkMode] = useState(true);
+    const [themeMode, setThemeMode] = useState('light');
 
-    const toggleTheme = () => {
-        setDarkMode((mode) => !mode);
+    const toggleTheme = (e) => {
+        setThemeMode(e.currentTarget.value);
     };
 
     useEffect(() => {
         document.documentElement.setAttribute(
             "data-theme",
-            darkMode ? "dark" : "light"
+            themeMode
         );
-    }, [darkMode]);
+    }, [themeMode]);
 
     return (
-        <ThemeContext.Provider value={{ toggleTheme, darkMode }}>
+        <ThemeContext.Provider value={{ toggleTheme, themeMode }}>
             {children}
         </ThemeContext.Provider>
     );
