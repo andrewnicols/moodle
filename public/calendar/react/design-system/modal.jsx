@@ -1,5 +1,5 @@
 // Event management imports.
-import Modal from 'react-bootstrap/Modal';
+import Modal from '@Bootstrap/Modal';
 
 // Import Bootstrap CSS. This would be abstracted elsewhere down the line.
 import 'bootstrap/dist/css/bootstrap.min.css';

@@ -1,9 +1,11 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+
+// TODO: Make this load from @Moodle/[frankenstyle]/react.
 import App from './App.jsx';
+import Home from "./component/home";
 
 import "./styles.css";
-import Home from "./component/home";
 import { ThemeProvider } from "./context/themeProvider";
 
 function init(selector, props) {

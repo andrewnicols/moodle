@@ -1,12 +1,12 @@
 import React, { Fragment, useState, useCallback } from 'react';
 
 // Pseudo design system imports.
-import CalendarShim from './design-system/calendar.jsx';
-import EventModal from './design-system/modal.jsx';
-import CalendarForm from "./design-system/form";
+import CalendarShim from '@DesignSystem/calendar';
+import EventModal from '@DesignSystem/modal';
+import CalendarForm from "@DesignSystem/form";
 
 // Standard Bootstrap imports.
-import Button from 'react-bootstrap/Button';
+import Button from '@Bootstrap/Button';
 
 export default function App({ events }) {
     const newEventString = "New Event";

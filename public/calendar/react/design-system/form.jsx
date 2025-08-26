@@ -1,5 +1,5 @@
-import Form from 'react-bootstrap/Form';
-import {InputGroup} from "react-bootstrap";
+import Form from '@Bootstrap/Form';
+import {InputGroup} from '@Bootstrap';
 
 function CalendarForm(props) {
     return (

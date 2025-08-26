@@ -1,6 +1,6 @@
 import { useTheme } from "../context/themeProvider";
-import Form from 'react-bootstrap/Form';
-import {InputGroup} from "react-bootstrap";
+import Form from '@Bootstrap/Form';
+import {InputGroup} from '@Bootstrap';
 
 const Home = () => {
     const { toggleTheme, themeMode } = useTheme();
