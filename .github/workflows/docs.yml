@@ -1,0 +1,65 @@
+name: PHPDocumentor
+
+on:
+  - push
+env:
+  php: 8.4
+
+jobs:
+  Generate:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Cache phpDocumentor
+        id: cache-phpdoc
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-phpdoc
+        with:
+          path: ~/.phpdoc
+          key: ${{ runner.os }}-build-${{ env.cache-name }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
+
+      - name: Checking out code
+        uses: actions/checkout@v4
+
+      - name: Configuring node & npm
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - name: Installing node stuff
+        run: npm install
+
+      - name: Running grunt
+        run: npx grunt ignorefiles
+
+      - name: Setting up PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ matrix.extensions }}
+          ini-values: max_input_vars=5000
+          coverage: none
+          tools: phpDocumentor
+
+      - name: Generate Documentation
+        run: phpdoc -t phpdoc --cache-folder=~/.phpdoc
+
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy phpdoc --project-name=moodlephpdocdemo
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: phpdoc
+          path: ./phpdoc
+          compression-level: 9
+          retention-days: 5
