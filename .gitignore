@@ -60,3 +60,7 @@ phpcs.xml
 jsconfig.json
 UPGRADING-CURRENT.md
 .phpunit.cache
+
+// Generated files for phpDocumentor.
+phpdoc.dist.xml
+.phpdoc/cache

@@ -20,7 +20,92 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+const path = require('path');
+const fs = require('fs');
+const ComponentList = require(path.join(process.cwd(), '.grunt', 'components.js'));
+const gruntFilePath = fs.realpathSync(process.cwd());
+
 module.exports = grunt => {
+    /**
+     * Generate the phpDocumentor configuration.
+     *
+     * @param {Object} thirdPartyPaths
+     */
+    const phpdocConfig = (thirdPartyPaths) => {
+        const {toXML} = require('jstoxml');
+
+        const getPathStanza = (pathData) => ({
+            _name: 'path',
+            _content: pathData,
+        });
+
+        const ignores = [];
+        thirdPartyPaths.forEach(library => {
+            ignores.push(getPathStanza(library));
+        });
+
+        const componentPaths = [];
+        ComponentList.getComponentPaths(`${gruntFilePath}/`).forEach(componentPath => {
+            componentPaths.push(getPathStanza(`${componentPath}/classes/*`));
+            componentPaths.push(getPathStanza(`${componentPath}/classes/**/*`));
+            componentPaths.push(getPathStanza(`${componentPath}/lib.php`));
+            componentPaths.push(getPathStanza(`${componentPath}/locallib.php`));
+            componentPaths.push(getPathStanza(`${componentPath}/tests/classes/*`));
+
+            ignores.push(getPathStanza(`${componentPath}/tests/**/*`));
+        });
+
+        const config = {
+            _name: 'phpdocumentor',
+            _attrs: {
+                configVersion: "3",
+                "xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance",
+                "xmlns": "https://www.phpdoc.org",
+                "xsi:noNamespaceSchemaLocation": "https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd",
+            },
+            _content: {
+                paths: {
+                    output: "public/phpdoc",
+                    cache: ".phpdoc/cache",
+                },
+                version: {
+                    _attrs: {
+                        number: "main"
+                    },
+                    api: [
+                        {
+                            _name: 'ignore',
+                            _attrs: {
+                                hidden: "true",
+                                symlinks: "true",
+                            },
+                            _content: ignores,
+                        },
+                        {
+                            _name: 'source',
+                            _attrs: {
+                                dsn: '.',
+                            },
+                            _content: componentPaths,
+                        },
+                        {
+                            _name: 'output',
+                            _content: 'public/phpdoc',
+                        },
+                        {
+                            _name: 'include-source',
+                            _content: 'true',
+                        },
+                    ],
+                },
+            },
+        };
+
+        grunt.file.write('phpdoc.dist.xml', toXML(config, {
+            header: true,
+            indent: '  ',
+        }) + "\n");
+    };
 
     /**
      * Generate the PHPCS configuration.
@@ -62,9 +147,6 @@ module.exports = grunt => {
      * Generate ignore files (utilising thirdpartylibs.xml data)
      */
     const handler = function() {
-        const path = require('path');
-        const ComponentList = require(path.join(process.cwd(), '.grunt', 'components.js'));
-
         // An array of paths to third party directories.
         const thirdPartyPaths = ComponentList.getThirdPartyPaths();
 
@@ -92,6 +174,7 @@ module.exports = grunt => {
         grunt.file.write('.stylelintignore', stylelintIgnores.join('\n') + '\n');
 
         phpcsIgnore(thirdPartyPaths);
+        phpdocConfig(thirdPartyPaths);
     };
 
     grunt.registerTask('ignorefiles', 'Generate ignore files for linters', handler);
