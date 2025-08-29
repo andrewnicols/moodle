@@ -144,7 +144,7 @@ function wiki_get_page($pageid) {
 function wiki_get_current_version($pageid) {
     global $DB;
 
-    // @TODO: Fix this query
+    // TODO Fix this query.
     $sql = "SELECT *
             FROM {wiki_versions}
             WHERE pageid = ?
@@ -156,7 +156,7 @@ function wiki_get_current_version($pageid) {
 
 /**
  * Alias of wiki_get_current_version
- * @TODO, does the exactly same thing as wiki_get_current_version, should be removed
+ * TODO does the exactly same thing as wiki_get_current_version, should be removed
  * @param int $pageid
  * @return object
  */
