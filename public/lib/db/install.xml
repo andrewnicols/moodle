@@ -2394,6 +2394,7 @@
       </KEYS>
       <INDEXES>
         <INDEX NAME="idnumber" UNIQUE="false" FIELDS="idnumber"/>
+        <INDEX NAME="courseid_name" UNIQUE="false" FIELDS="courseid, name"/>
       </INDEXES>
     </TABLE>
     <TABLE NAME="groups_members" COMMENT="Link a user to a group.">
@@ -2739,6 +2740,9 @@
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
       </KEYS>
+      <INDEXES>
+        <INDEX NAME="instanceid" UNIQUE="false" FIELDS="instanceid"/>
+      </INDEXES>
     </TABLE>
     <TABLE NAME="backup_courses" COMMENT="To store every course backup status">
       <FIELDS>
