@@ -376,11 +376,6 @@ require($CFG->dirroot .'/course/format/'. $course->format .'/format.php');
 
 echo html_writer::end_tag('div');
 
-// Trigger course viewed event.
-// We don't trust $context here. Course format inclusion above executes in the global space. We can't assume
-// anything after that point.
-course_view(context_course::instance($course->id), $section);
-
 // If available, include the JS to prepare the download course content modal.
 if ($candownloadcourse) {
     $PAGE->requires->js_call_amd('core_course/downloadcontent', 'init');
@@ -393,3 +388,8 @@ if ($completion->is_enabled()) {
 }
 
 echo $OUTPUT->footer();
+
+// Trigger course viewed event.
+// We don't trust $context here. Course format inclusion above executes in the global space. We can't assume
+// anything after that point.
+course_view(context_course::instance($course->id), $section);
