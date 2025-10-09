@@ -98,6 +98,37 @@ class util {
     }
 
     /**
+     * Throw a specialized HTTP exception based on the response status code.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     */
+    public static function throw_specialized_exception(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        ?string $message = null,
+        ?\Throwable $previous = null,
+    ): void {
+        $exceptionclass = match ($response->getStatusCode()) {
+            400 => \Slim\Exception\HttpBadRequestException::class,
+            401 => \Slim\Exception\HttpUnauthorizedException::class,
+            403 => \Slim\Exception\HttpForbiddenException::class,
+            404 => \Slim\Exception\HttpNotFoundException::class,
+            405 => \Slim\Exception\HttpMethodNotAllowedException::class,
+            410 => \Slim\Exception\HttpGoneException::class,
+            429 => \Slim\Exception\HttpTooManyRequestsException::class,
+            500 => \Slim\Exception\HttpInternalServerErrorException::class,
+            501 => \Slim\Exception\HttpNotImplementedException::class,
+
+            default => null,
+        };
+
+        if ($exceptionclass !== null) {
+            throw new $exceptionclass($request, $message, $previous);
+        }
+    }
+
+    /**
      * Generate a Page Not Found result.
      *
      * @param ServerRequestInterface $request
@@ -113,7 +144,7 @@ class util {
         ?string $message = null,
         ?\Throwable $previous = null,
     ): ResponseInterface {
-        throw new \Slim\Exception\HttpNotFoundException($request, $message, $previous);
+        self::throw_specialized_exception($request, $response->withStatus(404), $message, $previous);
     }
 
     /**

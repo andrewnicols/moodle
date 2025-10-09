@@ -553,8 +553,7 @@ class component {
         // Always keep moodle_exception in place.
         $keyclasses = [
             \core\exception\moodle_exception::class,
-            \core\navigation\navbar::class,
-            \core\navigation\navigation_node::class,
+            \core\router\middleware\api_validation_middleware::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
