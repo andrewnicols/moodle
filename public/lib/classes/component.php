@@ -207,6 +207,12 @@ class component {
                 require_once($path);
             }
         }
+
+        $vendordir = dirname(__DIR__, 3) . '/vendor';
+        $autoload = $vendordir . '/autoload.php';
+        if (file_exists($autoload)) {
+            require_once($autoload);
+        }
     }
 
     /**
