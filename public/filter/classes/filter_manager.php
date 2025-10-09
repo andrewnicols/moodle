@@ -166,6 +166,12 @@ class filter_manager {
         array $options = [],
         ?array $skipfilters = null
     ) {
+
+        if ($text === null || $text === '') {
+            // Nothing to filter.
+            return '';
+        }
+
         if (!isset($options['stage'])) {
             $filtermethod = 'filter';
         } else if (in_array($options['stage'], ['pre_format', 'pre_clean', 'post_clean', 'string'], true)) {
@@ -174,15 +180,11 @@ class filter_manager {
             $filtermethod = 'filter';
             debugging('Invalid filter stage specified in options: ' . $options['stage'], DEBUG_DEVELOPER);
         }
-        if ($text === null || $text === '') {
-            // Nothing to filter.
-            return '';
-        }
+
         foreach ($filterchain as $filtername => $filter) {
-            if ($skipfilters !== null && in_array($filtername, $skipfilters)) {
-                continue;
+            if ($skipfilters === null || !in_array($filtername, $skipfilters)) {
+                $text = $filter->$filtermethod($text, $options);
             }
-            $text = $filter->$filtermethod($text, $options);
         }
         return $text;
     }
