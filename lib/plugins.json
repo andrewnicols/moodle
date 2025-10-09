@@ -244,6 +244,7 @@
         "local": [],
         "logstore": [
             "database",
+            "otel",
             "standard"
         ],
         "ltiservice": [
