@@ -315,11 +315,24 @@ final class manager implements
                 }
             }
 
-            call_user_func($callback, $event);
+            $this->dispatch_to_listener($callback, $event);
         }
 
         // Developers need to be careful to not create infinite loops in hook callbacks.
         return $event;
+    }
+
+    /**
+     * Dispatch to a specific listener
+     *
+     * @param mixed $callback
+     * @param object $event
+     */
+    protected function dispatch_to_listener(
+        mixed $callback,
+        object $event,
+    ): void {
+        call_user_func($callback, $event);
     }
 
     /**
