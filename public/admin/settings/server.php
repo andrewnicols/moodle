@@ -202,6 +202,13 @@ if ($hassiteconfig) {
 
     $ADMIN->add('server', $temp);
 
+    // Composer Dependencies.
+    $ADMIN->add('server', new admin_externalpage(
+        'composer',
+        new lang_string('composermanagement', 'admin'),
+        "{$CFG->wwwroot}/{$CFG->admin}/composerinstall.php",
+    ));
+
     $temp = new admin_settingpage('maintenancemode', new lang_string('sitemaintenancemode', 'admin'));
     $options = [0 => new lang_string('disable'), 1 => new lang_string('enable')];
     $temp->add(new admin_setting_configselect('maintenance_enabled', new lang_string('sitemaintenancemode', 'admin'),
