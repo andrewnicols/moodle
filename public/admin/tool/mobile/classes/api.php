@@ -114,11 +114,11 @@ class api {
                 foreach ($addons as $addonname => $addoninfo) {
 
                     // Add handlers (for site add-ons).
-                    $handlers = !empty($addoninfo['handlers']) ? $addoninfo['handlers'] : array();
+                    $handlers = !empty($addoninfo['handlers']) ? $addoninfo['handlers'] : [];
                     $handlers = json_encode($handlers); // JSON formatted, since it is a complex structure that may vary over time.
 
                     // Now language strings used by the app.
-                    $lang = array();
+                    $lang = [];
                     if (!empty($addoninfo['lang'])) {
                         $stringmanager = get_string_manager();
                         $langs = $stringmanager->get_list_of_translations(true);
@@ -139,7 +139,7 @@ class api {
                         'component' => $component,
                         'version' => $version,
                         'addon' => $addonname,
-                        'dependencies' => !empty($addoninfo['dependencies']) ? $addoninfo['dependencies'] : array(),
+                        'dependencies' => !empty($addoninfo['dependencies']) ? $addoninfo['dependencies'] : [],
                         'fileurl' => '',
                         'filehash' => '',
                         'filesize' => 0,
@@ -509,10 +509,10 @@ class api {
         $identityproviders = new lang_string('oauth2identityproviders', 'tool_mobile');
 
         $availablemods = core_plugin_manager::instance()->get_plugins_of_type('mod');
-        $coursemodules = array();
-        $appsupportedmodules = array(
+        $coursemodules = [];
+        $appsupportedmodules = [
             'assign', 'bigbluebuttonbn', 'book', 'choice', 'data', 'feedback', 'folder', 'forum', 'glossary', 'h5pactivity',
-            'imscp', 'label', 'lesson', 'lti', 'page', 'quiz', 'resource', 'scorm', 'url', 'wiki', 'workshop');
+            'imscp', 'label', 'lesson', 'lti', 'page', 'quiz', 'resource', 'scorm', 'url', 'wiki', 'workshop'];
 
         foreach ($availablemods as $mod) {
             if (in_array($mod->name, $appsupportedmodules)) {
@@ -527,7 +527,7 @@ class api {
         }
         asort($coursemodules);
 
-        $remoteaddonslist = array();
+        $sitepluginslist = [];
         $mobileplugins = self::get_plugins_supporting_mobile();
         foreach ($mobileplugins as $plugin) {
             $displayname = core_plugin_manager::instance()->plugin_name($plugin['component']) . " - " . $plugin['addon'];
@@ -536,8 +536,8 @@ class api {
 
         // Display blocks.
         $availableblocks = core_plugin_manager::instance()->get_plugins_of_type('block');
-        $courseblocks = array();
-        $appsupportedblocks = array(
+        $courseblocks = [];
+        $appsupportedblocks = [
             'activity_results' => 'CoreBlockDelegate_AddonBlockActivityResults',
             'site_main_menu' => 'CoreBlockDelegate_AddonBlockSiteMainMenu',
             'myoverview' => 'CoreBlockDelegate_AddonBlockMyOverview',
@@ -567,7 +567,7 @@ class api {
             'search_forums' => 'CoreBlockDelegate_AddonBlockSearchForums',
             'selfcompletion' => 'CoreBlockDelegate_AddonBlockSelfCompletion',
             'tags' => 'CoreBlockDelegate_AddonBlockTags',
-        );
+        ];
 
         foreach ($availableblocks as $block) {
             if (isset($appsupportedblocks[$block->name])) {
@@ -576,8 +576,8 @@ class api {
         }
         asort($courseblocks);
 
-        $features = array(
-            "$general" => array(
+        $features = [
+            "$general" => [
                 'NoDelegate_CoreOffline' => new lang_string('offlineuse', 'tool_mobile'),
                 'NoDelegate_SiteBlocks' => new lang_string('blocks'),
                 'NoDelegate_CoreComments' => new lang_string('comments'),
@@ -592,8 +592,8 @@ class api {
                 'CoreReportBuilderDelegate' => new lang_string('reportbuilder', 'core_reportbuilder'),
                 'NoDelegate_CoreUserSupport' => new lang_string('contactsitesupport', 'admin'),
                 'NoDelegate_GlobalSearch' => new lang_string('globalsearch', 'search'),
-            ),
-            "$mainmenu" => array(
+            ],
+            "$mainmenu" => [
                 'CoreMainMenuDelegate_CoreSiteHome' => new lang_string('sitehome'),
                 'CoreMainMenuDelegate_CoreCoursesDashboard' => new lang_string('myhome'),
                 'CoreMainMenuDelegate_CoreCourses' => new lang_string('mycourses'),
@@ -603,8 +603,8 @@ class api {
                 'CoreMainMenuDelegate_AddonBlog' => new lang_string('blog', 'blog'),
                 'CoreMainMenuDelegate_CoreTag' => new lang_string('tags'),
                 'CoreMainMenuDelegate_QrReader' => new lang_string('scanqrcode', 'tool_mobile'),
-            ),
-            "$useraccount" => array(
+            ],
+            "$useraccount" => [
                 'CoreUserDelegate_CoreGrades' => new lang_string('grades', 'grades'),
                 'CoreUserDelegate_AddonPrivateFiles' => new lang_string('files'),
                 'CoreUserDelegate_AddonBadges:account' => new lang_string('badges', 'badges'),
@@ -613,8 +613,8 @@ class api {
                 'CoreUserDelegate_CorePolicy' => new lang_string('policiesagreements', 'tool_policy'),
                 'CoreUserDelegate_CoreDataPrivacy' => new lang_string('pluginname', 'tool_dataprivacy'),
                 'NoDelegate_SwitchAccount' => new lang_string('switchaccount', 'tool_mobile'),
-            ),
-            "$course" => array(
+            ],
+            "$course" => [
                 'CoreCourseOptionsDelegate_CoreUserParticipants' => new lang_string('participants'),
                 'CoreCourseOptionsDelegate_CoreGrades' => new lang_string('grades', 'grades'),
                 'CoreCourseOptionsDelegate_AddonCompetency' => new lang_string('competencies', 'competency'),
@@ -626,8 +626,8 @@ class api {
                 'NoDelegate_CoreCourseDownload' => new lang_string('downloadcourse', 'tool_mobile'),
                 'NoDelegate_CoreCoursesDownload' => new lang_string('downloadcourses', 'tool_mobile'),
                 'CoreCourseOptionsDelegate_CoreCourseOverview' => new lang_string('activitiesoverview', 'tool_mobile'),
-            ),
-            "$participants" => array(
+            ],
+            "$participants" => [
                 'CoreUserDelegate_CoreGrades:viewGrades' => new lang_string('grades', 'grades'),
                 'CoreUserDelegate_AddonCourseCompletion:viewCompletion' => new lang_string('coursecompletion', 'completion'),
                 'CoreUserDelegate_AddonBadges' => new lang_string('badges', 'badges'),
@@ -636,15 +636,15 @@ class api {
                 'CoreUserDelegate_AddonCompetency:learningPlan' => new lang_string('competencies', 'competency'),
                 'CoreUserDelegate_AddonMessages:sendMessage' => new lang_string('sendmessage', 'message'),
                 'CoreUserDelegate_picture' => new lang_string('userpic'),
-            ),
-            "$files" => array(
+            ],
+            "$files" => [
                 'AddonPrivateFilesPrivateFiles' => new lang_string('privatefiles'),
                 'AddonPrivateFilesSiteFiles' => new lang_string('sitefiles'),
                 'AddonPrivateFilesUpload' => new lang_string('upload'),
-            ),
+            ],
             "$modules" => $coursemodules,
             "$blocks" => $courseblocks,
-        );
+        ];
 
         if (!empty($sitepluginslist)) {
             $features["$siteplugins"] = $sitepluginslist;
@@ -658,7 +658,7 @@ class api {
 
         // Display OAuth 2 identity providers.
         if (is_enabled_auth('oauth2')) {
-            $identityproviderslist = array();
+            $identityproviderslist = [];
             $idps = \auth_plugin_base::get_identity_providers(['oauth2']);
 
             foreach ($idps as $idp) {
@@ -670,7 +670,7 @@ class api {
             }
 
             if (!empty($identityproviderslist)) {
-                $features["$identityproviders"] = array();
+                $features["$identityproviders"] = [];
 
                 if (count($identityproviderslist) > 1) {
                     // Include an option to disable them all.
@@ -695,7 +695,7 @@ class api {
         require_once($CFG->dirroot . "/lib/filelib.php");
         require_once($CFG->dirroot . '/message/lib.php');
 
-        $warnings = array();
+        $warnings = [];
 
         if (is_https()) {
             $curl = new curl();
