@@ -148,7 +148,7 @@ $string['qrkeyttl_desc'] = 'The length of time for which a QR code for automatic
 $string['qrsameipcheck'] = 'QR authentication same IP check';
 $string['qrsameipcheck_desc'] = 'Whether users must use the same network for both generating and scanning a QR code for login. Only disable it if users report issues with the QR login.';
 $string['readingthisemailgettheapp'] = 'Are you reading this in an email? <a href="{$a}">Download the mobile app and receive notifications on your mobile device</a>.';
-$string['remoteaddons'] = 'Remote add-ons';
+$string['siteplugins'] = 'Site plugins';
 $string['scanqrcode'] = 'Scan QR code';
 $string['selfsignedoruntrustedcertificatewarning'] = 'It seems that the HTTPS certificate is self-signed or not trusted. The mobile app will only work with trusted sites. Please use any online SSL checker to diagnose the problem. If it indicates that your certificate is OK, you can ignore this warning.';
 $string['setuplink'] = 'App download page';
@@ -171,3 +171,6 @@ $string['privacy:metadata:core_userkey'] = 'User\'s keys used to create auto-log
 $string['responsivemainmenuitems'] = 'Responsive menu items';
 $string['switchaccount'] = 'Switch account';
 $string['viewqrcode'] = 'View QR code';
+
+// Deprecated since Moodle 5.2.
+$string['remoteaddons'] = 'Remote add-ons';
