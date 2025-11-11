@@ -99,7 +99,7 @@ abstract class exception_response extends \core\router\schema\response\response 
      *
      * @return int
      */
-    protected static function get_exception_status_code(): int {
+    public static function get_exception_status_code(): int {
         return 500;
     }
 

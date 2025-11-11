@@ -115,6 +115,7 @@ class moodle_bootstrap_middleware implements MiddlewareInterface {
             }
 
             $PAGE->set_url((string) $url);
+            $PAGE->initialise_theme_and_output();
         }
 
         return $handler->handle($request);

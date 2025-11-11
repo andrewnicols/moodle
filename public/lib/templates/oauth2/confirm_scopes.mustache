@@ -1,0 +1,184 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/loginform_wrapper
+
+    TODO describe template loginform_wrapper
+
+    Example context (json):
+    {
+    }
+}}
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/oauth2/confirm_scopes
+
+    OAuth2 Template to confirm requested scopes.
+
+    Context variables required for this template:
+    * error - Any errors in the form?,
+    * info - Info notification to display,
+    * logourl - Flag, logo url,
+    * maintenance - Maintenance message,
+    * languagemenu - Language menu HTML,
+    * actionurl - The form action URL.
+    * grantedscopes - List of previously granted scopes.
+      * description - Scope description.
+      * identifier - Scope identifier.
+    * requestedscopes - List of newly requested scopes.
+      * description - Scope description.
+      * identifier - Scope identifier.
+
+    Example context (json):
+    {
+        "error": "",
+        "info": "",
+        "logourl": false,
+        "maintenance": "For full access to this site, you need to login in as an admin.",
+        "languagemenu": "Choose language",
+        "actionurl": "http://example.com/oauth2/confirm_scopes",
+        "grantedscopes": [
+            {
+                "description": "Access to your profile information",
+                "identifier": "profile"
+            }
+        ],
+        "requestedscopes": [
+            {
+                "description": "Access to your email address",
+                "identifier": "email"
+            }
+        ]
+    }
+}}
+
+<div class="loginform">
+    {{#logourl}}
+        <div id="loginlogo" class="login-logo">
+            <img id="logoimage" src="{{logourl}}" class="img-fluid" alt="{{sitename}}"/>
+            <h1 class="login-heading visually-hidden">{{#str}} loginto, core, {{sitename}} {{/str}}</h1>
+        </div>
+    {{/logourl}}
+    {{^logourl}}
+        <h1 class="login-heading mb-4">{{#str}} loginto, core, {{sitename}} {{/str}}</h1>
+    {{/logourl}}
+    {{#maintenance}}
+        <div class="alert alert-danger login-maintenance">
+            {{{maintenance}}}
+        </div>
+    {{/maintenance}}
+    {{#error}}
+        <div class="alert alert-danger" id="loginerrormessage" role="alert">{{error}}</div>
+    {{/error}}
+    {{#info}}
+        <div class="alert alert-info" id="logininfomessage" role="status">{{info}}</div>
+    {{/info}}
+
+    {{! The scope form is rendered here }}
+    <form method="POST" action="{{actionurl}}">
+        {{#grantedscopes.0}}
+            <p>{{#str}} oauth2:grantedscopes, core {{/str}}</p>
+            {{#grantedscopes}}
+                <div class="form-check form-switch">
+                    <input
+                        class="form-check-input"
+                        role="swich"
+                        type="checkbox"
+                        name="scopes[]"
+                        value="{{identifier}}"
+                        checked
+                        switch
+                        id="scope:{{identifier}}"
+                    >
+                    <label class="form-check-label" for="scope:{{identifier}}">{{description}}</label>
+                </div>
+            {{/grantedscopes}}
+        {{/grantedscopes.0}}
+
+        {{#requestedscopes.0}}
+            <p>{{#str}} oauth2:scopesforapproval, core {{/str}}</p>
+            {{#requestedscopes}}
+                <div class="form-check form-switch">
+                    <input
+                        class="form-check-input"
+                        role="swich"
+                        type="checkbox"
+                        name="scopes[]"
+                        value="{{identifier}}"
+                        checked
+                        switch
+                        id="scope:{{identifier}}"
+                    >
+                    <label class="form-check-label" for="scope:{{identifier}}">{{description}}</label>
+                </div>
+            {{/requestedscopes}}
+        {{/requestedscopes.0}}
+        <button type="submit" name="approve" value="1" class="btn btn-primary">{{#str}} continue {{/str}}</button>
+    </form>
+
+    <div class="login-divider"></div>
+    <div class="d-flex">
+        {{#languagemenu}}
+            <div class="login-languagemenu">
+                {{>core/action_menu}}
+            </div>
+            <div class="divider border-start align-self-center mx-3"></div>
+        {{/languagemenu}}
+        <button type="button" class="btn btn-secondary" {{!
+            }} data-modal="alert"{{!
+            }} data-modal-title-str='["cookiesenabled", "core"]' {{!
+            }} data-modal-content-str='["cookiesenabled_help_html", "core"]'{{!
+        }}>{{#str}}cookiesnotice{{/str}}</button>
+    </div>
+</div>
+
+{{#js}}
+    require(['core/pending'], function(Pending) {
+        const errorMessageDiv = document.getElementById('loginerrormessage');
+        const infoMessageDiv = document.getElementById('logininfomessage');
+        const errorMessage = errorMessageDiv?.textContent.trim();
+        const infoMessage = infoMessageDiv?.textContent.trim();
+        if (errorMessage || infoMessage) {
+            const pendingJS = new Pending('login-move-focus');
+            setTimeout(function() {
+                // Append a non-breaking space to the error/status message so screen readers will announce them after page load.
+                if (errorMessage) {
+                    errorMessageDiv.innerHTML += "&nbsp;";
+                }
+                if (infoMessage) {
+                    infoMessageDiv.innerHTML += "&nbsp;";
+                }
+                pendingJS.resolve();
+            }, 500);
+        }
+    });
+{{/js}}

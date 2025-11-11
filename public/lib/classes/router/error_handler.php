@@ -18,6 +18,7 @@ namespace core\router;
 
 use core\exception\response_aware_exception;
 use core\router\response\exception_response;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Handlers\ErrorHandler;
 
@@ -53,5 +54,24 @@ class error_handler extends ErrorHandler {
         }
 
         return parent::determineStatusCode();
+    }
+
+    #[\Override]
+    protected function respond(): ResponseInterface {
+        $request = $this->request;
+        $exception = $this->exception;
+
+        if ($exception instanceof \core\exception\response_aware_exception) {
+            $responseclassname = $exception->get_response_classname();
+            if (is_subclass_of($responseclassname, \core\router\response\exception_response::class)) {
+                $response = $responseclassname::get_response(
+                    request: $request,
+                    exception: $exception,
+                );
+                return $response->get_response($this->responseFactory);
+            }
+        }
+
+        return parent::respond();
     }
 }

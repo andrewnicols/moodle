@@ -44,7 +44,7 @@ final class cors_middleware_test extends route_testcase {
         });
 
         // Handle the request.
-        $request = new ServerRequest('GET', '/test');
+        $request = new ServerRequest('GET', '/test', ['Accept' => 'application/json']);
         $returns = $app->handle($request);
         $this->assertInstanceOf(ResponseInterface::class, $returns);
 
@@ -73,7 +73,7 @@ final class cors_middleware_test extends route_testcase {
         $app->map(['DELETE'], '/test', fn ($request, $response) => $response);
 
         // Handle the request.
-        $request = new ServerRequest('GET', '/test');
+        $request = new ServerRequest('GET', '/test', ['Accept' => 'application/json']);
         $returns = $app->handle($request);
         $this->assertInstanceOf(ResponseInterface::class, $returns);
 

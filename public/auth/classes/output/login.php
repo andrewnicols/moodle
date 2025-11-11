@@ -40,6 +40,7 @@ use templatable;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class login implements renderable, templatable {
+    use \core_auth\output\login_renderable_trait;
 
     /** @var bool Whether to auto focus the form fields. */
     public $autofocusform;
@@ -51,12 +52,6 @@ class login implements renderable, templatable {
     public $cansignup;
     /** @var help_icon The cookies help icon. */
     public $cookieshelpicon;
-    /** @var string The error message, if any. */
-    public $error;
-    /** @var string The error title, shown as bold heading above the error message for credential failures. */
-    public $errortitle;
-    /** @var string The info message, if any. */
-    public $info;
     /** @var moodle_url Forgot password URL. */
     public $forgotpasswordurl;
     /** @var array Additional identify providers, contains the keys 'url', 'name' and 'icon'. */
@@ -69,12 +64,8 @@ class login implements renderable, templatable {
     public $signupurl;
     /** @var string The user name to pre-fill the form with. */
     public $username;
-    /** @var string The language selector menu. */
-    public $languagemenu;
     /** @var string The csrf token to limit login to requests that come from the login form. */
     public $logintoken;
-    /** @var string Maintenance message, if Maintenance is enabled. */
-    public $maintenance;
     /** @var string ReCaptcha element HTML. */
     public $recaptcha;
     /** @var bool Toggle the password visibility icon. */
@@ -95,7 +86,6 @@ class login implements renderable, templatable {
 
         $languagedata = new \core\output\language_menu($PAGE);
 
-        $this->languagemenu = $languagedata->export_for_action_menu($OUTPUT);
         $this->canloginasguest = $CFG->guestloginbutton && !isguestuser();
         $this->canloginbyemail = !empty($CFG->authloginviaemail);
         $this->cansignup = $CFG->registerauth == 'email' || !empty($CFG->registerauth);
@@ -119,14 +109,6 @@ class login implements renderable, templatable {
             $this->instructions = get_string('logindonthaveaccount');
         }
 
-        if ($CFG->maintenance_enabled == true) {
-            if (!empty($CFG->maintenance_message)) {
-                $this->maintenance = $CFG->maintenance_message;
-            } else {
-                $this->maintenance = get_string('sitemaintenance', 'admin');
-            }
-        }
-
         // Identity providers.
         $this->identityproviders = \auth_plugin_base::get_identity_providers($authsequence);
         $this->logintoken = \core\session\manager::get_login_token();
@@ -143,31 +125,7 @@ class login implements renderable, templatable {
         $this->smallscreensonly = get_config('core', 'loginpasswordtoggle') == TOGGLE_SENSITIVE_SMALL_SCREENS_ONLY;
     }
 
-    /**
-     * Set the error message. For the AUTH_LOGIN_FAILED case, also sets
-     * an errortitle so the template can render a bold heading above the detail text.
-     *
-     * @param string $error The error message.
-     * @param int $errorcode The error code from login/index.php.
-     */
-    public function set_error(string $error, int $errorcode = 0): void {
-        if ($errorcode === AUTH_LOGIN_FAILED) {
-            $this->errortitle = get_string('logininvalidlogintitle');
-            $this->error = get_string('logininvalidlogindetail');
-        } else {
-            $this->error = $error;
-        }
-    }
-
-    /**
-     * Set the info message.
-     *
-     * @param string $info The info message.
-     */
-    public function set_info(string $info): void {
-        $this->info = $info;
-    }
-
+    #[\Override]
     public function export_for_template(renderer_base $output) {
 
         $identityproviders = \auth_plugin_base::prepare_identity_providers_for_output($this->identityproviders, $output);
@@ -178,9 +136,9 @@ class login implements renderable, templatable {
         $data->canloginbyemail = $this->canloginbyemail;
         $data->cansignup = $this->cansignup;
         $data->cookieshelpicon = $this->cookieshelpicon->export_for_template($output);
-        $data->error = $this->error;
-        $data->errortitle = $this->errortitle;
-        $data->info = $this->info;
+        $data->error = $this->get_error();
+        $data->errortitle = $this->get_error_title();
+        $data->info = $this->get_info();
         $data->forgotpasswordurl = $this->forgotpasswordurl->out(false);
         $data->hasidentityproviders = !empty($this->identityproviders);
         $data->identityproviders = $identityproviders;
@@ -190,8 +148,8 @@ class login implements renderable, templatable {
         $data->signupurl = $this->signupurl->out(false);
         $data->username = $this->username;
         $data->logintoken = $this->logintoken;
-        $data->maintenance = format_text($this->maintenance, FORMAT_MOODLE);
-        $data->languagemenu = $this->languagemenu;
+        $data->maintenance = format_text($this->get_maintenance(), FORMAT_MOODLE);
+        $data->languagemenu = $this->get_language_menu($output);
         $data->recaptcha = $this->recaptcha;
         $data->togglepassword = $this->togglepassword;
         $data->smallscreensonly = $this->smallscreensonly;

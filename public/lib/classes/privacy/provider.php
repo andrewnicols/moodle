@@ -135,6 +135,20 @@ class provider implements
             'identifier' => 'privacy:metadata:shortlink:identifier',
         ], 'privacy:metadata:shortlink');
 
+        // The following tables are used for OAuth2 Credentials and keys.
+        $collection->add_database_table('oauth2_server_client_access_tokens', [
+            'owner' => 'privacy:metadata:oauth2_server_client_access_tokens:owner',
+        ]);
+        $collection->add_database_table('oauth2_server_client_auth_codes', [
+            'userid' => 'privacy:metadata:oauth2_server_client_auth_codes:userid',
+        ]);
+        $collection->add_database_table('oauth2_server_client_granted_scopes', [
+            'userid' => 'privacy:metadata:oauth2_server_client_granted_scopes:userid',
+        ]);
+        $collection->add_database_table('rest_api_tokens', [
+            'userid' => 'privacy:metadata:rest_api_tokens:userid',
+        ]);
+
         return $collection;
     }
 

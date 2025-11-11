@@ -219,10 +219,6 @@ class manager {
             return static::$cookiessupported;
         }
 
-        if (defined('NO_MOODLE_COOKIES')) {
-            return !NO_MOODLE_COOKIES;
-        }
-
         // Support cookies by default.
         return true;
     }

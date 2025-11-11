@@ -121,7 +121,7 @@ class route {
         public readonly ?require_login $requirelogin = null,
 
         /** @var string[] The list of scopes required to access this page */
-        public readonly ?array $scopes = null,
+        protected readonly ?array $scopes = null,
 
         // Note. We do not make use of these extras.
         // These allow us to add additional arguments in future versions, whilst allowing plugins to use this version.
@@ -213,6 +213,26 @@ class route {
         }
 
         return $methods;
+    }
+
+    /**
+     * Get the list of scopes required for this route.
+     *
+     * @return null|\core\router\scope\abstract_scope[]
+     */
+    public function get_scopes(): ?array {
+        $scopes = $this->scopes;
+
+        if (isset($this->parentroute)) {
+            $parentscopes = $this->parentroute->get_scopes();
+            if ($scopes) {
+                $scopes = array_merge($parentscopes ?? [], $scopes);
+            } else {
+                $scopes = $parentscopes;
+            }
+        }
+
+        return $scopes;
     }
 
     /**

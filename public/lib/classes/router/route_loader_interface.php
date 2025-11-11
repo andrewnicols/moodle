@@ -40,6 +40,9 @@ interface route_loader_interface {
     /** @var string The route path prefix to use for shortlinks */
     public const ROUTE_GROUP_SHORTLINK = '/s/';
 
+    /** @var string The OAuth2 Server */
+    public const ROUTE_GROUP_OAUTH2 = '/oauth2';
+
     /**
      * Configure all routes for the application.
      *

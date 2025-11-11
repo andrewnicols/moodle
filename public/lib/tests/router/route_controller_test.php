@@ -39,6 +39,7 @@ final class route_controller_test extends route_testcase {
      * @covers ::redirect
      */
     public function test_redirect(): void {
+        global $CFG;
         $helper = new class (\core\di::get_container()) {
             use route_controller;
 
@@ -53,7 +54,7 @@ final class route_controller_test extends route_testcase {
 
         $response = $helper->test(new Response(), '/test');
         $this->assertEquals(302, $response->getStatusCode());
-        $this->assertEquals('/test', $response->getHeaderLine('Location'));
+        $this->assertEquals("{$CFG->wwwroot}/test", $response->getHeaderLine('Location'));
     }
 
     public function test_page_not_found(): void {

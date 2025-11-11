@@ -17,12 +17,14 @@
 namespace core\router\schema;
 
 use coding_exception;
+use core\oauth2\server\scope_repository;
 use core\router\response\invalid_parameter_response;
 use core\router\response\not_found_response;
 use core\router\route;
 use core\router\route_loader_interface;
 use core\router\schema\objects\type_base;
 use core\router\schema\response\response;
+use core\router\scope\abstract_scope;
 use core\router\util;
 use core\url;
 use stdClass;
@@ -48,6 +50,8 @@ class specification implements
 
     /** @var callable[] A list of common responses that are frequently found in paths */
     protected array $commonresponses = [];
+
+    protected array $scopes = [];
 
     /**
      * Constructor to configure base information.
@@ -92,12 +96,11 @@ class specification implements
                         'name' => 'MoodleSession',
                         'in' => parameter::IN_COOKIE,
                     ],
-                    // TODO MDL-82242: Add support for OAuth2.
                 ],
             ],
-            // TODO MDL-82242: Add support for OAuth2.
             'security' => [
                 (object) [
+                    'oauth2' => [],
                     'api_key' => [],
                     'cookie' => [],
                 ],
@@ -166,6 +169,30 @@ class specification implements
 
         // Add the Moodle site version here.
         $this->data->info->version = $CFG->version;
+
+        // Add OAuth2 scopes to the security schemes.
+        $scopes = scope_repository::get_scope_map();
+
+        // Convert the scopes into a name => description list.
+        $finalscopes = array_map(
+            fn ($scope): string => $scope::get_description(),
+            $scopes,
+        );
+
+        // Only sort them after processing.
+        ksort($finalscopes);
+
+        $this->data->components->securitySchemes->oauth2 = (object) [
+            'type' => 'oauth2',
+            'flows' => (object) [
+                // We support authorization code flow for user-interactive requests.
+                'authorizationCode' => (object) [
+                    'authorizationUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'authorize'])->out(false),
+                    'tokenUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'token'])->out(false),
+                    'scopes' => $finalscopes,
+                ],
+            ],
+        ];
 
         // Add the server configuration.
         $serverdescription = str_replace("'", "\'", format_string(get_site()->fullname));
@@ -505,6 +532,22 @@ class specification implements
             fn($param) => $param !== null,
         ));
 
+        $scopes = $route->get_scopes();
+        if (!empty($scopes)) {
+            // Add the scopes to the specification for later processing.
+            $this->scopes += $scopes;
+
+            // Add the scopes to the security section.
+            $oauth2scopes = [];
+            foreach ($scopes as $scope) {
+                $oauth2scopes[] = $scope->get_qualified_name();
+            }
+
+            $data->security[] = (object) [
+                'oauth2' => $oauth2scopes,
+            ];
+        }
+
         foreach ($this->get_common_request_responses() as $callable) {
             $data = $callable($route, $data);
         }
@@ -517,5 +560,29 @@ class specification implements
         }
 
         return (object) $methoddata;
+    }
+
+    /**
+     * Discover all route scopes in all components.
+     *
+     * @return array list of route scope class names.
+     */
+    private function discover_scopes(): array {
+        $components = \core\component::get_component_names(true);
+        $scopes = [];
+
+        // Fetch all route scope classes from all components.
+        array_walk_recursive(
+            $components,
+            function ($component) use (&$scopes): void {
+                $scopes += \core\component::get_component_classes_in_namespace($component, \route\scope::class);
+            },
+        );
+
+        // Filter to only include subclasses of abstract_scope.
+        return array_filter(
+            array_keys($scopes),
+            fn ($classname): bool => is_subclass_of($classname, abstract_scope::class),
+        );
     }
 }

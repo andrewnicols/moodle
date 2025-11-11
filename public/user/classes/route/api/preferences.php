@@ -42,6 +42,9 @@ use Psr\Http\Message\ServerRequestInterface;
     pathtypes: [
         new \core\router\parameters\path_user(),
     ],
+    scopes: [
+        new \core_user\route\scope\preferences_read_scope(),
+    ],
 )]
 class preferences {
     /**
@@ -71,7 +74,7 @@ class preferences {
         ResponseInterface $response,
         ServerRequestInterface $request,
         stdClass $user,
-        ?string  $preference,
+        ?string $preference,
     ): payload_response {
         $this->check_user($user);
 
@@ -98,6 +101,9 @@ class preferences {
     #[route(
         method: ['POST'],
         title: 'Set or update multiple user preferences',
+        scopes: [
+            new \core_user\route\scope\preferences_write_scope(),
+        ],
         requestbody: new \core\router\schema\request_body(
             content: new payload_response_type(
                 schema: new \core\router\schema\objects\schema_object(
@@ -153,6 +159,9 @@ class preferences {
         method: ['POST'],
         title: 'Set a single user preference',
         description: 'Set a single user preference',
+        scopes: [
+            new \core_user\route\scope\preferences_write_scope(),
+        ],
         pathtypes: [
             new \core\router\schema\parameters\path_parameter(
                 name: 'preference',
