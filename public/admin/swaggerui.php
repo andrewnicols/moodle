@@ -22,16 +22,18 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+use core\url;
+
 require('../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 
-$swaggerversion = '5.17.14';
+$swaggerversion = '5.30.2';
 
 $PAGE->set_url('/admin/swaggerui.php');
 
 admin_externalpage_setup('swaggerui');
 
-$PAGE->requires->css(new moodle_url("https://unpkg.com/swagger-ui-dist@{$swaggerversion}/swagger-ui.css"));
+$PAGE->requires->css(new url("https://unpkg.com/swagger-ui-dist@{$swaggerversion}/swagger-ui.css"));
 
 echo $OUTPUT->header();
 
@@ -40,7 +42,7 @@ echo html_writer::tag(
     tagname: 'script',
     contents: '',
     attributes: [
-        'src' => new moodle_url("https://unpkg.com/swagger-ui-dist@{$swaggerversion}/swagger-ui-bundle.js"),
+        'src' => new url("https://unpkg.com/swagger-ui-dist@{$swaggerversion}/swagger-ui-bundle.js"),
         'crossorigin' => 'crossorigin',
     ],
 );
@@ -48,12 +50,13 @@ echo html_writer::tag(
     tagname: 'script',
     contents: '',
     attributes: [
-        'src' => new moodle_url("https://unpkg.com/swagger-ui-plugin-hierarchical-tags"),
+        'src' => new url("https://unpkg.com/swagger-ui-plugin-hierarchical-tags"),
         'crossorigin' => 'crossorigin',
     ],
 );
 
-$openapipath = moodle_url::routed_path('/api/rest/v2/openapi.json')->out();
+$openapipath = url::routed_path('/api/rest/v2/openapi.json')->out();
+$oauth2redirect = (new url('/admin/swaggerui-oauth2.php'))->out();
 $swaggerinit = <<<JS
     window.ui = SwaggerUIBundle({
         url: "{$openapipath}",
@@ -71,7 +74,14 @@ $swaggerinit = <<<JS
             HierarchicalTagsPlugin,
         ],
 
-        hierarchicalTagSeparator: /[_]/
+        hierarchicalTagSeparator: /[_]/,
+
+        oauth2RedirectUrl: "{$oauth2redirect}",
+    });
+
+    window.ui.initOAuth({
+        clientId: "openapi",
+        appName: "Moodle OpenAPI Swagger UI",
     });
 JS;
 

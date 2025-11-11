@@ -49,6 +49,8 @@ class specification implements
     /** @var callable[] A list of common responses that are frequently found in paths */
     protected array $commonresponses = [];
 
+    protected array $scopes = [];
+
     /**
      * Constructor to configure base information.
      */
@@ -92,14 +94,13 @@ class specification implements
                         'name' => 'MoodleSession',
                         'in' => parameter::IN_COOKIE,
                     ],
-                    // TODO MDL-82242: Add support for OAuth2.
                 ],
             ],
-            // TODO MDL-82242: Add support for OAuth2.
             'security' => [
                 (object) [
                     'api_key' => [],
                     'cookie' => [],
+                    'oauth2' => [],
                 ],
             ],
             'externalDocs' => (object) [
@@ -166,6 +167,34 @@ class specification implements
 
         // Add the Moodle site version here.
         $this->data->info->version = $CFG->version;
+
+        // Add OAuth2 scopes to the security schemes.
+        $scopes = array_unique($this->scopes);
+        // TODO: Get scope descriptions from somewhere better.
+        $scopes = array_combine(
+            array_map(
+                fn($scope) => $scope,
+                $scopes,
+            ),
+            array_map(
+                fn($scope) => "Scope for: {$scope}",
+                $scopes,
+            ),
+        );
+        $this->data->components->securitySchemes->oauth2 = (object) [
+            'type' => 'oauth2',
+            'flows' => (object) [
+                'clientCredentials' => (object) [
+                    'tokenUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'token'])->out(false),
+                    'scopes' => $scopes,
+                ],
+                'authorizationCode' => (object) [
+                    'authorizationUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'authorize'])->out(false),
+                    'tokenUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'token'])->out(false),
+                    'scopes' => $scopes,
+                ],
+            ],
+        ];
 
         // Add the server configuration.
         $serverdescription = str_replace("'", "\'", format_string(get_site()->fullname));
@@ -504,6 +533,14 @@ class specification implements
             ),
             fn($param) => $param !== null,
         ));
+
+        $scopes = $route->get_scopes();
+        if (!empty($scopes)) {
+            $this->scopes += $scopes;
+            $data->security[] = (object) [
+                'oauth2' => $scopes,
+            ];
+        }
 
         foreach ($this->get_common_request_responses() as $callable) {
             $data = $callable($route, $data);

@@ -32,6 +32,12 @@ use Psr\Http\Server\RequestHandlerInterface;
 class moodle_authentication_middleware implements MiddlewareInterface {
     #[\Override]
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface {
+        // TODO Allow a route to disable cookies.
+        // $moodleroute = $request->getAttribute(route::class);
+
+        \core\session\manager::set_cookies_supported(true);
+        \core\session\manager::start();
+
         // Get the Moodle Route from the request. We need this to determine if login is required for this page.
         $moodleroute = $request->getAttribute(route::class);
 

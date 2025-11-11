@@ -558,4 +558,23 @@ final class route_test extends route_testcase {
         );
         $this->assertEquals('Example response', $route->get_response_with_status_code(201)->description);
     }
+
+    public function test_get_scopes(): void {
+        // Scopes on a route.
+        $route = new route(
+            scopes: ['user:read', 'user:write'],
+        );
+
+        $this->assertCount(2, $route->get_scopes());
+        $this->assertEquals(['user:read', 'user:write'], $route->get_scopes());
+
+        // Scopes inherited from parent.
+        $parent = new route(
+            scopes: ['user:read', 'user:write'],
+        );
+        $child = new route();
+        $child->set_parent($parent);
+        $this->assertCount(2, $child->get_scopes());
+        $this->assertEquals(['user:read', 'user:write'], $child->get_scopes());
+    }
 }

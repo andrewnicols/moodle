@@ -16,6 +16,7 @@
 
 namespace core\router;
 
+use core\route\oauth2;
 use core\route\shortlink;
 use Slim\App;
 use Slim\Interfaces\RouteGroupInterface;
@@ -37,6 +38,7 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
             route_loader_interface::ROUTE_GROUP_PAGE => $this->configure_standard_routes($app),
             route_loader_interface::ROUTE_GROUP_SHIM => $this->configure_shim_routes($app),
             route_loader_interface::ROUTE_GROUP_SHORTLINK => $this->configure_shortlink_routes($app),
+            route_loader_interface::ROUTE_GROUP_OAUTH2 => $this->configure_oauth2_auth($app),
         ];
     }
 
@@ -109,6 +111,38 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
             },
             $this->get_all_shortlink_routes(),
         );
+    }
+
+    protected function configure_oauth2_auth(App $app): RouteGroupInterface {
+        return $app->group(self::ROUTE_GROUP_OAUTH2, function (RouteCollectorProxy $group): void {
+            $callable = [oauth2::class, 'token'];
+            $slimroute = $group->map(['GET', 'POST'], '/token', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+
+            $callable = [oauth2::class, 'login'];
+            $slimroute = $group->get('/login', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+
+            $callable = [oauth2::class, 'do_login'];
+            $slimroute = $group->post('/login', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+
+            $callable = [oauth2::class, 'authorize'];
+            $slimroute = $group->get('/authorize', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+
+            $callable = [oauth2::class, 'approve'];
+            $slimroute = $group->get('/approve', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+
+            $callable = [oauth2::class, 'do_approve'];
+            $slimroute = $group->post('/do_approve', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+
+            $callable = [oauth2::class, 'refresh'];
+            $slimroute = $group->post('/refresh', $callable);
+            $this->set_route_name_for_callable($slimroute, $callable);
+        });
     }
 
     /**

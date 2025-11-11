@@ -129,7 +129,7 @@ class util {
     ): ResponseInterface {
         return $response
             ->withStatus(302)
-            ->withHeader('Location', (string) $url);
+            ->withHeader('Location', (string) $url->out(false));
     }
 
     /**

@@ -42,6 +42,10 @@ use Psr\Http\Message\ServerRequestInterface;
     pathtypes: [
         new \core\router\parameters\path_user(),
     ],
+    scopes: [
+        // Read is always required, even if writing.
+        'user:preferences:read',
+    ],
 )]
 class preferences {
     /**
@@ -71,7 +75,7 @@ class preferences {
         ResponseInterface $response,
         ServerRequestInterface $request,
         stdClass $user,
-        ?string  $preference,
+        ?string $preference,
     ): payload_response {
         $this->check_user($user);
 
@@ -98,6 +102,10 @@ class preferences {
     #[route(
         method: ['POST'],
         title: 'Set or update multiple user preferences',
+        scopes: [
+            // Read is inheritted from parent.
+            'user:preferences:write',
+        ],
         requestbody: new \core\router\schema\request_body(
             content: new payload_response_type(
                 schema: new \core\router\schema\objects\schema_object(
@@ -153,6 +161,9 @@ class preferences {
         method: ['POST'],
         title: 'Set a single user preference',
         description: 'Set a single user preference',
+        scopes: [
+            'user:preferences:write',
+        ],
         pathtypes: [
             new \core\router\schema\parameters\path_parameter(
                 name: 'preference',

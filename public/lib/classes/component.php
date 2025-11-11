@@ -193,6 +193,10 @@ class component {
      * Register the Moodle class autoloader.
      */
     public static function register_autoloader(): void {
+        if (is_file(dirname(__DIR__, 3) . '/vendor/autoload.php')) {
+            require_once(dirname(__DIR__, 3) . '/vendor/autoload.php');
+        }
+
         if (defined('COMPONENT_CLASSLOADER')) {
             spl_autoload_register(COMPONENT_CLASSLOADER);
         } else {
