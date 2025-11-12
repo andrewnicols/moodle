@@ -17,10 +17,12 @@
 namespace core_user\route\scope;
 
 /**
- * Class user_scope
+ * User scope.
+ *
+ * This scope is the parent scope for all user-related scopes.
  *
  * @package    core_user
- * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\core\router\scope\name_attribute('User')]

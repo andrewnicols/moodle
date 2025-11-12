@@ -17,6 +17,7 @@
 namespace core\route;
 
 use core\exception;
+use core\router\route;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
@@ -25,13 +26,25 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
- * Class token_request
+ * The oauth2 routes which control the oauth2 authorization flows.
  *
  * @package    core
- * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class oauth2 {
+    /**
+     * Fetch a token for the client.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param AuthorizationServer $server
+     * @return ResponseInterface
+     */
+    #[route(
+        path: '/token',
+        method: ['GET', 'POST'],
+    )]
     public function token(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -51,13 +64,18 @@ class oauth2 {
         }
     }
 
+    /**
+     * Show the login form.
+     *
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @return ResponseInterface
+     */
+    #[route(
+        path: '/login',
+        method: ['GET'],
+    )]
     public function login(
-        ServerRequestInterface $request,
         ResponseInterface $response,
-        AuthorizationServer $server,
-        ClientRepositoryInterface $clientrepository,
-        ScopeRepositoryInterface $scoperepository,
-        UserRepositoryInterface $userrepository,
     ): ResponseInterface {
         $action = \core\router\util::get_path_for_callable([self::class, 'do_login']);
         // Render a simple login form.
@@ -70,31 +88,39 @@ class oauth2 {
         return $response;
     }
 
+    /**
+     * Process the login form submission.
+     *
+     * @param ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param UserRepositoryInterface $userrepository
+     * @return ResponseInterface
+     */
+    #[route(
+        path: '/login',
+        method: ['POST'],
+    )]
     public function do_login(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        AuthorizationServer $server,
-        ClientRepositoryInterface $clientrepository,
-        ScopeRepositoryInterface $scoperepository,
         UserRepositoryInterface $userrepository,
     ): ResponseInterface {
         // Handle the login form submission.
-        $authrequest = $this->get_auth_request(
-            $request,
-            $server,
-            $clientrepository,
-            $scoperepository,
-        );
-        $authrequest->setUser($userrepository->getUserEntityByUserCredentials(
-            $request->getParsedBody()['username'] ?? '',
-            $request->getParsedBody()['password'] ?? '',
-            '',
-            $authrequest->getClient(),
-        ));
+        $authrequest = $this->get_auth_request($request);
 
-        $this->update_session($authrequest);
+        // Validate the user credentials.
+        $authrequest->setUser(
+            $userrepository->getUserEntityByUserCredentials(
+                $request->getParsedBody()['username'] ?? '',
+                $request->getParsedBody()['password'] ?? '',
+                '',
+                $authrequest->getClient(),
+            ),
+        );
 
         if ($authrequest->getUser() !== null) {
+            $this->update_session($authrequest);
+
             return \core\router\util::redirect_to_callable(
                 $request,
                 $response,
@@ -110,32 +136,33 @@ class oauth2 {
         );
     }
 
+    /**
+     * Handle the authorization request.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param AuthorizationServer $server
+     * @param UserRepositoryInterface $userrepository
+     * @return ResponseInterface
+     */
+    #[route(
+        path: '/authorize',
+        method: ['GET'],
+    )]
     public function authorize(
         ServerRequestInterface $request,
         ResponseInterface $response,
         AuthorizationServer $server,
-        ClientRepositoryInterface $clientrepository,
-        ScopeRepositoryInterface $scoperepository,
         UserRepositoryInterface $userrepository,
     ): ResponseInterface {
         global $SESSION;
 
         $this->reset_auth_request_session();
-        $authrequest = $this->get_auth_request(
-            $request,
-            $server,
-            $clientrepository,
-            $scoperepository,
-        );
+        $authrequest = $this->get_auth_request($request);
 
         if ($authrequest->getState() !== $request->getQueryParams()['state'] ?? null) {
             $this->reset_auth_request_session();
-            $authrequest = $this->get_auth_request(
-                $request,
-                $server,
-                $clientrepository,
-                $scoperepository,
-            );
+            $authrequest = $this->get_auth_request($request);
         }
 
         if (!property_exists($SESSION, 'user')) {
@@ -160,8 +187,22 @@ class oauth2 {
                 [self::class, 'approve'],
             );
         }
+
+        // TODO: Work out what to do in this case.
     }
 
+    /**
+     * Handle the refresh token request.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param AuthorizationServer $server
+     * @return ResponseInterface
+     */
+    #[route(
+        path: '/refresh',
+        method: ['POST'],
+    )]
     public function refresh(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -170,19 +211,25 @@ class oauth2 {
         return $server->respondToAccessTokenRequest($request, $response);
     }
 
+    /**
+     * Show the approval form.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param AuthorizationServer $server
+     * @param ClientRepositoryInterface $clientrepository
+     * @param ScopeRepositoryInterface $scoperepository
+     * @return ResponseInterface
+     */
+    #[route(
+        path: '/approve',
+        method: ['GET'],
+    )]
     public function approve(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        AuthorizationServer $server,
-        ClientRepositoryInterface $clientrepository,
-        ScopeRepositoryInterface $scoperepository,
     ): ResponseInterface {
-        $authrequest = $this->get_auth_request(
-            $request,
-            $server,
-            $clientrepository,
-            $scoperepository,
-        );
+        $authrequest = $this->get_auth_request($request);
 
         // Render a simple approval form.
         $action = \core\router\util::get_path_for_callable([self::class, 'do_approve']);
@@ -200,44 +247,57 @@ class oauth2 {
         return $response;
     }
 
+    /**
+     * Process the approval form submission.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param AuthorizationServer $server
+     * @return ResponseInterface
+     */
+    #[route(
+        path: '/approve',
+        method: ['POST'],
+    )]
     public function do_approve(
         ServerRequestInterface $request,
         ResponseInterface $response,
         AuthorizationServer $server,
-        ClientRepositoryInterface $clientrepository,
-        ScopeRepositoryInterface $scoperepository,
     ): ResponseInterface {
         global $SESSION;
 
         $approved = $request->getParsedBody()['approve'] ?? '0';
         $SESSION->approvedscopes = $approved === '1';
-        $authrequest = $this->get_auth_request(
-            $request,
-            $server,
-            $clientrepository,
-            $scoperepository,
-        );
+        $authrequest = $this->get_auth_request($request);
         $authrequest->setAuthorizationApproved(true);
 
         $this->update_session($authrequest);
         return $server->completeAuthorizationRequest($authrequest, $response);
     }
 
+    /**
+     * Helper to reset the authentication request in the session.
+     */
     private function reset_auth_request_session(): void {
         global $SESSION;
 
         unset($SESSION->oauth2request);
     }
 
+    /**
+     * Helper to get the authentication request from the session or create a new one.
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \League\OAuth2\Server\AuthorizationServer $server
+     */
     private function get_auth_request(
         ServerRequestInterface $request,
-        AuthorizationServer $server,
-        ClientRepositoryInterface $clientrepository,
-        ScopeRepositoryInterface $scoperepository,
     ): ?\League\OAuth2\Server\RequestTypes\AuthorizationRequest {
         global $SESSION;
 
         if (empty($SESSION->oauth2request)) {
+            $server = $this->get(AuthorizationServer::class);
+            $clientrepository = $this->get(ClientRepositoryInterface::class);
 
             $authrequest = $server->validateAuthorizationRequest($request);
             $client = $clientrepository->getClientEntity($request->getQueryParams()['client_id']);
@@ -252,11 +312,26 @@ class oauth2 {
         return $authrequest;
     }
 
+    /**
+     * Helper to update the authentication request within the session.
+     *
+     * @param \League\OAuth2\Server\RequestTypes\AuthorizationRequest $authrequest
+     */
     private function update_session(
         \League\OAuth2\Server\RequestTypes\AuthorizationRequest $authrequest
     ): void {
         global $SESSION;
 
         $SESSION->oauth2request = serialize($authrequest);
+    }
+
+    /**
+     * Helper to get a service from the DI container.
+     *
+     * @param string $identifier
+     * @return mixed
+     */
+    private function get(string $identifier): mixed {
+        return \core\di::get($identifier);
     }
 }

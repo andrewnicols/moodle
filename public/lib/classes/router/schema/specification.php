@@ -178,40 +178,42 @@ class specification implements
             }
         }
 
+        // Unique the scopes.
         $scopes = array_unique($scopes);
 
-        // TODO: Get scope descriptions from somewhere better.
-        $scopes = array_combine(
-            array_map(
-                function ($scope): string {
-                    $name = $scope::get_qualified_name();
-                    if ((new \ReflectionClass($scope))->isAbstract()) {
-                        return "{$name}:*";;
-                    }
+        // Convert the scopes into a name => description list.
+        $finalscopes = [];
+        for ($i = 0; $i < count($scopes); $i++) {
+            $scope = $scopes[$i];
+            $name = $scope::get_qualified_name();
+            $description = $scope::get_description();
+            $finalscopes[$name] = $description;
 
-                    return $name;
-                },
-                $scopes,
-            ),
-            array_map(
-                // fn($scope): string => '',
-                fn($scope): string => $scope ? $scope::get_description() : '',
-                $scopes,
-            ),
-        );
-        ksort($scopes);
+            // Note: We could do something here to create wildcard scopes, for example:
+            // if (array_key_exists($i + 1, $scopes)) {
+            //     if (get_parent_class($scope) === $scopes[$i + 1]) {
+            //         // Next scope is a child of this one, so add the wildcard version too.
+            //         $finalscopes["{$name}:*"] = "All sub-scopes of {$name}";
+            //     }
+            // }
+        }
+
+        // Only sort them after processing.
+        ksort($finalscopes);
 
         $this->data->components->securitySchemes->oauth2 = (object) [
             'type' => 'oauth2',
             'flows' => (object) [
+                // We support client credentials for machine-to-machine requests.
                 'clientCredentials' => (object) [
                     'tokenUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'token'])->out(false),
-                    'scopes' => $scopes,
+                    'scopes' => $finalscopes,
                 ],
+                // We support authorization code flow for user-interactive requests.
                 'authorizationCode' => (object) [
                     'authorizationUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'authorize'])->out(false),
                     'tokenUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'token'])->out(false),
-                    'scopes' => $scopes,
+                    'scopes' => $finalscopes,
                 ],
             ],
         ];

@@ -17,12 +17,27 @@
 namespace core\router\scope;
 
 /**
- * Class name_attribute
+ * The description attribute for a scope.
  *
  * @package    core
- * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class description_attribute extends \lang_string {
+    #[\Override]
+    public function get_string(): string {
+        $identifier = $this->get_identifier();
+        $component = $this->get_component();
+
+        $exists = get_string_manager()->string_exists(
+            $identifier, $component,
+        );
+
+        if ($exists) {
+            return parent::get_string();
+        }
+
+        return "[{$identifier}, {$component}]";
+    }
 }

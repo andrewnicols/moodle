@@ -17,16 +17,47 @@
 namespace core\router\scope;
 
 /**
- * Class name_attribute
+ * The name attribute for a scope.
  *
  * @package    core
- * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class name_attribute {
+    /**
+     * Constructor.
+     *
+     * @param string $name The name of the scope.
+     * @throws \InvalidArgumentException
+     */
     public function __construct(
-        public readonly string $name,
+        /** @var string The name of the scope. */
+        private string $name,
     ) {
+        $this->name = strtolower($name);
+        $this->validate_name();
+    }
+
+    /**
+     * Get the name of the scope.
+     *
+     * @return string
+     */
+    public function get_name(): string {
+        return $this->name;
+    }
+
+    /**
+     * Validate the scope name.
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function validate_name(): void {
+        if (!preg_match('/^[a-z][a-z0-9_]*$/', $this->name)) {
+            throw new \InvalidArgumentException(
+                'Scope name must start with a letter and contain only lowercase letters, numbers, and underscores.'
+            );
+        }
     }
 }

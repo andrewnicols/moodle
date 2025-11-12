@@ -113,35 +113,18 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
         );
     }
 
+    /**
+     * Configure all OAuth2 authentication routes.
+     *
+     * @param App $app
+     * @return RouteGroupInterface
+     */
     protected function configure_oauth2_auth(App $app): RouteGroupInterface {
         return $app->group(self::ROUTE_GROUP_OAUTH2, function (RouteCollectorProxy $group): void {
-            $callable = [oauth2::class, 'token'];
-            $slimroute = $group->map(['GET', 'POST'], '/token', $callable);
-            $this->set_route_name_for_callable($slimroute, $callable);
-
-            $callable = [oauth2::class, 'login'];
-            $slimroute = $group->get('/login', $callable);
-            $this->set_route_name_for_callable($slimroute, $callable);
-
-            $callable = [oauth2::class, 'do_login'];
-            $slimroute = $group->post('/login', $callable);
-            $this->set_route_name_for_callable($slimroute, $callable);
-
-            $callable = [oauth2::class, 'authorize'];
-            $slimroute = $group->get('/authorize', $callable);
-            $this->set_route_name_for_callable($slimroute, $callable);
-
-            $callable = [oauth2::class, 'approve'];
-            $slimroute = $group->get('/approve', $callable);
-            $this->set_route_name_for_callable($slimroute, $callable);
-
-            $callable = [oauth2::class, 'do_approve'];
-            $slimroute = $group->post('/do_approve', $callable);
-            $this->set_route_name_for_callable($slimroute, $callable);
-
-            $callable = [oauth2::class, 'refresh'];
-            $slimroute = $group->post('/refresh', $callable);
-            $this->set_route_name_for_callable($slimroute, $callable);
+            foreach ($this->get_all_oauth2_authentication_routes() as $moodleroute) {
+                $slimroute = $group->map(...$moodleroute);
+                $this->set_route_name_for_callable($slimroute, $moodleroute['callable']);
+            }
         });
     }
 
@@ -245,6 +228,28 @@ class route_loader extends abstract_route_loader implements route_loader_interfa
             );
 
             $cache->set('shortlink_routes', $cachedata);
+        }
+
+        return $cachedata;
+    }
+
+    /**
+     * Fetch all OAuth2 authentication routes.
+     *
+     * Note: This method caches results in MUC.
+     *
+     * @return array[]
+     */
+    protected function get_all_oauth2_authentication_routes(): array {
+        $cache = \cache::make('core', 'routes');
+
+        if (!($cachedata = $cache->get('oauth2_auth_routes'))) {
+            $cachedata = $this->get_all_routes_in_class(
+                componentpath: '/',
+                classinfo: new \ReflectionClass(oauth2::class),
+            );
+
+            $cache->set('oauth2_auth_routes', $cachedata);
         }
 
         return $cachedata;

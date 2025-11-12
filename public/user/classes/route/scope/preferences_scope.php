@@ -17,10 +17,12 @@
 namespace core_user\route\scope;
 
 /**
- * Class preferences_scope
+ * The user preferences scope.
+ *
+ * This scope is used to control management of user preferences.
  *
  * @package    core_user
- * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 #[\core\router\scope\name_attribute('preferences')]

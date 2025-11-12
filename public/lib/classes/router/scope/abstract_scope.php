@@ -19,20 +19,27 @@ namespace core\router\scope;
 use core\attribute_helper;
 
 /**
- * Class abstract_scope
+ * The abstract base class for all scopes.
+ *
+ * All scopes must extend this class, or one of it's derived classes.
  *
  * @package    core
- * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class abstract_scope implements \Stringable {
+    /**
+     * Get the fully-qualified name of the scope.
+     *
+     * @return string
+     */
     final public static function get_qualified_name(): string {
         $classname = static::class;
         while ($classname) {
             $attribute = attribute_helper::instance($classname, name_attribute::class);
 
             if ($attribute !== null) {
-                $parts[] = strtolower($attribute->name);
+                $parts[] = $attribute->get_name();
             }
             $classname = get_parent_class($classname);
         }
@@ -40,6 +47,11 @@ abstract class abstract_scope implements \Stringable {
         return implode(':', array_reverse($parts));
     }
 
+    /**
+     * Get the description of the scope.
+     *
+     * @return string
+     */
     final public static function get_description(): string {
         $attribute = attribute_helper::instance(static::class, description_attribute::class);
 
@@ -47,9 +59,14 @@ abstract class abstract_scope implements \Stringable {
             return (string)$attribute;
         }
 
-        return "Scope for: {$this->get_qualified_name()}";
+        return "Scope for: " . static::get_qualified_name();
     }
 
+    /**
+     * String representation of the scope.
+     *
+     * @return string
+     */
     final public function __toString(): string {
         return $this->get_qualified_name();
     }
