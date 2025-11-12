@@ -110,8 +110,8 @@ function is_moodle_cookie_secure() {
 function set_moodle_cookie($username) {
     global $CFG;
 
-    if (NO_MOODLE_COOKIES) {
-        return;
+    if (\core\session\manager::supports_cookies() === false) {
+        return '';
     }
 
     if (empty($CFG->rememberusername)) {
@@ -146,7 +146,7 @@ function set_moodle_cookie($username) {
 function get_moodle_cookie() {
     global $CFG;
 
-    if (NO_MOODLE_COOKIES) {
+    if (\core\session\manager::supports_cookies() === false) {
         return '';
     }
 

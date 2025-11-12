@@ -55,6 +55,9 @@ class manager {
     /** @var array Stores the the SESSION after write_close is called, used to check if it was mutated after the session is closed */
     private static $sessionatclose = [];
 
+    /** @var bool Whether Cookies are supported for this request */
+    private static bool $cookiessupported = true;
+
     /**
      * @var bool Used to trigger the SESSION mutation warning without actually preventing SESSION mutation.
      * This variable is used to "copy" what the $requireslock parameter  does in start_session().
@@ -100,7 +103,7 @@ class manager {
     public static function start() {
         global $CFG, $DB, $PERF;
 
-        if (isset(self::$sessionactive)) {
+        if (self::$sessionactive) {
             debugging('Session was already started!', DEBUG_DEVELOPER);
             return;
         }
@@ -111,7 +114,7 @@ class manager {
 
         // Init the session handler only if everything initialised properly in lib/setup.php file
         // and the session is actually required.
-        if (empty($DB) or empty($CFG->version) or !defined('NO_MOODLE_COOKIES') or NO_MOODLE_COOKIES or CLI_SCRIPT) {
+        if (!self::request_supports_sessions()) {
             self::$sessionactive = false;
             self::init_empty_session();
             return;
@@ -134,6 +137,66 @@ class manager {
         }
 
         self::start_session($requireslock);
+    }
+
+    /**
+     * Check whether this request supports the use of sessions.
+     *
+     * This takes into conisideration things like:
+     * - whether the database is available
+     * - whether a Moodle version was detected
+     * - whether the session has been marked as supporting cookies
+     * - whether this is a CLI script
+     *
+     * @return bool
+     */
+    private static function request_supports_sessions(): bool {
+        global $CFG, $DB;
+
+        if (empty($DB)) {
+            return false;
+        }
+
+        if (empty($CFG->version)) {
+            return false;
+        }
+
+        if (!static::$cookiessupported) {
+            return false;
+        }
+
+        if (CLI_SCRIPT) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Set whether the current request supports the use of cookies.
+     *
+     * @param bool $supported
+     */
+    public static function set_cookies_supported(bool $supported): void {
+        static::$cookiessupported = $supported;
+    }
+
+    /**
+     * Whether the current session supports cookies.
+     *
+     * @return bool
+     */
+    public static function supports_cookies(): bool {
+        if (isset(static::$cookiessupported)) {
+            return static::$cookiessupported;
+        }
+
+        if (defined('NO_MOODLE_COOKIES')) {
+            return !NO_MOODLE_COOKIES;
+        }
+
+        // Support cookies by default.
+        return true;
     }
 
     /**

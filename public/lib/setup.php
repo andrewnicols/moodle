@@ -882,6 +882,9 @@ if (CLI_SCRIPT) {
     }
 }
 
+// Inform session manager about our decision.
+\core\session\manager::set_cookies_supported(!NO_MOODLE_COOKIES);
+
 // Start session and prepare global $SESSION, $USER.
 if (empty($CFG->sessiontimeout)) {
     $CFG->sessiontimeout = 8 * 60 * 60;

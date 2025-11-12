@@ -26,6 +26,9 @@
 // Load the bootstrap and perform the bare early setup.
 // This just sets up the autoloaders, basic configuration, and so on.
 define('ABORT_AFTER_CONFIG', true);
+
+// Disable Moodle cookies to start with. These may be re-enabled later.
+define('NO_MOODLE_COOKIES', true);
 require_once('config.php');
 
 // Load the rest of the setup.

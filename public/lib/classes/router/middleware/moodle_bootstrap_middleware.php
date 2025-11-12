@@ -45,12 +45,8 @@ class moodle_bootstrap_middleware implements MiddlewareInterface {
 
         $routeattribute = util::get_route_instance_for_request($request);
         if ($routeattribute && !$routeattribute->cookies) {
-            // @codeCoverageIgnoreStart
             // This request should not access Moodle cookies.
-            if (!defined('NO_MOODLE_COOKIES')) {
-                define('NO_MOODLE_COOKIES', true);
-            }
-            // @codeCoverageIgnoreEnd
+            \core\session\manager::set_cookies_supported(false);
         }
 
         if (!$routeattribute || !$routeattribute->abortafterconfig) {
