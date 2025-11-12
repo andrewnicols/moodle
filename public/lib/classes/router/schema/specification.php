@@ -23,6 +23,7 @@ use core\router\route;
 use core\router\route_loader_interface;
 use core\router\schema\objects\type_base;
 use core\router\schema\response\response;
+use core\router\scope\abstract_scope;
 use core\router\util;
 use core\url;
 use stdClass;
@@ -169,18 +170,37 @@ class specification implements
         $this->data->info->version = $CFG->version;
 
         // Add OAuth2 scopes to the security schemes.
-        $scopes = array_unique($this->scopes);
+        foreach ($this->scopes as $scope) {
+            $scope = get_class($scope);
+            while ($scope && $scope !== abstract_scope::class) {
+                $scopes[] = $scope;
+                $scope = get_parent_class($scope);
+            }
+        }
+
+        $scopes = array_unique($scopes);
+
         // TODO: Get scope descriptions from somewhere better.
         $scopes = array_combine(
             array_map(
-                fn($scope) => $scope,
+                function ($scope): string {
+                    $name = $scope::get_qualified_name();
+                    if ((new \ReflectionClass($scope))->isAbstract()) {
+                        return "{$name}:*";;
+                    }
+
+                    return $name;
+                },
                 $scopes,
             ),
             array_map(
-                fn($scope) => "Scope for: {$scope}",
+                // fn($scope): string => '',
+                fn($scope): string => $scope ? $scope::get_description() : '',
                 $scopes,
             ),
         );
+        ksort($scopes);
+
         $this->data->components->securitySchemes->oauth2 = (object) [
             'type' => 'oauth2',
             'flows' => (object) [
@@ -538,7 +558,7 @@ class specification implements
         if (!empty($scopes)) {
             $this->scopes += $scopes;
             $data->security[] = (object) [
-                'oauth2' => $scopes,
+                'oauth2' => array_map(fn($scope): string => $scope->get_qualified_name(), $scopes),
             ];
         }
 

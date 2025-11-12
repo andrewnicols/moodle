@@ -44,7 +44,7 @@ use Psr\Http\Message\ServerRequestInterface;
     ],
     scopes: [
         // Read is always required, even if writing.
-        'user:preferences:read',
+        new \core_user\route\scope\read_preferences_scope(),
     ],
 )]
 class preferences {
@@ -104,7 +104,7 @@ class preferences {
         title: 'Set or update multiple user preferences',
         scopes: [
             // Read is inheritted from parent.
-            'user:preferences:write',
+            new \core_user\route\scope\write_preferences_scope(),
         ],
         requestbody: new \core\router\schema\request_body(
             content: new payload_response_type(
@@ -162,7 +162,8 @@ class preferences {
         title: 'Set a single user preference',
         description: 'Set a single user preference',
         scopes: [
-            'user:preferences:write',
+            // Read is inheritted from parent.
+            new \core_user\route\scope\write_preferences_scope(),
         ],
         pathtypes: [
             new \core\router\schema\parameters\path_parameter(

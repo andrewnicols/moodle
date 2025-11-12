@@ -141,3 +141,7 @@ $string['target:upcomingactivitiesdue_help'] = 'This target generates reminders 
 $string['target:upcomingactivitiesdueinfo'] = 'All upcoming activities due insights are listed here. These students have received these insights directly.';
 $string['usergroupselectorcount'] = '{$a->fullname} ({$a->groupcount})';
 $string['userprofile'] = 'User profile';
+$string['scope:preferences:write'] = 'Write user preferences';
+$string['scope:preferences:read'] = 'Read user preferences';
+$string['scope:preferences'] = 'User preferences';
+$string['scope:user'] = 'User information';

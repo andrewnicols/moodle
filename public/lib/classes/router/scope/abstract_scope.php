@@ -25,8 +25,8 @@ use core\attribute_helper;
  * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class abstract_scope {
-    final public function get_qualified_name(): string {
+abstract class abstract_scope implements \Stringable {
+    final public static function get_qualified_name(): string {
         $classname = static::class;
         while ($classname) {
             $attribute = attribute_helper::instance($classname, name_attribute::class);
@@ -40,7 +40,17 @@ abstract class abstract_scope {
         return implode(':', array_reverse($parts));
     }
 
-    final public function get_description(): string {
-        return attribute_helper::instance($this, description_attribute::class);
+    final public static function get_description(): string {
+        $attribute = attribute_helper::instance(static::class, description_attribute::class);
+
+        if ($attribute !== null) {
+            return (string)$attribute;
+        }
+
+        return "Scope for: {$this->get_qualified_name()}";
+    }
+
+    final public function __toString(): string {
+        return $this->get_qualified_name();
     }
 }

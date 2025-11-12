@@ -218,7 +218,7 @@ class route {
     /**
      * Get the list of scopes required for this route.
      *
-     * @return null|string[]
+     * @return null|\core\router\scope\abstract_scope[]
      */
     public function get_scopes(): ?array {
         $scopes = $this->scopes;
@@ -226,9 +226,7 @@ class route {
         if (isset($this->parentroute)) {
             $parentscopes = $this->parentroute->get_scopes();
             if ($scopes) {
-                $scopes = array_unique(
-                    array_merge($parentscopes ?? [], $scopes),
-                );
+                $scopes = array_merge($parentscopes ?? [], $scopes);
             } else {
                 $scopes = $parentscopes;
             }
