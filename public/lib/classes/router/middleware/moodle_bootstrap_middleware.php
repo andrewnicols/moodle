@@ -45,17 +45,27 @@ class moodle_bootstrap_middleware implements MiddlewareInterface {
 
         $routeattribute = util::get_route_instance_for_request($request);
         if ($routeattribute && !$routeattribute->cookies) {
-            // @codeCoverageIgnoreStart
             // This request should not access Moodle cookies.
-            if (!defined('NO_MOODLE_COOKIES')) {
-                define('NO_MOODLE_COOKIES', true);
-            }
-            // @codeCoverageIgnoreEnd
+            // Note: This check must be before the full Moodle stack is loaded as the router endpoint
+            // sets NO_MOODLE_COOKIES.
+            \core\session\manager::set_cookies_supported(false);
         }
 
         if (!$routeattribute || !$routeattribute->abortafterconfig) {
-            // Do not load the full Moodle stack. This is a lightweight request.
+            // Load the full Moodle stack.
+            // Either abortafterconfig is not set, or we cannot find the route attribute and must load this in full.
             $this->load_full_moodle();
+        }
+
+        if ($routeattribute && $routeattribute->cookies) {
+            // This request should access Moodle cookies.
+            // Note: This must be completed after the full Moodle stack is potentially loaded as the
+            // NO_MOODLE_COOKIES constant is set on the router.
+            \core\session\manager::set_cookies_supported(true);
+        }
+
+        if (\core\session\manager::supports_cookies()) {
+            \core\session\manager::start();
         }
 
         if ($PAGE) {

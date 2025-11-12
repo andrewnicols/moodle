@@ -17,6 +17,7 @@
 namespace core\session;
 
 use core\tests\session\mock_handler;
+use core\tests\session\testable_manager;
 
 /**
  * Unit tests for session manager class.
@@ -37,9 +38,32 @@ final class manager_test extends \advanced_testcase {
         $this->mockhandler = new mock_handler();
     }
 
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_start(): void {
         $this->resetAfterTest();
-        // Session must be started only once...
+
+        // If cookies are not supported, then the session will not be started, no matter how many times we call start.
+        // Session must be started only once.
+        testable_manager::start();
+        testable_manager::start();
+        testable_manager::start();
+        $this->assertDebuggingNotCalled();
+
+        // Even when cookies are supported, we are running as a CLI script so this won't run.
+        testable_manager::start();
+        testable_manager::start();
+        testable_manager::start();
+        $this->assertDebuggingNotCalled();
+
+        // Our testable manager allows us to pretend not to be a CLI script.
+        testable_manager::set_cli_script(false);
+
+        // Now set that cookies are supported, the first call should start the session.
+        testable_manager::set_cookies_supported(true);
+        testable_manager::start();
+        $this->assertDebuggingNotCalled();
+
+        // Any subsequent calls should trigger a debugging message.
         \core\session\manager::start();
         $this->assertDebuggingCalled('Session was already started!', DEBUG_DEVELOPER);
     }

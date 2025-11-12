@@ -207,6 +207,7 @@ class phpunit_util extends \core\test\testing_util {
         \core\session\manager::init_empty_session();
 
         // Reset all static caches.
+        \core\session\manager::phpunit_reset();
         \core\event\manager::phpunit_reset();
         accesslib_clear_all_caches(true);
         accesslib_reset_role_cache();

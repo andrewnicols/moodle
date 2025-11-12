@@ -36,6 +36,7 @@ final class send_login_notifications_test extends \advanced_testcase {
 
         $this->resetAfterTest();
 
+        \core\session\manager::set_cookies_supported(true);
         $loginuser = self::getDataGenerator()->create_user();
         $this->setUser(0);
 
@@ -47,8 +48,8 @@ final class send_login_notifications_test extends \advanced_testcase {
         // Redirect messages to sink and stop buffer output from CLI task.
         $sink = $this->redirectMessages();
         ob_start();
-        $this->runAdhocTasks('\core\task\send_login_notifications');
-        $output = ob_get_contents();
+        $this->runAdhocTasks(\core\task\send_login_notifications::class);
+        ob_get_contents();
         ob_end_clean();
         $messages = $sink->get_messages();
         $sink->close();

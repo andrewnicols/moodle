@@ -55,6 +55,9 @@ class manager {
     /** @var array Stores the the SESSION after write_close is called, used to check if it was mutated after the session is closed */
     private static $sessionatclose = [];
 
+    /** @var null|bool Whether Cookies are supported for this request */
+    private static ?bool $cookiessupported = null;
+
     /**
      * @var bool Used to trigger the SESSION mutation warning without actually preventing SESSION mutation.
      * This variable is used to "copy" what the $requireslock parameter  does in start_session().
@@ -100,20 +103,24 @@ class manager {
     public static function start() {
         global $CFG, $DB, $PERF;
 
-        if (isset(self::$sessionactive)) {
+        if (self::$sessionactive) {
             debugging('Session was already started!', DEBUG_DEVELOPER);
             return;
         }
 
         // Grab the time before session lock starts.
-        $PERF->sessionlock['start'] = microtime(true);
+        if ($PERF) {
+            $PERF->sessionlock['start'] = microtime(true);
+        }
         self::load_handler();
 
         // Init the session handler only if everything initialised properly in lib/setup.php file
         // and the session is actually required.
-        if (empty($DB) or empty($CFG->version) or !defined('NO_MOODLE_COOKIES') or NO_MOODLE_COOKIES or CLI_SCRIPT) {
+        if (!self::request_supports_sessions()) {
             self::$sessionactive = false;
-            self::init_empty_session();
+            if (!self::is_session_initialised()) {
+                self::init_empty_session();
+            }
             return;
         }
 
@@ -134,6 +141,92 @@ class manager {
         }
 
         self::start_session($requireslock);
+    }
+
+    /**
+     * Check whether this request supports the use of sessions.
+     *
+     * This takes into consideration things like:
+     * - whether the database is available
+     * - whether a Moodle version was detected
+     * - whether the session has been marked as supporting cookies
+     * - whether this is a CLI script
+     *
+     * @return bool
+     */
+    private static function request_supports_sessions(): bool {
+        global $CFG, $DB;
+
+        if (empty($DB)) {
+            return false;
+        }
+
+        if (empty($CFG->version)) {
+            return false;
+        }
+
+        if (static::$cookiessupported === null) {
+            static::set_initial_cookie_support();
+        }
+
+        if (!static::$cookiessupported) {
+            return false;
+        }
+
+        if (static::is_cli_script()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine the initial cookie support status.
+     */
+    public static function set_initial_cookie_support(): void {
+        if (static::$cookiessupported === null) {
+            if (defined('NO_MOODLE_COOKIES')) {
+                static::set_cookies_supported(!NO_MOODLE_COOKIES);
+            } else {
+                static::set_cookies_supported(true);
+            }
+        }
+    }
+
+    /**
+     * Set whether the current request supports the use of cookies.
+     *
+     * @param bool $supported
+     */
+    public static function set_cookies_supported(bool $supported): void {
+        static::$cookiessupported = $supported;
+    }
+
+    /**
+     * Helper to check whether this is run from a CLI Script.
+     *
+     * @return bool
+     */
+    protected static function is_cli_script(): bool {
+        return CLI_SCRIPT;
+    }
+
+    /**
+     * Whether the current session supports cookies.
+     *
+     * @return bool
+     */
+    public static function supports_cookies(): bool {
+        if (isset(static::$cookiessupported)) {
+            return static::$cookiessupported;
+        }
+
+        if (defined('NO_MOODLE_COOKIES')) {
+            return !NO_MOODLE_COOKIES;
+        }
+
+        // Support cookies by default.
+        return true;
     }
 
     /**
@@ -268,6 +361,27 @@ class manager {
         if (!self::$handler instanceof \core\session\handler) {
             throw new exception("$class must implement the \core\session\handler");
         }
+    }
+
+    /**
+     * Check whether the session has been initialised.
+     *
+     * @return bool
+     */
+    protected static function is_session_initialised(): bool {
+        if (self::$sessionactive) {
+            return true;
+        }
+
+        if (!is_object($GLOBALS['SESSION'])) {
+            return false;
+        }
+
+        if (!is_object($GLOBALS['USER'])) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -1548,5 +1662,27 @@ class manager {
         // Apply the comparison functions to the two given session arrays,
         // making sure to use the largest array first, so that all keys are considered.
         return array_udiff_uassoc($largest, $smallest, $valcompare, $keycompare);
+    }
+
+    /**
+     * Reset everything if necessary.
+     *
+     * @private
+     * @throws \core\exception\coding_exception if used outside of unit tests.
+     */
+    public static function phpunit_reset(): void {
+        if (!PHPUNIT_TEST) {
+            throw new \core\exception\coding_exception('Cannot reset manager outside of phpunit tests!');
+        }
+
+        self::$handler = null;
+        self::$sessionactive = null;
+        self::$logintokenkey = 'core_auth_login';
+        self::$priorsession = [];
+        self::$sessionatclose = [];
+        self::$cookiessupported = true;
+        self::$requireslockdebug = null;
+
+        self::load_handler();
     }
 }
