@@ -26,6 +26,7 @@
 // Load the bootstrap and perform the bare early setup.
 // This just sets up the autoloaders, basic configuration, and so on.
 define('ABORT_AFTER_CONFIG', true);
+
 require_once('config.php');
 
 // Load the rest of the setup.

@@ -2868,7 +2868,6 @@ function validate_user_key($keyvalue, $script, $instance) {
 /**
  * Require key login. Function terminates with error if key not found or incorrect.
  *
- * @uses NO_MOODLE_COOKIES
  * @uses PARAM_ALPHANUM
  * @param string $script unique script identifier
  * @param int $instance optional instance id
@@ -2878,7 +2877,7 @@ function validate_user_key($keyvalue, $script, $instance) {
 function require_user_key_login($script, $instance = null, $keyvalue = null) {
     global $DB;
 
-    if (!NO_MOODLE_COOKIES) {
+    if (!\core\session\manager::supports_cookies()) {
         throw new \moodle_exception('sessioncookiesdisable');
     }
 
@@ -4155,7 +4154,8 @@ function complete_user_login($user, array $extrauserinfo = []) {
     // Skip Web Service requests, CLI scripts, AJAX scripts, and request from the mobile app itself.
     $loginip = getremoteaddr();
     $isnewip = isset($SESSION->userpreviousip) && $SESSION->userpreviousip != $loginip;
-    $isvalidenv = (!WS_SERVER && !CLI_SCRIPT && !NO_MOODLE_COOKIES) || PHPUNIT_TEST;
+    $isvalidenv = (!WS_SERVER && !CLI_SCRIPT) || PHPUNIT_TEST;
+    $isvalidenv = $isvalidenv && \core\session\manager::supports_cookies();
 
     if (!empty($SESSION->isnewsessioncookie) && $isnewip && $isvalidenv && !\core_useragent::is_moodle_app()) {
 
