@@ -187,7 +187,9 @@ class specification implements
             $scope = $scopes[$i];
             $name = $scope::get_qualified_name();
             $description = $scope::get_description();
-            $finalscopes[$name] = $description;
+
+            $finalscopes["{$name}:read"] = get_string('oauth2:scope:read', 'core', $description);
+            $finalscopes["{$name}:write"] = get_string('oauth2:scope:write', 'core', $description);
 
             // Note: We could do something here to create wildcard scopes, for example:
             // if (array_key_exists($i + 1, $scopes)) {
@@ -558,9 +560,23 @@ class specification implements
 
         $scopes = $route->get_scopes();
         if (!empty($scopes)) {
+            // Add the scopes to the specification for later processing.
             $this->scopes += $scopes;
+
+            // Add the scopes to the security section.
+            $oauth2scopes = [];
+            foreach ($scopes as $scope) {
+                $qualifiedname = $scope->get_qualified_name();
+                if ($scope->is_read()) {
+                    $oauth2scopes[] = "{$qualifiedname}:read";
+                }
+                if ($scope->is_write()) {
+                    $oauth2scopes[] = "{$qualifiedname}:write";
+                }
+            }
+
             $data->security[] = (object) [
-                'oauth2' => array_map(fn($scope): string => $scope->get_qualified_name(), $scopes),
+                'oauth2' => $oauth2scopes,
             ];
         }
 

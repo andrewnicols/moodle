@@ -42,10 +42,6 @@ use Psr\Http\Message\ServerRequestInterface;
     pathtypes: [
         new \core\router\parameters\path_user(),
     ],
-    scopes: [
-        // Read is always required, even if writing.
-        new \core_user\route\scope\read_preferences_scope(),
-    ],
 )]
 class preferences {
     /**
@@ -69,6 +65,10 @@ class preferences {
         ],
         responses: [
             new user_preferences_response(),
+        ],
+        scopes: [
+            // Read is always required, even if writing.
+            new \core_user\route\scope\preferences_scope(),
         ],
     )]
     public function get_preferences(
@@ -103,8 +103,8 @@ class preferences {
         method: ['POST'],
         title: 'Set or update multiple user preferences',
         scopes: [
-            // Read is inheritted from parent.
-            new \core_user\route\scope\write_preferences_scope(),
+            // Read is always required, even if writing.
+            new \core_user\route\scope\preferences_scope(write: true),
         ],
         requestbody: new \core\router\schema\request_body(
             content: new payload_response_type(
@@ -163,7 +163,7 @@ class preferences {
         description: 'Set a single user preference',
         scopes: [
             // Read is inheritted from parent.
-            new \core_user\route\scope\write_preferences_scope(),
+            new \core_user\route\scope\preferences_scope(write: true),
         ],
         pathtypes: [
             new \core\router\schema\parameters\path_parameter(

@@ -27,5 +27,5 @@ namespace core_user\route\scope;
  */
 #[\core\router\scope\name_attribute('preferences')]
 #[\core\router\scope\description_attribute('scope:preferences', 'core_user')]
-abstract class preferences_scope extends user_scope {
+class preferences_scope extends user_scope {
 }

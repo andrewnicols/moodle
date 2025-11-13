@@ -29,6 +29,18 @@ use core\attribute_helper;
  */
 abstract class abstract_scope implements \Stringable {
     /**
+     * Create a new scope.
+     *
+     * @param bool $write Whether this is write scope
+     * @param bool $read Whether this is read scope
+     */
+    final public function __construct(
+        public readonly bool $write = false,
+        public readonly bool $read = true,
+    ) {
+    }
+
+    /**
      * Get the fully-qualified name of the scope.
      *
      * @return string
@@ -69,5 +81,22 @@ abstract class abstract_scope implements \Stringable {
      */
     final public function __toString(): string {
         return $this->get_qualified_name();
+    }
+
+    /**
+     * Whether the scope requires write.
+     * @return bool
+     */
+    final public function is_write(): bool {
+        return $this->write;
+    }
+
+    /**
+     * Whether the scope requires read.
+     *
+     * @return bool
+     */
+    final public function is_read(): bool {
+        return $this->read;
     }
 }
