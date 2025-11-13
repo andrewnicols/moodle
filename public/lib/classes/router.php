@@ -272,7 +272,6 @@ class router {
     protected function configure_oauth2_route(RouteGroupInterface $group): void {
         $group
             ->add(di::get(moodle_authentication_middleware::class))
-            ->add(di::get(validation_middleware::class))
         ;
     }
 

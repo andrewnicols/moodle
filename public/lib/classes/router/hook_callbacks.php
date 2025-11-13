@@ -23,6 +23,7 @@ use League\OAuth2\Server\Repositories\RefreshTokenRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class hook_callbacks
@@ -85,7 +86,7 @@ class hook_callbacks {
                 $privatekey = get_config('core', 'oauth2_private_key');
 
                 if (!empty($privatekey)) {
-                    $cachelocationtmp = $cachelocation . '.tmp';
+                    $cachelocationtmp = $cachelocation . uniqid();
                     file_put_contents($cachelocationtmp, $privatekey);
                     rename($cachelocationtmp, $cachelocation);
 
@@ -107,6 +108,30 @@ class hook_callbacks {
         );
 
         $hook->add_definition(
+            'oauth2.server.public_key',
+            \DI\factory(function (string $privatekey): string {
+                global $CFG;
+
+                // Cache path.
+                $cachelocation = $CFG->localcachedir . '/oauth2_public_key.pem';
+
+                if (file_exists($cachelocation)) {
+                    return file_get_contents($cachelocation);
+                }
+
+                $details = openssl_pkey_get_details(openssl_pkey_get_private($privatekey));
+                $publickey = $details['key'];
+
+                $cachelocationtmp = $cachelocation . uniqid();
+                file_put_contents($cachelocationtmp, $publickey);
+                rename($cachelocationtmp, $cachelocation);
+
+                return $publickey;
+            })
+                ->parameter('privatekey', \DI\get('oauth2.server.private_key')),
+        );
+
+        $hook->add_definition(
             'oauth2.server.encryption_key',
             \DI\factory(function (): string {
                 global $CFG;
@@ -122,11 +147,10 @@ class hook_callbacks {
                     require("{$CFG->dirroot}/lib/setup.php");
                 }
 
-
                 $encryptionkey = get_config('core', 'oauth2_encryption_key');
 
                 if (!empty($encryptionkey)) {
-                    $cachelocationtmp = $cachelocation . '.tmp';
+                    $cachelocationtmp = $cachelocation . uniqid();
                     file_put_contents($cachelocationtmp, $encryptionkey);
                     rename($cachelocationtmp, $cachelocation);
 
@@ -172,7 +196,7 @@ class hook_callbacks {
             \DI\create()
                 ->constructor(
                     \DI\get(AccessTokenRepositoryInterface::class),
-                    \DI\get('oauth2.server.private_key'),
+                    \DI\get('oauth2.server.public_key'),
                 ),
         );
 

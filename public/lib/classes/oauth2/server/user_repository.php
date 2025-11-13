@@ -45,4 +45,15 @@ class user_repository implements \League\OAuth2\Server\Repositories\UserReposito
 
         return $userentity;
     }
+
+    public function get_user_from_user_record(\stdClass $user): ?UserEntityInterface {
+        if (!$user) {
+            return null;
+        }
+
+        $userentity = new user_entity();
+        $userentity->setIdentifier($user->id);
+
+        return $userentity;
+    }
 }

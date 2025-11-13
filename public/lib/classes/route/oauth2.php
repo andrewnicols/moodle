@@ -17,8 +17,10 @@
 namespace core\route;
 
 use core\exception;
+use core\oauth2\server\user_repository;
 use core\router\route;
 use League\OAuth2\Server\AuthorizationServer;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
 use League\OAuth2\Server\Repositories\UserRepositoryInterface;
@@ -77,12 +79,40 @@ class oauth2 {
     public function login(
         ResponseInterface $response,
     ): ResponseInterface {
+        global $USER;
+
         $action = \core\router\util::get_path_for_callable([self::class, 'do_login']);
+
+        // If the user is already logged in, make this selectable.
+        if (isloggedin() && !isguestuser()) {
+            $body = $response->getBody();
+            $body->write("<p>You are already logged in as " . htmlspecialchars($USER->username) . ".</p>");
+            $body->write("<form method=\"post\" action=\"{$action}\">");
+            $body->write(\core\output\html_writer::empty_tag('input', [
+                'type' => 'hidden',
+                'name' => 'currentuser',
+                'value' => 1,
+            ]));
+            $body->write(\core\output\html_writer::empty_tag('input', [
+                'type' => 'hidden',
+                'name' => 'sesskey',
+                'value' => sesskey(),
+            ]));
+            $body->write('<button type="submit">Continue as this user</button>');
+            $body->write('</form>');
+            return $response;
+        }
+
         // Render a simple login form.
         $body = $response->getBody();
         $body->write("<form method=\"post\" action=\"{$action}\">");
         $body->write('<input type="text" name="username" placeholder="Username"/>');
         $body->write('<input type="password" name="password" placeholder="Password"/>');
+        $body->write(\core\output\html_writer::empty_tag('input', [
+            'type' => 'hidden',
+            'name' => 'sesskey',
+            'value' => sesskey(),
+        ]));
         $body->write('<button type="submit">Login</button>');
         $body->write('</form>');
         return $response;
@@ -93,7 +123,7 @@ class oauth2 {
      *
      * @param ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
-     * @param UserRepositoryInterface $userrepository
+     * @param user_repository $userrepository
      * @return ResponseInterface
      */
     #[route(
@@ -103,20 +133,31 @@ class oauth2 {
     public function do_login(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        UserRepositoryInterface $userrepository,
+        user_repository $userrepository,
     ): ResponseInterface {
+        global $USER;
+
+        require_sesskey();
+
         // Handle the login form submission.
         $authrequest = $this->get_auth_request($request);
 
-        // Validate the user credentials.
-        $authrequest->setUser(
-            $userrepository->getUserEntityByUserCredentials(
-                $request->getParsedBody()['username'] ?? '',
-                $request->getParsedBody()['password'] ?? '',
-                '',
-                $authrequest->getClient(),
-            ),
-        );
+        if ($request->getParsedBody()['currentuser'] ?? '' === '1') {
+            // Continue as the current user.
+            $authrequest->setUser(
+                $userrepository->get_user_from_user_record($USER),
+            );
+        } else {
+            // Validate the user credentials.
+            $authrequest->setUser(
+                $userrepository->getUserEntityByUserCredentials(
+                    $request->getParsedBody()['username'] ?? '',
+                    $request->getParsedBody()['password'] ?? '',
+                    '',
+                    $authrequest->getClient(),
+                ),
+            );
+        }
 
         if ($authrequest->getUser() !== null) {
             $this->update_session($authrequest);
@@ -158,7 +199,13 @@ class oauth2 {
         global $SESSION;
 
         $this->reset_auth_request_session();
-        $authrequest = $this->get_auth_request($request);
+        try {
+            $authrequest = $this->get_auth_request($request);
+        } catch (OAuthServerException $exception) {
+            // All instances of OAuthServerException can be formatted into a HTTP response
+            return $exception->generateHttpResponse($response);
+        }
+
 
         if ($authrequest->getState() !== $request->getQueryParams()['state'] ?? null) {
             $this->reset_auth_request_session();
