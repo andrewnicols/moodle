@@ -443,9 +443,13 @@ class question_bank_helper {
      *     Used in qbank_bulkmove/bulk_move.mustache
      * @param ?context $filtercontext Optional context in which to apply filters.
      *
-     * @return stdClass
+     * @return formatted_bank
      */
-    private static function get_formatted_bank(stdClass $cm, int $currentbankid = 0, ?context $filtercontext = null): stdClass {
+    private static function get_formatted_bank(
+        stdClass $cm,
+        int $currentbankid = 0,
+        ?context $filtercontext = null,
+    ): formatted_bank {
 
         $cminfo = cm_info::create($cm);
         $concatedcats = !empty($cm->cats) ? explode(self::CATEGORY_SEPARATOR, $cm->cats) : [];
@@ -459,21 +463,21 @@ class question_bank_helper {
             return $cat;
         }, $concatedcats);
 
-        $bank = new stdClass();
         $filteroptions = ['escape' => false];
         if (!is_null($filtercontext)) {
             $filteroptions['context'] = $filtercontext;
-        }
-        $bank->name = $cminfo->get_formatted_name($filteroptions);
-        $bank->modid = $cminfo->id;
-        $bank->contextid = $cminfo->context->id;
-        if (!isset($filteroptions['context'])) {
+        } else {
             $filteroptions['context'] = context_course::instance($cminfo->get_course()->id);
         }
-        $bank->coursenamebankname = format_string($cminfo->get_course()->shortname, true, $filteroptions) . " - {$bank->name}";
-        $bank->cminfo = $cminfo;
-        $bank->questioncategories = $categories;
-        return $bank;
+        $formattedname = $cminfo->get_formatted_name($filteroptions);
+        return new formatted_bank(
+            $formattedname,
+            $cminfo->id,
+            $cminfo->context->id,
+            format_string($cminfo->get_course()->shortname, true, $filteroptions) . " - {$formattedname}",
+            $cminfo,
+            $categories,
+        );
     }
 
     /**

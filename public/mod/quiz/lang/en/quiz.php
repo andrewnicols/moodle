@@ -1011,7 +1011,6 @@ $string['selectedattempts'] = 'Selected attempts...';
 $string['selectmultipleitems'] = 'Select multiple items';
 $string['selectmultipletoolbar'] = 'Select multiple toolbar';
 $string['selectnone'] = 'Deselect all';
-$string['selectquestionbank'] = 'Select question bank';
 $string['selectquestionslot'] = 'Select question {$a}';
 $string['selectquestiontype'] = '-- Select question type --';
 $string['sendnotificationopendatesoon'] = 'Notify user of an approaching quiz open date';
@@ -1154,7 +1153,6 @@ $string['yourfinalgradeis'] = 'Your final grade for this quiz is {$a}.';
 $string['questionversion'] = 'v{$a}';
 $string['questionversionlatest'] = 'v{$a} (latest)';
 $string['alwayslatest'] = 'Always latest';
-$string['gobacktoquiz'] = 'Go back';
 
 // Deprecated since Moodle 4.5.
 $string['attemptsdeleted'] = 'Quiz attempts deleted';
@@ -1166,3 +1164,7 @@ $string['groupoverridesdeleted'] = 'Group overrides deleted';
 $string['randomcoursecatwithsubcat'] = 'Any category inside course category {$a}';
 $string['randomcoursewithsubcat'] = 'Any category in this course';
 $string['randomsystemwithsubcat'] = 'Any system-level category';
+
+// Deprecated since Moodle 5.2.
+$string['gobacktoquiz'] = 'Go back';
+$string['selectquestionbank'] = 'Select question bank';

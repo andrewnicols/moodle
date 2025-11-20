@@ -26,6 +26,7 @@
 namespace core_question\output;
 
 use cm_info;
+use core\context\course;
 use core_question\local\bank\question_bank_helper;
 use renderer_base;
 
@@ -37,14 +38,14 @@ class switch_question_bank implements \renderable, \templatable {
     /**
      * Instantiate the output class.
      *
-     * @param int $quizcmid quiz course module id.
-     * @param int $courseid of the current course.
+     * @param ?int $cmid optional course module id, to include the current activity's bank.
+     * @param int $courseid of the current course, to include other banks from this course.
      * @param int $userid of the user viewing the page.
      */
     public function __construct(
-        /** @var int quiz course module id */
-        private readonly int $quizcmid,
-        /** @var int id of the current course */
+        /** @var int optional course module id, to include the current activity's bank. */
+        private readonly ?int $cmid,
+        /** @var int id of the current course, to include other banks from this course. */
         private readonly int $courseid,
         /** @var int id of the user viewing the page */
         private readonly int $userid
@@ -58,26 +59,39 @@ class switch_question_bank implements \renderable, \templatable {
      * @return array
      */
     public function export_for_template(renderer_base $output) {
-
-        [, $cm] = get_module_from_cmid($this->quizcmid);
-        $cminfo = cm_info::create($cm);
+        global $CFG;
+        require_once($CFG->dirroot . '/question/editlib.php');
+        if ($this->cmid) {
+            [, $cm] = get_module_from_cmid($this->cmid);
+            $cminfo = cm_info::create($cm);
+            $context = $cminfo->context;
+        } else {
+            $context = course::instance($this->courseid);
+        }
 
         $capabilities = ['moodle/question:useall', 'moodle/question:usemine'];
         $coursesharedbanks = question_bank_helper::get_activity_instances_with_shareable_questions(
             incourseids: [$this->courseid],
             havingcap: $capabilities,
-            filtercontext:  $cminfo->context,
+            filtercontext: $context,
         );
         $recentlyviewedbanks = question_bank_helper::get_recently_used_open_banks($this->userid, havingcap: $capabilities);
 
-        return [
-            'quizname' => $cminfo->get_formatted_name(),
-            'quizcmid' => $this->quizcmid,
-            'quizcontextid' => $cminfo->context->id,
+        $export = [
+            'hasactivitybank' => false,
+            'contextid' => $context->id,
             'hascoursesharedbanks' => !empty($coursesharedbanks),
             'coursesharedbanks' => $coursesharedbanks,
             'hasrecentlyviewedbanks' => !empty($recentlyviewedbanks),
             'recentlyviewedbanks' => $recentlyviewedbanks,
         ];
+        if (!empty($this->cmid)) {
+            $export['hasactivitybank'] = true;
+            $export['activitybank'] = [
+                'name' => $cminfo->get_formatted_name(),
+                'cmid' => $this->cmid,
+            ];
+        }
+        return $export;
     }
 }

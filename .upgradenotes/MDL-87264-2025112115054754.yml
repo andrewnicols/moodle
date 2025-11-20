@@ -1,0 +1,32 @@
+issueNumber: MDL-87264
+notes:
+  mod_quiz:
+    - message: >
+        The `mod_quiz_output_fragment_switch_question_bank()` Fragment API
+        callback is deprecated in favour of
+        `core_question\route\api\bank::switcher()`, available via the route
+        `/api/rest/v2/core/question/bank/switcher/{courseid}/{cmid}`. This
+        returns the exported output data which can be rendered client-side with
+        `Templates.render()`.
+      type: deprecated
+    - message: >
+        The "gobacktoquiz" and "selectquestionbank" lang strings have been deprecated.
+        These are only used by the question bank switching UI, so have been replaced
+        with the "switchergoback" and "switcherselectbank" strings in the core_question
+        component.
+      type: deprecated
+  core_question:
+    - message: >
+        The `\core_question\output\switch_question_bank` constructor now accepts
+        a null `cmid` as its first argument. This allows it to be used outside
+        of a quiz or activity context, for example if you just want to pick from
+        any bank on a course. The companion template
+        `core_question/switch_question_bank` now includes a `hasactivitybank`
+        and optional `acitvitybank.name` and `activitybank.cmid` context
+        variables, to make display of the current activity's bank optional.
+      type: improved
+    - message: >
+        The UI for switching question banks is now encapsulated in the
+        `core_question/bank_switcher` Javascript module. This takes an existing modal
+        and replaces the content with the switcher. It will then emit a custom
+        `bankSwitched` event on the modal's DOM element when a new bank is selected.
