@@ -323,6 +323,7 @@ export default class Fetch {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'pageparent': Cfg.pageparent || '',
             },
         };
 
