@@ -1,3 +1,4 @@
+composer.lock -diff
 **/yui/build/** -diff
 **/amd/build/** -diff
 **.js.map -diff
