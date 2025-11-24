@@ -1,0 +1,21 @@
+issueNumber: MDL-87264
+notes:
+  qbank_managecategories:
+    - message: >
+        It is now possible to move entire question categories between question
+        banks.
+
+        To support this, there is a new
+        `qbank_managecategories\output\move_context_list` output component, to
+        allow server-side construction of data for the
+        `qbank_managecategories\move_context_list` template. Previously this was
+        only constructed client-side from the categories displayed on the page.
+
+        A new `qbank_managecategories\route\api\categories` class has been
+        added, with a new `movetree` endpoint to return the `move_context_list`
+        data when moving a category to a different question bank. The full path
+        is
+        `/api/rest/v2/qbank_managecategories/categories/{categoryid}/movetree/{cmid}`,
+        where {categoryid} is the category being moved, and {cmid} is the
+        activity containing the destination question bank.
+      type: improved

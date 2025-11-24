@@ -25,6 +25,10 @@ import {categorymanager} from 'qbank_managecategories/categorymanager';
 import Templates from 'core/templates';
 import Modal from "core/modal";
 import {get_string as getString} from "core/str";
+import BankSwitcher from 'core_question/bank_switcher';
+import Fetch from 'core/fetch';
+import Notification from 'core/notification';
+import * as CoreUrl from 'core/url';
 import {eventTypes as inplaceEditableEventTypes} from 'core/local/inplace_editable/events';
 
 export default class extends BaseComponent {
@@ -45,6 +49,8 @@ export default class extends BaseComponent {
             CONTENT_CONTAINER: id => `#category-${id} .qbank_managecategories-childlistcontainer`,
             CHILD_LIST: id => `ul[data-categoryid="${id}"]`,
             PREVIOUS_SIBLING: sortorder => `:scope > [data-sortorder="${sortorder}"]`,
+            SWITCH_QUESTION_BANK: '[data-action="switch-question-bank"]',
+            MOVE_BANK_HEADER: '.bank-header',
         };
         this.classes = {
             NO_BOTTOM_PADDING: 'pb-0',
@@ -254,41 +260,50 @@ export default class extends BaseComponent {
         // Move to a new parent category.
         let newParent;
         const originParent = document.querySelector(this.selectors.CHILD_LIST(this.getElement().dataset.parent));
-        if (parseInt(this.getElement().dataset.parent) !== element.parent) {
-            newParent = document.querySelector(this.selectors.CHILD_LIST(element.parent));
-            if (!newParent) {
-                // The target category doesn't have a child list yet. We'd better create one.
-                newParent = await this.createChildList({categoryid: element.parent});
-            }
-            this.getElement().dataset.parent = element.parent;
-        } else {
-            newParent = this.getElement().parentElement;
-        }
-
-        // Move to a new position within the parent.
-        let previousSibling;
-        let nextSibling;
-        if (newParent.firstElementChild && parseInt(element.sortorder) <= parseInt(newParent.firstElementChild.dataset.sortorder)) {
-            // Move to the top of the list.
-            nextSibling = newParent.firstElementChild;
-        } else {
-            // Move later in the list.
-            previousSibling = newParent.querySelector(this.selectors.PREVIOUS_SIBLING(element.sortorder - 1));
-            nextSibling = previousSibling?.nextElementSibling;
-        }
-
-        // Check if this has actually moved, or if it's just having its sortorder updated due to another element moving.
-        const moved = (newParent !== this.getElement().parentElement || nextSibling !== this.getElement());
-
-        if (moved) {
-            if (nextSibling) {
-                // Move to the specified position in the list.
-                newParent.insertBefore(this.getElement(), nextSibling);
+        if (element.contextid === categorymanager.state.page.contextid) {
+            if (parseInt(this.getElement().dataset.parent) !== element.parent) {
+                newParent = document.querySelector(this.selectors.CHILD_LIST(element.parent));
+                if (!newParent) {
+                    // The target category doesn't have a child list yet. We'd better create one.
+                    newParent = await this.createChildList({categoryid: element.parent});
+                }
+                this.getElement().dataset.parent = element.parent;
             } else {
-                // Move to the end of the list (may also be the top of the list is empty).
-                newParent.appendChild(this.getElement());
+                newParent = this.getElement().parentElement;
             }
+
+            // Move to a new position within the parent.
+            let previousSibling;
+            let nextSibling;
+            if (
+                newParent.firstElementChild &&
+                parseInt(element.sortorder) <= parseInt(newParent.firstElementChild.dataset.sortorder)
+            ) {
+                // Move to the top of the list.
+                nextSibling = newParent.firstElementChild;
+            } else {
+                // Move later in the list.
+                previousSibling = newParent.querySelector(this.selectors.PREVIOUS_SIBLING(element.sortorder - 1));
+                nextSibling = previousSibling?.nextElementSibling;
+            }
+
+            // Check if this has actually moved, or if it's just having its sortorder updated due to another element moving.
+            const moved = (newParent !== this.getElement().parentElement || nextSibling !== this.getElement());
+
+            if (moved) {
+                if (nextSibling) {
+                    // Move to the specified position in the list.
+                    newParent.insertBefore(this.getElement(), nextSibling);
+                } else {
+                    // Move to the end of the list (may also be the top of the list is empty).
+                    newParent.appendChild(this.getElement());
+                }
+            }
+        } else {
+            // The category was moved to a different context, it should no longer appear on this page.
+            this.getElement().remove();
         }
+
         if (originParent !== newParent) {
             // Update child count of old and new parent.
             this.reactive.stateManager.processUpdates([
@@ -409,34 +424,75 @@ export default class extends BaseComponent {
         item.setAttribute('aria-disabled', true);
 
         // Build the list of move links.
-        let moveList = {contexts: []};
-        const contexts = document.querySelectorAll(this.selectors.CONTEXT);
-        contexts.forEach(context => {
-            const moveContext = {
-                contextname: context.dataset.contextname,
-                categories: [],
-                hascategories: false,
-            };
-            moveContext.categories = this.createMoveCategoryList(context, parseInt(item.dataset.categoryid));
-            moveContext.hascategories = moveContext.categories.length > 0;
-            moveList.contexts.push(moveContext);
-        });
+        const context = document.querySelector(this.selectors.CONTEXT);
+        const moveContext = {
+            contextname: context.dataset.contextname,
+            contextid: context.dataset.contextid,
+            cmid: categorymanager.state.page.cmid,
+            categories: [],
+            hascategories: false,
+        };
+        const movingCategoryId = parseInt(item.dataset.categoryid);
+        moveContext.categories = this.createMoveCategoryList(context, movingCategoryId);
+        moveContext.hascategories = moveContext.categories.length > 0;
 
+        const moveCategory = getString('movecategory', 'qbank_managecategories', item.dataset.categoryname);
         const modal = await Modal.create({
-            title: getString('movecategory', 'qbank_managecategories', item.dataset.categoryname),
-            body: Templates.render('qbank_managecategories/move_context_list', moveList),
+            title: moveCategory,
+            body: Templates.render('qbank_managecategories/move_context_list', moveContext),
             footer: '',
             show: true,
             large: true,
         });
-        // Show modal and add click event for list items.
-        modal.getBody()[0].addEventListener('click', e => {
-            const target = e.target.closest(this.selectors.MODAL_CATEGORY_ITEM);
-            if (!target) {
+        const switcher = new BankSwitcher();
+        // Show modal and add click event for list items and bank switcher.
+        modal.getBody()[0].addEventListener('click', async(e) => {
+            const categoryItem = e.target.closest(this.selectors.MODAL_CATEGORY_ITEM);
+            const moveHeader = e.currentTarget.querySelector(this.selectors.MOVE_BANK_HEADER);
+            if (categoryItem) {
+                categorymanager.moveCategory(
+                    categoryItem.dataset.movingcategoryid,
+                    categoryItem.dataset.parent,
+                    categoryItem.dataset.precedingsiblingid,
+                );
+                if (moveHeader.dataset.cmid !== categorymanager.state.page.cmid) {
+                    const url = CoreUrl.relativeUrl(
+                        '/question/bank/managecategories/category.php',
+                        {cmid: moveHeader.dataset.cmid}
+                    );
+                    const message = await getString(
+                        'categorymovedto',
+                        'qbank_managecategories',
+                        {url, name: moveHeader.textContent},
+                    );
+                    Notification.addNotification({message: message, type: 'info'});
+                }
+                modal.destroy();
                 return;
             }
-            categorymanager.moveCategory(target.dataset.movingcategoryid, target.dataset.parent, target.dataset.precedingsiblingid);
-            modal.destroy();
+            const switchButton = e.target.closest(this.selectors.SWITCH_QUESTION_BANK);
+            if (switchButton) {
+                const pageState = categorymanager.state.page;
+                try {
+                    await switcher.show(modal, pageState.courseid, parseInt(moveHeader.dataset.cmid), pageState.cmid);
+                } catch (ex) {
+                    Notification.exception(ex);
+                }
+            }
+        });
+        modal.getModal()[0].addEventListener('bankSwitched', async(e) => {
+            try {
+                const treeEndpoint = ['categories', movingCategoryId, 'movetree', e.detail.cmid];
+                const moveContext = await Fetch.performGet('qbank_managecategories', treeEndpoint.join('/'));
+                modal.setBody(
+                    Templates.render('qbank_managecategories/move_context_list', await moveContext.json()),
+                );
+                await modal.getBodyPromise();
+                modal.setTitle(moveCategory);
+                modal.setFooter('');
+            } catch (ex) {
+                Notification.exception(ex);
+            }
         });
         item.setAttribute('aria-disabled', false);
     }

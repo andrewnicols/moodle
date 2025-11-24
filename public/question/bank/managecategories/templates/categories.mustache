@@ -29,6 +29,7 @@
     Example context (json):
     {
         "contextid": "18",
+        "courseid": "2",
         "categoriesrendered": [{
             "items": [{
                 "categoryid": "1",
@@ -43,14 +44,16 @@
                 "iconright": "<i class=\"icon fa fa-arrow-right fa-fw \" title=\"Make child of 'category'\" role=\"img\" aria-label=\"Make child of 'category'\"></i>",
                 "children": ""
             }],
-            "heading": "Question categories for 'Quiz: qz'",
-            "ctxlvl": "contextlevel70"
+            "heading": "Question categories for 'Quiz: qz'"
         }]
     }
 }}
 <div id="categoryroot"
     class="editing col-11 col-md-12 mt-3 ps-0{{#showdescriptions}} showdescriptions{{/showdescriptions}}"
-    data-contextid="{{{contextid}}}">
+    data-contextid="{{{contextid}}}"
+    data-courseid="{{courseid}}"
+    data-cmid="{{cmid}}"
+    >
     {{#categoriesrendered}}
         <h3 class="context-heading">{{heading}}</h3>
         <div class="box py-3 boxwidthwide boxaligncenter generalbox questioncategories">

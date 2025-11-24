@@ -120,7 +120,7 @@ Feature: A teacher can reorder question categories
     And I should see "Question bank: Qbank 1" in the "Move Course category 1" "dialogue"
     And I should see "Before Course category 3" in the "Move Course category 1" "dialogue"
     And I press "Switch bank"
-    And I follow "Qbank 2"
+    And I click on "Qbank 2" "link" in the "Select question bank" "dialogue"
     And I should see "Question bank: Qbank 2" in the "Move Course category 1" "dialogue"
     And I should not see "Before Course category 3" in the "Move Course category 1" "dialogue"
     And I should see "As new child of Default for Qbank 2" in the "Move Course category 1" "dialogue"
