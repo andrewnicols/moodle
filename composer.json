@@ -21,6 +21,7 @@
             "Moodle\\BehatExtension": "lib/behat/extension/"
         }
     },
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.2.0",
@@ -42,7 +43,12 @@
         "ext-json": "*",
         "ext-hash": "*",
         "ext-fileinfo": "*",
-        "ext-sodium": "*"
+        "ext-sodium": "*",
+        "slim/slim": "^4.15",
+        "psr/clock": "^1.0",
+        "phpoffice/phpspreadsheet": "^5.3",
+        "openspout/openspout": "^4.32",
+        "guzzlehttp/guzzle": "^7.10"
     },
     "suggest": {
         "ext-mysqli": "Needed when Moodle uses MySQL or MariaDB database.",
@@ -55,6 +61,6 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "classmap-authoritative": true,
+        "classmap-authoritative": true
     }
 }
