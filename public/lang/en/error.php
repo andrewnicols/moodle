@@ -22,6 +22,10 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+$string['accessdenied:userdeletedexception'] = 'Access denied. The user account you are trying to access has been deleted: {$a}.';
+$string['accessdenied:usernotconfirmedexception'] = 'Access denied. The user account you are trying to access has not been confirmed: {$a}.';
+$string['accessdenied:usersuspendedexception'] = 'Access denied. The user account you are trying to access has been suspended: {$a}.';
+$string['accessdenied:maintenancemodeenabledexception'] = 'Access denied. The site is currently in maintenance mode and you do not have access: {$a}.';
 $string['activityisscheduledfordeletion'] = 'Activity deletion in progress...';
 $string['agedigitalconsentmapinvalidage'] = '"{$a}" is not a valid value for age.';
 $string['agedigitalconsentmapinvalidcomma'] = '"{$a}" has more or less than one comma separator.';

@@ -1059,40 +1059,29 @@ abstract class webservice_server implements webservice_server_interface {
             $user = $this->authenticate_by_token(EXTERNAL_TOKEN_EMBEDDED);
         }
 
-        // Cannot authenticate unless maintenance access is granted.
-        $hasmaintenanceaccess = has_capability('moodle/site:maintenanceaccess', context_system::instance(), $user);
-        if (!empty($CFG->maintenance_enabled) and !$hasmaintenanceaccess) {
-            throw new moodle_exception('sitemaintenance', 'admin');
-        }
-
-        //only confirmed user should be able to call web service
-        if (!empty($user->deleted)) {
+        try {
+            \core_auth\validate_user::validate_user_before_external_login($user);
+        } catch (\core_auth\exception\user_deleted_exception $e) {
             $params = $loginfaileddefaultparams;
             $params['other']['reason'] = 'user_deleted';
             $params['other']['username'] = $user->username;
-            $event = \core\event\webservice_login_failed::create($params);
-            $event->trigger();
-            throw new moodle_exception('wsaccessuserdeleted', 'webservice', '', $user->username);
-        }
+            \core\event\webservice_login_failed::create($params)->trigger();
 
-        //only confirmed user should be able to call web service
-        if (empty($user->confirmed)) {
+            throw new moodle_exception('wsaccessuserdeleted', 'webservice', '', $user->username, previous: $e);
+        } catch (\core_auth\exception\user_not_confirmed_exception $e) {
+            $params = $loginfaileddefaultparams;
+            $params['other']['reason'] = 'user_deleted';
+            $params['other']['username'] = $user->username;
+            \core\event\webservice_login_failed::create($params)->trigger();
+
+            throw new moodle_exception('wsaccessuserunconfirmed', 'webservice', '', $user->username, previous: $e);
+        } catch (\core_auth\exception\user_suspended_exception $e) {
             $params = $loginfaileddefaultparams;
             $params['other']['reason'] = 'user_unconfirmed';
             $params['other']['username'] = $user->username;
-            $event = \core\event\webservice_login_failed::create($params);
-            $event->trigger();
-            throw new moodle_exception('wsaccessuserunconfirmed', 'webservice', '', $user->username);
-        }
+            \core\event\webservice_login_failed::create($params)->trigger();
 
-        //check the user is suspended
-        if (!empty($user->suspended)) {
-            $params = $loginfaileddefaultparams;
-            $params['other']['reason'] = 'user_unconfirmed';
-            $params['other']['username'] = $user->username;
-            $event = \core\event\webservice_login_failed::create($params);
-            $event->trigger();
-            throw new moodle_exception('wsaccessusersuspended', 'webservice', '', $user->username);
+            throw new moodle_exception('wsaccessusersuspended', 'webservice', '', $user->username, previous: $e);
         }
 
         //retrieve the authentication plugin if no previously done
@@ -1107,8 +1096,7 @@ abstract class webservice_server implements webservice_server_interface {
                 $params = $loginfaileddefaultparams;
                 $params['other']['reason'] = 'password_expired';
                 $params['other']['username'] = $user->username;
-                $event = \core\event\webservice_login_failed::create($params);
-                $event->trigger();
+                \core\event\webservice_login_failed::create($params)->trigger();
                 throw new moodle_exception('wsaccessuserexpired', 'webservice', '', $user->username);
             }
         }
