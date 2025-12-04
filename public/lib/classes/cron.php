@@ -656,14 +656,7 @@ class cron {
         }
 
         if (empty(self::$cronuser)) {
-            // The cron user is essentially the admin user, but with some value removed.
-            // We ginore the timezone language, and locale preferences - use the site default instead.
-            self::$cronuser = get_admin();
-            self::$cronuser->timezone = $CFG->timezone;
-            self::$cronuser->lang = '';
-            self::$cronuser->theme = '';
-            unset(self::$cronuser->description);
-
+            self::$cronuser = \core\user::get_system_user();
             self::$cronsession = new stdClass();
         }
 

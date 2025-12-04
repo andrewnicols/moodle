@@ -555,6 +555,25 @@ class user {
     }
 
     /**
+     * Get the user record for the system user.
+     *
+     * @return stdClass user record
+     */
+    public static function get_system_user(): stdClass {
+        global $CFG;
+
+        // The system user is essentially the admin user, but with some value removed.
+        // We ignore the timezone language, and locale preferences - use the site default instead.
+        $systemuser = get_admin();
+        $systemuser->timezone = $CFG->timezone;
+        $systemuser->lang = '';
+        $systemuser->theme = '';
+        unset($systemuser->description);
+
+        return $systemuser;
+    }
+
+    /**
      * Reset self::$noreplyuser and self::$supportuser.
      * This is only used by phpunit, and there is no other use case for this function.
      * Please don't use it outside phpunit.
