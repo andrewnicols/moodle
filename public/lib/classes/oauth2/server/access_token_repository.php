@@ -43,9 +43,10 @@ class access_token_repository implements AccessTokenRepositoryInterface {
             $entity->addScope($scope);
         }
 
-        if ($useridentifier !== null) {
-            $entity->setUserIdentifier($useridentifier);
+        if ($useridentifier === null) {
+            $useridentifier = 0;
         }
+        $entity->setUserIdentifier($useridentifier);
 
         return $entity;
     }
@@ -59,7 +60,7 @@ class access_token_repository implements AccessTokenRepositoryInterface {
         $DB->insert_record('oauth2_server_client_access_tokens', (object)[
             'identifier' => $accesstoken->getIdentifier(),
             'expiry' => $accesstoken->getExpiryDateTime()->getTimestamp(),
-            'owner' => $accesstoken->getUserIdentifier(),
+            'owner' => $accesstoken->getUserIdentifier() ?? 0,
             'scopes' => implode(' ', $accesstoken->getScopes()),
             'clientidentifier' => $accesstoken->getClient()->getIdentifier(),
         ]);

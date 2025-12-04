@@ -33,6 +33,12 @@ class client_entity implements \League\OAuth2\Server\Entities\ClientEntityInterf
     /** @var int A status to inform that the token is active */
     public const int STATUS_ACTIVE = 1;
 
+    /** @var \core\context The owner context */
+    protected \core\context $ownercontext;
+
+    /** @var int The status of the client */
+    protected int $status;
+
     /**
      * Create a client_entity from a database record.
      *
@@ -53,10 +59,17 @@ class client_entity implements \League\OAuth2\Server\Entities\ClientEntityInterf
         $client->setIdentifier($clientrecord->clientidentifier);
         $client->name = $clientrecord->name;
         $client->redirectUri = $redirecturiarray;
+        $client->ownercontext = \core\context::instance_by_id($clientrecord->ownercontext);
+        $client->status = (int) $clientrecord->status;
 
+        // TODO: Store this in the database?
+        // Derive it from whether a secret exists?
+        // Select an app type and use that to derive a value?
         // Better to err on the side of caution?
-        $client->isConfidential = true;
+        // This is counter-intuitive.
+        // This _has_ to be true for ClientCredentials grant.
         $client->isConfidential = false;
+        $client->isConfidential = true;
 
         return $client;
     }
@@ -81,5 +94,31 @@ class client_entity implements \League\OAuth2\Server\Entities\ClientEntityInterf
         ]);
 
         return $secret;
+    }
+
+    /**
+     * Whether the Client is active and not revoked.
+     *
+     * @return bool
+     */
+    public function is_active(): bool {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+    #[\Override]
+    public function supportsGrantType(string $granttype): bool {
+        if ($granttype === 'client_credentials') {
+            if (!$this->isConfidential()) {
+                return false;
+            }
+
+            if ($this->ownercontext->contextlevel !== CONTEXT_SYSTEM) {
+                // Client Credentials grant only allowed for system context clients.
+                return false;
+            }
+        }
+
+        // For now, all clients support all grant types.
+        return true;
     }
 }

@@ -176,10 +176,20 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
         $request = $this->server->validateAuthenticatedRequest($request);
 
         $oauth2userid = $request->getAttribute('oauth_user_id');
-        if ($oauth2userid) {
+        $tokenid = $request->getAttribute('oauth2_access_token_id');
+
+        \core\di::get(\core\oauth2\server\access_token_repository::class);
+
+        if ($oauth2userid !== null) {
             $providedscopes = $request->getAttribute('oauth_scopes', []);
             $this->validate_scope($moodleroute, $providedscopes);
-            $this->complete_user_login($oauth2userid);
+
+            if ((int) $oauth2userid === 0) {
+                // System user login.
+                $this->complete_system_login();
+            } else {
+                $this->complete_user_login($oauth2userid);
+            }
 
             return $request;
         }
@@ -233,9 +243,30 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
     protected function complete_user_login(int $userid): void {
         // Log in the Moodle user associated with this OAuth2 user ID.
         $user = \core\user::get_user($userid);
-        // TODO: Copy the checks from webservice_user::authenticate_user to somewhere shared and call them.
 
+        try {
+            \core_auth\validate_user::validate_user_before_external_login($user);
+        } catch (\core_auth\exception\access_denied_exception $e) {
+            throw oauth_server_exception::accessDenied(
+                $e->getMessage(),
+                previous: $e,
+            );
+        }
+
+        \core\session\manager::init_empty_session();
         \core\session\manager::set_user($user);
-        // complete_user_login(\core\user::get_user($oauth2userid));
+    }
+
+    /**
+     * Complete the system user login for the middleware.
+     *
+     * This logs the user in as the system user, which is the 'main' admin user.
+     * Ideally this should be a separate user with elevated privileges.
+     */
+    protected function complete_system_login(): void {
+        // The system user is essentially the admin user, but with some value removed.
+        \core\session\manager::init_empty_session();
+        \core\session\manager::set_user(\core\user::get_system_user());
+        $GLOBALS['SESSION'] = new \stdClass();
     }
 }

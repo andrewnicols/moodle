@@ -28,6 +28,12 @@ use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class client_repository implements ClientRepositoryInterface {
+    /**
+     * Get a client entity.
+     *
+     * @param string $clientidentifier
+     * @return client_entity|null
+     */
     #[\Override]
     public function getClientEntity(
         $clientidentifier,
@@ -57,6 +63,24 @@ class client_repository implements ClientRepositoryInterface {
         // - active, expired, or revoked;
         // - if the client is 'confidential', we *must* validate the client secret;
         // - allowed to use the given grant type.
+
+        // Not all clients will be allowed to use all grant types.
+        // If we grant the ClientCredentials grant to a client then that client will be able to act as admin.
+        // They have no option to be a different user.
+
+        // Fetch the client record.
+        $client = self::getClientEntity($clientidentifier);
+        if (!$client) {
+            return false;
+        }
+
+        if (!$client->is_active()) {
+            return false;
+        }
+
+        if (!$client->supportsGrantType($granttype)) {
+            return false;
+        }
 
         $secrets = $DB->get_records('oauth2_server_client_secrets', [
             'clientidentifier' => $clientidentifier,

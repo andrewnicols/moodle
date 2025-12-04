@@ -125,6 +125,11 @@ class hook_callbacks {
                 )
                 ->method(
                     'enableGrantType',
+                    \DI\get(\League\OAuth2\Server\Grant\ClientCredentialsGrant::class),
+                    \DI\create(\DateInterval::class)->constructor('PT1H'),
+                )
+                ->method(
+                    'enableGrantType',
                     \DI\create(\League\OAuth2\Server\Grant\RefreshTokenGrant::class)
                         ->constructor(
                             \DI\get(RefreshTokenRepositoryInterface::class)
