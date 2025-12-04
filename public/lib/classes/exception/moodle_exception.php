@@ -56,7 +56,14 @@ class moodle_exception extends \Exception {
      * @param mixed $a Extra words and phrases that might be required in the error string
      * @param string $debuginfo optional debugging information
      */
-    public function __construct($errorcode, $module = '', $link = '', $a = null, $debuginfo = null) {
+    public function __construct(
+        $errorcode,
+        $module = '',
+        $link = '',
+        $a = null,
+        $debuginfo = null,
+        ?\Throwable $previous = null
+    ) {
         global $CFG;
 
         if (empty($module) || $module == 'moodle' || $module == 'core') {
@@ -98,7 +105,7 @@ class moodle_exception extends \Exception {
             $message .= PHP_EOL . '$a contents: ' . print_r($a, true); // phpcs:ignore moodle.PHP.ForbiddenFunctions.Found
         }
 
-        parent::__construct($message, 0);
+        parent::__construct($message, 0, $previous);
     }
 }
 
