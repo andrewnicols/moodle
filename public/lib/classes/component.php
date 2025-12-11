@@ -114,60 +114,13 @@ class component {
     ];
     /** @var array<string|array<string>> associative array of PRS-4 namespaces and corresponding paths. */
     protected static $psr4namespaces = [
-        \Aws::class => 'public/lib/aws-sdk/src',
         \CFPropertyList::class => 'public/lib/plist/src/CFPropertyList',
-        \Complex::class => 'public/lib/phpspreadsheet/markbaker/complex/classes/src',
-        \Composer\Pcre::class => 'public/lib/composer/pcre/src',
-        \DI::class => 'public/lib/php-di/php-di/src',
-        \GeoIp2::class => 'public/lib/maxmind/GeoIp2/src',
-        \FastRoute::class => 'public/lib/nikic/fast-route/src',
-        \Firebase\JWT::class => 'public/lib/php-jwt/src',
-        \GuzzleHttp::class => 'public/lib/guzzlehttp/guzzle/src',
-        \GuzzleHttp\Promise::class => 'public/lib/guzzlehttp/promises/src',
-        \GuzzleHttp\Psr7::class => 'public/lib/guzzlehttp/psr7/src',
-        \Html2Text::class => 'public/lib/html2text/src',
         \IMSGlobal\LTI::class => 'public/lib/ltiprovider/src',
-        \Invoker::class => 'public/lib/php-di/invoker/src',
-        \JmesPath::class => 'public/lib/jmespath/src',
-        \Kevinrob\GuzzleCache::class => 'public/lib/guzzlehttp/kevinrob/guzzlecache/src',
-        \Laravel\SerializableClosure::class => 'public/lib/laravel/serializable-closure/src',
-        \lbuchs\WebAuthn::class => 'public/lib/webauthn/src',
-        \libphonenumber::class => 'public/lib/giggsey/libphonenumber-for-php-lite/src',
-        \Matrix::class => 'public/lib/phpspreadsheet/markbaker/matrix/classes/src',
-        \MatthiasMullie\Minify::class => 'public/lib/minify/matthiasmullie-minify/src',
-        \MatthiasMullie\PathConverter::class => 'public/lib/minify/matthiasmullie-pathconverter/src',
-        \MaxMind\Db::class => 'public/lib/maxmind/MaxMind/src/MaxMind/Db',
-        \Michelf::class => 'public/lib/markdown/Michelf',
         \MoodleHQ::class => [
             'public/lib/rtlcss/src/MoodleHQ',
         ],
-        \OpenSpout::class => 'public/lib/openspout/src',
         \Packback\Lti1p3::class => 'public/lib/lti1p3/src',
-        \PHPMailer\PHPMailer::class => 'public/lib/phpmailer/src',
-        \PhpOffice\PhpSpreadsheet::class => 'public/lib/phpspreadsheet/phpspreadsheet/src/PhpSpreadsheet',
-        \PhpXmlRpc::class => 'public/lib/phpxmlrpc/src',
         \Phpml::class => 'public/lib/mlbackend/php/phpml/src/Phpml',
-        \Psr\Clock::class => 'public/lib/psr/clock/src',
-        \Psr\Container::class => 'public/lib/psr/container/src',
-        \Psr\EventDispatcher::class => 'public/lib/psr/event-dispatcher/src',
-        \Psr\Http\Client::class => 'public/lib/psr/http-client/src',
-        \Psr\Http\Message::class => [
-            'public/lib/psr/http-factory/src',
-            'public/lib/psr/http-message/src',
-        ],
-        \Psr\Http\Server::class => [
-            "public/lib/psr/http-server-handler/src",
-            "public/lib/psr/http-server-middleware/src",
-        ],
-        \Psr\Log::class => "public/lib/psr/log/src",
-        \Psr\SimpleCache::class => 'public/lib/psr/simple-cache/src',
-        \RedeyeVentures::class => 'public/lib/geopattern-php/src',
-        \Sabberworm\CSS::class => 'public/lib/php-css-parser/src',
-        \ScssPhp\ScssPhp::class => 'public/lib/scssphp/src',
-        \SimplePie::class => 'public/lib/simplepie/src',
-        \Slim::class => 'public/lib/slim/slim/Slim',
-        \Spatie\Cloneable::class => 'public/lib/spatie/php-cloneable/src',
-        \ZipStream::class => 'public/lib/zipstream/src',
     ];
 
     /**
@@ -180,13 +133,6 @@ class component {
      * @var array<string>
      */
     protected static $composerautoloadfiles = [
-        'public/lib/aws-sdk/src/functions.php',
-        'public/lib/guzzlehttp/guzzle/src/functions_include.php',
-        'public/lib/jmespath/src/JmesPath.php',
-        'public/lib/nikic/fast-route/src/functions.php',
-        'public/lib/php-di/php-di/src/functions.php',
-        'public/lib/ralouphie/getallheaders/src/getallheaders.php',
-        'public/lib/symfony/deprecation-contracts/function.php',
     ];
 
     /**
