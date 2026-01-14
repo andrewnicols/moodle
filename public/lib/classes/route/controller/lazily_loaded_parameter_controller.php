@@ -1,0 +1,45 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+namespace core\route\controller;
+
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+
+/**
+ * Route to demonstrate a lazily loaded parameter in a controller.
+ *
+ * @package    core
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class lazily_loaded_parameter_controller {
+    #[\core\router\route(
+        path: '/lazy/{foo}',
+        pathtypes: [
+            new \core\router\parameters\path_foo(),
+        ],
+    )]
+    public function nofile_shim_test(
+        ResponseInterface $response,
+        \core\context\course $foocontext,
+        // \core\context\coursecat $foocoursecatcontext,
+    ): ResponseInterface {
+        $args = array_slice(func_get_args(), 1);
+        print_object($args);
+        return $response;
+    }
+}

@@ -85,7 +85,8 @@ class bridge {
             new DefaultValueResolver(),
         ];
 
-        $invoker = new Invoker(new ResolverChain($resolvers), $container);
+        $resolverchain = new resolver_chain($resolvers);
+        $invoker = new Invoker($resolverchain, $container);
 
         return new controller_invoker(
             container: $container,
