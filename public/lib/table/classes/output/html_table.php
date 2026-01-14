@@ -31,6 +31,8 @@ namespace core_table\output;
  * @category output
  */
 class html_table {
+    use \core\deprecated_property_trait;
+
     /**
      * @var string Value to use for the id attribute of the table
      */
@@ -174,7 +176,11 @@ class html_table {
      *
      * @deprecated since Moodle 3.9.
      */
-    public $summary;
+    #[\core\attribute\deprecated(
+        since: '3.9',
+        reason: 'The "summary" attribute on the "table" element is not supported in HTML5. Consider describing the structure of the table in a "caption" element or in a "figure" element containing the table; or, simplify the structure of the table so that no description is needed.',
+    )]
+    private $summary;
 
     /**
      * @var string Caption for the table, typically a title.
