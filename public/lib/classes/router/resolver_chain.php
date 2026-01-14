@@ -17,6 +17,7 @@
 namespace core\router;
 
 use core\router\parameters\lazy_parameter;
+use core\router\parameters\parameter_proxy;
 use Invoker\ParameterResolver\ResolverChain;
 use ReflectionFunctionAbstract;
 
@@ -43,6 +44,10 @@ class resolver_chain extends ResolverChain {
         foreach ($params as $key => $value) {
             if ($value instanceof lazy_parameter) {
                 $params[$key] = $value->hydrate_value();
+            }
+
+            if ($value instanceof parameter_proxy) {
+                $params[$key] = $value->get;
             }
         }
 

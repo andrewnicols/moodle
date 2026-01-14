@@ -41,7 +41,6 @@ final class lazy_parameter {
      * @return mixed
      */
     public function hydrate_value(): mixed {
-        print_r("Hydrating lazy parameter");
         return ($this->hydrator)();
     }
 }

@@ -28,15 +28,16 @@ use Psr\Http\Message\ResponseInterface;
  */
 class lazily_loaded_parameter_controller {
     #[\core\router\route(
-        path: '/lazy/{foo}',
+        path: '/lazy/{cm}',
         pathtypes: [
-            new \core\router\parameters\path_foo(),
+            new \core\router\parameters\path_cmid('cm'),
         ],
     )]
     public function nofile_shim_test(
         ResponseInterface $response,
-        \core\context\course $foocontext,
-        // \core\context\coursecat $foocoursecatcontext,
+        \core\context\course $cmcoursecontext,
+        $cmcminfo,
+        //   \core\context\coursecat $foocoursecatcontext,
     ): ResponseInterface {
         $args = array_slice(func_get_args(), 1);
         print_object($args);
