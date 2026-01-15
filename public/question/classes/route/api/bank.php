@@ -53,28 +53,47 @@ class bank {
      *
      * This will count all top-level questions (no subquestions) that are not hidden.
      *
-     * @param int $courseid
+     * @param \stdClass $course The course ID the fetch question counts for.
+     * @param course $coursecontext The course context.
      */
     #[route(
-        path: '/bank/{courseid}/question_counts',
+        path: '/bank/{course}/question_counts',
         method: ['GET'],
         pathtypes: [
-            new path_parameter(
-                name: 'courseid',
-                type: param::INT,
-                description: 'The course ID the fetch question counts for',
-                required: true,
+            new path_course(),
+        ],
+        responses: [
+            new response(
+                statuscode: 200,
+                description: 'OK',
+                content: [
+                    new json_media_type(
+                        schema: new schema_object(
+                            content: [
+                                'counts' => new array_of_things(param::INT),
+                            ],
+                        ),
+                        example: new example(
+                            name: 'Question counts',
+                            summary: 'List of question counts, the number of questions keyed by the CMID of the question bank',
+                            value: [
+                                '1' => 1,
+                                '2' => 2,
+                            ],
+                        ),
+                    ),
+                ],
             ),
         ],
-        requirelogin: new require_login(false, true, 'courseid'),
+        requirelogin: new require_login(false, true, 'course'),
     )]
     public function question_counts(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        int $courseid,
+        \stdClass $course,
+        course $coursecontext,
     ): payload_response {
         global $DB;
-        $coursecontext = course::instance($courseid);
         $capabilities = array_merge(question_edit_contexts::$caps['editq'], question_edit_contexts::$caps['categories']);
 
         if (!has_any_capability($capabilities, $coursecontext)) {
