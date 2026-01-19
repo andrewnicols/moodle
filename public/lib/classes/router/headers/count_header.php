@@ -14,18 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\router\parameters;
+namespace core\router\headers;
+
+use core\router\schema\example;
 
 /**
- * A Moodle parameter referenced in the path.
+ * Class count_header
  *
  * @package    core
- * @copyright  Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class path_course extends \core\router\schema\parameters\path_parameter implements
-    \core\router\schema\parameters\mapped_property_parameter,
-    \core\router\schema\referenced_object
-{
-    use course_parameter_trait;
+class count_header extends \core\router\schema\parameters\header_object {
+    public function __construct(...$data) {
+        $data['name'] = 'X-Total-Count';
+        $data['type'] = \core\param::INT;
+        $data['examples'] = [
+            new example(
+                name: 'A total count header',
+                value: 42,
+            ),
+        ];
+
+        parent::__construct(...$data);
+    }
 }

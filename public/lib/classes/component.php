@@ -236,8 +236,13 @@ class component {
         if (isset(self::$classmap[$classname])) {
             // Global $CFG is expected in included scripts.
             global $CFG;
-            // Function include would be faster, but for BC it is better to include only once.
-            include_once(self::$classmap[$classname]);
+            try {
+                // Function include would be faster, but for BC it is better to include only once.
+                include_once(self::$classmap[$classname]);
+            } catch (\ParseError $e) {
+                throw new coding_exception("Failed to load class $classname from " . self::$classmap[$classname] .
+                    ". Exception: " . $e->getMessage());
+            }
             return;
         }
         if (isset(self::$classmaprenames[$classname]) && isset(self::$classmap[self::$classmaprenames[$classname]])) {

@@ -34,15 +34,15 @@ final class bank_test extends route_testcase {
      */
     public function test_question_count_empty(): void {
         $this->resetAfterTest();
-        $this->setAdminUser();
+        $this->setAdminUser();An
         $this->add_class_routes_to_route_loader(
             bank::class,
-            '/api/rest/v2/question'
+            \core\router\route_loader_interface::ROUTE_GROUP_API,
         );
         $course = self::getDataGenerator()->create_course();
         $qbank = self::getDataGenerator()->create_module('qbank', ['course' => $course->id]);
 
-        $response = $this->process_api_request('GET', "/question/bank/{$course->id}/question_counts");
+        $response = $this->process_api_request('GET', "/bank/{$course->id}/question_counts");
         $this->assert_valid_response($response);
         $payload = $this->decode_response($response, true);
 

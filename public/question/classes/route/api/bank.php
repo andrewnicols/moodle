@@ -16,24 +16,22 @@
 
 namespace core_question\route\api;
 
-use core\context\course;
-use core\context\module;
 use core\exception\required_capability_exception;
 use core\param;
+use core\router\headers\count_header;
 use core\router\parameters\path_course;
+use core\router\parameters\query_course;
+use core\router\parameters\query_coursemodule;
 use core\router\require_login;
 use core\router\route;
-use core\router\schema\example;
 use core\router\schema\objects\array_of_things;
 use core\router\schema\objects\scalar_type;
 use core\router\schema\objects\schema_object;
-use core\router\schema\parameters\path_parameter;
-use core\router\schema\parameters\query_parameter;
 use core\router\schema\response\content\json_media_type;
 use core\router\schema\response\payload_response;
 use core\router\schema\response\response;
 use core_question\local\bank\formatted_bank;
-use core_question\output\switch_question_bank;
+use core_question\local\bank\question_bank_helper;
 use core_question\local\bank\question_edit_contexts;
 use core_question\local\bank\question_version_status;
 use Psr\Http\Message\ResponseInterface;
@@ -54,34 +52,20 @@ class bank {
      * This will count all top-level questions (no subquestions) that are not hidden.
      *
      * @param \stdClass $course The course ID the fetch question counts for.
-     * @param course $coursecontext The course context.
+     * @param \core\context\course $coursecontext The course context.
      */
     #[route(
-        path: '/bank/{course}/question_counts',
-        method: ['GET'],
-        pathtypes: [
-            new path_course(),
+        path: '/questions',
+        method: ['GET', 'HEAD'],
+        queryparams: [
+            new query_course(),
         ],
         responses: [
             new response(
                 statuscode: 200,
                 description: 'OK',
-                content: [
-                    new json_media_type(
-                        schema: new schema_object(
-                            content: [
-                                'counts' => new array_of_things(param::INT),
-                            ],
-                        ),
-                        example: new example(
-                            name: 'Question counts',
-                            summary: 'List of question counts, the number of questions keyed by the CMID of the question bank',
-                            value: [
-                                '1' => 1,
-                                '2' => 2,
-                            ],
-                        ),
-                    ),
+                headers: [
+                    new count_header(),
                 ],
             ),
         ],
@@ -90,10 +74,33 @@ class bank {
     public function question_counts(
         ServerRequestInterface $request,
         ResponseInterface $response,
-        \stdClass $course,
-        course $coursecontext,
+        \core\context\course $coursecontext,
     ): payload_response {
         global $DB;
+
+        // TODO: This belongs in a service that can be injected using DI.
+        // This can be injected into the route method as a parameter, or the route constructor.
+        //
+        // $bankhelper = $this->get(\core_question\local\bank\question_bank_helper::class); // This line not needed if using the method / constructor injection.
+        // $bankhelper->get_question_count_in_course($course);
+        // Doing this will mean that we can easily test this code without needing to mock the DB, or even run `resetAfterTest()`
+
+        // Doing this means that this whole method becomes
+        /*
+
+    public function question_counts(
+        ServerRequestInterface $request,
+        ResponseInterface $response,
+        \stdClass $course,
+        \core_question\local\bank\question_bank_helper $bankhelper,
+    ): ResponseInterface {
+        return $response->withAddedHeader('X-Total-Count', $bankhelper->get_question_count_in_course($course));
+    }
+
+         */
+
+        // There is also a query as to where capability checking belongs.
+        // This really belongs in the service.
         $capabilities = array_merge(question_edit_contexts::$caps['editq'], question_edit_contexts::$caps['categories']);
 
         if (!has_any_capability($capabilities, $coursecontext)) {
@@ -132,17 +139,28 @@ class bank {
         ";
         $params = [
             'hidden' => question_version_status::QUESTION_STATUS_HIDDEN,
-            'module' => module::LEVEL,
+            'module' => \core\context\module::LEVEL,
             'contextpath' => "{$coursecontext->path}/%",
         ];
         $counts = $DB->get_records_sql_menu($sql, $params);
+        $response = $response->withAddedHeader('X-Total-Count', count($counts));
+
+        // TODO Note:
+        // If you want to, you can include the actual data here, even for the HEAD request.
+        // Slim will automatically remove any body content from a HEAD request.
+        // However, the chances are that you don't want to do this because it is more costly to fetch the data anyway.
+        // This is just a note to say that you _can_ do so if it suits your case.
+        // This would mean that the data is available from a single definition.
+        // If this is not what you want (and it probably isn't what you want) then you shoudl change the method part of the attribute back to 'HEAD' only and not return any data.
+        $data = ['some', 'data', 'here'];
         return new payload_response(
-            payload: [
-                'counts' => $counts,
-            ],
             request: $request,
             response: $response,
+            payload: $data,
         );
+
+        // If you are going with just the HEAD response you can use a Response directly:
+        return $response->withAddedHeader('X-Total-Count', count($counts));
     }
 
     /**
@@ -159,20 +177,18 @@ class bank {
      * @return payload_response The template context for core_question/switch_question_bank.
      */
     #[route(
-        path: '/bank/{course}/switcher', // Resolves to /api/rest/v2/question/bank/1/switcher.
-        pathtypes: [
-            new path_course(),
-        ],
+        path: '/banks', // Resolves to /api/rest/v2/question/bank/1/switcher.
         queryparams: [
-            new query_parameter(
-                name: 'currentcmid',
-                type: param::INT,
-            ),
+            new query_course(),
+            new query_coursemodule('currentmodule'),
         ],
         responses: [
             new response(
                 statuscode: 200,
                 description: 'OK',
+                headers: [
+                    new count_header(),
+                ],
                 content: [
                     new json_media_type(
                         schema: new schema_object(
@@ -191,40 +207,6 @@ class bank {
                                 'recentlyviewedbanks' => new array_of_things(thingtype: formatted_bank::class),
                             ],
                         ),
-                        example: new example(
-                            name: 'Question bank switcher',
-                            summary: 'Data for rendering the core_question/switch_question_bank template',
-                            value: [
-                                'contextid' => 1,
-                                'hasactivitybank' => true,
-                                'activitybank' => [
-                                    'name' => 'Quiz 1',
-                                    'cmid' => 1,
-                                ],
-                                'hascoursesharedbanks' => true,
-                                'coursesharedbanks' => [
-                                    0 => [
-                                        'name' => 'Question bank 1',
-                                        'modid' => '2',
-                                    ],
-                                    1 => [
-                                        'name' => 'Question bank 2',
-                                        'modid' => '3',
-                                    ],
-                                ],
-                                'hasrecentlyviewedbanks' => true,
-                                'recentlyviewedbanks' => [
-                                    0 => [
-                                        'modid' => '4',
-                                        'coursenamebankname' => 'c2 - Question bank 4',
-                                    ],
-                                    1 => [
-                                        'modid' => '6',
-                                        'coursenamebankname' => 'c3 - Question bank 5',
-                                    ],
-                                ],
-                            ],
-                        ),
                     ),
                 ],
             ),
@@ -235,25 +217,37 @@ class bank {
         ServerRequestInterface $request,
         ResponseInterface $response,
         \stdClass $course,
-        course $coursecontext,
+        \core\context\course $coursecontext,
+        \stdClass $currentmoduledata,
+        \core\context\module $currentmodulecontext,
     ): payload_response {
-        global $USER, $CFG, $PAGE;
-        require_once($CFG->dirroot . '/question/renderer.php');
-        $params = $request->getQueryParams();
-        $cmid = $params['currentcmid'] ?? null;
-        if ($cmid) {
-            $context = module::instance($cmid);
-        } else {
-            $context = $coursecontext;
-        }
-        $PAGE->set_context($context);
-        $switcher = new switch_question_bank($cmid, $course->id, $USER->id);
-        $output = new \core_question_bank_renderer($PAGE, RENDERER_TARGET_AJAX);
+        xdebug_break();
+        $cminfo = \cm_info::create($currentmoduledata);
+
+        $capabilities = ['moodle/question:useall', 'moodle/question:usemine'];
+
+        // TODO: This belongs in a service that can be injected using DI.
+        $coursesharedbanks = question_bank_helper::get_activity_instances_with_shareable_questions(
+            incourseids: [$course->id],
+            havingcap: $capabilities,
+            filtercontext: $currentmodulecontext,
+        );
+
+        $data = array_map(
+            function ($bank) {
+                $bank->isactivitybank = false;
+                $bank->recentlyviewed = true;
+                return $bank;
+            },
+            $coursesharedbanks,
+        );
+
+        $response = $response->withAddedHeader('X-Total-Count', count($data));
+
         return new payload_response(
             request: $request,
             response: $response,
-            payload: $switcher->export_for_template($output),
+            payload: $data,
         );
     }
-
 }
