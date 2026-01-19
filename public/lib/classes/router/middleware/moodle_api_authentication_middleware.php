@@ -146,7 +146,9 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
                     ->withAttribute('oauth_scopes', $apikey->scopes);
 
                 $this->validate_scope($moodleroute, explode(' ', $apikey->scopes));
-                $this->complete_user_login($apikey->userid);
+                $user = $this->complete_user_login($apikey->userid);
+
+                $request = $request->withAttribute('user', $user);
 
                 return $request;
             }
@@ -239,8 +241,9 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
      * Complete the user login for the middleware.
      *
      * @param int $userid
+     * @return \stdClass $user
      */
-    protected function complete_user_login(int $userid): void {
+    protected function complete_user_login(int $userid): \stdClass {
         // Log in the Moodle user associated with this OAuth2 user ID.
         $user = \core\user::get_user($userid);
 
@@ -255,6 +258,8 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
 
         \core\session\manager::init_empty_session();
         \core\session\manager::set_user($user);
+
+        return $user;
     }
 
     /**

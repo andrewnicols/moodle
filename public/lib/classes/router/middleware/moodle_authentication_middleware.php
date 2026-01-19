@@ -60,6 +60,24 @@ class moodle_authentication_middleware implements MiddlewareInterface {
             }
         }
 
+        $request = $request->withAttribute('user', $this->get_user());
+
         return $handler->handle($request);
+    }
+
+    /**
+     * Get the user object for the logged in user.
+     *
+     * @return object|null
+     */
+    protected function get_user(): ?\stdClass {
+        global $USER;
+
+        if (isloggedin()) {
+            // TODO: Do we return the user if logged in as guest?
+            return $USER;
+        }
+
+        return null;
     }
 }
