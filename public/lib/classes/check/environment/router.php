@@ -46,30 +46,35 @@ class router extends check {
             'expectedcode' => 200,
             'expectedcodetitle' => "OK",
             'failfeedbackstr' => 'routerfailpage',
+            'bookmarkanchor' => 'routerfailpage',
         ];
         yield [
             'url' => '/api/rest/v2/openapi.json',
             'expectedcode' => 200,
             'expectedcodetitle' => "OK",
             'failfeedbackstr' => 'routerfailapipage',
+            'bookmarkanchor' => 'routerfailapipage',
         ];
         yield [
             'url' => '/not/a/valid/request',
             'expectedcode' => 404,
             'expectedcodetitle' => "Not Found",
             'failfeedbackstr' => 'routerfailmissingpage',
+            'bookmarkanchor' => 'routerfailmissingpage',
         ];
         yield [
             'url' => \core\router\util::get_path_for_callable([\core\route\shim\test_controller::class, 'real_file_shim']),
             'expectedcode' => 302,
             'expectedcodetitle' => "Found",
             'failfeedbackstr' => 'routerfailshim',
+            'bookmarkanchor' => 'routerfailshim',
         ];
         yield [
             'url' => \core\router\util::get_path_for_callable([\core\route\shim\test_controller::class, 'nofile_shim']),
             'expectedcode' => 302,
             'expectedcodetitle' => "Found",
             'failfeedbackstr' => 'routerfailroutershim',
+            'bookmarkanchor' => 'routerfailroutershim',
         ];
     }
 
@@ -84,7 +89,7 @@ class router extends check {
                 result::ERROR,
                 get_string('routernotconfigured', 'admin'),
                 get_string('routernotconfigureddetail', 'admin', [
-                    'docs' => get_docs_url('Configuring_the_Router'),
+                    'docs' => get_docs_url("Configuring_the_Router#routernotconfigured"),
                 ]),
             );
 
@@ -124,7 +129,7 @@ class router extends check {
 
             $resultprops = [
                 'url' => $fullurl,
-                'docs' => get_docs_url('Configuring_the_Router'),
+                'docs' => get_docs_url("Configuring_the_Router#{$test['bookmarkanchor']}"),
                 'expectedstatuscode' => $test['expectedcode'],
                 'expectedstatuscodetitle' => $test['expectedcodetitle'],
                 'statuscode' => $code,
@@ -142,7 +147,7 @@ class router extends check {
                     get_string($test['failfeedbackstr'], 'admin', $resultprops),
                     get_string('routernotconfigureddetailwithurl', 'admin', $resultprops) . " {$expectedgot}",
                     new action_link(
-                        new \core\url(get_docs_url('Configuring_the_Router')),
+                        new \core\url(get_docs_url("Configuring_the_Router#{$test['bookmarkanchor']}")),
                         get_string('routerdocs', 'admin'),
                     ),
                 );
