@@ -19,6 +19,7 @@ namespace core\check\environment;
 use core\check\check;
 use core\check\result;
 use core\output\action_link;
+use GuzzleHttp\HandlerStack;
 
 /**
  * Checks status of router by making test requests to shimmed and API pages.
@@ -101,6 +102,8 @@ class router extends check {
         $clientoptions = [
             'http_errors' => false,
             'allow_redirects' => false,
+            // Override the Handler Stack to ensure that no caching is used, an that the security helper is not applied.
+            'handler' => HandlerStack::create(),
         ];
 
         foreach ($this->get_tests() as $test) {
