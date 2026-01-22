@@ -31,7 +31,6 @@ use core\output\action_link;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class result implements \renderable {
-
     /**
      * This is used to notify if a check does not apply.
      *
@@ -86,6 +85,31 @@ class result implements \renderable {
     const CRITICAL = 'critical';
 
     /**
+     * @var string $status - status
+     */
+    protected $status = self::UNKNOWN;
+
+    /**
+     * @var string summary - should be roughly 1 line of plain text and may change depending on the state.
+     */
+    protected $summary = '';
+
+    /**
+     * @var string details about check.
+     *
+     * This may be a large amount of preformatted html text, possibly describing all the
+     * different states and actions to address them.
+     */
+    protected string $details = '';
+
+    /**
+     * @var null|action_link An action link which is more specific than the general check link, if relvant
+     *
+     * If no specific check link is specified, then the check link will be used.
+     */
+    protected ?action_link $actionlink = null;
+
+    /**
      * Constructor
      *
      * @param string $status code
@@ -94,24 +118,15 @@ class result implements \renderable {
      * @param ?action_link $details An action link which is more specific than the general check link, if relevant
      */
     public function __construct(
-        /** @var string $status - status */
-        protected string $status,
-        /** @var string summary - should be roughly 1 line of plain text and may change depending on the state */
-        protected string $summary,
-        /**
-         * @var string details about check.
-         *
-         * This may be a large amount of preformatted html text, possibly describing all the
-         * different states and actions to address them.
-         */
-        protected string $details = '',
-        /**
-         * @var null|action_link An action link which is more specific than the general check link, if relvant
-         *
-         * If no specific check link is specified, then the check link will be used.
-         */
-        protected ?action_link $actionlink = null
+        string $status,
+        string $summary,
+        string $details = '',
+        ?action_link $actionlink = null,
     ) {
+        $this->status = $status;
+        $this->summary = $summary;
+        $this->details = $details;
+        $this->actionlink = $actionlink;
     }
 
     /**
