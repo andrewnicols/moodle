@@ -37,7 +37,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import { React, ReactDOM } from "@moodle/core/react";
+import * as React from "react";
 
 import { onRenderCallback, isProfilerEnabled } from "@moodle/core/profiler";
 

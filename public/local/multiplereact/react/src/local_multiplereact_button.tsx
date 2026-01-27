@@ -1,4 +1,4 @@
-import { React } from "@moodle/core/react";
+import * as React from "react";
 
 type Props = {
     label: string;

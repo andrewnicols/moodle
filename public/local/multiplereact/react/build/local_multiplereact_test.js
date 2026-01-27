@@ -1,1 +1,1 @@
-import{React as o}from"../../../../lib/react/build/react.js";function t({who:r}){return o.createElement("div",null,o.createElement("strong",null,"Hello from local_multiplereact \u{1F44B}"),o.createElement("div",null,"User: ",r))}export{t as default};
+import*as t from"react";function r({who:o}){return t.createElement("div",null,t.createElement("strong",null,"Hello from local_multiplereact \u{1F44B}"),t.createElement("div",null,"User: ",o))}export{r as default};

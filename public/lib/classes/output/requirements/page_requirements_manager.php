@@ -1772,9 +1772,6 @@ EOF;
             $output .= html_writer::script($js);
         }
 
-        // Add the react auto initialisation script to mount react code from mustache templates.
-        $output .= $this->react_mustache_autoinit();
-
         // Mark head sending done, it is not possible to anything there.
         $this->headdone = true;
 
@@ -1798,7 +1795,24 @@ EOF;
 
         // Include the Polyfills.
         $output .= html_writer::script('', $this->js_fix_url('/lib/polyfills/polyfill.js'));
+        $output .= html_writer::start_tag('script', ['type' => 'importmap']);
+        $output .= json_encode([
+            'imports' => [
+                // 'react' => $this->js_fix_url('/lib/react/react.min.js')->out(false),
+                // 'react-dom' => $this->js_fix_url('/lib/react/react-dom.min.js')->out(false),
+                // 'react-dom/client' => $this->js_fix_url('/lib/react/react-dom-client.min.js')->out(false),
+                'react' => (new \core\url('/lib/react/build/react.js'))->out(false),
+                'react-dom' => (new \core\url('/lib/react/build/react-dom.js'))->out(false),
+                'react-dom/client' => (new \core\url('/lib/react/build/react-dom-client.js'))->out(false),
+                'mod/' => $this->js_fix_url('/mod/')->out(false),
+                '@moodle/' => $this->js_fix_url('/lib/javascript.php/$rev/')->out(false),
+            ]
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 
+        $output .= html_writer::end_tag('script');
+
+        // Add the react auto initialisation script to mount react code from mustache templates.
+        $output .= $this->react_mustache_autoinit();
         // YUI3 JS needs to be loaded early in the body. It should be cached well by the browser.
         $output .= $this->get_yui3lib_headcode();
 

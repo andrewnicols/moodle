@@ -1,1 +1,1 @@
-import{React as s}from"../../../../lib/react/build/react.js";function e({message:r}){return s.createElement("div",null,s.createElement("strong",null,"Message"),s.createElement("div",null,r))}export{e as default};
+import*as s from"react";function r({message:e}){return s.createElement("div",null,s.createElement("strong",null,"Message"),s.createElement("div",null,e))}export{r as default};

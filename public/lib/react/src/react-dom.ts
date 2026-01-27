@@ -1,2 +1,1 @@
-import * as ReactDOM from 'react-dom';
-export {ReactDOM};
+export * from 'react-dom';

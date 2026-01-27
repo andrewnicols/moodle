@@ -41,7 +41,7 @@ export async function buildReactAutoInit() {
         minify: true,
         sourcemap: false,
         jsx: "automatic",
-        jsxImportSource: "@moodle/core/react",
+        // jsxImportSource: "@moodle/core/react",
         jsxDev: false,
         loader: { ".ts": "tsx" },
         plugins: [createAliasPlugin(), externalsPlugin],
