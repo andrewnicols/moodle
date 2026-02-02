@@ -28,6 +28,14 @@ use core\tests\environment as environment_tester;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(environment::class)]
 final class environment_test extends \advanced_testcase {
+    #[\Override]
+    protected function setUp(): void {
+        parent::setUp();
+        // Ensure tests start with default vendor path resolution.
+        environment_tester::set_vendor_path('');
+        environment_tester::set_developer_mode(false);
+    }
+
     #[\PHPUnit\Framework\Attributes\DataProvider('composer_error_states_provider')]
     public function test_composer_not_installed_cases(
         array $fs = [],
@@ -87,6 +95,135 @@ final class environment_test extends \advanced_testcase {
         $result = new \environment_results('custom_check');
         $result = environment_tester::check_composer_dependencies_installed($result);
         $this->assertNull($result);
+    }
+
+    #[\PHPUnit\Framework\Attributes\DataProvider('composer_installed_locations_provider')]
+    public function test_composer_installed_locations(
+        array $fs,
+        string $dirroot,
+        string $root
+    ): void {
+        global $CFG;
+
+        \org\bovigo\vfs\vfsStream::setup('root', null, $fs);
+
+        $originaldirroot = $CFG->dirroot;
+        $originalroot = $CFG->root ?? null;
+        $CFG->dirroot = \org\bovigo\vfs\vfsStream::url($dirroot);
+        $CFG->root = \org\bovigo\vfs\vfsStream::url($root);
+
+        try {
+            $result = new \environment_results('custom_check');
+            $result = environment_tester::check_composer_dependencies_installed($result);
+            $this->assertNull($result);
+        } finally {
+            $CFG->dirroot = $originaldirroot;
+            if ($originalroot === null) {
+                unset($CFG->root);
+            } else {
+                $CFG->root = $originalroot;
+            }
+        }
+    }
+
+    /**
+     * Data provider for test_composer_installed_locations.
+     *
+     * @return \Generator
+     */
+    public static function composer_installed_locations_provider(): \Generator {
+        yield 'composer installed in parent directory' => [
+            [
+                'moodle' => [
+                    'public' => [
+                        // No vendor directory inside the Moodle dirroot.
+                    ],
+                ],
+                'vendor' => [
+                    'autoload.php' => '',
+                    'composer' => [
+                        'installed.php' => '',
+                    ],
+                ],
+            ],
+            'root/moodle/public',
+            'root/moodle',
+        ];
+
+        yield 'composer installed in parent with composer.json' => [
+            [
+                'composer.json' => '{}',
+                'moodle' => [
+                    'public' => [
+                        // No vendor directory inside the Moodle dirroot.
+                    ],
+                ],
+                'vendor' => [
+                    'autoload.php' => '',
+                    'composer' => [
+                        'installed.php' => '',
+                    ],
+                ],
+            ],
+            'root/moodle/public',
+            'root/moodle',
+        ];
+
+        yield 'composer installed in moodle directory' => [
+            [
+                'moodle' => [
+                    'public' => [],
+                    'vendor' => [
+                        'autoload.php' => '',
+                        'composer' => [
+                            'installed.php' => '',
+                        ],
+                    ],
+                ],
+            ],
+            'root/moodle/public',
+            'root/moodle',
+        ];
+
+        yield 'composer installed in moodle with parent composer.json' => [
+            [
+                'composer.json' => '{}',
+                'moodle' => [
+                    'public' => [],
+                    'vendor' => [
+                        'autoload.php' => '',
+                        'composer' => [
+                            'installed.php' => '',
+                        ],
+                    ],
+                ],
+            ],
+            'root/moodle/public',
+            'root/moodle',
+        ];
+
+        yield 'composer installed in moodle and parent vendor exists too' => [
+            [
+                'composer.json' => '{}',
+                'vendor' => [
+                    'autoload.php' => '',
+                    'composer' => [
+                        'installed.php' => '',
+                    ],
+                ],
+                'moodle' => [
+                    'public' => [],
+                    'vendor' => [
+                        'autoload.php' => '',
+                        'composer' => [
+                            'installed.php' => '',
+                        ],
+                    ],
+                ],
+            ],
+            'root/moodle/public',
+            'root/moodle',
+        ];
     }
 
     public function test_composer_dev_installed(): void {
