@@ -1507,7 +1507,7 @@ class moodle_page {
             }
         }
 
-        $this->_url = new moodle_url($url, $params);
+        $this->_url = new \core\url($url, $params);
 
         $fullurl = $this->_url->out_omit_querystring();
         if (strpos($fullurl, "$CFG->wwwroot/") !== 0) {

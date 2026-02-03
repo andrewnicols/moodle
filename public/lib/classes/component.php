@@ -233,13 +233,24 @@ class component {
     public static function classloader($classname) {
         self::init();
 
-        if (isset(self::$classmap[$classname])) {
-            // Global $CFG is expected in included scripts.
-            global $CFG;
-            // Function include would be faster, but for BC it is better to include only once.
-            include_once(self::$classmap[$classname]);
-            return;
+
+        $candidates = [
+            $classname,
+            str_starts_with($classname, 'Moodle\\') ? substr($classname, 7) : "Moodle\\{$classname}",
+        ];
+
+        foreach ($candidates as $candidate) {
+            if (isset(self::$classmap[$candidate])) {
+                // Global $CFG is expected in included scripts.
+                global $CFG;
+                // Function include would be faster, but for BC it is better to include only once.
+                include_once(self::$classmap[$candidate]);
+
+                self::auto_prefix_moodle_vendor($classname);
+                return;
+            }
         }
+
         if (isset(self::$classmaprenames[$classname]) && isset(self::$classmap[self::$classmaprenames[$classname]])) {
             $newclassname = self::$classmaprenames[$classname];
             $debugging = "Class '%s' has been renamed for the autoloader and is now deprecated. Please use '%s' instead.";
@@ -289,6 +300,53 @@ class component {
                 }
             }
         }
+    }
+
+    /**
+     * Automatically attempt to add or remove the Moodle\ prefid.
+     *
+     * @param string $classname
+     */
+    protected static function auto_prefix_moodle_vendor(string $classname): void {
+        if (!self::class_exists($classname)) {
+            if (str_starts_with($classname, 'Moodle\\')) {
+                $alternateclassname = substr($classname, 7);
+                if (self::class_exists($alternateclassname)) {
+                    class_alias($alternateclassname, $classname);
+                }
+            } else {
+                $alternateclassname = "Moodle\\{$classname}";
+                if (self::class_exists($alternateclassname)) {
+                    class_alias($alternateclassname, $classname);
+                }
+            }
+        }
+    }
+
+    /**
+     * Check whether a class, interface, trait, or enum exists.
+     *
+     * @param string $class
+     * @param bool $autoload
+     */
+    protected static function class_exists(string $class, bool $autoload = true): bool {
+        if (class_exists($class, $autoload)) {
+            return true;
+        }
+
+        if (interface_exists($class, $autoload)) {
+            return true;
+        }
+
+        if (trait_exists($class, $autoload)) {
+            return true;
+        }
+
+        if (enum_exists($class, $autoload)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -2095,3 +2153,4 @@ $cache = ' . var_export($cache, true) . ';
 // Alias this class to the old name.
 // This should be kept here because we use this class in external tooling.
 class_alias(component::class, \core_component::class);
+class_alias(component::class, \core\component::class);

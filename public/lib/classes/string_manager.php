@@ -137,4 +137,3 @@ interface core_string_manager {
      */
     public function get_revision();
 }
-
