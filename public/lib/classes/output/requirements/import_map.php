@@ -17,10 +17,24 @@
 namespace core\output\requirements;
 
 /**
- * Class import_map
+ * The import map requirement class, which defines the import map for ES module loading.
+ *
+ * This class is responsible for defining the import map that will be used by the ES module loader to
+ * resolve module specifiers to URLs.
+ *
+ * A default loader URL should be set for the import map, which will be used for any specifiers
+ * that do not have a specific loader defined.
+ *
+ * The import map can be extended by adding additional imports with specific loaders, or overriding
+ * the standard loaders, during a pre_render hook.
+ *
+ * The import map will be serialized to JSON and included in the page output as a script tag with type "importmap".
+ *
+ * The class should be fetched using the dependency injection container, and the default loader URL
+ * should be set before the page is rendered.
  *
  * @package    core
- * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class import_map implements
@@ -29,40 +43,70 @@ class import_map implements
     /** @var array<string> The list of imports */
     protected array $imports = [];
 
+    /** @var \core\url The default loader URL to use */
     protected \core\url $loader;
 
+    /**
+     * Initialise the import_map requirement by setting the standard import list.
+     */
     public function __construct() {
         $this->add_standard_imports();
     }
 
+    /**
+     * Prepare the content for json encoding.
+     *
+     * @return array[]|array{imports: array}
+     */
     public function jsonSerialize(): array {
         $importmap = [
             'imports' => [],
         ];
 
-        foreach ($this->imports as $specifier) {
-            $importmap['imports'][$specifier] = (new \core\url($this->loader . "{$specifier}"))->out(false);
+        if (!isset($this->loader)) {
+            throw new \core\exception\coding_exception('Default loader URL must be set before serializing the import map.');
         }
 
+        foreach ($this->imports as $specifier => $loader) {
+            if ($loader === null) {
+                $loader = new \core\url($this->loader . $specifier);
+            }
+            $importmap['imports'][$specifier] = $loader->out(false);
+        }
 
         return $importmap;
     }
 
-    public function set_loader(\core\url $loader): void {
+    /**
+     * Set the default loader URL.
+     *
+     * @param \core\url $loader The default loader URL.
+     */
+    public function set_default_loader(\core\url $loader): void {
         $this->loader = $loader;
     }
 
+    /**
+     * Add the standard entries to the importmap.
+     * @return void
+     */
     protected function add_standard_imports(): void {
         $this->add_import('@moodle/lms/');
+        $this->add_import('@moodlehq/design-system');
         $this->add_import('react');
         $this->add_import('react-dom/client');
         $this->add_import('react/jsx-runtime');
         $this->add_import('react/jsx-dev-runtime');
-        $this->add_import('/stable/react@19.1.1/es2022/react.mjs');
-        $this->add_import('@moodlehq/design-system');
     }
 
-    public function add_import(string $specifier): void {
-        $this->imports[] = $specifier;
+    /**
+     * Add an key to the importmap.
+     *
+     * @param string $specifier The module specifier.
+     * @param \core\url|null $loader The URL to load the module from.
+     * If null, the default loader URL will be used with the specifier appended.
+     */
+    public function add_import(string $specifier, ?\core\url $loader = null): void {
+        $this->imports[$specifier] = $loader;
     }
 }

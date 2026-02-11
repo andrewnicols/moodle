@@ -1041,17 +1041,12 @@ class page_requirements_manager {
 
     /**
      * Returns the import map script tag for React platform files.
+     *
+     * @return string
      */
     public function get_import_map(): string {
-        /**
-         * React ESM is vendored from esm.sh as precompiled bundles.
-         * Do not rebuild with esbuild/webpack — esm.sh output is required
-         * to avoid CommonJS/RequireJS conflicts in Moodle.
-         */
-        $output = html_writer::start_tag('script', ['type' => 'importmap']);
-
         $importmap = \core\di::get(import_map::class);
-        $importmap->set_loader(
+        $importmap->set_default_loader(
             \core\router\util::get_path_for_callable(
                 [\core\route\controller\esm_controller::class, 'serve_esm'],
                 [
@@ -1060,10 +1055,15 @@ class page_requirements_manager {
                 ]
             ),
         );
-        $output .= json_encode($importmap, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-        $output .= html_writer::end_tag('script');
 
-        return $output;
+        return html_writer::tag(
+            'script',
+            json_encode(
+                ['jsrev' => $this->get_jsrev()],
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+            ),
+            ['type' => 'importmap'],
+        );
     }
 
     /**

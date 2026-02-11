@@ -73,8 +73,9 @@ class esm_controller {
 
         return match (true) {
             str_starts_with($scriptpath, '@moodle/lms/') => $this->serve_moodle_esm_script(...$args),
-            str_starts_with($scriptpath, '@moodlehq/design-system') => $this->serve_moodle_esm_script(...$args),
-            // We need to do similar things for react, the design system, etc. here.
+                str_starts_with($scriptpath, 'react/')
+                || str_starts_with($scriptpath, 'react-dom/')
+                || str_starts_with($scriptpath, '@moodlehq/design-system') => $this->serve_upstream_bundle(...$args),
 
             default => throw new \core\exception\not_found_exception('script', $scriptpath),
         };
@@ -101,25 +102,18 @@ class esm_controller {
         int $revision,
         string $scriptpath,
     ): ResponseInterface {
+        global $CFG;
+
         $map = [
-            'react/' => [
-                'base' => '/lib/js/platform_bundles/react/',
-                'version' => '19.1.1',
-            ],
-            'react-dom/' => [
-                'base' => '/lib/js/platform_bundles/react-dom/',
-                'version' => '19.1.1',
-            ],
-            '@moodlehq/design-system/' => [
-                'base' => '/lib/js/platform_bundles/moodle-design-system/',
-                'version' => '0.1.0',
-            ],
+            'react/' => '/lib/js/platform_bundles/react/',
+            'react-dom/' => '/lib/js/platform_bundles/react-dom/',
+            '@moodlehq/design-system/' => '/lib/js/platform_bundles/moodle-design-system/',
         ];
 
-        foreach ($map as $prefix => $info) {
+        foreach ($map as $prefix => $basepath) {
             if (str_starts_with($scriptpath, $prefix)) {
                 $relativepath = substr($scriptpath, strlen($prefix));
-                $file = $info['base'] . $info['version'] . '/' . $relativepath . '.js';
+                $file = $CFG->root . $basepath . $relativepath . '.js';
                 if (!file_exists($file)) {
                     throw new \core\exception\not_found_exception('script', $scriptpath);
                 }
