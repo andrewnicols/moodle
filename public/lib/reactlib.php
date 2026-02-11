@@ -49,10 +49,5 @@ function react_resolve_module_identifier(string $identifier): ?string {
         return null;
     }
 
-    $scriptdir = explode($CFG->dirroot, $dir);
-    if (!isset($scriptdir[1]) || $scriptdir[1] === '') {
-        return null;
-    }
-
-    return $scriptdir[1] . '/react/build/' . implode('/', $modulepath) . '.js';
+    return $dir . '/react/build/' . implode('/', $modulepath) . '.js';
 }

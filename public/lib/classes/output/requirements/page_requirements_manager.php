@@ -1049,23 +1049,20 @@ class page_requirements_manager {
          * to avoid CommonJS/RequireJS conflicts in Moodle.
          */
         $output = html_writer::start_tag('script', ['type' => 'importmap']);
-        $jsrev = $this->get_jsrev();
-        $reactserver = new \core\url('/lib/reactscript.php');
-        // Trailing slash is required for import map prefix resolution.
-        $reactserver->set_slashargument('/' . $jsrev . '/');
-        $importmap = (object) [
-            'imports' => (object) [
-                'react' => (new \core\url('/lib/js/platform_bundles/react/19.1.1/react.js'))->out(false),
-                'react-dom/client' => (new \core\url('/lib/js/platform_bundles/react/19.1.1/react-dom-client.js'))->out(false),
-                'react/jsx-runtime' => (new \core\url('/lib/js/platform_bundles/react/19.1.1/jsx-runtime.js'))->out(false),
-                'react/jsx-dev-runtime' => (new \core\url('/lib/js/platform_bundles/react/19.1.1/jsx-dev-runtime.js'))->out(false),
-                '/stable/react@19.1.1/es2022/react.mjs' => (new \core\url('/lib/js/platform_bundles/react/19.1.1/react.js'))->out(false),
-                '@moodlehq/design-system' => (new \core\url('/lib/js/platform_bundles/moodle-design-system/0.1.0/index.js'))->out(false),
-                '@moodle/lms/' => $reactserver->out(false),
-            ],
-        ];
+
+        $importmap = \core\di::get(import_map::class);
+        $importmap->set_loader(
+            \core\router\util::get_path_for_callable(
+                [\core\route\controller\esm_controller::class, 'serve_esm'],
+                [
+                    'revision' => $this->get_jsrev(),
+                    'scriptpath' => '',
+                ]
+            ),
+        );
         $output .= json_encode($importmap, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         $output .= html_writer::end_tag('script');
+
         return $output;
     }
 

@@ -343,6 +343,10 @@ enum param: string {
     #[param_clientside_regex('^[a-z](?:[a-z0-9_](?!__))*[a-z0-9]+$')]
     case PLUGIN = 'plugin';
 
+
+    #[param_clientside_regex('^@?[a-z][a-z0-9_-]*(/[a-z0-9_/-]+)?$')]
+    case ESM_PATH = 'esm_path';
+
     /**
      * Get the canonical enumerated parameter from the parameter type name.
      *
@@ -1330,6 +1334,17 @@ enum param: string {
         $param = (string)fix_utf8($param);
         $timezonepattern = '/^(([+-]?(0?[0-9](\.[5|0])?|1[0-3](\.0)?|1[0-2]\.5))|(99)|[[:alnum:]]+(\/?[[:alpha:]_-])+)$/';
         if (preg_match($timezonepattern, $param)) {
+            return $param;
+        } else {
+            return '';
+        }
+    }
+
+    protected function clean_param_value_esm_path(mixed $param): string {
+        // ESM paths must be relative and contain only safe characters.
+        $param = (string)fix_utf8($param);
+        $regex = $this->get_clientside_expression();
+        if (preg_match("~{$regex}~", $param)) {
             return $param;
         } else {
             return '';

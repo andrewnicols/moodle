@@ -184,6 +184,36 @@ class util {
     }
 
     /**
+     * Get the URI path for the specified callable.
+     *
+     * @param string|array|callable $callable the Callable to get the URI for
+     * @param array $params Any parameters to include in the path
+     * @param array $queryparams Any parameters to include in the query string
+     * @return url
+     */
+    public static function get_path_prefix_for_callable(
+        string|array|callable $callable,
+        array $params = [],
+        array $queryparams = [],
+    ): url {
+        global $CFG;
+
+        $router = \core\di::get(\core\router::class);
+        $app = $router->get_app();
+        $parser = $app->getRouteCollector()->getRouteParser();
+
+        $routename = self::get_route_name_for_callable($callable);
+
+        return new url(
+            url: $parser->urlFor(
+                $routename,
+                $params,
+                $queryparams,
+            ),
+        );
+    }
+
+    /**
      * Get the route attribute for the specified request.
      *
      * @param ServerRequestInterface $request
