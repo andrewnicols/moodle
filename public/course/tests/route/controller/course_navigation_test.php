@@ -67,7 +67,7 @@ final class course_navigation_test extends route_testcase {
         );
         $cmid = $cms[$currentmodule]->cmid ?? 9999; // If we cannot find it we will test the error case of not found.
         $this->setUser($users[$user]);
-        ini_set('error_log', '/dev/null');
+
         $response = $this->process_request(
             'GET',
             "course/cm/{$cmid}/next",

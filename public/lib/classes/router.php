@@ -16,6 +16,9 @@
 
 namespace core;
 
+use core\exception\not_found_exception;
+use core\exception\response_aware_exception;
+use core\router\error_renderer;
 use core\router\middleware\api_validation_middleware;
 use core\router\middleware\cors_middleware;
 use core\router\middleware\error_handling_middleware;
@@ -207,18 +210,25 @@ class router {
             $this->app->getCallableResolver(),
             $this->app->getResponseFactory(),
             displayErrorDetails: $displayerrordetails,
-            logErrors: true,
-            logErrorDetails: true,
+            logErrors: false,
+            logErrorDetails: false,
         );
 
         // Set a custom error handler for the HttpNotFoundException and HttpForbiddenException.
         // We route these to a custom error handler to ensure that the error is displayed with a feedback form.
+        $errorhandler = new router\error_handler(
+            $this->app->getCallableResolver(),
+            $this->app->getResponseFactory(),
+        );
+        $errorhandler->registerErrorRenderer('text/html', error_renderer::class);
         $errormiddleware->setErrorHandler(
             [
+                response_aware_exception::class,
                 HttpNotFoundException::class,
                 HttpForbiddenException::class,
             ],
-            new router\error_handler($this->app),
+            $errorhandler,
+            true,
         );
 
         $errormiddleware->getDefaultErrorHandler()->registerErrorRenderer('text/html', router\error_renderer::class);

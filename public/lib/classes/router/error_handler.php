@@ -16,6 +16,8 @@
 
 namespace core\router;
 
+use core\exception\response_aware_exception;
+use core\router\response\exception_response;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Handlers\ErrorHandler;
@@ -28,22 +30,6 @@ use Slim\Handlers\ErrorHandler;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class error_handler extends ErrorHandler {
-    /**
-     * Construct a new Error Handler.
-     *
-     * @param \Slim\App $app
-     */
-    public function __construct(
-        App $app,
-    ) {
-        parent::__construct(
-            $app->getCallableResolver(),
-            $app->getResponseFactory(),
-        );
-
-        $this->registerErrorRenderer('text/html', error_renderer::class);
-    }
-
     #[\Override]
     protected function determineContentType(ServerRequestInterface $request): ?string {
         // For anything hitting /rest/api/v2 we will default to JSON.
@@ -54,5 +40,20 @@ class error_handler extends ErrorHandler {
 
         // Fall back to the default behaviour of using the Accept header.
         return parent::determineContentType($request);
+    }
+
+    #[\Override]
+    protected function determineStatusCode(): int {
+        $exception = $this->exception;
+
+        if ($exception instanceof response_aware_exception) {
+            $responseclassname = $exception->get_response_classname();
+            if (is_subclass_of($responseclassname, exception_response::class)) {
+                /** @psalm-var class-string<exception_response> $responseclassname */
+                return $responseclassname::get_exception_status_code();
+            }
+        }
+
+        return parent::determineStatusCode();
     }
 }
