@@ -1,0 +1,5 @@
+issueNumber: MDL-88027
+notes:
+  core:
+    - message: Google Client v1 has been removed. Uses of it should be updated to use Google Client v2.
+      type: removed
