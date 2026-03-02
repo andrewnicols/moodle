@@ -188,7 +188,7 @@ export default function (thing, {
     final = false,
     emit = true,
 } = {}) {
-    if (replacement === null && reason === null && mdl === false) {
+    if (replacement === null && reason === null && mdl === null) {
         throw new Error('You must provide at least one of replacement, reason or mdl=false when marking something as deprecated.');
     }
 
