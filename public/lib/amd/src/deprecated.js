@@ -106,12 +106,12 @@ const getHTMLMessage = (
 
     stringParts.push(`<h2>Deprecation</h2>`);
     if (alternativeNotice) {
-        stringParts.push(`<p>${alternativeNotice}</p>`);
+        stringParts.push(`<p>${alternativeNotice}`);
     } else {
-        stringParts.push(`<p><code>${thing}</code> is deprecated.</p>`);
+        stringParts.push(`<p><code>${thing}</code> is deprecated`);
     }
 
-    if(since !== null) {
+    if (since !== null) {
         stringParts.push(` since ${since}`);
     }
 
