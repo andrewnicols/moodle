@@ -239,7 +239,7 @@ export const notifyUploadCompleted = elementId => {
  */
 export const triggerUploadStarted = () => emitDeprecation('core_form/events.triggerUploadStarted', {
     since: '4.0',
-    mdl: 'MDL-71113',
+    mdl: 'MDL-70990',
     replacement: 'core_form/events.notifyUploadStarted',
     reason: 'Consistent naming for all event notifiers',
     final: true,
@@ -250,7 +250,7 @@ export const triggerUploadStarted = () => emitDeprecation('core_form/events.trig
  */
 export const triggerUploadCompleted = () => emitDeprecation('core_form/events.triggerUploadCompleted', {
     since: '4.0',
-    mdl: 'MDL-71113',
+    mdl: 'MDL-70990',
     replacement: 'core_form/events.notifyUploadCompleted',
     reason: 'Consistent naming for all event notifiers',
     final: true,

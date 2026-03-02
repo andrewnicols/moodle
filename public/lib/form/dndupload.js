@@ -939,7 +939,7 @@ M.form_dndupload.init = function(Y, options) {
         notifyUploadCompleted: function() {
             require(['core_form/events'], function(FormEvent) {
                 const elementId = this.filemanagerhelper ? this.filemanagerhelper.filemanager.get('id') : this.options.containerid;
-                FormEvent.triggerUploadCompleted(elementId);
+                FormEvent.notifyUploadCompleted(elementId);
             }.bind(this));
          },
 
@@ -949,7 +949,7 @@ M.form_dndupload.init = function(Y, options) {
         notifyUploadStarted: function() {
             require(['core_form/events'], function(FormEvent) {
                 const elementId = this.filemanagerhelper ? this.filemanagerhelper.filemanager.get('id') : this.options.containerid;
-                FormEvent.triggerUploadStarted(elementId);
+                FormEvent.notifyUploadStarted(elementId);
             }.bind(this));
         },
 
