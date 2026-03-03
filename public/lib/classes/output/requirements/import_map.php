@@ -111,4 +111,24 @@ class import_map implements \JsonSerializable {
     public function add_import(string $specifier, ?\core\url $loader = null, ?string $path = null): void {
         $this->imports[$specifier] = $loader ?? $path;
     }
+
+    public function get_import_path_for_specifier(string $specifier): ?array {
+        global $CFG;
+
+        // Ensure that imports are sorted longest first.
+        // This ensures that where keys share a similar starting prefix that a more-specific one will be used.
+        uksort($this->importmap, fn ($a, $b) => strlen($b) <=> strlen($a));
+
+        // Find the first matching map.
+        foreach ($this->importmap as $importspecifier => $path) {
+            if (str_starts_with($specifier, $importspecifier)) {
+                return [
+                    $importspecifier,
+                    $CFG->root . DIRECTORY_SEPARATOR . $path,
+                ];
+            }
+        }
+
+        return null;
+    }
 }

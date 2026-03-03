@@ -35,22 +35,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class esm_controller {
-    use \core\router\route_controller;
     use \core\router\esm_script_serving;
-
-    /**
-     * Map of ESM specifier → root-relative file path for vendored upstream bundles.
-     *
-     * Paths are relative to $CFG->root (one level above the web root).
-     * These are fixed, versioned files. Add a new entry here when a new upstream bundle is vendored.
-     */
-    protected const UPSTREAM_BUNDLE_MAP = [
-        'react'                  => '/lib/platform_bundles/react/latest/react.js',
-        'react-dom'              => '/lib/platform_bundles/react/latest/react-dom-client.js',
-        'react/jsx-runtime'      => '/lib/platform_bundles/react/latest/jsx-runtime.js',
-        'react/jsx-dev-runtime'  => '/lib/platform_bundles/react/latest/jsx-dev-runtime.js',
-        'design-system'          => '/lib/platform_bundles/moodle-design-system/0.1.0/index.js',
-    ];
 
     #[\core\router\route(
         title: 'Serve ESM Content',
@@ -97,15 +82,27 @@ class esm_controller {
         // Strip the prefix to obtain the bare specifier, then look it up in the static map.
         if (str_starts_with($scriptpath, 'external/')) {
             $specifier = substr($scriptpath, 9);
-            if (isset(self::UPSTREAM_BUNDLE_MAP[$specifier])) {
-                global $CFG;
-                // Resolve the absolute path: bundles live outside the web root under $CFG->root.
-                $file = $CFG->root . self::UPSTREAM_BUNDLE_MAP[$specifier];
-                if (!file_exists($file)) {
-                    throw new \core\exception\not_found_exception('script', $scriptpath);
+            $importmap = \core\di::get(\core\output\requirements\import_map::class);
+            $pathpair = $importmap->get_import_path_for_specifier($specifier);
+            if ($pathpair !== null) {
+                [$key, $pathprefix] = $pathpair;
+
+                $pathremainder = substr($specifier, strlen($key));
+                $filepath = [
+                    $pathprefix,
+                    $pathremainder,
+                ];
+
+                $fullpath = implode(
+                    DIRECTORY_SEPARATOR,
+                    array_filter($filepath),
+                );
+
+                if (file_exists($fullpath)) {
+                    return $this->serve_script($request, $response, $revision, $file, basename($file));
                 }
-                return $this->serve_script($request, $response, $revision, $file, basename($file));
             }
+            throw new \core\exception\not_found_exception('script', $scriptpath);
         }
 
         // Any other path is treated as a Moodle component React build (<component>/<module>).

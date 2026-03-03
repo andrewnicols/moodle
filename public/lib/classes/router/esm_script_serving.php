@@ -51,16 +51,11 @@ trait esm_script_serving {
         string $file,
         string $presentedfilename,
     ): ResponseInterface {
-        $now = \core\di::get(\core\clock::class)->time();
-
         if ($revision === -1) {
             $response = $response
-                ->withHeader('Content-Type', 'application/javascript; charset=utf-8')
                 ->withHeader('Content-Disposition', "inline; filename=\"{$presentedfilename}\"")
-                ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', $now) . ' GMT')
-                ->withHeader('Expires', gmdate('D, d M Y H:i:s', $now + 2) . ' GMT')
-                ->withHeader('Pragma', '')
-                ->withHeader('Accept-Ranges', 'none');
+                ->withHeader('Last-Modified', $this->get_http_time())
+                ->withHeader('Expires', $this->get_http_time('+2 seconds'));
         } else {
             $etag = sha1($revision . ':' . $file);
 
@@ -69,17 +64,32 @@ trait esm_script_serving {
             }
 
             $response = $response
-                ->withHeader('Content-Type', 'application/javascript; charset=utf-8')
                 ->withHeader('ETag', $etag)
                 ->withHeader('Content-Disposition', 'inline; filename="' . basename($file) . '"')
-                ->withHeader('Last-Modified', gmdate('D, d M Y H:i:s', filemtime($file)) . ' GMT')
-                ->withHeader('Expires', gmdate('D, d M Y H:i:s', $now + 31536000) . ' GMT')
-                ->withHeader('Pragma', '')
-                ->withHeader('Cache-Control', 'public, max-age=31536000, immutable')
-                ->withHeader('Accept-Ranges', 'none');
+                ->withHeader('Last-Modified', (new \DateTime())
+                    ->setTimestamp(filemtime($file))
+                    ->format(\DateTimeInterface::RFC7231)
+                )
+                ->withHeader('Expires', $this->get_http_time('+1 year'))
+                ->withHeader('Cache-Control', 'public, max-age=' . YEARSECS . ', immutable');
         }
 
-        $response->getBody()->write(file_get_contents($file));
-        return $response;
+        $response = $response
+            ->withHeader('Content-Type', 'application/javascript; charset=utf-8')
+            ->withHeader('Pragma', '')
+            ->withHeader('Accept-Ranges', 'none');        
+
+        return $response->withBody(\GuzzleHttp\Psr7\Utils::streamFor(fopen($file, 'r')));
+    }
+
+    private function get_http_time(?string $modifier): string {
+        $clock = \core\di::get(\core\clock::class);
+        $expirationtime = $clock->now();
+        if ($modifier) {
+            $expirationtime->modify($modifier);
+        }
+
+        // Format to RFC 7231 (HTTP-date).
+        return $expirationtime->format(\DateTimeInterface::RFC7231);
     }
 }
