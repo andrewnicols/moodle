@@ -350,7 +350,7 @@ enum param: string {
      * Accepts lowercase letters, numbers, hyphens, underscores and forward slashes.
      * The path must start with a letter.
      */
-    #[param_clientside_regex('^[a-z][a-z0-9_-]*(/[a-z0-9_/-]+)?$')]
+    #[param_clientside_regex('^[@a-z][a-z0-9_-]*(/[a-z0-9_/-]+)?$')]
     case ESM_PATH = 'esm_path';
 
     /**

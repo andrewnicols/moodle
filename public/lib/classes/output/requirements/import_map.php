@@ -38,7 +38,7 @@ namespace core\output\requirements;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class import_map implements \JsonSerializable {
-    /** @var array<string> The list of imports */
+    /** @var array The list of imports */
     protected array $imports = [];
 
     /** @var \core\url The default loader URL to use */
@@ -65,11 +65,12 @@ class import_map implements \JsonSerializable {
             throw new \core\exception\coding_exception('Default loader URL must be set before serializing the import map.');
         }
 
-        foreach ($this->imports as $specifier => $loader) {
-            if ($loader === null) {
-                $loader = new \core\url($this->loader->out(false) . $specifier);
-            } else if (is_string($loader)) {
+        foreach ($this->imports as $specifier => $importdata) {
+            $loader = $importdata->loader;
+            if ($loader instanceof \core\url) {
                 $loader = new \core\url($this->loader->out(false) . $loader);
+            } else {
+                $loader = new \core\url($this->loader->out(false) . $specifier);
             }
             $importmap['imports'][$specifier] = $loader->out(false);
         }
@@ -91,12 +92,11 @@ class import_map implements \JsonSerializable {
      * @return void
      */
     protected function add_standard_imports(): void {
-        $this->add_import('@moodle/lms/', path: '');
-        $this->add_import('@moodlehq/design-system', path: 'external/design-system');
-        $this->add_import('react', path: 'external/react');
-        $this->add_import('react-dom', path: 'external/react-dom');
-        $this->add_import('react/jsx-runtime', path: 'external/react/jsx-runtime');
-        $this->add_import('react/jsx-dev-runtime', path: 'external/react/jsx-dev-runtime');
+        $this->add_import('@moodle/lms/', path: 'js/esm/build', loadfromcomponent: true);
+        $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system');
+        $this->add_import('react', path: 'lib/js/bundles/react/react');
+        $this->add_import('react/', path: 'lib/js/bundles/react/');
+        $this->add_import('react-dom', path: 'lib/js/bundles/react-dom/react-dom');
     }
 
     /**
@@ -108,27 +108,95 @@ class import_map implements \JsonSerializable {
      * @param string|null $path Optional URL path suffix to append to the default loader URL,
      * when no explicit $loader is given. Defaults to $specifier when not set.
      */
-    public function add_import(string $specifier, ?\core\url $loader = null, ?string $path = null): void {
-        $this->imports[$specifier] = $loader ?? $path;
+    public function add_import(
+        string $specifier,
+        ?\core\url $loader = null,
+        ?string $path = null,
+        bool $loadfromcomponent = false,
+    ): void {
+        $this->imports[$specifier] = (object) [
+            'loader' => $loader,
+            'path' => $path,
+            'loadfromcomponent' => $loadfromcomponent,
+        ];
     }
 
-    public function get_import_path_for_specifier(string $specifier): ?array {
-        global $CFG;
-
+    public function get_path_for_script(string $requestedpath): ?string {
         // Ensure that imports are sorted longest first.
         // This ensures that where keys share a similar starting prefix that a more-specific one will be used.
-        uksort($this->importmap, fn ($a, $b) => strlen($b) <=> strlen($a));
+        uksort($this->imports, fn ($a, $b) => strlen($b) <=> strlen($a));
 
         // Find the first matching map.
-        foreach ($this->importmap as $importspecifier => $path) {
-            if (str_starts_with($specifier, $importspecifier)) {
-                return [
-                    $importspecifier,
-                    $CFG->root . DIRECTORY_SEPARATOR . $path,
-                ];
+        foreach ($this->imports as $specifier => $importdata) {
+            if (str_starts_with($requestedpath, $specifier)) {
+                if ($importdata->loader !== null) {
+                    throw new \core\exception\coding_exception(
+                        'Import map entries with explicit loaders cannot be resolved to filesystem paths.',
+                    );
+                }
+
+                // TODO: Ensure no directory traversal attacks in either of these resolutions.
+                
+
+                if ($importdata->loadfromcomponent) {
+                    $subpath = substr($requestedpath, strlen($specifier));
+                    return $this->resolve_module_identifier($importdata, $subpath);
+                }
+
+                return $this->get_full_path_for_script($specifier, $importdata->path, $requestedpath);
             }
         }
 
-        return null;
+        return null;  
+    }
+
+    protected function get_full_path_for_script(
+        string $specifier,
+        string $pathprefix,
+        string $requestedpath,
+    ): string {
+        global $CFG;
+
+        $pathremainder = substr($requestedpath, strlen($specifier));
+        $filepath = [
+            $CFG->root,
+            $pathprefix,
+            $pathremainder,
+        ];
+
+        return implode(
+            DIRECTORY_SEPARATOR,
+            array_filter($filepath),
+        );
+    }
+
+
+    /**
+     * Resolve a `<component>/<module>` alias to an absolute filesystem path.
+     *
+     * For example, `mod_book/viewer` resolves to
+     * `<dirroot>/mod/book/react/build/viewer.js`.
+     *
+     * @param string $identifier Alias in the form `<component>/<module>`.
+     * @return string Absolute path to the JS file.
+     * @throws \core\exception\not_found_exception If the component or file cannot be found.
+     */
+    protected function resolve_module_identifier(object $importdata, string $subpath): string {
+        global $CFG;
+
+        if (!str_contains($subpath, '/')) {
+            throw new \core\exception\not_found_exception('component', $subpath);
+        }
+
+        [$component, $modulerest] = explode('/', $subpath, 2);
+
+        $dir = \core\component::get_component_directory($component);
+
+        $file = "{$dir}/{$importdata->path}/{$modulerest}.js";
+        if (!file_exists($file)) {
+            throw new \core\exception\not_found_exception('script', $subpath);
+        }
+
+        return $file;
     }
 }

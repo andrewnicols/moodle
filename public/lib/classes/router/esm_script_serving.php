@@ -82,7 +82,7 @@ trait esm_script_serving {
         return $response->withBody(\GuzzleHttp\Psr7\Utils::streamFor(fopen($file, 'r')));
     }
 
-    private function get_http_time(?string $modifier): string {
+    private function get_http_time(?string $modifier = null): string {
         $clock = \core\di::get(\core\clock::class);
         $expirationtime = $clock->now();
         if ($modifier) {

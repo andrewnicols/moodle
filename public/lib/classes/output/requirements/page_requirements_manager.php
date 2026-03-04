@@ -1047,7 +1047,7 @@ class page_requirements_manager {
         $importmap = \core\di::get(import_map::class);
         $importmap->set_default_loader(
             \core\router\util::get_path_for_callable(
-                [\core\route\shim\esm_controller::class, 'serve'],
+                [\core\route\controller\esm_controller::class, 'serve'],
                 [
                     'revision' => $this->get_jsrev(),
                     'scriptpath' => '',

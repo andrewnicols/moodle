@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\route\shim;
+namespace core\route\controller;
 
 use core\router\schema\parameters\path_parameter;
 use Psr\Http\Message\ResponseInterface;
@@ -39,7 +39,7 @@ class esm_controller {
 
     #[\core\router\route(
         title: 'Serve ESM Content',
-        path: '/{revision:[0-9-]+}/{scriptpath:.*}',
+        path: '/esm/{revision:[0-9-]+}/{scriptpath:.*}',
         pathtypes: [
             new path_parameter(
                 name: 'revision',
@@ -78,73 +78,13 @@ class esm_controller {
             $revision = -1;
         }
 
-        // Paths beginning with 'external/' are vendored upstream bundles (e.g. React).
-        // Strip the prefix to obtain the bare specifier, then look it up in the static map.
-        if (str_starts_with($scriptpath, 'external/')) {
-            $specifier = substr($scriptpath, 9);
-            $importmap = \core\di::get(\core\output\requirements\import_map::class);
-            $pathpair = $importmap->get_import_path_for_specifier($specifier);
-            if ($pathpair !== null) {
-                [$key, $pathprefix] = $pathpair;
-
-                $pathremainder = substr($specifier, strlen($key));
-                $filepath = [
-                    $pathprefix,
-                    $pathremainder,
-                ];
-
-                $fullpath = implode(
-                    DIRECTORY_SEPARATOR,
-                    array_filter($filepath),
-                );
-
-                if (file_exists($fullpath)) {
-                    return $this->serve_script($request, $response, $revision, $file, basename($file));
-                }
+        $importmap = \core\di::get(\core\output\requirements\import_map::class);
+        $fullpath = rtrim($importmap->get_path_for_script($scriptpath), '.js') . ".js";
+        if ($fullpath !== null) {
+            if (file_exists($fullpath)) {
+                return $this->serve_script($request, $response, $revision, $fullpath, basename($fullpath));
             }
-            throw new \core\exception\not_found_exception('script', $scriptpath);
         }
-
-        // Any other path is treated as a Moodle component React build (<component>/<module>).
-        // resolve_module_identifier() maps it to the compiled JS file on disk.
-        $file = $this->resolve_module_identifier($scriptpath);
-        return $this->serve_script($request, $response, $revision, $file, $scriptpath);
-    }
-
-    /**
-     * Resolve a `<component>/<module>` alias to an absolute filesystem path.
-     *
-     * For example, `mod_book/viewer` resolves to
-     * `<dirroot>/mod/book/react/build/viewer.js`.
-     *
-     * @param string $identifier Alias in the form `<component>/<module>`.
-     * @return string Absolute path to the JS file.
-     * @throws \core\exception\not_found_exception If the component or file cannot be found.
-     */
-    protected function resolve_module_identifier(string $identifier): string {
-        global $CFG;
-
-        $modulepath = explode('/', $identifier);
-        $component = array_shift($modulepath);
-
-        if ($component === null || $component === '' || empty($modulepath)) {
-            throw new \core\exception\not_found_exception('component', $component ?? '');
-        }
-
-        if (!class_exists('\\core\\component')) {
-            require_once($CFG->dirroot . '/lib/classes/component.php');
-        }
-
-        $dir = \core\component::get_component_directory($component);
-        if ($dir === null) {
-            throw new \core\exception\not_found_exception('component', $component);
-        }
-
-        $file = $dir . '/js/react/build/' . implode('/', $modulepath) . '.js';
-        if (!file_exists($file)) {
-            throw new \core\exception\not_found_exception('script', $identifier);
-        }
-
-        return $file;
+        throw new \core\exception\not_found_exception('script', $scriptpath);
     }
 }
