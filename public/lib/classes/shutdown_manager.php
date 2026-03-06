@@ -263,12 +263,14 @@ class shutdown_manager {
 
             if ($logperformance) {
                 $perf = get_performance_info();
-                // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
-                error_log("PERF: " . $perf['txt']);
-            }
-            if (!empty($PERF->perfdebugdeferred)) {
-                $perf = get_performance_info();
-                echo $OUTPUT->select_element_for_replace('#perfdebugfooter', $perf['html']);
+
+                if (MDL_PERFTOLOG) {
+                    // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
+                    error_log("PERF: " . $perf['txt']);
+                }
+                if (!empty($PERF->perfdebugdeferred)) {
+                    echo $OUTPUT->select_element_for_replace('#perfdebugfooter', $perf['html']);
+                }
             }
 
             if (MDL_PERFINC) {
@@ -278,7 +280,7 @@ class shutdown_manager {
                     if (preg_match(':^/:', $f)) {
                         $fs = filesize($f);
                         $ts += $fs;
-                        $hfs = display_size($fs);
+                        $hfs = function_exists('display_size') ? display_size($fs) : $fs . ' bytes';
                         // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
                         error_log(substr($f, strlen($CFG->dirroot)) . " size: $fs ($hfs)");
                     } else {
@@ -287,7 +289,7 @@ class shutdown_manager {
                     }
                 }
                 if ($ts > 0) {
-                    $hts = display_size($ts);
+                    $hts = function_exists('display_size') ? display_size($ts) : $ts . ' bytes';
                     // phpcs:ignore moodle.PHP.ForbiddenFunctions.FoundWithAlternative
                     error_log("Total size of files included: $ts ($hts)");
                 }
