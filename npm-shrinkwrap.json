@@ -16,6 +16,7 @@
         "@babel/eslint-parser": "^7.21.3",
         "@babel/eslint-plugin": "7.19.1",
         "@babel/preset-env": "7.16.11",
+        "@types/react": "^19.2.14",
         "@types/react-dom": "^19.2.3",
         "@typescript-eslint/parser": "^8.53.1",
         "@xmldom/xmldom": "^0.8.7",
@@ -2206,7 +2207,6 @@
       "integrity": "sha512-ilcTH/UniCkMdtexkoCN0bI7pMcJDvmQFPvuPvmEaYA/NSfFTAgdUSLAoVjaRJm7+6PvcM+q1zYOwS4wTYMF9w==",
       "dev": true,
       "license": "MIT",
-      "peer": true,
       "dependencies": {
         "csstype": "^3.2.2"
       }
@@ -4037,8 +4037,7 @@
       "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz",
       "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
       "dev": true,
-      "license": "MIT",
-      "peer": true
+      "license": "MIT"
     },
     "node_modules/ctype": {
       "version": "0.5.3",

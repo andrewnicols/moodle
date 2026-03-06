@@ -164,6 +164,7 @@ final class param_test extends \advanced_testcase {
             ['react/jsx-runtime', param::ESM_PATH],
             ['button.small', param::ESM_PATH],
             ['@moodlehq/design-system/button.small', param::ESM_PATH],
+            ['@moodlehq/design-system/Button', param::ESM_PATH],
         ];
     }
 

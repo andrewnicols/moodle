@@ -167,8 +167,12 @@ export function generateAliases() {
 
     // Build TS paths for tsconfig.aliases.json
     /** @type {Record<string, string[]>} */
-    const tsPaths = {};
-    tsPaths["@moodle/lms/core/*"] = ["./public/lib/js/esm/src/*"]; // Always include core alias.
+    const tsPaths = {
+        // Always include core alias.
+        "@moodle/lms/core/*": ["./public/lib/js/esm/src/*"],
+        // Add the design system alias for TypeScript.
+        "@moodlehq/design-system": ["./lib/js/bundles/design-system/index.d.ts"]
+    };
 
     for (const [componentPath, componentName] of Object.entries(componentPathMap)) {
         const reactSrcDir = path.join(rootDir, componentPath, "js", "esm", "src");

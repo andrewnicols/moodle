@@ -60,6 +60,11 @@ module.exports = grunt => {
             (async() => {
                 try {
                     const {watchComponents} = await import('../../.esbuild/plugin/plugincomponents.mjs');
+                    const { generateAliases } = await import('../../.esbuild/generate-aliases.mjs');
+                    const { buildPluginComponents } = await import('../../.esbuild/plugin/plugincomponents.mjs');
+
+                    generateAliases();
+                    await buildPluginComponents(isDev);
 
                     const ctx = await watchComponents(true, onRebuild);
 

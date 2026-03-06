@@ -10,15 +10,16 @@
     "upgradenote": "node .grunt/upgradenotes.mjs create"
   },
   "dependencies": {
+    "@moodlehq/design-system": "^2.1",
     "react": "^19.1",
-    "react-dom": "^19.1",
-    "@moodlehq/design-system": "^2.1"
+    "react-dom": "^19.1"
   },
   "devDependencies": {
     "@babel/core": "7.17.5",
     "@babel/eslint-parser": "^7.21.3",
     "@babel/eslint-plugin": "7.19.1",
     "@babel/preset-env": "7.16.11",
+    "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/parser": "^8.53.1",
     "@xmldom/xmldom": "^0.8.7",

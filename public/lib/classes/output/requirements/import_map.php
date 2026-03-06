@@ -98,7 +98,7 @@ class import_map implements \JsonSerializable {
      */
     protected function add_standard_imports(): void {
         $this->add_import('@moodle/lms/', path: 'js/esm/build', loadfromcomponent: true);
-        $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system');
+        $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system/index');
         $this->add_import('react', path: 'lib/js/bundles/react/react');
         $this->add_import('react/', path: 'lib/js/bundles/react');
         $this->add_import('react-dom', path: 'lib/js/bundles/react-dom/react-dom');
@@ -122,11 +122,13 @@ class import_map implements \JsonSerializable {
         ?\core\url $loader = null,
         ?string $path = null,
         bool $loadfromcomponent = false,
+        string $suffix = '.js',
     ): void {
         $this->imports[$specifier] = (object) [
             'loader' => $loader,
             'path' => $path,
             'loadfromcomponent' => $loadfromcomponent,
+            'suffix' => $suffix,
         ];
         $this->importssorted = false;
     }
@@ -171,7 +173,7 @@ class import_map implements \JsonSerializable {
             if (in_array('..', explode('/', $pathremainder), true)) {
                 return null;
             }
-            return implode(DIRECTORY_SEPARATOR, array_filter([$CFG->root, $importdata->path, $pathremainder])) . '.js';
+            return implode(DIRECTORY_SEPARATOR, array_filter([$CFG->root, $importdata->path, $pathremainder])) . $importdata->suffix;
         }
 
         return null;
@@ -204,7 +206,7 @@ class import_map implements \JsonSerializable {
 
         // Resolve the component directory; an unknown component name returns null.
         $dir = \core\component::get_component_directory($component);
-        $file = "{$dir}/{$importdata->path}/{$modulerest}.js";
+        $file = "{$dir}/{$importdata->path}/{$modulerest}{$importdata->suffix}";
         if (!file_exists($file)) {
             throw new \core\exception\not_found_exception('script', $subpath);
         }

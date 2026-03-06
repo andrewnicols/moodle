@@ -1,9 +1,10 @@
 {
   "extends": "./tsconfig.aliases.json", // Added to extend the generated aliases.
   "compilerOptions": {
+    "baseUrl": ".",
     "target": "ES2020",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "jsx": "react-jsx",
     "strict": true,
     "skipLibCheck": true
