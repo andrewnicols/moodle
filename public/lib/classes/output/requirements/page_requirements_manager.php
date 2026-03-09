@@ -1068,6 +1068,34 @@ class page_requirements_manager {
     }
 
     /**
+     * Returns the `<script>` tag used to load the React auto-init bundle for Mustache templates.
+     *
+     * This bundle scans the page for React placeholders rendered by Mustache and bootstraps
+     * the registered components automatically so that calling code does not need to add its own
+     * inline initialisation script.
+     *
+     * @return string Returns the script html to include the react auto init code
+     */
+    public function react_mustache_autoinit(): string {
+        $path = \core\router\util::get_path_for_callable(
+            [\core\route\controller\esm_controller::class, 'serve'],
+            [
+                'revision' => $this->get_jsrev(),
+                'scriptpath' => '@moodle/lms/core/react_autoinit',
+            ]
+        );
+        $scripthtml = html_writer::tag(
+            tagname: 'script',
+            contents: '',
+            attributes: [
+                'type' => 'module',
+                'src' => $path->out(),
+            ],
+        ) . "\n";
+        return $scripthtml;
+    }
+
+    /**
      * !!!DEPRECATED!!! please use js_init_call() if possible
      * Ensure that the specified JavaScript function is called from an inline script
      * somewhere on this page.
@@ -1772,6 +1800,9 @@ EOF;
                 $output .= html_writer::script('', $url);
             }
         }
+
+        // Add the react auto initialisation script to mount react code from mustache templates.
+        $output .= $this->react_mustache_autoinit();
 
         // Then the clever trick for hiding of things not needed when JS works.
         $output .= html_writer::script("document.body.className += ' jsenabled';") . "\n";
