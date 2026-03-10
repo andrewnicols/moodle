@@ -39,6 +39,7 @@ import {createRoot} from "react-dom/client";
 
 const SELECTOR = "[data-react-component]";
 const MOUNTED_FLAG = "reactMounted";
+const MOUNTING_FLAG = "reactMounting";
 const reactUnmountMap: WeakMap<Element, () => void> = new WeakMap();
 
 /**
@@ -116,8 +117,15 @@ const mountOne = async(el: Element) => {
         return;
     }
 
+    if ((el as HTMLElement).dataset[MOUNTING_FLAG]) {
+        return;
+    }
+
+    (el as HTMLElement).dataset[MOUNTING_FLAG] = "1";
+
     const componentName = el.getAttribute("data-react-component");
     if (!componentName) {
+        delete (el as HTMLElement).dataset[MOUNTING_FLAG];
         return;
     }
 
@@ -125,6 +133,7 @@ const mountOne = async(el: Element) => {
 
     if (!mod) {
         window.console.warn("[react_autoinit] Component not found:", componentName);
+        delete (el as HTMLElement).dataset[MOUNTING_FLAG];
         return;
     }
 
@@ -132,6 +141,7 @@ const mountOne = async(el: Element) => {
 
     if (!Component) {
         window.console.warn("[react_autoinit] Module has no default export:", componentName);
+        delete (el as HTMLElement).dataset[MOUNTING_FLAG];
         return;
     }
 
@@ -168,9 +178,9 @@ const unmountOne = (el: Element) => {
  *
  * @param {Element|Document} root The root to scan.
  */
-const scanAndMount = async(root: Element | Document) => {
+const scanAndMount = (root: Element | Document) => {
     for (const el of root.querySelectorAll(SELECTOR)) {
-        await mountOne(el);
+        mountOne(el);
     }
 };
 
@@ -214,9 +224,9 @@ const handleRemovedNode = (node: Node) => {
  */
 const installObserver = () => {
     const obs = new MutationObserver((mutations) => {
-        mutations.forEach((m) => {
-            m.addedNodes?.forEach(handleAddedNode);
-            m.removedNodes?.forEach(handleRemovedNode);
+        mutations.forEach((mutation) => {
+            mutation.addedNodes?.forEach(handleAddedNode);
+            mutation.removedNodes?.forEach(handleRemovedNode);
         });
     });
 
@@ -235,11 +245,10 @@ let observer: MutationObserver | null = null;
  */
 const init = async() => {
     await domReady();
-    await scanAndMount(document);
-
     if (!observer) {
         observer = installObserver();
     }
+    scanAndMount(document);
 };
 
 init();
