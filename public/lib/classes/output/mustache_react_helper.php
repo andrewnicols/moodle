@@ -82,6 +82,20 @@ class mustache_react_helper {
             return ['', $text];
         }
 
+        // The most common case is that the JSON config is the only content, so we can skip the more complex parsing.
+        if (json_validate($text)) {
+            return [$text, ''];
+        }
+
+        // The next simplest case is that the JSON config is at the start, so we can just find the closing brace of the first JSON block.
+        $lastcurlindex = strrpos($text, '}');
+        if ($lastcurlindex !== false) {
+            $potentialjson = substr($text, 0, $lastcurlindex + 1);
+            if (json_validate($potentialjson)) {
+                return [$potentialjson, trim(substr($text, $lastcurlindex + 1))];
+            }
+        }
+
         $len = strlen($text);
         $depth = 0;
         $inquotes = false;
@@ -132,15 +146,16 @@ class mustache_react_helper {
      * @return array|null Decoded array or null on failure
      */
     private function decode_json(string $json): ?array {
-        // Strip trailing commas - common mistake.
-        $json = preg_replace('/,\s*([}\]])/', '$1', $json);
+        if (json_validate($json) === false) {
+            // Attempt to clean common issues like trailing commas and re-validate.
+            $json = preg_replace('/,\s*([}\]])/', '$1', $json);
+            if (json_validate($json) === false) {
+                debugging('Invalid JSON in mustache react helper: ' . json_last_error_msg() . "\n" . $json, DEBUG_DEVELOPER);
+                return null;
+            }
+        }
 
         $result = json_decode($json, true);
-
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            debugging('Invalid JSON in mustache react helper: ' . json_last_error_msg() . "\n" . $json, DEBUG_DEVELOPER);
-            return null;
-        }
 
         return is_array($result) ? $result : null;
     }
