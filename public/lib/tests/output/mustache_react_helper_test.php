@@ -133,6 +133,26 @@ final class mustache_react_helper_test extends \advanced_testcase {
                 ['id="wrapper"', 'class="container"', '<h1>Title</h1>'],
                 ['data-react-component', 'data-react-props'],
             ],
+            'escaped values with preserved inner content' => [
+                '{"id":"wrapper","class":"container","props":{"user":{"name":"J\\\\D"}}}<h1>Title\\Thing{}s</h1>',
+                [
+                    'id="wrapper"',
+                    'class="container"',
+                    '<h1>Title\\Thing{}s</h1>',
+                    '"user":{"name":"J\\\\D"}',
+                ],
+                [],
+            ],
+            'extra closing brace' => [
+                '{"id":"wrapper","class":"container","props":{"user":{"name":"J\\\\D"}}}}<h1>Title\\Thing{}s</h1>',
+                [
+                    'id="wrapper"',
+                    'class="container"',
+                    '<h1>Title\\Thing{}s</h1>',
+                    '"user":{"name":"J\\\\D"}',
+                ],
+                [],
+            ],
             'XSS in attribute value is escaped' => [
                 '{"component":"@moodle/lms/mod_book/viewer","class":"<script>alert(1)</script>"}',
                 ['&lt;script&gt;'],
