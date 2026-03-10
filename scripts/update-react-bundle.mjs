@@ -45,14 +45,13 @@ const REACT_DOM_VERSION = getPackageVersion('react-dom');
 const bundles = [
   { packageName: "react", version: REACT_VERSION, fileName: "react" },
   { packageName: "react", version: REACT_VERSION, fileName: "jsx-runtime" },
-  { packageName: "react", version: REACT_VERSION, fileName: "jsx-dev-runtime" },
+  { packageName: "react", version: REACT_VERSION, fileName: "jsx-dev-runtime", dev: true },
   { packageName: "react-dom", version: REACT_DOM_VERSION, fileName: "react-dom" },
   { packageName: "react-dom", version: REACT_DOM_VERSION, fileName: "client" },
 ].map((bundle) => ({
   ...bundle,
-  url: `https://esm.sh/${bundle.packageName}@${bundle.version}/${TARGET}/${bundle.fileName}.bundle.mjs`
+  url: `https://esm.sh/${bundle.packageName}@${bundle.version}/${TARGET}/${bundle.fileName}${bundle.dev ? '.development' : ''}.bundle.mjs`
 }));
-
 
 /**
  * Update the react and react-dom bundles by downloading them from esm.sh and saving them in the lib folder.
