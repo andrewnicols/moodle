@@ -61,6 +61,8 @@ class ClientResolver
         __CLASS__,
         '_resolve_from_env_ini'
     ];
+    private const ANONYMOUS_SIGNATURE = 'anonymous';
+    private const DPOP_SIGNATURE = 'dpop';
 
     /** @var array Map of types to a corresponding function */
     private static $typeMap = [
@@ -668,7 +670,10 @@ class ClientResolver
             $args['credentials'] = CredentialProvider::fromCredentials(
                 new Credentials('', '')
             );
-            $args['config']['signature_version'] = 'anonymous';
+            if ($args['config']['signature_version'] !== self::DPOP_SIGNATURE) {
+                $args['config']['signature_version'] = self::ANONYMOUS_SIGNATURE;
+            }
+
             $args['config']['configured_signature_version'] = true;
         } elseif ($value instanceof CacheInterface) {
             $args['credentials'] = CredentialProvider::defaultProvider($args);
@@ -1162,7 +1167,7 @@ class ClientResolver
         }
 
         // Assign user's preferred auth scheme list
-        $args['auth_scheme_preference'] = $value;
+        $args['config']['auth_scheme_preference'] = $value;
     }
 
     public static function _default_signature_version(array &$args)
@@ -1241,12 +1246,6 @@ class ClientResolver
         } elseif (!empty($_ENV["AWS_SUPPRESS_PHP_DEPRECATION_WARNING"])) {
             $args['suppress_php_deprecation_warning'] =
                 \Aws\boolean_value($_ENV["AWS_SUPPRESS_PHP_DEPRECATION_WARNING"]);
-        }
-
-        if ($args['suppress_php_deprecation_warning'] === false
-            && PHP_VERSION_ID < 80100
-        ) {
-            self::emitDeprecationWarning();
         }
     }
 
@@ -1433,23 +1432,6 @@ EOT;
         }
         return is_dir(
             __DIR__ . "/data/{$service}/$apiVersion"
-        );
-    }
-
-    private static function emitDeprecationWarning()
-    {
-        $phpVersionString = phpversion();
-        trigger_error(
-            "This installation of the SDK is using PHP version"
-            .  " {$phpVersionString}, which will be deprecated on January"
-            .  " 13th, 2025.\nPlease upgrade your PHP version to a minimum of"
-            .  " 8.1.x to continue receiving updates for the AWS"
-            .  " SDK for PHP.\nTo disable this warning, set"
-            .  " suppress_php_deprecation_warning to true on the client constructor"
-            .  " or set the environment variable AWS_SUPPRESS_PHP_DEPRECATION_WARNING"
-            .  " to true.\nMore information can be found at: "
-            .   "https://aws.amazon.com/blogs/developer/announcing-the-end-of-support-for-php-runtimes-8-0-x-and-below-in-the-aws-sdk-for-php/\n",
-            E_USER_DEPRECATED
         );
     }
 }
