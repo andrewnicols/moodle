@@ -30,6 +30,15 @@ $ADMIN->add('server', new admin_category('email', new lang_string('categoryemail
 $ADMIN->add('server', new admin_category('webservicesettings', new lang_string('webservices', 'webservice')));
 
 if ($hassiteconfig) {
+    $ADMIN->add('server', new admin_externalpage(
+        'oauth2server',
+        new lang_string('oauth2server:clients', 'moodle'),
+        (string) \core\router\util::get_path_for_callable(
+            [\core_admin\route\controller\oauth2serverclients\client_manager_controller::class, 'list_clients'],
+        ),
+        'moodle/oauth2server:manageclients',
+    ));
+
     // System paths.
     $temp = new admin_settingpage('systempaths', new lang_string('systempaths', 'admin'));
     $temp->add(new admin_setting_configexecutable('pathtophp', new lang_string('pathtophp', 'admin'),

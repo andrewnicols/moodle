@@ -341,6 +341,7 @@ $string['notabletooverrideroleshere'] = 'You are not able to override the permis
 $string['notes:manage'] = 'Manage notes';
 $string['notes:view'] = 'View notes';
 $string['notset'] = 'Not set';
+$string['oauth2server:manageclients'] = 'Manage OAuth2 server clients';
 $string['overrideanotherrole'] = 'Override another role';
 $string['overridecontext'] = 'Override context';
 $string['overridepermissions'] = 'Override permissions';

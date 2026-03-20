@@ -39,6 +39,9 @@ class client_entity implements \League\OAuth2\Server\Entities\ClientEntityInterf
     /** @var int The status of the client */
     protected int $status;
 
+    /** @var string|null The description of the client */
+    protected ?string $description = null;
+
     /**
      * Create a client_entity from a database record.
      *
@@ -61,6 +64,7 @@ class client_entity implements \League\OAuth2\Server\Entities\ClientEntityInterf
         $client->redirectUri = $redirecturiarray;
         $client->ownercontext = \core\context::instance_by_id($clientrecord->ownercontext);
         $client->status = (int) $clientrecord->status;
+        $client->description = $clientrecord->description;
 
         // TODO: Store this in the database?
         // Derive it from whether a secret exists?
@@ -105,8 +109,13 @@ class client_entity implements \League\OAuth2\Server\Entities\ClientEntityInterf
         return $this->status === self::STATUS_ACTIVE;
     }
 
-    #[\Override]
-    public function supportsGrantType(string $granttype): bool {
+    /**
+     * Returns true if the client supports the given grant type.
+     *
+     * @param string $granttype The grant type to check.
+     * @return bool True if the client supports the grant type, false otherwise.
+     */
+    public function supportsGrantType(string $granttype): bool { // phpcs:ignore moodle.NamingConventions.ValidFunctionName.LowercaseMethod
         if ($granttype === 'client_credentials') {
             if (!$this->isConfidential()) {
                 return false;
@@ -120,5 +129,9 @@ class client_entity implements \League\OAuth2\Server\Entities\ClientEntityInterf
 
         // For now, all clients support all grant types.
         return true;
+    }
+
+    public function get_description(): ?string {
+        return $this->description;
     }
 }

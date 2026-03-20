@@ -38,17 +38,7 @@ class client_repository implements ClientRepositoryInterface {
     public function getClientEntity(
         $clientidentifier,
     ): ?\League\OAuth2\Server\Entities\ClientEntityInterface {
-        global $DB;
-
-        $clientrecord = $DB->get_record('oauth2_server_clients', ['clientidentifier' => $clientidentifier]);
-
-        if (!$clientrecord) {
-            return null;
-        }
-
-        $redirecturis = $DB->get_records('oauth2_server_client_redirect_uris', ['clientidentifier' => $clientidentifier]);
-
-        return client_entity::from_record($clientrecord, $redirecturis ?: []);
+        return $this->get_client_from_params(['clientidentifier' => $clientidentifier]);
     }
 
     #[\Override]
@@ -95,6 +85,24 @@ class client_repository implements ClientRepositoryInterface {
 
         return false;
     }
+
+    public function get_client_by_id(int $id): ?client_entity {
+        return $this->get_client_from_params(['id' => $id]);
+    }
+
+    private function get_client_from_params(array $params): ?client_entity {
+        global $DB;
+
+        $clientrecord = $DB->get_record('oauth2_server_clients', $params);
+
+        if (!$clientrecord) {
+            return null;
+        }
+
+        $redirecturis = $DB->get_records('oauth2_server_client_redirect_uris', ['clientidentifier' => $clientrecord->clientidentifier]);
+
+        return client_entity::from_record($clientrecord, $redirecturis ?: []);
+     }
 
     /**
      * Create a new OAuth2 client.
@@ -145,7 +153,7 @@ class client_repository implements ClientRepositoryInterface {
         global $DB;
 
         $DB->insert_record('oauth2_server_client_redirect_uris', (object)[
-            'clientidentifier' => $client->getIdentifier(),
+            'clientidentifier' => $clientidentifier,
             'uri' => $redirecturi,
         ]);
     }

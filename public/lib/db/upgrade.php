@@ -1874,6 +1874,7 @@ function xmldb_main_upgrade($oldversion) {
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
         $table->add_field('ownercontext', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('name', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('description', XMLDB_TYPE_TEXT, null, null, null, null, null);
         $table->add_field('clientidentifier', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
         $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
         $table->add_field('lastaccessed', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
@@ -2029,6 +2030,7 @@ function xmldb_main_upgrade($oldversion) {
         // Configure OAuth2 server keys.
         \core\oauth2\setup::configure_keys();
 
+        // Main savepoint reached.
         upgrade_main_savepoint(true, 2026041600.00);
     }
 

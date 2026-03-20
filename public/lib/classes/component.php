@@ -578,6 +578,7 @@ class component {
         $keyclasses = [
             \core\exception\moodle_exception::class,
             \core\oauth2\server\client_repository::class,
+            \core_admin\router\parameters\oauth2\server\path_client::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
