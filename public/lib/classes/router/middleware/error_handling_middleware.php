@@ -47,10 +47,7 @@ class error_handling_middleware implements MiddlewareInterface {
             $response = $handler->handle($request);
         } catch (\Exception $e) {
             // @codeCoverageIgnoreStart
-            if (defined('ABORT_AFTER_CONFIG') && !defined('ABORT_AFTER_CONFIG_CANCEL')) {
-                define('ABORT_AFTER_CONFIG_CANCEL', true);
-                require(__DIR__ . '/../../../setup.php');
-            }
+            \core\router\util::load_full_moodle();
             // @codeCoverageIgnoreEnd
 
             $response = $this->responsehandler->get_response_from_exception($request, $e);

@@ -151,8 +151,8 @@ class moodle_bootstrap_middleware implements MiddlewareInterface {
         if (defined('ABORT_AFTER_CONFIG_CANCEL') && ABORT_AFTER_CONFIG_CANCEL) {
             return;
         }
-        define('ABORT_AFTER_CONFIG_CANCEL', true);
 
-        require("{$CFG->dirroot}/lib/setup.php");
+        // Load the full Moodle stack.
+        util::load_full_moodle();
     }
 }

@@ -347,4 +347,18 @@ class util {
 
         return $component;
     }
+
+    /**
+     * Load the full Moodle Framework.
+     *
+     * @codeCoverageIgnore
+     */
+    public static function load_full_moodle(): void {
+        global $CFG;
+
+        if (defined('ABORT_AFTER_CONFIG') && !defined('ABORT_AFTER_CONFIG_CANCEL')) {
+            define('ABORT_AFTER_CONFIG_CANCEL', true);
+            require($CFG->dirroot . '/lib/setup.php');
+        }
+    }
 }
