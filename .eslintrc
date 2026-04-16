@@ -260,6 +260,13 @@
         // disabled for AMD files above). Native Promises are standard in TS.
         'promise/no-native': 'off',
         'promise/avoid-new': 'off',
+
+        // Disabled: base rule misreads TypeScript type method parameter names as
+        // unused variables. TypeScript compiler flags are the correct authority.
+        'no-unused-vars': 'off',
+
+        // Allow triple-slash directives (/// <reference path="..." />).
+        'spaced-comment': ['warn', 'always', {markers: ['/']}],
       }
     }
   ]
