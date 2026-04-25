@@ -8,5 +8,8 @@
     "strict": true,
     "skipLibCheck": true
   },
-  "include": ["public/**/esm/src/**/*"]
+  "include": [
+    "public/**/esm/src/**/*",
+    "node_modules/@types/**/*.d.ts"
+  ]
 }

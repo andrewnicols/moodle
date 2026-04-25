@@ -142,6 +142,9 @@ export function generateAliases() {
     const tsPaths = {
         // Always include core alias.
         "@moodle/lms/core/*": ["./public/lib/js/esm/src/*"],
+
+        // Note: AMD type aliases for each component (including core) are added
+        // dynamically in the loop below, pointing to generated declarations.
     };
 
     for (const [componentPath, componentName] of Object.entries(componentPathMap)) {
@@ -151,6 +154,9 @@ export function generateAliases() {
             .replace(/\\/g, "/")}`;
 
         tsPaths[runtimeAliasKey] = [targetPattern];
+
+        // AMD type aliases — point to generated declarations.
+        tsPaths[`${componentName}/*`] = [`./.types/amd/${componentPath.replace(/\\/g, "/")}/*`];
     }
 
     const tsconfig = {
@@ -176,10 +182,9 @@ export function generateAliases() {
 
     if (previousPaths && hasWarningHeader && pathsEqual(previousPaths, tsPaths)) {
         console.log("✓ Generating tsconfig.aliases.json was skipped. No alias modifications detected.");
-        return;
+    } else {
+        // Write tsconfig.aliases.json
+        fs.writeFileSync(tsconfigOut, stringifyFlatArrays(tsconfig));
+        console.log("✓ Generating tsconfig.aliases.json");
     }
-
-    // Write tsconfig.aliases.json
-    fs.writeFileSync(tsconfigOut, stringifyFlatArrays(tsconfig));
-    console.log("✓ Generating tsconfig.aliases.json");
 }
