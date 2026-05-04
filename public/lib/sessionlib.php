@@ -107,24 +107,25 @@ function is_moodle_cookie_secure() {
  *
  * @param string $username to encrypt and place in a cookie, '' means delete current cookie
  */
-function set_moodle_cookie($username) {
+function set_moodle_cookie($username): void {
     global $CFG;
 
     if (\core\session\manager::supports_cookies() === false) {
-        return '';
+        // Cannot set cookie if cookies are not supported.
+        return;
     }
 
     if (empty($CFG->rememberusername)) {
-        // erase current and do not store permanent cookies
+        // Erase current and do not store permanent cookies.
         $username = '';
     }
 
     if ($username === 'guest') {
-        // keep previous cookie in case of guest account login
+        // Keep previous cookie in case of guest account login.
         return;
     }
 
-    $cookiename = 'MOODLEID1_'.$CFG->sessioncookie;
+    $cookiename = 'MOODLEID1_' . $CFG->sessioncookie;
 
     $cookiesecure = is_moodle_cookie_secure();
 
@@ -133,8 +134,15 @@ function set_moodle_cookie($username) {
 
     if ($username !== '') {
         // Set username cookie for 60 days.
-        setcookie($cookiename, \core\encryption::encrypt($username), time() + (DAYSECS * 60), $CFG->sessioncookiepath,
-            $CFG->sessioncookiedomain, $cookiesecure, $CFG->cookiehttponly);
+        setcookie(
+            $cookiename,
+            \core\encryption::encrypt($username),
+            time() + (DAYSECS * 60),
+            $CFG->sessioncookiepath,
+            $CFG->sessioncookiedomain,
+            $cookiesecure,
+            $CFG->cookiehttponly,
+        );
     }
 }
 

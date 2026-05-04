@@ -2877,7 +2877,7 @@ function validate_user_key($keyvalue, $script, $instance) {
 function require_user_key_login($script, $instance = null, $keyvalue = null) {
     global $DB;
 
-    if (!\core\session\manager::supports_cookies()) {
+    if (\core\session\manager::supports_cookies()) {
         throw new \moodle_exception('sessioncookiesdisable');
     }
 
