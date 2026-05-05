@@ -47,12 +47,14 @@ final class manager_test extends \advanced_testcase {
         testable_manager::start();
         testable_manager::start();
         testable_manager::start();
+        $this->assertFalse(testable_manager::is_session_active());
         $this->assertDebuggingNotCalled();
 
         // Even when cookies are supported, we are running as a CLI script so this won't run.
         testable_manager::start();
         testable_manager::start();
         testable_manager::start();
+        $this->assertFalse(testable_manager::is_session_active());
         $this->assertDebuggingNotCalled();
 
         // Our testable manager allows us to pretend not to be a CLI script.
@@ -62,9 +64,11 @@ final class manager_test extends \advanced_testcase {
         testable_manager::set_cookies_supported(true);
         testable_manager::start();
         $this->assertDebuggingNotCalled();
+        $this->assertTrue(testable_manager::is_session_active());
 
         // Any subsequent calls should trigger a debugging message.
         \core\session\manager::start();
+        $this->assertTrue(testable_manager::is_session_active());
         $this->assertDebuggingCalled('Session was already started!', DEBUG_DEVELOPER);
     }
 

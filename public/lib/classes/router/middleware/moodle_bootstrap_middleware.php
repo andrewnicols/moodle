@@ -64,7 +64,7 @@ class moodle_bootstrap_middleware implements MiddlewareInterface {
             \core\session\manager::set_cookies_supported(true);
         }
 
-        if (\core\session\manager::supports_cookies()) {
+        if (\core\session\manager::supports_cookies() && !\core\session\manager::is_session_active()) {
             \core\session\manager::start();
         }
 

@@ -103,7 +103,7 @@ class manager {
     public static function start() {
         global $CFG, $DB, $PERF;
 
-        if (self::$sessionactive) {
+        if (self::is_session_active()) {
             debugging('Session was already started!', DEBUG_DEVELOPER);
             return;
         }
@@ -141,6 +141,15 @@ class manager {
         }
 
         self::start_session($requireslock);
+    }
+
+    /**
+     * Whether the session is currently active.
+     *
+     * @return bool
+     */
+    public static function is_session_active(): bool {
+        return self::$sessionactive ?? false;
     }
 
     /**
