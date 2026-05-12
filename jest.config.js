@@ -51,5 +51,6 @@ module.exports = {
     setupFilesAfterEnv: [
         '@testing-library/jest-dom',
         '<rootDir>/.jest/globalSetup.ts',
+        '<rootDir>/.jest/fetch.ts',
     ],
 };
