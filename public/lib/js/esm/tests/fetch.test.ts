@@ -61,6 +61,10 @@ class MockRequest {
         this._body = init?.body ?? null;
     }
 
+    get body(): any {
+        return this._body;
+    }
+
     async text(): Promise<string> {
         if (this._body === null || this._body === undefined) {
             return '';
@@ -531,6 +535,228 @@ describe('@moodle/lms/core/fetch', () => {
 
                 expect(await r1).toBe('Internal Server Error');
                 expect(await r2).toBe('Internal Server Error');
+            } finally {
+                mockM.cfg.batchFetchRequests = false;
+            }
+        });
+    });
+
+    describe('execute (edge cases)', () => {
+        it('rejects a request when the batch response omits its Content-ID', async () => {
+            mockM.cfg.batchFetchRequests = true;
+
+            // Return a batch response that only includes one Content-ID (for the first request).
+            fetchMock.mockImplementation(async (input: Request) => {
+                capturedRequest = input;
+                const body = await input.text();
+
+                // Extract Content-IDs — only respond to the first one.
+                const idMatches = [...body.matchAll(/Content-ID: ([^\n]+)/g)];
+                const ids = idMatches.map((m) => m[1].trim());
+                const firstId = ids[0];
+
+                const boundary = 'resp-boundary';
+                const batchBody = [
+                    `--${boundary}\n`,
+                    'Content-Type: application/http\n\n',
+                    'HTTP/1.1 200 OK\n',
+                    `Content-ID: ${firstId}\n`,
+                    'Content-Type: application/json\n\n',
+                    '{"ok":true}\n',
+                    `--${boundary}--\n`,
+                ].join('');
+
+                return new MockResponse(batchBody, {
+                    status: 200,
+                    statusText: 'OK',
+                    headers: new MockHeaders({
+                        'content-type': `multipart/mixed;boundary=${boundary}`,
+                    }),
+                }) as any;
+            });
+
+            try {
+                const batcher = new Fetch();
+                const p1 = batcher.performGet('mod_example', 'list');
+                const p2 = batcher.performGet('mod_example', 'items');
+
+                // Catch the expected rejection before execute to avoid unhandled promise.
+                const r2 = p2.catch((e: string) => e);
+
+                await batcher.execute();
+
+                const response = await p1;
+                expect(response).toHaveProperty('ok', true);
+
+                const rejection = await r2;
+                expect(rejection).toContain('No response provided for request');
+            } finally {
+                mockM.cfg.batchFetchRequests = false;
+            }
+        });
+
+        it('includes request body in batch when present (POST)', async () => {
+            mockM.cfg.batchFetchRequests = true;
+
+            fetchMock.mockImplementation(async (input: Request) => {
+                capturedRequest = input;
+                const body = await input.text();
+
+                const idMatches = [...body.matchAll(/Content-ID: ([^\n]+)/g)];
+                const ids = idMatches.map((m) => m[1].trim());
+
+                const boundary = 'resp-boundary';
+                const parts = ids.map((id) => [
+                    `--${boundary}\n`,
+                    'Content-Type: application/http\n\n',
+                    'HTTP/1.1 200 OK\n',
+                    `Content-ID: ${id}\n`,
+                    'Content-Type: application/json\n\n',
+                    '{}\n',
+                ].join(''));
+
+                const batchBody = parts.join('') + `--${boundary}--\n`;
+
+                return new MockResponse(batchBody, {
+                    status: 200,
+                    statusText: 'OK',
+                    headers: new MockHeaders({
+                        'content-type': `multipart/mixed;boundary=${boundary}`,
+                    }),
+                }) as any;
+            });
+
+            try {
+                const batcher = new Fetch();
+                const p1 = batcher.performPost('mod_example', 'create', {body: {title: 'Test'}});
+                const p2 = batcher.performGet('mod_example', 'list');
+                await batcher.execute();
+                await Promise.all([p1, p2]);
+
+                // The batch body should contain the POST body.
+                const batchRequestBody = await capturedRequest!.text();
+                expect(batchRequestBody).toContain('{"title":"Test"}');
+                expect(batchRequestBody).toContain('POST');
+            } finally {
+                mockM.cfg.batchFetchRequests = false;
+            }
+        });
+
+        it('handles application/json batch response', async () => {
+            mockM.cfg.batchFetchRequests = true;
+
+            fetchMock.mockImplementation(async (input: Request) => {
+                capturedRequest = input;
+                const body = await input.text();
+                const idMatches = [...body.matchAll(/Content-ID: ([^\n]+)/g)];
+                const ids = idMatches.map((m) => m[1].trim());
+
+                // Return an application/json response (array of response text segments).
+                const segments = ids.map((id) => [
+                    'Content-Type: application/http\n\n',
+                    'HTTP/1.1 200 OK\n',
+                    `Content-ID: ${id}\n`,
+                    'Content-Type: application/json\n\n',
+                    '{}',
+                ].join(''));
+
+                return new MockResponse(JSON.stringify(segments), {
+                    status: 200,
+                    statusText: 'OK',
+                    headers: new MockHeaders({
+                        'content-type': 'application/json',
+                    }),
+                }) as any;
+            });
+
+            try {
+                const batcher = new Fetch();
+                const p1 = batcher.performGet('mod_example', 'first');
+                const p2 = batcher.performGet('mod_example', 'second');
+                await batcher.execute();
+                const [r1, r2] = await Promise.all([p1, p2]);
+
+                expect(r1).toHaveProperty('ok', true);
+                expect(r2).toHaveProperty('ok', true);
+            } finally {
+                mockM.cfg.batchFetchRequests = false;
+            }
+        });
+
+        it('throws on unknown batch response content type', async () => {
+            mockM.cfg.batchFetchRequests = true;
+
+            fetchMock.mockResolvedValue(new MockResponse('something', {
+                status: 200,
+                statusText: 'OK',
+                headers: new MockHeaders({
+                    'content-type': 'text/plain',
+                }),
+            }) as any);
+
+            try {
+                const batcher = new Fetch();
+                const p1 = batcher.performGet('mod_example', 'list');
+                const p2 = batcher.performGet('mod_example', 'items');
+
+                await expect(batcher.execute()).rejects.toThrow("Unknown response type 'text/plain'");
+            } finally {
+                mockM.cfg.batchFetchRequests = false;
+            }
+        });
+
+        it('triggers execute when queue exceeds 20 requests', async () => {
+            mockM.cfg.batchFetchRequests = true;
+
+            // Track how many times fetch is called.
+            let fetchCallCount = 0;
+            fetchMock.mockImplementation(async (input: Request) => {
+                fetchCallCount++;
+                capturedRequest = input;
+                const url = input.url;
+                if (url.includes('/$batch')) {
+                    const body = await input.text();
+                    const idMatches = [...body.matchAll(/Content-ID: ([^\n]+)/g)];
+                    const ids = idMatches.map((m) => m[1].trim());
+
+                    const boundary = 'resp-boundary';
+                    const parts = ids.map((id) => [
+                        `--${boundary}\n`,
+                        'Content-Type: application/http\n\n',
+                        'HTTP/1.1 200 OK\n',
+                        `Content-ID: ${id}\n`,
+                        'Content-Type: application/json\n\n',
+                        '{}\n',
+                    ].join(''));
+                    const batchBody = parts.join('') + `--${boundary}--\n`;
+
+                    return new MockResponse(batchBody, {
+                        status: 200,
+                        statusText: 'OK',
+                        headers: new MockHeaders({
+                            'content-type': `multipart/mixed;boundary=${boundary}`,
+                        }),
+                    }) as any;
+                }
+                return {ok: true, statusText: 'OK'};
+            });
+
+            try {
+                const batcher = new Fetch();
+                const promises: Promise<Response>[] = [];
+
+                // Queue 22 requests to trigger the overflow (check is > 20, so 21 items triggers it).
+                for (let i = 0; i < 22; i++) {
+                    promises.push(batcher.performGet('mod_example', `action${i}`));
+                }
+
+                // The 22nd request triggers execute for the first 21.
+                // The 22nd sits in the new queue. Execute it manually.
+                await batcher.execute();
+                await Promise.all(promises);
+
+                // fetch should have been called at least twice: once for the overflow batch, once for the remaining.
+                expect(fetchCallCount).toBeGreaterThanOrEqual(2);
             } finally {
                 mockM.cfg.batchFetchRequests = false;
             }
