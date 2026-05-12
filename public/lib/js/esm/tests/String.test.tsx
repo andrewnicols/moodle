@@ -85,18 +85,26 @@ describe('@moodle/lms/core/String', () => {
             expect(screen.getByText('Hello World')).toBeInTheDocument();
         });
 
-        it('renders the default fallback while suspended', () => {
-            render(<String identifier="loading" component="mod_quiz" />);
+        it('renders the default fallback while suspended', async() => {
+            mockPendingString('loading', 'mod_quiz');
+
+            await act(async () => {
+                render(<String identifier="loading" component="mod_quiz" />);
+            });
 
             expect(screen.getByText('loading, mod_quiz')).toBeInTheDocument();
         });
 
-        it('renders custom children as fallback while suspended', () => {
-            render(
-                <String identifier="loading" component="core">
-                    <span>Loading...</span>
-                </String>,
-            );
+        it('renders custom children as fallback while suspended', async() => {
+            mockPendingString('loading', 'core');
+
+            await act(async () => {
+                render(
+                    <String identifier="loading" component="core">
+                        <span>Loading...</span>
+                    </String>,
+                );
+            });
 
             expect(screen.getByText('Loading...')).toBeInTheDocument();
         });
