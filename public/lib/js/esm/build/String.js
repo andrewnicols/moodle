@@ -1,4 +1,4 @@
-var a=Object.defineProperty;var n=(r,t)=>a(r,"name",{value:t,configurable:!0});import{requireAsync as g}from"@moodle/lms/core/amd";var i=new Map,u=n((r,t="core",e)=>{let s=`${t}::${r}::${JSON.stringify(e)}`;return i.has(s)||i.set(s,g("core/str").then(o=>o.get_string(r,t,e))),i.get(s)},"getString"),p=n(async r=>{(await g("core/str")).cache_strings(r)},"cacheStrings");export{p as cacheStrings,u as getString};
+var a=Object.defineProperty;var s=(r,t)=>a(r,"name",{value:t,configurable:!0});import{requireAsync as g}from"@moodle/lms/core/amd";var n=new Map,u=s((r,t="core",i)=>{let e=`${t}::${r}::${JSON.stringify(i)}`;return n.has(e)||n.set(e,g("core/str").then(o=>o.get_string(r,t,i))),n.get(e)},"getString"),p=s(()=>n.clear(),"resetStringCache"),P=s(async r=>{(await g("core/str")).cache_strings(r)},"cacheStrings");export{P as cacheStrings,u as getString,p as resetStringCache};
 /**
  * ESM wrapper around the AMD core/str module for loading Moodle language strings.
  *
