@@ -1577,6 +1577,7 @@ EOF;
         // This is a static list. It is only intended for core subsystems, and only intended for
         // those which are widely used.
         $staticmaps = [
+            'core/pending' => '@moodle/lms/core/pending:default',
         ];
 
         $staticmapjs = implode(

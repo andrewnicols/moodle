@@ -30,6 +30,10 @@ declare global {
     function mockAmdModule(moduleName: string, module: string|object): void;
     function mockString(identifier: string, component: string, resolved: string): void;
     function mockPendingString(identifier: string, component: string): void;
+    /** Keys passed to `M.util.js_pending()` since the last reset. */
+    var pendingStack: string[];
+    /** Keys passed to `M.util.js_complete()` since the last reset. */
+    var completeStack: string[];
 }
 
 /**
@@ -47,12 +51,41 @@ const stringMap = new Map<string, string>();
  */
 const pendingStringSet = new Set<string>();
 
+/**
+ * @var pendingStack - Tracks keys passed to `M.util.js_pending()` in the current test.
+ */
+const pendingStack: string[] = [];
+
+/**
+ * @var completeStack - Tracks keys passed to `M.util.js_complete()` in the current test.
+ */
+const completeStack: string[] = [];
+
+(globalThis as any).pendingStack = pendingStack;
+(globalThis as any).completeStack = completeStack;
+
+// Provide the global M object with cfg defaults and tracked js_pending/js_complete mocks.
+(globalThis as any).M = {
+    cfg: {},
+    util: {
+        js_pending: jest.fn((key: string) => {
+            pendingStack.push(key);
+        }),
+        js_complete: jest.fn((key: string) => {
+            completeStack.push(key);
+        }),
+    },
+};
+
 // Mock the global functions for mocking AMD modules and strings, making them available in all test files.
 
 jest.mock('@moodle/lms/core/amd');
 jest.mock('@moodle/lms/core/String', () => jest.requireActual('@moodle/lms/core/String'));
 
 beforeEach(() => {
+    pendingStack.length = 0;
+    completeStack.length = 0;
+
     resetStringCache();
 
     // Provide a mock implementation for requireAsync to return mocked modules when requested.
