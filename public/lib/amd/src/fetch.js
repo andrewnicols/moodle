@@ -26,8 +26,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import nativeImport from 'core/import';
+import Module from 'core/esm!core/fetch';
 
-const {default: Fetch} = await nativeImport('@moodle/lms/core/fetch');
-
-export default Fetch;
+export default Module.default;

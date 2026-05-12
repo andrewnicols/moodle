@@ -27,8 +27,6 @@
  * @since      2.9
  */
 
-import nativeImport from 'core/import';
+import config from 'core/esm!core/config';
 
-const {default: config} = await nativeImport('@moodle/lms/core/config');
-
-export default config;
+export default config.default;

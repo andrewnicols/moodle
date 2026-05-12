@@ -26,8 +26,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import nativeImport from 'core/import';
+import Pending from 'core/esm!core/pending';
 
-const {default: Pending} = await nativeImport('@moodle/lms/core/pending');
-
-export default Pending;
+export default Pending.default;

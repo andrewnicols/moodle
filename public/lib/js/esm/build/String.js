@@ -1,15 +1,1 @@
-function e(n){return new Promise((r,s)=>{requirejs([n],t=>r(t),s)})}async function u(n){return(await e("core/str")).get_strings(n)}export{u as getStrings};
-/**
- * Promise-based AMD module loader.
- *
- * @module     core/amd
- * @copyright  Meirza <meirza.arson@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-/**
- * ESM wrapper around the AMD core/str module for loading Moodle language strings.
- *
- * @module     core/String
- * @copyright  Meirza <meirza.arson@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+import{Suspense as c,use as a}from"react";import{requireAsync as g}from"@moodle/lms/core/amd";import{Fragment as d,jsx as i}from"react/jsx-runtime";var s=new Map,u=(t,r="core",n)=>{let e=`${r}::${t}::${JSON.stringify(n)}`;return s.has(e)||s.set(e,g("core/str").then(o=>o.get_string(t,r,n))),s.get(e)},P=()=>s.clear(),S=t=>g("core/str").then(r=>r.cache_strings(t));function m({identifier:t,component:r,params:n}){return i(d,{children:a(u(t,r,n))})}function p({children:t,identifier:r,component:n="core",params:e}){return i(c,{fallback:t??`${r}, ${n}`,children:i(m,{identifier:r,component:n,params:e})})}var h=p;export{S as cacheStrings,h as default,u as getString,P as resetStringCache};
