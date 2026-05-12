@@ -21,15 +21,43 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {requireAsync} from './amd';
+import { requireAsync } from "@moodle/lms/core/amd";
 
-/**
- * Load multiple Moodle language strings in a single request via core/str.
- *
- * @param requests Array of {key, component} objects.
- * @returns Array of resolved strings in the same order as requests.
- */
-export async function getStrings(requests: Array<{key: string; component: string}>): Promise<string[]> {
-    const str = await requireAsync<{get_strings(reqs: Array<{key: string; component: string}>): Promise<string[]>}>('core/str');
-    return str.get_strings(requests);
+type stringParams = Record<string, string | number> | string | number | null;
+type stringRequest = {
+    key: string;
+    component: string;
+    lang: string;
+    param: stringParams;
+};
+
+interface stringModule {
+    get_string: (identifier: string, component?: string, params?: stringParams) => Promise<string>;
+    get_strings: (requests: stringRequest[]) => Promise<string>[];
+    cache_strings: (strings: stringRequest[]) => void;
 }
+
+// Ensures the same Promise instance is returned for the same string key across
+// renders. use() requires a stable reference — without this, a new Promise is
+// created on every render and the component suspends indefinitely.
+const stringPromiseCache = new Map<string, Promise<string>>();
+
+export interface StringProps {
+    identifier: string;
+    component?: string;
+    params?: string | number | Record<string, string | number>;
+}
+
+export const getString = async (
+    identifier: string,
+    component: string = "core",
+    params?: string | number | Record<string, string | number>,
+): Promise<string> => {
+    const str = await requireAsync<stringModule>("core/str");
+
+    const key = `${component}::${identifier}::${JSON.stringify(params)}`;
+    if (!stringPromiseCache.has(key)) {
+        stringPromiseCache.set(key, str.get_string(identifier, component, params));
+    }
+    return stringPromiseCache.get(key)!;
+};
