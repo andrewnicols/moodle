@@ -109,13 +109,7 @@ class MockResponse {
 
 (globalThis as any).Response = MockResponse;
 
-// Configure M.cfg for the fetch module (M.util is already provided by globalSetup).
-const mockM = (globalThis as any).M;
-Object.assign(mockM.cfg, {
-    apibase: 'https://example.com',
-    traceId: 'test-trace-id',
-    batchFetchRequests: false,
-});
+import config from '@moodle/lms/core/config';
 
 /**
  * Build a minimal mock that satisfies the Response interface the module checks
@@ -433,7 +427,7 @@ describe('@moodle/lms/core/fetch', () => {
         });
 
         it('sends individual fetch for a single queued request', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
             try {
                 const batcher = new Fetch();
                 const promise = batcher.performGet('mod_example', 'list');
@@ -444,12 +438,12 @@ describe('@moodle/lms/core/fetch', () => {
                 expect(capturedRequest!.url).toContain('/rest/v2/mod_example/list');
                 expect(response).toHaveProperty('ok', true);
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
 
         it('sends a batch request for multiple queued requests', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             // Intercept the batch fetch to inspect the request and build a matching response.
             fetchMock.mockImplementation(async (input: Request) => {
@@ -501,12 +495,12 @@ describe('@moodle/lms/core/fetch', () => {
                 expect(r1).toHaveProperty('ok', true);
                 expect(r2).toHaveProperty('ok', true);
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
 
         it('rejects all requests when batch response is not ok', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             fetchMock.mockResolvedValue(new MockResponse(null, {
                 status: 500,
@@ -527,14 +521,14 @@ describe('@moodle/lms/core/fetch', () => {
                 expect(await r1).toBe('Internal Server Error');
                 expect(await r2).toBe('Internal Server Error');
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
     });
 
     describe('execute (edge cases)', () => {
         it('rejects a request when the batch response omits its Content-ID', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             // Return a batch response that only includes one Content-ID (for the first request).
             fetchMock.mockImplementation(async (input: Request) => {
@@ -582,12 +576,12 @@ describe('@moodle/lms/core/fetch', () => {
                 const rejection = await r2;
                 expect(rejection).toContain('No response provided for request');
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
 
         it('includes request body in batch when present (POST)', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             fetchMock.mockImplementation(async (input: Request) => {
                 capturedRequest = input;
@@ -629,12 +623,12 @@ describe('@moodle/lms/core/fetch', () => {
                 expect(batchRequestBody).toContain('{"title":"Test"}');
                 expect(batchRequestBody).toContain('POST');
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
 
         it('handles application/json batch response', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             fetchMock.mockImplementation(async (input: Request) => {
                 capturedRequest = input;
@@ -670,12 +664,12 @@ describe('@moodle/lms/core/fetch', () => {
                 expect(r1).toHaveProperty('ok', true);
                 expect(r2).toHaveProperty('ok', true);
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
 
         it('throws on unknown batch response content type', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             fetchMock.mockResolvedValue(new MockResponse('something', {
                 status: 200,
@@ -692,12 +686,12 @@ describe('@moodle/lms/core/fetch', () => {
 
                 await expect(batcher.execute()).rejects.toThrow("Unknown response type 'text/plain'");
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
 
         it('triggers execute when queue exceeds 20 requests', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             // Track how many times fetch is called.
             let fetchCallCount = 0;
@@ -749,7 +743,7 @@ describe('@moodle/lms/core/fetch', () => {
                 // fetch should have been called at least twice: once for the overflow batch, once for the remaining.
                 expect(fetchCallCount).toBeGreaterThanOrEqual(2);
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
     });
@@ -764,7 +758,7 @@ describe('@moodle/lms/core/fetch', () => {
         });
 
         it('auto-executes after the configured timeout', async () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             try {
                 const batcher = new Fetch(100);
@@ -781,12 +775,12 @@ describe('@moodle/lms/core/fetch', () => {
                 expect(fetchMock).toHaveBeenCalledTimes(1);
                 expect(response).toHaveProperty('ok', true);
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
 
         it('resets the timer when a new request is added', () => {
-            mockM.cfg.batchFetchRequests = true;
+            config.batchFetchRequests = true;
 
             try {
                 const batcher = new Fetch(100);
@@ -811,7 +805,7 @@ describe('@moodle/lms/core/fetch', () => {
                 jest.advanceTimersByTime(25);
                 expect(executeMock).toHaveBeenCalledTimes(1);
             } finally {
-                mockM.cfg.batchFetchRequests = false;
+                config.batchFetchRequests = false;
             }
         });
     });

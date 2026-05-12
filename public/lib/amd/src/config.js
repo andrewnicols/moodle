@@ -14,12 +14,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Expose the M.cfg global variable.
+ * Backwards-compatibility shim for core/config.
+ *
+ * The real implementation now lives in the ESM module
+ * `@moodle/lms/core/config`. This AMD wrapper delegates to the ESM module
+ * so that existing `import config from 'core/config'` call-sites continue
+ * to work without changes.
  *
  * @module     core/config
  * @copyright  2015 Damyon Wiese <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      2.9
  */
-// This module exposes only the raw data from M.cfg;
-export default M.cfg;
+
+import nativeImport from 'core/import';
+
+const {default: config} = await nativeImport('@moodle/lms/core/config');
+
+export default config;

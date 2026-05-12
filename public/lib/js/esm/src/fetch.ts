@@ -37,14 +37,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-declare const M: {
-    cfg: {
-        apibase: string;
-        traceId?: string;
-        batchFetchRequests?: boolean;
-    };
-};
-
+import config from '@moodle/lms/core/config';
 import Pending from '@moodle/lms/core/pending';
 
 /** The body types accepted by write-method requests. */
@@ -158,7 +151,7 @@ export default class Fetch {
      */
     constructor(autoBatchTimeout: number | null = null) {
         this.#autoBatchTimeout = autoBatchTimeout;
-        this.#batchRequests = !!M.cfg.batchFetchRequests;
+        this.#batchRequests = !!config.batchFetchRequests;
     }
 
     /**
@@ -523,7 +516,7 @@ export default class Fetch {
         }
         urlParts.push(component, endpoint);
 
-        const url = new URL(`${M.cfg.apibase}/${urlParts.join('/').replaceAll('//', '/')}`);
+        const url = new URL(`${config.apibase}/${urlParts.join('/').replaceAll('//', '/')}`);
         const options: RequestInit & {headers: Record<string, string>} = {
             method,
             headers: {
@@ -595,7 +588,7 @@ export default class Fetch {
         ];
 
         return new Request(
-            `${M.cfg.apibase}/$batch`,
+            `${config.apibase}/$batch`,
             {
                 body: body.join(''),
                 method: 'POST',
