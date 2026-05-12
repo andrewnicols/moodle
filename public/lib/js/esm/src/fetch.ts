@@ -43,11 +43,9 @@ declare const M: {
         traceId?: string;
         batchFetchRequests?: boolean;
     };
-    util: {
-        js_pending(key: string): void;
-        js_complete(key: string): void;
-    };
 };
+
+import Pending from '@moodle/lms/core/pending';
 
 /** The body types accepted by write-method requests. */
 type RequestBody = string | object | FormData;
@@ -134,19 +132,6 @@ class RequestWrapper {
 }
 
 /**
- * Register a pending operation with Moodle's Behat integration.
- *
- * Returns a callback that marks the operation complete.
- *
- * @param key A descriptive identifier for debugging.
- * @returns A function that resolves the pending operation.
- */
-function markPending(key: string): () => void {
-    M.util.js_pending(key);
-    return () => M.util.js_complete(key);
-}
-
-/**
  * The core/fetch module allows you to make web service requests to the Moodle API.
  *
  * @see module:core/fetch
@@ -207,7 +192,7 @@ export default class Fetch {
             method = 'GET',
         }: RequestOptions = {},
     ): Promise<Response> {
-        const resolvePending = markPending(`Requesting ${component}/${action} with ${method}`);
+        const resolvePending = new Pending(`Requesting ${component}/${action} with ${method}`);
         const requestWrapper = Fetch.#getRequest(
             Fetch.#normaliseComponent(component),
             action,
@@ -215,7 +200,7 @@ export default class Fetch {
         );
         const result = await fetch(requestWrapper.request);
 
-        resolvePending();
+        resolvePending.resolve();
         requestWrapper.handleResponse(result);
 
         return requestWrapper.promise;

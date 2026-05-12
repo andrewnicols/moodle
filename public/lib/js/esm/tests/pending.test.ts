@@ -22,19 +22,23 @@
 
 import Pending from '@moodle/lms/core/pending';
 
-const mockM = {
-    util: {
-        js_pending: jest.fn(),
-        js_complete: jest.fn(),
-    },
-};
-(globalThis as any).M = mockM;
-
-beforeEach(() => {
-    jest.clearAllMocks();
-});
-
 describe('core/pending', () => {
+    describe('Pending.pending', () => {
+        it('calls M.util.js_pending with the given key', () => {
+            Pending.pending('test/static-pending');
+
+            expect(pendingStack).toContain('test/static-pending');
+        });
+    });
+
+    describe('Pending.complete', () => {
+        it('calls M.util.js_complete with the given key', () => {
+            Pending.complete('test/static-complete');
+
+            expect(completeStack).toContain('test/static-complete');
+        });
+    });
+
     describe('constructor', () => {
         it('returns a Promise', () => {
             const pending = new Pending('test/constructor');
@@ -48,7 +52,7 @@ describe('core/pending', () => {
         it('calls js_pending with the given key', () => {
             const pending = new Pending('test/pending-key');
 
-            expect(mockM.util.js_pending).toHaveBeenCalledWith('test/pending-key');
+            expect(pendingStack).toContain('test/pending-key');
 
             (pending as any).resolve();
         });
@@ -56,7 +60,7 @@ describe('core/pending', () => {
         it('uses default key when none is provided', () => {
             const pending = new Pending();
 
-            expect(mockM.util.js_pending).toHaveBeenCalledWith('pendingPromise');
+            expect(pendingStack).toContain('pendingPromise');
 
             (pending as any).resolve();
         });
@@ -83,7 +87,7 @@ describe('core/pending', () => {
             (pending as any).resolve('done');
             await pending;
 
-            expect(mockM.util.js_complete).toHaveBeenCalledWith('test/complete');
+            expect(completeStack).toContain('test/complete');
         });
 
         it('resolves with the value passed to resolve', async () => {
@@ -108,13 +112,13 @@ describe('core/pending', () => {
         it('calls js_pending with the given key', () => {
             Pending.Promise((resolve) => resolve('ok'), 'test/static-key');
 
-            expect(mockM.util.js_pending).toHaveBeenCalledWith('test/static-key');
+            expect(pendingStack).toContain('test/static-key');
         });
 
         it('uses default key when none is provided', () => {
             Pending.Promise((resolve) => resolve('ok'));
 
-            expect(mockM.util.js_pending).toHaveBeenCalledWith('pendingPromise');
+            expect(pendingStack).toContain('pendingPromise');
         });
 
         it('returns a Promise', () => {
@@ -136,7 +140,7 @@ describe('core/pending', () => {
             // Allow the .then() chain to flush.
             await new Promise((r) => process.nextTick(r));
 
-            expect(mockM.util.js_complete).toHaveBeenCalledWith('test/complete-static');
+            expect(completeStack).toContain('test/complete-static');
         });
 
         it('rejects when the executor calls reject', async () => {
@@ -151,7 +155,7 @@ describe('core/pending', () => {
             await result.catch(() => {});
             await new Promise((r) => process.nextTick(r));
 
-            expect(mockM.util.js_complete).not.toHaveBeenCalled();
+            expect(completeStack).toHaveLength(0);
         });
 
         it('passes resolve and reject to the executor', () => {

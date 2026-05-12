@@ -109,20 +109,13 @@ class MockResponse {
 
 (globalThis as any).Response = MockResponse;
 
-// Provide M.cfg and M.util globals that the module reads at runtime.
-const mockM = {
-    cfg: {
-        apibase: 'https://example.com',
-        traceId: 'test-trace-id',
-        batchFetchRequests: false,
-    },
-    util: {
-        js_pending: jest.fn(),
-        js_complete: jest.fn(),
-    },
-};
-
-(globalThis as any).M = mockM;
+// Configure M.cfg for the fetch module (M.util is already provided by globalSetup).
+const mockM = (globalThis as any).M;
+Object.assign(mockM.cfg, {
+    apibase: 'https://example.com',
+    traceId: 'test-trace-id',
+    batchFetchRequests: false,
+});
 
 /**
  * Build a minimal mock that satisfies the Response interface the module checks
@@ -159,8 +152,6 @@ beforeEach(() => {
         return mockFetchResponse(true) as any;
     });
     capturedRequest = null;
-    mockM.util.js_pending.mockClear();
-    mockM.util.js_complete.mockClear();
 });
 
 describe('@moodle/lms/core/fetch', () => {
@@ -185,10 +176,10 @@ describe('@moodle/lms/core/fetch', () => {
         it('registers and resolves a pending operation', async () => {
             await request('mod_forum', 'posts', {method: 'GET'});
 
-            expect(mockM.util.js_pending).toHaveBeenCalledWith(
+            expect(pendingStack).toContain(
                 'Requesting mod_forum/posts with GET',
             );
-            expect(mockM.util.js_complete).toHaveBeenCalledWith(
+            expect(completeStack).toContain(
                 'Requesting mod_forum/posts with GET',
             );
         });

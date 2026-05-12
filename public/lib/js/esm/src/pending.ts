@@ -61,6 +61,29 @@ interface PendingPromise<T> extends Promise<T> {
  *     .then(okay => stringPromise.resolve(okay));
  */
 export default class Pending {
+    /** Resolve the pending promise, marking the operation as complete. */
+    declare resolve: (value?: unknown) => void;
+    /** Reject the pending promise. */
+    declare reject: (reason?: unknown) => void;
+
+    /**
+     * Register a pending operation with Moodle's Behat integration.
+     *
+     * @param key A descriptive identifier for debugging.
+     */
+    static pending(key: string): void {
+        M.util.js_pending(key);
+    }
+
+    /**
+     * Mark a pending operation as complete.
+     *
+     * @param key The same identifier that was passed to {@link Pending.pending}.
+     */
+    static complete(key: string): void {
+        M.util.js_complete(key);
+    }
+
     /**
      * Request a new pendingPromise for later resolution.
      *
@@ -82,7 +105,7 @@ export default class Pending {
         (pendingPromise as PendingPromise<unknown>).reject = rejector;
 
         // The constructor returns the Promise directly (not `this`).
-        return pendingPromise as unknown as Pending;
+        return pendingPromise as Promise<void> as Pending;
     }
 
     /**
@@ -114,12 +137,12 @@ export default class Pending {
         pendingKey = 'pendingPromise',
     ): Promise<T> {
         const resolver = new Promise<T>((resolve, reject) => {
-            M.util.js_pending(pendingKey);
+            Pending.pending(pendingKey);
             fn(resolve, reject);
         });
 
         resolver.then(() => {
-            M.util.js_complete(pendingKey);
+            Pending.complete(pendingKey);
             return;
         }).catch(() => {
             // Intentionally empty — swallow rejection to avoid unhandled promise warnings.
