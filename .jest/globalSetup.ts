@@ -24,6 +24,7 @@ import {
     requireAsync,
     requireManyAsync,
 } from '@moodle/lms/core/amd';
+import {resetStringCache} from '@moodle/lms/core/String';
 
 declare global {
     function mockAmdModule(moduleName: string, module: string|object): void;
@@ -43,8 +44,10 @@ const stringMap = new Map<string, string>();
 // Mock the global functions for mocking AMD modules and strings, making them available in all test files.
 
 jest.mock('@moodle/lms/core/amd');
+jest.mock('@moodle/lms/core/String', () => jest.requireActual('@moodle/lms/core/String'));
 
 beforeEach(() => {
+    resetStringCache();
 
     // Provide a mock implementation for requireAsync to return mocked modules when requested.
     // If a module is not mocked, it throws an error to indicate an unexpected call.

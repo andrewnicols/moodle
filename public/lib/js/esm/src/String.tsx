@@ -41,18 +41,22 @@ export interface StringProps {
     params?: string | number | Record<string, string | number>;
 }
 
-export const getString = async (
+export const getString = (
     identifier: string,
     component: string = "core",
     params?: string | number | Record<string, string | number>,
 ): Promise<string> => {
     const key = `${component}::${identifier}::${JSON.stringify(params)}`;
     if (!stringPromiseCache.has(key)) {
-        const str = await requireAsync<stringModule>("core/str");
-        stringPromiseCache.set(key, str.get_string(identifier, component, params));
+        stringPromiseCache.set(
+            key,
+            requireAsync<stringModule>("core/str").then(str => str.get_string(identifier, component, params)),
+        );
     }
     return stringPromiseCache.get(key)!;
 };
+
+export const resetStringCache = () => stringPromiseCache.clear();
 
 export const cacheStrings = (strings: stringRequest[]) =>
     requireAsync<stringModule>("core/str").then(str => str.cache_strings(strings));
