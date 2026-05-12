@@ -24,10 +24,12 @@ import {
     requireAsync,
     requireManyAsync,
 } from '@moodle/lms/core/amd';
+import {resetStringCache} from '@moodle/lms/core/String';
 
 declare global {
     function mockAmdModule(moduleName: string, module: string|object): void;
     function mockString(identifier: string, component: string, resolved: string): void;
+    function mockPendingString(identifier: string, component: string): void;
 }
 
 /**
@@ -40,11 +42,18 @@ const mockedModules = new Map<string, any>();
  */
 const stringMap = new Map<string, string>();
 
+/**
+ * @var pendingStringSet - A set of string keys that should return a never-resolving promise.
+ */
+const pendingStringSet = new Set<string>();
+
 // Mock the global functions for mocking AMD modules and strings, making them available in all test files.
 
 jest.mock('@moodle/lms/core/amd');
+jest.mock('@moodle/lms/core/String', () => jest.requireActual('@moodle/lms/core/String'));
 
 beforeEach(() => {
+    resetStringCache();
 
     // Provide a mock implementation for requireAsync to return mocked modules when requested.
     // If a module is not mocked, it throws an error to indicate an unexpected call.
@@ -85,6 +94,9 @@ beforeEach(() => {
     (global as any).mockAmdModule('core/str', {
         get_string: jest.fn((identifier: string, component?: string, params?: any) => {
             const key = `${component}:${identifier}`;
+            if (pendingStringSet.has(key)) {
+                return new Promise(() => {});
+            }
             if (stringMap.has(key)) {
                 return Promise.resolve(stringMap.get(key));
             }
@@ -102,10 +114,22 @@ beforeEach(() => {
     (global as any).mockString = (identifier: string, component: string, resolved: string): void => {
         stringMap.set(`${component}:${identifier}`, resolved);
     };
+
+    /**
+     * Mock a string so that it remains permanently pending (never resolves).
+     * Useful for testing Suspense fallback rendering.
+     *
+     * @param identifier The string identifier (key) to mock.
+     * @param component The component the string belongs to.
+     */
+    (global as any).mockPendingString = (identifier: string, component: string): void => {
+        pendingStringSet.add(`${component}:${identifier}`);
+    };
 });
 
 afterEach(() => {
     // Clear the mocked modules and strings after each test to ensure a clean state for the next test.
     mockedModules.clear();
     stringMap.clear();
+    pendingStringSet.clear();
 });
