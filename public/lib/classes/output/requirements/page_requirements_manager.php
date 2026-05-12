@@ -1581,6 +1581,7 @@ EOF;
         \core\hook\output\before_requirejs_config $requirejshook,
     ): string {
         $requirejshook->add_requirejs_map_entries([
+            'core/pending' => '@moodle/lms/core/pending:default',
         ]);
 
         $maps = $requirejshook->get_requirejs_map();
