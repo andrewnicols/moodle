@@ -48,6 +48,10 @@ module.exports = {
             },
         }],
     },
+    collectCoverageFrom: [
+        '**/esm/src/**/*.{ts,tsx}',
+        '!**/*.d.ts',
+    ],
     setupFilesAfterEnv: [
         '@testing-library/jest-dom',
         '<rootDir>/.jest/globalSetup.ts',
