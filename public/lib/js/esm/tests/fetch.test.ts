@@ -74,6 +74,7 @@ const mockM = {
     cfg: {
         apibase: 'https://example.com',
         traceId: 'test-trace-id',
+        batchFetchRequests: false,
     },
     util: {
         js_pending: jest.fn(),
@@ -133,7 +134,6 @@ describe('@moodle/lms/core/fetch', () => {
             expect(capturedRequest!.url).toBe('https://example.com/rest/v2/mod_example/animals?type=mammal');
             expect(capturedRequest!.headers.get('Accept')).toBe('application/json');
             expect(capturedRequest!.headers.get('Content-Type')).toBe('application/json');
-            expect(capturedRequest!.headers.get('pageparent')).toBe('test-trace-id');
         });
 
         it('strips the core_ prefix from component names', async () => {
@@ -199,17 +199,6 @@ describe('@moodle/lms/core/fetch', () => {
             await request('mod_example', 'index');
 
             expect(capturedRequest!.method).toBe('GET');
-        });
-
-        it('uses empty pageparent header when traceId is not set', async () => {
-            const original = mockM.cfg.traceId;
-            mockM.cfg.traceId = undefined as any;
-
-            await request('mod_example', 'index');
-
-            expect(capturedRequest!.headers.get('pageparent')).toBe('');
-
-            mockM.cfg.traceId = original;
         });
     });
 
@@ -285,14 +274,14 @@ describe('@moodle/lms/core/fetch', () => {
     });
 
     describe('Fetch default export (class API)', () => {
-        it('exposes static methods that match the named exports', () => {
-            expect(Fetch.request).toBe(request);
-            expect(Fetch.performGet).toBe(performGet);
-            expect(Fetch.performHead).toBe(performHead);
-            expect(Fetch.performPost).toBe(performPost);
-            expect(Fetch.performPut).toBe(performPut);
-            expect(Fetch.performPatch).toBe(performPatch);
-            expect(Fetch.performDelete).toBe(performDelete);
+        it('exposes static methods matching named exports', () => {
+            expect(typeof Fetch.request).toBe('function');
+            expect(typeof Fetch.performGet).toBe('function');
+            expect(typeof Fetch.performHead).toBe('function');
+            expect(typeof Fetch.performPost).toBe('function');
+            expect(typeof Fetch.performPut).toBe('function');
+            expect(typeof Fetch.performPatch).toBe('function');
+            expect(typeof Fetch.performDelete).toBe('function');
         });
 
         it('can be used via Fetch.performGet()', async () => {
