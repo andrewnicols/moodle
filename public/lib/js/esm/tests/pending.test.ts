@@ -46,7 +46,7 @@ describe('core/pending', () => {
             expect(pending).toBeInstanceOf(Promise);
 
             // Resolve to prevent unhandled rejection.
-            (pending as any).resolve();
+            pending.resolve();
         });
 
         it('calls js_pending with the given key', () => {
@@ -54,7 +54,7 @@ describe('core/pending', () => {
 
             expect(pendingStack).toContain('test/pending-key');
 
-            (pending as any).resolve();
+            pending.resolve();
         });
 
         it('uses default key when none is provided', () => {
@@ -62,29 +62,29 @@ describe('core/pending', () => {
 
             expect(pendingStack).toContain('pendingPromise');
 
-            (pending as any).resolve();
+            pending.resolve();
         });
 
         it('has a resolve method', () => {
             const pending = new Pending('test/resolve');
 
-            expect(typeof (pending as any).resolve).toBe('function');
+            expect(typeof pending.resolve).toBe('function');
 
-            (pending as any).resolve();
+            pending.resolve();
         });
 
         it('has a reject method', () => {
             const pending = new Pending('test/reject');
 
-            expect(typeof (pending as any).reject).toBe('function');
+            expect(typeof pending.reject).toBe('function');
 
-            (pending as any).resolve();
+            pending.resolve();
         });
 
         it('calls js_complete when resolved', async () => {
             const pending = new Pending('test/complete');
 
-            (pending as any).resolve('done');
+            pending.resolve('done');
             await pending;
 
             expect(completeStack).toContain('test/complete');
@@ -93,7 +93,7 @@ describe('core/pending', () => {
         it('resolves with the value passed to resolve', async () => {
             const pending = new Pending('test/value');
 
-            (pending as any).resolve('hello');
+            pending.resolve('hello');
 
             await expect(pending).resolves.toBe('hello');
         });
@@ -102,7 +102,7 @@ describe('core/pending', () => {
             const pending = new Pending('test/rejection');
 
             const result = (pending as Promise<unknown>).catch((e: unknown) => e);
-            (pending as any).reject('failure');
+            pending.reject('failure');
 
             await expect(result).resolves.toBe('failure');
         });

@@ -101,11 +101,11 @@ export default class Pending {
             rejector = reject;
         }, pendingKey) as PendingPromise<unknown>;
 
-        (pendingPromise as PendingPromise<unknown>).resolve = resolver;
-        (pendingPromise as PendingPromise<unknown>).reject = rejector;
+        pendingPromise.resolve = resolver;
+        pendingPromise.reject = rejector;
 
         // The constructor returns the Promise directly (not `this`).
-        return pendingPromise as Promise<void> as Pending;
+        return pendingPromise as unknown as Pending;
     }
 
     /**
