@@ -1,0 +1,102 @@
+var __defProp = Object.defineProperty;
+var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// public/lib/js/esm/src/pending.ts
+var Pending = class _Pending {
+  static {
+    __name(this, "Pending");
+  }
+  /**
+   * Register a pending operation with Moodle's Behat integration.
+   *
+   * @param key A descriptive identifier for debugging.
+   */
+  static pending(key) {
+    M.util.js_pending(key);
+  }
+  /**
+   * Mark a pending operation as complete.
+   *
+   * @param key The same identifier that was passed to {@link Pending.pending}.
+   */
+  static complete(key) {
+    M.util.js_complete(key);
+  }
+  /**
+   * Request a new pendingPromise for later resolution.
+   *
+   * When the action you are performing is complete, simply call `resolve` on the returned Promise.
+   *
+   * @param pendingKey An identifier to help in debugging.
+   * @returns A Promise with `resolve` and `reject` methods attached.
+   */
+  constructor(pendingKey = "pendingPromise") {
+    let resolver;
+    let rejector;
+    const pendingPromise = _Pending.Promise((resolve, reject) => {
+      resolver = resolve;
+      rejector = reject;
+    }, pendingKey);
+    pendingPromise.resolve = resolver;
+    pendingPromise.reject = rejector;
+    return pendingPromise;
+  }
+  /**
+   * Create a new Pending Promise with the same interface as a native Promise.
+   *
+   * @param fn A callable which takes the resolve and reject arguments as in a native Promise constructor.
+   * @param pendingKey An identifier to help in debugging.
+   * @returns A Promise that marks the pending operation as complete when resolved.
+   * @since Moodle 4.2
+   *
+   * @example
+   * import Pending from 'core/pending';
+   * import {getString} from 'core/str';
+   *
+   * export const init = () => {
+   *     Pending.Promise((resolve, reject) => {
+   *         getString('ok')
+   *             .then(okay => {
+   *                 window.console.log(okay);
+   *                 return okay;
+   *             })
+   *             .then(resolve)
+   *             .catch(reject);
+   *     }, 'mod_myexample/setup:init');
+   * };
+   */
+  static Promise(fn, pendingKey = "pendingPromise") {
+    const resolver = new Promise((resolve, reject) => {
+      _Pending.pending(pendingKey);
+      fn(resolve, reject);
+    });
+    resolver.then(() => {
+      _Pending.complete(pendingKey);
+      return;
+    }).catch(() => {
+    });
+    return resolver;
+  }
+};
+export {
+  Pending as default
+};
+/**
+ * A helper used to inform Behat that an operation is in progress and that Behat must wait for it to complete.
+ *
+ * This is useful in cases where the user interface may be updated and take some time to change — for example
+ * where applying a transition.
+ *
+ * This data is used by Behat, but may also be consumed by other locations too.
+ *
+ * By informing Behat that an action is about to happen, and then that it is complete, allows
+ * Behat to wait for that completion and avoid random failures in automated testing.
+ *
+ * Note: It is recommended that a descriptive key be used to aid in debugging where possible, but this is optional.
+ *
+ * @module     core/pending
+ * @copyright  2018 Andrew Nicols <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      3.6
+ */
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vc3JjL3BlbmRpbmcudHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbIi8vIFRoaXMgZmlsZSBpcyBwYXJ0IG9mIE1vb2RsZSAtIGh0dHA6Ly9tb29kbGUub3JnL1xuLy9cbi8vIE1vb2RsZSBpcyBmcmVlIHNvZnR3YXJlOiB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5XG4vLyBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieVxuLy8gdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiwgZWl0aGVyIHZlcnNpb24gMyBvZiB0aGUgTGljZW5zZSwgb3Jcbi8vIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uXG4vL1xuLy8gTW9vZGxlIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsXG4vLyBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZlxuLy8gTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZVxuLy8gR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy5cbi8vXG4vLyBZb3Ugc2hvdWxkIGhhdmUgcmVjZWl2ZWQgYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZVxuLy8gYWxvbmcgd2l0aCBNb29kbGUuICBJZiBub3QsIHNlZSA8aHR0cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uXG5cbi8qKlxuICogQSBoZWxwZXIgdXNlZCB0byBpbmZvcm0gQmVoYXQgdGhhdCBhbiBvcGVyYXRpb24gaXMgaW4gcHJvZ3Jlc3MgYW5kIHRoYXQgQmVoYXQgbXVzdCB3YWl0IGZvciBpdCB0byBjb21wbGV0ZS5cbiAqXG4gKiBUaGlzIGlzIHVzZWZ1bCBpbiBjYXNlcyB3aGVyZSB0aGUgdXNlciBpbnRlcmZhY2UgbWF5IGJlIHVwZGF0ZWQgYW5kIHRha2Ugc29tZSB0aW1lIHRvIGNoYW5nZSBcdTIwMTQgZm9yIGV4YW1wbGVcbiAqIHdoZXJlIGFwcGx5aW5nIGEgdHJhbnNpdGlvbi5cbiAqXG4gKiBUaGlzIGRhdGEgaXMgdXNlZCBieSBCZWhhdCwgYnV0IG1heSBhbHNvIGJlIGNvbnN1bWVkIGJ5IG90aGVyIGxvY2F0aW9ucyB0b28uXG4gKlxuICogQnkgaW5mb3JtaW5nIEJlaGF0IHRoYXQgYW4gYWN0aW9uIGlzIGFib3V0IHRvIGhhcHBlbiwgYW5kIHRoZW4gdGhhdCBpdCBpcyBjb21wbGV0ZSwgYWxsb3dzXG4gKiBCZWhhdCB0byB3YWl0IGZvciB0aGF0IGNvbXBsZXRpb24gYW5kIGF2b2lkIHJhbmRvbSBmYWlsdXJlcyBpbiBhdXRvbWF0ZWQgdGVzdGluZy5cbiAqXG4gKiBOb3RlOiBJdCBpcyByZWNvbW1lbmRlZCB0aGF0IGEgZGVzY3JpcHRpdmUga2V5IGJlIHVzZWQgdG8gYWlkIGluIGRlYnVnZ2luZyB3aGVyZSBwb3NzaWJsZSwgYnV0IHRoaXMgaXMgb3B0aW9uYWwuXG4gKlxuICogQG1vZHVsZSAgICAgY29yZS9wZW5kaW5nXG4gKiBAY29weXJpZ2h0ICAyMDE4IEFuZHJldyBOaWNvbHMgPGFuZHJld0BuaWNvbHMuY28udWs+XG4gKiBAbGljZW5zZSAgICBodHRwOi8vd3d3LmdudS5vcmcvY29weWxlZnQvZ3BsLmh0bWwgR05VIEdQTCB2MyBvciBsYXRlclxuICogQHNpbmNlICAgICAgMy42XG4gKi9cblxuZGVjbGFyZSBjb25zdCBNOiB7XG4gICAgdXRpbDoge1xuICAgICAgICBqc19wZW5kaW5nKGtleTogc3RyaW5nKTogdm9pZDtcbiAgICAgICAganNfY29tcGxldGUoa2V5OiBzdHJpbmcpOiB2b2lkO1xuICAgIH07XG59O1xuXG4vKiogQSBQcm9taXNlIGV4dGVuZGVkIHdpdGggYHJlc29sdmVgIGFuZCBgcmVqZWN0YCBtZXRob2RzIGZvciBleHRlcm5hbCBzZXR0bGVtZW50LiAqL1xuaW50ZXJmYWNlIFBlbmRpbmdQcm9taXNlPFQ+IGV4dGVuZHMgUHJvbWlzZTxUPiB7XG4gICAgcmVzb2x2ZTogKHZhbHVlOiBUKSA9PiB2b2lkO1xuICAgIHJlamVjdDogKHJlYXNvbj86IHVua25vd24pID0+IHZvaWQ7XG59XG5cbi8qKlxuICogQSBoZWxwZXIgdXNlZCB0byByZWdpc3RlciBhbnkgbG9uZy1ydW5uaW5nIG9wZXJhdGlvbnMgdGhhdCBhcmUgaW4tcHJvZ3Jlc3NcbiAqIGFuZCB0aGF0IEJlaGF0IG11c3Qgd2FpdCBmb3IgdG8gY29tcGxldGUuXG4gKlxuICogQGV4YW1wbGVcbiAqIGltcG9ydCBQZW5kaW5nIGZyb20gJ2NvcmUvcGVuZGluZyc7XG4gKiBpbXBvcnQge2dldFN0cmluZ30gZnJvbSAnY29yZS9zdHInO1xuICpcbiAqIGNvbnN0IHN0cmluZ1Byb21pc2UgPSBuZXcgUGVuZGluZygnbW9kX215ZXhhbXBsZS9zZXR1cCcpO1xuICogY29uc3QgbXlTdHJpbmcgPSBnZXRTdHJpbmcoJ29rJylcbiAqICAgICAudGhlbihva2F5ID0+IHtcbiAqICAgICAgICAgd2luZG93LmNvbnNvbGUubG9nKG9rYXkpO1xuICogICAgIH0pXG4gKiAgICAgLnRoZW4ob2theSA9PiBzdHJpbmdQcm9taXNlLnJlc29sdmUob2theSkpO1xuICovXG5leHBvcnQgZGVmYXVsdCBjbGFzcyBQZW5kaW5nIHtcbiAgICAvKiogUmVzb2x2ZSB0aGUgcGVuZGluZyBwcm9taXNlLCBtYXJraW5nIHRoZSBvcGVyYXRpb24gYXMgY29tcGxldGUuICovXG4gICAgZGVjbGFyZSByZXNvbHZlOiAodmFsdWU/OiB1bmtub3duKSA9PiB2b2lkO1xuICAgIC8qKiBSZWplY3QgdGhlIHBlbmRpbmcgcHJvbWlzZS4gKi9cbiAgICBkZWNsYXJlIHJlamVjdDogKHJlYXNvbj86IHVua25vd24pID0+IHZvaWQ7XG5cbiAgICAvKipcbiAgICAgKiBSZWdpc3RlciBhIHBlbmRpbmcgb3BlcmF0aW9uIHdpdGggTW9vZGxlJ3MgQmVoYXQgaW50ZWdyYXRpb24uXG4gICAgICpcbiAgICAgKiBAcGFyYW0ga2V5IEEgZGVzY3JpcHRpdmUgaWRlbnRpZmllciBmb3IgZGVidWdnaW5nLlxuICAgICAqL1xuICAgIHN0YXRpYyBwZW5kaW5nKGtleTogc3RyaW5nKTogdm9pZCB7XG4gICAgICAgIE0udXRpbC5qc19wZW5kaW5nKGtleSk7XG4gICAgfVxuXG4gICAgLyoqXG4gICAgICogTWFyayBhIHBlbmRpbmcgb3BlcmF0aW9uIGFzIGNvbXBsZXRlLlxuICAgICAqXG4gICAgICogQHBhcmFtIGtleSBUaGUgc2FtZSBpZGVudGlmaWVyIHRoYXQgd2FzIHBhc3NlZCB0byB7QGxpbmsgUGVuZGluZy5wZW5kaW5nfS5cbiAgICAgKi9cbiAgICBzdGF0aWMgY29tcGxldGUoa2V5OiBzdHJpbmcpOiB2b2lkIHtcbiAgICAgICAgTS51dGlsLmpzX2NvbXBsZXRlKGtleSk7XG4gICAgfVxuXG4gICAgLyoqXG4gICAgICogUmVxdWVzdCBhIG5ldyBwZW5kaW5nUHJvbWlzZSBmb3IgbGF0ZXIgcmVzb2x1dGlvbi5cbiAgICAgKlxuICAgICAqIFdoZW4gdGhlIGFjdGlvbiB5b3UgYXJlIHBlcmZvcm1pbmcgaXMgY29tcGxldGUsIHNpbXBseSBjYWxsIGByZXNvbHZlYCBvbiB0aGUgcmV0dXJuZWQgUHJvbWlzZS5cbiAgICAgKlxuICAgICAqIEBwYXJhbSBwZW5kaW5nS2V5IEFuIGlkZW50aWZpZXIgdG8gaGVscCBpbiBkZWJ1Z2dpbmcuXG4gICAgICogQHJldHVybnMgQSBQcm9taXNlIHdpdGggYHJlc29sdmVgIGFuZCBgcmVqZWN0YCBtZXRob2RzIGF0dGFjaGVkLlxuICAgICAqL1xuICAgIGNvbnN0cnVjdG9yKHBlbmRpbmdLZXkgPSAncGVuZGluZ1Byb21pc2UnKSB7XG4gICAgICAgIGxldCByZXNvbHZlciE6ICh2YWx1ZTogdW5rbm93bikgPT4gdm9pZDtcbiAgICAgICAgbGV0IHJlamVjdG9yITogKHJlYXNvbj86IHVua25vd24pID0+IHZvaWQ7XG5cbiAgICAgICAgY29uc3QgcGVuZGluZ1Byb21pc2UgPSBQZW5kaW5nLlByb21pc2UoKHJlc29sdmUsIHJlamVjdCkgPT4ge1xuICAgICAgICAgICAgcmVzb2x2ZXIgPSByZXNvbHZlO1xuICAgICAgICAgICAgcmVqZWN0b3IgPSByZWplY3Q7XG4gICAgICAgIH0sIHBlbmRpbmdLZXkpIGFzIFBlbmRpbmdQcm9taXNlPHVua25vd24+O1xuXG4gICAgICAgIHBlbmRpbmdQcm9taXNlLnJlc29sdmUgPSByZXNvbHZlcjtcbiAgICAgICAgcGVuZGluZ1Byb21pc2UucmVqZWN0ID0gcmVqZWN0b3I7XG5cbiAgICAgICAgLy8gVGhlIGNvbnN0cnVjdG9yIHJldHVybnMgdGhlIFByb21pc2UgZGlyZWN0bHkgKG5vdCBgdGhpc2ApLlxuICAgICAgICByZXR1cm4gcGVuZGluZ1Byb21pc2UgYXMgdW5rbm93biBhcyBQZW5kaW5nO1xuICAgIH1cblxuICAgIC8qKlxuICAgICAqIENyZWF0ZSBhIG5ldyBQZW5kaW5nIFByb21pc2Ugd2l0aCB0aGUgc2FtZSBpbnRlcmZhY2UgYXMgYSBuYXRpdmUgUHJvbWlzZS5cbiAgICAgKlxuICAgICAqIEBwYXJhbSBmbiBBIGNhbGxhYmxlIHdoaWNoIHRha2VzIHRoZSByZXNvbHZlIGFuZCByZWplY3QgYXJndW1lbnRzIGFzIGluIGEgbmF0aXZlIFByb21pc2UgY29uc3RydWN0b3IuXG4gICAgICogQHBhcmFtIHBlbmRpbmdLZXkgQW4gaWRlbnRpZmllciB0byBoZWxwIGluIGRlYnVnZ2luZy5cbiAgICAgKiBAcmV0dXJucyBBIFByb21pc2UgdGhhdCBtYXJrcyB0aGUgcGVuZGluZyBvcGVyYXRpb24gYXMgY29tcGxldGUgd2hlbiByZXNvbHZlZC5cbiAgICAgKiBAc2luY2UgTW9vZGxlIDQuMlxuICAgICAqXG4gICAgICogQGV4YW1wbGVcbiAgICAgKiBpbXBvcnQgUGVuZGluZyBmcm9tICdjb3JlL3BlbmRpbmcnO1xuICAgICAqIGltcG9ydCB7Z2V0U3RyaW5nfSBmcm9tICdjb3JlL3N0cic7XG4gICAgICpcbiAgICAgKiBleHBvcnQgY29uc3QgaW5pdCA9ICgpID0+IHtcbiAgICAgKiAgICAgUGVuZGluZy5Qcm9taXNlKChyZXNvbHZlLCByZWplY3QpID0+IHtcbiAgICAgKiAgICAgICAgIGdldFN0cmluZygnb2snKVxuICAgICAqICAgICAgICAgICAgIC50aGVuKG9rYXkgPT4ge1xuICAgICAqICAgICAgICAgICAgICAgICB3aW5kb3cuY29uc29sZS5sb2cob2theSk7XG4gICAgICogICAgICAgICAgICAgICAgIHJldHVybiBva2F5O1xuICAgICAqICAgICAgICAgICAgIH0pXG4gICAgICogICAgICAgICAgICAgLnRoZW4ocmVzb2x2ZSlcbiAgICAgKiAgICAgICAgICAgICAuY2F0Y2gocmVqZWN0KTtcbiAgICAgKiAgICAgfSwgJ21vZF9teWV4YW1wbGUvc2V0dXA6aW5pdCcpO1xuICAgICAqIH07XG4gICAgICovXG4gICAgc3RhdGljIFByb21pc2U8VD4oXG4gICAgICAgIGZuOiAocmVzb2x2ZTogKHZhbHVlOiBUKSA9PiB2b2lkLCByZWplY3Q6IChyZWFzb24/OiB1bmtub3duKSA9PiB2b2lkKSA9PiB2b2lkLFxuICAgICAgICBwZW5kaW5nS2V5ID0gJ3BlbmRpbmdQcm9taXNlJyxcbiAgICApOiBQcm9taXNlPFQ+IHtcbiAgICAgICAgY29uc3QgcmVzb2x2ZXIgPSBuZXcgUHJvbWlzZTxUPigocmVzb2x2ZSwgcmVqZWN0KSA9PiB7XG4gICAgICAgICAgICBQZW5kaW5nLnBlbmRpbmcocGVuZGluZ0tleSk7XG4gICAgICAgICAgICBmbihyZXNvbHZlLCByZWplY3QpO1xuICAgICAgICB9KTtcblxuICAgICAgICByZXNvbHZlci50aGVuKCgpID0+IHtcbiAgICAgICAgICAgIFBlbmRpbmcuY29tcGxldGUocGVuZGluZ0tleSk7XG4gICAgICAgICAgICByZXR1cm47XG4gICAgICAgIH0pLmNhdGNoKCgpID0+IHtcbiAgICAgICAgICAgIC8vIEludGVudGlvbmFsbHkgZW1wdHkgXHUyMDE0IHN3YWxsb3cgcmVqZWN0aW9uIHRvIGF2b2lkIHVuaGFuZGxlZCBwcm9taXNlIHdhcm5pbmdzLlxuICAgICAgICAgICAgLy8gVGhlIGNhbGxlcidzIG93biAuY2F0Y2goKSB3aWxsIGhhbmRsZSB0aGUgZXJyb3IuXG4gICAgICAgIH0pO1xuXG4gICAgICAgIHJldHVybiByZXNvbHZlcjtcbiAgICB9XG59XG4iXSwKICAibWFwcGluZ3MiOiAiOzs7O0FBOERBLElBQXFCLFVBQXJCLE1BQXFCLFNBQVE7QUFBQSxFQTlEN0IsT0E4RDZCO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxFQVd6QixPQUFPLFFBQVEsS0FBbUI7QUFDOUIsTUFBRSxLQUFLLFdBQVcsR0FBRztBQUFBLEVBQ3pCO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLEVBT0EsT0FBTyxTQUFTLEtBQW1CO0FBQy9CLE1BQUUsS0FBSyxZQUFZLEdBQUc7QUFBQSxFQUMxQjtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxFQVVBLFlBQVksYUFBYSxrQkFBa0I7QUFDdkMsUUFBSTtBQUNKLFFBQUk7QUFFSixVQUFNLGlCQUFpQixTQUFRLFFBQVEsQ0FBQyxTQUFTLFdBQVc7QUFDeEQsaUJBQVc7QUFDWCxpQkFBVztBQUFBLElBQ2YsR0FBRyxVQUFVO0FBRWIsbUJBQWUsVUFBVTtBQUN6QixtQkFBZSxTQUFTO0FBR3hCLFdBQU87QUFBQSxFQUNYO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsRUEwQkEsT0FBTyxRQUNILElBQ0EsYUFBYSxrQkFDSDtBQUNWLFVBQU0sV0FBVyxJQUFJLFFBQVcsQ0FBQyxTQUFTLFdBQVc7QUFDakQsZUFBUSxRQUFRLFVBQVU7QUFDMUIsU0FBRyxTQUFTLE1BQU07QUFBQSxJQUN0QixDQUFDO0FBRUQsYUFBUyxLQUFLLE1BQU07QUFDaEIsZUFBUSxTQUFTLFVBQVU7QUFDM0I7QUFBQSxJQUNKLENBQUMsRUFBRSxNQUFNLE1BQU07QUFBQSxJQUdmLENBQUM7QUFFRCxXQUFPO0FBQUEsRUFDWDtBQUNKOyIsCiAgIm5hbWVzIjogW10KfQo=
