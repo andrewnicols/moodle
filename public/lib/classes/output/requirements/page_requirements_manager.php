@@ -1542,6 +1542,8 @@ class page_requirements_manager {
             $output .= html_writer::script('', $this->js_fix_url('/lib/requirejs/require.js'));
         }
 
+        $output .= $this->get_requirejs_static_esm_map();
+
         // First include must be to a module with no dependencies, this prevents multiple requests.
         $prefix = <<<EOF
 M.util.js_pending("core/first");
@@ -1564,6 +1566,35 @@ EOF;
 
         $output .= html_writer::script($prefix . $prefetch . implode(";\n", $this->amdjscode) . $suffix);
         return $output;
+    }
+
+    /**
+     * Get the requirejs static ESM map content.
+     *
+     * @return string
+     */
+    protected function get_requirejs_static_esm_map(): string {
+        // This is a static list. It is only intended for core subsystems, and only intended for
+        // those which are widely used.
+        $staticmaps = [
+        ];
+
+        $staticmapjs = implode(
+            ",\n   ",
+            array_map(
+                fn ($amd, $esm): string => "'{$amd}': 'core/esm!{$esm}'",
+                array_keys($staticmaps),
+                $staticmaps,
+            ),
+        );
+
+        return html_writer::script(
+            "requirejs.config({map: {
+                '*': {
+                    {$staticmapjs}
+                }
+            }});"
+        );
     }
 
     /**

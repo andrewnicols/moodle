@@ -49,7 +49,9 @@ const generateJsconfig = (grunt) => {
     const componentData = fetchComponentData().components;
     for (const [thisPath, component] of Object.entries(componentData)) {
         jsconfigData.compilerOptions.paths[`${component}/*`] = [`${thisPath}/amd/src/*`];
+        jsconfigData.compilerOptions.paths[`core/esm!${component}/*`] = [`${thisPath}/js/esm/src/*`];
         jsconfigData.include.push(`${thisPath}/amd/src/**/*`);
+        jsconfigData.include.push(`${thisPath}/js/esm/src/**/*`);
     }
 
     grunt.file.write('jsconfig.json', JSON.stringify(jsconfigData, null, "  ") + "\n");
