@@ -1,48 +1,32 @@
-var __defProp = Object.defineProperty;
-var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-
-// public/lib/js/esm/src/String.tsx
-import { Fragment, jsxDEV } from "react/jsx-dev-runtime";
-import { Suspense, use } from "react";
-import { requireAsync } from "@moodle/lms/core/amd";
-var stringPromiseCache = /* @__PURE__ */ new Map();
-var getString = /* @__PURE__ */ __name((identifier, component = "core", params) => {
-  const key = `${component}::${identifier}::${JSON.stringify(params)}`;
-  if (!stringPromiseCache.has(key)) {
-    stringPromiseCache.set(
-      key,
-      requireAsync("core/str").then((str) => str.get_string(identifier, component, params))
-    );
-  }
-  return stringPromiseCache.get(key);
-}, "getString");
-var resetStringCache = /* @__PURE__ */ __name(() => stringPromiseCache.clear(), "resetStringCache");
-var cacheStrings = /* @__PURE__ */ __name((strings) => requireAsync("core/str").then((str) => str.cache_strings(strings)), "cacheStrings");
-function StringInner({ identifier, component, params }) {
-  return /* @__PURE__ */ jsxDEV(Fragment, { children: use(getString(identifier, component, params)) }, void 0, false, {
-    fileName: "public/lib/js/esm/src/String.tsx",
-    lineNumber: 65,
-    columnNumber: 12
-  }, this);
-}
-__name(StringInner, "StringInner");
-function String({ children, identifier, component = "core", params }) {
-  return /* @__PURE__ */ jsxDEV(Suspense, { fallback: children ?? `${identifier}, ${component}`, children: /* @__PURE__ */ jsxDEV(StringInner, { identifier, component, params }, void 0, false, {
-    fileName: "public/lib/js/esm/src/String.tsx",
-    lineNumber: 71,
-    columnNumber: 13
-  }, this) }, void 0, false, {
-    fileName: "public/lib/js/esm/src/String.tsx",
-    lineNumber: 70,
-    columnNumber: 9
-  }, this);
-}
-__name(String, "String");
-var String_default = String;
-export {
-  cacheStrings,
-  String_default as default,
-  getString,
-  resetStringCache
-};
-//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsiLi4vc3JjL1N0cmluZy50c3giXSwKICAic291cmNlc0NvbnRlbnQiOiBbIi8vIFRoaXMgZmlsZSBpcyBwYXJ0IG9mIE1vb2RsZSAtIGh0dHA6Ly9tb29kbGUub3JnL1xuLy9cbi8vIE1vb2RsZSBpcyBmcmVlIHNvZnR3YXJlOiB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBpdCBhbmQvb3IgbW9kaWZ5XG4vLyBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieVxuLy8gdGhlIEZyZWUgU29mdHdhcmUgRm91bmRhdGlvbiwgZWl0aGVyIHZlcnNpb24gMyBvZiB0aGUgTGljZW5zZSwgb3Jcbi8vIChhdCB5b3VyIG9wdGlvbikgYW55IGxhdGVyIHZlcnNpb24uXG4vL1xuLy8gTW9vZGxlIGlzIGRpc3RyaWJ1dGVkIGluIHRoZSBob3BlIHRoYXQgaXQgd2lsbCBiZSB1c2VmdWwsXG4vLyBidXQgV0lUSE9VVCBBTlkgV0FSUkFOVFk7IHdpdGhvdXQgZXZlbiB0aGUgaW1wbGllZCB3YXJyYW50eSBvZlxuLy8gTUVSQ0hBTlRBQklMSVRZIG9yIEZJVE5FU1MgRk9SIEEgUEFSVElDVUxBUiBQVVJQT1NFLiAgU2VlIHRoZVxuLy8gR05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgZm9yIG1vcmUgZGV0YWlscy5cbi8vXG4vLyBZb3Ugc2hvdWxkIGhhdmUgcmVjZWl2ZWQgYSBjb3B5IG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMgTGljZW5zZVxuLy8gYWxvbmcgd2l0aCBNb29kbGUuICBJZiBub3QsIHNlZSA8aHR0cDovL3d3dy5nbnUub3JnL2xpY2Vuc2VzLz4uXG5cbmltcG9ydCB7IFN1c3BlbnNlLCB1c2UsIHR5cGUgUmVhY3ROb2RlIH0gZnJvbSAncmVhY3QnO1xuaW1wb3J0IHsgcmVxdWlyZUFzeW5jIH0gZnJvbSBcIkBtb29kbGUvbG1zL2NvcmUvYW1kXCI7XG5cbnR5cGUgc3RyaW5nUGFyYW1zID0gUmVjb3JkPHN0cmluZywgc3RyaW5nIHwgbnVtYmVyPiB8IHN0cmluZyB8IG51bWJlciB8IG51bGw7XG50eXBlIHN0cmluZ1JlcXVlc3QgPSB7XG4gICAga2V5OiBzdHJpbmc7XG4gICAgY29tcG9uZW50OiBzdHJpbmc7XG4gICAgbGFuZzogc3RyaW5nO1xuICAgIHBhcmFtOiBzdHJpbmdQYXJhbXM7XG59O1xuXG5pbnRlcmZhY2Ugc3RyaW5nTW9kdWxlIHtcbiAgICBnZXRfc3RyaW5nOiAoaWRlbnRpZmllcjogc3RyaW5nLCBjb21wb25lbnQ/OiBzdHJpbmcsIHBhcmFtcz86IHN0cmluZ1BhcmFtcykgPT4gUHJvbWlzZTxzdHJpbmc+O1xuICAgIGdldF9zdHJpbmdzOiAocmVxdWVzdHM6IHN0cmluZ1JlcXVlc3RbXSkgPT4gUHJvbWlzZTxzdHJpbmc+W107XG4gICAgY2FjaGVfc3RyaW5nczogKHN0cmluZ3M6IHN0cmluZ1JlcXVlc3RbXSkgPT4gdm9pZDtcbn1cblxuLy8gRW5zdXJlcyB0aGUgc2FtZSBQcm9taXNlIGluc3RhbmNlIGlzIHJldHVybmVkIGZvciB0aGUgc2FtZSBzdHJpbmcga2V5IGFjcm9zc1xuLy8gcmVuZGVycy4gdXNlKCkgcmVxdWlyZXMgYSBzdGFibGUgcmVmZXJlbmNlIFx1MjAxNCB3aXRob3V0IHRoaXMsIGEgbmV3IFByb21pc2UgaXNcbi8vIGNyZWF0ZWQgb24gZXZlcnkgcmVuZGVyIGFuZCB0aGUgY29tcG9uZW50IHN1c3BlbmRzIGluZGVmaW5pdGVseS5cbmNvbnN0IHN0cmluZ1Byb21pc2VDYWNoZSA9IG5ldyBNYXA8c3RyaW5nLCBQcm9taXNlPHN0cmluZz4+KCk7XG5cbmV4cG9ydCBpbnRlcmZhY2UgU3RyaW5nUHJvcHMge1xuICAgIGlkZW50aWZpZXI6IHN0cmluZztcbiAgICBjb21wb25lbnQ/OiBzdHJpbmc7XG4gICAgcGFyYW1zPzogc3RyaW5nIHwgbnVtYmVyIHwgUmVjb3JkPHN0cmluZywgc3RyaW5nIHwgbnVtYmVyPjtcbn1cblxuZXhwb3J0IGNvbnN0IGdldFN0cmluZyA9IChcbiAgICBpZGVudGlmaWVyOiBzdHJpbmcsXG4gICAgY29tcG9uZW50OiBzdHJpbmcgPSBcImNvcmVcIixcbiAgICBwYXJhbXM/OiBzdHJpbmcgfCBudW1iZXIgfCBSZWNvcmQ8c3RyaW5nLCBzdHJpbmcgfCBudW1iZXI+LFxuKTogUHJvbWlzZTxzdHJpbmc+ID0+IHtcbiAgICBjb25zdCBrZXkgPSBgJHtjb21wb25lbnR9Ojoke2lkZW50aWZpZXJ9Ojoke0pTT04uc3RyaW5naWZ5KHBhcmFtcyl9YDtcbiAgICBpZiAoIXN0cmluZ1Byb21pc2VDYWNoZS5oYXMoa2V5KSkge1xuICAgICAgICBzdHJpbmdQcm9taXNlQ2FjaGUuc2V0KFxuICAgICAgICAgICAga2V5LFxuICAgICAgICAgICAgcmVxdWlyZUFzeW5jPHN0cmluZ01vZHVsZT4oXCJjb3JlL3N0clwiKS50aGVuKHN0ciA9PiBzdHIuZ2V0X3N0cmluZyhpZGVudGlmaWVyLCBjb21wb25lbnQsIHBhcmFtcykpLFxuICAgICAgICApO1xuICAgIH1cbiAgICByZXR1cm4gc3RyaW5nUHJvbWlzZUNhY2hlLmdldChrZXkpITtcbn07XG5cbmV4cG9ydCBjb25zdCByZXNldFN0cmluZ0NhY2hlID0gKCkgPT4gc3RyaW5nUHJvbWlzZUNhY2hlLmNsZWFyKCk7XG5cbmV4cG9ydCBjb25zdCBjYWNoZVN0cmluZ3MgPSAoc3RyaW5nczogc3RyaW5nUmVxdWVzdFtdKSA9PlxuICAgIHJlcXVpcmVBc3luYzxzdHJpbmdNb2R1bGU+KFwiY29yZS9zdHJcIikudGhlbihzdHIgPT4gc3RyLmNhY2hlX3N0cmluZ3Moc3RyaW5ncykpO1xuXG5mdW5jdGlvbiBTdHJpbmdJbm5lcih7IGlkZW50aWZpZXIsIGNvbXBvbmVudCwgcGFyYW1zIH06IFN0cmluZ1Byb3BzKSB7XG4gICAgcmV0dXJuIDw+e3VzZShnZXRTdHJpbmcoaWRlbnRpZmllciwgY29tcG9uZW50LCBwYXJhbXMpKX08Lz47XG59XG5cbmZ1bmN0aW9uIFN0cmluZyh7IGNoaWxkcmVuLCBpZGVudGlmaWVyLCBjb21wb25lbnQgPSBcImNvcmVcIiwgcGFyYW1zIH06IFN0cmluZ1Byb3BzICYgeyBjaGlsZHJlbj86IFJlYWN0Tm9kZSB9KSB7XG4gICAgcmV0dXJuIChcbiAgICAgICAgPFN1c3BlbnNlIGZhbGxiYWNrPXtjaGlsZHJlbiA/PyBgJHtpZGVudGlmaWVyfSwgJHtjb21wb25lbnR9YH0+XG4gICAgICAgICAgICA8U3RyaW5nSW5uZXIgaWRlbnRpZmllcj17aWRlbnRpZmllcn0gY29tcG9uZW50PXtjb21wb25lbnR9IHBhcmFtcz17cGFyYW1zfSAvPlxuICAgICAgICA8L1N1c3BlbnNlPlxuICAgICk7XG59XG5cbmV4cG9ydCBkZWZhdWx0IFN0cmluZztcbiJdLAogICJtYXBwaW5ncyI6ICI7Ozs7QUFnRVc7QUFqRFgsU0FBUyxVQUFVLFdBQTJCO0FBQzlDLFNBQVMsb0JBQW9CO0FBbUI3QixJQUFNLHFCQUFxQixvQkFBSSxJQUE2QjtBQVFyRCxJQUFNLFlBQVksd0JBQ3JCLFlBQ0EsWUFBb0IsUUFDcEIsV0FDa0I7QUFDbEIsUUFBTSxNQUFNLEdBQUcsU0FBUyxLQUFLLFVBQVUsS0FBSyxLQUFLLFVBQVUsTUFBTSxDQUFDO0FBQ2xFLE1BQUksQ0FBQyxtQkFBbUIsSUFBSSxHQUFHLEdBQUc7QUFDOUIsdUJBQW1CO0FBQUEsTUFDZjtBQUFBLE1BQ0EsYUFBMkIsVUFBVSxFQUFFLEtBQUssU0FBTyxJQUFJLFdBQVcsWUFBWSxXQUFXLE1BQU0sQ0FBQztBQUFBLElBQ3BHO0FBQUEsRUFDSjtBQUNBLFNBQU8sbUJBQW1CLElBQUksR0FBRztBQUNyQyxHQWJ5QjtBQWVsQixJQUFNLG1CQUFtQiw2QkFBTSxtQkFBbUIsTUFBTSxHQUEvQjtBQUV6QixJQUFNLGVBQWUsd0JBQUMsWUFDekIsYUFBMkIsVUFBVSxFQUFFLEtBQUssU0FBTyxJQUFJLGNBQWMsT0FBTyxDQUFDLEdBRHJEO0FBRzVCLFNBQVMsWUFBWSxFQUFFLFlBQVksV0FBVyxPQUFPLEdBQWdCO0FBQ2pFLFNBQU8sbUNBQUcsY0FBSSxVQUFVLFlBQVksV0FBVyxNQUFNLENBQUMsS0FBL0M7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQUFpRDtBQUM1RDtBQUZTO0FBSVQsU0FBUyxPQUFPLEVBQUUsVUFBVSxZQUFZLFlBQVksUUFBUSxPQUFPLEdBQTJDO0FBQzFHLFNBQ0ksdUJBQUMsWUFBUyxVQUFVLFlBQVksR0FBRyxVQUFVLEtBQUssU0FBUyxJQUN2RCxpQ0FBQyxlQUFZLFlBQXdCLFdBQXNCLFVBQTNEO0FBQUE7QUFBQTtBQUFBO0FBQUEsU0FBMkUsS0FEL0U7QUFBQTtBQUFBO0FBQUE7QUFBQSxTQUVBO0FBRVI7QUFOUztBQVFULElBQU8saUJBQVE7IiwKICAibmFtZXMiOiBbXQp9Cg==
+import{Suspense as I,use as k}from"react";import{requireAsync as C}from"@moodle/lms/core/amd";var v=M.cfg,o=v,_=v.jsrev!==-1;var m=class r{#e;#r;#s;#t;#n;constructor(e){this.#e=e,this.#r=this.#o();let t=`${o.wwwroot}/${o.jsrev}`;this.#s=`${r.hashString(t)}/`,this.#t=`${r.hashString(o.wwwroot)}/jsrev`,this.#n=`${r.hashString(o.wwwroot)}/currentlogin`,this.#g()}#o(){if(o.jsrev===-1||typeof this.#e>"u")return!1;let e="test";try{return this.#e===null?!1:(this.#e.setItem(e,"1"),this.#e.removeItem(e),!0)}catch{return!1}}#i(e){return this.#s+e}#g(){if(!this.#r)return;let e=this.#e.getItem(this.#t);if(e===null?this.#e.setItem(this.#t,String(o.jsrev)):String(o.jsrev)!==e&&(this.#e.clear(),this.#e.setItem(this.#t,String(o.jsrev))),o.currentlogin!==null){let t=this.#e.getItem(this.#n);t!==null&&t!==String(o.currentlogin)&&(this.#e.clear(),this.#e.setItem(this.#t,String(o.jsrev))),this.#e.setItem(this.#n,String(o.currentlogin))}}static hashString(e){let t=0;for(let n=0;n<e.length;n++)t=(t<<5)-t+e.charCodeAt(n),t|=0;return t}get(e){return this.#r?this.#e.getItem(this.#i(e)):null}set(e,t){if(!this.#r)return!1;try{this.#e.setItem(this.#i(e),t)}catch{return!1}return!0}clean(){this.#e.clear()}};var b=new m(window.localStorage),y=r=>b.get(r),p=(r,e)=>b.set(r,e);import{Fragment as A,jsx as f}from"react/jsx-runtime";var c=new Map,h=new Map,x=(r,e,t)=>`core_str/${r}/${e}/${t}`,P=r=>{let e=new Array(r.length),t=[];for(let n=0;n<r.length;n++){let{key:i,component:s="core",param:l=null,lang:u=o.language}=r[n],g=x(i,s,u);if(M.str[s]?.[i]!==void 0){let a=Promise.resolve(M.util.get_string(i,s,l));c.set(g,a),e[n]=a;continue}let d=y(g);if(d!==null){M.str[s]||(M.str[s]={}),M.str[s][i]=d;let a=Promise.resolve(M.util.get_string(i,s,l));c.set(g,a),e[n]=a;continue}if(c.has(g)){e[n]=c.get(g).then(()=>M.util.get_string(i,s,l));continue}let S=new Promise((a,w)=>{t.push({request:{methodname:"core_get_string",args:{stringid:i,stringparams:[],component:s,lang:u}},resolve:a,reject:w})});c.set(g,S),e[n]=S.then(a=>(M.str[s]||(M.str[s]={}),M.str[s][i]=a,p(g,a),M.util.get_string(i,s,l)))}if(t.length>0){let n=t.map(i=>i.request);C("core/ajax").then(i=>(i.call(n,!0,!1,!1,0,o.langrev).forEach((l,u)=>{l.then(g=>t[u].resolve(g),g=>t[u].reject(g))}),i),i=>{t.forEach(s=>s.reject(i))})}return e},z=r=>Promise.all(P(r)),O=r=>{for(let{key:e,component:t="core",value:n,lang:i=o.language}of r){let s=x(e,t,i);M.str[t]||(M.str[t]={}),e in M.str[t]||(M.str[t][e]=n),p(s,n),c.has(s)||c.set(s,Promise.resolve(n))}},$=(r,e="core",t)=>{let n=`${e}::${r}::${JSON.stringify(t)}`;return h.has(n)||h.set(n,P([{key:r,component:e,param:t}])[0]),h.get(n)},V=()=>{h.clear(),c.clear()};function R({identifier:r,component:e,params:t}){return f(A,{children:k($(r,e,t))})}function q({children:r,identifier:e,component:t="core",params:n}){return f(I,{fallback:r??`${e}, ${t}`,children:f(R,{identifier:e,component:t,params:n})})}var B=q;export{O as cacheStrings,B as default,P as getRequestedStrings,$ as getString,z as getStrings,V as resetStringCache};
+/**
+ * Typed access to the Moodle page configuration (`M.cfg`).
+ *
+ * This module exposes the same `M.cfg` object that is injected into every Moodle page
+ * by the server-side renderer, but with a full TypeScript interface so that consuming
+ * modules get autocompletion and compile-time type safety.
+ *
+ * The default export is the live `M.cfg` object — mutations made by tests or other code
+ * are immediately visible to every consumer.
+ *
+ * @module     core/config
+ * @copyright  2015 Damyon Wiese <damyon@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
+ */
+/**
+ * Wrap an instance of the browser's local or session storage to handle
+ * cache expiry, key namespacing and other helpful things.
+ *
+ * @module     core/storagewrapper
+ * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+/**
+ * Simple API for set/get to localStorage, with cacherev expiration.
+ *
+ * @module     core/localstorage
+ * @copyright  2015 Damyon Wiese <damyon@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
+ */

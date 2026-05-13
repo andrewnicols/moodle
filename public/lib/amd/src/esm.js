@@ -33,9 +33,9 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @example <caption>Re-export a default export from an ESM module</caption>
- * import Module from 'core/esm!core/config';
+ * import Module from 'core/esm!@moodle/lms/core/config:default';
  *
- * export default Module.default;
+ * export default Module;
  *
  * @example <caption>Re-export default and named exports</caption>
  * import Module from 'core/esm!core/fetch';
@@ -47,8 +47,20 @@
 
 import nativeImport from 'core/import';
 
+/**
+ * Whether just the default export was requested (via `:default` suffix).
+ *
+ * @param {String} name
+ * @returns {boolean}
+ */
 const defaultRequested = (name) => name.endsWith(':default');
 
+/**
+ * Get the ESM module name by stripping the `:default` suffix if present.
+ *
+ * @param {String} name The AMD module name passed to the plugin, for example `@moodle/lms/core/config:default`.
+ * @returns {String}
+ */
 const getModuleName = (name) => {
     if (defaultRequested(name)) {
         return name.slice(0, -':default'.length);
@@ -61,7 +73,6 @@ export default {
     // eslint-disable-next-line no-unused-vars
     load: function (name, req, onload, config) {
         // Dynamically require the target module containing the promise.
-        // We load the nativeImport function asynchronously to ensure that the ESM module is loaded.
         nativeImport(getModuleName(name))
             .then(function (resolvedValue) {
                 if (defaultRequested(name)) {
