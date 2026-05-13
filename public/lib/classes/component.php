@@ -573,6 +573,7 @@ class component {
         // Always keep moodle_exception in place.
         $keyclasses = [
             \core\exception\moodle_exception::class,
+            \core\hook\output\before_requirejs_config::class,
             \core\telemetry::class,
         ];
         foreach ($keyclasses as $classname) {
