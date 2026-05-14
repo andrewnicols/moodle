@@ -21,7 +21,7 @@
  * configuration or build steps.
  *
  * Source layout convention:
- *   <component>/js/esm/src/**\/*.{ts,tsx}  →  <component>/js/esm/build/**\/*.js
+ *   <component>/js/esm/src/**\/*.{js,jsx,ts,tsx}  →  <component>/js/esm/build/**\/*.js
  *
  * Exports:
  *   createBuildConfig(isDev)           esbuild config object; pass isDev=true
@@ -46,6 +46,7 @@ import path from "path";
 import fs from "fs";
 
 const projectRoot = process.cwd();
+const esmSourceGlob = "**/js/esm/src/**/*.{js,jsx,ts,tsx}";
 
 /**
  * Resolve a path from the current project root.
@@ -133,7 +134,7 @@ export function resolveComponentPaths(entry) {
 
         return {
             file,
-            output: fromRoot(part, 'esm', 'build', file.replace(/\.(ts|tsx)$/, '.js')),
+            output: fromRoot(part, 'esm', 'build', file.replace(/\.(js|jsx|ts|tsx)$/, '.js')),
         };
     }
     return null;
@@ -208,7 +209,7 @@ export function createBuildConfig(isDev) {
 export async function buildPluginComponents(isDev) {
     console.log(chalk.green('> Building components...'));
 
-    const entryPoints = glob.sync("**/js/esm/src/**/*.{ts,tsx}", {
+    const entryPoints = glob.sync(esmSourceGlob, {
         cwd: projectRoot,
         absolute: true,
         ignore: [
@@ -240,7 +241,7 @@ export async function buildPluginComponents(isDev) {
  * @returns {Promise<import('esbuild').BuildContext|null>} The active context, or null if no source files exist.
  */
 export async function watchComponents(isDev, onRebuild) {
-    const entryPoints = glob.sync("**/js/esm/src/**/*.{ts,tsx}", {
+    const entryPoints = glob.sync(esmSourceGlob, {
         cwd: projectRoot,
         absolute: true,
         ignore: [

@@ -103,6 +103,7 @@ class import_map implements \JsonSerializable {
         $this->add_import('react/', path: 'lib/js/bundles/react');
         $this->add_import('react-dom', path: 'lib/js/bundles/react-dom/react-dom');
         $this->add_import('react-dom/', path: 'lib/js/bundles/react-dom', modifier: $this->resolve_react_dev_path(...));
+        $this->add_import('@popperjs/core', path: 'lib/js/bundles/@popperjs/core/core');
     }
 
     /**
@@ -250,10 +251,19 @@ class import_map implements \JsonSerializable {
         // Resolve the component directory; an unknown component name returns null.
         $dir = \core\component::get_component_directory($component);
         $file = "{$dir}/{$importdata->path}/{$modulerest}{$importdata->suffix}";
-        if (!file_exists($file)) {
-            throw new \core\exception\not_found_exception('script', $subpath);
+        if (file_exists($file)) {
+            return $file;
         }
 
-        return $file;
+        if (str_ends_with($modulerest, $importdata->suffix)) {
+            // If the requested path already ends with the suffix, don't try appending it again.
+            // This allows specifiers to include the suffix if needed (e.g. for files that don't follow the standard naming convention).
+            $file = "{$dir}/{$importdata->path}/{$modulerest}";
+            if (file_exists($file)) {
+               return $file;
+            }
+        }
+
+        throw new \core\exception\not_found_exception('script', $subpath);
     }
 }
