@@ -1585,6 +1585,7 @@ EOF;
             'core/config' => '@moodle/lms/core/config:default',
             'core/deprecated' => '@moodle/lms/core/deprecated:default',
             'core/fetch' => '@moodle/lms/core/fetch:default',
+            'core/log' => '@moodle/lms/core/log:default',
             'core/localstorage' => '@moodle/lms/core/LocalStorage:default',
             'core/pending' => '@moodle/lms/core/pending:default',
             'core/sessionstorage' => '@moodle/lms/core/SessionStorage:default',
