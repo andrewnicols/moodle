@@ -9,6 +9,7 @@
       "dependencies": {
         "@moodlehq/design-system": "^2.1",
         "@popperjs/core": "^2.11.8",
+        "bootstrap": "^5.3.8",
         "react": "^19.1",
         "react-dom": "^19.1"
       },

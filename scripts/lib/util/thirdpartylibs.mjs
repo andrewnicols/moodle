@@ -47,12 +47,12 @@ export const updateThirdPartyLibsXml = (componentPath, packageLocation, packageN
     const library = xpath.select(`//libraries/library[location="${packageLocation}"]`, doc);
 
     if (library.length === 0) {
-        console.warn(chalk.yellow(`Warning: Library with name ${packageName} not found in thirdpartylibs.xml`));
+        console.warn(chalk.yellow(`Warning: Library with name ${packageName} not found at location ${packageLocation} in thirdpartylibs.xml`));
         process.exit(1);
     }
     const versionNode = xpath.select('version', library[0])[0];
     if (!versionNode) {
-        console.warn(chalk.yellow(`Warning: Version node not found for library ${packageName} in thirdpartylibs.xml`));
+        console.warn(chalk.yellow(`Warning: Version node not found for library ${packageName} in ${xmlPath}`));
         process.exit(1);
     }
     versionNode.textContent = version;
