@@ -21,7 +21,7 @@
  */
 
 import {render, screen, act} from '@testing-library/react';
-import {getString, cacheStrings} from '@moodle/lms/core/String';
+import {getString, getStrings, getRequestedStrings, cacheStrings} from '@moodle/lms/core/String';
 import String from '@moodle/lms/core/String';
 
 describe('@moodle/lms/core/String', () => {
@@ -56,21 +56,97 @@ describe('@moodle/lms/core/String', () => {
         });
     });
 
+    describe('getRequestedStrings', () => {
+        it('returns individual promises for each request', async() => {
+            mockString('one', 'core', 'One');
+
+            const promises = getRequestedStrings([
+                {key: 'one', component: 'core'},
+                {key: 'two', component: 'core'},
+            ]);
+
+            expect(promises).toHaveLength(2);
+            await expect(promises[0]).resolves.toBe('One');
+            await expect(promises[1]).resolves.toBe('[two, core]');
+        });
+
+        it('deduplicates requests for the same string', async() => {
+            const promises = getRequestedStrings([
+                {key: 'dup', component: 'core'},
+                {key: 'dup', component: 'core'},
+            ]);
+
+            const [first, second] = await Promise.all(promises);
+            expect(first).toBe('[dup, core]');
+            expect(second).toBe('[dup, core]');
+        });
+
+        it('defaults component to core', async() => {
+            mockString('yes', 'core', 'Yes');
+
+            const promises = getRequestedStrings([{key: 'yes'}]);
+            await expect(promises[0]).resolves.toBe('Yes');
+        });
+    });
+
+    describe('getStrings', () => {
+        it('returns all strings in a single promise', async() => {
+            mockString('yes', 'core', 'Yes');
+            mockString('no', 'core', 'No');
+
+            const result = await getStrings([
+                {key: 'yes', component: 'core'},
+                {key: 'no', component: 'core'},
+            ]);
+
+            expect(result).toEqual(['Yes', 'No']);
+        });
+
+        it('returns defaults for unmocked strings', async() => {
+            const result = await getStrings([
+                {key: 'missing', component: 'core'},
+            ]);
+
+            expect(result).toEqual(['[missing, core]']);
+        });
+
+        it('handles a mix of cached and uncached strings', async() => {
+            mockString('cached', 'core', 'Cached Value');
+
+            const result = await getStrings([
+                {key: 'cached', component: 'core'},
+                {key: 'uncached', component: 'core'},
+            ]);
+
+            expect(result).toEqual(['Cached Value', '[uncached, core]']);
+        });
+    });
+
     describe('cacheStrings', () => {
-        it('delegates to the AMD module cache_strings method', async() => {
-            const mockedCacheStrings = jest.fn();
-            mockAmdModule('core/str', {
-                get_string: jest.fn(),
-                cache_strings: mockedCacheStrings,
-            });
+        it('makes subsequent getString calls resolve from cache', async() => {
+            cacheStrings([
+                {key: 'precached', component: 'mod_forum', value: 'Pre-cached'},
+            ]);
 
-            const strings = [
-                {key: 'cached', component: 'core', identifier: 'cached', lang: 'en', param: null},
-            ];
+            await expect(getString('precached', 'mod_forum')).resolves.toBe('Pre-cached');
+        });
 
-            await cacheStrings(strings);
+        it('does not overwrite existing cached values', async() => {
+            mockString('existing', 'core', 'Original');
 
-            expect(mockedCacheStrings).toHaveBeenCalledWith(strings);
+            cacheStrings([
+                {key: 'existing', component: 'core', value: 'New Value'},
+            ]);
+
+            await expect(getString('existing', 'core')).resolves.toBe('Original');
+        });
+
+        it('defaults component to core', async() => {
+            cacheStrings([
+                {key: 'defaultcomp', value: 'Default Component'},
+            ]);
+
+            await expect(getString('defaultcomp', 'core')).resolves.toBe('Default Component');
         });
     });
 

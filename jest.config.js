@@ -52,6 +52,9 @@ module.exports = {
         '**/esm/src/**/*.{ts,tsx}',
         '!**/*.d.ts',
     ],
+    setupFiles: [
+        '<rootDir>/.jest/globalM.ts',
+    ],
     setupFilesAfterEnv: [
         '@testing-library/jest-dom',
         '<rootDir>/.jest/globalSetup.ts',
