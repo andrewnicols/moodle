@@ -34,6 +34,7 @@ export default class StorageWrapper {
     #supported: boolean;
     #prefix: string;
     #jsrevPrefix: string;
+    #loginPrefix: string;
 
     /**
      * @param storage The underlying Storage instance (e.g. `window.localStorage`).
@@ -45,6 +46,7 @@ export default class StorageWrapper {
         const hashSource = `${config.wwwroot}/${config.jsrev}`;
         this.#prefix = `${StorageWrapper.hashString(hashSource)}/`;
         this.#jsrevPrefix = `${StorageWrapper.hashString(config.wwwroot)}/jsrev`;
+        this.#loginPrefix = `${StorageWrapper.hashString(config.wwwroot)}/currentlogin`;
         this.#validateCache();
     }
 
@@ -82,21 +84,30 @@ export default class StorageWrapper {
     }
 
     /**
-     * Check the current jsrev version and clear the cache if it has been bumped.
+     * Check the current jsrev version and user login, clearing the cache if either has changed.
      */
     #validateCache(): void {
         if (!this.#supported) {
             return;
         }
+
+        // Check if the JS revision has changed (new deployment).
         const cacheVersion = this.#storage.getItem(this.#jsrevPrefix);
         if (cacheVersion === null) {
             this.#storage.setItem(this.#jsrevPrefix, String(config.jsrev));
-            return;
-        }
-
-        if (String(config.jsrev) !== cacheVersion) {
+        } else if (String(config.jsrev) !== cacheVersion) {
             this.#storage.clear();
             this.#storage.setItem(this.#jsrevPrefix, String(config.jsrev));
+        }
+
+        // Check if the user's login session has changed (different user or re-login).
+        if (config.currentlogin !== null) {
+            const storedLogin = this.#storage.getItem(this.#loginPrefix);
+            if (storedLogin !== null && storedLogin !== String(config.currentlogin)) {
+                this.#storage.clear();
+                this.#storage.setItem(this.#jsrevPrefix, String(config.jsrev));
+            }
+            this.#storage.setItem(this.#loginPrefix, String(config.currentlogin));
         }
     }
 
