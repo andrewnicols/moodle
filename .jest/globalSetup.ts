@@ -89,6 +89,7 @@ const defaultCfg = {
     templaterev: 1,
     siteId: 1,
     userId: 2,
+    currentlogin: null,
     deprecationignorelist: [],
     traceId: 'test-trace-id',
     developerdebug: true,
