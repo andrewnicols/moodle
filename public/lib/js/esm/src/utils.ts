@@ -16,56 +16,52 @@
 /**
  * Utility functions.
  *
- * @module core/utils
+ * @module     core/utils
  * @copyright  2019 Ryan Wyllie <ryan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
  */
 
-import Pending from 'core/pending';
-import jQuery from 'jquery';
+import Pending from './pending';
 
- /**
-  * Create a wrapper function to throttle the execution of the given
-  *
-  * function to at most once every specified period.
-  *
-  * If the function is attempted to be executed while it's in cooldown
-  * (during the wait period) then it'll immediately execute again as
-  * soon as the cooldown is over.
-  *
-  * @method
-  * @param {Function} func The function to throttle
-  * @param {Number} wait The number of milliseconds to wait between executions
-  * @return {Function}
-  */
-export const throttle = (func, wait) => {
+/**
+ * Create a wrapper function to throttle the execution of the given
+ * function to at most once every specified period.
+ *
+ * If the function is attempted to be executed while it's in cooldown
+ * (during the wait period) then it'll immediately execute again as
+ * soon as the cooldown is over.
+ *
+ * @param func The function to throttle.
+ * @param wait The number of milliseconds to wait between executions.
+ * @returns The throttled function.
+ */
+export const throttle = <T extends unknown[]>(func: (...args: T) => void, wait: number): ((...args: T) => void) => {
     let onCooldown = false;
-    let runAgain = null;
-    const run = function(...args) {
-        if (runAgain === null) {
-            // This is the first time the function has been called.
-            runAgain = false;
-        } else {
-            // This function has been called a second time during the wait period
-            // so re-run it once the wait period is over.
-            runAgain = true;
-        }
+    let runAgain = false;
+    let latestArgs: T;
+
+    const run = function(this: unknown, ...args: T): void {
+        latestArgs = args;
 
         if (onCooldown) {
-            // Function has already run for this wait period.
+            runAgain = true;
             return;
         }
 
+        // Preserve caller context for throttled methods.
+        // eslint-disable-next-line no-invalid-this
         func.apply(this, args);
         onCooldown = true;
 
         setTimeout(() => {
             const recurse = runAgain;
             onCooldown = false;
-            runAgain = null;
+            runAgain = false;
 
             if (recurse) {
-                run(args);
+                // eslint-disable-next-line no-invalid-this
+                run.apply(this, latestArgs);
             }
         }, wait);
     };
@@ -74,39 +70,47 @@ export const throttle = (func, wait) => {
 };
 
 /**
- * @property {Map} debounceMap A map of functions to their debounced pending promises.
+ * @property debounceMap A map of functions to their debounced pending promises.
  */
-const debounceMap = new Map();
+const debounceMap = new Map<(...args: unknown[]) => void, Pending>();
+
+type DebounceOptions = {
+    pending?: boolean;
+    cancel?: boolean;
+};
+
+type DebouncedFunction<T extends unknown[]> = ((...args: T) => void) & {
+    cancel?: () => void;
+};
 
 /**
  * Create a wrapper function to debounce the execution of the given
  * function. Each attempt to execute the function will reset the cooldown
  * period.
  *
- * @method
- * @param {Function} func The function to debounce
- * @param {Number} wait The number of milliseconds to wait after the final attempt to execute
- * @param {Object} [options]
- * @param {boolean} [options.pending=false] Whether to wrap the debounced method in a pending promise
- * @param {boolean} [options.cancel=false] Whether to add a cancel method to the debounced function
- * @return {Function}
+ * @param func The function to debounce.
+ * @param wait The number of milliseconds to wait after the final attempt to execute.
+ * @param options Optional debounce behavior toggles.
+ * @returns The debounced function.
  */
-export const debounce = (
-    func,
-    wait,
+export const debounce = <T extends unknown[]>(
+    func: (...args: T) => unknown,
+    wait: number,
     {
         pending = false,
         cancel = false,
-    } = {},
-) => {
-    let timeout = null;
+    }: DebounceOptions = {},
+): DebouncedFunction<T> => {
+    let timeout: ReturnType<typeof setTimeout> | null = null;
 
-    const returnedFunction = (...args) => {
+    const returnedFunction: DebouncedFunction<T> = (...args: T): void => {
         if (pending && !debounceMap.has(returnedFunction)) {
             debounceMap.set(returnedFunction, new Pending('core/utils:debounce'));
         }
-        clearTimeout(timeout);
-        timeout = setTimeout(async () => {
+        if (timeout !== null) {
+            clearTimeout(timeout);
+        }
+        timeout = setTimeout(async() => {
             // Get the current pending promise and immediately empty it.
             // This is important to allow the function to be debounced again as soon as possible.
             // We do not resolve it until later - but that's fine because the promise is appropriately scoped.
@@ -115,7 +119,7 @@ export const debounce = (
 
             // Allow the debounced function to return a Promise.
             // This ensures that Behat will not continue until the function has finished executing.
-            await func.apply(this, args);
+            await func.apply(undefined, args);
 
             // Resolve the pending promise if it exists.
             pendingPromise?.resolve();
@@ -123,10 +127,12 @@ export const debounce = (
     };
 
     if (cancel) {
-        returnedFunction.cancel = () => {
+        returnedFunction.cancel = (): void => {
             const pendingPromise = debounceMap.get(returnedFunction);
             pendingPromise?.resolve();
-            clearTimeout(timeout);
+            if (timeout !== null) {
+                clearTimeout(timeout);
+            }
         };
     }
 
@@ -136,23 +142,19 @@ export const debounce = (
 /**
  * Normalise the provided component such that '', 'moodle', and 'core' are treated consistently.
  *
- * @param   {String} component
- * @returns {String}
+ * @param component The component name to normalise.
+ * @returns The normalised component name.
  */
-export const getNormalisedComponent = (component) => {
-    if (component) {
-        if (component !== 'moodle' && component !== 'core') {
-            return component;
-        }
+export const getNormalisedComponent = (component: string): string => {
+    if (component && component !== 'moodle' && component !== 'core') {
+        return component;
     }
 
     return 'core';
 };
 
-/**
- * Wrap a Native Promise in a jQuery Whenable for b/c.
- *
- * @param {*} promise
- * @returns {jQuery}
- */
-export const wrapPromiseInWhenable = (promise) => jQuery.when(promise);
+export default {
+    throttle,
+    debounce,
+    getNormalisedComponent,
+};
