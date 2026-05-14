@@ -1,9 +1,15 @@
-import{requireAsync as u}from"@moodle/lms/core/amd";function l(e){return typeof e=="object"&&e!==null&&"message"in e&&"errorcode"in e}var a=await u("core/ajax");function s(e){return new Promise((n,o)=>{e.then(n,o)})}function c(e,n=!0,o=!0,r=!1){let[t]=a.call([e],n,o,r);return s(t)}function m(e,n=!0,o=!0,r=!1){return Promise.all(a.call(e,n,o,r).map(t=>s(t)))}export{m as fetchMany,c as fetchOne,l as isMoodleAjaxError};
+import w from"@moodle/lms/core/config";import y from"@moodle/lms/core/pending";import j from"@moodle/lms/core/log";import{redirect as b}from"@moodle/lms/core/location";import{relativeUrl as T}from"@moodle/lms/core/url";function q(e){return typeof e=="object"&&e!==null&&"message"in e&&"errorcode"in e}var P=2e3,h=!1;typeof window<"u"&&window.addEventListener("beforeunload",()=>{h=!0});function E(e,t){let{loginrequired:m,nosessionupdate:u,cachekey:r}=t,n=e.map(l=>l.methodname),i=n.length<=5?n.sort().join():`${n.length}-method-calls`,g=JSON.stringify(e),a,s,c="POST";m?(a="service.php",s=`${w.wwwroot}/lib/ajax/${a}?sesskey=${w.sesskey}&info=${i}`):(a="service-nologin.php",s=`${w.wwwroot}/lib/ajax/${a}?info=${i}`,r&&(s+=`&cachekey=${r}`,c="GET")),u&&(s+="&nosessionupdate=true");let x={"Content-Type":"application/json",Accept:"application/json",pageparent:w.traceId||""},d;if(c==="POST")d=g;else{let l=`${s}&args=${encodeURIComponent(g)}`;l.length>P?(c="POST",d=g):s=l}let f={method:c,headers:x,credentials:"same-origin"};return d&&(f.body=d),{url:s,init:f}}function S(e,t,m){if("error"in e&&e.error&&!Array.isArray(e)){for(let{reject:n}of t)n(e);return}let u=e,r=null;for(let n=0;n<t.length;n++){let i=u[n];if(typeof i>"u"){r=new Error("missing response");break}if(i.error===!1)t[n].resolve(i.data);else{r=i.exception||new Error("Unknown error");break}}if(r!==null)if(q(r)&&r.errorcode==="servicerequireslogin"&&!m)b(T("/login/index.php"));else for(let{reject:n}of t)n(r)}function v(e,t={}){let{loginrequired:m=!0,nosessionupdate:u=!1,timeout:r=0,cachekey:n=null}=t,i={loginrequired:m,nosessionupdate:u,timeout:r,cachekey:n&&Number(n)>0?Number(n):null},g=e.map((o,p)=>({index:p,methodname:o.methodname,args:o.args})),a=[],s=e.map(()=>{let o,p,R=new Promise((k,A)=>{o=k,p=A});return a.push({resolve:o,reject:p}),R}),{url:c,init:x}=E(g,i),d=new y("core/ajax:call"),f,l;return r>0&&(f=new AbortController,x.signal=f.signal,l=setTimeout(()=>f.abort(),r)),fetch(c,x).then(o=>{if(!o.ok)throw new Error(`HTTP ${o.status}: ${o.statusText}`);return o.json()}).then(o=>(S(o,a,u),o)).catch(o=>{if(h)j.error("Page unloaded."),j.error(o);else for(let{reject:p}of a)p(o)}).finally(()=>{l&&clearTimeout(l),d.resolve()}),s}function N(e,t={}){return v([e],t)[0]}function U(e,t={}){return Promise.all(v(e,t))}export{U as fetchMany,N as fetchOne,q as isMoodleAjaxError,v as performFetch};
 /**
- * ESM wrapper for the core/ajax AMD module.
+ * Standard Ajax wrapper for Moodle web service calls.
+ *
+ * Calls the central Ajax script which can invoke any existing web service
+ * using the current session. Supports batching multiple requests into a
+ * single HTTP call.
  *
  * @module     core/ajax
- * @copyright  Meirza <meirza.arson@moodle.com>
+ * @copyright  2015 Damyon Wiese <damyon@moodle.com>
+ * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
  */
 //# sourceMappingURL=ajax.js.map
