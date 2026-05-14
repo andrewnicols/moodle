@@ -49,9 +49,9 @@
 </div>
 {{#js}}
 require(['jquery'], function($) {
-    require(['theme_boost/bootstrap/popover'], function() {
+    require(['theme_boost/index'], function(Bootstrap) {
         const target = document.getElementById("calendar-day-popover-link-{{courseid}}-{{year}}-{{yday}}-{{uniqid}}");
-        new Popover(target, {
+        new Bootstrap.Popover(target, {
             content: function() {
                 var source = target.next().find("> *:not('.hidden')");
                 var content = $('<div>');

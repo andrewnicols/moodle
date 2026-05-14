@@ -35,7 +35,7 @@ import {
     notifyCollapsableSectionHidden,
     notifyCollapsableSectionShown
 } from 'core/local/collapsable_section/events';
-import Collapse from 'theme_boost/bootstrap/collapse';
+import {Collapse} from 'theme_boost/index';
 
 let initialized = false;
 

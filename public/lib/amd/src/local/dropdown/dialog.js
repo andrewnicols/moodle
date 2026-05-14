@@ -21,7 +21,7 @@
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import Dropdown from 'theme_boost/bootstrap/dropdown';
+import {Dropdown} from 'theme_boost/index';
 import {
     firstFocusableElement,
     lastFocusableElement,

@@ -20,8 +20,13 @@
  * @copyright  2020 Bas Brands <bas@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+import Deprecated from 'core/deprecated';
 
-import Toast from './bootstrap/toast';
+Deprecated('theme_boost/toast', {
+    replacement: 'Use "import {Toast} from \'theme_boost/index\'" instead.'
+});
+
+import {Toast} from './index';
 
 export {
     Toast

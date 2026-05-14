@@ -29,8 +29,7 @@
  */
 
 import { DefaultAllowlist } from './bootstrap/util/sanitizer';
-import Popover from 'theme_boost/bootstrap/popover';
-import Tooltip from 'theme_boost/bootstrap/tooltip';
+import {Popover, Tooltip} from 'theme_boost/bootstrap/popover';
 import log from 'core/log';
 import emitDeprecation from 'core/deprecated';
 

@@ -14,7 +14,7 @@
     <customised/>
   </library>
   <library>
-    <location>js/esm/src/bootstrap</location>
+    <location>js/esm/src/bootstrap.js</location>
     <name>Twitter Bootstrap</name>
     <description>HTML, CSS, and JavaScript framework for developing responsive, mobile-first projects on the web.</description>
     <version>5.3.8</version>
@@ -27,10 +27,10 @@
     <customised/>
   </library>
   <library>
-    <location>amd/src/index.js</location>
+    <location>js/esm/src/bootstrap</location>
     <name>Twitter Bootstrap</name>
     <description>HTML, CSS, and JavaScript framework for developing responsive, mobile-first projects on the web.</description>
-    <version>5.3.3</version>
+    <version>5.3.8</version>
     <license>MIT</license>
     <repository>https://github.com/twbs/bootstrap</repository>
     <copyrights>

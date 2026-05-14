@@ -1266,10 +1266,10 @@ M.form_filemanager.init = function(Y, options) {
             }
             // Load popover for the filemanager content.
             var filepickerContent = Y.one('.filemanager.fp-file');
-            require(['theme_boost/bootstrap/popover'], function(Popover) {
+            require(['theme_boost/index'], function(Bootstrap) {
                 var popoverTriggerList = filepickerContent.getDOMNode().querySelectorAll('[data-bs-toggle="popover"]');
                 popoverTriggerList.forEach((popoverTriggerEl) => {
-                    new Popover(popoverTriggerEl);
+                    new Bootstrap.Popover(popoverTriggerEl);
                 });
             });
             // update dialog header

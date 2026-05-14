@@ -35,7 +35,7 @@ import {
     hide,
     unhide,
 } from 'core/aria';
-import EventHandler from 'theme_boost/bootstrap/dom/event-handler';
+import {EventHandler} from 'theme_boost/index';
 
 const Selectors = {
     mainMenu: '[role="menu"]',

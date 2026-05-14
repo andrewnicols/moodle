@@ -31,12 +31,18 @@ async function init() {
 
   // Copy the JS bundles to the lib folder.
   fs.copySync(
-    path.join(nodeModuleRoot, 'js', 'dist'),
-    path.join(bundleRoot),
+    path.join(nodeModuleRoot, 'dist', 'js', 'bootstrap.esm.js'),
+    path.join(esmRoot, 'bootstrap.js'),
+  );
+
+  // The bundle does not provide public access to the util and dom modules, so we need to copy those separately.
+  fs.copySync(
+    path.join(nodeModuleRoot, 'js', 'dist', 'util'),
+    path.join(esmRoot, 'bootstrap/util'),
   );
   fs.copySync(
-    path.join(nodeModuleRoot, 'js', 'index.esm.js'),
-    path.join(esmRoot, 'bootstrap.js'),
+    path.join(nodeModuleRoot, 'js', 'dist', 'dom'),
+    path.join(esmRoot, 'bootstrap/dom'),
   );
   console.log(chalk.green(`→ bootstrap:${DS_VERSION} JS bundles ✓`));
 
@@ -49,12 +55,11 @@ async function init() {
 
   // Create readme files in the package folders.
   console.log(chalk.green(`→ Creating readme_moodle.txt files ✓`));
-  createPackageReadme(bundleRoot, 'bootstrap');
   createPackageReadme(themeScssRoot, 'bootstrap');
 
   // And update the version in thirdpartylibs.xml.
   console.log(chalk.green(`→ Updating thirdpartylibs.xml files ✓`));
-  updateThirdPartyLibsXml(themeRoot, 'js/esm/src/bootstrap', 'bootstrap', DS_VERSION);
+  updateThirdPartyLibsXml(themeRoot, 'js/esm/src/bootstrap.js', 'bootstrap', DS_VERSION);
   updateThirdPartyLibsXml(themeRoot, 'scss/bootstrap', 'bootstrap', DS_VERSION);
 
   console.log("\nAll bundles saved" + chalk.green(" ✓"));
