@@ -1,9 +1,15 @@
-var i=Object.defineProperty;var r=(e,n)=>i(e,"name",{value:n,configurable:!0});import{requireAsync as l}from"@moodle/lms/core/amd";function x(e){return typeof e=="object"&&e!==null&&"message"in e&&"errorcode"in e}r(x,"isMoodleAjaxError");var s=await l("core/ajax");function u(e){return new Promise((n,o)=>{e.then(n,o)})}r(u,"toNativePromise");function d(e,n=!0,o=!0,t=!1){let[a]=s.call([e],n,o,t);return u(a)}r(d,"fetchOne");function j(e,n=!0,o=!0,t=!1){return Promise.all(s.call(e,n,o,t).map(a=>u(a)))}r(j,"fetchMany");export{j as fetchMany,d as fetchOne,x as isMoodleAjaxError};
+var b=Object.defineProperty;var c=(e,n)=>b(e,"name",{value:n,configurable:!0});import R from"@moodle/lms/core/config";import T from"@moodle/lms/core/pending";import w from"@moodle/lms/core/log";import{redirect as E}from"@moodle/lms/core/location";import{relativeUrl as S}from"@moodle/lms/core/url";function q(e){return typeof e=="object"&&e!==null&&"message"in e&&"errorcode"in e}c(q,"isMoodleAjaxError");var P=2e3,j=!1;typeof window<"u"&&window.addEventListener("beforeunload",()=>{j=!0});function $(e,n){let{loginrequired:g,nosessionupdate:l,cachekey:t}=n,o=e.map(u=>u.methodname),i=o.length<=5?o.sort().join():`${o.length}-method-calls`,x=JSON.stringify(e),a,s,d="POST";g?(a="service.php",s=`${R.wwwroot}/lib/ajax/${a}?sesskey=${R.sesskey}&info=${i}`):(a="service-nologin.php",s=`${R.wwwroot}/lib/ajax/${a}?info=${i}`,t&&(s+=`&cachekey=${t}`,d="GET")),l&&(s+="&nosessionupdate=true");let h={"Content-Type":"application/json",Accept:"application/json",pageparent:R.traceId||""},p;if(d==="POST")p=x;else{let u=`${s}&args=${encodeURIComponent(x)}`;u.length>P?(d="POST",p=x):s=u}let f={method:d,headers:h,credentials:"same-origin"};return p&&(f.body=p),{url:s,init:f}}c($,"buildRequest");function O(e,n,g){if("error"in e&&e.error&&!Array.isArray(e)){for(let{reject:o}of n)o(e);return}let l=e,t=null;for(let o=0;o<n.length;o++){let i=l[o];if(typeof i>"u"){t=new Error("missing response");break}if(i.error===!1)n[o].resolve(i.data);else{t=i.exception||new Error("Unknown error");break}}if(t!==null)if(q(t)&&t.errorcode==="servicerequireslogin"&&!g)E(S("/login/index.php"));else for(let{reject:o}of n)o(t)}c(O,"processResponse");function v(e,n={}){let{loginrequired:g=!0,nosessionupdate:l=!1,timeout:t=0,cachekey:o=null}=n,i={loginrequired:g,nosessionupdate:l,timeout:t,cachekey:o&&Number(o)>0?Number(o):null},x=e.map((r,m)=>({index:m,methodname:r.methodname,args:r.args})),a=[],s=e.map(()=>{let r,m,k=new Promise((A,y)=>{r=A,m=y});return a.push({resolve:r,reject:m}),k}),{url:d,init:h}=$(x,i),p=new T("core/ajax:call"),f,u;return t>0&&(f=new AbortController,h.signal=f.signal,u=setTimeout(()=>f.abort(),t)),fetch(d,h).then(r=>{if(!r.ok)throw new Error(`HTTP ${r.status}: ${r.statusText}`);return r.json()}).then(r=>(O(r,a,l),r)).catch(r=>{if(j)w.error("Page unloaded."),w.error(r);else for(let{reject:m}of a)m(r)}).finally(()=>{u&&clearTimeout(u),p.resolve()}),s}c(v,"performFetch");function L(e,n={}){return v([e],n)[0]}c(L,"fetchOne");function G(e,n={}){return Promise.all(v(e,n))}c(G,"fetchMany");export{G as fetchMany,L as fetchOne,q as isMoodleAjaxError,v as performFetch};
 /**
- * ESM wrapper for the core/ajax AMD module.
+ * Standard Ajax wrapper for Moodle web service calls.
+ *
+ * Calls the central Ajax script which can invoke any existing web service
+ * using the current session. Supports batching multiple requests into a
+ * single HTTP call.
  *
  * @module     core/ajax
- * @copyright  Meirza <meirza.arson@moodle.com>
+ * @copyright  2015 Damyon Wiese <damyon@moodle.com>
+ * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
  */
 //# sourceMappingURL=ajax.js.map

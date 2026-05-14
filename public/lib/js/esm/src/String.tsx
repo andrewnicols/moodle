@@ -14,7 +14,13 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 import {Suspense, use, type ReactNode} from 'react';
-import {requireAsync} from '@moodle/lms/core/amd';
+import {
+    fetchMany,
+    FetchResult,
+    FetchResultError,
+    FetchResultSuccess,
+    ServiceErrorResponse,
+} from '@moodle/lms/core/ajax';
 import config from './config';
 import {localStore} from './Storage';
 
@@ -57,6 +63,9 @@ export type CacheStringEntry = {
     /** The language code (defaults to current page language). */
     lang?: string;
 };
+
+type FetchStringResultSuccess = FetchResultSuccess & string;
+type FetchStringResult = FetchStringResultSuccess[] | FetchResultError[];
 
 // --- Internal state ---
 
@@ -171,24 +180,30 @@ export const getRequestedStrings = (requests: StringRequest[]): Promise<string>[
     if (pendingFetches.length > 0) {
         const ajaxRequests = pendingFetches.map((pf) => pf.request);
 
-        requireAsync<AmdAjax>('core/ajax').then(
-            (ajax) => {
-                const jqPromises = ajax.call(
-                    ajaxRequests, true, false, false, 0, config.langrev,
-                );
-                jqPromises.forEach((jqp, j) => {
-                    jqp.then( // eslint-disable-line promise/no-nesting
-                        (str: unknown) => pendingFetches[j].resolve(str as string),
-                        (err: unknown) => pendingFetches[j].reject(err),
-                    );
-                });
+        fetchMany<FetchResult>(ajaxRequests, {
+            loginrequired: true,
+            nosessionupdate: false,
+            timeout: 0,
+            cachekey: config.langrev,
+        })
+        .then((results) => {
+            if ('error' in results && results.error) {
+                const errorMessage = (results as ServiceErrorResponse).exception?.message || 'Unknown error';
+                throw new Error(errorMessage);
+            }
 
-                return ajax;
-            },
-            (err) => {
-                pendingFetches.forEach((pf) => pf.reject(err));
-            },
-        );
+            (results as FetchStringResult[]).forEach((result, index) => {
+                const pf = pendingFetches[index];
+                if (typeof result === 'string') {
+                    pf.resolve(result);
+                }
+            });
+
+            return results;
+        })
+        .catch((err) => {
+            pendingFetches.forEach((pf) => pf.reject(err));
+        });
     }
 
     return stringPromises;
