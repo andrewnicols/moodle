@@ -1589,6 +1589,7 @@ EOF;
             'core/pending' => '@moodle/lms/core/pending:default',
             'core/sessionstorage' => '@moodle/lms/core/Storage:sessionStore',
             'core/storagewrapper' => '@moodle/lms/core/Storage:default',
+            'core/url' => '@moodle/lms/core/url',
             'core/utils' => '@moodle/lms/core/utils',
         ]);
 
