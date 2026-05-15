@@ -112,8 +112,8 @@ type ServiceResult = ServiceResponse[] | ServiceErrorResponse;
 function buildRequest(
     requestData: ServiceRequest[],
     options: Required<AjaxOptions>,
-): { url: string; init: RequestInit } {
-    const { loginrequired, nosessionupdate, cachekey } = options;
+): {url: string; init: RequestInit} {
+    const {loginrequired, nosessionupdate, cachekey} = options;
 
     const methodInfo = requestData.map((r) => r.methodname);
     const requestInfo = methodInfo.length <= 5
@@ -173,7 +173,7 @@ function buildRequest(
         init.body = body;
     }
 
-    return { url, init };
+    return {url, init};
 }
 
 /**
@@ -181,12 +181,12 @@ function buildRequest(
  */
 function processResponse(
     responses: ServiceResult,
-    resolvers: Array<{ resolve: (value: unknown) => void; reject: (reason: unknown) => void }>,
+    resolvers: Array<{resolve: (value: unknown) => void; reject: (reason: unknown) => void}>,
     nosessionupdate: boolean,
 ): void {
     // Check for a whole-batch error.
     if ('error' in responses && responses.error && !Array.isArray(responses)) {
-        for (const { reject } of resolvers) {
+        for (const {reject} of resolvers) {
             reject(responses);
         }
         return;
@@ -213,7 +213,7 @@ function processResponse(
         if (isMoodleAjaxError(exception) && exception.errorcode === 'servicerequireslogin' && !nosessionupdate) {
             redirect(relativeUrl('/login/index.php'));
         } else {
-            for (const { reject } of resolvers) {
+            for (const {reject} of resolvers) {
                 reject(exception);
             }
         }
@@ -256,19 +256,19 @@ export function performFetch(
         args: req.args,
     }));
 
-    const resolvers: Array<{ resolve: (value: unknown) => void; reject: (reason: unknown) => void }> = [];
+    const resolvers: Array<{resolve: (value: unknown) => void; reject: (reason: unknown) => void}> = [];
     const promises: Promise<unknown>[] = requests.map(() => {
-        let resolve!: (value: unknown) => void;
-        let reject!: (reason: unknown) => void;
-        const promise = new Promise<unknown>((res, rej) => {
-            resolve = res;
-            reject = rej;
+        let outerResolve!: (value: unknown) => void;
+        let outerReject!: (reason: unknown) => void;
+        const promise = new Promise<unknown>((resolve, reject) => {
+            outerResolve = resolve;
+            outerReject = reject;
         });
-        resolvers.push({ resolve, reject });
+        resolvers.push({resolve: outerResolve, reject: outerReject});
         return promise;
     });
 
-    const { url, init } = buildRequest(requestData, resolvedOptions);
+    const {url, init} = buildRequest(requestData, resolvedOptions);
 
     const pendingPromise = new Pending('core/ajax:call');
 
@@ -290,13 +290,15 @@ export function performFetch(
         })
         .then((data) => {
             processResponse(data, resolvers, nosessionupdate);
+
+            return data;
         })
         .catch((error) => {
             if (unloading) {
                 log.error('Page unloaded.');
                 log.error(error);
             } else {
-                for (const { reject } of resolvers) {
+                for (const {reject} of resolvers) {
                     reject(error);
                 }
             }
