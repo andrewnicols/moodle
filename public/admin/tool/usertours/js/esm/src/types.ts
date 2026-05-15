@@ -81,3 +81,31 @@ export interface VisibleStepInfo {
     /** The one-based position among visible steps. */
     position: number;
 }
+
+/** A tour detail entry as passed from PHP via js_call_amd. */
+export interface TourDetail {
+    /** The database ID of the tour. */
+    tourId: number;
+    /** Whether the tour should be started for the current user. */
+    startTour: boolean;
+    /** Client-side filter values keyed by filter name. */
+    filtervalues: Record<string, string[]>;
+}
+
+/**
+ * Interface that client-side tour filters must implement.
+ *
+ * Each filter module is dynamically imported and must export a `filterMatches` function.
+ */
+export interface TourFilter {
+    /** Check whether this tour should be shown given the current page state. */
+    filterMatches(tourConfig: TourDetail): boolean;
+}
+
+/** Props for the top-level UserTours orchestrator component. */
+export interface UserToursProps {
+    /** Tour detail entries from the server (one per candidate tour). */
+    tourDetails: TourDetail[];
+    /** AMD module names for client-side filters (e.g. "tool_usertours/filter_cssselector"). */
+    filterNames: string[];
+}

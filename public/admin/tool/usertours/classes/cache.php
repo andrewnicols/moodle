@@ -123,6 +123,7 @@ EOF;
         global $DB;
 
         $cache = \cache::make('tool_usertours', self::CACHENAME_STEP);
+        $cache->purge();
 
         $data = $cache->get($tourid);
         if ($data === false) {

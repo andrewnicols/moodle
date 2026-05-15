@@ -21,17 +21,33 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+import FilterBase from './filter_base';
+
 /**
- * Checks whether the configured CSS selector exists on this page.
- *
- * @param {array} tourConfig  The tour configuration.
- * @returns {boolean}
+ * Client-side filter that checks whether a CSS selector matches an element on the page.
  */
-export const filterMatches = function(tourConfig) {
-    let filterValues = tourConfig.filtervalues.cssselector;
-    if (filterValues[0]) {
-        return !!document.querySelector(filterValues[0]);
+export class CssSelectorFilter extends FilterBase {
+    /**
+     * Checks whether the configured CSS selector exists on this page.
+     *
+     * @param {object} tourConfig The tour configuration including filtervalues.
+     * @returns {boolean} True if the selector matches or none is configured.
+     */
+    filterMatches(tourConfig) {
+        const filterValues = tourConfig.filtervalues.cssselector;
+        if (filterValues[0]) {
+            return !!document.querySelector(filterValues[0]);
+        }
+        // If there is no CSS selector configured, this page matches.
+        return true;
     }
-    // If there is no CSS selector configured, this page matches.
-    return true;
-};
+}
+
+// Export a singleton instance as the default so that requireManyAsync
+// returns an object with a filterMatches method — matching the interface
+// expected by the UserTours orchestrator.
+export default new CssSelectorFilter();
+
+// Also export filterMatches as a named export for backward compatibility.
+const instance = new CssSelectorFilter();
+export const filterMatches = (tourConfig) => instance.filterMatches(tourConfig);

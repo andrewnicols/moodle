@@ -32,7 +32,11 @@
  */
 
 export {default} from './TourComponent';
+export {default as UserTours} from './UserTours';
 export {default as TourStep} from './TourStep';
 export {default as TourBackdrop} from './TourBackdrop';
 export {useTourApi} from './useTourApi';
-export type {TourConfig, TourProps, StepConfig, Placement, VisibleStepInfo} from './types';
+export type {
+    TourConfig, TourProps, StepConfig, Placement, VisibleStepInfo,
+    TourDetail, TourFilter, UserToursProps,
+} from './types';

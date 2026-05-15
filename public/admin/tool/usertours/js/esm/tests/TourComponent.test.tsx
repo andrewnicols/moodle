@@ -26,10 +26,27 @@ import userEvent from '@testing-library/user-event';
 import Tour from '../src/TourComponent';
 import type {TourConfig} from '../src/types';
 
+// Mock useTourApi — the component calls these internally.
+const mockMarkStepShown = jest.fn().mockResolvedValue(undefined);
+const mockMarkTourComplete = jest.fn().mockResolvedValue(undefined);
+const mockFetchTour = jest.fn().mockResolvedValue(null);
+const mockResetTourState = jest.fn().mockResolvedValue(null);
+
+jest.mock('../src/useTourApi', () => ({
+    useTourApi: () => ({
+        fetchTour: mockFetchTour,
+        markStepShown: mockMarkStepShown,
+        markTourComplete: mockMarkTourComplete,
+        resetTourState: mockResetTourState,
+    }),
+}));
+
 beforeEach(() => {
     mockString('nextstep', 'tool_usertours', 'Next');
     mockString('nextstep_sequence', 'tool_usertours', 'Next ({$a->position}/{$a->total})');
     mockString('skip_tour', 'tool_usertours', 'Skip tour');
+    mockMarkStepShown.mockClear();
+    mockMarkTourComplete.mockClear();
 });
 
 // Mock @popperjs/core.
@@ -110,17 +127,12 @@ describe('Tour', () => {
         expect(dialog.getAttribute('aria-describedby')).toBe('tour-step-test_tour-0-body');
     });
 
-    it('calls onTourEnd when end button is clicked', async () => {
-        const onTourEnd = jest.fn();
-        const onTourComplete = jest.fn();
-
+    it('calls markTourComplete when end button is clicked', async () => {
         await act(async () => {
             render(
                 <Tour
                     tourConfig={baseTourConfig}
                     tourId={1}
-                    onTourEnd={onTourEnd}
-                    onTourComplete={onTourComplete}
                 />,
             );
         });
@@ -132,8 +144,7 @@ describe('Tour', () => {
         const endButton = screen.getByRole('button', {name: /skip tour|got it/i});
         await userEvent.click(endButton);
 
-        expect(onTourEnd).toHaveBeenCalled();
-        expect(onTourComplete).toHaveBeenCalled();
+        expect(mockMarkTourComplete).toHaveBeenCalled();
     });
 
     it('advances to next step when next button is clicked', async () => {
@@ -179,10 +190,8 @@ describe('Tour', () => {
     });
 
     it('closes on Escape key', async () => {
-        const onTourEnd = jest.fn();
-
         await act(async () => {
-            render(<Tour tourConfig={baseTourConfig} tourId={1} onTourEnd={onTourEnd} />);
+            render(<Tour tourConfig={baseTourConfig} tourId={1} />);
         });
 
         await act(async () => {
@@ -191,7 +200,7 @@ describe('Tour', () => {
 
         await userEvent.keyboard('{Escape}');
 
-        expect(onTourEnd).toHaveBeenCalled();
+        expect(mockMarkTourComplete).toHaveBeenCalled();
     });
 
     it('starts at a specific step number', async () => {
