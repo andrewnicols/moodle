@@ -111,6 +111,7 @@ export function markTourComplete(
  * @returns The ID of the tour to restart, or null.
  */
 export function resetTourState(tourId: number): Promise<number | null> {
+    window.console.log('Resetting tour state for tour ID', tourId); // Debug log to trace reset calls.
     return fetchOne<ResetTourResponse>({
         methodname: 'tool_usertours_reset_tour',
         args: {

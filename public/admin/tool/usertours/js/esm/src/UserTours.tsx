@@ -27,8 +27,7 @@
  */
 
 import {type FC, useState, useEffect} from 'react';
-import {createPortal} from 'react-dom';
-import String from '@moodle/lms/core/String';
+import {getString} from '@moodle/lms/core/String';
 
 import Tour from './TourComponent';
 import {fetchTour, resetTourState} from './useTourApi';
@@ -72,26 +71,50 @@ function getResetContainer(): HTMLElement {
 }
 
 /**
- * Reset link component rendered via a portal into the preferred page location.
+ * Reset link component.
+ *
+ * Creates the link imperatively so the text is available synchronously
+ * for the footer popover (which copies innerHTML). Uses document-level
+ * event delegation so clicks on any copy of the link are handled.
  */
 const ResetLink: FC<{onClick: () => void}> = ({onClick}) => {
-    const container = getResetContainer();
+    // Create the DOM element imperatively with pre-resolved text.
+    useEffect(() => {
+        const container = getResetContainer();
+        const wrapper = document.createElement('div');
+        wrapper.className = 'usertour';
 
-    return createPortal(
-        <div className="usertour">
-            <a
-                id="resetpagetour"
-                href="#"
-                onClick={(e) => {
-                    e.preventDefault();
-                    onClick();
-                }}
-            >
-                <String identifier="resettouronpage" component="tool_usertours" />
-            </a>
-        </div>,
-        container,
-    );
+        const link = document.createElement('a');
+        link.id = 'resetpagetour';
+        link.href = '#';
+        wrapper.appendChild(link);
+        container.appendChild(wrapper);
+
+        getString('resettouronpage', 'tool_usertours').then((text) => {
+            link.textContent = text;
+            return undefined;
+        });
+
+        return () => {
+            wrapper.remove();
+        };
+    }, []);
+
+    // Document-level delegation catches clicks on the original and any copies.
+    useEffect(() => {
+        const handler = (e: MouseEvent) => {
+            const target = (e.target as HTMLElement).closest('#resetpagetour');
+            if (!target) {
+                return;
+            }
+            e.preventDefault();
+            onClick();
+        };
+        document.addEventListener('click', handler);
+        return () => document.removeEventListener('click', handler);
+    }, [onClick]);
+
+    return null;
 };
 
 const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
