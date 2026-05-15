@@ -26,7 +26,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {type FC, useState, useEffect, useCallback} from 'react';
+import {type FC, useState, useEffect} from 'react';
 import {createPortal} from 'react-dom';
 import String from '@moodle/lms/core/String';
 
@@ -139,24 +139,22 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
     }, [filtersLoaded, tourDetails, filters]);
 
     // Handle reset: clear current tour, request reset from server, re-fetch.
-    const handleReset = useCallback(() => {
+    const handleReset = async() => {
         if (matchedTourId === null) {
             return;
         }
 
         setTourConfig(null);
 
-        resetTourState(matchedTourId).then(async(restartTourId) => {
-            if (restartTourId) {
-                setMatchedTourId(restartTourId);
-                const config = await fetchTour(restartTourId);
-                if (config) {
-                    setTourConfig(config);
-                }
+        const restartTourId = await resetTourState(matchedTourId);
+        if (restartTourId) {
+            setMatchedTourId(restartTourId);
+            const config = await fetchTour(restartTourId);
+            if (config) {
+                setTourConfig(config);
             }
-            return undefined;
-        });
-    }, [matchedTourId]);
+        }
+    };
 
     return (
         <>

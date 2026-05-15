@@ -26,11 +26,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {type FC, useState, useCallback, useMemo, useEffect, useRef} from 'react';
+import {type FC, useState, useCallback, useMemo, useEffect} from 'react';
 import {createPortal} from 'react-dom';
 
 import TourStep from './TourStep';
 import {markStepShown, markTourComplete} from './useTourApi';
+import {get as sessionGet, set as sessionSet} from '@moodle/lms/core/SessionStorage';
 import type {TourProps, StepConfig, VisibleStepInfo} from './types';
 
 /** Custom event names matching the original AMD events module. */
@@ -115,6 +116,30 @@ function normalizeStep(raw: Record<string, unknown>, index: number): StepConfig 
     };
 }
 
+/**
+ * Find the next potentially visible step after a given index.
+ */
+function getNextVisibleStep(steps: StepConfig[], from: number): number | null {
+    for (let i = from + 1; i < steps.length; i++) {
+        if (isStepPotentiallyVisible(steps[i])) {
+            return i;
+        }
+    }
+    return null;
+}
+
+/**
+ * Find the previous potentially visible step before a given index.
+ */
+function getPreviousVisibleStep(steps: StepConfig[], from: number): number | null {
+    for (let i = from - 1; i >= 0; i--) {
+        if (isStepPotentiallyVisible(steps[i])) {
+            return i;
+        }
+    }
+    return null;
+}
+
 const Tour: FC<TourProps> = ({
     tourConfig,
     tourId,
@@ -122,7 +147,7 @@ const Tour: FC<TourProps> = ({
 }) => {
     const [currentStepNumber, setCurrentStepNumber] = useState<number | null>(null);
     const [tourRunning, setTourRunning] = useState(false);
-    const storageKeyRef = useRef(`tourstate_${tourConfig.name}`);
+    const storageKey = `tourstate_${tourConfig.name}`;
 
     // Normalise steps once.
     const steps = useMemo(
@@ -142,60 +167,6 @@ const Tour: FC<TourProps> = ({
         }
         return {visibleStepsMap: map, totalVisibleSteps: map.size};
     }, [steps]);
-
-    /**
-     * Find the next potentially visible step after a given step number.
-     */
-    const getNextStepNumber = useCallback(
-        (from: number): number | null => {
-            for (let i = from + 1; i < steps.length; i++) {
-                if (isStepPotentiallyVisible(steps[i])) {
-                    return i;
-                }
-            }
-            return null;
-        },
-        [steps],
-    );
-
-    /**
-     * Find the previous potentially visible step before a given step number.
-     */
-    const getPreviousStepNumber = useCallback(
-        (from: number): number | null => {
-            for (let i = from - 1; i >= 0; i--) {
-                if (isStepPotentiallyVisible(steps[i])) {
-                    return i;
-                }
-            }
-            return null;
-        },
-        [steps],
-    );
-
-    /**
-     * Check if a step is the last visible step.
-     */
-    const isLastStep = useCallback(
-        (stepNumber: number): boolean => {
-            return getNextStepNumber(stepNumber) === null;
-        },
-        [getNextStepNumber],
-    );
-
-    /**
-     * Save current step to session storage.
-     */
-    const saveStepToStorage = useCallback(
-        (stepNumber: number) => {
-            try {
-                window.sessionStorage.setItem(storageKeyRef.current, String(stepNumber));
-            } catch {
-                // Quota exceeded or unavailable — silently ignore.
-            }
-        },
-        [],
-    );
 
     /**
      * End the tour.
@@ -218,7 +189,7 @@ const Tour: FC<TourProps> = ({
         setTourRunning(false);
 
         dispatchTourEvent(EVENT_TYPES.tourEnded);
-    }, [currentStepNumber, steps, tourId, markTourComplete]);
+    }, [currentStepNumber, steps, tourId]);
 
     /**
      * Go to a specific step.
@@ -241,8 +212,10 @@ const Tour: FC<TourProps> = ({
 
             // If target isn't visible and not orphan, skip to next/previous.
             if (!step.orphan && !isStepTargetVisible(step)) {
-                const fn = direction === -1 ? getPreviousStepNumber : getNextStepNumber;
-                gotoStep(fn(stepNumber), direction);
+                const nextStep = direction === -1
+                    ? getPreviousVisibleStep(steps, stepNumber)
+                    : getNextVisibleStep(steps, stepNumber);
+                gotoStep(nextStep, direction);
                 return;
             }
 
@@ -262,14 +235,14 @@ const Tour: FC<TourProps> = ({
             }
 
             setCurrentStepNumber(stepNumber);
-            saveStepToStorage(stepNumber);
+            sessionSet(storageKey, String(stepNumber));
 
             // Notify the server about the step being shown.
             markStepShown(step.stepid, tourId, stepNumber);
 
             dispatchTourEvent(EVENT_TYPES.stepRendered, {stepConfig: step});
         },
-        [steps, endTour, getPreviousStepNumber, getNextStepNumber, currentStepNumber, saveStepToStorage, markStepShown, tourId],
+        [steps, endTour, currentStepNumber, tourId, storageKey],
     );
 
     /**
@@ -279,25 +252,20 @@ const Tour: FC<TourProps> = ({
         if (currentStepNumber === null) {
             return;
         }
-        const nextStep = getNextStepNumber(currentStepNumber);
-        gotoStep(nextStep);
-    }, [currentStepNumber, getNextStepNumber, gotoStep]);
+        gotoStep(getNextVisibleStep(steps, currentStepNumber));
+    }, [currentStepNumber, steps, gotoStep]);
 
     // Start the tour on mount.
     useEffect(() => {
         let resolvedStartAt = startAt;
 
         // Check session storage for a resume position.
-        try {
-            const stored = window.sessionStorage.getItem(storageKeyRef.current);
-            if (stored !== null) {
-                const parsed = parseInt(stored, 10);
-                if (!isNaN(parsed) && parsed >= 0 && parsed < steps.length) {
-                    resolvedStartAt = parsed;
-                }
+        const stored = sessionGet(storageKey);
+        if (stored !== null) {
+            const parsed = parseInt(stored, 10);
+            if (!isNaN(parsed) && parsed >= 0 && parsed < steps.length) {
+                resolvedStartAt = parsed;
             }
-        } catch {
-            // Session storage unavailable.
         }
 
         const startAllowed = dispatchTourEvent(
@@ -353,7 +321,7 @@ const Tour: FC<TourProps> = ({
             stepConfig={currentStep}
             tourName={tourConfig.name}
             endTourLabel={tourConfig.endtourlabel}
-            isLastStep={isLastStep(currentStepNumber)}
+            isLastStep={getNextVisibleStep(steps, currentStepNumber) === null}
             displayStepNumbers={tourConfig.displaystepnumbers}
             visibleSteps={visibleStepsMap}
             totalVisibleSteps={totalVisibleSteps}

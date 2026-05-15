@@ -469,7 +469,6 @@ const TourStep: FC<TourStepProps> = ({
                                     id={`${stepId}-title`}
                                     dangerouslySetInnerHTML={{__html: stepConfig.title}}
                                 />
-                                Hello!!!
                             </div>
                             <div
                                 className="modal-body"
