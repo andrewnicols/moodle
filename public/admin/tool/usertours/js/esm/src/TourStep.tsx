@@ -31,6 +31,7 @@ import {createPopper} from '@popperjs/core';
 import type {Instance as PopperInstance, Placement as PopperPlacement} from '@popperjs/core';
 
 import String from '@moodle/lms/core/String';
+import {Button} from '@moodlehq/design-system';
 
 import TourBackdrop from './TourBackdrop';
 import type {StepConfig, VisibleStepInfo} from './types';
@@ -479,51 +480,49 @@ const TourStep: FC<TourStepProps> = ({
                             />
                             <div className="modal-footer">
                                 {!isLastStep && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-secondary"
+                                    <Button
+                                        variant="secondary"
                                         data-role="skip"
                                         onClick={onEnd}
-                                    >
-                                        <String
-                                            identifier="skip_tour"
-                                            component="tool_usertours"
-                                        />
-                                    </button>
+                                        label={
+                                            <String
+                                                identifier="skip_tour"
+                                                component="tool_usertours"
+                                            /> as unknown as string
+                                        }
+                                    />
                                 )}
                                 {!isLastStep && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
+                                    <Button
+                                        variant="primary"
                                         data-role="next"
                                         onClick={onNext}
-                                    >
-                                        {displayStepNumbers && stepInfo ? (
-                                            <String
-                                                identifier="nextstep_sequence"
-                                                component="tool_usertours"
-                                                params={{
-                                                    position: stepInfo.position,
-                                                    total: totalVisibleSteps,
-                                                }}
-                                            />
-                                        ) : (
-                                            <String
-                                                identifier="nextstep"
-                                                component="tool_usertours"
-                                            />
-                                        )}
-                                    </button>
+                                        label={
+                                            displayStepNumbers && stepInfo ? (
+                                                <String
+                                                    identifier="nextstep_sequence"
+                                                    component="tool_usertours"
+                                                    params={{
+                                                        position: stepInfo.position,
+                                                        total: totalVisibleSteps,
+                                                    }}
+                                                /> as unknown as string
+                                            ) : (
+                                                <String
+                                                    identifier="nextstep"
+                                                    component="tool_usertours"
+                                                /> as unknown as string
+                                            )
+                                        }
+                                    />
                                 )}
                                 {isLastStep && (
-                                    <button
-                                        type="button"
-                                        className="btn btn-primary"
+                                    <Button
+                                        variant="primary"
                                         data-role="end"
                                         onClick={onEnd}
-                                    >
-                                        {endTourLabel}
-                                    </button>
+                                        label={endTourLabel}
+                                    />
                                 )}
                             </div>
                         </div>
