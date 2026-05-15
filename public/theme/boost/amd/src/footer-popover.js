@@ -92,6 +92,20 @@ export const init = () => {
     footerButton.addEventListener('hide.bs.popover', () => {
         footerIsShown = false;
     });
+
+    // Watch the footer content source for changes (e.g. dynamically-added
+    // elements like the user tours reset link) and push fresh content into
+    // the Popover so the next open reflects the current state.
+    const footerContent = document.querySelector(SELECTORS.FOOTERCONTENT);
+    if (footerContent) {
+        const observer = new MutationObserver(() => {
+            const instance = Popover.getInstance(footerButton);
+            if (instance) {
+                instance.setContent({'.popover-body': getFooterContent()});
+            }
+        });
+        observer.observe(footerContent, {childList: true, subtree: true, characterData: true});
+    }
 };
 
 /**
