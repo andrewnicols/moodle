@@ -4,18 +4,16 @@
  * @module     tool_usertours/usertours
  * @copyright  2016 Andrew Nicols <andrew@nicols.co.uk>
  */
-import BootstrapTour from './tour';
 import Templates from 'core/templates';
-import log from 'core/log';
 import notification from 'core/notification';
 import * as tourRepository from './repository';
 import Pending from 'core/pending';
-import {eventTypes} from './events';
 
-let currentTour = null;
+import {appendToDom} from 'core/component';
+
+/** The container element holding the currently mounted React tour. */
+let tourContainer = null;
 let tourId = null;
-let restartTourAndKeepProgress = false;
-let currentStepNo = null;
 
 /**
  * Find the first matching tour.
@@ -77,24 +75,10 @@ export const init = async(tourDetails, filters) => {
             resetTourState(tourId);
         }
     });
-
-    // Watch for the resize event.
-    window.addEventListener("resize", () => {
-        // Only listen for the running tour.
-        if (currentTour && currentTour.tourRunning) {
-            clearTimeout(window.resizedFinished);
-            window.resizedFinished = setTimeout(() => {
-                // Wait until the resize event has finished.
-                currentStepNo = currentTour.getCurrentStepNumber();
-                restartTourAndKeepProgress = true;
-                resetTourState(tourId);
-            }, 250);
-        }
-    });
 };
 
 /**
- * Fetch the configuration specified tour, and start the tour when it has been fetched.
+ * Fetch the configuration for the specified tour and mount the React tour component.
  *
  * @method  fetchTour
  * @param   {Number}    tourId      The ID of the tour to start.
@@ -103,11 +87,25 @@ const fetchTour = async tourId => {
     const pendingPromise = new Pending(`admin_usertour_fetchTour:${tourId}`);
 
     try {
-        // If we don't have any tour config (because it doesn't need showing for the current user), return early.
         const response = await tourRepository.fetchTour(tourId);
         if (response.hasOwnProperty('tourconfig')) {
-            const {html} = await Templates.renderForPromise('tool_usertours/tourstep', response.tourconfig);
-            startBootstrapTour(tourId, html, response.tourconfig);
+            // Remove any previously mounted tour.
+            if (tourContainer) {
+                tourContainer.remove();
+                tourContainer = null;
+            }
+
+            appendToDom(
+                '@moodle/lms/tool_usertours/TourComponent',
+                {
+                    tourConfig: response.tourconfig,
+                    tourId: tourId,
+                },
+                document.body,
+            );
+
+            // Keep a reference to the container so we can remove it on reset.
+            tourContainer = document.body.lastElementChild;
         }
         pendingPromise.resolve();
     } catch (error) {
@@ -154,98 +152,6 @@ const addResetLink = () => {
     .catch()
     .then(pendingPromise.resolve)
     .catch();
-};
-
-/**
- * Start the specified tour.
- *
- * @method  startBootstrapTour
- * @param   {Number}    tourId      The ID of the tour to start.
- * @param   {String}    template    The template to use.
- * @param   {Object}    tourConfig  The tour configuration.
- * @return  {Object}
- */
-const startBootstrapTour = (tourId, template, tourConfig) => {
-    if (currentTour && currentTour.tourRunning) {
-        // End the current tour.
-        currentTour.endTour();
-        currentTour = null;
-    }
-
-    document.addEventListener(eventTypes.tourEnded, markTourComplete);
-    document.addEventListener(eventTypes.stepRenderer, markStepShown);
-
-    // Sort out the tour name.
-    tourConfig.tourName = tourConfig.name;
-    delete tourConfig.name;
-
-    // Add the template to the configuration.
-    // This enables translations of the buttons.
-    tourConfig.template = template;
-
-    tourConfig.steps = tourConfig.steps.map(function(step) {
-        if (typeof step.element !== 'undefined') {
-            step.target = step.element;
-            delete step.element;
-        }
-
-        if (typeof step.reflex !== 'undefined') {
-            step.moveOnClick = !!step.reflex;
-            delete step.reflex;
-        }
-
-        if (typeof step.content !== 'undefined') {
-            step.body = step.content;
-            delete step.content;
-        }
-
-        return step;
-    });
-
-    currentTour = new BootstrapTour(tourConfig);
-    let startAt = 0;
-    if (restartTourAndKeepProgress && currentStepNo) {
-        startAt = currentStepNo;
-        restartTourAndKeepProgress = false;
-        currentStepNo = null;
-    }
-    return currentTour.startTour(startAt);
-};
-
-/**
- * Mark the specified step as being shownd by the user.
- *
- * @method  markStepShown
- * @param   {Event} e
- */
-const markStepShown = e => {
-    const tour = e.detail.tour;
-    const stepConfig = tour.getStepConfig(tour.getCurrentStepNumber());
-    tourRepository.markStepShown(
-        stepConfig.stepid,
-        tourId,
-        tour.getCurrentStepNumber()
-    ).catch(log.error);
-};
-
-/**
- * Mark the specified tour as being completed by the user.
- *
- * @method  markTourComplete
- * @param   {Event} e
- * @listens tool_usertours/stepRendered
- */
-const markTourComplete = e => {
-    document.removeEventListener(eventTypes.tourEnded, markTourComplete);
-    document.removeEventListener(eventTypes.stepRenderer, markStepShown);
-
-    const tour = e.detail.tour;
-    const stepConfig = tour.getStepConfig(tour.getCurrentStepNumber());
-    tourRepository.markTourComplete(
-        stepConfig.stepid,
-        tourId,
-        tour.getCurrentStepNumber()
-    ).catch(log.error);
 };
 
 /**
