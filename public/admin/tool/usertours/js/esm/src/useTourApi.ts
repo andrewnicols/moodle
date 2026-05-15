@@ -24,7 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {performFetch} from '@moodle/lms/core/ajax';
+import {fetchOne} from '@moodle/lms/core/ajax';
 import config from '@moodle/lms/core/config';
 
 import type {TourConfig} from './types';
@@ -45,18 +45,15 @@ interface ResetTourResponse {
  * @param tourId The database ID of the tour.
  * @returns The tour configuration, or null if none was returned.
  */
-export async function fetchTour(tourId: number): Promise<TourConfig | null> {
-    const [promise] = performFetch([{
+export function fetchTour(tourId: number): Promise<TourConfig | null> {
+    return fetchOne<FetchTourResponse>({
         methodname: 'tool_usertours_fetch_and_start_tour',
         args: {
             tourid: tourId,
             context: config.contextid,
             pageurl: window.location.href,
         },
-    }]);
-
-    const response = await promise as FetchTourResponse;
-    return response.tourconfig ?? null;
+    }).then((response) => response.tourconfig ?? null);
 }
 
 /**
@@ -66,12 +63,12 @@ export async function fetchTour(tourId: number): Promise<TourConfig | null> {
  * @param tourId The database ID of the tour.
  * @param stepIndex The zero-based index of the step.
  */
-export async function markStepShown(
+export function markStepShown(
     stepId: number,
     tourId: number,
     stepIndex: number,
 ): Promise<void> {
-    const [promise] = performFetch([{
+    return fetchOne({
         methodname: 'tool_usertours_step_shown',
         args: {
             tourid: tourId,
@@ -80,8 +77,7 @@ export async function markStepShown(
             context: config.contextid,
             pageurl: window.location.href,
         },
-    }]);
-    await promise;
+    }).then(() => undefined);
 }
 
 /**
@@ -91,12 +87,12 @@ export async function markStepShown(
  * @param tourId The database ID of the tour.
  * @param stepIndex The zero-based index of the final step.
  */
-export async function markTourComplete(
+export function markTourComplete(
     stepId: number,
     tourId: number,
     stepIndex: number,
 ): Promise<void> {
-    const [promise] = performFetch([{
+    return fetchOne({
         methodname: 'tool_usertours_complete_tour',
         args: {
             stepid: stepId,
@@ -105,8 +101,7 @@ export async function markTourComplete(
             context: config.contextid,
             pageurl: window.location.href,
         },
-    }]);
-    await promise;
+    }).then(() => undefined);
 }
 
 /**
@@ -115,16 +110,13 @@ export async function markTourComplete(
  * @param tourId The database ID of the tour.
  * @returns The ID of the tour to restart, or null.
  */
-export async function resetTourState(tourId: number): Promise<number | null> {
-    const [promise] = performFetch([{
+export function resetTourState(tourId: number): Promise<number | null> {
+    return fetchOne<ResetTourResponse>({
         methodname: 'tool_usertours_reset_tour',
         args: {
             tourid: tourId,
             context: config.contextid,
             pageurl: window.location.href,
         },
-    }]);
-
-    const response = await promise as ResetTourResponse;
-    return response.startTour ?? null;
+    }).then((response) => response.startTour ?? null);
 }
