@@ -37,7 +37,7 @@ import type {TourFilter} from './types';
  */
 export async function loadFilterModules(filterNames: string[]): Promise<TourFilter[]> {
     const modules = await Promise.all(
-        filterNames.map((name) => import(/* webpackIgnore: true */ name)),
+        filterNames.map((name) => import(/* WebpackIgnore: true */ name)),
     );
     return modules.map((m) => m.default ?? m) as TourFilter[];
 }

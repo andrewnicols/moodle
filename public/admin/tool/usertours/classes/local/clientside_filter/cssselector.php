@@ -98,7 +98,6 @@ class cssselector extends clientside_filter {
     public static function get_client_side_values(tour $tour): stdClass {
         $filtername = static::get_filter_name();
         $filtervalues = $tour->get_filter_values($filtername);
-
         // Filter values might not exist for tours that were created before this filter existed.
         if (!$filtervalues) {
             return new stdClass();

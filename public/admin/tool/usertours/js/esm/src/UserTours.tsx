@@ -111,6 +111,7 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
         loadFilterModules(filterNames).then((loaded) => {
             setFilters(loaded);
             setFiltersLoaded(true);
+            return undefined;
         });
     }, [filterNames]);
 
@@ -133,6 +134,7 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
                 if (config) {
                     setTourConfig(config);
                 }
+                return undefined;
             });
         }
     }, [filtersLoaded, tourDetails, filters, fetchTour]);
@@ -145,15 +147,15 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
 
         setTourConfig(null);
 
-        resetTourState(matchedTourId).then((restartTourId) => {
+        resetTourState(matchedTourId).then(async(restartTourId) => {
             if (restartTourId) {
                 setMatchedTourId(restartTourId);
-                fetchTour(restartTourId).then((config) => {
-                    if (config) {
-                        setTourConfig(config);
-                    }
-                });
+                const config = await fetchTour(restartTourId);
+                if (config) {
+                    setTourConfig(config);
+                }
             }
+            return undefined;
         });
     }, [matchedTourId, resetTourState, fetchTour]);
 

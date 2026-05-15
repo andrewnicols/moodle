@@ -178,7 +178,7 @@ const TourStep: FC<TourStepProps> = ({
     // Set up ARIA attributes on the target.
     useEffect(() => {
         if (!targetElement) {
-            return;
+            return undefined;
         }
 
         const originals = new Map<HTMLElement, {describedby?: string; tabindex?: string}>();
@@ -216,7 +216,7 @@ const TourStep: FC<TourStepProps> = ({
     // Accessibility: hide siblings from screen readers.
     useEffect(() => {
         if (!containerRef.current) {
-            return;
+            return undefined;
         }
 
         const hidden: HTMLElement[] = [];
@@ -241,14 +241,15 @@ const TourStep: FC<TourStepProps> = ({
             }
         });
 
-        let ancestor = container.parentElement;
+        let ancestor: Element | null = container.parentElement;
         while (ancestor && ancestor !== document.body) {
-            Array.from(ancestor.parentElement?.children ?? []).forEach((sibling) => {
-                if (sibling !== ancestor && sibling instanceof HTMLElement) {
+            const current = ancestor;
+            Array.from(current.parentElement?.children ?? []).forEach((sibling) => {
+                if (sibling !== current && sibling instanceof HTMLElement) {
                     hideNode(sibling);
                 }
             });
-            ancestor = ancestor.parentElement;
+            ancestor = current.parentElement;
         }
 
         return () => {
@@ -263,7 +264,7 @@ const TourStep: FC<TourStepProps> = ({
     useEffect(() => {
         const container = containerRef.current;
         if (!container) {
-            return;
+            return undefined;
         }
 
         const doPosition = async() => {
@@ -417,7 +418,7 @@ const TourStep: FC<TourStepProps> = ({
     // MoveOnClick: advance when target is clicked.
     useEffect(() => {
         if (!stepConfig.moveOnClick || !targetElement) {
-            return;
+            return undefined;
         }
 
         const handler = (e: MouseEvent) => {

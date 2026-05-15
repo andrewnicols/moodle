@@ -314,7 +314,6 @@ const Tour: FC<TourProps> = ({
         gotoStep(resolvedStartAt);
 
         dispatchTourEvent(EVENT_TYPES.tourStarted, {startAt: resolvedStartAt});
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     // Handle window resize: restart at current step.

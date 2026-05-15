@@ -116,7 +116,7 @@ const TourBackdrop: FC<TourBackdropProps> = ({targetElement, visible, onClick}) 
     useEffect(() => {
         if (!visible || !targetElement) {
             setClipPath(undefined);
-            return;
+            return undefined;
         }
 
         const updateClipPath = () => {
