@@ -32,19 +32,8 @@ import {createPortal} from 'react-dom';
 import TourStep from './TourStep';
 import {markStepShown, markTourComplete} from './useTourApi';
 import {get as sessionGet, set as sessionSet} from '@moodle/lms/core/SessionStorage';
+import {eventTypes} from './events';
 import type {TourProps, StepConfig, VisibleStepInfo} from './types';
-
-/** Custom event names matching the original AMD events module. */
-const EVENT_TYPES = {
-    stepRender: 'tool_usertours/stepRender',
-    stepRendered: 'tool_usertours/stepRendered',
-    tourStart: 'tool_usertours/tourStart',
-    tourStarted: 'tool_usertours/tourStarted',
-    tourEnd: 'tool_usertours/tourEnd',
-    tourEnded: 'tool_usertours/tourEnded',
-    stepHide: 'tool_usertours/stepHide',
-    stepHidden: 'tool_usertours/stepHidden',
-} as const;
 
 /**
  * Check if a step target element exists and is visible on the page.
@@ -172,7 +161,7 @@ const Tour: FC<TourProps> = ({
      * End the tour.
      */
     const endTour = useCallback(() => {
-        const result = dispatchTourEvent(EVENT_TYPES.tourEnd, {}, true);
+        const result = dispatchTourEvent(eventTypes.tourEnd, {}, true);
         if (!result) {
             return; // Event was cancelled.
         }
@@ -188,7 +177,7 @@ const Tour: FC<TourProps> = ({
         setCurrentStepNumber(null);
         setTourRunning(false);
 
-        dispatchTourEvent(EVENT_TYPES.tourEnded);
+        dispatchTourEvent(eventTypes.tourEnded);
     }, [currentStepNumber, steps, tourId]);
 
     /**
@@ -221,7 +210,7 @@ const Tour: FC<TourProps> = ({
 
             // Dispatch stepRender event (cancelable).
             const renderAllowed = dispatchTourEvent(
-                EVENT_TYPES.stepRender,
+                eventTypes.stepRender,
                 {stepConfig: step},
                 true,
             );
@@ -231,7 +220,7 @@ const Tour: FC<TourProps> = ({
 
             // Dispatch stepHide for the previous step.
             if (currentStepNumber !== null) {
-                dispatchTourEvent(EVENT_TYPES.stepHide);
+                dispatchTourEvent(eventTypes.stepHide);
             }
 
             setCurrentStepNumber(stepNumber);
@@ -240,7 +229,7 @@ const Tour: FC<TourProps> = ({
             // Notify the server about the step being shown.
             markStepShown(step.stepid, tourId, stepNumber);
 
-            dispatchTourEvent(EVENT_TYPES.stepRendered, {stepConfig: step});
+            dispatchTourEvent(eventTypes.stepRendered, {stepConfig: step});
         },
         [steps, endTour, currentStepNumber, tourId, storageKey],
     );
@@ -269,7 +258,7 @@ const Tour: FC<TourProps> = ({
         }
 
         const startAllowed = dispatchTourEvent(
-            EVENT_TYPES.tourStart,
+            eventTypes.tourStart,
             {startAt: resolvedStartAt},
             true,
         );
@@ -280,7 +269,7 @@ const Tour: FC<TourProps> = ({
         setTourRunning(true);
         gotoStep(resolvedStartAt);
 
-        dispatchTourEvent(EVENT_TYPES.tourStarted, {startAt: resolvedStartAt});
+        dispatchTourEvent(eventTypes.tourStarted, {startAt: resolvedStartAt});
     }, []);
 
     // Handle window resize: restart at current step.

@@ -36,6 +36,7 @@ export {default as UserTours} from './UserTours';
 export {default as TourStep} from './TourStep';
 export {default as TourBackdrop} from './TourBackdrop';
 export {fetchTour, markStepShown, markTourComplete, resetTourState} from './useTourApi';
+export {eventTypes} from './events';
 export type {
     TourConfig, TourProps, StepConfig, Placement, VisibleStepInfo,
     TourDetail, TourFilter, UserToursProps,
