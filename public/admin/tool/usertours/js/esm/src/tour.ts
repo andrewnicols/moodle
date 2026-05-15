@@ -20,11 +20,11 @@
  * component. It can be used either via the data-react-component autoinit
  * system or mounted manually from the AMD orchestrator using mountReactApp().
  *
- * Re-exports all public components, hooks, and types so consumers can
+ * Re-exports all public components, API functions, and types so consumers can
  * import from a single path:
  *
  *   import UserTour from '@moodle/lms/tool_usertours/tour';
- *   import {useTourApi} from '@moodle/lms/tool_usertours/tour';
+ *   import {fetchTour} from '@moodle/lms/tool_usertours/tour';
  *
  * @module     tool_usertours/tour
  * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
@@ -35,7 +35,7 @@ export {default} from './TourComponent';
 export {default as UserTours} from './UserTours';
 export {default as TourStep} from './TourStep';
 export {default as TourBackdrop} from './TourBackdrop';
-export {useTourApi} from './useTourApi';
+export {fetchTour, markStepShown, markTourComplete, resetTourState} from './useTourApi';
 export type {
     TourConfig, TourProps, StepConfig, Placement, VisibleStepInfo,
     TourDetail, TourFilter, UserToursProps,

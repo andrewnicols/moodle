@@ -14,7 +14,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * React hook for User Tours web service API calls.
+ * User Tours web service API functions.
  *
  * Provides functions to communicate with the tool_usertours external API
  * for fetching tours, tracking step visibility, and managing tour state.
@@ -24,7 +24,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {useCallback, useRef} from 'react';
 import {performFetch} from '@moodle/lms/core/ajax';
 import config from '@moodle/lms/core/config';
 
@@ -41,78 +40,91 @@ interface ResetTourResponse {
 }
 
 /**
- * Hook that returns stable callback functions for User Tours API operations.
+ * Fetch the full tour configuration from the server.
  *
- * Each function performs a single web service call using the current page context and URL.
+ * @param tourId The database ID of the tour.
+ * @returns The tour configuration, or null if none was returned.
  */
-export function useTourApi() {
-    const contextId = useRef(config.contextid);
+export async function fetchTour(tourId: number): Promise<TourConfig | null> {
+    const [promise] = performFetch([{
+        methodname: 'tool_usertours_fetch_and_start_tour',
+        args: {
+            tourid: tourId,
+            context: config.contextid,
+            pageurl: window.location.href,
+        },
+    }]);
 
-    const getPageUrl = useCallback(() => window.location.href, []);
+    const response = await promise as FetchTourResponse;
+    return response.tourconfig ?? null;
+}
 
-    const fetchTour = useCallback(async(tourId: number): Promise<TourConfig | null> => {
-        const [promise] = performFetch([{
-            methodname: 'tool_usertours_fetch_and_start_tour',
-            args: {
-                tourid: tourId,
-                context: contextId.current,
-                pageurl: getPageUrl(),
-            },
-        }]);
+/**
+ * Notify the server that a step has been shown to the user.
+ *
+ * @param stepId The database ID of the step.
+ * @param tourId The database ID of the tour.
+ * @param stepIndex The zero-based index of the step.
+ */
+export async function markStepShown(
+    stepId: number,
+    tourId: number,
+    stepIndex: number,
+): Promise<void> {
+    const [promise] = performFetch([{
+        methodname: 'tool_usertours_step_shown',
+        args: {
+            tourid: tourId,
+            stepid: stepId,
+            stepindex: stepIndex,
+            context: config.contextid,
+            pageurl: window.location.href,
+        },
+    }]);
+    await promise;
+}
 
-        const response = await promise as FetchTourResponse;
-        return response.tourconfig ?? null;
-    }, [getPageUrl]);
+/**
+ * Mark the tour as complete on the server.
+ *
+ * @param stepId The database ID of the final step.
+ * @param tourId The database ID of the tour.
+ * @param stepIndex The zero-based index of the final step.
+ */
+export async function markTourComplete(
+    stepId: number,
+    tourId: number,
+    stepIndex: number,
+): Promise<void> {
+    const [promise] = performFetch([{
+        methodname: 'tool_usertours_complete_tour',
+        args: {
+            stepid: stepId,
+            stepindex: stepIndex,
+            tourid: tourId,
+            context: config.contextid,
+            pageurl: window.location.href,
+        },
+    }]);
+    await promise;
+}
 
-    const markStepShown = useCallback(async(
-        stepId: number,
-        tourId: number,
-        stepIndex: number,
-    ): Promise<void> => {
-        const [promise] = performFetch([{
-            methodname: 'tool_usertours_step_shown',
-            args: {
-                tourid: tourId,
-                stepid: stepId,
-                stepindex: stepIndex,
-                context: contextId.current,
-                pageurl: getPageUrl(),
-            },
-        }]);
-        await promise;
-    }, [getPageUrl]);
+/**
+ * Reset the tour state so it can be replayed.
+ *
+ * @param tourId The database ID of the tour.
+ * @returns The ID of the tour to restart, or null.
+ */
+export async function resetTourState(tourId: number): Promise<number | null> {
+    const [promise] = performFetch([{
+        methodname: 'tool_usertours_reset_tour',
+        args: {
+            tourid: tourId,
+            context: config.contextid,
+            pageurl: window.location.href,
+        },
+    }]);
 
-    const markTourComplete = useCallback(async(
-        stepId: number,
-        tourId: number,
-        stepIndex: number,
-    ): Promise<void> => {
-        const [promise] = performFetch([{
-            methodname: 'tool_usertours_complete_tour',
-            args: {
-                stepid: stepId,
-                stepindex: stepIndex,
-                tourid: tourId,
-                context: contextId.current,
-                pageurl: getPageUrl(),
-            },
-        }]);
-        await promise;
-    }, [getPageUrl]);
-
-    const resetTourState = useCallback(async(tourId: number): Promise<number | null> => {
-        const [promise] = performFetch([{
-            methodname: 'tool_usertours_reset_tour',
-            args: {
-                tourid: tourId,
-                context: contextId.current,
-                pageurl: getPageUrl(),
-            },
-        }]);
-
-        const response = await promise as ResetTourResponse;
-        return response.startTour ?? null;
-    }, [getPageUrl]);
-
-    return {fetchTour, markStepShown, markTourComplete, resetTourState};
+    const response = await promise as ResetTourResponse;
+    return response.startTour ?? null;
 }

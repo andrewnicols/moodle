@@ -29,16 +29,10 @@ import type {TourConfig} from '../src/types';
 // Mock useTourApi — the component calls these internally.
 const mockMarkStepShown = jest.fn().mockResolvedValue(undefined);
 const mockMarkTourComplete = jest.fn().mockResolvedValue(undefined);
-const mockFetchTour = jest.fn().mockResolvedValue(null);
-const mockResetTourState = jest.fn().mockResolvedValue(null);
 
 jest.mock('../src/useTourApi', () => ({
-    useTourApi: () => ({
-        fetchTour: mockFetchTour,
-        markStepShown: mockMarkStepShown,
-        markTourComplete: mockMarkTourComplete,
-        resetTourState: mockResetTourState,
-    }),
+    markStepShown: (...args: unknown[]) => mockMarkStepShown(...args),
+    markTourComplete: (...args: unknown[]) => mockMarkTourComplete(...args),
 }));
 
 beforeEach(() => {

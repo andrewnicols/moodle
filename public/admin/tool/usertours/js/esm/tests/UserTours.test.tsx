@@ -23,7 +23,12 @@ jest.mock('../src/loadFilters', () => ({
     loadFilterModules: jest.fn().mockResolvedValue([]),
 }));
 
-jest.mock('../src/useTourApi');
+jest.mock('../src/useTourApi', () => ({
+    fetchTour: (...args: unknown[]) => mockFetchTour(...args),
+    markStepShown: (...args: unknown[]) => mockMarkStepShown(...args),
+    markTourComplete: (...args: unknown[]) => mockMarkTourComplete(...args),
+    resetTourState: (...args: unknown[]) => mockResetTourState(...args),
+}));
 jest.mock('@popperjs/core', () => ({
     createPopper: jest.fn(() => ({
         update: jest.fn(),
@@ -32,19 +37,11 @@ jest.mock('@popperjs/core', () => ({
 }));
 
 import {loadFilterModules} from '../src/loadFilters';
-import {useTourApi} from '../src/useTourApi';
 
 const mockFetchTour = jest.fn();
 const mockMarkStepShown = jest.fn();
 const mockMarkTourComplete = jest.fn();
 const mockResetTourState = jest.fn();
-
-(useTourApi as jest.Mock).mockReturnValue({
-    fetchTour: mockFetchTour,
-    markStepShown: mockMarkStepShown,
-    markTourComplete: mockMarkTourComplete,
-    resetTourState: mockResetTourState,
-});
 
 const tourConfig = {
     name: 'Test Tour',

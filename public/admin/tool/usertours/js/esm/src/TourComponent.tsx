@@ -30,7 +30,7 @@ import {type FC, useState, useCallback, useMemo, useEffect, useRef} from 'react'
 import {createPortal} from 'react-dom';
 
 import TourStep from './TourStep';
-import {useTourApi} from './useTourApi';
+import {markStepShown, markTourComplete} from './useTourApi';
 import type {TourProps, StepConfig, VisibleStepInfo} from './types';
 
 /** Custom event names matching the original AMD events module. */
@@ -123,7 +123,6 @@ const Tour: FC<TourProps> = ({
     const [currentStepNumber, setCurrentStepNumber] = useState<number | null>(null);
     const [tourRunning, setTourRunning] = useState(false);
     const storageKeyRef = useRef(`tourstate_${tourConfig.name}`);
-    const {markStepShown, markTourComplete} = useTourApi();
 
     // Normalise steps once.
     const steps = useMemo(

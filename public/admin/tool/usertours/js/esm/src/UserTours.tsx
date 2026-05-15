@@ -31,7 +31,7 @@ import {createPortal} from 'react-dom';
 import String from '@moodle/lms/core/String';
 
 import Tour from './TourComponent';
-import {useTourApi} from './useTourApi';
+import {fetchTour, resetTourState} from './useTourApi';
 import {loadFilterModules} from './loadFilters';
 import type {UserToursProps, TourDetail, TourFilter, TourConfig} from './types';
 
@@ -99,7 +99,6 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
     const [matchedTourId, setMatchedTourId] = useState<number | null>(null);
     const [filtersLoaded, setFiltersLoaded] = useState(false);
     const [filters, setFilters] = useState<TourFilter[]>([]);
-    const {fetchTour, resetTourState} = useTourApi();
 
     // Load client-side filter modules.
     useEffect(() => {
@@ -137,7 +136,7 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
                 return undefined;
             });
         }
-    }, [filtersLoaded, tourDetails, filters, fetchTour]);
+    }, [filtersLoaded, tourDetails, filters]);
 
     // Handle reset: clear current tour, request reset from server, re-fetch.
     const handleReset = useCallback(() => {
@@ -157,7 +156,7 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
             }
             return undefined;
         });
-    }, [matchedTourId, resetTourState, fetchTour]);
+    }, [matchedTourId]);
 
     return (
         <>
