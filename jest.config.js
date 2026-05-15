@@ -21,9 +21,10 @@
  */
 
 const fs = require('fs');
+const path = require('path');
 
 // The tsconfig.aliases.json uses JSONC (JSON with comments) — strip line comments before parsing.
-const aliasesRaw = fs.readFileSync('./tsconfig.aliases.json', 'utf-8').replace(/\/\/[^\n]*/g, '');
+const aliasesRaw = fs.readFileSync(path.join(__dirname, './tsconfig.aliases.json'), 'utf-8').replace(/\/\/[^\n]*/g, '');
 const {compilerOptions} = JSON.parse(aliasesRaw);
 
 // Convert TypeScript path aliases to Jest moduleNameMapper format.

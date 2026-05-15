@@ -38,7 +38,7 @@ declare global {
 
 /**
  * @var mockedModules - A map to store mocked AMD modules by their name.
-*/
+ */
 const mockedModules = new Map<string, any>();
 
 /**
@@ -106,8 +106,37 @@ const defaultCfg = {
     js_complete: jest.fn((key: string) => {
         completeStack.push(key);
     }),
-    get_string: jest.fn((key: string, component: string) => {
-        return (globalThis as any).M.str[component]?.[key] ?? `[${key}, ${component}]`;
+    get_string: jest.fn((key: string, component: string, params?: Record<string, unknown>) => {
+        if (!(globalThis as any).M.str[component] || !(globalThis as any).M.str[component][key]) {
+            return `[${key}, ${component}]`;
+        }
+
+        const stringValue = (globalThis as any).M.str[component][key];
+
+        if (!params) {
+            return stringValue;
+        }
+
+        const normaliseParameter = (param: unknown): string => {
+            if (typeof param === 'string') {
+                return param;
+            }
+            if (typeof param === 'number' || typeof param === 'boolean') {
+                return String(param);
+            }
+            return JSON.stringify(param);
+        };
+
+        if (['string', 'number'].includes(typeof params)) {
+            return (stringValue as string).replace(/{\$a}/g, normaliseParameter(params));
+        }
+
+        let result = stringValue;
+        const replacements = Object.entries(params).forEach(([placeholder, value]) => (
+            result = (result as string).replace(new RegExp(`{\\$a->${placeholder}}`, 'g'), normaliseParameter(value))
+        ));
+
+        return result;
     }),
 };
 
