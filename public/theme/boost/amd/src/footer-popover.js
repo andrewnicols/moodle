@@ -36,9 +36,13 @@ export const init = () => {
     const container = document.querySelector(SELECTORS.FOOTERCONTAINER);
     const footerButton = document.querySelector(SELECTORS.FOOTERBUTTON);
     const footerArrow = document.querySelector(SELECTORS.FOOTERARROW);
+    const footerContent = document.querySelector(SELECTORS.FOOTERCONTENT);
 
-    new Popover(footerButton, {
-        content: getFooterContent,
+    if (!container || !footerButton || !footerContent) {
+        return;
+    }
+
+    const popoverConfig = {
         container: container,
         sanitize: false,
         html: true,
@@ -62,7 +66,23 @@ export const init = () => {
                 },
             },
         ]
+    };
+
+    new Popover(footerButton, {
+        ...popoverConfig,
+        content: getFooterContent,
     });
+
+    // Watch the footer content source for changes (e.g. dynamically-added
+    // elements like the user tours reset link) and push fresh content into
+    // the Popover so the next open reflects the current state.
+    const observer = new MutationObserver(() => {
+        const instance = Popover.getOrCreateInstance(footerButton, popoverConfig);
+        if (instance) {
+            instance.setContent({ '.popover-body': getFooterContent() });
+        }
+    });
+    observer.observe(footerContent, { childList: true, subtree: true, characterData: true });
 
     document.addEventListener('click', e => {
         if (footerIsShown && !e.target.closest(SELECTORS.FOOTERCONTAINER)) {
