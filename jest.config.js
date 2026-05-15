@@ -35,6 +35,10 @@ const moduleNameMapper = Object.fromEntries(
     ]),
 );
 
+// The @moodlehq/design-system npm package uses ESM-only exports which Jest
+// cannot resolve directly. Map it to the pre-built bundle in lib/.
+moduleNameMapper['^@moodlehq/design-system$'] = '<rootDir>/lib/js/bundles/design-system/index.js';
+
 /** @type {import('jest').Config} */
 module.exports = {
     testEnvironment: 'jsdom',
@@ -45,6 +49,13 @@ module.exports = {
         '^.+\\.(ts|tsx)$': ['@swc/jest', {
             jsc: {
                 parser: {syntax: 'typescript', tsx: true},
+                transform: {react: {runtime: 'automatic'}},
+            },
+        }],
+        // The design-system bundle ships ESM .js files that Jest cannot load natively.
+        'lib/js/bundles/design-system/.+\\.js$': ['@swc/jest', {
+            jsc: {
+                parser: {syntax: 'ecmascript', jsx: true},
                 transform: {react: {runtime: 'automatic'}},
             },
         }],

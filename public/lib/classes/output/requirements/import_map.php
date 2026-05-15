@@ -98,7 +98,8 @@ class import_map implements \JsonSerializable {
      */
     protected function add_standard_imports(): void {
         $this->add_import('@moodle/lms/', path: 'js/esm/build', loadfromcomponent: true);
-        $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system/index');
+        $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system');
+        // $this->add_import('@moodlehq/design-system/', path: 'lib/js/bundles/design-system/');
         $this->add_import('react', path: 'lib/js/bundles/react/react');
         $this->add_import('react/', path: 'lib/js/bundles/react');
         $this->add_import('react-dom', path: 'lib/js/bundles/react-dom/react-dom');
@@ -209,14 +210,27 @@ class import_map implements \JsonSerializable {
             if (in_array('..', explode('/', $pathremainder), true)) {
                 return null;
             }
+
             $resolved = implode(DIRECTORY_SEPARATOR, array_filter([
                 $CFG->root,
                 $importdata->path,
                 $pathremainder,
-            ])) . $importdata->suffix;
+            ]));
+
+            if (file_exists($resolved) && is_dir($resolved)) {
+                $resolved .= "/index";
+            }
+
+            if (!str_ends_with($resolved, $importdata->suffix)) {
+                // If the requested path already ends with the suffix, don't try appending it again.
+                // This allows specifiers to include the suffix if needed (e.g. for files that don't follow the standard naming convention).
+                $resolved .= $importdata->suffix;
+            }
+
             if ($importdata->modifier !== null) {
                 $resolved = ($importdata->modifier)($revision, $requestedpath, $resolved);
             }
+
             return $resolved;
         }
 
