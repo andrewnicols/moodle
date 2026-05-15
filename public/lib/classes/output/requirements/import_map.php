@@ -103,6 +103,7 @@ class import_map implements \JsonSerializable {
         ];
         $this->add_import('@moodle/lms/', path: 'js/esm/build', loadfromcomponent: true, allowedsuffixes: $allowedsuffixes);
         $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system/index.js', allowedsuffixes: $allowedsuffixes);
+        $this->add_import('@moodlehq/design-system/', path: 'lib/js/bundles/design-system/', allowedsuffixes: $allowedsuffixes);
         $this->add_import('react', path: 'lib/js/bundles/react/react');
         $this->add_import('react/', path: 'lib/js/bundles/react');
         $this->add_import('react-dom', path: 'lib/js/bundles/react-dom/react-dom');

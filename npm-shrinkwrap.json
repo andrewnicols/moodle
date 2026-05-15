@@ -7,7 +7,7 @@
       "name": "Moodle",
       "hasInstallScript": true,
       "dependencies": {
-        "@moodlehq/design-system": "^2.1",
+        "@moodlehq/design-system": "^3.1.0",
         "@popperjs/core": "^2.11.8",
         "bootstrap": "^5.3.8",
         "react": "^19.1",
@@ -3233,9 +3233,9 @@
       }
     },
     "node_modules/@moodlehq/design-system": {
-      "version": "2.1.1",
-      "resolved": "https://registry.npmjs.org/@moodlehq/design-system/-/design-system-2.1.1.tgz",
-      "integrity": "sha512-mJv3iiVwrXO1mXf2bZGqz0PGJb/q6x3B/OBDqGljxDbHEce4LpKjipGqPurnrvP1WouBHEdDmLI94ETujqUoag==",
+      "version": "3.1.0",
+      "resolved": "https://registry.npmjs.org/@moodlehq/design-system/-/design-system-3.1.0.tgz",
+      "integrity": "sha512-mlk1QqCa9gKLOHMW5Qh9SboEvw+z8lSScm+kUHOR4aAKXfOSf7wsmy0g7mTA66DZCjVfakrZBc4+7dF3H8FGRw==",
       "license": "GPL-3.0-only",
       "dependencies": {
         "bootstrap": "^5.3.8"
