@@ -50,7 +50,7 @@ export function useTourApi() {
 
     const getPageUrl = useCallback(() => window.location.href, []);
 
-    const fetchTour = useCallback(async (tourId: number): Promise<TourConfig | null> => {
+    const fetchTour = useCallback(async(tourId: number): Promise<TourConfig | null> => {
         const [promise] = performFetch([{
             methodname: 'tool_usertours_fetch_and_start_tour',
             args: {
@@ -64,7 +64,7 @@ export function useTourApi() {
         return response.tourconfig ?? null;
     }, [getPageUrl]);
 
-    const markStepShown = useCallback(async (
+    const markStepShown = useCallback(async(
         stepId: number,
         tourId: number,
         stepIndex: number,
@@ -82,7 +82,7 @@ export function useTourApi() {
         await promise;
     }, [getPageUrl]);
 
-    const markTourComplete = useCallback(async (
+    const markTourComplete = useCallback(async(
         stepId: number,
         tourId: number,
         stepIndex: number,
@@ -100,7 +100,7 @@ export function useTourApi() {
         await promise;
     }, [getPageUrl]);
 
-    const resetTourState = useCallback(async (tourId: number): Promise<number | null> => {
+    const resetTourState = useCallback(async(tourId: number): Promise<number | null> => {
         const [promise] = performFetch([{
             methodname: 'tool_usertours_reset_tour',
             args: {

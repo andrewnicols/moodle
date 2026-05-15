@@ -16,23 +16,30 @@
 /**
  * Base class for client-side user tour filters.
  *
- * Each client-side filter must extend this class and implement
- * the filterMatches method. Filter modules are loaded dynamically
- * by the UserTours orchestrator via their AMD module names.
+ * Each client-side filter must extend this class and implement the
+ * {@link filterMatches} method. Filter modules are loaded dynamically
+ * by the UserTours orchestrator via ESM import map specifiers provided
+ * by the PHP layer.
  *
- * @module     tool_usertours/filter_base
+ * @module     tool_usertours/local/filters/base
  * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-export default class FilterBase {
+import type {TourDetail} from '../../types';
+
+/**
+ * Abstract base class for client-side tour filters.
+ */
+export default abstract class FilterBase {
     /**
      * Check whether the current page matches this filter for the given tour.
      *
-     * @param {object} tourConfig The tour configuration including filtervalues.
-     * @returns {boolean} True if the tour should be shown on this page.
+     * Subclasses must override this method to inspect the tour's
+     * `filtervalues` and the current DOM/page state.
+     *
+     * @param tourDetail The tour detail entry including filtervalues from the server.
+     * @returns True if the tour should be shown on this page according to this filter.
      */
-    filterMatches(tourConfig) { // eslint-disable-line no-unused-vars
-        throw new Error('filterMatches() must be implemented by subclasses');
-    }
+    abstract filterMatches(tourDetail: TourDetail): boolean;
 }

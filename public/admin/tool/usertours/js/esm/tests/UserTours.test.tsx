@@ -18,9 +18,9 @@ import {render, screen, act, waitFor} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import UserTours from '../src/UserTours';
 
-// Mock the dependencies.
-jest.mock('@moodle/lms/core/amd', () => ({
-    requireManyAsync: jest.fn(),
+// Mock the filter loader module.
+jest.mock('../src/loadFilters', () => ({
+    loadFilterModules: jest.fn().mockResolvedValue([]),
 }));
 
 jest.mock('../src/useTourApi');
@@ -31,7 +31,7 @@ jest.mock('@popperjs/core', () => ({
     })),
 }));
 
-import {requireManyAsync} from '@moodle/lms/core/amd';
+import {loadFilterModules} from '../src/loadFilters';
 import {useTourApi} from '../src/useTourApi';
 
 const mockFetchTour = jest.fn();
@@ -81,7 +81,7 @@ describe('UserTours', () => {
         mockResetTourState.mockResolvedValue(null);
         mockMarkStepShown.mockResolvedValue(undefined);
         mockMarkTourComplete.mockResolvedValue(undefined);
-        (requireManyAsync as jest.Mock).mockResolvedValue([]);
+        (loadFilterModules as jest.Mock).mockResolvedValue([]);
 
         mockString('resettouronpage', 'tool_usertours', 'Reset user tour on this page');
         mockString('nextstep', 'tool_usertours', 'Next');
@@ -134,7 +134,7 @@ describe('UserTours', () => {
         const matchingFilter = {
             filterMatches: jest.fn().mockReturnValue(true),
         };
-        (requireManyAsync as jest.Mock).mockResolvedValue([matchingFilter]);
+        (loadFilterModules as jest.Mock).mockResolvedValue([matchingFilter]);
 
         await act(async () => {
             render(
@@ -146,7 +146,7 @@ describe('UserTours', () => {
         });
 
         await waitFor(() => {
-            expect(requireManyAsync).toHaveBeenCalledWith(['tool_usertours/filter_cssselector']);
+            expect(loadFilterModules).toHaveBeenCalledWith(['tool_usertours/filter_cssselector']);
         });
 
         await waitFor(() => {
@@ -158,7 +158,7 @@ describe('UserTours', () => {
         const rejectingFilter = {
             filterMatches: jest.fn().mockReturnValue(false),
         };
-        (requireManyAsync as jest.Mock).mockResolvedValue([rejectingFilter]);
+        (loadFilterModules as jest.Mock).mockResolvedValue([rejectingFilter]);
 
         await act(async () => {
             render(
@@ -223,7 +223,7 @@ describe('UserTours', () => {
         const selectiveFilter = {
             filterMatches: jest.fn().mockImplementation((tour: {tourId: number}) => tour.tourId === 20),
         };
-        (requireManyAsync as jest.Mock).mockResolvedValue([selectiveFilter]);
+        (loadFilterModules as jest.Mock).mockResolvedValue([selectiveFilter]);
 
         await act(async () => {
             render(

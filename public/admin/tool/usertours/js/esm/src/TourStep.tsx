@@ -266,7 +266,7 @@ const TourStep: FC<TourStepProps> = ({
             return;
         }
 
-        const doPosition = async () => {
+        const doPosition = async() => {
             // Clean up any previous popper.
             if (popperRef.current) {
                 popperRef.current.destroy();

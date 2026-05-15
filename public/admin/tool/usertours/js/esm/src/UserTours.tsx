@@ -28,11 +28,11 @@
 
 import {type FC, useState, useEffect, useCallback} from 'react';
 import {createPortal} from 'react-dom';
-import {requireManyAsync} from '@moodle/lms/core/amd';
 import String from '@moodle/lms/core/String';
 
 import Tour from './TourComponent';
 import {useTourApi} from './useTourApi';
+import {loadFilterModules} from './loadFilters';
 import type {UserToursProps, TourDetail, TourFilter, TourConfig} from './types';
 
 /**
@@ -108,11 +108,10 @@ const UserTours: FC<UserToursProps> = ({tourDetails, filterNames}) => {
             return;
         }
 
-        requireManyAsync(filterNames)
-            .then((modules: TourFilter[]) => {
-                setFilters(modules);
-                setFiltersLoaded(true);
-            });
+        loadFilterModules(filterNames).then((loaded) => {
+            setFilters(loaded);
+            setFiltersLoaded(true);
+        });
     }, [filterNames]);
 
     // Find matching tour and fetch its config.

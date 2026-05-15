@@ -106,6 +106,6 @@ export interface TourFilter {
 export interface UserToursProps {
     /** Tour detail entries from the server (one per candidate tour). */
     tourDetails: TourDetail[];
-    /** AMD module names for client-side filters (e.g. "tool_usertours/filter_cssselector"). */
+    /** ESM import specifiers for client-side filters (e.g. "@moodle/lms/tool_usertours/local/filters/cssselector"). */
     filterNames: string[];
 }
