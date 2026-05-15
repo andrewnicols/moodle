@@ -1,0 +1,45 @@
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Base class for client-side user tour filters.
+ *
+ * Each client-side filter must extend this class and implement the
+ * {@link filterMatches} method. Filter modules are loaded dynamically
+ * by the UserTours orchestrator via ESM import map specifiers provided
+ * by the PHP layer.
+ *
+ * @module     tool_usertours/local/filters/base
+ * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+import type {TourDetail} from '../../types';
+
+/**
+ * Abstract base class for client-side tour filters.
+ */
+export default abstract class FilterBase {
+    /**
+     * Check whether the current page matches this filter for the given tour.
+     *
+     * Subclasses must override this method to inspect the tour's
+     * `filtervalues` and the current DOM/page state.
+     *
+     * @param tourDetail The tour detail entry including filtervalues from the server.
+     * @returns True if the tour should be shown on this page according to this filter.
+     */
+    abstract filterMatches(tourDetail: TourDetail): boolean;
+}

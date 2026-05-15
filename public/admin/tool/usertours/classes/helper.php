@@ -555,7 +555,7 @@ class helper {
         foreach ($filters as $filter) {
             if ($component = \core_component::get_component_from_classname($filter)) {
                 $filternames[] = sprintf(
-                    "%s/filter_%s",
+                    "@moodle/lms/%s/local/filters/%s",
                     $component,
                     $filter::get_filter_name(),
                 );

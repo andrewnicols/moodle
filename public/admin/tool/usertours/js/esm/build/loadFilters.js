@@ -1,0 +1,11 @@
+async function e(o){return(await Promise.all(o.map(r=>import(r)))).map(r=>r.default??r)}export{e as loadFilterModules};
+/**
+ * Dynamic loader for client-side tour filter modules.
+ *
+ * Uses the browser import map to resolve ESM specifiers provided by the
+ * PHP layer at runtime.
+ *
+ * @module     tool_usertours/loadFilters
+ * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
