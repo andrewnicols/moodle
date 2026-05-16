@@ -98,8 +98,8 @@ class import_map implements \JsonSerializable {
      */
     protected function add_standard_imports(): void {
         $this->add_import('@moodle/lms/', path: 'js/esm/build', loadfromcomponent: true);
-        $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system');
-        // $this->add_import('@moodlehq/design-system/', path: 'lib/js/bundles/design-system/');
+        $this->add_import('@moodlehq/design-system', path: 'lib/js/bundles/design-system/index.js');
+        $this->add_import('@moodlehq/design-system/', path: 'lib/js/bundles/design-system/design-system/');
         $this->add_import('react', path: 'lib/js/bundles/react/react');
         $this->add_import('react/', path: 'lib/js/bundles/react');
         $this->add_import('react-dom', path: 'lib/js/bundles/react-dom/react-dom');
@@ -177,7 +177,6 @@ class import_map implements \JsonSerializable {
         string $requestedpath,
     ): ?string {
         global $CFG;
-
         // Sort longest-key-first once so a more-specific prefix always wins over a shorter one.
         if (!$this->importssorted) {
             uksort($this->imports, fn ($a, $b) => strlen($b) <=> strlen($a));
