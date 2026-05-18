@@ -190,11 +190,11 @@ export function createBuildConfig(isDev) {
         format: "esm",
         external: ["react", "react/*", "react-dom", "react-dom/*", "@moodlehq/design-system", "@moodlehq/design-system/*", "@moodle/lms", "@moodle/lms/*"],
         jsx: "automatic",
-        minify: !isDev,
-        sourcemap: isDev ? 'inline' : false,
+        minify: true,
+        sourcemap: 'linked',
         jsxDev: isDev,
         keepNames: isDev,
-        treeShaking: !isDev,
+        treeShaking: true,
         define: { 'process.env.NODE_ENV': isDev ? '"development"' : '"production"' },
     };
 }
