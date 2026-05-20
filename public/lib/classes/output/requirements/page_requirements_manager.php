@@ -1592,6 +1592,7 @@ EOF;
             'core/storagewrapper' => '@moodle/lms/core/StorageWrapper:default',
             'core/url' => '@moodle/lms/core/url',
             'core/utils' => '@moodle/lms/core/utils',
+            'core/popper2' => '@popperjs/core',
         ]);
 
         $maps = $requirejshook->get_requirejs_map();
