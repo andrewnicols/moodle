@@ -4,10 +4,11 @@
   "description": "Moodle",
   "scripts": {
     "postinstall": "npm run update-packages",
-    "update-packages": "npm run update-design-system && npm run update-react && npm run update-popper",
+    "update-packages": "npm run update-design-system && npm run update-react && npm run update-popper && npm run update-bootstrap",
     "update-react": "node scripts/update-react-bundle.mjs",
     "update-design-system": "node scripts/update-design-system.mjs",
     "update-popper": "node scripts/update-popper.mjs",
+    "update-bootstrap": "node scripts/update-bootstrap.mjs",
     "upgradenote": "node .grunt/upgradenotes.mjs create",
     "pretest": "grunt jsconfig",
     "test": "jest"
@@ -15,6 +16,7 @@
   "dependencies": {
     "@moodlehq/design-system": "^2.1",
     "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.8",
     "react": "^19.1",
     "react-dom": "^19.1"
   },
@@ -25,6 +27,7 @@
     "@babel/preset-env": "7.16.11",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "@types/bootstrap": "^5.2.10",
     "@types/jest": "^30.0.0",
     "@types/jquery": "^4.0.0",
     "@types/react": "^19.2.14",

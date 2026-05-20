@@ -1,0 +1,6 @@
+var f=(n,e)=>()=>(e||n((e={exports:{}}).exports,e),e.exports);var b=f((o,u)=>{(function(n,e){typeof o=="object"&&typeof u<"u"?u.exports=e():typeof define=="function"&&define.amd?define(e):(n=typeof globalThis<"u"?globalThis:n||self,n.Manipulator=e())})(o,(function(){"use strict";function n(t){if(t==="true")return!0;if(t==="false")return!1;if(t===Number(t).toString())return Number(t);if(t===""||t==="null")return null;if(typeof t!="string")return t;try{return JSON.parse(decodeURIComponent(t))}catch{return t}}function e(t){return t.replace(/[A-Z]/g,r=>`-${r.toLowerCase()}`)}return{setDataAttribute(t,r,a){t.setAttribute(`data-bs-${e(r)}`,a)},removeDataAttribute(t,r){t.removeAttribute(`data-bs-${e(r)}`)},getDataAttributes(t){if(!t)return{};let r={},a=Object.keys(t.dataset).filter(i=>i.startsWith("bs")&&!i.startsWith("bsConfig"));for(let i of a){let s=i.replace(/^bs/,"");s=s.charAt(0).toLowerCase()+s.slice(1,s.length),r[s]=n(t.dataset[i])}return r},getDataAttribute(t,r){return n(t.getAttribute(`data-bs-${e(r)}`))}}}))});export default b();
+/*!
+  * Bootstrap manipulator.js v5.3.3 (https://getbootstrap.com/)
+  * Copyright 2011-2024 The Bootstrap Authors (https://github.com/twbs/bootstrap/graphs/contributors)
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
+  */
