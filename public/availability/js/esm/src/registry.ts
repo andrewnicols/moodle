@@ -25,7 +25,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-import {AvailabilityPlugin} from './types';
+import {isAvailabilityPlugin} from './types';
 import type {PluginDescriptor, PluginRegistration} from './types';
 
 /**
@@ -79,7 +79,7 @@ async function loadSinglePlugin(descriptor: PluginDescriptor): Promise<PluginReg
         // Instantiate and validate.
         const instance: unknown = typeof PluginClass === 'function' ? new PluginClass() : PluginClass;
 
-        if (!(instance instanceof AvailabilityPlugin)) {
+        if (!isAvailabilityPlugin(instance)) {
             window.console.warn(
                 `[core_availability/registry] Plugin "${name}" does not extend AvailabilityPlugin. ` +
                 'Attempting legacy adapter fallback.',

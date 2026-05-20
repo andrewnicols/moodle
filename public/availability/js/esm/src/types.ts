@@ -139,7 +139,31 @@ export interface AvailabilityFormProps {
  * Subclasses MUST implement {@link getComponent} and {@link fillValue}.
  * Other methods have default implementations that plugins MAY override.
  */
+/**
+ * Symbol used to brand AvailabilityPlugin instances so that `isAvailabilityPlugin()`
+ * works across separately-compiled bundles (where `instanceof` fails because each
+ * bundle gets its own copy of the class constructor).
+ */
+export const AVAILABILITY_PLUGIN_BRAND = Symbol.for('core_availability/AvailabilityPlugin');
+
+/**
+ * Type guard that checks whether a value is an AvailabilityPlugin instance.
+ *
+ * Uses a Symbol brand rather than `instanceof` so the check works reliably
+ * across separately-bundled ESM entry points.
+ */
+export function isAvailabilityPlugin(value: unknown): value is AvailabilityPlugin {
+    return (
+        typeof value === 'object' &&
+        value !== null &&
+        (value as any)[AVAILABILITY_PLUGIN_BRAND] === true
+    );
+}
+
 export abstract class AvailabilityPlugin {
+    /** Brand marker — enables cross-bundle identification via {@link isAvailabilityPlugin}. */
+    readonly [AVAILABILITY_PLUGIN_BRAND] = true;
+
     /**
      * Return the React component that renders this condition's form controls.
      *

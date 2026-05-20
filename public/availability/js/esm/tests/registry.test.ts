@@ -23,7 +23,7 @@
 
 import type {ComponentType} from 'react';
 import {loadPlugins} from '@moodle/lms/core_availability/registry';
-import {AvailabilityPlugin} from '@moodle/lms/core_availability/types';
+import {AvailabilityPlugin, isAvailabilityPlugin} from '@moodle/lms/core_availability/types';
 import type {PluginComponentProps, PluginDescriptor, ConditionJSON} from '@moodle/lms/core_availability/types';
 
 /**
@@ -151,7 +151,7 @@ describe('core_availability/registry', () => {
             const registration = registry.get('legacy')!;
             expect(registration.name).toBe('legacy');
             expect(registration.allowAdd).toBe(true);
-            expect(registration.plugin).toBeInstanceOf(AvailabilityPlugin);
+            expect(isAvailabilityPlugin(registration.plugin)).toBe(true);
         });
 
         it('preserves plugin metadata in registration', async () => {

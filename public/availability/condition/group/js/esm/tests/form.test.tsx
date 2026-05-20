@@ -24,7 +24,7 @@
 import {render, screen, fireEvent} from '@testing-library/react';
 import GroupPlugin from '@moodle/lms/availability_group/form';
 import type {PluginComponentProps, ConditionJSON} from '@moodle/lms/core_availability/types';
-import {AvailabilityPlugin} from '@moodle/lms/core_availability/types';
+import {isAvailabilityPlugin} from '@moodle/lms/core_availability/types';
 
 declare const M: {
     util: {
@@ -47,7 +47,7 @@ describe('availability_group/form', () => {
     describe('GroupPlugin class', () => {
         it('extends AvailabilityPlugin', () => {
             const plugin = new GroupPlugin();
-            expect(plugin).toBeInstanceOf(AvailabilityPlugin);
+            expect(isAvailabilityPlugin(plugin)).toBe(true);
         });
 
         it('returns a component from getComponent()', () => {
