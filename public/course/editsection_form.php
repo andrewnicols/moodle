@@ -96,8 +96,9 @@ class editsection_form extends moodleform {
         $course = $this->_customdata['course'];
 
         if (!empty($CFG->enableavailability)) {
-            \core_availability\frontend::include_all_javascript($course, null,
+            $mountpoint = \core_availability\frontend::include_all_javascript($course, null,
                     $this->_customdata['cs']);
+            $mform->addElement('html', $mountpoint);
         }
 
         $this->add_action_buttons();

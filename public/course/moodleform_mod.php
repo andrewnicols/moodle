@@ -640,7 +640,8 @@ abstract class moodleform_mod extends moodleform {
             } else {
                 $cm = null;
             }
-            \core_availability\frontend::include_all_javascript($COURSE, $cm);
+            $mountpoint = \core_availability\frontend::include_all_javascript($COURSE, $cm);
+            $mform->addElement('html', $mountpoint);
         }
 
         // Conditional activities: completion tracking section

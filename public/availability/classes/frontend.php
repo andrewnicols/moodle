@@ -95,25 +95,23 @@ abstract class frontend {
     /**
      * Includes JavaScript for the main system and all plugins.
      *
+     * This method prepares the React mount point HTML and string requirements
+     * for the availability conditions form. The returned HTML should be added
+     * to the form to render the React component.
+     *
      * @param \stdClass $course Course object
      * @param \cm_info $cm Course-module currently being edited (null if none)
      * @param \section_info $section Section currently being edited (null if none)
+     * @return string HTML for the React mount point element
      */
     public static function include_all_javascript($course, ?\cm_info $cm = null,
-            ?\section_info $section = null) {
+            ?\section_info $section = null): string {
         global $PAGE;
 
-        // Prepare array of required YUI modules. It is bad for performance to
-        // make multiple yui_module calls, so we group all the plugin modules
-        // into a single call (the main init function will call init for each
-        // plugin).
-        $modules = array('moodle-core_availability-form', 'base', 'node',
-                'panel', 'moodle-core-notification-dialogue', 'json');
-
-        // Work out JS to include for all components.
+        // Work out plugin descriptors for the React component.
         $pluginmanager = \core_plugin_manager::instance();
         $enabled = $pluginmanager->get_enabled_plugins('availability');
-        $componentparams = new \stdClass();
+        $plugins = [];
         foreach ($enabled as $plugin => $info) {
             // Create plugin front-end object.
             $class = '\availability_' . $plugin . '\frontend';
@@ -123,17 +121,14 @@ abstract class frontend {
 
             /** @var \core_availability\frontend $frontend */
             $frontend = new $class();
-
-            // Add to array of required YUI modules.
             $component = $frontend->get_component();
-            $modules[] = 'moodle-' . $component . '-form';
 
-            // Get parameters for this plugin.
-            $componentparams->{$plugin} = [
-                $component,
-                $frontend->allow_add($course, $cm, $section),
-                $frontend->get_javascript_init_params($course, $cm, $section),
-                get_config('availability_' . $plugin, 'defaultdisplaymode'),
+            $plugins[] = [
+                'name' => $plugin,
+                'modulePath' => '@moodle/lms/availability_' . $plugin . '/form',
+                'allowAdd' => (bool) $frontend->allow_add($course, $cm, $section),
+                'displayMode' => (bool) get_config('availability_' . $plugin, 'defaultdisplaymode'),
+                'initParams' => $frontend->get_javascript_init_params($course, $cm, $section),
             ];
 
             // Include strings for this plugin.
@@ -143,14 +138,19 @@ abstract class frontend {
             $PAGE->requires->strings_for_js($identifiers, $component);
         }
 
-        // Include all JS (in one call). The init function runs on DOM ready.
-        $PAGE->requires->yui_module($modules,
-                'M.core_availability.form.init', array($componentparams), null, true);
+        // Build the props for the React component.
+        $props = [
+            'plugins' => $plugins,
+            'textareaId' => 'id_availabilityconditionsjson',
+            'courseId' => (int) $course->id,
+            'cmId' => $cm ? (int) $cm->id : null,
+            'sectionId' => $section ? (int) $section->id : null,
+        ];
 
-        // Include main strings.
-        $PAGE->requires->strings_for_js(array('none', 'cancel', 'delete', 'choosedots'),
+        // Include main strings (still needed for the React components).
+        $PAGE->requires->strings_for_js(['none', 'cancel', 'delete', 'choosedots'],
                 'moodle');
-        $PAGE->requires->strings_for_js(array('addrestriction', 'invalid',
+        $PAGE->requires->strings_for_js(['addrestriction', 'invalid',
                 'listheader_sign_before', 'listheader_sign_pos',
                 'listheader_sign_neg', 'listheader_single',
                 'listheader_multi_after', 'listheader_multi_before',
@@ -159,8 +159,20 @@ abstract class frontend {
                 'show_verb', 'shown_individual', 'hidden_all', 'shown_all',
                 'condition_group', 'condition_group_info', 'and', 'or',
                 'label_multi', 'label_sign', 'setheading', 'itemheading',
-                'missingplugin', 'disabled_verb'),
+                'missingplugin', 'disabled_verb'],
                 'availability');
+
+        // Return the React mount point HTML. The react_autoinit system
+        // (loaded on every page) will detect this element and mount the
+        // component automatically.
+        return \html_writer::div(
+            '',
+            'availability-react-form',
+            [
+                'data-react-component' => '@moodle/lms/core_availability/form',
+                'data-react-props' => json_encode($props),
+            ]
+        );
     }
 
     /**
