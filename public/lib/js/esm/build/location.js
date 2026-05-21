@@ -1,4 +1,4 @@
-var t=Object.defineProperty;var n=(i,o)=>t(i,"name",{value:o,configurable:!0});function c(i){window.location.assign(i)}n(c,"redirect");export{c as redirect};
+function n(i){window.location.assign(i)}export{n as redirect};
 /**
  * Browser location utilities.
  *

@@ -1,4 +1,4 @@
-var r=Object.defineProperty;var e=(a,o)=>r(a,"name",{value:o,configurable:!0});var t=class{static{e(this,"FilterBase")}};export{t as default};
+var t=class{};export{t as default};
 /**
  * Base class for client-side user tour filters.
  *

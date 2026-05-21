@@ -1,4 +1,4 @@
-var c=Object.defineProperty;var n=(e,t)=>c(e,"name",{value:t,configurable:!0});import{createElement as i,Profiler as l}from"react";import{createRoot as s}from"react-dom/client";import{isProfilerEnabled as f,onRenderCallback as y}from"@moodle/lms/core/profiler";var r=new WeakMap;function b(e,t,u,d={}){let a=d.id||t.displayName||t.name||"ReactApp",o=i(t,u);f()&&(o=i(l,{id:a,onRender:y},o));let m=s(e);m.render(o);let p=n(()=>{m.unmount()},"unmount");return r.set(e,p),p}n(b,"mountReactApp");function v(e){let t=r.get(e);t&&(t(),r.delete(e))}n(v,"unmountReactApp");export{b as mountReactApp,v as unmountReactApp};
+import{createElement as p,Profiler as a}from"react";import{createRoot as c}from"react-dom/client";import{isProfilerEnabled as l,onRenderCallback as s}from"@moodle/lms/core/profiler";var o=new WeakMap;function E(e,t,i,u={}){let d=u.id||t.displayName||t.name||"ReactApp",n=p(t,i);l()&&(n=p(a,{id:d,onRender:s},n));let r=c(e);r.render(n);let m=()=>{r.unmount()};return o.set(e,m),m}function P(e){let t=o.get(e);t&&(t(),o.delete(e))}export{E as mountReactApp,P as unmountReactApp};
 /**
  * Shared React mount helper with optional profiling support.
  *

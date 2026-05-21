@@ -1,4 +1,4 @@
-var i=Object.defineProperty;var e=(o,t)=>i(o,"name",{value:t,configurable:!0});async function s(o){return(await Promise.all(o.map(r=>import(r)))).map(r=>r.default??r)}e(s,"loadFilterModules");export{s as loadFilterModules};
+async function e(o){return(await Promise.all(o.map(r=>import(r)))).map(r=>r.default??r)}export{e as loadFilterModules};
 /**
  * Dynamic loader for client-side tour filter modules.
  *
