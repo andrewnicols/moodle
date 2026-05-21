@@ -28,6 +28,7 @@
  */
 
 import {useCallback, useState} from 'react';
+import {Button} from '@moodlehq/design-system';
 import type {AvailabilityTree, ConditionJSON} from '../types';
 import {isTree} from '../tree';
 import {useAvailability} from './AvailabilityContext';
@@ -136,13 +137,12 @@ export function ConditionList({tree, path, isRoot}: ConditionListProps) {
                         onAdd={handleAddCondition}
                     />
                 )}
-                <button
-                    type="button"
-                    className="btn btn-sm btn-outline-secondary"
+                <Button
+                    variant="outline-secondary"
+                    size="sm"
+                    label="Add condition group"
                     onClick={handleAddNestedSet}
-                >
-                    Add condition group
-                </button>
+                />
             </div>
         </div>
     );
@@ -180,14 +180,13 @@ function AddConditionDropdown({plugins, onAdd}: AddConditionDropdownProps) {
                     </option>
                 ))}
             </select>
-            <button
-                type="button"
-                className="btn btn-sm btn-primary"
+            <Button
+                variant="primary"
+                size="sm"
+                label="Add"
                 onClick={handleAdd}
                 disabled={!selectedType}
-            >
-                Add
-            </button>
+            />
         </div>
     );
 }

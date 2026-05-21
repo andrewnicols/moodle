@@ -27,8 +27,6 @@
 
 namespace core_availability;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Class with front-end (editing form) functionality.
  *

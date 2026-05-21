@@ -1,6 +1,8 @@
-import{jsx as e}from"react/jsx-runtime";function i({onDelete:n,label:t="Delete condition"}){return e("button",{type:"button",className:"availability-delete btn btn-link p-1 text-danger",title:t,"aria-label":t,onClick:n,children:e("i",{className:"bi bi-x-lg","aria-hidden":"true"})})}export{i as DeleteButton};
+import{CloseButton as o}from"@moodlehq/design-system";import{jsx as l}from"react/jsx-runtime";function n({onDelete:e,label:t="Delete condition"}){return l(o,{"aria-label":t,className:"availability-delete",onClick:e,size:"sm"})}export{n as DeleteButton};
 /**
  * Delete button for availability conditions and nested sets.
+ *
+ * Uses the Moodle Design System CloseButton component.
  *
  * @module     core_availability/components/DeleteButton
  * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>

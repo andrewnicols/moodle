@@ -16,10 +16,14 @@
 /**
  * Delete button for availability conditions and nested sets.
  *
+ * Uses the Moodle Design System CloseButton component.
+ *
  * @module     core_availability/components/DeleteButton
  * @copyright  2026 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+import {CloseButton} from '@moodlehq/design-system';
 
 interface DeleteButtonProps {
     /** Callback when the delete button is clicked. */
@@ -30,14 +34,11 @@ interface DeleteButtonProps {
 
 export function DeleteButton({onDelete, label = 'Delete condition'}: DeleteButtonProps) {
     return (
-        <button
-            type="button"
-            className="availability-delete btn btn-link p-1 text-danger"
-            title={label}
+        <CloseButton
             aria-label={label}
+            className="availability-delete"
             onClick={onDelete}
-        >
-            <i className="bi bi-x-lg" aria-hidden="true" />
-        </button>
+            size="sm"
+        />
     );
 }
