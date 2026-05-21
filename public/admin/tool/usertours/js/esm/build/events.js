@@ -18,3 +18,4 @@ var e={stepRender:"tool_usertours/stepRender",stepRendered:"tool_usertours/stepR
  *     e.preventDefault(); // Cancel the step render.
  * });
  */
+//# sourceMappingURL=events.js.map

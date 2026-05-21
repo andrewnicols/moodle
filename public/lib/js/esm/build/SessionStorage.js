@@ -1,4 +1,4 @@
-import r from"./StorageWrapper.js";var e=new r(window.sessionStorage),s=t=>e.get(t),n=(t,o)=>e.set(t,o),i={get:s,set:n};export{i as default,s as get,n as set};
+var s=Object.defineProperty;var o=(t,e)=>s(t,"name",{value:e,configurable:!0});import n from"./StorageWrapper.js";var r=new n(window.sessionStorage),g=o(t=>r.get(t),"get"),i=o((t,e)=>r.set(t,e),"set"),l={get:g,set:i};export{l as default,g as get,i as set};
 /**
  * Simple API for set/get to sessionStorage, with cacherev expiration.
  *

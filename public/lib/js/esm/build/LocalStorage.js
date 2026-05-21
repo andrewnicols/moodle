@@ -1,4 +1,4 @@
-import r from"./StorageWrapper.js";var o=new r(window.localStorage),n=t=>o.get(t),s=(t,e)=>o.set(t,e),a=()=>o.clean(),l={get:n,set:s,clean:a};export{a as clean,l as default,n as get,s as set};
+var n=Object.defineProperty;var o=(t,e)=>n(t,"name",{value:e,configurable:!0});import s from"./StorageWrapper.js";var r=new s(window.localStorage),a=o(t=>r.get(t),"get"),g=o((t,e)=>r.set(t,e),"set"),l=o(()=>r.clean(),"clean"),p={get:a,set:g,clean:l};export{l as clean,p as default,a as get,g as set};
 /**
  * Simple API for set/get to localStorage, with cacherev expiration.
  *
