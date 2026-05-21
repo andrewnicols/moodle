@@ -1581,7 +1581,7 @@ EOF;
     protected function get_requirejs_static_esm_map(
         \core\hook\output\before_requirejs_config $requirejshook,
     ): string {
-        $requirejshook->add_requirejs_map_entries([
+        $requirejshook->add_requirejs_esm_map_entries([
             'core/config' => '@moodle/lms/core/config:default',
             'core/deprecated' => '@moodle/lms/core/deprecated:default',
             'core/fetch' => '@moodle/lms/core/fetch:default',
