@@ -194,6 +194,9 @@ class core_scss extends \ScssPhp\ScssPhp\Compiler {
         $addthemedirectory = core_component::get_plugin_types()['theme'];
         $addrealroot = realpath($addthemedirectory);
 
+        // Moodle core scss directory.
+        $corescssroot = $CFG->root . '/lib/scss';
+
         // Original theme directory.
         $themedirectory = $CFG->dirroot . "/theme";
         $realroot = realpath($themedirectory);
@@ -201,7 +204,7 @@ class core_scss extends \ScssPhp\ScssPhp\Compiler {
         // Bundles directory.
         $bundledirectory = realpath($CFG->root . '/lib/bundles');
 
-        // File should end in .scss and must be in sites theme directory, else ignore it.
+        // The path must be in the theme directory, or in the bundles directory.
         $pathvalid = $realpath !== false;
         $pathvalid = $pathvalid && (substr($path, -5) === '.scss');
         $pathvalid = $pathvalid && (
