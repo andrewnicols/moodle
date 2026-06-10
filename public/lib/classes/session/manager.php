@@ -252,6 +252,11 @@ class manager {
             self::$handler->set_requires_write_lock($requireslock);
             self::prepare_cookies();
             $isnewsession = empty($_COOKIE[session_name()]);
+            error_log(sprintf(
+                "Checked for existing session with name %s and the result was %s",
+                session_name(),
+                $isnewsession ? 'NOT FOUND' : 'FOUND',
+            ));
 
             if (!self::$handler->start()) {
                 // Could not successfully start/recover session.
@@ -647,6 +652,7 @@ class manager {
         if (!isset($_SESSION['SESSION'])) {
             $_SESSION['SESSION'] = new \stdClass();
             if (!$newsid) {
+                error_log("Session timed out - no session data found for session ID $sid, creating new session.");
                 $timedout = true;
             }
         }
