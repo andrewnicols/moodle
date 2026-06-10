@@ -302,6 +302,7 @@ if ($frm && isset($frm->username)) {
 /// Detect problems with timedout sessions
 if ($session_has_timed_out and !data_submitted()) {
     $errormsg = get_string('sessionerroruser', 'error');
+    $errormsg = "FOO BAR BAZZZZZZ - no data has been sumitted but session has timed out. This is likely caused by a problem with the session handler or cookies. Please check your server configuration and error logs.";
     $errorcode = 4;
 }
 
@@ -408,6 +409,7 @@ if (isloggedin() and !isguestuser()) {
     );
     echo $OUTPUT->box_end();
 } else {
+    error_log($errormsg);
     $loginform = new \core_auth\output\login($authsequence, $frm->username);
     $loginform->set_error($errormsg, $errorcode);
     $loginform->set_info($infomsg);

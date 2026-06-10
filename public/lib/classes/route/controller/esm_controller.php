@@ -76,6 +76,7 @@ class esm_controller {
         int $revision,
         string $scriptpath,
     ): ResponseInterface {
+        error_log("Received request for ESM script with revision {$revision} and path '{$scriptpath}'");
         // Normalise the revision: an outdated or invalid value disables long-term caching
         // so browsers always re-fetch rather than serving a stale file.
         if (!min_is_revision_valid_and_current($revision)) {

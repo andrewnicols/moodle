@@ -684,6 +684,7 @@ class manager {
         }
 
         if ($timedout) {
+            error_log("Setting has_timed_out...");
             $_SESSION['SESSION']->has_timed_out = true;
         }
     }

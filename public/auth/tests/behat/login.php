@@ -36,8 +36,10 @@ if (!$behatrunning) {
 $username = required_param('username', PARAM_ALPHANUMEXT);
 $wantsurl = optional_param('wantsurl', null, PARAM_URL);
 
+error_log("User wants to log in as {$username}");
 if (isloggedin()) {
     // If the user is already logged in, log them out and redirect them back to login again.
+    error_log("Logged in - logging out to allow login as $username then redirecting");
     require_logout();
     redirect(new moodle_url('/auth/tests/behat/login.php', [
         'username' => $username,
@@ -50,6 +52,7 @@ $password = $username;
 
 $failurereason = null;
 $user = authenticate_user_login($username, $password, true, $failurereason, false);
+error_log("Attempting to authenticate user $username with password $password - got failure reason of " . var_export($failurereason, true));
 if ($failurereason) {
     switch($failurereason) {
         case AUTH_LOGIN_NOUSER:
@@ -86,4 +89,5 @@ if (!complete_user_login($user)) {
 if (empty($wantsurl)) {
     $wantsurl = core_login_get_return_url();
 }
+error_log("Login successful, redirecting to " . $wantsurl);
 redirect(new moodle_url($wantsurl));
