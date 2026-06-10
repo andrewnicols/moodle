@@ -652,7 +652,7 @@ class manager {
         if (!isset($_SESSION['SESSION'])) {
             $_SESSION['SESSION'] = new \stdClass();
             if (!$newsid) {
-                error_log("Session timed out - no session data found for session ID $sid, creating new session.");
+                error_log("Session timed out - no session data found for session ID, creating new session.");
                 $timedout = true;
             }
         }
