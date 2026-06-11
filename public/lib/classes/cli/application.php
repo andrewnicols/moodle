@@ -16,6 +16,9 @@
 
 namespace core\cli;
 
+use Symfony\Component\Console\Command\CompleteCommand;
+use Symfony\Component\Console\Command\DumpCompletionCommand;
+
 /**
  * Moodle CLI application.
  *
@@ -34,6 +37,9 @@ class application extends \Symfony\Component\Console\Application {
     ) {
         parent::__construct('Moodle CLI Application', self::get_moodle_version());
         $this->setCommandLoader($commandloader);
+
+        $this->add(new CompleteCommand());
+        $this->add(new DumpCompletionCommand());
     }
 
     /**
