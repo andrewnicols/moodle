@@ -673,6 +673,9 @@ final class manager_test extends \advanced_testcase {
         manager::scheduled_task_complete($next);
     }
 
+    /**
+     * Test enabling and disabling cron.
+     */
     public function test_cron_enabled(): void {
         $this->resetAfterTest();
 
