@@ -573,8 +573,7 @@ class component {
         // Always keep moodle_exception in place.
         $keyclasses = [
             \core\exception\moodle_exception::class,
-            \core\hook\output\before_requirejs_config::class,
-            \core\hook\output\before_import_map_config::class,
+            \core_auth\output\login_form::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
