@@ -50,7 +50,7 @@ class login_form implements
 
     #[\Override]
     public function get_template_name(\core\output\renderer_base $renderer): string {
-        return 'core/loginform';
+        return 'core/login_form';
     }
 
     /**

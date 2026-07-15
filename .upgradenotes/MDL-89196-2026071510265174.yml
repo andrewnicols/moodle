@@ -1,0 +1,16 @@
+issueNumber: MDL-89196
+notes:
+  theme:
+    - message: |
+        The `core/loginform` template from Moodle core has been removed, and
+        replaced by the `core/login_form` template, taken from the Boost
+        version of `core/login`.
+
+        The previously used core version has not been used in core for some
+        time, and was not tested or validated.
+
+        Themes wishing to override the login form should now either:
+
+        - Override the `core/login_form` template; or
+        - Override the `\core\output\core_renderer::login_form()` method in their theme renderer class.
+      type: changed
