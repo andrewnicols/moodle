@@ -168,7 +168,16 @@ class login implements renderable, templatable {
         $this->info = $info;
     }
 
-    public function export_for_template(renderer_base $output) {
+    /**
+     * Export data for the template
+     *
+     * @param \core\output\renderer_base $output
+     * @return stdClass
+     */
+    public function export_for_template(\core\output\renderer_base $output) {
+        global $CFG, $SITE;
+
+        $formatter = \core\di::get(\core\formatting::class);
 
         $identityproviders = \auth_plugin_base::prepare_identity_providers_for_output($this->identityproviders, $output);
 
@@ -179,13 +188,17 @@ class login implements renderable, templatable {
         $data->cansignup = $this->cansignup;
         $data->cookieshelpicon = $this->cookieshelpicon->export_for_template($output);
         $data->error = $this->error;
+        $data->errorformatted = $output->error_text($data->error);
         $data->errortitle = $this->errortitle;
         $data->info = $this->info;
         $data->forgotpasswordurl = $this->forgotpasswordurl->out(false);
         $data->hasidentityproviders = !empty($this->identityproviders);
         $data->identityproviders = $identityproviders;
-        list($data->instructions, $data->instructionsformat) = \core_external\util::format_text($this->instructions, FORMAT_MOODLE,
-            context_system::instance()->id);
+        [$data->instructions, $data->instructionsformat] = \core_external\util::format_text(
+            $this->instructions,
+            FORMAT_MOODLE,
+            \core\context\system::instance()->id,
+        );
         $data->loginurl = $this->loginurl->out(false);
         $data->signupurl = $this->signupurl->out(false);
         $data->username = $this->username;
@@ -196,6 +209,20 @@ class login implements renderable, templatable {
         $data->togglepassword = $this->togglepassword;
         $data->smallscreensonly = $this->smallscreensonly;
         $data->showloginform = get_config('core', 'showloginform') === false || get_config('core', 'showloginform');
+
+        $data->logourl = null;
+        $logourl = $output->get_logo_url();
+        if ($logourl) {
+            $data->logourl = $logourl->out(false);
+        }
+
+        $data->sitename = $formatter->format_string(
+            string: $SITE->fullname,
+            context: \core\context\course::instance(SITEID),
+            escape: false,
+        );
+
+        $data->hasauthinstructions = !empty($CFG->auth_instructions);
 
         return $data;
     }
