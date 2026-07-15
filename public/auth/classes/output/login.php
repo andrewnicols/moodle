@@ -27,10 +27,8 @@ namespace core_auth\output;
 use context_system;
 use help_icon;
 use moodle_url;
-use renderable;
 use renderer_base;
 use stdClass;
-use templatable;
 
 /**
  * Login renderable class.
@@ -39,8 +37,10 @@ use templatable;
  * @copyright  2016 Frédéric Massart - FMCorz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class login implements renderable, templatable {
-
+class login implements
+    \core\output\named_templatable,
+    \core\output\renderable
+{
     /** @var bool Whether to auto focus the form fields. */
     public $autofocusform;
     /** @var bool Whether we can login as guest. */
@@ -141,6 +141,11 @@ class login implements renderable, templatable {
         $this->togglepassword = get_config('core', 'loginpasswordtoggle') == TOGGLE_SENSITIVE_ENABLED ||
             get_config('core', 'loginpasswordtoggle') == TOGGLE_SENSITIVE_SMALL_SCREENS_ONLY;
         $this->smallscreensonly = get_config('core', 'loginpasswordtoggle') == TOGGLE_SENSITIVE_SMALL_SCREENS_ONLY;
+    }
+
+    #[\Override]
+    public function get_template_name(renderer_base $renderer): string {
+        return 'core/loginform';
     }
 
     /**

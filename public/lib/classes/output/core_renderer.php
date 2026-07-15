@@ -4739,18 +4739,6 @@ EOD;
     }
 
     /**
-     * Renders the login form.
-     *
-     * @param \core_auth\output\login $form The renderable.
-     * @return string
-     */
-    public function render_login(\core_auth\output\login $form) {
-        $context = $form->export_for_template($this);
-
-        return $this->render_from_template('core/loginform', $context);
-    }
-
-    /**
      * Renders an mform element from a template.
      *
      * @param HTML_QuickForm_element $element element
