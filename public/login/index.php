@@ -408,7 +408,11 @@ if (isloggedin() and !isguestuser()) {
     );
     echo $OUTPUT->box_end();
 } else {
-    $loginform = new \core_auth\output\login_form($authsequence, $frm->username);
+    $loginform = new \core_auth\output\login_form(
+        new \core\url('/login/index.php'),
+        $authsequence,
+        $frm->username,
+    );
     $loginform->set_error($errormsg, $errorcode);
     $loginform->set_info($infomsg);
     echo $OUTPUT->render($loginform);
