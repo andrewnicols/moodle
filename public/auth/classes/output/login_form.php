@@ -37,15 +37,18 @@ class login_form implements
     /**
      * Constructor.
      *
+     * @param url $action The URL to submit the form to.
      * @param array $authsequence The enabled sequence of authentication plugins.
      * @param string $username The username to display.
      */
     public function __construct(
+        \core\url $action,
         /** @var string[] The order of authentication plugins */
         private array $authsequence,
         /** @var string The user name to pre-fill the form with. */
         private string $username = '',
     ) {
+        $this->set_action_url($action);
     }
 
     #[\Override]
@@ -75,10 +78,7 @@ class login_form implements
         $data->cookieshelpicon = $this->get_cookies_help_icon()->export_for_template($output);
 
         $data->forgotpasswordurl = new url('/login/forgot_password.php');
-        $loginurl = new url('/login/index.php');
-        $signupurl = new url('/login/signup.php');
-        $data->loginurl = $loginurl->out(false);
-        $data->signupurl = $signupurl->out(false);
+        $data->signupurl = (new url('/login/signup.php'))->out(false);
 
         // Authentication instructions.
         $data->instructions = $CFG->auth_instructions;

@@ -24,6 +24,9 @@ namespace core_auth\output;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 trait login_renderable_trait {
+    /** @var \core\url The URL to use in any form action */
+    private \core\url $actionurl;
+
     /** @var string The error message, if any. */
     private ?string $error = null;
 
@@ -34,6 +37,15 @@ trait login_renderable_trait {
     private ?string $info = null;
 
     /**
+     * The Action URL for form submission.
+     *
+     * @param \core\url $actionurl
+     */
+    public function set_action_url(\core\url $actionurl): void {
+        $this->actionurl = $actionurl;
+    }
+
+    /**
      * Set the error message. For the AUTH_LOGIN_FAILED case, also sets
      * an errortitle so the template can render a bold heading above the detail text.
      *
@@ -42,11 +54,20 @@ trait login_renderable_trait {
      */
     public function set_error(string $error, int $errorcode = 0): void {
         if ($errorcode === AUTH_LOGIN_FAILED) {
-            $this->errortitle = get_string('logininvalidlogintitle');
+            $this->set_error_title(get_string('logininvalidlogintitle'));
             $this->error = get_string('logininvalidlogindetail');
         } else {
             $this->error = $error;
         }
+    }
+
+    /**
+     * Set the error title.
+     *
+     * @param string $errortitle The error title.
+     */
+    public function set_error_title(string $errortitle): void {
+        $this->errortitle = $errortitle;
     }
 
     /**
@@ -66,6 +87,7 @@ trait login_renderable_trait {
      */
     public function export_for_template(\core\output\renderer_base $output): \stdClass {
         return (object) [
+            'actionurl' => $this->actionurl->out(false),
             'error' => $this->error,
             'errorformatted' => $output->error_text($this->error),
             'errortitle' => $this->errortitle,

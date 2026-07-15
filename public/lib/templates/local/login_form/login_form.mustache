@@ -1,0 +1,109 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/local/login_form/login_form
+
+    Context variables required for this template:
+    * autofocusform: Auto focus on form ?,
+    * canloginbyemail - Is login by email allowed?,
+    * error - Any errors in the form?,
+    * forgotpasswordurl - Forgot password url,
+    * actionurl - Login url,
+    * signupurl - Signup url,
+    * logintoken - Random token to protect login request.,
+    * togglepassword - Flag, set to true to show toggle password button,
+
+    Example context (json):
+    {
+        "autofocusform": false,
+        "canloginbyemail": false,
+        "error": "",
+        "forgotpasswordurl": "http://localhost/stable_master/login/forgot_password.php",
+        "actionurl": "http://localhost/stable_master/login/index.php",
+        "signupurl": "http://localhost/stable_master/login/signup.php",
+        "cookieshelpiconformatted": "",
+        "logintoken": "randomstring",
+        "togglepassword": true
+    }
+}}
+<form class="login-form" action="{{actionurl}}" method="post" id="login">
+    <input id="anchor" type="hidden" name="anchor" value="">
+    <script>document.getElementById('anchor').value = location.hash;</script>
+    <input type="hidden" name="logintoken" value="{{logintoken}}">
+    <div class="login-form-username mb-3">
+        <label for="username" class="form-label">
+            {{^canloginbyemail}}
+                {{#str}} username {{/str}}
+            {{/canloginbyemail}}
+            {{#canloginbyemail}}
+                {{#str}} usernameemail {{/str}}
+            {{/canloginbyemail}}
+        </label>
+        <input type="text" name="username" id="username" {{!
+            !}}class="form-control" {{!
+            !}}value="{{username}}" {{!
+            !}}placeholder="{{^canloginbyemail}}{{#str}}enterusername{{/str}}{{/canloginbyemail}}{{!
+            !}}{{#canloginbyemail}}{{#str}}loginenterusernameoremail{{/str}}{{/canloginbyemail}}" {{!
+            !}}autocomplete="username">
+    </div>
+    <div class="login-form-password mb-3">
+        <label for="password" class="form-label">{{#str}} password {{/str}}</label>
+        <input type="password" name="password" id="password" value="" {{!
+            !}}class="form-control" {{!
+            !}}placeholder="{{#str}}loginenterpassword{{/str}}" {{!
+            !}}autocomplete="current-password">
+    </div>
+    <div class="text-end mb-3">
+        <a href="{{forgotpasswordurl}}">{{#str}}loginforgotpassword{{/str}}</a>
+    </div>
+    {{#recaptcha}}
+        <div class="login-form-recaptcha mb-3">
+            {{{recaptcha}}}
+        </div>
+    {{/recaptcha}}
+    <div class="login-form-submit mb-3">
+        <button class="btn btn-primary w-100" type="submit" id="loginbtn">{{#str}}login{{/str}}</button>
+    </div>
+</form>
+
+{{#js}}
+    require(['core_form/submit'], function(Submit) {
+        Submit.init("loginbtn");
+    });
+    {{^error}}
+        {{#autofocusform}}
+            require(['core_form/events'], function(FormEvent) {
+                function autoFocus() {
+                    const userNameField = document.getElementById('username');
+                    const passwordField = document.getElementById('password');
+                    if (userNameField && userNameField.value.length == 0) {
+                        userNameField.focus();
+                    } else if (passwordField) {
+                        passwordField.focus();
+                    }
+                }
+                autoFocus();
+                window.addEventListener(FormEvent.eventTypes.fieldStructureChanged, autoFocus);
+            });
+        {{/autofocusform}}
+    {{/error}}
+    {{#togglepassword}}
+        require(['core/togglesensitive'], function(ToggleSensitive) {
+            ToggleSensitive.init("password", {{smallscreensonly}});
+        });
+    {{/togglepassword}}
+{{/js}}

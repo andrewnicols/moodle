@@ -25,6 +25,7 @@
     * canloginbyemail - Is login by email allowed?,
     * cansignup - Signup allowed?,
     * showloginform - Hide the standard login form if it not necessary (only OAuth2 for example)
+    * cookieshelpicon - cookies help icon details
     * error - Any errors in the form?,
     * errortitle - Optional bold heading shown above the error message (credential failures only),
     * hasauthinstructions - Flag, set to true when auth_instructions is configured,
@@ -33,8 +34,10 @@
     * hasidentityproviders - Flag, set to true to hide identity providers,
     * identityproviders - List of identity providers,
     * instructions - Instructions,
-    * loginurl - Login url,
+    * instructionsformat - Format of instructions,
+    * actionurl - Login url,
     * signupurl - Signup url,
+    * errorformatted - Formatted error,
     * logourl - Flag, logo url,
     * sitename - Name of site.,
     * logintoken - Random token to protect login request.,
@@ -47,6 +50,34 @@
         "canloginbyemail": false,
         "cansignup": true,
         "showloginform": true,
+        "cookieshelpicon": {
+            "heading": "Cookies must be enabled in your browser",
+            "text": "<div class=\"no-overflow\">Two cookies are used on this site. Both died..</div>",
+            "icon": {
+                "attributes": [
+                    {
+                        "name": "class",
+                        "value": ""
+                    },
+                    {
+                        "name": "alt",
+                        "value": "Help with Cookies must be enabled in your browser"
+                    },
+                    {
+                        "name": "title",
+                        "value": "Help with Cookies must be enabled in your browser"
+                    },
+                    {
+                        "name": "src",
+                        "value": "http://localhost/stable_master/theme/image.php?theme=boost&component=core&image=help"
+                    }
+                ]
+            },
+            "linktext": null,
+            "title": "Help with Cookies must be enabled in your browser",
+            "url": "http://localhost/stable_master/help.php?component=core&identifier=cookiesenabled&lang=en",
+            "ltr": true
+        },
         "error": "",
         "errortitle": "",
         "hasauthinstructions": false,
@@ -55,8 +86,11 @@
         "hasidentityproviders": false,
         "identityproviders": [],
         "instructions": "For full access to this site, you first need to create an account.",
-        "loginurl": "http://localhost/stable_master/login/index.php",
+        "instructionsformat": "1",
+        "actionurl": "http://localhost/stable_master/login/index.php",
         "signupurl": "http://localhost/stable_master/login/signup.php",
+        "cookieshelpiconformatted": "",
+        "errorformatted": "",
         "logourl": false,
         "sitename": "Beer & Chips",
         "logintoken": "randomstring",
@@ -68,186 +102,30 @@
 }}
 
 <div class="loginform">
-    {{#logourl}}
-        <div id="loginlogo" class="d-flex justify-content-center mb-4">
-            <img id="logoimage" src="{{logourl}}" class="img-fluid" alt="{{sitename}}"/>
-        </div>
-    {{/logourl}}
+    {{>core/local/login_form/logo}}
     <h1 class="h2">{{#str}}loginwelcomeback{{/str}}</h1>
     <p class="text-muted mb-4">{{#str}} loginto, core, {{sitename}} {{/str}}</p>
-    {{#maintenance}}
-        <div class="alert alert-danger login-maintenance">
-            {{{maintenance}}}
-        </div>
-    {{/maintenance}}
-    {{#error}}
-        <div class="alert alert-danger" id="loginerrormessage" role="alert">
-            {{#errortitle}}<strong class="d-block mb-1">{{errortitle}}</strong>{{/errortitle}}
-            {{error}}
-        </div>
-    {{/error}}
-    {{#info}}
-        <div class="alert alert-info" id="logininfomessage" role="status">{{info}}</div>
-    {{/info}}
+    {{>core/local/login_form/maintenance}}
+    {{>core/local/login_form/errorinfo}}
     {{#showloginform}}
-        <form class="login-form" action="{{loginurl}}" method="post" id="login">
-            <input id="anchor" type="hidden" name="anchor" value="">
-            <script>document.getElementById('anchor').value = location.hash;</script>
-            <input type="hidden" name="logintoken" value="{{logintoken}}">
-            <div class="login-form-username mb-3">
-                <label for="username" class="form-label">
-                    {{^canloginbyemail}}
-                        {{#str}} username {{/str}}
-                    {{/canloginbyemail}}
-                    {{#canloginbyemail}}
-                        {{#str}} usernameemail {{/str}}
-                    {{/canloginbyemail}}
-                </label>
-                <input type="text" name="username" id="username" {{!
-                    !}}class="form-control" {{!
-                    !}}value="{{username}}" {{!
-                    !}}placeholder="{{^canloginbyemail}}{{#str}}enterusername{{/str}}{{/canloginbyemail}}{{!
-                    !}}{{#canloginbyemail}}{{#str}}loginenterusernameoremail{{/str}}{{/canloginbyemail}}" {{!
-                    !}}autocomplete="username">
-            </div>
-            <div class="login-form-password mb-3">
-                <label for="password" class="form-label">{{#str}} password {{/str}}</label>
-                <input type="password" name="password" id="password" value="" {{!
-                    !}}class="form-control" {{!
-                    !}}placeholder="{{#str}}loginenterpassword{{/str}}" {{!
-                    !}}autocomplete="current-password">
-            </div>
-            <div class="text-end mb-3">
-                <a href="{{forgotpasswordurl}}">{{#str}}loginforgotpassword{{/str}}</a>
-            </div>
-            {{#recaptcha}}
-                <div class="login-form-recaptcha mb-3">
-                    {{{recaptcha}}}
-                </div>
-            {{/recaptcha}}
-            <div class="login-form-submit mb-3">
-                <button class="btn btn-primary w-100" type="submit" id="loginbtn">{{#str}}login{{/str}}</button>
-            </div>
-        </form>
+        {{>core/local/login_form/login_form}}
     {{/showloginform}}
-    {{#hasauthinstructions}}
-        <div class="d-lg-none small mb-3">
-            {{{instructions}}}
-        </div>
-    {{/hasauthinstructions}}
-    {{^hasauthinstructions}}
-        {{#cansignup}}
-            <div class="text-center small mb-3">
-                {{#instructions}}
-                    <span class="text-muted me-1">{{{instructions}}}</span>
-                {{/instructions}}
-                <a href="{{signupurl}}">{{#str}}loginstartsignup{{/str}}</a>
-            </div>
-        {{/cansignup}}
-        {{^cansignup}}
-            {{#instructions}}
-                <p class="small mb-3">{{{instructions}}}</p>
-            {{/instructions}}
-        {{/cansignup}}
-    {{/hasauthinstructions}}
-    {{#hasauthinstructions}}
-        {{#cansignup}}
-            <div class="text-center small mb-3">
-                <a href="{{signupurl}}">{{#str}}loginstartsignup{{/str}}</a>
-            </div>
-        {{/cansignup}}
-    {{/hasauthinstructions}}
-    {{#hasidentityproviders}}
-        <div class="login-separator my-5">{{#str}}loginseparatoror{{/str}}</div>
-    {{/hasidentityproviders}}
-    {{^hasidentityproviders}}
-        {{#canloginasguest}}
-            <div class="login-separator my-5">{{#str}}loginseparatoror{{/str}}</div>
-        {{/canloginasguest}}
-    {{/hasidentityproviders}}
-    {{#hasidentityproviders}}
-        <div class="login-identityproviders">
-            {{#identityproviders}}
-                <a class="btn login-identityprovider-btn btn-outline-secondary mb-3" href="{{url}}">
-                    {{#iconurl}}
-                        <img src="{{iconurl}}" alt="" width="24" height="24"/>
-                    {{/iconurl}}
-                    {{#str}}loginwith, core, {{name}}{{/str}}
-                </a>
-            {{/identityproviders}}
-        </div>
-    {{/hasidentityproviders}}
-    {{#canloginasguest}}
-        <form action="{{loginurl}}" method="post" id="guestlogin" class="mb-4">
-            <input type="hidden" name="logintoken" value="{{logintoken}}">
-            <input type="hidden" name="username" value="guest" />
-            <input type="hidden" name="password" value="guest" />
-            <button class="btn btn-outline-secondary login-identityprovider-btn" type="submit" id="loginguestbtn"><i class="fa fa-user me-2" aria-hidden="true"></i>{{#str}}loginasguest{{/str}}</button>
-        </form>
-    {{/canloginasguest}}
-    {{#languagemenu}}
-        <div class="login-languagemenu d-flex justify-content-center my-5">
-            {{>core/action_menu}}
-        </div>
-    {{/languagemenu}}
-    <div class="login-cookiesnotice text-center">
-        <button type="button" class="btn btn-link p-0" {{!
-        }} data-modal="alert"{{!
-        }} data-modal-title-str='["cookiesenabled", "core"]' {{!
-        }} data-modal-content-str='["cookiesenabled_help_html", "core"]'{{!
-        }}>{{#str}}cookiesnotice{{/str}}</button>
-    </div>
+    {{>core/local/login_form/instructions}}
+    {{>core/local/login_form/identityproviders}}
+    {{>core/local/login_form/guestlogin}}
+    {{>core/local/login_form/languagemenu}}
+    {{>core/local/login_form/cookiesnotice}}
 </div>
 
 {{#js}}
-    {{^error}}
-        {{#autofocusform}}
-            require(['core_form/events'], function(FormEvent) {
-                function autoFocus() {
-                    const userNameField = document.getElementById('username');
-                    const passwordField = document.getElementById('password');
-                    if (userNameField && userNameField.value.length == 0) {
-                        userNameField.focus();
-                    } else if (passwordField) {
-                        passwordField.focus();
-                    }
-                }
-                autoFocus();
-                window.addEventListener(FormEvent.eventTypes.fieldStructureChanged, autoFocus);
-            });
-        {{/autofocusform}}
-    {{/error}}
     require(['core/pending'], function(Pending) {
-        const errorMessageDiv = document.getElementById('loginerrormessage');
-        const infoMessageDiv = document.getElementById('logininfomessage');
-        const errorMessage = errorMessageDiv?.textContent.trim();
-        const infoMessage = infoMessageDiv?.textContent.trim();
-        if (errorMessage || infoMessage) {
+        const errorMessage = document.getElementById('loginerrormessage')?.textContent.trim();
+        if (errorMessage) {
             const pendingJS = new Pending('login-move-focus');
-            const usernameField = document.getElementById('username');
             setTimeout(function() {
-                if (errorMessage && usernameField) {
-                    usernameField.focus();
-                }
-                if (errorMessage) {
-                    errorMessageDiv.innerHTML += "&nbsp;";
-                }
-                if (infoMessage) {
-                    infoMessageDiv.innerHTML += "&nbsp;";
-                }
+                document.getElementById('username')?.focus();
                 pendingJS.resolve();
             }, 500);
         }
-    });
-    {{#togglepassword}}
-        require(['core/togglesensitive'], function(ToggleSensitive) {
-            ToggleSensitive.init("password", {{smallscreensonly}});
-        });
-    {{/togglepassword}}
-    require(['core_form/submit'], function(Submit) {
-        Submit.init("loginbtn");
-        {{#canloginasguest}}
-            Submit.init("loginguestbtn");
-        {{/canloginasguest}}
     });
 {{/js}}

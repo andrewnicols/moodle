@@ -1,0 +1,63 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/local/login_form/errorinfo
+
+    Context variables required for this template:
+    * error - Any errors in the form?,
+    * errortitle - Optional bold heading shown above the error message (credential failures only),
+    * info - Info notification to display,
+
+
+    Example context (json):
+    {
+        "error": "Unable to log in",
+        "errortitle": "Your login info may be incorrect. Please try again.",
+        "hasauthinstructions": false,
+        "info": "Example login info message"
+    }
+}}
+{{#error}}
+    <div class="alert alert-danger" id="loginerrormessage" role="alert">
+        {{#errortitle}}<strong class="d-block mb-1">{{errortitle}}</strong>{{/errortitle}}
+        {{error}}
+    </div>
+{{/error}}
+{{#info}}
+    <div class="alert alert-info" id="logininfomessage" role="status">{{info}}</div>
+{{/info}}
+{{#js}}
+    require(['core/pending'], function(Pending) {
+        const errorMessageDiv = document.getElementById('loginerrormessage');
+        const infoMessageDiv = document.getElementById('logininfomessage');
+        const errorMessage = errorMessageDiv?.textContent.trim();
+        const infoMessage = infoMessageDiv?.textContent.trim();
+        if (errorMessage || infoMessage) {
+            const pendingJS = new Pending('login-move-focus');
+            setTimeout(function() {
+                // Append a non-breaking space to the error/status message so screen readers will announce them after page load.
+                if (errorMessage) {
+                    errorMessageDiv.innerHTML += "&nbsp;";
+                }
+                if (infoMessage) {
+                    infoMessageDiv.innerHTML += "&nbsp;";
+                }
+                pendingJS.resolve();
+            }, 500);
+        }
+    });
+{{/js}}
