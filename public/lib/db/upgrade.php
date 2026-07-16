@@ -2159,6 +2159,9 @@ function xmldb_main_upgrade($oldversion) {
             $dbman->create_table($table);
         }
 
+        // Generate the keys for oauth2.
+        \core\di::get(\core\oauth2\setup::class)->configure_keys();
+
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2026071800.00);
     }
