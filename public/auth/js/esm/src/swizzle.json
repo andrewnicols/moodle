@@ -42,5 +42,33 @@
   "LoginForm": {
     "eject": "risky",
     "wrap": "risky"
+  },
+  "local/OAuth2/ClientDescription": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/OAuth2/ConfirmScopesForm": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/OAuth2/ContinueForm": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/OAuth2/ScopeInformation": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/OAuth2/UserInfo": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "ConfirmScopesPage": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "ContinueAsUserPage": {
+    "eject": "risky",
+    "wrap": "risky"
   }
 }

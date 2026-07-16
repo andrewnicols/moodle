@@ -1,0 +1,8 @@
+import S from"@moodle/lms/core/String";import d from"@moodle/lms/core_auth/local/LoginForm/Logo";import C from"@moodle/lms/core_auth/local/LoginForm/Maintenance";import y from"@moodle/lms/core_auth/local/LoginForm/ErrorInfo";import R from"@moodle/lms/core_auth/local/LoginForm/LanguageMenu";import q from"@moodle/lms/core_auth/local/LoginForm/CookiesNotice";import v from"@moodle/lms/core_auth/local/OAuth2/UserInfo";import H from"@moodle/lms/core_auth/local/OAuth2/ClientDescription";import M from"@moodle/lms/core_auth/local/OAuth2/ScopeInformation";import N from"@moodle/lms/core_auth/local/OAuth2/ConfirmScopesForm";import{jsx as e,jsxs as h}from"react/jsx-runtime";/**
+ * The OAuth2 "confirm scopes" page, asking the user to approve or reject the access
+ * requested by an OAuth2 client.
+ *
+ * @module     core_auth/ConfirmScopesPage
+ * @copyright  2026 Andrew Nicols <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */function T({logoUrl:n,siteName:r,maintenance:o,error:t,errorTitle:l,info:s,clientName:i,clientDescription:m,clientPrivacyUrl:c,clientTermsUrl:a,userPictureHtml:p,userProfileUrl:f,requestedScopes:g,actionUrl:u,sesskey:U,languageMenuHtml:P}){return h("div",{className:"login_form",children:[e(d,{logoUrl:n,siteName:r}),e("h2",{children:e(S,{identifier:"oauth2:confirmscopes:clientaccesstitle",component:"core",params:{clientname:i,sitename:r}})}),e(v,{userPictureHtml:p}),e(H,{clientDescription:m}),e(C,{maintenance:o}),e(y,{error:t,errorTitle:l,info:s}),e(M,{clientName:i,siteName:r,requestedScopes:g,profileUrl:f,clientPrivacyUrl:c,clientTermsUrl:a}),e(N,{actionUrl:u,sesskey:U}),e(R,{languageMenuHtml:P}),e(q,{})]})}export{T as default};
