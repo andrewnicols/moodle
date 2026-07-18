@@ -68,10 +68,5 @@ class hook_callbacks {
             \Psr\Http\Message\ResponseFactoryInterface::class,
             \DI\factory([\Slim\Factory\AppFactory::class, 'determineResponseFactory']),
         );
-
-        $hook->add_definition(
-            ScopeRepositoryInterface::class,
-            \DI\get(\core\oauth2\server\scope_repository::class),
-        );
     }
 }
