@@ -80,13 +80,7 @@ class login_form implements
         $data->forgotpasswordurl = new url('/login/forgot_password.php');
         $data->signupurl = (new url('/login/signup.php'))->out(false);
 
-        // Authentication instructions.
-        $data->instructions = $CFG->auth_instructions;
-        if (\core\di::get(\core\authentication::class)->is_enabled('none')) {
-            $data->instructions = get_string('loginstepsnone');
-        } else if ($CFG->registerauth == 'email' && empty($data->instructions)) {
-            $data->instructions = get_string('logindonthaveaccount');
-        }
+        $this->add_signup_instructions($data);
 
         // ReCaptcha.
         $data->recaptcha = $this->get_recaptcha();
@@ -102,16 +96,8 @@ class login_form implements
         $data->identityproviders = \auth_plugin_base::prepare_identity_providers_for_output($identityproviders, $output);
         $data->hasidentityproviders = !empty($data->identityproviders);
 
-        // Login instructions.
-        [$data->instructions, $data->instructionsformat] = \core_external\util::format_text(
-            $data->instructions,
-            FORMAT_MOODLE,
-            \core\context\system::instance()->id,
-        );
         $data->username = $this->username;
         $data->showloginform = get_config('core', 'showloginform') === false || get_config('core', 'showloginform');
-
-        $data->hasauthinstructions = !empty($CFG->auth_instructions);
 
         return $data;
     }
@@ -155,5 +141,30 @@ class login_form implements
         } else {
             return new help_icon('cookiesenabled', 'core');
         }
+    }
+
+    /**
+     * Add the signup instructions to the data.
+     *
+     * @param \stdClass $data
+     */
+    protected function add_signup_instructions(\stdClass $data): void {
+        global $CFG;
+
+        // Signup instructions.
+        $data->signupinstructions = null;
+        if ($this->can_signup()) {
+            // These instructions are only shown when the user is able to sign up.
+            if (\core\di::get(\core\authentication::class)->is_enabled('none')) {
+                $data->signupinstructions = get_string('loginstepsnone');
+            } else if ($CFG->registerauth == 'email' && empty($data->signupinstructions)) {
+                $data->signupinstructions = get_string('logindonthaveaccount');
+            }
+        }
+        [$data->signupinstructions, $data->signupinstructionsformat] = \core_external\util::format_text(
+            $data->signupinstructions,
+            FORMAT_MOODLE,
+            \core\context\system::instance()->id,
+        );
     }
 }

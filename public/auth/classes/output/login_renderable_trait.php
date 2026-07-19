@@ -86,7 +86,7 @@ trait login_renderable_trait {
      * @return \stdClass
      */
     public function export_for_template(\core\output\renderer_base $output): \stdClass {
-        return (object) [
+        $data = (object) [
             'actionurl' => $this->actionurl->out(false),
             'error' => $this->error,
             'errorformatted' => $output->error_text($this->error),
@@ -97,6 +97,9 @@ trait login_renderable_trait {
             'sitename' => $this->get_site_name(),
             'logourl' => $this->get_logo_url(),
         ];
+
+        $this->add_auth_instructions($data);
+        return $data;
     }
 
     /**
@@ -162,5 +165,31 @@ trait login_renderable_trait {
         }
 
         return null;
+    }
+
+    /**
+     * Get the instructions for the left-hand side of the layout.
+     *
+     * @param \stdClass $data The data object to populate with instructions.
+     */
+    protected function add_auth_instructions(\stdClass $data): void {
+        global $CFG;
+
+        $data->authinstructions = null;
+        $data->hasauthinstructions = !empty($CFG->auth_instructions);
+
+        // Left-panel instructions. Only set when the admin has defined custom instructions;
+        // the template falls back to the default welcome content when this is empty/null.
+        if (empty($CFG->auth_instructions)) {
+            return;
+        }
+
+        $data->authinstructions = format_text(
+            $CFG->auth_instructions,
+            FORMAT_MOODLE,
+            [
+                'context' => \core\context\system::instance(),
+            ],
+        );
     }
 }

@@ -21,7 +21,8 @@ notes:
         - `core/local/login_form/errorinfo` - renders the error information
         - `core/local/login_form/guestlogin` - renders the guest login form
         - `core/local/login_form/identityproviders` - renders the identity providers
-        - `core/local/login_form/instructions` - renders the instructions
+        - `core/local/login_form/authinstructions` - renders the authentication instructions
+        - `core/local/login_form/signupinstructions` - renders the signup instructions
         - `core/local/login_form/languagemenu` - renders the language menu
         - `core/local/login_form/logo` - renders the login logo
         - `core/local/login_form/maintenance` - renders the maintenance message
