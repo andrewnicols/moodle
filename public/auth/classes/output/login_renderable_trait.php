@@ -96,6 +96,7 @@ trait login_renderable_trait {
             'maintenance' => \format_text($this->get_maintenance_message(), FORMAT_MOODLE),
             'sitename' => $this->get_site_name(),
             'logourl' => $this->get_logo_url(),
+            'authinstructions' => $this->get_auth_instructions(),
         ];
     }
 
@@ -162,5 +163,27 @@ trait login_renderable_trait {
         }
 
         return null;
+    }
+
+    /**
+     * Get the instructions for the left-hand side of the layout.
+     *
+     * @return string|null
+     */
+    protected function get_auth_instructions(): ?string {
+        global $CFG;
+        // Left-panel instructions. Only set when the admin has defined custom instructions;
+        // the template falls back to the default welcome content when this is empty/null.
+        if (empty($CFG->auth_instructions)) {
+            return null;
+        }
+
+        return format_text(
+            $CFG->auth_instructions,
+            FORMAT_MOODLE,
+            [
+                'context' => \core\context\system::instance(),
+            ],
+        );
     }
 }

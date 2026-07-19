@@ -28,13 +28,13 @@
     * cookieshelpicon - cookies help icon details
     * error - Any errors in the form?,
     * errortitle - Optional bold heading shown above the error message (credential failures only),
-    * hasauthinstructions - Flag, set to true when auth_instructions is configured,
+    * hasauthsignupinstructions - Flag, set to true when auth_signupinstructions is configured,
     * info - Info notification to display,
     * forgotpasswordurl - Forgot password url,
     * hasidentityproviders - Flag, set to true to hide identity providers,
     * identityproviders - List of identity providers,
-    * instructions - Instructions,
-    * instructionsformat - Format of instructions,
+    * signupinstructions - signupinstructions,
+    * signupinstructionsformat - Format of signupinstructions,
     * actionurl - Login url,
     * signupurl - Signup url,
     * errorformatted - Formatted error,
@@ -80,13 +80,13 @@
         },
         "error": "",
         "errortitle": "",
-        "hasauthinstructions": false,
+        "hasauthsignupinstructions": false,
         "info": "",
         "forgotpasswordurl": "http://localhost/stable_master/login/forgot_password.php",
         "hasidentityproviders": false,
         "identityproviders": [],
-        "instructions": "For full access to this site, you first need to create an account.",
-        "instructionsformat": "1",
+        "signupinstructions": "For full access to this site, you first need to create an account.",
+        "signupinstructionsformat": "1",
         "actionurl": "http://localhost/stable_master/login/index.php",
         "signupurl": "http://localhost/stable_master/login/signup.php",
         "cookieshelpiconformatted": "",
@@ -110,7 +110,8 @@
     {{#showloginform}}
         {{>core/local/login_form/login_form}}
     {{/showloginform}}
-    {{>core/local/login_form/instructions}}
+    {{>core/local/login_form/authinstructions}}
+    {{>core/local/login_form/signupinstructions}}
     {{>core/local/login_form/identityproviders}}
     {{>core/local/login_form/guestlogin}}
     {{>core/local/login_form/languagemenu}}
