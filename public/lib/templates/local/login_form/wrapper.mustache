@@ -15,33 +15,22 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template core/login_layout
+    @template core/local/login_form/page_left
 
-    Split-screen layout for login-flow pages (login, MFA, etc.).
-
-    Provides a two-column structure: a decorative left panel (hidden on mobile)
-    and a right panel that receives the page's main content. The left panel
-    content is loaded from the core/login_panel partial, which themes can
-    override to customise the welcome copy and branding.
-
-    Context variables required for this template:
-    * output - The core renderer output object (provides main_content).
+    TODO describe template page_left
 
     Example context (json):
     {
-        "output": {
-            "main_content": "<h1>Login form goes here</h1>"
-        }
     }
 }}
 <div id="page-content" class="min-vh-100 row g-0">
     <aside class="login-layout-left col-lg-6 d-none d-lg-flex">
-        {{> core/login_panel }}
+        {{>core/local/login_form/login_panel}}
     </aside>
     <div id="region-main" class="login-layout-right col-12 col-lg-6">
         <div id="region-main-box" class="login-layout-right-content">
             <div class="login-container">
-                {{{ output.main_content }}}
+                {{$content}}{{{content}}}{{/content}}
             </div>
         </div>
     </div>

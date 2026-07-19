@@ -1,0 +1,12 @@
+issueNumber: MDL-89196
+notes:
+  core:
+    - message: >
+        The content of the boost `login_layout` template has been moved into the
+        new `core/login_form` template with all parameters moved to the
+        `core_auth\output\login_form` renderable.
+
+
+        Functionality remains unchanged but this change allows theme designers
+        to exert greater control over the layout.
+      type: changed

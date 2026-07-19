@@ -15,20 +15,20 @@
     along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 }}
 {{!
-    @template core/login_panel
+    @template core/local/login_form/login_panel
 
     Default content for the left panel of the split-screen login layout.
 
-    When leftinstructions is provided (i.e. the site has custom auth instructions configured),
+    When authinstructions is provided (i.e. the site has custom auth instructions configured),
     it fully replaces the entire default welcome section (title, tagline, and stats).
 
     Example context (json):
     {
-        "leftinstructions": "<p>Welcome to our learning platform. Please log in to continue.</p>"
+        "authinstructions": "<p>Welcome to our learning platform. Please log in to continue.</p>"
     }
 }}
 <div class="login-layout-left-content">
-    {{^leftinstructions}}
+    {{^authinstructions}}
         <h1 class="h2 mb-3">{{#str}}loginwelcometitle{{/str}}</h1>
         <div class="mx-auto mb-4 text-start">
             {{#str}}loginwelcomedescription{{/str}}
@@ -48,10 +48,10 @@
                 <span>{{#str}}loginstatcountries{{/str}}</span>
             </div>
         </div>
-    {{/leftinstructions}}
-    {{#leftinstructions}}
+    {{/authinstructions}}
+    {{#authinstructions}}
         <div class="mx-auto text-start">
-            {{{leftinstructions}}}
+            {{{authinstructions}}}
         </div>
-    {{/leftinstructions}}
+    {{/authinstructions}}
 </div>

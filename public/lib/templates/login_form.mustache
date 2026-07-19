@@ -101,22 +101,26 @@
     }
 }}
 
-<div class="loginform">
-    {{>core/local/login_form/logo}}
-    <h1 class="h2">{{#str}}loginwelcomeback{{/str}}</h1>
-    <p class="text-muted mb-4">{{#str}} loginto, core, {{sitename}} {{/str}}</p>
-    {{>core/local/login_form/maintenance}}
-    {{>core/local/login_form/errorinfo}}
-    {{#showloginform}}
-        {{>core/local/login_form/login_form}}
-    {{/showloginform}}
-    {{>core/local/login_form/authinstructions}}
-    {{>core/local/login_form/signupinstructions}}
-    {{>core/local/login_form/identityproviders}}
-    {{>core/local/login_form/guestlogin}}
-    {{>core/local/login_form/languagemenu}}
-    {{>core/local/login_form/cookiesnotice}}
-</div>
+{{<core/local/login_form/wrapper}}
+    {{$content}}
+        <div class="loginform">
+            {{>core/local/login_form/logo}}
+            <h1 class="h2">{{#str}}loginwelcomeback{{/str}}</h1>
+            <p class="text-muted mb-4">{{#str}} loginto, core, {{sitename}} {{/str}}</p>
+            {{>core/local/login_form/maintenance}}
+            {{>core/local/login_form/errorinfo}}
+            {{#showloginform}}
+                {{>core/local/login_form/login_form}}
+            {{/showloginform}}
+            {{>core/local/login_form/authinstructions}}
+            {{>core/local/login_form/signupinstructions}}
+            {{>core/local/login_form/identityproviders}}
+            {{>core/local/login_form/guestlogin}}
+            {{>core/local/login_form/languagemenu}}
+            {{>core/local/login_form/cookiesnotice}}
+        </div>
+    {{/content}}
+{{/core/local/login_form/wrapper}}
 
 {{#js}}
     require(['core/pending'], function(Pending) {
