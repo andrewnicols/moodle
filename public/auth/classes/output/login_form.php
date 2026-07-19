@@ -34,6 +34,12 @@ class login_form implements
         export_for_template as shared_export_for_template;
     }
 
+    /** @var ?bool Whether login as guest is allowed. If null the value is calculated from site settings */
+    protected ?bool $canloginasguest = null;
+
+    /** @var ?bool Whether signup is allowed. If null the value is calcualted from site settings */
+    protected ?bool $signupallowed = null;
+
     /**
      * Constructor.
      *
@@ -71,9 +77,9 @@ class login_form implements
 
         $data->autofocusform = !empty($CFG->loginpageautofocus);
 
-        $data->canloginasguest = $CFG->guestloginbutton && !isguestuser();
+        $data->canloginasguest = $this->can_login_as_guest();
         $data->canloginbyemail = !empty($CFG->authloginviaemail);
-        $data->cansignup = $CFG->registerauth == 'email' || !empty($CFG->registerauth);
+        $data->cansignup = $this->can_signup();
 
         $data->cookieshelpicon = $this->get_cookies_help_icon()->export_for_template($output);
 
@@ -141,6 +147,54 @@ class login_form implements
         } else {
             return new help_icon('cookiesenabled', 'core');
         }
+    }
+
+    /**
+     * Whether the user can log in as a guest.
+     *
+     * @return bool
+     */
+    protected function can_login_as_guest(): bool {
+        global $CFG;
+
+        if ($this->canloginasguest !== null) {
+            return $this->canloginasguest;
+        }
+
+        return $CFG->guestloginbutton && !isguestuser();
+    }
+
+    /**
+     * Whether the user can register a new account.
+     *
+     * @return bool|null
+     */
+    protected function can_signup(): bool {
+        global $CFG;
+
+        if ($this->signupallowed !== null) {
+            return $this->signupallowed;
+        }
+
+        return $CFG->registerauth == 'email' || !empty($CFG->registerauth);
+    }
+
+    /**
+     * Override the default value for allowing login as guest.
+     *
+     * @param ?bool $canloginasguest
+     */
+    public function set_can_login_as_guest(?bool $canloginasguest): void {
+        $this->canloginasguest = $canloginasguest;
+    }
+
+    /**
+     * Override the default value for allowing signup.
+     *
+     * @param ?bool $allowed
+     */
+    public function set_signup_allowed(?bool $allowed): void {
+        $this->signupallowed = $allowed;
     }
 
     /**
