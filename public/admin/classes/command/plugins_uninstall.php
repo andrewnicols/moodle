@@ -47,7 +47,7 @@ class plugins_uninstall extends Command {
                 'Plugin component name(s) to uninstall (e.g. mod_assign local_myplugin)',
             )
             ->addOption(
-                'yes',
+                'assume-yes',
                 'y',
                 InputOption::VALUE_NONE,
                 'Assume yes to the confirmation prompt when uninstalling multiple plugins',
@@ -59,7 +59,7 @@ class plugins_uninstall extends Command {
                 When multiple plugins are specified, the command validates all plugins, shows the list to be
                 uninstalled, and asks for confirmation before continuing.
 
-                Use <info>--yes</info> to skip the confirmation prompt for multi-plugin uninstalls. This is
+                Use <info>--assume-yes</info> to skip the confirmation prompt for multi-plugin uninstalls. This is
                 required in non-interactive mode.
 
                 Uninstall a single plugin:
@@ -69,13 +69,13 @@ class plugins_uninstall extends Command {
                   <info>php bin/moodle admin:plugins:uninstall mod_assign local_myplugin</info>
 
                 Uninstall multiple plugins without prompting:
-                  <info>php bin/moodle admin:plugins:uninstall mod_assign local_myplugin --yes</info>
+                  <info>php bin/moodle admin:plugins:uninstall mod_assign local_myplugin --assume-yes</info>
                 EOT);
     }
 
     #[\Override]
     protected function execute(InputInterface $input, OutputInterface $output): int {
-        $assumeyes = $input->getOption('yes');
+        $assumeyes = $input->getOption('assume-yes');
         $components = $input->getArgument('plugin');
         $pluginman = $this->get_plugin_manager();
         $plugins = [];
@@ -109,7 +109,7 @@ class plugins_uninstall extends Command {
             if (!$assumeyes) {
                 if (!$input->isInteractive()) {
                     $output->writeln(
-                        '<error>Confirmation is required when uninstalling multiple plugins in non-interactive mode. Re-run with --yes.</error>',
+                        '<error>Confirmation is required when uninstalling multiple plugins in non-interactive mode. Re-run with --assume-yes.</error>',
                     );
                     return Command::FAILURE;
                 }
