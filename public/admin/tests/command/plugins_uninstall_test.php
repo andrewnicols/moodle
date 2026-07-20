@@ -17,6 +17,8 @@
 namespace core_admin\command;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Tester\CommandTester;
 
 /**
@@ -121,7 +123,7 @@ final class plugins_uninstall_test extends \advanced_testcase {
      * @return plugins_uninstall
      */
     private function build_command(\core\plugin_manager $manager): plugins_uninstall {
-        return new class ($manager) extends plugins_uninstall {
+        $command = new class ($manager) extends plugins_uninstall {
             /**
              * Constructor.
              *
@@ -139,6 +141,13 @@ final class plugins_uninstall_test extends \advanced_testcase {
                 return $this->mockmanager;
             }
         };
+
+        // Normally the Application provides the HelperSet (and its QuestionHelper) when the
+        // command is run. These tests construct the command directly, bypassing the
+        // Application, so the HelperSet must be supplied here instead.
+        $command->setHelperSet(new HelperSet([new QuestionHelper()]));
+
+        return $command;
     }
 
     /**
