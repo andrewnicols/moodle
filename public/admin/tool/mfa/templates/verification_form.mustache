@@ -37,44 +37,47 @@
     }
 }}
 
-<div class="tool-mfa-verify-container">
-    <div class="d-flex align-items-start pb-2 {{#disablefactor}}text-muted{{/disablefactor}}">
-        <div class="mb-2">
-            <h1 class="h2 mb-2">{{logintitle}}</h1>
-            <p class="text-muted">{{{logindesc}}}</p>
-        </div>
-    </div>
-    <div class="mfa-verify-form">
-        {{{form}}}
-    </div>
-    <div class="form-container text-center mt-3">
-        <div class="d-flex justify-content-center">
-            <form id="cancelmfa" method="POST" action="{{{authurl}}}">
-                <input type="hidden" id="{{uniqid}}-logout" name="logout" value="true">
-                <input type="hidden" name="sesskey" value="{{sesskey}}">
-                <input type="submit" class="btn btn-link"
-                    name="cancelmfa" id="cancelmfa_button"
-                    value="{{#str}} backtologin, tool_mfa {{/str}}">
+{{<core/local/login_form/wrapper}}
+    {{$content}}
+        <div class="tool-mfa-verify-container">
+            <div class="d-flex align-items-start pb-2 {{#disablefactor}}text-muted{{/disablefactor}}">
+                <div class="mb-2">
+                    <h1 class="h2 mb-2">{{logintitle}}</h1>
+                    <p class="text-muted">{{{logindesc}}}</p>
+                </div>
+            </div>
+            <div class="mfa-verify-form">
+                {{{form}}}
+            </div>
+            <div class="form-container text-center mt-3">
+                <div class="d-flex justify-content-center">
+                    <form id="cancelmfa" method="POST" action="{{{authurl}}}">
+                        <input type="hidden" id="{{uniqid}}-logout" name="logout" value="true">
+                        <input type="hidden" name="sesskey" value="{{sesskey}}">
+                        <input type="submit" class="btn btn-link"
+                            name="cancelmfa" id="cancelmfa_button"
+                            value="{{#str}} backtologin, tool_mfa {{/str}}">
+                    </form>
+                </div>
+            </div>
+            {{#hasadditionalfactors}}
+            <div class="login-separator my-5">{{#str}}loginseparatoror{{/str}}</div>
+            {{/hasadditionalfactors}}
+            {{#additionalfactors}}
+            <form class="pt-2" id="{{uniqid}}-nextfactor" method="POST" action="{{{authurl}}}">
+                <input type="hidden" id="{{uniqid}}-factorname" name="factorname" value="{{name}}">
+                <button class="btn btn-secondary w-100 mb-2 {{#disable}}disabled{{/disable}}" type="submit">
+                    <span>{{loginoption}}</span>
+                </button>
             </form>
+            {{/additionalfactors}}
+            <div class="form-container text-center mt-3">
+                {{#supportlink}}
+                <div class="tool-mfa-site-support mt-4">
+                    {{#str}} needhelp, tool_mfa {{/str}} {{{supportlink}}}
+                </div>
+                {{/supportlink}}
+            </div>
         </div>
-    </div>
-    {{#hasadditionalfactors}}
-    <div class="login-separator my-5">{{#str}}loginseparatoror{{/str}}</div>
-    {{/hasadditionalfactors}}
-    {{#additionalfactors}}
-    <form class="pt-2" id="{{uniqid}}-nextfactor" method="POST" action="{{{authurl}}}">
-        <input type="hidden" id="{{uniqid}}-factorname" name="factorname" value="{{name}}">
-        <button class="btn btn-secondary w-100 mb-2 {{#disable}}disabled{{/disable}}" type="submit">
-            <span>{{loginoption}}</span>
-        </button>
-    </form>
-    {{/additionalfactors}}
-    <div class="form-container text-center mt-3">
-        {{#supportlink}}
-        <div class="tool-mfa-site-support mt-4">
-            {{#str}} needhelp, tool_mfa {{/str}} {{{supportlink}}}
-        </div>
-        {{/supportlink}}
-    </div>
-</div>
-
+    {{/content}}
+{{/core/local/login_form/wrapper}}

@@ -60,16 +60,21 @@ function core_login_process_password_reset_request() {
         // Any email has now been sent.
         // Next display results to requesting user if settings permit.
         echo $OUTPUT->header();
-        notice($notice, $url);
+        $content = '';
+        $content .= $OUTPUT->box($notice, 'generalbox', 'notice');
+        $content .= $OUTPUT->continue_button($url);
+        echo $OUTPUT->render_from_template('core/local/login_form/wrapper', ['content' => $content]);
+        echo $OUTPUT->footer();
         die; // Never reached.
     }
 
     // DISPLAY FORM.
+    $content = '';
 
     echo $OUTPUT->header();
-    echo $OUTPUT->box(get_string('passwordforgotteninstructions2'), 'generalbox boxwidthnormal boxaligncenter');
-    $mform->display();
-
+    $content .= $OUTPUT->box(get_string('passwordforgotteninstructions2'), 'generalbox boxwidthnormal boxaligncenter');
+    $content .= $mform->render();
+    echo $OUTPUT->render_from_template('core/local/login_form/wrapper', ['content' => $content]);
     echo $OUTPUT->footer();
 }
 
@@ -241,16 +246,24 @@ function core_login_process_password_set($token) {
         // (suspicious)
         // Direct the user to the forgot password page to request a password reset.
         echo $OUTPUT->header();
-        notice(get_string('noresetrecord'), $forgotpasswordurl);
-        die; // Never reached.
+        $content = '';
+        $content .= $OUTPUT->box(get_string('noresetrecord'), 'generalbox', 'notice');
+        $content .= $OUTPUT->continue_button($forgotpasswordurl);
+        echo $OUTPUT->render_from_template('core/local/login_form/wrapper', ['content' => $content]);
+        echo $OUTPUT->footer();
+        exit(1);
     }
     if ($user->timerequested < (time() - $pwresettime)) {
         // There is a reset record, but it's expired.
         // Direct the user to the forgot password page to request a password reset.
         $pwresetmins = floor($pwresettime / MINSECS);
         echo $OUTPUT->header();
-        notice(get_string('resetrecordexpired', '', $pwresetmins), $forgotpasswordurl);
-        die; // Never reached.
+        $content = '';
+        $content .= $OUTPUT->box(get_string('resetrecordexpired'), 'generalbox', 'notice');
+        $content .= $OUTPUT->continue_button($forgotpasswordurl);
+        echo $OUTPUT->render_from_template('core/local/login_form/wrapper', ['content' => $content]);
+        echo $OUTPUT->footer();
+        exit(1);
     }
 
     if (
@@ -280,8 +293,10 @@ function core_login_process_password_set($token) {
         $setdata->token = $user->token;
         $mform->set_data($setdata);
         echo $OUTPUT->header();
-        echo $OUTPUT->box(get_string('setpasswordinstructions'), 'generalbox boxwidthnormal boxaligncenter');
-        $mform->display();
+
+        $content = $OUTPUT->box(get_string('setpasswordinstructions'), 'generalbox boxwidthnormal boxaligncenter');
+        $content .= $mform->render();
+        echo $OUTPUT->render_from_template('core/local/login_form/wrapper', ['content' => $content]);
         echo $OUTPUT->footer();
         return;
     } else {

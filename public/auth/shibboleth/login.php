@@ -77,12 +77,13 @@ echo $OUTPUT->header();
 
 if (isloggedin() and !isguestuser()) {
     // Prevent logging when already logged in, we do not want them to relogin by accident because sesskey would be changed.
-    echo $OUTPUT->box_start();
+    $content = $OUTPUT->box_start();
     $params = ['sesskey' => sesskey(), 'loginpage' => 1];
     $logout = new single_button(new moodle_url('/login/logout.php', $params), get_string('logout'), 'post');
     $continue = new single_button(new moodle_url('/'), get_string('cancel'), 'get');
-    echo $OUTPUT->confirm(get_string('alreadyloggedin', 'error', fullname($USER)), $logout, $continue);
-    echo $OUTPUT->box_end();
+    $content .= $OUTPUT->confirm(get_string('alreadyloggedin', 'error', fullname($USER)), $logout, $continue);
+    $content .= $OUTPUT->box_end();
+    echo $OUTPUT->render_from_template('core/local/login_form/wrapper', ['content' => $content]);
 } else {
     // Print login page.
     $selectedidp = '-';

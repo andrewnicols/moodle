@@ -59,71 +59,74 @@
         "isvalid": false
     }
 }}
-
-<div class="my-1 my-sm-5"></div>
-<div class="container">
-    <div class="card">
-        <h2 class="card-header">
-            {{#loginname}}{{.}}{{/loginname}}
-            {{^loginname}}{{#str}}auth_shibboleth_login_long, auth_shibboleth{{/str}}{{/loginname}}
-        </h2>
-        <div class="card-body">
-            <div class="row justify-content-center mx-1 mb-1">
-                <div class="col-md-5">
-                    <form action="{{loginurl}}" method="post" id="login">
-                        <div class="mb-3">
-                            <label for="idp">{{#str}}auth_shibboleth_select_organization, auth_shibboleth{{/str}}</label>
-                            <select id="idp" name="idp" class="form-control input-block-level {{^isvalid}}is-invalid{{/isvalid}}">
-                                <option value="-">{{#str}}auth_shibboleth_select_member, auth_shibboleth{{/str}}</option>
-                                {{#idps}}
-                                    <option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>
-                                {{/idps}}
-                            </select>
-                            <div class="invalid-feedback text-danger mb-1" {{#isvalid}}hidden{{/isvalid}}>
-                                {{#str}}auth_shibboleth_errormsg, auth_shibboleth{{/str}}
-                            </div>
+{{<core/local/login_form/wrapper}}
+    {{$content}}
+        <div class="my-1 my-sm-5"></div>
+        <div class="container">
+            <div class="card">
+                <h2 class="card-header">
+                    {{#loginname}}{{.}}{{/loginname}}
+                    {{^loginname}}{{#str}}auth_shibboleth_login_long, auth_shibboleth{{/str}}{{/loginname}}
+                </h2>
+                <div class="card-body">
+                    <div class="row justify-content-center mx-1 mb-1">
+                        <div class="col-md-5">
+                            <form action="{{loginurl}}" method="post" id="login">
+                                <div class="mb-3">
+                                    <label for="idp">{{#str}}auth_shibboleth_select_organization, auth_shibboleth{{/str}}</label>
+                                    <select id="idp" name="idp" class="form-control input-block-level {{^isvalid}}is-invalid{{/isvalid}}">
+                                        <option value="-">{{#str}}auth_shibboleth_select_member, auth_shibboleth{{/str}}</option>
+                                        {{#idps}}
+                                            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>
+                                        {{/idps}}
+                                    </select>
+                                    <div class="invalid-feedback text-danger mb-1" {{#isvalid}}hidden{{/isvalid}}>
+                                        {{#str}}auth_shibboleth_errormsg, auth_shibboleth{{/str}}
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 mb-1" accesskey="s">
+                                    {{#str}}select, moodle{{/str}}
+                                </button>
+                                <p class="form-text text-muted mt-1 mb-1">
+                                    {{#str}}auth_shib_contact_administrator, auth_shibboleth, {{adminemail}}{{/str}}
+                                </p>
+                            </form>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 mb-1" accesskey="s">
-                            {{#str}}select, moodle{{/str}}
-                        </button>
-                        <p class="form-text text-muted mt-1 mb-1">
-                            {{#str}}auth_shib_contact_administrator, auth_shibboleth, {{adminemail}}{{/str}}
-                        </p>
-                    </form>
-                </div>
-                {{#guestlogin}}
-                <div class="col-md-5">
-                    <p>
-                        {{#str}}someallowguest, moodle{{/str}}
-                    </p>
-                    <form action="{{guestloginurl}}" method="post" id="guestlogin">
-                        <div class="guestform">
-                            <input type="hidden" name="logintoken" value="{{logintoken}}">
-                            <input type="hidden" name="username" value="guest">
-                            <input type="hidden" name="password" value="guest">
-                            <button type="submit" class="btn btn-secondary w-100">
-                                {{#str}}loginguest, moodle{{/str}}
-                            </button>
+                        {{#guestlogin}}
+                        <div class="col-md-5">
+                            <p>
+                                {{#str}}someallowguest, moodle{{/str}}
+                            </p>
+                            <form action="{{guestloginurl}}" method="post" id="guestlogin">
+                                <div class="guestform">
+                                    <input type="hidden" name="logintoken" value="{{logintoken}}">
+                                    <input type="hidden" name="username" value="guest">
+                                    <input type="hidden" name="password" value="guest">
+                                    <button type="submit" class="btn btn-secondary w-100">
+                                        {{#str}}loginguest, moodle{{/str}}
+                                    </button>
+                                </div>
+                            </form>
                         </div>
-                    </form>
+                        {{/guestlogin}}
+                    </div>
                 </div>
-                {{/guestlogin}}
             </div>
+            {{#showinstructions}}
+            <div class="card mt-1">
+                <div class="card-body mx-1 mb-1">
+                    <h2 class="card-title">{{#str}}firsttime, moodle{{/str}}</h2>
+                    <p>
+                        {{{instructions}}}
+                    </p>
+                    {{#cansignup}}
+                    <form action="{{signupurl}}" method="get" id="signup">
+                        <button type="submit" class="btn btn-secondary">{{#str}}startsignup, moodle{{/str}}</button>
+                    </form>
+                    {{/cansignup}}
+                </div>
+            </div>
+            {{/showinstructions}}
         </div>
-    </div>
-    {{#showinstructions}}
-    <div class="card mt-1">
-        <div class="card-body mx-1 mb-1">
-            <h2 class="card-title">{{#str}}firsttime, moodle{{/str}}</h2>
-            <p>
-                {{{instructions}}}
-            </p>
-            {{#cansignup}}
-            <form action="{{signupurl}}" method="get" id="signup">
-                <button type="submit" class="btn btn-secondary">{{#str}}startsignup, moodle{{/str}}</button>
-            </form>
-            {{/cansignup}}
-        </div>
-    </div>
-    {{/showinstructions}}
-</div>
+    {{/content}}
+{{/core/local/login_form/wrapper}}
