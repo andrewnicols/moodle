@@ -18,9 +18,8 @@ namespace core;
 
 use core\plugininfo\base;
 use core\tests\fake_plugins_test_trait;
-use core_plugin_manager;
-use testable_core_plugin_manager;
-use testable_plugininfo_base;
+use core\tests\plugin_manager as testable_plugin_manager;
+use core\tests\plugininfo\base as testable_plugininfo_base;
 
 /**
  * Unit tests for plugin manager class.
@@ -29,56 +28,62 @@ use testable_plugininfo_base;
  * @category  test
  * @copyright 2013 Petr Skoda {@link http://skodak.org}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core_plugin_manager
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(plugin_manager::class)]
 final class plugin_manager_test extends \advanced_testcase {
-
     use fake_plugins_test_trait;
 
-    public static function setUpBeforeClass(): void {
-        global $CFG;
-        require_once($CFG->dirroot . '/lib/tests/fixtures/testable_plugin_manager.php');
-        require_once($CFG->dirroot . '/lib/tests/fixtures/testable_plugininfo_base.php');
-        parent::setUpBeforeClass();
+    /**
+     * Configure the test manager.
+     */
+    #[\PHPUnit\Framework\Attributes\Before]
+    public function configure_test_manager(): void {
+        testable_plugin_manager::register();
     }
 
-    public function tearDown(): void {
-        // The caches of the testable singleton must be reset explicitly. It is
-        // safer to kill the whole testable singleton at the end of every test.
-        testable_core_plugin_manager::reset_caches();
-        parent::tearDown();
+    /**
+     * Reset the testable singleton after tests.
+     *
+     * The caches of the testable singleton must be reset explicitly. It is
+     * safer to kill the whole testable singleton at the end of every test.
+     */
+    #[\PHPUnit\Framework\Attributes\After]
+    public function reset_testable_plugin_manager(): void {
+        testable_plugin_manager::reset_caches();
     }
 
     public function test_instance(): void {
-        $pluginman1 = core_plugin_manager::instance();
-        $this->assertInstanceOf('core_plugin_manager', $pluginman1);
-        $pluginman2 = core_plugin_manager::instance();
+        // Calling instance returns the correct instance type.
+        $pluginman1 = plugin_manager::instance();
+        $this->assertInstanceOf(plugin_manager::class, $pluginman1);
+
+        // Calling it again returns the identical instance.
+        $pluginman2 = plugin_manager::instance();
         $this->assertSame($pluginman1, $pluginman2);
-        $pluginman3 = testable_core_plugin_manager::instance();
-        $this->assertInstanceOf('core_plugin_manager', $pluginman3);
-        $this->assertInstanceOf('testable_core_plugin_manager', $pluginman3);
-        $pluginman4 = testable_core_plugin_manager::instance();
-        $this->assertSame($pluginman3, $pluginman4);
-        $this->assertNotSame($pluginman1, $pluginman3);
+
+        // Fetching it from DI container returns the identical instance.
+        $pluginman3 = \core\di::get(plugin_manager::class);
+        $this->assertSame($pluginman1, $pluginman3);
     }
 
     public function test_reset_caches(): void {
         // Make sure there are no warnings or errors.
-        core_plugin_manager::reset_caches();
-        testable_core_plugin_manager::reset_caches();
+        plugin_manager::reset_caches();
+        testable_plugin_manager::reset_caches();
     }
 
     /**
      * Make sure that the tearDown() really kills the singleton after this test.
      */
     public function test_teardown_works_precheck(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
         $pluginfo = testable_plugininfo_base::fake_plugin_instance(
             'fake',
             '/dev/null',
             'one',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $pluginman->inject_testable_plugininfo('fake', 'one', $pluginfo);
@@ -88,14 +93,15 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_teardown_works_postcheck(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
         $this->assertNull($pluginman->get_plugin_info('fake_one'));
         $this->assertNull($pluginman->get_plugin_info('fake_two'));
     }
 
     public function test_get_plugin_types(): void {
         // Make sure there are no warnings or errors.
-        $types = core_plugin_manager::instance()->get_plugin_types();
+        $types = plugin_manager::instance()->get_plugin_types();
         $this->assertIsArray($types);
         foreach ($types as $type => $fulldir) {
             $this->assertFileExists($fulldir);
@@ -103,9 +109,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_installed_plugins(): void {
-        $types = core_plugin_manager::instance()->get_plugin_types();
+        $types = plugin_manager::instance()->get_plugin_types();
         foreach ($types as $type => $fulldir) {
-            $installed = core_plugin_manager::instance()->get_installed_plugins($type);
+            $installed = plugin_manager::instance()->get_installed_plugins($type);
             foreach ($installed as $plugin => $version) {
                 $this->assertMatchesRegularExpression('/^[a-z]+[a-z0-9_]*$/', $plugin);
                 $this->assertTrue(
@@ -117,9 +123,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_enabled_plugins(): void {
-        $types = core_plugin_manager::instance()->get_plugin_types();
+        $types = plugin_manager::instance()->get_plugin_types();
         foreach ($types as $type => $fulldir) {
-            $enabled = core_plugin_manager::instance()->get_enabled_plugins($type);
+            $enabled = plugin_manager::instance()->get_enabled_plugins($type);
             if (is_array($enabled)) {
                 foreach ($enabled as $key => $val) {
                     $this->assertMatchesRegularExpression('/^[a-z]+[a-z0-9_]*$/', $key);
@@ -132,9 +138,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_present_plugins(): void {
-        $types = core_plugin_manager::instance()->get_plugin_types();
+        $types = plugin_manager::instance()->get_plugin_types();
         foreach ($types as $type => $fulldir) {
-            $present = core_plugin_manager::instance()->get_present_plugins($type);
+            $present = plugin_manager::instance()->get_present_plugins($type);
             if (is_array($present)) {
                 foreach ($present as $plugin => $version) {
                     $this->assertMatchesRegularExpression(
@@ -156,28 +162,17 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_plugins(): void {
-        $plugininfos1 = core_plugin_manager::instance()->get_plugins();
+        $plugininfos1 = plugin_manager::instance()->get_plugins();
         foreach ($plugininfos1 as $type => $infos) {
             foreach ($infos as $name => $info) {
-                $this->assertInstanceOf('\core\plugininfo\base', $info);
+                $this->assertInstanceOf(base::class, $info);
             }
         }
-
-        // The testable variant of the manager holds its own tree of the
-        // plugininfo objects.
-        $plugininfos2 = testable_core_plugin_manager::instance()->get_plugins();
-        $this->assertNotSame($plugininfos1['mod']['forum'], $plugininfos2['mod']['forum']);
-
-        // Singletons of each manager class share the same tree.
-        $plugininfos3 = core_plugin_manager::instance()->get_plugins();
-        $this->assertSame($plugininfos1['mod']['forum'], $plugininfos3['mod']['forum']);
-        $plugininfos4 = testable_core_plugin_manager::instance()->get_plugins();
-        $this->assertSame($plugininfos2['mod']['forum'], $plugininfos4['mod']['forum']);
     }
 
     public function test_plugininfo_back_reference_to_the_plugin_manager(): void {
-        $plugman1 = core_plugin_manager::instance();
-        $plugman2 = testable_core_plugin_manager::instance();
+        $plugman1 = plugin_manager::instance();
+        $plugman2 = testable_plugin_manager::instance();
 
         foreach ($plugman1->get_plugins() as $type => $infos) {
             foreach ($infos as $info) {
@@ -193,9 +188,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_plugins_of_type(): void {
-        $plugininfos = core_plugin_manager::instance()->get_plugins();
+        $plugininfos = plugin_manager::instance()->get_plugins();
         foreach ($plugininfos as $type => $infos) {
-            $this->assertSame($infos, core_plugin_manager::instance()->get_plugins_of_type($type));
+            $this->assertSame($infos, plugin_manager::instance()->get_plugins_of_type($type));
         }
     }
 
@@ -205,7 +200,7 @@ final class plugin_manager_test extends \advanced_testcase {
         // Any standard plugin with subplugins is suitable.
         $this->assertFileExists("$CFG->dirroot/lib/editor/tiny", 'TinyMCE is not present.');
 
-        $subplugins = core_plugin_manager::instance()->get_subplugins_of_plugin('editor_tiny');
+        $subplugins = plugin_manager::instance()->get_subplugins_of_plugin('editor_tiny');
         foreach ($subplugins as $component => $info) {
             $this->assertInstanceOf('\core\plugininfo\base', $info);
         }
@@ -213,7 +208,7 @@ final class plugin_manager_test extends \advanced_testcase {
 
     public function test_get_subplugins(): void {
         // Tested already indirectly from test_get_subplugins_of_plugin().
-        $subplugins = core_plugin_manager::instance()->get_subplugins();
+        $subplugins = plugin_manager::instance()->get_subplugins();
         $this->assertIsArray($subplugins);
     }
 
@@ -223,7 +218,7 @@ final class plugin_manager_test extends \advanced_testcase {
         // Any standard plugin with subplugins is suitable.
         $this->assertFileExists("$CFG->dirroot/lib/editor/tiny", 'TinyMCE is not present.');
 
-        $parent = core_plugin_manager::instance()->get_parent_of_subplugin('tiny');
+        $parent = plugin_manager::instance()->get_parent_of_subplugin('tiny');
         $this->assertSame('editor_tiny', $parent);
     }
 
@@ -233,27 +228,27 @@ final class plugin_manager_test extends \advanced_testcase {
         // Any standard plugin is suitable.
         $this->assertFileExists("$CFG->dirroot/lib/editor/tiny", 'TinyMCE is not present.');
 
-        $name = core_plugin_manager::instance()->plugin_name('editor_tiny');
+        $name = plugin_manager::instance()->plugin_name('editor_tiny');
         $this->assertSame(get_string('pluginname', 'editor_tiny'), $name);
     }
 
     public function test_plugintype_name(): void {
-        $name = core_plugin_manager::instance()->plugintype_name('editor');
+        $name = plugin_manager::instance()->plugintype_name('editor');
         $this->assertSame(get_string('type_editor', 'core_plugin'), $name);
     }
 
     public function test_plugintype_name_plural(): void {
-        $name = core_plugin_manager::instance()->plugintype_name_plural('editor');
+        $name = plugin_manager::instance()->plugintype_name_plural('editor');
         $this->assertSame(get_string('type_editor_plural', 'core_plugin'), $name);
     }
 
     public function test_plugintype_name_core(): void {
-        $name = core_plugin_manager::instance()->plugintype_name('core');
+        $name = plugin_manager::instance()->plugintype_name('core');
         $this->assertSame(get_string('type_core', 'core_plugin'), $name);
     }
 
     public function test_plugintype_name_core_plural(): void {
-        $name = core_plugin_manager::instance()->plugintype_name_plural('core');
+        $name = plugin_manager::instance()->plugintype_name_plural('core');
         $this->assertSame(get_string('type_core_plural', 'core_plugin'), $name);
     }
 
@@ -263,7 +258,7 @@ final class plugin_manager_test extends \advanced_testcase {
         // Any standard plugin is suitable.
         $this->assertFileExists("$CFG->dirroot/lib/editor/tiny", 'TinyMCE is not present.');
 
-        $info = core_plugin_manager::instance()->get_plugin_info('editor_tiny');
+        $info = plugin_manager::instance()->get_plugin_info('editor_tiny');
         $this->assertInstanceOf('\core\plugininfo\editor', $info);
     }
 
@@ -274,8 +269,8 @@ final class plugin_manager_test extends \advanced_testcase {
         $this->assertFileExists("$CFG->dirroot/report/competency", 'competency report is not present');
         $this->assertFileExists("$CFG->dirroot/$CFG->admin/tool/lp", 'tool lp is not present');
 
-        $this->assertFalse(core_plugin_manager::instance()->can_uninstall_plugin('tool_lp'));
-        $this->assertTrue(core_plugin_manager::instance()->can_uninstall_plugin('report_competency'));
+        $this->assertFalse(plugin_manager::instance()->can_uninstall_plugin('tool_lp'));
+        $this->assertTrue(plugin_manager::instance()->can_uninstall_plugin('report_competency'));
     }
 
     public function test_plugin_states(): void {
@@ -302,45 +297,45 @@ final class plugin_manager_test extends \advanced_testcase {
         // Deleted present.
         set_config('version', 2013091300, 'enrol_authorize');
 
-        core_plugin_manager::reset_caches();
+        plugin_manager::reset_caches();
 
-        $plugininfos = core_plugin_manager::instance()->get_plugins();
+        $plugininfos = plugin_manager::instance()->get_plugins();
         foreach ($plugininfos as $type => $infos) {
             /** @var \core\plugininfo\base $info */
             foreach ($infos as $info) {
                 if ($info->component === 'mod_assign') {
                     $this->assertSame(
-                        core_plugin_manager::PLUGIN_STATUS_UPGRADE,
+                        plugin_manager::PLUGIN_STATUS_UPGRADE,
                         $info->get_status(),
                         'Invalid ' . $info->component . ' state'
                     );
                 } else if ($info->component === 'mod_forum') {
                     $this->assertSame(
-                        core_plugin_manager::PLUGIN_STATUS_DOWNGRADE,
+                        plugin_manager::PLUGIN_STATUS_DOWNGRADE,
                         $info->get_status(),
                         'Invalid ' . $info->component . ' state'
                     );
                 } else if ($info->component === 'tool_phpunit') {
                     $this->assertSame(
-                        core_plugin_manager::PLUGIN_STATUS_NEW,
+                        plugin_manager::PLUGIN_STATUS_NEW,
                         $info->get_status(),
                         'Invalid ' . $info->component . ' state'
                     );
                 } else if ($info->component === 'mod_xxxxxxx') {
                     $this->assertSame(
-                        core_plugin_manager::PLUGIN_STATUS_MISSING,
+                        plugin_manager::PLUGIN_STATUS_MISSING,
                         $info->get_status(),
                         'Invalid ' . $info->component . ' state'
                     );
                 } else if ($info->component === 'enrol_authorize') {
                     $this->assertSame(
-                        core_plugin_manager::PLUGIN_STATUS_DELETE,
+                        plugin_manager::PLUGIN_STATUS_DELETE,
                         $info->get_status(),
                         'Invalid ' . $info->component . ' state'
                     );
                 } else {
                     $this->assertSame(
-                        core_plugin_manager::PLUGIN_STATUS_UPTODATE,
+                        plugin_manager::PLUGIN_STATUS_UPTODATE,
                         $info->get_status(),
                         'Invalid ' . $info->component . ' state'
                     );
@@ -350,14 +345,15 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_plugin_available_updates(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         $foobar = testable_plugininfo_base::fake_plugin_instance(
             'foo',
             '/dev/null',
             'bar',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $foobar->versiondb = 2015092900;
@@ -386,19 +382,21 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_some_plugins_updatable_none(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
         $this->assertFalse($pluginman->some_plugins_updatable());
     }
 
     public function test_some_plugins_updatable_some(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         $foobar = testable_plugininfo_base::fake_plugin_instance(
             'foo',
             '/dev/null',
             'bar',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $foobar->versiondb = 2015092900;
@@ -409,14 +407,15 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_available_updates(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         $foobar = testable_plugininfo_base::fake_plugin_instance(
             'foo',
             '/dev/null',
             'bar',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $foobar->versiondb = 2015092900;
@@ -434,7 +433,8 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_remote_plugin_info(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         $this->assertFalse($pluginman->get_remote_plugin_info('not_exists', ANY_VERSION, false));
 
@@ -449,13 +449,15 @@ final class plugin_manager_test extends \advanced_testcase {
      * The combination of ANY_VERSION + $exactmatch is illegal.
      */
     public function test_get_remote_plugin_info_exception(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
         $this->expectException(\moodle_exception::class);
         $pluginman->get_remote_plugin_info('any_thing', ANY_VERSION, true);
     }
 
     public function test_is_remote_plugin_available(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         $this->assertFalse($pluginman->is_remote_plugin_available('not_exists', ANY_VERSION, false));
         $this->assertTrue($pluginman->is_remote_plugin_available('foo_bar', 2013131313, false));
@@ -463,7 +465,8 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_resolve_requirements(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         // Prepare a fake pluginfo instance.
         $pluginfo = testable_plugininfo_base::fake_plugin_instance(
@@ -471,7 +474,7 @@ final class plugin_manager_test extends \advanced_testcase {
             '/dev/null',
             'one',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $pluginfo->versiondisk = 2015060600;
@@ -541,7 +544,7 @@ final class plugin_manager_test extends \advanced_testcase {
             '/dev/null',
             'missing',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $pluginfo->versiondisk = null;
@@ -553,7 +556,7 @@ final class plugin_manager_test extends \advanced_testcase {
             '/dev/null',
             'two',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $pluginfo->versiondisk = 2015060600;
@@ -568,14 +571,15 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_missing_dependencies(): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         $one = testable_plugininfo_base::fake_plugin_instance(
             'fake',
             '/dev/null',
             'one',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $one->versiondisk = 2015070800;
@@ -585,7 +589,7 @@ final class plugin_manager_test extends \advanced_testcase {
             '/dev/null',
             'two',
             '/dev/null/fake',
-            'testable_plugininfo_base',
+            testable_plugininfo_base::class,
             $pluginman
         );
         $two->versiondisk = 2015070900;
@@ -609,15 +613,15 @@ final class plugin_manager_test extends \advanced_testcase {
     /**
      * Tests for check_explicitly_supported function to ensure that versions are correctly reported.
      *
-     * @dataProvider check_explicitly_supported_provider
      * @param array|null $supported Supported versions to inject
      * @param string|int|null $incompatible Incompatible version to inject.
      * @param int $version Version to test
      * @param int $expected
-     * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('check_explicitly_supported_provider')]
     public function test_explicitly_supported($supported, $incompatible, $version, $expected): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         // Prepare a fake pluginfo instance.
         $plugininfo = new testable_plugininfo_base();
@@ -648,81 +652,79 @@ final class plugin_manager_test extends \advanced_testcase {
                 'supported' => [29, 31],
                 'incompatible' => null,
                 'version' => 29,
-                'expected' => core_plugin_manager::VERSION_SUPPORTED,
+                'expected' => plugin_manager::VERSION_SUPPORTED,
             ],
             'Range, branch in support, mid' => [
                 'supported' => [29, 31],
                 'incompatible' => null,
                 'version' => 30,
-                'expected' => core_plugin_manager::VERSION_SUPPORTED,
+                'expected' => plugin_manager::VERSION_SUPPORTED,
             ],
             'Range, branch in support, highest' => [
                 'supported' => [29, 31],
                 'incompatible' => null,
                 'version' => 31,
-                'expected' => core_plugin_manager::VERSION_SUPPORTED,
+                'expected' => plugin_manager::VERSION_SUPPORTED,
             ],
 
             'Range, branch not in support, high' => [
                 'supported' => [29, 31],
                 'incompatible' => null,
                 'version' => 32,
-                'expected' => core_plugin_manager::VERSION_NOT_SUPPORTED,
+                'expected' => plugin_manager::VERSION_NOT_SUPPORTED,
             ],
             'Range, branch not in support, low' => [
                 'supported' => [29, 31],
                 'incompatible' => null,
                 'version' => 28,
-                'expected' => core_plugin_manager::VERSION_NOT_SUPPORTED,
+                'expected' => plugin_manager::VERSION_NOT_SUPPORTED,
             ],
             'Range, incompatible, high.' => [
                 'supported' => [29, 31],
                 'incompatible' => 32,
                 'version' => 33,
-                'expected' => core_plugin_manager::VERSION_NOT_SUPPORTED,
+                'expected' => plugin_manager::VERSION_NOT_SUPPORTED,
             ],
             'Range, incompatible, low.' => [
                 'supported' => [29, 31],
                 'incompatible' => 32,
                 'version' => 31,
-                'expected' => core_plugin_manager::VERSION_SUPPORTED,
+                'expected' => plugin_manager::VERSION_SUPPORTED,
             ],
             'Range, incompatible, equal.' => [
                 'supported' => [29, 31],
                 'incompatible' => 32,
                 'version' => 32,
-                'expected' => core_plugin_manager::VERSION_NOT_SUPPORTED,
+                'expected' => plugin_manager::VERSION_NOT_SUPPORTED,
             ],
             'No supports' => [
                 'supported' => null,
                 'incompatible' => null,
                 'version' => 32,
-                'expected' => core_plugin_manager::VERSION_NO_SUPPORTS,
+                'expected' => plugin_manager::VERSION_NO_SUPPORTS,
             ],
             'No supports, but incompatible, older' => [
                 'supported' => null,
                 'incompatible' => 30,
                 'version' => 32,
-                'expected' => core_plugin_manager::VERSION_NOT_SUPPORTED,
+                'expected' => plugin_manager::VERSION_NOT_SUPPORTED,
             ],
             'No supports, but incompatible, equal' => [
                 'supported' => null,
                 'incompatible' => 32,
                 'version' => 32,
-                'expected' => core_plugin_manager::VERSION_NOT_SUPPORTED,
+                'expected' => plugin_manager::VERSION_NOT_SUPPORTED,
             ],
             'No supports, but incompatible, newer' => [
                 'supported' => null,
                 'incompatible' => 34,
                 'version' => 32,
-                'expected' => core_plugin_manager::VERSION_NO_SUPPORTS,
+                'expected' => plugin_manager::VERSION_NO_SUPPORTS,
             ],
         ];
     }
 
-    /**
-     * @dataProvider is_deleted_standard_plugin_provider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('is_deleted_standard_plugin_provider')]
     public function test_is_deleted_standard_plugin(
         mixed $type,
         mixed $name,
@@ -730,10 +732,15 @@ final class plugin_manager_test extends \advanced_testcase {
     ): void {
         $this->assertEquals(
             $expected,
-            \core_plugin_manager::is_deleted_standard_plugin($type, $name),
+            plugin_manager::is_deleted_standard_plugin($type, $name),
         );
     }
 
+    /**
+     * Data provider for deleted standard plugin tests.
+     *
+     * @return array
+     */
     public static function is_deleted_standard_plugin_provider(): array {
         return [
             // Valid deleted plugin.
@@ -746,7 +753,7 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_deleted_plugins(): void {
-        $plugins = core_plugin_manager::get_deleted_plugins();
+        $plugins = plugin_manager::get_deleted_plugins();
         $this->assertIsArray($plugins);
 
         // Pick a couple we know should be there.
@@ -758,24 +765,27 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_standard_plugins_list_no_type(): void {
-        $plugins = core_plugin_manager::standard_plugins_list('typo');
+        $plugins = plugin_manager::standard_plugins_list('typo');
         $this->assertFalse($plugins);
     }
 
-    /**
-     * @dataProvider standard_plugins_list_provider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('standard_plugins_list_provider')]
     public function test_standard_plugins_list(
         string $type,
         array $expectedplugins,
     ): void {
-        $plugins = core_plugin_manager::standard_plugins_list($type);
+        $plugins = plugin_manager::standard_plugins_list($type);
         $this->assertIsArray($plugins);
         foreach ($expectedplugins as $expected) {
             $this->assertContains($expected, $plugins);
         }
     }
 
+    /**
+     * Data provider for standard plugins list tests.
+     *
+     * @return array[]
+     */
     public static function standard_plugins_list_provider(): array {
         return [
             [
@@ -794,7 +804,7 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     public function test_get_standard_plugins(): void {
-        $plugins = core_plugin_manager::get_standard_plugins();
+        $plugins = plugin_manager::get_standard_plugins();
         $this->assertIsArray($plugins);
 
         $this->assertContains('mod_forum', $plugins);
@@ -803,11 +813,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     /**
-     * Test core_plugin_manager when dealing with deprecated plugin (not subplugin) types.
-     *
-     * @runInSeparateProcess
-     * @return void
+     * Test plugin_manager when dealing with deprecated plugin (not subplugin) types.
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_plugin_manager_deprecated_plugintype(): void {
         $this->resetAfterTest();
 
@@ -820,7 +828,8 @@ final class plugin_manager_test extends \advanced_testcase {
 
         // Use testable_plugin_manager, as this properly loads the mocked fake_plugininfo class, meaning the fake plugins are
         // recognised by the plugin manager. See testable_plugin_manager::resolve_plugininfo_class().
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         // Deprecated plugin type are excluded from the following for B/C.
         $this->assertArrayNotHasKey('fake', $pluginman->get_plugin_types());
@@ -838,7 +847,7 @@ final class plugin_manager_test extends \advanced_testcase {
         $this->assertFalse($plugininfo->is_deleted());
         $this->assertTrue($plugininfo->is_uninstall_allowed());
         $this->assertIsString($plugininfo->full_path('version.php'));
-        $this->assertEquals(\core_plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
+        $this->assertEquals(plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
         $this->assertFalse($plugininfo->get_parent_plugin());
         $this->assertNotEmpty($plugininfo->versiondisk);
         $this->assertStringContainsString('/fake/', $plugininfo->get_dir());
@@ -867,11 +876,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     /**
-     * Test core_plugin_manager when dealing with deprecated subplugin types.
-     *
-     * @runInSeparateProcess
-     * @return void
+     * Test plugin_manager when dealing with deprecated subplugin types.
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_plugin_manager_deprecated_subplugintype(): void {
         $this->resetAfterTest();
 
@@ -887,7 +894,8 @@ final class plugin_manager_test extends \advanced_testcase {
 
         // Use testable_plugin_manager, as this properly loads the mocked fake_plugininfo class, meaning the fake plugins are
         // recognised by the plugin manager. See testable_plugin_manager::resolve_plugininfo_class().
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         // Deprecated plugin type are excluded from the following for B/C.
         $this->assertArrayNotHasKey('fulldeprecatedsubtype', $pluginman->get_plugin_types());
@@ -912,7 +920,7 @@ final class plugin_manager_test extends \advanced_testcase {
         $this->assertFalse($plugininfo->is_deleted());
         $this->assertTrue($plugininfo->is_uninstall_allowed());
         $this->assertIsString($plugininfo->full_path('version.php'));
-        $this->assertEquals(\core_plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
+        $this->assertEquals(plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
         $this->assertEquals('fake_fullfeatured', $plugininfo->get_parent_plugin());
         $this->assertNotEmpty($plugininfo->versiondisk);
         $this->assertStringContainsString('/fulldeprecatedsubtype/', $plugininfo->get_dir());
@@ -926,8 +934,10 @@ final class plugin_manager_test extends \advanced_testcase {
         // Deprecated plugins included in the following.
         $this->assertArrayHasKey('test', $pluginman->get_present_plugins('fulldeprecatedsubtype')); // Plugins on disk.
         $this->assertArrayHasKey('test', $pluginman->get_installed_plugins('fulldeprecatedsubtype')); // Plugins with DB config.
-        $this->assertInstanceOf(\fake_fullfeatured\plugininfo\fulldeprecatedsubtype::class,
-            $pluginman->get_plugin_info('fulldeprecatedsubtype_test'));
+        $this->assertInstanceOf(
+            \fake_fullfeatured\plugininfo\fulldeprecatedsubtype::class,
+            $pluginman->get_plugin_info('fulldeprecatedsubtype_test')
+        );
         $this->assertEquals('Full deprecated subtype test', $pluginman->plugin_name('fulldeprecatedsubtype_test'));
         $this->assertIsString($pluginman->get_plugintype_root('fulldeprecatedsubtype'));
         $this->assertTrue($pluginman->can_uninstall_plugin('fulldeprecatedsubtype_test'));
@@ -944,11 +954,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     /**
-     * Test core_plugin_manager when dealing with deleted plugin (not subplugin) types.
-     *
-     * @runInSeparateProcess
-     * @return void
+     * Test plugin_manager when dealing with deleted plugin (not subplugin) types.
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_plugin_manager_deleted_plugintype(): void {
         $this->resetAfterTest();
 
@@ -961,7 +969,8 @@ final class plugin_manager_test extends \advanced_testcase {
 
         // Use testable_plugin_manager, as this properly loads the mocked fake_plugininfo class, meaning the fake plugins are
         // recognised by the plugin manager. See testable_plugin_manager::resolve_plugininfo_class().
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         // Deleted plugins are excluded from the following for B/C.
         $this->assertArrayNotHasKey('fake', $pluginman->get_plugin_types());
@@ -979,7 +988,7 @@ final class plugin_manager_test extends \advanced_testcase {
         $this->assertTrue($plugininfo->is_deleted());
         $this->assertTrue($plugininfo->is_uninstall_allowed());
         $this->assertIsString($plugininfo->full_path('version.php'));
-        $this->assertEquals(\core_plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
+        $this->assertEquals(plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
         $this->assertFalse($plugininfo->get_parent_plugin());
         $this->assertNotEmpty($plugininfo->versiondisk);
         $this->assertStringContainsString('/fake/', $plugininfo->get_dir());
@@ -1008,11 +1017,9 @@ final class plugin_manager_test extends \advanced_testcase {
     }
 
     /**
-     * Test core_plugin_manager when dealing with deleted subplugin types.
-     *
-     * @runInSeparateProcess
-     * @return void
+     * Test plugin_manager when dealing with deleted subplugin types.
      */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
     public function test_plugin_manager_deleted_subplugintype(): void {
         $this->resetAfterTest();
 
@@ -1028,7 +1035,8 @@ final class plugin_manager_test extends \advanced_testcase {
 
         // Use testable_plugin_manager, as this properly loads the mocked fake_plugininfo class, meaning the fake plugins are
         // recognised by the plugin manager. See testable_plugin_manager::resolve_plugininfo_class().
-        $pluginman = testable_core_plugin_manager::instance();
+        testable_plugin_manager::register();
+        $pluginman = plugin_manager::instance();
 
         // Deleted plugin type are excluded from the following for B/C.
         $this->assertArrayNotHasKey('fulldeletedsubtype', $pluginman->get_plugin_types());
@@ -1053,7 +1061,7 @@ final class plugin_manager_test extends \advanced_testcase {
         $this->assertTrue($plugininfo->is_deleted());
         $this->assertTrue($plugininfo->is_uninstall_allowed());
         $this->assertIsString($plugininfo->full_path('version.php'));
-        $this->assertEquals(\core_plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
+        $this->assertEquals(plugin_manager::PLUGIN_STATUS_UPTODATE, $plugininfo->get_status());
         $this->assertEquals('fake_fullfeatured', $plugininfo->get_parent_plugin());
         $this->assertNotEmpty($plugininfo->versiondisk);
         $this->assertStringContainsString('/fulldeletedsubtype/', $plugininfo->get_dir());
@@ -1067,8 +1075,10 @@ final class plugin_manager_test extends \advanced_testcase {
         // Deprecated plugins included in the following.
         $this->assertArrayHasKey('demo', $pluginman->get_present_plugins('fulldeletedsubtype')); // Plugins on disk.
         $this->assertArrayHasKey('demo', $pluginman->get_installed_plugins('fulldeletedsubtype')); // Plugins with DB config.
-        $this->assertInstanceOf(\fake_fullfeatured\plugininfo\fulldeletedsubtype::class,
-            $pluginman->get_plugin_info('fulldeletedsubtype_demo'));
+        $this->assertInstanceOf(
+            \fake_fullfeatured\plugininfo\fulldeletedsubtype::class,
+            $pluginman->get_plugin_info('fulldeletedsubtype_demo')
+        );
         $this->assertIsString($pluginman->get_plugintype_root('fulldeletedsubtype'));
         $this->assertTrue($pluginman->can_uninstall_plugin('fulldeletedsubtype_demo'));
         $uninstallurl = $pluginman->get_uninstall_url('fulldeletedsubtype_demo');

@@ -1,0 +1,16 @@
+issueNumber: MDL-89219
+notes:
+  core:
+    - message: >
+        The `\core\plugin_manager` (`\core_plugin_manager`) is now loaded via
+        dependency
+
+        injection. Calls to `::instance()` can be replaced with:
+
+
+        ```
+
+        \core\di::get(\core\plugin_manager::class)
+
+        ```
+      type: changed

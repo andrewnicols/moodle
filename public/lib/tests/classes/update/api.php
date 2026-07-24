@@ -14,19 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Provides \core\update\testable_api class.
- *
- * @package     core_plugin
- * @subpackage  fixtures
- * @category    test
- * @copyright   2015 David Mudrak <david@moodle.com>
- * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
-namespace core\update;
-
-defined('MOODLE_INTERNAL') || die();
+namespace core\tests\update;
 
 /**
  * Testable variant of \core\update\api class.
@@ -34,18 +22,20 @@ defined('MOODLE_INTERNAL') || die();
  * Provides access to some protected methods we want to explicitly test and
  * bypass the actual cURL calls by providing fake responses.
  *
- * @copyright 2015 David Mudrak <david@moodle.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package     core_plugin
+ * @subpackage  fixtures
+ * @category    test
+ * @copyright   2015 David Mudrak <david@moodle.com>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class testable_api extends api {
-
+class api extends \core\update\api {
     /**
      * Provides access to the parent protected method.
      *
      * @param int $branch
      * @return string
      */
-    public function convert_branch_numbering_format($branch) {
+    public function convert_branch_numbering_format($branch) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
         return parent::convert_branch_numbering_format($branch);
     }
 
@@ -68,18 +58,18 @@ class testable_api extends api {
      * @param array $params
      * @return stdClass|bool
      */
-    protected function call_service($serviceurl, array $params=array()) {
+    protected function call_service($serviceurl, array $params = []) {
 
-        $response = (object)array(
+        $response = (object)[
             'data' => null,
             'info' => null,
             'status' => null,
-        );
+        ];
 
-        $foobarinfo = (object)array(
+        $foobarinfo = (object)[
             'status' => 'OK',
             'apiver' => '1.3',
-            'pluginfo' => (object)array(
+            'pluginfo' => (object)[
                 'id' => 42,
                 'name' => 'Foo bar',
                 'component' => 'foo_bar',
@@ -88,10 +78,10 @@ class testable_api extends api {
                 'bugs' => '',
                 'discussion' => '',
                 'version' => false,
-            ),
-        );
+            ],
+        ];
 
-        $version2015093000info = (object)array(
+        $version2015093000info = (object)[
             'id' => '6765',
             'version' => '2015093000',
             'release' => '1.0',
@@ -103,19 +93,19 @@ class testable_api extends api {
             'vcsrepositoryurl' => '',
             'vcsbranch' => '',
             'vcstag' => '',
-            'supportedmoodles' => array(
-                (object)array(
+            'supportedmoodles' => [
+                (object)[
                     'version' => '2015041700',
-                    'release' => '2.9'
-                ),
-                (object)array(
+                    'release' => '2.9',
+                ],
+                (object)[
                     'version' => '2015110900',
-                    'release' => '3.0'
-                ),
-            )
-        );
+                    'release' => '3.0',
+                ],
+            ],
+        ];
 
-        $version2015100400info = (object)array(
+        $version2015100400info = (object)[
             'id' => '6796',
             'version' => '2015100400',
             'release' => '1.1',
@@ -127,15 +117,15 @@ class testable_api extends api {
             'vcsrepositoryurl' => '',
             'vcsbranch' => '',
             'vcstag' => '',
-            'supportedmoodles' => array(
-                (object)array(
+            'supportedmoodles' => [
+                (object)[
                     'version' => '2015110900',
-                    'release' => '3.0'
-                ),
-            )
-        );
+                    'release' => '3.0',
+                ],
+            ],
+        ];
 
-        $version2015100500info = (object)array(
+        $version2015100500info = (object)[
             'id' => '6799',
             'version' => '2015100500',
             'release' => '2.0beta',
@@ -147,20 +137,20 @@ class testable_api extends api {
             'vcsrepositoryurl' => '',
             'vcsbranch' => '',
             'vcstag' => '',
-            'supportedmoodles' => array(
-                (object)array(
+            'supportedmoodles' => [
+                (object)[
                     'version' => '2015110900',
-                    'release' => '3.0'
-                ),
-            )
-        );
+                    'release' => '3.0',
+                ],
+            ],
+        ];
 
         if ($serviceurl === 'http://testab.le/api/pluginfo.php') {
             if (strpos($params['plugin'], 'foo_bar@') === 0) {
                 $response->data = $foobarinfo;
-                $response->info = array(
+                $response->info = [
                     'http_code' => 200,
-                );
+                ];
                 $response->status = '200 OK';
 
                 if (substr($params['plugin'], -11) === '@2015093000') {
@@ -174,35 +164,31 @@ class testable_api extends api {
                 if (substr($params['plugin'], -11) === '@2015100500') {
                     $response->data->pluginfo->version = $version2015100500info;
                 }
-
-            } else if ($params['plugin'] === 'foo_bar' and isset($params['branch']) and isset($params['minversion'])) {
+            } else if ($params['plugin'] === 'foo_bar' && isset($params['branch']) && isset($params['minversion'])) {
                 $response->data = $foobarinfo;
-                $response->info = array(
+                $response->info = [
                     'http_code' => 200,
-                );
+                ];
                 $response->status = '200 OK';
 
                 if ($params['minversion'] <= 2015100400) {
                     // If two stable versions fullfilling the required version are
                     // available, the /1.3/pluginfo.php API returns the more recent one.
                     $response->data->pluginfo->version = $version2015100400info;
-
                 } else if ($params['minversion'] <= 2015100500) {
                     // The /1.3/pluginfo.php API returns versions with lower
                     // maturity if it is the only way how to fullfil the
                     // required minimal version.
                     $response->data->pluginfo->version = $version2015100500info;
                 }
-
             } else {
-                $response->info = array(
+                $response->info = [
                     'http_code' => 404,
-                );
+                ];
                 $response->status = '404 Not Found (unknown plugin)';
             }
 
             return $response;
-
         } else {
             return 'This should not happen';
         }

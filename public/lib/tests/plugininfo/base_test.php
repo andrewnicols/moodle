@@ -18,8 +18,9 @@ declare(strict_types=1);
 
 namespace core\plugininfo;
 
-use testable_core_plugin_manager;
-use testable_plugininfo_base;
+use core\plugin_manager;
+use core\tests\plugin_manager as testable_plugin_manager;
+use core\tests\plugininfo\base as testable_plugininfo_base;
 
 /**
  * Unit tests for plugin base class.
@@ -27,41 +28,38 @@ use testable_plugininfo_base;
  * @package   core
  * @copyright 2019 Andrew Nicols
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\plugininfo\base
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(base::class)]
 final class base_test extends \advanced_testcase {
-
     /**
-     * Setup to ensure that fixtures are loaded.
+     * Configure the test manager.
      */
-    public static function setUpBeforeClass(): void {
-        global $CFG;
-
-        require_once($CFG->dirroot.'/lib/tests/fixtures/testable_plugin_manager.php');
-        require_once($CFG->dirroot.'/lib/tests/fixtures/testable_plugininfo_base.php');
-        parent::setUpBeforeClass();
+    #[\PHPUnit\Framework\Attributes\Before]
+    public function configure_test_manager(): void {
+        testable_plugin_manager::register();
     }
 
     /**
-     * Tear down the testable plugin manager singleton between tests.
+     * Reset the testable singleton after tests.
+     *
+     * The caches of the testable singleton must be reset explicitly. It is
+     * safer to kill the whole testable singleton at the end of every test.
      */
-    public function tearDown(): void {
-        // The caches of the testable singleton must be reset explicitly. It is
-        // safer to kill the whole testable singleton at the end of every test.
-        testable_core_plugin_manager::reset_caches();
-        parent::tearDown();
+    #[\PHPUnit\Framework\Attributes\After]
+    public function reset_testable_plugin_manager(): void {
+        testable_plugin_manager::reset_caches();
     }
 
     /**
      * Test the load_disk_version function to check that it handles a variety of invalid supported fields.
      *
-     * @dataProvider load_disk_version_invalid_supported_version_provider
      * @param array|null $supported Supported versions to inject
      * @param string|int|null $incompatible Incompatible version to inject.
      * @param int $version Version to test
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_disk_version_invalid_supported_version_provider')]
     public function test_load_disk_version_invalid_supported_version($supported, $incompatible, $version): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        $pluginman = plugin_manager::instance();
 
         // Prepare a fake plugininfo instance.
         $plugininfo = new testable_plugininfo_base();
@@ -124,11 +122,11 @@ final class base_test extends \advanced_testcase {
     /**
      * Test the load_disk_version function to check that it handles a variety of invalid incompatible fields.
      *
-     * @dataProvider load_disk_version_invalid_incompatible_version_provider
      * @param mixed $incompatible
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_disk_version_invalid_incompatible_version_provider')]
     public function test_load_disk_version_invalid_incompatible_version($incompatible): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        $pluginman = plugin_manager::instance();
 
         // Prepare a fake plugininfo instance.
         $plugininfo = new testable_plugininfo_base();
@@ -161,20 +159,19 @@ final class base_test extends \advanced_testcase {
             [''],
             ['somestring'],
         ];
-
     }
 
     /**
      * Test the load_disk_version function to check that it handles a range of correct supported and incompatible field
      * definitions.
      *
-     * @dataProvider load_disk_version_branch_supports_provider
      * @param array|null $supported Supported versions to inject
      * @param string|int|null $incompatible Incompatible version to inject.
      * @param int $version Version to test
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('load_disk_version_branch_supports_provider')]
     public function test_load_disk_version_branch_supports($supported, $incompatible, $version): void {
-        $pluginman = testable_core_plugin_manager::instance();
+        $pluginman = plugin_manager::instance();
 
         // Prepare a fake plugininfo instance.
         $plugininfo = new testable_plugininfo_base();
@@ -286,12 +283,12 @@ final class base_test extends \advanced_testcase {
     /**
      * Ensure that the base implementation is used for plugins not supporting ordering.
      *
-     * @dataProvider plugins_not_supporting_ordering
      * @param string $plugin
-     * @coversNothing
      *
      * Note: This test cannot declare coverage because it covers the various plugin implementations.
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('plugins_not_supporting_ordering')]
+    #[\PHPUnit\Framework\Attributes\CoversNothing]
     public function test_get_sorted_plugins(
         string $plugin,
     ): void {

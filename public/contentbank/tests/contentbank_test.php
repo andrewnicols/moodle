@@ -25,20 +25,12 @@
 
 namespace core_contentbank;
 
-defined('MOODLE_INTERNAL') || die();
-
-use advanced_testcase;
-use context_block;
-use context_course;
-use context_coursecat;
-use context_module;
-use context_system;
-use context_user;
-use Exception;
-
-global $CFG;
-require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_contenttype.php');
-require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_content.php');
+use core\context\block as context_block;
+use core\context\course as context_course;
+use core\context\coursecat as context_coursecat;
+use core\context\module as context_module;
+use core\context\system as context_system;
+use core\context\user as context_user;
 
 /**
  * Test for extensions manager.
@@ -47,17 +39,16 @@ require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_content.php')
  * @category   test
  * @copyright  2020 Amaia Anabitarte <amaia@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @coversDefaultClass \core_contentbank\contentbank
  */
-final class contentbank_test extends advanced_testcase {
-
+#[\PHPUnit\Framework\Attributes\CoversClass(contentbank::class)]
+final class contentbank_test extends \advanced_testcase {
     /**
      * Setup to ensure that fixtures are loaded.
      */
-    public static function setupBeforeClass(): void {
-        global $CFG;
-
-        require_once($CFG->dirroot . '/contentbank/tests/fixtures/testable_contenttype.php');
+    #[\PHPUnit\Framework\Attributes\BeforeClass]
+    public static function load_fixtures(): void {
+        self::load_fixture('contentbank', 'testable_contenttype.php');
+        self::load_fixture('contentbank', 'testable_content.php');
     }
 
     /**
@@ -68,19 +59,17 @@ final class contentbank_test extends advanced_testcase {
     public static function get_extension_provider(): array {
         return [
             'H5P file' => ['something.h5p', '.h5p'],
-            'PDF file' => ['something.pdf', '.pdf']
+            'PDF file' => ['something.pdf', '.pdf'],
         ];
     }
 
     /**
      * Tests for get_extension() function.
      *
-     * @dataProvider    get_extension_provider
      * @param   string  $filename    The filename given
      * @param   string   $expected   The extension of the file
-     *
-     * @covers ::get_extension
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_extension_provider')]
     public function test_get_extension(string $filename, string $expected): void {
         $this->resetAfterTest();
 
@@ -105,13 +94,11 @@ final class contentbank_test extends advanced_testcase {
     /**
      * Tests for get_extension_supporter() function with admin permissions.
      *
-     * @dataProvider    get_extension_supporters_provider
      * @param   array   $supporters   The content type plugin supporters for each extension
      * @param   string  $extension    The extension of the file given
      * @param   string  $expected   The supporter contenttype of the file
-     *
-     * @covers ::load_context_supported_extensions
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_extension_supporters_provider')]
     public function test_get_extension_supporter_for_admins(array $supporters, string $extension, string $expected): void {
         $this->resetAfterTest();
 
@@ -129,13 +116,11 @@ final class contentbank_test extends advanced_testcase {
     /**
      * Tests for get_extension_supporter() function with user default permissions.
      *
-     * @dataProvider    get_extension_supporters_provider
      * @param   array   $supporters   The content type plugin supporters for each extension
      * @param   string  $extension    The extension of the file given
      * @param   string  $expected   The supporter contenttype of the file
-     *
-     * @covers ::load_context_supported_extensions
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_extension_supporters_provider')]
     public function test_get_extension_supporter_for_users(array $supporters, string $extension, string $expected): void {
         $this->resetAfterTest();
 
@@ -154,13 +139,11 @@ final class contentbank_test extends advanced_testcase {
     /**
      * Tests for get_extension_supporter() function with teacher defaul permissions.
      *
-     * @dataProvider    get_extension_supporters_provider
      * @param   array   $supporters   The content type plugin supporters for each extension
      * @param   string  $extension    The extension of the file given
      * @param   string  $expected   The supporter contenttype of the file
-     *
-     * @covers ::load_context_supported_extensions
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_extension_supporters_provider')]
     public function test_get_extension_supporter_for_teachers(array $supporters, string $extension, string $expected): void {
         $this->resetAfterTest();
 
@@ -180,13 +163,11 @@ final class contentbank_test extends advanced_testcase {
     /**
      * Tests for get_extension_supporter() function.
      *
-     * @dataProvider    get_extension_supporters_provider
      * @param   array   $supporters   The content type plugin supporters for each extension
      * @param   string  $extension    The extension of the file given
      * @param   string  $expected   The supporter contenttype of the file
-     *
-     * @covers ::get_extension_supporter
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_extension_supporters_provider')]
     public function test_get_extension_supporter(array $supporters, string $extension, string $expected): void {
         $this->resetAfterTest();
 
@@ -201,14 +182,19 @@ final class contentbank_test extends advanced_testcase {
     /**
      * Test the behaviour of search_contents().
      *
-     * @dataProvider search_contents_provider
      * @param  string $search String to search.
      * @param  string $where Context where to search.
      * @param  int $expectedresult Expected result.
      * @param  array $contexts List of contexts where to create content.
      */
-    public function test_search_contents(?string $search, string $where, int $expectedresult, array $contexts = [],
-            ?array $contenttypes = null): void {
+    #[\PHPUnit\Framework\Attributes\DataProvider('search_contents_provider')]
+    public function test_search_contents(
+        ?string $search,
+        string $where,
+        int $expectedresult,
+        array $contexts = [],
+        ?array $contenttypes = null
+    ): void {
         global $DB, $CFG;
 
         $this->resetAfterTest();
@@ -238,8 +224,14 @@ final class contentbank_test extends advanced_testcase {
         $generator = $this->getDataGenerator()->get_plugin_generator('core_contentbank');
         foreach ($contexts as $context) {
             $contextinstance = $existingcontexts[$context];
-            $records = $generator->generate_contentbank_data('contenttype_h5p', 3,
-                $manager->id, $contextinstance, false, $filepath);
+            $records = $generator->generate_contentbank_data(
+                'contenttype_h5p',
+                3,
+                $manager->id,
+                $contextinstance,
+                false,
+                $filepath
+            );
         }
 
         // Search for some content.
@@ -266,85 +258,85 @@ final class contentbank_test extends advanced_testcase {
                 null,
                 '',
                 9,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in all contexts for existing string in all contents' => [
                 'content',
                 '',
                 9,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in all contexts for unexisting string in all contents' => [
                 'chocolate',
                 '',
                 0,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in all contexts for existing string in some contents' => [
                 '1',
                 '',
                 3,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in all contexts for existing string in some contents (create only 1 context)' => [
                 '1',
                 '',
                 1,
-                ['system']
+                ['system'],
             ],
             'Search in system context for existing string in all contents' => [
                 'content',
                 'system',
                 3,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in category context for unexisting string in all contents' => [
                 'chocolate',
                 'category',
                 0,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in course context for existing string in some contents' => [
                 '1',
                 'course',
                 1,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in system context' => [
                 null,
                 'system',
                 3,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in course context with existing content' => [
                 null,
                 'course',
                 3,
-                ['system', 'category', 'course']
+                ['system', 'category', 'course'],
             ],
             'Search in course context without existing content' => [
                 null,
                 'course',
                 0,
-                ['system', 'category']
+                ['system', 'category'],
             ],
             'Search in an empty contentbank' => [
                 null,
                 '',
                 0,
-                []
+                [],
             ],
             'Search in a context in an empty contentbank' => [
                 null,
                 'system',
                 0,
-                []
+                [],
             ],
             'Search for a string in an empty contentbank' => [
                 'content',
                 '',
                 0,
-                []
+                [],
             ],
             'Search with unexisting content-type' => [
                 null,
@@ -358,8 +350,6 @@ final class contentbank_test extends advanced_testcase {
 
     /**
      * Test create_content_from_file function.
-     *
-     * @covers ::create_content_from_file
      */
     public function test_create_content_from_file(): void {
         global $USER, $CFG;
@@ -370,15 +360,15 @@ final class contentbank_test extends advanced_testcase {
         $name = 'greeting-card.h5p';
 
         // Create a dummy H5P file.
-        $dummyh5p = array(
+        $dummyh5p = [
             'contextid' => $systemcontext->id,
             'component' => 'contentbank',
             'filearea' => 'public',
             'itemid' => 1,
             'filepath' => '/',
             'filename' => $name,
-            'userid' => $USER->id
-        );
+            'userid' => $USER->id,
+        ];
         $path = $CFG->dirroot . '/h5p/tests/fixtures/' . $name;
         $dummyh5pfile = \core_h5p\helper::create_fake_stored_file_from_path($path);
 
@@ -392,8 +382,6 @@ final class contentbank_test extends advanced_testcase {
 
     /**
      * Test the behaviour of delete_contents().
-     *
-     * @covers  ::delete_contents
      */
     public function test_delete_contents(): void {
         global $DB;
@@ -441,8 +429,6 @@ final class contentbank_test extends advanced_testcase {
 
     /**
      * Test the behaviour of delete_contents() for empty content bank.
-     *
-     * @covers  ::delete_contents
      */
     public function test_delete_contents_for_empty_contentbank(): void {
 
@@ -464,8 +450,6 @@ final class contentbank_test extends advanced_testcase {
 
     /**
      * Test the behaviour of move_contents().
-     *
-     * @covers  ::move_contents
      */
     public function test_move_contents(): void {
         global $DB;
@@ -497,8 +481,6 @@ final class contentbank_test extends advanced_testcase {
 
     /**
      * Test the behaviour of move_contents() for empty content bank.
-     *
-     * @covers  ::move_contents
      */
     public function test_move_contents_for_empty_contentbank(): void {
 
@@ -543,12 +525,10 @@ final class contentbank_test extends advanced_testcase {
     /**
      * Tests for get_contenttypes_with_capability_feature() function.
      *
-     * @dataProvider    get_contenttypes_with_capability_feature_provider
      * @param   array $contenttypesenabled Content types enabled.
      * @param   array $contenttypescanfeature Content types the user has the permission to use the feature.
-     *
-     * @covers ::get_contenttypes_with_capability_feature
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('get_contenttypes_with_capability_feature_provider')]
     public function test_get_contenttypes_with_capability_feature(array $contenttypesenabled, array $contenttypescanfeature): void {
         $this->resetAfterTest();
 
@@ -566,9 +546,8 @@ final class contentbank_test extends advanced_testcase {
                 ->onlyMethods(['get_plugins_of_type'])
                 ->getMock();
 
-            // Replace protected singletoninstance reference (core_plugin_manager property) with mock object.
-            $ref = new \ReflectionProperty(\core_plugin_manager::class, 'singletoninstance');
-            $ref->setValue(null, $pluginmanager);
+            // Replace the plugin manager with the mocked one.
+            \core\di::set(\core\plugin_manager::class, $pluginmanager);
 
             // Return values of get_plugins_of_type method.
             foreach ($contenttypescanfeature as $contenttypepluginname) {
@@ -610,11 +589,8 @@ final class contentbank_test extends advanced_testcase {
 
     /**
      * Test the behaviour of get_content_from_id()
-     *
-     * @covers  ::get_content_from_id
      */
     public function test_get_content_from_id(): void {
-
         $this->resetAfterTest();
         $cb = new \core_contentbank\contentbank();
 
@@ -631,14 +607,12 @@ final class contentbank_test extends advanced_testcase {
         $this->assertEquals($content->get_id(), $newinstance->get_id());
 
         // Now produce and exception with an innexistent id.
-        $this->expectException(Exception::class);
+        $this->expectException(\dml_missing_record_exception::class);
         $cb->get_content_from_id(0);
     }
 
     /**
      * Test the behaviour of is_context_allowed().
-     *
-     * @covers ::is_context_allowed
      */
     public function test_is_context_allowed(): void {
         $this->resetAfterTest();

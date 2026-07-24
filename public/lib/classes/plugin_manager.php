@@ -25,11 +25,13 @@ use progress_trace;
 use stdClass;
 
 /**
- * Defines classes used for plugins management
+ * Defines classes used for plugins management.
  *
  * This library provides a unified interface to various plugin types in
  * Moodle. It is mainly used by the plugins management admin page and the
  * plugins check page during the upgrade.
+ *
+ * Note: This class *must* be loaded using the Dependency Injector.
  *
  * @package    core
  * @copyright  2011 David Mudrak <david@moodle.com>
@@ -37,48 +39,46 @@ use stdClass;
  */
 class plugin_manager {
     /** the plugin is shipped with standard Moodle distribution */
-    const PLUGIN_SOURCE_STANDARD    = 'std';
+    public const PLUGIN_SOURCE_STANDARD    = 'std';
     /** the plugin is added extension */
-    const PLUGIN_SOURCE_EXTENSION   = 'ext';
+    public const PLUGIN_SOURCE_EXTENSION   = 'ext';
 
     /** the plugin uses neither database nor capabilities, no versions */
-    const PLUGIN_STATUS_NODB        = 'nodb';
+    public const PLUGIN_STATUS_NODB        = 'nodb';
     /** the plugin is up-to-date */
-    const PLUGIN_STATUS_UPTODATE    = 'uptodate';
+    public const PLUGIN_STATUS_UPTODATE    = 'uptodate';
     /** the plugin is about to be installed */
-    const PLUGIN_STATUS_NEW         = 'new';
+    public const PLUGIN_STATUS_NEW         = 'new';
     /** the plugin is about to be upgraded */
-    const PLUGIN_STATUS_UPGRADE     = 'upgrade';
+    public const PLUGIN_STATUS_UPGRADE     = 'upgrade';
     /** the standard plugin is about to be deleted */
-    const PLUGIN_STATUS_DELETE     = 'delete';
+    public const PLUGIN_STATUS_DELETE     = 'delete';
     /** the version at the disk is lower than the one already installed */
-    const PLUGIN_STATUS_DOWNGRADE   = 'downgrade';
+    public const PLUGIN_STATUS_DOWNGRADE   = 'downgrade';
     /** the plugin is installed but missing from disk */
-    const PLUGIN_STATUS_MISSING     = 'missing';
+    public const PLUGIN_STATUS_MISSING     = 'missing';
 
     /** the given requirement/dependency is fulfilled */
-    const REQUIREMENT_STATUS_OK = 'ok';
+    public const REQUIREMENT_STATUS_OK = 'ok';
     /** the plugin requires higher core/other plugin version than is currently installed */
-    const REQUIREMENT_STATUS_OUTDATED = 'outdated';
+    public const REQUIREMENT_STATUS_OUTDATED = 'outdated';
     /** the required dependency is not installed */
-    const REQUIREMENT_STATUS_MISSING = 'missing';
+    public const REQUIREMENT_STATUS_MISSING = 'missing';
     /** the current Moodle version is too high for plugin. */
-    const REQUIREMENT_STATUS_NEWER = 'newer';
+    public const REQUIREMENT_STATUS_NEWER = 'newer';
 
     /** the required dependency is available in the plugins directory */
-    const REQUIREMENT_AVAILABLE = 'available';
+    public const REQUIREMENT_AVAILABLE = 'available';
     /** the required dependency is available in the plugins directory */
-    const REQUIREMENT_UNAVAILABLE = 'unavailable';
+    public const REQUIREMENT_UNAVAILABLE = 'unavailable';
 
     /** the moodle version is explicitly supported */
-    const VERSION_SUPPORTED = 'supported';
+    public const VERSION_SUPPORTED = 'supported';
     /** the moodle version is not explicitly supported */
-    const VERSION_NOT_SUPPORTED = 'notsupported';
+    public const VERSION_NOT_SUPPORTED = 'notsupported';
     /** the plugin does not specify supports */
-    const VERSION_NO_SUPPORTS = 'nosupports';
+    public const VERSION_NO_SUPPORTS = 'nosupports';
 
-    /** @var plugin_manager holds the singleton instance */
-    protected static $singletoninstance;
     /** @var stdClass cache of standard plugins */
     protected static ?stdClass $standardplugincache = null;
     /** @var array of raw plugins information */
@@ -103,9 +103,12 @@ class plugin_manager {
     protected $updateapiclient = null;
 
     /**
-     * Direct initiation not allowed, use the factory method {@link self::instance()}
+     * Create a new instance of the plugin manager.
+     *
+     * Note: Dependency Injection must be used to get an instance of this class.
+     * Do not use the constructor directly.
      */
-    protected function __construct() {
+    public function __construct() {
     }
 
     /**
@@ -120,10 +123,7 @@ class plugin_manager {
      * @return static the singleton instance
      */
     public static function instance() {
-        if (is_null(static::$singletoninstance)) {
-            static::$singletoninstance = new static();
-        }
-        return static::$singletoninstance;
+        return \core\di::get(self::class);
     }
 
     /**
@@ -132,22 +132,20 @@ class plugin_manager {
      */
     public static function reset_caches($phpunitreset = false) {
         static::$standardplugincache = null;
-        if ($phpunitreset) {
-            static::$singletoninstance = null;
-        } else {
-            if (static::$singletoninstance) {
-                static::$singletoninstance->pluginsinfo = null;
-                static::$singletoninstance->subpluginsinfo = null;
-                static::$singletoninstance->remotepluginsinfoatleast = null;
-                static::$singletoninstance->remotepluginsinfoexact = null;
-                static::$singletoninstance->installedplugins = null;
-                static::$singletoninstance->enabledplugins = null;
-                static::$singletoninstance->presentplugins = null;
-                static::$singletoninstance->plugintypes = null;
-                static::$singletoninstance->codemanager = null;
-                static::$singletoninstance->updateapiclient = null;
-            }
-        }
+
+        // Reset the current state.
+        $instance = \core\di::get(self::class);
+        $instance->pluginsinfo = null;
+        $instance->subpluginsinfo = null;
+        $instance->remotepluginsinfoatleast = null;
+        $instance->remotepluginsinfoexact = null;
+        $instance->installedplugins = null;
+        $instance->enabledplugins = null;
+        $instance->presentplugins = null;
+        $instance->plugintypes = null;
+        $instance->codemanager = null;
+        $instance->updateapiclient = null;
+
         $cache = cache::make('core', 'plugin_manager');
         $cache->purge();
     }
@@ -389,7 +387,7 @@ class plugin_manager {
         if ($includeindeprecation) {
             return $this->pluginsinfo;
         }
-        return array_filter($this->pluginsinfo, function($key) {
+        return array_filter($this->pluginsinfo, function ($key) {
             return !core_component::is_plugintype_in_deprecation($key);
         }, ARRAY_FILTER_USE_KEY);
     }
