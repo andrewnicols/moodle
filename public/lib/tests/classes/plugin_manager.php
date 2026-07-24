@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\tests;
+
 /**
  * Provides testable_core_plugin_manager class.
  *
@@ -22,21 +24,13 @@
  * @copyright   2015 David Mudrak <david@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-require_once(__DIR__.'/testable_update_api.php');
-
-/**
- * Testable variant of the core_plugin_manager
- *
- * @copyright 2015 David Mudrak <david@moodle.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class testable_core_plugin_manager extends core_plugin_manager {
-
-    /** @var testable_core_plugin_manager holds the singleton instance */
-    protected static $singletoninstance;
+class plugin_manager extends \core\plugin_manager {
+    /**
+     * Register the testable plugin manager as the plugin manager.
+     */
+    public static function register(): void {
+        \core\di::set(\core\plugin_manager::class, new self());
+    }
 
     /**
      * Allows us to inject items directly into the plugins info tree.
@@ -57,13 +51,9 @@ class testable_core_plugin_manager extends core_plugin_manager {
         $this->pluginsinfo[$type][$name] = $plugininfo;
     }
 
-    /**
-     * Returns testable subclass of the client.
-     *
-     * @return \core\update\testable_api
-     */
-    protected function get_update_api_client() {
-        return \core\update\testable_api::client();
+    #[\Override]
+    protected function get_update_api_client(): \core\tests\update\api {
+        return \core\tests\update\api::client();
     }
 
     /**
@@ -84,25 +74,25 @@ class testable_core_plugin_manager extends core_plugin_manager {
     public function load_available_updates_for_plugin($component) {
 
         if ($component === 'foo_bar') {
-            $updates = array();
+            $updates = [];
 
-            $updates[] = new \core\update\info($component, array(
+            $updates[] = new \core\update\info($component, [
                 'version' => '2015093000',
                 'release' => 'Foo bar 15.09.30 beta',
                 'maturity' => MATURITY_BETA,
-            ));
+            ]);
 
-            $updates[] = new \core\update\info($component, array(
+            $updates[] = new \core\update\info($component, [
                 'version' => '2015100400',
                 'release' => 'Foo bar 15.10.04',
                 'maturity' => MATURITY_STABLE,
-            ));
+            ]);
 
-            $updates[] = new \core\update\info($component, array(
+            $updates[] = new \core\update\info($component, [
                 'version' => '2015100500',
                 'release' => 'Foo bar 15.10.05 beta',
                 'maturity' => MATURITY_BETA,
-            ));
+            ]);
 
             return $updates;
         }

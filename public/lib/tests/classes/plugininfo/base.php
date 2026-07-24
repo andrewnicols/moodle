@@ -14,38 +14,44 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\tests\plugininfo;
+
 /**
- * Provides testable_plugininfo_base class.
+ * Testable plugininfo subclass representing a fake plugin type instance.
  *
  * @package     core
  * @category    test
  * @copyright   2015 David Mudrak <david@moodle.com>
  * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die();
-
-/**
- * Testable plugininfo subclass representing a fake plugin type instance.
- *
- * @copyright 2015 David Mudrak <david@moodle.com>
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class testable_plugininfo_base extends \core\plugininfo\base {
-
+class base extends \core\plugininfo\base {
+    /**
+     * Create a fake plugin instance.
+     *
+     * @param mixed $type
+     * @param mixed $typerootdir
+     * @param mixed $name
+     * @param mixed $namerootdir
+     * @param mixed $typeclass
+     * @param mixed $pluginman
+     * @return \core\plugininfo\base
+     */
     public static function fake_plugin_instance($type, $typerootdir, $name, $namerootdir, $typeclass, $pluginman) {
         return self::make_plugin_instance($type, $typerootdir, $name, $namerootdir, $typeclass, $pluginman);
     }
 
+    #[\Override]
     public function init_display_name() {
         $this->displayname = 'Testable fake pluginfo instance';
     }
 
+    #[\Override]
     public function load_db_version() {
         $this->versiondb = null;
     }
 
+    #[\Override]
     public function init_is_standard() {
-        $this->source = core_plugin_manager::PLUGIN_SOURCE_EXTENSION;
+        $this->source = \core\plugin_manager::PLUGIN_SOURCE_EXTENSION;
     }
 }

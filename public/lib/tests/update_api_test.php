@@ -16,10 +16,7 @@
 
 namespace core;
 
-defined('MOODLE_INTERNAL') || die();
-
-global $CFG;
-require_once(__DIR__.'/fixtures/testable_update_api.php');
+use core\tests\update\api as testable_api;
 
 /**
  * Tests for \core\update\api client.
@@ -34,6 +31,7 @@ require_once(__DIR__.'/fixtures/testable_update_api.php');
  * @copyright 2015 David Mudrak <david@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\update\api::class)]
 final class update_api_test extends \advanced_testcase {
 
     /**
@@ -41,8 +39,8 @@ final class update_api_test extends \advanced_testcase {
      */
     public function test_convert_branch_numbering_format(): void {
 
-        /** @var \core\update\testable_api $client */
-        $client = \core\update\testable_api::client();
+        /** @var testable_api $client */
+        $client = testable_api::client();
 
         $this->assertSame('2.9', $client->convert_branch_numbering_format(29));
         $this->assertSame('29.9', $client->convert_branch_numbering_format(299));
@@ -72,7 +70,7 @@ final class update_api_test extends \advanced_testcase {
      */
     public function test_get_plugin_info(): void {
 
-        $client = \core\update\testable_api::client();
+        $client = testable_api::client();
 
         // The plugin is not found in the plugins directory.
         $this->assertFalse($client->get_plugin_info('non_existing', 2015093000));
@@ -97,7 +95,7 @@ final class update_api_test extends \advanced_testcase {
      */
     public function test_find_plugin(): void {
 
-        $client = \core\update\testable_api::client();
+        $client = testable_api::client();
 
         // The plugin is not found in the plugins directory.
         $this->assertFalse($client->find_plugin('non_existing'));
@@ -129,7 +127,7 @@ final class update_api_test extends \advanced_testcase {
      */
     public function test_validate_pluginfo_format(): void {
 
-        $client = \core\update\testable_api::client();
+        $client = testable_api::client();
 
         $json = '{"id":127,"name":"Course contents","component":"block_course_contents","source":"https:\/\/github.com\/mudrd8mz\/moodle-block_course_contents","doc":"http:\/\/docs.moodle.org\/20\/en\/Course_contents_block","bugs":"https:\/\/github.com\/mudrd8mz\/moodle-block_course_contents\/issues","discussion":null,"version":{"id":8100,"version":"2015030300","release":"3.0","maturity":200,"downloadurl":"https:\/\/moodle.org\/plugins\/download.php\/8100\/block_course_contents_moodle29_2015030300.zip","downloadmd5":"8d8ae64822f38d278420776f8b42eaa5","vcssystem":"git","vcssystemother":null,"vcsrepositoryurl":"https:\/\/github.com\/mudrd8mz\/moodle-block_course_contents","vcsbranch":"master","vcstag":"v3.0","supportedmoodles":[{"version":2014041100,"release":"2.7"},{"version":2014101000,"release":"2.8"},{"version":2015041700,"release":"2.9"}]}}';
 
