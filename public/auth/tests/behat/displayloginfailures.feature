@@ -1,4 +1,4 @@
-@core @core_auth
+@core @core_auth @javascript
 Feature: Test the 'showlogfailures' feature works.
   In order to see my recent login failures when logging in
   As a user
@@ -12,7 +12,7 @@ Feature: Test the 'showlogfailures' feature works.
       | displayloginfailures | 1 |
 
   # Given the user has at least one failed login attempt, when they login, then they should see both header and footer notices.
-  Scenario: Check that 'displayloginfailures' works without javascript for teachers.
+  Scenario: Check that 'displayloginfailures' works for teachers.
     # Simulate a log in failure for the teacher.
     Given I am on homepage
     And I set the field "Username" to "teacher1"
@@ -32,7 +32,7 @@ Feature: Test the 'showlogfailures' feature works.
     And I should not see "1 failed logins since your last login" in the "page-footer" "region"
 
   # Given the user has at least one failed login attempt, when they login, then they should see both header and footer notices.
-  Scenario: Check that 'displayloginfailures' works without javascript for admins.
+  Scenario: Check that 'displayloginfailures' works for admins.
     # Simulate a log in failure for the teacher.
     Given I am on homepage
     And I set the field "Username" to "admin"
