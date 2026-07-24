@@ -4743,6 +4743,7 @@ EOD;
      *
      * @param \core_auth\output\login $form The renderable.
      * @return string
+     * @deprecated since Moodle 5.3. Use login_form instead.
      */
     public function render_login(\core_auth\output\login $form) {
         $context = $form->export_for_template($this);

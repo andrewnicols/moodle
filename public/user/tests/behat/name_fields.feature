@@ -1,14 +1,15 @@
 @core @core_user
 Feature: Both first name and last name are always available for every user
-  In order to easily identify and display users on Moodle pages
-  As any user
-  I need to rely on both first name and last name are always available
+    In order to easily identify and display users on Moodle pages
+    As any user
+    I need to rely on both first name and last name are always available
 
+  @javascript
   Scenario: Attempting to self-register as a new user with empty names
     Given the following config values are set as admin:
-      | enablemyhome    | 1     |
-      | registerauth    | email |
-      | passwordpolicy  | 0     |
+      | enablemyhome   | 1     |
+      | registerauth   | email |
+      | passwordpolicy | 0     |
     And I am on homepage
     And I click on "Sign up" "link"
     When I set the following fields to these values:
@@ -22,6 +23,7 @@ Feature: Both first name and last name are always available for every user
     Then I should see "Missing given name"
     And I should see "Missing last name"
 
+  @javascript
   Scenario: Attempting to change own names to whitespace
     Given the following "users" exist:
       | username | firstname | lastname | email       |

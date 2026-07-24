@@ -9,6 +9,7 @@ Feature: Relogin prevention
       | username | password | firstname | lastname | email            |
       | testuser | test     | Test      | User     | user@example.com |
 
+  @javascript
   Scenario: A logged in user tries to access the login page again
     Given I am on homepage
     And I set the field "Username" to "testuser"

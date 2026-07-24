@@ -7,3 +7,24 @@ notes:
         The previously used core version has not been used in core for some
         time, and was not tested or validated.
       type: changed
+    - message: |
+        The login form has been converted to a new set of React Components.
+
+
+        If your theme previously customised the login form you will need to
+        migrate all customisations to the Swizzle-based react system.
+
+
+        For those not yet ready to migrate to React components they may instead
+        create a new `render_login_form` implementation in their theme:
+
+
+        ```php
+
+        public function render_login_form(\core_auth\output\login_form
+        $loginform): string {
+            return $this->render($loginform->get_legacy_login_form());
+        }
+
+        ```
+      type: improved

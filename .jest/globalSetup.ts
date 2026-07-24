@@ -102,6 +102,48 @@ const defaultCfg = {
     developerdebug: true,
 };
 
+/**
+ * Normalise a language-string parameter value into a string, mirroring the behaviour of
+ * `M.util.get_string` in the real Moodle core JS.
+ *
+ * @param param The parameter value to normalise.
+ * @returns The normalised string value.
+ */
+const normaliseStringParameter = (param: unknown): string => {
+    if (typeof param === 'string') {
+        return param;
+    }
+    if (typeof param === 'number' || typeof param === 'boolean') {
+        return globalThis.String(param);
+    }
+    return JSON.stringify(param);
+};
+
+/**
+ * Substitute `{$a}` / `{$a->prop}` placeholders in a mocked string value with the given
+ * parameters, mirroring the behaviour of `M.util.get_string` in the real Moodle core JS.
+ *
+ * @param stringValue The raw (unsubstituted) string value.
+ * @param params The parameter(s) to substitute into the string, if any.
+ * @returns The string with placeholders substituted.
+ */
+const substituteStringParameters = (stringValue: string, params?: unknown): string => {
+    if (params === undefined || params === null) {
+        return stringValue;
+    }
+
+    if (['string', 'number', 'boolean'].includes(typeof params)) {
+        return stringValue.replace(/{\$a}/g, normaliseStringParameter(params));
+    }
+
+    let result = stringValue;
+    Object.entries(params as Record<string, unknown>).forEach(([placeholder, value]) => {
+        result = result.replace(new RegExp(`{\\$a->${placeholder}}`, 'g'), normaliseStringParameter(value));
+    });
+
+    return result;
+};
+
 // Replace the placeholder util functions with proper jest.fn() mocks.
 (globalThis as any).M.util = {
     js_pending: jest.fn((key: string) => {
@@ -115,32 +157,7 @@ const defaultCfg = {
             return `[${key}, ${component}]`;
         }
 
-        const stringValue = (globalThis as any).M.str[component][key];
-
-        if (!params) {
-            return stringValue;
-        }
-
-        const normaliseParameter = (param: unknown): string => {
-            if (typeof param === 'string') {
-                return param;
-            }
-            if (typeof param === 'number' || typeof param === 'boolean') {
-                return globalThis.String(param);
-            }
-            return JSON.stringify(param);
-        };
-
-        if (['string', 'number'].includes(typeof params)) {
-            return (stringValue as string).replace(/{\$a}/g, normaliseParameter(params));
-        }
-
-        let result = stringValue;
-        Object.entries(params).forEach(([placeholder, value]) => {
-            result = (result as string).replace(new RegExp(`{\\$a->${placeholder}}`, 'g'), normaliseParameter(value));
-        });
-
-        return result;
+        return substituteStringParameters((globalThis as any).M.str[component][key], params);
     }),
 };
 
@@ -194,14 +211,14 @@ beforeEach(() => {
 
     const getRequestedStringsSpy = jest.spyOn(stringUtils, 'getRequestedStrings');
     (getRequestedStringsSpy as jest.SpyInstance).mockImplementation((requests: {key: string; component: string; param?: unknown}[]) => {
-        return requests.map(({key, component}) => {
+        return requests.map(({key, component, param}) => {
             const mapKey = `${component}:${key}`;
             if (pendingStringSet.has(mapKey)) {
                 // Return a promise that never resolves to simulate a permanently pending string.
                 return new Promise<string>(() => {});
             }
             if (stringMap.has(mapKey)) {
-                return Promise.resolve(stringMap.get(mapKey)!);
+                return Promise.resolve(substituteStringParameters(stringMap.get(mapKey)!, param));
             }
             return Promise.resolve(`[${key}, ${component}]`);
         });

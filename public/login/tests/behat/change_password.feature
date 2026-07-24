@@ -11,6 +11,7 @@ Feature: Change password
       | username | firstname | lastname | email |
       | testuser | Test | User | moodle@example.com |
 
+  @javascript
   Scenario: A user can change his password manually
     Given I am on site homepage
     And I log in as "testuser"
