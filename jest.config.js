@@ -17,12 +17,24 @@ module.exports = {
     testEnvironment: 'jsdom',
     clearMocks: true,
     testMatch: ['**/esm/tests/**/*.test.{ts,tsx}'],
-    moduleNameMapper,
+    moduleNameMapper: {
+        ...moduleNameMapper,
+        // The design system package's "exports" map only declares an ESM ("import") condition,
+        // so bypass conditional-exports resolution and point straight at the built entry file.
+        '^@moodlehq/design-system$': '<rootDir>/node_modules/@moodlehq/design-system/dist/index.js',
+    },
     transform: {
         '^.+\\.(ts|tsx)$': ['ts-jest', {
             tsconfig: './tsconfig.jest.json',
         }],
+        '^.+\\.jsx?$': ['ts-jest', {
+            tsconfig: './tsconfig.jest.json',
+            isolatedModules: true,
+        }],
     },
+    transformIgnorePatterns: [
+        '/node_modules/(?!@moodlehq/design-system)',
+    ],
     setupFiles: [
         '<rootDir>/.jest/globalM.ts',
     ],

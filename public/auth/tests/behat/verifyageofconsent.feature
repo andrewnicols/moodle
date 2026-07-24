@@ -1,4 +1,4 @@
-@core @verify_age_location
+@core @verify_age_location @javascript
 Feature: Test the 'Digital age of consent verification' feature works.
   In order to self-register on the site
   As an user

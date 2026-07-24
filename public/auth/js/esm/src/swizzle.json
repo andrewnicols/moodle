@@ -1,0 +1,46 @@
+{
+  "local/LoginForm/AuthInstructions": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/CookiesNotice": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/ErrorInfo": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/GuestLogin": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/IdentityProviders": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/LanguageMenu": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/LoginFields": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/Logo": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/Maintenance": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "local/LoginForm/SignupInstructions": {
+    "eject": "risky",
+    "wrap": "risky"
+  },
+  "LoginForm": {
+    "eject": "risky",
+    "wrap": "risky"
+  }
+}

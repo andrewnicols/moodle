@@ -5084,6 +5084,19 @@ EOD;
         $output .= "\n";
         return $output;
     }
+
+    /**
+     * Render the login form.
+     *
+     * @param \core_auth\output\login_form $loginform
+     * @return string
+     */
+    public function render_login_form(\core_auth\output\login_form $loginform) {
+        return \core\output\html_writer::react_component(
+            '@moodle/lms/core_auth/LoginForm',
+            $loginform->export_for_template($this),
+        );
+    }
 }
 // Alias this class to the old name.
 // This file will be autoloaded by the legacyclasses autoload system.
