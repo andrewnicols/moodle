@@ -1,4 +1,4 @@
-@core @core_auth
+@core @core_auth @javascript
 Feature: Authentication
   In order to validate my credentials in the system
   As a user
@@ -8,12 +8,7 @@ Feature: Authentication
     Given the following config values are set as admin:
       | enablemyhome | 1 |
 
-  Scenario: Log in with the predefined admin user with Javascript disabled
-    Given I log in as "admin"
-    Then I should see "You are logged in as Admin User" in the "page-footer" "region"
-
-  @javascript
-  Scenario: Log in with the predefined admin user with Javascript enabled
+  Scenario: Log in with the predefined admin user
     Given I log in as "admin"
     Then I should see "You are logged in as Admin User" in the "page-footer" "region"
 
@@ -42,7 +37,7 @@ Feature: Authentication
     When I click on "Log out" "link" in the "#page-footer" "css_element"
     Then I should see "You are not logged in" in the "page-footer" "region"
 
-  @javascript @accessibility
+  @accessibility
   Scenario: Login page must be accessible
     Given the following config values are set as admin:
       | forcelogin | 0 |
@@ -58,7 +53,7 @@ Feature: Authentication
     And the page should meet "wcag131, wcag141, wcag412" accessibility standards
     And the page should meet accessibility standards with "wcag131, wcag141, wcag412" extra tests
 
-  @javascript @accessibility
+  @accessibility
   Scenario: The login page must meet accessibility standards
     Given the following config values are set as admin:
       | forcelogin | 0 |

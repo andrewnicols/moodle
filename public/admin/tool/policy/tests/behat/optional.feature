@@ -52,6 +52,7 @@ Feature: Optional policies
       | Name                                                    | Policy status | Version |
       | ConsentPageOptional1 Site policy, All users, Compulsory | Active        | v1      |
 
+  @javascript
   Scenario: Compulsory policies must be accepted prior signup, optional policies just after it
     Given the following config values are set as admin:
       | registerauth    | email |

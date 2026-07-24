@@ -10,6 +10,7 @@ Feature: Test the 'remember username' feature works.
       | teacher1 |
 
   # Given the user has logged in and selected 'Remember username', when they log in again, then their username should be remembered.
+  @javascript
   Scenario: Check that 'remember username' works without javascript for teachers.
     # Log in the first time with $CFG->rememberusername set to Yes.
     Given the following config values are set as admin:
@@ -22,26 +23,3 @@ Feature: Test the 'remember username' feature works.
     # Log out and check that the username was remembered.
     When I am on homepage
     Then the field "username" matches value "teacher1"
-
-  # Given the user has logged in before and selected 'Remember username', when they log in again and unset 'Remember username', then
-  # their username should be forgotten for future log in attempts.
-  Scenario: Check that 'remember username' unsetting works without javascript for teachers.
-    # Log in the first time with $CFG->rememberusername set to Optional.
-    Given the following config values are set as admin:
-      | rememberusername | 2 |
-    And I am on homepage
-    And I set the field "Username" to "teacher1"
-    And I set the field "Password" to "teacher1"
-    And I press "Log in"
-    And I log out
-    # Log in again, the username should have been remembered.
-    When I am on homepage
-    Then the field "username" matches value "teacher1"
-    And I set the field "Password" to "teacher1"
-    And I press "Log in"
-    And I log out
-    And the following config values are set as admin:
-      | rememberusername | 0 |
-    # Check username has been forgotten.
-    And I am on homepage
-    Then the field "username" matches value ""

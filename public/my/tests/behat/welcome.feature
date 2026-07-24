@@ -4,6 +4,7 @@ Feature: Welcome message
   As a user
   I will see welcome message when I log into moodle
 
+  @javascript
   Scenario: Log in and being redirected to course page
     Given the following "users" exist:
       | username | password | firstname | lastname | email            |
