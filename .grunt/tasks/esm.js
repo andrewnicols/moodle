@@ -67,9 +67,10 @@ module.exports = grunt => {
 
                     generateAliases();
 
-                    const [productionContext, developmentContext] = await watchComponents(onRebuild);
+                    const contexts = await watchComponents(onRebuild);
 
-                    if (!productionContext || !developmentContext) {
+                    const validContexts = contexts.filter(context => !!context);
+                    if (validContexts.length === 0) {
                         grunt.log.warn('No ESM source files found. Nothing to watch.');
                         done();
                         return;
@@ -80,8 +81,7 @@ module.exports = grunt => {
                     // Keep the process alive until the user interrupts. done() is intentionally
                     // not called here — grunt's async mechanism holds the process open.
                     process.on('SIGINT', async() => {
-                        await productionContext.dispose();
-                        await developmentContext.dispose();
+                        await Promise.all(validContexts.map(context => context.dispose()));
                         done();
                     });
                 } catch (err) {
@@ -122,4 +122,14 @@ module.exports = grunt => {
 
     grunt.registerTask('react', ['esm']);
     grunt.registerTask('react:watch', ['esm:watch']);
+    grunt.config.merge({
+        watch: {
+            esm: {
+                files: grunt.moodleEnv.inComponent
+                    ? ['js/esm/src/*.ts', 'js/esm/src/**/*.ts', 'js/esm/src/*.tsx', 'js/esm/src/**/*.tsx']
+                    : ['**/js/esm/src/*.ts', '**/js/esm/src/**/*.ts', '**/js/esm/src/*.tsx', '**/js/esm/src/**/*.tsx'],
+                tasks: ['esm'],
+            },
+        },
+    });
 };

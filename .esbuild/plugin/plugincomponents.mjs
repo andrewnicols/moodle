@@ -39,7 +39,7 @@ import chalk from "chalk";
 import path from "path";
 import fs from "fs";
 import fsPromises from "fs/promises";
-import { getOwningComponentDirectory } from "../../.grunt/components.js";
+import {getOwningComponentDirectory} from "../../.grunt/components.js";
 
 const projectRoot = process.cwd();
 
@@ -393,11 +393,10 @@ const getWatchReporter = (onRebuild) => ({
 
             const outputs = Object.keys(result.metafile?.outputs ?? {});
 
-            console.log(chalk.green(`[${now}] ✓ ${outputs.length} ${buildType} component(s) built`) + chalk.dim(` · ${elapsed}s`));
-
             if (isInitial) {
                 isInitial = false;
             } else if (onRebuild) {
+                console.log(chalk.green(`[${now}] ✓ ${outputs.length} ${buildType} component(s) built`) + chalk.dim(` · ${elapsed}s`));
                 // entryPoint is the source file (relative to projectRoot) that triggered
                 // this rebuild. Pass it to the caller so they can run follow-up tasks
                 // (e.g. linting) without this module needing to know about them.
@@ -438,22 +437,25 @@ export async function watchComponents(onRebuild) {
 
     const buildConfig = createBuildConfig();
 
-    const [
-        productionContext,
-        developmentContext,
-    ] = await Promise.all([
-        getProductionBuild(entryPoints, buildConfig, getWatchReporter(onRebuild)),
-        // Do not pass a callback for dev builds - we only need to perform the callbacks once.
-        getDevelopmentBuild(entryPoints, buildConfig, getWatchReporter()),
-    ]);
+    const componentEntryPoints = {};
+    entryPoints.forEach((entryPoint) => {
+        const component = getOwningComponentDirectory(entryPoint);
+        if (componentEntryPoints[component]) {
+            componentEntryPoints[component].push(entryPoint);
+        } else {
+            componentEntryPoints[component] = [entryPoint];
+        }
+    });
 
-    await Promise.all([
-        productionContext.watch(),
-        developmentContext.watch(),
-    ]);
+    const contexts = Object.values(componentEntryPoints).flatMap((entryPoints) => {
+        return [
+            getProductionBuild(entryPoints, buildConfig, getWatchReporter(onRebuild)),
+            getDevelopmentBuild(entryPoints, buildConfig, getWatchReporter()),
+        ];
+    });
 
-    return [
-        productionContext,
-        developmentContext,
-    ];
+    const resolvedContexts = await Promise.all(contexts);
+    await Promise.all(resolvedContexts.map((context) => context.watch()));
+
+    return resolvedContexts;
 }
