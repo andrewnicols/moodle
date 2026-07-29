@@ -1,38 +1,20 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * Auto-init shim for Mustache React helper components.
- *
- * Scans the DOM for elements with the `data-react-component` attribute and
- * mounts the matching React component into each one. A MutationObserver watches
- * for dynamically injected content (AJAX, fragments) so components are mounted
- * and unmounted automatically without any additional initialiser call.
- *
- * The expected DOM contract is:
- * ```html
- *   <div
- *     data-react-component="@mod_book/viewer"
- *     data-react-props='{"title":"My Book"}'
- *   ></div>
- * ```
- *
- * @module     core/react_autoinit
- * @copyright  Meirza <meirza.arson@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+
+// public/lib/js/esm/src/react_autoinit.ts
 import { isProfilerEnabled } from "@moodle/lms/core/profiler";
 import { mountReactApp, unmountReactApp } from "@moodle/lms/core/mount";
-const SELECTOR = "[data-react-component]";
-const MOUNTED_FLAG = "reactMounted";
-const MOUNTING_FLAG = "reactMounting";
-const reactUnmountMap = /* @__PURE__ */ new WeakMap();
-const profilingEnabled = isProfilerEnabled();
-const domReady = /* @__PURE__ */ __name(() => document.readyState === "loading" ? new Promise(
+var SELECTOR = "[data-react-component]";
+var MOUNTED_FLAG = "reactMounted";
+var MOUNTING_FLAG = "reactMounting";
+var reactUnmountMap = /* @__PURE__ */ new WeakMap();
+var profilingEnabled = isProfilerEnabled();
+var domReady = /* @__PURE__ */ __name(() => document.readyState === "loading" ? new Promise(
   (resolve) => document.addEventListener("DOMContentLoaded", resolve, {
     once: true
   })
 ) : Promise.resolve(), "domReady");
-const parseProps = /* @__PURE__ */ __name((el) => {
+var parseProps = /* @__PURE__ */ __name((el) => {
   const raw = el.getAttribute("data-react-props");
   if (!raw) {
     return {};
@@ -44,7 +26,7 @@ const parseProps = /* @__PURE__ */ __name((el) => {
     return {};
   }
 }, "parseProps");
-const resolveComponent = /* @__PURE__ */ __name(async (componentName) => {
+var resolveComponent = /* @__PURE__ */ __name(async (componentName) => {
   if (!componentName) {
     return null;
   }
@@ -68,14 +50,14 @@ const resolveComponent = /* @__PURE__ */ __name(async (componentName) => {
     return null;
   }
 }, "resolveComponent");
-const mountReactComponent = /* @__PURE__ */ __name((el, Component, props) => {
+var mountReactComponent = /* @__PURE__ */ __name((el, Component, props) => {
   const componentName = el.getAttribute("data-react-component") || "Unknown";
   const unmount = mountReactApp(el, Component, props, {
     id: componentName
   });
   reactUnmountMap.set(el, unmount);
 }, "mountReactComponent");
-const mountOne = /* @__PURE__ */ __name(async (el) => {
+var mountOne = /* @__PURE__ */ __name(async (el) => {
   if (el.dataset[MOUNTED_FLAG]) {
     return;
   }
@@ -115,7 +97,7 @@ const mountOne = /* @__PURE__ */ __name(async (el) => {
     delete el.dataset[MOUNTING_FLAG];
   }
 }, "mountOne");
-const unmountOne = /* @__PURE__ */ __name((el) => {
+var unmountOne = /* @__PURE__ */ __name((el) => {
   const unmount = reactUnmountMap.get(el) ?? (() => unmountReactApp(el));
   if (unmount) {
     try {
@@ -132,7 +114,7 @@ const unmountOne = /* @__PURE__ */ __name((el) => {
   delete el.dataset[MOUNTED_FLAG];
   delete el.dataset[MOUNTING_FLAG];
 }, "unmountOne");
-const scanAndMount = /* @__PURE__ */ __name((root) => {
+var scanAndMount = /* @__PURE__ */ __name((root) => {
   const elements = root.querySelectorAll(SELECTOR);
   if (profilingEnabled && elements.length > 0) {
     window.console.log(
@@ -143,7 +125,7 @@ const scanAndMount = /* @__PURE__ */ __name((root) => {
     mountOne(el);
   }
 }, "scanAndMount");
-const handleAddedNode = /* @__PURE__ */ __name((node) => {
+var handleAddedNode = /* @__PURE__ */ __name((node) => {
   if (!(node instanceof Element)) {
     return;
   }
@@ -155,7 +137,7 @@ const handleAddedNode = /* @__PURE__ */ __name((node) => {
   }
   node.querySelectorAll?.(SELECTOR).forEach(mountOne);
 }, "handleAddedNode");
-const handleRemovedNode = /* @__PURE__ */ __name((node) => {
+var handleRemovedNode = /* @__PURE__ */ __name((node) => {
   if (!(node instanceof Element)) {
     return;
   }
@@ -164,7 +146,7 @@ const handleRemovedNode = /* @__PURE__ */ __name((node) => {
   }
   node.querySelectorAll?.(SELECTOR).forEach(unmountOne);
 }, "handleRemovedNode");
-const installObserver = /* @__PURE__ */ __name(() => {
+var installObserver = /* @__PURE__ */ __name(() => {
   const obs = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes?.forEach(handleAddedNode);
@@ -177,8 +159,8 @@ const installObserver = /* @__PURE__ */ __name(() => {
   });
   return obs;
 }, "installObserver");
-let observer = null;
-const init = /* @__PURE__ */ __name(async () => {
+var observer = null;
+var init = /* @__PURE__ */ __name(async () => {
   await domReady();
   if (profilingEnabled) {
     window.console.log("[react_autoinit] Initializing (profiling enabled)...");
@@ -192,4 +174,24 @@ const init = /* @__PURE__ */ __name(async () => {
   scanAndMount(document);
 }, "init");
 init();
+/**
+ * Auto-init shim for Mustache React helper components.
+ *
+ * Scans the DOM for elements with the `data-react-component` attribute and
+ * mounts the matching React component into each one. A MutationObserver watches
+ * for dynamically injected content (AJAX, fragments) so components are mounted
+ * and unmounted automatically without any additional initialiser call.
+ *
+ * The expected DOM contract is:
+ * ```html
+ *   <div
+ *     data-react-component="@mod_book/viewer"
+ *     data-react-props='{"title":"My Book"}'
+ *   ></div>
+ * ```
+ *
+ * @module     core/react_autoinit
+ * @copyright  Meirza <meirza.arson@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 //# sourceMappingURL=react_autoinit.dev.js.map

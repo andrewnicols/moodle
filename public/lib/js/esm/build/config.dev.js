@@ -1,3 +1,11 @@
+// public/lib/js/esm/src/config.ts
+var config = M.cfg;
+var config_default = config;
+var isJSCachingEnabled = config.jsrev !== -1;
+export {
+  config_default as default,
+  isJSCachingEnabled
+};
 /**
  * Typed access to the Moodle page configuration (`M.cfg`).
  *
@@ -13,11 +21,4 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      2.9
  */
-const config = M.cfg;
-var config_default = config;
-const isJSCachingEnabled = config.jsrev !== -1;
-export {
-  config_default as default,
-  isJSCachingEnabled
-};
 //# sourceMappingURL=config.dev.js.map

@@ -1,8 +1,10 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// public/lib/js/esm/src/String.tsx
 import { Fragment, jsxDEV } from "react/jsx-dev-runtime";
 import { Suspense, use } from "react";
-import { getString } from "./stringUtils";
+import { getString } from "@moodle/lms/core/stringUtils";
 function StringInner({ identifier, component, params }) {
   return /* @__PURE__ */ jsxDEV(Fragment, { children: use(getString(identifier, component, params)) }, void 0, false, {
     fileName: "public/lib/js/esm/src/String.tsx",

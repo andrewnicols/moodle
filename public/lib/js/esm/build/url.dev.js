@@ -1,15 +1,9 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * URL utility functions.
- *
- * @module     core/url
- * @copyright  2015 Damyon Wiese <damyon@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      2.9
- */
-import config from "./config";
-const fileUrl = /* @__PURE__ */ __name((relativeScript, slashArg) => {
+
+// public/lib/js/esm/src/url.ts
+import config from "@moodle/lms/core/config";
+var fileUrl = /* @__PURE__ */ __name((relativeScript, slashArg) => {
   let url = config.wwwroot + relativeScript;
   if (slashArg.charAt(0) !== "/") {
     slashArg = `/${slashArg}`;
@@ -21,7 +15,7 @@ const fileUrl = /* @__PURE__ */ __name((relativeScript, slashArg) => {
   }
   return url;
 }, "fileUrl");
-const relativeUrl = /* @__PURE__ */ __name((relativePath, params = {}, includeSessKey = false) => {
+var relativeUrl = /* @__PURE__ */ __name((relativePath, params = {}, includeSessKey = false) => {
   if (relativePath.indexOf("http:") === 0 || relativePath.indexOf("https:") === 0 || relativePath.indexOf("://") >= 0) {
     throw new Error("relativeUrl function does not accept absolute urls");
   }
@@ -43,7 +37,7 @@ const relativeUrl = /* @__PURE__ */ __name((relativePath, params = {}, includeSe
   }
   return config.wwwroot + relativePath;
 }, "relativeUrl");
-const imageUrl = /* @__PURE__ */ __name((imagename, component) => M.util.image_url(imagename, component), "imageUrl");
+var imageUrl = /* @__PURE__ */ __name((imagename, component) => M.util.image_url(imagename, component), "imageUrl");
 var url_default = {
   fileUrl,
   relativeUrl,
@@ -55,4 +49,12 @@ export {
   imageUrl,
   relativeUrl
 };
+/**
+ * URL utility functions.
+ *
+ * @module     core/url
+ * @copyright  2015 Damyon Wiese <damyon@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
+ */
 //# sourceMappingURL=url.dev.js.map

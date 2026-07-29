@@ -1,15 +1,9 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * Wrap an instance of the browser's local or session storage to handle
- * cache expiry, key namespacing and other helpful things.
- *
- * @module     core/Storage
- * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-import config from "./config";
-class Storage {
+
+// public/lib/js/esm/src/Storage.ts
+import config from "@moodle/lms/core/config";
+var Storage = class _Storage {
   static {
     __name(this, "Storage");
   }
@@ -25,9 +19,9 @@ class Storage {
     this.#storage = storage;
     this.#supported = this.#detectSupport();
     const hashSource = `${config.wwwroot}/${config.jsrev}`;
-    this.#prefix = `${Storage.hashString(hashSource)}/`;
-    this.#jsrevPrefix = `${Storage.hashString(config.wwwroot)}/jsrev`;
-    this.#loginPrefix = `${Storage.hashString(config.wwwroot)}/currentlogin`;
+    this.#prefix = `${_Storage.hashString(hashSource)}/`;
+    this.#jsrevPrefix = `${_Storage.hashString(config.wwwroot)}/jsrev`;
+    this.#loginPrefix = `${_Storage.hashString(config.wwwroot)}/currentlogin`;
     this.#validateCache();
   }
   /**
@@ -131,15 +125,15 @@ class Storage {
   clean() {
     this.#storage.clear();
   }
-}
-const internalLocalStore = new Storage(window.localStorage);
-const internalSessionStore = new Storage(window.sessionStorage);
-const localStore = {
+};
+var internalLocalStore = new Storage(window.localStorage);
+var internalSessionStore = new Storage(window.sessionStorage);
+var localStore = {
   get: internalLocalStore.get.bind(internalLocalStore),
   set: internalLocalStore.set.bind(internalLocalStore),
   "default": internalLocalStore
 };
-const sessionStore = {
+var sessionStore = {
   get: internalSessionStore.get.bind(internalSessionStore),
   set: internalSessionStore.set.bind(internalSessionStore),
   "default": internalSessionStore
@@ -150,4 +144,12 @@ export {
   localStore,
   sessionStore
 };
+/**
+ * Wrap an instance of the browser's local or session storage to handle
+ * cache expiry, key namespacing and other helpful things.
+ *
+ * @module     core/Storage
+ * @copyright  2017 Ryan Wyllie <ryan@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 //# sourceMappingURL=Storage.dev.js.map

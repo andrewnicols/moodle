@@ -1,30 +1,19 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * Standard Ajax wrapper for Moodle web service calls.
- *
- * Calls the central Ajax script which can invoke any existing web service
- * using the current session. Supports batching multiple requests into a
- * single HTTP call.
- *
- * @module     core/ajax
- * @copyright  2015 Damyon Wiese <damyon@moodle.com>
- * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      2.9
- */
+
+// public/lib/js/esm/src/ajax.ts
 import config from "@moodle/lms/core/config";
 import Pending from "@moodle/lms/core/pending";
 import log from "@moodle/lms/core/log";
 import { redirect } from "@moodle/lms/core/location";
 import { relativeUrl } from "@moodle/lms/core/url";
-import { getGlobalAbortSignal } from "./abort";
+import { getGlobalAbortSignal } from "@moodle/lms/core/abort";
 function isMoodleAjaxError(err) {
   return typeof err === "object" && err !== null && "message" in err && "errorcode" in err;
 }
 __name(isMoodleAjaxError, "isMoodleAjaxError");
-const MAX_URL_LENGTH = 2e3;
-let unloading = false;
+var MAX_URL_LENGTH = 2e3;
+var unloading = false;
 if (typeof window !== "undefined") {
   window.addEventListener("beforeunload", () => {
     unloading = true;
@@ -195,4 +184,17 @@ export {
   isMoodleAjaxError,
   performFetch
 };
+/**
+ * Standard Ajax wrapper for Moodle web service calls.
+ *
+ * Calls the central Ajax script which can invoke any existing web service
+ * using the current session. Supports batching multiple requests into a
+ * single HTTP call.
+ *
+ * @module     core/ajax
+ * @copyright  2015 Damyon Wiese <damyon@moodle.com>
+ * @copyright  2025 Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
+ */
 //# sourceMappingURL=ajax.dev.js.map

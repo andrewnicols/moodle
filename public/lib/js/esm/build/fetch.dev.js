@@ -1,28 +1,11 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * The core/fetch module allows you to make web service requests to the Moodle REST API.
- *
- * @module     core/fetch
- * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @example <caption>Perform a single GET request</caption>
- * import Fetch from 'core/fetch';
- *
- * const result = Fetch.performGet('mod_example', 'animals', { params: { type: 'mammal' } });
- *
- * result.then((response) => {
- *    // Do something with the Response object.
- * })
- * .catch((error) => {
- *     // Handle the error
- * });
- */
+
+// public/lib/js/esm/src/fetch.ts
 import config from "@moodle/lms/core/config";
 import Pending from "@moodle/lms/core/pending";
-import { getGlobalAbortSignal } from "./abort";
-class RequestWrapper {
+import { getGlobalAbortSignal } from "@moodle/lms/core/abort";
+var RequestWrapper = class {
   static {
     __name(this, "RequestWrapper");
   }
@@ -50,8 +33,8 @@ class RequestWrapper {
       this.#reject(response.statusText);
     }
   }
-}
-class Fetch {
+};
+var Fetch = class _Fetch {
   static {
     __name(this, "Fetch");
   }
@@ -71,8 +54,8 @@ class Fetch {
     method = "GET"
   } = {}) {
     const resolvePending = new Pending(`Requesting ${component}/${action} with ${method}`);
-    const requestWrapper = Fetch.#getRequest(
-      Fetch.#normaliseComponent(component),
+    const requestWrapper = _Fetch.#getRequest(
+      _Fetch.#normaliseComponent(component),
       action,
       { headers, params, method, body, cachekey }
     );
@@ -192,8 +175,27 @@ class Fetch {
     }
     return new RequestWrapper(new Request(url, options));
   }
-}
+};
 export {
   Fetch as default
 };
+/**
+ * The core/fetch module allows you to make web service requests to the Moodle REST API.
+ *
+ * @module     core/fetch
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @example <caption>Perform a single GET request</caption>
+ * import Fetch from 'core/fetch';
+ *
+ * const result = Fetch.performGet('mod_example', 'animals', { params: { type: 'mammal' } });
+ *
+ * result.then((response) => {
+ *    // Do something with the Response object.
+ * })
+ * .catch((error) => {
+ *     // Handle the error
+ * });
+ */
 //# sourceMappingURL=fetch.dev.js.map

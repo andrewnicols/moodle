@@ -1,5 +1,14 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// public/lib/js/esm/src/location.ts
+function redirect(url) {
+  window.location.assign(url);
+}
+__name(redirect, "redirect");
+export {
+  redirect
+};
 /**
  * Browser location utilities.
  *
@@ -9,11 +18,4 @@ var __name = (target, value) => __defProp(target, "name", { value, configurable:
  * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-function redirect(url) {
-  window.location.assign(url);
-}
-__name(redirect, "redirect");
-export {
-  redirect
-};
 //# sourceMappingURL=location.dev.js.map

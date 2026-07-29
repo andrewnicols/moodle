@@ -1,16 +1,8 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * A logging module providing level-filtered console output.
- *
- * Each log method accepts an optional `source` parameter which, when provided,
- * prefixes the message with `"source: message"` for easier filtering.
- *
- * @module     core/log
- * @copyright  Andrew Nicols <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-const levels = {
+
+// public/lib/js/esm/src/log.ts
+var levels = {
   TRACE: 0,
   DEBUG: 1,
   INFO: 2,
@@ -18,15 +10,15 @@ const levels = {
   ERROR: 4,
   SILENT: 5
 };
-const consoleMethods = {
+var consoleMethods = {
   [levels.TRACE]: "trace",
   [levels.DEBUG]: "debug",
   [levels.INFO]: "info",
   [levels.WARN]: "warn",
   [levels.ERROR]: "error"
 };
-let currentLevel = levels.WARN;
-let defaultLevel = levels.WARN;
+var currentLevel = levels.WARN;
+var defaultLevel = levels.WARN;
 function resolveLevel(level) {
   if (typeof level === "string") {
     const upper = level.toUpperCase();
@@ -103,7 +95,7 @@ function error(message, source) {
   logAtLevel(levels.ERROR, message, source);
 }
 __name(error, "error");
-const log = {
+var log = {
   levels,
   trace,
   debug,
@@ -125,4 +117,14 @@ export {
   log_default as default,
   levels
 };
+/**
+ * A logging module providing level-filtered console output.
+ *
+ * Each log method accepts an optional `source` parameter which, when provided,
+ * prefixes the message with `"source: message"` for easier filtering.
+ *
+ * @module     core/log
+ * @copyright  Andrew Nicols <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 //# sourceMappingURL=log.dev.js.map

@@ -1,17 +1,12 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * Shared React Profiler helpers.
- *
- * @module     core/profiler
- * @copyright  Meirza <meirza.arson@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+
+// public/lib/js/esm/src/profiler.ts
 import { createElement, Profiler } from "react";
-const isProfilerEnabled = /* @__PURE__ */ __name(() => {
+var isProfilerEnabled = /* @__PURE__ */ __name(() => {
   return window.M?.cfg?.jsrev === -1;
 }, "isProfilerEnabled");
-const onRenderCallback = /* @__PURE__ */ __name((id, phase, actualDuration, baseDuration, startTime, commitTime) => {
+var onRenderCallback = /* @__PURE__ */ __name((id, phase, actualDuration, baseDuration, startTime, commitTime) => {
   if (!isProfilerEnabled()) {
     return;
   }
@@ -38,7 +33,7 @@ const onRenderCallback = /* @__PURE__ */ __name((id, phase, actualDuration, base
   }
   window.console.groupEnd();
 }, "onRenderCallback");
-const getProfilerCallback = /* @__PURE__ */ __name(() => {
+var getProfilerCallback = /* @__PURE__ */ __name(() => {
   return isProfilerEnabled() ? onRenderCallback : void 0;
 }, "getProfilerCallback");
 function withProfiler(Component, id) {
@@ -61,4 +56,11 @@ export {
   onRenderCallback,
   withProfiler
 };
+/**
+ * Shared React Profiler helpers.
+ *
+ * @module     core/profiler
+ * @copyright  Meirza <meirza.arson@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 //# sourceMappingURL=profiler.dev.js.map

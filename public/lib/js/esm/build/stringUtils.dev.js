@@ -1,14 +1,16 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
+
+// public/lib/js/esm/src/stringUtils.ts
 import {
   fetchMany
 } from "@moodle/lms/core/ajax";
-import config from "./config";
-import { localStore } from "./Storage";
-const promiseCache = /* @__PURE__ */ new Map();
-const stringPromiseCache = /* @__PURE__ */ new Map();
-const getCacheKey = /* @__PURE__ */ __name((key, component, lang) => `core_str/${key}/${component}/${lang}`, "getCacheKey");
-const getRequestedStrings = /* @__PURE__ */ __name((requests) => {
+import config from "@moodle/lms/core/config";
+import { localStore } from "@moodle/lms/core/Storage";
+var promiseCache = /* @__PURE__ */ new Map();
+var stringPromiseCache = /* @__PURE__ */ new Map();
+var getCacheKey = /* @__PURE__ */ __name((key, component, lang) => `core_str/${key}/${component}/${lang}`, "getCacheKey");
+var getRequestedStrings = /* @__PURE__ */ __name((requests) => {
   const stringPromises = new Array(requests.length);
   const pendingFetches = [];
   for (let i = 0; i < requests.length; i++) {
@@ -76,8 +78,8 @@ const getRequestedStrings = /* @__PURE__ */ __name((requests) => {
   }
   return stringPromises;
 }, "getRequestedStrings");
-const getStrings = /* @__PURE__ */ __name((requests) => Promise.all(getRequestedStrings(requests)), "getStrings");
-const cacheStrings = /* @__PURE__ */ __name((strings) => {
+var getStrings = /* @__PURE__ */ __name((requests) => Promise.all(getRequestedStrings(requests)), "getStrings");
+var cacheStrings = /* @__PURE__ */ __name((strings) => {
   for (const { key, component = "core", value, lang = config.language } of strings) {
     const cacheKey = getCacheKey(key, component, lang);
     if (!M.str[component]) {
@@ -92,7 +94,7 @@ const cacheStrings = /* @__PURE__ */ __name((strings) => {
     }
   }
 }, "cacheStrings");
-const getString = /* @__PURE__ */ __name((identifier, component = "core", params) => {
+var getString = /* @__PURE__ */ __name((identifier, component = "core", params) => {
   const key = `${component}::${identifier}::${JSON.stringify(params)}`;
   if (!stringPromiseCache.has(key)) {
     stringPromiseCache.set(
@@ -102,7 +104,7 @@ const getString = /* @__PURE__ */ __name((identifier, component = "core", params
   }
   return stringPromiseCache.get(key);
 }, "getString");
-const resetStringCache = /* @__PURE__ */ __name(() => {
+var resetStringCache = /* @__PURE__ */ __name(() => {
   stringPromiseCache.clear();
   promiseCache.clear();
 }, "resetStringCache");

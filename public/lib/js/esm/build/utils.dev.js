@@ -1,15 +1,9 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * Utility functions.
- *
- * @module     core/utils
- * @copyright  2019 Ryan Wyllie <ryan@moodle.com>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @since      2.9
- */
-import Pending from "./pending";
-const throttle = /* @__PURE__ */ __name((func, wait) => {
+
+// public/lib/js/esm/src/utils.ts
+import Pending from "@moodle/lms/core/pending";
+var throttle = /* @__PURE__ */ __name((func, wait) => {
   let onCooldown = false;
   let runAgain = false;
   let latestArgs;
@@ -32,8 +26,8 @@ const throttle = /* @__PURE__ */ __name((func, wait) => {
   }, "run");
   return run;
 }, "throttle");
-const debounceMap = /* @__PURE__ */ new Map();
-const debounce = /* @__PURE__ */ __name((func, wait, {
+var debounceMap = /* @__PURE__ */ new Map();
+var debounce = /* @__PURE__ */ __name((func, wait, {
   pending = false,
   cancel = false
 } = {}) => {
@@ -63,7 +57,7 @@ const debounce = /* @__PURE__ */ __name((func, wait, {
   }
   return returnedFunction;
 }, "debounce");
-const getNormalisedComponent = /* @__PURE__ */ __name((component) => {
+var getNormalisedComponent = /* @__PURE__ */ __name((component) => {
   if (component && component !== "moodle" && component !== "core") {
     return component;
   }
@@ -80,4 +74,12 @@ export {
   getNormalisedComponent,
   throttle
 };
+/**
+ * Utility functions.
+ *
+ * @module     core/utils
+ * @copyright  2019 Ryan Wyllie <ryan@moodle.com>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since      2.9
+ */
 //# sourceMappingURL=utils.dev.js.map

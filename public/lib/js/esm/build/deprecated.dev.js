@@ -1,29 +1,11 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
-/**
- * The core/deprecated module allows you to mark things as deprecated and warn appropriately.
- *
- * It emits a console error for non-final deprecations, or throws an Error for final ones.
- * When developer debugging is enabled (or running under Behat), a toast notification is
- * also displayed via core/notification.
- *
- * @module     core/deprecated
- * @copyright  Andrew Lyons <andrew@nicols.co.uk>
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @example
- * import emitDeprecation from '@moodle/lms/core/deprecated';
- *
- * emitDeprecation('myFunction', {
- *     replacement: 'myNewFunction',
- *     since: '5.0',
- *     mdl: 'MDL-12345',
- * });
- */
+
+// public/lib/js/esm/src/deprecated.ts
 import config from "@moodle/lms/core/config";
 import { getString } from "@moodle/lms/core/stringUtils";
 import { requireAsync } from "@moodle/lms/core/amd";
-const getMessage = /* @__PURE__ */ __name((thing, alternativeNotice, replacement, since, reason, mdl) => {
+var getMessage = /* @__PURE__ */ __name((thing, alternativeNotice, replacement, since, reason, mdl) => {
   const parts = [];
   parts.push("Deprecation: ");
   if (alternativeNotice) {
@@ -46,7 +28,7 @@ const getMessage = /* @__PURE__ */ __name((thing, alternativeNotice, replacement
   }
   return parts.join("");
 }, "getMessage");
-const getHTMLMessage = /* @__PURE__ */ __name((thing, alternativeNotice, replacement, since, reason, mdl) => {
+var getHTMLMessage = /* @__PURE__ */ __name((thing, alternativeNotice, replacement, since, reason, mdl) => {
   const parts = [];
   parts.push("<h2>Deprecation</h2>");
   if (alternativeNotice) {
@@ -72,11 +54,11 @@ const getHTMLMessage = /* @__PURE__ */ __name((thing, alternativeNotice, replace
   }
   return parts.join("");
 }, "getHTMLMessage");
-const isIgnored = /* @__PURE__ */ __name((thing) => {
+var isIgnored = /* @__PURE__ */ __name((thing) => {
   const ignored = config.deprecationignorelist || [];
   return ignored.includes(thing);
 }, "isIgnored");
-const canEmit = /* @__PURE__ */ __name(() => {
+var canEmit = /* @__PURE__ */ __name(() => {
   if (config.developerdebug) {
     return true;
   }
@@ -118,4 +100,24 @@ __name(emitDeprecation, "emitDeprecation");
 export {
   emitDeprecation as default
 };
+/**
+ * The core/deprecated module allows you to mark things as deprecated and warn appropriately.
+ *
+ * It emits a console error for non-final deprecations, or throws an Error for final ones.
+ * When developer debugging is enabled (or running under Behat), a toast notification is
+ * also displayed via core/notification.
+ *
+ * @module     core/deprecated
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @example
+ * import emitDeprecation from '@moodle/lms/core/deprecated';
+ *
+ * emitDeprecation('myFunction', {
+ *     replacement: 'myNewFunction',
+ *     since: '5.0',
+ *     mdl: 'MDL-12345',
+ * });
+ */
 //# sourceMappingURL=deprecated.dev.js.map
