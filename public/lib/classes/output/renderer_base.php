@@ -242,6 +242,15 @@ class renderer_base {
             }
         }
 
+        if ($widget instanceof react_component_renderable) {
+            // This is a react renderable.
+            // Render the react component with the provided props.
+            return html_writer::react_component(
+                "@moodle/lms/" . $widget->get_react_component_name(),
+                $widget->get_react_component_props($this),
+            );
+        }
+
         if ($widget instanceof named_templatable) {
             // This is a named templatable.
             // Fetch the template name from the get_template_name function instead.
