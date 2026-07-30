@@ -27,11 +27,11 @@ use core\url;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class login_form implements
-    \core\output\named_templatable,
+    \core\output\react_component_renderable,
     \core\output\renderable
 {
     use login_renderable_trait {
-        export_for_template as shared_export_for_template;
+        get_react_component_props as shared_get_react_component_props;
     }
 
     /** @var ?bool Whether login as guest is allowed. If null the value is calculated from site settings */
@@ -48,7 +48,7 @@ class login_form implements
      * @param string $username The username to display.
      */
     public function __construct(
-        \core\url $action,
+        url $action,
         /** @var string[] The order of authentication plugins */
         private array $authsequence,
         /** @var string The user name to pre-fill the form with. */
@@ -58,20 +58,17 @@ class login_form implements
     }
 
     #[\Override]
-    public function get_template_name(\core\output\renderer_base $renderer): string {
-        return 'core/login_form';
+    public function get_react_component_name(): string {
+        return 'core_auth/LoginForm';
     }
 
-    /**
-     * Export data for the template
-     *
-     * @param \core\output\renderer_base $output
-     * @return \stdClass
-     */
-    public function export_for_template(\core\output\renderer_base $output): \stdClass {
+    #[\Override]
+    public function get_react_component_props(
+        \core\output\renderer_base $output,
+    ): \stdClass {
         global $CFG;
 
-        $data = $this->shared_export_for_template($output);
+        $data = $this->shared_get_react_component_props($output);
 
         $data->loginToken = \core\session\manager::get_login_token();
 

@@ -85,7 +85,7 @@ trait login_renderable_trait {
      * @param \core\output\renderer_base $output
      * @return \stdClass
      */
-    public function export_for_template(\core\output\renderer_base $output): \stdClass {
+    public function get_react_component_props(\core\output\renderer_base $output): \stdClass {
         $data = (object) [
             'actionUrl' => $this->actionurl->out(false),
             'error' => $this->error,
