@@ -39,7 +39,7 @@ admin_externalpage_setup('manageqbehaviours');
 $thispageurl = new moodle_url('/admin/qbehaviours.php');
 
 $behaviours = core_component::get_plugin_list('qbehaviour');
-$pluginmanager = core_plugin_manager::instance();
+$pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
 // Get some data we will need - question counts and which types are needed.
 $counts = $DB->get_records_sql_menu("
@@ -215,7 +215,7 @@ foreach ($sortedbehaviours as $behaviour => $behaviourname) {
     if ($needed[$behaviour]) {
         $row[] = '';
     } else {
-        $uninstallurl = core_plugin_manager::instance()->get_uninstall_url('qbehaviour_'.$behaviour, 'manage');
+        $uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('qbehaviour_'.$behaviour, 'manage');
         if ($uninstallurl) {
             $row[] = html_writer::link($uninstallurl, get_string('uninstallplugin', 'core_admin'),
                 array('title' => get_string('uninstallbehaviour', 'question')));

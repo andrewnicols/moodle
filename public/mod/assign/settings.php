@@ -438,12 +438,12 @@ $ADMIN->add('modassignfolder', new admin_category('assignfeedbackplugins',
     new lang_string('feedbackplugins', 'assign'), !$module->is_enabled()));
 $ADMIN->add('assignfeedbackplugins', new assign_admin_page_manage_assign_plugins('assignfeedback'));
 
-foreach (core_plugin_manager::instance()->get_plugins_of_type('assignsubmission') as $plugin) {
+foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('assignsubmission') as $plugin) {
     /** @var \mod_assign\plugininfo\assignsubmission $plugin */
     $plugin->load_settings($ADMIN, 'assignsubmissionplugins', $hassiteconfig);
 }
 
-foreach (core_plugin_manager::instance()->get_plugins_of_type('assignfeedback') as $plugin) {
+foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('assignfeedback') as $plugin) {
     /** @var \mod_assign\plugininfo\assignfeedback $plugin */
     $plugin->load_settings($ADMIN, 'assignfeedbackplugins', $hassiteconfig);
 }

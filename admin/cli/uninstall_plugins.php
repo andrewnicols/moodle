@@ -98,7 +98,7 @@ if ($options['showsql']) {
     $DB->set_debug(true);
 }
 
-$pluginman = core_plugin_manager::instance();
+$pluginman = \core\di::get(\core\plugin_manager::class)();
 $plugininfo = $pluginman->get_plugins();
 
 if ($options['show-all'] || $options['show-missing'] || $options['show-contrib']) {

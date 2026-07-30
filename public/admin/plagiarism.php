@@ -73,7 +73,7 @@ foreach ($plagiarismplugins as $plugin => $dir) {
         }
         // uninstall link.
         $uninstall = '';
-        if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url('plagiarism_'.$plugin, 'manage')) {
+        if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('plagiarism_'.$plugin, 'manage')) {
             $uninstall = html_writer::link($uninstallurl, $txt->uninstall);
         }
         $table->data[] = array($displayname, $version, $uninstall, $settings);

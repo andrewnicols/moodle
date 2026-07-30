@@ -336,7 +336,7 @@ class contentbank {
         if ($enabled) {
             $contenttypestocheck = $this->get_enabled_content_types();
         } else {
-            $plugins = core_plugin_manager::instance()->get_plugins_of_type('contenttype');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('contenttype');
             foreach ($plugins as $plugin) {
                 $contenttypeclassname = "\\{$plugin->type}_{$plugin->name}\\contenttype";
                 $contenttypestocheck[$contenttypeclassname] = $plugin->name;

@@ -70,7 +70,7 @@ if ($hassiteconfig) {
     $ADMIN->add('messaging', new admin_page_managemessageoutputs());
 
     // Notification outputs plugins.
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('message');
+    $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('message');
     core_collator::asort_objects_by_property($plugins, 'displayname');
     foreach ($plugins as $plugin) {
         /** @var \core\plugininfo\message $plugin */

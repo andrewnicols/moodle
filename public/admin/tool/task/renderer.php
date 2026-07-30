@@ -543,7 +543,7 @@ class tool_task_renderer extends plugin_renderer_base {
             return get_string('corecomponent', 'tool_task');
         }
 
-        $plugininfo = core_plugin_manager::instance()->get_plugin_info($component);
+        $plugininfo = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($component);
         if (!$plugininfo) {
             return $component;
         }

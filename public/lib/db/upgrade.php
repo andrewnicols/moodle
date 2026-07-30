@@ -720,7 +720,7 @@ function xmldb_main_upgrade($oldversion) {
         if (!file_exists("{$CFG->dirroot}/lib/editor/atto/version.php")) {
             // Remove each of the subplugins first. These are no longer on disk so the standard `uninstall_plugin` approach
             // on atto itself will not remove them.
-            $plugins = array_keys(core_plugin_manager::instance()->get_plugins_of_type('atto'));
+            $plugins = array_keys(\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('atto'));
 
             // Now remove each.
             foreach ($plugins as $pluginname) {

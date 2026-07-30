@@ -1027,7 +1027,7 @@ class manager {
      */
     private static function task_component_is_deprecated(task_base $task): bool {
         // Only supports plugin type deprecation. Info will be null for other, non-plugin components.
-        if ($info = \core_plugin_manager::instance()->get_plugin_info($task->get_component())) {
+        if ($info = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($task->get_component())) {
             if ($info->is_deprecated() || $info->is_deleted()) {
                 return true;
             }
@@ -1054,7 +1054,7 @@ class manager {
         $params = ['timestart1' => $timestart, 'timestart2' => $timestart];
         $records = $DB->get_records_select('task_scheduled', $where, $params);
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
         foreach ($records as $record) {
             $task = self::scheduled_task_from_record($record);

@@ -193,7 +193,7 @@ class tree extends tree_node {
         }
 
         // Get list of enabled plugins.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $enabled = $pluginmanager->get_enabled_plugins('availability');
 
         // For unit tests, also allow the mock plugin type (even though it

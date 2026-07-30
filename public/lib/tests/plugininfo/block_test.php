@@ -63,7 +63,7 @@ final class block_test extends advanced_testcase {
         string $plugin,
         bool $expected,
     ): void {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugininfo = $pluginmanager->get_plugin_info("block_{$plugin}");
         $this->assertEquals($expected, $plugininfo->is_uninstall_allowed());
     }

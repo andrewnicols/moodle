@@ -61,7 +61,7 @@ class refresh_mod_calendar_events_task extends adhoc_task {
             $courseid = 0;
         }
 
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $modplugins = $pluginmanager->get_plugins_of_type('mod');
         foreach ($modplugins as $plugin) {
             // Check if a specific list of plugins is defined and check if it contains the plugin that is currently being evaluated.

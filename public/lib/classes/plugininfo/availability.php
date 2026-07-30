@@ -34,7 +34,7 @@ class availability extends base {
         global $DB;
 
         // Get all available plugins.
-        $plugins = \core_plugin_manager::instance()->get_installed_plugins('availability');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('availability');
         if (!$plugins) {
             return [];
         }

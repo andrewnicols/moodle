@@ -83,7 +83,7 @@ class tool_log_setting_managestores extends \core_admin\setting {
         $struninstall = get_string('uninstallplugin', 'core_admin');
         $strversion = get_string('version');
 
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $logmanager = new \tool_log\log\manager();
         $available = $logmanager->get_store_plugins();
         $enabled = get_config('tool_log', 'enabled_stores');
@@ -199,7 +199,7 @@ class tool_log_setting_managestores extends \core_admin\setting {
 
             // Add uninstall info.
             $uninstall = '';
-            if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url($store, 'manage')) {
+            if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url($store, 'manage')) {
                 $uninstall = html_writer::link($uninstallurl, $struninstall);
             }
 

@@ -134,7 +134,7 @@ class content_item_service {
         // This gives us the set of all itemtypes which we'll use to register favourite content items.
         // The ids that each plugin returns will be used together with the itemtype to uniquely identify
         // each content item for favouriting.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_plugins_of_type('mod');
         $itemtypes = [];
         foreach ($plugins as $plugin) {
@@ -249,7 +249,7 @@ class content_item_service {
         $allcontentitems = $this->repository->find_all_for_course($course, $user);
 
         // Content items can only originate from modules or submodules.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $components = \core_component::get_component_list();
         $parents = [];
         foreach ($allcontentitems as $contentitem) {

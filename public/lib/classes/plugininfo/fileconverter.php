@@ -107,7 +107,7 @@ class fileconverter extends base {
 
         $order = (!empty($CFG->converter_plugins_sortorder)) ? explode(',', $CFG->converter_plugins_sortorder) : [];
         if ($order) {
-            $plugins = \core_plugin_manager::instance()->get_installed_plugins('fileconverter');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('fileconverter');
             $order = array_intersect($order, array_keys($plugins));
         }
 
@@ -160,7 +160,7 @@ class fileconverter extends base {
             $list = explode(',', $list);
         }
         if ($list) {
-            $plugins = \core_plugin_manager::instance()->get_installed_plugins('fileconverter');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('fileconverter');
             $list = array_intersect($list, array_keys($plugins));
         }
         set_config('converter_plugins_sortorder', join(',', $list));

@@ -101,7 +101,7 @@ class eventlist {
      * @return array list of plugins with human readable name, grouped by their type
      */
     public static function get_plugin_list($eventlist = array()) {
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
         if (empty($eventlist)) {
             $eventlist = self::get_all_eventlist();

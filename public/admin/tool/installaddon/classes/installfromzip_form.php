@@ -110,7 +110,7 @@ class tool_installaddon_installfromzip_form extends moodleform {
      */
     public function validation($data, $files) {
 
-        $pluginman = core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
         $errors = parent::validation($data, $files);
 
         if (!empty($data['plugintype'])) {

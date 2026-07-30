@@ -132,7 +132,7 @@ class report_eventlist_list_generator {
         foreach ($events as $key => $observers) {
             foreach ($observers as $observerskey => $observer) {
                 $events[$key][$observerskey]->parentplugin =
-                        \core_plugin_manager::instance()->get_parent_of_subplugin($observer->plugintype);
+                        \core\di::get(\core\plugin_manager::class)()->get_parent_of_subplugin($observer->plugintype);
             }
         }
         return $events;

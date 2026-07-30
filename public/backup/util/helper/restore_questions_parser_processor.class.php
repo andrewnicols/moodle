@@ -72,7 +72,7 @@ class restore_questions_parser_processor extends grouped_parser_processor {
         $this->add_path(self::CATEGORY_PATH . self::LEGACY_QUESTION_SUBPATH . '/question_hints/question_hint');
 
         $connectionpoint = new restore_path_element('question', self::CATEGORY_PATH . self::QUESTION_SUBPATH);
-        foreach (\core\plugin_manager::instance()->get_plugins_of_type('qtype') as $qtype) {
+        foreach (\core\di::get(\core\plugin_manager::class)->get_plugins_of_type('qtype') as $qtype) {
             $restore = $this->get_qtype_restore($qtype->name);
             if (!$restore) {
                 continue;

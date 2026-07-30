@@ -786,7 +786,7 @@ abstract class info {
         // Access all plugins. Normally only the completion plugin is going
         // to affect this value, but it's potentially possible that some other
         // plugin could also rely on the completion plugin.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $enabled = $pluginmanager->get_enabled_plugins('availability');
         foreach ($enabled as $plugin => $info) {
             /** @var \core_availability\condition $class */

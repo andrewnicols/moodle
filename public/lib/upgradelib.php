@@ -2580,7 +2580,7 @@ function upgrade_install_plugins(array $installable, $confirmed, $heading='', $c
         redirect($return);
     }
 
-    $pluginman = core_plugin_manager::instance();
+    $pluginman = \core\di::get(\core\plugin_manager::class)();
 
     if ($confirmed) {
         // Installation confirmed at the validation results page.

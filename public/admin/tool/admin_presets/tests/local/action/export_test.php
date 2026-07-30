@@ -119,7 +119,7 @@ final class export_test extends \advanced_testcase {
             $this->assertEquals('1', $setting->value);
 
             // Check plugins have been created with the expected values.
-            $manager = \core_plugin_manager::instance();
+            $manager = \core\di::get(\core\plugin_manager::class)();
             $plugintype = 'enrol';
             $plugins = $manager->get_present_plugins($plugintype);
             $enabledplugins = $manager->get_enabled_plugins($plugintype);

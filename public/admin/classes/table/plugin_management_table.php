@@ -54,7 +54,7 @@ abstract class plugin_management_table extends flexible_table implements dynamic
         require_once($CFG->libdir . '/adminlib.php');
 
         // Fetch the plugininfo class.
-        $this->pluginmanager = core_plugin_manager::instance();
+        $this->pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $this->plugininfoclass = $this->pluginmanager::resolve_plugininfo_class($this->get_plugintype());
 
         $this->guess_base_url();

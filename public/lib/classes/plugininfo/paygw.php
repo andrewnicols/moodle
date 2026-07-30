@@ -79,7 +79,7 @@ class paygw extends base {
 
         $order = (!empty($CFG->paygw_plugins_sortorder)) ? explode(',', $CFG->paygw_plugins_sortorder) : [];
         if ($order) {
-            $plugins = \core_plugin_manager::instance()->get_installed_plugins('paygw');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('paygw');
             $order = array_intersect($order, array_keys($plugins));
         }
 
@@ -134,7 +134,7 @@ class paygw extends base {
             $list = explode(',', $list);
         }
         if ($list) {
-            $plugins = \core_plugin_manager::instance()->get_installed_plugins('paygw');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('paygw');
             $list = array_intersect($list, array_keys($plugins));
         }
         set_config('paygw_plugins_sortorder', join(',', $list));

@@ -98,7 +98,7 @@ class manageenrols extends \core_admin\setting {
         $strversion   = get_string('version');
         $strtest      = get_string('testsettings', 'core_enrol');
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
         $enrolsavailable = enrol_get_plugins(false);
         $activeenrols    = enrol_get_plugins(true);
@@ -225,7 +225,7 @@ class manageenrols extends \core_admin\setting {
 
             // Add uninstall info.
             $uninstall = '';
-            if ($uninstallurl = \core_plugin_manager::instance()->get_uninstall_url('enrol_' . $enrol, 'manage')) {
+            if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('enrol_' . $enrol, 'manage')) {
                 $uninstall = \html_writer::link($uninstallurl, $struninstall);
             }
 

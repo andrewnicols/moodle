@@ -100,7 +100,7 @@ abstract class base {
     final public function get_component_displayname(): string {
         [$component] = explode('\\', get_class($this));
 
-        if ($plugininfo = core_plugin_manager::instance()->get_plugin_info($component)) {
+        if ($plugininfo = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($component)) {
             return $plugininfo->displayname;
         }
 

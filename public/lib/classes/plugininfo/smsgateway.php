@@ -75,7 +75,7 @@ class smsgateway extends base {
 
     #[\Override]
     public static function get_enabled_plugins(): ?array {
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_installed_plugins('smsgateway');
 
         if (!$plugins) {

@@ -121,7 +121,7 @@ class settings {
             !$this->moduleenabled
         ));
         $this->admin->add($this->parent, new admin_page_manage_extensions());
-        foreach (core_plugin_manager::instance()->get_plugins_of_type(extension::BBB_EXTENSION_PLUGIN_NAME) as $plugin) {
+        foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type(extension::BBB_EXTENSION_PLUGIN_NAME) as $plugin) {
             $plugin->load_settings($this->admin, extension::BBB_EXTENSION_PLUGIN_NAME, $this->hassiteconfig);
         }
     }

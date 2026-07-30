@@ -43,7 +43,7 @@ class theme extends base {
      *                                  And whose values are the values to display
      */
     public static function get_filter_options() {
-        $manager = \core_plugin_manager::instance();
+        $manager = \core\di::get(\core\plugin_manager::class)();
         $themes = $manager->get_installed_plugins('theme');
 
         $options = [];

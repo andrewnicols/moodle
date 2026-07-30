@@ -48,7 +48,7 @@ class bbbext extends base {
             return [];
         }
         // Get all available plugins.
-        $plugins = \core_plugin_manager::instance()->get_installed_plugins(extension::BBB_EXTENSION_PLUGIN_NAME);
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins(extension::BBB_EXTENSION_PLUGIN_NAME);
         if (!$plugins) {
             return [];
         }

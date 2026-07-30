@@ -67,7 +67,7 @@ $ADMIN->add('modltifolder', new admin_externalpage('ltitoolconfigure',
         get_string('manage_external_tools', 'lti'),
         new moodle_url('/mod/lti/toolconfigure.php')));
 
-foreach (core_plugin_manager::instance()->get_plugins_of_type('ltisource') as $plugin) {
+foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('ltisource') as $plugin) {
     /*
      * @var \mod_lti\plugininfo\ltisource $plugin
      */

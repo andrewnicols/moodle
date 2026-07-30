@@ -639,6 +639,6 @@ class validator {
      * @return core_plugin_manager
      */
     protected function get_plugin_manager() {
-        return core_plugin_manager::instance();
+        return \core\di::get(\core\plugin_manager::class)();
     }
 }

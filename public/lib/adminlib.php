@@ -174,7 +174,7 @@ function uninstall_plugin($type, $name) {
     }
 
     // Specific plugin type cleanup.
-    $plugininfo = core_plugin_manager::instance()->get_plugin_info($component);
+    $plugininfo = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($component);
     if ($plugininfo) {
         $plugininfo->uninstall_cleanup();
         core_plugin_manager::reset_caches();

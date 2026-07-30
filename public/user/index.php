@@ -232,7 +232,7 @@ if (!empty($CFG->enablenotes) && has_capability('moodle/notes:manage', $context)
 $params = ['operation' => 'download_participants'];
 
 $downloadoptions = [];
-$formats = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+$formats = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('dataformat');
 foreach ($formats as $format) {
     if ($format->is_enabled()) {
         $params = ['operation' => 'download_participants', 'dataformat' => $format->name];

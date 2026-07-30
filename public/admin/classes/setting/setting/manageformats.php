@@ -78,7 +78,7 @@ class manageformats extends \core_admin\setting {
         if (parent::is_related($query)) {
             return true;
         }
-        $formats = \core_plugin_manager::instance()->get_plugins_of_type('format');
+        $formats = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('format');
         foreach ($formats as $format) {
             if (strpos($format->component, $query) !== false) {
                 $this->searchmatchtype = admin_search::SEARCH_MATCH_SETTING_SHORT_NAME;
@@ -105,7 +105,7 @@ class manageformats extends \core_admin\setting {
         $return = $OUTPUT->heading(new \lang_string('courseformats'), 3, 'main');
         $return .= $OUTPUT->box_start('generalbox formatsui');
 
-        $formats = \core_plugin_manager::instance()->get_plugins_of_type('format');
+        $formats = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('format');
 
         // Display strings.
         $txt = get_strings(['settings', 'name', 'enable', 'disable', 'up', 'down', 'default']);
@@ -169,7 +169,7 @@ class manageformats extends \core_admin\setting {
                 $settings = \html_writer::link($format->get_settings_url(), $txt->settings);
             }
             $uninstall = '';
-            $uninstallurl = \core_plugin_manager::instance()->get_uninstall_url(
+            $uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url(
                 'format_' . $format->name,
                 'manage',
             );

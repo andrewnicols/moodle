@@ -116,7 +116,7 @@ abstract class manage_plugins extends \core_admin\setting {
         }
 
         $query = \core_text::strtolower($query);
-        $plugins = \core_plugin_manager::instance()->get_plugins_of_type($this->get_plugin_type());
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type($this->get_plugin_type());
         foreach ($plugins as $name => $plugin) {
             $localised = $plugin->displayname;
             if (strpos(\core_text::strtolower($name), $query) !== false) {
@@ -159,7 +159,7 @@ abstract class manage_plugins extends \core_admin\setting {
             'plugins' => [],
         ];
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $allplugins = $pluginmanager->get_plugins_of_type($this->get_plugin_type());
         $enabled = $pluginmanager->get_enabled_plugins($this->get_plugin_type());
         $plugins = array_merge($enabled, $allplugins);
@@ -203,7 +203,7 @@ abstract class manage_plugins extends \core_admin\setting {
             $pluginkey->togglelink = $togglelink;
 
             $frankenstyle = $plugin->type . '_' . $plugin->name;
-            if ($uninstalllink = \core_plugin_manager::instance()->get_uninstall_url($frankenstyle, 'manage')) {
+            if ($uninstalllink = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url($frankenstyle, 'manage')) {
                 // This plugin supports uninstallation.
                 $pluginkey->uninstalllink = $uninstalllink;
             }

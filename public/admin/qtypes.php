@@ -40,7 +40,7 @@ $canviewreports = has_capability('report/questioninstances:view', $systemcontext
 $thispageurl = new moodle_url('/admin/qtypes.php');
 
 $qtypes = question_bank::get_all_qtypes();
-$pluginmanager = core_plugin_manager::instance();
+$pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
 // Get some data we will need - question counts and which types are needed.
 // The second JOIN on question_versions (qv2) is to get the latest version of each question. 
@@ -239,7 +239,7 @@ foreach ($sortedqtypes as $qtypename => $localname) {
     if ($needed[$qtypename]) {
         $row[] = '';
     } else {
-        $uninstallurl = core_plugin_manager::instance()->get_uninstall_url('qtype_'.$qtypename, 'manage');
+        $uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('qtype_'.$qtypename, 'manage');
         if ($uninstallurl) {
             $row[] = html_writer::link($uninstallurl, get_string('uninstallplugin', 'core_admin'),
                 array('title' => get_string('uninstallqtype', 'question')));

@@ -51,7 +51,7 @@ class factor extends \core\plugininfo\base {
      */
     public static function get_factors(): array {
         $return = [];
-        $factors = \core_plugin_manager::instance()->get_plugins_of_type('factor');
+        $factors = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('factor');
 
         foreach ($factors as $factor) {
             $classname = '\\factor_'.$factor->name.'\\factor';
@@ -94,7 +94,7 @@ class factor extends \core\plugininfo\base {
      * @return mixed factor object or false if factor not found.
      */
     public static function get_factor(string $name): object|bool {
-        $factors = \core_plugin_manager::instance()->get_plugins_of_type('factor');
+        $factors = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('factor');
 
         foreach ($factors as $factor) {
             if ($name == $factor->name) {
@@ -422,7 +422,7 @@ class factor extends \core\plugininfo\base {
 
     #[\Override]
     public static function get_sorted_plugins(bool $enabledonly = false): ?array {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_plugins_of_type('factor');
         $orders = self::get_factors();
         $sortedplugins = [];

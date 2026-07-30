@@ -75,7 +75,7 @@ class managemediaplayers extends \core_admin\setting {
         }
 
         $query = \core_text::strtolower($query);
-        $plugins = \core_plugin_manager::instance()->get_plugins_of_type('media');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('media');
         foreach ($plugins as $name => $plugin) {
             $localised = $plugin->displayname;
             if (strpos(\core_text::strtolower($name), $query) !== false) {
@@ -95,7 +95,7 @@ class managemediaplayers extends \core_admin\setting {
      * @return \core\plugininfo\media[]
      */
     protected function get_sorted_plugins() {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
         $plugins = $pluginmanager->get_plugins_of_type('media');
         $enabledplugins = $pluginmanager->get_enabled_plugins('media');
@@ -135,7 +135,7 @@ class managemediaplayers extends \core_admin\setting {
         $strname      = get_string('name');
         $strsupports  = get_string('supports', 'core_media');
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
         $plugins = $this->get_sorted_plugins();
         $enabledplugins = $pluginmanager->get_enabled_plugins('media');

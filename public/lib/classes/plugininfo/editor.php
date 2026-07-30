@@ -163,7 +163,7 @@ class editor extends base {
     public static function get_sorted_plugins(bool $enabledonly = false): ?array {
         global $CFG;
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_plugins_of_type('editor');
 
         // The Editor list is stored in an ordered string.

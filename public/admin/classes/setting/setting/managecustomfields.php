@@ -73,7 +73,7 @@ class managecustomfields extends \core_admin\setting {
         if (parent::is_related($query)) {
             return true;
         }
-        $formats = \core_plugin_manager::instance()->get_plugins_of_type('customfield');
+        $formats = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('customfield');
         foreach ($formats as $format) {
             if (strpos($format->component, $query) !== false) {
                 $this->searchmatchtype = admin_search::SEARCH_MATCH_SETTING_SHORT_NAME;
@@ -100,7 +100,7 @@ class managecustomfields extends \core_admin\setting {
         $return = $OUTPUT->heading(new \lang_string('customfields', 'core_customfield'), 3, 'main');
         $return .= $OUTPUT->box_start('generalbox customfieldsui');
 
-        $fields = \core_plugin_manager::instance()->get_plugins_of_type('customfield');
+        $fields = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('customfield');
 
         $txt = get_strings(['settings', 'name', 'enable', 'disable', 'up', 'down']);
         $txt->uninstall = get_string('uninstallplugin', 'core_admin');
@@ -139,7 +139,7 @@ class managecustomfields extends \core_admin\setting {
                 $settings = \html_writer::link($field->get_settings_url(), $txt->settings);
             }
             $uninstall = '';
-            if ($uninstallurl = \core_plugin_manager::instance()->get_uninstall_url('customfield_' . $field->name, 'manage')) {
+            if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('customfield_' . $field->name, 'manage')) {
                 $uninstall = \html_writer::link($uninstallurl, $txt->uninstall);
             }
             $row = new \html_table_row([$strfieldname, $hideshow, $uninstall, $settings]);

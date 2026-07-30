@@ -81,7 +81,7 @@ if ($formaction == 'bulkchange.php') {
         // Check permissions.
         $pagecontext = ($course->id == SITEID) ? context_system::instance() : $context;
         if (course_can_view_participants($pagecontext)) {
-            $plugins = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('dataformat');
             if (isset($plugins[$dataformat])) {
                 if ($plugins[$dataformat]->is_enabled()) {
                     if (empty($userids)) {

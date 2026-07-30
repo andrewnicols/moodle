@@ -88,7 +88,7 @@ class export_form extends \moodleform {
                 ['optional' => true]);
 
         // Export formats.
-        $formats = \core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+        $formats = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('dataformat');
         $options = [];
         foreach ($formats as $format) {
             $options[$format->name] = $format->displayname;

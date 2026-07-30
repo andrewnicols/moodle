@@ -7198,7 +7198,7 @@ function get_plugins_with_function($function, $file = 'lib.php', $include = true
     $dirty = false;
 
     // Use the plugin manager to check that plugins are currently installed.
-    $pluginmanager = \core_plugin_manager::instance();
+    $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
     if ($pluginfunctions !== false) {
 

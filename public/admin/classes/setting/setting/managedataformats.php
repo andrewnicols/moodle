@@ -73,7 +73,7 @@ class managedataformats extends \core_admin\setting {
         if (parent::is_related($query)) {
             return true;
         }
-        $formats = \core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+        $formats = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('dataformat');
         foreach ($formats as $format) {
             if (strpos($format->component, $query) !== false) {
                 $this->searchmatchtype = admin_search::SEARCH_MATCH_SETTING_SHORT_NAME;
@@ -98,7 +98,7 @@ class managedataformats extends \core_admin\setting {
         global $CFG, $OUTPUT;
         $return = '';
 
-        $formats = \core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+        $formats = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('dataformat');
 
         $txt = get_strings(['settings', 'name', 'enable', 'disable', 'up', 'down', 'default']);
         $txt->uninstall = get_string('uninstallplugin', 'core_admin');
@@ -169,7 +169,7 @@ class managedataformats extends \core_admin\setting {
             } else if ($status === \core_plugin_manager::PLUGIN_STATUS_NEW) {
                 $uninstall = get_string('status_new', 'core_plugin');
             } else if (
-                $uninstallurl = \core_plugin_manager::instance()->get_uninstall_url(
+                $uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url(
                     "dataformat_{$format->name}",
                     "manage",
                 )

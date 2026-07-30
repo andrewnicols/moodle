@@ -148,7 +148,7 @@ trait subplugins_test_helper_trait {
         $fillclassmap->invoke(null);
 
         // Now uninstall the plugin and clean everything up for other tests.
-        $pluginman = core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
         $plugininfo = $pluginman->get_plugins();
         foreach ($plugininfo as $type => $plugins) {
             foreach ($plugins as $name => $plugin) {

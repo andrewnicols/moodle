@@ -40,7 +40,7 @@ class assignsubmission extends base {
     public static function get_enabled_plugins() {
         global $DB;
 
-        $plugins = core_plugin_manager::instance()->get_installed_plugins('assignsubmission');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('assignsubmission');
         if (!$plugins) {
             return array();
         }

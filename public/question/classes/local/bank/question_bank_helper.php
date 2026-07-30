@@ -94,7 +94,7 @@ class question_bank_helper {
             return $sharedmods;
         }
 
-        $manager = \core_plugin_manager::instance();
+        $manager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $manager->get_enabled_plugins('mod');
 
         $sharedmods = array_filter(
@@ -118,7 +118,7 @@ class question_bank_helper {
             return $privatemods;
         }
 
-        $manager = \core_plugin_manager::instance();
+        $manager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $manager->get_enabled_plugins('mod');
 
         $privatemods = array_filter(

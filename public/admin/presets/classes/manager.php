@@ -533,7 +533,7 @@ class manager {
 
         // Store plugins visibility (enabled/disabled).
         $pluginsfound = false;
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $types = $pluginmanager->get_plugin_types();
         foreach ($types as $plugintype => $notused) {
             $plugins = $pluginmanager->get_present_plugins($plugintype);
@@ -1000,7 +1000,7 @@ class manager {
         // Plugins.
         $plugins = $DB->get_records('adminpresets_app_plug', ['adminpresetapplyid' => $presetappid]);
         if ($plugins) {
-            $pluginmanager = \core_plugin_manager::instance();
+            $pluginmanager = \core\di::get(\core\plugin_manager::class)();
             foreach ($plugins as $plugin) {
                 $pluginclass = \core_plugin_manager::resolve_plugininfo_class($plugin->plugin);
                 $pluginclass::enable_plugin($plugin->name, (int) $plugin->oldvalue);
@@ -1184,7 +1184,7 @@ class manager {
         $strdisabled = get_string('disabled', 'core_adminpresets');
 
         $plugins = $DB->get_records('adminpresets_plug', ['adminpresetid' => $presetid]);
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         foreach ($plugins as $plugin) {
             $pluginclass = \core_plugin_manager::resolve_plugininfo_class($plugin->plugin);
             $oldvalue = $pluginclass::get_enabled_plugin($plugin->name);

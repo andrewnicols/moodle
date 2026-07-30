@@ -47,7 +47,7 @@ $syscontext = context_system::instance();
 // URL params we want to maintain on redirects.
 $pageurl = new moodle_url('/admin/plugins.php');
 
-$pluginman = core_plugin_manager::instance();
+$pluginman = \core\di::get(\core\plugin_manager::class)();
 
 $PAGE->set_primary_active_tab('siteadminnode');
 

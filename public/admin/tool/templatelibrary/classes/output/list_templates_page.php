@@ -63,7 +63,7 @@ class list_templates_page implements renderable, templatable {
      */
     public function export_for_template(renderer_base $output) {
         $fulltemplatenames = api::list_templates();
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $components = [];
 
         foreach ($fulltemplatenames as $templatename) {

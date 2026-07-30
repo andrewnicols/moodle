@@ -36,7 +36,7 @@ class qtype extends base {
     public static function get_enabled_plugins() {
         global $DB;
 
-        $plugins = \core\plugin_manager::instance()->get_installed_plugins('qtype');
+        $plugins = \core\di::get(\core\plugin_manager::class)->get_installed_plugins('qtype');
         if (!$plugins) {
             return [];
         }

@@ -38,7 +38,7 @@ require_sesskey();
 
 $return = new moodle_url('/admin/settings.php', array('section' => 'managedataformats'));
 
-$plugins = core_plugin_manager::instance()->get_plugins_of_type('dataformat');
+$plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('dataformat');
 $sortorder = array_flip(array_keys($plugins));
 
 if (!isset($plugins[$name])) {

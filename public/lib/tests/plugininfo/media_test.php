@@ -57,7 +57,7 @@ final class media_test extends advanced_testcase {
     public function test_is_uninstall_allowed(
         string $plugin,
     ): void {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugininfo = $pluginmanager->get_plugin_info("media_{$plugin}");
         $this->assertTrue($plugininfo->is_uninstall_allowed());
     }
@@ -103,7 +103,7 @@ final class media_test extends advanced_testcase {
     }
 
     public static function change_plugin_order_provider(): array {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $allplugins = $pluginmanager->get_plugins_of_type('media');
         \core_collator::asort_objects_by_method($allplugins, 'get_rank', \core_collator::SORT_NUMERIC);
         $getorder = function (array $plugins) use ($allplugins) {

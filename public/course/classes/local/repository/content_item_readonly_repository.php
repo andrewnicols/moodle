@@ -96,7 +96,7 @@ class content_item_readonly_repository implements content_item_readonly_reposito
             \stdClass $user): array {
 
         $contentitems = [];
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         foreach ($pluginmanager->get_subplugins_of_plugin($parentpluginname) as $subpluginname => $subplugin) {
             // Call the hook, but with a copy of the module content item data.
             $spcontentitems = component_callback($subpluginname, 'get_course_content_items', [$modulecontentitem, $user], null);
@@ -118,7 +118,7 @@ class content_item_readonly_repository implements content_item_readonly_reposito
      */
     private function get_subplugin_all_content_items(string $parentpluginname, content_item $modulecontentitem): array {
         $contentitems = [];
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         foreach ($pluginmanager->get_subplugins_of_plugin($parentpluginname) as $subpluginname => $subplugin) {
             // Call the hook, but with a copy of the module content item data.
             $spcontentitems = component_callback($subpluginname, 'get_all_content_items', [$modulecontentitem], null);

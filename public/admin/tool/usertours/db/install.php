@@ -32,7 +32,7 @@ use tool_usertours\manager;
 function xmldb_tool_usertours_install() {
     global $DB;
 
-    $localplugin = core_plugin_manager::instance()->get_plugin_info('local_usertours');
+    $localplugin = \core\di::get(\core\plugin_manager::class)()->get_plugin_info('local_usertours');
     if ($localplugin) {
         // If the old local plugin was previously installed, copy over the data from the old tables.
 

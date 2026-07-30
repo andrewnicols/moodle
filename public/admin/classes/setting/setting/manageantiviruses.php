@@ -184,7 +184,7 @@ class manageantiviruses extends \core_admin\setting {
             }
 
             $uninstall = '';
-            if ($uninstallurl = \core_plugin_manager::instance()->get_uninstall_url('antivirus_' . $antivirus, 'manage')) {
+            if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('antivirus_' . $antivirus, 'manage')) {
                 $uninstall = \html_writer::link($uninstallurl, $struninstall);
             }
 

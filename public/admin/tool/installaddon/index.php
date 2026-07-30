@@ -32,7 +32,7 @@ if (!empty($CFG->disableupdateautodeploy)) {
     notice(get_string('featuredisabled', 'tool_installaddon'));
 }
 
-$pluginman = core_plugin_manager::instance();
+$pluginman = \core\di::get(\core\plugin_manager::class)();
 $installer = tool_installaddon_installer::instance();
 
 $output = $PAGE->get_renderer('tool_installaddon');

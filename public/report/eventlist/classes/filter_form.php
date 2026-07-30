@@ -61,7 +61,7 @@ class report_eventlist_filter_form extends moodleform {
      * @return array[] Component type => [...Components]
      */
     private static function group_components_by_type(array $components): array {
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
         $result = [];
         foreach ($components as $component) {

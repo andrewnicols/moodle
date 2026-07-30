@@ -44,7 +44,7 @@ class helper {
     public static function get_supported_currencies(): array {
         $currencies = [];
 
-        $plugins = \core_plugin_manager::instance()->get_enabled_plugins('paygw');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_enabled_plugins('paygw');
         foreach ($plugins as $plugin) {
             /** @var \paygw_paypal\gateway $classname */
             $classname = '\paygw_' . $plugin . '\gateway';

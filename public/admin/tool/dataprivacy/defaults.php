@@ -41,7 +41,7 @@ $category = get_config('tool_dataprivacy', $categoryvar);
 $otherdefaults = [];
 if ($mode == CONTEXT_MODULE) {
     // Get activity module plugin info.
-    $pluginmanager = core_plugin_manager::instance();
+    $pluginmanager = \core\di::get(\core\plugin_manager::class)();
     $modplugins = $pluginmanager->get_enabled_plugins('mod');
 
     foreach ($modplugins as $name) {

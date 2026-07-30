@@ -59,7 +59,7 @@ if (!empty($id)) {
 }
 
 // Check plugin is enabled.
-$plugin = core_plugin_manager::instance()->get_plugin_info($contenttypename);
+$plugin = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($contenttypename);
 if (!$plugin || !$plugin->is_enabled()) {
     throw new \moodle_exception('unsupported', 'core_contentbank', $returnurl);
 }

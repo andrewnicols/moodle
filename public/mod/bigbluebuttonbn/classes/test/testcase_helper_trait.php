@@ -50,7 +50,7 @@ trait testcase_helper_trait {
      */
     protected function create_instance(?stdClass $course = null, array $params = [], array $options = []): array {
         // Prior to creating the instance, make sure that the BigBlueButton module is enabled.
-        $modules = \core_plugin_manager::instance()->get_plugins_of_type('mod');
+        $modules = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('mod');
         if (!$modules['bigbluebuttonbn']->is_enabled()) {
             mod::enable_plugin('bigbluebuttonbn', true);
         }

@@ -39,7 +39,7 @@ class permission {
         if ($section->modinfo->get_course()->format == 'site') {
             return false;
         }
-        if (!array_key_exists('subsection', \core_plugin_manager::instance()->get_enabled_plugins('mod'))) {
+        if (!array_key_exists('subsection', \core\di::get(\core\plugin_manager::class)()->get_enabled_plugins('mod'))) {
             return false;
         }
         if (!has_capability('mod/subsection:addinstance', context_course::instance($section->course), $userid)) {

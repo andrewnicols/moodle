@@ -339,7 +339,7 @@ final class manager_test extends \advanced_testcase {
         $this->assertEquals('1', $setting->value);
 
         // Check plugins have been created with the expected values.
-        $manager = \core_plugin_manager::instance();
+        $manager = \core\di::get(\core\plugin_manager::class)();
         $plugintype = 'enrol';
         $plugins = $manager->get_present_plugins($plugintype);
         $enabledplugins = $manager->get_enabled_plugins($plugintype);
@@ -838,7 +838,7 @@ final class manager_test extends \advanced_testcase {
         $this->add_mocked_plugin('fake', 'fullfeatured', $CFG->libdir . '/tests/fixtures/fakeplugins/fake/fullfeatured');
 
         // Pre-flight check to ensure that the plugin is deprecated.
-        $pluginman = \core\plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class);
         $plugininfo = $pluginman->get_plugin_info('fake_fullfeatured');
         // Expected, unit-test-only debugging, since \core\plugin_manager isn't aware of the mock plugininfo class for this type.
         $this->assertDebuggingCalled();

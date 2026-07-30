@@ -52,7 +52,7 @@ if (is_null($plugintype)) {
     die();
 }
 
-$pluginman = core_plugin_manager::instance();
+$pluginman = \core\di::get(\core\plugin_manager::class)();
 
 $plugintypepath = $pluginman->get_plugintype_root($plugintype);
 

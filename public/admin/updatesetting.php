@@ -39,7 +39,7 @@ require_sesskey();
 
 $plugintypeclass = "\\core\\plugininfo\\{$type}";
 
-$plugins = \core_plugin_manager::instance()->get_plugins_of_type($type);
+$plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type($type);
 $sortorder = array_values($plugintypeclass::get_enabled_plugins());
 
 $return = $plugintypeclass::get_manage_url();

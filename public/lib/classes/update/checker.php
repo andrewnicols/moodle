@@ -438,7 +438,7 @@ class checker {
         $this->currentrelease = $release;
         $this->currentbranch = moodle_major_version(true);
 
-        $pluginman = \core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
         foreach ($pluginman->get_plugins() as $type => $plugins) {
             // Iterate over installed plugins and determine which are non-standard and eligible for update checks. Note that we
             // disregard empty component names here, to ensure we only request valid data from the update site (in the case of an
@@ -646,7 +646,7 @@ class checker {
         }
 
         $notifications = array();
-        $pluginman = \core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginman->get_plugins();
 
         foreach ($changes as $component => $componentchanges) {

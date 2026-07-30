@@ -218,7 +218,7 @@ class manageauths extends \core_admin\setting {
 
             // Uninstall link.
             $uninstall = '';
-            if ($uninstallurl = \core_plugin_manager::instance()->get_uninstall_url('auth_' . $auth, 'manage')) {
+            if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('auth_' . $auth, 'manage')) {
                 $uninstall = \html_writer::link($uninstallurl, $txt->uninstall);
             }
 

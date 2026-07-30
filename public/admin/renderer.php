@@ -115,7 +115,7 @@ class core_admin_renderer extends plugin_renderer_base {
         $output .= $this->header();
         $output .= $this->heading(get_string('pluginscheck', 'admin'));
         $output .= $this->warning(get_string('pluginscheckfailed', 'admin', array('pluginslist' => implode(', ', array_unique($failed)))));
-        $output .= $this->plugins_check_table(core_plugin_manager::instance(), $version, array('xdep' => true));
+        $output .= $this->plugins_check_table(\core\di::get(\core\plugin_manager::class)(), $version, array('xdep' => true));
         $output .= $this->warning(get_string('pluginschecktodo', 'admin'));
         $output .= $this->continue_button($reloadurl);
 
@@ -230,7 +230,7 @@ class core_admin_renderer extends plugin_renderer_base {
      */
     public function upgrade_confirm_abort_install_page(array $abortable, moodle_url $continue) {
 
-        $pluginman = core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
 
         if (empty($abortable)) {
             // The UI should not allow this.

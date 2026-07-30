@@ -771,7 +771,7 @@ class manager {
                     if (preg_match('~^\\\\mod_([^\\\\]+)\\\\~', $indicator, $matches)) {
                         if (!$allmodules) {
                             // The first time, get all modules.
-                            $allmodules = \core\plugin_manager::instance()->get_present_plugins('mod');
+                            $allmodules = \core\di::get(\core\plugin_manager::class)->get_present_plugins('mod');
                         }
                         if (!array_key_exists($matches[1], $allmodules)) {
                             // Module does not exist, so skip indicator.

@@ -96,7 +96,7 @@ class media extends base {
 
         $order = (!empty($CFG->media_plugins_sortorder)) ? explode(',', $CFG->media_plugins_sortorder) : [];
         if ($order) {
-            $plugins = \core_plugin_manager::instance()->get_installed_plugins('media');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('media');
             $order = array_intersect($order, array_keys($plugins));
         }
         return array_combine($order, $order);
@@ -115,7 +115,7 @@ class media extends base {
             // Enable media plugin.
 
             /** @var \core\plugininfo\media[] $pluginsbytype */
-            $pluginsbytype = \core_plugin_manager::instance()->get_plugins_of_type('media');
+            $pluginsbytype = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('media');
             if (!array_key_exists($pluginname, $pluginsbytype)) {
                 // Can not be enabled.
                 return false;
@@ -168,7 +168,7 @@ class media extends base {
             $list = explode(',', $list);
         }
         if ($list) {
-            $plugins = \core_plugin_manager::instance()->get_installed_plugins('media');
+            $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('media');
             $list = array_intersect($list, array_keys($plugins));
         }
         set_config('media_plugins_sortorder', join(',', $list));
@@ -213,7 +213,7 @@ class media extends base {
 
     // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
     public static function get_sorted_plugins(bool $enabledonly = false): ?array {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
 
         $plugins = $pluginmanager->get_plugins_of_type('media');
         $enabledplugins = $pluginmanager->get_enabled_plugins('media');

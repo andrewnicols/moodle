@@ -153,7 +153,7 @@ class penalty_manager {
      */
     private static function calculate_penalties(penalty_container $container): penalty_container {
         // Iterate through all the penalty plugins to calculate the total penalty.
-        foreach (core_plugin_manager::instance()->get_plugins_of_type('gradepenalty') as $pluginname => $plugin) {
+        foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('gradepenalty') as $pluginname => $plugin) {
             if (gradepenalty::is_plugin_enabled($pluginname)) {
                 $classname = "\\gradepenalty_{$pluginname}\\penalty_calculator";
                 if (class_exists($classname)) {

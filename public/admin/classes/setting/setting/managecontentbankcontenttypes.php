@@ -73,7 +73,7 @@ class managecontentbankcontenttypes extends \core_admin\setting {
         if (parent::is_related($query)) {
             return true;
         }
-        $types = \core_plugin_manager::instance()->get_plugins_of_type('contenttype');
+        $types = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('contenttype');
         foreach ($types as $type) {
             if (strpos($type->component, $query) !== false) {
                 $this->searchmatchtype = admin_search::SEARCH_MATCH_SETTING_SHORT_NAME;
@@ -98,7 +98,7 @@ class managecontentbankcontenttypes extends \core_admin\setting {
         global $CFG, $OUTPUT;
         $return = '';
 
-        $types = \core_plugin_manager::instance()->get_plugins_of_type('contenttype');
+        $types = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('contenttype');
         $txt = get_strings(['settings', 'name', 'enable', 'disable', 'order', 'up', 'down', 'default']);
         $txt->uninstall = get_string('uninstallplugin', 'core_admin');
 
@@ -162,7 +162,7 @@ class managecontentbankcontenttypes extends \core_admin\setting {
             }
 
             $uninstall = '';
-            if ($uninstallurl = \core_plugin_manager::instance()->get_uninstall_url('contenttype_' . $type->name, 'manage')) {
+            if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('contenttype_' . $type->name, 'manage')) {
                 $uninstall = \html_writer::link($uninstallurl, $txt->uninstall);
             }
 

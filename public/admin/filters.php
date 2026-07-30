@@ -32,7 +32,7 @@ admin_externalpage_setup('managefilters');
 
 // Clean up bogus filter states first.
 /** @var core\plugininfo\filter[] $plugininfos */
-$plugininfos = core_plugin_manager::instance()->get_plugins_of_type('filter');
+$plugininfos = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('filter');
 $filters = [];
 $states = filter_get_global_states();
 foreach ($states as $state) {
@@ -166,7 +166,7 @@ die;
  */
 function filters_action_url(string $filterpath, string $action): ?moodle_url {
     if ($action === 'delete') {
-        return core_plugin_manager::instance()->get_uninstall_url('filter_'.$filterpath, 'manage');
+        return \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('filter_'.$filterpath, 'manage');
     }
     return new moodle_url('/admin/filters.php',
             ['sesskey' => sesskey(), 'filterpath' => $filterpath, 'action' => $action]);

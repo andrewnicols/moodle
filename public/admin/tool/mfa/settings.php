@@ -73,7 +73,7 @@ if ($hassiteconfig) {
 
     $ADMIN->add('toolmfafolder', $settings);
 
-    foreach (core_plugin_manager::instance()->get_plugins_of_type('factor') as $plugin) {
+    foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('factor') as $plugin) {
         $plugin->load_settings($ADMIN, 'toolmfafolder', $hassiteconfig);
     }
 

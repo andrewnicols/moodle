@@ -140,7 +140,7 @@ class manager {
 
                 // Group each report source by the component that it belongs to.
                 [$component] = explode('\\', $class);
-                if ($plugininfo = core_plugin_manager::instance()->get_plugin_info($component)) {
+                if ($plugininfo = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($component)) {
                     $componentname = $plugininfo->displayname;
                 } else {
                     $componentname = get_string('site');

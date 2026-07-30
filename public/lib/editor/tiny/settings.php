@@ -87,7 +87,7 @@ if ($ADMIN->fulltree) {
 // This ensures that it shows in the category list too.
 $ADMIN->add('editortiny', $settings);
 
-foreach (core_plugin_manager::instance()->get_plugins_of_type('tiny') as $plugin) {
+foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('tiny') as $plugin) {
     /** @var \editor_tiny\plugininfo\tiny $plugin */
     $plugin->load_settings($ADMIN, 'editortiny', $hassiteconfig);
 }

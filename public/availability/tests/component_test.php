@@ -39,7 +39,7 @@ final class component_test extends \advanced_testcase {
         // This code will throw debugging information if the plugininfo class
         // is missing. Unfortunately it doesn't actually cause the test to
         // fail, but it's obvious when running test at least.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $list = $pluginmanager->get_enabled_plugins('availability');
         $this->assertArrayHasKey('completion', $list);
         $this->assertArrayHasKey('date', $list);

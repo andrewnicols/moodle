@@ -113,7 +113,7 @@ switch ($action) {
 
         echo $OUTPUT->notification(get_string('success'), 'notifysuccess');
 
-        if (!$return = core_plugin_manager::instance()->get_uninstall_url('enrol_'.$enrol, 'manage')) {
+        if (!$return = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('enrol_'.$enrol, 'manage')) {
             $return = new moodle_url('/admin/plugins.php');
         }
         echo $OUTPUT->continue_button($return);

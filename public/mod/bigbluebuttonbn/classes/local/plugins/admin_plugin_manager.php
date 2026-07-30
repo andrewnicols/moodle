@@ -111,7 +111,7 @@ class admin_plugin_manager {
         $table->setup();
 
         $plugins = $this->get_sorted_plugins_list();
-        $instances = core_plugin_manager::instance()->get_plugins_of_type(extension::BBB_EXTENSION_PLUGIN_NAME);
+        $instances = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type(extension::BBB_EXTENSION_PLUGIN_NAME);
 
         foreach ($plugins as $idx => $plugin) {
             $componentname = extension::BBB_EXTENSION_PLUGIN_NAME . '_' . $plugin;
@@ -154,7 +154,7 @@ class admin_plugin_manager {
             } else {
                 $row[] = '&nbsp;';
             }
-            $url = core_plugin_manager::instance()->get_uninstall_url(
+            $url = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url(
                 $componentname,
                 'manage'
             );

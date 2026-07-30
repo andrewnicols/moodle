@@ -92,7 +92,7 @@ class summary_page implements renderable, templatable {
         }
 
         // Get activity module plugin info.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $modplugins = $pluginmanager->get_enabled_plugins('mod');
 
         foreach ($modplugins as $name) {

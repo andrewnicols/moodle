@@ -60,7 +60,7 @@ class nofactivities extends provider_base {
      */
     public function config_form_definition(MoodleQuickForm $mform): void {
         $options = [];
-        $plugins = core_plugin_manager::instance()->get_plugins_of_type('mod');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('mod');
         foreach ($plugins as $plugin) {
             $options[$plugin->name] = $plugin->displayname;
         }

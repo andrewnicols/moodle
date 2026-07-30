@@ -597,7 +597,7 @@ final class repeated_restore_test extends advanced_testcase {
     public static function get_qtype_generators(): array {
         global $CFG;
         $generators = [];
-        foreach (\core\plugin_manager::instance()->get_plugins_of_type('qtype') as $qtype) {
+        foreach (\core\di::get(\core\plugin_manager::class)->get_plugins_of_type('qtype') as $qtype) {
             $helperpath = "{$CFG->dirroot}/question/type/{$qtype->name}/tests/helper.php";
             if (!file_exists($helperpath)) {
                 continue;

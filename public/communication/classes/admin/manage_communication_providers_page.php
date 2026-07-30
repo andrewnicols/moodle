@@ -54,7 +54,7 @@ class manage_communication_providers_page extends \core_admin\setting {
     public function output_html($data, $query = ''): string {
         global $OUTPUT;
 
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_plugins_of_type('communication');
         if (empty($plugins)) {
             return get_string('nocommunicationprovider', 'core_communication');
@@ -103,7 +103,7 @@ class manage_communication_providers_page extends \core_admin\setting {
 
             $uninstall = '';
             if (
-                $uninstallurl = core_plugin_manager::instance()->get_uninstall_url(
+                $uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url(
                     'communication_' . $plugin->name,
                     'manage'
                 )
@@ -125,7 +125,7 @@ class manage_communication_providers_page extends \core_admin\setting {
         if (parent::is_related($query)) {
             return true;
         }
-        $types = core_plugin_manager::instance()->get_plugins_of_type('communication');
+        $types = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('communication');
         foreach ($types as $type) {
             if (strpos($type->component, $query) !== false) {
                 $this->searchmatchtype = admin_search::SEARCH_MATCH_SETTING_SHORT_NAME;

@@ -250,7 +250,7 @@ if (!core_tables_exist()) {
 
     // Check plugin dependencies.
     $failed = [];
-    if (!core_plugin_manager::instance()->all_plugins_ok($version, $failed, $CFG->branch)) {
+    if (!\core\di::get(\core\plugin_manager::class)()->all_plugins_ok($version, $failed, $CFG->branch)) {
         $PAGE->navbar->add(get_string('pluginscheck', 'admin'));
         $PAGE->set_title($strinstallation);
         $PAGE->set_heading($strinstallation . ' - Moodle ' . $CFG->target_release);
@@ -390,7 +390,7 @@ if (!$outagelessupgrade) {
             $PAGE->set_heading($strplugincheck);
             $PAGE->set_cacheable(false);
 
-            $pluginman = core_plugin_manager::instance();
+            $pluginman = \core\di::get(\core\plugin_manager::class)();
 
             // Check for available updates.
             if ($fetchupdates) {
@@ -524,7 +524,7 @@ if (!$outagelessupgrade) {
             }
 
             echo $output->upgrade_plugin_check_page(
-                core_plugin_manager::instance(),
+                \core\di::get(\core\plugin_manager::class)(),
                 \core\update\checker::instance(),
                 $version,
                 $showallplugins,
@@ -535,7 +535,7 @@ if (!$outagelessupgrade) {
         } else {
             // Always verify plugin dependencies!
             $failed = [];
-            if (!core_plugin_manager::instance()->all_plugins_ok($version, $failed, $CFG->branch)) {
+            if (!\core\di::get(\core\plugin_manager::class)()->all_plugins_ok($version, $failed, $CFG->branch)) {
                 echo $output->unsatisfied_dependencies_page($version, $failed, new moodle_url(
                     $PAGE->url,
                     ['confirmplugincheck' => 0]
@@ -572,7 +572,7 @@ if (!$outagelessupgrade) {
         if (!$PAGE->headerprinted) {
             // Means core upgrade or installation was not already done.
 
-            $pluginman = core_plugin_manager::instance();
+            $pluginman = \core\di::get(\core\plugin_manager::class)();
             $output = $PAGE->get_renderer('core', 'admin');
 
             if (empty($confirmrelease)) {
@@ -915,7 +915,7 @@ if ($updateschecker->enabled()) {
     );
 
     // Available updates for contributed plugins.
-    $pluginman = core_plugin_manager::instance();
+    $pluginman = \core\di::get(\core\plugin_manager::class)();
     foreach ($pluginman->get_plugins() as $plugintype => $plugintypeinstances) {
         foreach ($plugintypeinstances as $pluginname => $plugininfo) {
             $pluginavailableupdates = $plugininfo->available_updates();

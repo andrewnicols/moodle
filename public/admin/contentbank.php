@@ -38,7 +38,7 @@ require_sesskey();
 
 $return = new moodle_url('/admin/settings.php', array('section' => 'managecontentbanktypes'));
 
-$plugins = core_plugin_manager::instance()->get_plugins_of_type('contenttype');
+$plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('contenttype');
 $sortorder = array_flip(array_keys($plugins));
 
 if (!isset($plugins[$name])) {

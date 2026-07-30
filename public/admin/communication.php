@@ -38,7 +38,7 @@ require_sesskey();
 
 $return = new moodle_url('/admin/settings.php', ['section' => 'managecommunicationproviders']);
 
-$plugins = core_plugin_manager::instance()->get_plugins_of_type('communication');
+$plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('communication');
 $sortorder = array_flip(array_keys($plugins));
 
 if (!isset($plugins[$name])) {

@@ -107,7 +107,7 @@ class tiny extends \core\plugininfo\base {
     }
 
     public static function get_enabled_plugins(): array {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_installed_plugins('tiny');
 
         if (!$plugins) {

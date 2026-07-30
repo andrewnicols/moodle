@@ -1552,7 +1552,7 @@ class external extends external_api {
         self::validate_context($context);
 
         // Get activity module plugin info.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $modplugins = $pluginmanager->get_enabled_plugins('mod');
         $modoptions = [];
 

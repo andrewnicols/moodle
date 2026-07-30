@@ -368,7 +368,7 @@ if (($action == 'edit') || ($action == 'new')) {
             $updowncount++;
 
             $uninstall = '';
-            if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url('repository_' . $typename, 'manage')) {
+            if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('repository_' . $typename, 'manage')) {
                 $uninstall = html_writer::link($uninstallurl, $struninstall);
             }
 
@@ -392,7 +392,7 @@ if (($action == 'edit') || ($action == 'new')) {
                     'applyto' . basename($plugin));
                 $select->set_label(get_string('action'), array('class' => 'accesshide'));
                 $uninstall = '';
-                if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url('repository_' . $plugin, 'manage')) {
+                if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('repository_' . $plugin, 'manage')) {
                     $uninstall = html_writer::link($uninstallurl, $struninstall);
                 }
                 $table->data[] = array(get_string('pluginname', 'repository_'.$plugin), $OUTPUT->render($select), '', '', $uninstall);

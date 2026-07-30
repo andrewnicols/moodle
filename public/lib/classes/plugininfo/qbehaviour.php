@@ -40,7 +40,7 @@ class qbehaviour extends base {
      * @return array|null of enabled plugins $pluginname=>$pluginname, null means unknown
      */
     public static function get_enabled_plugins() {
-        $plugins = core_plugin_manager::instance()->get_installed_plugins('qbehaviour');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('qbehaviour');
         if (!$plugins) {
             return array();
         }

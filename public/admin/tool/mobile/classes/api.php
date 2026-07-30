@@ -510,7 +510,7 @@ class api {
         $siteplugins = new lang_string('siteplugins', 'tool_mobile');
         $identityproviders = new lang_string('oauth2identityproviders', 'tool_mobile');
 
-        $availablemods = core_plugin_manager::instance()->get_plugins_of_type('mod');
+        $availablemods = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('mod');
         $coursemodules = [];
         $appsupportedmodules = [
             'assign', 'bigbluebuttonbn', 'book', 'choice', 'data', 'feedback', 'folder', 'forum', 'glossary', 'h5pactivity',
@@ -532,12 +532,12 @@ class api {
         $sitepluginslist = [];
         $mobileplugins = self::get_plugins_supporting_mobile();
         foreach ($mobileplugins as $plugin) {
-            $displayname = core_plugin_manager::instance()->plugin_name($plugin['component']) . " - " . $plugin['addon'];
+            $displayname = \core\di::get(\core\plugin_manager::class)()->plugin_name($plugin['component']) . " - " . $plugin['addon'];
             $sitepluginslist['sitePlugin_' . $plugin['component'] . '_' . $plugin['addon']] = $displayname;
         }
 
         // Display blocks.
-        $availableblocks = core_plugin_manager::instance()->get_plugins_of_type('block');
+        $availableblocks = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('block');
         $courseblocks = [];
         $appsupportedblocks = [
             'activity_results' => 'CoreBlockDelegate_AddonBlockActivityResults',

@@ -33,7 +33,7 @@ if ($hassiteconfig) {
         get_string('availableproviders', 'core_ai'),
         get_string('availableproviders_desc', 'core_ai')));
 
-    if (!empty(core_plugin_manager::instance()->get_plugins_of_type("aiprovider"))) {
+    if (!empty(\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type("aiprovider"))) {
         // Add call to action to add a new provider.
         $providers->add(new \core_admin\admin\admin_setting_template_render(
             name: 'addnewprovider',
@@ -71,7 +71,7 @@ if ($hassiteconfig) {
     $ADMIN->add('ai', $placements);
 
     // Load settings for all placements.
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('aiplacement');
+    $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('aiplacement');
     foreach ($plugins as $plugin) {
         /** @var \core\plugininfo\aiprovider $plugin */
         $plugin->load_settings($ADMIN, 'ai', $hassiteconfig);

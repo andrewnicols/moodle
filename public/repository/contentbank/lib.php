@@ -142,7 +142,7 @@ class repository_contentbank extends repository {
         $contextid = clean_param($fileparams->contextid, PARAM_INT);
 
         $contentbankfile = $DB->get_record('contentbank_content', ['id' => $itemid]);
-        $plugin = \core_plugin_manager::instance()->get_plugin_info($contentbankfile->contenttype);
+        $plugin = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($contentbankfile->contenttype);
 
         $managerclass = "\\$contentbankfile->contenttype\\content";
         if ($plugin && $plugin->is_enabled() && class_exists($managerclass)) {

@@ -597,7 +597,7 @@ class moodle_content_writer implements content_writer {
      */
     protected function check_plugin_is_installed(string $component): Bool {
         if (!isset($this->checkedplugins[$component])) {
-            $pluginmanager = \core_plugin_manager::instance();
+            $pluginmanager = \core\di::get(\core\plugin_manager::class)();
             $plugin = $pluginmanager->get_plugin_info($component);
             $this->checkedplugins[$component] = !is_null($plugin);
         }

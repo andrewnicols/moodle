@@ -131,7 +131,7 @@ class contenttype extends base {
     public static function get_enabled_plugins() {
         global $CFG;
 
-        $plugins = \core_plugin_manager::instance()->get_installed_plugins('contenttype');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('contenttype');
 
         if (!$plugins) {
             return array();

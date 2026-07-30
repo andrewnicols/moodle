@@ -73,7 +73,7 @@ $PAGE->set_title($title);
 $PAGE->set_heading($title);
 
 // Explode if there are no provider plugins installed.
-$plugins = core_plugin_manager::instance()->get_plugins_of_type('aiprovider');
+$plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('aiprovider');
 if (empty($plugins)) {
     throw new moodle_exception('noproviderplugins', 'core_ai');
 }

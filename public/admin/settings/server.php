@@ -691,7 +691,7 @@ if ($hassiteconfig) {
 
     $ADMIN->add('webservicesettings', $temp);
 
-    $plugins = core_plugin_manager::instance()->get_plugins_of_type('webservice');
+    $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('webservice');
     core_collator::asort_objects_by_property($plugins, 'displayname');
     foreach ($plugins as $plugin) {
         /** @var \core\plugininfo\webservice $plugin */

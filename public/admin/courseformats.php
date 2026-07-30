@@ -37,7 +37,7 @@ require_sesskey();
 
 $return = new moodle_url('/admin/settings.php', array('section' => 'manageformats'));
 
-$formatplugins = core_plugin_manager::instance()->get_plugins_of_type('format');
+$formatplugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('format');
 $sortorder = array_flip(array_keys($formatplugins));
 
 if (!isset($formatplugins[$formatname])) {

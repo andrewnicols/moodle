@@ -383,7 +383,7 @@ function get_message_processors($ready = false, $reset = false, $resetonly = fal
 function get_message_providers() {
     global $CFG, $DB;
 
-    $pluginman = core_plugin_manager::instance();
+    $pluginman = \core\di::get(\core\plugin_manager::class)();
 
     $providers = $DB->get_records('message_providers', null, 'name');
 

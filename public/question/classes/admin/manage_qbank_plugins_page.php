@@ -61,7 +61,7 @@ class manage_qbank_plugins_page extends \core_admin\setting {
         if (parent::is_related($query)) {
             return true;
         }
-        $types = \core_plugin_manager::instance()->get_plugins_of_type('qbank');
+        $types = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('qbank');
         foreach ($types as $type) {
             if (strpos($type->component, $query) !== false) {
                 $this->searchmatchtype = admin_search::SEARCH_MATCH_SETTING_SHORT_NAME;
@@ -80,7 +80,7 @@ class manage_qbank_plugins_page extends \core_admin\setting {
         global $CFG, $OUTPUT;
         $return = '';
 
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $types = $pluginmanager->get_plugins_of_type('qbank');
         if (empty($types)) {
             return get_string('noquestionbanks', 'question');
@@ -135,7 +135,7 @@ class manage_qbank_plugins_page extends \core_admin\setting {
 
             $uninstall = '';
             if (
-                $uninstallurl = \core_plugin_manager::instance()->get_uninstall_url(
+                $uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url(
                     'qbank_' . $type->name,
                     'manage'
                 )

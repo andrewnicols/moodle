@@ -44,7 +44,7 @@ if (empty($SESSION->notifications)) {
 }
 
 $returnurl = new \moodle_url('/contentbank/index.php', ['contextid' => $context->id]);
-$plugin = core_plugin_manager::instance()->get_plugin_info($record->contenttype);
+$plugin = \core\di::get(\core\plugin_manager::class)()->get_plugin_info($record->contenttype);
 if (!$plugin || !$plugin->is_enabled()) {
     throw new \moodle_exception('unsupported', 'core_contentbank', $returnurl);
 }

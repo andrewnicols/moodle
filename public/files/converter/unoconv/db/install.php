@@ -34,7 +34,7 @@ function xmldb_fileconverter_unoconv_install() {
     if ($unoconvpresent) {
         // Unoconv is currently configured correctly.
         // Enable it.
-        $plugins = \core_plugin_manager::instance()->get_plugins_of_type('fileconverter');
+        $plugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('fileconverter');
         $plugins['unoconv']->set_enabled(true);
     }
 }

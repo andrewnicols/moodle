@@ -59,7 +59,7 @@ core_collator::asort($plugins);
 
 foreach ($plugins as $plugin => $name) {
     $uninstall = '';
-    if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url('local_'.$plugin, 'manage')) {
+    if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('local_'.$plugin, 'manage')) {
         $uninstall = html_writer::link($uninstallurl, get_string('uninstallplugin', 'core_admin'));
     }
 

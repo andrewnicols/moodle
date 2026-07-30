@@ -2379,7 +2379,7 @@ function get_sorted_course_formats($enabledonly = false) {
 
     // Include both formats that exist on disk (but might not have been installed yet), and those
     // which were installed but no longer exist on disk.
-    $installedformats = core_plugin_manager::instance()->get_installed_plugins('format');
+    $installedformats = \core\di::get(\core\plugin_manager::class)()->get_installed_plugins('format');
     $existingformats = core_component::get_plugin_list('format');
     $formats = array_merge($installedformats, $existingformats);
 

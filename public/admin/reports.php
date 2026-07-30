@@ -77,7 +77,7 @@ $logmanager = get_log_manager();
 
 foreach ($plugins as $plugin => $name) {
     $uninstall = '';
-    if ($uninstallurl = core_plugin_manager::instance()->get_uninstall_url('report_'.$plugin, 'manage')) {
+    if ($uninstallurl = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url('report_'.$plugin, 'manage')) {
         $uninstall = html_writer::link($uninstallurl, $struninstall);
     }
 

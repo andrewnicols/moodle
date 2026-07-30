@@ -154,7 +154,7 @@ class assign_plugin_manager {
         $url = $this->pageurl;
 
         if ($action === 'delete') {
-            $url = core_plugin_manager::instance()->get_uninstall_url($this->subtype.'_'.$plugin, 'manage');
+            $url = \core\di::get(\core\plugin_manager::class)()->get_uninstall_url($this->subtype.'_'.$plugin, 'manage');
             if (!$url) {
                 return '&nbsp;';
             }

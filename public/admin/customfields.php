@@ -37,7 +37,7 @@ require_sesskey();
 
 $return = new moodle_url('/admin/settings.php', array('section' => 'managecustomfields'));
 
-$customfieldplugins = core_plugin_manager::instance()->get_plugins_of_type('customfield');
+$customfieldplugins = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('customfield');
 $sortorder = array_flip(array_keys($customfieldplugins));
 
 if (!isset($customfieldplugins[$customfieldname])) {

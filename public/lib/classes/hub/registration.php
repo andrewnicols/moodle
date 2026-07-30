@@ -714,7 +714,7 @@ class registration {
     public static function get_plugin_usage_data(): array {
         global $DB;
 
-        $pluginman = core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
         $plugininfo = $pluginman->get_plugins();
         $data = [];
 

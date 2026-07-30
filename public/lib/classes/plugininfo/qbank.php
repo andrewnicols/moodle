@@ -68,7 +68,7 @@ class qbank extends base {
 
     public static function get_enabled_plugins(): ?array {
         global $CFG;
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_installed_plugins('qbank');
 
         if (!$plugins) {
@@ -124,7 +124,7 @@ class qbank extends base {
      * @return bool
      */
     public static function is_plugin_enabled($fullpluginname): bool {
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $qbankinfo = $pluginmanager->get_plugin_info($fullpluginname);
         if (empty($qbankinfo)) {
             return false;

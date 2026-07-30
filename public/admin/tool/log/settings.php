@@ -41,7 +41,7 @@ if ($hassiteconfig) {
     $temp->add(new tool_log_setting_managestores());
     $ADMIN->add('logging', $temp);
 
-    foreach (core_plugin_manager::instance()->get_plugins_of_type('logstore') as $plugin) {
+    foreach (\core\di::get(\core\plugin_manager::class)()->get_plugins_of_type('logstore') as $plugin) {
         /** @var \tool_log\plugininfo\logstore $plugin */
         $plugin->load_settings($ADMIN, 'logging', $hassiteconfig);
     }

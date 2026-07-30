@@ -163,7 +163,7 @@ class aiplacement extends base {
      * @return array|null of enabled plugins $pluginname=>$pluginname, null means unknown.
      */
     public static function get_enabled_plugins(): ?array {
-        $pluginmanager = core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $plugins = $pluginmanager->get_installed_plugins('aiplacement');
 
         if (!$plugins) {

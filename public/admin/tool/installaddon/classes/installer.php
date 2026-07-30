@@ -142,7 +142,7 @@ class tool_installaddon_installer {
     public function get_plugin_types_menu() {
         global $CFG;
 
-        $pluginman = core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
 
         $menu = array('' => get_string('choosedots'));
         foreach (array_keys($pluginman->get_plugin_types()) as $plugintype) {
@@ -179,7 +179,7 @@ class tool_installaddon_installer {
         }
 
         list($plugintype, $pluginname) = core_component::normalize_component($data->component);
-        $pluginman = core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
 
         $plugintypepath = $pluginman->get_plugintype_root($plugintype);
 

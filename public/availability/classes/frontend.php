@@ -111,7 +111,7 @@ abstract class frontend {
                 'panel', 'moodle-core-notification-dialogue', 'json');
 
         // Work out JS to include for all components.
-        $pluginmanager = \core_plugin_manager::instance();
+        $pluginmanager = \core\di::get(\core\plugin_manager::class)();
         $enabled = $pluginmanager->get_enabled_plugins('availability');
         $componentparams = new \stdClass();
         foreach ($enabled as $plugin => $info) {

@@ -101,7 +101,7 @@ class extension {
         // Get the class basename without Reflection API.
         $classnamecomponents = explode("\\", $classname);
         $classbasename = end($classnamecomponents);
-        $allsubs = core_plugin_manager::instance()->get_plugins_of_type(self::BBB_EXTENSION_PLUGIN_NAME);
+        $allsubs = \core\di::get(\core\plugin_manager::class)()->get_plugins_of_type(self::BBB_EXTENSION_PLUGIN_NAME);
         $extensionclasses = [];
         $names = core_component::get_plugin_list(self::BBB_EXTENSION_PLUGIN_NAME);
         $sortedlist = self::get_sorted_plugins_list($names); // Make sure to use the most updated list.

@@ -44,7 +44,7 @@ class metadata_registry {
         $manager = new \core_privacy\manager();
         $manager->set_observer(new \tool_dataprivacy\manager_observer());
 
-        $pluginman = \core_plugin_manager::instance();
+        $pluginman = \core\di::get(\core\plugin_manager::class)();
         $contributedplugins = $this->get_contrib_list();
         $metadata = $manager->get_metadata_for_components();
         $fullyrichtree = $this->get_full_component_list();
@@ -178,6 +178,6 @@ class metadata_registry {
             return array_filter($plugins, function($plugindata) {
                 return !$plugindata->is_standard();
             });
-        }, \core_plugin_manager::instance()->get_plugins());
+        }, \core\di::get(\core\plugin_manager::class)()->get_plugins());
     }
 }
