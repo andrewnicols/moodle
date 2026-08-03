@@ -38,7 +38,6 @@ export default function CookiesNotice(): React.ReactElement {
     return (
         <div className="login-cookiesnotice text-center">
             <Button
-                type="submit"
                 variant="ghost"
                 label={label}
                 data-modal="alert"

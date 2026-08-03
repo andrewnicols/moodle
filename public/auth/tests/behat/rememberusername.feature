@@ -11,7 +11,7 @@ Feature: Test the 'remember username' feature works.
 
   # Given the user has logged in and selected 'Remember username', when they log in again, then their username should be remembered.
   @javascript
-  Scenario: Check that 'remember username' works without javascript for teachers.
+  Scenario: Check that 'remember username' works
     # Log in the first time with $CFG->rememberusername set to Yes.
     Given the following config values are set as admin:
       | rememberusername | 1 |

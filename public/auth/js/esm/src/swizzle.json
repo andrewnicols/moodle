@@ -1,46 +1,46 @@
 {
   "local/LoginForm/AuthInstructions": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   },
   "local/LoginForm/CookiesNotice": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   },
   "local/LoginForm/ErrorInfo": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   },
   "local/LoginForm/GuestLogin": {
     "eject": "risky",
-    "wrap": "risky"
+    "wrap": "safe"
   },
   "local/LoginForm/IdentityProviders": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   },
   "local/LoginForm/LanguageMenu": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   },
   "local/LoginForm/LoginFields": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "prohibited",
+    "wrap": "safe"
   },
   "local/LoginForm/Logo": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   },
   "local/LoginForm/Maintenance": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   },
   "local/LoginForm/SignupInstructions": {
     "eject": "risky",
     "wrap": "risky"
   },
   "LoginForm": {
-    "eject": "risky",
-    "wrap": "risky"
+    "eject": "safe",
+    "wrap": "safe"
   }
 }

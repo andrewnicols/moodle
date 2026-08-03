@@ -38,6 +38,7 @@ use templatable;
  * @package    core_auth
  * @copyright  2016 Frédéric Massart - FMCorz.net
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @deprecated since Moodle 5.3. Use login_form instead.
  */
 class login implements renderable, templatable {
 

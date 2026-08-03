@@ -78,8 +78,6 @@ class login_form implements
         $data->canLoginByEmail = !empty($CFG->authloginviaemail);
         $data->canSignup = $this->can_signup();
 
-        $data->cookiesHelpIcon = $this->get_cookies_help_icon()->export_for_template($output);
-
         $data->forgotPasswordUrl = new url('/login/forgot_password.php');
         $data->signupUrl = (new url('/login/signup.php'))->out(false);
 
@@ -97,7 +95,6 @@ class login_form implements
         // Identity Providers.
         $identityproviders = \auth_plugin_base::get_identity_providers($this->authsequence);
         $data->identityProviders = \auth_plugin_base::prepare_identity_providers_for_output($identityproviders, $output);
-        $data->hasIdentityProviders = !empty($data->identityProviders);
 
         $data->username = $this->username;
         $data->showLoginForm = get_config('core', 'showloginform') === false || get_config('core', 'showloginform');
@@ -124,7 +121,12 @@ class login_form implements
         // We want to strongly encourage all theme designers with login form customisations to migrate to the new renderable,
         // and to React.
         \core\deprecation::emit_deprecation(__METHOD__);
-        return new \core_auth\output\login($this->authsequence, $this->username);
+        $legacyform = new \core_auth\output\login($this->authsequence, $this->username);
+
+        $legacyform->set_error($this->rawerror, $this->errorcode);
+        $legacyform->set_info($this->info);
+
+        return $legacyform;
     }
 
     /**
@@ -151,21 +153,6 @@ class login_form implements
         }
 
         return null;
-    }
-
-    /**
-     * Get the help icon for the Cookies helper.
-     *
-     * @return help_icon
-     */
-    protected function get_cookies_help_icon(): help_icon {
-        global $CFG;
-
-        if ($CFG->rememberusername == 0) {
-            return new help_icon('cookiesenabledonlysession', 'core');
-        } else {
-            return new help_icon('cookiesenabled', 'core');
-        }
     }
 
     /**
@@ -233,11 +220,11 @@ class login_form implements
             } else if ($CFG->registerauth == 'email' && empty($data->signupInstructions)) {
                 $data->signupInstructions = get_string('logindonthaveaccount');
             }
+            [$data->signupInstructions] = \core_external\util::format_text(
+                $data->signupInstructions,
+                FORMAT_MOODLE,
+                \core\context\system::instance()->id,
+            );
         }
-        [$data->signupInstructions, $data->signupInstructionsformat] = \core_external\util::format_text(
-            $data->signupInstructions,
-            FORMAT_MOODLE,
-            \core\context\system::instance()->id,
-        );
     }
 }

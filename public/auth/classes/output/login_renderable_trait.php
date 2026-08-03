@@ -27,13 +27,18 @@ trait login_renderable_trait {
     /** @var \core\url The URL to use in any form action */
     private \core\url $actionurl;
 
-    /** @var string The error message, if any. */
+    /** @var string|null The error message, if any. */
     private ?string $error = null;
 
-    /** @var string The error title, shown as bold heading above the error message for credential failures. */
+    /** @var string|null The raw error message, if any. */
+    private ?string $rawerror = null;
+    /** @var int|null The error code, if any */
+    private ?int $errorcode = null;
+
+    /** @var string|null The error title, shown as bold heading above the error message for credential failures. */
     private ?string $errortitle = null;
 
-    /** @var string The info message, if any. */
+    /** @var string|null The info message, if any. */
     private ?string $info = null;
 
     /**
@@ -53,6 +58,8 @@ trait login_renderable_trait {
      * @param int $errorcode The error code from login/index.php.
      */
     public function set_error(string $error, int $errorcode = 0): void {
+        $this->rawerror = $error;
+        $this->errorcode = $errorcode;
         if ($errorcode === AUTH_LOGIN_FAILED) {
             $this->set_error_title(get_string('logininvalidlogintitle'));
             $this->error = get_string('logininvalidlogindetail');
@@ -89,7 +96,6 @@ trait login_renderable_trait {
         $data = (object) [
             'actionUrl' => $this->actionurl->out(false),
             'error' => $this->error,
-            'errorFormatted' => $output->error_text($this->error),
             'errorTitle' => $this->errortitle,
             'info' => $this->info,
             'languageMenuHtml' => $this->get_language_menu($output),
