@@ -25,8 +25,8 @@ use Psr\Container\ContainerInterface;
  * @package   core
  * @copyright 2024 Andrew Nicols <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \core\di
  */
+#[\PHPUnit\Framework\Attributes\CoversClass(\core\di::class)]
 final class di_test extends \advanced_testcase {
     /**
      * Test that the get_container method returns the Container Instance and stores it statically.
@@ -125,9 +125,8 @@ final class di_test extends \advanced_testcase {
 
     /**
      * Test that a client mocked in a previous test does not bleed.
-     *
-     * @depends test_mocked_client_test_one
      */
+    #[\PHPUnit\Framework\Attributes\Depends('test_mocked_client_test_one')]
     public function test_mocked_client_test_two(Stub $mockedclient): void {
         $client = di::get_container()->get(http_client::class);
         $this->assertInstanceOf(http_client::class, $client);
@@ -158,5 +157,10 @@ final class di_test extends \advanced_testcase {
             get_string_manager(),
             $stringmanager,
         );
+    }
+
+    public function test_attribute_injection_enabled(): void {
+        $example = new \core\tests\di\example_class();
+        $this->assertInstanceOf(\core\formatting::class, $example->formatter);
     }
 }

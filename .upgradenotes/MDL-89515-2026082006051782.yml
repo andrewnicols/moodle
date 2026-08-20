@@ -1,0 +1,32 @@
+issueNumber: MDL-89515
+notes:
+  core:
+    - message: >
+        Support for Attribute-based Dependency Injection has been added. This
+        means that injection can be performed on legacy code more easily via
+        injection called from within the constructor:
+
+
+        ```php
+
+        class example {
+            #[\DI\Attribute\Inject]
+            private \core\formatting $formatter;
+
+            public function __construct() {
+                \core\di::inject_on($this);
+            }
+        }
+
+        ```
+
+
+        When the constructor is called it will inject upon itself using the DI container,
+        rather than requiring use of the dependency location pattern. This is primarily intended to support the migration of legacy code to use DI.
+
+
+
+        This change also means that, in the case of Route Controllers, injection can
+        take place via attributes. This is the best practice approach for
+        controllers.
+      type: improved

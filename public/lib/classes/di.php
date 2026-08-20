@@ -32,7 +32,7 @@ class di {
     /**
      * Get the DI Container.
      *
-     * @return ContainerInterface
+     * @return \DI\Container
      */
     public static function get_container(): ContainerInterface {
         if (!isset(self::$container)) {
@@ -78,6 +78,10 @@ class di {
         $container->set($id, $value);
     }
 
+    public static function inject_on(object $object): void {
+        self::get_container()->injectOn($object);
+    }
+
     /**
      * Create a new Container Instance.
      *
@@ -92,6 +96,9 @@ class di {
         // At the moment we are using autowiring, but not automatic attribute injection.
         // Automatic attribute injection is a php-di specific feature.
         $builder->useAutowiring(true);
+
+        // Enable the use of attributes for autowiring. This is a php-di specific feature.
+        $builder->useAttributes(true);
 
         if (!$CFG->debugdeveloper) {
             // Enable compilation of the container and write proxies to disk in production.
