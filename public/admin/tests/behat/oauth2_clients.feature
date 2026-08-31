@@ -85,7 +85,7 @@ Feature: Create OAuth2 clients
     And the "Authorization Code" "field" should be disabled
     And I should see "Callback URIs"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
-    And the "Proof Key for Code Exchange" "checkbox" should be disabled
+    And the "Proof Key for Code Exchange" "field" should be disabled
     When I press "Create client"
     Then "OAuth 2 clients" "heading" should exist
     And "Secrets" "heading" should not exist
@@ -267,15 +267,17 @@ Feature: Create OAuth2 clients
     And I should see "0" in the "#client-active-secrets" "css_element"
     And "Manage secrets" "link" should exist in the "#client-active-secrets" "css_element"
     And the following fields match these values:
-      | Name           | Test Confidential Client          |
-      | Description    | A test confidential OAuth2 client |
-      | redirecturi[0] | https://example.com/callback      |
+      | Name                        | Test Confidential Client          |
+      | Description                 | A test confidential OAuth2 client |
+      | redirecturi[0]              | https://example.com/callback      |
+      | Proof Key for Code Exchange | 1                                 |
     And "Confidential" "radio" should not exist
     And "Public" "radio" should not exist
     And "Authorization Code" "field" should not exist
     And "Client Credentials" "field" should not exist
     And "redirecturi[0]" "field" should exist
-    And "Proof Key for Code Exchange" "field" should not exist
+    And "Proof Key for Code Exchange" "field" should exist
+    And the "Proof Key for Code Exchange" "field" should be enabled
     # Edit the client name, description and redirect URIs.
     And I set the field "Name" to "Updated Confidential Client"
     And I set the field "Description" to "Updated confidential OAuth2 client"

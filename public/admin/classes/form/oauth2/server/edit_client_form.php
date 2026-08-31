@@ -35,7 +35,7 @@ class edit_client_form extends base_client_form {
         // Add the Name and Description fields.
         $this->add_client_details();
 
-        // Populate the fields with default values.
+        // Populate the fields with current values.
         $this->set_data((object) [
             'name' => $cliententity->getName(),
             'description' => $cliententity->get_description(),
@@ -49,9 +49,22 @@ class edit_client_form extends base_client_form {
             // Add redirect URI fields and populate existing values.
             $this->add_redirect_uri_elements($redirecturis);
 
-            // Populate the fields with default values.
+            // Populate the fields with current values.
             $this->set_data((object) [
                 'redirecturi' => array_values($redirecturis),
+            ]);
+        }
+
+        if ($cliententity->isConfidential() && $cliententity->supportsGrantType(client_entity::GRANT_TYPE_AUTHORIZATION_CODE)) {
+            $label = $this->create_label(
+                get_string('oauth2server_clientpkcerequired', 'admin'),
+                get_string('oauth2server_clientpkcerequiredconfidentialdesc', 'admin'),
+            );
+
+            $this->_form->addElement('checkbox', 'ispkcerequired', get_string('oauth2server_clientpkce', 'admin'), $label);
+
+            $this->set_data([
+                'ispkcerequired' => $cliententity->is_pkce_required(),
             ]);
         }
 

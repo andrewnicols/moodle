@@ -111,7 +111,6 @@ class hook_callbacks {
                     'authCodeTTL',
                     \DI\get('oauth2.server.authCodeTTL'),
                 )
-                ->method('disableRequireCodeChallengeForPublicClients')
                 ->method('setRefreshTokenTTL', \DI\get('oauth2.server.refreshTokenTTL')),
         );
 

@@ -182,7 +182,7 @@ final class client_manager_test extends \advanced_testcase {
             ],
             $client->get_grant_types(),
         );
-        $this->assertTrue($client->is_pkce_enabled());
+        $this->assertTrue($client->is_pkce_required());
 
         $record = $DB->get_record(
             'oauth2_server_clients',
@@ -334,6 +334,33 @@ final class client_manager_test extends \advanced_testcase {
         $this->assertSame('Renamed client', $updated->name);
         $this->assertSame('A new description', $updated->description);
         $this->assertSame(self::NOW, (int) $updated->timemodified);
+    }
+
+    /**
+     * Test updating the administrative metadata of a client.
+     *
+     * @return void
+     */
+    public function test_update_client_with_pkce(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $manager = $this->get_manager();
+        $record = $this->create_fixture_client($manager);
+        $this->assertSame(1, (int) $record->ispkcerequired);
+
+        $manager->update_client((int) $record->id, [
+            'name' => 'Renamed client',
+            'description' => 'A new description',
+            'ispkcerequired' => 0,
+        ]);
+
+        $updated = $DB->get_record('oauth2_server_clients', ['id' => $record->id], '*', MUST_EXIST);
+        $this->assertSame('Renamed client', $updated->name);
+        $this->assertSame('A new description', $updated->description);
+        $this->assertSame(self::NOW, (int) $updated->timemodified);
+        $this->assertSame(0, (int) $updated->ispkcerequired);
     }
 
     /**

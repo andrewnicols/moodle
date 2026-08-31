@@ -5089,7 +5089,7 @@
         <FIELD NAME="status" TYPE="int" LENGTH="1" NOTNULL="true" SEQUENCE="false" COMMENT="Current lifecycle status of the OAuth2 client"/>
         <FIELD NAME="isconfidential" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Indicates if the OAuth2 client can securely maintain a secret"/>
         <FIELD NAME="granttypes" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" COMMENT="The OAuth2 grant types supported by the client, represented as comma-separated values"/>
-        <FIELD NAME="ispkceenabled" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Indicates whether PKCE is enabled for the OAuth2 client"/>
+        <FIELD NAME="ispkcerequired" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="1" SEQUENCE="false" COMMENT="Indicates whether PKCE is required for the OAuth2 client"/>
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Creation timestamp"/>
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Last modification timestamp"/>
         <FIELD NAME="lastaccessed" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="Last accessed timestamp"/>

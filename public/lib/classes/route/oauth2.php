@@ -81,6 +81,7 @@ class oauth2 {
     ): ResponseInterface {
         try {
             [$requestid, $authrequest] = $this->get_auth_request($request);
+            $this->check_pkce_requirement($authrequest);
         } catch (OAuthServerException $exception) {
             // All instances of OAuthServerException can be formatted into a HTTP response.
             return $exception->generateHttpResponse($response);
@@ -1257,5 +1258,23 @@ class oauth2 {
         $response->getBody()->write($OUTPUT->footer());
 
         return $response;
+    }
+
+    /**
+     * Ensure that PKCE requirements are met.
+     *
+     * @param \League\OAuth2\Server\RequestTypes\AuthorizationRequest $authrequest
+     */
+    protected function check_pkce_requirement(
+        \League\OAuth2\Server\RequestTypes\AuthorizationRequest $authrequest,
+    ): void {
+        $client = $authrequest->getClient();
+        if ($client->is_pkce_required() && $authrequest->getCodeChallenge() === null) {
+            // PKCE is required for this client, but the request does not include a code challenge.
+            throw OAuthServerException::invalidRequest(
+                'code_challenge',
+                'PKCE is required for this client',
+            );
+        }
     }
 }

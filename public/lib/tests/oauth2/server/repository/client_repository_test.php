@@ -76,7 +76,7 @@ final class client_repository_test extends \advanced_testcase {
             $this->assertSame($expectedproperties['status'], $client->get_status());
             $this->assertSame($expectedproperties['isconfidential'], $client->isConfidential());
             $this->assertEqualsCanonicalizing($expectedproperties['granttypes'], $client->get_grant_types());
-            $this->assertEquals($expectedproperties['ispkceenabled'], $client->is_pkce_enabled());
+            $this->assertEquals($expectedproperties['ispkcerequired'], $client->is_pkce_required());
             $this->assertEqualsCanonicalizing($expectedproperties['redirecturi'], array_values($client->getRedirectUri()));
         }
     }
@@ -102,7 +102,7 @@ final class client_repository_test extends \advanced_testcase {
                     'status' => client_entity::STATUS_ACTIVE,
                     'isconfidential' => 1,
                     'granttypes' => client_entity::GRANT_TYPE_CLIENT_CREDENTIALS,
-                    'ispkceenabled' => false,
+                    'ispkcerequired' => false,
                     'timecreated' => time(),
                     'redirecturis' => ['https://example.test/callback'],
                 ],
@@ -115,7 +115,7 @@ final class client_repository_test extends \advanced_testcase {
                     'status' => client_entity::STATUS_ACTIVE,
                     'isconfidential' => true,
                     'granttypes' => [client_entity::GRANT_TYPE_CLIENT_CREDENTIALS],
-                    'ispkceenabled' => false,
+                    'ispkcerequired' => false,
                     'redirecturi' => ['https://example.test/callback'],
                 ],
             ],
@@ -133,7 +133,7 @@ final class client_repository_test extends \advanced_testcase {
                             client_entity::GRANT_TYPE_REFRESH_TOKEN,
                         ]
                     ),
-                    'ispkceenabled' => true,
+                    'ispkcerequired' => true,
                     'timecreated' => time(),
                     'redirecturis' => ['https://example.test/uri1', 'https://example.test/uri2'],
                 ],

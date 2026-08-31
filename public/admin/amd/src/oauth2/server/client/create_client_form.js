@@ -24,7 +24,7 @@
 const Selectors = {
     clientTypeRadioInputs: 'input[name="clienttype"]',
     authCodeFlowCheckbox: 'input[name="flow_auth_code"]',
-    enablePkceCheckbox: 'input[name="enablepkce"]',
+    pkceRequiredCheckbox: 'input[name="ispkcerequired"]',
     primaryFlowsSeparator: '.primaryflowsgroup-separator',
 };
 
@@ -48,16 +48,16 @@ const syncPublicClientDefaults = () => {
     }
 
     const authCodeFlowCheckboxElement = document.querySelector(Selectors.authCodeFlowCheckbox);
-    const enablePkceCheckboxElement = document.querySelector(Selectors.enablePkceCheckbox);
+    const pkceRequiredCheckboxElement = document.querySelector(Selectors.pkceRequiredCheckbox);
 
     if (authCodeFlowCheckboxElement) {
         authCodeFlowCheckboxElement.checked = true;
         authCodeFlowCheckboxElement.dispatchEvent(new Event('change', {bubbles: true}));
     }
 
-    if (enablePkceCheckboxElement) {
-        enablePkceCheckboxElement.checked = true;
-        enablePkceCheckboxElement.dispatchEvent(new Event('change', {bubbles: true}));
+    if (pkceRequiredCheckboxElement) {
+        pkceRequiredCheckboxElement.checked = true;
+        pkceRequiredCheckboxElement.dispatchEvent(new Event('change', {bubbles: true}));
     }
 };
 

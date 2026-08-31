@@ -184,4 +184,18 @@ abstract class base_client_form extends moodleform {
 
         return $errors;
     }
+
+    /**
+     * Create a custom label for a radio/checkbox element.
+     *
+     * @param string $name Label name.
+     * @param string $description Label description.
+     * @return string Generated HTML.
+     */
+    protected function create_label(string $name, string $description): string {
+        $namespan = \html_writer::span($name, 'fw-semibold');
+        $descriptionspan = \html_writer::span($description, 'text-muted small');
+
+        return \html_writer::div($namespan . $descriptionspan, 'd-inline-flex flex-column ms-1');
+    }
 }

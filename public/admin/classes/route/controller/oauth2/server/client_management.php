@@ -146,7 +146,7 @@ class client_management {
                 $redirecturis,
                 $data->description,
                 (int) $data->clienttype === client_entity::TYPE_CONFIDENTIAL,
-                $ispublicclient || !empty($data->enablepkce),
+                ($ispublicclient || !empty($data->ispkcerequired)),
             );
 
             if ($cliententity->isConfidential()) {
@@ -216,14 +216,19 @@ class client_management {
 
         // Process the form data.
         if ($data = $mform->get_data()) {
+            $updates = [
+                'name' => $data->name,
+                'description' => $data->description,
+            ];
+
+            if ($cliententity->isConfidential() && $cliententity->supportsGrantType(client_entity::GRANT_TYPE_AUTHORIZATION_CODE)) {
+                $updates['ispkcerequired'] = empty($data->ispkcerequired) ? 0 : 1;
+            }
             $transaction = $DB->start_delegated_transaction();
 
             $clientmanager->update_client(
                 $cliententity->get_id(),
-                [
-                    'name' => $data->name,
-                    'description' => $data->description,
-                ],
+                $updates,
             );
 
             // Sanitize the redirect URIs by trimming whitespace and removing empty entries.

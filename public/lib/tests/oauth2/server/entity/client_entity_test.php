@@ -114,15 +114,33 @@ final class client_entity_test extends \advanced_testcase {
     }
 
     /**
-     * Test the client grant types getter.
-     *
-     * @return void
+     * Test the PKCE getter.
      */
-    public function test_pkce_enabled_getter(): void {
+    #[DataProvider('pkce_required_provider')]
+    public function test_pkce_required_getter(
+        bool $ispkcerequired,
+        bool $isconfidential,
+        bool $expectedresult,
+    ): void {
         $client = new client_entity();
-        $this->set_protected_property($client, 'ispkceenabled', true);
+        $this->set_protected_property($client, 'ispkcerequired', $ispkcerequired);
+        $this->set_protected_property($client, 'isConfidential', $isconfidential);
 
-        $this->assertTrue($client->is_pkce_enabled());
+        $this->assertSame($expectedresult, $client->is_pkce_required());
+    }
+
+    /**
+     * Data provider for PKCE required tests.
+     *
+     * @return \Generator
+     */
+    public static function pkce_required_provider(): \Generator {
+        yield 'Confidential: PKCE Required' => [true, true, true];
+        yield 'Confidential: PKCE Not Required' => [false, true, false];
+
+        // PKCE is always required for public clients.
+        yield 'Public: PKCE Required' => [true, false, true];
+        yield 'Public: PKCE Not Required' => [false, false, true];
     }
 
     /**
@@ -271,7 +289,7 @@ final class client_entity_test extends \advanced_testcase {
      * @param int $expectedstatus The expected status.
      * @param bool $expectedconfidential The expected isConfidential state.
      * @param array $expectedgranttypes The expected grant types supported by the client.
-     * @param bool $expectedpkceenabled The expected PKCE enabled state.
+     * @param bool $expectedpkcerequired The expected PKCE enabled state.
      * @param array $expectedredirecturis The expected redirect URIs.
      * @return void
      */
@@ -286,7 +304,7 @@ final class client_entity_test extends \advanced_testcase {
         int $expectedstatus,
         bool $expectedconfidential,
         array $expectedgranttypes,
-        bool $expectedpkceenabled,
+        bool $expectedpkcerequired,
         array $expectedredirecturis
     ): void {
         $this->resetAfterTest();
@@ -303,7 +321,7 @@ final class client_entity_test extends \advanced_testcase {
         $this->assertSame($expectedstatus, $client->get_status());
         $this->assertSame($expectedconfidential, $client->isConfidential());
         $this->assertSame($expectedgranttypes, $client->get_grant_types());
-        $this->assertSame($expectedpkceenabled, $client->is_pkce_enabled());
+        $this->assertSame($expectedpkcerequired, $client->is_pkce_required());
         $this->assertSame($expectedredirecturis, (array)$client->getRedirectUri());
     }
 
@@ -324,7 +342,7 @@ final class client_entity_test extends \advanced_testcase {
                     'status' => 1,
                     'isconfidential' => 1,
                     'granttypes' => client_entity::GRANT_TYPE_CLIENT_CREDENTIALS,
-                    'ispkceenabled' => false,
+                    'ispkcerequired' => false,
                 ],
                 [(object) ['uri' => 'https://example.test/callback']],
                 10,
@@ -353,7 +371,7 @@ final class client_entity_test extends \advanced_testcase {
                             client_entity::GRANT_TYPE_AUTHORIZATION_CODE,
                         ],
                     ),
-                    'ispkceenabled' => true,
+                    'ispkcerequired' => true,
                 ],
                 [
                     (object) ['uri' => 'https://example.test/alt1'],

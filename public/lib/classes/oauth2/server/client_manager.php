@@ -95,7 +95,7 @@ class client_manager {
      * @param array $redirecturis The redirect URIs to register, as strings. Duplicates are ignored.
      * @param string|null $description An optional human-readable description.
      * @param bool $isconfidential Whether the client can keep a secret confidential.
-     * @param bool $ispkceenabled Whether PKCE is enabled for this client.
+     * @param bool $ispkcerequired Whether PKCE is required for this client.
      * @return client_entity The client that was created.
      * @throws moodle_exception If any of the redirect URIs is not usable.
      */
@@ -106,7 +106,7 @@ class client_manager {
         array $redirecturis = [],
         ?string $description = null,
         bool $isconfidential = true,
-        bool $ispkceenabled = true,
+        bool $ispkcerequired = true,
     ): client_entity {
         $redirecturis = array_values(array_unique($redirecturis));
 
@@ -125,7 +125,7 @@ class client_manager {
             'status' => client_entity::STATUS_ACTIVE,
             'isconfidential' => (int) $isconfidential,
             'granttypes' => implode(',', $granttypes),
-            'ispkceenabled' => (int) $ispkceenabled,
+            'ispkcerequired' => (int) $ispkcerequired,
             'timecreated' => $now,
             'timemodified' => $now,
         ];
@@ -197,6 +197,11 @@ class client_manager {
         foreach ($filteredupdates as $field => $value) {
             $client->{$field} = $value;
         }
+
+        if ($client->isconfidential && array_key_exists('ispkcerequired', $updates)) {
+            $client->ispkcerequired = (int) $updates['ispkcerequired'];
+        }
+
         $client->timemodified = $this->clock->time();
 
         $this->db->update_record('oauth2_server_clients', $client);
