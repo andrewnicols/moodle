@@ -62,10 +62,13 @@ final class cors_middleware_test extends route_testcase {
     }
 
     /**
-     * CORS headers are not added for a request which does not accept JSON and is not an OPTIONS
-     * or HEAD request.
+     * CORS headers are always added, even for a request which does not accept JSON and is not
+     * an OPTIONS or HEAD request, so that cross-origin clients sending a generic Accept header
+     * (e.g. the default wildcard Accept header sent by `fetch()`) are not blocked from reading a response
+     * that Moodle has already fully processed. Only the JSON Content-Type/Content-Disposition
+     * forcing is conditional on the Accept header.
      */
-    public function test_cors_headers_not_added_for_non_json_request(): void {
+    public function test_cors_headers_added_for_non_json_request(): void {
         $app = $this->get_simple_app();
         $app->add(di::get(cors_middleware::class));
         $app->addRoutingMiddleware();
@@ -79,12 +82,39 @@ final class cors_middleware_test extends route_testcase {
         $returns = $app->handle($request);
         $this->assertInstanceOf(ResponseInterface::class, $returns);
 
-        // No CORS headers should have been added, and the response should be returned unmodified.
-        $this->assertEquals('', $returns->getHeaderLine('Access-Control-Allow-Origin'));
-        $this->assertEquals('', $returns->getHeaderLine('Access-Control-Allow-Methods'));
-        $this->assertEquals('', $returns->getHeaderLine('Access-Control-Allow-Headers'));
+        // CORS headers should still be present.
+        $this->assertEquals('*', $returns->getHeaderLine('Access-Control-Allow-Origin'));
+        $this->assertEquals('GET', $returns->getHeaderLine('Access-Control-Allow-Methods'));
+        $this->assertNotEquals('', $returns->getHeaderLine('Access-Control-Allow-Headers'));
+
+        // The JSON Content-Type/Content-Disposition should not have been forced.
         $this->assertEquals('', $returns->getHeaderLine('Content-Type'));
         $this->assertEquals('', $returns->getHeaderLine('Content-Disposition'));
+    }
+
+    /**
+     * CORS headers are added for a request with a generic wildcard Accept header, as is typical
+     * of a browser `fetch()` call which does not explicitly set the Accept header.
+     */
+    public function test_cors_headers_added_for_wildcard_accept_request(): void {
+        $app = $this->get_simple_app();
+        $app->add(di::get(cors_middleware::class));
+        $app->addRoutingMiddleware();
+
+        $app->map(['GET'], '/test', function ($request, $response) {
+            return $response;
+        });
+
+        $request = new ServerRequest('GET', '/test', ['Accept' => '*/*']);
+        $returns = $app->handle($request);
+        $this->assertInstanceOf(ResponseInterface::class, $returns);
+
+        $this->assertEquals('*', $returns->getHeaderLine('Access-Control-Allow-Origin'));
+        $this->assertEquals('GET', $returns->getHeaderLine('Access-Control-Allow-Methods'));
+
+        // A wildcard Accept header does not explicitly request JSON, so the Content-Type is
+        // not forced.
+        $this->assertEquals('', $returns->getHeaderLine('Content-Type'));
     }
 
     /**
