@@ -109,7 +109,7 @@ class token_manager {
             $name,
             $secret,
             $userid,
-            implode(' ', $scopes),
+            $scopes,
             $description,
             $expirytime,
         );

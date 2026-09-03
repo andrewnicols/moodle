@@ -35,7 +35,7 @@ class api_token_repository {
      * @param string $name The human-readable name.
      * @param string $secret The raw secret.
      * @param int $userid The user ID.
-     * @param string $scopes The scopes.
+     * @param string[] $scopes The scopes.
      * @param string|null $description The description.
      * @param int|null $expirytime The expiry timestamp.
      * @return api_token_entity
@@ -45,7 +45,7 @@ class api_token_repository {
         #[\SensitiveParameter]
         string $secret,
         int $userid,
-        string $scopes,
+        array $scopes,
         ?string $description = null,
         ?int $expirytime = null
     ): api_token_entity {
@@ -55,7 +55,7 @@ class api_token_repository {
         $record->name = $name;
         $record->token = password_hash($secret, PASSWORD_DEFAULT);
         $record->userid = $userid;
-        $record->scopes = $scopes;
+        $record->scopes = implode(' ', $scopes);
         $record->description = $description;
         $record->expirytime = $expirytime;
         $record->revoked = api_token_entity::REVOKED_NO;
