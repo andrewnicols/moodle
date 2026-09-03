@@ -46,7 +46,7 @@ final class api_tokens_test extends \advanced_testcase {
             $name,
             'irrelevant-secret',
             (int) $USER->id,
-            'core_grades:grade:read',
+            ['core_grades:grade:read'],
             null,
             $expirytime,
         );
