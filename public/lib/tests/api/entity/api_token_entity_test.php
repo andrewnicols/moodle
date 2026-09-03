@@ -51,7 +51,7 @@ final class api_token_entity_test extends \advanced_testcase {
         $this->assertEquals('A token for testing', $entity->get_description());
         $this->assertEquals('token', $entity->get_token());
         $this->assertEquals(456, $entity->get_userid());
-        $this->assertEquals('scope', $entity->get_scopes());
+        $this->assertEquals(['scope'], $entity->get_scopes());
         $this->assertEquals(1700000000, $entity->get_expirytime());
         $this->assertEquals(api_token_entity::REVOKED_YES, $entity->get_revoked());
         $this->assertEquals(1600000000, $entity->get_timecreated());

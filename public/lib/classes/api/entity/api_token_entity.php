@@ -48,8 +48,8 @@ class api_token_entity {
     /** @var int The user ID of the token owner. */
     protected int $userid;
 
-    /** @var string The space-separated list of scopes. */
-    protected string $scopes;
+    /** @var string[] An array of scopes stored as their string values */
+    protected array $scopes;
 
     /** @var int|null The token expiry timestamp. */
     protected ?int $expirytime;
@@ -75,7 +75,7 @@ class api_token_entity {
         $token->name = $record->name;
         $token->token = $record->token;
         $token->userid = (int) $record->userid;
-        $token->scopes = $record->scopes;
+        $token->scopes = explode(' ', $record->scopes);
         $token->timecreated = (int) $record->timecreated;
         $token->description = $record->description ?? null;
         $token->expirytime = isset($record->expirytime) ? (int) $record->expirytime : null;
@@ -131,11 +131,11 @@ class api_token_entity {
     }
 
     /**
-     * Get the space-separated list of scopes.
+     * Get the list of scopes as an array of scopes in their string format.
      *
-     * @return string
+     * @return string[]
      */
-    public function get_scopes(): string {
+    public function get_scopes(): array {
         return $this->scopes;
     }
 
