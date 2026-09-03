@@ -40,11 +40,9 @@ final class token_manager_test extends \advanced_testcase {
      * @return token_manager
      */
     private function get_manager(): token_manager {
-        return new token_manager(
-            new api_token_repository(),
-            $this->mock_clock_with_frozen(self::NOW),
-            new scope_repository(),
-        );
+        return \core\di::make(token_manager::class, [
+            'clock' => $this->mock_clock_with_frozen(self::NOW)
+        ]);
     }
 
     /**
