@@ -114,7 +114,7 @@ class scope_repository implements ScopeRepositoryInterface {
      *
      * @return array The map of scope identifiers to scope classes.
      */
-    private function get_scope_map(): array {
+    public function get_scope_map(): array {
         // Look for a cached version of the scope map first.
         $cache = \cache::make('core', 'oauth2_server');
         $scopemapcache = $cache->get('scope_map');
