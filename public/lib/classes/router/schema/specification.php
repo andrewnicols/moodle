@@ -17,6 +17,7 @@
 namespace core\router\schema;
 
 use coding_exception;
+use core\oauth2\server\repository\scope_repository;
 use core\router\response\invalid_parameter_response;
 use core\router\response\not_found_response;
 use core\router\route;
@@ -82,6 +83,7 @@ class specification implements
 
                 // The add_component method does not support securitySchemes because we hard-code these.
                 'securitySchemes' => (object) [
+                    'oauth2' => (object) [],
                     'api_key' => (object) [
                         'type' => 'apiKey',
                         'name' => 'api_key',
@@ -98,6 +100,7 @@ class specification implements
             // TODO MDL-82242: Add support for OAuth2.
             'security' => [
                 (object) [
+                    'oauth2' => [],
                     'api_key' => [],
                     'cookie' => [],
                 ],
@@ -166,6 +169,30 @@ class specification implements
 
         // Add the Moodle site version here.
         $this->data->info->version = $CFG->version;
+
+        // Add OAuth2 scopes to the security schemes.
+        $scopes = \core\di::get(scope_repository::class)->get_scope_map();
+
+        // Convert the scopes into a name => description list.
+        $finalscopes = array_map(
+            fn($scope): string => $scope::get_description(),
+            $scopes,
+        );
+
+        // Only sort them after processing.
+        ksort($finalscopes);
+
+        $this->data->components->securitySchemes->oauth2 = (object) [
+            'type' => 'oauth2',
+            'flows' => (object) [
+                // We support authorization code flow for user-interactive requests.
+                'authorizationCode' => (object) [
+                    'authorizationUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'authorize'])->out(false),
+                    'tokenUrl' => util::get_path_for_callable([\core\route\oauth2::class, 'token'])->out(false),
+                    'scopes' => $finalscopes,
+                ],
+            ],
+        ];
 
         // Add the server configuration.
         $serverdescription = str_replace("'", "\'", format_string(get_site()->fullname));
