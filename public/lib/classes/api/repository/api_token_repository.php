@@ -17,6 +17,7 @@
 namespace core\api\repository;
 
 use core\api\entity\api_token_entity;
+use core\api\token_manager;
 use core\clock;
 use core\di;
 
@@ -41,6 +42,7 @@ class api_token_repository {
      */
     public function create_token(
         string $name,
+        #[\SensitiveParameter]
         string $secret,
         int $userid,
         string $scopes,
@@ -77,6 +79,33 @@ class api_token_repository {
         $record = $DB->get_record('rest_api_tokens', ['id' => $id], '*', MUST_EXIST);
 
         return api_token_entity::create_from_record($record);
+    }
+
+    /**
+     * Get a token entity from a provided token.
+     *
+     * @param string $token
+     * @return api_token_entity
+     * @throws \core\exception\invalid_api_token_exception If the token is invalid.
+     * @throws \core\exception\expired_api_token_exception If the token has expired.
+     * @throws \core\exception\revoked_api_token_exception If the token has been revoked.
+     */
+    public function get_from_token(
+        #[\SensitiveParameter]
+        string $token,
+    ): api_token_entity {
+        if (!str_starts_with($token, token_manager::TOKEN_PREFIX)) {
+            throw new \core\exception\invalid_api_token_exception();
+        }
+
+        // Tokens are a base64 encoded string of "tokenid/secret" prefixed with the token manager's prefix.
+        // The secret is hashed in the database using `password_hash` so is not reversible.
+        // The base64 encoding makes it URL safe and allows us to include the token ID and secret for verification.
+        $tokendata = base64_decode(substr($token, strlen(token_manager::TOKEN_PREFIX)));
+        [$tokenid, $secret] = explode('/', $tokendata, 2);
+
+        // Validate the token and secret, throwing exceptions if invalid, expired, or revoked.
+        return $this->validate_token($tokenid, $secret);
     }
 
     /**

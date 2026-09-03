@@ -19,6 +19,7 @@ namespace core\api\repository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use core\api\entity\api_token_entity;
+use core\api\token_manager;
 
 /**
  * Tests for {@see api_token_repository}.
@@ -249,6 +250,111 @@ final class api_token_repository_test extends \advanced_testcase {
                 \core\exception\revoked_api_token_exception::class,
             ],
         ];
+    }
+
+    /**
+     * Build a token string in the same shape {@see token_manager::issue_token} hands out.
+     *
+     * @param int $tokenid The token ID.
+     * @param string $secret The raw secret.
+     * @return string
+     */
+    private function build_token_string(int $tokenid, string $secret): string {
+        return rtrim(
+            token_manager::TOKEN_PREFIX . base64_encode("{$tokenid}/{$secret}"),
+            '=',
+        );
+    }
+
+    /**
+     * Test that a well-formed, active token resolves back to its entity.
+     */
+    public function test_get_from_token_valid(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $repository = new api_token_repository();
+
+        $token = $repository->create_token('Test', 'correctsecret', $user->id, 'scope');
+        $tokenstring = $this->build_token_string($token->get_id(), 'correctsecret');
+
+        $resolved = $repository->get_from_token($tokenstring);
+
+        $this->assertEquals($token->get_id(), $resolved->get_id());
+        $this->assertEquals($user->id, $resolved->get_userid());
+    }
+
+    /**
+     * A token missing the expected prefix is rejected before it is even decoded.
+     */
+    public function test_get_from_token_missing_prefix_throws(): void {
+        $this->resetAfterTest();
+
+        $repository = new api_token_repository();
+
+        $this->expectException(\core\exception\invalid_api_token_exception::class);
+        $repository->get_from_token(base64_encode('1/somesecret'));
+    }
+
+    /**
+     * A token whose ID does not correspond to any stored record is rejected.
+     */
+    public function test_get_from_token_missing_record_throws(): void {
+        $this->resetAfterTest();
+
+        $repository = new api_token_repository();
+
+        $this->expectException(\dml_missing_record_exception::class);
+        $repository->get_from_token($this->build_token_string(999999, 'somesecret'));
+    }
+
+    /**
+     * A token whose secret does not match the stored hash is rejected.
+     */
+    public function test_get_from_token_wrong_secret_throws(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $repository = new api_token_repository();
+
+        $token = $repository->create_token('Test', 'correctsecret', $user->id, 'scope');
+        $tokenstring = $this->build_token_string($token->get_id(), 'wrongsecret');
+
+        $this->expectException(\core\exception\invalid_api_token_exception::class);
+        $repository->get_from_token($tokenstring);
+    }
+
+    /**
+     * An expired token is rejected even though the secret is correct.
+     */
+    public function test_get_from_token_expired_throws(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $repository = new api_token_repository();
+
+        $token = $repository->create_token('Test', 'correctsecret', $user->id, 'scope', null, time() - 3600);
+        $tokenstring = $this->build_token_string($token->get_id(), 'correctsecret');
+
+        $this->expectException(\core\exception\expired_api_token_exception::class);
+        $repository->get_from_token($tokenstring);
+    }
+
+    /**
+     * A revoked token is rejected even though the secret is correct.
+     */
+    public function test_get_from_token_revoked_throws(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $repository = new api_token_repository();
+
+        $token = $repository->create_token('Test', 'correctsecret', $user->id, 'scope');
+        $repository->revoke_token($token->get_id());
+        $tokenstring = $this->build_token_string($token->get_id(), 'correctsecret');
+
+        $this->expectException(\core\exception\revoked_api_token_exception::class);
+        $repository->get_from_token($tokenstring);
     }
 
     /**
