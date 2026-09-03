@@ -101,7 +101,7 @@ if ($action === 'create') {
         $scopes = $form->get_submitted_scopes((array) $data);
         $expirytime = $form->get_expiry_time($data);
 
-        $token = $manager->create_token(
+        $token = $manager->issue_token(
             $data->name,
             (int) $USER->id,
             $scopes,
