@@ -64,10 +64,13 @@ final class token_manager_test extends \advanced_testcase {
             self::NOW + WEEKSECS,
         );
 
-        $this->assertMatchesRegularExpression('/^pat_\d+_[A-Za-z0-9]{32}$/', $token);
+        // The token is a base64-encoded string with the token ID and secret, prefixed by 'pat_'.
+        // It follows the pattern 'pat_' + base64_encode(token_id/secret) with the trailing '=' stripped.
+        $this->assertMatchesRegularExpression('/^pat_[A-Za-z0-9]+$/', $token);
 
         // The id in the string must address the row that was just written.
-        [, $id, $secret] = explode('_', $token, 3);
+        [, $encoded] = explode('_', $token, 2);
+        [$id, $secret] = explode('/', base64_decode($encoded), 2);
         $record = $DB->get_record('rest_api_tokens', ['id' => (int) $id], '*', MUST_EXIST);
 
         $this->assertEquals('Attendance export', $record->name);
@@ -112,11 +115,11 @@ final class token_manager_test extends \advanced_testcase {
             self::NOW + DAYSECS,
         );
 
-        [, $id] = explode('_', $token, 3);
+        $apitoken = \core\di::make(api_token_repository::class)->get_from_token($token);
 
         $this->assertEquals(
             'core_grades:grade:read core_course:course:read',
-            $DB->get_field('rest_api_tokens', 'scopes', ['id' => (int) $id]),
+            $DB->get_field('rest_api_tokens', 'scopes', ['id' => (int) $apitoken->get_id()], MUST_EXIST),
         );
     }
 

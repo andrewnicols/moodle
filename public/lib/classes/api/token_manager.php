@@ -86,7 +86,7 @@ class token_manager {
      * @param string[] $scopes The scope identifiers to grant. At least one is required.
      * @param string|null $description An optional human-readable description.
      * @param int $expirytime The timestamp at which the token lapses.
-     * @return string The token to present to the user, as {@see self::TOKEN_PREFIX}<id>_<secret>.
+     * @return string The token to present to the user, as {@see self::TOKEN_PREFIX}<key>.
      * @throws moodle_exception If the expiry is out of range, or a scope is missing or unknown.
      */
     public function issue_token(
@@ -117,7 +117,20 @@ class token_manager {
         // The id is what makes the secret findable again: the stored hash is salted per row, so it
         // cannot be searched for, and validation needs the row before it can verify the secret.
         // This is also the only time the secret exists readable, so the caller must not keep it.
-        return self::TOKEN_PREFIX . $token->get_id() . '_' . $secret;
+        // The base64 encoding makes it URL safe and allows us to include the token ID and secret for verification.
+        // We also strip the trailing '=' padding from the base64 encoding to make the token shorter and more user-friendly.
+        return rtrim(
+            sprintf(
+                "%s%s",
+                self::TOKEN_PREFIX,
+                base64_encode(sprintf(
+                    "%s/%s",
+                    $token->get_id(),
+                    $secret,
+                )),
+            ),
+            '=',
+        );
     }
 
     /**
