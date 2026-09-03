@@ -96,6 +96,10 @@ class token_manager {
         ?string $description,
         int $expirytime,
     ): string {
+        // Ensure there are no empty scopes.
+        $scopes = array_map('trim', $scopes);
+        $scopes = array_filter($scopes, fn($scope) => $scope !== '');
+
         $this->validate_expiry($expirytime);
         $this->validate_scopes($scopes);
 
