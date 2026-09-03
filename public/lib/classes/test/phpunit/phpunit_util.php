@@ -498,6 +498,9 @@ class phpunit_util extends \core\test\testing_util {
         set_config('curlsecurityblockedhosts', '');
         set_config('curlsecurityallowedport', '');
 
+        // Configure keys to ensure that tests of the oauth2 framework do not cause DB changes.
+        \core\di::get(\core\oauth2\setup::class)->configure_keys();
+
         // Execute all the adhoc tasks.
         while ($task = \core\task\manager::get_next_adhoc_task(time())) {
             $task->execute();
