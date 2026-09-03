@@ -89,7 +89,7 @@ class token_manager {
      * @return string The token to present to the user, as {@see self::TOKEN_PREFIX}<id>_<secret>.
      * @throws moodle_exception If the expiry is out of range, or a scope is missing or unknown.
      */
-    public function create_token(
+    public function issue_token(
         string $name,
         int $userid,
         array $scopes,
