@@ -24,6 +24,7 @@ use core\router\schema\objects\scalar_type;
 use core\router\schema\response\payload_response;
 use core\router\schema\response\content\payload_response_type;
 use core\router\schema\response\response_type;
+use core\router\scope\scopeset;
 use core\user;
 use core_user\route\responses\user_preferences_response;
 use stdClass;
@@ -66,6 +67,9 @@ class preferences {
         responses: [
             new user_preferences_response(),
         ],
+    )]
+    #[scopeset(
+        new \core_user\route\scope\user\read(),
     )]
     public function get_preferences(
         ResponseInterface $response,
@@ -113,6 +117,10 @@ class preferences {
         responses: [
             new user_preferences_response(),
         ],
+    )]
+    #[scopeset(
+        new \core_user\route\scope\user\read(),
+        new \core_user\route\scope\user\write(),
     )]
     public function set_preferences(
         ResponseInterface $response,
@@ -191,6 +199,10 @@ class preferences {
                 ],
             ),
         ],
+    )]
+    #[scopeset(
+        new \core_user\route\scope\user\read(),
+        new \core_user\route\scope\user\write(),
     )]
     public function set_preference(
         ResponseInterface $response,

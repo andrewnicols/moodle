@@ -21,6 +21,8 @@ use core\tests\router\route_testcase;
 use core\context\module;
 use core_question\local\bank\question_counts_test;
 use core_question\local\bank\question_version_status;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Unit tests for \core_question\route\api\bank
@@ -32,8 +34,8 @@ use core_question\local\bank\question_version_status;
  * @copyright 2025 onwards Catalyst IT EU {@link https://catalyst-eu.net}
  * @author    Mark Johnson <mark.johnson@catalyst-eu.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core_question\route\api\bank
  */
+#[CoversClass(bank::class)]
 final class bank_test extends route_testcase {
     /**
      * All course modules using the question bank should have their count returned.
@@ -88,5 +90,32 @@ final class bank_test extends route_testcase {
             ],
             $payload,
         );
+    }
+
+    /**
+     * Each of the bank API routes require the caller to hold the course:content:read scope, since they
+     * expose read-only information about question banks within a course.
+     *
+     * @param string $method
+     */
+    #[DataProvider('required_scopes_provider')]
+    public function test_required_scopes(string $method): void {
+        $this->assert_route_required_scopes(
+            [['core_course:course:content:read']],
+            [bank::class, $method],
+        );
+    }
+
+    /**
+     * Data provider for test_required_scopes.
+     *
+     * @return array
+     */
+    public static function required_scopes_provider(): array {
+        return [
+            'question_counts' => ['question_counts'],
+            'banks' => ['banks'],
+            'categories' => ['categories'],
+        ];
     }
 }
