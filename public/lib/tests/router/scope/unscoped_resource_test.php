@@ -14,18 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\router\scope;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+
 /**
- * Strings for a testing OAuth2 scopes.
+ * Tests for {@see unscoped_resource}.
  *
  * @package    core
- * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+#[CoversClass(unscoped_resource::class)]
+final class unscoped_resource_test extends \advanced_testcase {
+    /**
+     * The attribute must only be usable on methods, and only once per method.
+     */
+    public function test_attributes(): void {
+        $reflection = new \ReflectionClass(unscoped_resource::class);
+        $attributes = $reflection->getAttributes(\Attribute::class);
 
-defined('MOODLE_INTERNAL') || die;
+        $this->assertCount(1, $attributes);
+        $flags = $attributes[0]->getArguments()[0];
 
-$string['pluginname'] = 'Fake plugin for testing OAuth2 scopes';
-$string['read_scope_desc'] = 'This is a test scope used for testing OAuth2 scopes in Moodle.';
-$string['read_scope_summary'] = 'Read scope';
-$string['write_scope_desc'] = 'This is a test scope used for testing OAuth2 scopes in Moodle.';
-$string['write_scope_summary'] = 'Write scope';
+        $this->assertEquals(\Attribute::TARGET_METHOD, $flags);
+    }
+}

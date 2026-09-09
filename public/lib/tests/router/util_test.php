@@ -17,6 +17,8 @@
 namespace core\router;
 
 use core\router\middleware\moodle_route_attribute_middleware;
+use core\router\scope\scopeset;
+use core\tests\fake_plugins_test_trait;
 use core\tests\router\route_testcase;
 use core\url;
 use GuzzleHttp\Psr7\Response;
@@ -31,6 +33,8 @@ use GuzzleHttp\Psr7\ServerRequest;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(util::class)]
 final class util_test extends route_testcase {
+    use fake_plugins_test_trait;
+
     /**
      * Ensure that redirecting works as expected.
      *
@@ -220,6 +224,147 @@ final class util_test extends route_testcase {
         $secondroute = util::get_route_instance_for_request($request);
         $this->assertInstanceOf(route::class, $secondroute);
         $this->assertEquals('/method/path', $secondroute->get_path());
+    }
+
+    /**
+     * A method with no scope-related attributes at all has no required scope sets.
+     */
+    public function test_get_all_required_scopes_for_method_no_attributes(): void {
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $this->assertSame(
+            [],
+            util::get_all_required_scopes_for_method(
+                [\core\fixtures\route_with_scopes::class, 'method_with_no_scope_attributes'],
+            ),
+        );
+    }
+
+    /**
+     * A method explicitly marked as unscoped has no required scope sets, even if scopeset attributes exist.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_get_all_required_scopes_for_method_unscoped_resource(): void {
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $this->assertSame(
+            [],
+            util::get_all_required_scopes_for_method(
+                [\core\fixtures\route_with_scopes::class, 'method_with_unscoped_resource'],
+            ),
+        );
+    }
+
+    /**
+     * A method with a single scopeset attribute returns that single scope set.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_get_all_required_scopes_for_method_single_scopeset(): void {
+        $this->add_fake_oauth2scope_plugin();
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $scopesets = util::get_all_required_scopes_for_method(
+            [\core\fixtures\route_with_scopes::class, 'method_with_single_scopeset'],
+        );
+
+        $this->assertCount(1, $scopesets);
+        $this->assertInstanceOf(scopeset::class, $scopesets[0]);
+        $this->assertCount(1, $scopesets[0]->requiredscopes);
+        $this->assertSame('fake_oauth2scope:resource:read', $scopesets[0]->requiredscopes[0]->get_identifier());
+    }
+
+    /**
+     * A method with more than one scopeset attribute returns all scope sets (an OR condition), including
+     * any which reference a scope class that could not be resolved (replaced with a fail-safe
+     * unknown_scope) - util itself does not filter these out; that is left to callers such as
+     * {@see \core\tests\router\route_testcase::assert_route_required_scopes()}.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_get_all_required_scopes_for_method_multiple_scopesets(): void {
+        $this->add_fake_oauth2scope_plugin();
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $scopesets = util::get_all_required_scopes_for_method(
+            [\core\fixtures\route_with_scopes::class, 'method_with_multiple_scopesets'],
+        );
+
+        $this->assertCount(3, $scopesets);
+        $this->assertSame('fake_oauth2scope:resource:read', $scopesets[0]->requiredscopes[0]->get_identifier());
+        $this->assertSame('fake_oauth2scope:resource:write', $scopesets[1]->requiredscopes[0]->get_identifier());
+        $this->assertInstanceOf(\core\router\scope\unknown_scope::class, $scopesets[2]->requiredscopes[0]);
+    }
+
+    /**
+     * A scopeset attribute referencing a scope class which no longer exists is replaced with a scope set
+     * containing only an unknown_scope, ensuring the route can never be satisfied (fail-safe).
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_get_all_required_scopes_for_method_invalid_scope(): void {
+        $this->add_fake_oauth2scope_plugin();
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $scopesets = util::get_all_required_scopes_for_method(
+            [\core\fixtures\route_with_scopes::class, 'method_with_invalid_scope'],
+        );
+
+        $this->assertCount(1, $scopesets);
+        $this->assertInstanceOf(scopeset::class, $scopesets[0]);
+        $this->assertCount(1, $scopesets[0]->requiredscopes);
+        $this->assertInstanceOf(\core\router\scope\unknown_scope::class, $scopesets[0]->requiredscopes[0]);
+
+        // The unknown scope can never be satisfied, even by an empty (fail-safe) grant.
+        $this->assertFalse($scopesets[0]->is_satisfied_by([]));
+    }
+
+    /**
+     * A callable which cannot be resolved to a class method (for example, a Closure route handler) has no
+     * required scope sets, rather than causing an error.
+     */
+    public function test_get_all_required_scopes_for_method_not_array_callable(): void {
+        $this->assertSame([], util::get_all_required_scopes_for_method(fn () => null));
+    }
+
+    /**
+     * When a request already has the scopeset attribute set (for example, by the
+     * moodle_scope_attribute_middleware), that value is used without requiring Slim routing to have occurred.
+     */
+    public function test_get_all_required_scopes_for_request_uses_attribute_when_present(): void {
+        $request = (new ServerRequest('GET', '/test'))
+            ->withAttribute(scopeset::class, []);
+
+        $this->assertSame([], util::get_all_required_scopes_for_request($request));
+    }
+
+    /**
+     * When a request has no scopeset attribute set, the scope sets are derived from the routed Slim route.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_get_all_required_scopes_for_request_falls_back_to_route(): void {
+        $this->add_fake_oauth2scope_plugin();
+        self::load_fixture('core', 'router/route_with_scopes.php');
+
+        $app = $this->get_simple_app();
+        $app->addRoutingMiddleware();
+        $app->get('/method/path', [\core\fixtures\route_with_scopes::class, 'method_with_single_scopeset']);
+        $app->handle(new ServerRequest('GET', '/method/path'));
+
+        $request = $this->route_request($app, new ServerRequest('GET', '/method/path'));
+
+        $scopesets = util::get_all_required_scopes_for_request($request);
+
+        $this->assertCount(1, $scopesets);
+        $this->assertSame('fake_oauth2scope:resource:read', $scopesets[0]->requiredscopes[0]->get_identifier());
+    }
+
+    /**
+     * Helper to install the fake_oauth2scope fixture plugin used in scope-related tests.
+     */
+    protected function add_fake_oauth2scope_plugin(): void {
+        $this->resetAfterTest();
+        $this->add_full_mocked_plugintype(
+            plugintype: 'fake',
+            path: 'public/lib/tests/fixtures/fakeplugins/fake',
+        );
     }
 
     /**

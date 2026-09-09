@@ -14,18 +14,19 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\router\scope;
+
 /**
- * Strings for a testing OAuth2 scopes.
+ * A placeholder scope used when the server does not know about a requested scope.
+ *
+ * This is used to prevent a scope set from being used.
  *
  * @package    core
- * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$string['pluginname'] = 'Fake plugin for testing OAuth2 scopes';
-$string['read_scope_desc'] = 'This is a test scope used for testing OAuth2 scopes in Moodle.';
-$string['read_scope_summary'] = 'Read scope';
-$string['write_scope_desc'] = 'This is a test scope used for testing OAuth2 scopes in Moodle.';
-$string['write_scope_summary'] = 'Write scope';
+#[identifier_attribute('unknown_scope')]
+#[summary_attribute('unknown_scope_summary')]
+#[description_attribute('unknown_scope_description')]
+class unknown_scope extends \core\router\scope\abstract_scope {
+}

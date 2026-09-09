@@ -14,18 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+namespace core\router\scope;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+
 /**
- * Strings for a testing OAuth2 scopes.
+ * Tests for {@see unknown_scope}.
  *
  * @package    core
- * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-defined('MOODLE_INTERNAL') || die;
-
-$string['pluginname'] = 'Fake plugin for testing OAuth2 scopes';
-$string['read_scope_desc'] = 'This is a test scope used for testing OAuth2 scopes in Moodle.';
-$string['read_scope_summary'] = 'Read scope';
-$string['write_scope_desc'] = 'This is a test scope used for testing OAuth2 scopes in Moodle.';
-$string['write_scope_summary'] = 'Write scope';
+#[CoversClass(unknown_scope::class)]
+final class unknown_scope_test extends \advanced_testcase {
+    /**
+     * The unknown_scope must extend the abstract_scope base class so that it can be used
+     * anywhere a scope is expected.
+     */
+    public function test_extends_abstract_scope(): void {
+        $this->assertInstanceOf(abstract_scope::class, new unknown_scope());
+    }
+}

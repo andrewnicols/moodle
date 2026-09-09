@@ -20,6 +20,8 @@ use core\api\repository\api_token_repository;
 use core\api\token_manager;
 use core\di;
 use core\router\route;
+use core\router\scope\scopeset;
+use core\tests\fake_plugins_test_trait;
 use core\tests\router\route_testcase;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -39,6 +41,8 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 #[\PHPUnit\Framework\Attributes\CoversClass(moodle_api_authentication_middleware::class)]
 final class moodle_api_authentication_middleware_test extends route_testcase {
+    use fake_plugins_test_trait;
+
     /**
      * Build a middleware instance, optionally with a mocked OAuth2 Resource Server.
      *
@@ -130,7 +134,8 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
         $route = new route();
         $request = (new ServerRequest('GET', '/test'))
             ->withHeader('Authorization', "Bearer {$bearer}")
-            ->withAttribute(route::class, $route);
+            ->withAttribute(route::class, $route)
+            ->withAttribute(scopeset::class, []);
 
         $handler = $this->get_recording_handler();
         $response = $this->get_middleware()->process($request, $handler);
@@ -175,7 +180,8 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
         $route = new route();
         $request = (new ServerRequest('GET', '/test'))
             ->withHeader('Authorization', 'Bearer sometoken')
-            ->withAttribute(route::class, $route);
+            ->withAttribute(route::class, $route)
+            ->withAttribute(scopeset::class, []);
 
         $response = $this->get_middleware($server)->process($request, $this->get_recording_handler());
 
@@ -202,7 +208,8 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
         $route = new route();
         $request = (new ServerRequest('GET', '/test'))
             ->withHeader('Authorization', 'Bearer sometoken')
-            ->withAttribute(route::class, $route);
+            ->withAttribute(route::class, $route)
+            ->withAttribute(scopeset::class, []);
 
         $response = $this->get_middleware($server)->process($request, $this->get_recording_handler());
 
@@ -251,5 +258,137 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
         $response = $this->get_middleware()->process($request, $this->get_recording_handler());
 
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * Install the fake_oauth2scope fixture plugin used by the scope-validation tests below.
+     */
+    protected function add_fake_oauth2scope_plugin(): void {
+        $this->add_full_mocked_plugintype(
+            plugintype: 'fake',
+            path: 'public/lib/tests/fixtures/fakeplugins/fake',
+        );
+    }
+
+    /**
+     * A valid API key token which does not carry a scope required by the route is denied with a 401
+     * (unauthorized) response, rather than being permitted to authenticate.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_api_key_auth_with_missing_scope_is_denied(): void {
+        $this->resetAfterTest();
+        $this->add_fake_oauth2scope_plugin();
+
+        $user = $this->getDataGenerator()->create_user();
+        $repository = di::get(api_token_repository::class);
+        // The token does not carry the scope required by the route below.
+        $token = $repository->create_token('Test', 'correctsecret', $user->id, []);
+        $bearer = $this->build_bearer_token($token->get_id(), 'correctsecret');
+
+        $route = new route();
+        $request = (new ServerRequest('GET', '/test'))
+            ->withHeader('Authorization', "Bearer {$bearer}")
+            ->withAttribute(route::class, $route)
+            ->withAttribute(scopeset::class, [
+                new scopeset(new \fake_oauth2scope\route\scope\resource\read()),
+            ]);
+
+        $response = $this->get_middleware()->process($request, $this->get_recording_handler());
+
+        $this->assertEquals(401, $response->getStatusCode());
+        $payload = json_decode((string) $response->getBody());
+        $this->assertEquals('access_denied', $payload->error);
+    }
+
+    /**
+     * A valid API key token which carries the scope required by the route is permitted to authenticate.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_api_key_auth_with_required_scope_authenticates(): void {
+        $this->resetAfterTest();
+        $this->add_fake_oauth2scope_plugin();
+
+        $user = $this->getDataGenerator()->create_user();
+        $repository = di::get(api_token_repository::class);
+        $token = $repository->create_token('Test', 'correctsecret', $user->id, ['fake_oauth2scope:resource:read']);
+        $bearer = $this->build_bearer_token($token->get_id(), 'correctsecret');
+
+        $route = new route();
+        $request = (new ServerRequest('GET', '/test'))
+            ->withHeader('Authorization', "Bearer {$bearer}")
+            ->withAttribute(route::class, $route)
+            ->withAttribute(scopeset::class, [
+                new scopeset(new \fake_oauth2scope\route\scope\resource\read()),
+            ]);
+
+        $handler = $this->get_recording_handler();
+        $response = $this->get_middleware()->process($request, $handler);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($user->id, $handler->capturedrequest->getAttribute('user')->id);
+    }
+
+    /**
+     * A valid OAuth2 login which does not carry a scope required by the route is denied with a 401
+     * (unauthorized) response.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_oauth2_login_with_missing_scope_is_denied(): void {
+        $this->resetAfterTest();
+        $this->add_fake_oauth2scope_plugin();
+
+        $user = $this->getDataGenerator()->create_user();
+        $server = $this->createMock(ResourceServer::class);
+        $server->method('validateAuthenticatedRequest')
+            ->willReturnCallback(fn (ServerRequestInterface $request) => $request
+                ->withAttribute('oauth_user_id', (string) $user->id)
+                ->withAttribute('oauth_scopes', [])
+            );
+
+        $route = new route();
+        $request = (new ServerRequest('GET', '/test'))
+            ->withHeader('Authorization', '******')
+            ->withAttribute(route::class, $route)
+            ->withAttribute(scopeset::class, [
+                new scopeset(new \fake_oauth2scope\route\scope\resource\read()),
+            ]);
+
+        $response = $this->get_middleware($server)->process($request, $this->get_recording_handler());
+
+        $this->assertEquals(401, $response->getStatusCode());
+        $payload = json_decode((string) $response->getBody());
+        $this->assertEquals('access_denied', $payload->error);
+    }
+
+    /**
+     * A valid OAuth2 login which carries the scope required by the route is permitted to authenticate.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_oauth2_login_with_required_scope_authenticates(): void {
+        global $USER;
+
+        $this->resetAfterTest();
+        $this->add_fake_oauth2scope_plugin();
+
+        $user = $this->getDataGenerator()->create_user();
+        $server = $this->createMock(ResourceServer::class);
+        $server->method('validateAuthenticatedRequest')
+            ->willReturnCallback(fn (ServerRequestInterface $request) => $request
+                ->withAttribute('oauth_user_id', (string) $user->id)
+                ->withAttribute('oauth_scopes', ['fake_oauth2scope:resource:read'])
+            );
+
+        $route = new route();
+        $request = (new ServerRequest('GET', '/test'))
+            ->withHeader('Authorization', '******')
+            ->withAttribute(route::class, $route)
+            ->withAttribute(scopeset::class, [
+                new scopeset(new \fake_oauth2scope\route\scope\resource\read()),
+            ]);
+
+        $response = $this->get_middleware($server)->process($request, $this->get_recording_handler());
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals($user->id, $USER->id);
     }
 }

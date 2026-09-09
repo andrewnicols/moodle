@@ -147,10 +147,16 @@ class apidocs {
                 continue;
             }
 
+            // Get any required scopes for this route.
+            $scopesets = util::get_all_required_scopes_for_method(
+                [$classinfo->getName(), $method->getName()],
+            );
+
             // Add this path to the OpenAPI specification.
             $api->add_path(
                 component: $component,
                 route: $routeattribute,
+                scopesets: $scopesets,
             );
         }
 
