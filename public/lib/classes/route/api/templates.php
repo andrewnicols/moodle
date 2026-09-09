@@ -107,6 +107,7 @@ class templates {
             ),
         ],
     )]
+    #[\core\router\scope\unscoped_resource]
     public function get_templates(
         ServerRequestInterface $request,
         ResponseInterface $response,

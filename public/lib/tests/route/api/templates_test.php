@@ -17,6 +17,8 @@
 namespace core\route\api;
 
 use core\tests\router\route_testcase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for Templates API.
@@ -25,19 +27,19 @@ use core\tests\router\route_testcase;
  * @category   test
  * @copyright  2024 Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers \core\route\api\templates
  */
+#[CoversClass(\core\route\api\templates::class)]
 final class templates_test extends route_testcase {
     /**
      * Test fetching templates.
      *
      * Note: This is a risky test because it relies on data in other parts of Moodle.
      *
-     * @dataProvider fetch_templates_provider
      * @param string $path
      * @param array $requiredtemplates
      * @param array $requiredstrings
      */
+    #[DataProvider('fetch_templates_provider')]
     public function test_fetch_known_templates(
         string $path,
         array $requiredtemplates,
@@ -118,5 +120,13 @@ final class templates_test extends route_testcase {
         $response = $this->process_api_request('GET', '/templates/boost/core/missing');
 
         $this->assert_not_found_response($response);
+    }
+
+    /**
+     * The get_templates route is explicitly marked as unscoped, since it serves public template markup and
+     * does not require any OAuth2 scope to access.
+     */
+    public function test_get_templates_is_unscoped(): void {
+        $this->assert_route_is_unscoped([templates::class, 'get_templates']);
     }
 }

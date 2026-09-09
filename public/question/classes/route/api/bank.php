@@ -27,7 +27,6 @@ use core\router\schema\example;
 use core\router\schema\objects\array_of_strings;
 use core\router\schema\objects\array_of_things;
 use core\router\schema\objects\schema_object;
-use core\router\schema\parameters\path_parameter;
 use core\router\schema\parameters\query_parameter;
 use core\router\schema\response\content\json_media_type;
 use core\router\schema\response\payload_response;
@@ -36,12 +35,10 @@ use core_question\local\bank\formatted_bank;
 use core_question\local\bank\question_bank_helper;
 use core_question\local\bank\question_counts;
 use core_question\local\bank\question_edit_contexts;
-use core_question\local\bank\question_version_status;
 use core_question\output\question_category_selector;
 use core_question\question_category;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use stdClass;
 
 /**
  * Web service functions related to question banks
@@ -91,6 +88,9 @@ class bank {
             ),
         ],
         requirelogin: new require_login(false, true, 'course'),
+    )]
+    #[\core\router\scope\scopeset(
+        new \core_course\route\scope\course\content\read(),
     )]
     public function question_counts(
         ServerRequestInterface $request,
@@ -161,6 +161,9 @@ class bank {
         ],
         requirelogin: new require_login(true, courseattributename: 'course'),
     )]
+    #[\core\router\scope\scopeset(
+        new \core_course\route\scope\course\content\read(),
+    )]
     public function banks(
         ServerRequestInterface $request,
         ResponseInterface $response,
@@ -183,6 +186,15 @@ class bank {
         );
     }
 
+    /**
+     * Return a list of question categories with names and info formatted for output.
+     *
+     * @param ServerRequestInterface $request
+     * @param ResponseInterface $response
+     * @param module $coursemodulecontext The module context.
+     * @param question_category_selector $categoryselector Injected dependency.
+     * @return payload_response The course module context id and name, and a list of question categories in that context.
+     */
     #[route(
         path: '/categories', // Resolves to /api/rest/v2/question/categories.
         queryparams: [
@@ -205,15 +217,9 @@ class bank {
             ),
         ],
     )]
-    /**
-     * Return a list of question categories with names and info formatted for output.
-     *
-     * @param ServerRequestInterface $request
-     * @param ResponseInterface $response
-     * @param module $coursemodulecontext The module context.
-     * @param question_category_selector $categoryselector Injected dependency.
-     * @return payload_response The course module context id and name, and a list of question categories in that context.
-     */
+    #[\core\router\scope\scopeset(
+        new \core_course\route\scope\course\content\read(),
+    )]
     public function categories(
         ServerRequestInterface $request,
         ResponseInterface $response,
