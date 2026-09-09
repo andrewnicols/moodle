@@ -16,6 +16,8 @@
 
 namespace core\router;
 
+use core\router\scope\scopeset;
+use core\router\scope\unscoped_resource;
 use core\url;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\ResponseInterface;
@@ -248,12 +250,34 @@ class util {
     }
 
     /**
-     * Get the instance of the \core\router\route attribute for the specified callable if one is available.
+     * Get the scope sets attribute for the specified request.
+     *
+     * @param ServerRequestInterface $request
+     * @return scopeset[]
+     */
+    public static function get_all_required_scopes_for_request(ServerRequestInterface $request): array {
+        $scopesets = $request->getAttribute(scopeset::class);
+        if ($scopesets !== null) {
+            // Note: An empty array is a valid value, indicating that no scopes are required for this route.
+            return $scopesets;
+        }
+
+        $context = RouteContext::fromRequest($request);
+        if ($slimroute = $context->getRoute()) {
+            return self::get_all_required_scopes_for_method($slimroute->getCallable());
+        }
+
+        // This should not be encountered - the route should always be set.
+        return []; // @codeCoverageIgnore
+    }
+
+    /**
+     * Get the reflected method for the specified callable if one is available.
      *
      * @param callable|array|string $callable
-     * @return null|route The route if one was found.
+     * @return null|\ReflectionMethod The reflected method if one was found.
      */
-    public static function get_route_instance_for_method(callable|array|string $callable): ?route {
+    public static function get_reflected_method_from_callable(callable|array|string $callable): ?\ReflectionMethod {
         // Normalise the callable using the resolver.
         // This happens in the same way that Slim does so.
         $resolver = \core\di::get(\Invoker\CallableResolver::class);
@@ -274,7 +298,59 @@ class util {
             return null; // @codeCoverageIgnore
         }
 
-        return self::attempt_get_route_instance_for_method($classinfo, $methodinfo);
+        return $methodinfo;
+    }
+
+    /**
+     * Get the instance of the \core\router\route attribute for the specified callable if one is available.
+     *
+     * @param callable|array|string $callable
+     * @return null|route The route if one was found.
+     */
+    public static function get_route_instance_for_method(callable|array|string $callable): ?route {
+        $methodinfo = self::get_reflected_method_from_callable($callable);
+        if (!$methodinfo) {
+            // The method does not exist. This shouldn't be possible because the resolver will throw an exception.
+            return null; // @codeCoverageIgnore
+        }
+
+        return self::attempt_get_route_instance_for_method($methodinfo->getDeclaringClass(), $methodinfo);
+    }
+
+    /**
+     * Get all instances of the \core\router\scope\scopeset attribute for the specified callable if one is available.
+     *
+     * @param callable|array|string $callable
+     * @return scopeset[] The scope sets if any were found.
+     */
+    public static function get_all_required_scopes_for_method(callable|array|string $callable): array {
+        $methodinfo = self::get_reflected_method_from_callable($callable);
+        if (!$methodinfo) {
+            // The method does not exist, or the callable could not be resolved to a class method (for example,
+            // a Closure route handler). There is nothing to inspect for scope attributes.
+            return [];
+        }
+
+        if (count($methodinfo->getAttributes(unscoped_resource::class))) {
+            // This resource has explicitly declared itself as not having any scopes.
+            return [];
+        }
+
+        $methodattributes = $methodinfo->getAttributes(scopeset::class);
+        $scopesets = [];
+        foreach ($methodattributes as $attribute) {
+            try {
+                $scopesets[] = $attribute->newInstance();
+            } catch (\Error $error) {
+                // This is, most likely, a scope that does not exist in this version of Moodle.
+                // We must fail safe and disable the entire scope set.
+                // Other scope sets may still be valid.
+                // Note: It is not safe to skip this - missing scope sets means no scope restrictions.
+                $scopesets[] = new scopeset(new \core\router\scope\unknown_scope());
+            }
+        }
+
+        return $scopesets;
     }
 
     /**

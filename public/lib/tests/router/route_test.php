@@ -25,6 +25,8 @@ use core\router\schema\parameters\query_parameter;
 use core\router\schema\request_body;
 use core\router\schema\response\response;
 use core\tests\router\route_testcase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Tests for user preference API handler.
@@ -32,8 +34,8 @@ use core\tests\router\route_testcase;
  * @package   core
  * @copyright Andrew Lyons <andrew@nicols.co.uk>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- * @covers    \core\router\route
  */
+#[CoversClass(route::class)]
 final class route_test extends route_testcase {
     /**
      * Test that the Attribute is configured correctly.
@@ -154,12 +156,32 @@ final class route_test extends route_testcase {
     /**
      * Ensure that pathtypes and queryparams do not accept the wrong type of parameter.
      *
-     * @dataProvider invalid_constructor_param_types
      * @param array $args
      */
+    #[DataProvider('invalid_constructor_param_types')]
     public function test_params_not_params(array $args): void {
         $this->expectException(\coding_exception::class);
         new route(...$args);
+    }
+
+    /**
+     * The `scopes` constructor argument was removed in favour of the #[scopeset] attribute. Passing a non-empty
+     * `scopes` array must raise a coding_exception so that anyone still using the old API is alerted.
+     */
+    public function test_scopes_extra_argument_throws(): void {
+        $this->expectException(\coding_exception::class);
+        $this->expectExceptionMessage(
+            'Scopes should be defined as a first-class attribute, and not within the route itself',
+        );
+        new route(scopes: ['core_user:user:read']);
+    }
+
+    /**
+     * An empty `scopes` array is tolerated, since older callers may still explicitly pass an empty array.
+     */
+    public function test_scopes_extra_argument_empty_is_allowed(): void {
+        $route = new route(scopes: []);
+        $this->assertInstanceOf(route::class, $route);
     }
 
     /**

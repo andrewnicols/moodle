@@ -25,6 +25,7 @@ use core\router\middleware\error_handling_middleware;
 use core\router\middleware\moodle_api_authentication_middleware;
 use core\router\middleware\moodle_authentication_middleware;
 use core\router\middleware\moodle_bootstrap_middleware;
+use core\router\middleware\moodle_oauth2_scope_attribute_middleware;
 use core\router\middleware\moodle_route_attribute_middleware;
 use core\router\middleware\uri_normalisation_middleware;
 use core\router\middleware\validation_middleware;
@@ -184,6 +185,10 @@ class router {
         // Add the Moodle route attribute to the request.
         // This must be processed after the Routing Middleware has been processed on the request.
         $this->app->add(di::get(moodle_route_attribute_middleware::class));
+
+        // Add the Moodle route attribute to the request.
+        // This must be processed after the Routing Middleware has been processed on the request.
+        $this->app->add(di::get(moodle_oauth2_scope_attribute_middleware::class));
 
         // Add the Routing Middleware as one of the outer-most middleware.
         // This allows the Route to be accessed before it is handled.

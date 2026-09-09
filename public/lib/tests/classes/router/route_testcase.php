@@ -22,6 +22,10 @@ use core\router\route_loader_interface;
 use core\router\schema\openapi_base;
 use core\router\schema\referenced_object;
 use core\router\schema\specification;
+use core\router\scope\scopeset;
+use core\router\scope\unknown_scope;
+use core\router\scope\unscoped_resource;
+use core\router\util;
 use stdClass;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\ServerRequest;
@@ -511,6 +515,130 @@ abstract class route_testcase extends \advanced_testcase {
 
         $payload = $this->decode_response($response);
         $this->assertObjectHasProperty('errorcode', $payload);
+    }
+
+    /**
+     * Assert that the specified route/method does not require any scope to be granted.
+     *
+     * This only passes if the method is explicitly marked with #[unscoped_resource]. A method with no
+     * #[scopeset] attributes for any other reason (for example, because it could not be resolved to a class
+     * method at all) is not considered a valid "unscoped" declaration, and will fail this assertion.
+     *
+     * @param callable|array|string $callable The route method to check, for example [my_api::class, 'method']
+     */
+    protected function assert_route_is_unscoped(
+        callable|array|string $callable,
+    ): void {
+        $methodinfo = util::get_reflected_method_from_callable($callable);
+        $this->assertNotNull($methodinfo, 'Unable to resolve the callable to a class method.');
+        $this->assertNotEmpty(
+            $methodinfo->getAttributes(unscoped_resource::class),
+            'The method is not explicitly marked with #[unscoped_resource].',
+        );
+        $this->assertSame([], util::get_all_required_scopes_for_method($callable));
+    }
+
+    /**
+     * Assert that the specified route/method requires at least one scope to be granted.
+     *
+     * This only checks that a scope decision has been made (i.e. that at least one #[scopeset] attribute is
+     * present) without resolving or comparing the specific scope identifiers required. It is therefore safe
+     * to use even where a scope referenced by the route does not exist in this version of Moodle (for
+     * example, in a plugin which targets a scope only added in a future Moodle release), because it never
+     * calls get_identifier() on any individual scope.
+     *
+     * This is the assertion to reach for when writing a blanket "no route was accidentally left unscoped"
+     * regression test, or when a plugin cannot guarantee that all of the scopes it depends on exist on every
+     * Moodle version it supports.
+     *
+     * @param callable|array|string $callable The route method to check, for example [my_api::class, 'method']
+     */
+    protected function assert_route_is_scoped(
+        callable|array|string $callable,
+    ): void {
+        $scopesets = util::get_all_required_scopes_for_method($callable);
+        if (count($scopesets) === 0) {
+            $rcm = new \ReflectionMethod($callable[0], $callable[1]);
+            $unscoped = $rcm->getAttributes(unscoped_resource::class);
+            if (empty($unscoped)) {
+                $this->fail(
+                    'The route does not declare any required scopes, and is not marked as #[unscoped_resource].'
+                );
+            }
+        } else {
+            $this->assertNotEmpty(
+                $scopesets,
+                'The route does not declare any required scopes, and is not marked as #[unscoped_resource].',
+            );
+        }
+    }
+
+    /**
+     * Assert that the specified route/method requires exactly the given set(s) of scopes.
+     *
+     * The expected scopes are expressed as an array of scope sets, each scope set being an ordered list of
+     * scope identifiers which are all required together (an AND condition, mirroring a single #[scopeset]
+     * attribute). Multiple scope sets represent alternative ways of satisfying the route (an OR condition,
+     * mirroring multiple #[scopeset] attributes on the same method).
+     *
+     * A scope set which requires a scope that cannot be resolved to an identifier (for example, because it
+     * targets a scope which only exists in a different version of Moodle to the one currently running) can
+     * never be satisfied by anyone, and is therefore not a usable way to authorise the route. Such scope
+     * sets are silently ignored before comparing against the expected scopes, so that this assertion remains
+     * valid regardless of whether that scope happens to exist in the version of Moodle running the test.
+     * This means a caller can never know, nor needs to know, whether a given scope set is present in a
+     * route's declaration purely because it does not yet (or no longer) exist.
+     *
+     * @param string[][] $expectedscopesets For example: [['core_user:user:read', 'core_user:user:write']]
+     * @param callable|array|string $callable The route method to check, for example [my_api::class, 'method']
+     */
+    protected function assert_route_required_scopes(
+        array $expectedscopesets,
+        callable|array|string $callable,
+    ): void {
+        $scopesets = array_values(array_filter(
+            util::get_all_required_scopes_for_method($callable),
+            fn (scopeset $scopeset) => !$this->scopeset_contains_unknown_scope($scopeset),
+        ));
+
+        $this->assertCount(
+            count($expectedscopesets),
+            $scopesets,
+            'The number of alternative, satisfiable scope sets required by the route does not match the ' .
+                'expected count.',
+        );
+
+        foreach (array_values($expectedscopesets) as $index => $expectedidentifiers) {
+            $identifiers = array_map(
+                fn ($scope) => $scope->get_identifier(),
+                $scopesets[$index]->requiredscopes,
+            );
+            $this->assertSame(
+                $expectedidentifiers,
+                $identifiers,
+                "Scope set #{$index} did not match the expected required scopes.",
+            );
+        }
+    }
+
+    /**
+     * Determine whether a scope set contains a scope which can never be resolved to an identifier.
+     *
+     * Such a scope set can never be satisfied by anyone (it is a permanent fail-safe placeholder, put in
+     * place of a scope reference which could not be resolved), and is therefore not a usable way to
+     * authorise a route.
+     *
+     * @param scopeset $scopeset
+     * @return bool
+     */
+    private function scopeset_contains_unknown_scope(scopeset $scopeset): bool {
+        foreach ($scopeset->requiredscopes as $scope) {
+            if ($scope instanceof unknown_scope) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

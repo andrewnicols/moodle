@@ -17,6 +17,7 @@
 namespace core\router\middleware;
 
 use core\api\token_manager;
+use core\router\scope\scopeset;
 use core\router\exception\oauth_server_exception;
 use core\router\route;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -129,6 +130,7 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
 
             $apikey = $this->apitokenmanager->get_from_token($token);
             $request = $request->withAttribute('api_token_id', $apikey->get_id());
+            $this->validate_scope($request, $apikey->get_scopes());
 
             $user = $this->complete_user_login($apikey->get_userid());
 
@@ -163,6 +165,9 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
         $oauth2userid = $request->getAttribute('oauth_user_id');
 
         if ($oauth2userid !== null) {
+            $providedscopes = $request->getAttribute('oauth_scopes', []);
+            $this->validate_scope($request, $providedscopes);
+
             if ((int) $oauth2userid === 0) {
                 // System user login.
                 $this->complete_system_login();
@@ -212,5 +217,73 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
         \core\session\manager::init_empty_session();
         \core\session\manager::set_user(\core\user::get_system_user());
         $GLOBALS['SESSION'] = new \stdClass();
+    }
+
+    /**
+     * Validate the scopes against the route.
+     *
+     * @param ServerRequestInterface $request
+     * @param array $grantedscopes
+     * @return void
+     */
+    protected function validate_scope(
+        ServerRequestInterface $request,
+        array $grantedscopes,
+    ): void {
+        $requiredscopesets = \core\router\util::get_all_required_scopes_for_request($request);
+        if (count($requiredscopesets) === 0) {
+            // There are no required scope sets.
+            // No validation required.
+            return;
+        }
+
+        foreach ($requiredscopesets as $requiredscopeset) {
+            if ($requiredscopeset->is_satisfied_by($grantedscopes)) {
+                return;
+            }
+        }
+
+        throw OAuthServerException::accessDenied(
+            $this->get_missing_scope_hint($requiredscopesets, $grantedscopes),
+        );
+    }
+
+    /**
+     * Build a human-readable hint describing which scope(s) are missing for this route.
+     *
+     * @param scopeset[] $scopesets
+     * @param array $grantedscopes
+     * @return string
+     */
+    protected function get_missing_scope_hint(
+        array $scopesets,
+        array $grantedscopes,
+    ): string {
+        $describeset = fn (array $scopes): string => implode(', ', array_map(
+            fn ($scope) => $scope->get_identifier(),
+            $scopes,
+        ));
+
+        // If exactly one scope set is required, tell the caller precisely what is missing.
+        if (count($scopesets) === 1) {
+            $missing = array_filter(
+                $scopesets[0]->requiredscopes,
+                fn ($scope) => !$scope->is_satisfied_by($grantedscopes),
+            );
+
+            return sprintf(
+                'The access token is missing the following required scope(s): %s.',
+                $describeset($missing),
+            );
+        }
+
+        // List all acceptable combinations of scopes.
+        $options = implode(' OR ', array_map(
+            fn (scopeset $scopeset) => '[' . $describeset($scopeset->requiredscopes) . ']',
+            $scopesets,
+        ));
+
+        return "The access token does not have the required scope(s). This endpoint requires one of the "
+            . "following scope combinations: {$options}.";
     }
 }

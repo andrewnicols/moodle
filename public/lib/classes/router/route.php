@@ -120,9 +120,6 @@ class route {
         /** @var null|array Whether to require login or not */
         public readonly ?require_login $requirelogin = null,
 
-        /** @var string[] The list of scopes required to access this page */
-        public readonly ?array $scopes = null,
-
         // Note. We do not make use of these extras.
         // These allow us to add additional arguments in future versions, whilst allowing plugins to use this version.
         ...$extra,
@@ -155,6 +152,12 @@ class route {
         }
         if (count(array_filter($this->headerparams, fn($pathtype) => $pathtype->get_in() !== 'header'))) {
             throw new coding_exception('All header properties must be in the path.');
+        }
+
+        // We originally declared a scopes array in the route, but this has been moved to its own attribute.
+        // No-one should be using this, but declare it in case.
+        if (array_key_exists('scopes', $extra) && count($extra['scopes']) > 0) {
+            throw new coding_exception('Scopes should be defined as a first-class attribute, and not within the route itself');
         }
     }
 

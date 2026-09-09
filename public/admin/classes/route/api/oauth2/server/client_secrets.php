@@ -19,6 +19,7 @@ namespace core_admin\route\api\oauth2\server;
 use core\oauth2\server\entity\client_entity;
 use core\router\require_login;
 use core\router\route;
+use core\router\scope\scopeset;
 use core\router\schema\response\payload_response;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,6 +50,10 @@ class client_secrets {
             requirelogin: true,
             autologinguest: false,
         ),
+    )]
+    #[scopeset(
+        new \core_admin\route\scope\config\read(),
+        new \core_admin\route\scope\config\write(),
     )]
     public function create_secret(
         ServerRequestInterface $request,
@@ -95,6 +100,10 @@ class client_secrets {
             requirelogin: true,
             autologinguest: false,
         ),
+    )]
+    #[scopeset(
+        new \core_admin\route\scope\config\read(),
+        new \core_admin\route\scope\config\write(),
     )]
     public function get_client_secrets(
         ServerRequestInterface $request,
@@ -145,6 +154,10 @@ class client_secrets {
             requirelogin: true,
             autologinguest: false,
         ),
+    )]
+    #[scopeset(
+        new \core_admin\route\scope\config\read(),
+        new \core_admin\route\scope\config\write(),
     )]
     public function revoke_client_secret(
         ServerRequestInterface $request,
