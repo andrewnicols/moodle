@@ -34,11 +34,20 @@ use Psr\Http\Server\RequestHandlerInterface;
 class moodle_api_authentication_middleware extends moodle_authentication_middleware {
     /**
      * Constructor for the API Authentication Middleware.
+     *
+     * @param \League\OAuth2\Server\ResourceServer $server The OAuth2 Resource Server instance.
+     * @param \Slim\App $app The Slim application instance.
+     * @param \core_auth\validate_user $uservalidator The user validator instance.
+     * @param \core\api\repository\api_token_repository $apitokenmanager The API token manager instance.
      */
     public function __construct(
+        /** @var \League\OAuth2\Server\ResourceServer The OAuth2 Resource Server instance. */
         private \League\OAuth2\Server\ResourceServer $server,
+        /** @var \Slim\App The Slim application instance. */
         private \Slim\App $app,
+        /** @var \core_auth\validate_user The user validator instance. */
         private \core_auth\validate_user $uservalidator,
+        /** @var \core\api\repository\api_token_repository The API token manager instance. */
         private \core\api\repository\api_token_repository $apitokenmanager,
     ) {
     }
