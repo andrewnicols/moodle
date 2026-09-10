@@ -482,4 +482,19 @@ class util {
             throw new \moodle_exception('invalidsesskey');
         }
     }
+
+    /**
+     * Check whether a specific scope has been granted for the current request.
+     *
+     * @param ServerRequestInterface $request
+     * @param scope\abstract_scope $scope
+     * @return bool
+     */
+    public static function has_scope_granted(
+        ServerRequestInterface $request,
+        \core\router\scope\abstract_scope $scope,
+    ): bool {
+        $grantedscopes = $request->getAttribute(scopeset::GRANTED_SCOPES, []);
+        return $scope->is_satisfied_by($grantedscopes);
+    }
 }

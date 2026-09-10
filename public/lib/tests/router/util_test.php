@@ -357,6 +357,52 @@ final class util_test extends route_testcase {
     }
 
     /**
+     * has_scope_granted() returns true when the scope's identifier is present in the request's granted_scopes
+     * attribute.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_has_scope_granted_true(): void {
+        $this->add_fake_oauth2scope_plugin();
+
+        $scope = new \fake_oauth2scope\route\scope\resource\read();
+
+        $request = (new ServerRequest('GET', '/'))
+            ->withAttribute('granted_scopes', [$scope->get_identifier()]);
+
+        $this->assertTrue(util::has_scope_granted($request, $scope));
+    }
+
+    /**
+     * has_scope_granted() returns false when the scope's identifier is not present in the request's
+     * granted_scopes attribute.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_has_scope_granted_false(): void {
+        $this->add_fake_oauth2scope_plugin();
+
+        $scope = new \fake_oauth2scope\route\scope\resource\read();
+
+        $request = (new ServerRequest('GET', '/'))
+            ->withAttribute('granted_scopes', ['fake_oauth2scope:resource:write']);
+
+        $this->assertFalse(util::has_scope_granted($request, $scope));
+    }
+
+    /**
+     * has_scope_granted() returns false when the request has no granted_scopes attribute at all.
+     */
+    #[\PHPUnit\Framework\Attributes\RunInSeparateProcess]
+    public function test_has_scope_granted_no_attribute(): void {
+        $this->add_fake_oauth2scope_plugin();
+
+        $scope = new \fake_oauth2scope\route\scope\resource\read();
+
+        $request = new ServerRequest('GET', '/');
+
+        $this->assertFalse(util::has_scope_granted($request, $scope));
+    }
+
+    /**
      * Helper to install the fake_oauth2scope fixture plugin used in scope-related tests.
      */
     protected function add_fake_oauth2scope_plugin(): void {
