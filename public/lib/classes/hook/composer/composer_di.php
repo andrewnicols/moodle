@@ -38,9 +38,26 @@ class composer_di {
             function (): \core\composer {
                 global $CFG;
 
+                $vendordir = null;
+                if (!class_exists(\Composer\InstalledVersions::class)) {
+                    $vendordir = $CFG->root . '/vendor';
+                }
+
+                $rootpackage = \Composer\InstalledVersions::getRootPackage();
+                if (!is_array($rootpackage) || empty($rootpackage['install_path'])) {
+                    $vendordir = $CFG->root . '/vendor';
+                }
+
+                if ($vendordir === null) {
+                    $realpath = realpath($rootpackage['install_path']);
+                    if ($realpath !== false) {
+                        $vendordir = $realpath . '/vendor';
+                    }
+                }
+
                 return new \core\composer(
-                    $CFG->root . '/vendor',
-                    $CFG->root . '/composer.lock'
+                    $vendordir,
+                    dirname($vendordir) . '/composer.lock',
                 );
             }
         );

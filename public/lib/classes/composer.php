@@ -205,12 +205,12 @@ class composer {
         }
 
         $data = \Composer\InstalledVersions::getAllRawData();
+        $rootinstallpath = realpath($this->vendordir . '/..');
 
         foreach ($data as $package) {
-            $packagename = $package['root']['name'] ?? null;
-
-            // Skip if not the Moodle package.
-            if ($packagename !== 'moodle/moodle') {
+            // Skip if not the correct root package.
+            $installpath = $package['root']['install_path'] ?? null;
+            if (empty($installpath) || realpath($installpath) !== $rootinstallpath) {
                 continue;
             }
 
