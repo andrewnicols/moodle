@@ -41,7 +41,7 @@ final class token_manager_test extends \advanced_testcase {
      */
     private function get_manager(): token_manager {
         return \core\di::make(token_manager::class, [
-            'clock' => $this->mock_clock_with_frozen(self::NOW)
+            'clock' => $this->mock_clock_with_frozen(self::NOW),
         ]);
     }
 
