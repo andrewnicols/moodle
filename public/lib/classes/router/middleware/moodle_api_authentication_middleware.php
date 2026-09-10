@@ -33,7 +33,7 @@ use Psr\Http\Server\RequestHandlerInterface;
  */
 class moodle_api_authentication_middleware extends moodle_authentication_middleware {
     /**
-     * Constructor for the API Authentifcation Middleware.
+     * Constructor for the API Authentication Middleware.
      */
     public function __construct(
         private \League\OAuth2\Server\ResourceServer $server,
