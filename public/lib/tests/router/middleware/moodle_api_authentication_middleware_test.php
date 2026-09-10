@@ -167,8 +167,8 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
         $user = $this->getDataGenerator()->create_user();
         $server = $this->createMock(ResourceServer::class);
         $server->method('validateAuthenticatedRequest')
-            ->willReturnCallback(fn (ServerRequestInterface $request) => $request
-                ->withAttribute('oauth_user_id', (string) $user->id)
+            ->willReturnCallback(
+                fn (ServerRequestInterface $request) => $request->withAttribute('oauth_user_id', (string) $user->id)
             );
 
         $route = new route();
@@ -194,8 +194,8 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
         $user = $this->getDataGenerator()->create_user(['suspended' => 1]);
         $server = $this->createMock(ResourceServer::class);
         $server->method('validateAuthenticatedRequest')
-            ->willReturnCallback(fn (ServerRequestInterface $request) => $request
-                ->withAttribute('oauth_user_id', (string) $user->id)
+            ->willReturnCallback(
+                fn (ServerRequestInterface $request) => $request->withAttribute('oauth_user_id', (string) $user->id)
             );
 
         $route = new route();
