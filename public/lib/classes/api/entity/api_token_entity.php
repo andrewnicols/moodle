@@ -48,7 +48,7 @@ class api_token_entity {
     /** @var int The user ID of the token owner. */
     protected int $userid;
 
-    /** @var string[] The space-separated list of scopes. */
+    /** @var string[] An arrayof scopes stored as their string values */
     protected array $scopes;
 
     /** @var int|null The token expiry timestamp. */
