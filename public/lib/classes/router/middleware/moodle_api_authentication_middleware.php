@@ -50,7 +50,7 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
         if ($moodleroute) {
             // Check if this is an API Key request.
             try {
-                $authenticatedrequest = $this->handle_api_key_auth($request, $moodleroute);
+                $authenticatedrequest = $this->handle_api_key_auth($request);
             } catch (OAuthServerException $exception) {
                 // We are going to re-use the OAuth2 exception handling mechanism for API key errors.
                 $response = $this->app->getResponseFactory()->createResponse();
@@ -61,7 +61,7 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
                 // Still not authenticated.
                 // Check for an OAuth2 login credential in the header.
                 try {
-                    $authenticatedrequest = $this->process_oauth2_login($request, $moodleroute);
+                    $authenticatedrequest = $this->process_oauth2_login($request);
                 } catch (OAuthServerException $exception) {
                     // There was an OAuth2 header, but it did not provide good auth.
                     $response = $this->app->getResponseFactory()->createResponse();
@@ -112,7 +112,6 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
      */
     protected function handle_api_key_auth(
         ServerRequestInterface $request,
-        route $moodleroute,
     ): ServerRequestInterface|null {
         if ($request->hasHeader('authorization') === false) {
             // Not an API Key Request.
@@ -149,7 +148,6 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
      */
     protected function process_oauth2_login(
         ServerRequestInterface $request,
-        route $moodleroute,
     ): ServerRequestInterface|null {
         if ($request->hasHeader('authorization') === false) {
             // Not an OAuth2 Request.
