@@ -53,7 +53,15 @@ class api_token_repository {
 
         $record = new \stdClass();
         $record->name = $name;
-        $record->token = password_hash($secret, PASSWORD_DEFAULT);
+
+        // Ensure that scopes are sorted for consistency.
+        sort($scopes);
+
+        // When we hash the secret we include a checksum of the granted scopes and expiry to ensure that these
+        // are not changed in the database.
+        $secret .= $this->calculate_token_checksum($scopes, $expirytime);
+
+        $record->token = password_hash($this->prehash_secret($secret), PASSWORD_DEFAULT);
         $record->userid = $userid;
         $record->scopes = implode(' ', $scopes);
         $record->description = $description;
@@ -189,7 +197,9 @@ class api_token_repository {
     public function validate_token(int $tokenid, string $secret): api_token_entity {
         $tokenentity = $this->get_by_id($tokenid);
 
-        if (!password_verify($secret, $tokenentity->get_token())) {
+        $checksum = $this->calculate_token_checksum($tokenentity->get_scopes(), $tokenentity->get_expirytime());
+
+        if (!password_verify($this->prehash_secret($secret . $checksum), $tokenentity->get_token())) {
             throw new \core\exception\invalid_api_token_exception();
         }
 
@@ -252,5 +262,43 @@ class api_token_repository {
         return array_map(function ($record) {
             return api_token_entity::create_from_record($record);
         }, $records);
+    }
+
+    /**
+     * Pre-hash the secret and its appended checksum.
+     *
+     * The default password_hash() algorithm is bcrypt, which silently truncates its input to 72 bytes. Our
+     * secret is already 64 bytes (see {@see token_manager::SECRET_LENGTH}), leaving very little room for the
+     * scopes/expirytime checksum appended in {@see self::create_token()} and {@see self::validate_token()}.
+     * Without pre-hashing, two tokens whose secret + checksum share the same first ~72 bytes would produce
+     * the same bcrypt hash, defeating the checksum's purpose of detecting tampering with stored scopes or
+     * expiry time.
+     *
+     * Hashing first collapses the input to a fixed-length 64-character SHA-256 digest, well under the bcrypt
+     * limit, regardless of how many scopes are granted or how long their names are.
+     *
+     * @param string $secret The raw secret, with the checksum already appended.
+     * @return string The pre-hashed digest to pass to password_hash()/password_verify().
+     */
+    protected function prehash_secret(
+        #[\SensitiveParameter]
+        string $secret,
+    ): string {
+        return hash('sha256', $secret);
+    }
+
+    /**
+     * Calculate the checksum used as an addendum to the token secret.
+     *
+     * Note: We do not hash the checksum in any way. It is used as-is appended to the token secret.
+     * If we were to shasum it then we would open it to collision attacks.
+     *
+     * @param array $scopes
+     * @param int|null $expirytime
+     * @return string
+     */
+    protected function calculate_token_checksum(array $scopes, ?int $expirytime): string {
+        sort($scopes);
+        return implode(' ', $scopes) . '|' . ($expirytime ?? '');
     }
 }

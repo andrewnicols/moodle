@@ -77,9 +77,12 @@ final class token_manager_test extends \advanced_testcase {
         // The repository stamps this from the injected clock, so the frozen time reaches it.
         $this->assertEquals(self::NOW, $record->timecreated);
 
-        // Only a hash is stored, and it must verify against the secret half of the string.
+        // Only a hash is stored, and it must verify against the secret half of the string combined with
+        // the checksum of the granted scopes and expiry time.
         $this->assertNotEquals($secret, $record->token);
-        $this->assertTrue(password_verify($secret, $record->token));
+        $checksum = 'core_grades:grade:read' . '|' . (self::NOW + WEEKSECS);
+        $password = hash('sha256', $secret . $checksum);
+        $this->assertTrue(password_verify($password, $record->token));
     }
 
     /**
@@ -115,8 +118,9 @@ final class token_manager_test extends \advanced_testcase {
 
         $apitoken = \core\di::make(api_token_repository::class)->get_from_token($token);
 
+        // Scopes are sorted alphabetically before being stored, regardless of the order supplied.
         $this->assertEquals(
-            'core_grades:grade:read core_course:course:read',
+            'core_course:course:read core_grades:grade:read',
             $DB->get_field('rest_api_tokens', 'scopes', ['id' => (int) $apitoken->get_id()], MUST_EXIST),
         );
     }
