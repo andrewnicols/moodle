@@ -103,7 +103,7 @@ class token_manager {
         $this->validate_expiry($expirytime);
         $this->validate_scopes($scopes);
 
-        $secret = random_string(self::SECRET_LENGTH);
+        $secret = bin2hex(random_bytes(self::SECRET_LENGTH));
 
         $token = $this->repository->create_token(
             $name,
