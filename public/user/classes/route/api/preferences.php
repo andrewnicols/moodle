@@ -69,7 +69,7 @@ class preferences {
         ],
     )]
     #[scopeset(
-        new \core_user\route\scope\user\read(),
+        new \core_user\route\scope\user\read_self(),
     )]
     public function get_preferences(
         ResponseInterface $response,
@@ -119,8 +119,8 @@ class preferences {
         ],
     )]
     #[scopeset(
-        new \core_user\route\scope\user\read(),
-        new \core_user\route\scope\user\write(),
+        new \core_user\route\scope\user\read_self(),
+        new \core_user\route\scope\user\update_self(),
     )]
     public function set_preferences(
         ResponseInterface $response,
@@ -201,8 +201,8 @@ class preferences {
         ],
     )]
     #[scopeset(
-        new \core_user\route\scope\user\read(),
-        new \core_user\route\scope\user\write(),
+        new \core_user\route\scope\user\read_self(),
+        new \core_user\route\scope\user\update_self(),
     )]
     public function set_preference(
         ResponseInterface $response,

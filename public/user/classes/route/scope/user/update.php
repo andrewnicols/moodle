@@ -17,16 +17,16 @@
 namespace core_user\route\scope\user;
 
 /**
- * The core_user:user:write scope.
+ * The core_user:user:update scope.
  *
- * This scope is used to handle user write-related routes.
+ * This scope is used to guard updating user information for any user.
  *
  * @package    core_user
  * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-#[\core\router\scope\identifier_attribute('write')]
-#[\core\router\scope\summary_attribute('user_write_scope_summary', 'core_user')]
-#[\core\router\scope\description_attribute('user_write_scope_desc', 'core_user')]
-class write extends abstract_scope {
+#[\core\router\scope\identifier_attribute('update')]
+#[\core\router\scope\summary_attribute('user_update_scope_summary', 'core_user')]
+#[\core\router\scope\description_attribute('user_update_scope_desc', 'core_user')]
+class update extends abstract_scope {
 }

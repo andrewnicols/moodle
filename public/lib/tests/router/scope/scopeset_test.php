@@ -103,4 +103,14 @@ final class scopeset_test extends \advanced_testcase {
 
         $scopeset = new scopeset();
     }
+
+    /**
+     * Ensure that a parent scope satisfies all of its children.
+     */
+    public function test_parent_scope_satisfies_child_scope(): void {
+        $scope = new \core_user\route\scope\user\read_self();
+
+        $this->assertTrue($scope->is_satisfied_by(['core_user:user:read:self']));
+        $this->assertTrue($scope->is_satisfied_by(['core_user:user:read']));
+    }
 }

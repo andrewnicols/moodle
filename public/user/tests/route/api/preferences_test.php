@@ -306,7 +306,7 @@ final class preferences_test extends route_testcase {
     #[DataProvider('required_scopes_provider')]
     public function test_required_scopes(string $method, array $expectedidentifiers): void {
         $this->assert_route_required_scopes(
-            [$expectedidentifiers],
+            $expectedidentifiers,
             [preferences::class, $method],
         );
     }
@@ -318,9 +318,80 @@ final class preferences_test extends route_testcase {
      */
     public static function required_scopes_provider(): array {
         return [
-            'get_preferences' => ['get_preferences', ['core_user:user:read']],
-            'set_preferences' => ['set_preferences', ['core_user:user:read', 'core_user:user:write']],
-            'set_preference' => ['set_preference', ['core_user:user:read', 'core_user:user:write']],
+            'get_preferences' => [
+                'get_preferences', [
+                    ['core_user:user:read:self'],
+                ],
+            ],
+            'set_preferences' => [
+                'set_preferences', [
+                    ['core_user:user:read:self', 'core_user:user:update:self'],
+                ],
+            ],
+            'set_preference' => [
+                'set_preference', [
+                    ['core_user:user:read:self', 'core_user:user:update:self'],
+                ],
+            ],
         ];
+    }
+
+    /**
+     * Ensure that each route is authorized by any scope set which satisfies its requirements, whether
+     * the granted scopes are the required scopes themselves or an ancestor of them.
+     *
+     * @param string $method
+     * @param string[][] $scopesets
+     */
+    #[DataProvider('satisfying_scopes_provider')]
+    public function test_satisfying_scopes(string $method, array $scopesets): void {
+        foreach ($scopesets as $scopeset) {
+            $this->assert_route_authorized_with_scopes(
+                $scopeset,
+                [preferences::class, $method],
+            );
+        }
+    }
+
+    /**
+     * Data provider for test_satisfying_scopes.
+     *
+     * @return array
+     */
+    public static function satisfying_scopes_provider(): array {
+        return [
+            'get_preferences' => [
+                'get_preferences', [
+                    ['core_user:user:read'],
+                    ['core_user:user:read:self'],
+                ],
+            ],
+            'set_preferences' => [
+                'set_preferences', [
+                    ['core_user:user:read', 'core_user:user:update'],
+                    ['core_user:user:read', 'core_user:user:update:self'],
+                    ['core_user:user:read:self', 'core_user:user:update'],
+                    ['core_user:user:read:self', 'core_user:user:update:self'],
+                ],
+            ],
+            'set_preference' => [
+                'set_preference', [
+                    ['core_user:user:read', 'core_user:user:update'],
+                    ['core_user:user:read', 'core_user:user:update:self'],
+                    ['core_user:user:read:self', 'core_user:user:update'],
+                    ['core_user:user:read:self', 'core_user:user:update:self'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Reading preferences requires the read scope and is not satisfied by just the write scope
+     */
+    public function test_not_satisfying_scopes(): void {
+        $this->assert_route_not_authorized_with_scopes(
+            ['core_user:user:update'],
+            [preferences::class, 'get_preferences'],
+        );
     }
 }
