@@ -254,49 +254,6 @@ final class api_token_repository_test extends \advanced_testcase {
     }
 
     /**
-     * Test token update.
-     */
-    public function test_update_token(): void {
-        $this->resetAfterTest();
-
-        $user = $this->getDataGenerator()->create_user();
-        $repository = new api_token_repository();
-
-        $token = $repository->create_token(
-            'Original Name',
-            'secret',
-            $user->id,
-            ['scope'],
-            'Original Description',
-            1700000000
-        );
-
-        $updates = [
-            'name' => 'Updated Name',
-            'token' => 'updatedsecrethash',
-            'userid' => 99999,
-            'description' => 'Updated Description',
-            'scopes' => 'updatedscope',
-            'expirytime' => 1800000000,
-        ];
-
-        $repository->update_token($token->get_id(), $updates);
-
-        $updatedtoken = $repository->get_by_id($token->get_id());
-
-        // Verify allowed updates successfully persisted.
-        $this->assertEquals('Updated Name', $updatedtoken->get_name());
-        $this->assertEquals('Updated Description', $updatedtoken->get_description());
-        $this->assertEquals(['updatedscope'], $updatedtoken->get_scopes());
-        $this->assertEquals(1800000000, $updatedtoken->get_expirytime());
-        // Verify that protected fields were NOT modified.
-        // The user ID should not have changed.
-        $this->assertEquals($user->id, $updatedtoken->get_userid());
-        // The token hash should not have changed.
-        $this->assertNotEquals('updatedsecrethash', $updatedtoken->get_token());
-    }
-
-    /**
      * Test revoking a token.
      */
     public function test_revoke_token(): void {

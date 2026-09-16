@@ -128,34 +128,6 @@ class api_token_repository {
     }
 
     /**
-     * Update an existing token.
-     *
-     * Only the following fields can be updated via this method: name, description, scopes, expirytime.
-     *
-     * @param int $tokenid The token ID.
-     * @param array $updates The updates.
-     * @return void
-     */
-    public function update_token(int $tokenid, array $updates): void {
-        global $DB;
-
-        $allowedfields = ['name', 'description', 'scopes', 'expirytime'];
-        $filteredupdates = array_intersect_key($updates, array_flip($allowedfields));
-
-        if (empty($filteredupdates)) {
-            return;
-        }
-
-        $token = $DB->get_record('rest_api_tokens', ['id' => $tokenid], '*', MUST_EXIST);
-
-        foreach ($filteredupdates as $field => $value) {
-            $token->{$field} = $value;
-        }
-
-        $DB->update_record('rest_api_tokens', $token);
-    }
-
-    /**
      * Revoke a token.
      *
      * @param int $tokenid The token ID.
