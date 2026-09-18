@@ -219,6 +219,35 @@ final class api_token_repository_test extends \advanced_testcase {
     }
 
     /**
+     * Validating a token ID that does not exist in the database at all must fail with the same
+     * exception as a token ID that exists but has the wrong secret. Otherwise, an attacker could
+     * enumerate valid token IDs by noticing that non-existent IDs raise a different exception
+     * ({@see \dml_missing_record_exception}) than existing-but-wrong-secret ones.
+     */
+    public function test_validate_token_fails_the_same_way_for_missing_and_wrong_secret(): void {
+        $this->resetAfterTest();
+
+        $user = $this->getDataGenerator()->create_user();
+        $repository = new api_token_repository();
+
+        $token = $repository->create_token('Token', 'secret', $user->id, ['scope']);
+
+        // A token ID which was never created.
+        $missingid = $token->get_id() + 1000;
+
+        try {
+            $repository->validate_token($missingid, 'secret');
+            $this->fail('Expected an invalid_api_token_exception to be thrown.');
+        } catch (\core\exception\invalid_api_token_exception $e) {
+            // Expected.
+        }
+
+        // An existing token ID, but with the wrong secret, must raise the exact same exception class.
+        $this->expectException(\core\exception\invalid_api_token_exception::class);
+        $repository->validate_token($token->get_id(), 'wrongsecret');
+    }
+
+    /**
      * Test getting a token by ID.
      */
     public function test_get_by_id(): void {
@@ -416,7 +445,10 @@ final class api_token_repository_test extends \advanced_testcase {
 
         $repository = new api_token_repository();
 
-        $this->expectException(\dml_missing_record_exception::class);
+        // A token ID with no matching row must be rejected the same way as one with a wrong secret
+        // (invalid_api_token_exception), not with a lower-level dml_missing_record_exception. Otherwise
+        // the exception type itself would tell a caller whether a given token ID exists at all.
+        $this->expectException(\core\exception\invalid_api_token_exception::class);
         $repository->get_from_token($this->build_token_string(999999, 'somesecret'));
     }
 

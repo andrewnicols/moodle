@@ -158,7 +158,7 @@ final class moodle_api_authentication_middleware_test extends route_testcase {
             ->withHeader('Authorization', "Bearer {$bearer}")
             ->withAttribute(route::class, $route);
 
-        $this->expectException(\dml_missing_record_exception::class);
+        $this->expectException(\core\exception\invalid_api_token_exception::class);
         $this->get_middleware()->process($request, $this->get_recording_handler());
     }
 

@@ -157,6 +157,14 @@ class api_token_repository {
     }
 
     /**
+     * A pre-computed bcrypt hash, used only to burn an equivalent amount of CPU time to a real
+     * password_verify() call when no matching token row exists to check against.
+     *
+     * @var string
+     */
+    protected const string DUMMY_HASH = '$2y$10$VeFTuEKh7qoWSrbPxWsnVeyLNgcZCrakBQAvqKQcVbaro8Jj2smvu';
+
+    /**
      * Validate a token.
      *
      * @param int $tokenid The token ID.
@@ -167,7 +175,18 @@ class api_token_repository {
      * @throws \core\exception\revoked_api_token_exception If the token has been revoked.
      */
     public function validate_token(int $tokenid, string $secret): api_token_entity {
-        $tokenentity = $this->get_by_id($tokenid);
+        try {
+            $tokenentity = $this->get_by_id($tokenid);
+        } catch (\dml_missing_record_exception $e) {
+            // Without this, a request for a token ID that does not exist returns immediately with a
+            // different exception type to one for an ID that exists but has the wrong secret (which
+            // only fails after the cost of a bcrypt verify). Both the timing difference and the
+            // distinct exception would let an attacker enumerate valid token IDs by probing every
+            // integer. Performing a dummy verify here keeps both the timing and the exception thrown
+            // the same in either case.
+            password_verify($this->prehash_secret($secret), self::DUMMY_HASH);
+            throw new \core\exception\invalid_api_token_exception();
+        }
 
         $checksum = $this->calculate_token_checksum($tokenentity->get_scopes(), $tokenentity->get_expirytime());
 
