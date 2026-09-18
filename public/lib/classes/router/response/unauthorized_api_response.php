@@ -14,31 +14,23 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\exception;
+namespace core\router\response;
 
 /**
- * Invalid API token exception.
+ * A Unauthorized response for an API call.
  *
  * @package    core
- * @subpackage exception
- * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class invalid_api_token_exception extends api_token_exception implements
-    response_aware_exception
-{
-    /**
-     * Constructor.
-     *
-     * @param mixed $a Additional information
-     * @param string|null $debuginfo Information to aid the debugging process
-     */
-    public function __construct($a = null,  ?string $debuginfo = null) {
-        parent::__construct('invalidapitoken', 'error', $a, $debuginfo);
+class unauthorized_api_response extends exception_response {
+    #[\Override]
+    public static function get_exception_status_code(): int {
+        return 401;
     }
 
     #[\Override]
-    public function get_response_classname(): string {
-        return \core\router\response\unauthorized_api_response::class;
+    protected static function get_response_description(): string {
+        return 'Unauthorized';
     }
 }
