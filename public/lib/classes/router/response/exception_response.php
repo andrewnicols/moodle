@@ -62,6 +62,7 @@ abstract class exception_response extends \core\router\schema\response\response 
         \Exception $exception,
         ...$extra,
     ): payload_response {
+        $extra['request'] = $request;
         return new payload_response(
             payload: static::get_payload_data($exception, ...$extra),
             request: $request,

@@ -575,9 +575,9 @@ class component {
         // Note: This list should be kept _extremely_ minimal and generally
         // when adding a newly discovered classes older ones should be removed.
         // Always keep moodle_exception in place.
-        $keyclasses = [
+    $keyclasses = [
             \core\exception\moodle_exception::class,
-            \core\router\scope\scopeset::class,
+            \core\router\response\unauthorized_api_response::class,
         ];
         foreach ($keyclasses as $classname) {
             if (!array_key_exists($classname, $cache['classmap'])) {
