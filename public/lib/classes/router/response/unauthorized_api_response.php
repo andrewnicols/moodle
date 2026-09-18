@@ -14,40 +14,35 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-namespace core\exception;
+namespace core\router\response;
+
+use core\exception\www_authenticate_aware_exception;
 
 /**
- * Revoked API token exception.
+ * An Unauthorized response for an API call.
  *
  * @package    core
- * @subpackage exception
- * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class revoked_api_token_exception extends api_token_exception implements
-    response_aware_exception,
-    www_authenticate_aware_exception
+class unauthorized_api_response extends exception_response {
+    use www_authenticate_header_trait;
 
-{
-    /**
-     * Constructor.
-     *
-     * @param mixed $a Additional information
-     * @param string|null $debuginfo Information to aid the debugging process
-     */
-    public function __construct($a = null, ?string $debuginfo = null) {
-        parent::__construct('revokedapitoken', 'error', $a, $debuginfo);
+    #[\Override]
+    public static function get_exception_status_code(): int {
+        return 401;
     }
 
     #[\Override]
-    public function get_response_classname(): string {
-        return \core\router\response\unauthorized_api_response::class;
+    protected static function get_additional_headers(\Exception $exception): array {
+        return array_merge(
+            parent::get_additional_headers($exception),
+            static::get_www_authenticate_header($exception, 'invalid_token'),
+        );
     }
 
     #[\Override]
-    public function get_www_authenticate_params(): array {
-        return [
-            'error="invalid_token"',
-        ];
+    protected static function get_response_description(): string {
+        return 'Unauthorized';
     }
 }
