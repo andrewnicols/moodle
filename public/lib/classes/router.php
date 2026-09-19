@@ -235,6 +235,7 @@ class router {
             $this->app->getResponseFactory(),
         );
         $errorhandler->registerErrorRenderer('text/html', error_renderer::class);
+        $errorhandler->registerErrorRenderer('application/problem+json', \Slim\Error\Renderers\JsonErrorRenderer::class);
         $errormiddleware->setErrorHandler(
             [
                 response_aware_exception::class,
