@@ -32,9 +32,9 @@ class error_handler extends ErrorHandler {
     #[\Override]
     protected function determineContentType(ServerRequestInterface $request): ?string {
         // For anything hitting /rest/api/v2 we will default to JSON.
-        $restbase = (new \core\url('/rest/api/v2/'))->get_path();
+        $restbase = (new \core\url(route_loader_interface::ROUTE_GROUP_API))->get_path();
         if (substr($request->getUri()->getPath(), 0, strlen($restbase)) === $restbase) {
-            return 'application/json';
+            return 'application/problem+json';
         }
 
         // Fall back to the default behaviour of using the Accept header.
