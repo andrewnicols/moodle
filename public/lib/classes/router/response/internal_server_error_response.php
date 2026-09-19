@@ -17,20 +17,15 @@
 namespace core\router\response;
 
 /**
- * A standard response for user preferences.
+ * A generic response for any exception which does not specify its own response class.
  *
  * @package    core
- * @copyright  2023 Andrew Lyons <andrew@nicols.co.uk>
+ * @copyright  Andrew Lyons <andrew@nicols.co.uk>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class not_found_response extends exception_response {
-    #[\Override]
-    public static function get_exception_status_code(): int {
-        return 404;
-    }
-
+class internal_server_error_response extends exception_response {
     #[\Override]
     protected static function get_response_description(): string {
-        return 'Not Found';
+        return 'Internal Server Error';
     }
 }

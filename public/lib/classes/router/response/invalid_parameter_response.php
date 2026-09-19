@@ -31,6 +31,6 @@ class invalid_parameter_response extends exception_response {
 
     #[\Override]
     protected static function get_response_description(): string {
-        return 'The parameter provided was invalid in some way.';
+        return 'Bad Request';
     }
 }
