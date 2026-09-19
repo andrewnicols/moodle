@@ -19,7 +19,7 @@ namespace core\router;
 use core\exception\invalid_parameter_exception;
 use core\exception\response_aware_exception;
 use core\router;
-use core\router\response\exception_response;
+use core\router\response\internal_server_error_response;
 use core\router\response\invalid_parameter_response;
 use core\router\schema\response\response_type;
 use Psr\Container\ContainerInterface;
@@ -95,7 +95,7 @@ class response_handler {
             ),
 
             // Otherwise use the default.
-            default => exception_response::get_response($request, $exception),
+            default => internal_server_error_response::get_response($request, $exception),
         };
 
         return $this->standardise_response($response);

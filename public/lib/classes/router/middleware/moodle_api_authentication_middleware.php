@@ -152,7 +152,14 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
             $request = $request
                 ->withAttribute('api_token_id', $apikey->get_id())
                 ->withAttribute(scopeset::GRANTED_SCOPES, $apikey->get_scopes());
-            $this->validate_scope($request, $apikey->get_scopes());
+            $this->validate_scope(
+                $request,
+                $apikey->get_scopes(),
+                fn (string $hint) => new \core\exception\access_denied_exception(
+                    'apitokenmissingscopes',
+                    a: $hint,
+                ),
+            );
 
             $user = $this->complete_user_login($apikey->get_userid());
 
@@ -187,7 +194,11 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
         if ($oauth2userid !== null) {
             $providedscopes = $request->getAttribute('oauth_scopes', []);
             $request = $request->withAttribute(scopeset::GRANTED_SCOPES, $providedscopes);
-            $this->validate_scope($request, $providedscopes);
+            $this->validate_scope(
+                $request,
+                $providedscopes,
+                fn (string $hint) => OAuthServerException::accessDenied($hint),
+            );
 
             if ((int) $oauth2userid === 0) {
                 // System user login.
@@ -250,6 +261,7 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
     protected function validate_scope(
         ServerRequestInterface $request,
         array $grantedscopes,
+        callable $exception,
     ): void {
         $requiredscopesets = \core\router\util::get_all_required_scopes_for_request($request);
         if (count($requiredscopesets) === 0) {
@@ -264,7 +276,7 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
             }
         }
 
-        throw OAuthServerException::accessDenied(
+        throw $exception(
             $this->get_missing_scope_hint($requiredscopesets, $grantedscopes),
         );
     }
