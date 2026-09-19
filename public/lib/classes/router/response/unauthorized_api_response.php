@@ -16,8 +16,6 @@
 
 namespace core\router\response;
 
-use core\exception\www_authenticate_aware_exception;
-
 /**
  * An Unauthorized response for an API call.
  *
@@ -39,10 +37,5 @@ class unauthorized_api_response extends exception_response {
             parent::get_additional_headers($exception),
             static::get_www_authenticate_header($exception, 'invalid_token'),
         );
-    }
-
-    #[\Override]
-    protected static function get_response_description(): string {
-        return 'Unauthorized';
     }
 }

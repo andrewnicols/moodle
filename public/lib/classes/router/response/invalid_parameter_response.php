@@ -38,9 +38,4 @@ class invalid_parameter_response extends exception_response {
             static::get_www_authenticate_header($exception, 'invalid_request'),
         );
     }
-
-    #[\Override]
-    protected static function get_response_description(): string {
-        return 'The parameter provided was invalid in some way.';
-    }
 }

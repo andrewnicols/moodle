@@ -153,7 +153,10 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
             $request = $request
                 ->withAttribute('api_token_id', $apikey->get_id())
                 ->withAttribute(scopeset::GRANTED_SCOPES, $apikey->get_scopes());
-            $this->validate_scope($request, $apikey->get_scopes());
+            $this->validate_scope(
+                $request,
+                $apikey->get_scopes(),
+            );
 
             $user = $this->complete_user_login($apikey->get_userid());
 
@@ -186,7 +189,10 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
         if ($oauth2userid !== null) {
             $providedscopes = $request->getAttribute('oauth_scopes', []);
             $request = $request->withAttribute(scopeset::GRANTED_SCOPES, $providedscopes);
-            $this->validate_scope($request, $providedscopes);
+            $this->validate_scope(
+                $request,
+                $providedscopes,
+            );
 
             if ((int) $oauth2userid === 0) {
                 // System user login.
@@ -244,7 +250,6 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
      *
      * @param ServerRequestInterface $request
      * @param array $grantedscopes
-     * @return void
      */
     protected function validate_scope(
         ServerRequestInterface $request,
