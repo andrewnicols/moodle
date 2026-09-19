@@ -1,0 +1,17 @@
+issueNumber: MDL-89850
+notes:
+  core:
+    - message: >
+        REST API Exceptions have been standardised to the RFC-9457 response
+        format.
+
+
+        The following fields have been removed:
+
+
+        - `stacktrace` - removed without replacement
+
+        - `errorcode` - replaced by the `status` field
+
+        - `message` - replaced by the `detail` field
+      type: improved
