@@ -4,7 +4,7 @@ notes:
     - message: >
         The fields used in the response for a REST exception have been changed
         to support the RFC-9457 standard. As part of this the following fields
-        have been deprecated and removed:
+        have been deprecated:
 
 
         - `message` - replaced by the new `detail` field;
