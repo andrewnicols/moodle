@@ -16,6 +16,8 @@
 
 namespace core_admin\form\oauth2\server;
 
+use core\oauth2\server\repository\scope_repository;
+use core\output\html_writer;
 use moodleform;
 
 /**
@@ -28,6 +30,51 @@ use moodleform;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 abstract class base_client_form extends moodleform {
+    /**
+     * Prefix for the per-scope checkbox elements.
+     *
+     * @var string
+     */
+    protected const string SCOPE_ELEMENT_PREFIX = 'scope_';
+
+    /**
+     * Name of the element that labels the scope list and carries its error.
+     *
+     * @var string
+     */
+    protected const string SCOPE_LABEL = 'scopeslabel';
+
+    /**
+     * Create an instance of a client form.
+     *
+     * @param scope_repository $scoperepository
+     * @param array $customdata
+     */
+    public function __construct(
+        /** @var scope_repository */
+        protected scope_repository $scoperepository,
+        array $customdata = [],
+    ) {
+        parent::__construct(
+            customdata: $customdata,
+        );
+    }
+
+    /**
+     * Server-side validation.
+     *
+     * @param array $data Submitted form data.
+     * @param array $files Submitted files.
+     * @return array Array of errors indexed by field name.
+     */
+    public function validation($data, $files): array {
+        $errors = parent::validation($data, $files);
+
+        $errors += $this->validate_scope_fields($data, $files);
+
+        return $errors;
+    }
+
     /**
      * Add the common client name and description fields.
      *
@@ -197,5 +244,115 @@ abstract class base_client_form extends moodleform {
         $descriptionspan = \html_writer::span($description, 'text-muted small');
 
         return \html_writer::div($namespan . $descriptionspan, 'd-inline-flex flex-column ms-1');
+    }
+
+
+    /**
+     * Map the available scopes to form element names, keyed by element name.
+     *
+     * @return string[] Scope identifiers keyed by element name.
+     */
+    private function get_scope_elements(): array {
+        $elements = [];
+
+        // Colons are not usable in element names, so each becomes an underscore. Deriving the
+        // name from the identifier rather than the position keeps it stable as scopes change.
+        foreach (array_keys($this->scoperepository->get_all_scopes()) as $identifier) {
+            $elements[self::SCOPE_ELEMENT_PREFIX . str_replace(':', '_', $identifier)] = $identifier;
+        }
+
+        return $elements;
+    }
+
+    /**
+     * Add the scope fields to the form.
+     */
+    protected function add_scope_fields(): void {
+        global $OUTPUT;
+
+        $scopes = $this->scoperepository->get_all_scopes();
+
+        $mform = $this->_form;
+
+        // The hint carries the label, so "Scopes" sits in the label column like every other
+        // field on this form and level with something to read. Not on the first checkbox: an
+        // advcheckbox carrying a label renders its text in a described-by span rather than as
+        // the label itself, which leaves a trailing line box and makes that row taller.
+        // Marked required by hand: the requirement is that any one of the boxes is ticked, which
+        // is not something a rule on a single element expresses.
+        $mform->addElement(
+            'static',
+            self::SCOPE_LABEL,
+            get_string('oauth2server_scopes', 'admin') . ' ' . $OUTPUT->pix_icon('req', get_string('requiredelement', 'form')),
+            // What the scopes are for, rather than that one is required: the marker beside the
+            // label says that already, and so does the error when none is ticked.
+            $OUTPUT->notification(get_string('oauth2server_client_scope_list', 'admin'), 'info', false),
+        );
+
+        // A checkbox per scope, each its own form row: a form group would lay them out inline,
+        // and a description too wide for the rest of the line drops beneath its own checkbox.
+        foreach ($this->get_scope_elements() as $elementname => $identifier) {
+            $scope = $scopes[$identifier];
+            $mform->addElement(
+                'advcheckbox',
+                $elementname,
+                '',
+                html_writer::div(
+                    $scope::get_summary() . ' - ' .
+                        html_writer::tag('code', $identifier, ['class' => 'fw-normal text-muted']),
+                    'fw-bold',
+                )
+                . html_writer::div($scope::get_description(), 'text-muted small'),
+            );
+            $mform->setType($elementname, PARAM_BOOL);
+        }
+    }
+
+    /**
+     * Validate scope fields.
+     *
+     * @param array $data
+     * @param array $files
+     */
+    private function validate_scope_fields(array $data, array $files): array {
+        $errors = [];
+        if (empty($this->get_submitted_scopes($data))) {
+            // Reported against the label, which is the row that names the list.
+            $errors[self::SCOPE_LABEL] = get_string('oauth2serverclientnoscopes', 'error');
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Resolve the checked scope elements back to scope identifiers.
+     *
+     * @param array $data The submitted data.
+     * @return string[] The identifiers of the checked scopes.
+     */
+    public function get_submitted_scopes(array $data): array {
+        $selected = [];
+
+        foreach ($this->get_scope_elements() as $elementname => $identifier) {
+            if (!empty($data[$elementname])) {
+                $selected[] = $identifier;
+            }
+        }
+
+        return $selected;
+    }
+
+    /**
+     * Set the current scope data on the form.
+     *
+     * @param string[] $scopes
+     */
+    protected function set_scope_data(array $scopes): void {
+        foreach ($scopes as $identifier) {
+            $fieldidentifier = self::SCOPE_ELEMENT_PREFIX . str_replace(':', '_', $identifier);
+            $this->set_data([
+                $fieldidentifier => 1,
+            ]);
+        }
     }
 }

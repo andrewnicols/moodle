@@ -512,6 +512,7 @@ $string['oauth2clientsecretlimitreached'] = 'This OAuth 2 client already has the
 $string['oauth2upgradetokenerror'] = 'Could not upgrade OAuth 2 token. HTTP status for remote endpoint: {$a}';
 $string['oauth2refreshtokenerror'] = 'Could not refresh OAuth 2 token. HTTP status for remote endpoint: {$a}';
 $string['oauth2refreshtokentaskerror'] = 'Could not refresh OAuth 2 token for one or more issuers. View task output for details.';
+$string['oauth2serverclientnoscopes'] = 'You must select at least one scope.';
 $string['onlyadmins'] = 'Only administrators can do that';
 $string['onlyeditingteachers'] = 'Only editing teachers can do that';
 $string['onlyeditown'] = 'You can only edit your own information';

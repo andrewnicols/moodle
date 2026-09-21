@@ -16,7 +16,7 @@
 
 namespace core\oauth2\server\entity;
 
-use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Entities\Traits\ClientTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
 
@@ -29,7 +29,7 @@ use League\OAuth2\Server\Entities\Traits\EntityTrait;
  * @copyright  2026 Mihail Geshoski <mihailgesoski@gmail.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class client_entity implements ClientEntityInterface {
+class client_entity implements client_entity_interface {
     use ClientTrait;
     use EntityTrait;
 
@@ -81,6 +81,9 @@ class client_entity implements ClientEntityInterface {
     /** @var bool Whether PKCE is required for the client */
     protected bool $ispkcerequired;
 
+    /** @var string[] The list of scopes approved for use by this client */
+    protected array $scopes;
+
     /**
      * Get the ID of the client.
      *
@@ -129,6 +132,29 @@ class client_entity implements ClientEntityInterface {
         }
 
         return $this->ispkcerequired;
+    }
+
+    /**
+     * The list of scope identifiers allowed for use by this OAuth2 Client.
+     *
+     * @return string[]
+     */
+    public function get_scopes(): array {
+        return $this->scopes;
+    }
+
+    /**
+     * Whether a scope requested by the user has been allowed for this client.
+     *
+     * @param ScopeEntityInterface|null $scope
+     * @return bool
+     */
+    public function is_scope_approved(?ScopeEntityInterface $scope): bool {
+        if ($scope === null) {
+            return false;
+        }
+
+        return in_array($scope->getIdentifier(), $this->scopes, true);
     }
 
     /**
@@ -185,6 +211,7 @@ class client_entity implements ClientEntityInterface {
         $client->isConfidential = (bool) $clientrecord->isconfidential;
         $client->granttypes = !empty($clientrecord->granttypes) ? explode(',', $clientrecord->granttypes) : [];
         $client->ispkcerequired = (bool) $clientrecord->ispkcerequired;
+        $client->scopes = explode(' ', $clientrecord->scopes);
 
         return $client;
     }

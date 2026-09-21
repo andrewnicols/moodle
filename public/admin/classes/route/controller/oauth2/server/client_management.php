@@ -109,7 +109,7 @@ class client_management {
 
         $PAGE->set_pagetype('admin-oauth2server-client-create');
 
-        $mform = new \core_admin\form\oauth2\server\create_client_form();
+        $mform = \core\di::make(\core_admin\form\oauth2\server\create_client_form::class);
 
         // Handle form cancellation.
         if ($mform->is_cancelled()) {
@@ -138,6 +138,8 @@ class client_management {
                 $granttypes[] = client_entity::GRANT_TYPE_CLIENT_CREDENTIALS;
             }
 
+            $scopes = $mform->get_submitted_scopes((array) $data);
+
             $clientmanager = \core\di::get(\core\oauth2\server\client_manager::class);
             $cliententity = $clientmanager->create_client(
                 $data->name,
@@ -147,6 +149,7 @@ class client_management {
                 $data->description,
                 (int) $data->clienttype === client_entity::TYPE_CONFIDENTIAL,
                 ($ispublicclient || !empty($data->ispkcerequired)),
+                $scopes,
             );
 
             if ($cliententity->isConfidential()) {
@@ -207,18 +210,22 @@ class client_management {
 
         $clientmanager = \core\di::get(\core\oauth2\server\client_manager::class);
 
-        $mform = new \core_admin\form\oauth2\server\edit_client_form(null, ['cliententity' => $cliententity]);
+        $mform = \core\di::make(\core_admin\form\oauth2\server\edit_client_form::class, [
+            'customdata' => [
+                'cliententity' => $cliententity,
+            ],
+        ]);
 
         // Handle form cancellation.
         if ($mform->is_cancelled()) {
             redirect(\core\router\util::get_path_for_callable([self::class, 'list_clients']));
         }
-
         // Process the form data.
         if ($data = $mform->get_data()) {
             $updates = [
                 'name' => $data->name,
                 'description' => $data->description,
+                'scopes' => $mform->get_submitted_scopes((array) $data),
             ];
 
             if ($cliententity->isConfidential() && $cliententity->supportsGrantType(client_entity::GRANT_TYPE_AUTHORIZATION_CODE)) {

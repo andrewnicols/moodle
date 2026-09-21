@@ -2357,5 +2357,26 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2026091400.01);
     }
 
+    if ($oldversion < 2026092100.00) {
+        // Define field scopes to be added to oauth2_server_clients.
+        $table = new xmldb_table('oauth2_server_clients');
+        $field = new xmldb_field('scopes', XMLDB_TYPE_TEXT, null, null, null, null, null, 'lastaccessed');
+
+        // Conditionally launch add field scopes.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Set the initial value.
+        $DB->set_field('oauth2_server_clients', 'scopes', '');
+
+        // Launch change of nullability for field scopes.
+        $field = new xmldb_field('scopes', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, null, 'lastaccessed');
+        $dbman->change_field_notnull($table, $field);
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2026092100.00);
+    }
+
     return true;
 }

@@ -68,6 +68,11 @@ class edit_client_form extends base_client_form {
             ]);
         }
 
+        // Add the scope fields.
+        // This restricts which scopes a token has access to.
+        $this->add_scope_fields();
+        $this->set_scope_data($cliententity->get_scopes());
+
         // Action buttons.
         $this->add_action_buttons(true);
     }

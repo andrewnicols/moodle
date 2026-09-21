@@ -58,6 +58,7 @@ final class refresh_token_repository_test extends \advanced_testcase {
             'status' => client_entity::STATUS_ACTIVE,
             'isconfidential' => 1,
             'timecreated' => time(),
+            'scopes' => '',
         ]);
 
         $DB->insert_record('oauth2_server_client_access_tokens', [
@@ -108,6 +109,7 @@ final class refresh_token_repository_test extends \advanced_testcase {
             'status' => client_entity::STATUS_ACTIVE,
             'isconfidential' => 1,
             'timecreated' => time(),
+            'scopes' => '',
         ]);
 
         $DB->insert_record('oauth2_server_client_access_tokens', [

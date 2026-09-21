@@ -104,12 +104,14 @@ final class oauth2_test extends \advanced_testcase {
      * @param string $description
      * @param bool $isconfidential Whether the client can keep a secret confidential.
      * @param bool $ispkcerequired Whether PKCE is required for this client.
+     * @param array $scopes The scope identifiers this client is approved to use.
      */
     protected function make_client_entity(
         string $name = 'Example client',
         string $description = 'This application would like to access your account.',
         bool $isconfidential = true,
         bool $ispkcerequired = false,
+        array $scopes = [],
     ): client_entity {
         $clientmanager = \core\di::get(\core\oauth2\server\client_manager::class);
 
@@ -120,6 +122,7 @@ final class oauth2_test extends \advanced_testcase {
             description: $description,
             isconfidential: $isconfidential,
             ispkcerequired: $ispkcerequired,
+            scopes: $scopes,
         );
 
         return $client;
@@ -1376,7 +1379,7 @@ final class oauth2_test extends \advanced_testcase {
 
         $this->resetAfterTest();
 
-        $client = $this->make_client_entity();
+        $client = $this->make_client_entity(scopes: ['moodle']);
         $requestid = $this->store_auth_request_in_session($this->make_auth_request($client, scopes: ['moodle']));
 
         $clientrepository = $this->createStub(ClientRepositoryInterface::class);

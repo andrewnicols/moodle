@@ -16,6 +16,7 @@
 
 namespace core\oauth2\server\entity;
 
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 
@@ -291,6 +292,7 @@ final class client_entity_test extends \advanced_testcase {
      * @param array $expectedgranttypes The expected grant types supported by the client.
      * @param bool $expectedpkcerequired The expected PKCE enabled state.
      * @param array $expectedredirecturis The expected redirect URIs.
+     * @param array $expectedscopes The expected scopes allowed for the client.
      * @return void
      */
     #[DataProvider('create_from_record_provider')]
@@ -305,7 +307,8 @@ final class client_entity_test extends \advanced_testcase {
         bool $expectedconfidential,
         array $expectedgranttypes,
         bool $expectedpkcerequired,
-        array $expectedredirecturis
+        array $expectedredirecturis,
+        array $expectedscopes,
     ): void {
         $this->resetAfterTest();
         $systemcontext = \context_system::instance();
@@ -323,6 +326,18 @@ final class client_entity_test extends \advanced_testcase {
         $this->assertSame($expectedgranttypes, $client->get_grant_types());
         $this->assertSame($expectedpkcerequired, $client->is_pkce_required());
         $this->assertSame($expectedredirecturis, (array)$client->getRedirectUri());
+        $this->assertSame($expectedscopes, $client->get_scopes());
+
+        foreach ($expectedscopes as $approvedscope) {
+            $scope = $this->createMock(ScopeEntityInterface::class);
+            $scope->method('getIdentifier')->willReturn($approvedscope);
+            $this->assertTrue($client->is_scope_approved($scope));
+        }
+
+        $unapprovedscope = $this->createMock(ScopeEntityInterface::class);
+        $unapprovedscope->method('getIdentifier')->willReturn('not-an-approved-scope');
+        $this->assertFalse($client->is_scope_approved($unapprovedscope));
+        $this->assertFalse($client->is_scope_approved(null));
     }
 
     /**
@@ -343,6 +358,7 @@ final class client_entity_test extends \advanced_testcase {
                     'isconfidential' => 1,
                     'granttypes' => client_entity::GRANT_TYPE_CLIENT_CREDENTIALS,
                     'ispkcerequired' => false,
+                    'scopes' => 'profile email',
                 ],
                 [(object) ['uri' => 'https://example.test/callback']],
                 10,
@@ -354,6 +370,7 @@ final class client_entity_test extends \advanced_testcase {
                 [client_entity::GRANT_TYPE_CLIENT_CREDENTIALS],
                 false,
                 ['https://example.test/callback'],
+                ['profile', 'email'],
             ],
             'disabled, public client with multiple redirect uris' => [
                 (object) [
@@ -372,6 +389,7 @@ final class client_entity_test extends \advanced_testcase {
                         ],
                     ),
                     'ispkcerequired' => true,
+                    'scopes' => 'profile',
                 ],
                 [
                     (object) ['uri' => 'https://example.test/alt1'],
@@ -389,6 +407,7 @@ final class client_entity_test extends \advanced_testcase {
                 ],
                 true,
                 ['https://example.test/alt1', 'https://example.test/alt2'],
+                ['profile'],
             ],
         ];
     }

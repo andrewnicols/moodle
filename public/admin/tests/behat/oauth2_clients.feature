@@ -18,6 +18,7 @@ Feature: Create OAuth2 clients
     And I should see "Callback URIs"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
     And the "Proof Key for Code Exchange" "checkbox" should be enabled
+    And I set the field "View courses and course categories" to "1"
     When I press "Create client"
     Then "Test Confidential Client" "heading" should exist
     And "Secrets" "heading" should exist
@@ -40,6 +41,7 @@ Feature: Create OAuth2 clients
     And I set the field "Client Credentials" to "1"
     And I should not see "Callback URIs"
     And "Proof Key for Code Exchange" "field" should not be visible
+    And I set the field "View courses and course categories" to "1"
     When I press "Create client"
     Then "Test Confidential Client" "heading" should exist
     And "Secrets" "heading" should exist
@@ -62,6 +64,7 @@ Feature: Create OAuth2 clients
     And I set the field "Client Credentials" to "0"
     And I should see "Callback URIs"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
+    And I set the field "View courses and course categories" to "1"
     And the "Proof Key for Code Exchange" "checkbox" should be enabled
     When I press "Create client"
     Then "Test Confidential Client" "heading" should exist
@@ -86,6 +89,7 @@ Feature: Create OAuth2 clients
     And I should see "Callback URIs"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
     And the "Proof Key for Code Exchange" "field" should be disabled
+    And I set the field "View courses and course categories" to "1"
     When I press "Create client"
     Then "OAuth 2 clients" "heading" should exist
     And "Secrets" "heading" should not exist
@@ -121,6 +125,9 @@ Feature: Create OAuth2 clients
     And I set the field "redirecturi[0]" to "http://example.com/callback"
     And I press "Create client"
     And I should see "Must be a valid HTTPS URL (e.g., https://example.com/callback). HTTP is only allowed for loopback addresses." in the "Callback URIs" "form_row"
+    And I set the field "redirecturi[0]" to "http://localhost/callback"
+    And I press "Create client"
+    And I should see "You must select at least one scope." in the "Scopes" "form_row"
 
   Scenario: Generate secrets for a confidential OAuth2 client
     Given I click on "Create client" "link"
@@ -129,6 +136,7 @@ Feature: Create OAuth2 clients
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
     And I set the field "Client Credentials" to "1"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     And "Test Confidential Client" "heading" should exist
     And "Secrets" "heading" should exist
@@ -156,6 +164,7 @@ Feature: Create OAuth2 clients
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
     And I set the field "Client Credentials" to "1"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     And I press "Generate secret"
     And I click on "Close" "button" in the "Secret generated" "dialogue"
@@ -176,6 +185,7 @@ Feature: Create OAuth2 clients
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
     And I set the field "Client Credentials" to "1"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     # Generate the first secret.
     And I press "Generate secret"
@@ -203,6 +213,7 @@ Feature: Create OAuth2 clients
     And I click on "Confidential" "radio"
     And I set the field "Authorization Code" to "0"
     And I set the field "Client Credentials" to "1"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     And I click on "Go back to OAuth 2 clients" "link"
     And I click on "Edit" "link" in the "Test Confidential Client" "table_row"
@@ -220,8 +231,10 @@ Feature: Create OAuth2 clients
     And I should see "0" in the "#client-active-secrets" "css_element"
     And "Manage secrets" "link" should exist in the "#client-active-secrets" "css_element"
     And the following fields match these values:
-      | Name        | Test Confidential Client |
-      | Description | A test confidential OAuth2 client |
+      | Name                               | Test Confidential Client          |
+      | Description                        | A test confidential OAuth2 client |
+      | View courses and course categories | 1                                 |
+      | Restore courses                    | 0                                 |
     And "Confidential" "radio" should not exist
     And "Public" "radio" should not exist
     And "Authorization Code" "field" should not exist
@@ -231,6 +244,7 @@ Feature: Create OAuth2 clients
     # Edit the client name and description.
     And I set the field "Name" to "Updated Confidential Client"
     And I set the field "Description" to "Updated confidential OAuth2 client"
+    And I set the field "Restore courses" to "1"
     When I press "Save changes"
     Then the following should exist in the "reportbuilder-table" table:
       | Name                             |
@@ -251,6 +265,7 @@ Feature: Create OAuth2 clients
     And I set the field "Authorization Code" to "1"
     And I set the field "Client Credentials" to "1"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     And I click on "Go back to OAuth 2 clients" "link"
     And I click on "Edit" "link" in the "Test Confidential Client" "table_row"
@@ -306,6 +321,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test public OAuth2 client"
     And I click on "Public" "radio"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     And I click on "Edit" "link" in the "Test Public Client" "table_row"
     # Validate the layout of the edit client page.
@@ -358,6 +374,7 @@ Feature: Create OAuth2 clients
     And I set the field "Authorization Code" to "1"
     And I set the field "Client Credentials" to "1"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     # Generate a secret for the client.
     And I press "Generate secret"
@@ -401,6 +418,7 @@ Feature: Create OAuth2 clients
     And I set the field "Authorization Code" to "1"
     And I set the field "Client Credentials" to "1"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     # Generate a secret for the client.
     And I press "Generate secret"
@@ -439,6 +457,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "A test public OAuth2 client"
     And I click on "Public" "radio"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     # Create another public OAuth2 client.
     Given I click on "Create client" "link"
@@ -446,6 +465,7 @@ Feature: Create OAuth2 clients
     And I set the field "Description" to "Another public OAuth2 client"
     And I click on "Public" "radio"
     And I set the field "redirecturi[0]" to "https://example.com/callback"
+    And I set the field "View courses and course categories" to "1"
     And I press "Create client"
     And "Delete" "button" should not exist in the "Test Public Client" "table_row"
     # Disable the client.

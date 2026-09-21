@@ -58,6 +58,7 @@ final class auth_code_repository_test extends \advanced_testcase {
             'status' => client_entity::STATUS_ACTIVE,
             'isconfidential' => 1,
             'timecreated' => time(),
+            'scopes' => '',
         ]);
 
         $client = new client_entity();
@@ -107,6 +108,7 @@ final class auth_code_repository_test extends \advanced_testcase {
             'status' => client_entity::STATUS_ACTIVE,
             'isconfidential' => 1,
             'timecreated' => time(),
+            'scopes' => '',
         ]);
 
         $DB->insert_record('oauth2_server_client_auth_codes', [

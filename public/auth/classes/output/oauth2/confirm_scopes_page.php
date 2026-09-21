@@ -104,12 +104,24 @@ class confirm_scopes_page extends oauth2_page {
             ];
         };
 
-        $data->requestedscopes = array_map(
-            $normalisescope,
-            // Filter out any missing scopes.
-            array_filter(
-                $this->requestedscopes,
-                static fn($scope) => $scope instanceof ScopeEntityInterface && $scope instanceof abstract_scope,
+        $data->requestedscopes = array_values(
+            array_map(
+                $normalisescope,
+                // Filter out any missing scopes.
+                array_filter(
+                    $this->requestedscopes,
+                    function ($scope): bool {
+                        if (!($scope instanceof ScopeEntityInterface)) {
+                            return false;
+                        }
+
+                        if (!($scope instanceof abstract_scope)) {
+                            return false;
+                        }
+
+                        return $this->client->is_scope_approved($scope);
+                    },
+                ),
             ),
         );
 

@@ -364,6 +364,53 @@ final class client_manager_test extends \advanced_testcase {
     }
 
     /**
+     * Test that update_client updates the scopes when a 'scopes' key is supplied.
+     *
+     * @return void
+     */
+    public function test_update_client_with_scopes(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $manager = $this->get_manager();
+        $record = $this->create_fixture_client($manager);
+        $this->assertSame('', $record->scopes);
+
+        $manager->update_client((int) $record->id, [
+            'scopes' => ['profile', 'email'],
+        ]);
+
+        $updated = $DB->get_record('oauth2_server_clients', ['id' => $record->id], '*', MUST_EXIST);
+        $this->assertSame('profile email', $updated->scopes);
+        $this->assertSame(self::NOW, (int) $updated->timemodified);
+    }
+
+    /**
+     * Test that update_client leaves the scopes untouched when no 'scopes' key is supplied.
+     *
+     * This is a regression test: update_client() must not overwrite the scopes with an empty
+     * value whenever an update omits the 'scopes' key entirely.
+     *
+     * @return void
+     */
+    public function test_update_client_without_scopes_leaves_scopes_unchanged(): void {
+        global $DB;
+
+        $this->resetAfterTest();
+
+        $manager = $this->get_manager();
+        $record = $this->create_fixture_client($manager);
+
+        $manager->update_client((int) $record->id, ['scopes' => ['profile']]);
+        $manager->update_client((int) $record->id, ['name' => 'Renamed client']);
+
+        $updated = $DB->get_record('oauth2_server_clients', ['id' => $record->id], '*', MUST_EXIST);
+        $this->assertSame('Renamed client', $updated->name);
+        $this->assertSame('profile', $updated->scopes);
+    }
+
+    /**
      * Test that update_client refuses to change anything but the name and the description.
      *
      * @return void

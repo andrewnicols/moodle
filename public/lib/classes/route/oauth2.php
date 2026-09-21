@@ -1078,6 +1078,7 @@ class oauth2 {
         if ($data['state'] !== null) {
             $authrequest->setState($data['state']);
         }
+
         $authrequest->setScopes(array_values(array_filter(array_map(
             fn (string $identifier): ?ScopeEntityInterface => $this->scoperepository->getScopeEntityByIdentifier($identifier),
             $data['scopes'],

@@ -17,6 +17,7 @@
 namespace core\oauth2\server\repository;
 
 use core\oauth2\server\entity\client_entity;
+use core\oauth2\server\entity\client_entity_interface;
 use core\router\scope\abstract_scope;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
@@ -54,6 +55,15 @@ class scope_repository implements ScopeRepositoryInterface {
     ): array {
         global $DB;
 
+        // The League interface only requires a ClientEntityInterface here, but every client entity
+        // produced by this OAuth2 server also implements client_entity_interface, which is needed
+        // below to check whether each scope is approved for this specific client.
+        if (!$cliententity instanceof client_entity_interface) {
+            throw new \coding_exception(
+                'The client entity passed to finalizeScopes() must implement client_entity_interface.',
+            );
+        }
+
         if ($useridentifier === null) {
             // No user identifier means this is not a user-specific grant (for example, the
             // client_credentials grant). There are no user-granted scopes to check against, but
@@ -71,13 +81,13 @@ class scope_repository implements ScopeRepositoryInterface {
 
         // Validate against the specific session if exchanging an authorization code.
         if ($granttype === client_entity::GRANT_TYPE_AUTHORIZATION_CODE && $authcodeid !== null) {
-            $approvedscopes = $DB->get_field(
+            $usergrantedscopes = $DB->get_field(
                 'oauth2_server_client_auth_codes',
                 'scopes',
                 ['identifier' => $authcodeid],
             );
         } else { // Otherwise, fall back to the persistent global user grant table for refresh tokens.
-            $approvedscopes = $DB->get_field(
+            $usergrantedscopes = $DB->get_field(
                 'oauth2_server_client_granted_scopes',
                 'scope',
                 [
@@ -88,16 +98,23 @@ class scope_repository implements ScopeRepositoryInterface {
         }
 
         // No approved scopes.
-        if ($approvedscopes === false || empty(trim($approvedscopes))) {
+        if ($usergrantedscopes === false || empty(trim($usergrantedscopes))) {
             return [];
         }
 
-        $approvedscopesarray = explode(' ', $approvedscopes);
+        // Restrict the list of scopes to only those approved for this OAauth2 Client.
+        $usergrantedscopesarray = explode(' ', $usergrantedscopes);
 
         // Remove any scopes that have not been approved.
         foreach ($scopes as $key => $scope) {
-            if (!in_array($scope->getIdentifier(), $approvedscopesarray, true)) {
+            if (!in_array($scope->getIdentifier(), $usergrantedscopesarray, true)) {
                 unset($scopes[$key]);
+                continue;
+            }
+
+            if (!$cliententity->is_scope_approved($scope)) {
+                unset($scopes[$key]);
+                continue;
             }
         }
 

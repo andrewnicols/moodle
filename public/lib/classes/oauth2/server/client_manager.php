@@ -107,6 +107,7 @@ class client_manager {
         ?string $description = null,
         bool $isconfidential = true,
         bool $ispkcerequired = true,
+        array $scopes = [],
     ): client_entity {
         $redirecturis = array_values(array_unique($redirecturis));
 
@@ -128,6 +129,7 @@ class client_manager {
             'ispkcerequired' => (int) $ispkcerequired,
             'timecreated' => $now,
             'timemodified' => $now,
+            'scopes' => implode(' ', $scopes),
         ];
 
         $transaction = $this->db->start_delegated_transaction();
@@ -175,9 +177,9 @@ class client_manager {
     /**
      * Update the administrative metadata of a client.
      *
-     * Only the name and the description can be changed. Any other key in $updates is ignored, so
-     * that security-relevant properties such as the client identifier or the owner context can
-     * never be altered through this method.
+     * Only the name, description, PKCE requirement and scopes can be changed. Any other key in
+     * $updates is ignored, so that security-relevant properties such as the client identifier or
+     * the owner context can never be altered through this method.
      *
      * @param int $clientid The client ID.
      * @param array $updates The new values, keyed by field name.
@@ -188,7 +190,10 @@ class client_manager {
         $allowedfields = ['name', 'description'];
         $filteredupdates = array_intersect_key($updates, array_flip($allowedfields));
 
-        if (empty($filteredupdates)) {
+        $haspkceupdate = array_key_exists('ispkcerequired', $updates);
+        $hasscopesupdate = array_key_exists('scopes', $updates);
+
+        if (empty($filteredupdates) && !$haspkceupdate && !$hasscopesupdate) {
             return;
         }
 
@@ -198,8 +203,12 @@ class client_manager {
             $client->{$field} = $value;
         }
 
-        if ($client->isconfidential && array_key_exists('ispkcerequired', $updates)) {
+        if ($client->isconfidential && $haspkceupdate) {
             $client->ispkcerequired = (int) $updates['ispkcerequired'];
+        }
+
+        if ($hasscopesupdate) {
+            $client->scopes = implode(' ', $updates['scopes']);
         }
 
         $client->timemodified = $this->clock->time();

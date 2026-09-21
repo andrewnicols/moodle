@@ -17,9 +17,9 @@
 namespace core\oauth2\server\repository;
 
 use core\oauth2\server\entity\client_entity;
+use core\oauth2\server\entity\client_entity_interface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
-use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\UserEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\ScopeRepositoryInterface;
@@ -58,6 +58,7 @@ final class granted_scopes_repository_test extends \advanced_testcase {
                 'status' => client_entity::STATUS_ACTIVE,
                 'isconfidential' => 1,
                 'timecreated' => time(),
+                'scopes' => '',
             ],
         );
 
@@ -82,8 +83,11 @@ final class granted_scopes_repository_test extends \advanced_testcase {
         });
 
         // Mock client entity.
-        $client = $this->createMock(ClientEntityInterface::class);
+        $client = $this->createMock(client_entity_interface::class);
         $client->method('getIdentifier')->willReturn($clientidentifier);
+        // This test focuses on which scopes the user has granted, not on which scopes the client
+        // itself is approved for, so the client approves every scope it is asked about.
+        $client->method('is_scope_approved')->willReturn(true);
 
         // Mock user entity.
         $userentity = $this->createMock(UserEntityInterface::class);
@@ -151,6 +155,7 @@ final class granted_scopes_repository_test extends \advanced_testcase {
                 'status' => client_entity::STATUS_ACTIVE,
                 'isconfidential' => 1,
                 'timecreated' => time(),
+                'scopes' => '',
             ]
         );
 
@@ -175,8 +180,11 @@ final class granted_scopes_repository_test extends \advanced_testcase {
         });
 
         // Mock client entity.
-        $client = $this->createMock(ClientEntityInterface::class);
+        $client = $this->createMock(client_entity_interface::class);
         $client->method('getIdentifier')->willReturn($clientidentifier);
+        // This test focuses on which scopes the user has granted, not on which scopes the client
+        // itself is approved for, so the client approves every scope it is asked about.
+        $client->method('is_scope_approved')->willReturn(true);
 
         // Mock user entity.
         $userentity = $this->createMock(UserEntityInterface::class);
@@ -237,6 +245,7 @@ final class granted_scopes_repository_test extends \advanced_testcase {
                 'status' => client_entity::STATUS_ACTIVE,
                 'isconfidential' => 1,
                 'timecreated' => time(),
+                'scopes' => '',
             ]
         );
 
@@ -253,7 +262,7 @@ final class granted_scopes_repository_test extends \advanced_testcase {
         }
 
         // Mock client entity.
-        $client = $this->createMock(ClientEntityInterface::class);
+        $client = $this->createMock(client_entity_interface::class);
         $client->method('getIdentifier')->willReturn($clientidentifier);
 
         // Mock user entity.

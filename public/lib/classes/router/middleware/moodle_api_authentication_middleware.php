@@ -181,9 +181,7 @@ class moodle_api_authentication_middleware extends moodle_authentication_middlew
         // Note: Do not catch exceptions here - we want to return an error response for invalid OAuth2 requests.
         // If we catch and return false then we'll fall back to cookie auth incorrectly.
         $request = $this->server->validateAuthenticatedRequest($request);
-
         $oauth2userid = $request->getAttribute('oauth_user_id');
-
         if ($oauth2userid !== null) {
             $providedscopes = $request->getAttribute('oauth_scopes', []);
             $request = $request->withAttribute(scopeset::GRANTED_SCOPES, $providedscopes);

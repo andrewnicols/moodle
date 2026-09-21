@@ -1050,6 +1050,7 @@ $string['numberofmissingstrings'] = 'Number of missing strings: {$a}';
 $string['numberofstrings'] = 'Total number of strings: {$a->strings}<br />Missing: {$a->missing} ({$a->missingpercent}&nbsp;%)';
 $string['oauth2server_activesecrets'] = 'Active secrets';
 $string['oauth2server_client'] = 'OAuth 2 client';
+$string['oauth2server_client_scope_list'] = 'Clients are restricted to the following scopes.';
 $string['oauth2server_clientaddcallbackuri'] = 'Add another callback URI';
 $string['oauth2server_clientbacktoclients'] = 'Go back to OAuth 2 clients';
 $string['oauth2server_clientcallbackurisinvalid'] = 'Must be a valid HTTPS URL (e.g., https://example.com/callback). HTTP is only allowed for loopback addresses.';
@@ -1105,6 +1106,7 @@ $string['oauth2server_noactivesecrets'] = '<i class="fa fa-circle-info me-2"></i
 $string['oauth2server_revoke'] = 'Revoke';
 $string['oauth2server_revokeactivesecrettoaddnew'] = 'To generate a new secret, you must first revoke one of the existing <strong>Active</strong> secrets.';
 $string['oauth2server_revokeinactivesecrettoaddnew'] = 'To generate a new secret, you must first revoke one of the existing <strong>Inactive</strong> secrets.';
+$string['oauth2server_scopes'] = 'Scopes';
 $string['oauth2server_secretsinactivewarning'] = 'Secrets cannot be used for authentication until the client is re-enabled.';
 $string['oauth2server_secretsnotavailablepublicclient'] = 'This OAuth 2 client is not confidential and does not support client secrets.';
 $string['oauth2server_statusactive'] = 'Active';
