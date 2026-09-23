@@ -28,6 +28,7 @@ use core_reportbuilder\local\models\report;
 use core_reportbuilder\local\report\action;
 use core_reportbuilder\local\report\base;
 use core_reportbuilder\local\report\column;
+use core_reportbuilder\local\report\row_action;
 
 /**
  * Base class for system reports
@@ -50,7 +51,7 @@ abstract class system_report extends base {
     /** @var bool $filterformdefault Whether to use the default filters form */
     private $filterformdefault = true;
 
-    /** @var action|action_menu_filler[] $actions */
+    /** @var row_action|action_menu_filler[] $actions */
     private $actions = [];
 
     /** @var column $initialsortcolumn */
@@ -209,7 +210,7 @@ abstract class system_report extends base {
      *
      * @param action $action
      */
-    final public function add_action(action $action): void {
+    final public function add_action(row_action $action): void {
         $this->actions[] = $action;
     }
 
@@ -236,7 +237,7 @@ abstract class system_report extends base {
     /**
      * Return report actions
      *
-     * @return action|action_menu_filler[]
+     * @return row_action|action_menu_filler[]
      */
     final public function get_actions(): array {
         return $this->actions;

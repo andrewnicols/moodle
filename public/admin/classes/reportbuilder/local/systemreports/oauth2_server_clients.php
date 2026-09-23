@@ -18,12 +18,15 @@ namespace core_admin\reportbuilder\local\systemreports;
 
 use core\oauth2\server\entity\client_entity;
 use core\output\help_icon;
+use core\output\pix_icon;
 use core_admin\route\controller\oauth2\server\client_management;
 use core_reportbuilder\local\report\column;
 use core_reportbuilder\local\report\filter;
+use core_reportbuilder\local\report\routed_action;
 use core_reportbuilder\output\report_action;
 use core_reportbuilder\system_report;
 use lang_string;
+use stdClass;
 
 /**
  * OAuth2 server clients system report class.
@@ -51,10 +54,33 @@ class oauth2_server_clients extends system_report {
             ],
             'a',
         ));
+        $this->add_base_fields('client.id as client');
+        $this->add_base_fields('client.isconfidential as isconfidential');
 
         // Add columns and filters.
         $this->add_columns();
         $this->add_filters();
+
+        // Edit client action.
+        $this->add_action((new routed_action(
+            [client_management::class, 'edit_client'],
+            new pix_icon('t/edit', ''),
+            [],
+            false,
+            new lang_string('edit', 'moodle'),
+        )));
+
+        // Manage client secrets action.
+        // Only available to confidential clients.
+        $this->add_action((new routed_action(
+            [client_management::class, 'manage_client_secrets'],
+            new pix_icon('t/edit', ''),
+            [],
+            false,
+            new lang_string('oauth2server_managesecrets', 'admin'),
+        ))
+            ->add_callback(static fn (stdClass $row): bool => !! (int) $row->isconfidential)
+        );
     }
 
     /**
