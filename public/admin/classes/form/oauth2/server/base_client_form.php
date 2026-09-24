@@ -45,6 +45,31 @@ abstract class base_client_form extends moodleform {
     protected const string SCOPE_LABEL = 'scopeslabel';
 
     /**
+     * HTML id of the fieldset wrapping the scope checkboxes.
+     *
+     * @var string
+     */
+    protected const string SCOPES_FIELDSET_ID = 'id_scopesfieldset';
+
+    /**
+     * The "Scopes" label text, including its required-field marker.
+     *
+     * Shared by the static label row and the fieldset's legend, so both read the same thing.
+     *
+     * @var string
+     */
+    protected string $scopeslabel = '';
+
+    /**
+     * The element holding the scopes fieldset's opening tag and legend.
+     *
+     * Its text is rewritten in {@see display()} once the scopes error, if any, is known.
+     *
+     * @var \HTML_QuickForm_html|null
+     */
+    protected ?\HTML_QuickForm_html $scopesfieldsetopen = null;
+
+    /**
      * Create an instance of a client form.
      *
      * @param scope_repository $scoperepository
@@ -274,6 +299,10 @@ abstract class base_client_form extends moodleform {
 
         $mform = $this->_form;
 
+        $this->scopeslabel = get_string('oauth2server_scopes', 'admin')
+            . ' '
+            . $OUTPUT->pix_icon('req', get_string('requiredelement', 'form'));
+
         // The hint carries the label, so "Scopes" sits in the label column like every other
         // field on this form and level with something to read. Not on the first checkbox: an
         // advcheckbox carrying a label renders its text in a described-by span rather than as
@@ -283,11 +312,19 @@ abstract class base_client_form extends moodleform {
         $mform->addElement(
             'static',
             self::SCOPE_LABEL,
-            get_string('oauth2server_scopes', 'admin') . ' ' . $OUTPUT->pix_icon('req', get_string('requiredelement', 'form')),
+            $this->scopeslabel,
             // What the scopes are for, rather than that one is required: the marker beside the
             // label says that already, and so does the error when none is ticked.
             $OUTPUT->notification(get_string('oauth2server_client_scope_list', 'admin'), 'info', false),
         );
+
+        // A real fieldset around the checkboxes, so their shared "select at least one" error
+        // describes the group as a unit rather than any single checkbox. Built from raw 'html'
+        // elements rather than mform's own grouping: a group renders its members with the
+        // "-inline" template, which would collapse the one-checkbox-per-row layout below onto a
+        // single line. Whether it is invalid is not known until the form has been validated, so
+        // the opening tag starts out plain and is rewritten in display() once that is known.
+        $this->scopesfieldsetopen = $mform->addElement('html', $this->get_scopes_fieldset_open(false));
 
         // A checkbox per scope, each its own form row: a form group would lay them out inline,
         // and a description too wide for the rest of the line drops beneath its own checkbox.
@@ -306,6 +343,50 @@ abstract class base_client_form extends moodleform {
             );
             $mform->setType($elementname, PARAM_BOOL);
         }
+
+        $mform->addElement('html', html_writer::end_tag('fieldset'));
+    }
+
+    /**
+     * Build the scopes fieldset's opening tag and its legend.
+     *
+     * @param bool $invalid Whether the scopes error is present, so the fieldset should be
+     *                       exposed as invalid and take focus once the page renders.
+     * @return string
+     */
+    protected function get_scopes_fieldset_open(bool $invalid): string {
+        $attributes = ['id' => self::SCOPES_FIELDSET_ID];
+
+        if ($invalid) {
+            // Mirrors what mform already does for a single invalid control such as Name:
+            // aria-invalid and aria-describedby point at the error, and, since there is no
+            // JavaScript involved in a full page reload, tabindex plus autofocus is what
+            // actually moves focus here once the browser has finished parsing the page.
+            $attributes += [
+                'tabindex' => '-1',
+                'autofocus' => 'autofocus',
+                'aria-invalid' => 'true',
+                'aria-describedby' => 'id_error_' . self::SCOPE_LABEL,
+            ];
+        }
+
+        return html_writer::start_tag('fieldset', $attributes) .
+            html_writer::tag('legend', $this->scopeslabel, ['class' => 'visually-hidden']);
+    }
+
+    /**
+     * Print html form.
+     *
+     * Once the form has been through validation, the scopes error (if any) is known, so the
+     * fieldset opening tag added in {@see definition()} is rewritten here to carry it.
+     */
+    #[\Override]
+    public function display(): void {
+        if ($this->_form->getElementError(self::SCOPE_LABEL)) {
+            $this->scopesfieldsetopen->setText($this->get_scopes_fieldset_open(true));
+        }
+
+        parent::display();
     }
 
     /**
