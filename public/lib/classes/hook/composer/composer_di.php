@@ -38,21 +38,52 @@ class composer_di {
             function (): \core\composer {
                 global $CFG;
 
+                // We need to provide the vendor directory for the Moodle composer installation.
+                // We accept the following locations:
+                // 1. The default vendor directory within the Moodle root were the package type is 'moodle-core'; or
+                // 2. A composer package type of 'project', and an install path which is:
+                // 2a. in the parent directory of the Moodle root; or
+                // 2b. completely separate from the Moodle root (symlink).
+                // If none of these conditions are met, we will fallback to the default vendor directory within the Moodle root.
+
                 $vendordir = null;
                 if (class_exists(\Composer\InstalledVersions::class)) {
-                    $rootpackage = \Composer\InstalledVersions::getRootPackage();
-                    if (!is_array($rootpackage) || empty($rootpackage['install_path'])) {
-                        $vendordir = $CFG->root . '/vendor';
+                    $rootrealpath = realpath($CFG->root);
+                    foreach (\Composer\InstalledVersions::getAllRawData() as $packagedata) {
+                        $package = $packagedata['root'];
+                        // First check if this is the main Moodle core package -- Moodle is not installed using Composer.
+                        if ($package['type'] === 'moodle-core') {
+                            if (isset($package['install_path']) && is_dir($package['install_path'] . '/vendor')) {
+                                $vendordir = $package['install_path'] . '/vendor';
+                                break;
+                            }
+                        }
+
+                        // Our next option is that Moodle is installed using Composer.
+                        // In these cases we expect the Composer type to be 'project' rather than library or some other type.
+                        if ($package['type'] === 'project') {
+                            $realpath = $package['install_path'] ?? null;
+                            if (str_starts_with($rootrealpath, $realpath)) {
+                                $vendordir = $realpath . '/vendor';
+                                break;
+                            }
+
+                            // Our final option is that Moodle is installed using Composer,
+                            // but the Composer install path is not a parent, or child, of the Moodle root.
+                            // This can happen with symlinks.
+                            // Note: We already checked if the realpath is a parent of the Moodle root,
+                            // so here we only need to check if it is not a child.
+                            if (!str_starts_with($realpath, $rootrealpath)) {
+                                $vendordir = $realpath . '/vendor';
+                                break;
+                            }
+                        }
                     }
-                } else {
-                    $vendordir = $CFG->root . '/vendor';
                 }
 
                 if ($vendordir === null) {
-                    $realpath = realpath($rootpackage['install_path']);
-                    if ($realpath !== false) {
-                        $vendordir = $realpath . '/vendor';
-                    }
+                    // Fallback to the default vendor directory within the Moodle root if no specific vendor directory was found.
+                    $vendordir = $CFG->root . '/vendor';
                 }
 
                 return new \core\composer(
