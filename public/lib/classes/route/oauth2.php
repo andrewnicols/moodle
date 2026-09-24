@@ -746,9 +746,14 @@ class oauth2 {
         $approved = $request->getParsedBody()['approve'] ?? '0';
 
         if ($approved === '1') {
-            $selectedscopes = array_map(function ($scope) {
-                return $scope->getIdentifier();
-            }, $authrequest->getScopes());
+            $client = $authrequest->getClient();
+            $selectedscopes = array_map(
+                fn (ScopeEntityInterface $scope): string => $scope->getIdentifier(),
+                array_filter(
+                    $authrequest->getScopes(),
+                    static fn (ScopeEntityInterface $scope): bool => $client->is_scope_approved($scope),
+                ),
+            );
 
             $grantedscopesrepository->store_granted_scopes_for_user(
                 $authrequest->getClient(),
