@@ -2378,5 +2378,38 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2026092300.01);
     }
 
+    if ($oldversion < 2026092800.01) {
+        // Define table api_idempotency_keys to be created.
+        $table = new xmldb_table('api_idempotency_keys');
+
+        // Adding fields to table api_idempotency_keys.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('keyhash', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('requesthash', XMLDB_TYPE_CHAR, '64', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('state', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, 'processing');
+        $table->add_field('statuscode', XMLDB_TYPE_INTEGER, '3', null, null, null, null);
+        $table->add_field('response', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('timetoexpire', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+
+        // Adding keys to table api_idempotency_keys.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('keyhash_uk', XMLDB_KEY_UNIQUE, ['keyhash']);
+
+        // Adding indexes to table api_idempotency_keys.
+        $table->add_index('userid', XMLDB_INDEX_NOTUNIQUE, ['userid']);
+        $table->add_index('timetoexpire', XMLDB_INDEX_NOTUNIQUE, ['timetoexpire']);
+
+        // Conditionally launch create table for api_idempotency_keys.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2026092800.01);
+    }
+
     return true;
 }
