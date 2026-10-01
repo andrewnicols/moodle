@@ -429,6 +429,15 @@ $tasks = array(
         'month' => '*'
     ],
     [
+        'classname' => 'core\task\api_idempotency_key_cleanup_task',
+        'blocking' => 0,
+        'minute' => '*/15',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ],
+    [
         'classname' => 'core_xapi\task\state_cleanup_task',
         'blocking' => 0,
         'minute' => 'R',

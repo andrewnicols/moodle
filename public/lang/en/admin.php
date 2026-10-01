@@ -1570,6 +1570,7 @@ $string['task_dbwrites'] = 'Database writes';
 $string['task_result'] = 'Result';
 $string['tasktype'] = 'Type';
 $string['tasklockcleanuptask'] = 'Clean up ad hoc task metadata';
+$string['taskapiidempotencykeycleanup'] = 'REST API Idempotency Key cleanup';
 $string['taskadmintitle'] = 'Tasks';
 $string['taskanalyticscleanup'] = 'Analytics cleanup';
 $string['taskautomatedbackup'] = 'Automated backups';

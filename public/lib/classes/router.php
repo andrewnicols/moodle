@@ -22,6 +22,7 @@ use core\router\error_renderer;
 use core\router\middleware\api_validation_middleware;
 use core\router\middleware\cors_middleware;
 use core\router\middleware\error_handling_middleware;
+use core\router\middleware\idempotency_key_middleware;
 use core\router\middleware\moodle_api_authentication_middleware;
 use core\router\middleware\moodle_authentication_middleware;
 use core\router\middleware\moodle_bootstrap_middleware;
@@ -268,6 +269,9 @@ class router {
             // Add a Middleware to set the CORS headers for all REST Responses.
             ->add(di::get(cors_middleware::class))
             ->add(di::get(api_validation_middleware::class))
+            // Idempotency support must run after authentication (so the cache key can be scoped to the
+            // current user) but before the route handler itself is invoked.
+            ->add(di::get(idempotency_key_middleware::class))
             ->add(di::get(moodle_api_authentication_middleware::class))
             ->add(di::get(error_handling_middleware::class));
     }
