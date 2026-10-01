@@ -17,6 +17,9 @@
 namespace core\router\middleware;
 
 use core\api\repository\idempotency_key_repository;
+use core\exception\api\idempotency\invalid_key_exception;
+use core\exception\api\idempotency\key_in_progress_exception;
+use core\exception\api\idempotency\key_mismatch_exception;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -91,8 +94,7 @@ class idempotency_key_middleware implements MiddlewareInterface {
 
         $key = trim($request->getHeaderLine(self::HEADER_NAME));
         if ($key === '' || strlen($key) > self::MAX_KEY_LENGTH) {
-            return $this->create_json_error_response(
-                400,
+            throw new invalid_key_exception(
                 sprintf(
                     'The %s header must be a non-empty string of no more than %d characters.',
                     self::HEADER_NAME,
@@ -120,10 +122,7 @@ class idempotency_key_middleware implements MiddlewareInterface {
 
             // Vanishingly unlikely (the concurrent record would have to be deleted between our two
             // queries), but fail safely rather than let the request through unprotected.
-            return $this->create_json_error_response(
-                409,
-                'A request with this Idempotency-Key is already being processed.',
-            );
+            throw new key_in_progress_exception();
         }
 
         try {
@@ -167,18 +166,12 @@ class idempotency_key_middleware implements MiddlewareInterface {
         if ($existing->requesthash !== $requesthash) {
             // The same key has been reused with a different request. This is a client error:
             // Idempotency-Keys must only be reused for retries of the exact same request.
-            return $this->create_json_error_response(
-                422,
-                sprintf('The %s header has already been used with a different request.', self::HEADER_NAME),
-            );
+            throw new key_mismatch_exception();
         }
 
         if ($existing->state === idempotency_key_repository::STATE_PROCESSING) {
             // An earlier request with this key is still being processed (e.g. a concurrent retry).
-            return $this->create_json_error_response(
-                409,
-                'A request with this Idempotency-Key is already being processed.',
-            );
+            throw new key_in_progress_exception();
         }
 
         // We have a captured, completed, response for an identical request. Replay it.
@@ -237,21 +230,6 @@ class idempotency_key_middleware implements MiddlewareInterface {
             }
         }
         $response->getBody()->write($decoded['body']);
-
-        return $response;
-    }
-
-    /**
-     * Create a simple JSON error response.
-     *
-     * @param int $statuscode
-     * @param string $message
-     * @return ResponseInterface
-     */
-    protected function create_json_error_response(int $statuscode, string $message): ResponseInterface {
-        $response = $this->responsefactory->createResponse($statuscode)
-            ->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode(['error' => $message]));
 
         return $response;
     }
