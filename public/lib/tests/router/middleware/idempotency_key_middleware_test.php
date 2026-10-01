@@ -155,9 +155,9 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $second = (new ServerRequest('POST', '/example'))
             ->withHeader('Idempotency-Key', 'my-key')
             ->withBody(\GuzzleHttp\Psr7\Utils::streamFor('{"a":2}'));
-        $response = $middleware->process($second, $handler);
 
-        $this->assertEquals(422, $response->getStatusCode());
+        $this->expectException(\core\exception\api\idempotency\key_mismatch_exception::class);
+        $middleware->process($second, $handler);
     }
 
     public function test_empty_key_is_rejected(): void {
@@ -167,9 +167,9 @@ final class idempotency_key_middleware_test extends \advanced_testcase {
         $handler = $this->get_counting_handler(0);
 
         $request = (new ServerRequest('POST', '/example'))->withHeader('Idempotency-Key', '   ');
-        $response = $middleware->process($request, $handler);
 
-        $this->assertEquals(400, $response->getStatusCode());
+        $this->expectException(\core\exception\api\idempotency\invalid_key_exception::class);
+        $middleware->process($request, $handler);
     }
 
     public function test_server_errors_are_not_persisted(): void {
