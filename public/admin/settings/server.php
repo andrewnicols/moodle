@@ -676,6 +676,24 @@ if ($hassiteconfig) {
         new lang_string('serviceusersettings', 'webservice'), "{$CFG->wwwroot}/{$CFG->admin}/webservice/service_user_settings.php",
         'moodle/site:config', true));
 
+    // Web services > REST API.
+    $temp = new admin_settingpage('restapisettings', new lang_string('restapisettings', 'webservice'));
+    $temp->add(new admin_setting_configtext(
+        'apiidempotencymaxrecordsperuser',
+        new lang_string('apiidempotencymaxrecordsperuser', 'webservice'),
+        new lang_string('apiidempotencymaxrecordsperuser_desc', 'webservice'),
+        \core\api\repository\idempotency_key_repository::MAX_COMPLETE_RECORDS_PER_USER,
+        PARAM_INT,
+    ));
+    $temp->add(new admin_setting_configtext(
+        'apiidempotencymaxresponsebytes',
+        new lang_string('apiidempotencymaxresponsebytes', 'webservice'),
+        new lang_string('apiidempotencymaxresponsebytes_desc', 'webservice'),
+        \core\api\repository\idempotency_key_repository::MAX_ENCRYPTED_RESPONSE_BYTES,
+        PARAM_INT,
+    ));
+    $ADMIN->add('webservicesettings', $temp);
+
     // Web services > Manage protocols.
     $temp = new admin_settingpage('webserviceprotocols', new lang_string('manageprotocols', 'webservice'));
     $temp->add(new admin_setting_managewebserviceprotocols());
